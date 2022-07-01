@@ -1265,7 +1265,8 @@ namespace Fx.Amiya.Service
                 if (orderInfo == null)
                 { throw new Exception("未找到该订单，完成订单失败！"); }
                 orderInfo.StatusCode = OrderStatusCode.TRADE_FINISHED;
-                orderInfo.WriteOffDate = DateTime.Now;
+                if (!orderInfo.WriteOffDate.HasValue)
+                { orderInfo.WriteOffDate = DateTime.Now; }
                 orderInfo.UpdateDate = DateTime.Now;
                 await dalOrderInfo.UpdateAsync(orderInfo, true);
 

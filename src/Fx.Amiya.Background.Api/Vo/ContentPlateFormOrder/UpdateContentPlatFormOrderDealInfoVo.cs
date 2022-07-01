@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
 {
     /// <summary>
-    /// 订单成交情况
+    /// 修改订单成交情况
     /// </summary>
-    public class ContentPlatFormOrderDealInfoVo
+    public class UpdateContentPlatFormOrderDealInfoVo
     {
         /// <summary>
         /// 编号
@@ -19,11 +19,6 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 派单编号
         /// </summary>
         public string ContentPlatFormOrderId { get; set; }
-
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        public DateTime CreateDate { get; set; }
 
         /// <summary>
         /// 是否到院
@@ -38,15 +33,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 是否成交
         /// </summary>
         public bool IsDeal { get; set; }
-
         /// <summary>
         /// 最终成交医院id
         /// </summary>
         public int? LastDealHospitalId { get; set; }
-        /// <summary>
-        /// 成交医院
-        /// </summary>
-        public string DealHospital { get; set; }
 
         /// <summary>
         /// 截图

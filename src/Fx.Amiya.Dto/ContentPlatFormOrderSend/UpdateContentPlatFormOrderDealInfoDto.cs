@@ -21,11 +21,6 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         public string ContentPlatFormOrderId { get; set; }
 
         /// <summary>
-        /// 创建时间
-        /// </summary>
-        public DateTime CreateDate { get; set; }
-
-        /// <summary>
         /// 是否到院
         /// </summary>
         public bool IsToHospital { get; set; }

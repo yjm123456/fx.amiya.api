@@ -129,7 +129,6 @@ namespace Fx.Amiya.Service
 
                 ContentPlatFOrmOrderDealInfo.Id = updateDto.Id;
                 ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId = updateDto.ContentPlatFormOrderId;
-                ContentPlatFOrmOrderDealInfo.CreateDate = updateDto.CreateDate;
                 ContentPlatFOrmOrderDealInfo.IsToHospital = updateDto.IsToHospital;
                 ContentPlatFOrmOrderDealInfo.ToHospitalDate = updateDto.ToHospitalDate;
                 ContentPlatFOrmOrderDealInfo.LastDealHospitalId = updateDto.LastDealHospitalId;

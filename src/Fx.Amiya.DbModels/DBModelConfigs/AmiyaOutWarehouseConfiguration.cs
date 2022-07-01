@@ -21,7 +21,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.EmployeeId).HasColumnName("use_employee_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.DepartmentId).HasColumnName("department_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
-            builder.Property(t => t.Remark).HasColumnName("remark").HasColumnType("varchar(500)").IsRequired();
+            builder.Property(t => t.Remark).HasColumnName("remark").HasColumnType("varchar(500)").IsRequired(false);
 
             builder.HasOne(e => e.WareHouseInfo).WithMany(e => e.AmiyaOutWarehouseList).HasForeignKey(e => e.WareHouseId);
             builder.HasOne(e => e.Employee).WithMany(e => e.AmiyaOutWarehouse).HasForeignKey(e => e.CreateBy);
