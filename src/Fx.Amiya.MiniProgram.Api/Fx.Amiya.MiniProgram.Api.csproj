@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>673f3c90-1ece-4c71-b527-989b85594fc1</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>D:\LTM代码管理\FX\阿美雅api\src\Fx.Amiya.MiniProgram.Api\Fx.Amiya.MiniProgram.Api.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>F:\net\Fx.Amiya\src\Fx.Amiya.MiniProgram.Api\Fx.Amiya.MiniProgram.Api.xml</DocumentationFile>
+    <OutputPath>C:\Users\FLH\Desktop\新建文件夹\</OutputPath>
+  </PropertyGroup>
+
+
+
+  <ItemGroup>
+    <PackageReference Include="AlipaySDKNet.Standard" Version="4.6.60" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
+    <PackageReference Include="TimedJob" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\方旋基础类库\web基础类库\方旋Web基础类库\Fx.Open.Infrastructure.Web\Fx.Open.Infrastructure.Web.csproj" />
+    <ProjectReference Include="..\..\..\方旋基础类库\业务基础类库\方旋业务基础类库\Fx.Infrastructure\Fx.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\方旋短信平台\src\Fx.Sms.Core\Fx.Sms.Core.csproj" />
+    <ProjectReference Include="..\Core\Fx.Amiya.Core.Services\Fx.Amiya.Core.Services.csproj" />
+    <ProjectReference Include="..\Fx.Amiya.Common\Fx.Amiya.Common.csproj" />
+    <ProjectReference Include="..\Fx.Amiya.IService\Fx.Amiya.IService.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Dockerfile">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+
+</Project>

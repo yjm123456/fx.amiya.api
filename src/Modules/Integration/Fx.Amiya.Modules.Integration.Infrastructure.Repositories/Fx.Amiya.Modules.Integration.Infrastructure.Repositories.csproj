@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FreeSql" Version="2.5.100" />
+    <PackageReference Include="FreeSql.DbContext" Version="2.5.100" />
+    <PackageReference Include="FreeSql.Provider.MySql" Version="2.5.100" />
+    <PackageReference Include="FreeSql.Provider.SqlServer" Version="2.5.100" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\Fx.Amiya.Core.Infrastructure\Fx.Amiya.Core.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Core\Fx.Amiya.Modules.Infrastructure\Fx.Amiya.Modules.Infrastructure.csproj" />
+    <ProjectReference Include="..\Fx.Amiya.Modules.Integration.DbModel\Fx.Amiya.Modules.Integration.DbModel.csproj" />
+    <ProjectReference Include="..\Fx.Amiya.Modules.Integration.Domin\Fx.Amiya.Modules.Integration.Domin.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>f18ac9e0-0d16-455f-8c57-c050876dc8ff</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\方旋基础类库\web基础类库\方旋Web基础类库\Fx.Open.Infrastructure.Web\Fx.Open.Infrastructure.Web.csproj" />
+    <ProjectReference Include="..\..\..\方旋基础类库\业务基础类库\方旋业务基础类库\Fx.Infrastructure.DataAccess.Mongodb.Standard\Fx.Infrastructure.DataAccess.Mongodb.Standard.csproj" />
+    <ProjectReference Include="..\..\..\方旋统一登录认证库\src\Fx.Authentication\Fx.Authentication.csproj" />
+    <ProjectReference Include="..\..\..\方旋统一登录认证库\src\Fx.Authorization\Fx.Authorization.csproj" />
+    <ProjectReference Include="..\..\..\方旋统一登录认证库\src\Fx.Identity.Core\Fx.Identity.Core.csproj" />
+    <ProjectReference Include="..\Fx.Amiya.Common\Fx.Amiya.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.10" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Dockerfile">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="fxapp.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

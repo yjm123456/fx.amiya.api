@@ -1,0 +1,461 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Fx.Amiya.Background.Api.Vo.CallRecord;
+using Fx.Amiya.Background.Api.Vo.Track;
+using Fx.Amiya.Dto.Track;
+using Fx.Amiya.IService;
+using Fx.Authorization.Attributes;
+using Fx.Common;
+using Fx.Infrastructure;
+using Fx.Infrastructure.DataAccess.Mongodb.Standard;
+using Fx.Open.Infrastructure.Web;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
+
+namespace Fx.Amiya.Background.Api.Controllers
+{
+    [Route("[controller]")]
+    [ApiController]
+    public class TrackController : ControllerBase
+    {
+        private ITrackService trackService;
+        private IHttpContextAccessor httpContextAccessor;
+        private IMongoRepository<CallRecordVo> repository;
+        public TrackController(ITrackService trackService,
+            IHttpContextAccessor httpContextAccessor,
+            IMongoRepository<CallRecordVo> repository)
+        {
+            this.trackService = trackService;
+            this.httpContextAccessor = httpContextAccessor;
+            this.repository = repository;
+        }
+
+
+
+
+        /// <summary>
+        /// 获取回访类型列表（分页）
+        /// </summary>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("typeListWithPage")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<FxPageInfo<TrackTypeVo>>> GetTrackTypeListWithPageAsync(int pageNum, int pageSize)
+        {
+            var q = await trackService.GetTrackTypeListWithPageAsync(pageNum, pageSize);
+            var trackType = from d in q.List
+                            select new TrackTypeVo
+                            {
+                                Id = d.Id,
+                                Name = d.Name,
+                                Valid = d.Valid
+                            };
+            FxPageInfo<TrackTypeVo> trackTypePageInfo = new FxPageInfo<TrackTypeVo>();
+            trackTypePageInfo.TotalCount = q.TotalCount;
+            trackTypePageInfo.List = trackType;
+            return ResultData<FxPageInfo<TrackTypeVo>>.Success().AddData("trackType", trackTypePageInfo);
+        }
+
+
+
+
+
+
+
+        /// <summary>
+        /// 获取有效的回访类型列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("typeList")]
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData<List<TrackTypeVo>>> GetTrackTypeListAsync()
+        {
+            var trackType = from d in await trackService.GetTrackTypeListAsync()
+                            select new TrackTypeVo
+                            {
+                                Id = d.Id,
+                                Name = d.Name,
+                                Valid = d.Valid
+                            };
+            return ResultData<List<TrackTypeVo>>.Success().AddData("trackType", trackType.ToList());
+        }
+
+
+
+
+
+        /// <summary>
+        /// 添加回访类型
+        /// </summary>
+        /// <param name="addVo"></param>
+        /// <returns></returns>
+        [HttpPost("type")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> AddTrackTypeAsync(AddTrackTypeVo addVo)
+        {
+            AddTrackTypeDto addDto = new AddTrackTypeDto();
+            addDto.Name = addVo.Name;
+            await trackService.AddTrackTypeAsync(addDto);
+            return ResultData.Success();
+        }
+
+
+
+
+
+
+        /// <summary>
+        /// 修改回访类型
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut("type")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> UpdateTrackTypeAsync(UpdateTrackTypeVo updateVo)
+        {
+            UpdateTrackTypeDto updateDto = new UpdateTrackTypeDto();
+            updateDto.Id = updateVo.Id;
+            updateDto.Name = updateVo.Name;
+            updateDto.Valid = updateVo.Valid;
+            await trackService.UpdateTrackTypeAsync(updateDto);
+            return ResultData.Success();
+        }
+
+
+
+
+
+        /// <summary>
+        /// 删除回访类型
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("type/{id}")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> DeleteTrackTypeAsync(int id)
+        {
+            await trackService.DeleteTrackTypeAsync(id);
+            return ResultData.Success();
+        }
+
+
+
+
+
+
+        /// <summary>
+        /// 获取回访工具列表（分页）
+        /// </summary>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("toolListWithPage")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<FxPageInfo<TrackToolVo>>> GetTrackToolListWithPageAsync(int pageNum, int pageSize)
+        {
+            var q = await trackService.GetTrackToolListWithPageAsync(pageNum, pageSize);
+            var trackTool = from d in q.List
+                            select new TrackToolVo
+                            {
+                                Id = d.Id,
+                                Name = d.Name,
+                                Valid = d.Valid
+                            };
+            FxPageInfo<TrackToolVo> trackToolPageInfo = new FxPageInfo<TrackToolVo>();
+            trackToolPageInfo.TotalCount = q.TotalCount;
+            trackToolPageInfo.List = trackTool;
+            return ResultData<FxPageInfo<TrackToolVo>>.Success().AddData("trackTool", trackToolPageInfo);
+        }
+
+
+
+
+
+        /// <summary>
+        /// 获取有效的回访工具列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("toolList")]
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData<List<TrackToolVo>>> GetTrackToolListAsync()
+        {
+            var trackTool = from d in await trackService.GetTrackToolListAsync()
+                            select new TrackToolVo
+                            {
+                                Id = d.Id,
+                                Name = d.Name,
+                                Valid = d.Valid
+                            };
+            return ResultData<List<TrackToolVo>>.Success().AddData("trackTool", trackTool.ToList());
+        }
+
+
+
+
+
+        /// <summary>
+        /// 添加回访工具
+        /// </summary>
+        /// <param name="addVo"></param>
+        /// <returns></returns>
+        [HttpPost("tool")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> AddTrackToolAsync(AddTrackToolVo addVo)
+        {
+            AddTrackToolDto addDto = new AddTrackToolDto();
+            addDto.Name = addVo.Name;
+            await trackService.AddTrackToolAsync(addDto);
+            return ResultData.Success();
+        }
+
+
+
+
+
+        /// <summary>
+        /// 修改回访工具
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut("tool")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> UpdateTrackToolAsync(UpdateTrackToolVo updateVo)
+        {
+            UpdateTrackToolDto updateDto = new UpdateTrackToolDto();
+            updateDto.Id = updateVo.Id;
+            updateDto.Name = updateVo.Name;
+            updateDto.Valid = updateVo.Valid;
+            await trackService.UpdateTrackToolAsync(updateDto);
+            return ResultData.Success();
+        }
+
+
+
+
+
+        /// <summary>
+        /// 删除回访工具
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("tool/{id}")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> DeleteTrackToolAsync(int id)
+        {
+            await trackService.DeleteTrackToolAsync(id);
+            return ResultData.Success();
+        }
+
+
+
+
+
+
+        /// <summary>
+        /// 获取回访记录（分页）
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="employeeId">-1查全部</param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("recordListWithPage")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<FxPageInfo<TrackRecordVo>>> GetRecordListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int? employeeId, int pageNum, int pageSize)
+        {
+            try
+            {
+                if (employeeId == null)
+                {
+                    var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                    employeeId = Convert.ToInt32(employee.Id);
+                }
+
+                var q = await trackService.GetRecordListWithPageAsync(keyword, startDate, endDate, (int)employeeId, pageNum, pageSize);
+
+                var trackRecord = from d in q.List
+                                  select new TrackRecordVo
+                                  {
+                                      Id = d.Id,
+                                      Phone = d.Phone,
+                                      EncryptPhone = d.EncryptPhone,
+                                      TrackDate = d.TrackDate,
+                                      TrackContent = d.TrackContent,
+                                      TrackThemeId = d.TrackThemeId,
+                                      TrackPlan=d.TrackPlan,
+                                      TrackTheme = d.TrackTheme,
+                                      TrackTypeId = d.TrackTypeId,
+                                      TrackTypeName = d.TrackTypeName,
+                                      TrackToolId = d.TrackToolId,
+                                      TrackToolName = d.TrackToolName,
+                                      EmployeeId = d.EmployeeId,
+                                      EmployeeName = d.EmployeeName,
+                                      Valid = d.Valid,
+                                      CallRecordId = d.CallRecordId,
+                                  };
+
+                FxPageInfo<TrackRecordVo> trackRecordPageInfo = new FxPageInfo<TrackRecordVo>();
+                trackRecordPageInfo.TotalCount = q.TotalCount;
+                trackRecordPageInfo.List = trackRecord;
+                return ResultData<FxPageInfo<TrackRecordVo>>.Success().AddData("trackRecord", trackRecordPageInfo);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+
+
+
+        /// <summary>
+        /// 根据加密电话文本获取回访记录列表（分页）
+        /// </summary>
+        /// <param name="encryptPhone"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("recordListByEncryptPhone")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<FxPageInfo<TrackRecordVo>>> GetRecordListByEncryptPhoneWithPageAsync(string encryptPhone, int pageNum, int pageSize)
+        {
+            var q = await trackService.GetRecordListByEncryptPhoneWithPageAsync(encryptPhone, pageNum, pageSize);
+
+            var trackRecord = from d in q.List
+                              select new TrackRecordVo
+                              {
+                                  Id = d.Id,
+                                  Phone = d.Phone,
+                                  TrackDate = d.TrackDate,
+                                  TrackContent = d.TrackContent,
+                                  TrackTheme = d.TrackTheme,
+                                  TrackThemeId = d.TrackThemeId,
+                                  TrackTypeId = d.TrackTypeId,
+                                  TrackTypeName = d.TrackTypeName,
+                                  TrackPlan=d.TrackPlan,
+                                  TrackToolId = d.TrackToolId,
+                                  TrackToolName = d.TrackToolName,
+                                  EmployeeId = d.EmployeeId,
+                                  EmployeeName = d.EmployeeName,
+                                  Valid = d.Valid,
+                                  CallRecordId = d.CallRecordId,
+                                  IsPlanTrack = d.IsPlanTrack,
+                                  PlanTrackTheme = d.PlanTrackTheme
+                              };
+            FxPageInfo<TrackRecordVo> trackRecordPageInfo = new FxPageInfo<TrackRecordVo>();
+            trackRecordPageInfo.TotalCount = q.TotalCount;
+            trackRecordPageInfo.List = trackRecord;
+            return ResultData<FxPageInfo<TrackRecordVo>>.Success().AddData("trackRecord", trackRecordPageInfo);
+        }
+
+
+
+
+
+
+        /// <summary>
+        /// 添加回访记录
+        /// </summary>
+        /// <param name="addVo"></param>
+        /// <returns></returns>  
+        [HttpPost("trackRecord")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> AddTrackRecordAsync(AddTrackRecordVo addVo)
+        {
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+
+            AddTrackRecordDto addDto = new AddTrackRecordDto();
+            addDto.WaitTrackId = addVo.WaitTrackId;
+            addDto.EncryptPhone = addVo.EncryptPhone;
+            addDto.TrackContent = addVo.TrackContent;
+            addDto.TrackToolId = addVo.TrackToolId;
+            addDto.TrackPlan = addVo.TrackPlan;
+            addDto.TrackTypeId = addVo.TrackTypeId;
+            addDto.TrackThemeId = addVo.TrackThemeId;
+            addDto.Valid = addVo.Valid;
+            addDto.CallRecordId = addVo.CallRecordId;
+            List<AddWaitTrackCustomerDto> waitTrackRecordList = new List<AddWaitTrackCustomerDto>();
+            if (addVo.AddWaitTrackCustomer!=null)
+            {
+                foreach(var x in addVo.AddWaitTrackCustomer)
+                {
+                    AddWaitTrackCustomerDto addList = new AddWaitTrackCustomerDto();
+                    addList = new AddWaitTrackCustomerDto()
+                    {
+                        PlanTrackDate = x.PlanTrackDate,
+                        TrackTypeId = x.TrackTypeId,
+                        TrackThemeId = x.TrackThemeId,
+                        OtherTrackEmployeeId = x.OtherTrackEmployeeId,
+                        TrackPlan=x.TrackPlan
+                    };
+                    waitTrackRecordList.Add(addList);
+                }
+            }
+            addDto.AddWaitTrackCustomer = waitTrackRecordList;
+            int result= await trackService.AddTrackRecordAsync(addDto, employeeId);
+            return ResultData.Success();
+
+        }
+
+
+
+
+
+        /// <summary>
+        /// 获取待回访列表（分页）
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="employeeId">-1查全部</param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("waitTrackListWithPage")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<FxPageInfo<WaitTrackCustomerVo>>> GetWaitTrackListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int? employeeId, int pageNum, int pageSize)
+        {
+            if (employeeId == null)
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                employeeId = Convert.ToInt32(employee.Id);
+            }
+
+            var q = await trackService.GetWaitTrackListWithPageAsync(keyword, startDate, endDate, (int)employeeId, pageNum, pageSize);
+
+            var waitTrack = from d in q.List
+                            select new WaitTrackCustomerVo
+                            {
+                                Id = d.Id,
+                                Phone = d.Phone,
+                                EncryptPhone = d.EncryptPhone,
+                                PlanTrackDate = d.PlanTrackDate,
+                                TrackTypeId = d.TrackTypeId,
+                                TrackTypeName = d.TrackTypeName,
+                                TrackThemeId = d.TrackThemeId,
+                                TrackPlan=d.TrackPlan,
+                                TrackTheme = d.TrackTheme,
+                                CreateDate = d.CreateDate,
+                                CreateBy = d.CreateBy,
+                                CreateName = d.CreateName,
+                                Status = d.Status,
+                                PlanTrackEmployeeId = d.PlanTrackEmployeeId,
+                                PlanTrackEnmployeeName = d.PlanTrackEnmployeeName
+                            };
+            FxPageInfo<WaitTrackCustomerVo> waitTrackPageInfo = new FxPageInfo<WaitTrackCustomerVo>();
+            waitTrackPageInfo.TotalCount = q.TotalCount;
+            waitTrackPageInfo.List = waitTrack;
+            return ResultData<FxPageInfo<WaitTrackCustomerVo>>.Success().AddData("waitTrack", waitTrackPageInfo);
+        }
+
+    }
+}

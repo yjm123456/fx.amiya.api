@@ -1,0 +1,46 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using Jd.ACES.Utils;
+
+namespace Jd.ACES.Common
+{
+
+    public class JosMasterKeyGetRequest
+    {
+        public String sig { get; set; }
+        public int sdk_ver { get; set; }
+        public long ts { get; set; }
+        public String tid { get; set; }
+        public String accessToken { get; set; }
+        public String appKey { get; set; }
+        public String appSecret { get; set; }
+        
+        public JosMasterKeyGetRequest() {
+        }
+
+        public String getParameters()
+        {
+            Dictionary<string, string> businessParams = new Dictionary<string, string>();
+            businessParams.Add("sdk_ver", Convert.ToString(sdk_ver));
+            businessParams.Add("ts", Convert.ToString(ts));
+            businessParams.Add("tid", tid);
+            businessParams.Add("sig", sig);
+
+            // 添加协议级请求参数
+            Dictionary<string, string> sysParams = new Dictionary<string, string>();
+            sysParams.Add(Constants.METHOD, Constants.KMS_API_SERVER);
+            sysParams.Add(Constants.VERSION, "2.0");
+            sysParams.Add(Constants.APP_KEY, appKey);
+            sysParams.Add(Constants.TIMESTAMP, DateTime.Now.ToString(Constants.DATE_TIME_FORMAT));
+            if (this.accessToken != null)
+            {
+                sysParams.Add(Constants.ACCESS_TOKEN, this.accessToken);
+            }
+            sysParams.Add(Constants.PARAM_JSON, JsonConvert.SerializeObject(businessParams, Formatting.Indented));
+            // 添加签名参数
+            sysParams.Add(Constants.SIGN, WebUtils.SignJdRequest(sysParams, appSecret, true));
+            return WebUtils.BuildQuery(sysParams);
+        }
+    }
+}

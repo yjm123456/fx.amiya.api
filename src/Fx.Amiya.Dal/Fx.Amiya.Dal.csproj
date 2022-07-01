@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="DalSignHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\方旋基础类库\业务基础类库\方旋业务基础类库\Fx.Infrastructure.DataAccess.EFCore\Fx.Infrastructure.DataAccess.EFCore.csproj" />
+    <ProjectReference Include="..\..\..\方旋基础类库\业务基础类库\方旋业务基础类库\Fx.Infrastructure\Fx.Infrastructure.csproj" />
+    <ProjectReference Include="..\Fx.Amiya.DbModels\Fx.Amiya.DbModels.csproj" />
+    <ProjectReference Include="..\Fx.Amiya.IDal\Fx.Amiya.IDal.csproj" />
+  </ItemGroup>
+
+</Project>

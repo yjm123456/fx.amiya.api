@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Fx.Amiya.Dto.Track
+{
+   public class AddWaitTrackCustomerDto
+    {
+        public DateTime PlanTrackDate { get; set; }
+        public int? TrackTypeId { get; set; }
+        public int? TrackThemeId { get; set; }
+
+        /// <summary>
+        /// 回访计划
+        /// </summary>
+        public string TrackPlan { get; set; }
+
+        /// <summary>
+        /// 其他客服下次回访
+        /// </summary>
+        public int? OtherTrackEmployeeId { get; set; }
+    }
+}

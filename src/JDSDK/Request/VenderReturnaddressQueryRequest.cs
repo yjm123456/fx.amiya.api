@@ -1,0 +1,31 @@
+using System;
+using System.Collections.Generic;
+using Jd.Api.Response;
+using Jd.Api.Util;
+namespace Jd.Api.Request
+{
+    public class VenderReturnaddressQueryRequest : JdRequestBase<VenderReturnaddressQueryResponse>
+    {
+                                                                                                                   public  		string
+                                                                                      addressType
+ {get; set;}
+                                                                                                                                  
+                                             public override string ApiName
+            {
+                get{return "jingdong.vender.returnaddress.query";}
+            }
+            protected override void PrepareParam(IDictionary<String, Object> parameters)
+            {
+                                                                                                                                                parameters.Add("address_type", this.                                                                                    addressType
+);
+                                                                                                    }
+    }
+}
+
+
+
+
+
+        
+ 
+

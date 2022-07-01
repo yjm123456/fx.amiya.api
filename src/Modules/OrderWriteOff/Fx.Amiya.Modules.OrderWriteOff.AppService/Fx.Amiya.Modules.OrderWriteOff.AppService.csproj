@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\Fx.Amiya.Core\Fx.Amiya.Core.csproj" />
+    <ProjectReference Include="..\Fx.Amiya.Modules.MemberCard.Infrastructure.Repositories\Fx.Amiya.Modules.OrderWriteOff.Infrastructure.Repositories.csproj" />
+    <ProjectReference Include="..\Fx.Amiya.Modules.OrderWriteOff.DbModels\Fx.Amiya.Modules.OrderWriteOff.DbModels.csproj" />
+    <ProjectReference Include="..\Fx.Amiya.Modules.OrderWriteOff.Domain\Fx.Amiya.Modules.OrderWriteOff.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

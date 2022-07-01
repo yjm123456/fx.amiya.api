@@ -1,0 +1,67 @@
+using System;
+using System.Xml.Serialization;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Jd.Api.Domain;
+namespace Jd.Api.Domain
+{
+
+[Serializable]
+public class ConsigneeInfoDTO:JdObject{
+      [JsonProperty("consName")]
+public 				string
+
+             consName
+ { get; set; }
+      [JsonProperty("consMobile")]
+public 				string
+
+             consMobile
+ { get; set; }
+      [JsonProperty("provinceId")]
+public 				int
+
+             provinceId
+ { get; set; }
+      [JsonProperty("provinceName")]
+public 				string
+
+             provinceName
+ { get; set; }
+      [JsonProperty("cityId")]
+public 				int
+
+             cityId
+ { get; set; }
+      [JsonProperty("cityName")]
+public 				string
+
+             cityName
+ { get; set; }
+      [JsonProperty("countyId")]
+public 				int
+
+             countyId
+ { get; set; }
+      [JsonProperty("countyName")]
+public 				string
+
+             countyName
+ { get; set; }
+      [JsonProperty("townId")]
+public 				int
+
+             townId
+ { get; set; }
+      [JsonProperty("townName")]
+public 				string
+
+             townName
+ { get; set; }
+      [JsonProperty("consAddress")]
+public 				string
+
+             consAddress
+ { get; set; }
+	}
+}

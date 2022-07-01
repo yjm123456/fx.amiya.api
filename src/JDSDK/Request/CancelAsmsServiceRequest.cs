@@ -1,0 +1,55 @@
+using System;
+using System.Collections.Generic;
+using Jd.Api.Response;
+using Jd.Api.Util;
+namespace Jd.Api.Request
+{
+    public class CancelAsmsServiceRequest : JdRequestBase<CancelAsmsServiceResponse>
+    {
+                                                                                                                                              public  		Nullable<int>
+              serviceId
+ {get; set;}
+                                                          
+                                                          public  		string
+              operatorName
+ {get; set;}
+                                                          
+                                                          public  		string
+              operatorPin
+ {get; set;}
+                                                          
+                                                          public  		string
+              cancelReason
+ {get; set;}
+                                                          
+                                                          public  		string
+              venderCode
+ {get; set;}
+                                                          
+                                             public override string ApiName
+            {
+                get{return "jingdong.cancelAsmsService";}
+            }
+            protected override void PrepareParam(IDictionary<String, Object> parameters)
+            {
+                                                                                                                                        parameters.Add("serviceId", this.            serviceId
+);
+                                                                                                        parameters.Add("operatorName", this.            operatorName
+);
+                                                                                                        parameters.Add("operatorPin", this.            operatorPin
+);
+                                                                                                        parameters.Add("cancelReason", this.            cancelReason
+);
+                                                                                                        parameters.Add("venderCode", this.            venderCode
+);
+                                                                            }
+    }
+}
+
+
+
+
+
+        
+ 
+

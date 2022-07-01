@@ -1,0 +1,62 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
+{
+    /// <summary>
+    /// 未派单内容平台订单列表
+    /// </summary>
+    public class UnSendContentPlatFormOrderInfoDto
+    {
+        public string OrderId { get; set; }
+        public string ContentPlatFormName { get; set; }
+        public string LiveAnchorName { get; set; }
+        public DateTime CreateDate { get; set; }
+        public string GoodsName { get; set; }
+        public string ThumbPictureUrl { get; set; }
+        public string ConsultingContent { get; set; }
+        public string CustomerName { get; set; }
+        public decimal? DepositAmount { get; set; }
+        public decimal? DealAmount { get; set; }
+        public string OrderTypeText{ get; set; }
+        public string OrderStatusText { get; set; }
+        public string AppointmentHospital { get; set; }
+        public string AppointmentDate { get; set; }
+        public string Phone { get; set; }
+        public string EncryptPhone { get; set; }
+        public string Remark { get; set; }
+        /// <summary>
+        /// 面诊员
+        /// </summary>
+        public int? ConsultationEmpId { get; set; }
+        /// <summary>
+        /// 面诊员名字
+        /// </summary>
+        public string ConsultationEmpName{ get; set; }
+        /// <summary>
+        /// 后期项目铺垫
+        /// </summary>
+        public string LateProjectStage { get; set; }
+        public int BelongEmpId { get; set; }
+        public string BelongEmpName { get; set; }
+
+        /// <summary>
+        /// 订单来源文本
+        /// </summary>
+
+        public string OrderSourceText { get; set; }
+
+        /// <summary>
+        /// 未派单原因
+        /// </summary>
+        public string UnSendReason { get; set; }
+
+        /// <summary>
+        /// 院方接诊人员
+        /// </summary>
+        public string AcceptConsulting { get; set; }
+    }
+}

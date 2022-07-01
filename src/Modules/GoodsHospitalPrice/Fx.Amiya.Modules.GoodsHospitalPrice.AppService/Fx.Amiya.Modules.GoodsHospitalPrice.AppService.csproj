@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Class1.cs" />
+    <Compile Remove="GoodsHospitalPriceAppService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\Fx.Amiya.Core\Fx.Amiya.Core.csproj" />
+    <ProjectReference Include="..\..\..\Fx.Amiya.Common\Fx.Amiya.Common.csproj" />
+    <ProjectReference Include="..\..\..\Fx.Amiya.DbModels\Fx.Amiya.DbModels.csproj" />
+    <ProjectReference Include="..\Fx.Amiya.Modules.GoodsHospitalPrice.DbModel\Fx.Amiya.Modules.GoodsHospitalPrice.DbModel.csproj" />
+    <ProjectReference Include="..\Fx.Amiya.Modules.GoodsHospitalPrice.Domin\Fx.Amiya.Modules.GoodsHospitalPrice.Domin.csproj" />
+    <ProjectReference Include="..\Fx.Amiya.Modules.GoodsHospitalPrice.Infrastructure.Repositories\Fx.Amiya.Modules.GoodsHospitalPrice.Infrastructure.Repositories.csproj" />
+  </ItemGroup>
+
+</Project>

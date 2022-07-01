@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Modules\GoodsHospitalPrice\Fx.Amiya.Modules.GoodsHospitalPrice.AppService\Fx.Amiya.Modules.GoodsHospitalPrice.AppService.csproj" />
+    <ProjectReference Include="..\..\Modules\Goods\Fx.Amiya.Modules.Goods.AppService\Fx.Amiya.Modules.Goods.AppService.csproj" />
+    <ProjectReference Include="..\..\Modules\Integration\Fx.Amiya.Modules.Integration.AppService\Fx.Amiya.Modules.Integration.AppService.csproj" />
+    <ProjectReference Include="..\..\Modules\MemberCard\Fx.Amiya.Modules.MemberCard.AppService\Fx.Amiya.Modules.MemberCard.AppService.csproj" />
+  </ItemGroup>
+
+</Project>

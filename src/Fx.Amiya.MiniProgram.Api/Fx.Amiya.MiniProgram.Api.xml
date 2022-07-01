@@ -1,0 +1,2115 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Fx.Amiya.MiniProgram.Api</name>
+    </assembly>
+    <members>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.AddressController.GetListByCustomerIdAsync">
+            <summary>
+            获取收货地址列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.AddressController.GetByIdAsync(System.Int32)">
+            <summary>
+            根据地址编号获取收货地址信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.AddressController.GetIsExistByCustomrId">
+            <summary>
+            根据客户编号获取是否存在收货地址
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.AddressController.GetSingleByCustomerIdAsync">
+            <summary>
+            获取单条收货地址
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.AddressController.AddAsync(Fx.Amiya.MiniProgram.Api.Vo.Address.AddAddressVo)">
+            <summary>
+            添加收货地址
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.AddressController.UpdateAsync(Fx.Amiya.MiniProgram.Api.Vo.Address.UpdateAddressVo)">
+            <summary>
+            修改收货地址
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.AddressController.DeleteAsync(System.Int32)">
+            <summary>
+            删除收货地址
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.AppointmentController.GetSurplusQuantityAsync(System.Int32,System.Int32,System.DateTime)">
+            <summary>
+            获取剩余预约数量
+            </summary>
+            <param name="hospitalId"></param>
+            <param name="itemInfoId"></param>
+            <param name="date"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.AppointmentController.CheckOrderAsync(System.Int32)">
+            <summary>
+            判断客户是否有订单信息
+            </summary>
+            <param name="itemInfoId">项目编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.AppointmentController.AddAsync(Fx.Amiya.MiniProgram.Api.Vo.Appointment.AddAppointmentVo)">
+            <summary>
+            添加预约
+            </summary>
+            <param name="addVo"></param>
+            <returns>预约编号</returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.AppointmentController.GetListOfWxAsync(System.Int32,System.Int32,System.Int32,System.String)">
+             <summary>
+             获取预约列表
+             </summary>
+             <param name="pageNum"></param>
+             <param name="pageSize"></param>
+            <param name = "status" > 0 = 全部，1=待完成，2=已完成，3=已取消</param>
+             <param name="itemName">项目名称</param>
+             <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.AppointmentController.GetByIdOfWxAsync(System.Int32)">
+            <summary>
+            根据预约编号获取预约信息
+            </summary>
+            <param name="id">预约编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.AppointmentController.GetQrCodeImage(System.Int32)">
+            <summary>
+            获取预约二维码图片
+            </summary>
+            <param name="id">预约编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.AppointmentController.GetQrCodeBase64(System.Int32)">
+            <summary>
+            获取预约二维码（Base64）
+            </summary>
+            <param name="id">预约编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.AppointmentController.CancelAsync(System.Int32)">
+            <summary>
+            取消预约
+            </summary>
+            <param name="id">预约编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.AppointmentController.ConfirmFinishAsync(System.Int32)">
+            <summary>
+            确认完成
+            </summary>
+            <param name="id">预约编号</param>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Controllers.BeautyDiaryController">
+            <summary>
+            美丽日记
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.BeautyDiaryController.GetListAsync(System.String,System.Int32,System.Int32)">
+            <summary>
+            获取日记列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.BeautyDiaryController.GetByIdAsync(System.String)">
+            <summary>
+            根据编号获取日记详细信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.BeautyDiaryController.GivingLikes(System.String)">
+            <summary>
+            点赞日记
+            </summary>
+            <param name="id">日记编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.BeautyDiaryController.AddViews(System.String)">
+            <summary>
+            浏览日记（浏览量+1）
+            </summary>
+            <param name="id">日记编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CarouselImageController.GetListAsync">
+            <summary>
+            获取轮播图列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CooperativeHospitalCityController.GetListAsync">
+            <summary>
+            获取合作医院城市列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CooperativeHospitalCityController.GetListByGoodsIdAsync(System.String)">
+            <summary>
+            根据商品信息获取有效的合作城市列表
+            </summary>
+            <param name="goodsId">商品id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CooperativeHospitalCityController.GetHotListAsync">
+            <summary>
+            获取热门城市
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CooperativeHospitalCityController.GetProvinceAndCityListAsync">
+            <summary>
+            获取合作医院省份城市列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CustomerController.Bind(System.String)">
+            <summary>
+            绑定客户
+            </summary>
+            <param name="phoneNumber"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CustomerController.GetPhoneByCustomerIdAsync">
+            <summary>
+            获取客户手机号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CustomerController.UpdatePhoneByIdAsync(System.String)">
+            <summary>
+            修改客户手机号
+            </summary>
+            <param name="phone"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CustomerController.DecryptoPhone(System.String)">
+            <summary>
+            解密手机号
+            </summary>
+            <param name="encryptPhone"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GiftController.GetCanReceiveQuantityOfWxAsync">
+            <summary>
+            获取可领取礼品数量
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GiftController.GetSimpleListOfWxAsync(System.String,System.Int32,System.Int32)">
+            <summary>
+            获取礼品列表
+            </summary>
+            <param name="name"></param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GiftController.AddReceiveGiftAsync(Fx.Amiya.MiniProgram.Api.Vo.Gift.AddReceiveGiftVo)">
+            <summary>
+            领取礼品
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GiftController.GetReceiveGiftListByCustomerIdAsync(System.Int32,System.Int32)">
+            <summary>
+            获取已领取礼品
+            </summary>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GiftController.GetGiftExpressInfoAsync(Fx.Amiya.MiniProgram.Api.Vo.Gift.GetGiftExpressInfoVo)">
+            <summary>
+            根据条件获取核销好礼快递信息
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GoodsController.GetGoodsCategoryListAsync(System.Int32)">
+            <summary>
+            根据展示方向获取商品分类列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GoodsController.GetGoodsInfoListAsync(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Int32,System.Int32)">
+            <summary>
+            获取商品列表
+            </summary>
+            <param name="keyword"></param>
+            <param name="exchangeType">交易方式（0积分支付，1三方支付，2线下支付）</param>
+            <param name="categoryId"></param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GoodsController.GetGoodsInfoByIdAsync(System.String)">
+            <summary>
+            根据商品编号获取商品信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GoodsController.GetGoodsListForGoodsGroupByGoodsIdAsync(System.String)">
+            <summary>
+            根据商品编号获取同商品组的所有商品列表
+            </summary>
+            <param name="goodsId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Controllers.GoodsDemandController">
+            <summary>
+            项目需求接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GoodsDemandController.#ctor(Fx.Amiya.IService.IAmiyaGoodsDemandService,Fx.Amiya.IService.IAmiyaHospitalDepartmentService)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="amiyaGoodsDemandService"></param>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GoodsDemandController.getAmiyaGoodsDemandList(System.String)">
+            <summary>
+            获取商品需求id和名称（下拉框使用）【可根据科室id进行筛选】
+            </summary>
+            <param name="hospitalDepartmentId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GoodsDemandController.getAmiyaHospitalDepartmentList">
+            <summary>
+            获取医院科室id和名称（下拉框使用）
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GoodsDemandController.getAmiyaHospitalDepartmentAndGoodsDemandList">
+            <summary>
+            获取医院科室和项目名称信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.HospitalInfoController.GetSimpleListAsync(System.String,System.String)">
+            <summary>
+            获取医院列表
+            </summary>
+            <param name="keyword">搜索关键字，可空</param>
+            <param name="city">定位城市，可空</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.HospitalInfoController.GetHospitalsAsync(System.String,System.String)">
+            <summary>
+            根据商品id获取门店医院
+            </summary>
+            <param name="goodsId">商品id</param>
+            <param name="city">定位城市，可空</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.HospitalInfoController.GetListWithPageOfWxAsync(System.Int32,System.Int32,System.String,System.Int32)">
+            <summary>
+            根据项目名称获取医院详细列表（分页）
+            </summary>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <param name="city">定位城市，可空</param>
+            <param name="itemInfoId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.HospitalInfoController.GetListHospitalAsync(System.Int32,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            根据标签，名称，城市等筛选获取医院列表（分页）
+            </summary>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <param name="city">城市名称</param>
+            <param name="hospitalName">医院名称</param>
+            <param name="tags">标签(选中多个用逗号隔开,例：2,3,4)</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.HospitalInfoController.GetNameListAsync(System.Nullable{System.Byte})">
+            <summary>
+            根据类型获取标签列表
+            </summary>
+            <param name="type">0=医院规模,1=医院设施，null=全部</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.IntegrationAccountController.GetIntegrationBalanceByCustomerIDAsync">
+            <summary>
+            获取客户的积分余额
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.IntegrationAccountController.GetCustomerInitergrationRecord(System.Int32,System.Int32)">
+            <summary>
+            客户积分明细
+            </summary>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.IntegrationAccountController.IntegrationPayAsync(Fx.Amiya.MiniProgram.Api.Vo.Order.AddCustomerIntegralOrderRefundsVo)">
+            <summary>
+            客户积分退款申请
+            </summary>
+            <param name="addVo">订单号</param>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Controllers.ItemInfoController">
+            <summary>
+            项目
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.ItemInfoController.GetSimpleListAsync(System.String)">
+            <summary>
+            获取简单字段项目列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.ItemInfoController.GetListByCustomerAsync">
+            <summary>
+            客户获取已购买的项目列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.ItemInfoController.GetCanWriteOffOrdersCount">
+            <summary>
+            客户获取可核销项目数量
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.ItemInfoController.GetByIdAsync(System.Int32)">
+            <summary>
+            根据项目编号获取项目信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.ItemInfoController.GetListAsync">
+            <summary>
+            获取项目列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.LocationController.GetCity(System.Decimal,System.Decimal)">
+            <summary>
+            根据经纬度获取城市名称
+            </summary>
+            <param name="latitude">纬度</param>
+            <param name="longitude">经度</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.MemberCardController.CustomerApplyForMemberCardAsync">
+            <summary>
+            领取会员卡
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.MemberCardController.GetMemberCardInfoByCustomerIdAsync">
+            <summary>
+            获取会员卡信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Controllers.NotifyController">
+            <summary>
+            支付回调
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.NotifyController.aliPayNotifyUrlAsync(Fx.Amiya.MiniProgram.Api.Vo.Notify.AliPayNotifyVo)">
+            <summary>
+            支付宝订单回调地址
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.NotifyController.GetRequestPost(Fx.Amiya.MiniProgram.Api.Vo.Notify.AliPayNotifyVo)">
+            <summary>
+            获取支付宝POST过来通知消息，并以“参数名=参数值”的形式组成数组
+            </summary>
+            <returns>request回来的信息组成的数组</returns>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Controllers.OrderController">
+            <summary>
+            订单接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.GetUnReceiveGiftOrderListByCustomerIdAsync">
+            <summary>
+            获取未领取礼品的订单列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.getOrderInfoById(System.String)">
+            <summary>
+            根据订单编号获取订单
+            </summary>
+            <param name="orderId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.GetQrCodeImage(System.Int32)">
+            <summary>
+            根据核销id画二维码
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.GetQrCodeBase64(System.Int32)">
+            <summary>
+            根据核销id画二维码（Base64）
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.GetReceiveGiftOrderListByCustomerIdAsync(System.Int32,System.Int32)">
+            <summary>
+            核销好礼接口
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.GetAlreadyBuyOrderListAsync(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            获取已购买订单
+            </summary>
+            <param name="ExchangeType">交易方式:0：积分订单，1：其他订单</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.GetAlreadyBuyOrderListHistoryAsync(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            获取已购买订单历史数据
+            </summary>
+            <param name="ExchangeType">交易方式:0：积分订单，1：其他订单</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.AddOrderAsync(Fx.Amiya.MiniProgram.Api.Vo.Order.OrderAddVo)">
+            <summary>
+            生成订单
+            </summary>
+            <returns>交易编号</returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.GetWechatPayAsync(System.String)">
+            <summary>
+            订单重新支付
+            </summary>
+            <param name="tradeId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.GetOrderListForAmiyaByCustomerId(System.String,System.Int32,System.Int32)">
+            <summary>
+            获取订单列表
+            </summary>
+            <param name="statusCode">状态码：WAIT_BUYER_PAY=待付款，WAIT_SELLER_SEND_GOODS=待发货，WAIT_BUYER_CONFIRM_GOODS=待收货</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.GetOrderTradeByTradeIdAsync(System.String)">
+            <summary>
+            根据交易编号获取订单交易详情
+            </summary>
+            <param name="tradeId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.GetExpressInfoAsync(System.String)">
+            <summary>
+            根据交易编号获取物流信息
+            </summary>
+            <param name="tradeId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.CancelOrderByTradeIdAsync(System.String)">
+            <summary>
+            根据交易编号取消订单
+            </summary>
+            <param name="tradeId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.ConfirmReceiveByTradeIdAsync(System.String)">
+            <summary>
+            确认收货
+            </summary>
+            <param name="tradeId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.UserController.Login(Fx.Amiya.MiniProgram.Api.Vo.Login.LoginVo)">
+            <summary>
+            登录
+            </summary>
+            <param name="loginVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.UserController.UpdateUserInfo(Fx.Amiya.MiniProgram.Api.Vo.UserInfo.UserInfoEditVo)">
+            <summary>
+            通过小程序用户信息来更新方旋用户信息
+            </summary>
+            <param name="userInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.UserController.Visit(Fx.Amiya.MiniProgram.Api.Vo.Login.VisitVo)">
+            <summary>
+            访问
+            </summary>
+            <param name="visitVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.UserController.FxUserIsCustomer">
+            <summary>
+            判断用户是否是客户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.UserController.DecryptWxPhoneNumber(Fx.Amiya.MiniProgram.Api.Vo.UserInfo.DecryptWxPhoneNumberVo)">
+            <summary>
+            解密手机号
+            </summary>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.UserController.GetUserInfoAsync">
+            <summary>
+            获取用户信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Controllers.ValidateCodeController">
+            <summary>
+            验证码api
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.ValidateCodeController.Send(System.String)">
+            <summary>
+            发送验证码
+            </summary>
+            <param name="phoneNumber"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.ValidateCodeController.ValidateAsync(System.String,System.String)">
+            <summary>
+            验证验证码是否有效
+            </summary>
+            <param name="phone"></param>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Filters.FxAmiyaApiUserTypeAuthorizationAttribute">
+            <summary>
+            用户类型授权
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.FxMiniSessionStorage">
+            <summary>
+            小程序会话存储器
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.FxWxMiniUserSession">
+            <summary>
+            微信小程序的自定义登录状态
+            保存在服务端
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.TimeJob.Run">
+            <summary>
+            Begin 起始时间
+            Interval 表示时间间隔，单位是毫秒
+            SkipWhileExecuting 是否等待上一个执行任务完成，true为等待 1000 * 3600 * 24
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.TimeJob.HandleTimeOutOrderAsync">
+            <summary>
+            处理阿美雅超时未支付的订单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddAddressVo.Province">
+            <summary>
+            省份
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddAddressVo.ProvinceCode">
+            <summary>
+            省份编码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddAddressVo.City">
+            <summary>
+            城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddAddressVo.CityCode">
+            <summary>
+            城市编码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddAddressVo.District">
+            <summary>
+            区/县
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddAddressVo.DistrictCode">
+            <summary>
+            区/县编码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddAddressVo.Other">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddAddressVo.Contact">
+            <summary>
+            收货人姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddAddressVo.Phone">
+            <summary>
+            收货人电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddAddressVo.IsDefault">
+            <summary>
+            是否设置为默认地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddressVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddressVo.Province">
+            <summary>
+            省份
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddressVo.ProvinceCode">
+            <summary>
+            省份编码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddressVo.City">
+            <summary>
+            城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddressVo.CityCode">
+            <summary>
+            城市编码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddressVo.District">
+            <summary>
+            区/县
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddressVo.DistrictCode">
+            <summary>
+            区/县编码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddressVo.Other">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddressVo.Contact">
+            <summary>
+            收货人姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddressVo.Phone">
+            <summary>
+            收货人电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.AddressVo.IsDefault">
+            <summary>
+            是否默认地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.UpdateAddressVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.UpdateAddressVo.Province">
+            <summary>
+            省份
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.UpdateAddressVo.ProvinceCode">
+            <summary>
+            省份编码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.UpdateAddressVo.City">
+            <summary>
+            城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.UpdateAddressVo.CityCode">
+            <summary>
+            城市编码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.UpdateAddressVo.District">
+            <summary>
+            区/县
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.UpdateAddressVo.DistrictCode">
+            <summary>
+            区/县编码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.UpdateAddressVo.Other">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.UpdateAddressVo.Contact">
+            <summary>
+            收货人姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.UpdateAddressVo.Phone">
+            <summary>
+            收货人电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Address.UpdateAddressVo.IsDefault">
+            <summary>
+            是否设置为默认地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AddAppointmentVo.AppointmentDate">
+            <summary>
+            预约日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AddAppointmentVo.Week">
+            <summary>
+            星期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AddAppointmentVo.Time">
+            <summary>
+            上午/下午
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AddAppointmentVo.Phone">
+            <summary>
+            预约手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AddAppointmentVo.CustomerName">
+            <summary>
+            客户姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AddAppointmentVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AddAppointmentVo.HospitalId">
+            <summary>
+            医院编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AddAppointmentVo.ItemInfoName">
+            <summary>
+            项目名称
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AppointmentHospitalVo">
+            <summary>
+            预约医院信息
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AppointmentHospitalVo.HospitalId">
+            <summary>
+            医院编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AppointmentHospitalVo.HospitalName">
+            <summary>
+            医院名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AppointmentHospitalVo.ThumbPicture">
+            <summary>
+            医院缩略图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AppointmentHospitalVo.Longitude">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AppointmentHospitalVo.Latitude">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AppointmentHospitalVo.HospitalPhone">
+            <summary>
+            医院电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AppointmentHospitalVo.Address">
+            <summary>
+            地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AppointmentItemVo.ItemName">
+            <summary>
+            项目名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AppointmentItemVo.ItemDescription">
+            <summary>
+            项目简介
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AppointmentItemVo.Standard">
+            <summary>
+            项目规格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AppointmentItemVo.Parts">
+            <summary>
+            部位
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AppointmentSurplusQuantityVo.AmSurplusQuantity">
+            <summary>
+            上午还剩预约数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.AppointmentSurplusQuantityVo.PmSurplusQuantity">
+            <summary>
+            下午还剩预约数量
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.Appointment.WxAppointmentInfoVo">
+            <summary>
+            预约信息
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.WxAppointmentInfoVo.Id">
+            <summary>
+            预约编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.WxAppointmentInfoVo.AppointmentDate">
+            <summary>
+            预约日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.WxAppointmentInfoVo.Week">
+            <summary>
+            星期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.WxAppointmentInfoVo.Time">
+            <summary>
+            上午/下午
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.WxAppointmentInfoVo.Status">
+            <summary>
+            状态 1=待完成，2=已完成，3=已取消
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.WxAppointmentInfoVo.CreateDate">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.WxAppointmentInfoVo.SubmitDate">
+            <summary>
+            提交时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.WxAppointmentInfoVo.Phone">
+            <summary>
+            预约手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.WxAppointmentInfoVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.WxAppointmentInfoVo.ItemInfoName">
+            <summary>
+            项目名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Appointment.WxAppointmentInfoVo.ItemInfopicUrl">
+            <summary>
+            项目图片地址
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageBannerImageVo">
+            <summary>
+            日记轮播图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageBannerImageVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageBannerImageVo.PicUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageBannerImageVo.DisplayIndex">
+            <summary>
+            轮播顺序
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageForDetailsVo">
+            <summary>
+            美丽日记详情输出数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageForDetailsVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageForDetailsVo.CoverTitle">
+            <summary>
+            封面标题
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageForDetailsVo.DetailsTitle">
+            <summary>
+            日记标题
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageForDetailsVo.ReleaseState">
+            <summary>
+            发布状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageForDetailsVo.CreateDate">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageForDetailsVo.Views">
+            <summary>
+            浏览量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageForDetailsVo.GivingLikes">
+            <summary>
+            点赞量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageForDetailsVo.ThumbPictureUrl">
+            <summary>
+            封面图片地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageForDetailsVo.VideoUrl">
+            <summary>
+            视频地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageForDetailsVo.DetailsDescription">
+            <summary>
+            内容
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageForDetailsVo.BannerImage">
+            <summary>
+            轮播图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageForDetailsVo.BeautyDiaryTagName">
+            <summary>
+            标签
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiarySimpleVo">
+            <summary>
+            美丽日记基础输出
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiarySimpleVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiarySimpleVo.CoverTitle">
+            <summary>
+            标题
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiarySimpleVo.ThumbPictureUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiarySimpleVo.Views">
+            <summary>
+            浏览量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiarySimpleVo.GivingLikes">
+            <summary>
+            点赞量
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryTagNameVo">
+            <summary>
+            美丽日记标签
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryTagNameVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryTagNameVo.Name">
+            <summary>
+            标签名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.CooperativeHospitalCity.CooperativeHospitalCityVo.Name">
+            <summary>
+            城市名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.CooperativeHospitalCity.ProvinceAndCityVo.Id">
+            <summary>
+            省份id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.CooperativeHospitalCity.ProvinceAndCityVo.ProvinceName">
+            <summary>
+            省份名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.CooperativeHospitalCity.ProvinceAndCityVo.City">
+            <summary>
+            所属城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Gift.AddReceiveGiftVo.OrderId">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Gift.AddReceiveGiftVo.GiftId">
+            <summary>
+            礼品编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Gift.AddReceiveGiftVo.AddressId">
+            <summary>
+            收货地址编号
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.Gift.GetGiftExpressInfoVo">
+            <summary>
+            核销好礼快递信息查询输入类
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Gift.GetGiftExpressInfoVo.CourierNumber">
+            <summary>
+            快递单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Gift.GetGiftExpressInfoVo.ReceiverPhone">
+            <summary>
+            收货人手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Gift.GetGiftExpressInfoVo.ExpressId">
+            <summary>
+            物流公司id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Gift.GiftInfoSimpleVo.Integration">
+            <summary>
+            抵扣积分
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Gift.ReceiveGiftOfWxVo.CourierNumber">
+            <summary>
+            快递单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Gift.ReceiveGiftOfWxVo.DeliveryStatus">
+            <summary>
+            发货状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Gift.ReceiveGiftOfWxVo.ExpressId">
+            <summary>
+            快递公司id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Gift.ReceiveGiftOfWxVo.ReceiverPhone">
+            <summary>
+            收货人手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Gift.ReceiveGiftOfWxVo.GiftInfos">
+            <summary>
+            礼品详情
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.GoodsDemand.AmiyaGoodsDemandIdAndNameVo">
+            <summary>
+            项目需求下拉框数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsDemand.AmiyaGoodsDemandIdAndNameVo.Id">
+            <summary>
+            项目需求id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsDemand.AmiyaGoodsDemandIdAndNameVo.ProjectName">
+            <summary>
+            项目名称
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.GoodsDemand.AmiyaHospitalDepartmentIdAndNameVo">
+            <summary>
+            医院科室id和名称（下拉框专用）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsDemand.AmiyaHospitalDepartmentIdAndNameVo.Id">
+            <summary>
+            科室编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsDemand.AmiyaHospitalDepartmentIdAndNameVo.DepartmentName">
+            <summary>
+            科室名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsDemand.AmiyaHospitalDepartmentIdAndNameVo.GoodsDemandList">
+            <summary>
+            需求项目
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsCategoryVo.ShowDirectionType">
+            <summary>
+            展示方向
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForListVo.ThumbPicUrl">
+            <summary>
+            缩略图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForListVo.Name">
+            <summary>
+            商品名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForListVo.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForListVo.DetailsDescription">
+            <summary>
+            详情
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForListVo.SalePrice">
+            <summary>
+            售价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForListVo.MaxShowPrice">
+            <summary>
+            最大价格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForListVo.MinShowPrice">
+            <summary>
+            最小价格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForListVo.InventoryQuantity">
+            <summary>
+            库存
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForListVo.VisitCount">
+            <summary>
+            浏览量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForListVo.ShowSaleCount">
+            <summary>
+            销量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForListVo.ExchangeType">
+            <summary>
+            交易方式：0=积分
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForListVo.IntegrationQuantity">
+            <summary>
+            积分抵扣数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForListVo.IsLimitBuy">
+            <summary>
+            是否限购
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForListVo.LimitBuyQuantity">
+            <summary>
+            限购数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.ThumbPicUrl">
+            <summary>
+            缩略图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.Name">
+            <summary>
+            商品名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.SimpleCode">
+            <summary>
+            简码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.Standard">
+            <summary>
+            规格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.Unit">
+            <summary>
+            单位
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.SalePrice">
+            <summary>
+            售价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.InventoryQuantity">
+            <summary>
+            库存
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.ExchangeType">
+            <summary>
+            交易方式：0=积分支付
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.IntegrationQuantity">
+            <summary>
+            积分抵扣数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.IsMaterial">
+            <summary>
+            是否实物商品
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.GoodsType">
+            <summary>
+            商品类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.IsLimitBuy">
+            <summary>
+            是否限购
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.LimitBuyQuantity">
+            <summary>
+            限购数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.CategoryId">
+            <summary>
+            商品分类编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.GoodsDetailId">
+            <summary>
+            商品详情编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.CarouselImageUrls">
+            <summary>
+            轮播图数组
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.GoodsDetailHtml">
+            <summary>
+            商品html详情
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.DetailsDescription">
+            <summary>
+            详情
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.MaxShowPrice">
+            <summary>
+            最大展示价格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.MinShowPrice">
+            <summary>
+            最小展示价格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.ShowSaleCount">
+            <summary>
+            展示销量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.VisitCount">
+            <summary>
+            浏览量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoSimpleVo.GoodsGroupId">
+            <summary>
+            商品组编号（预留）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoSimpleVo.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoSimpleVo.ThumbPicUrl">
+            <summary>
+            略缩图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoSimpleVo.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoSimpleVo.Standard">
+            <summary>
+            规格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoSimpleVo.Unit">
+            <summary>
+            单位
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoSimpleVo.SalePrice">
+            <summary>
+            售价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoSimpleVo.ExchangeType">
+            <summary>
+            交易方式：0=积分
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoSimpleVo.IntegrationQuantity">
+            <summary>
+            积分抵扣数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoSimpleVo.ActualPrice">
+            <summary>
+            优惠价(预留)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoSimpleVo.IsLimitBuy">
+            <summary>
+            是否限购
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoSimpleVo.LimitBuyQuantity">
+            <summary>
+            限购数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoSimpleVo.InventoryQuantity">
+            <summary>
+            库存
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoSimpleVo.IsMaterial">
+            <summary>
+            是否实物商品
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.ShoppingCartVo.Qauntity">
+            <summary>
+            加购商品数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.ShoppingCartVo.ThumbPicUrl">
+            <summary>
+            缩略图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.ShoppingCartVo.Name">
+            <summary>
+            商品名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.ShoppingCartVo.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.ShoppingCartVo.Standard">
+            <summary>
+            规格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.ShoppingCartVo.Unit">
+            <summary>
+            单位
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.ShoppingCartVo.SalePrice">
+            <summary>
+            售价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.ShoppingCartVo.InventoryQuantity">
+            <summary>
+            库存
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.ShoppingCartVo.ExchangeType">
+            <summary>
+            交易方式：0=积分
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.ShoppingCartVo.IntegrationQuantity">
+            <summary>
+            积分抵扣数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.ShoppingCartVo.IsMaterial">
+            <summary>
+            是否实物商品
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.ShoppingCartVo.IsLimitBuy">
+            <summary>
+            是否限购
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.ShoppingCartVo.LimitBuyQuantity">
+            <summary>
+            限购数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.HospitalInfo.HospitalInfoSimpleVo.Longitude">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.HospitalInfo.HospitalInfoSimpleVo.Latitude">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.HospitalInfo.HospitalInfoSimpleVo.IsRecommend">
+            <summary>
+            是否推荐
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.HospitalInfo.HospitalInfoSimpleVo.BusinessHours">
+            <summary>
+            营业时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.HospitalInfo.HospitalInfoSimpleVo.Phone">
+            <summary>
+            联系电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.HospitalInfo.HospitalInfoSimpleVo.HospitalSalePrice">
+            <summary>
+            门店价格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.HospitalInfo.TagNameVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.HospitalInfo.TagNameVo.Name">
+            <summary>
+            标签名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.HospitalInfo.WxHospitalInfoVo.IsRecommend">
+            <summary>
+            是否推荐
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ItemInfo.WxItemInfoVo.Id">
+            <summary>
+            项目编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ItemInfo.WxItemInfoVo.OtherAppItemId">
+            <summary>
+            其他应用项目编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ItemInfo.WxItemInfoVo.Name">
+             <summary>
+            名称
+             </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ItemInfo.WxItemInfoVo.ThumbPicUrl">
+            <summary>
+            缩略图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ItemInfo.WxItemInfoVo.Description">
+            <summary>
+            简介
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ItemInfo.WxItemInfoVo.Standard">
+            <summary>
+            规格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ItemInfo.WxItemInfoVo.Parts">
+            <summary>
+            部位
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ItemInfo.WxItemInfoVo.Commitment">
+            <summary>
+            承诺
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ItemInfo.WxItemInfoVo.Guarantee">
+            <summary>
+            保障
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ItemInfo.WxItemInfoVo.AppointmentNotice">
+            <summary>
+            预约须知
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.MemberCard.MemberCardHandleVo.Date">
+            <summary>
+            日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.MemberCard.MemberCardHandleVo.CustomerId">
+            <summary>
+            客户编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.MemberCard.MemberCardHandleVo.MemberCardNum">
+            <summary>
+            会员卡号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.MemberCard.MemberCardHandleVo.MemberRankId">
+            <summary>
+            会员级别编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.MemberCard.MemberCardHandleVo.MemberRankName">
+            <summary>
+            会员级别名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.MemberCard.MemberCardHandleVo.HandleBy">
+            <summary>
+            经手人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.MemberCard.MemberCardHandleVo.Valid">
+            <summary>
+            是否有效
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.MemberCard.MemberCardHandleVo.Description">
+            <summary>
+            会员级别描述
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.MemberCard.MemberCardHandleVo.ImageUrl">
+            <summary>
+            会员卡图片url
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.Notify.AliPayNotifyVo">
+            <summary>
+            支付宝支付接收回调信息
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.Order.AddCustomerIntegralOrderRefundsVo">
+            <summary>
+            客户添加退款情况
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.AddCustomerIntegralOrderRefundsVo.OrderId">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.AddCustomerIntegralOrderRefundsVo.RefundReason">
+            <summary>
+            退款原因
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.Order.ExpressDetailsVo">
+            <summary>
+            物流信息
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.ExpressDetailsVo.time">
+            <summary>
+            时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.ExpressDetailsVo.content">
+            <summary>
+            内容
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderAddResultVo">
+            <summary>
+            订单生成返回类
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderAddResultVo.TradeId">
+            <summary>
+            交易编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderAddResultVo.PayRequestInfo">
+            <summary>
+            拉起微信支付参数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderAddResultVo.AlipayUrl">
+            <summary>
+            支付宝跳转页面
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderAddVo.AddressId">
+            <summary>
+            收货地址编号（用于实物商品发货）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderAddVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderExpressInfoVo">
+            <summary>
+            订单物流信息
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderExpressInfoVo.ExpressNo">
+            <summary>
+            快递单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderExpressInfoVo.ExpressName">
+            <summary>
+            物流公司
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderExpressInfoVo.state">
+            <summary>
+            快递当前状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderExpressInfoVo.ExpressDetailList">
+            <summary>
+            物流详情
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderInfoVo.AppointmentHospital">
+            <summary>
+            下单医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderInfoVo.ActualPayment">
+            <summary>
+            总价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderInfoVo.SinglePrice">
+            <summary>
+            单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderInfoVo.IntegrationQuantity">
+            <summary>
+            积分总价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderInfoVo.SingleIntegrationQuantity">
+            <summary>
+            积分单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderItemVo.GoodsId">
+            <summary>
+            商品编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderItemVo.Quantity">
+            <summary>
+            购买数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderItemVo.HospitalId">
+            <summary>
+            门店医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderItemVo.ActualPayment">
+            <summary>
+            实付款价格
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.Order.PayRequestInfoVo">
+            <summary>
+            jsAPI支付返回参数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.PayRequestInfoVo.appId">
+            <summary>
+            微信appId
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.PayRequestInfoVo.package">
+            <summary>
+            订单详情扩展字符串
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.PayRequestInfoVo.timeStamp">
+            <summary>
+            时间戳
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.PayRequestInfoVo.nonceStr">
+            <summary>
+            随机字符串
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.PayRequestInfoVo.paySign">
+            <summary>
+            签名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.PayRequestInfoVo.signType">
+            <summary>
+            签名方式
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo">
+            <summary>
+            小程序订单明细展示模型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.CreateDate">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.AppointmentHospital">
+            <summary>
+            合作医院（支付订单展示）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.HospitalAddress">
+            <summary>
+            配送门店地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.GoodsCategory">
+            <summary>
+            商品分类（实物商品订单展示）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.SinglePrice">
+            <summary>
+            商品单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.SingleIntegrationQuantity">
+            <summary>
+            积分单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.ActualPayment">
+            <summary>
+            实付款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.IntegrationQuantity">
+            <summary>
+            实付积分
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.OrderType">
+            <summary>
+            订单类型(可根据订单类型定位配送方式：0为自提，1为快递)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.BuyerNick">
+            <summary>
+            购买人昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.Quantity">
+            <summary>
+            购买数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.appType">
+            <summary>
+            订单来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.StatusCode">
+            <summary>
+            订单状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.StatusText">
+            <summary>
+            订单状态（说明）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.WriteOffCode">
+            <summary>
+            核销码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.RefundOrderInfo">
+            <summary>
+            退款信息
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.RefundOrderInfo">
+            <summary>
+            退款申请情况
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.RefundOrderInfo.CheckTypeText">
+            <summary>
+            审核类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.RefundOrderInfo.CheckReason">
+            <summary>
+            审核原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.RefundOrderInfo.RefundReason">
+            <summary>
+            退款原因
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.TmallOrderSimpleVo">
+            <summary>
+            已购买订单展示模型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.TmallOrderSimpleVo.CreateDate">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.TmallOrderSimpleVo.AppointmentHospital">
+            <summary>
+            合作医院（支付订单展示）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.TmallOrderSimpleVo.GoodsCategory">
+            <summary>
+            商品分类（实物商品订单展示）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.TmallOrderSimpleVo.SinglePrice">
+            <summary>
+            商品单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.TmallOrderSimpleVo.SingleIntegrationQuantity">
+            <summary>
+            积分单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.TmallOrderSimpleVo.ActualPayment">
+            <summary>
+            实付款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.TmallOrderSimpleVo.IntegrationQuantity">
+            <summary>
+            实付积分
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.TmallOrderSimpleVo.Quantity">
+            <summary>
+            购买数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.TmallOrderSimpleVo.appType">
+            <summary>
+            订单来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.TmallOrderSimpleVo.StatusCode">
+            <summary>
+            订单状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.TmallOrderSimpleVo.StatusCodeInfo">
+            <summary>
+            订单状态原版参数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.TmallOrderSimpleVo.TradeId">
+            <summary>
+            交易编号
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.WriteOffOrderVo">
+            <summary>
+            核销好礼展示模型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.WriteOffOrderVo.OrderId">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.WriteOffOrderVo.ThumbPicUrl">
+            <summary>
+            商品图片
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.WriteOffOrderVo.GoodsName">
+            <summary>
+            商品名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.WriteOffOrderVo.AppType">
+            <summary>
+            订单来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.WriteOffOrderVo.AppointmentHospital">
+            <summary>
+            医院
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.UserInfo.DecryptWxPhoneNumberVo">
+            <summary>
+            解密手机号参数类
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.UserInfo.UserInfoVo.Gender">
+            <summary>
+            性别编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.UserInfo.UserInfoVo.Sex">
+            <summary>
+            性别文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.UserInfo.UserInfoVo.IsAuthorizationUserInfo">
+            <summary>
+            是否需要授权用户信息
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.WxCustomerInterGrationAccount">
+            <summary>
+            客户积分明细基础类
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.WxCustomerInterGrationAccount.CurrentIntergration">
+            <summary>
+            当前积分
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.WxCustomerInterGrationAccount.CustomerIntergrationDetails">
+            <summary>
+            积分明细
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.CustomerInterGrationAccountDetails">
+            <summary>
+            客户积分明细
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.CustomerInterGrationAccountDetails.GenerateOrUsed">
+            <summary>
+            积分来源/用途
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.CustomerInterGrationAccountDetails.InterGrationAmount">
+            <summary>
+            数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.CustomerInterGrationAccountDetails.CreateDate">
+            <summary>
+            时间
+            </summary>
+        </member>
+    </members>
+</doc>

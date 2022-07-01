@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="log4net.config~RF433d24c2.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fx.Amiya.DbModels\Fx.Amiya.DbModels.csproj" />
+    <ProjectReference Include="..\Fx.Amiya.Dto\Fx.Amiya.Dto.csproj" />
+    <ProjectReference Include="..\Fx.Amiya.IDal\Fx.Amiya.IDal.csproj" />
+    <ProjectReference Include="..\Fx.Amiya.IService\Fx.Amiya.IService.csproj" />
+    <ProjectReference Include="..\Fx.Amiya.SyncOrder.Core\Fx.Amiya.SyncOrder.Core.csproj" />
+    <ProjectReference Include="..\JDSDK\jos-sdk-net.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="libs\" />
+  </ItemGroup>
+
+</Project>
