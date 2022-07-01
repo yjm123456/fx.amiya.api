@@ -195,9 +195,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.AppointmentDate = addVo.AppointmentDate;
             addDto.TimeType = addVo.TimeType;
             addDto.Content = addVo.Content;
+            await _orderService.FinishOrderAsync(addDto.OrderId);
             await sendOrderInfoService.AddAsync(addDto, employeeId);
 
-            await _orderService.FinishOrderAsync(addDto.OrderId);
             return ResultData.Success();
         }
 
