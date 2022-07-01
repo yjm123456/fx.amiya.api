@@ -1266,7 +1266,7 @@ namespace Fx.Amiya.Service
                 { throw new Exception("未找到该订单，完成订单失败！"); }
                 orderInfo.StatusCode = OrderStatusCode.TRADE_FINISHED;
                 if (!orderInfo.WriteOffDate.HasValue)
-                { throw new Exception("该订单暂无核销时间，无法分配医院！请先在下单平台订单列表中校对订单或者在派单列表中完成订单后操作"); }
+                { throw new Exception("该订单暂无核销时间，无法分配医院！请先在下单平台订单列表中校对订单或者在派单列表中完成订单后操作，若无法校对订单，请联系管理员"); }
                 orderInfo.UpdateDate = DateTime.Now;
                 await dalOrderInfo.UpdateAsync(orderInfo, true);
 
