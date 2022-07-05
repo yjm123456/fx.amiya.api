@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>E:\新建文件夹\fx.amiya.api\src\Fx.Amiya.Background.Api\Fx.Amiya.Background.Api.xml</DocumentationFile>
+    <DocumentationFile></DocumentationFile>
     <OutputPath>C:\Users\FLH\Desktop\api生成注释\微信后台api\</OutputPath>
   </PropertyGroup>
 

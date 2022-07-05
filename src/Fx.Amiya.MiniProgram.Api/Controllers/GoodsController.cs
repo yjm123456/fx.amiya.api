@@ -169,7 +169,35 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             return ResultData<List<GoodsInfoSimpleVo>>.Success().AddData("goodsInfos", goodsInfos.ToList());
         }
 
+        [HttpGet("likeInfoList")]
+        public async Task<ResultData<FxPageInfo<GoodsInfoForListVo>>> GetLikeGoodsInfoListAsync(int pageNum, int pageSize)
+        {
 
+            var q = await goodsInfoService.GetLikeListAsync(true, pageNum, pageSize);
+            var goodsInfos = from d in q.List
+                             select new GoodsInfoForListVo
+                             {
+                                 Id = d.Id,
+                                 Name = d.Name,
+                                 ThumbPicUrl = d.ThumbPicUrl,
+                                 Description = d.Description,
+                                 SalePrice = d.SalePrice,
+                                 InventoryQuantity = d.InventoryQuantity,
+                                 ExchangeType = d.ExchangeType,
+                                 IntegrationQuantity = d.IntegrationQuantity,
+                                 IsLimitBuy = d.IsLimitBuy,
+                                 LimitBuyQuantity = d.LimitBuyQuantity,
+                                 DetailsDescription = d.DetailsDescription,
+                                 MaxShowPrice = d.MaxShowPrice,
+                                 MinShowPrice = d.MinShowPrice,
+                                 ShowSaleCount = d.ShowSaleCount,
+                                 VisitCount = d.VisitCount
+                             };
+            FxPageInfo<GoodsInfoForListVo> goodsPageInfo = new FxPageInfo<GoodsInfoForListVo>();
+            goodsPageInfo.TotalCount = q.TotalCount;
+            goodsPageInfo.List = goodsInfos;
+            return ResultData<FxPageInfo<GoodsInfoForListVo>>.Success().AddData("goodsInfos", goodsPageInfo);
+        }
 
     }
 }

@@ -34,6 +34,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                     {
                                         Id = d.Id,
                                         DisplayIndex = d.DisplayIndex,
+                                        LinkUrl=d.LinkUrl,
                                         PicUrl=d.PicUrl
                                     };
                 return ResultData<List<HomepageCarouselImageVo>>.Success().AddData("carouselImage", carouselImage.ToList());

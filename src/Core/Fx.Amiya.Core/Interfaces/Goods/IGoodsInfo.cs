@@ -99,5 +99,10 @@ namespace Fx.Amiya.Core.Interfaces.Goods
         /// </summary>
         /// <returns></returns>
         List<ExchangeTypeDto> GetExchangeTypeList();
+        /// <summary>
+        /// 以销量排序获取首页展示商品
+        /// </summary>
+        /// <returns></returns>
+        Task<FxPageInfo<GoodsInfoForListDto>> GetLikeListAsync(bool? valid, int pageNum, int pageSize);
     }
 }

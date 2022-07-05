@@ -740,7 +740,16 @@ ADD CONSTRAINT `fk_use_department_info`
 
 
 
+-----------------------------------------------王健 2022/07/04 BEGIN--------------------------------------------;
 
+
+ALTER TABLE `amiyadb`.`tbl_homepage_carousel_image` 
+ADD COLUMN `link_url` VARCHAR(200)  NOT NULL AFTER `create_date`;
+
+
+
+
+-----------------------------------------------王健 2022/07/04 END--------------------------------------------;
 
 
 

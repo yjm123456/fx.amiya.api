@@ -32,6 +32,7 @@ namespace Fx.Amiya.Service
                                     {
                                         Id = d.Id,
                                         PicUrl = d.PicUrl,
+                                        LinkUrl=d.LinkUrl,
                                         DisplayIndex = d.DisplayIndex,
                                         CreateDate = d.CreateDate
                                     };

@@ -8,5 +8,6 @@ namespace Fx.Amiya.Background.Api.Vo.CarouselImage
     public class AddCarouselImageVo
     {
         public string PicUrl { get; set; }
+        public string LinkUrl { get; set; }
     }
 }

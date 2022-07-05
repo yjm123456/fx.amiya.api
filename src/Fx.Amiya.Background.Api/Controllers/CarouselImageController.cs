@@ -42,6 +42,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                             Id = d.Id,
                             PicUrl = d.PicUrl,
                             DisplayIndex = d.DisplayIndex,
+                            LinkUrl=d.LinkUrl,
                             CreateDate = d.CreateDate
                         };
                 return ResultData<List<HomepageCarouselImageVo>>.Success().AddData("carouselImageList", q.ToList());
@@ -66,7 +67,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 AddCarouselImageDto addDto = new AddCarouselImageDto();
                 addDto.PicUrl = addVo.PicUrl;
-
+                addDto.LinkUrl = addVo.LinkUrl;
                 await carouselImageService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -91,6 +92,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 HomepageCarouselImageVo carouselImageVo = new HomepageCarouselImageVo();
                 carouselImageVo.DisplayIndex = carouselImage.DisplayIndex;
                 carouselImageVo.PicUrl = carouselImage.PicUrl;
+                carouselImageVo.LinkUrl = carouselImage.LinkUrl;
                 carouselImageVo.CreateDate = carouselImage.CreateDate;
                 carouselImageVo.Id = carouselImage.Id;
 
@@ -118,7 +120,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.Id = updateVo.Id;
                 updateDto.PicUrl = updateVo.PicUrl;
                 updateDto.DisplayIndex = updateVo.DisplayIndex;
-
+                updateDto.LinkUrl = updateVo.LinkUrl;
                 await carouselImageService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

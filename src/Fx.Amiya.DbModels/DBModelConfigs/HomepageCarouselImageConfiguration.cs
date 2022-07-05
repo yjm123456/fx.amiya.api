@@ -17,6 +17,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t=>t.PicUrl).HasColumnName("pic_url").HasColumnType("varchar(500)").IsRequired();
             builder.Property(t=>t.DisplayIndex).HasColumnName("display_index").HasColumnType("tinyint").IsRequired();
             builder.Property(t=>t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
+            builder.Property(t => t.LinkUrl).HasColumnName("link_url").HasColumnType("varchar(200)").IsRequired();
         }
     }
 }
