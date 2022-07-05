@@ -1296,6 +1296,31 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.ContentPlatFormOrderDealInfoController">
+            <summary>
+            成交情况数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlatFormOrderDealInfoController.#ctor(Fx.Amiya.IService.IContentPlatFormOrderDealInfoService,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="contentPlatFormOrderDealInfoService"></param>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlatFormOrderDealInfoController.GetByIdAsync(System.String)">
+            <summary>
+            根据成交情况编号获取成交情况信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlatFormOrderDealInfoController.UpdateAsync(Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo)">
+            <summary>
+            修改成交情况信息
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.CooperativeHospitalCityController.GetListWithPageAsync(System.Int32,System.Int32)">
             <summary>
             获取合作医院城市列表（分页）
@@ -6607,6 +6632,11 @@
             是否成交
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.LastDealHospitalId">
+            <summary>
+            最终成交医院id
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.DealHospital">
             <summary>
             成交医院
@@ -6925,6 +6955,56 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.OrderProsperityVo.DealDate">
             <summary>
             成交时间
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo">
+            <summary>
+            修改订单成交情况
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo.ContentPlatFormOrderId">
+            <summary>
+            派单编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo.IsToHospital">
+            <summary>
+            是否到院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo.TohospitalDate">
+            <summary>
+            到院时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo.IsDeal">
+            <summary>
+            是否成交
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo.LastDealHospitalId">
+            <summary>
+            最终成交医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo.DealPicture">
+            <summary>
+            截图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo.Price">
+            <summary>
+            价格
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.ContentPlateForm.AddContentPalteFormVo">
