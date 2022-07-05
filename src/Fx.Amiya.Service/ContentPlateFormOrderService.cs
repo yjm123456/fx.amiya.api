@@ -301,17 +301,17 @@ namespace Fx.Amiya.Service
                         var departmentInfo = await _departmentService.GetByIdAsync(x.GoodsDepartmentId);
                         x.DepartmentName = departmentInfo.DepartmentName;
                     }
-                    if (x.CheckBy != 0)
+                    if (x.CheckBy.HasValue && x.CheckBy != 0)
                     {
                         var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.CheckBy);
                         x.CheckByName = empInfo.Name.ToString();
                     }
-                    if (x.LastDealHospitalId.HasValue)
+                    if (x.LastDealHospitalId.HasValue && x.LastDealHospitalId != 0)
                     {
                         var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(x.LastDealHospitalId.Value);
                         x.LastDealHospital = hospitalInfo.Name;
                     }
-                    if (x.ConsultationEmpId.HasValue)
+                    if (x.ConsultationEmpId.HasValue && x.ConsultationEmpId != 0)
                     {
                         var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.ConsultationEmpId);
                         x.ConsultationEmpName = empInfo.Name.ToString();
