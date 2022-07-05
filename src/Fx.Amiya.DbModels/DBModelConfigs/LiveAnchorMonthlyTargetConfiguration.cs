@@ -43,9 +43,19 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.CumulativeConsultation).HasColumnName("cumulative_consultation").HasColumnType("int").IsRequired();
             builder.Property(t => t.ConsultationCompleteRate).HasColumnName("consultation_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
 
+
+            builder.Property(t => t.ConsultationTarget2).HasColumnName("consultation_target2").HasColumnType("int").IsRequired();
+            builder.Property(t => t.CumulativeConsultation2).HasColumnName("cumulative_consultation2").HasColumnType("int").IsRequired();
+            builder.Property(t => t.ConsultationCompleteRate2).HasColumnName("consultation_complete_rate2").HasColumnType("decimal(12,2)").IsRequired();
+
             builder.Property(t => t.ConsultationCardConsumedTarget).HasColumnName("consultation_card_consumed_target").HasColumnType("int").IsRequired();
             builder.Property(t => t.CumulativeConsultationCardConsumed).HasColumnName("cumulative_consultation_card_consumed").HasColumnType("int").IsRequired();
             builder.Property(t => t.ConsultationCardConsumedCompleteRate).HasColumnName("consultation_card_consumed_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+
+            builder.Property(t => t.ConsultationCardConsumedTarget2).HasColumnName("consultation_card_consumed_target2").HasColumnType("int").IsRequired();
+            builder.Property(t => t.CumulativeConsultationCardConsumed2).HasColumnName("cumulative_consultation_card_consumed2").HasColumnType("int").IsRequired();
+            builder.Property(t => t.ConsultationCardConsumedCompleteRate2).HasColumnName("consultation_card_consumed_complete_rate2").HasColumnType("decimal(12,2)").IsRequired();
+
 
             builder.Property(t => t.ActivateHistoricalConsultationTarget).HasColumnName("activate_historical_consultation_target").HasColumnType("int").IsRequired();
             builder.Property(t => t.CumulativeActivateHistoricalConsultation).HasColumnName("cumulative_activate_historical_consultation").HasColumnType("int").IsRequired();

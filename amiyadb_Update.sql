@@ -651,8 +651,6 @@ ADD COLUMN `living_tracking_employee_id` INT NOT NULL DEFAULT 0 AFTER `operation
 
 
 
-----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
-
 
 
 -----------------------------------------------余建明 2022/06/24 BEGIN--------------------------------------------;
@@ -736,6 +734,8 @@ ADD CONSTRAINT `fk_use_department_info`
 
 
 -----------------------------------------------余建明 2022/06/24 END--------------------------------------------;
+----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
 
 
 
@@ -750,6 +750,25 @@ ADD COLUMN `link_url` VARCHAR(200)  NOT NULL AFTER `create_date`;
 
 
 -----------------------------------------------王健 2022/07/04 END--------------------------------------------;
+
+-----------------------------------------------余建明 2022/07/05 BEGIN--------------------------------------------;
+
+ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
+ADD COLUMN `consultation_num2` INT NOT NULL DEFAULT 0 AFTER `consultation_num`,
+ADD COLUMN `consultation_card_consumed2` INT NOT NULL DEFAULT 0 AFTER `consultation_card_consumed`;
+
+ALTER TABLE `amiyadb`.`tbl_liveanchor_monthly_target` 
+ADD COLUMN `consultation_target2` INT NOT NULL DEFAULT 0 AFTER `consultation_complete_rate`,
+ADD COLUMN `cumulative_consultation2` INT NOT NULL DEFAULT 0 AFTER `consultation_target2`,
+ADD COLUMN `consultation_complete_rate2` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_consultation2`,
+ADD COLUMN `consultation_card_consumed_target2` INT NOT NULL DEFAULT 0 AFTER `consultation_card_consumed_complete_rate`,
+ADD COLUMN `cumulative_consultation_card_consumed2` INT NOT NULL DEFAULT 0 AFTER `consultation_card_consumed_target2`,
+ADD COLUMN `consultation_card_consumed_complete_rate2` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_consultation_card_consumed2`;
+
+
+-----------------------------------------------余建明 2022/07/05 END--------------------------------------------;
+
+
 
 
 

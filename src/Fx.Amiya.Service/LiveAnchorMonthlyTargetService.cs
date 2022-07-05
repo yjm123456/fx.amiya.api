@@ -58,11 +58,17 @@ namespace Fx.Amiya.Service
                                                   AddFansCompleteRate = d.AddFansCompleteRate,
                                                   AddWechatCompleteRate = d.AddWechatCompleteRate,
                                                   ConsultationTarget = d.ConsultationTarget,
-                                                  ConsultationCompleteRate = d.ConsultationCompleteRate,
                                                   CumulativeConsultation = d.CumulativeConsultation,
+                                                  ConsultationCompleteRate = d.ConsultationCompleteRate,
+                                                  CumulativeConsultation2 = d.CumulativeConsultation2,
+                                                  ConsultationTarget2 = d.ConsultationTarget2,
+                                                  ConsultationCompleteRate2 = d.ConsultationCompleteRate2,
                                                   ConsultationCardConsumedTarget = d.ConsultationCardConsumedTarget,
                                                   CumulativeConsultationCardConsumed = d.CumulativeConsultationCardConsumed,
                                                   ConsultationCardConsumedCompleteRate = d.ConsultationCardConsumedCompleteRate,
+                                                  ConsultationCardConsumedTarget2 = d.ConsultationCardConsumedTarget2,
+                                                  CumulativeConsultationCardConsumed2 = d.CumulativeConsultationCardConsumed2,
+                                                  ConsultationCardConsumedCompleteRate2 = d.ConsultationCardConsumedCompleteRate2,
                                                   ActivateHistoricalConsultationTarget = d.ActivateHistoricalConsultationTarget,
                                                   CumulativeActivateHistoricalConsultation = d.CumulativeActivateHistoricalConsultation,
                                                   ActivateHistoricalConsultationCompleteRate = d.ActivateHistoricalConsultationCompleteRate,
@@ -138,9 +144,15 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.ConsultationTarget = addDto.ConsultationTarget;
                 liveAnchorMonthlyTarget.CumulativeConsultation = 0;
                 liveAnchorMonthlyTarget.ConsultationCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.ConsultationTarget2 = addDto.ConsultationTarget2;
+                liveAnchorMonthlyTarget.CumulativeConsultation2 = 0;
+                liveAnchorMonthlyTarget.ConsultationCompleteRate2 = 0.00M;
                 liveAnchorMonthlyTarget.ConsultationCardConsumedTarget = addDto.ConsultationCardConsumedTarget;
                 liveAnchorMonthlyTarget.CumulativeConsultationCardConsumed = 0;
                 liveAnchorMonthlyTarget.ConsultationCardConsumedCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.ConsultationCardConsumedTarget2 = addDto.ConsultationCardConsumedTarget2;
+                liveAnchorMonthlyTarget.CumulativeConsultationCardConsumed2 = 0;
+                liveAnchorMonthlyTarget.ConsultationCardConsumedCompleteRate2 = 0.00M;
                 liveAnchorMonthlyTarget.ActivateHistoricalConsultationTarget = addDto.ActivateHistoricalConsultationTarget;
                 liveAnchorMonthlyTarget.CumulativeActivateHistoricalConsultation = 0;
                 liveAnchorMonthlyTarget.ActivateHistoricalConsultationCompleteRate = 0.00M;
@@ -234,9 +246,15 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.ConsultationTarget = liveAnchorMonthlyTarget.ConsultationTarget;
                 liveAnchorMonthlyTargetDto.ConsultationCompleteRate = liveAnchorMonthlyTarget.ConsultationCompleteRate;
                 liveAnchorMonthlyTargetDto.CumulativeConsultation = liveAnchorMonthlyTarget.CumulativeConsultation;
+                liveAnchorMonthlyTargetDto.ConsultationTarget2 = liveAnchorMonthlyTarget.ConsultationTarget2;
+                liveAnchorMonthlyTargetDto.ConsultationCompleteRate2 = liveAnchorMonthlyTarget.ConsultationCompleteRate2;
+                liveAnchorMonthlyTargetDto.CumulativeConsultation2 = liveAnchorMonthlyTarget.CumulativeConsultation2;
                 liveAnchorMonthlyTargetDto.ConsultationCardConsumedTarget = liveAnchorMonthlyTarget.ConsultationCardConsumedTarget;
                 liveAnchorMonthlyTargetDto.CumulativeConsultationCardConsumed = liveAnchorMonthlyTarget.CumulativeConsultationCardConsumed;
                 liveAnchorMonthlyTargetDto.ConsultationCardConsumedCompleteRate = liveAnchorMonthlyTarget.ConsultationCardConsumedCompleteRate;
+                liveAnchorMonthlyTargetDto.ConsultationCardConsumedTarget2 = liveAnchorMonthlyTarget.ConsultationCardConsumedTarget2;
+                liveAnchorMonthlyTargetDto.CumulativeConsultationCardConsumed2 = liveAnchorMonthlyTarget.CumulativeConsultationCardConsumed2;
+                liveAnchorMonthlyTargetDto.ConsultationCardConsumedCompleteRate2 = liveAnchorMonthlyTarget.ConsultationCardConsumedCompleteRate2;
                 liveAnchorMonthlyTargetDto.ActivateHistoricalConsultationTarget = liveAnchorMonthlyTarget.ActivateHistoricalConsultationTarget;
                 liveAnchorMonthlyTargetDto.CumulativeActivateHistoricalConsultation = liveAnchorMonthlyTarget.CumulativeActivateHistoricalConsultation;
                 liveAnchorMonthlyTargetDto.ActivateHistoricalConsultationCompleteRate = liveAnchorMonthlyTarget.ActivateHistoricalConsultationCompleteRate;
@@ -293,6 +311,8 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.AddWechatTarget = updateDto.AddWechatTarget;
                 liveAnchorMonthlyTarget.ConsultationTarget = updateDto.ConsultationTarget;
                 liveAnchorMonthlyTarget.ConsultationCardConsumedTarget = updateDto.ConsultationCardConsumedTarget;
+                liveAnchorMonthlyTarget.ConsultationTarget2 = updateDto.ConsultationTarget2;
+                liveAnchorMonthlyTarget.ConsultationCardConsumedTarget2 = updateDto.ConsultationCardConsumedTarget2;
                 liveAnchorMonthlyTarget.ActivateHistoricalConsultationTarget = updateDto.ActivateHistoricalConsultationTarget;
                 liveAnchorMonthlyTarget.SendOrderTarget = updateDto.SendOrderTarget;
                 liveAnchorMonthlyTarget.VisitTarget = updateDto.VisitTarget;
@@ -394,7 +414,7 @@ namespace Fx.Amiya.Service
                 }
                 #endregion
 
-                #region #面诊卡
+                #region #99面诊卡
                 liveAnchorMonthlyTarget.CumulativeConsultation += editDto.CumulativeConsultation;
                 if (liveAnchorMonthlyTarget.CumulativeConsultation <= 0)
                 {
@@ -406,7 +426,7 @@ namespace Fx.Amiya.Service
                 }
                 #endregion
 
-                #region #消耗卡
+                #region #99消耗卡
                 liveAnchorMonthlyTarget.CumulativeConsultationCardConsumed += editDto.CumulativeConsultationCardConsumed;
                 if (liveAnchorMonthlyTarget.CumulativeConsultationCardConsumed <= 0)
                 {
@@ -415,6 +435,30 @@ namespace Fx.Amiya.Service
                 else
                 {
                     liveAnchorMonthlyTarget.ConsultationCardConsumedCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeConsultationCardConsumed) / Convert.ToDecimal(liveAnchorMonthlyTarget.ConsultationCardConsumedTarget)) * 100, 2);
+                }
+                #endregion
+
+                #region #199面诊卡
+                liveAnchorMonthlyTarget.CumulativeConsultation2 += editDto.CumulativeConsultation2;
+                if (liveAnchorMonthlyTarget.CumulativeConsultation2 <= 0)
+                {
+                    liveAnchorMonthlyTarget.ConsultationCompleteRate2 = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.ConsultationCompleteRate2 = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeConsultation2) / Convert.ToDecimal(liveAnchorMonthlyTarget.ConsultationTarget2)) * 100, 2);
+                }
+                #endregion
+
+                #region #199消耗卡
+                liveAnchorMonthlyTarget.CumulativeConsultationCardConsumed2 += editDto.CumulativeConsultationCardConsumed2;
+                if (liveAnchorMonthlyTarget.CumulativeConsultationCardConsumed2 <= 0)
+                {
+                    liveAnchorMonthlyTarget.ConsultationCardConsumedCompleteRate2 = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.ConsultationCardConsumedCompleteRate2 = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeConsultationCardConsumed2) / Convert.ToDecimal(liveAnchorMonthlyTarget.ConsultationCardConsumedTarget2)) * 100, 2);
                 }
                 #endregion
 

@@ -69,6 +69,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 AddWechatNum = d.AddWechatNum,
                                                 Consultation = d.Consultation,
                                                 ConsultationCardConsumed = d.ConsultationCardConsumed,
+                                                Consultation2 = d.Consultation2,
+                                                ConsultationCardConsumed2 = d.ConsultationCardConsumed2,
                                                 ActivateHistoricalConsultation = d.ActivateHistoricalConsultation,
                                                 SendOrderNum = d.SendOrderNum,
                                                 NewVisitNum = d.NewVisitNum,
@@ -131,6 +133,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                     updateDto.AddWechatNum = selectResult.AddWechatNum;
                     updateDto.Consultation = selectResult.Consultation;
                     updateDto.ConsultationCardConsumed = selectResult.ConsultationCardConsumed;
+                    updateDto.Consultation2 = selectResult.Consultation2;
+                    updateDto.ConsultationCardConsumed2 = selectResult.ConsultationCardConsumed2;
                     updateDto.ActivateHistoricalConsultation = selectResult.ActivateHistoricalConsultation;
                     updateDto.SendOrderNum = selectResult.SendOrderNum;
                     updateDto.NewVisitNum = selectResult.NewVisitNum;
@@ -162,6 +166,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     {
                         updateDto.LivingRoomFlowInvestmentNum = addVo.LivingRoomFlowInvestmentNum;
                         updateDto.Consultation = addVo.Consultation;
+                        updateDto.Consultation2 = selectResult.Consultation2;
                         updateDto.CargoSettlementCommission = addVo.CargoSettlementCommission;
                         updateDto.LivingTrackingEmployeeId = addVo.LivingTrackingEmployeeId;
                     }
@@ -169,6 +174,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     {
                         updateDto.AddWechatNum = addVo.AddWechatNum;
                         updateDto.ConsultationCardConsumed = addVo.ConsultationCardConsumed;
+                        updateDto.ConsultationCardConsumed2 = selectResult.ConsultationCardConsumed2;
                         updateDto.ActivateHistoricalConsultation = addVo.ActivateHistoricalConsultation;
                         updateDto.SendOrderNum = addVo.SendOrderNum.HasValue ? addVo.SendOrderNum.Value : 0;
                         updateDto.NewVisitNum = addVo.NewVisitNum.HasValue ? addVo.NewVisitNum.Value : 0;
@@ -205,6 +211,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.AddWechatNum = addVo.AddWechatNum;
                     addDto.Consultation = addVo.Consultation;
                     addDto.ConsultationCardConsumed = addVo.ConsultationCardConsumed;
+                    addDto.Consultation2 = addVo.Consultation2;
+                    addDto.ConsultationCardConsumed2 = addVo.ConsultationCardConsumed2;
                     addDto.ActivateHistoricalConsultation = addVo.ActivateHistoricalConsultation;
                     addDto.SendOrderNum = addVo.SendOrderNum.HasValue ? addVo.SendOrderNum.Value : 0;
                     addDto.NewVisitNum = addVo.NewVisitNum.HasValue ? addVo.NewVisitNum.Value : 0;
@@ -260,8 +268,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorDailyTargetVo.AddFansNum = liveAnchorDailyTarget.AddFansNum;
                 liveAnchorDailyTargetVo.AddWechatNum = liveAnchorDailyTarget.AddWechatNum;
                 liveAnchorDailyTargetVo.Consultation = liveAnchorDailyTarget.Consultation;
+                liveAnchorDailyTargetVo.Consultation2 = liveAnchorDailyTarget.Consultation2;
                 liveAnchorDailyTargetVo.ActivateHistoricalConsultation = liveAnchorDailyTarget.ActivateHistoricalConsultation;
                 liveAnchorDailyTargetVo.ConsultationCardConsumed = liveAnchorDailyTarget.ConsultationCardConsumed;
+                liveAnchorDailyTargetVo.ConsultationCardConsumed2 = liveAnchorDailyTarget.ConsultationCardConsumed2;
                 liveAnchorDailyTargetVo.SendOrderNum = liveAnchorDailyTarget.SendOrderNum;
                 liveAnchorDailyTargetVo.NewVisitNum = liveAnchorDailyTarget.NewVisitNum;
                 liveAnchorDailyTargetVo.SubsequentVisitNum = liveAnchorDailyTarget.SubsequentVisitNum;
@@ -315,6 +325,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.AddWechatNum = updateVo.AddWechatNum;
                 updateDto.Consultation = updateVo.Consultation;
                 updateDto.ConsultationCardConsumed = updateVo.ConsultationCardConsumed;
+                updateDto.Consultation2 = updateVo.Consultation2;
+                updateDto.ConsultationCardConsumed2 = updateVo.ConsultationCardConsumed2;
                 updateDto.ActivateHistoricalConsultation = updateVo.ActivateHistoricalConsultation;
                 updateDto.SendOrderNum = updateVo.SendOrderNum;
                 updateDto.NewVisitNum = updateVo.NewVisitNum;

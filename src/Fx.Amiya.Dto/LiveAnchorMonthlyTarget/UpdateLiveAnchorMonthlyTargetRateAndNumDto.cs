@@ -40,13 +40,21 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
         public int CumulativeAddWechat { get; set; }
         /// <summary>
-        /// 当日面诊卡
+        /// 当日99面诊卡
         /// </summary>
         public int CumulativeConsultation { get; set; }
         /// <summary>
-        /// 当日消耗卡
+        /// 当日99消耗卡
         /// </summary>
         public int CumulativeConsultationCardConsumed { get; set; }
+        /// <summary>
+        /// 当日199面诊卡
+        /// </summary>
+        public int CumulativeConsultation2 { get; set; }
+        /// <summary>
+        /// 当日199消耗卡
+        /// </summary>
+        public int CumulativeConsultationCardConsumed2 { get; set; }
         /// <summary>
         /// 当日激活历史面诊
         /// </summary>

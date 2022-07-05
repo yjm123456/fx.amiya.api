@@ -128,35 +128,69 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
         public decimal AddWechatCompleteRate { get; set; }
 
+
         /// <summary>
-        /// 面诊卡目标
+        /// 99面诊卡目标
         /// </summary>
         public int ConsultationTarget { get; set; }
 
         /// <summary>
-        /// 累计面诊卡
+        /// 累计99面诊卡
         /// </summary>
         public int CumulativeConsultation { get; set; }
 
         /// <summary>
-        /// 面诊卡完成率
+        /// 99面诊卡完成率
         /// </summary>
         public decimal ConsultationCompleteRate { get; set; }
 
+
         /// <summary>
-        /// 消耗卡目标
+        /// 199面诊卡目标
+        /// </summary>
+        public int ConsultationTarget2 { get; set; }
+
+        /// <summary>
+        /// 累计199面诊卡
+        /// </summary>
+        public int CumulativeConsultation2 { get; set; }
+
+        /// <summary>
+        /// 199面诊卡完成率
+        /// </summary>
+        public decimal ConsultationCompleteRate2 { get; set; }
+
+
+        /// <summary>
+        /// 99消耗卡目标
         /// </summary>
         public int ConsultationCardConsumedTarget { get; set; }
 
         /// <summary>
-        /// 累计消耗卡
+        /// 99累计消耗卡
         /// </summary>
         public int CumulativeConsultationCardConsumed { get; set; }
 
         /// <summary>
-        /// 消耗卡完成率
+        /// 99消耗卡完成率
         /// </summary>
         public decimal ConsultationCardConsumedCompleteRate { get; set; }
+
+
+        /// <summary>
+        /// 199消耗卡目标
+        /// </summary>
+        public int ConsultationCardConsumedTarget2 { get; set; }
+
+        /// <summary>
+        /// 199累计消耗卡
+        /// </summary>
+        public int CumulativeConsultationCardConsumed2 { get; set; }
+
+        /// <summary>
+        /// 199消耗卡完成率
+        /// </summary>
+        public decimal ConsultationCardConsumedCompleteRate2 { get; set; }
 
         /// <summary>
         /// 激活历史面诊数量目标

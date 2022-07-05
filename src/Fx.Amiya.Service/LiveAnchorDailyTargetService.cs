@@ -73,6 +73,8 @@ namespace Fx.Amiya.Service
                                                 AddWechatNum = d.AddWechatNum,
                                                 Consultation = d.Consultation,
                                                 ConsultationCardConsumed = d.ConsultationCardConsumed,
+                                                Consultation2 = d.Consultation2,
+                                                ConsultationCardConsumed2 = d.ConsultationCardConsumed2,
                                                 ActivateHistoricalConsultation = d.ActivateHistoricalConsultation,
                                                 SendOrderNum = d.SendOrderNum,
                                                 NewVisitNum = d.NewVisitNum,
@@ -181,7 +183,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<LiveAnchorDailyTargetDto> GetLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId,DateTime recordDate)
+        public async Task<LiveAnchorDailyTargetDto> GetLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate)
         {
             var liveAnchorDiaryInfo = from d in dalLiveAnchorDailyTarget.GetAll()
                                       where d.RecordDate == recordDate && d.LiveanchorMonthlyTargetId == monthlyTargetId
@@ -202,6 +204,8 @@ namespace Fx.Amiya.Service
                                           AddWechatNum = d.AddWechatNum,
                                           Consultation = d.Consultation,
                                           ConsultationCardConsumed = d.ConsultationCardConsumed,
+                                          Consultation2 = d.Consultation2,
+                                          ConsultationCardConsumed2 = d.ConsultationCardConsumed2,
                                           ActivateHistoricalConsultation = d.ActivateHistoricalConsultation,
                                           SendOrderNum = d.SendOrderNum,
                                           NewVisitNum = d.NewVisitNum,
@@ -230,63 +234,69 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-               
-                    LiveAnchorDailyTarget liveAnchorDailyTarget = new LiveAnchorDailyTarget();
-                    liveAnchorDailyTarget.Id = Guid.NewGuid().ToString();
-                    liveAnchorDailyTarget.LiveanchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
-                    liveAnchorDailyTarget.LivingTrackingEmployeeId = addDto.LivingTrackingEmployeeId;
-                    liveAnchorDailyTarget.OperationEmployeeId = addDto.OperationEmployeeId;
-                    liveAnchorDailyTarget.NetWorkConsultingEmployeeId = addDto.NetWorkConsultingEmployeeId.HasValue ? addDto.NetWorkConsultingEmployeeId.Value : 0;
-                    liveAnchorDailyTarget.TodaySendNum = addDto.TodaySendNum;
-                    liveAnchorDailyTarget.FlowInvestmentNum = addDto.FlowInvestmentNum;
-                    liveAnchorDailyTarget.LivingRoomFlowInvestmentNum = addDto.LivingRoomFlowInvestmentNum;
-                    liveAnchorDailyTarget.AddFansNum = addDto.AddFansNum;
-                    liveAnchorDailyTarget.CluesNum = addDto.CluesNum;
-                    liveAnchorDailyTarget.AddWechatNum = addDto.AddWechatNum;
-                    liveAnchorDailyTarget.Consultation = addDto.Consultation;
-                    liveAnchorDailyTarget.ConsultationCardConsumed = addDto.ConsultationCardConsumed;
-                    liveAnchorDailyTarget.ActivateHistoricalConsultation = addDto.ActivateHistoricalConsultation;
-                    liveAnchorDailyTarget.SendOrderNum = addDto.SendOrderNum.HasValue ? addDto.SendOrderNum.Value : 0;
-                    liveAnchorDailyTarget.NewVisitNum = addDto.NewVisitNum.HasValue ? addDto.NewVisitNum.Value : 0;
-                    liveAnchorDailyTarget.SubsequentVisitNum = addDto.SubsequentVisitNum.HasValue ? addDto.SubsequentVisitNum.Value : 0;
-                    liveAnchorDailyTarget.OldCustomerVisitNum = addDto.OldCustomerVisitNum.HasValue ? addDto.OldCustomerVisitNum.Value : 0;
-                    liveAnchorDailyTarget.VisitNum = addDto.VisitNum.HasValue ? addDto.VisitNum.Value : 0;
-                    liveAnchorDailyTarget.NewDealNum = addDto.NewDealNum.HasValue ? addDto.NewDealNum.Value : 0;
-                    liveAnchorDailyTarget.SubsequentDealNum = addDto.SubsequentDealNum.HasValue ? addDto.SubsequentDealNum.Value : 0;
-                    liveAnchorDailyTarget.OldCustomerDealNum = addDto.OldCustomerDealNum.HasValue ? addDto.OldCustomerDealNum.Value : 0;
-                    liveAnchorDailyTarget.DealNum = addDto.DealNum.HasValue ? addDto.DealNum.Value : 0;
-                    liveAnchorDailyTarget.CargoSettlementCommission = addDto.CargoSettlementCommission;
-                    liveAnchorDailyTarget.NewPerformanceNum = addDto.NewPerformanceNum.HasValue ? addDto.NewPerformanceNum.Value : 0;
-                    liveAnchorDailyTarget.SubsequentPerformanceNum = addDto.SubsequentPerformanceNum.HasValue ? addDto.SubsequentPerformanceNum.Value : 0;
-                    liveAnchorDailyTarget.NewCustomerPerformanceCountNum = addDto.NewCustomerPerformanceCountNum.HasValue ? addDto.NewCustomerPerformanceCountNum.Value : 0;
-                    liveAnchorDailyTarget.OldCustomerPerformanceNum = addDto.OldCustomerPerformanceNum.HasValue ? addDto.OldCustomerPerformanceNum.Value : 0;
-                    liveAnchorDailyTarget.PerformanceNum = addDto.PerformanceNum.HasValue ? addDto.PerformanceNum.Value : 0;
-                    liveAnchorDailyTarget.MinivanRefund = addDto.MinivanRefund;
-                    liveAnchorDailyTarget.MiniVanBadReviews = addDto.MiniVanBadReviews;
-                    liveAnchorDailyTarget.CreateDate = DateTime.Now;
-                    liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
-                    await dalLiveAnchorDailyTarget.AddAsync(liveAnchorDailyTarget, true);
 
-                    UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
-                    editLiveAnchorMonthlyTarget.Id = addDto.LiveanchorMonthlyTargetId;
-                    editLiveAnchorMonthlyTarget.CumulativeRelease = addDto.TodaySendNum;
-                    editLiveAnchorMonthlyTarget.CumulativeFlowInvestment = addDto.FlowInvestmentNum;
-                    editLiveAnchorMonthlyTarget.LivingRoomCumulativeFlowInvestment = addDto.LivingRoomFlowInvestmentNum;
-                    editLiveAnchorMonthlyTarget.CumulativeCluesNum = addDto.CluesNum;
-                    editLiveAnchorMonthlyTarget.CumulativeAddFansNum = addDto.AddFansNum;
-                    editLiveAnchorMonthlyTarget.CumulativeAddWechat = addDto.AddWechatNum;
-                    editLiveAnchorMonthlyTarget.CumulativeConsultation = addDto.Consultation;
-                    editLiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed = addDto.ConsultationCardConsumed;
-                    editLiveAnchorMonthlyTarget.CumulativeActivateHistoricalConsultation = addDto.ActivateHistoricalConsultation;
-                    editLiveAnchorMonthlyTarget.CumulativeSendOrder = addDto.SendOrderNum.HasValue ? addDto.SendOrderNum.Value : 0;
-                    editLiveAnchorMonthlyTarget.CumulativeVisit = addDto.VisitNum.HasValue ? addDto.VisitNum.Value : 0;
-                    editLiveAnchorMonthlyTarget.CumulativeDealTarget = addDto.DealNum.HasValue ? addDto.DealNum.Value : 0;
-                    editLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = addDto.CargoSettlementCommission;
-                    editLiveAnchorMonthlyTarget.CumulativePerformance = addDto.PerformanceNum.HasValue ? addDto.PerformanceNum.Value : 0;
-                    editLiveAnchorMonthlyTarget.CumulativeMiniVanBadReviews = addDto.MiniVanBadReviews;
-                    editLiveAnchorMonthlyTarget.CumulativeMinivanRefund = addDto.MinivanRefund;
-                    await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
-                    unitOfWork.Commit();
+                LiveAnchorDailyTarget liveAnchorDailyTarget = new LiveAnchorDailyTarget();
+                liveAnchorDailyTarget.Id = Guid.NewGuid().ToString();
+                liveAnchorDailyTarget.LiveanchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.LivingTrackingEmployeeId = addDto.LivingTrackingEmployeeId;
+                liveAnchorDailyTarget.OperationEmployeeId = addDto.OperationEmployeeId;
+                liveAnchorDailyTarget.NetWorkConsultingEmployeeId = addDto.NetWorkConsultingEmployeeId.HasValue ? addDto.NetWorkConsultingEmployeeId.Value : 0;
+                liveAnchorDailyTarget.TodaySendNum = addDto.TodaySendNum;
+                liveAnchorDailyTarget.FlowInvestmentNum = addDto.FlowInvestmentNum;
+                liveAnchorDailyTarget.LivingRoomFlowInvestmentNum = addDto.LivingRoomFlowInvestmentNum;
+                liveAnchorDailyTarget.AddFansNum = addDto.AddFansNum;
+                liveAnchorDailyTarget.CluesNum = addDto.CluesNum;
+                liveAnchorDailyTarget.AddWechatNum = addDto.AddWechatNum;
+                liveAnchorDailyTarget.Consultation = addDto.Consultation;
+                liveAnchorDailyTarget.ConsultationCardConsumed = addDto.ConsultationCardConsumed;
+                liveAnchorDailyTarget.Consultation2 = addDto.Consultation2;
+                liveAnchorDailyTarget.ConsultationCardConsumed2 = addDto.ConsultationCardConsumed2;
+                liveAnchorDailyTarget.Consultation2 = addDto.Consultation2;
+                liveAnchorDailyTarget.ConsultationCardConsumed2 = addDto.ConsultationCardConsumed2;
+                liveAnchorDailyTarget.ActivateHistoricalConsultation = addDto.ActivateHistoricalConsultation;
+                liveAnchorDailyTarget.SendOrderNum = addDto.SendOrderNum.HasValue ? addDto.SendOrderNum.Value : 0;
+                liveAnchorDailyTarget.NewVisitNum = addDto.NewVisitNum.HasValue ? addDto.NewVisitNum.Value : 0;
+                liveAnchorDailyTarget.SubsequentVisitNum = addDto.SubsequentVisitNum.HasValue ? addDto.SubsequentVisitNum.Value : 0;
+                liveAnchorDailyTarget.OldCustomerVisitNum = addDto.OldCustomerVisitNum.HasValue ? addDto.OldCustomerVisitNum.Value : 0;
+                liveAnchorDailyTarget.VisitNum = addDto.VisitNum.HasValue ? addDto.VisitNum.Value : 0;
+                liveAnchorDailyTarget.NewDealNum = addDto.NewDealNum.HasValue ? addDto.NewDealNum.Value : 0;
+                liveAnchorDailyTarget.SubsequentDealNum = addDto.SubsequentDealNum.HasValue ? addDto.SubsequentDealNum.Value : 0;
+                liveAnchorDailyTarget.OldCustomerDealNum = addDto.OldCustomerDealNum.HasValue ? addDto.OldCustomerDealNum.Value : 0;
+                liveAnchorDailyTarget.DealNum = addDto.DealNum.HasValue ? addDto.DealNum.Value : 0;
+                liveAnchorDailyTarget.CargoSettlementCommission = addDto.CargoSettlementCommission;
+                liveAnchorDailyTarget.NewPerformanceNum = addDto.NewPerformanceNum.HasValue ? addDto.NewPerformanceNum.Value : 0;
+                liveAnchorDailyTarget.SubsequentPerformanceNum = addDto.SubsequentPerformanceNum.HasValue ? addDto.SubsequentPerformanceNum.Value : 0;
+                liveAnchorDailyTarget.NewCustomerPerformanceCountNum = addDto.NewCustomerPerformanceCountNum.HasValue ? addDto.NewCustomerPerformanceCountNum.Value : 0;
+                liveAnchorDailyTarget.OldCustomerPerformanceNum = addDto.OldCustomerPerformanceNum.HasValue ? addDto.OldCustomerPerformanceNum.Value : 0;
+                liveAnchorDailyTarget.PerformanceNum = addDto.PerformanceNum.HasValue ? addDto.PerformanceNum.Value : 0;
+                liveAnchorDailyTarget.MinivanRefund = addDto.MinivanRefund;
+                liveAnchorDailyTarget.MiniVanBadReviews = addDto.MiniVanBadReviews;
+                liveAnchorDailyTarget.CreateDate = DateTime.Now;
+                liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
+                await dalLiveAnchorDailyTarget.AddAsync(liveAnchorDailyTarget, true);
+
+                UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
+                editLiveAnchorMonthlyTarget.Id = addDto.LiveanchorMonthlyTargetId;
+                editLiveAnchorMonthlyTarget.CumulativeRelease = addDto.TodaySendNum;
+                editLiveAnchorMonthlyTarget.CumulativeFlowInvestment = addDto.FlowInvestmentNum;
+                editLiveAnchorMonthlyTarget.LivingRoomCumulativeFlowInvestment = addDto.LivingRoomFlowInvestmentNum;
+                editLiveAnchorMonthlyTarget.CumulativeCluesNum = addDto.CluesNum;
+                editLiveAnchorMonthlyTarget.CumulativeAddFansNum = addDto.AddFansNum;
+                editLiveAnchorMonthlyTarget.CumulativeAddWechat = addDto.AddWechatNum;
+                editLiveAnchorMonthlyTarget.CumulativeConsultation = addDto.Consultation;
+                editLiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed = addDto.ConsultationCardConsumed;
+                editLiveAnchorMonthlyTarget.CumulativeConsultation2 = addDto.Consultation2;
+                editLiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed2 = addDto.ConsultationCardConsumed2;
+                editLiveAnchorMonthlyTarget.CumulativeActivateHistoricalConsultation = addDto.ActivateHistoricalConsultation;
+                editLiveAnchorMonthlyTarget.CumulativeSendOrder = addDto.SendOrderNum.HasValue ? addDto.SendOrderNum.Value : 0;
+                editLiveAnchorMonthlyTarget.CumulativeVisit = addDto.VisitNum.HasValue ? addDto.VisitNum.Value : 0;
+                editLiveAnchorMonthlyTarget.CumulativeDealTarget = addDto.DealNum.HasValue ? addDto.DealNum.Value : 0;
+                editLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = addDto.CargoSettlementCommission;
+                editLiveAnchorMonthlyTarget.CumulativePerformance = addDto.PerformanceNum.HasValue ? addDto.PerformanceNum.Value : 0;
+                editLiveAnchorMonthlyTarget.CumulativeMiniVanBadReviews = addDto.MiniVanBadReviews;
+                editLiveAnchorMonthlyTarget.CumulativeMinivanRefund = addDto.MinivanRefund;
+                await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
+                unitOfWork.Commit();
             }
             catch (Exception ex)
             {
@@ -318,8 +328,10 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTargetDto.AddFansNum = liveAnchorDailyTarget.AddFansNum;
                 liveAnchorDailyTargetDto.AddWechatNum = liveAnchorDailyTarget.AddWechatNum;
                 liveAnchorDailyTargetDto.Consultation = liveAnchorDailyTarget.Consultation;
+                liveAnchorDailyTargetDto.Consultation2 = liveAnchorDailyTarget.Consultation2;
                 liveAnchorDailyTargetDto.ActivateHistoricalConsultation = liveAnchorDailyTarget.ActivateHistoricalConsultation;
                 liveAnchorDailyTargetDto.ConsultationCardConsumed = liveAnchorDailyTarget.ConsultationCardConsumed;
+                liveAnchorDailyTargetDto.ConsultationCardConsumed2 = liveAnchorDailyTarget.ConsultationCardConsumed2;
                 liveAnchorDailyTargetDto.SendOrderNum = liveAnchorDailyTarget.SendOrderNum;
                 liveAnchorDailyTargetDto.NewVisitNum = liveAnchorDailyTarget.NewVisitNum;
                 liveAnchorDailyTargetDto.SubsequentVisitNum = liveAnchorDailyTarget.SubsequentVisitNum;
@@ -371,7 +383,9 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTargetDto.AddFansNum = liveAnchorDailyTarget.AddFansNum;
                 liveAnchorDailyTargetDto.AddWechatNum = liveAnchorDailyTarget.AddWechatNum;
                 liveAnchorDailyTargetDto.Consultation = liveAnchorDailyTarget.Consultation;
+                liveAnchorDailyTargetDto.Consultation2 = liveAnchorDailyTarget.Consultation2;
                 liveAnchorDailyTargetDto.ConsultationCardConsumed = liveAnchorDailyTarget.ConsultationCardConsumed;
+                liveAnchorDailyTargetDto.ConsultationCardConsumed2 = liveAnchorDailyTarget.ConsultationCardConsumed2;
                 liveAnchorDailyTargetDto.ActivateHistoricalConsultation = liveAnchorDailyTarget.ActivateHistoricalConsultation;
                 liveAnchorDailyTargetDto.SendOrderNum = liveAnchorDailyTarget.SendOrderNum;
                 liveAnchorDailyTargetDto.VisitNum = liveAnchorDailyTarget.VisitNum;
@@ -408,7 +422,9 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeAddFansNum = -liveAnchorDailyTarget.AddFansNum;
                 editLiveAnchorMonthlyTarget.CumulativeAddWechat = -liveAnchorDailyTarget.AddWechatNum;
                 editLiveAnchorMonthlyTarget.CumulativeConsultation = -liveAnchorDailyTarget.Consultation;
+                editLiveAnchorMonthlyTarget.CumulativeConsultation2 = -liveAnchorDailyTarget.Consultation2;
                 editLiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed = -liveAnchorDailyTarget.ConsultationCardConsumed;
+                editLiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed2 = -liveAnchorDailyTarget.ConsultationCardConsumed2;
                 editLiveAnchorMonthlyTarget.CumulativeActivateHistoricalConsultation = -liveAnchorDailyTarget.ActivateHistoricalConsultation;
                 editLiveAnchorMonthlyTarget.CumulativeSendOrder = -liveAnchorDailyTarget.SendOrderNum;
                 editLiveAnchorMonthlyTarget.CumulativeVisit = -liveAnchorDailyTarget.VisitNum;
@@ -431,6 +447,8 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.AddWechatNum = updateDto.AddWechatNum;
                 liveAnchorDailyTarget.Consultation = updateDto.Consultation;
                 liveAnchorDailyTarget.ConsultationCardConsumed = updateDto.ConsultationCardConsumed;
+                liveAnchorDailyTarget.Consultation2 = updateDto.Consultation2;
+                liveAnchorDailyTarget.ConsultationCardConsumed2 = updateDto.ConsultationCardConsumed2;
                 liveAnchorDailyTarget.ActivateHistoricalConsultation = updateDto.ActivateHistoricalConsultation;
                 liveAnchorDailyTarget.SendOrderNum = updateDto.SendOrderNum;
                 liveAnchorDailyTarget.NewVisitNum = updateDto.NewVisitNum;
@@ -462,7 +480,9 @@ namespace Fx.Amiya.Service
                 lasteditLiveAnchorMonthlyTarget.CumulativeAddFansNum = liveAnchorDailyTarget.AddFansNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeAddWechat = liveAnchorDailyTarget.AddWechatNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeConsultation = liveAnchorDailyTarget.Consultation;
+                lasteditLiveAnchorMonthlyTarget.CumulativeConsultation2 = liveAnchorDailyTarget.Consultation2;
                 lasteditLiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed = liveAnchorDailyTarget.ConsultationCardConsumed;
+                lasteditLiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed2 = liveAnchorDailyTarget.ConsultationCardConsumed2;
                 lasteditLiveAnchorMonthlyTarget.CumulativeActivateHistoricalConsultation = liveAnchorDailyTarget.ActivateHistoricalConsultation;
                 lasteditLiveAnchorMonthlyTarget.CumulativeSendOrder = liveAnchorDailyTarget.SendOrderNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeVisit = liveAnchorDailyTarget.VisitNum;
@@ -499,6 +519,8 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeActivateHistoricalConsultation = -liveAnchorDailyTarget.ActivateHistoricalConsultation;
                 editLiveAnchorMonthlyTarget.CumulativeAddWechat = -liveAnchorDailyTarget.AddWechatNum;
                 editLiveAnchorMonthlyTarget.CumulativeConsultation = -liveAnchorDailyTarget.Consultation;
+                editLiveAnchorMonthlyTarget.CumulativeConsultation2 = -liveAnchorDailyTarget.Consultation2;
+                editLiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed2 = -liveAnchorDailyTarget.ConsultationCardConsumed2;
                 editLiveAnchorMonthlyTarget.CumulativeMinivanRefund = -liveAnchorDailyTarget.MinivanRefund;
                 editLiveAnchorMonthlyTarget.CumulativeMiniVanBadReviews = -liveAnchorDailyTarget.MiniVanBadReviews;
                 editLiveAnchorMonthlyTarget.CumulativeSendOrder = -liveAnchorDailyTarget.SendOrderNum;
@@ -543,8 +565,10 @@ namespace Fx.Amiya.Service
                                                 AddFansNum = d.AddFansNum,
                                                 AddWechatNum = d.AddWechatNum,
                                                 Consultation = d.Consultation,
+                                                Consultation2 = d.Consultation2,
                                                 ActivateHistoricalConsultation = d.ActivateHistoricalConsultation,
                                                 ConsultationCardConsumed = d.ConsultationCardConsumed,
+                                                ConsultationCardConsumed2 = d.ConsultationCardConsumed2,
                                                 SendOrderNum = d.SendOrderNum,
                                                 NewVisitNum = d.NewVisitNum,
                                                 SubsequentVisitNum = d.SubsequentVisitNum,
@@ -621,10 +645,18 @@ namespace Fx.Amiya.Service
                     x.CumulativeConsultation = liveanchorMonthlyTarget.CumulativeConsultation;
                     x.ConsultationCompleteRate = liveanchorMonthlyTarget.ConsultationCompleteRate.ToString("0.00") + "%";
 
+                    x.ConsultationTarget2 = liveanchorMonthlyTarget.ConsultationTarget2;
+                    x.CumulativeConsultation2 = liveanchorMonthlyTarget.CumulativeConsultation2;
+                    x.ConsultationCompleteRate2 = liveanchorMonthlyTarget.ConsultationCompleteRate2.ToString("0.00") + "%";
+
 
                     x.ConsultationCardConsumedTarget = liveanchorMonthlyTarget.ConsultationCardConsumedTarget;
                     x.CumulativeConsultationCardConsumed = liveanchorMonthlyTarget.CumulativeConsultationCardConsumed;
                     x.ConsultationCardConsumedCompleteRate = liveanchorMonthlyTarget.ConsultationCardConsumedCompleteRate.ToString("0.00") + "%";
+
+                    x.ConsultationCardConsumedTarget2 = liveanchorMonthlyTarget.ConsultationCardConsumedTarget2;
+                    x.CumulativeConsultationCardConsumed2 = liveanchorMonthlyTarget.CumulativeConsultationCardConsumed2;
+                    x.ConsultationCardConsumedCompleteRate2 = liveanchorMonthlyTarget.ConsultationCardConsumedCompleteRate2.ToString("0.00") + "%";
 
 
                     x.ActivateHistoricalConsultationTarget = liveanchorMonthlyTarget.ActivateHistoricalConsultationTarget;
@@ -685,7 +717,7 @@ namespace Fx.Amiya.Service
                          where d.RecordDate >= startrq && d.RecordDate < endrq
                          select d;
             var orderList = orders.ToList();
-            return orderList.GroupBy(x => x.RecordDate.Date).Select(x => new OrderOperationConditionDto { Date = x.Key.ToString("yyyy-MM-dd"), OrderNum = x.Sum(z => z.Consultation) }).ToList();
+            return orderList.GroupBy(x => x.RecordDate.Date).Select(x => new OrderOperationConditionDto { Date = x.Key.ToString("yyyy-MM-dd"), OrderNum = (x.Sum(z => z.Consultation) + x.Sum(z => z.Consultation2)) }).ToList();
         }
 
         /// <summary>

@@ -26,9 +26,10 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.AddFansNum).HasColumnName("add_fans_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.AddWechatNum).HasColumnName("add_wechat_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.Consultation).HasColumnName("consultation_num").HasColumnType("int").IsRequired();
+            builder.Property(t => t.Consultation2).HasColumnName("consultation_num2").HasColumnType("int").IsRequired();
             builder.Property(t => t.ConsultationCardConsumed).HasColumnName("consultation_card_consumed").HasColumnType("int").IsRequired();
+            builder.Property(t => t.ConsultationCardConsumed2).HasColumnName("consultation_card_consumed2").HasColumnType("int").IsRequired();
             builder.Property(t => t.ActivateHistoricalConsultation).HasColumnName("activate_historical_consultation").HasColumnType("int").IsRequired();
-            builder.Property(t => t.Consultation).HasColumnName("consultation_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.SendOrderNum).HasColumnName("send_order_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.NewVisitNum).HasColumnName("new_visit_nun").HasColumnType("int").IsRequired();
             builder.Property(t => t.VisitNum).HasColumnName("visit_num").HasColumnType("int").IsRequired();

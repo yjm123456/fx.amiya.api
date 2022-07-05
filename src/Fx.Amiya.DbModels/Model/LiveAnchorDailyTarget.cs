@@ -71,14 +71,22 @@ namespace Fx.Amiya.DbModels.Model
         public int AddWechatNum { get; set; }
 
         /// <summary>
-        /// 今日面诊卡数量
+        /// 今日99面诊卡数量
         /// </summary>
         public int Consultation { get; set; }
+        /// <summary>
+        /// 今日199面诊卡数量
+        /// </summary>
+        public int Consultation2 { get; set; }
 
         /// <summary>
-        /// 今日消耗卡数量
+        /// 今日99消耗卡数量
         /// </summary>
         public int ConsultationCardConsumed { get; set; }
+        /// <summary>
+        /// 今日199消耗卡数量
+        /// </summary>
+        public int ConsultationCardConsumed2 { get; set; }
 
         /// <summary>
         /// 今日激活历史面诊数量

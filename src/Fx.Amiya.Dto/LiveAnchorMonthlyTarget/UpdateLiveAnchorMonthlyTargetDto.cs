@@ -59,14 +59,22 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
         public int AddWechatTarget { get; set; }
         /// <summary>
-        /// 面诊卡目标
+        /// 99面诊卡目标
         /// </summary>
         public int ConsultationTarget { get; set; }
+        /// <summary>
+        /// 199面诊卡目标
+        /// </summary>
+        public int ConsultationTarget2 { get; set; }
 
         /// <summary>
-        /// 消耗卡目标
+        /// 99消耗卡目标
         /// </summary>
         public int ConsultationCardConsumedTarget { get; set; }
+        /// <summary>
+        /// 199消耗卡目标
+        /// </summary>
+        public int ConsultationCardConsumedTarget2 { get; set; }
 
         /// <summary>
         /// 激活历史面诊数量目标

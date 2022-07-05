@@ -160,43 +160,80 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         public string AddFansCompleteRate { get; set; }
 
         /// <summary>
-        /// 今日面诊卡数量
+        /// 今日99面诊卡数量
         /// </summary>
         public int Consultation { get; set; }
         /// <summary>
-        /// 面诊卡目标
+        /// 99面诊卡目标
         /// </summary>
         public int ConsultationTarget { get; set; }
 
         /// <summary>
-        /// 累计面诊卡
+        /// 累计99面诊卡
         /// </summary>
         public int CumulativeConsultation { get; set; }
 
         /// <summary>
-        /// 面诊卡完成率
+        /// 99面诊卡完成率
         /// </summary>
         public string ConsultationCompleteRate { get; set; }
+        /// <summary>
+        /// 今日199面诊卡数量
+        /// </summary>
+        public int Consultation2 { get; set; }
+        /// <summary>
+        /// 199面诊卡目标
+        /// </summary>
+        public int ConsultationTarget2 { get; set; }
 
         /// <summary>
-        /// 今日消耗卡数量
+        /// 累计199面诊卡
+        /// </summary>
+        public int CumulativeConsultation2 { get; set; }
+
+        /// <summary>
+        /// 199面诊卡完成率
+        /// </summary>
+        public string ConsultationCompleteRate2 { get; set; }
+
+        /// <summary>
+        /// 今日99消耗卡数量
         /// </summary>
         public int ConsultationCardConsumed { get; set; }
 
         /// <summary>
-        /// 消耗卡目标
+        /// 99消耗卡目标
         /// </summary>
         public int ConsultationCardConsumedTarget { get; set; }
 
         /// <summary>
-        /// 累计消耗卡
+        /// 累计99消耗卡
         /// </summary>
         public int CumulativeConsultationCardConsumed { get; set; }
 
         /// <summary>
-        /// 消耗卡完成率
+        /// 99消耗卡完成率
         /// </summary>
         public string ConsultationCardConsumedCompleteRate { get; set; }
+        /// <summary>
+        /// 今日199消耗卡数量
+        /// </summary>
+        public int ConsultationCardConsumed2 { get; set; }
+
+        /// <summary>
+        /// 199消耗卡目标
+        /// </summary>
+        public int ConsultationCardConsumedTarget2 { get; set; }
+
+        /// <summary>
+        /// 累计199消耗卡
+        /// </summary>
+        public int CumulativeConsultationCardConsumed2 { get; set; }
+
+        /// <summary>
+        /// 199消耗卡完成率
+        /// </summary>
+        public string ConsultationCardConsumedCompleteRate2 { get; set; }
 
         /// <summary>
         /// 今日激活历史面诊数量
