@@ -166,7 +166,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     {
                         updateDto.LivingRoomFlowInvestmentNum = addVo.LivingRoomFlowInvestmentNum;
                         updateDto.Consultation = addVo.Consultation;
-                        updateDto.Consultation2 = selectResult.Consultation2;
+                        updateDto.Consultation2 = addVo.Consultation2;
                         updateDto.CargoSettlementCommission = addVo.CargoSettlementCommission;
                         updateDto.LivingTrackingEmployeeId = addVo.LivingTrackingEmployeeId;
                     }
@@ -174,7 +174,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     {
                         updateDto.AddWechatNum = addVo.AddWechatNum;
                         updateDto.ConsultationCardConsumed = addVo.ConsultationCardConsumed;
-                        updateDto.ConsultationCardConsumed2 = selectResult.ConsultationCardConsumed2;
+                        updateDto.ConsultationCardConsumed2 = addVo.ConsultationCardConsumed2;
                         updateDto.ActivateHistoricalConsultation = addVo.ActivateHistoricalConsultation;
                         updateDto.SendOrderNum = addVo.SendOrderNum.HasValue ? addVo.SendOrderNum.Value : 0;
                         updateDto.NewVisitNum = addVo.NewVisitNum.HasValue ? addVo.NewVisitNum.Value : 0;
