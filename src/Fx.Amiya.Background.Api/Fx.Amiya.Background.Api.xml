@@ -1107,6 +1107,13 @@
             <param name="updateVo"></param>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormOrderController.UpdateFinishOrderByEmployeeAsync(Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo)">
+            <summary>
+            客服修改已完成订单
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormOrderController.FinishOrderAsync(Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo)">
             <summary>
             医院完成订单
@@ -6427,6 +6434,16 @@
             到院时间（最新）
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.UnDealPictureUrl">
+            <summary>
+            未成交截图url
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.DealPictureUrl">
+            <summary>
+            成交凭证
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.Id">
             <summary>
             订单号
@@ -6655,6 +6672,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.Price">
             <summary>
             价格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.DealDate">
+            <summary>
+            成交时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.OtherOrderId">
+            <summary>
+            三方订单号
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoSimpleVo">
@@ -6957,6 +6984,71 @@
             成交时间
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.Id">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.DealId">
+            <summary>
+            成交情况id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.IsFinish">
+            <summary>
+            是否成交
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.LastDealHospitalId">
+            <summary>
+            成交医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.IsToHospital">
+            <summary>
+            是否到院（成交则默认true）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.ToHospitalDate">
+            <summary>
+            到院时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.DealAmount">
+            <summary>
+            成交金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.LastProjectStage">
+            <summary>
+            后期项目铺垫
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.DealPictureUrl">
+            <summary>
+            成交截图url
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.UnDealReason">
+            <summary>
+            未成交原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.UnDealPictureUrl">
+            <summary>
+            未成交截图url
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.DealDate">
+            <summary>
+            成交时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.OtherContentPlatFormOrderId">
+            <summary>
+            三方订单号
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo">
             <summary>
             修改订单成交情况
@@ -7005,6 +7097,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo.Price">
             <summary>
             价格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo.DealDate">
+            <summary>
+            成交时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo.OtherAppOrderId">
+            <summary>
+            三方订单号
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.ContentPlateForm.AddContentPalteFormVo">
@@ -11094,12 +11196,22 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AddLiveAnchorDailyTargetVo.Consultation">
             <summary>
-            今日面诊卡数量
+            今日99面诊卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AddLiveAnchorDailyTargetVo.Consultation2">
+            <summary>
+            今日199面诊卡数量
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AddLiveAnchorDailyTargetVo.ConsultationCardConsumed">
             <summary>
-            今日消耗卡数量
+            今日99消耗卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AddLiveAnchorDailyTargetVo.ConsultationCardConsumed2">
+            <summary>
+            今日199消耗卡数量
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AddLiveAnchorDailyTargetVo.ActivateHistoricalConsultation">
@@ -11264,12 +11376,22 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.Consultation">
             <summary>
-            今日面诊卡数量
+            今日99面诊卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.Consultation2">
+            <summary>
+            今日199面诊卡数量
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.ConsultationCardConsumed">
             <summary>
-            今日消耗卡数量
+            今日99消耗卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.ConsultationCardConsumed2">
+            <summary>
+            今日199消耗卡数量
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.ActivateHistoricalConsultation">
@@ -11434,12 +11556,22 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.Consultation">
             <summary>
-            今日面诊卡数量
+            今日99面诊卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.Consultation2">
+            <summary>
+            今日199面诊卡数量
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.ConsultationCardConsumed">
             <summary>
-            今日消耗卡数量
+            今日99消耗卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.ConsultationCardConsumed2">
+            <summary>
+            今日199消耗卡数量
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.ActivateHistoricalConsultation">
@@ -11589,12 +11721,22 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.UpdateLiveAnchorDailyTargetVo.Consultation">
             <summary>
-            今日面诊卡数量
+            今日99面诊卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.UpdateLiveAnchorDailyTargetVo.Consultation2">
+            <summary>
+            今日199面诊卡数量
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.UpdateLiveAnchorDailyTargetVo.ConsultationCardConsumed">
             <summary>
-            今日消耗卡数量
+            今日99消耗卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.UpdateLiveAnchorDailyTargetVo.ConsultationCardConsumed2">
+            <summary>
+            今日199消耗卡数量
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.UpdateLiveAnchorDailyTargetVo.ActivateHistoricalConsultation">
@@ -11749,12 +11891,22 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.ConsultationTarget">
             <summary>
-            面诊卡目标
+            99面诊卡目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.ConsultationTarget2">
+            <summary>
+            199面诊卡目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.ConsultationCardConsumedTarget">
             <summary>
-            消耗卡目标
+            99消耗卡目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.ConsultationCardConsumedTarget2">
+            <summary>
+            199消耗卡目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.ActivateHistoricalConsultationTarget">
@@ -11929,32 +12081,62 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ConsultationTarget">
             <summary>
-            面诊卡目标
+            99面诊卡目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeConsultation">
             <summary>
-            累计面诊卡
+            累计99面诊卡
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ConsultationCompleteRate">
             <summary>
-            面诊卡完成率
+            99面诊卡完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ConsultationTarget2">
+            <summary>
+            199面诊卡目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeConsultation2">
+            <summary>
+            累计199面诊卡
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ConsultationCompleteRate2">
+            <summary>
+            199面诊卡完成率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ConsultationCardConsumedTarget">
             <summary>
-            消耗卡目标
+            99消耗卡目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeConsultationCardConsumed">
             <summary>
-            累计消耗卡
+            99累计消耗卡
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ConsultationCardConsumedCompleteRate">
             <summary>
-            消耗卡完成率
+            99消耗卡完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ConsultationCardConsumedTarget2">
+            <summary>
+            199消耗卡目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeConsultationCardConsumed2">
+            <summary>
+            199累计消耗卡
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ConsultationCardConsumedCompleteRate2">
+            <summary>
+            199消耗卡完成率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ActivateHistoricalConsultationTarget">
@@ -12139,12 +12321,22 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.ConsultationTarget">
             <summary>
-            面诊卡目标
+            99面诊卡目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.ConsultationTarget2">
+            <summary>
+            199面诊卡目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.ConsultationCardConsumedTarget">
             <summary>
-            消耗卡目标
+            99消耗卡目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.ConsultationCardConsumedTarget2">
+            <summary>
+            199消耗卡目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.ActivateHistoricalConsultationTarget">
@@ -13679,42 +13871,82 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.Consultation">
             <summary>
-            今日面诊卡数量
+            今日99面诊卡数量
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationTarget">
             <summary>
-            面诊卡目标
+            99面诊卡目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.CumulativeConsultation">
             <summary>
-            累计面诊卡
+            累计99面诊卡
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationCompleteRate">
             <summary>
-            面诊卡完成率
+            99面诊卡完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.Consultation2">
+            <summary>
+            今日199面诊卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationTarget2">
+            <summary>
+            199面诊卡目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.CumulativeConsultation2">
+            <summary>
+            累计199面诊卡
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationCompleteRate2">
+            <summary>
+            199面诊卡完成率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationCardConsumed">
             <summary>
-            今日消耗卡数量
+            今日99消耗卡数量
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationCardConsumedTarget">
             <summary>
-            消耗卡目标
+            99消耗卡目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.CumulativeConsultationCardConsumed">
             <summary>
-            累计消耗卡
+            累计99消耗卡
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationCardConsumedCompleteRate">
             <summary>
-            消耗卡完成率
+            99消耗卡完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationCardConsumed2">
+            <summary>
+            今日199消耗卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationCardConsumedTarget2">
+            <summary>
+            199消耗卡目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.CumulativeConsultationCardConsumed2">
+            <summary>
+            累计199消耗卡
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationCardConsumedCompleteRate2">
+            <summary>
+            199消耗卡完成率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ActivateHistoricalConsultation">

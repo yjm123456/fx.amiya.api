@@ -1,35 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
+namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
 {
-    /// <summary>
-    /// 内容平台派单处理情况
-    /// </summary>
-    public class ContentPlatFormOrderDealInfoDto
+    public class UpdateContentPlateFormOrderFinishVo
     {
-
         /// <summary>
-        /// 编号
+        /// 订单号
         /// </summary>
         public string Id { get; set; }
 
         /// <summary>
-        /// 派单编号
+        /// 成交情况id
         /// </summary>
-        public string ContentPlatFormOrderId { get; set; }
+        public string DealId { get; set; }
 
         /// <summary>
-        /// 创建时间
+        /// 是否成交
         /// </summary>
-        public DateTime CreateDate { get; set; }
+        public bool IsFinish { get; set; }
 
         /// <summary>
-        /// 是否到院
+        /// 成交医院
         /// </summary>
+        public int? LastDealHospitalId { get; set; }
+        /// <summary>
+        /// 是否到院（成交则默认true）
+        /// </summary>
+
         public bool IsToHospital { get; set; }
 
         /// <summary>
@@ -38,28 +38,26 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         public DateTime? ToHospitalDate { get; set; }
 
         /// <summary>
-        /// 是否成交
+        /// 成交金额
         /// </summary>
-        public bool IsDeal { get; set; }
+        public decimal? DealAmount { get; set; }
         /// <summary>
-        /// 最终成交医院id
+        /// 后期项目铺垫
         /// </summary>
-        public int? LastDealHospitalId { get; set; }
-        public string LastDealHospital { get; set; }
+        public string LastProjectStage { get; set; }
 
         /// <summary>
-        /// 截图
+        /// 成交截图url
         /// </summary>
-        public string DealPicture { get; set; }
-
+        public string DealPictureUrl { get; set; }
         /// <summary>
-        /// 备注
+        /// 未成交原因
         /// </summary>
-        public string Remark { get; set; }
+        public string UnDealReason { get; set; }
         /// <summary>
-        /// 价格
+        /// 未成交截图url
         /// </summary>
-        public decimal Price { get; set; }
+        public string UnDealPictureUrl { get; set; }
 
         /// <summary>
         /// 成交时间
@@ -69,6 +67,6 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// <summary>
         /// 三方订单号
         /// </summary>
-        public string OtherAppOrderId { get; set; }
+        public string OtherContentPlatFormOrderId { get; set; }
     }
 }

@@ -23,6 +23,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.DealPicture).HasColumnName("deal_picture").HasColumnType("varchar(200)").IsRequired(false);
             builder.Property(t => t.Remark).HasColumnName("remark").HasColumnType("varchar(200)").IsRequired(false);
             builder.Property(t => t.Price).HasColumnName("price").HasColumnType("decimal(10,2)").IsRequired();
+            builder.Property(t => t.DealDate).HasColumnName("deal_date").HasColumnType("datetime").IsRequired(false);
+            builder.Property(t => t.OtherAppOrderId).HasColumnName("other_order_id").HasColumnType("varchar(50)").IsRequired(false);
         }
     }
 }

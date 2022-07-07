@@ -43,7 +43,9 @@ namespace Fx.Amiya.Service
                                                        LastDealHospitalId=d.LastDealHospitalId,
                                                        DealPicture=d.DealPicture,
                                                        Remark=d.Remark,
-                                                       Price=d.Price
+                                                       Price=d.Price,
+                                                       DealDate=d.DealDate,
+                                                       OtherAppOrderId=d.OtherAppOrderId,
                               };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -81,6 +83,8 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.DealPicture = addDto.DealPicture;
                 ContentPlatFOrmOrderDealInfo.Remark = addDto.Remark;
                 ContentPlatFOrmOrderDealInfo.Price = addDto.Price;
+                ContentPlatFOrmOrderDealInfo.DealDate = addDto.DealDate;
+                ContentPlatFOrmOrderDealInfo.OtherAppOrderId = addDto.OtherAppOrderId;
                 await dalContentPlatFormOrderDealInfo.AddAsync(ContentPlatFOrmOrderDealInfo, true);
             }
             catch (Exception ex)
@@ -99,18 +103,20 @@ namespace Fx.Amiya.Service
                     throw new Exception("未找到该成交信息");
                 }
 
-                ContentPlatFormOrderDealInfoDto ContentPlatFOrmOrderDealInfoDto = new ContentPlatFormOrderDealInfoDto();
-                ContentPlatFOrmOrderDealInfoDto.Id = ContentPlatFOrmOrderDealInfo.Id;
-                ContentPlatFOrmOrderDealInfoDto.ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId;
-                ContentPlatFOrmOrderDealInfoDto.CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate;
-                ContentPlatFOrmOrderDealInfoDto.IsToHospital = ContentPlatFOrmOrderDealInfo.IsToHospital;
-                ContentPlatFOrmOrderDealInfoDto.ToHospitalDate = ContentPlatFOrmOrderDealInfo.ToHospitalDate;
-                ContentPlatFOrmOrderDealInfoDto.LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId;
-                ContentPlatFOrmOrderDealInfoDto.IsDeal = ContentPlatFOrmOrderDealInfo.IsDeal;
-                ContentPlatFOrmOrderDealInfoDto.DealPicture = ContentPlatFOrmOrderDealInfo.DealPicture;
-                ContentPlatFOrmOrderDealInfoDto.Remark = ContentPlatFOrmOrderDealInfo.Remark;
-                ContentPlatFOrmOrderDealInfoDto.Price = ContentPlatFOrmOrderDealInfo.Price;
-                return ContentPlatFOrmOrderDealInfoDto;
+                ContentPlatFormOrderDealInfoDto contentPlatFOrmOrderDealInfoDto = new ContentPlatFormOrderDealInfoDto();
+                contentPlatFOrmOrderDealInfoDto.Id = ContentPlatFOrmOrderDealInfo.Id;
+                contentPlatFOrmOrderDealInfoDto.ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId;
+                contentPlatFOrmOrderDealInfoDto.CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate;
+                contentPlatFOrmOrderDealInfoDto.IsToHospital = ContentPlatFOrmOrderDealInfo.IsToHospital;
+                contentPlatFOrmOrderDealInfoDto.ToHospitalDate = ContentPlatFOrmOrderDealInfo.ToHospitalDate;
+                contentPlatFOrmOrderDealInfoDto.LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId;
+                contentPlatFOrmOrderDealInfoDto.IsDeal = ContentPlatFOrmOrderDealInfo.IsDeal;
+                contentPlatFOrmOrderDealInfoDto.DealPicture = ContentPlatFOrmOrderDealInfo.DealPicture;
+                contentPlatFOrmOrderDealInfoDto.Remark = ContentPlatFOrmOrderDealInfo.Remark;
+                contentPlatFOrmOrderDealInfoDto.Price = ContentPlatFOrmOrderDealInfo.Price;
+                contentPlatFOrmOrderDealInfoDto.DealDate = ContentPlatFOrmOrderDealInfo.DealDate;
+                contentPlatFOrmOrderDealInfoDto.OtherAppOrderId = ContentPlatFOrmOrderDealInfo.OtherAppOrderId;
+                return contentPlatFOrmOrderDealInfoDto;
             }
             catch (Exception ex)
             {
@@ -127,6 +133,7 @@ namespace Fx.Amiya.Service
                 if (ContentPlatFOrmOrderDealInfo == null)
                     throw new Exception("未找到该成交信息！");
 
+
                 ContentPlatFOrmOrderDealInfo.Id = updateDto.Id;
                 ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId = updateDto.ContentPlatFormOrderId;
                 ContentPlatFOrmOrderDealInfo.IsToHospital = updateDto.IsToHospital;
@@ -136,7 +143,10 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.DealPicture = updateDto.DealPicture;
                 ContentPlatFOrmOrderDealInfo.Remark = updateDto.Remark;
                 ContentPlatFOrmOrderDealInfo.Price = updateDto.Price;
+                ContentPlatFOrmOrderDealInfo.DealDate = updateDto.DealDate;
+                ContentPlatFOrmOrderDealInfo.OtherAppOrderId = updateDto.OtherAppOrderId;
                 await dalContentPlatFormOrderDealInfo.UpdateAsync(ContentPlatFOrmOrderDealInfo, true);
+
             }
             catch (Exception ex)
             {

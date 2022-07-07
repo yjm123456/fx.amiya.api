@@ -207,5 +207,13 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 顾客照片（最多上传5张）
         /// </summary>
         public List<string> CustomerPictures { get; set; }
+        /// <summary>
+        /// 未成交截图url
+        /// </summary>
+        public string UnDealPictureUrl { get; set; }
+        /// <summary>
+        /// 成交凭证
+        /// </summary>
+        public string DealPictureUrl { get; set; }
     }
 }

@@ -1057,6 +1057,8 @@ namespace Fx.Amiya.Service
             result.CheckStateText = ServiceClass.GetCheckTypeText(result.CheckState.Value);
             result.CheckPrice = order.CheckPrice;
             result.IsToHospital = order.IsToHospital;
+            result.UnDealPictureUrl = order.UnDealPictureUrl;
+            result.DealPictureUrl = order.DealPictureUrl;
             result.ToHospitalDate = order.ToHospitalDate;
             result.IsReturnBackPrice = order.IsReturnBackPrice;
             if (result.IsReturnBackPrice == true)
@@ -1136,6 +1138,8 @@ namespace Fx.Amiya.Service
             var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == orderId).FirstOrDefaultAsync();
             return order.RepeatOrderPictureUrl;
         }
+
+
 
         /// <summary>
         /// 根据加密手机号获取简易的订单列表
@@ -1500,12 +1504,14 @@ namespace Fx.Amiya.Service
                 orderDealDto.ContentPlatFormOrderId = input.Id;
                 orderDealDto.CreateDate = DateTime.Now;
                 orderDealDto.IsDeal = input.IsFinish;
+                orderDealDto.OtherAppOrderId = input.OtherContentPlatFormOrderId;
                 if (input.IsFinish == true)
                 {
                     orderDealDto.IsToHospital = true;
                     orderDealDto.ToHospitalDate = input.ToHospitalDate;
                     orderDealDto.LastDealHospitalId = input.LastDealHospitalId;
                     orderDealDto.DealPicture = input.DealPictureUrl;
+                    orderDealDto.DealDate = input.DealDate;
                     orderDealDto.Price = input.DealAmount.Value;
                     orderDealDto.Remark = input.LastProjectStage;
                 }
@@ -1518,6 +1524,89 @@ namespace Fx.Amiya.Service
                     orderDealDto.Price = 0.00M;
                 }
                 await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
+                unitOfWork.Commit();
+            }
+            catch (Exception err)
+            {
+                unitOfWork.RollBack();
+                throw new Exception(err.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 修改完成订单
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task UpdateFinishContentPlateFormOrderAsync(UpdateContentPlateFormOrderFinishDto input)
+        {
+            unitOfWork.BeginTransaction();
+            try
+            {
+                var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.Id).SingleOrDefaultAsync();
+                var orderDealInfo = await _contentPlatFormOrderDalService.GetByIdAsync(input.DealId);
+                order.DealAmount -= orderDealInfo.Price;
+                if (order == null)
+                {
+                    throw new Exception("未找到该订单的相关信息！");
+                }
+                if (input.IsFinish == true)
+                {
+                    var price = order.DepositAmount.HasValue ? order.DepositAmount.Value : 0.00M;
+                    await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + input.DealAmount.Value, (int)OrderFrom.ContentPlatFormOrder);
+                    order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.OrderComplete);
+                    order.DealAmount += input.DealAmount;
+                    order.LateProjectStage = input.LastProjectStage;
+                    order.LastDealHospitalId = input.LastDealHospitalId;
+                    order.ToHospitalDate = input.ToHospitalDate;
+                    order.DealPictureUrl = input.DealPictureUrl;
+                    order.IsToHospital = true;
+                    order.ToHospitalDate = input.ToHospitalDate;
+                    order.LastDealHospitalId = input.LastDealHospitalId;
+                    order.UnDealReason = "";
+                    order.UnDealPictureUrl = "";
+                    order.DealDate = input.DealDate;
+
+                }
+                else
+                {
+                    order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.WithoutCompleteOrder);
+                    order.UnDealReason = input.UnDealReason;
+                    order.UnDealPictureUrl = input.UnDealPictureUrl;
+                    order.IsToHospital = input.IsToHospital;
+                    order.ToHospitalDate = input.ToHospitalDate;
+                    order.LateProjectStage = "";
+                    order.DealPictureUrl = "";
+                }
+                order.OtherContentPlatFormOrderId = input.OtherContentPlatFormOrderId;
+                order.UpdateDate = DateTime.Now;
+                await _dalContentPlatformOrder.UpdateAsync(order, true);
+
+                //修改订单成交情况
+                UpdateContentPlatFormOrderDealInfoDto orderDealDto = new UpdateContentPlatFormOrderDealInfoDto();
+                orderDealDto.Id = input.DealId;
+                orderDealDto.ContentPlatFormOrderId = input.Id;
+                orderDealDto.IsDeal = input.IsFinish;
+                orderDealDto.OtherAppOrderId = input.OtherContentPlatFormOrderId;
+                if (input.IsFinish == true)
+                {
+                    orderDealDto.IsToHospital = true;
+                    orderDealDto.ToHospitalDate = input.ToHospitalDate;
+                    orderDealDto.LastDealHospitalId = input.LastDealHospitalId;
+                    orderDealDto.DealPicture = input.DealPictureUrl;
+                    orderDealDto.Price = input.DealAmount.Value;
+                    orderDealDto.Remark = input.LastProjectStage;
+                    orderDealDto.DealDate = input.DealDate;
+                }
+                else
+                {
+                    orderDealDto.IsToHospital = input.IsToHospital;
+                    orderDealDto.ToHospitalDate = input.ToHospitalDate;
+                    orderDealDto.DealPicture = input.UnDealPictureUrl;
+                    orderDealDto.Remark = input.UnDealReason;
+                    orderDealDto.Price = 0.00M;
+                }
+                await _contentPlatFormOrderDalService.UpdateAsync(orderDealDto);
                 unitOfWork.Commit();
             }
             catch (Exception err)

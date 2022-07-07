@@ -95,7 +95,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 throw new Exception("该订单没有手机号，不能绑定客服");
             }
-            if (employee.PositionName == "客服" || employee.PositionName == "客服管理员" || employee.PositionName == "客服主管")
+            if (employee.PositionName == "客服" || employee.PositionName == "客服管理员" || employee.PositionName == "客服主管" || employee.PositionName == "财务")
             {
                 var bind = await _dalBindCustomerService.GetAll()
               .Include(e => e.CustomerServiceAmiyaEmployee)

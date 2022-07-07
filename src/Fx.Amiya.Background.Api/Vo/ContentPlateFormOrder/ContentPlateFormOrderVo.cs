@@ -266,5 +266,13 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 到院时间（最新）
         /// </summary>
         public DateTime? ToHospitalDate { get; set; }
+        /// <summary>
+        /// 未成交截图url
+        /// </summary>
+        public string UnDealPictureUrl { get; set; }
+        /// <summary>
+        /// 成交凭证
+        /// </summary>
+        public string DealPictureUrl { get; set; }
     }
 }

@@ -202,6 +202,14 @@ namespace Fx.Amiya.IService
         Task FinishContentPlateFormOrderAsync(ContentPlateFormOrderFinishDto input);
 
         /// <summary>
+        /// 修改订单完成后的信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task UpdateFinishContentPlateFormOrderAsync(UpdateContentPlateFormOrderFinishDto input);
+
+
+        /// <summary>
         /// 获取订单类型
         /// </summary>
         /// <returns></returns>

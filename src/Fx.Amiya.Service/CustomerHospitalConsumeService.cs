@@ -244,6 +244,8 @@ namespace Fx.Amiya.Service
                 var bind = await _dalBindCustomerService.GetAll()
                 .Include(e => e.CustomerServiceAmiyaEmployee)
                 .FirstOrDefaultAsync(e => e.BuyerPhone == result.Phone);
+                if (bind == null)
+                { throw new Exception("该手机号的顾客未在啊美雅系统中产生任何消费，无法升单，请先在下单平台/内容平台录单！"); }
                 bind.NewConsumptionDate = DateTime.Now;
                 bind.NewConsumptionContentPlatform = (int)OrderFrom.BuyAgainOrder;
                 bind.NewContentPlatForm = ServiceClass.GerConsumeChannelText(result.Channel.Value);
@@ -529,7 +531,7 @@ namespace Fx.Amiya.Service
                                            && (channel == null || d.Channel == channel)
                                            && (!isConfirmOrder.HasValue || d.IsConfirmOrder == isConfirmOrder.Value)
                                            && (liveAnchorId == null || d.LiveAnchorId == liveAnchorId)
-                                           && (string.IsNullOrWhiteSpace(keyword) || d.Phone.Contains(keyword) || d.ItemName.Contains(keyword)||d.ConsumeId.Contains(keyword))
+                                           && (string.IsNullOrWhiteSpace(keyword) || d.Phone.Contains(keyword) || d.ItemName.Contains(keyword) || d.ConsumeId.Contains(keyword))
                                            && (consumeType == null || d.ConsumeType == consumeType)
                                            && (addedBy == -1 || d.AddedBy == addedBy)
                                            && (checkState == -1 || d.CheckState == checkState)

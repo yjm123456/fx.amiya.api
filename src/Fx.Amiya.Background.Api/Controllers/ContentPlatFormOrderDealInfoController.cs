@@ -65,6 +65,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 contentPlatFormOrderDealInfoVo.DealPicture = contentPlatFormOrderDealInfo.DealPicture;
                 contentPlatFormOrderDealInfoVo.Remark = contentPlatFormOrderDealInfo.Remark;
                 contentPlatFormOrderDealInfoVo.Price = contentPlatFormOrderDealInfo.Price;
+                contentPlatFormOrderDealInfoVo.DealDate = contentPlatFormOrderDealInfo.DealDate;
+                contentPlatFormOrderDealInfoVo.OtherOrderId = contentPlatFormOrderDealInfo.OtherAppOrderId;
                 return ResultData<ContentPlatFormOrderDealInfoVo>.Success().AddData("contentPlatFormOrderDealInfoInfo", contentPlatFormOrderDealInfoVo);
             }
             catch (Exception ex)
@@ -95,6 +97,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.DealPicture = updateVo.DealPicture;
                 updateDto.Remark = updateVo.Remark;
                 updateDto.Price = updateVo.Price;
+                updateDto.DealDate = updateVo.DealDate;
+                updateDto.OtherAppOrderId = updateVo.OtherAppOrderId;
                 await _contentPlatFormOrderDealInfoService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

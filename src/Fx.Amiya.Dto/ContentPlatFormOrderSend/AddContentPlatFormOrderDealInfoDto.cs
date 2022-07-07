@@ -52,5 +52,15 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 价格
         /// </summary>
         public decimal Price { get; set; }
+
+        /// <summary>
+        /// 成交时间
+        /// </summary>
+        public DateTime? DealDate { get; set; }
+
+        /// <summary>
+        /// 三方订单号
+        /// </summary>
+        public string OtherAppOrderId { get; set; }
     }
 }

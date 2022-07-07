@@ -765,6 +765,11 @@ ADD COLUMN `consultation_card_consumed_target2` INT NOT NULL DEFAULT 0 AFTER `co
 ADD COLUMN `cumulative_consultation_card_consumed2` INT NOT NULL DEFAULT 0 AFTER `consultation_card_consumed_target2`,
 ADD COLUMN `consultation_card_consumed_complete_rate2` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_consultation_card_consumed2`;
 
+ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
+ADD COLUMN `deal_date` DATETIME NULL AFTER `last_deal_hospital_id`,
+ADD COLUMN `other_order_id` VARCHAR(50) NULL AFTER `deal_date`;
+
+
 
 -----------------------------------------------余建明 2022/07/05 END--------------------------------------------;
 

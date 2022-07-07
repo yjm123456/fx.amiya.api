@@ -297,10 +297,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             IsDeal = d.IsDeal,
                                             IsToHospital = d.IsToHospital,
                                             TohospitalDate = d.ToHospitalDate,
-                                            DealHospital=d.LastDealHospital,
+                                            DealHospital = d.LastDealHospital,
                                             DealPicture = d.DealPicture,
                                             Remark = d.Remark,
-                                            Price = d.Price
+                                            Price = d.Price,
+                                            OtherOrderId = d.OtherAppOrderId,
+                                            DealDate = d.DealDate,
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;
@@ -335,7 +337,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             IsToHospital = d.IsToHospital,
                                             DealPicture = d.DealPicture,
                                             Remark = d.Remark,
-                                            Price = d.Price
+                                            Price = d.Price,
+                                            DealDate=d.DealDate,
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;

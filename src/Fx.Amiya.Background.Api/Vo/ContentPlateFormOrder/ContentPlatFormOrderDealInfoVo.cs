@@ -61,5 +61,15 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 价格
         /// </summary>
         public decimal Price { get; set; }
+
+        /// <summary>
+        /// 成交时间
+        /// </summary>
+        public DateTime? DealDate { get; set; }
+
+        /// <summary>
+        /// 三方订单号
+        /// </summary>
+        public string OtherOrderId { get; set; }
     }
 }

@@ -442,6 +442,8 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             orderUpdateInfo.CreateDate = order.CreateDate;
             orderUpdateInfo.SendDate = order.SendDate;
+            orderUpdateInfo.UnDealPictureUrl = order.UnDealPictureUrl;
+            orderUpdateInfo.DealPictureUrl = order.DealPictureUrl;
             orderUpdateInfo.UpdateDate = order.UpdateDate;
             orderUpdateInfo.DealDate = order.DealDate;
             orderUpdateInfo.DealAmount = order.DealAmount;
@@ -802,7 +804,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData> FinishOrderByEmployeeAsync(ContentPlateFormOrderFinishVo updateVo)
         {
-            //修改订单
             ContentPlateFormOrderFinishDto updateDto = new ContentPlateFormOrderFinishDto();
             updateDto.Id = updateVo.Id;
             updateDto.IsFinish = updateVo.IsFinish;
@@ -820,6 +821,34 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData.Success();
         }
 
+
+
+        /// <summary>
+        /// 客服修改已完成订单
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut("updateFinishContentPlateFormOrderByEmployee")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> UpdateFinishOrderByEmployeeAsync(UpdateContentPlateFormOrderFinishVo updateVo)
+        {
+            UpdateContentPlateFormOrderFinishDto updateDto = new UpdateContentPlateFormOrderFinishDto();
+            updateDto.Id = updateVo.Id;
+            updateDto.DealId = updateVo.DealId ;
+            updateDto.IsFinish = updateVo.IsFinish;
+            updateDto.LastDealHospitalId = updateVo.LastDealHospitalId;
+            updateDto.ToHospitalDate = updateVo.ToHospitalDate;
+            updateDto.DealAmount = updateVo.DealAmount;
+            updateDto.LastProjectStage = updateVo.LastProjectStage;
+            updateDto.DealPictureUrl = updateVo.DealPictureUrl;
+            updateDto.UnDealReason = updateVo.UnDealReason;
+            updateDto.IsToHospital = updateVo.IsToHospital;
+            updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
+            updateDto.DealDate = updateVo.DealDate;
+            updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
+            await _orderService.UpdateFinishContentPlateFormOrderAsync(updateDto);
+            return ResultData.Success();
+        }
 
         /// <summary>
         /// 医院完成订单
