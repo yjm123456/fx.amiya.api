@@ -20,6 +20,7 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         public string Phone { get; set; }
         public decimal Price { get; set; }
         public int ConsultationType { get; set; }
+        public string ConsultationTypeText { get; set; }
         public bool IsAddWeChat { get; set; }
         public bool IsWriteOff { get; set; }
         public bool IsConsultation { get; set; }

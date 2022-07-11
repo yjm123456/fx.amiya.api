@@ -55,28 +55,28 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// 面诊方式
         /// </summary>
         [Description("面诊方式")]
-        public int ConsultationType { get; set; }
+        public string ConsultationTypeText { get; set; }
 
         /// <summary>
         /// 是否加V
         /// </summary>
         [Description("是否加V")]
-        public bool IsAddWechat { get; set; }
+        public string IsAddWechat { get; set; }
         /// <summary>
         /// 是否核销
         /// </summary>
         [Description("是否核销")]
-        public bool IsWriteOff { get; set; }
+        public string IsWriteOff { get; set; }
         /// <summary>
         /// 是否面诊
         /// </summary>
         [Description("是否面诊")]
-        public bool IsConsultation { get; set; }
+        public string IsConsultation { get; set; }
         /// <summary>
         /// 是否退款
         /// </summary>
         [Description("是否退款")]
-        public bool IsReturnBackPrice { get; set; }
+        public string IsReturnBackPrice { get; set; }
         /// <summary>
         /// 备注
         /// </summary>

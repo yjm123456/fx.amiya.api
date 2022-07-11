@@ -458,6 +458,31 @@ CREATE TABLE `amiyadb`.`tbl_amiya_warehouse` (
 
 
 
+-----------------------------------------------余建明 2022/07/11 BEGIN--------------------------------------------;
+CREATE TABLE `amiyadb`.`tbl_goods_shopcar` (
+  `id` VARCHAR(50) NOT NULL,
+  `customer_id` VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL,
+  `goods_id` VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL,
+  `num` INT NOT NULL DEFAULT 0,
+  `status` INT NOT NULL DEFAULT 1,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_goods_shop_car_shop_info_idx` (`goods_id` ASC) VISIBLE,
+  CONSTRAINT `fk_goods_shop_car_customer_info`
+    FOREIGN KEY (`customer_id`)
+    REFERENCES `amiyadb`.`tbl_customer_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_goods_shop_car_shop_info`
+    FOREIGN KEY (`goods_id`)
+    REFERENCES `amiyadb`.`tbl_goods_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+-----------------------------------------------余建明 2022/07/11 END--------------------------------------------;
+
+
+
 
 
 
@@ -555,9 +580,6 @@ CREATE TABLE `amiyadb`.`tbl_hospital_brand_apply` (
   PRIMARY KEY (`id`));
 
 -----------------------------------------------余建明 2022/04/29 END--------------------------------------------;
-
-
-
 
 
 

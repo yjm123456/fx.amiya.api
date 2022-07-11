@@ -306,6 +306,29 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GoodsShopCarController.GetGoodsShopCarInfoListAsync(System.String,System.Int32,System.Int32)">
+            <summary>
+            获取客户的购物车列表
+            </summary>
+            <param name="keyword"></param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GoodsShopCarController.AddAsync(Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.AddGoodsShopCarVo)">
+            <summary>
+            添加购物车
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GoodsShopCarController.UpdateAsync(Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.UpdateGoodsShopCarVo)">
+            <summary>
+            修改购物车
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.HospitalInfoController.GetSimpleListAsync(System.String,System.String)">
             <summary>
             获取医院列表
@@ -1219,6 +1242,96 @@
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsDemand.AmiyaHospitalDepartmentIdAndNameVo.GoodsDemandList">
             <summary>
             需求项目
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.AddGoodsShopCarVo.GoodsId">
+            <summary>
+            商品id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.AddGoodsShopCarVo.Num">
+            <summary>
+            数量
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo">
+            <summary>
+            购物车
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.CustomerId">
+            <summary>
+            客户id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.GoodsId">
+            <summary>
+            商品id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.GoodsName">
+            <summary>
+            商品名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.Unit">
+            <summary>
+            商品规格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.Price">
+            <summary>
+            价格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.InterGrationAccount">
+            <summary>
+            积分
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.ExchangeType">
+            <summary>
+            交易类型(0:积分支付展示积分；1:三方支付展示价格)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.Num">
+            <summary>
+            数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.Status">
+            <summary>
+            购物车状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.CreateDate">
+            <summary>
+            创建日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.UpdateDate">
+            <summary>
+            更新日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.UpdateGoodsShopCarVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.UpdateGoodsShopCarVo.GoodsId">
+            <summary>
+            商品id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.UpdateGoodsShopCarVo.Num">
+            <summary>
+            数量
             </summary>
         </member>
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsCategoryVo.ShowDirectionType">

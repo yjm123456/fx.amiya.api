@@ -333,6 +333,30 @@ namespace Fx.Amiya.Service
                     x.LiveAnchorName = liveAnchorInfo.Name;
                     var empInfo = await _amiyaEmployeeService.GetByIdAsync(x.CreateBy);
                     x.CreateByName = empInfo.Name;
+                    if (x.ConsultationType == 1)
+                    {
+                        x.ConsultationTypeText = "视频";
+                    }
+                    if (x.ConsultationType == 2)
+                    {
+                        x.ConsultationTypeText = "图片";
+                    }
+                    if (x.ConsultationType == 3)
+                    {
+                        x.ConsultationTypeText = "私信";
+                    }
+                    if (x.ConsultationType == 4)
+                    {
+                        x.ConsultationTypeText = "其他";
+                    }
+                    if (x.ConsultationType == 5)
+                    {
+                        x.ConsultationTypeText = "短视频";
+                    }
+                    if (x.ConsultationType == 6)
+                    {
+                        x.ConsultationTypeText = "其他";
+                    }
                 }
                 return shoppingCartRegistrationPageInfo;
             }

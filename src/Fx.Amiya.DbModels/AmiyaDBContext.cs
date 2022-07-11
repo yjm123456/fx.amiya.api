@@ -39,6 +39,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<ConsumptionLevel> ConsumptionLevel { get; set; }
         public virtual DbSet<AmiyaPositionInfo> AmiyaPositionInfo { get; set; }
         public virtual DbSet<HospitalEmployee> HospitalEmployee { get; set; }
+        public virtual DbSet<GoodsShopCar> GoodsShopCar { get; set; }
         public virtual DbSet<HospitalPositionInfo> HospitalPositionInfo { get; set; }
         public virtual DbSet<ItemInfo> ItemInfo { get; set; }
         public virtual DbSet<HomepageCarouselImage> HomepageCarouselImage { get; set; }
@@ -89,6 +90,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<Initializer> OrderInitializer { get; set; }
         public virtual DbSet<LiveType> LiveType { get; set; }
         public virtual DbSet<RequirementType> RequirementType { get; set; }
+        public virtual DbSet<GoodsInfo> GoodsInfo { get; set; }
         public virtual DbSet<AmiyaDepartment> AmiyaDepartment { get; set; }
         public virtual DbSet<LiveRequirementInfo> LiveRequirementInfo { get; set; }
         public virtual DbSet<Address> Address { get; set; }
@@ -135,6 +137,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new BeautyDiaryTagDetailConfiguration());
             modelBuilder.ApplyConfiguration(new BeautyDiaryBannerImageConfiguration());
             modelBuilder.ApplyConfiguration(new BeautyDiaryManageConfiguration());
+            modelBuilder.ApplyConfiguration(new GoodsInfoConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalInfoConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalEnvironmentConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalEnvironmentPictureConfiguration());
@@ -142,6 +145,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new ExpressConfiguration());
             modelBuilder.ApplyConfiguration(new TagInfoConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalTagDetailConfiguration());
+            modelBuilder.ApplyConfiguration(new GoodsShopCarConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalAppointmentNumerConfiguration());
             modelBuilder.ApplyConfiguration(new TmallGoodsSkuConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalBrandApplyConfiguration());

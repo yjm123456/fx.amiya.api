@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\LTM代码管理\FX\阿美雅api\src\Fx.Amiya.MiniProgram.Api\Fx.Amiya.MiniProgram.Api.xml</DocumentationFile>
+    <DocumentationFile>E:\新建文件夹\fx.amiya.api\src\Fx.Amiya.MiniProgram.Api\Fx.Amiya.MiniProgram.Api.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

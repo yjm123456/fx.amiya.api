@@ -163,97 +163,97 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         public string AddWechatCompleteRate { get; set; }
 
         /// <summary>
-        /// 今日99面诊卡数量
+        /// 今日照片面诊卡数量
         /// </summary>
-        [Description("今日99面诊卡下单数量")]
+        [Description("今日照片面诊卡下单数量")]
         public int Consultation { get; set; }
         /// <summary>
-        /// 99面诊卡目标
+        /// 照片面诊卡目标
         /// </summary>
-        [Description("99面诊卡下单数量目标")]
+        [Description("照片面诊卡下单数量目标")]
         public int ConsultationTarget { get; set; }
 
         /// <summary>
-        /// 累计99面诊卡
+        /// 累计照片面诊卡
         /// </summary>
-        [Description("累计99面诊卡下单数量")]
+        [Description("累计照片面诊卡下单数量")]
         public int CumulativeConsultation { get; set; }
 
         /// <summary>
-        /// 99面诊卡完成率
+        /// 照片面诊卡完成率
         /// </summary>
-        [Description("99面诊卡下单数量完成率")]
+        [Description("照片面诊卡下单数量完成率")]
         public string ConsultationCompleteRate { get; set; }
         /// <summary>
-        /// 今日199面诊卡数量
+        /// 今日视频面诊卡数量
         /// </summary>
-        [Description("199面诊卡下单数量完成率")]
+        [Description("今日视频面诊卡数量")]
         public int Consultation2 { get; set; }
         /// <summary>
-        /// 199面诊卡目标
+        /// 视频面诊卡目标
         /// </summary>
-        [Description("199面诊卡下单数量完成率")]
+        [Description("视频面诊卡目标")]
         public int ConsultationTarget2 { get; set; }
 
         /// <summary>
-        /// 累计199面诊卡
+        /// 累计视频面诊卡
         /// </summary>
-        [Description("199面诊卡下单数量完成率")]
+        [Description("累计视频面诊卡")]
         public int CumulativeConsultation2 { get; set; }
 
         /// <summary>
-        /// 199面诊卡完成率
+        /// 视频面诊卡完成率
         /// </summary>
-        [Description("199面诊卡下单数量完成率")]
+        [Description("视频面诊卡完成率")]
         public string ConsultationCompleteRate2 { get; set; }
 
         /// <summary>
-        /// 今日99消耗卡数量
+        /// 今日照片消耗卡数量
         /// </summary>
-        [Description("今日99消耗卡数量")]
+        [Description("今日照片消耗卡数量")]
         public int ConsultationCardConsumed { get; set; }
 
         /// <summary>
-        /// 99消耗卡目标
+        /// 照片消耗卡目标
         /// </summary>
-        [Description("99消耗卡目标")]
+        [Description("照片消耗卡目标")]
         public int ConsultationCardConsumedTarget { get; set; }
 
         /// <summary>
-        /// 累计99消耗卡
+        /// 累计照片消耗卡
         /// </summary>
-        [Description("累计99消耗卡")]
+        [Description("累计照片消耗卡")]
         public int CumulativeConsultationCardConsumed { get; set; }
 
         /// <summary>
-        /// 99消耗卡完成率
+        /// 照片消耗卡完成率
         /// </summary>
-        [Description("99消耗卡完成率")]
+        [Description("照片消耗卡完成率")]
         public string ConsultationCardConsumedCompleteRate { get; set; }
 
 
         /// <summary>
-        /// 今日199消耗卡数量
+        /// 今日视频消耗卡数量
         /// </summary>
-        [Description("今日199消耗卡数量")]
+        [Description("今日视频消耗卡数量")]
         public int ConsultationCardConsumed2 { get; set; }
 
         /// <summary>
-        /// 199消耗卡目标
+        /// 视频消耗卡目标
         /// </summary>
-        [Description("199消耗卡目标")]
+        [Description("视频消耗卡目标")]
         public int ConsultationCardConsumedTarget2 { get; set; }
 
         /// <summary>
-        /// 累计199消耗卡
+        /// 累计视频消耗卡
         /// </summary>
-        [Description("累计199消耗卡")]
+        [Description("累计视频消耗卡")]
         public int CumulativeConsultationCardConsumed2 { get; set; }
 
         /// <summary>
-        /// 199消耗卡完成率
+        /// 视频消耗卡完成率
         /// </summary>
-        [Description("199消耗卡完成率")]
+        [Description("视频消耗卡完成率")]
         public string ConsultationCardConsumedCompleteRate2 { get; set; }
 
         /// <summary>

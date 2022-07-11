@@ -17,5 +17,6 @@ namespace Fx.Amiya.DbModels.Model
         public List<ReceiveGift> ReceiveGiftList { get; set; }
         public List<Address> AddressList { get; set; }
         public List<OrderTrade> OrderTradeList { get; set; }
+        public List<GoodsShopCar> GoodsShopCar { get; set; }
     }
 }
