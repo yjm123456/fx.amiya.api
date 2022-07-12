@@ -5,6 +5,7 @@ using Fx.Common;
 using Fx.Open.Infrastructure.Web;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -48,11 +49,16 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                         CustomerId = d.CustomerId,
                                         GoodsId = d.GoodsId,
                                         GoodsName = d.GoodsName,
+                                        GoodsPictureUrl=d.GoodsPictureUrl,
                                         Unit = d.Unit,
                                         Price = d.Price,
                                         InterGrationAccount = d.InterGrationAccount,
                                         ExchangeType = d.ExchangeType,
                                         Num = d.Num,
+                                        City=d.City,
+                                        CityId=d.CityId,
+                                        Hospital=d.Hospital,
+                                        HospitalId=d.HospitalId,
                                         Status = d.Status,
                                         UpdateDate = d.UpdateDate,
                                         CreateDate = d.CreateDate,
@@ -81,6 +87,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 addDto.CustomerId = customerId;
                 addDto.GoodsId = addVo.GoodsId;
                 addDto.Num = addVo.Num;
+                addDto.CityId = addVo.CityId;
+                addDto.HospitalId = addVo.HospitalId;
 
                 await goodsShopCarService.AddAsync(addDto);
                 return ResultData.Success();
@@ -111,8 +119,29 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 updateDto.CustomerId = customerId;
                 updateDto.GoodsId = updateVo.GoodsId;
                 updateDto.Num = updateVo.Num;
+                updateDto.CityId = updateVo.CityId;
+                updateDto.HospitalId = updateVo.HospitalId;
 
                 await goodsShopCarService.UpdateAsync(updateDto);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 批量删除用户购物车
+        /// </summary>
+        /// <param name="idList">购物车id</param>
+        /// <returns></returns>
+        [HttpPut("deleteGoodsShopCar")]
+        public async Task<ResultData> DeleteGoodsShopCarAsync(List<string>idList)
+        {
+            try
+            {
+                await goodsShopCarService.DeleteAsync(idList);
                 return ResultData.Success();
             }
             catch (Exception ex)

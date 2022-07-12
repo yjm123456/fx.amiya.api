@@ -27,6 +27,10 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar
         /// 商品名称
         /// </summary>
         public string GoodsName { get; set; }
+        /// <summary>
+        /// 商品图片
+        /// </summary>
+        public string GoodsPictureUrl { get; set; }
 
         /// <summary>
         /// 商品规格
@@ -48,6 +52,22 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar
         /// </summary>
         public int ExchangeType { get; set; }
 
+        /// <summary>
+        /// 城市id
+        /// </summary>
+        public int? CityId { get; set; }
+        /// <summary>
+        /// 城市
+        /// </summary>
+        public string City { get; set; }
+        /// <summary>
+        /// 医院id
+        /// </summary>
+        public int? HospitalId { get; set; }
+        /// <summary>
+        /// 医院
+        /// </summary>
+        public string Hospital { get; set; }
         /// <summary>
         /// 数量
         /// </summary>

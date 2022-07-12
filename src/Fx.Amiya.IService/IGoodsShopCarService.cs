@@ -14,7 +14,7 @@ namespace Fx.Amiya.IService
         Task AddAsync(AddGoodsShopCarDto addDto);
         Task<GoodsShopCarDto> GetByIdAsync(string id);
         Task UpdateAsync(UpdateGoodsShopCarDto updateDto);
-        Task DeleteAsync(string id);
+        Task DeleteAsync(List<string> id);
 
 
     }

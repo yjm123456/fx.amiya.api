@@ -17,11 +17,20 @@ namespace Fx.Amiya.DbModels.Model
         public string GoodsId { get; set; }
         public int Num { get; set; }
         public int Status { get; set; }
+
+        public int? CityId { get; set; }
+
+        public int? HospitalId { get; set; }
+
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
 
         public GoodsInfo GoodsInfo { get; set; }
 
         public CustomerInfo CustomerInfo { get; set; }
+
+        public CooperativeHospitalCity City { get; set; }
+
+        public HospitalInfo HospitalInfo { get; set; }
     }
 }

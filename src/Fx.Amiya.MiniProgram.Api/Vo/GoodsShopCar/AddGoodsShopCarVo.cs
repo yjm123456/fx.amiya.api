@@ -16,5 +16,14 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar
         /// 数量
         /// </summary>
         public int Num { get; set; }
+        /// <summary>
+        /// 城市id
+        /// </summary>
+        public int? CityId { get; set; }
+
+        /// <summary>
+        /// 医院id
+        /// </summary>
+        public int? HospitalId { get; set; }
     }
 }

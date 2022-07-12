@@ -329,6 +329,13 @@
             <param name="updateVo"></param>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GoodsShopCarController.DeleteGoodsShopCarAsync(System.Collections.Generic.List{System.String})">
+            <summary>
+            批量删除用户购物车
+            </summary>
+            <param name="idList">购物车id</param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.HospitalInfoController.GetSimpleListAsync(System.String,System.String)">
             <summary>
             获取医院列表
@@ -1254,6 +1261,16 @@
             数量
             </summary>
         </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.AddGoodsShopCarVo.CityId">
+            <summary>
+            城市id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.AddGoodsShopCarVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo">
             <summary>
             购物车
@@ -1279,6 +1296,11 @@
             商品名称
             </summary>
         </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.GoodsPictureUrl">
+            <summary>
+            商品图片
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.Unit">
             <summary>
             商品规格
@@ -1297,6 +1319,26 @@
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.ExchangeType">
             <summary>
             交易类型(0:积分支付展示积分；1:三方支付展示价格)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.CityId">
+            <summary>
+            城市id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.City">
+            <summary>
+            城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.Hospital">
+            <summary>
+            医院
             </summary>
         </member>
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.Num">
@@ -1332,6 +1374,16 @@
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.UpdateGoodsShopCarVo.Num">
             <summary>
             数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.UpdateGoodsShopCarVo.CityId">
+            <summary>
+            城市id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.UpdateGoodsShopCarVo.HospitalId">
+            <summary>
+            医院id
             </summary>
         </member>
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsCategoryVo.ShowDirectionType">

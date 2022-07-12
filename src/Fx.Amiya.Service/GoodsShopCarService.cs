@@ -30,6 +30,7 @@ namespace Fx.Amiya.Service
                 var goodsShopCarService = from d in dalGoodsShopCarService.GetAll()
                                           where (keyword == null || d.GoodsInfo.Name.Contains(keyword))
                                                && (d.CustomerId == customerId)
+                                               && (d.Status == 1)
                                                && (d.Num > 0)
                                           select new GoodsShopCarDto
                                           {
@@ -43,8 +44,13 @@ namespace Fx.Amiya.Service
                                               ExchangeType = d.GoodsInfo.ExchangeType,
                                               Num = d.Num,
                                               Status = d.Status,
+                                              GoodsPictureUrl = d.GoodsInfo.ThumbPicUrl,
                                               UpdateDate = d.UpdateDate,
                                               CreateDate = d.CreateDate,
+                                              HospitalId = d.HospitalId,
+                                              Hospital = d.HospitalId.HasValue ? d.HospitalInfo.Name : "",
+                                              CityId = d.CityId,
+                                              City = d.CityId.HasValue ? d.City.Name : "",
                                           };
                 FxPageInfo<GoodsShopCarDto> goodsShopCarServicePageInfo = new FxPageInfo<GoodsShopCarDto>();
                 goodsShopCarServicePageInfo.TotalCount = await goodsShopCarService.CountAsync();
@@ -69,6 +75,8 @@ namespace Fx.Amiya.Service
                     updateDto.Id = isExistGoodsShopCar.Id;
                     updateDto.CustomerId = addDto.CustomerId;
                     updateDto.GoodsId = addDto.GoodsId;
+                    updateDto.CityId = addDto.CityId;
+                    updateDto.HospitalId = addDto.HospitalId;
                     updateDto.Num = isExistGoodsShopCar.Num + addDto.Num;
                     await this.UpdateAsync(updateDto);
                 }
@@ -78,6 +86,8 @@ namespace Fx.Amiya.Service
                     goodsShopCar.Id = Guid.NewGuid().ToString();
                     goodsShopCar.CustomerId = addDto.CustomerId;
                     goodsShopCar.GoodsId = addDto.GoodsId;
+                    goodsShopCar.CityId = addDto.CityId;
+                    goodsShopCar.HospitalId = addDto.HospitalId;
                     goodsShopCar.Num = addDto.Num;
                     goodsShopCar.Status = 1;
                     goodsShopCar.CreateDate = DateTime.Now;
@@ -116,6 +126,8 @@ namespace Fx.Amiya.Service
                 goodsShopCarServiceDto.Status = goodsShopCarService.Status;
                 goodsShopCarServiceDto.UpdateDate = goodsShopCarService.UpdateDate;
                 goodsShopCarServiceDto.CreateDate = goodsShopCarService.CreateDate;
+                goodsShopCarServiceDto.CityId = goodsShopCarService.CityId;
+                goodsShopCarServiceDto.HospitalId = goodsShopCarService.HospitalId;
                 return goodsShopCarServiceDto;
             }
             catch (Exception ex)
@@ -144,6 +156,8 @@ namespace Fx.Amiya.Service
                 goodsShopCarServiceDto.Status = goodsShopCarService.Status;
                 goodsShopCarServiceDto.UpdateDate = goodsShopCarService.UpdateDate;
                 goodsShopCarServiceDto.CreateDate = goodsShopCarService.CreateDate;
+                goodsShopCarServiceDto.CityId = goodsShopCarService.CityId;
+                goodsShopCarServiceDto.HospitalId = goodsShopCarService.HospitalId;
                 return goodsShopCarServiceDto;
             }
             catch (Exception ex)
@@ -162,8 +176,10 @@ namespace Fx.Amiya.Service
                     throw new Exception("购物车编号错误！");
                 goodsShopCarService.CustomerId = updateDto.CustomerId;
                 goodsShopCarService.GoodsId = updateDto.GoodsId;
-                goodsShopCarService.Num = goodsShopCarService.Num+updateDto.Num;
+                goodsShopCarService.Num = goodsShopCarService.Num + updateDto.Num;
                 goodsShopCarService.UpdateDate = DateTime.Now;
+                goodsShopCarService.CityId = updateDto.CityId;
+                goodsShopCarService.HospitalId = updateDto.HospitalId;
                 await dalGoodsShopCarService.UpdateAsync(goodsShopCarService, true);
 
 
@@ -175,16 +191,20 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(List<string> id)
         {
             try
             {
-                var goodsShopCarService = await dalGoodsShopCarService.GetAll().SingleOrDefaultAsync(e => e.Id == id);
+                foreach (var x in id)
+                {
+                    var goodsShopCarService = await dalGoodsShopCarService.GetAll().SingleOrDefaultAsync(e => e.Id == x);
+                    if (goodsShopCarService == null)
+                        throw new Exception("购物车编号错误");
 
-                if (goodsShopCarService == null)
-                    throw new Exception("入库编号错误");
-
-                await dalGoodsShopCarService.DeleteAsync(goodsShopCarService, true);
+                    goodsShopCarService.Status = 0;
+                    goodsShopCarService.Num = 0;
+                    await dalGoodsShopCarService.UpdateAsync(goodsShopCarService, true);
+                }
             }
             catch (Exception ex)
             {

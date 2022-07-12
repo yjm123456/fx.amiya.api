@@ -96,6 +96,7 @@ namespace Fx.Amiya.DbModels.Model
         public List<CustomerHospitalConsume> CustomerHospitalConsumeList { get; set; }
         public List<SendOrderMessageBoard> SendOrderMessageBoardList { get; set; }
         public List<ContentPlatformOrder> ContentPlatformOrderList { get; set; }
+        public List<GoodsShopCar> GoodsShopCar { get; set; }
 
     }
 }

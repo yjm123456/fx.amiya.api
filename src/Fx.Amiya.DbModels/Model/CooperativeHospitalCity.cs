@@ -14,5 +14,6 @@ namespace Fx.Amiya.DbModels.Model
         public bool IsHot { get; set; }
 
         public List<HospitalInfo> HospitalInfoList { get; set; }
+        public List<GoodsShopCar> GoodsShopCar { get; set; }
     }
 }
