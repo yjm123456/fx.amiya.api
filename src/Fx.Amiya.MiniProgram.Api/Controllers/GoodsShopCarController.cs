@@ -62,6 +62,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                         Status = d.Status,
                                         UpdateDate = d.UpdateDate,
                                         CreateDate = d.CreateDate,
+                                        IsMaterial=d.IsMaterial
                                     };
             FxPageInfo<GoodsShopCarVo> goodsShopCarPageInfo = new FxPageInfo<GoodsShopCarVo>();
             goodsShopCarPageInfo.TotalCount = q.TotalCount;
@@ -137,11 +138,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <param name="idList">购物车id</param>
         /// <returns></returns>
         [HttpPut("deleteGoodsShopCar")]
-        public async Task<ResultData> DeleteGoodsShopCarAsync(List<string>idList)
+        public async Task<ResultData> DeleteGoodsShopCarAsync(DeleteGoodsShopCarVo deleteGoodsShopCarVo)
         {
             try
             {
-                await goodsShopCarService.DeleteAsync(idList);
+                await goodsShopCarService.DeleteAsync(deleteGoodsShopCarVo.idList);
                 return ResultData.Success();
             }
             catch (Exception ex)

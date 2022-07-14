@@ -3646,6 +3646,58 @@ namespace Fx.Amiya.Service
             }
             return returnInfo;
         }
+        /// <summary>
+        /// 根据客户编号获取所有平台订单列表
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="statusCode"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+
+        public async Task<FxPageInfo<OrderTradeForWxDto>> GetOrderListForAllAmiyaByCustomerId(string customerId, string statusCode, int pageNum, int pageSize)
+        {
+            var orders = from d in dalOrderTrade.GetAll()
+                         .Include(e => e.OrderInfoList)
+                         where d.CustomerId == customerId
+                         && (string.IsNullOrWhiteSpace(statusCode) || d.StatusCode == statusCode )
+                         select new OrderTradeForWxDto
+                         {
+                             TradeId = d.TradeId,
+                             CustomerId = d.CustomerId,
+                             CreateDate = d.CreateDate,
+                             AddressId = d.AddressId,
+                             TotalAmount = d.TotalAmount,
+                             TotalIntegration = d.TotalIntegration,
+                             Remark = d.Remark,
+                             StatusCode = d.StatusCode,
+                             StatusText = ServiceClass.GetOrderStatusText(d.StatusCode),
+                             OrderInfoList = (from o in d.OrderInfoList
+                                              select new OrderInfoDto
+                                              {
+                                                  Id = o.Id,
+                                                  GoodsName = o.GoodsName,
+                                                  GoodsId = o.GoodsId,
+                                                  ThumbPicUrl = o.ThumbPicUrl,
+                                                  ActualPayment = o.ActualPayment,
+                                                  CreateDate = o.CreateDate,
+                                                  UpdateDate = o.UpdateDate,
+                                                  OrderType = o.OrderType,
+                                                  OrderTypeText = ServiceClass.GetOrderTypeText((byte)o.OrderType),
+                                                  Quantity = o.Quantity,
+                                                  IntegrationQuantity = o.IntegrationQuantity,
+                                                  ExchangeType = o.ExchangeType,
+                                                  ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)o.ExchangeType),
+                                                  TradeId = o.TradeId,
+                                                  AppType=o.AppType,
+                                                  AppTypeText=ServiceClass.GetAppTypeText((byte)o.AppType)
+                                              }).ToList()
+                         };
+            FxPageInfo<OrderTradeForWxDto> orderTradePageInfo = new FxPageInfo<OrderTradeForWxDto>();
+            orderTradePageInfo.TotalCount = await orders.CountAsync();
+            orderTradePageInfo.List = await orders.OrderByDescending(e => e.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+            return orderTradePageInfo;
+        }
         #endregion
     }
 }

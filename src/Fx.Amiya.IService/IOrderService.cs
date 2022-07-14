@@ -396,6 +396,15 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<FxPageInfo<OrderTradeForWxDto>> GetOrderListForAmiyaByCustomerId(string customerId, string statusCode, int pageNum, int pageSize);
 
+        /// <summary>
+        /// 根据客户编号获取所有平台订单列表
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="statusCode"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<OrderTradeForWxDto>> GetOrderListForAllAmiyaByCustomerId(string customerId, string statusCode, int pageNum, int pageSize);
 
         /// <summary>
         /// 获取小程序实物订单交易列表
