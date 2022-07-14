@@ -45,6 +45,8 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 到院时间（最新）
         /// </summary>
         public DateTime? ToHospitalDate { get; set; }
+        public int ToHospitalType { get; set; }
+        public string ToHospitalTypeText { get; set; }
         /// <summary>
         /// 最终成交医院id
         /// </summary>

@@ -50,7 +50,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderDealListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int? checkState, bool? ReturnBackPriceState, string keyword, string contentPlateFormId, int? hospitalId, int employeeId, int pageNum, int pageSize);
+        Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderDealListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int? checkState, bool? ReturnBackPriceState, string keyword, string contentPlateFormId, int? hospitalId, int? toHospitalType, int employeeId, int pageNum, int pageSize);
 
         /// <summary>
         /// 内容平台已完成订单报表
@@ -214,6 +214,12 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         List<ContentPlateFormOrderTypeDto> GetOrderTypeList();
+
+        /// <summary>
+        /// 获取订单到院状态
+        /// </summary>
+        /// <returns></returns>
+        List<ContentPlateFormOrderTypeDto> GetOrderToHospitalTypeList();
         /// <summary>
         /// 获取下单状态
         /// </summary>

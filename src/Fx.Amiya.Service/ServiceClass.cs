@@ -436,6 +436,39 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
+        /// 获取内容平台到院类型文本
+        /// </summary>
+        /// <param name="consumeType"></param>
+        /// <returns></returns>
+        public static string GerContentPlatFormOrderToHospitalTypeText(int toHospitalType)
+        {
+            string toHospitalTypeText = "";
+            switch (toHospitalType)
+            {
+                case 0:
+                    toHospitalTypeText = "其他";
+                    break;
+
+                case 1:
+                    toHospitalTypeText = "初诊";
+                    break;
+
+                case 2:
+                    toHospitalTypeText = "复诊";
+                    break;
+
+                case 3:
+                    toHospitalTypeText = "再消费";
+
+                    break;
+                case 4:
+                    toHospitalTypeText = "退款";
+                    break;
+            }
+            return toHospitalTypeText;
+        }
+
+        /// <summary>
         /// 获取内容平台订单来源
         /// </summary>
         /// <param name="consumeType"></param>

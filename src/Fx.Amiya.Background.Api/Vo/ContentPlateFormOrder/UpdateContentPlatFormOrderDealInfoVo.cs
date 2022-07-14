@@ -28,6 +28,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 到院时间
         /// </summary>
         public DateTime? TohospitalDate { get; set; }
+        /// <summary>
+        /// 到院类型
+        /// </summary>
+        public int ToHospitalType { get; set; }
 
         /// <summary>
         /// 是否成交

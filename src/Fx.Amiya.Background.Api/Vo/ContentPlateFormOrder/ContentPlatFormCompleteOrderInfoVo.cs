@@ -79,6 +79,16 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         [Description("定金金额")]
         public decimal? DepositAmount { get; set; }
+
+        /// <summary>
+        /// 是否到院
+        /// </summary>
+        public string IsToHospital { get; set; }
+        /// <summary>
+        /// 到院类型
+        /// </summary>
+
+        public string ToHospitalType { get; set; }
         /// <summary>
         /// 成交金额
         /// </summary>

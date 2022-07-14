@@ -59,6 +59,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 contentPlatFormOrderDealInfoVo.ContentPlatFormOrderId = contentPlatFormOrderDealInfo.ContentPlatFormOrderId;
                 contentPlatFormOrderDealInfoVo.CreateDate = contentPlatFormOrderDealInfo.CreateDate;
                 contentPlatFormOrderDealInfoVo.IsToHospital = contentPlatFormOrderDealInfo.IsToHospital;
+                contentPlatFormOrderDealInfoVo.ToHospitalType = contentPlatFormOrderDealInfo.ToHospitalType;
                 contentPlatFormOrderDealInfoVo.TohospitalDate = contentPlatFormOrderDealInfo.ToHospitalDate;
                 contentPlatFormOrderDealInfoVo.IsDeal = contentPlatFormOrderDealInfo.IsDeal;
                 contentPlatFormOrderDealInfoVo.LastDealHospitalId = contentPlatFormOrderDealInfo.LastDealHospitalId;
@@ -77,7 +78,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 修改成交情况信息
+        /// 修改成交情况信息(暂停使用)
         /// </summary>
         /// <param name="updateVo"></param>
         /// <returns></returns>
@@ -95,6 +96,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.IsDeal = updateVo.IsDeal;
                 updateDto.LastDealHospitalId = updateVo.LastDealHospitalId;
                 updateDto.DealPicture = updateVo.DealPicture;
+                updateDto.ToHospitalType = updateVo.ToHospitalType;
                 updateDto.Remark = updateVo.Remark;
                 updateDto.Price = updateVo.Price;
                 updateDto.DealDate = updateVo.DealDate;

@@ -213,20 +213,23 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="endDate"></param>        
         /// <param name="hospitalId"></param>        
         /// <param name="IsToHospital">是否到院， -1查询全部</param>
+        /// <param name="toHospitalStartDate">到院时间起</param>
+        /// <param name="toHospitalEndDate">到院时间止</param>           
+        /// <param name="toHospitalType">到院类型</param>        
         /// <param name="orderSource">订单来源， -1查询全部</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetSendOrderList(string keyword, int?liveAnchorId ,int? consultationEmpId,int? employeeId, int? sendBy, int? orderStatus , string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId,int IsToHospital, int orderSource,int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetSendOrderList(string keyword, int?liveAnchorId ,int? consultationEmpId,int? employeeId, int? sendBy, int? orderStatus , string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId,int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate,int? toHospitalType, int orderSource,int pageNum, int pageSize)
         {
             if (employeeId == null)
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 employeeId = Convert.ToInt32(employee.Id);
             }
-            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorId,consultationEmpId,sendBy,keyword, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, orderSource,pageNum, pageSize);
+            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorId,consultationEmpId,sendBy,keyword, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital,toHospitalStartDate,toHospitalEndDate,toHospitalType, orderSource,pageNum, pageSize);
 
             var contentPlatformOrders = from d in orders.List
                                         select new SendContentPlatformOrderVo
@@ -251,6 +254,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             DealAmount = d.DealAmount,
                                             DealPictureUrl = d.DealPictureUrl,
                                             IsToHospital = d.IsToHospital,
+                                            ToHospitalTypeText=d.ToHospitalTypeText,
+                                            ToHospitalDate = d.ToHospitalDate,
                                             UnDealReason = d.UnDealReason,
                                             Sender = d.Sender,
                                             SenderName = d.SenderName,
@@ -296,6 +301,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             CreateDate = d.CreateDate,
                                             IsDeal = d.IsDeal,
                                             IsToHospital = d.IsToHospital,
+                                            ToHospitalType = d.ToHospitalType,
+                                            ToHospitalTypeText = d.ToHospitalTypeText,
                                             TohospitalDate = d.ToHospitalDate,
                                             DealHospital = d.LastDealHospital,
                                             DealPicture = d.DealPicture,
@@ -335,6 +342,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             TohospitalDate = d.ToHospitalDate,
                                             DealHospital = d.LastDealHospital,
                                             IsToHospital = d.IsToHospital,
+                                            ToHospitalType=d.ToHospitalType,
+                                            ToHospitalTypeText=d.ToHospitalTypeText,
                                             DealPicture = d.DealPicture,
                                             Remark = d.Remark,
                                             Price = d.Price,

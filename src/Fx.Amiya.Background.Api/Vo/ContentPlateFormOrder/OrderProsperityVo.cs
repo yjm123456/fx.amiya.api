@@ -25,6 +25,6 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// <summary>
         /// 成交时间
         /// </summary>
-        public DateTime DealDate { get; set; }
+        public DateTime? DealDate { get; set; }
     }
 }

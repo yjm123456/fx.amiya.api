@@ -346,18 +346,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="keyword">关键词</param>
         /// <param name="checkState">审核状态,为空查询所有</param>
         /// <param name="ReturnBackPriceState">回款状态,为空查询所有</param>
+        /// <param name="toHospitalType">到院类型,为空查询所有</param>
         /// <param name="pageNum">第/页</param>
         /// <param name="pageSize">每页显示/行</param>
         /// <returns></returns>
         [HttpGet("contentPlateFormOrderDealLlistWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormCompleteOrderInfoVo>>> GetOrderDealListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int? checkState, bool? ReturnBackPriceState, string keyword, int? hospitalId, string contentPlateFormId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormCompleteOrderInfoVo>>> GetOrderDealListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int? checkState, bool? ReturnBackPriceState, string keyword, int? hospitalId, int? toHospitalType,string contentPlateFormId, int pageNum, int pageSize)
         {
             try
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await _orderService.GetOrderDealListWithPageAsync(liveAnchorId, startDate, endDate, consultationEmpId, checkState, ReturnBackPriceState, keyword, contentPlateFormId, hospitalId, employeeId, pageNum, pageSize);
+                var q = await _orderService.GetOrderDealListWithPageAsync(liveAnchorId, startDate, endDate, consultationEmpId, checkState, ReturnBackPriceState, keyword, contentPlateFormId, hospitalId,toHospitalType, employeeId, pageNum, pageSize);
                 var order = from d in q.List
                             select new ContentPlatFormCompleteOrderInfoVo
                             {
@@ -368,6 +369,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 CreateDate = d.CreateDate,
                                 CustomerName = d.CustomerName,
                                 Phone = d.Phone,
+                                IsToHospital = d.IsToHospital == true ? "是" : "否",
+                                ToHospitalType = d.ToHospitalTypeText,
                                 AppointmentDate = d.AppointmentDate == null ? "未预约时间" : d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss"),
                                 AppointmentHospitalName = d.AppointmentHospitalName,
                                 GoodsName = d.GoodsName,
@@ -439,7 +442,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.OrderSource = order.OrderSource;
             orderUpdateInfo.AcceptConsulting = order.AcceptConsulting;
             orderUpdateInfo.UnSendReason = order.UnSendReason;
-
             orderUpdateInfo.CreateDate = order.CreateDate;
             orderUpdateInfo.SendDate = order.SendDate;
             orderUpdateInfo.UnDealPictureUrl = order.UnDealPictureUrl;
@@ -469,6 +471,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.ReturnBackDate = order.ReturnBackDate;
             orderUpdateInfo.ReturnBackPrice = order.ReturnBackPrice;
             orderUpdateInfo.IsToHospital = order.IsToHospital;
+            orderUpdateInfo.ToHospitalType = order.ToHospitalType;
+            orderUpdateInfo.ToHospitalTypeText = order.ToHospitalTypeText;
             orderUpdateInfo.ToHospitalDate = order.ToHospitalDate;
             orderUpdateInfo.SendBy = order.SendBy;
             orderUpdateInfo.SendByName = order.SendByName;
@@ -495,7 +499,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.Price = order.DepositAmount.Value + order.DealAmount.Value;
             orderUpdateInfo.LiveAnchorName = order.LiveAnchorName;
             orderUpdateInfo.hospitalPicture = order.SendHospitaPicture;
-            orderUpdateInfo.DealDate = order.DealDate.Value;
+            orderUpdateInfo.DealDate = order.DealDate;
             return ResultData<OrderProsperityVo>.Success().AddData("orderInfo", orderUpdateInfo);
         }
 
@@ -814,6 +818,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.DealPictureUrl = updateVo.DealPictureUrl;
             updateDto.UnDealReason = updateVo.UnDealReason;
             updateDto.IsToHospital = updateVo.IsToHospital;
+            updateDto.ToHospitalType = updateVo.ToHospitalType;
             updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
             updateDto.DealDate = updateVo.DealDate;
             updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
@@ -834,7 +839,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             UpdateContentPlateFormOrderFinishDto updateDto = new UpdateContentPlateFormOrderFinishDto();
             updateDto.Id = updateVo.Id;
-            updateDto.DealId = updateVo.DealId ;
+            updateDto.DealId = updateVo.DealId;
             updateDto.IsFinish = updateVo.IsFinish;
             updateDto.LastDealHospitalId = updateVo.LastDealHospitalId;
             updateDto.ToHospitalDate = updateVo.ToHospitalDate;
@@ -843,6 +848,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.DealPictureUrl = updateVo.DealPictureUrl;
             updateDto.UnDealReason = updateVo.UnDealReason;
             updateDto.IsToHospital = updateVo.IsToHospital;
+            updateDto.ToHospitalType = updateVo.ToHospitalType;
             updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
             updateDto.DealDate = updateVo.DealDate;
             updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
@@ -928,6 +934,21 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<List<ContentPlateFormOrderSourceVo>>.Success().AddData("orderSources", orderSources.ToList());
         }
 
+        /// <summary>
+        /// 获取内容平台订单到院状态
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("contentPlateFormOrderToHospitalTypeList")]
+        public ResultData<List<ContentPlateFormOrderTypeVo>> GetContentPlateFormOrderToHospitalTypeList()
+        {
+            var orderTypes = from d in _orderService.GetOrderToHospitalTypeList()
+                             select new ContentPlateFormOrderTypeVo
+                             {
+                                 OrderType = d.OrderType,
+                                 OrderTypeText = d.OrderTypeText = d.OrderTypeText
+                             };
+            return ResultData<List<ContentPlateFormOrderTypeVo>>.Success().AddData("orderTypes", orderTypes.ToList());
+        }
         #endregion
     }
 }

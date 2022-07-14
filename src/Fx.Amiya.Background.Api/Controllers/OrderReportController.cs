@@ -349,7 +349,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           RecordDate = d.RecordDate,
                           ContentPlatFormName = d.ContentPlatFormName,
                           LiveAnchorName = d.LiveAnchorName,
-                          IsAddWechat = d.IsAddWeChat==true?"是":"否",
+                          IsAddWechat = d.IsAddWeChat == true ? "是" : "否",
                           LiveAnchorWechatNo = d.LiveAnchorWechatNo,
                           CustomerNickName = d.CustomerNickName,
                           Phone = d.Phone,
@@ -392,7 +392,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           RecordDate = d.RecordDate,
                           ContentPlatFormName = d.ContentPlatFormName,
                           LiveAnchorName = d.LiveAnchorName,
-                          IsAddWechat = d.IsAddWeChat==true?"是":"否",
+                          IsAddWechat = d.IsAddWeChat == true ? "是" : "否",
                           LiveAnchorWechatNo = d.LiveAnchorWechatNo,
                           CustomerNickName = d.CustomerNickName,
                           Phone = d.Phone,
@@ -989,10 +989,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="employeeId">派单客服id</param>
         /// <param name="belongEmpId">归属客服id</param>
         /// <param name="orderStatus">订单状态</param>
+        /// <param name="IsToHospital">是否到院， -1查询全部</param>
+        /// <param name="toHospitalStartDate">到院时间起</param>
+        /// <param name="toHospitalEndDate">到院时间止</param>        
+        /// <param name="toHospitalType">到院类型，为空查询所有</param>
         /// <returns></returns>
         [HttpGet("customerSendContentPlatFormOrderReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<CustomerSendContentPlatFormOrderReportVo>>> GetCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int? liveAnchorId, string contentPlatFormId, int employeeId, int belongEmpId, int? orderStatus)
+        public async Task<ResultData<List<CustomerSendContentPlatFormOrderReportVo>>> GetCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int? liveAnchorId, int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate,int? toHospitalType, string contentPlatFormId, int employeeId, int belongEmpId, int? orderStatus)
         {
             if (!startDate.HasValue && !endDate.HasValue)
             { throw new Exception("请选择时间进行查询"); }
@@ -1008,7 +1012,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 employeeId = Convert.ToInt32(employee.Id);
             }
-            var q = await _sendContentPlatFormOrderInfoService.GetSendOrderReportList(liveAnchorId, hospitalId, employeeId, belongEmpId, orderStatus, contentPlatFormId, startDate, endDate, true);
+            var q = await _sendContentPlatFormOrderInfoService.GetSendOrderReportList(liveAnchorId, hospitalId, employeeId, belongEmpId, orderStatus, contentPlatFormId, IsToHospital, toHospitalStartDate, toHospitalEndDate,toHospitalType, startDate, endDate, true);
             var res = from d in q
                       select new CustomerSendContentPlatFormOrderReportVo()
                       {
@@ -1021,6 +1025,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                           CustomerName = d.CustomerName,
                           Phone = d.Phone,
                           OrderStatusText = d.OrderStatusText,
+                          IsToHospital=d.IsToHospital==true?"是":"否",
+                          ToHospitalTypeText = d.ToHospitalTypeText,
+                          ToHospitalDate=d.ToHospitalDate,
                           DepositAmount = d.DepositAmount,
                           DealAmount = d.DealAmount,
                           SendHospital = d.SendHospital,
@@ -1041,10 +1048,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="employeeId">派单客服id(-1查询所有)</param>
         /// <param name="belongEmpId">归属客服id(-1查询所有)</param>
         /// <param name="orderStatus">订单状态</param>
+        /// <param name="IsToHospital">是否到院， -1查询全部</param>
+        /// <param name="toHospitalStartDate">到院时间起</param>
+        /// <param name="toHospitalEndDate">到院时间止</param>        
+        /// <param name="toHospitalType">到院类型，为空查询所有</param>
         /// <returns></returns>
         [HttpGet("customerSendContentPlatFormOrderExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? liveAnchorId, int? hospitalId, string contentPlatFormId, int employeeId, int belongEmpId, int? orderStatus)
+        public async Task<FileStreamResult> ExportCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? liveAnchorId, int? hospitalId, string contentPlatFormId, int employeeId, int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int belongEmpId, int? orderStatus)
         {
             bool isHidePhone = true;
             if (!startDate.HasValue && !endDate.HasValue)
@@ -1065,7 +1076,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 employeeId = Convert.ToInt32(employee.Id);
             }
-            var q = await _sendContentPlatFormOrderInfoService.GetSendOrderReportList(liveAnchorId, hospitalId, employeeId, belongEmpId, orderStatus, contentPlatFormId, startDate, endDate, isHidePhone);
+            var q = await _sendContentPlatFormOrderInfoService.GetSendOrderReportList(liveAnchorId, hospitalId, employeeId, belongEmpId, orderStatus, contentPlatFormId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, startDate, endDate, isHidePhone);
             var res = from d in q
                       select new CustomerSendContentPlatFormOrderReportVo()
                       {
@@ -1078,6 +1089,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                           CustomerName = d.CustomerName,
                           Phone = d.Phone,
                           OrderStatusText = d.OrderStatusText,
+                          IsToHospital = d.IsToHospital == true ? "是" : "否",
+                          ToHospitalTypeText = d.ToHospitalTypeText,
+                          ToHospitalDate = d.ToHospitalDate,
                           DepositAmount = d.DepositAmount,
                           DealAmount = d.DealAmount,
                           SendHospital = d.SendHospital,
@@ -2162,7 +2176,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             #region 【老客复购情况】
             var bindCustomerInfo = await customerService.GetTopBindCustomerConsumptionServiceListAsync(startDate, endDate);
             List<OldCustomerBuyInfo> oldCustomerBuyInfo = new List<OldCustomerBuyInfo>();
-            foreach(var x in bindCustomerInfo)
+            foreach (var x in bindCustomerInfo)
             {
                 OldCustomerBuyInfo oldCustomerBuyInfos = new OldCustomerBuyInfo();
                 oldCustomerBuyInfos.Phone = x.Phone;

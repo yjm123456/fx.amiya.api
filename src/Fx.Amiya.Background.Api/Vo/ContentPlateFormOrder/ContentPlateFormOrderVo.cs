@@ -263,6 +263,15 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public bool IsToHospital { get; set; }
         /// <summary>
+        /// 到院类型
+        /// </summary>
+        public int ToHospitalType { get; set; }
+        /// <summary>
+        /// 到院类型文本
+        /// </summary>
+
+        public string ToHospitalTypeText { get; set; }
+        /// <summary>
         /// 到院时间（最新）
         /// </summary>
         public DateTime? ToHospitalDate { get; set; }

@@ -48,6 +48,8 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 是否到院
         /// </summary>
         public bool IsToHospital { get; set; }
+
+        public string ToHospitalTypeText { get; set; }
         public string SendHospital { get; set; }
         public string AppointmentDate { get; set; }
        
@@ -129,6 +131,12 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 派单时间
         /// </summary>
         public DateTime SendDate { get; set; }
+
+
+        /// <summary>
+        /// 到院时间
+        /// </summary>
+        public DateTime? ToHospitalDate { get; set; }
 
         /// <summary>
         /// 派单留言

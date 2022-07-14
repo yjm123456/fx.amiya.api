@@ -251,6 +251,34 @@ namespace Fx.Amiya.IService
     }
 
     /// <summary>
+    /// 内容平台订单到院类型
+    /// </summary>
+    public enum ContentPlateFormOrderToHospitalType
+    {
+        /// <summary>
+        /// 其他
+        /// </summary>
+        OTHER=0,
+        /// <summary>
+        /// 初诊=1
+        /// </summary>
+        FIRST_SEEK_ADVICE = 1,
+
+        /// <summary>
+        /// 复诊=2
+        /// </summary>
+        AGAIN_SEEK_ADVICE = 2,
+        /// <summary>
+        /// 再消费=3
+        /// </summary>
+        AGAIN_CONSUMPTION = 3,
+        /// <summary>
+        /// 退款=4
+        /// </summary>
+        REFUND=4
+    }
+
+    /// <summary>
     /// 内容平台订单的订单来源
     /// </summary>
     public enum ContentPlateFormOrderSource

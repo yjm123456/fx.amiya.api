@@ -28,6 +28,11 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// </summary>
         public bool IsToHospital { get; set; }
         /// <summary>
+        /// 到院类型
+        /// </summary>
+        public int ToHospitalType { get; set; }
+
+        /// <summary>
         /// 到院时间（最新）
         /// </summary>
         public DateTime? ToHospitalDate { get; set; }
