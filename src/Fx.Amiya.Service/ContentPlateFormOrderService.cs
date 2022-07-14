@@ -203,7 +203,7 @@ namespace Fx.Amiya.Service
             try
             {
                 var orders = from d in _dalContentPlatformOrder.GetAll()
-                             where (string.IsNullOrWhiteSpace(keyword) || d.Id.Contains(keyword) || d.ConsultingContent.Contains(keyword)
+                             where (string.IsNullOrWhiteSpace(keyword) || d.Id.Contains(keyword) || d.ConsultingContent.Contains(keyword) || d.CustomerName.Contains(keyword) || d.AcceptConsulting.Contains(keyword) || d.Remark.Contains(keyword)
                              || d.Phone.Contains(keyword))
                              && (orderStatus == null || d.OrderStatus == orderStatus)
                              && (!appointmentHospital.HasValue || d.AppointmentHospitalId == appointmentHospital)
@@ -639,11 +639,12 @@ namespace Fx.Amiya.Service
         /// <param name="keyword"></param>
         /// <param name="statusCode"></param>
         /// <param name="appType"></param>
+        /// <param name="toHospitalType">到院类型,为空查询所有</param>
         /// <param name="employeeId"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderDealListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int? checkState, bool? ReturnBackPriceState, string keyword, string contentPlateFormId, int? hospitalId, int employeeId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderDealListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int? checkState, bool? ReturnBackPriceState, string keyword, string contentPlateFormId, int? hospitalId, int? toHospitalType, int employeeId, int pageNum, int pageSize)
         {
             try
             {
@@ -652,6 +653,7 @@ namespace Fx.Amiya.Service
                              || d.Phone.Contains(keyword))
                              && (!liveAnchorId.HasValue || d.LiveAnchorId == liveAnchorId.Value)
                              && (!hospitalId.HasValue || d.AppointmentHospitalId == hospitalId)
+                             && (!toHospitalType.HasValue || d.ToHospitalType == toHospitalType.Value)
                              && (!checkState.HasValue || d.CheckState == checkState)
                              && (!ReturnBackPriceState.HasValue || d.IsReturnBackPrice == ReturnBackPriceState)
                              && (!consultationEmpId.HasValue || d.ConsultationEmpId == consultationEmpId)
@@ -692,6 +694,9 @@ namespace Fx.Amiya.Service
                                 Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                                 EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
                                 AppointmentDate = d.AppointmentDate,
+                                ToHospitalType = d.ToHospitalType,
+                                ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
+                                ToHospitalDate = d.ToHospitalDate,
                                 AppointmentHospitalId = d.AppointmentHospitalId,
                                 AppointmentHospitalName = d.HospitalInfo.Name,
                                 GoodsId = d.GoodsId,
@@ -1057,6 +1062,8 @@ namespace Fx.Amiya.Service
             result.CheckStateText = ServiceClass.GetCheckTypeText(result.CheckState.Value);
             result.CheckPrice = order.CheckPrice;
             result.IsToHospital = order.IsToHospital;
+            result.ToHospitalType = order.ToHospitalType;
+            result.ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(result.ToHospitalType);
             result.UnDealPictureUrl = order.UnDealPictureUrl;
             result.DealPictureUrl = order.DealPictureUrl;
             result.ToHospitalDate = order.ToHospitalDate;
@@ -1495,6 +1502,7 @@ namespace Fx.Amiya.Service
                     order.LateProjectStage = "";
                     order.DealPictureUrl = "";
                 }
+                order.ToHospitalType = input.ToHospitalType;
                 order.OtherContentPlatFormOrderId = input.OtherContentPlatFormOrderId;
                 order.UpdateDate = DateTime.Now;
                 await _dalContentPlatformOrder.UpdateAsync(order, true);
@@ -1505,6 +1513,7 @@ namespace Fx.Amiya.Service
                 orderDealDto.CreateDate = DateTime.Now;
                 orderDealDto.IsDeal = input.IsFinish;
                 orderDealDto.OtherAppOrderId = input.OtherContentPlatFormOrderId;
+                orderDealDto.ToHospitalType = input.ToHospitalType;
                 if (input.IsFinish == true)
                 {
                     orderDealDto.IsToHospital = true;
@@ -1580,6 +1589,7 @@ namespace Fx.Amiya.Service
                 }
                 order.OtherContentPlatFormOrderId = input.OtherContentPlatFormOrderId;
                 order.UpdateDate = DateTime.Now;
+                order.ToHospitalType = input.ToHospitalType;
                 await _dalContentPlatformOrder.UpdateAsync(order, true);
 
                 //修改订单成交情况
@@ -1588,6 +1598,7 @@ namespace Fx.Amiya.Service
                 orderDealDto.ContentPlatFormOrderId = input.Id;
                 orderDealDto.IsDeal = input.IsFinish;
                 orderDealDto.OtherAppOrderId = input.OtherContentPlatFormOrderId;
+                orderDealDto.ToHospitalType = input.ToHospitalType;
                 if (input.IsFinish == true)
                 {
                     orderDealDto.IsToHospital = true;
@@ -1780,6 +1791,20 @@ namespace Fx.Amiya.Service
                 ContentPlateFormOrderTypeDto orderType = new ContentPlateFormOrderTypeDto();
                 orderType.OrderType = Convert.ToByte(item);
                 orderType.OrderTypeText = ServiceClass.GetContentPlateFormOrderTypeText(Convert.ToByte(item));
+                orderTypeList.Add(orderType);
+            }
+            return orderTypeList;
+        }
+
+        public List<ContentPlateFormOrderTypeDto> GetOrderToHospitalTypeList()
+        {
+            var orderTypes = Enum.GetValues(typeof(ContentPlateFormOrderToHospitalType));
+            List<ContentPlateFormOrderTypeDto> orderTypeList = new List<ContentPlateFormOrderTypeDto>();
+            foreach (var item in orderTypes)
+            {
+                ContentPlateFormOrderTypeDto orderType = new ContentPlateFormOrderTypeDto();
+                orderType.OrderType = Convert.ToByte(item);
+                orderType.OrderTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(Convert.ToByte(item));
                 orderTypeList.Add(orderType);
             }
             return orderTypeList;

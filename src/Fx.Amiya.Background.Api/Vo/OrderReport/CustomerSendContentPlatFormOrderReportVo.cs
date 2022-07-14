@@ -23,6 +23,23 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("派单时间")]
         public DateTime SendDate { get; set; }
+
+        /// <summary>
+        /// 是否到院
+        /// </summary>
+        [Description("是否到院")]
+        public string IsToHospital { get; set; }
+        /// <summary>
+        /// 到院类型
+        /// </summary>
+        [Description("到院类型")]
+        public string ToHospitalTypeText { get; set; }
+
+        /// <summary>
+        /// 到院时间
+        /// </summary>
+        [Description("到院时间")]
+        public DateTime? ToHospitalDate { get; set; }
         /// <summary>
         /// 订单编号
         /// </summary>

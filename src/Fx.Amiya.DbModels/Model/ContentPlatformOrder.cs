@@ -58,6 +58,8 @@ namespace Fx.Amiya.DbModels.Model
         public string Remark { get; set; }
         public bool IsToHospital { get; set; }
 
+        public int ToHospitalType { get; set; }
+
         /// <summary>
         /// 到院时间（最新）
         /// </summary>

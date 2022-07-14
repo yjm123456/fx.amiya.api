@@ -984,7 +984,7 @@
             <param name="contentPlateFormId">内容平台</param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormOrderController.GetOrderDealListWithPageAsync(System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.Nullable{System.Int32},System.String,System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormOrderController.GetOrderDealListWithPageAsync(System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Int32,System.Int32)">
             <summary>
             根据条件获取已成交内容平台订单
             </summary>
@@ -997,6 +997,7 @@
             <param name="keyword">关键词</param>
             <param name="checkState">审核状态,为空查询所有</param>
             <param name="ReturnBackPriceState">回款状态,为空查询所有</param>
+            <param name="toHospitalType">到院类型,为空查询所有</param>
             <param name="pageNum">第/页</param>
             <param name="pageSize">每页显示/行</param>
             <returns></returns>
@@ -1139,6 +1140,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormOrderController.GetContentPlateFormOrderToHospitalTypeList">
+            <summary>
+            获取内容平台订单到院状态
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.ContentPlateFormSendOrderController">
             <summary>
             派单API
@@ -1184,7 +1191,7 @@
             <param name="updateVo"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormSendOrderController.GetSendOrderList(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Int32,System.Int32,System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormSendOrderController.GetSendOrderList(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Int32,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Int32,System.Int32,System.Int32)">
             <summary>
             获取内容平台订单已派单信息列表
             </summary>
@@ -1199,6 +1206,9 @@
             <param name="endDate"></param>        
             <param name="hospitalId"></param>        
             <param name="IsToHospital">是否到院， -1查询全部</param>
+            <param name="toHospitalStartDate">到院时间起</param>
+            <param name="toHospitalEndDate">到院时间止</param>           
+            <param name="toHospitalType">到院类型</param>        
             <param name="orderSource">订单来源， -1查询全部</param>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
@@ -1323,7 +1333,7 @@
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlatFormOrderDealInfoController.UpdateAsync(Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo)">
             <summary>
-            修改成交情况信息
+            修改成交情况信息(暂停使用)
             </summary>
             <param name="updateVo"></param>
             <returns></returns>
@@ -3511,7 +3521,7 @@
             <param name="orderStatus"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetCustomerSendContentPlatFormOrderAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Int32,System.Int32,System.Nullable{System.Int32})">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetCustomerSendContentPlatFormOrderAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Int32,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String,System.Int32,System.Int32,System.Nullable{System.Int32})">
             <summary>
              内容平台客服已派单报表
             </summary>
@@ -3523,9 +3533,13 @@
             <param name="employeeId">派单客服id</param>
             <param name="belongEmpId">归属客服id</param>
             <param name="orderStatus">订单状态</param>
+            <param name="IsToHospital">是否到院， -1查询全部</param>
+            <param name="toHospitalStartDate">到院时间起</param>
+            <param name="toHospitalEndDate">到院时间止</param>        
+            <param name="toHospitalType">到院类型，为空查询所有</param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.ExportCustomerSendContentPlatFormOrderAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Int32,System.Int32,System.Nullable{System.Int32})">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.ExportCustomerSendContentPlatFormOrderAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Int32,System.Nullable{System.Int32})">
             <summary>
              内容平台客服已派单报表导出
             </summary>
@@ -3537,6 +3551,10 @@
             <param name="employeeId">派单客服id(-1查询所有)</param>
             <param name="belongEmpId">归属客服id(-1查询所有)</param>
             <param name="orderStatus">订单状态</param>
+            <param name="IsToHospital">是否到院， -1查询全部</param>
+            <param name="toHospitalStartDate">到院时间起</param>
+            <param name="toHospitalEndDate">到院时间止</param>        
+            <param name="toHospitalType">到院类型，为空查询所有</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetUnSendOrderListWithPageAsync(System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.Nullable{System.Int32},System.Int32)">
@@ -4082,6 +4100,16 @@
         <member name="P:Fx.Amiya.Background.Api.Controllers.SendContentPlatformOrderVo.IsToHospital">
             <summary>
             是否到院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Controllers.SendContentPlatformOrderVo.ToHospitalTypeText">
+            <summary>
+            到院类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Controllers.SendContentPlatformOrderVo.ToHospitalDate">
+            <summary>
+            到院时间
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Controllers.SendContentPlatformOrderVo.AppointmentDate">
@@ -5974,6 +6002,11 @@
             是否到院（成交则默认true）
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.ToHospitalType">
+            <summary>
+            到院类型
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.ToHospitalDate">
             <summary>
             到院时间
@@ -6429,6 +6462,16 @@
             是否到院
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ToHospitalType">
+            <summary>
+            到院类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ToHospitalTypeText">
+            <summary>
+            到院类型文本
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ToHospitalDate">
             <summary>
             到院时间（最新）
@@ -6512,6 +6555,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.DepositAmount">
             <summary>
             定金金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.IsToHospital">
+            <summary>
+            是否到院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.ToHospitalType">
+            <summary>
+            到院类型
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.DealAmount">
@@ -6637,6 +6690,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.IsToHospital">
             <summary>
             是否到院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.ToHospitalType">
+            <summary>
+            到院类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.ToHospitalTypeText">
+            <summary>
+            到院类型文本
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.TohospitalDate">
@@ -7009,6 +7072,11 @@
             是否到院（成交则默认true）
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.ToHospitalType">
+            <summary>
+            到院类型
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.ToHospitalDate">
             <summary>
             到院时间
@@ -7072,6 +7140,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo.TohospitalDate">
             <summary>
             到院时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo.ToHospitalType">
+            <summary>
+            到院类型
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo.IsDeal">
@@ -13349,6 +13422,21 @@
             派单时间
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerSendContentPlatFormOrderReportVo.IsToHospital">
+            <summary>
+            是否到院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerSendContentPlatFormOrderReportVo.ToHospitalTypeText">
+            <summary>
+            到院类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerSendContentPlatFormOrderReportVo.ToHospitalDate">
+            <summary>
+            到院时间
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerSendContentPlatFormOrderReportVo.OrderId">
             <summary>
             订单编号
@@ -13871,82 +13959,82 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.Consultation">
             <summary>
-            今日99面诊卡数量
+            今日照片面诊卡数量
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationTarget">
             <summary>
-            99面诊卡目标
+            照片面诊卡目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.CumulativeConsultation">
             <summary>
-            累计99面诊卡
+            累计照片面诊卡
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationCompleteRate">
             <summary>
-            99面诊卡完成率
+            照片面诊卡完成率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.Consultation2">
             <summary>
-            今日199面诊卡数量
+            今日视频面诊卡数量
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationTarget2">
             <summary>
-            199面诊卡目标
+            视频面诊卡目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.CumulativeConsultation2">
             <summary>
-            累计199面诊卡
+            累计视频面诊卡
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationCompleteRate2">
             <summary>
-            199面诊卡完成率
+            视频面诊卡完成率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationCardConsumed">
             <summary>
-            今日99消耗卡数量
+            今日照片消耗卡数量
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationCardConsumedTarget">
             <summary>
-            99消耗卡目标
+            照片消耗卡目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.CumulativeConsultationCardConsumed">
             <summary>
-            累计99消耗卡
+            累计照片消耗卡
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationCardConsumedCompleteRate">
             <summary>
-            99消耗卡完成率
+            照片消耗卡完成率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationCardConsumed2">
             <summary>
-            今日199消耗卡数量
+            今日视频消耗卡数量
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationCardConsumedTarget2">
             <summary>
-            199消耗卡目标
+            视频消耗卡目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.CumulativeConsultationCardConsumed2">
             <summary>
-            累计199消耗卡
+            累计视频消耗卡
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ConsultationCardConsumedCompleteRate2">
             <summary>
-            199消耗卡完成率
+            视频消耗卡完成率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ActivateHistoricalConsultation">
@@ -14754,7 +14842,7 @@
             下单金额
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ShoppingCartRegistrationReportVo.ConsultationType">
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ShoppingCartRegistrationReportVo.ConsultationTypeText">
             <summary>
             面诊方式
             </summary>

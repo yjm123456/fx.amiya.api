@@ -778,6 +778,7 @@ ADD COLUMN `other_order_id` VARCHAR(50) NULL AFTER `deal_date`;
 
 -----------------------------------------------余建明 2022/07/12 BEGIN--------------------------------------------;
 
+--购物车
 ALTER TABLE `amiyadb`.`tbl_goods_shopcar` 
 ADD COLUMN `city_id` INT UNSIGNED NOT NULL AFTER `update_date`,
 ADD COLUMN `hosiptal_id` INT UNSIGNED NOT NULL AFTER `city_id`,
@@ -796,7 +797,7 @@ ADD CONSTRAINT `fk_hospital_info`
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
 
-
+  --购物车
   ALTER TABLE `amiyadb`.`tbl_goods_shopcar` 
 DROP FOREIGN KEY `fk_city_info`,
 DROP FOREIGN KEY `fk_hospital_info`;
@@ -810,6 +811,16 @@ ADD CONSTRAINT `fk_city_info`
 ADD CONSTRAINT `fk_hospital_info`
   FOREIGN KEY (`hosiptal_id`)
   REFERENCES `amiyadb`.`tbl_hospital_info` (`id`);
+
+  --内容平台成交情况
+  ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
+ADD COLUMN `to_hospital_type` INT NOT NULL DEFAULT 0 AFTER `is_to_hospital`;
+
+
+--内容平台订单
+ALTER TABLE `amiyadb`.`tbl_content_platform_order` 
+ADD COLUMN `to_hospital_type` INT NOT NULL DEFAULT 0 AFTER `is_to_hospital`;
+
 
   
 -----------------------------------------------余建明 2022/07/12 END--------------------------------------------;

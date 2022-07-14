@@ -29,6 +29,17 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 是否到院
         /// </summary>
         public bool IsToHospital { get; set; }
+
+        /// <summary>
+        /// 到院类型
+        /// </summary>
+        public int ToHospitalType { get; set; }
+
+        /// <summary>
+        /// 到院类型文本
+        /// </summary>
+        public string ToHospitalTypeText { get; set; }
+
         /// <summary>
         /// 到院时间
         /// </summary>

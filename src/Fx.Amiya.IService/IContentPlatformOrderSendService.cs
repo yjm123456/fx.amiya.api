@@ -94,14 +94,16 @@ namespace Fx.Amiya.IService
         /// <param name="contentPlatFormId">内容平台id</param>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
+        /// <param name="toHospitalStartDate">到院时间起</param>
+        /// <param name="toHospitalEndDate">到院时间止</param>        
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<SendContentPlatformOrderDto>> GetSendOrderList(int? liveAnchorId, int? consultationEmpId, int? sendBy, string keyword, int employeeId, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, int IsToHospital, int orderSource, int pageNum, int pageSize);
+        Task<FxPageInfo<SendContentPlatformOrderDto>> GetSendOrderList(int? liveAnchorId, int? consultationEmpId, int? sendBy, string keyword, int employeeId, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int pageNum, int pageSize);
 
 
         Task<List<SendContentPlatformOrderDto>> GetSendOrderReportList(int? liveAnchorId, int? hospitalId, int employeeId, int belongEmpId, int? orderStatus
-          , string contentPlatFormId, DateTime? startDate, DateTime? endDate, bool isHidePhone);
+          , string contentPlatFormId, int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, DateTime? startDate, DateTime? endDate, bool isHidePhone);
         #region 报表相关
 
         /// <summary>

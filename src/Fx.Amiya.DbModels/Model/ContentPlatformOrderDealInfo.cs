@@ -29,6 +29,11 @@ namespace Fx.Amiya.DbModels.Model
         public bool IsToHospital { get; set; }
 
         /// <summary>
+        /// 到院类型
+        /// </summary>
+        public int ToHospitalType { get; set; }
+
+        /// <summary>
         /// 到院时间
         /// </summary>
         public DateTime? ToHospitalDate { get; set; }
@@ -41,6 +46,7 @@ namespace Fx.Amiya.DbModels.Model
         /// 是否成交
         /// </summary>
         public bool IsDeal { get; set; }
+
 
         /// <summary>
         /// 截图

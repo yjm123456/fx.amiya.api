@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Service
 {
-    public class ContentPlatFormOrderDealInfoService: IContentPlatFormOrderDealInfoService
+    public class ContentPlatFormOrderDealInfoService : IContentPlatFormOrderDealInfoService
     {
         private IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo;
         private IHospitalInfoService _hospitalInfoService;
@@ -31,7 +31,7 @@ namespace Fx.Amiya.Service
             try
             {
                 var ContentPlatFOrmOrderDealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll()
-                                                   where string.IsNullOrEmpty(contentPlafFormOrderId )|| d.ContentPlatFormOrderId == contentPlafFormOrderId
+                                                   where string.IsNullOrEmpty(contentPlafFormOrderId) || d.ContentPlatFormOrderId == contentPlafFormOrderId
                                                    select new ContentPlatFormOrderDealInfoDto
                                                    {
                                                        Id = d.Id,
@@ -39,21 +39,23 @@ namespace Fx.Amiya.Service
                                                        CreateDate = d.CreateDate,
                                                        IsDeal = d.IsDeal,
                                                        IsToHospital = d.IsToHospital,
-                                                       ToHospitalDate=d.ToHospitalDate,
-                                                       LastDealHospitalId=d.LastDealHospitalId,
-                                                       DealPicture=d.DealPicture,
-                                                       Remark=d.Remark,
-                                                       Price=d.Price,
-                                                       DealDate=d.DealDate,
-                                                       OtherAppOrderId=d.OtherAppOrderId,
-                              };
+                                                       ToHospitalType = d.ToHospitalType,
+                                                       ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
+                                                       ToHospitalDate = d.ToHospitalDate,
+                                                       LastDealHospitalId = d.LastDealHospitalId,
+                                                       DealPicture = d.DealPicture,
+                                                       Remark = d.Remark,
+                                                       Price = d.Price,
+                                                       DealDate = d.DealDate,
+                                                       OtherAppOrderId = d.OtherAppOrderId,
+                                                   };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
                 ContentPlatFOrmOrderDealInfoPageInfo.TotalCount = await ContentPlatFOrmOrderDealInfo.CountAsync();
-                ContentPlatFOrmOrderDealInfoPageInfo.List = await ContentPlatFOrmOrderDealInfo.OrderByDescending(x=>x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
-                foreach(var z in ContentPlatFOrmOrderDealInfoPageInfo.List)
+                ContentPlatFOrmOrderDealInfoPageInfo.List = await ContentPlatFOrmOrderDealInfo.OrderByDescending(x => x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+                foreach (var z in ContentPlatFOrmOrderDealInfoPageInfo.List)
                 {
-                    if(z.LastDealHospitalId.HasValue)
+                    if (z.LastDealHospitalId.HasValue)
                     {
                         var dealHospital = await _hospitalInfoService.GetBaseByIdAsync(z.LastDealHospitalId.Value);
                         z.LastDealHospital = dealHospital.Name;
@@ -67,7 +69,6 @@ namespace Fx.Amiya.Service
             }
         }
 
-
         public async Task AddAsync(AddContentPlatFormOrderDealInfoDto addDto)
         {
             try
@@ -77,6 +78,7 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId = addDto.ContentPlatFormOrderId;
                 ContentPlatFOrmOrderDealInfo.CreateDate = addDto.CreateDate;
                 ContentPlatFOrmOrderDealInfo.IsToHospital = addDto.IsToHospital;
+                ContentPlatFOrmOrderDealInfo.ToHospitalType = addDto.ToHospitalType;
                 ContentPlatFOrmOrderDealInfo.ToHospitalDate = addDto.ToHospitalDate;
                 ContentPlatFOrmOrderDealInfo.LastDealHospitalId = addDto.LastDealHospitalId;
                 ContentPlatFOrmOrderDealInfo.IsDeal = addDto.IsDeal;
@@ -108,6 +110,7 @@ namespace Fx.Amiya.Service
                 contentPlatFOrmOrderDealInfoDto.ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId;
                 contentPlatFOrmOrderDealInfoDto.CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate;
                 contentPlatFOrmOrderDealInfoDto.IsToHospital = ContentPlatFOrmOrderDealInfo.IsToHospital;
+                contentPlatFOrmOrderDealInfoDto.ToHospitalType = contentPlatFOrmOrderDealInfoDto.ToHospitalType;
                 contentPlatFOrmOrderDealInfoDto.ToHospitalDate = ContentPlatFOrmOrderDealInfo.ToHospitalDate;
                 contentPlatFOrmOrderDealInfoDto.LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId;
                 contentPlatFOrmOrderDealInfoDto.IsDeal = ContentPlatFOrmOrderDealInfo.IsDeal;
@@ -137,6 +140,7 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.Id = updateDto.Id;
                 ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId = updateDto.ContentPlatFormOrderId;
                 ContentPlatFOrmOrderDealInfo.IsToHospital = updateDto.IsToHospital;
+                ContentPlatFOrmOrderDealInfo.ToHospitalType = updateDto.ToHospitalType;
                 ContentPlatFOrmOrderDealInfo.ToHospitalDate = updateDto.ToHospitalDate;
                 ContentPlatFOrmOrderDealInfo.LastDealHospitalId = updateDto.LastDealHospitalId;
                 ContentPlatFOrmOrderDealInfo.IsDeal = updateDto.IsDeal;

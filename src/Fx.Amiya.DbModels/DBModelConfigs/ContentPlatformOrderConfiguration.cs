@@ -42,6 +42,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.ConsultingContent).HasColumnName("consulting_content").HasColumnType("VARCHAR(200)").IsRequired(false);
             builder.Property(e => e.Remark).HasColumnName("remark").HasColumnType("VARCHAR(200)").IsRequired(false);
             builder.Property(t => t.IsToHospital).HasColumnName("is_to_hospital").HasColumnType("bit").IsRequired();
+            builder.Property(e => e.ToHospitalType).HasColumnName("to_hospital_type").HasColumnType("int").IsRequired();
             builder.Property(e => e.ToHospitalDate).HasColumnName("to_hospital_date").HasColumnType("DATETIME").IsRequired(false);
             builder.Property(e => e.LastDealHospitalId).HasColumnName("last_deal_hospital_id").HasColumnType("int").IsRequired(false);
             builder.Property(e => e.CheckState).HasColumnName("check_state").HasColumnType("int").IsRequired(false);
