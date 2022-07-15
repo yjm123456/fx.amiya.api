@@ -796,11 +796,23 @@ ADD CONSTRAINT `fk_live_anchor_info`
   ON UPDATE NO ACTION;
 -----------------------------------------------余建明 2022/07/05 END--------------------------------------------;
 
-----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
 
 -----------------------------------------------余建明 2022/07/12 BEGIN--------------------------------------------;
+
+
+--内容平台成交情况
+  ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
+ADD COLUMN `to_hospital_type` INT NOT NULL DEFAULT 0 AFTER `is_to_hospital`;
+
+
+--内容平台订单
+ALTER TABLE `amiyadb`.`tbl_content_platform_order` 
+ADD COLUMN `to_hospital_type` INT NOT NULL DEFAULT 0 AFTER `is_to_hospital`;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
 
 --购物车
 ALTER TABLE `amiyadb`.`tbl_goods_shopcar` 
@@ -835,18 +847,6 @@ ADD CONSTRAINT `fk_city_info`
 ADD CONSTRAINT `fk_hospital_info`
   FOREIGN KEY (`hosiptal_id`)
   REFERENCES `amiyadb`.`tbl_hospital_info` (`id`);
-
---内容平台成交情况
-  ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
-ADD COLUMN `to_hospital_type` INT NOT NULL DEFAULT 0 AFTER `is_to_hospital`;
-
-
---内容平台订单
-ALTER TABLE `amiyadb`.`tbl_content_platform_order` 
-ADD COLUMN `to_hospital_type` INT NOT NULL DEFAULT 0 AFTER `is_to_hospital`;
-
-
-
 
   
 -----------------------------------------------余建明 2022/07/12 END--------------------------------------------;
