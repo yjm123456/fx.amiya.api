@@ -35,6 +35,7 @@ namespace Fx.Amiya.Service
         private IAmiyaHospitalDepartmentService _departmentService;
         private IHospitalInfoService _hospitalInfoService;
         private IContentPlatFormCustomerPictureService _contentPlatFormCustomerPictureService;
+        private IEmployeeBindLiveAnchorService employeeBindLiveAnchorService;
         private IUnitOfWork unitOfWork;
         private IContentPlatFormOrderDealInfoService _contentPlatFormOrderDalService;
         private IDalConfig _dalConfig;
@@ -43,6 +44,7 @@ namespace Fx.Amiya.Service
            IDalContentPlatformOrder dalContentPlatformOrder,
            IDalAmiyaEmployee dalAmiyaEmployee,
             ILiveAnchorService liveAnchorService,
+            IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
             IHospitalInfoService hospitalInfoService,
             IBindCustomerServiceService bindCustomerServiceService,
             IContentPlatformService contentPlatformService,
@@ -64,6 +66,7 @@ namespace Fx.Amiya.Service
             _dalBindCustomerService = dalBindCustomerService;
             _departmentService = departmentService;
             this.amiyaGoodsDemandService = amiyaGoodsDemandService;
+            this.employeeBindLiveAnchorService = employeeBindLiveAnchorService;
             _liveAnchorService = liveAnchorService;
             _contentPlatformService = contentPlatformService;
             _amiyaEmployeeService = amiyaEmployeeService;
@@ -202,6 +205,23 @@ namespace Fx.Amiya.Service
         {
             try
             {
+                List<int> liveAnchorIds = new List<int>();
+                if (liveAnchorId.HasValue)
+                {
+                    liveAnchorIds.Add(liveAnchorId.Value);
+                }
+                else
+                {
+                    var empInfo = await _amiyaEmployeeService.GetByIdAsync(employeeId);
+                    if (empInfo.PositionId == 19)
+                    {
+                        var bindLiveAnchorInfo = await employeeBindLiveAnchorService.GetByEmpIdAsync(employeeId);
+                        foreach (var x in bindLiveAnchorInfo)
+                        {
+                            liveAnchorIds.Add(x.LiveAnchorId);
+                        }
+                    }
+                }
                 var orders = from d in _dalContentPlatformOrder.GetAll()
                              where (string.IsNullOrWhiteSpace(keyword) || d.Id.Contains(keyword) || d.ConsultingContent.Contains(keyword) || d.CustomerName.Contains(keyword) || d.AcceptConsulting.Contains(keyword) || d.Remark.Contains(keyword)
                              || d.Phone.Contains(keyword))
@@ -211,7 +231,7 @@ namespace Fx.Amiya.Service
                              && (orderSource == -1 || d.OrderSource == orderSource)
                              && (string.IsNullOrWhiteSpace(hospitalDepartmentId) || d.HospitalDepartmentId == hospitalDepartmentId)
                              && (!consultationEmpId.HasValue || d.ConsultationEmpId == consultationEmpId)
-                             && (!liveAnchorId.HasValue || d.LiveAnchorId == liveAnchorId)
+                             && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorId.Value))
                              && (string.IsNullOrEmpty(contentPlateFormId) || d.ContentPlateformId == contentPlateFormId)
                              select d;
 
@@ -231,7 +251,6 @@ namespace Fx.Amiya.Service
                              where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.Phone) > 0
                              select d;
                 }
-
                 var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
                 var order = from d in orders
                             select new ContentPlatFormOrderInfoDto

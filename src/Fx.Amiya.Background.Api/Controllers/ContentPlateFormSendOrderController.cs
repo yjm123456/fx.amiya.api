@@ -73,17 +73,21 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="keyword"></param>
         /// <param name="startDate"></param>
+        /// <param name="IsToHospital">是否到院， -1查询全部</param>
+        /// <param name="toHospitalStartDate">到院时间起</param>
+        /// <param name="toHospitalEndDate">到院时间止</param>           
+        /// <param name="toHospitalType">到院类型</param>        
         /// <param name="endDate"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listOfHospital")]
         [FxTenantAuthorize]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderSendInfoVo>>> GetListByHospitalIdAsync(string keyword, DateTime? startDate, DateTime? endDate, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderSendInfoVo>>> GetListByHospitalIdAsync(string keyword, DateTime? startDate, DateTime? endDate, int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int pageNum, int pageSize)
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalId = employee.HospitalId;
-            var q = await _sendOrderInfoService.GetListByHospitalIdAsync(hospitalId, keyword, startDate, endDate, pageNum, pageSize);
+            var q = await _sendOrderInfoService.GetListByHospitalIdAsync(hospitalId, keyword, startDate, endDate, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, pageNum, pageSize);
             var sendOrder = from d in q.List
                             select new ContentPlatFormOrderSendInfoVo
                             {

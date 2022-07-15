@@ -10,7 +10,7 @@ namespace Fx.Amiya.IService
 {
     public interface ILiveAnchorMonthlyTargetService
     {
-        Task<FxPageInfo<LiveAnchorMonthlyTargetDto>> GetListWithPageAsync(int Year, int Month, int? LiveAnchorId, int pageNum, int pageSize);
+        Task<FxPageInfo<LiveAnchorMonthlyTargetDto>> GetListWithPageAsync(int Year, int Month, int? LiveAnchorId, int employeeId,int pageNum, int pageSize);
         Task AddAsync(AddLiveAnchorMonthlyTargetDto addDto);
         Task<List<LiveAnchorMonthlyTargetKeyAndValueDto>> GetIdAndNames(int year, int month);
         Task<LiveAnchorMonthlyTargetDto> GetByIdAsync(string id);

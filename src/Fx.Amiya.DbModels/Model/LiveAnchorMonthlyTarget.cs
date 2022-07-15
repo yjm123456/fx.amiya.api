@@ -314,5 +314,9 @@ namespace Fx.Amiya.DbModels.Model
         /// 创建日期
         /// </summary>
         public DateTime CreateDate { get; set; }
+
+        public LiveAnchor LiveAnchor { get; set; }
+
+        public List<LiveAnchorDailyTarget> LiveAnchorDailyTargets { get; set; }
     }
 }

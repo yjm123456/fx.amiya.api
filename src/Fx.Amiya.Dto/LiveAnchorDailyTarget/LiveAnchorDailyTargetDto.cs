@@ -18,6 +18,10 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 主播月目标关联id
         /// </summary>
         public string LiveanchorMonthlyTargetId { get; set; }
+        /// <summary>
+        /// 主播ID
+        /// </summary>
+        public int LiveAnchorId { get; set; }
 
         /// <summary>
         /// 主播

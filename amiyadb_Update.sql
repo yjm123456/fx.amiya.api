@@ -770,6 +770,30 @@ ADD COLUMN `other_order_id` VARCHAR(50) NULL AFTER `deal_date`;
 
 
 
+--主播IP日运营报表关联关系
+ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
+ADD INDEX `fk_live_anchor_monthly_target_info_idx` (`liveanchor_monthly_target_id` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
+ADD CONSTRAINT `fk_live_anchor_monthly_target_info`
+  FOREIGN KEY (`liveanchor_monthly_target_id`)
+  REFERENCES `amiyadb`.`tbl_liveanchor_monthly_target` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
+
+  --主播月度报表关联关系
+ ALTER TABLE `amiyadb`.`tbl_liveanchor_monthly_target` 
+CHANGE COLUMN `live_anchor_id` `live_anchor_id` INT UNSIGNED NOT NULL DEFAULT '0' ,
+ADD INDEX `fk_live_anchor_info_idx` (`live_anchor_id` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`tbl_liveanchor_monthly_target` 
+ADD CONSTRAINT `fk_live_anchor_info`
+  FOREIGN KEY (`live_anchor_id`)
+  REFERENCES `amiyadb`.`tbl_live_anchor` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
 -----------------------------------------------余建明 2022/07/05 END--------------------------------------------;
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
@@ -812,7 +836,7 @@ ADD CONSTRAINT `fk_hospital_info`
   FOREIGN KEY (`hosiptal_id`)
   REFERENCES `amiyadb`.`tbl_hospital_info` (`id`);
 
-  --内容平台成交情况
+--内容平台成交情况
   ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
 ADD COLUMN `to_hospital_type` INT NOT NULL DEFAULT 0 AFTER `is_to_hospital`;
 
@@ -820,6 +844,8 @@ ADD COLUMN `to_hospital_type` INT NOT NULL DEFAULT 0 AFTER `is_to_hospital`;
 --内容平台订单
 ALTER TABLE `amiyadb`.`tbl_content_platform_order` 
 ADD COLUMN `to_hospital_type` INT NOT NULL DEFAULT 0 AFTER `is_to_hospital`;
+
+
 
 
   

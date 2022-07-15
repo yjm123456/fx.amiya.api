@@ -26,14 +26,16 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class LiveAnchorDailyTargetController : ControllerBase
     {
         private ILiveAnchorDailyTargetService _liveAnchorDailyTargetService;
-        private IOrderService _orderService;
+        private IHttpContextAccessor httpContextAccessor;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        public LiveAnchorDailyTargetController(ILiveAnchorDailyTargetService liveAnchorDailyTargetService)
+        public LiveAnchorDailyTargetController(ILiveAnchorDailyTargetService liveAnchorDailyTargetService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _liveAnchorDailyTargetService = liveAnchorDailyTargetService;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
@@ -52,7 +54,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var q = await _liveAnchorDailyTargetService.GetListWithPageAsync(startDate, endDate, operationEmpId, netWorkConEmpId, liveAnchorId, pageNum, pageSize);
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                var q = await _liveAnchorDailyTargetService.GetListWithPageAsync(startDate, endDate, operationEmpId, netWorkConEmpId, liveAnchorId, pageNum, pageSize,employeeId);
 
                 var liveAnchorDailyTarget = from d in q.List
                                             select new LiveAnchorDailyTargetVo

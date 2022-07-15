@@ -26,14 +26,18 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class LiveAnchorMonthlyTargetController : ControllerBase
     {
         private ILiveAnchorMonthlyTargetService _liveAnchorMonthlyTargetService;
+        private IHttpContextAccessor httpContextAccessor;
         private ILiveAnchorDailyTargetService _liveAnchorDailyTargetService;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        public LiveAnchorMonthlyTargetController(ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService, ILiveAnchorDailyTargetService liveAnchorDailyTargetService)
+        public LiveAnchorMonthlyTargetController(ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService,
+            IHttpContextAccessor httpContextAccessor, 
+            ILiveAnchorDailyTargetService liveAnchorDailyTargetService)
         {
             _liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
+            this.httpContextAccessor = httpContextAccessor;
             _liveAnchorDailyTargetService = liveAnchorDailyTargetService;
         }
 
@@ -51,7 +55,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var q = await _liveAnchorMonthlyTargetService.GetListWithPageAsync(year, month, liveAnchorId, pageNum, pageSize);
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                var q = await _liveAnchorMonthlyTargetService.GetListWithPageAsync(year, month, liveAnchorId,employeeId ,pageNum, pageSize);
 
                 var liveAnchorMonthlyTarget = from d in q.List
                                               select new LiveAnchorMonthlyTargetVo

@@ -185,11 +185,18 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderSendInfoDto>> GetListByHospitalIdAsync(int hospitalId, string keyword, DateTime? startDate, DateTime? endDate, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderSendInfoDto>> GetListByHospitalIdAsync(int hospitalId, string keyword, DateTime? startDate, DateTime? endDate, int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int pageNum, int pageSize)
         {
+            bool toHospital = false;
+            if (IsToHospital > 0)
+            {
+                toHospital = true;
+            }
             var q = from d in _dalContentPlatformOrderSend.GetAll()
-                    where d.HospitalId == hospitalId
-                     && (keyword == null || d.ContentPlatformOrder.CustomerName.Contains(keyword) || d.ContentPlatformOrder.Phone.Contains(keyword) || d.ContentPlatformOrder.Id.Contains(keyword))
+                    where (d.HospitalId == hospitalId)
+                     && (string.IsNullOrEmpty(keyword) || d.ContentPlatformOrder.Id.Contains(keyword)||d.ContentPlatformOrder.Phone.Contains(keyword) || d.ContentPlatformOrder.CustomerName.Contains(keyword))
+                     && (IsToHospital == 0 || d.ContentPlatformOrder.IsToHospital == toHospital)
+                     && (!toHospitalType.HasValue || d.ContentPlatformOrder.ToHospitalType == toHospitalType.Value)
                     select d;
 
             if (startDate != null && endDate != null)
@@ -200,6 +207,14 @@ namespace Fx.Amiya.Service
                 q = from d in q
                     where (d.SendDate >= startrq.Date && d.SendDate < endrq.Date)
                     select d;
+            }
+            if (toHospitalStartDate != null && toHospitalEndDate != null)
+            {
+                DateTime startrq = ((DateTime)toHospitalStartDate).Date;
+                DateTime endrq = ((DateTime)toHospitalEndDate).Date.AddDays(1);
+                q = from d in q
+                         where (d.ContentPlatformOrder.ToHospitalDate >= startrq && d.ContentPlatformOrder.ToHospitalDate < endrq)
+                         select d;
             }
             var config = await GetCallCenterConfig();
             var sendOrder = from d in q
@@ -235,7 +250,12 @@ namespace Fx.Amiya.Service
                                 UnDealPictureUrl = d.ContentPlatformOrder.UnDealPictureUrl,
                                 OrderSourceText = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? ServiceClass.GerContentPlatFormOrderSourceText(d.ContentPlatformOrder.OrderSource.Value) : "****",
                                 AcceptConsulting = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.AcceptConsulting : "****",
-                                CheckState = d.ContentPlatformOrder.CheckState
+                                CheckState = d.ContentPlatformOrder.CheckState,
+                                DealDate = d.ContentPlatformOrder.DealDate,
+                                IsToHospital = d.ContentPlatformOrder.IsToHospital,
+                                ToHospitalDate = d.ContentPlatformOrder.ToHospitalDate,
+                                ToHospitalType = d.ContentPlatformOrder.ToHospitalType,
+                                ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ContentPlatformOrder.ToHospitalType)
                             };
             FxPageInfo<ContentPlatFormOrderSendInfoDto> sendOrderPageInfo = new FxPageInfo<ContentPlatFormOrderSendInfoDto>();
             sendOrderPageInfo.TotalCount = await sendOrder.CountAsync();
@@ -400,7 +420,7 @@ namespace Fx.Amiya.Service
                                             SenderName = d.AmiyaEmployee.Name,
                                             CheckState = d.ContentPlatformOrder.CheckState,
                                             SendDate = d.SendDate,
-                                            ToHospitalDate=d.ContentPlatformOrder.ToHospitalDate,
+                                            ToHospitalDate = d.ContentPlatformOrder.ToHospitalDate,
                                             SendOrderRemark = d.Remark,
                                             DealDate = d.ContentPlatformOrder.DealDate,
                                             OrderRemark = d.ContentPlatformOrder.Remark,
@@ -491,9 +511,9 @@ namespace Fx.Amiya.Service
                                             DealAmount = d.ContentPlatformOrder.DealAmount,
                                             SenderName = d.AmiyaEmployee.Name,
                                             SendDate = d.SendDate,
-                                            IsToHospital=d.ContentPlatformOrder.IsToHospital,
-                                            ToHospitalTypeText=ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ContentPlatformOrder.ToHospitalType),
-                                            ToHospitalDate=d.ContentPlatformOrder.ToHospitalDate,
+                                            IsToHospital = d.ContentPlatformOrder.IsToHospital,
+                                            ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ContentPlatformOrder.ToHospitalType),
+                                            ToHospitalDate = d.ContentPlatformOrder.ToHospitalDate,
                                             SendOrderRemark = d.Remark,
                                             OtherContentPlatFormOrderId = d.ContentPlatformOrder.OtherContentPlatFormOrderId,
                                         };

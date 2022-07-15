@@ -170,5 +170,7 @@ namespace Fx.Amiya.DbModels.Model
         /// 今日业绩
         /// </summary>
         public decimal PerformanceNum { get; set; }
+
+        public LiveAnchorMonthlyTarget LiveAnchorMonthlyTarget { get; set; }
     }
 }

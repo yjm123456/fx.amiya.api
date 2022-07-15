@@ -1158,12 +1158,16 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormSendOrderController.GetListByHospitalIdAsync(System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormSendOrderController.GetListByHospitalIdAsync(System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Int32,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Int32,System.Int32)">
             <summary>
             医院获取派单信息
             </summary>
             <param name="keyword"></param>
             <param name="startDate"></param>
+            <param name="IsToHospital">是否到院， -1查询全部</param>
+            <param name="toHospitalStartDate">到院时间起</param>
+            <param name="toHospitalEndDate">到院时间止</param>           
+            <param name="toHospitalType">到院类型</param>        
             <param name="endDate"></param>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
@@ -2640,7 +2644,7 @@
             主播日运营目标情况数据接口
             </summary>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.#ctor(Fx.Amiya.IService.ILiveAnchorDailyTargetService)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.#ctor(Fx.Amiya.IService.ILiveAnchorDailyTargetService,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
             <summary>
             构造函数
             </summary>
@@ -2691,7 +2695,7 @@
             主播月度运营目标情况数据接口
             </summary>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorMonthlyTargetController.#ctor(Fx.Amiya.IService.ILiveAnchorMonthlyTargetService,Fx.Amiya.IService.ILiveAnchorDailyTargetService)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorMonthlyTargetController.#ctor(Fx.Amiya.IService.ILiveAnchorMonthlyTargetService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Fx.Amiya.IService.ILiveAnchorDailyTargetService)">
             <summary>
             构造函数
             </summary>
@@ -4969,7 +4973,7 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.AmiyaEmployee.UpdateAmiyaEmployeeVo.LiveAnchorIds">
             <summary>
-            当为客服情况下上传绑定主播ID
+            当为客服/运营咨询情况下上传绑定主播ID
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.AmiyaEmployee.UpdatePasswordAmiiyaVo.OldPassword">
@@ -7430,6 +7434,21 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormOrderSendInfoVo.CheckState">
             <summary>
             审核状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormOrderSendInfoVo.IsToHospital">
+            <summary>
+            是否到院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormOrderSendInfoVo.ToHospitalDate">
+            <summary>
+            到院时间（最新）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormOrderSendInfoVo.ToHospitalTypeText">
+            <summary>
+            到院类型
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormSendOrderInfoSimpleVo.HospitalId">

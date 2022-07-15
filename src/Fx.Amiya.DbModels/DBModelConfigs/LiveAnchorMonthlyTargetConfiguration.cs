@@ -88,6 +88,9 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.MiniVanBadReviewsCompleteRate).HasColumnName("mini_van_bad_reviews_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
 
             builder.Property(t => t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
+
+
+            builder.HasOne(e => e.LiveAnchor).WithMany(e => e.liveAnchorMonthlyTargets).HasForeignKey(e => e.LiveAnchorId);
         }
     }
 }

@@ -133,7 +133,7 @@ namespace Fx.Amiya.Service
                     DepartmentId = employee.AmiyaPositionInfo.DepartmentId,
                     DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name,
                 };
-                if (employeeDto.IsCustomerService == true)
+                if (employeeDto.IsCustomerService == true || employeeDto.PositionId == 19)
                 {
                     employeeDto.LiveAnchorIds = new List<int>();
                     var liveAnchorIdsResult = await employeeBindLiveAnchorService.GetByEmpIdAsync(employeeDto.Id);
@@ -252,7 +252,7 @@ namespace Fx.Amiya.Service
                 await dalAmiyaEmployee.UpdateAsync(employee, true);
 
 
-                if (updateDto.IsCustomerService == true)
+                if (updateDto.IsCustomerService == true || updateDto.PositionId == 19)
                 {
                     if (updateDto.LiveAnchorIds.Count > 0)
                     {
@@ -423,8 +423,8 @@ namespace Fx.Amiya.Service
         public async Task<List<AmiyaEmployeeNameDto>> GetOperatingConsultingNameListAsync()
         {
             var employee = from d in dalAmiyaEmployee.GetAll()
-                           where d.IsCustomerService && d.Valid
-                           && d.AmiyaPositionInfo.Name.Contains("运营咨询")
+                           where d.Valid
+                           && d.AmiyaPositionInfo.Id == 19
                            select new AmiyaEmployeeNameDto
                            {
                                Id = d.Id,

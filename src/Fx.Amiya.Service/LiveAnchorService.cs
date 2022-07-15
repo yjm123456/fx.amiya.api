@@ -17,12 +17,18 @@ namespace Fx.Amiya.Service
     {
         private IDalLiveAnchor dalLiveAnchor;
         private IDalContentplatform _contentPlateForm;
+        private IEmployeeBindLiveAnchorService employeeBindLiveAnchorService;
+        private IAmiyaEmployeeService _amiyaEmployeeService;
         private ILiveRequirementInfoService _liveRequirementInfoService;
         public LiveAnchorService(IDalLiveAnchor dalLiveAnchor,
+            IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
             ILiveRequirementInfoService liveRequirementInfoService,
+            IAmiyaEmployeeService amiyaEmployeeService,
             IDalContentplatform contentPlateForm)
         {
             this.dalLiveAnchor = dalLiveAnchor;
+            this.employeeBindLiveAnchorService = employeeBindLiveAnchorService;
+            _amiyaEmployeeService = amiyaEmployeeService;
             _liveRequirementInfoService = liveRequirementInfoService;
             _contentPlateForm = contentPlateForm;
         }
@@ -32,15 +38,28 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="contentPlatFormId">内容平台id</param>
         /// <returns></returns>
-        public async Task<List<LiveAnchorDto>> GetValidListAsync(string contentPlatFormId)
+        public async Task<List<LiveAnchorDto>> GetValidListAsync(string contentPlatFormId, int employeeId)
         {
             if (string.IsNullOrEmpty(contentPlatFormId))
             {
                 throw new Exception("请先选择内容平台进行主播账号查询！");
             }
+            List<int> liveAnchorIds = new List<int>();
+
+            var empInfo = await _amiyaEmployeeService.GetByIdAsync(employeeId);
+            if (empInfo.PositionId == 19)
+            {
+                var bindLiveAnchorInfo = await employeeBindLiveAnchorService.GetByEmpIdAsync(employeeId);
+                foreach (var x in bindLiveAnchorInfo)
+                {
+                    liveAnchorIds.Add(x.LiveAnchorId);
+                }
+            }
+
             var liveAnchors = from d in dalLiveAnchor.GetAll()
                               where d.Valid == true
                               && d.ContentPlateFormId == contentPlatFormId
+                              && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.Id))
                               select new LiveAnchorDto
                               {
                                   Id = d.Id,
@@ -98,10 +117,23 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<LiveAnchorDto>> GetListAsync(string name, string contentPlatformId, bool valid, int pageNum, int pageSize)
+        public async Task<FxPageInfo<LiveAnchorDto>> GetListAsync(string name, int employeeId, string contentPlatformId, bool valid, int pageNum, int pageSize)
         {
+            List<int> liveAnchorIds = new List<int>();
+
+            var empInfo = await _amiyaEmployeeService.GetByIdAsync(employeeId);
+            if (empInfo.PositionId == 19)
+            {
+                var bindLiveAnchorInfo = await employeeBindLiveAnchorService.GetByEmpIdAsync(employeeId);
+                foreach (var x in bindLiveAnchorInfo)
+                {
+                    liveAnchorIds.Add(x.LiveAnchorId);
+                }
+            }
+
             var liveAnchors = from d in dalLiveAnchor.GetAll()
                               where (string.IsNullOrWhiteSpace(name) || d.Name.Contains(name))
+                              && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.Id))
                               && (string.IsNullOrEmpty(contentPlatformId) || d.ContentPlateFormId == contentPlatformId)
                               && (d.Valid == valid)
                               select new LiveAnchorDto
