@@ -852,7 +852,15 @@ ADD CONSTRAINT `fk_hospital_info`
 -----------------------------------------------余建明 2022/07/12 END--------------------------------------------;
 
 
+-----------------------------------------------余建明 2022/07/18  BEGIN--------------------------------------------;
 
+--tbl_config表修改config列【加入抖店渠道】
+UPDATE `amiyadb`.`tbl_config` SET `config_json` = '{\"FxJwtConfig\":{\"Key\":\"kljdsf982734jkldg!@#\",\"ExpireInSeconds\":7200,\"RefreshTokenExpireInSeconds\":14400},\"FxOpenConfig\":{\"Enable\":true,\"RequestBaseUrl\":\"https://app.hsltm.com/fxgatetest\"},\"FxOSSConfig\":null,\"FxRedisConfig\":{\"ConnectionString\":\"app.hsltm.com:6379,allowadmin=true,password=hsltm\"},\"FxSmsConfig\":{\"AliyunSmsList\":[{\"Name\":\"send_validate_code\",\"AccessKeyId\":\"LTAIlyCdQbQnA96C\",\"AccessSecret\":\"nXtBYoUzt3nw3v5DasAjNdLliuBB0h\",\"RegionId\":\"cn_hangzhou\",\"SignName\":\"杭州华山医院\",\"TemplateCode\":\"SMS_126464576\",\"Remark\":\"发送验证码\"}]},\"FxUniteWxAccessTokenConfig\":{\"Enable\":true,\"RequestBaseUrl\":\"https://app.hsltm.com/fxwxaccesstoken\"},\"WxPayConfig\":null,\"FxMessageCenterConfig\":{\"EnableMessageCenter\":true,\"EnableMessageQueue\":true,\"MQHostName\":\"app.hsltm.com\",\"MQUserName\":\"admin\",\"Port\":5672,\"MQPassword\":\"hsltm1007\",\"MQQueueName\":\"fx_wxmp_message_queue\",\"MessageCenterWebSocketUrl\":null},\"ChatInMinute\":1440,\"CallCenterConfig\":{\"CallRecordStoreAddress\":\"mongodb://192.168.11.72:27890\",\"EnablevoiceCardCallable\":false,\"SupportOldCallBox\":false,\"SwitchSimCardInCallCount\":5,\"VoiceCardManagerAddress\":\"\",\"PhoneEncryptKey\":\"test\",\"EnablePhoneEncrypt\":true,\"HidePhoneNumber\":true},\"SyncOrderConfig\":{\"Jd\":false,\"Tmall\":true,\"WeiFenXiao\":true,\"DouYin\":true}}' WHERE (`id` = '1');
+
+--tbl_order_app_info表加入抖店商户号配置
+INSERT INTO `amiyadb`.`tbl_order_app_info` (`id`, `app_key`, `app_secret`, `access_token`, `authorize_date`, `app_type`, `expire_date`, `refresh_token`) VALUES ('5', '7109321803654252040', '1', 'edae7c30-8386-443b-88a1-031111596fdd', '2022-07-18 16:20:00', '4', '2022-07-19 16:20:00', '1');
+
+-----------------------------------------------余建明 2022/07/18 END--------------------------------------------;
 
 
 

@@ -129,5 +129,39 @@ namespace Fx.Amiya.Service
             tmallAppInfoDto.RefreshToken = appInfo.RefreshToken;
             return tmallAppInfoDto;
         }
+
+
+        public async Task<OrderAppInfoDto> GetTikTokAppInfo()
+        {
+            var appInfo = await dalOrderAppInfo.GetAll().SingleOrDefaultAsync(e => e.AppType == (byte)AppType.WeChatOfficialAccount);
+            if (appInfo == null)
+                throw new Exception("抖音订单同步应用证书信息为空");
+            DateTime date = DateTime.Now;
+            if (appInfo.ExpireDate <= date)
+            {
+                string url = $"http://api.wifenxiao.com/token?shop_id={appInfo.AccessToken}&app_key={appInfo.AppKey}&secret={appInfo.AppSecret}";
+                var res = await HttpUtil.HTTPJsonGetAsync(url);
+                if (res.Contains("errorcode"))
+                    throw new Exception(res);
+                JObject requestObject = JsonConvert.DeserializeObject(res) as JObject;
+                string token = requestObject["access_token"].ToString();
+                double expires_in = Convert.ToDouble(requestObject["expires_in"].ToString());
+                appInfo.RefreshToken = token;
+                appInfo.ExpireDate = date.AddSeconds(expires_in - 400);
+                appInfo.AuthorizeDate = date;
+                await dalOrderAppInfo.UpdateAsync(appInfo, true);
+            }
+
+            OrderAppInfoDto tmallAppInfoDto = new OrderAppInfoDto();
+            tmallAppInfoDto.Id = appInfo.Id;
+            tmallAppInfoDto.AppKey = appInfo.AppKey;
+            tmallAppInfoDto.AppSecret = appInfo.AppSecret;
+            tmallAppInfoDto.AccessToken = appInfo.AccessToken;
+            tmallAppInfoDto.AuthorizeDate = appInfo.AuthorizeDate;
+            tmallAppInfoDto.AppType = appInfo.AppType;
+            tmallAppInfoDto.ExpireDate = appInfo.ExpireDate;
+            tmallAppInfoDto.RefreshToken = appInfo.RefreshToken;
+            return tmallAppInfoDto;
+        }
     }
 }

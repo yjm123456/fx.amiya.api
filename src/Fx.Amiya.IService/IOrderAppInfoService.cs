@@ -32,6 +32,7 @@ namespace Fx.Amiya.IService
         Task<OrderAppInfoDto> GetJdAppInfo();
 
         Task<OrderAppInfoDto> GetWeiFenXiaoAppInfo();
+        Task<OrderAppInfoDto> GetTikTokAppInfo();
 
     }
 }
