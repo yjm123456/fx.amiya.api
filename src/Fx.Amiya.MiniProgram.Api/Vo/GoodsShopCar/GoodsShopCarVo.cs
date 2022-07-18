@@ -85,5 +85,6 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar
         /// </summary>
         public DateTime? UpdateDate { get; set; }
         public bool IsMaterial { get; set; }
+        public decimal? HospitalSalePrice { get; set; }
     }
 }

@@ -231,6 +231,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
             var goodsInfos = freeSql.Select<GoodsInfoDbModel>()
                 .Include(e => e.GoodsCategory)
                 .Where(e => valid == null || e.Valid == valid)
+                .Where(e=>e.ExchangeType==1)
                 .OrderByDescending(e=>e.SaleCount);
 
             var goodsInfoList = from d in await goodsInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync()

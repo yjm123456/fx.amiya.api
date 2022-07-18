@@ -15,9 +15,11 @@ namespace Fx.Amiya.Service
     public class GoodsShopCarService : IGoodsShopCarService
     {
         private IDalGoodsShopCar dalGoodsShopCarService;
-        public GoodsShopCarService(IDalGoodsShopCar dalGoodsShopCarService)
+        private IDalGoodsHospitalPrice dalGoodsHospitalPrice;
+        public GoodsShopCarService(IDalGoodsShopCar dalGoodsShopCarService, IDalGoodsHospitalPrice dalGoodsHospitalPrice)
         {
             this.dalGoodsShopCarService = dalGoodsShopCarService;
+            this.dalGoodsHospitalPrice = dalGoodsHospitalPrice;
         }
 
 
@@ -31,7 +33,7 @@ namespace Fx.Amiya.Service
                                           where (keyword == null || d.GoodsInfo.Name.Contains(keyword))
                                                && (d.CustomerId == customerId)
                                                && (d.Status == 1)
-                                               && (d.Num > 0)
+                                               && (d.Num > 0) 
                                           select new GoodsShopCarDto
                                           {
                                               Id = d.Id,
@@ -51,7 +53,8 @@ namespace Fx.Amiya.Service
                                               Hospital = d.HospitalId.HasValue ? d.HospitalInfo.Name : "",
                                               CityId = d.CityId,
                                               City = d.CityId.HasValue ? d.City.Name : "",
-                                              IsMaterial=d.GoodsInfo.IsMaterial
+                                              IsMaterial=d.GoodsInfo.IsMaterial,
+                                              HospitalSalePrice =  d.GoodsInfo.IsMaterial ?0:dalGoodsHospitalPrice.GetAll().Where(e=>e.GoodsId==d.GoodsId && e.HospitalId==d.HospitalId).FirstOrDefault().Price*d.Num
                                           };
                 FxPageInfo<GoodsShopCarDto> goodsShopCarServicePageInfo = new FxPageInfo<GoodsShopCarDto>();
                 goodsShopCarServicePageInfo.TotalCount = await goodsShopCarService.CountAsync();

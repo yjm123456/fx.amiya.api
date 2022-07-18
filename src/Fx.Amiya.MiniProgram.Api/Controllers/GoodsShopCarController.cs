@@ -62,7 +62,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                         Status = d.Status,
                                         UpdateDate = d.UpdateDate,
                                         CreateDate = d.CreateDate,
-                                        IsMaterial=d.IsMaterial
+                                        IsMaterial=d.IsMaterial,
+                                        HospitalSalePrice=d.HospitalSalePrice
                                     };
             FxPageInfo<GoodsShopCarVo> goodsShopCarPageInfo = new FxPageInfo<GoodsShopCarVo>();
             goodsShopCarPageInfo.TotalCount = q.TotalCount;
