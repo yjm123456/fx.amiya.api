@@ -256,10 +256,6 @@ namespace Fx.Amiya.IService
     public enum ContentPlateFormOrderToHospitalType
     {
         /// <summary>
-        /// 其他
-        /// </summary>
-        OTHER=0,
-        /// <summary>
         /// 初诊=1
         /// </summary>
         FIRST_SEEK_ADVICE = 1,
@@ -275,7 +271,11 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 退款=4
         /// </summary>
-        REFUND=4
+        REFUND=4,
+        /// <summary>
+        /// 其他
+        /// </summary>
+        OTHER = 0,
     }
 
     /// <summary>

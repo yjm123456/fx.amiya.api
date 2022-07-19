@@ -23,6 +23,10 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 主播
         /// </summary>
         public string LiveAnchorName { get; set; }
+        /// <summary>
+        /// 微信编号
+        /// </summary>
+        public string LiveAnchorWeChatNo { get; set; }
 
         /// <summary>
         /// 客户姓名
@@ -173,5 +177,20 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 三方订单号
         /// </summary>
         public string OtherContentPlatFormOrderId { get; set; }
+
+        /// <summary>
+        /// 新客/老客
+        /// </summary>
+        public string IsOldCustomer { get; set; }
+
+        /// <summary>
+        /// 是否陪诊
+        /// </summary>
+        public string IsAcompanying { get; set; }
+
+        /// <summary>
+        /// 佣金比例
+        /// </summary>
+        public decimal CommissionRatio { get; set; }
     }
 }

@@ -848,6 +848,18 @@ ADD CONSTRAINT `fk_hospital_info`
   FOREIGN KEY (`hosiptal_id`)
   REFERENCES `amiyadb`.`tbl_hospital_info` (`id`);
 
+  ALTER TABLE `amiyadb`.`tbl_content_platform_order`
+ADD COLUMN `live_anchor_we_chat_no` VARCHAR(100) NULL AFTER `live_anchor_id`,
+ADD COLUMN `is_old_customer` BIT(1) NOT NULL AFTER `return_back_date`,
+ADD COLUMN `is_accompanying` BIT(1) NOT NULL AFTER `is_old_customer`,
+ADD COLUMN `commission_ratio` DECIMAL(5,2) NOT NULL DEFAULT 0.00 AFTER `is_accompanying`;
+
+
+  ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
+ADD COLUMN `is_old_customer` BIT(1) NOT NULL AFTER `other_order_id`,
+ADD COLUMN `is_accompanying` BIT(1) NOT NULL AFTER `is_old_customer`,
+ADD COLUMN `commission_ratio` DECIMAL(5,2) NOT NULL DEFAULT 0.00 AFTER `is_accompanying`;
+
   
 -----------------------------------------------余建明 2022/07/12 END--------------------------------------------;
 

@@ -62,6 +62,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 成交时间
         /// </summary>
         public DateTime? DealDate { get; set; }
+        /// <summary>
+        /// 是否陪诊
+        /// </summary>
+        public bool IsAcompanying { get; set; }
 
         /// <summary>
         /// 三方订单号

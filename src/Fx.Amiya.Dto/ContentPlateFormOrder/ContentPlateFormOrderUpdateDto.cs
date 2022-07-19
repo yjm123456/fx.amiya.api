@@ -42,9 +42,13 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// </summary>
         public string LiveAnchorName { get; set; }
         /// <summary>
+        /// 主播微信号
+        /// </summary>
+        public string LiveAnchorWeChatNo { get; set; }
+        /// <summary>
         /// 客户姓名
         /// </summary>
-        
+
         public string CustomerName { get; set; }
         /// <summary>
         /// 面诊员
@@ -219,5 +223,20 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 成交凭证
         /// </summary>
         public string DealPictureUrl { get; set; }
+
+        /// <summary>
+        /// 新客/老客
+        /// </summary>
+        public bool IsOldCustomer { get; set; }
+
+        /// <summary>
+        /// 是否陪诊
+        /// </summary>
+        public bool IsAcompanying { get; set; }
+
+        /// <summary>
+        /// 佣金比例
+        /// </summary>
+        public decimal CommissionRatio { get; set; }
     }
 }

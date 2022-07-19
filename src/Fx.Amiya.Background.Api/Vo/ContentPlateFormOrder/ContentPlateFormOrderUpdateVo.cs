@@ -33,6 +33,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         [Required]
         public int LiveAnchorId { get; set; }
+        /// <summary>
+        /// 主播微信号
+        /// </summary>
+        public string LiveAnchorWeChatNo { get; set; }
 
         /// <summary>
         /// 商品id

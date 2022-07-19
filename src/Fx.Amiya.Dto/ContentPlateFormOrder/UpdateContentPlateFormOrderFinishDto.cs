@@ -73,5 +73,16 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 三方订单号
         /// </summary>
         public string OtherContentPlatFormOrderId { get; set; }
+
+        /// <summary>
+        /// 佣金比例
+        /// </summary>
+        public decimal CommissionRatio { get; set; }
+
+        /// <summary>
+        /// 是否陪诊
+        /// </summary>
+        public bool IsAcompanying { get; set; }
+
     }
 }

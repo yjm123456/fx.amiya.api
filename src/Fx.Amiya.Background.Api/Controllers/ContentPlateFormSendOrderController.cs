@@ -209,11 +209,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="keyword"></param>
         /// <param name="employeeId"> -1(归属客服)查询全部</param>
         /// <param name="sendBy"> 派单人（空查询全部）</param>
+        /// <param name="isAcompanying">是否陪诊，为空查询所有</param>
+        /// <param name="isOldCustomer">新老客业绩，为空查询所有</param>
+        /// <param name="commissionRatio">佣金比例，为空查询所有</param>
         /// <param name="liveAnchorId">归属主播ID</param>
         /// <param name="orderStatus">订单状态</param>
         /// <param name="contentPlatFormId">内容平台id</param>
-        /// <param name="startDate"></param>
         /// <param name="consultationEmpId">面诊员id</param>
+        /// <param name="startDate"></param>
         /// <param name="endDate"></param>        
         /// <param name="hospitalId"></param>        
         /// <param name="IsToHospital">是否到院， -1查询全部</param>
@@ -226,14 +229,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetSendOrderList(string keyword, int?liveAnchorId ,int? consultationEmpId,int? employeeId, int? sendBy, int? orderStatus , string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId,int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate,int? toHospitalType, int orderSource,int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetSendOrderList(string keyword, int?liveAnchorId ,int? consultationEmpId,int? employeeId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, int? orderStatus , string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId,int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate,int? toHospitalType, int orderSource,int pageNum, int pageSize)
         {
             if (employeeId == null)
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 employeeId = Convert.ToInt32(employee.Id);
             }
-            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorId,consultationEmpId,sendBy,keyword, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital,toHospitalStartDate,toHospitalEndDate,toHospitalType, orderSource,pageNum, pageSize);
+            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorId,consultationEmpId,sendBy, isAcompanying,isOldCustomer,commissionRatio,keyword, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital,toHospitalStartDate,toHospitalEndDate,toHospitalType, orderSource,pageNum, pageSize);
 
             var contentPlatformOrders = from d in orders.List
                                         select new SendContentPlatformOrderVo
@@ -314,6 +317,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             Price = d.Price,
                                             OtherOrderId = d.OtherAppOrderId,
                                             DealDate = d.DealDate,
+                                            IsAcompanying=d.IsAcompanying,
+                                            IsOldCustomer=d.IsOldCustomer,
+                                            CommissionRatio=d.CommissionRatio,
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;
@@ -352,6 +358,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             Remark = d.Remark,
                                             Price = d.Price,
                                             DealDate=d.DealDate,
+                                            IsAcompanying = d.IsAcompanying,
+                                            IsOldCustomer = d.IsOldCustomer,
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;

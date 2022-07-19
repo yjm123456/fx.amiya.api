@@ -48,11 +48,15 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         
         public int LiveAnchorId { get; set; }
+        /// <summary>
+        /// 主播微信号
+        /// </summary>
+        public string LiveAnchorWeChatNo { get; set; }
 
         /// <summary>
         /// 商品id
         /// </summary>
-        
+
         public string GoodsId { get; set; }
         /// <summary>
         /// 医院科室id
@@ -283,5 +287,20 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 成交凭证
         /// </summary>
         public string DealPictureUrl { get; set; }
+
+        /// <summary>
+        /// 新客/老客
+        /// </summary>
+        public bool IsOldCustomer { get; set; }
+
+        /// <summary>
+        /// 是否陪诊
+        /// </summary>
+        public bool IsAcompanying { get; set; }
+
+        /// <summary>
+        /// 佣金比例
+        /// </summary>
+        public decimal CommissionRatio { get; set; }
     }
 }

@@ -481,6 +481,25 @@ CREATE TABLE `amiyadb`.`tbl_goods_shopcar` (
     ON UPDATE NO ACTION);
 -----------------------------------------------余建明 2022/07/11 END--------------------------------------------;
 
+-----------------------------------------------余建明 2022/07/19 BEGIN--------------------------------------------;
+
+CREATE TABLE `amiyadb`.`tbl_live_anchor_wechat_info` (
+  `id` VARCHAR(50) NOT NULL,
+  `live_anchor_id` INT UNSIGNED NOT NULL,
+  `wechat_no` VARCHAR(100) NULL,
+  `nick_name` VARCHAR(200) NULL,
+  `remark` VARCHAR(300) NULL,
+  `valid` BIT(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_wechat_liveanchor_idx` (`live_anchor_id` ASC) VISIBLE,
+  CONSTRAINT `fk_wechat_liveanchor`
+    FOREIGN KEY (`live_anchor_id`)
+    REFERENCES `amiyadb`.`tbl_live_anchor` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+-----------------------------------------------余建明 2022/07/19END--------------------------------------------;
+
+
 
 
 

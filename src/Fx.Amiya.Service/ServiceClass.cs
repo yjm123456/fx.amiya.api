@@ -445,10 +445,6 @@ namespace Fx.Amiya.Service
             string toHospitalTypeText = "";
             switch (toHospitalType)
             {
-                case 0:
-                    toHospitalTypeText = "其他";
-                    break;
-
                 case 1:
                     toHospitalTypeText = "初诊";
                     break;
@@ -464,6 +460,11 @@ namespace Fx.Amiya.Service
                 case 4:
                     toHospitalTypeText = "退款";
                     break;
+
+                case 0:
+                    toHospitalTypeText = "其他";
+                    break;
+
             }
             return toHospitalTypeText;
         }

@@ -143,6 +143,7 @@ namespace Fx.Amiya.Service
                 order.OrderType = input.OrderType;
                 order.ContentPlateformId = input.ContentPlateFormId;
                 order.LiveAnchorId = input.LiveAnchorId;
+                order.LiveAnchorWeChatNo = input.LiveAnchorWeChatNo;
                 order.CreateDate = input.CreateDate;
                 order.GoodsId = input.GoodsId;
                 order.CustomerName = input.CustomerName;
@@ -223,7 +224,7 @@ namespace Fx.Amiya.Service
                     }
                 }
                 var orders = from d in _dalContentPlatformOrder.GetAll()
-                             where (string.IsNullOrWhiteSpace(keyword) || d.Id.Contains(keyword) || d.ConsultingContent.Contains(keyword) || d.CustomerName.Contains(keyword) || d.AcceptConsulting.Contains(keyword) || d.Remark.Contains(keyword)
+                             where (string.IsNullOrWhiteSpace(keyword) || d.Id.Contains(keyword) || d.ConsultingContent.Contains(keyword) || d.CustomerName.Contains(keyword) || d.AcceptConsulting.Contains(keyword) || d.Remark.Contains(keyword) || d.LiveAnchorWeChatNo.Contains(keyword)
                              || d.Phone.Contains(keyword))
                              && (orderStatus == null || d.OrderStatus == orderStatus)
                              && (!appointmentHospital.HasValue || d.AppointmentHospitalId == appointmentHospital)
@@ -262,6 +263,7 @@ namespace Fx.Amiya.Service
                                 ContentPlatformName = d.Contentplatform.ContentPlatformName,
                                 LiveAnchorId = d.LiveAnchorId,
                                 LiveAnchorName = d.LiveAnchor.HostAccountName,
+                                LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 CreateDate = d.CreateDate,
                                 CustomerName = d.CustomerName,
                                 Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
@@ -708,8 +710,11 @@ namespace Fx.Amiya.Service
                                 ContentPlatformName = d.Contentplatform.ContentPlatformName,
                                 LiveAnchorId = d.LiveAnchorId,
                                 LiveAnchorName = d.LiveAnchor.HostAccountName,
+                                LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 CreateDate = d.CreateDate,
                                 CustomerName = d.CustomerName,
+                                IsOldCustomer = d.IsOldCustomer,
+                                IsAcompanying = d.IsAcompanying,
                                 Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                                 EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
                                 AppointmentDate = d.AppointmentDate,
@@ -742,6 +747,7 @@ namespace Fx.Amiya.Service
                                 IsReturnBackPrice = d.IsReturnBackPrice,
                                 ReturnBackDate = d.ReturnBackDate,
                                 ReturnBackPrice = d.ReturnBackPrice,
+                                CommissionRatio = d.CommissionRatio,
                             };
 
 
@@ -768,8 +774,9 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
+
         /// <summary>
-        /// 获取已成交订单报表
+        /// 获取内容平台订单成交报表
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
@@ -807,11 +814,14 @@ namespace Fx.Amiya.Service
                                 ContentPlatformName = d.Contentplatform.ContentPlatformName,
                                 LiveAnchorId = d.LiveAnchorId,
                                 LiveAnchorName = d.LiveAnchor.HostAccountName,
+                                LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 CreateDate = d.CreateDate,
                                 CustomerName = d.CustomerName,
+                                IsAcompanying = d.IsAcompanying,
                                 Phone = hidePhone == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                                 AppointmentDate = d.AppointmentDate,
                                 AppointmentHospitalId = d.AppointmentHospitalId,
+                                IsOldCustomer = d.IsOldCustomer,
                                 AppointmentHospitalName = d.HospitalInfo.Name,
                                 GoodsId = d.GoodsId,
                                 GoodsName = d.AmiyaGoodsDemand.ProjectNname,
@@ -836,6 +846,7 @@ namespace Fx.Amiya.Service
                                 ReturnBackDate = d.ReturnBackDate,
                                 ReturnBackPrice = d.ReturnBackPrice,
                                 OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
+                                CommissionRatio = d.CommissionRatio,
                             };
                 var x = await order.ToListAsync();
                 foreach (var k in x)
@@ -1062,6 +1073,10 @@ namespace Fx.Amiya.Service
             result.CustomerName = order.CustomerName;
             result.Phone = order.Phone;
             result.CreateDate = order.CreateDate;
+            result.LiveAnchorWeChatNo = order.LiveAnchorWeChatNo;
+            result.IsOldCustomer = order.IsOldCustomer;
+            result.IsAcompanying = order.IsAcompanying;
+            result.CommissionRatio = order.CommissionRatio;
             result.UnSendReason = order.UnSendReason;
             result.OrderTypeText = ServiceClass.GetContentPlateFormOrderTypeText((byte)order.OrderType);
             result.UpdateDate = order.UpdateDate;
@@ -1296,6 +1311,7 @@ namespace Fx.Amiya.Service
             }
             order.OrderType = input.OrderType;
             order.ContentPlateformId = input.ContentPlateFormId;
+            order.LiveAnchorWeChatNo = input.LiveAnchorWeChatNo;
             order.LiveAnchorId = input.LiveAnchorId;
             order.GoodsId = input.GoodsId;
             order.CustomerName = input.CustomerName;
@@ -1489,6 +1505,11 @@ namespace Fx.Amiya.Service
             try
             {
                 var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.Id).SingleOrDefaultAsync();
+                var isoldCustomer = false;
+                if (order.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
+                {
+                    isoldCustomer = true;
+                }
                 if (order == null)
                 {
                     throw new Exception("未找到该订单的相关信息！");
@@ -1506,6 +1527,7 @@ namespace Fx.Amiya.Service
                     order.IsToHospital = true;
                     order.ToHospitalDate = input.ToHospitalDate;
                     order.LastDealHospitalId = input.LastDealHospitalId;
+                    order.CommissionRatio = input.CommissionRatio;
                     order.UnDealReason = "";
                     order.UnDealPictureUrl = "";
                     order.DealDate = input.DealDate;
@@ -1521,6 +1543,8 @@ namespace Fx.Amiya.Service
                     order.LateProjectStage = "";
                     order.DealPictureUrl = "";
                 }
+                order.IsOldCustomer = isoldCustomer;
+                order.IsAcompanying = input.IsAcompanying;
                 order.ToHospitalType = input.ToHospitalType;
                 order.OtherContentPlatFormOrderId = input.OtherContentPlatFormOrderId;
                 order.UpdateDate = DateTime.Now;
@@ -1533,6 +1557,8 @@ namespace Fx.Amiya.Service
                 orderDealDto.IsDeal = input.IsFinish;
                 orderDealDto.OtherAppOrderId = input.OtherContentPlatFormOrderId;
                 orderDealDto.ToHospitalType = input.ToHospitalType;
+                orderDealDto.IsOldCustomer = isoldCustomer;
+                orderDealDto.IsAcompanying = input.IsAcompanying;
                 if (input.IsFinish == true)
                 {
                     orderDealDto.IsToHospital = true;
@@ -1541,6 +1567,7 @@ namespace Fx.Amiya.Service
                     orderDealDto.DealPicture = input.DealPictureUrl;
                     orderDealDto.DealDate = input.DealDate;
                     orderDealDto.Price = input.DealAmount.Value;
+                    orderDealDto.CommissionRatio = input.CommissionRatio;
                     orderDealDto.Remark = input.LastProjectStage;
                 }
                 else
@@ -1572,8 +1599,14 @@ namespace Fx.Amiya.Service
             try
             {
                 var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.Id).SingleOrDefaultAsync();
+                var isoldCustomer = false;
+                if (order.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
+                {
+                    isoldCustomer = true;
+                }
                 var orderDealInfo = await _contentPlatFormOrderDalService.GetByIdAsync(input.DealId);
                 order.DealAmount -= orderDealInfo.Price;
+
                 if (order == null)
                 {
                     throw new Exception("未找到该订单的相关信息！");
@@ -1589,6 +1622,7 @@ namespace Fx.Amiya.Service
                     order.ToHospitalDate = input.ToHospitalDate;
                     order.DealPictureUrl = input.DealPictureUrl;
                     order.IsToHospital = true;
+                    order.CommissionRatio = input.CommissionRatio;
                     order.ToHospitalDate = input.ToHospitalDate;
                     order.LastDealHospitalId = input.LastDealHospitalId;
                     order.UnDealReason = "";
@@ -1606,6 +1640,8 @@ namespace Fx.Amiya.Service
                     order.LateProjectStage = "";
                     order.DealPictureUrl = "";
                 }
+                order.IsOldCustomer = isoldCustomer;
+                order.IsAcompanying = input.IsAcompanying;
                 order.OtherContentPlatFormOrderId = input.OtherContentPlatFormOrderId;
                 order.UpdateDate = DateTime.Now;
                 order.ToHospitalType = input.ToHospitalType;
@@ -1615,6 +1651,8 @@ namespace Fx.Amiya.Service
                 UpdateContentPlatFormOrderDealInfoDto orderDealDto = new UpdateContentPlatFormOrderDealInfoDto();
                 orderDealDto.Id = input.DealId;
                 orderDealDto.ContentPlatFormOrderId = input.Id;
+                orderDealDto.IsOldCustomer = isoldCustomer;
+                orderDealDto.IsAcompanying = input.IsAcompanying;
                 orderDealDto.IsDeal = input.IsFinish;
                 orderDealDto.OtherAppOrderId = input.OtherContentPlatFormOrderId;
                 orderDealDto.ToHospitalType = input.ToHospitalType;
@@ -1623,6 +1661,7 @@ namespace Fx.Amiya.Service
                     orderDealDto.IsToHospital = true;
                     orderDealDto.ToHospitalDate = input.ToHospitalDate;
                     orderDealDto.LastDealHospitalId = input.LastDealHospitalId;
+                    orderDealDto.CommissionRatio = input.CommissionRatio;
                     orderDealDto.DealPicture = input.DealPictureUrl;
                     orderDealDto.Price = input.DealAmount.Value;
                     orderDealDto.Remark = input.LastProjectStage;

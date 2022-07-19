@@ -18,5 +18,7 @@ namespace Fx.Amiya.DbModels.Model
         public List<ContentPlatformOrder> ContentPlatformOrderList { get; set; }
 
         public List<LiveAnchorMonthlyTarget> liveAnchorMonthlyTargets { get; set; }
+
+        public List<LiveAnchorWeChatInfo> LiveAnchorWeChatInfo { get; set; }
     }
 }

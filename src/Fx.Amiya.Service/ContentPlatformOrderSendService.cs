@@ -194,7 +194,7 @@ namespace Fx.Amiya.Service
             }
             var q = from d in _dalContentPlatformOrderSend.GetAll()
                     where (d.HospitalId == hospitalId)
-                     && (string.IsNullOrEmpty(keyword) || d.ContentPlatformOrder.Id.Contains(keyword)||d.ContentPlatformOrder.Phone.Contains(keyword) || d.ContentPlatformOrder.CustomerName.Contains(keyword))
+                     && (string.IsNullOrEmpty(keyword) || d.ContentPlatformOrder.Id.Contains(keyword) || d.ContentPlatformOrder.Phone.Contains(keyword) || d.ContentPlatformOrder.CustomerName.Contains(keyword))
                      && (IsToHospital == 0 || d.ContentPlatformOrder.IsToHospital == toHospital)
                      && (!toHospitalType.HasValue || d.ContentPlatformOrder.ToHospitalType == toHospitalType.Value)
                     select d;
@@ -213,8 +213,8 @@ namespace Fx.Amiya.Service
                 DateTime startrq = ((DateTime)toHospitalStartDate).Date;
                 DateTime endrq = ((DateTime)toHospitalEndDate).Date.AddDays(1);
                 q = from d in q
-                         where (d.ContentPlatformOrder.ToHospitalDate >= startrq && d.ContentPlatformOrder.ToHospitalDate < endrq)
-                         select d;
+                    where (d.ContentPlatformOrder.ToHospitalDate >= startrq && d.ContentPlatformOrder.ToHospitalDate < endrq)
+                    select d;
             }
             var config = await GetCallCenterConfig();
             var sendOrder = from d in q
@@ -351,7 +351,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<SendContentPlatformOrderDto>> GetSendOrderList(int? liveAnchorId, int? consultationEmpId, int? sendBy, string keyword, int employeeId, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int pageNum, int pageSize)
+        public async Task<FxPageInfo<SendContentPlatformOrderDto>> GetSendOrderList(int? liveAnchorId, int? consultationEmpId, int? sendBy,bool? isAcompanying,bool? isOldCustomer,decimal? commissionRatio, string keyword, int employeeId, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int pageNum, int pageSize)
         {
             bool toHospital = false;
             if (IsToHospital > 0)
@@ -359,12 +359,15 @@ namespace Fx.Amiya.Service
                 toHospital = true;
             }
             var orders = _dalContentPlatformOrderSend.GetAll()
-                       .Where(e => string.IsNullOrWhiteSpace(keyword) || e.ContentPlatformOrderId == keyword || e.ContentPlatformOrder.Phone.Contains(keyword))
+                       .Where(e => string.IsNullOrWhiteSpace(keyword) || e.ContentPlatformOrderId == keyword || e.ContentPlatformOrder.Phone.Contains(keyword) || e.ContentPlatformOrder.LiveAnchorWeChatNo.Contains(keyword))
                        .Where(e => hospitalId == 0 || e.HospitalId == hospitalId)
                        .Where(e => employeeId == -1 || e.ContentPlatformOrder.BelongEmpId == employeeId)
                        .Where(e => orderSource == -1 || e.ContentPlatformOrder.OrderSource == orderSource)
                        .Where(e => IsToHospital == -1 || e.ContentPlatformOrder.IsToHospital == toHospital)
                        .Where(e => !sendBy.HasValue || e.Sender == sendBy.Value)
+                       .Where(e => !isAcompanying.HasValue || e.ContentPlatformOrder.IsAcompanying == isAcompanying.Value)
+                       .Where(e => !isOldCustomer.HasValue || e.ContentPlatformOrder.IsOldCustomer == isOldCustomer.Value)
+                       .Where(e => !commissionRatio.HasValue || e.ContentPlatformOrder.CommissionRatio == commissionRatio.Value)
                        .Where(e => !toHospitalType.HasValue || e.ContentPlatformOrder.ToHospitalType == toHospitalType.Value)
                        .Where(e => !consultationEmpId.HasValue || e.ContentPlatformOrder.ConsultationEmpId == consultationEmpId.Value)
                        .Where(e => !liveAnchorId.HasValue || e.ContentPlatformOrder.LiveAnchorId == liveAnchorId.Value)
@@ -397,6 +400,10 @@ namespace Fx.Amiya.Service
                                             OrderId = d.ContentPlatformOrderId,
                                             ContentPlatFormName = d.ContentPlatformOrder.Contentplatform.ContentPlatformName,
                                             LiveAnchorName = d.ContentPlatformOrder.LiveAnchor.HostAccountName,
+                                            LiveAnchorWeChatNo = d.ContentPlatformOrder.LiveAnchorWeChatNo,
+                                            IsOldCustomer = d.ContentPlatformOrder.IsOldCustomer == true ? "老客业绩" : "新客业绩",
+                                            IsAcompanying = d.ContentPlatformOrder.IsAcompanying == true ? "是" : "否",
+                                            CommissionRatio = d.ContentPlatformOrder.CommissionRatio,
                                             CustomerName = d.ContentPlatformOrder.CustomerName,
                                             Phone = config.EnablePhoneEncrypt == true ? ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone) : d.ContentPlatformOrder.Phone,
                                             EncryptPhone = ServiceClass.Encrypt(d.ContentPlatformOrder.Phone, config.PhoneEncryptKey),
@@ -464,7 +471,7 @@ namespace Fx.Amiya.Service
         /// <param name="toHospitalEndDate">到院时间止</param>        
         /// <returns></returns>
         public async Task<List<SendContentPlatformOrderDto>> GetSendOrderReportList(int? liveAnchorId, int? hospitalId, int employeeId, int belongEmpId, int? orderStatus
-          , string contentPlatFormId, int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, DateTime? startDate, DateTime? endDate, bool isHidePhone)
+          , bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string contentPlatFormId, int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, DateTime? startDate, DateTime? endDate, bool isHidePhone)
         {
             bool toHospital = false;
             if (IsToHospital > 0)
@@ -476,6 +483,9 @@ namespace Fx.Amiya.Service
                        .Where(e => belongEmpId == -1 || e.ContentPlatformOrder.BelongEmpId == belongEmpId)
                        .Where(e => !liveAnchorId.HasValue || e.ContentPlatformOrder.LiveAnchorId == liveAnchorId.Value)
                        .Where(e => IsToHospital == -1 || e.ContentPlatformOrder.IsToHospital == toHospital)
+                       .Where(e => !isAcompanying.HasValue || e.ContentPlatformOrder.IsAcompanying == isAcompanying.Value)
+                       .Where(e => !isOldCustomer.HasValue || e.ContentPlatformOrder.IsOldCustomer == isOldCustomer.Value)
+                       .Where(e => !commissionRatio.HasValue || e.ContentPlatformOrder.CommissionRatio == commissionRatio.Value)
                        .Where(e => !toHospitalType.HasValue || e.ContentPlatformOrder.ToHospitalType == toHospitalType.Value)
                        .Where(e => !hospitalId.HasValue || e.HospitalId == hospitalId.Value)
                        .Where(e => orderStatus == null || e.ContentPlatformOrder.OrderStatus == orderStatus)
@@ -502,6 +512,10 @@ namespace Fx.Amiya.Service
                                             OrderId = d.ContentPlatformOrderId,
                                             ContentPlatFormName = d.ContentPlatformOrder.Contentplatform.ContentPlatformName,
                                             LiveAnchorName = d.ContentPlatformOrder.LiveAnchor.HostAccountName,
+                                            LiveAnchorWeChatNo = d.ContentPlatformOrder.LiveAnchorWeChatNo,
+                                            IsOldCustomer = d.ContentPlatformOrder.IsOldCustomer == true ? "老客业绩" : "新客业绩",
+                                            IsAcompanying = d.ContentPlatformOrder.IsAcompanying == true ? "是" : "否",
+                                            CommissionRatio = d.ContentPlatformOrder.CommissionRatio,
                                             CustomerName = d.ContentPlatformOrder.CustomerName,
                                             Phone = isHidePhone == true ? ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone) : d.ContentPlatformOrder.Phone,
                                             SendHospitalId = d.HospitalId,
@@ -516,6 +530,7 @@ namespace Fx.Amiya.Service
                                             ToHospitalDate = d.ContentPlatformOrder.ToHospitalDate,
                                             SendOrderRemark = d.Remark,
                                             OtherContentPlatFormOrderId = d.ContentPlatformOrder.OtherContentPlatFormOrderId,
+
                                         };
 
             List<SendContentPlatformOrderDto> pageInfo = new List<SendContentPlatformOrderDto>();

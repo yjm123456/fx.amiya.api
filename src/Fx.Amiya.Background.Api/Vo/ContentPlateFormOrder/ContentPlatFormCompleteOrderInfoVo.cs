@@ -65,6 +65,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         [Description("主播ip账号")]
         public string LiveAnchorName { get; set; }
         /// <summary>
+        /// 主播微信号
+        /// </summary>
+        [Description("主播微信号")]
+        public string LiveAnchorWeChatNo { get; set; }
+        /// <summary>
         /// 订单类型
         /// </summary>
         [Description("订单类型")]
@@ -163,5 +168,17 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 三方订单号
         /// </summary>
         public string OtherContentPlatFormOrderId { get; set; }
+        /// <summary>
+        /// 佣金比例
+        /// </summary>
+        public decimal CommissionRatio { get; set; }
+        /// <summary>
+        /// 新老客业绩
+        /// </summary>
+        public string IsOldCustomer { get; set; }
+        /// <summary>
+        /// 是否陪诊
+        /// </summary>
+        public string IsAcompanying { get; set; }
     }
 }

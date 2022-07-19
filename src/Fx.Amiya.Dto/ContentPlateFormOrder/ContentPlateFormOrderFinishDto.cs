@@ -62,6 +62,16 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// </summary>
         public int? LastDealHospitalId { get; set; }
 
+        /// <summary>
+        /// 是否陪诊
+        /// </summary>
+        public bool IsAcompanying { get; set; }
+
+        /// <summary>
+        /// 佣金比例
+        /// </summary>
+        public decimal CommissionRatio { get; set; }
+
 
         /// <summary>
         /// 三方订单号
