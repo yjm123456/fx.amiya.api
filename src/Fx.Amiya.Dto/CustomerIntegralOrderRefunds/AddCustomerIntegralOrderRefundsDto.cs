@@ -13,6 +13,10 @@ namespace Fx.Amiya.Dto.CustomerIntegralOrderRefunds
         /// 订单号
         /// </summary>
         public string OrderId { get; set; }
+        /// <summary>
+        /// trade交易id
+        /// </summary>
+        public string TradeId { get; set; }
 
         /// <summary>
         /// 客户编号

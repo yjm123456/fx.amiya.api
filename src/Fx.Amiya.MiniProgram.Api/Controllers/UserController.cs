@@ -239,6 +239,26 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
         }
 
+        [HttpPut("userEditInfo")]
+        public async Task<ResultData> UseEditInfo(UserEditInfoVo editInfoVo) {
+            var sessionInfo = sessionStorage.GetSession(tokenReader.GetToken());
+            if (sessionInfo != null) {
+                await userService.UpdateUserInfo(
+                    new UserInfoEditDto { 
+                        Id=sessionInfo.FxUserId,
+                        Gender=editInfoVo.Gender,
+                        City=editInfoVo.City,
+                        Province=editInfoVo.Province,
+                        NickName=editInfoVo.NickName
+                    }
+                    );
+                return ResultData.Success();
+            } else {
+                return ResultData.Fail();
+            }
+        }
+
+
         /// <summary>
         /// 访问
         /// </summary>

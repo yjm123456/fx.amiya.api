@@ -3660,7 +3660,7 @@ namespace Fx.Amiya.Service
             var orders = from d in dalOrderTrade.GetAll()
                          .Include(e => e.OrderInfoList)
                          where d.CustomerId == customerId
-                         && (string.IsNullOrWhiteSpace(statusCode) || d.StatusCode == statusCode )
+                         && (string.IsNullOrWhiteSpace(statusCode) || d.StatusCode == statusCode ) orderby d.CreateDate
                          select new OrderTradeForWxDto
                          {
                              TradeId = d.TradeId,
