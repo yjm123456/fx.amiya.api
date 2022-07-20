@@ -19,6 +19,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.OrderType).HasColumnName("order_type").HasColumnType("int").IsRequired();
             builder.Property(e => e.ContentPlateformId).HasColumnName("content_plateform_id").HasColumnType("VARCHAR(50)").IsRequired();
             builder.Property(e => e.LiveAnchorId).HasColumnName("live_anchor_id").HasColumnType("int").IsRequired(false);
+            builder.Property(e => e.LiveAnchorWeChatNo).HasColumnName("live_anchor_we_chat_no").HasColumnType("VARCHAR(100)").IsRequired();
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("DATETIME").IsRequired();
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("DATETIME").IsRequired(false);
             builder.Property(e => e.GoodsId).HasColumnName("goods_id").HasColumnType("varchar(50)").IsRequired(false);
@@ -57,6 +58,9 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.ReturnBackPrice).HasColumnName("return_back_price").HasColumnType("DECIMAL(12,2)").IsRequired(false);
             builder.Property(e => e.ReturnBackDate).HasColumnName("return_back_date").HasColumnType("DATETIME").IsRequired(false);
             builder.Property(e => e.OtherContentPlatFormOrderId).HasColumnName("other_content_platform_order_id").HasColumnType("VARCHAR(50)").IsRequired(false);
+            builder.Property(t => t.IsOldCustomer).HasColumnName("is_old_customer").HasColumnType("bit").IsRequired();
+            builder.Property(t => t.IsAcompanying).HasColumnName("is_accompanying").HasColumnType("bit").IsRequired();
+            builder.Property(e => e.CommissionRatio).HasColumnName("commission_ratio").HasColumnType("DECIMAL(5,2)").IsRequired();
 
             builder.HasOne(e => e.Contentplatform).WithMany(e => e.ContentPlatformOrderList).HasForeignKey(e=>e.ContentPlateformId);
             builder.HasOne(e => e.LiveAnchor).WithMany(e => e.ContentPlatformOrderList).HasForeignKey(e=>e.LiveAnchorId);

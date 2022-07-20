@@ -78,6 +78,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         [Description("主播ip账号")]
         public string LiveAnchorName { get; set; }
         /// <summary>
+        /// 主播微信号
+        /// </summary>
+        [Description("主播微信号")]
+        public string LiveAnchorWeChatNo { get; set; }
+        /// <summary>
         /// 订单类型
         /// </summary>
         [Description("订单类型")]

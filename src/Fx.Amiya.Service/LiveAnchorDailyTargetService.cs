@@ -22,10 +22,12 @@ namespace Fx.Amiya.Service
         private ILiveAnchorMonthlyTargetService _liveAnchorMonthlyTargetService;
         private IUnitOfWork unitOfWork;
         private IAmiyaEmployeeService _amiyaEmployeeService;
+        private IEmployeeBindLiveAnchorService employeeBindLiveAnchorService;
 
         public LiveAnchorDailyTargetService(IDalLiveAnchorDailyTarget dalLiveAnchorDailyTarget,
             ILiveAnchorService liveAnchorService,
             IUnitOfWork unitOfWork,
+            IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
             ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService,
             IAmiyaEmployeeService amiyaEmployeeService)
         {
@@ -34,6 +36,7 @@ namespace Fx.Amiya.Service
             _liveanchorService = liveAnchorService;
             _liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
             _amiyaEmployeeService = amiyaEmployeeService;
+            this.employeeBindLiveAnchorService = employeeBindLiveAnchorService;
         }
 
 
@@ -47,134 +50,108 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<LiveAnchorDailyTargetDto>> GetListWithPageAsync(DateTime startDate, DateTime endDate, int? operationEmpId, int? netWorkConEmpId, int? liveAnchorId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<LiveAnchorDailyTargetDto>> GetListWithPageAsync(DateTime startDate, DateTime endDate, int? operationEmpId, int? netWorkConEmpId, int? liveAnchorId, int pageNum, int pageSize, int employeeId)
         {
             try
             {
-                endDate = endDate.AddDays(1);
-                var liveAnchorDailyTarget = from d in dalLiveAnchorDailyTarget.GetAll()
-                                            where d.RecordDate >= startDate && d.RecordDate < endDate
-                                            && (operationEmpId.HasValue == false || d.OperationEmployeeId == operationEmpId)
-                                            && (netWorkConEmpId.HasValue == false || d.NetWorkConsultingEmployeeId == netWorkConEmpId)
-                                            select new LiveAnchorDailyTargetDto
-                                            {
-                                                Id = d.Id,
-                                                LiveanchorMonthlyTargetId = d.LiveanchorMonthlyTargetId,
-                                                CreateDate = d.CreateDate,
-                                                RecordDate = d.RecordDate,
-                                                OperationEmployeeId = d.OperationEmployeeId,
-                                                LivingTrackingEmployeeId = d.LivingTrackingEmployeeId,
-                                                NetWorkConsultingEmployeeId = d.NetWorkConsultingEmployeeId,
-                                                TodaySendNum = d.TodaySendNum,
-                                                FlowInvestmentNum = d.FlowInvestmentNum,
-                                                LivingRoomFlowInvestmentNum = d.LivingRoomFlowInvestmentNum,
-                                                CluesNum = d.CluesNum,
-                                                AddFansNum = d.AddFansNum,
-                                                AddWechatNum = d.AddWechatNum,
-                                                Consultation = d.Consultation,
-                                                ConsultationCardConsumed = d.ConsultationCardConsumed,
-                                                Consultation2 = d.Consultation2,
-                                                ConsultationCardConsumed2 = d.ConsultationCardConsumed2,
-                                                ActivateHistoricalConsultation = d.ActivateHistoricalConsultation,
-                                                SendOrderNum = d.SendOrderNum,
-                                                NewVisitNum = d.NewVisitNum,
-                                                SubsequentVisitNum = d.SubsequentVisitNum,
-                                                OldCustomerVisitNum = d.OldCustomerVisitNum,
-                                                VisitNum = d.VisitNum,
-                                                NewDealNum = d.NewDealNum,
-                                                SubsequentDealNum = d.SubsequentDealNum,
-                                                OldCustomerDealNum = d.OldCustomerDealNum,
-                                                DealNum = d.DealNum,
-                                                CargoSettlementCommission = d.CargoSettlementCommission,
-                                                NewPerformanceNum = d.NewPerformanceNum,
-                                                SubsequentPerformanceNum = d.SubsequentPerformanceNum,
-                                                NewCustomerPerformanceCountNum = d.NewCustomerPerformanceCountNum,
-                                                OldCustomerPerformanceNum = d.OldCustomerPerformanceNum,
-                                                MinivanRefund = d.MinivanRefund,
-                                                MiniVanBadReviews = d.MiniVanBadReviews,
-                                                PerformanceNum = d.PerformanceNum,
-                                            };
-
-                FxPageInfo<LiveAnchorDailyTargetDto> liveAnchorDailyTargetPageInfo = new FxPageInfo<LiveAnchorDailyTargetDto>();
-                var diaryTargetInfo = await liveAnchorDailyTarget.OrderByDescending(x => x.CreateDate).ToListAsync();
-                List<LiveAnchorDailyTargetDto> resultList = new List<LiveAnchorDailyTargetDto>();
-                if (liveAnchorId.HasValue == false)
+                List<int> liveAnchorIds = new List<int>();
+                if (liveAnchorId.HasValue)
                 {
-                    resultList = diaryTargetInfo.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
-                    foreach (var x in resultList)
-                    {
-                        var liveanchorMonthlyTarget = await _liveAnchorMonthlyTargetService.GetByIdAsync(x.LiveanchorMonthlyTargetId);
-                        var liveAnchor = await _liveanchorService.GetByIdAsync(liveanchorMonthlyTarget.LiveAnchorId);
-                        x.LiveAnchor = liveAnchor.Name.ToString();
-                        if (x.OperationEmployeeId != 0)
-                        {
-                            var operationEmployee = await _amiyaEmployeeService.GetByIdAsync(x.OperationEmployeeId);
-                            if (operationEmployee.Id != 0)
-                            {
-                                x.OperationEmployeeName = operationEmployee.Name;
-                            }
-                        }
-                        if (x.LivingTrackingEmployeeId != 0)
-                        {
-                            var ivingTrackingEmployee = await _amiyaEmployeeService.GetByIdAsync(x.LivingTrackingEmployeeId);
-                            if (ivingTrackingEmployee.Id != 0)
-                            {
-                                x.LivingTrackingEmployeeName = ivingTrackingEmployee.Name;
-                            }
-                        }
-                        if (x.NetWorkConsultingEmployeeId != 0)
-                        {
-                            var netWorkConsultingEmployee = await _amiyaEmployeeService.GetByIdAsync(x.NetWorkConsultingEmployeeId);
-                            if (netWorkConsultingEmployee.Id != 0)
-                            {
-                                x.NetWorkConsultingEmployeeName = netWorkConsultingEmployee.Name;
-                            }
-                        }
-                    }
-                    liveAnchorDailyTargetPageInfo.TotalCount = await liveAnchorDailyTarget.CountAsync();
-                    liveAnchorDailyTargetPageInfo.List = resultList;
+                    liveAnchorIds.Add(liveAnchorId.Value);
                 }
                 else
                 {
-                    foreach (var z in diaryTargetInfo)
+                    var empInfo = await _amiyaEmployeeService.GetByIdAsync(employeeId);
+                    if (empInfo.PositionId == 19)
                     {
-                        var liveanchorMonthlyTarget = await _liveAnchorMonthlyTargetService.GetByIdAsync(z.LiveanchorMonthlyTargetId);
-                        if (liveanchorMonthlyTarget.LiveAnchorId == liveAnchorId.Value)
+                        var bindLiveAnchorInfo = await employeeBindLiveAnchorService.GetByEmpIdAsync(employeeId);
+                        foreach (var x in bindLiveAnchorInfo)
                         {
-
-                            var liveAnchor = await _liveanchorService.GetByIdAsync(liveanchorMonthlyTarget.LiveAnchorId);
-                            z.LiveAnchor = liveAnchor.Name.ToString();
-                            if (z.OperationEmployeeId != 0)
-                            {
-                                var operationEmployee = await _amiyaEmployeeService.GetByIdAsync(z.OperationEmployeeId);
-                                if (operationEmployee.Id != 0)
-                                {
-                                    z.OperationEmployeeName = operationEmployee.Name.ToString();
-                                }
-
-                            }
-                            if (z.LivingTrackingEmployeeId != 0)
-                            {
-                                var ivingTrackingEmployee = await _amiyaEmployeeService.GetByIdAsync(z.LivingTrackingEmployeeId);
-                                if (ivingTrackingEmployee.Id != 0)
-                                {
-                                    z.LivingTrackingEmployeeName = ivingTrackingEmployee.Name;
-                                }
-                            }
-                            if (z.NetWorkConsultingEmployeeId != 0)
-                            {
-                                var netWorkConsultingEmployee = await _amiyaEmployeeService.GetByIdAsync(z.NetWorkConsultingEmployeeId);
-                                if (netWorkConsultingEmployee.Id != 0)
-                                {
-                                    z.NetWorkConsultingEmployeeName = netWorkConsultingEmployee.Name.ToString();
-                                }
-                            }
-                            resultList.Add(z);
+                            liveAnchorIds.Add(x.LiveAnchorId);
                         }
                     }
-                    liveAnchorDailyTargetPageInfo.TotalCount = resultList.Count();
-                    liveAnchorDailyTargetPageInfo.List = resultList.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
                 }
+                endDate = endDate.AddDays(1);
+
+                var result = from d in dalLiveAnchorDailyTarget.GetAll().Include(e => e.LiveAnchorMonthlyTarget).ThenInclude(k => k.LiveAnchor)
+                             where d.RecordDate >= startDate && d.RecordDate < endDate
+                             && (operationEmpId.HasValue == false || d.OperationEmployeeId == operationEmpId)
+                             && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                             && (netWorkConEmpId.HasValue == false || d.NetWorkConsultingEmployeeId == netWorkConEmpId)
+                             select new LiveAnchorDailyTargetDto
+                             {
+                                 Id = d.Id,
+                                 LiveanchorMonthlyTargetId = d.LiveanchorMonthlyTargetId,
+                                 LiveAnchorId = d.LiveAnchorMonthlyTarget.LiveAnchorId,
+                                 LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                 CreateDate = d.CreateDate,
+                                 RecordDate = d.RecordDate,
+                                 OperationEmployeeId = d.OperationEmployeeId,
+                                 LivingTrackingEmployeeId = d.LivingTrackingEmployeeId,
+                                 NetWorkConsultingEmployeeId = d.NetWorkConsultingEmployeeId,
+                                 TodaySendNum = d.TodaySendNum,
+                                 FlowInvestmentNum = d.FlowInvestmentNum,
+                                 LivingRoomFlowInvestmentNum = d.LivingRoomFlowInvestmentNum,
+                                 CluesNum = d.CluesNum,
+                                 AddFansNum = d.AddFansNum,
+                                 AddWechatNum = d.AddWechatNum,
+                                 Consultation = d.Consultation,
+                                 ConsultationCardConsumed = d.ConsultationCardConsumed,
+                                 Consultation2 = d.Consultation2,
+                                 ConsultationCardConsumed2 = d.ConsultationCardConsumed2,
+                                 ActivateHistoricalConsultation = d.ActivateHistoricalConsultation,
+                                 SendOrderNum = d.SendOrderNum,
+                                 NewVisitNum = d.NewVisitNum,
+                                 SubsequentVisitNum = d.SubsequentVisitNum,
+                                 OldCustomerVisitNum = d.OldCustomerVisitNum,
+                                 VisitNum = d.VisitNum,
+                                 NewDealNum = d.NewDealNum,
+                                 SubsequentDealNum = d.SubsequentDealNum,
+                                 OldCustomerDealNum = d.OldCustomerDealNum,
+                                 DealNum = d.DealNum,
+                                 CargoSettlementCommission = d.CargoSettlementCommission,
+                                 NewPerformanceNum = d.NewPerformanceNum,
+                                 SubsequentPerformanceNum = d.SubsequentPerformanceNum,
+                                 NewCustomerPerformanceCountNum = d.NewCustomerPerformanceCountNum,
+                                 OldCustomerPerformanceNum = d.OldCustomerPerformanceNum,
+                                 MinivanRefund = d.MinivanRefund,
+                                 MiniVanBadReviews = d.MiniVanBadReviews,
+                                 PerformanceNum = d.PerformanceNum,
+                             };
+
+                FxPageInfo<LiveAnchorDailyTargetDto> liveAnchorDailyTargetPageInfo = new FxPageInfo<LiveAnchorDailyTargetDto>();
+                liveAnchorDailyTargetPageInfo.TotalCount = await result.CountAsync();
+                var diaryTargetInfo = await result.OrderByDescending(x => x.CreateDate).ToListAsync();
+                List<LiveAnchorDailyTargetDto> resultList = new List<LiveAnchorDailyTargetDto>();
+                resultList = diaryTargetInfo.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+                foreach (var x in resultList)
+                {
+                    if (x.OperationEmployeeId != 0)
+                    {
+                        var operationEmployee = await _amiyaEmployeeService.GetByIdAsync(x.OperationEmployeeId);
+                        if (operationEmployee.Id != 0)
+                        {
+                            x.OperationEmployeeName = operationEmployee.Name;
+                        }
+                    }
+                    if (x.LivingTrackingEmployeeId != 0)
+                    {
+                        var ivingTrackingEmployee = await _amiyaEmployeeService.GetByIdAsync(x.LivingTrackingEmployeeId);
+                        if (ivingTrackingEmployee.Id != 0)
+                        {
+                            x.LivingTrackingEmployeeName = ivingTrackingEmployee.Name;
+                        }
+                    }
+                    if (x.NetWorkConsultingEmployeeId != 0)
+                    {
+                        var netWorkConsultingEmployee = await _amiyaEmployeeService.GetByIdAsync(x.NetWorkConsultingEmployeeId);
+                        if (netWorkConsultingEmployee.Id != 0)
+                        {
+                            x.NetWorkConsultingEmployeeName = netWorkConsultingEmployee.Name;
+                        }
+                    }
+                }
+                liveAnchorDailyTargetPageInfo.List = resultList;
                 return liveAnchorDailyTargetPageInfo;
             }
             catch (Exception ex)
@@ -547,52 +524,104 @@ namespace Fx.Amiya.Service
             try
             {
                 endDate = endDate.AddDays(1);
-                var liveAnchorDailyTarget = from d in dalLiveAnchorDailyTarget.GetAll()
+                var liveAnchorDailyTarget = from d in dalLiveAnchorDailyTarget.GetAll().Include(e => e.LiveAnchorMonthlyTarget).ThenInclude(e => e.LiveAnchor)
                                             where d.RecordDate >= startDate && d.RecordDate < endDate
                                             select new LiveAnchorDailyAndMonthTargetDto
                                             {
                                                 Id = d.Id,
                                                 LiveanchorMonthlyTargetId = d.LiveanchorMonthlyTargetId,
+                                                LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
                                                 CreateDate = d.CreateDate,
                                                 RecordDate = d.RecordDate,
                                                 OperationEmployeeId = d.OperationEmployeeId,
                                                 LivingTrackingEmployeeId = d.LivingTrackingEmployeeId,
                                                 NetWorkConsultingEmployeeId = d.NetWorkConsultingEmployeeId,
                                                 TodaySendNum = d.TodaySendNum,
+                                                ReleaseTarget = d.LiveAnchorMonthlyTarget.ReleaseTarget,
+                                                CumulativeRelease = d.LiveAnchorMonthlyTarget.CumulativeRelease,
+                                                ReleaseCompleteRate = d.LiveAnchorMonthlyTarget.ReleaseCompleteRate.ToString("0.00") + "%",
                                                 FlowInvestmentNum = d.FlowInvestmentNum,
+                                                FlowInvestmentTarget = d.LiveAnchorMonthlyTarget.FlowInvestmentTarget,
+                                                CumulativeFlowInvestment = d.LiveAnchorMonthlyTarget.CumulativeFlowInvestment,
+                                                FlowInvestmentCompleteRate = d.LiveAnchorMonthlyTarget.FlowInvestmentCompleteRate.ToString("0.00") + "%",
                                                 LivingRoomFlowInvestmentNum = d.LivingRoomFlowInvestmentNum,
+                                                LivingRoomFlowInvestmentTarget = d.LiveAnchorMonthlyTarget.LivingRoomFlowInvestmentTarget,
+                                                LivingRoomCumulativeFlowInvestment = d.LiveAnchorMonthlyTarget.LivingRoomCumulativeFlowInvestment,
+                                                LivingRoomFlowInvestmentCompleteRate = d.LiveAnchorMonthlyTarget.LivingRoomFlowInvestmentCompleteRate.ToString("0.00") + "%",
                                                 CluesNum = d.CluesNum,
+                                                CluesNumTarget = d.LiveAnchorMonthlyTarget.CluesTarget,
+                                                CumulativeCluesNum = d.LiveAnchorMonthlyTarget.CumulativeClues,
+                                                CluesCompleteRate = d.LiveAnchorMonthlyTarget.CluesCompleteRate.ToString("0.00") + "%",
                                                 AddFansNum = d.AddFansNum,
+                                                AddFansTarget = d.LiveAnchorMonthlyTarget.AddFansTarget,
+                                                CumulativeAddFansNum = d.LiveAnchorMonthlyTarget.CumulativeAddFans,
+                                                AddFansCompleteRate = d.LiveAnchorMonthlyTarget.AddFansCompleteRate.ToString("0.00") + "%",
                                                 AddWechatNum = d.AddWechatNum,
+                                                AddWechatTarget = d.LiveAnchorMonthlyTarget.AddWechatTarget,
+                                                CumulativeAddWechat = d.LiveAnchorMonthlyTarget.CumulativeAddWechat,
+                                                AddWechatCompleteRate = d.LiveAnchorMonthlyTarget.AddWechatCompleteRate.ToString("0.00") + "%",
                                                 Consultation = d.Consultation,
+                                                ConsultationTarget = d.LiveAnchorMonthlyTarget.ConsultationTarget,
+                                                CumulativeConsultation = d.LiveAnchorMonthlyTarget.CumulativeConsultation,
+                                                ConsultationCompleteRate = d.LiveAnchorMonthlyTarget.ConsultationCompleteRate.ToString("0.00") + "%",
                                                 Consultation2 = d.Consultation2,
+                                                ConsultationTarget2 = d.LiveAnchorMonthlyTarget.ConsultationTarget2,
+                                                CumulativeConsultation2 = d.LiveAnchorMonthlyTarget.CumulativeConsultation2,
+                                                ConsultationCompleteRate2 = d.LiveAnchorMonthlyTarget.ConsultationCompleteRate2.ToString("0.00") + "%",
                                                 ActivateHistoricalConsultation = d.ActivateHistoricalConsultation,
+                                                ActivateHistoricalConsultationTarget = d.LiveAnchorMonthlyTarget.ActivateHistoricalConsultationTarget,
+                                                CumulativeActivateHistoricalConsultation = d.LiveAnchorMonthlyTarget.CumulativeActivateHistoricalConsultation,
+                                                ActivateHistoricalConsultationCompleteRate = d.LiveAnchorMonthlyTarget.ActivateHistoricalConsultationCompleteRate.ToString("0.00") + "%",
                                                 ConsultationCardConsumed = d.ConsultationCardConsumed,
+                                                ConsultationCardConsumedTarget = d.LiveAnchorMonthlyTarget.ConsultationCardConsumedTarget,
+                                                CumulativeConsultationCardConsumed = d.LiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed,
+                                                ConsultationCardConsumedCompleteRate = d.LiveAnchorMonthlyTarget.ConsultationCardConsumedCompleteRate.ToString("0.00") + "%",
                                                 ConsultationCardConsumed2 = d.ConsultationCardConsumed2,
+                                                ConsultationCardConsumedTarget2 = d.LiveAnchorMonthlyTarget.ConsultationCardConsumedTarget2,
+                                                CumulativeConsultationCardConsumed2 = d.LiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed2,
+                                                ConsultationCardConsumedCompleteRate2 = d.LiveAnchorMonthlyTarget.ConsultationCardConsumedCompleteRate2.ToString("0.00") + "%",
                                                 SendOrderNum = d.SendOrderNum,
+                                                SendOrderTarget = d.LiveAnchorMonthlyTarget.SendOrderTarget,
+                                                CumulativeSendOrder = d.LiveAnchorMonthlyTarget.CumulativeSendOrder,
+                                                SendOrderCompleteRate = d.LiveAnchorMonthlyTarget.SendOrderCompleteRate.ToString("0.00") + "%",
                                                 NewVisitNum = d.NewVisitNum,
                                                 SubsequentVisitNum = d.SubsequentVisitNum,
                                                 OldCustomerVisitNum = d.OldCustomerVisitNum,
                                                 VisitNum = d.VisitNum,
+                                                VisitTarget = d.LiveAnchorMonthlyTarget.VisitTarget,
+                                                CumulativeVisit = d.LiveAnchorMonthlyTarget.CumulativeVisit,
+                                                VisitCompleteRate = d.LiveAnchorMonthlyTarget.VisitCompleteRate.ToString("0.00") + "%",
                                                 NewDealNum = d.NewDealNum,
                                                 SubsequentDealNum = d.SubsequentDealNum,
                                                 OldCustomerDealNum = d.OldCustomerDealNum,
                                                 DealNum = d.DealNum,
+                                                DealTarget = d.LiveAnchorMonthlyTarget.DealTarget,
+                                                CumulativeDealTarget = d.LiveAnchorMonthlyTarget.CumulativeDealTarget,
+                                                DealRate = d.LiveAnchorMonthlyTarget.DealRate.ToString("0.00") + "%",
                                                 CargoSettlementCommission = d.CargoSettlementCommission,
+                                                CargoSettlementCommissionTarget = d.LiveAnchorMonthlyTarget.CargoSettlementCommissionTarget,
+                                                CumulativeCargoSettlementCommission = d.LiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission,
+                                                CargoSettlementCommissionCompleteRate = d.LiveAnchorMonthlyTarget.CargoSettlementCommissionCompleteRate.ToString("0.00") + "%",
                                                 NewPerformanceNum = d.NewPerformanceNum,
+                                                PerformanceTarget = d.LiveAnchorMonthlyTarget.PerformanceTarget,
+                                                CumulativePerformance = d.LiveAnchorMonthlyTarget.CumulativePerformance,
+                                                PerformanceCompleteRate = d.LiveAnchorMonthlyTarget.PerformanceCompleteRate.ToString("0.00") + "%",
                                                 SubsequentPerformanceNum = d.SubsequentPerformanceNum,
                                                 OldCustomerPerformanceNum = d.OldCustomerPerformanceNum,
                                                 NewCustomerPerformanceCountNum = d.NewCustomerPerformanceCountNum,
                                                 MiniVanBadReviews = d.MiniVanBadReviews,
+                                                MiniVanBadReviewsTarget = d.LiveAnchorMonthlyTarget.MiniVanBadReviewsTarget,
+                                                CumulativeMiniVanBadReviews = d.LiveAnchorMonthlyTarget.CumulativeMiniVanBadReviews,
+                                                MiniVanBadReviewsCompleteRate = d.LiveAnchorMonthlyTarget.MiniVanBadReviewsCompleteRate.ToString("0.00") + "%",
                                                 MinivanRefund = d.MinivanRefund,
+                                                MinivanRefundTarget = d.LiveAnchorMonthlyTarget.MinivanRefundTarget,
+                                                CumulativeMinivanRefund = d.LiveAnchorMonthlyTarget.CumulativeMinivanRefund,
+                                                MinivanRefundCompleteRate = d.LiveAnchorMonthlyTarget.MinivanRefundCompleteRate.ToString("0.00") + "%",
                                                 PerformanceNum = d.PerformanceNum,
                                             };
                 var result = await liveAnchorDailyTarget.OrderByDescending(x => x.RecordDate).ToListAsync();
                 foreach (var x in result)
                 {
-                    var liveanchorMonthlyTarget = await _liveAnchorMonthlyTargetService.GetByIdAsync(x.LiveanchorMonthlyTargetId);
-                    var liveAnchor = await _liveanchorService.GetByIdAsync(liveanchorMonthlyTarget.LiveAnchorId);
-                    x.LiveAnchor = liveAnchor.Name.ToString();
                     if (x.OperationEmployeeId != 0)
                     {
                         var operationEmployee = await _amiyaEmployeeService.GetByIdAsync(x.OperationEmployeeId);
@@ -617,81 +646,6 @@ namespace Fx.Amiya.Service
                             x.NetWorkConsultingEmployeeName = netWorkConsultingEmployee.Name.ToString();
                         }
                     }
-                    x.ReleaseTarget = liveanchorMonthlyTarget.ReleaseTarget;
-                    x.CumulativeRelease = liveanchorMonthlyTarget.CumulativeRelease;
-                    x.ReleaseCompleteRate = liveanchorMonthlyTarget.ReleaseCompleteRate.ToString("0.00") + "%";
-
-                    x.FlowInvestmentTarget = liveanchorMonthlyTarget.FlowInvestmentTarget;
-                    x.CumulativeFlowInvestment = liveanchorMonthlyTarget.CumulativeFlowInvestment;
-                    x.FlowInvestmentCompleteRate = liveanchorMonthlyTarget.FlowInvestmentCompleteRate.ToString("0.00") + "%";
-
-                    x.LivingRoomFlowInvestmentTarget = liveanchorMonthlyTarget.LivingRoomFlowInvestmentTarget;
-                    x.LivingRoomCumulativeFlowInvestment = liveanchorMonthlyTarget.LivingRoomCumulativeFlowInvestment;
-                    x.LivingRoomFlowInvestmentCompleteRate = liveanchorMonthlyTarget.LivingRoomFlowInvestmentCompleteRate.ToString("0.00") + "%";
-
-                    x.CluesNumTarget = liveanchorMonthlyTarget.CluesTarget;
-                    x.CumulativeCluesNum = liveanchorMonthlyTarget.CumulativeClues;
-                    x.CluesCompleteRate = liveanchorMonthlyTarget.CluesCompleteRate.ToString("0.00") + "%";
-
-                    x.AddFansTarget = liveanchorMonthlyTarget.AddFansTarget;
-                    x.CumulativeAddFansNum = liveanchorMonthlyTarget.CumulativeAddFans;
-                    x.AddFansCompleteRate = liveanchorMonthlyTarget.AddFansCompleteRate.ToString("0.00") + "%";
-
-                    x.AddWechatTarget = liveanchorMonthlyTarget.AddWechatTarget;
-                    x.CumulativeAddWechat = liveanchorMonthlyTarget.CumulativeAddWechat;
-                    x.AddWechatCompleteRate = liveanchorMonthlyTarget.AddWechatCompleteRate.ToString("0.00") + "%";
-
-                    x.ConsultationTarget = liveanchorMonthlyTarget.ConsultationTarget;
-                    x.CumulativeConsultation = liveanchorMonthlyTarget.CumulativeConsultation;
-                    x.ConsultationCompleteRate = liveanchorMonthlyTarget.ConsultationCompleteRate.ToString("0.00") + "%";
-
-                    x.ConsultationTarget2 = liveanchorMonthlyTarget.ConsultationTarget2;
-                    x.CumulativeConsultation2 = liveanchorMonthlyTarget.CumulativeConsultation2;
-                    x.ConsultationCompleteRate2 = liveanchorMonthlyTarget.ConsultationCompleteRate2.ToString("0.00") + "%";
-
-
-                    x.ConsultationCardConsumedTarget = liveanchorMonthlyTarget.ConsultationCardConsumedTarget;
-                    x.CumulativeConsultationCardConsumed = liveanchorMonthlyTarget.CumulativeConsultationCardConsumed;
-                    x.ConsultationCardConsumedCompleteRate = liveanchorMonthlyTarget.ConsultationCardConsumedCompleteRate.ToString("0.00") + "%";
-
-                    x.ConsultationCardConsumedTarget2 = liveanchorMonthlyTarget.ConsultationCardConsumedTarget2;
-                    x.CumulativeConsultationCardConsumed2 = liveanchorMonthlyTarget.CumulativeConsultationCardConsumed2;
-                    x.ConsultationCardConsumedCompleteRate2 = liveanchorMonthlyTarget.ConsultationCardConsumedCompleteRate2.ToString("0.00") + "%";
-
-
-                    x.ActivateHistoricalConsultationTarget = liveanchorMonthlyTarget.ActivateHistoricalConsultationTarget;
-                    x.CumulativeActivateHistoricalConsultation = liveanchorMonthlyTarget.CumulativeActivateHistoricalConsultation;
-                    x.ActivateHistoricalConsultationCompleteRate = liveanchorMonthlyTarget.ActivateHistoricalConsultationCompleteRate.ToString("0.00") + "%";
-
-                    x.SendOrderTarget = liveanchorMonthlyTarget.SendOrderTarget;
-                    x.CumulativeSendOrder = liveanchorMonthlyTarget.CumulativeSendOrder;
-                    x.SendOrderCompleteRate = liveanchorMonthlyTarget.SendOrderCompleteRate.ToString("0.00") + "%";
-
-                    x.VisitTarget = liveanchorMonthlyTarget.VisitTarget;
-                    x.CumulativeVisit = liveanchorMonthlyTarget.CumulativeVisit;
-                    x.VisitCompleteRate = liveanchorMonthlyTarget.VisitCompleteRate.ToString("0.00") + "%";
-
-                    x.DealTarget = liveanchorMonthlyTarget.DealTarget;
-                    x.CumulativeDealTarget = liveanchorMonthlyTarget.CumulativeDealTarget;
-                    x.DealRate = liveanchorMonthlyTarget.DealRate.ToString("0.00") + "%";
-
-                    x.CargoSettlementCommissionTarget = liveanchorMonthlyTarget.CargoSettlementCommissionTarget;
-                    x.CumulativeCargoSettlementCommission = liveanchorMonthlyTarget.CumulativeCargoSettlementCommission;
-                    x.CargoSettlementCommissionCompleteRate = liveanchorMonthlyTarget.CargoSettlementCommissionCompleteRate.ToString("0.00") + "%";
-
-                    x.PerformanceTarget = liveanchorMonthlyTarget.PerformanceTarget;
-                    x.CumulativePerformance = liveanchorMonthlyTarget.CumulativePerformance;
-                    x.PerformanceCompleteRate = liveanchorMonthlyTarget.PerformanceCompleteRate.ToString("0.00") + "%";
-
-
-                    x.MiniVanBadReviewsTarget = liveanchorMonthlyTarget.MiniVanBadReviewsTarget;
-                    x.CumulativeMiniVanBadReviews = liveanchorMonthlyTarget.CumulativeMiniVanBadReviews;
-                    x.MiniVanBadReviewsCompleteRate = liveanchorMonthlyTarget.MiniVanBadReviewsCompleteRate.ToString("0.00") + "%";
-
-
-                    x.MinivanRefundTarget = liveanchorMonthlyTarget.MinivanRefundTarget;
-                    x.CumulativeMinivanRefund = liveanchorMonthlyTarget.CumulativeMinivanRefund;
-                    x.MinivanRefundCompleteRate = liveanchorMonthlyTarget.MinivanRefundCompleteRate.ToString("0.00") + "%";
                 }
                 return result;
             }

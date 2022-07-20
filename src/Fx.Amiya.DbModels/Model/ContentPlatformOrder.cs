@@ -12,6 +12,7 @@ namespace Fx.Amiya.DbModels.Model
         public int OrderType { get; set; }
         public string ContentPlateformId { get; set; }
         public int? LiveAnchorId { get; set; }
+        public string LiveAnchorWeChatNo { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public string GoodsId { get; set; }
@@ -88,6 +89,21 @@ namespace Fx.Amiya.DbModels.Model
         /// 三方订单号
         /// </summary>
         public string OtherContentPlatFormOrderId { get; set; }
+
+        /// <summary>
+        /// 新客/老客
+        /// </summary>
+        public bool IsOldCustomer { get; set; }
+
+        /// <summary>
+        /// 是否陪诊
+        /// </summary>
+        public bool IsAcompanying { get; set; }
+
+        /// <summary>
+        /// 佣金比例
+        /// </summary>
+        public decimal CommissionRatio { get; set; }
 
         public Contentplatform Contentplatform { get; set; }
         public LiveAnchor LiveAnchor { get; set; }

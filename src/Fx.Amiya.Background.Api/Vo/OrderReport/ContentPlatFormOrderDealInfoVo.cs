@@ -59,6 +59,11 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("主播ip账号")]
         public string LiveAnchorName { get; set; }
         /// <summary>
+        /// 主播微信号
+        /// </summary>
+        [Description("主播微信号")]
+        public string LiveAnchorWeChatNo { get; set; }
+        /// <summary>
         /// 订单类型
         /// </summary>
         [Description("订单类型")]
@@ -104,6 +109,23 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("后期项目铺垫")]
         public string LateProjectStage { get; set; }
+
+        /// <summary>
+        /// 新老客业绩
+        /// </summary>
+        [Description("新老客业绩")]
+        public string IsOldCustomer { get; set; }
+
+        /// <summary>
+        /// 是否陪诊
+        /// </summary>
+        [Description("是否陪诊")]
+        public string IsAcompanying { get; set; }
+        /// <summary>
+        /// 佣金比例
+        /// </summary>
+        [Description("佣金比例")]
+        public decimal CommissionRatio { get; set; }
         /// <summary>
         /// 备注
         /// </summary>

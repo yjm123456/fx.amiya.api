@@ -17,5 +17,6 @@ namespace Fx.Amiya.IService
         Task UpdateAsync(UpdateContentPlatFormOrderDealInfoDto updateDto);
 
         Task DeleteAsync(string id);
+        Task<ContentPlatFormOrderDealInfoDto> GetByOrderIdAsync(string orderId);
     }
 }

@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using Pomelo.AspNetCore.TimedJob;
 using System.Threading;
 using Fx.Amiya.Core.Dto.Goods;
+using Fx.Amiya.SyncOrder.TikTok;
 
 namespace Fx.Amiya.Background.Api
 {
@@ -23,6 +24,7 @@ namespace Fx.Amiya.Background.Api
         private IOrderService orderService;
         private ISyncOrder syncOrder;
         private ISyncWeiFenXiaoOrder _syncWeiFenXiaoOrder;
+        private SyncTikTokOrder _syncTikTokOrder;
         private FxAppGlobal _fxAppGlobal;
         private IIntegrationAccount integrationAccountService;
         private ICustomerService customerService;
@@ -33,6 +35,7 @@ namespace Fx.Amiya.Background.Api
           IIntegrationAccount integrationAccountService,
             ICustomerService customerService,
              IMemberCard memberCardService,
+             SyncTikTokOrder syncTikTokOrder,
              IMemberRankInfo memberRankInfoService)
         {
             this.orderService = orderService;
@@ -42,6 +45,7 @@ namespace Fx.Amiya.Background.Api
             this.integrationAccountService = integrationAccountService;
             this.customerService = customerService;
             this.memberCardService = memberCardService;
+            _syncTikTokOrder = syncTikTokOrder;
             this.memberRankInfoService = memberRankInfoService;
             _bindCustomerService = bindCustomerService;
         }
@@ -69,6 +73,12 @@ namespace Fx.Amiya.Background.Api
                     ////获取微分销发生改变的订单，开始时间和结束时间不能超过一天
                     var weiFenXiaoOrderResult = await _syncWeiFenXiaoOrder.TranslateTradesSoldChangedOrders(date.AddMinutes(-15), date);
                     orderList.AddRange(weiFenXiaoOrderResult);
+                }
+                if (_fxAppGlobal.AppConfig.SyncOrderConfig.DouYin == true)
+                {
+                    ////获取抖音发生改变的订单，开始时间和结束时间不能超过一天
+                    var douYinOrderResult = await _syncTikTokOrder.TranslateTradesSoldChangedOrders(date.AddMinutes(-15), date);
+                    orderList.AddRange(douYinOrderResult);
                 }
                 List<OrderInfoAddDto> amiyaOrderList = new List<OrderInfoAddDto>();
                 List<ConsumptionIntegrationDto> consumptionIntegrationList = new List<ConsumptionIntegrationDto>();

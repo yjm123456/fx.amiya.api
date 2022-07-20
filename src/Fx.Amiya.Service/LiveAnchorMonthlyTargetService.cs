@@ -16,22 +16,47 @@ namespace Fx.Amiya.Service
     {
         private IDalLiveAnchorMonthlyTarget dalLiveAnchorMonthlyTarget;
         private ILiveAnchorService _liveanchorService;
+        private IAmiyaEmployeeService _amiyaEmployeeService;
+        private IEmployeeBindLiveAnchorService employeeBindLiveAnchorService;
 
         public LiveAnchorMonthlyTargetService(IDalLiveAnchorMonthlyTarget dalLiveAnchorMonthlyTarget,
-            ILiveAnchorService liveAnchorService)
+            ILiveAnchorService liveAnchorService,
+            IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
+            IAmiyaEmployeeService amiyaEmployeeService)
         {
             this.dalLiveAnchorMonthlyTarget = dalLiveAnchorMonthlyTarget;
+            _amiyaEmployeeService = amiyaEmployeeService;
+            this.employeeBindLiveAnchorService = employeeBindLiveAnchorService;
             _liveanchorService = liveAnchorService;
         }
 
 
 
-        public async Task<FxPageInfo<LiveAnchorMonthlyTargetDto>> GetListWithPageAsync(int Year, int Month, int? LiveAnchorId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<LiveAnchorMonthlyTargetDto>> GetListWithPageAsync(int Year, int Month, int? LiveAnchorId, int employeeId, int pageNum, int pageSize)
         {
             try
             {
-                var liveAnchorMonthlyTarget = from d in dalLiveAnchorMonthlyTarget.GetAll()
-                                              where (d.Year == Year) && (d.Month == Month) && (LiveAnchorId.HasValue == false || d.LiveAnchorId == LiveAnchorId)
+                List<int> liveAnchorIds = new List<int>();
+                if (LiveAnchorId.HasValue)
+                {
+                    liveAnchorIds.Add(LiveAnchorId.Value);
+                }
+                else
+                {
+                    var empInfo = await _amiyaEmployeeService.GetByIdAsync(employeeId);
+                    if (empInfo.PositionId == 19)
+                    {
+                        var bindLiveAnchorInfo = await employeeBindLiveAnchorService.GetByEmpIdAsync(employeeId);
+                        foreach (var x in bindLiveAnchorInfo)
+                        {
+                            liveAnchorIds.Add(x.LiveAnchorId);
+                        }
+                    }
+                }
+                var liveAnchorMonthlyTarget = from d in dalLiveAnchorMonthlyTarget.GetAll().Include(e => e.LiveAnchor)
+                                              where (d.Year == Year)
+                                              && (d.Month == Month)
+                                              && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorId))
                                               select new LiveAnchorMonthlyTargetDto
                                               {
                                                   Id = d.Id,
@@ -39,6 +64,7 @@ namespace Fx.Amiya.Service
                                                   Month = d.Month,
                                                   MonthlyTargetName = d.MonthlyTargetName,
                                                   LiveAnchorId = d.LiveAnchorId,
+                                                  LiveAnchorName = d.LiveAnchor.Name,
                                                   ReleaseTarget = d.ReleaseTarget,
                                                   CumulativeRelease = d.CumulativeRelease,
                                                   ReleaseCompleteRate = d.ReleaseCompleteRate,
@@ -99,11 +125,6 @@ namespace Fx.Amiya.Service
                 FxPageInfo<LiveAnchorMonthlyTargetDto> liveAnchorMonthlyTargetPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetDto>();
                 liveAnchorMonthlyTargetPageInfo.TotalCount = await liveAnchorMonthlyTarget.CountAsync();
                 liveAnchorMonthlyTargetPageInfo.List = await liveAnchorMonthlyTarget.OrderByDescending(x => x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
-                foreach (var x in liveAnchorMonthlyTargetPageInfo.List)
-                {
-                    var liveAnchor = await _liveanchorService.GetByIdAsync(x.LiveAnchorId);
-                    x.LiveAnchorName = liveAnchor.Name.ToString();
-                }
                 return liveAnchorMonthlyTargetPageInfo;
             }
             catch (Exception ex)

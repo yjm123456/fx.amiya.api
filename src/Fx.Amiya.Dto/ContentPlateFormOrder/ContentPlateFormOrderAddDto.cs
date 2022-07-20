@@ -28,9 +28,13 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         
         public int LiveAnchorId { get; set; }
         /// <summary>
+        /// 主播微信号
+        /// </summary>
+        public string LiveAnchorWeChatNo { get; set; }
+        /// <summary>
         /// 客户姓名
         /// </summary>
-        
+
         public string CustomerName { get; set; }
         /// <summary>
         /// 手机号

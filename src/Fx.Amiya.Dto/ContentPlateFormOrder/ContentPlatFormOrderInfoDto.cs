@@ -23,6 +23,7 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         public string ConsultationEmpName { get; set; }
         public int? LiveAnchorId { get; set; }
         public string LiveAnchorName { get; set; }
+        public string LiveAnchorWeChatNo { get; set; }
         public DateTime CreateDate { get; set; }
         public string CustomerName { get; set; }
         public string EncryptPhone { get; set; }
@@ -70,6 +71,20 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
 
         public decimal? ReturnBackPrice { get; set; }
         public DateTime? ReturnBackDate { get; set; }
+
+        /// <summary>
+        /// 新客/老客
+        /// </summary>
+        public bool IsOldCustomer { get; set; }
+        /// <summary>
+        /// 是否陪诊
+        /// </summary>
+        public bool IsAcompanying { get; set; }
+
+        /// <summary>
+        /// 佣金比例
+        /// </summary>
+        public decimal CommissionRatio { get; set; }
 
         public int? CheckBy { get; set; }
         public string CheckByName { get; set; }

@@ -77,6 +77,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.ContentPlateFormId = addVo.ContentPlateFormId;
             addDto.ConsultationEmpId = addVo.ConsultationEmpId;
             addDto.LiveAnchorId = addVo.LiveAnchorId;
+            addDto.LiveAnchorWeChatNo = addVo.LiveAnchorWeChatNo;
             addDto.CustomerName = addVo.CustomerName;
             addDto.Phone = addVo.Phone;
             addDto.AppointmentDate = addVo.AppointmentDate;
@@ -129,6 +130,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 OrderTypeText = d.OrderTypeText,
                                 ContentPlatformName = d.ContentPlatformName,
                                 LiveAnchorName = d.LiveAnchorName,
+                                LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 CreateDate = d.CreateDate,
                                 CustomerName = d.CustomerName,
                                 Phone = d.Phone,
@@ -352,13 +354,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("contentPlateFormOrderDealLlistWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormCompleteOrderInfoVo>>> GetOrderDealListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int? checkState, bool? ReturnBackPriceState, string keyword, int? hospitalId, int? toHospitalType,string contentPlateFormId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormCompleteOrderInfoVo>>> GetOrderDealListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int? checkState, bool? ReturnBackPriceState, string keyword, int? hospitalId, int? toHospitalType, string contentPlateFormId, int pageNum, int pageSize)
         {
             try
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await _orderService.GetOrderDealListWithPageAsync(liveAnchorId, startDate, endDate, consultationEmpId, checkState, ReturnBackPriceState, keyword, contentPlateFormId, hospitalId,toHospitalType, employeeId, pageNum, pageSize);
+                var q = await _orderService.GetOrderDealListWithPageAsync(liveAnchorId, startDate, endDate, consultationEmpId, checkState, ReturnBackPriceState, keyword, contentPlateFormId, hospitalId, toHospitalType, employeeId, pageNum, pageSize);
                 var order = from d in q.List
                             select new ContentPlatFormCompleteOrderInfoVo
                             {
@@ -366,8 +368,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 OrderTypeText = d.OrderTypeText,
                                 ContentPlatformName = d.ContentPlatformName,
                                 LiveAnchorName = d.LiveAnchorName,
+                                LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 CreateDate = d.CreateDate,
                                 CustomerName = d.CustomerName,
+                                IsAcompanying = d.IsAcompanying == true ? "是" : "否",
                                 Phone = d.Phone,
                                 IsToHospital = d.IsToHospital == true ? "是" : "否",
                                 ToHospitalType = d.ToHospitalTypeText,
@@ -394,6 +398,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 ReturnBackDate = d.ReturnBackDate,
                                 ReturnBackPrice = d.ReturnBackPrice,
                                 OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
+                                CommissionRatio = d.CommissionRatio,
+                                IsOldCustomer = d.IsOldCustomer == false ? "新客业绩" : "老客业绩",
                             };
                 FxPageInfo<ContentPlatFormCompleteOrderInfoVo> orderPageInfo = new FxPageInfo<ContentPlatFormCompleteOrderInfoVo>();
                 orderPageInfo.TotalCount = q.TotalCount;
@@ -436,6 +442,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.Remark = order.Remark;
             orderUpdateInfo.LateProjectStage = order.LateProjectStage;
             orderUpdateInfo.CheckState = order.CheckState;
+            orderUpdateInfo.LiveAnchorWeChatNo = order.LiveAnchorWeChatNo;
+            orderUpdateInfo.IsOldCustomer = order.IsOldCustomer;
+            orderUpdateInfo.IsAcompanying = order.IsAcompanying;
+            orderUpdateInfo.CommissionRatio = order.CommissionRatio;
             orderUpdateInfo.CheckPrice = order.CheckPrice;
             orderUpdateInfo.HospitalDepartmentId = order.HospitalDepartmentId;
             orderUpdateInfo.SettlePrice = order.SettlePrice;
@@ -582,6 +592,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.Id = updateVo.Id;
             updateDto.OrderType = updateVo.OrderType;
             updateDto.ContentPlateFormId = updateVo.ContentPlateFormId;
+            updateDto.LiveAnchorWeChatNo = updateVo.LiveAnchorWeChatNo;
             updateDto.LiveAnchorId = updateVo.LiveAnchorId;
             updateDto.GoodsId = updateVo.GoodsId;
             updateDto.HospitalDepartmentId = updateVo.HospitalDepartmentId;
@@ -851,6 +862,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.ToHospitalType = updateVo.ToHospitalType;
             updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
             updateDto.DealDate = updateVo.DealDate;
+            updateDto.CommissionRatio = updateVo.CommissionRatio;
+            updateDto.IsAcompanying = updateVo.IsAcompanying;
             updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
             await _orderService.UpdateFinishContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
@@ -878,6 +891,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.IsToHospital = updateVo.IsToHospital;
             updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
             updateDto.DealDate = updateVo.DealDate;
+            updateDto.IsAcompanying = updateVo.IsAcompanying;
             await _orderService.FinishContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
         }

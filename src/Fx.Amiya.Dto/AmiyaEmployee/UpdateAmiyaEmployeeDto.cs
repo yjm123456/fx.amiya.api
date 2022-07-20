@@ -14,7 +14,7 @@ namespace Fx.Amiya.Dto.AmiyaEmployee
         public string Email { get; set; }
         public bool IsCustomerService { get; set; }
         /// <summary>
-        /// 当为客服情况下上传绑定主播ID
+        /// 当为客服/运营咨询情况下上传绑定主播ID
         /// </summary>
         public List<int> LiveAnchorIds { get; set; }
     }

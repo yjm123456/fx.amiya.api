@@ -770,13 +770,49 @@ ADD COLUMN `other_order_id` VARCHAR(50) NULL AFTER `deal_date`;
 
 
 
+--主播IP日运营报表关联关系
+ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
+ADD INDEX `fk_live_anchor_monthly_target_info_idx` (`liveanchor_monthly_target_id` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
+ADD CONSTRAINT `fk_live_anchor_monthly_target_info`
+  FOREIGN KEY (`liveanchor_monthly_target_id`)
+  REFERENCES `amiyadb`.`tbl_liveanchor_monthly_target` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
+
+  --主播月度报表关联关系
+ ALTER TABLE `amiyadb`.`tbl_liveanchor_monthly_target` 
+CHANGE COLUMN `live_anchor_id` `live_anchor_id` INT UNSIGNED NOT NULL DEFAULT '0' ,
+ADD INDEX `fk_live_anchor_info_idx` (`live_anchor_id` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`tbl_liveanchor_monthly_target` 
+ADD CONSTRAINT `fk_live_anchor_info`
+  FOREIGN KEY (`live_anchor_id`)
+  REFERENCES `amiyadb`.`tbl_live_anchor` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
 -----------------------------------------------余建明 2022/07/05 END--------------------------------------------;
 
-----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
 
 -----------------------------------------------余建明 2022/07/12 BEGIN--------------------------------------------;
+
+
+--内容平台成交情况
+  ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
+ADD COLUMN `to_hospital_type` INT NOT NULL DEFAULT 0 AFTER `is_to_hospital`;
+
+
+--内容平台订单
+ALTER TABLE `amiyadb`.`tbl_content_platform_order` 
+ADD COLUMN `to_hospital_type` INT NOT NULL DEFAULT 0 AFTER `is_to_hospital`;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
 
 --购物车
 ALTER TABLE `amiyadb`.`tbl_goods_shopcar` 
@@ -812,21 +848,31 @@ ADD CONSTRAINT `fk_hospital_info`
   FOREIGN KEY (`hosiptal_id`)
   REFERENCES `amiyadb`.`tbl_hospital_info` (`id`);
 
-  --内容平台成交情况
+  ALTER TABLE `amiyadb`.`tbl_content_platform_order`
+ADD COLUMN `live_anchor_we_chat_no` VARCHAR(100) NULL AFTER `live_anchor_id`,
+ADD COLUMN `is_old_customer` BIT(1) NOT NULL AFTER `return_back_date`,
+ADD COLUMN `is_accompanying` BIT(1) NOT NULL AFTER `is_old_customer`,
+ADD COLUMN `commission_ratio` DECIMAL(5,2) NOT NULL DEFAULT 0.00 AFTER `is_accompanying`;
+
+
   ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
-ADD COLUMN `to_hospital_type` INT NOT NULL DEFAULT 0 AFTER `is_to_hospital`;
-
-
---内容平台订单
-ALTER TABLE `amiyadb`.`tbl_content_platform_order` 
-ADD COLUMN `to_hospital_type` INT NOT NULL DEFAULT 0 AFTER `is_to_hospital`;
-
+ADD COLUMN `is_old_customer` BIT(1) NOT NULL AFTER `other_order_id`,
+ADD COLUMN `is_accompanying` BIT(1) NOT NULL AFTER `is_old_customer`,
+ADD COLUMN `commission_ratio` DECIMAL(5,2) NOT NULL DEFAULT 0.00 AFTER `is_accompanying`;
 
   
 -----------------------------------------------余建明 2022/07/12 END--------------------------------------------;
 
 
+-----------------------------------------------余建明 2022/07/18  BEGIN--------------------------------------------;
 
+--tbl_config表修改config列【加入抖店渠道】
+UPDATE `amiyadb`.`tbl_config` SET `config_json` = '{\"FxJwtConfig\":{\"Key\":\"kljdsf982734jkldg!@#\",\"ExpireInSeconds\":7200,\"RefreshTokenExpireInSeconds\":14400},\"FxOpenConfig\":{\"Enable\":true,\"RequestBaseUrl\":\"https://app.hsltm.com/fxgatetest\"},\"FxOSSConfig\":null,\"FxRedisConfig\":{\"ConnectionString\":\"app.hsltm.com:6379,allowadmin=true,password=hsltm\"},\"FxSmsConfig\":{\"AliyunSmsList\":[{\"Name\":\"send_validate_code\",\"AccessKeyId\":\"LTAIlyCdQbQnA96C\",\"AccessSecret\":\"nXtBYoUzt3nw3v5DasAjNdLliuBB0h\",\"RegionId\":\"cn_hangzhou\",\"SignName\":\"杭州华山医院\",\"TemplateCode\":\"SMS_126464576\",\"Remark\":\"发送验证码\"}]},\"FxUniteWxAccessTokenConfig\":{\"Enable\":true,\"RequestBaseUrl\":\"https://app.hsltm.com/fxwxaccesstoken\"},\"WxPayConfig\":null,\"FxMessageCenterConfig\":{\"EnableMessageCenter\":true,\"EnableMessageQueue\":true,\"MQHostName\":\"app.hsltm.com\",\"MQUserName\":\"admin\",\"Port\":5672,\"MQPassword\":\"hsltm1007\",\"MQQueueName\":\"fx_wxmp_message_queue\",\"MessageCenterWebSocketUrl\":null},\"ChatInMinute\":1440,\"CallCenterConfig\":{\"CallRecordStoreAddress\":\"mongodb://192.168.11.72:27890\",\"EnablevoiceCardCallable\":false,\"SupportOldCallBox\":false,\"SwitchSimCardInCallCount\":5,\"VoiceCardManagerAddress\":\"\",\"PhoneEncryptKey\":\"test\",\"EnablePhoneEncrypt\":true,\"HidePhoneNumber\":true},\"SyncOrderConfig\":{\"Jd\":false,\"Tmall\":true,\"WeiFenXiao\":true,\"DouYin\":true}}' WHERE (`id` = '1');
+
+--tbl_order_app_info表加入抖店商户号配置
+INSERT INTO `amiyadb`.`tbl_order_app_info` (`id`, `app_key`, `app_secret`, `access_token`, `authorize_date`, `app_type`, `expire_date`, `refresh_token`) VALUES ('5', '7109321803654252040', '1', 'edae7c30-8386-443b-88a1-031111596fdd', '2022-07-18 16:20:00', '4', '2022-07-19 16:20:00', '1');
+
+-----------------------------------------------余建明 2022/07/18 END--------------------------------------------;
 
 
 

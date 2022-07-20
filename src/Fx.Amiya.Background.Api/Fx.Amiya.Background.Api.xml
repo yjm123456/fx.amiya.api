@@ -1158,12 +1158,16 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormSendOrderController.GetListByHospitalIdAsync(System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormSendOrderController.GetListByHospitalIdAsync(System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Int32,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Int32,System.Int32)">
             <summary>
             医院获取派单信息
             </summary>
             <param name="keyword"></param>
             <param name="startDate"></param>
+            <param name="IsToHospital">是否到院， -1查询全部</param>
+            <param name="toHospitalStartDate">到院时间起</param>
+            <param name="toHospitalEndDate">到院时间止</param>           
+            <param name="toHospitalType">到院类型</param>        
             <param name="endDate"></param>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
@@ -1191,18 +1195,21 @@
             <param name="updateVo"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormSendOrderController.GetSendOrderList(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Int32,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Int32,System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormSendOrderController.GetSendOrderList(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},System.Nullable{System.Int32},System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Int32,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Int32,System.Int32,System.Int32)">
             <summary>
             获取内容平台订单已派单信息列表
             </summary>
             <param name="keyword"></param>
             <param name="employeeId"> -1(归属客服)查询全部</param>
             <param name="sendBy"> 派单人（空查询全部）</param>
+            <param name="isAcompanying">是否陪诊，为空查询所有</param>
+            <param name="isOldCustomer">新老客业绩，为空查询所有</param>
+            <param name="commissionRatio">佣金比例，为空查询所有</param>
             <param name="liveAnchorId">归属主播ID</param>
             <param name="orderStatus">订单状态</param>
             <param name="contentPlatFormId">内容平台id</param>
-            <param name="startDate"></param>
             <param name="consultationEmpId">面诊员id</param>
+            <param name="startDate"></param>
             <param name="endDate"></param>        
             <param name="hospitalId"></param>        
             <param name="IsToHospital">是否到院， -1查询全部</param>
@@ -2640,7 +2647,7 @@
             主播日运营目标情况数据接口
             </summary>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.#ctor(Fx.Amiya.IService.ILiveAnchorDailyTargetService)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.#ctor(Fx.Amiya.IService.ILiveAnchorDailyTargetService,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
             <summary>
             构造函数
             </summary>
@@ -2691,7 +2698,7 @@
             主播月度运营目标情况数据接口
             </summary>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorMonthlyTargetController.#ctor(Fx.Amiya.IService.ILiveAnchorMonthlyTargetService,Fx.Amiya.IService.ILiveAnchorDailyTargetService)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorMonthlyTargetController.#ctor(Fx.Amiya.IService.ILiveAnchorMonthlyTargetService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Fx.Amiya.IService.ILiveAnchorDailyTargetService)">
             <summary>
             构造函数
             </summary>
@@ -2739,6 +2746,63 @@
         <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorMonthlyTargetController.DeleteAsync(System.String)">
             <summary>
             删除主播月度运营目标情况
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.LiveAnchorWechatInfoController">
+            <summary>
+            主播微信账号
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorWechatInfoController.GetValidListAsync">
+            <summary>
+             获取有效的主播微信账号列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorWechatInfoController.GetValidListAsync(System.Int32)">
+            <summary>
+             根据主播获取有效的主播微信账号列表
+            </summary>
+            <param name="liveanchorId">主播id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorWechatInfoController.GetListAsync(System.String,System.Nullable{System.Int32},System.Boolean,System.Int32,System.Int32)">
+            <summary>
+            获取主播微信账号列表
+            </summary>
+            <param name="keyword"></param>
+            <param name="liveAnchorId"></param>
+            <param name="valid"></param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorWechatInfoController.AddAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.AddLiveAnchorWechatInfoVo)">
+            <summary>
+            添加主播微信账号
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorWechatInfoController.GetByIdAsync(System.String)">
+            <summary>
+            根据编号获取主播微信账号
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorWechatInfoController.UpdateAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.UpdateLiveAnchorWechatInfoVo)">
+            <summary>
+            修改主播微信账号
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorWechatInfoController.DeleteAsync(System.String)">
+            <summary>
+            删除主播微信账号
             </summary>
             <param name="id"></param>
             <returns></returns>
@@ -3521,7 +3585,7 @@
             <param name="orderStatus"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetCustomerSendContentPlatFormOrderAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Int32,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String,System.Int32,System.Int32,System.Nullable{System.Int32})">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetCustomerSendContentPlatFormOrderAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},System.Int32,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String,System.Int32,System.Int32,System.Nullable{System.Int32})">
             <summary>
              内容平台客服已派单报表
             </summary>
@@ -3539,7 +3603,7 @@
             <param name="toHospitalType">到院类型，为空查询所有</param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.ExportCustomerSendContentPlatFormOrderAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Int32,System.Nullable{System.Int32})">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.ExportCustomerSendContentPlatFormOrderAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Int32,System.Nullable{System.Int32})">
             <summary>
              内容平台客服已派单报表导出
             </summary>
@@ -4969,7 +5033,7 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.AmiyaEmployee.UpdateAmiyaEmployeeVo.LiveAnchorIds">
             <summary>
-            当为客服情况下上传绑定主播ID
+            当为客服/运营咨询情况下上传绑定主播ID
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.AmiyaEmployee.UpdatePasswordAmiiyaVo.OldPassword">
@@ -5872,6 +5936,11 @@
             主播账号id
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.LiveAnchorWeChatNo">
+            <summary>
+            主播微信号
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.CustomerName">
             <summary>
             客户姓名
@@ -6042,6 +6111,11 @@
             成交时间
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.IsAcompanying">
+            <summary>
+            是否陪诊
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.OtherContentPlatFormOrderId">
             <summary>
             三方订单号
@@ -6095,6 +6169,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.LiveAnchorId">
             <summary>
             主播账号id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.LiveAnchorWeChatNo">
+            <summary>
+            主播微信号
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.GoodsId">
@@ -6225,6 +6304,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.LiveAnchorId">
             <summary>
             主播账号id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.LiveAnchorWeChatNo">
+            <summary>
+            主播微信号
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.GoodsId">
@@ -6487,6 +6571,21 @@
             成交凭证
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.IsOldCustomer">
+            <summary>
+            新客/老客
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.IsAcompanying">
+            <summary>
+            是否陪诊
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.CommissionRatio">
+            <summary>
+            佣金比例
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.Id">
             <summary>
             订单号
@@ -6540,6 +6639,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.LiveAnchorName">
             <summary>
             主播ip账号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.LiveAnchorWeChatNo">
+            <summary>
+            主播微信号
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.OrderTypeText">
@@ -6647,6 +6751,21 @@
             三方订单号
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.CommissionRatio">
+            <summary>
+            佣金比例
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.IsOldCustomer">
+            <summary>
+            新老客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.IsAcompanying">
+            <summary>
+            是否陪诊
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCustomerPictureVo">
             <summary>
             内容平台订单客户照片基础类
@@ -6745,6 +6864,21 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.OtherOrderId">
             <summary>
             三方订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.IsOldCustomer">
+            <summary>
+            新客/老客
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.IsAcompanying">
+            <summary>
+            是否陪诊
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CommissionRatio">
+            <summary>
+            佣金比例
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoSimpleVo">
@@ -6890,6 +7024,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.LiveAnchorName">
             <summary>
             主播ip账号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.LiveAnchorWeChatNo">
+            <summary>
+            主播微信号
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.OrderTypeText">
@@ -7115,6 +7254,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.OtherContentPlatFormOrderId">
             <summary>
             三方订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.IsAcompanying">
+            <summary>
+            是否陪诊
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.CommissionRatio">
+            <summary>
+            佣金比例
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo">
@@ -7430,6 +7579,21 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormOrderSendInfoVo.CheckState">
             <summary>
             审核状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormOrderSendInfoVo.IsToHospital">
+            <summary>
+            是否到院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormOrderSendInfoVo.ToHospitalDate">
+            <summary>
+            到院时间（最新）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormOrderSendInfoVo.ToHospitalTypeText">
+            <summary>
+            到院类型
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormSendOrderInfoSimpleVo.HospitalId">
@@ -12452,6 +12616,96 @@
             小黄车差评总量
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.AddLiveAnchorWechatInfoVo.LiveAnchorId">
+            <summary>
+            主播ID
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.AddLiveAnchorWechatInfoVo.WeChatNo">
+            <summary>
+            微信号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.AddLiveAnchorWechatInfoVo.NickName">
+            <summary>
+            昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.AddLiveAnchorWechatInfoVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.LiveAnchorWechatInfoVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.LiveAnchorWechatInfoVo.LiveAnchorId">
+            <summary>
+            主播ID
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.LiveAnchorWechatInfoVo.LiveAnchorName">
+            <summary>
+            主播名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.LiveAnchorWechatInfoVo.ContentPlatFormName">
+            <summary>
+            平台
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.LiveAnchorWechatInfoVo.WeChatNo">
+            <summary>
+            微信号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.LiveAnchorWechatInfoVo.NickName">
+            <summary>
+            昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.LiveAnchorWechatInfoVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.LiveAnchorWechatInfoVo.Valid">
+            <summary>
+            是否有效
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.UpdateLiveAnchorWechatInfoVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.UpdateLiveAnchorWechatInfoVo.LiveAnchorId">
+            <summary>
+            主播ID
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.UpdateLiveAnchorWechatInfoVo.WeChatNo">
+            <summary>
+            微信号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.UpdateLiveAnchorWechatInfoVo.NickName">
+            <summary>
+            昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.UpdateLiveAnchorWechatInfoVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo.UpdateLiveAnchorWechatInfoVo.Valid">
+            <summary>
+            是否有效
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchor.AddLiveAnchorVo.Name">
             <summary>
             主播姓名
@@ -13002,6 +13256,11 @@
             主播ip账号
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.LiveAnchorWeChatNo">
+            <summary>
+            主播微信号
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.OrderTypeText">
             <summary>
             订单类型
@@ -13045,6 +13304,21 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.LateProjectStage">
             <summary>
             后期项目铺垫
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.IsOldCustomer">
+            <summary>
+            新老客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.IsAcompanying">
+            <summary>
+            是否陪诊
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.CommissionRatio">
+            <summary>
+            佣金比例
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.Remark">
@@ -13452,14 +13726,29 @@
             主播
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerSendContentPlatFormOrderReportVo.LiveAnchorWeChatNo">
+            <summary>
+            主播微信编号
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerSendContentPlatFormOrderReportVo.GoodsName">
             <summary>
             项目
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerSendContentPlatFormOrderReportVo.IsOldCustomer">
+            <summary>
+            新老客业绩
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerSendContentPlatFormOrderReportVo.CustomerName">
             <summary>
             客户姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerSendContentPlatFormOrderReportVo.IsAcompanying">
+            <summary>
+            是否陪诊
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerSendContentPlatFormOrderReportVo.Phone">
@@ -13485,6 +13774,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerSendContentPlatFormOrderReportVo.DealAmount">
             <summary>
             成交金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerSendContentPlatFormOrderReportVo.CommissionRatio">
+            <summary>
+            佣金比例
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerSendContentPlatFormOrderReportVo.SendHospital">

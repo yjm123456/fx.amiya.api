@@ -129,5 +129,13 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// </summary>
         public string AcceptConsulting { get; set; }
         public int? CheckState { get; set; }
+        public DateTime? DealDate { get; set; }
+        public bool IsToHospital { get; set; }
+        /// <summary>
+        /// 到院时间（最新）
+        /// </summary>
+        public DateTime? ToHospitalDate { get; set; }
+        public int ToHospitalType { get; set; }
+        public string ToHospitalTypeText { get; set; }
     }
 }

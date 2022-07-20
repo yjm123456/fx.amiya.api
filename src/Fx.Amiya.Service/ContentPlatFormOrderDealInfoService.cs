@@ -38,6 +38,9 @@ namespace Fx.Amiya.Service
                                                        ContentPlatFormOrderId = d.ContentPlatFormOrderId,
                                                        CreateDate = d.CreateDate,
                                                        IsDeal = d.IsDeal,
+                                                       IsOldCustomer = d.IsOldCustomer,
+                                                       IsAcompanying = d.IsAcompanying,
+                                                       CommissionRatio = d.CommissionRatio,
                                                        IsToHospital = d.IsToHospital,
                                                        ToHospitalType = d.ToHospitalType,
                                                        ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
@@ -87,6 +90,9 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.Price = addDto.Price;
                 ContentPlatFOrmOrderDealInfo.DealDate = addDto.DealDate;
                 ContentPlatFOrmOrderDealInfo.OtherAppOrderId = addDto.OtherAppOrderId;
+                ContentPlatFOrmOrderDealInfo.IsAcompanying = addDto.IsAcompanying;
+                ContentPlatFOrmOrderDealInfo.IsOldCustomer = addDto.IsOldCustomer;
+                ContentPlatFOrmOrderDealInfo.CommissionRatio = addDto.CommissionRatio;
                 await dalContentPlatFormOrderDealInfo.AddAsync(ContentPlatFOrmOrderDealInfo, true);
             }
             catch (Exception ex)
@@ -110,7 +116,7 @@ namespace Fx.Amiya.Service
                 contentPlatFOrmOrderDealInfoDto.ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId;
                 contentPlatFOrmOrderDealInfoDto.CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate;
                 contentPlatFOrmOrderDealInfoDto.IsToHospital = ContentPlatFOrmOrderDealInfo.IsToHospital;
-                contentPlatFOrmOrderDealInfoDto.ToHospitalType = contentPlatFOrmOrderDealInfoDto.ToHospitalType;
+                contentPlatFOrmOrderDealInfoDto.ToHospitalType = ContentPlatFOrmOrderDealInfo.ToHospitalType;
                 contentPlatFOrmOrderDealInfoDto.ToHospitalDate = ContentPlatFOrmOrderDealInfo.ToHospitalDate;
                 contentPlatFOrmOrderDealInfoDto.LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId;
                 contentPlatFOrmOrderDealInfoDto.IsDeal = ContentPlatFOrmOrderDealInfo.IsDeal;
@@ -119,6 +125,9 @@ namespace Fx.Amiya.Service
                 contentPlatFOrmOrderDealInfoDto.Price = ContentPlatFOrmOrderDealInfo.Price;
                 contentPlatFOrmOrderDealInfoDto.DealDate = ContentPlatFOrmOrderDealInfo.DealDate;
                 contentPlatFOrmOrderDealInfoDto.OtherAppOrderId = ContentPlatFOrmOrderDealInfo.OtherAppOrderId;
+                contentPlatFOrmOrderDealInfoDto.IsAcompanying = ContentPlatFOrmOrderDealInfo.IsAcompanying;
+                contentPlatFOrmOrderDealInfoDto.IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer;
+                contentPlatFOrmOrderDealInfoDto.CommissionRatio = ContentPlatFOrmOrderDealInfo.CommissionRatio;
                 return contentPlatFOrmOrderDealInfoDto;
             }
             catch (Exception ex)
@@ -149,6 +158,9 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.Price = updateDto.Price;
                 ContentPlatFOrmOrderDealInfo.DealDate = updateDto.DealDate;
                 ContentPlatFOrmOrderDealInfo.OtherAppOrderId = updateDto.OtherAppOrderId;
+                ContentPlatFOrmOrderDealInfo.IsAcompanying = updateDto.IsAcompanying;
+                ContentPlatFOrmOrderDealInfo.IsOldCustomer = updateDto.IsOldCustomer;
+                ContentPlatFOrmOrderDealInfo.CommissionRatio = updateDto.CommissionRatio;
                 await dalContentPlatFormOrderDealInfo.UpdateAsync(ContentPlatFOrmOrderDealInfo, true);
 
             }
@@ -176,5 +188,40 @@ namespace Fx.Amiya.Service
             }
         }
 
+        public async Task<ContentPlatFormOrderDealInfoDto> GetByOrderIdAsync(string orderId)
+        {
+            try
+            {
+                var ContentPlatFOrmOrderDealInfo = await dalContentPlatFormOrderDealInfo.GetAll().SingleOrDefaultAsync(e => e.ContentPlatFormOrderId == orderId);
+                if (ContentPlatFOrmOrderDealInfo == null)
+                {
+                    return new ContentPlatFormOrderDealInfoDto() ;
+                }
+
+                ContentPlatFormOrderDealInfoDto contentPlatFOrmOrderDealInfoDto = new ContentPlatFormOrderDealInfoDto();
+                contentPlatFOrmOrderDealInfoDto.Id = ContentPlatFOrmOrderDealInfo.Id;
+                contentPlatFOrmOrderDealInfoDto.ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId;
+                contentPlatFOrmOrderDealInfoDto.CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate;
+                contentPlatFOrmOrderDealInfoDto.IsToHospital = ContentPlatFOrmOrderDealInfo.IsToHospital;
+                contentPlatFOrmOrderDealInfoDto.ToHospitalType = ContentPlatFOrmOrderDealInfo.ToHospitalType;
+                contentPlatFOrmOrderDealInfoDto.ToHospitalDate = ContentPlatFOrmOrderDealInfo.ToHospitalDate;
+                contentPlatFOrmOrderDealInfoDto.LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId;
+                contentPlatFOrmOrderDealInfoDto.IsDeal = ContentPlatFOrmOrderDealInfo.IsDeal;
+                contentPlatFOrmOrderDealInfoDto.DealPicture = ContentPlatFOrmOrderDealInfo.DealPicture;
+                contentPlatFOrmOrderDealInfoDto.Remark = ContentPlatFOrmOrderDealInfo.Remark;
+                contentPlatFOrmOrderDealInfoDto.Price = ContentPlatFOrmOrderDealInfo.Price;
+                contentPlatFOrmOrderDealInfoDto.DealDate = ContentPlatFOrmOrderDealInfo.DealDate;
+                contentPlatFOrmOrderDealInfoDto.OtherAppOrderId = ContentPlatFOrmOrderDealInfo.OtherAppOrderId;
+                contentPlatFOrmOrderDealInfoDto.IsAcompanying = ContentPlatFOrmOrderDealInfo.IsAcompanying;
+                contentPlatFOrmOrderDealInfoDto.IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer;
+                contentPlatFOrmOrderDealInfoDto.CommissionRatio = ContentPlatFOrmOrderDealInfo.CommissionRatio;
+                return contentPlatFOrmOrderDealInfoDto;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

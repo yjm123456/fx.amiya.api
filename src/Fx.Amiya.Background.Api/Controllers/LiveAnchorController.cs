@@ -22,9 +22,11 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class LiveAnchorController : ControllerBase
     {
         private ILiveAnchorService liveAnchorService;
-        public LiveAnchorController(ILiveAnchorService liveAnchorService)
+        private IHttpContextAccessor httpContextAccessor;
+        public LiveAnchorController(IHttpContextAccessor httpContextAccessor, ILiveAnchorService liveAnchorService)
         {
             this.liveAnchorService = liveAnchorService;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
@@ -51,7 +53,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("validList")]
         public async Task<ResultData<List<LiveAnchorVo>>> GetValidListAsync(string contentPlatFormId)
         {
-            var liveAnchors = from d in await liveAnchorService.GetValidListAsync(contentPlatFormId)
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            var liveAnchors = from d in await liveAnchorService.GetValidListAsync(contentPlatFormId, employeeId)
                               select new LiveAnchorVo
                               {
                                   Id = d.Id,
@@ -76,7 +80,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("list")]
         public async Task<ResultData<FxPageInfo<LiveAnchorVo>>> GetListAsync(string name,string contentPlatformId,bool valid, int pageNum, int pageSize)
         {
-            var q = await liveAnchorService.GetListAsync(name,  contentPlatformId, valid, pageNum, pageSize);
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            var q = await liveAnchorService.GetListAsync(name,employeeId,  contentPlatformId, valid, pageNum, pageSize);
             var liveAnchors = from d in q.List
                               select new LiveAnchorVo
                               {

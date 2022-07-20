@@ -145,15 +145,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fx.Amiya.SyncOrder.WeiFenXi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrderWriteOff", "OrderWriteOff", "{93DD8ADC-6043-4A56-88FA-4AABF7490735}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fx.Amiya.Modules.OrderWriteOff.AppService", "src\Modules\OrderWriteOff\Fx.Amiya.Modules.OrderWriteOff.AppService\Fx.Amiya.Modules.OrderWriteOff.AppService.csproj", "{A87BA317-0611-428C-BB3E-A1574F1EBB5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fx.Amiya.Modules.OrderWriteOff.AppService", "src\Modules\OrderWriteOff\Fx.Amiya.Modules.OrderWriteOff.AppService\Fx.Amiya.Modules.OrderWriteOff.AppService.csproj", "{A87BA317-0611-428C-BB3E-A1574F1EBB5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fx.Amiya.Modules.OrderWriteOff.DbModels", "src\Modules\OrderWriteOff\Fx.Amiya.Modules.OrderWriteOff.DbModels\Fx.Amiya.Modules.OrderWriteOff.DbModels.csproj", "{39FA2EFB-C3A7-4340-B08D-17415F517C43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fx.Amiya.Modules.OrderWriteOff.DbModels", "src\Modules\OrderWriteOff\Fx.Amiya.Modules.OrderWriteOff.DbModels\Fx.Amiya.Modules.OrderWriteOff.DbModels.csproj", "{39FA2EFB-C3A7-4340-B08D-17415F517C43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fx.Amiya.Modules.OrderWriteOff.Infrastructure", "src\Modules\OrderWriteOff\Fx.Amiya.Modules.OrderWriteOff.Infrastructure\Fx.Amiya.Modules.OrderWriteOff.Infrastructure.csproj", "{F4F030EE-31BA-400D-8E4F-1138A4481054}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fx.Amiya.Modules.OrderWriteOff.Infrastructure", "src\Modules\OrderWriteOff\Fx.Amiya.Modules.OrderWriteOff.Infrastructure\Fx.Amiya.Modules.OrderWriteOff.Infrastructure.csproj", "{F4F030EE-31BA-400D-8E4F-1138A4481054}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fx.Amiya.Modules.OrderWriteOff.Domain", "src\Modules\OrderWriteOff\Fx.Amiya.Modules.OrderWriteOff.Domain\Fx.Amiya.Modules.OrderWriteOff.Domain.csproj", "{309162FD-5BF1-40DE-87BE-5564F50CA31F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fx.Amiya.Modules.OrderWriteOff.Domain", "src\Modules\OrderWriteOff\Fx.Amiya.Modules.OrderWriteOff.Domain\Fx.Amiya.Modules.OrderWriteOff.Domain.csproj", "{309162FD-5BF1-40DE-87BE-5564F50CA31F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fx.Amiya.Modules.OrderWriteOff.Infrastructure.Repositories", "src\Modules\OrderWriteOff\Fx.Amiya.Modules.MemberCard.Infrastructure.Repositories\Fx.Amiya.Modules.OrderWriteOff.Infrastructure.Repositories.csproj", "{E42652F5-67E9-4F50-8E79-0AC333717AAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fx.Amiya.Modules.OrderWriteOff.Infrastructure.Repositories", "src\Modules\OrderWriteOff\Fx.Amiya.Modules.MemberCard.Infrastructure.Repositories\Fx.Amiya.Modules.OrderWriteOff.Infrastructure.Repositories.csproj", "{E42652F5-67E9-4F50-8E79-0AC333717AAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fx.Amiya.SyncOrder.TikTok", "Fx.Amiya.SyncOrder.TikTok\Fx.Amiya.SyncOrder.TikTok.csproj", "{41F9DD37-6BFC-4C03-8C94-E8DF73EC7C4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -413,6 +415,10 @@ Global
 		{E42652F5-67E9-4F50-8E79-0AC333717AAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E42652F5-67E9-4F50-8E79-0AC333717AAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E42652F5-67E9-4F50-8E79-0AC333717AAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41F9DD37-6BFC-4C03-8C94-E8DF73EC7C4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41F9DD37-6BFC-4C03-8C94-E8DF73EC7C4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41F9DD37-6BFC-4C03-8C94-E8DF73EC7C4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41F9DD37-6BFC-4C03-8C94-E8DF73EC7C4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -473,6 +479,7 @@ Global
 		{F4F030EE-31BA-400D-8E4F-1138A4481054} = {93DD8ADC-6043-4A56-88FA-4AABF7490735}
 		{309162FD-5BF1-40DE-87BE-5564F50CA31F} = {93DD8ADC-6043-4A56-88FA-4AABF7490735}
 		{E42652F5-67E9-4F50-8E79-0AC333717AAF} = {93DD8ADC-6043-4A56-88FA-4AABF7490735}
+		{41F9DD37-6BFC-4C03-8C94-E8DF73EC7C4A} = {B1D119C9-4D26-452F-9B3B-AD58B1CCC9A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A0E44A17-667C-4412-BDA3-BD2FC32CF44F}

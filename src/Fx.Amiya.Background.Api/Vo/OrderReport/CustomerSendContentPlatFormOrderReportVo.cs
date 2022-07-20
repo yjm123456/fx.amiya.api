@@ -58,11 +58,23 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("主播")]
         public string LiveAnchorName { get; set; }
 
+
+        /// <summary>
+        /// 主播微信编号
+        /// </summary>
+        [Description("主播微信编号")]
+        public string LiveAnchorWeChatNo { get; set; }
+
         /// <summary>
         /// 项目
         /// </summary>
         [Description("项目")]
         public string GoodsName { get; set; }
+        /// <summary>
+        /// 新老客业绩
+        /// </summary>
+        [Description("新老客业绩")]
+        public string IsOldCustomer { get; set; }
 
         /// <summary>
         /// 客户姓名
@@ -70,6 +82,12 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("客户姓名")]
         public string CustomerName { get; set; }
 
+
+        /// <summary>
+        /// 是否陪诊
+        /// </summary>
+        [Description("是否陪诊")]
+        public string IsAcompanying { get; set; }
         /// <summary>
         /// 客户手机号
         /// </summary>
@@ -99,19 +117,24 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("成交金额")]
         public decimal? DealAmount { get; set; }
+
+        /// <summary>
+        /// 佣金比例
+        /// </summary>
+        [Description("佣金比例")]
+        public decimal CommissionRatio { get; set; }
         /// <summary>
         /// 派单医院
         /// </summary>
         [Description("派单医院")]
         public string SendHospital { get; set; }
-
-
-
         /// <summary>
         /// 派单留言
         /// </summary>
         [Description("派单留言")]
         public string SendOrderRemark { get; set; }
+
+
 
     }
 }
