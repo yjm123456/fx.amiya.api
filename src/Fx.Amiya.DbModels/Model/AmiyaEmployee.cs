@@ -15,7 +15,6 @@ namespace Fx.Amiya.DbModels.Model
         public string Email { get; set; }
         public bool IsCustomerService { get; set; }
 
-       
         public AmiyaPositionInfo AmiyaPositionInfo { get; set; }
         public List<AmiyaPositionInfo> UpdateByAmiyaPositionInfoList { get; set; }
 

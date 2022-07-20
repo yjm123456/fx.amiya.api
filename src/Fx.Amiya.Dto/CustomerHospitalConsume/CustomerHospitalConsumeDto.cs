@@ -9,6 +9,7 @@ namespace Fx.Amiya.Dto.CustomerHospitalConsume
         public int Id { get; set; }
         public string ConsumeId { get; set; }
         public int HospitalId { get; set; }
+
         public string HospitalName { get; set; }
         public string Phone { get; set; }
         public string EncryptPhone { get; set; }
@@ -30,6 +31,10 @@ namespace Fx.Amiya.Dto.CustomerHospitalConsume
         /// 渠道
         /// </summary>
         public int? Channel { get; set; }
+        /// <summary>
+        /// 渠道名称
+        /// </summary>
+        public string ChannelText { get; set; }
 
         /// <summary>
         /// 主播ID
@@ -122,7 +127,7 @@ namespace Fx.Amiya.Dto.CustomerHospitalConsume
         public decimal? CheckSettlePrice { get; set; }
 
         /// <summary>
-        /// 结算日期
+        /// 审核日期
         /// </summary>
         public DateTime? CheckDate { get; set; }
         /// <summary>

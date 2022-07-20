@@ -205,9 +205,9 @@ namespace Fx.Amiya.Service
 
         public async Task<LiveAnchorWeChatInfoDto> GetByIdAsync(string id)
         {
-            var result = from d in dalLiveAnchorWeChatInfo.GetAll()
+            var result = from d in dalLiveAnchorWeChatInfo.GetAll().Include(x=>x.LiveAnchor)
                          select d;
-            var x = result.SingleOrDefault(e => e.Id == id);
+            var x = result.FirstOrDefault(e => e.Id == id);
             if (x == null)
             {
                 return new LiveAnchorWeChatInfoDto();
@@ -215,6 +215,7 @@ namespace Fx.Amiya.Service
 
             LiveAnchorWeChatInfoDto liveAnchorWeChatInfoDto = new LiveAnchorWeChatInfoDto();
             liveAnchorWeChatInfoDto.Id = x.Id;
+            liveAnchorWeChatInfoDto.ContentPlatFormId = x.LiveAnchor.ContentPlateFormId;
             liveAnchorWeChatInfoDto.LiveAnchorId = x.LiveAnchorId;
             liveAnchorWeChatInfoDto.WeChatNo = x.WeChatNo;
             liveAnchorWeChatInfoDto.NickName = x.NickName;
@@ -232,10 +233,11 @@ namespace Fx.Amiya.Service
         public async Task UpdateAsync(UpdateLiveAnchorWeChatInfoDto updateDto)
         {
             var resultCount = await this.GetValidListAsync();
-            var result = resultCount.FirstOrDefault(e => e.LiveAnchorId == updateDto.LiveAnchorId && e.WeChatNo == updateDto.WeChatNo);
+            var result = resultCount.FirstOrDefault(e => e.Id != updateDto.Id&&e.LiveAnchorId == updateDto.LiveAnchorId && e.WeChatNo == updateDto.WeChatNo);
             if (result != null)
                 throw new Exception("已存在该主播微信账号");
             LiveAnchorWeChatInfo liveAchor = new LiveAnchorWeChatInfo();
+            liveAchor.Id = updateDto.Id;
             liveAchor.LiveAnchorId = updateDto.LiveAnchorId;
             liveAchor.WeChatNo = updateDto.WeChatNo;
             liveAchor.Valid = updateDto.Valid;

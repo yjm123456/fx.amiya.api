@@ -483,6 +483,7 @@ CREATE TABLE `amiyadb`.`tbl_goods_shopcar` (
 
 -----------------------------------------------余建明 2022/07/19 BEGIN--------------------------------------------;
 
+--主播微信号
 CREATE TABLE `amiyadb`.`tbl_live_anchor_wechat_info` (
   `id` VARCHAR(50) NOT NULL,
   `live_anchor_id` INT UNSIGNED NOT NULL,
@@ -497,6 +498,20 @@ CREATE TABLE `amiyadb`.`tbl_live_anchor_wechat_info` (
     REFERENCES `amiyadb`.`tbl_live_anchor` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
+    --主播介绍
+    CREATE TABLE `amiyadb`.`tbl_live_anchor_base_info` (
+  `id` VARCHAR(50) NOT NULL,
+  `live_anchor_name` VARCHAR(100) NULL,
+  `thumb_picture` VARCHAR(300) NULL,
+  `nick_name` VARCHAR(45) NULL,
+  `individuality_signature` VARCHAR(200) NULL,
+  `description` VARCHAR(400) NULL,
+  `detail_picture` VARCHAR(300) NULL,
+  `is_main` INT NULL, 
+  `valid` BIT NOT NULL ,
+  PRIMARY KEY (`id`));
+
 -----------------------------------------------余建明 2022/07/19END--------------------------------------------;
 
 

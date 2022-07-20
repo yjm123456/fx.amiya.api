@@ -13,6 +13,7 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchor
         public string HostAccountName { get; set; }
 
         public string ContentPlateFormId { get; set; }
+        public string LiveAnchorBaseId { get; set; }
         public string ContentPlateFormName { get; set; }
         public bool Valid { get; set; }
     }

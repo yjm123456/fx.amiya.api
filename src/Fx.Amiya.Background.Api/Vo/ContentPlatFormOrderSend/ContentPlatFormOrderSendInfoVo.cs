@@ -149,5 +149,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// 到院类型
         /// </summary>
         public string ToHospitalTypeText { get; set; }
+        /// <summary>
+        /// 是否陪诊
+        /// </summary>
+        public bool IsAcompanying { get; set; }
     }
 }

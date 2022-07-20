@@ -19,6 +19,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<AmiyaWareHouse> AmiyaWareHouse { get; set; }
         public virtual DbSet<AmiyaInWarehouse> AmiyaInWarehouse { get; set; }
         public virtual DbSet<AmiyaOutWarehouse> AmiyaOutWarehouse { get; set; }
+        public virtual DbSet<LiveAnchorBaseInfo> LiveAnchorBaseInfo { get; set; }
         public virtual DbSet<LiveAnchorWeChatInfo> LiveAnchorWeChatInfo { get; set; }
         public virtual DbSet<AmiyaWareHouseNameManage> AmiyaWareHouseNameManage { get; set; }
         public virtual DbSet<WxMpUserInfo> WxMpUserInfo { get; set; }
@@ -118,6 +119,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new ConsumptionLevelConfiguration());
             modelBuilder.ApplyConfiguration(new ContentPlatFormCustomerPictureConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalFeedBackConfiguration());
+            modelBuilder.ApplyConfiguration(new LiveAnchorBaseInfoConfiguration());
             modelBuilder.ApplyConfiguration(new LiveAnchorWechatInfoConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaWareHouseConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaInWarehouseConfiguration());

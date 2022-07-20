@@ -997,14 +997,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="employeeId">派单客服id</param>
         /// <param name="belongEmpId">归属客服id</param>
         /// <param name="orderStatus">订单状态</param>
-        /// <param name="IsToHospital">是否到院， -1查询全部</param>
+        /// <param name="IsToHospital">是否到院，为空查询全部</param>
         /// <param name="toHospitalStartDate">到院时间起</param>
         /// <param name="toHospitalEndDate">到院时间止</param>        
         /// <param name="toHospitalType">到院类型，为空查询所有</param>
         /// <returns></returns>
         [HttpGet("customerSendContentPlatFormOrderReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<CustomerSendContentPlatFormOrderReportVo>>> GetCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int? liveAnchorId, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, string contentPlatFormId, int employeeId, int belongEmpId, int? orderStatus)
+        public async Task<ResultData<List<CustomerSendContentPlatFormOrderReportVo>>> GetCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int? liveAnchorId, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, string contentPlatFormId, int employeeId, int belongEmpId, int? orderStatus)
         {
             if (!startDate.HasValue && !endDate.HasValue)
             { throw new Exception("请选择时间进行查询"); }
@@ -1060,14 +1060,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="employeeId">派单客服id(-1查询所有)</param>
         /// <param name="belongEmpId">归属客服id(-1查询所有)</param>
         /// <param name="orderStatus">订单状态</param>
-        /// <param name="IsToHospital">是否到院， -1查询全部</param>
+        /// <param name="IsToHospital">是否到院， 为空查询全部</param>
         /// <param name="toHospitalStartDate">到院时间起</param>
         /// <param name="toHospitalEndDate">到院时间止</param>        
         /// <param name="toHospitalType">到院类型，为空查询所有</param>
         /// <returns></returns>
         [HttpGet("customerSendContentPlatFormOrderExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? liveAnchorId, int? hospitalId, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string contentPlatFormId, int employeeId, int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int belongEmpId, int? orderStatus)
+        public async Task<FileStreamResult> ExportCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? liveAnchorId, int? hospitalId, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string contentPlatFormId, int employeeId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int belongEmpId, int? orderStatus)
         {
             bool isHidePhone = true;
             if (!startDate.HasValue && !endDate.HasValue)

@@ -58,6 +58,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 contentPlatFormOrderDealInfoVo.Id = contentPlatFormOrderDealInfo.Id;
                 contentPlatFormOrderDealInfoVo.ContentPlatFormOrderId = contentPlatFormOrderDealInfo.ContentPlatFormOrderId;
                 contentPlatFormOrderDealInfoVo.CreateDate = contentPlatFormOrderDealInfo.CreateDate;
+                contentPlatFormOrderDealInfoVo.IsOldCustomer = contentPlatFormOrderDealInfo.IsOldCustomer;
+                contentPlatFormOrderDealInfoVo.IsAcompanying = contentPlatFormOrderDealInfo.IsAcompanying;
+                contentPlatFormOrderDealInfoVo.CommissionRatio = contentPlatFormOrderDealInfo.CommissionRatio;
                 contentPlatFormOrderDealInfoVo.IsToHospital = contentPlatFormOrderDealInfo.IsToHospital;
                 contentPlatFormOrderDealInfoVo.ToHospitalType = contentPlatFormOrderDealInfo.ToHospitalType;
                 contentPlatFormOrderDealInfoVo.TohospitalDate = contentPlatFormOrderDealInfo.ToHospitalDate;

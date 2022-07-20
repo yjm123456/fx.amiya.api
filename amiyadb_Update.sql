@@ -860,6 +860,15 @@ ADD COLUMN `is_old_customer` BIT(1) NOT NULL AFTER `other_order_id`,
 ADD COLUMN `is_accompanying` BIT(1) NOT NULL AFTER `is_old_customer`,
 ADD COLUMN `commission_ratio` DECIMAL(5,2) NOT NULL DEFAULT 0.00 AFTER `is_accompanying`;
 
+ALTER TABLE `amiyadb`.`tbl_live_anchor` 
+ADD COLUMN `live_anchor_base_id` VARCHAR(50) NULL AFTER `valid`;
+
+ALTER TABLE `amiyadb`.`tbl_live_anchor_base_info` 
+ADD COLUMN `video_url` VARCHAR(300) NULL AFTER `detail_picture`,
+ADD COLUMN `contract_url` VARCHAR(300) NULL AFTER `video_url`,
+ADD COLUMN `due_time` DATETIME NULL AFTER `contract_url`;
+
+
   
 -----------------------------------------------余建明 2022/07/12 END--------------------------------------------;
 
@@ -871,6 +880,8 @@ UPDATE `amiyadb`.`tbl_config` SET `config_json` = '{\"FxJwtConfig\":{\"Key\":\"k
 
 --tbl_order_app_info表加入抖店商户号配置
 INSERT INTO `amiyadb`.`tbl_order_app_info` (`id`, `app_key`, `app_secret`, `access_token`, `authorize_date`, `app_type`, `expire_date`, `refresh_token`) VALUES ('5', '7109321803654252040', '1', 'edae7c30-8386-443b-88a1-031111596fdd', '2022-07-18 16:20:00', '4', '2022-07-19 16:20:00', '1');
+
+
 
 -----------------------------------------------余建明 2022/07/18 END--------------------------------------------;
 

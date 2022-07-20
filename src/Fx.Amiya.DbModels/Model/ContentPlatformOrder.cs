@@ -110,7 +110,6 @@ namespace Fx.Amiya.DbModels.Model
         public AmiyaGoodsDemand AmiyaGoodsDemand { get; set; }
         public HospitalInfo HospitalInfo { get; set; }
         public List<ContentPlatformOrderSend> ContentPlatformOrderSendList { get; set; }
-
         public List<ContentPlatFormCustomerPicture>CustomerPictureList { get; set; }
     }
 }

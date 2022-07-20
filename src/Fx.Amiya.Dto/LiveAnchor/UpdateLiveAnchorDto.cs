@@ -24,6 +24,7 @@ namespace Fx.Amiya.Dto.LiveAnchor
         /// 平台id
         /// </summary>
         public string ContentPlateFormId { get; set; }
+        public string LiveAnchorBaseId { get; set; }
         /// <summary>
         /// 是否有效
         /// </summary>

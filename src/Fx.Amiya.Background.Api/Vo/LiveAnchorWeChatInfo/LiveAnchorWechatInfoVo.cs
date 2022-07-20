@@ -19,6 +19,10 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorWeChatInfo
         /// 主播名称
         /// </summary>
         public string LiveAnchorName { get; set; }
+        /// <summary>
+        /// 平台id
+        /// </summary>
+        public string ContentPlatFormId { get; set; }
 
 
         /// <summary>

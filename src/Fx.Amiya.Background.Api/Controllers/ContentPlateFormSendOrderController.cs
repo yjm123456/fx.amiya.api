@@ -73,7 +73,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="keyword"></param>
         /// <param name="startDate"></param>
-        /// <param name="IsToHospital">是否到院， -1查询全部</param>
+        /// <param name="IsToHospital">是否到院，为空查询全部</param>
         /// <param name="toHospitalStartDate">到院时间起</param>
         /// <param name="toHospitalEndDate">到院时间止</param>           
         /// <param name="toHospitalType">到院类型</param>        
@@ -83,7 +83,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("listOfHospital")]
         [FxTenantAuthorize]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderSendInfoVo>>> GetListByHospitalIdAsync(string keyword, DateTime? startDate, DateTime? endDate, int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderSendInfoVo>>> GetListByHospitalIdAsync(string keyword, DateTime? startDate, DateTime? endDate, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int pageNum, int pageSize)
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalId = employee.HospitalId;
@@ -113,6 +113,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 ConsultingContent = d.ConsultingContent,
                                 OrderRemark = d.OrderRemark,
                                 SendOrderRemark = d.SendOrderRemark,
+                                IsAcompanying = d.IsAcompanying,
                                 HospitalRemark = d.HospitalRemark,
                                 UnDealPictureUrl = d.UnDealPictureUrl,
                                 OrderSourceText = d.OrderSourceText,
@@ -219,7 +220,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>        
         /// <param name="hospitalId"></param>        
-        /// <param name="IsToHospital">是否到院， -1查询全部</param>
+        /// <param name="IsToHospital">是否到院，为空查询全部</param>
         /// <param name="toHospitalStartDate">到院时间起</param>
         /// <param name="toHospitalEndDate">到院时间止</param>           
         /// <param name="toHospitalType">到院类型</param>        
@@ -229,7 +230,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetSendOrderList(string keyword, int?liveAnchorId ,int? consultationEmpId,int? employeeId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, int? orderStatus , string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId,int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate,int? toHospitalType, int orderSource,int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetSendOrderList(string keyword, int?liveAnchorId ,int? consultationEmpId,int? employeeId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, int? orderStatus , string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId,bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate,int? toHospitalType, int orderSource,int pageNum, int pageSize)
         {
             if (employeeId == null)
             {
@@ -245,6 +246,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             OrderId = d.OrderId,
                                             ContentPlatFormName = d.ContentPlatFormName,
                                             LiveAnchorName = d.LiveAnchorName,
+                                            LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
+                                            IsOldCustomer = d.IsOldCustomer,
+                                            IsAcompanying = d.IsAcompanying,
+                                            CommissionRatio = d.CommissionRatio,
                                             CustomerName = d.CustomerName,
                                             Phone = d.Phone,
                                             EncryptPhone = d.EncryptPhone,

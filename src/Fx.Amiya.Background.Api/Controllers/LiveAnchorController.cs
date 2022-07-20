@@ -63,6 +63,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   HostAccountName = d.HostAccountName,
                                   ContentPlateFormId = d.ContentPlateFormId,
                                   ContentPlateFormName = d.ContentPlateFormName,
+                                  LiveAnchorBaseId=d.LiveAnchorBaseId,
                                   Valid = d.Valid
                               };
             return ResultData<List<LiveAnchorVo>>.Success().AddData("liveAnchors", liveAnchors.ToList());
@@ -88,6 +89,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                               {
                                   Id = d.Id,
                                   Name = d.Name,
+                                  LiveAnchorBaseId=d.LiveAnchorBaseId,
                                   HostAccountName = d.HostAccountName,
                                   ContentPlateFormId = d.ContentPlateFormId,
                                   ContentPlateFormName = d.ContentPlateFormName,
@@ -114,6 +116,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.HostAccountName = addVo.HostAccountName;
             addDto.ContentPlateFormId = addVo.ContentPlateFormId;
             addDto.Name = addVo.Name;
+            addDto.LiveAnchorBaseId = addVo.LiveAnchorBaseId;
             addDto.Valid = addVo.Valid;
             await liveAnchorService.AddAsync(addDto);
             return ResultData.Success();
@@ -133,6 +136,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             LiveAnchorVo cooperativeHospitalCityVo = new LiveAnchorVo();
             cooperativeHospitalCityVo.Id = result.Id;
             cooperativeHospitalCityVo.Name = result.Name;
+            cooperativeHospitalCityVo.LiveAnchorBaseId = result.LiveAnchorBaseId;
             cooperativeHospitalCityVo.Valid = result.Valid;
             cooperativeHospitalCityVo.HostAccountName = result.HostAccountName;
             cooperativeHospitalCityVo.ContentPlateFormId = result.ContentPlateFormId;
@@ -150,6 +154,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             UpdateLiveAnchorDto updateDto = new UpdateLiveAnchorDto();
             updateDto.Id = updateVo.Id;
             updateDto.Name = updateVo.Name;
+            updateDto.LiveAnchorBaseId = updateVo.LiveAnchorBaseId;
             updateDto.Valid = updateVo.Valid;
             updateDto.HostAccountName = updateVo.HostAccountName;
             updateDto.ContentPlateFormId = updateVo.ContentPlateFormId;

@@ -68,6 +68,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         public bool IsAcompanying { get; set; }
 
         /// <summary>
+        /// 佣金比例
+        /// </summary>
+        public decimal CommissionRatio { get; set; }
+
+        /// <summary>
         /// 三方订单号
         /// </summary>
         public string OtherContentPlatFormOrderId { get; set; }

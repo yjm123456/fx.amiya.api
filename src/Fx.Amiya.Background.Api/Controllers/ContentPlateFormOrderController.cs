@@ -827,6 +827,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.DealAmount = updateVo.DealAmount;
             updateDto.LastProjectStage = updateVo.LastProjectStage;
             updateDto.DealPictureUrl = updateVo.DealPictureUrl;
+            updateDto.CommissionRatio = updateVo.CommissionRatio;
+            updateDto.IsAcompanying = updateVo.IsAcompanying;
             updateDto.UnDealReason = updateVo.UnDealReason;
             updateDto.IsToHospital = updateVo.IsToHospital;
             updateDto.ToHospitalType = updateVo.ToHospitalType;
