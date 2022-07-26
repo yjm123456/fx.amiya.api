@@ -37,5 +37,7 @@ namespace Fx.Amiya.SyncOrder.Core
         public long OrderType { get; set; }
         public int Quantity { get; set; }
         public string TikTokUserId { get; set; }
+        public string CipherPhone { get; set; }
+        public string CipherName { get; set; }
     }
 }

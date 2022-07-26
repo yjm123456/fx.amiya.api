@@ -84,17 +84,22 @@ namespace Fx.Amiya.Service
                         tikTokUserInfo.Phone = item.decrypt_text;
                         customerBaseInfo.Phone=item.decrypt_text;
                     }
-                    //解密后将解密信息更新到tiktokuserinfo表中
-                    await dalTikTokUserInfo.UpdateAsync(tikTokUserInfo,true);
-                    //将解密信息更新到tiktok订单表中
-                    var tiktokOrder = dalTikTokOrderInfo.GetAll().SingleOrDefault(o=>o.Id==orderid);
-                    if (tiktokOrder!=null) {
-                        tiktokOrder.Phone = tikTokUserDto.Phone;
-                        tiktokOrder.BuyerNick = tikTokUserDto.Name;
-                        await dalTikTokOrderInfo.UpdateAsync(tiktokOrder,true);
-                    }
-                    //将信息添加到customerbaseinfo表中
-                    await dalCustomerBaseInfo.AddAsync(customerBaseInfo,true);
+                    
+                }
+                //解密后将解密信息更新到tiktokuserinfo表中
+                await dalTikTokUserInfo.UpdateAsync(tikTokUserInfo, true);
+                //将解密信息更新到tiktok订单表中
+                var tiktokOrder = dalTikTokOrderInfo.GetAll().SingleOrDefault(o => o.Id == orderid);
+                if (tiktokOrder != null)
+                {
+                    tiktokOrder.Phone = tikTokUserDto.Phone;
+                    tiktokOrder.BuyerNick = tikTokUserDto.Name;
+                    await dalTikTokOrderInfo.UpdateAsync(tiktokOrder, true);
+                }
+                //将信息添加到customerbaseinfo表中
+                var customBaseInfo = dalCustomerBaseInfo.GetAll().FirstOrDefault(c=>c.Phone== customerBaseInfo.Phone);
+                if (customBaseInfo==null) {
+                    await dalCustomerBaseInfo.AddAsync(customerBaseInfo, true);
                 }
             }
             return tikTokUserDto;

@@ -30,7 +30,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.ThumbPicUrl).HasColumnName("thumb_pic_url").HasColumnType("varchar(500)").IsRequired(false);
             builder.Property(t => t.BuyerNick).HasColumnName("buyer_nick").HasColumnType("varchar(225)").IsRequired(false);
             builder.Property(t => t.AppType).HasColumnName("app_type").HasColumnType("tinyint").IsRequired();
-            builder.Property(t => t.OrderType).HasColumnName("order_type").HasColumnType("tinyint").IsRequired(false);
+            builder.Property(t => t.OrderType).HasColumnName("order_type").HasColumnType("bigint").IsRequired(false);
             builder.Property(t => t.OrderNature).HasColumnName("order_nature").HasColumnType("tinyint").IsRequired(false);
             builder.Property(t => t.Quantity).HasColumnName("quantity").HasColumnType("int").IsRequired(false);
             builder.Property(t => t.IntegrationQuantity).HasColumnName("integration_quantity").HasColumnType("decimal(18,2)").IsRequired(false);

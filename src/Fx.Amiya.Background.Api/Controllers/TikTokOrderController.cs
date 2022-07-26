@@ -36,7 +36,7 @@ namespace Fx.Amiya.Background.Api.Controllers
     /// </summary>
     [Route("[controller]")]
     [ApiController]
-    //[FxInternalAuthorize]
+    [FxInternalAuthorize]
     public class TikTokOrderController : ControllerBase
     {
         private ITikTokOrderInfoService tikTokOrderService;
@@ -142,7 +142,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 LiveAnchor = d.LiveAnchorName,
                                 LiveAnchorPlatForm = d.LiveAnchorPlatForm,
                                 BelongEmpName = d.BelongEmpName,
-
                             };
                 FxPageInfo<TikTokOrderInfoVo> orderPageInfo = new FxPageInfo<TikTokOrderInfoVo>();
                 orderPageInfo.TotalCount = q.TotalCount;

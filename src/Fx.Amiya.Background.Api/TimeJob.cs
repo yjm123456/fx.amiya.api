@@ -181,6 +181,8 @@ namespace Fx.Amiya.Background.Api
                     tikTokOrder.Quantity = order.Quantity;
                     tikTokOrder.ExchangeType = (byte)ExchangeType.ThirdPartyPayment;
                     tikTokOrder.TikTokUserId = order.TikTokUserId;
+                    tikTokOrder.CipherPhone = order.CipherPhone;
+                    tikTokOrder.CipherName = order.CipherName;
                     //如果订单信息包含手机号则绑定,没有则暂时不绑定
                     if (!string.IsNullOrEmpty(order.Phone)) {
                         int belongEmpId = await _bindCustomerService.GetEmployeeIdByPhone(order.Phone);

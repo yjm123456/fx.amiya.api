@@ -83,7 +83,7 @@ namespace Fx.Amiya.SyncOrder.TikTok
                 var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
 
                 var host = "https://openapi-fxg.jinritemai.com";
-                var start = DateTimeOffset.Now.ToUnixTimeSeconds() - 172800;
+                var start = DateTimeOffset.Now.ToUnixTimeSeconds() - 900;
                 var end = DateTimeOffset.Now.ToUnixTimeSeconds();
                 //请求参数
                 var param = new Dictionary<string, object> {
@@ -137,13 +137,13 @@ namespace Fx.Amiya.SyncOrder.TikTok
                             }
                             currentChildList.Add(tikTokOrder);                            
                         }
-
-                        AddTikTokUserDto addTikTokUserDto = new AddTikTokUserDto();
+                        currentChildList.ForEach(o=> { o.CipherPhone = orderItem.encrypt_post_tel;o.CipherName = orderItem.encrypt_post_receiver; });
+                        /*AddTikTokUserDto addTikTokUserDto = new AddTikTokUserDto();
                         addTikTokUserDto.CipherName = orderItem.encrypt_post_receiver;
                         addTikTokUserDto.CipherPhone = orderItem.encrypt_post_tel;
-                        var userinfo = _tikTokUserInfoService.getTikTokUserInfoByCipherPhone(orderItem.encrypt_post_tel);
+                        var userinfo = _tikTokUserInfoService.getTikTokUserInfoByCipherPhone(orderItem.encrypt_post_tel);*/
                         //如果密文已存在且有对应的解密信息,直接将用户信息赋值给订单
-                        if (userinfo != null)
+                        /*if (userinfo != null)
                         {
                             if (!string.IsNullOrEmpty(userinfo.Phone))
                             {
@@ -159,7 +159,7 @@ namespace Fx.Amiya.SyncOrder.TikTok
                             addTikTokUserDto.Id = GuidUtil.NewGuidShortString();
                             await _tikTokUserInfoService.AddAsync(addTikTokUserDto);
                             currentChildList.ForEach(o => o.TikTokUserId = addTikTokUserDto.Id);
-                        }
+                        }*/
                         amiyaOrderList.AddRange(currentChildList);
                     }
                 }

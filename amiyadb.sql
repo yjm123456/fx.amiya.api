@@ -586,7 +586,7 @@ CREATE TABLE `tbl_tiktok_order_info` (
   `buyer_nick` varchar(225) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `app_type` tinyint NOT NULL COMMENT '下单平台（0=天猫，1=京东，2=阿美雅）',
   `is_appointment` bit(1) NOT NULL,
-  `order_type` tinyint DEFAULT NULL COMMENT '订单类型（0=虚拟订单，1=实物订单）',
+  `order_type` bigint DEFAULT NULL COMMENT '订单类型（0=虚拟订单，1=实物订单）',
   `order_nature` tinyint NOT NULL DEFAULT '0',
   `quantity` int unsigned DEFAULT NULL COMMENT '商品数量',
   `integration_quantity` decimal(18,2) DEFAULT NULL COMMENT '抵扣积分',

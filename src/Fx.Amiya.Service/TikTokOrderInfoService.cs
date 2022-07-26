@@ -10,6 +10,7 @@ using Fx.Amiya.Dto.OrderCheckPicture;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.OrderWriteOffIno;
 using Fx.Amiya.Dto.TikTokOrder;
+using Fx.Amiya.Dto.TikTokUserInfo;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -55,8 +56,9 @@ namespace Fx.Amiya.Service
         private IDalSendGoodsRecord dalSendGoodsRecord;
         private IOrderWriteOffInfoService _orderWriteOffInfoService;
         private IExpressManageService _expressManageService;
+        private ITikTokUserInfoService tikTokUserInfoService;
 
-        public TikTokOrderInfoService(IDalTikTokOrderInfo dalTikTokOrderInfo, IFxSmsBasedTemplateSender smsSender, IDalBindCustomerService dalBindCustomerService, ISendOrderInfoService sendOrderInfoService, IDalAmiyaEmployee dalAmiyaEmployee, IDalOrderInfo dalOrderInfo, IWxAppConfigService wxAppConfigService, ILiveAnchorService liveAnchorService, IContentPlatformService contentPlatFormService, IUnitOfWork unitOfWork, IDalOrderTrade dalOrderTrade, IAmiyaGoodsDemandService amiyaGoodsDemandService, ICustomerService customerService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, IIntegrationAccount integrationAccountService, IBindCustomerServiceService bindCustomerServiceService, IOrderCheckPictureService orderCheckPictureService, IDalCustomerInfo dalCustomerInfo, IDalReceiveGift dalReceiveGift, IGoodsInfo goodsInfoService, IDalContentPlatformOrder dalContentPlatFormOrder, IHospitalInfoService hospitalInfoService, IDalSendGoodsRecord dalSendGoodsRecord, IOrderWriteOffInfoService orderWriteOffInfoService, IExpressManageService expressManageService)
+        public TikTokOrderInfoService(IDalTikTokOrderInfo dalTikTokOrderInfo, IFxSmsBasedTemplateSender smsSender, IDalBindCustomerService dalBindCustomerService, ISendOrderInfoService sendOrderInfoService, IDalAmiyaEmployee dalAmiyaEmployee, IDalOrderInfo dalOrderInfo, IWxAppConfigService wxAppConfigService, ILiveAnchorService liveAnchorService, IContentPlatformService contentPlatFormService, IUnitOfWork unitOfWork, IDalOrderTrade dalOrderTrade, IAmiyaGoodsDemandService amiyaGoodsDemandService, ICustomerService customerService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, IIntegrationAccount integrationAccountService, IBindCustomerServiceService bindCustomerServiceService, IOrderCheckPictureService orderCheckPictureService, IDalCustomerInfo dalCustomerInfo, IDalReceiveGift dalReceiveGift, IGoodsInfo goodsInfoService, IDalContentPlatformOrder dalContentPlatFormOrder, IHospitalInfoService hospitalInfoService, IDalSendGoodsRecord dalSendGoodsRecord, IOrderWriteOffInfoService orderWriteOffInfoService, IExpressManageService expressManageService, ITikTokUserInfoService tikTokUserInfoService)
         {
             this.dalTikTokOrderInfo = dalTikTokOrderInfo;
             _smsSender = smsSender;
@@ -83,6 +85,7 @@ namespace Fx.Amiya.Service
             this.dalSendGoodsRecord = dalSendGoodsRecord;
             _orderWriteOffInfoService = orderWriteOffInfoService;
             _expressManageService = expressManageService;
+            this.tikTokUserInfoService = tikTokUserInfoService;
         }
 
         public async Task<string> AddAmiyaOrderAsync(TikTokOrderTradeAddDto orderTradeAddDto)
@@ -224,6 +227,12 @@ namespace Fx.Amiya.Service
                         order.BelongEmpId = orderItem.BelongEmpId;
                         order.TikTokUserInfoId = orderItem.TikTokUserId;
                         //order.TikTokUserInfoId=orderItem.
+                        AddTikTokUserDto addTikTokUserDto = new AddTikTokUserDto();
+                        addTikTokUserDto.CipherName = orderItem.CipherName;
+                        addTikTokUserDto.CipherPhone = orderItem.CipherPhone;
+                        addTikTokUserDto.Id = GuidUtil.NewGuidShortString();
+                        await tikTokUserInfoService.AddAsync(addTikTokUserDto);
+                        order.TikTokUserInfoId = addTikTokUserDto.Id;
                         orderInfoList.Add(order);
                     }
                 }
