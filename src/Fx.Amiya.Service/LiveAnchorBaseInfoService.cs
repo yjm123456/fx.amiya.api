@@ -118,7 +118,7 @@ namespace Fx.Amiya.Service
             }
 
             LiveAnchorBaseInfoDto liveAnchorBaseInfoDto = new LiveAnchorBaseInfoDto();
-            liveAnchorBaseInfoDto.Id = Guid.NewGuid().ToString();
+            liveAnchorBaseInfoDto.Id =x.Id;
             liveAnchorBaseInfoDto.LiveAnchorName = x.LiveAnchorName;
             liveAnchorBaseInfoDto.ThumbPicture = x.ThumbPicture;
             liveAnchorBaseInfoDto.NickName = x.NickName;

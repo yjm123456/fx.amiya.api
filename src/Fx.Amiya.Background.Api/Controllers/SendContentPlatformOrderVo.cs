@@ -195,7 +195,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 是否陪诊
         /// </summary>
-        public string IsAcompanying { get; set; }
+        public bool IsAcompanying { get; set; }
 
         /// <summary>
         /// 佣金比例

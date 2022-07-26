@@ -12,6 +12,11 @@ namespace Fx.Amiya.Dto.TmallOrder
         /// 订单号
         /// </summary>
         public string OrderId { get; set; }
+
+        /// <summary>
+        /// 成交编号id
+        /// </summary>
+        public string OrderDealId { get; set; }
         /// <summary>
         /// 回款金额
         /// </summary>

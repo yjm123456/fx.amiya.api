@@ -205,6 +205,43 @@ namespace Fx.Amiya.Service
             }
         }
 
+        public async Task<ShoppingCartRegistrationDto> GetByPhoneAsync(string phone)
+        {
+            try
+            {
+                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().SingleOrDefaultAsync(e => e.Id == phone);
+                if (shoppingCartRegistration == null)
+                {
+                    return new ShoppingCartRegistrationDto();
+                }
+
+                ShoppingCartRegistrationDto shoppingCartRegistrationDto = new ShoppingCartRegistrationDto();
+                shoppingCartRegistrationDto.Id = shoppingCartRegistration.Id;
+                shoppingCartRegistrationDto.RecordDate = shoppingCartRegistration.RecordDate;
+                shoppingCartRegistrationDto.ContentPlatFormId = shoppingCartRegistration.ContentPlatFormId;
+                shoppingCartRegistrationDto.LiveAnchorId = shoppingCartRegistration.LiveAnchorId;
+                shoppingCartRegistrationDto.LiveAnchorWechatNo = shoppingCartRegistration.LiveAnchorWechatNo;
+                shoppingCartRegistrationDto.CustomerNickName = shoppingCartRegistration.CustomerNickName;
+                shoppingCartRegistrationDto.Phone = shoppingCartRegistration.Phone;
+                shoppingCartRegistrationDto.Price = shoppingCartRegistration.Price;
+                shoppingCartRegistrationDto.IsAddWeChat = shoppingCartRegistration.IsAddWeChat;
+                shoppingCartRegistrationDto.ConsultationType = shoppingCartRegistration.ConsultationType;
+                shoppingCartRegistrationDto.IsWriteOff = shoppingCartRegistration.IsWriteOff;
+                shoppingCartRegistrationDto.IsConsultation = shoppingCartRegistration.IsConsultation;
+                shoppingCartRegistrationDto.IsReturnBackPrice = shoppingCartRegistration.IsReturnBackPrice;
+                shoppingCartRegistrationDto.Remark = shoppingCartRegistration.Remark;
+                shoppingCartRegistrationDto.CreateBy = shoppingCartRegistration.CreateBy;
+                shoppingCartRegistrationDto.CreateDate = shoppingCartRegistration.CreateDate;
+
+                return shoppingCartRegistrationDto;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         public async Task UpdateAsync(UpdateShoppingCartRegistrationDto updateDto)
         {
             //   unitOfWork.BeginTransaction();

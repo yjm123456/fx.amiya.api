@@ -49,13 +49,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 获取主播基础信息列表
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="contentPlatformId"></param>
         /// <param name="valid"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
-        public async Task<ResultData<FxPageInfo<LiveAnchorBaseInfoVo>>> GetListAsync(string name,string contentPlatformId,bool valid, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<LiveAnchorBaseInfoVo>>> GetListAsync(string name,bool valid, int pageNum, int pageSize)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);

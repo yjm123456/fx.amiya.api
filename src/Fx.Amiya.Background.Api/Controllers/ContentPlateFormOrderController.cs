@@ -35,16 +35,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IOrderService _tmallOrderService;
         private IContentPlatFormCustomerPictureService _contentPlatFormCustomerPictureService;
         private IHttpContextAccessor _httpContextAccessor;
-        private IContentPlatformOrderSendService _contentPlatFormOrderSendService;
         public ContentPlateFormOrderController(IContentPlateFormOrderService orderService,
             IOrderService tmallOrderService,
             IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
-            IContentPlatformOrderSendService contentPlatformOrderSendService,
             IHttpContextAccessor httpContextAccessor)
         {
             _orderService = orderService;
             _tmallOrderService = tmallOrderService;
-            _contentPlatFormOrderSendService = contentPlatformOrderSendService;
             _httpContextAccessor = httpContextAccessor;
             _contentPlatFormCustomerPictureService = contentPlatFormCustomerPictureService;
         }
@@ -371,7 +368,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 CreateDate = d.CreateDate,
                                 CustomerName = d.CustomerName,
-                                IsAcompanying = d.IsAcompanying == true ? "是" : "否",
+                                IsAcompanying = d.IsAcompanying ,
                                 Phone = d.Phone,
                                 IsToHospital = d.IsToHospital == true ? "是" : "否",
                                 ToHospitalType = d.ToHospitalTypeText,
@@ -636,6 +633,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             //修改订单
             ContentPlateFormOrderCheckDto updateDto = new ContentPlateFormOrderCheckDto();
             updateDto.Id = updateVo.Id;
+            updateDto.OrderDealInfoId = updateVo.OrderDealInfoId;
             updateDto.CheckPrice = updateVo.CheckPrice;
             updateDto.CheckState = updateVo.CheckState;
             updateDto.SettlePrice = updateVo.SettlePrice;
@@ -667,6 +665,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             //修改订单
             ReturnBackOrderDto updateDto = new ReturnBackOrderDto();
             updateDto.OrderId = updateVo.OrderId;
+            updateDto.OrderDealId = updateVo.OrderDealId;
             updateDto.ReturnBackPrice = updateVo.ReturnBackPrice;
             updateDto.ReturnBackDate = updateVo.ReturnBackDate;
             await _orderService.ReturnBackOrderAsync(updateDto);
@@ -819,6 +818,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData> FinishOrderByEmployeeAsync(ContentPlateFormOrderFinishVo updateVo)
         {
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             ContentPlateFormOrderFinishDto updateDto = new ContentPlateFormOrderFinishDto();
             updateDto.Id = updateVo.Id;
             updateDto.IsFinish = updateVo.IsFinish;
@@ -835,6 +835,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
             updateDto.DealDate = updateVo.DealDate;
             updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
+            updateDto.EmpId = Convert.ToInt32(employee.Id);
             await _orderService.FinishContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
         }
@@ -894,6 +895,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
             updateDto.DealDate = updateVo.DealDate;
             updateDto.IsAcompanying = updateVo.IsAcompanying;
+            updateDto.EmpId = 0;
             await _orderService.FinishContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
         }

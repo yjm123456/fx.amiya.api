@@ -13,6 +13,7 @@ namespace Fx.Amiya.IService
         Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize);
         Task AddAsync(AddShoppingCartRegistrationDto addDto);
         Task<ShoppingCartRegistrationDto> GetByIdAsync(string id);
+        Task<ShoppingCartRegistrationDto> GetByPhoneAsync(string phone);
         Task UpdateAsync(UpdateShoppingCartRegistrationDto updateDto);
         Task DeleteAsync(string id);
 

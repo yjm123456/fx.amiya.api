@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Fx.Amiya.Background.Api.Vo.CallRecord;
 using Fx.Amiya.Background.Api.Vo.Track;
 using Fx.Amiya.Dto.Track;
+using Fx.Amiya.Dto.TrackTypeThemeModel;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -52,7 +53,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                             {
                                 Id = d.Id,
                                 Name = d.Name,
-                                Valid = d.Valid
+                                Valid = d.Valid,
+                                HasModel = d.HasModel
                             };
             FxPageInfo<TrackTypeVo> trackTypePageInfo = new FxPageInfo<TrackTypeVo>();
             trackTypePageInfo.TotalCount = q.TotalCount;
@@ -79,7 +81,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                             {
                                 Id = d.Id,
                                 Name = d.Name,
-                                Valid = d.Valid
+                                Valid = d.Valid,
+                                HasModel = d.HasModel,
                             };
             return ResultData<List<TrackTypeVo>>.Success().AddData("trackType", trackType.ToList());
         }
@@ -99,12 +102,56 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             AddTrackTypeDto addDto = new AddTrackTypeDto();
             addDto.Name = addVo.Name;
+            addDto.HasModel = addVo.HasModel;
+            if (addVo.HasModel == true)
+            {
+                List<AddTrackTypeThemeModelDto> trackTypeThemeModelDto = new List<AddTrackTypeThemeModelDto>();
+                foreach (var x in addVo.TrackTypeThemeModelVo)
+                {
+                    AddTrackTypeThemeModelDto dto = new AddTrackTypeThemeModelDto();
+                    dto.TrackTypeId = x.TrackTypeId;
+                    dto.TrackThemeId = x.TrackThemeId;
+                    dto.DaysLater = x.DaysLater;
+                    dto.TrackPlan = x.TrackPlan;
+                    trackTypeThemeModelDto.Add(dto);
+                }
+                addDto.TrackTypeThemeModelDto = trackTypeThemeModelDto;
+            }
             await trackService.AddTrackTypeAsync(addDto);
             return ResultData.Success();
         }
 
 
-
+        /// <summary>
+        /// 根据编号获取回访类型
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("byId/{id}")]
+        public async Task<ResultData<TrackTypeVo>> GetByIdAsync(int id)
+        {
+            var trackType = await trackService.GetbyIdAsync(id);
+            TrackTypeVo trackTypeVo = new TrackTypeVo();
+            trackTypeVo.Id = trackType.Id;
+            trackTypeVo.Name = trackType.Name;
+            trackTypeVo.HasModel = trackType.HasModel;
+            trackTypeVo.Valid = trackType.Valid;
+            List<TrackTypeThemeModelVo> trackTypeThemeModel = new List<TrackTypeThemeModelVo>();
+            foreach (var x in trackType.TrackTypeThemeModelDto)
+            {
+                TrackTypeThemeModelVo resutModel = new TrackTypeThemeModelVo();
+                resutModel.Id = x.Id;
+                resutModel.TrackTypeId = x.TrackTypeId;
+                resutModel.TrackTypeName = x.TrackTypeName;
+                resutModel.TrackThemeId = x.TrackThemeId;
+                resutModel.TrackThemeName = x.TrackThemeName;
+                resutModel.DaysLater = x.DaysLater;
+                resutModel.TrackPlan = x.TrackPlan;
+                trackTypeThemeModel.Add(resutModel);
+            }
+            trackTypeVo.TrackTypeThemeModel = trackTypeThemeModel;
+            return ResultData<TrackTypeVo>.Success().AddData("giftInfo", trackTypeVo);
+        }
 
 
 
@@ -121,6 +168,21 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.Id = updateVo.Id;
             updateDto.Name = updateVo.Name;
             updateDto.Valid = updateVo.Valid;
+            updateDto.HasModel = updateVo.HasModel;
+            if (updateVo.HasModel == true)
+            {
+                List<AddTrackTypeThemeModelDto> trackTypeThemeModelDto = new List<AddTrackTypeThemeModelDto>();
+                foreach (var x in updateVo.TrackTypeThemeModelVo)
+                {
+                    AddTrackTypeThemeModelDto dto = new AddTrackTypeThemeModelDto();
+                    dto.TrackTypeId = x.TrackTypeId;
+                    dto.TrackThemeId = x.TrackThemeId;
+                    dto.DaysLater = x.DaysLater;
+                    dto.TrackPlan = x.TrackPlan;
+                    trackTypeThemeModelDto.Add(dto);
+                }
+                updateDto.AddTrackTypeThemeModelDto = trackTypeThemeModelDto;
+            }
             await trackService.UpdateTrackTypeAsync(updateDto);
             return ResultData.Success();
         }
@@ -288,7 +350,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                       TrackDate = d.TrackDate,
                                       TrackContent = d.TrackContent,
                                       TrackThemeId = d.TrackThemeId,
-                                      TrackPlan=d.TrackPlan,
+                                      TrackPlan = d.TrackPlan,
                                       TrackTheme = d.TrackTheme,
                                       TrackTypeId = d.TrackTypeId,
                                       TrackTypeName = d.TrackTypeName,
@@ -340,7 +402,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   TrackThemeId = d.TrackThemeId,
                                   TrackTypeId = d.TrackTypeId,
                                   TrackTypeName = d.TrackTypeName,
-                                  TrackPlan=d.TrackPlan,
+                                  TrackPlan = d.TrackPlan,
                                   TrackToolId = d.TrackToolId,
                                   TrackToolName = d.TrackToolName,
                                   EmployeeId = d.EmployeeId,
@@ -384,9 +446,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.Valid = addVo.Valid;
             addDto.CallRecordId = addVo.CallRecordId;
             List<AddWaitTrackCustomerDto> waitTrackRecordList = new List<AddWaitTrackCustomerDto>();
-            if (addVo.AddWaitTrackCustomer!=null)
+            if (addVo.AddWaitTrackCustomer != null)
             {
-                foreach(var x in addVo.AddWaitTrackCustomer)
+                foreach (var x in addVo.AddWaitTrackCustomer)
                 {
                     AddWaitTrackCustomerDto addList = new AddWaitTrackCustomerDto();
                     addList = new AddWaitTrackCustomerDto()
@@ -395,13 +457,13 @@ namespace Fx.Amiya.Background.Api.Controllers
                         TrackTypeId = x.TrackTypeId,
                         TrackThemeId = x.TrackThemeId,
                         OtherTrackEmployeeId = x.OtherTrackEmployeeId,
-                        TrackPlan=x.TrackPlan
+                        TrackPlan = x.TrackPlan
                     };
                     waitTrackRecordList.Add(addList);
                 }
             }
             addDto.AddWaitTrackCustomer = waitTrackRecordList;
-            int result= await trackService.AddTrackRecordAsync(addDto, employeeId);
+            int result = await trackService.AddTrackRecordAsync(addDto, employeeId);
             return ResultData.Success();
 
         }
@@ -442,7 +504,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 TrackTypeId = d.TrackTypeId,
                                 TrackTypeName = d.TrackTypeName,
                                 TrackThemeId = d.TrackThemeId,
-                                TrackPlan=d.TrackPlan,
+                                TrackPlan = d.TrackPlan,
                                 TrackTheme = d.TrackTheme,
                                 CreateDate = d.CreateDate,
                                 CreateBy = d.CreateBy,

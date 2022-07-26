@@ -24,6 +24,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 创建时间
         /// </summary>
         public DateTime CreateDate { get; set; }
+        /// <summary>
+        /// 客户手机号
+        /// </summary>
+        public string Phone { get; set; }
 
         /// <summary>
         /// 是否到院
@@ -97,5 +101,67 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 佣金比例
         /// </summary>
         public decimal CommissionRatio { get; set; }
+
+
+        /// <summary>
+        /// 审核状态
+        /// </summary>
+        public int? CheckState { get; set; }
+
+        /// <summary>
+        /// 审核状态文本
+        /// </summary>
+        public string CheckStateText { get; set; }
+        /// <summary>
+        /// 审核金额
+        /// </summary>
+
+        public decimal? CheckPrice { get; set; }
+        /// <summary>
+        /// 审核日期
+        /// </summary>
+        public DateTime? CheckDate { get; set; }
+        /// <summary>
+        /// 结算金额
+        /// </summary>
+
+        public decimal? SettlePrice { get; set; }
+        /// <summary>
+        /// 审核人
+        /// </summary>
+        public int? CheckBy { get; set; }
+
+        /// <summary>
+        /// 审核人名称
+        /// </summary>
+        public string CheckByEmpName { get; set; }
+        /// <summary>
+        /// 审核备注
+        /// </summary>
+        public string CheckRemark { get; set; }
+        /// <summary>
+        /// 是否回款
+        /// </summary>
+
+        public bool IsReturnBackPrice { get; set; }
+        /// <summary>
+        /// 回款金额
+        /// </summary>
+
+        public decimal? ReturnBackPrice { get; set; }
+        /// <summary>
+        /// 回款日期
+        /// </summary>
+        public DateTime? ReturnBackDate { get; set; }
+
+        /// <summary>
+        /// 创建人（0为医院）
+        /// </summary>
+        public int CreateBy { get; set; }
+
+        /// <summary>
+        /// 创建人名称
+        /// </summary>
+        public string CreateByEmpName { get; set; }
     }
 }

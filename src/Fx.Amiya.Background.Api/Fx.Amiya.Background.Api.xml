@@ -1331,6 +1331,30 @@
             </summary>
             <param name="contentPlatFormOrderDealInfoService"></param>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlatFormOrderDealInfoController.GetDealInfo(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String,System.Int32,System.Int32)">
+            <summary>
+            获取成交情况列表
+            </summary>
+            <param name="startDate">登记开始日期</param>
+            <param name="endDate">登记结束日期</param>
+            <param name="isToHospital">是否到院（空查询所有）</param>
+            <param name="tohospitalStartDate">到院开始时间</param>
+            <param name="toHospitalEndDate">到院结束时间</param>
+            <param name="toHospitalType">到院类型（空查询所有）</param>
+            <param name="isDeal">是否成交（空查询所有）</param>
+            <param name="lastDealHospitalId">最终成交医院id（空查询所有）</param>
+            <param name="isAccompanying">是否陪诊（空查询所有）</param>
+            <param name="isOldCustomer">新老客业绩（空查询所有）</param>
+            <param name="CheckState">审核状态（空查询所有）</param>
+            <param name="isReturnBakcPrice">是否回款（空查询所有）</param>
+            <param name="returnBackPriceStartDate">回款开始时间</param>
+            <param name="returnBackPriceEndDate">回款结束时间</param>
+            <param name="customerServiceId">跟进人员（空查询所有，0查医院）</param>
+            <param name="keyWord">关键字</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlatFormOrderDealInfoController.GetByIdAsync(System.String)">
             <summary>
             根据成交情况编号获取成交情况信息
@@ -2094,6 +2118,59 @@
             <param name="addVo"></param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalCustomerInfoController">
+            <summary>
+            医院客户数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalCustomerInfoController.#ctor(Fx.Amiya.IService.IDockingHospitalCustomerInfoService,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="hospitalCustomerInfoService"></param>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalCustomerInfoController.GetListWithPageAsync(System.DateTime,System.DateTime,System.String,System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            获取医院客户信息列表（分页）
+            </summary>
+            <param name="startDate"></param>
+            <param name="endDate"></param>
+            <param name="customerName"></param>
+            <param name="customerPhone"></param>
+            <param name="hospitalId"></param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalCustomerInfoController.GetOrderByCustomerIdWithPageAsync(System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            根据客户编号获取消费记录（分页）
+            </summary>
+            <param name="customerId"></param>
+            <param name="hospitalId"></param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalCustomerInfoController.GetHospitalOrderWithPageAsync(System.DateTime,System.DateTime,System.String,System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            获取医院客户信息列表（分页）
+            </summary>
+            <param name="startDate"></param>
+            <param name="endDate"></param>
+            <param name="customerName"></param>
+            <param name="customerPhone"></param>
+            <param name="hospitalId"></param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalCustomerInfoController.GetDockingHospitalInfo">
+            <summary>
+            获取已配置对接订单客户的医院信息
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalEmployeeController">
             <summary>
             医院员工API
@@ -2596,12 +2673,11 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorBaseInfoController.GetListAsync(System.String,System.String,System.Boolean,System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorBaseInfoController.GetListAsync(System.String,System.Boolean,System.Int32,System.Int32)">
             <summary>
             获取主播基础信息列表
             </summary>
             <param name="name"></param>
-            <param name="contentPlatformId"></param>
             <param name="valid"></param>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
@@ -3520,6 +3596,50 @@
             <param name="checkState">审核情况（查询全部传空）</param>
             <param name="dealHospitalId">成交医院（全部则不传）</param>
             <param name="liveAnchorId">主播id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetDealInfo(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String)">
+            <summary>
+            获取成交情况列表
+            </summary>
+            <param name="startDate">登记开始日期</param>
+            <param name="endDate">登记结束日期</param>
+            <param name="isToHospital">是否到院（空查询所有）</param>
+            <param name="tohospitalStartDate">到院开始时间</param>
+            <param name="toHospitalEndDate">到院结束时间</param>
+            <param name="toHospitalType">到院类型（空查询所有）</param>
+            <param name="isDeal">是否成交（空查询所有）</param>
+            <param name="lastDealHospitalId">最终成交医院id（空查询所有）</param>
+            <param name="isAccompanying">是否陪诊（空查询所有）</param>
+            <param name="isOldCustomer">新老客业绩（空查询所有）</param>
+            <param name="CheckState">审核状态（空查询所有）</param>
+            <param name="isReturnBakcPrice">是否回款（空查询所有）</param>
+            <param name="returnBackPriceStartDate">回款开始时间</param>
+            <param name="returnBackPriceEndDate">回款结束时间</param>
+            <param name="customerServiceId">跟进人员（空查询所有，0查医院）</param>
+            <param name="keyWord">关键字</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.ExportDealInfo(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String)">
+            <summary>
+            导出成交情况列表
+            </summary>
+            <param name="startDate">登记开始日期</param>
+            <param name="endDate">登记结束日期</param>
+            <param name="isToHospital">是否到院（空查询所有）</param>
+            <param name="tohospitalStartDate">到院开始时间</param>
+            <param name="toHospitalEndDate">到院结束时间</param>
+            <param name="toHospitalType">到院类型（空查询所有）</param>
+            <param name="isDeal">是否成交（空查询所有）</param>
+            <param name="lastDealHospitalId">最终成交医院id（空查询所有）</param>
+            <param name="isAccompanying">是否陪诊（空查询所有）</param>
+            <param name="isOldCustomer">新老客业绩（空查询所有）</param>
+            <param name="CheckState">审核状态（空查询所有）</param>
+            <param name="isReturnBakcPrice">是否回款（空查询所有）</param>
+            <param name="returnBackPriceStartDate">回款开始时间</param>
+            <param name="returnBackPriceEndDate">回款结束时间</param>
+            <param name="customerServiceId">跟进人员（空查询所有，0查医院）</param>
+            <param name="keyWord">关键字</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetSendOrderAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String)">
@@ -4587,6 +4707,13 @@
             添加回访类型
             </summary>
             <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TrackController.GetByIdAsync(System.Int32)">
+            <summary>
+            根据编号获取回访类型
+            </summary>
+            <param name="id"></param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.TrackController.UpdateTrackTypeAsync(Fx.Amiya.Background.Api.Vo.Track.UpdateTrackTypeVo)">
@@ -6096,6 +6223,11 @@
             编号
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderCheckVo.OrderDealInfoId">
+            <summary>
+            成交情况id
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderCheckVo.CheckState">
             <summary>
             审核状态
@@ -6881,6 +7013,11 @@
             创建时间
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.Phone">
+            <summary>
+            客户手机号
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.IsToHospital">
             <summary>
             是否到院
@@ -6954,6 +7091,71 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CommissionRatio">
             <summary>
             佣金比例
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CheckState">
+            <summary>
+            审核状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CheckStateText">
+            <summary>
+            审核状态文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CheckPrice">
+            <summary>
+            审核金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CheckDate">
+            <summary>
+            审核日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.SettlePrice">
+            <summary>
+            结算金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CheckBy">
+            <summary>
+            审核人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CheckByEmpName">
+            <summary>
+            审核人名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CheckRemark">
+            <summary>
+            审核备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.IsReturnBackPrice">
+            <summary>
+            是否回款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.ReturnBackPrice">
+            <summary>
+            回款金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.ReturnBackDate">
+            <summary>
+            回款日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CreateBy">
+            <summary>
+            创建人（0为医院）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CreateByEmpName">
+            <summary>
+            创建人名称
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoSimpleVo">
@@ -10154,6 +10356,161 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCheckPhoneRecord.HospitalCheckPhoneRecordVo.Date">
             <summary>
             查看时间
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerInfoVo">
+            <summary>
+            医院客户列表
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerInfoVo.MemberCardNum">
+            <summary>
+            会员卡号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerInfoVo.CustomerId">
+            <summary>
+            医院客户编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerInfoVo.CustomerName">
+            <summary>
+            客户昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerInfoVo.SceneEmployeeName">
+            <summary>
+            所属现场
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerInfoVo.Sex">
+            <summary>
+            性别
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerInfoVo.Age">
+            <summary>
+            年龄
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerInfoVo.RegisterDate">
+            <summary>
+            登记日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerInfoVo.Region">
+            <summary>
+            所属地区
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerInfoVo.ChannelCategory">
+            <summary>
+            渠道类别
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerInfoVo.Channel">
+            <summary>
+            渠道
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.customerID">
+            <summary>
+            客户编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.date">
+            <summary>
+            消费日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.memberCardNum">
+            <summary>
+            会员卡号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.customerName">
+            <summary>
+            客户姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.sceneName">
+            <summary>
+            现场咨询
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.channelCategory">
+            <summary>
+            渠道分类
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.channelName">
+            <summary>
+            来源渠道
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.docType">
+            <summary>
+            单据类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.itemName">
+            <summary>
+            项目名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.itemStandard">
+            <summary>
+            规格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.quantity">
+            <summary>
+            数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.amount">
+            <summary>
+            总金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.cashAmount">
+            <summary>
+            货币金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.prepaymentAmount">
+            <summary>
+            预交冲款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.cashOfMoneyCardAmount">
+            <summary>
+            金额卡（真实金额）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.yearCardAmount">
+            <summary>
+            年卡冲款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.handselOfMoneyCardAmount">
+            <summary>
+            金额卡（虚拟金额）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.integrationAmount">
+            <summary>
+            积分冲款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.insteadMoneyAmount">
+            <summary>
+            代金券消费
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalCustomerInfo.HospitalCustomerOrderInfoVo.arrearsAmount">
+            <summary>
+            欠款
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.HospitalEmployee.AddHospitalEmployeeVo">
@@ -13411,6 +13768,11 @@
             订单号
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderCheck.ReturnBackOrderVo.OrderDealId">
+            <summary>
+            成交编号id
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderCheck.ReturnBackOrderVo.ReturnBackPrice">
             <summary>
             回款金额
@@ -13529,6 +13891,171 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.BuyOrderReportVo.BelongEmpName">
             <summary>
             归属客服
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.CreateDate">
+            <summary>
+            登记时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.ContentPlatFormOrderId">
+            <summary>
+            订单编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.OrderCreateDate">
+            <summary>
+            下单时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.SendOrderDate">
+            <summary>
+            派单时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.ContentPlatFormName">
+            <summary>
+            平台
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.LiveAnchorName">
+            <summary>
+            主播
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.GoodsName">
+            <summary>
+            项目
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.CustomerNickName">
+            <summary>
+            客户昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.Phone">
+            <summary>
+            客户手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.IsToHospital">
+            <summary>
+            是否到院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.ToHospitalTypeText">
+            <summary>
+            到院类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.TohospitalDate">
+            <summary>
+            到院时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.LastDealHospital">
+            <summary>
+            成交医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.IsDeal">
+            <summary>
+            是否成交
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.Price">
+            <summary>
+            成交金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.DealDate">
+            <summary>
+            成交时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.OtherOrderId">
+            <summary>
+            三方订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.IsOldCustomer">
+            <summary>
+            新老客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.IsAcompanying">
+            <summary>
+            是否陪诊
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.CommissionRatio">
+            <summary>
+            佣金比例
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.CheckStateText">
+            <summary>
+            审核状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.CheckPrice">
+            <summary>
+            审核金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.CheckDate">
+            <summary>
+            审核日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.SettlePrice">
+            <summary>
+            结算金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.CheckBy">
+            <summary>
+            审核人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.CheckRemark">
+            <summary>
+            审核备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.IsReturnBackPrice">
+            <summary>
+            是否回款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.ReturnBackPrice">
+            <summary>
+            回款金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.ReturnBackDate">
+            <summary>
+            回款日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.ConsultationEmpName">
+            <summary>
+            面诊员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.CreateByEmpName">
+            <summary>
+            创建人
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.Id">
@@ -17578,6 +18105,16 @@
             回访类型名称
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Track.AddTrackTypeVo.HasModel">
+            <summary>
+            是否需要模板
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Track.AddTrackTypeVo.TrackTypeThemeModelVo">
+            <summary>
+            回访模板
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.Track.AddWaitTrackCustomerVo.PlanTrackDate">
             <summary>
             待回访日期
@@ -17676,6 +18213,76 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.Track.TrackRecordVo.PlanTrackTheme">
             <summary>
             下次回访主题
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Track.TrackTypeThemeModelVo">
+            <summary>
+            回访模板
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Track.TrackTypeThemeModelVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Track.TrackTypeThemeModelVo.TrackTypeId">
+            <summary>
+            回访类型id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Track.TrackTypeThemeModelVo.TrackTypeName">
+            <summary>
+            回访类型名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Track.TrackTypeThemeModelVo.TrackThemeId">
+            <summary>
+            回访主题id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Track.TrackTypeThemeModelVo.TrackThemeName">
+            <summary>
+            回访主题名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Track.TrackTypeThemeModelVo.DaysLater">
+            <summary>
+            时隔/日
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Track.TrackTypeThemeModelVo.TrackPlan">
+            <summary>
+            回访计划
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Track.TrackTypeVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Track.TrackTypeVo.Name">
+            <summary>
+            回访类型名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Track.TrackTypeVo.Valid">
+            <summary>
+            是否有效
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Track.TrackTypeVo.HasModel">
+            <summary>
+            是否存在模板
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Track.TrackTypeVo.TrackTypeThemeModel">
+            <summary>
+            回访模板
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Track.UpdateTrackTypeVo.TrackTypeThemeModelVo">
+            <summary>
+            回访模板
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.Track.WaitTrackCustomerVo.TrackPlan">

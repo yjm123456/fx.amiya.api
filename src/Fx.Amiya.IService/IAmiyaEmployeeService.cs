@@ -131,6 +131,11 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<AmiyaEmployeeNameDto>> GetOperatingConsultingNameListAsync();
+        /// <summary>
+        /// 获取财务人员姓名列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<AmiyaEmployeeNameDto>> GetFinancialNameListAsync();
 
         /// <summary>
         /// 获取面诊员姓名列表

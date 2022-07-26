@@ -3,6 +3,7 @@ using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
+using jos_sdk_net.Util;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,22 +17,324 @@ namespace Fx.Amiya.Service
     {
         private IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo;
         private IHospitalInfoService _hospitalInfoService;
+        private IDalBindCustomerService _dalBindCustomerService;
+        private IAmiyaEmployeeService _amiyaEmployeeService;
+        private IDalAmiyaEmployee _dalAmiyaEmployee;
 
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
+            IAmiyaEmployeeService amiyaEmployeeService,
+            IDalBindCustomerService dalBindCustomerService,
+            IDalAmiyaEmployee dalAmiyaEmployee,
             IHospitalInfoService hospitalInfoService)
         {
             this.dalContentPlatFormOrderDealInfo = dalContentPlatFormOrderDealInfo;
             _hospitalInfoService = hospitalInfoService;
+            _amiyaEmployeeService = amiyaEmployeeService;
+            _dalBindCustomerService = dalBindCustomerService;
+            _dalAmiyaEmployee = dalAmiyaEmployee;
+        }
+        /// <summary>
+        /// 获取成交情况列表
+        /// </summary>
+        /// <param name="startDate">登记开始日期</param>
+        /// <param name="endDate">登记结束日期</param>
+        /// <param name="isToHospital">是否到院（空查询所有）</param>
+        /// <param name="tohospitalStartDate">到院开始时间</param>
+        /// <param name="toHospitalEndDate">到院结束时间</param>
+        /// <param name="toHospitalType">到院类型（空查询所有）</param>
+        /// <param name="isDeal">是否成交（空查询所有）</param>
+        /// <param name="lastDealHospitalId">最终成交医院id（空查询所有）</param>
+        /// <param name="isAccompanying">是否陪诊（空查询所有）</param>
+        /// <param name="isOldCustomer">新老客业绩（空查询所有）</param>
+        /// <param name="CheckState">审核状态（空查询所有）</param>
+        /// <param name="isReturnBakcPrice">是否回款（空查询所有）</param>
+        /// <param name="returnBackPriceStartDate">回款开始时间</param>
+        /// <param name="returnBackPriceEndDate">回款结束时间</param>
+        /// <param name="customerServiceId">跟进人员（空查询所有）</param>
+        /// <param name="keyWord">关键字</param>
+        /// <param name="employeeId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, int pageNum, int pageSize)
+        {
+            try
+            {
+                var dealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder) select d;
+
+                var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
+                if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
+                {
+                    dealInfo = from d in dealInfo
+                               where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0
+                               select d;
+                }
+                if (startDate != null && endDate != null)
+                {
+                    DateTime startrq = ((DateTime)startDate).Date;
+                    DateTime endrq = ((DateTime)endDate).Date.AddDays(1);
+                    dealInfo = from d in dealInfo
+                               where (d.CreateDate >= startrq && d.CreateDate < endrq)
+                               select d;
+                }
+                if (isToHospital == true)
+                {
+                    if (!tohospitalStartDate.HasValue && !toHospitalEndDate.HasValue)
+                    {
+                        throw new Exception("到院时间为必填项，请完整填写到院的开始时间与结束时间！");
+                    }
+                    DateTime startrq = ((DateTime)tohospitalStartDate).Date;
+                    DateTime endrq = ((DateTime)toHospitalEndDate).Date.AddDays(1);
+                    dealInfo = from d in dealInfo
+                               where (d.ToHospitalDate.HasValue)
+                               &&(d.ToHospitalDate.Value >= startrq && d.ToHospitalDate.Value < endrq)
+                               && (d.IsToHospital == true)
+                               select d;
+                }
+                if (isReturnBakcPrice == true)
+                {
+                    if (!returnBackPriceStartDate.HasValue && !returnBackPriceEndDate.HasValue)
+                    {
+                        throw new Exception("回款时间为必填项，请完整填写回款的开始时间与结束时间！");
+                    }
+                    DateTime startrq = ((DateTime)returnBackPriceStartDate).Date;
+                    DateTime endrq = ((DateTime)returnBackPriceEndDate).Date.AddDays(1);
+                    dealInfo = from d in dealInfo
+                               where (d.ReturnBackDate.HasValue)
+                               &&(d.ReturnBackDate.Value >= startrq && d.ReturnBackDate.Value < endrq)
+                               && (d.IsToHospital == true)
+                               select d;
+                }
+                var ContentPlatFOrmOrderDealInfo = from d in dealInfo
+                                                   where (string.IsNullOrEmpty(keyWord) || d.ContentPlatFormOrderId.Contains(keyWord) || d.ContentPlatFormOrder.Phone.Contains(keyWord) || d.Id.Contains(keyWord))
+                                                   && (!isToHospital.HasValue || d.IsToHospital == isToHospital.Value)
+                                                   && (!toHospitalType.HasValue || d.ToHospitalType == toHospitalType.Value)
+                                                   && (!isDeal.HasValue || d.IsDeal == isDeal.Value)
+                                                   && (!lastDealHospitalId.HasValue || d.LastDealHospitalId.Value == lastDealHospitalId.Value)
+                                                   && (!isOldCustomer.HasValue || d.IsOldCustomer == isOldCustomer.Value)
+                                                   && (!isAccompanying.HasValue || d.IsAcompanying == isAccompanying.Value)
+                                                   && (!CheckState.HasValue || d.CheckState == CheckState.Value)
+                                                   && (!isReturnBakcPrice.HasValue || d.IsReturnBackPrice == isReturnBakcPrice.Value)
+                                                   && (!customerServiceId.HasValue || d.CreateBy == customerServiceId)
+                                                   select new ContentPlatFormOrderDealInfoDto
+                                                   {
+                                                       Id = d.Id,
+                                                       ContentPlatFormOrderId = d.ContentPlatFormOrderId,
+                                                       CreateDate = d.CreateDate,
+                                                       Phone = ServiceClass.GetIncompletePhone(d.ContentPlatFormOrder.Phone),
+                                                       IsDeal = d.IsDeal,
+                                                       IsOldCustomer = d.IsOldCustomer,
+                                                       IsAcompanying = d.IsAcompanying,
+                                                       CommissionRatio = d.CommissionRatio,
+                                                       IsToHospital = d.IsToHospital,
+                                                       ToHospitalType = d.ToHospitalType,
+                                                       ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
+                                                       ToHospitalDate = d.ToHospitalDate,
+                                                       LastDealHospitalId = d.LastDealHospitalId,
+                                                       DealPicture = d.DealPicture,
+                                                       Remark = d.Remark,
+                                                       Price = d.Price,
+                                                       DealDate = d.DealDate,
+                                                       OtherAppOrderId = d.OtherAppOrderId,
+                                                       CheckState = d.CheckState,
+                                                       CheckStateText = ServiceClass.GetCheckTypeText(d.CheckState.Value),
+                                                       CheckPrice = d.CheckPrice,
+                                                       CheckDate = d.CheckDate,
+                                                       CheckBy = d.CheckBy,
+                                                       SettlePrice = d.SettlePrice,
+                                                       CheckRemark = d.CheckRemark,
+                                                       IsReturnBackPrice = d.IsReturnBackPrice,
+                                                       ReturnBackDate = d.ReturnBackDate,
+                                                       ReturnBackPrice = d.ReturnBackPrice,
+                                                       CreateBy = d.CreateBy,
+                                                   };
+
+                FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
+                ContentPlatFOrmOrderDealInfoPageInfo.TotalCount = await ContentPlatFOrmOrderDealInfo.CountAsync();
+                ContentPlatFOrmOrderDealInfoPageInfo.List = await ContentPlatFOrmOrderDealInfo.OrderByDescending(x => x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+                foreach (var z in ContentPlatFOrmOrderDealInfoPageInfo.List)
+                {
+                    if (z.LastDealHospitalId.HasValue)
+                    {
+                        var dealHospital = await _hospitalInfoService.GetBaseByIdAsync(z.LastDealHospitalId.Value);
+                        z.LastDealHospital = dealHospital.Name;
+                    }
+                    if (z.CheckBy.HasValue)
+                    {
+                        var empInfo = await _amiyaEmployeeService.GetByIdAsync(z.CheckBy.Value);
+                        z.CheckByEmpName = empInfo.Name;
+                    }
+                    if (z.CreateBy == 0)
+                    {
+                        z.CreateByEmpName = "其他";
+                    }
+                    else
+                    {
+                        var empInfo = await _amiyaEmployeeService.GetByIdAsync(z.CreateBy);
+                        z.CreateByEmpName = empInfo.Name;
+                    }
+                }
+                return ContentPlatFOrmOrderDealInfoPageInfo;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, bool hidePhone)
+        {
+            try
+            {
+                var dealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder) select d;
 
+                var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
+                if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
+                {
+                    dealInfo = from d in dealInfo
+                               where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0
+                               select d;
+                }
+                if (startDate != null && endDate != null)
+                {
+                    DateTime startrq = ((DateTime)startDate).Date;
+                    DateTime endrq = ((DateTime)endDate).Date.AddDays(1);
+                    dealInfo = from d in dealInfo
+                               where (d.CreateDate >= startrq && d.CreateDate < endrq)
+                               select d;
+                }
+                if (isToHospital == true)
+                {
+                    if (!tohospitalStartDate.HasValue && !toHospitalEndDate.HasValue)
+                    {
+                        throw new Exception("到院时间为必填项，请完整填写到院的开始时间与结束时间！");
+                    }
+                    DateTime startrq = ((DateTime)tohospitalStartDate).Date;
+                    DateTime endrq = ((DateTime)toHospitalEndDate).Date.AddDays(1);
+                    dealInfo = from d in dealInfo
+                               where (d.ToHospitalDate.HasValue)
+                               && (d.ToHospitalDate.Value >= startrq && d.ToHospitalDate.Value < endrq)
+                               && (d.IsToHospital == true)
+                               select d;
+                }
+                if (isReturnBakcPrice == true)
+                {
+                    if (!returnBackPriceStartDate.HasValue && !returnBackPriceEndDate.HasValue)
+                    {
+                        throw new Exception("回款时间为必填项，请完整填写回款的开始时间与结束时间！");
+                    }
+                    DateTime startrq = ((DateTime)returnBackPriceStartDate).Date;
+                    DateTime endrq = ((DateTime)returnBackPriceEndDate).Date.AddDays(1);
+                    dealInfo = from d in dealInfo
+                               where (d.ReturnBackDate.HasValue)
+                               && (d.ReturnBackDate.Value >= startrq && d.ReturnBackDate.Value < endrq)
+                               && (d.IsToHospital == true)
+                               select d;
+                }
+                var ContentPlatFOrmOrderDealInfo = from d in dealInfo
+                                                   where (string.IsNullOrEmpty(keyWord) || d.ContentPlatFormOrderId.Contains(keyWord) || d.ContentPlatFormOrder.Phone.Contains(keyWord) || d.Id.Contains(keyWord))
+                                                   && (!isToHospital.HasValue || d.IsToHospital == isToHospital.Value)
+                                                   && (!toHospitalType.HasValue || d.ToHospitalType == toHospitalType.Value)
+                                                   && (!isDeal.HasValue || d.IsDeal == isDeal.Value)
+                                                   && (!lastDealHospitalId.HasValue || d.LastDealHospitalId.Value == lastDealHospitalId.Value)
+                                                   && (!isOldCustomer.HasValue || d.IsOldCustomer == isOldCustomer.Value)
+                                                   && (!isAccompanying.HasValue || d.IsAcompanying == isAccompanying.Value)
+                                                   && (!CheckState.HasValue || d.CheckState == CheckState.Value)
+                                                   && (!isReturnBakcPrice.HasValue || d.IsReturnBackPrice == isReturnBakcPrice.Value)
+                                                   && (!customerServiceId.HasValue || d.CreateBy == customerServiceId)
+                                                   select new ContentPlatFormOrderDealInfoDto
+                                                   {
+                                                       Id = d.Id,
+                                                       ContentPlatFormOrderId = d.ContentPlatFormOrderId,
+                                                       OrderCreateDate = d.ContentPlatFormOrder.CreateDate,
+                                                       ContentPlatFormName = d.ContentPlatFormOrder.Contentplatform.ContentPlatformName,
+                                                       LiveAnchorName = d.ContentPlatFormOrder.LiveAnchor.Name,
+                                                       GoodsName = d.ContentPlatFormOrder.AmiyaGoodsDemand.ProjectNname,
+                                                       SendDate = d.ContentPlatFormOrder.ContentPlatformOrderSendList[0].SendDate,
+                                                       CustomerNickName=d.ContentPlatFormOrder.CustomerName,
+                                                       ConsultationEmpId=d.ContentPlatFormOrder.ConsultationEmpId,
+                                                       CreateDate = d.CreateDate,
+                                                       IsDeal = d.IsDeal,
+                                                       IsOldCustomer = d.IsOldCustomer,
+                                                       IsAcompanying = d.IsAcompanying,
+                                                       Phone = hidePhone == true ? ServiceClass.GetIncompletePhone(d.ContentPlatFormOrder.Phone) : d.ContentPlatFormOrder.Phone,
+                                                       CommissionRatio = d.CommissionRatio,
+                                                       IsToHospital = d.IsToHospital,
+                                                       ToHospitalType = d.ToHospitalType,
+                                                       ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
+                                                       ToHospitalDate = d.ToHospitalDate,
+                                                       LastDealHospitalId = d.LastDealHospitalId,
+                                                       Remark = d.Remark,
+                                                       Price = d.Price,
+                                                       DealDate = d.DealDate,
+                                                       OtherAppOrderId = d.OtherAppOrderId,
+                                                       CheckState = d.CheckState,
+                                                       CheckStateText = ServiceClass.GetCheckTypeText(d.CheckState.Value),
+                                                       CheckPrice = d.CheckPrice,
+                                                       CheckDate = d.CheckDate,
+                                                       CheckBy = d.CheckBy,
+                                                       SettlePrice = d.SettlePrice,
+                                                       CheckRemark = d.CheckRemark,
+                                                       IsReturnBackPrice = d.IsReturnBackPrice,
+                                                       ReturnBackDate = d.ReturnBackDate,
+                                                       ReturnBackPrice = d.ReturnBackPrice,
+                                                       CreateBy = d.ContentPlatFormOrder.BelongEmpId.HasValue?d.ContentPlatFormOrder.BelongEmpId.Value:-1,
+                                                   };
 
+                List<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new List<ContentPlatFormOrderDealInfoDto>();
+                ContentPlatFOrmOrderDealInfoPageInfo = await ContentPlatFOrmOrderDealInfo.OrderByDescending(x => x.CreateDate).ToListAsync();
+                foreach (var z in ContentPlatFOrmOrderDealInfoPageInfo)
+                {
+                    if (z.LastDealHospitalId.HasValue && z.LastDealHospitalId != 0)
+                    {
+                        var dealHospital = await _hospitalInfoService.GetBaseByIdAsync(z.LastDealHospitalId.Value);
+                        z.LastDealHospital = dealHospital.Name;
+                    }
+                    if (z.ConsultationEmpId.HasValue&&z.ConsultationEmpId!=0)
+                    {
+                        var empInfo = await _amiyaEmployeeService.GetByIdAsync(z.ConsultationEmpId.Value);
+                        z.ConsultationEmpName = empInfo.Name;
+                    }
+                    if (z.CheckBy.HasValue&&z.CheckBy!=0)
+                    {
+                        var empInfo = await _amiyaEmployeeService.GetByIdAsync(z.CheckBy.Value);
+                        z.CheckByEmpName = empInfo.Name;
+                    }
+                    if (z.CreateBy == 0)
+                    {
+                        z.CreateByEmpName = "医院";
+                    }
+                    else if (z.CreateBy == -1)
+                    {
+                        z.CreateByEmpName = "其他";
+                    }
+                    else
+                    {
+                        var empInfo = await _amiyaEmployeeService.GetByIdAsync(z.CreateBy);
+                        z.CreateByEmpName = empInfo.Name;
+                    }
+                }
+                return ContentPlatFOrmOrderDealInfoPageInfo;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 根据订单号展示成交情况
+        /// </summary>
+        /// <param name="contentPlafFormOrderId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetListWithPageAsync(string contentPlafFormOrderId, int pageNum, int pageSize)
         {
             try
             {
                 var ContentPlatFOrmOrderDealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll()
-                                                   where string.IsNullOrEmpty(contentPlafFormOrderId) || d.ContentPlatFormOrderId == contentPlafFormOrderId
+                                                   where (string.IsNullOrEmpty(contentPlafFormOrderId) || d.ContentPlatFormOrderId == contentPlafFormOrderId)
                                                    select new ContentPlatFormOrderDealInfoDto
                                                    {
                                                        Id = d.Id,
@@ -51,6 +354,17 @@ namespace Fx.Amiya.Service
                                                        Price = d.Price,
                                                        DealDate = d.DealDate,
                                                        OtherAppOrderId = d.OtherAppOrderId,
+                                                       CheckState = d.CheckState,
+                                                       CheckStateText = ServiceClass.GetCheckTypeText(d.CheckState.Value),
+                                                       CheckPrice = d.CheckPrice,
+                                                       CheckDate = d.CheckDate,
+                                                       CheckBy = d.CheckBy,
+                                                       SettlePrice = d.SettlePrice,
+                                                       CheckRemark = d.CheckRemark,
+                                                       IsReturnBackPrice = d.IsReturnBackPrice,
+                                                       ReturnBackDate = d.ReturnBackDate,
+                                                       ReturnBackPrice = d.ReturnBackPrice,
+                                                       CreateBy = d.CreateBy,
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -63,6 +377,15 @@ namespace Fx.Amiya.Service
                         var dealHospital = await _hospitalInfoService.GetBaseByIdAsync(z.LastDealHospitalId.Value);
                         z.LastDealHospital = dealHospital.Name;
                     }
+                    if (z.CreateBy == 0)
+                    {
+                        z.CreateByEmpName = "医院添加";
+                    }
+                    else
+                    {
+                        var empInfo = await _amiyaEmployeeService.GetByIdAsync(z.CreateBy);
+                        z.CreateByEmpName = empInfo.Name;
+                    }
                 }
                 return ContentPlatFOrmOrderDealInfoPageInfo;
             }
@@ -71,13 +394,12 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
-
         public async Task AddAsync(AddContentPlatFormOrderDealInfoDto addDto)
         {
             try
             {
                 ContentPlatformOrderDealInfo ContentPlatFOrmOrderDealInfo = new ContentPlatformOrderDealInfo();
-                ContentPlatFOrmOrderDealInfo.Id = Guid.NewGuid().ToString();
+                ContentPlatFOrmOrderDealInfo.Id = CreateOrderIdHelper.GetNextNumber(); 
                 ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId = addDto.ContentPlatFormOrderId;
                 ContentPlatFOrmOrderDealInfo.CreateDate = addDto.CreateDate;
                 ContentPlatFOrmOrderDealInfo.IsToHospital = addDto.IsToHospital;
@@ -92,7 +414,12 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.OtherAppOrderId = addDto.OtherAppOrderId;
                 ContentPlatFOrmOrderDealInfo.IsAcompanying = addDto.IsAcompanying;
                 ContentPlatFOrmOrderDealInfo.IsOldCustomer = addDto.IsOldCustomer;
+                ContentPlatFOrmOrderDealInfo.CreateBy = addDto.CreateBy;
                 ContentPlatFOrmOrderDealInfo.CommissionRatio = addDto.CommissionRatio;
+                ContentPlatFOrmOrderDealInfo.CheckBy = 0;
+                ContentPlatFOrmOrderDealInfo.CheckPrice = 0.00M;
+                ContentPlatFOrmOrderDealInfo.CheckState = 0;
+                ContentPlatFOrmOrderDealInfo.SettlePrice = 0.00M;
                 await dalContentPlatFormOrderDealInfo.AddAsync(ContentPlatFOrmOrderDealInfo, true);
             }
             catch (Exception ex)
@@ -128,6 +455,17 @@ namespace Fx.Amiya.Service
                 contentPlatFOrmOrderDealInfoDto.IsAcompanying = ContentPlatFOrmOrderDealInfo.IsAcompanying;
                 contentPlatFOrmOrderDealInfoDto.IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer;
                 contentPlatFOrmOrderDealInfoDto.CommissionRatio = ContentPlatFOrmOrderDealInfo.CommissionRatio;
+                contentPlatFOrmOrderDealInfoDto.CheckState = ContentPlatFOrmOrderDealInfo.CheckState;
+                contentPlatFOrmOrderDealInfoDto.CheckStateText = ServiceClass.GetCheckTypeText(ContentPlatFOrmOrderDealInfo.CheckState.Value);
+                contentPlatFOrmOrderDealInfoDto.CheckPrice = ContentPlatFOrmOrderDealInfo.CheckPrice;
+                contentPlatFOrmOrderDealInfoDto.CheckDate = ContentPlatFOrmOrderDealInfo.CheckDate;
+                contentPlatFOrmOrderDealInfoDto.CheckBy = ContentPlatFOrmOrderDealInfo.CheckBy;
+                contentPlatFOrmOrderDealInfoDto.SettlePrice = ContentPlatFOrmOrderDealInfo.SettlePrice;
+                contentPlatFOrmOrderDealInfoDto.CheckRemark = ContentPlatFOrmOrderDealInfo.CheckRemark;
+                contentPlatFOrmOrderDealInfoDto.IsReturnBackPrice = ContentPlatFOrmOrderDealInfo.IsReturnBackPrice;
+                contentPlatFOrmOrderDealInfoDto.ReturnBackDate = ContentPlatFOrmOrderDealInfo.ReturnBackDate;
+                contentPlatFOrmOrderDealInfoDto.ReturnBackPrice = ContentPlatFOrmOrderDealInfo.ReturnBackPrice;
+                contentPlatFOrmOrderDealInfoDto.CreateBy = ContentPlatFOrmOrderDealInfo.CreateBy;
                 return contentPlatFOrmOrderDealInfoDto;
             }
             catch (Exception ex)
@@ -170,6 +508,64 @@ namespace Fx.Amiya.Service
             }
         }
 
+
+        /// <summary>
+        /// 审核成交情况
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <returns></returns>
+        public async Task CheckAsync(UpdateContentPlatFormOrderDealInfoDto updateDto)
+        {
+            try
+            {
+                var ContentPlatFOrmOrderDealInfo = await dalContentPlatFormOrderDealInfo.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                if (ContentPlatFOrmOrderDealInfo == null)
+                    throw new Exception("未找到该成交信息！");
+
+
+                ContentPlatFOrmOrderDealInfo.Id = updateDto.Id;
+                ContentPlatFOrmOrderDealInfo.CheckBy = updateDto.CheckBy;
+                ContentPlatFOrmOrderDealInfo.CheckDate = DateTime.Now;
+                ContentPlatFOrmOrderDealInfo.CheckPrice = updateDto.CheckPrice;
+                ContentPlatFOrmOrderDealInfo.CheckRemark = updateDto.CheckRemark;
+                ContentPlatFOrmOrderDealInfo.CheckState = updateDto.CheckState;
+                ContentPlatFOrmOrderDealInfo.SettlePrice = updateDto.SettlePrice;
+                await dalContentPlatFormOrderDealInfo.UpdateAsync(ContentPlatFOrmOrderDealInfo, true);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 成交情况回款
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <returns></returns>
+        public async Task SettleAsync(UpdateContentPlatFormOrderDealInfoDto updateDto)
+        {
+            try
+            {
+                var ContentPlatFOrmOrderDealInfo = await dalContentPlatFormOrderDealInfo.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                if (ContentPlatFOrmOrderDealInfo == null)
+                    throw new Exception("未找到该成交信息！");
+
+
+                ContentPlatFOrmOrderDealInfo.Id = updateDto.Id;
+                ContentPlatFOrmOrderDealInfo.IsReturnBackPrice = true;
+                ContentPlatFOrmOrderDealInfo.ReturnBackDate = updateDto.ReturnBackDate;
+                ContentPlatFOrmOrderDealInfo.ReturnBackPrice = updateDto.ReturnBackPrice;
+                await dalContentPlatFormOrderDealInfo.UpdateAsync(ContentPlatFOrmOrderDealInfo, true);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task DeleteAsync(string id)
         {
             try
@@ -188,34 +584,49 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<ContentPlatFormOrderDealInfoDto> GetByOrderIdAsync(string orderId)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetByOrderIdAsync(string orderId)
         {
             try
             {
-                var ContentPlatFOrmOrderDealInfo = await dalContentPlatFormOrderDealInfo.GetAll().SingleOrDefaultAsync(e => e.ContentPlatFormOrderId == orderId);
-                if (ContentPlatFOrmOrderDealInfo == null)
+                List<ContentPlatFormOrderDealInfoDto> returnList = new List<ContentPlatFormOrderDealInfoDto>();
+                var selectResult = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.ContentPlatFormOrderId == orderId).ToListAsync();
+                if (selectResult == null)
                 {
-                    return new ContentPlatFormOrderDealInfoDto() ;
+                    return returnList;
                 }
-
-                ContentPlatFormOrderDealInfoDto contentPlatFOrmOrderDealInfoDto = new ContentPlatFormOrderDealInfoDto();
-                contentPlatFOrmOrderDealInfoDto.Id = ContentPlatFOrmOrderDealInfo.Id;
-                contentPlatFOrmOrderDealInfoDto.ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId;
-                contentPlatFOrmOrderDealInfoDto.CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate;
-                contentPlatFOrmOrderDealInfoDto.IsToHospital = ContentPlatFOrmOrderDealInfo.IsToHospital;
-                contentPlatFOrmOrderDealInfoDto.ToHospitalType = ContentPlatFOrmOrderDealInfo.ToHospitalType;
-                contentPlatFOrmOrderDealInfoDto.ToHospitalDate = ContentPlatFOrmOrderDealInfo.ToHospitalDate;
-                contentPlatFOrmOrderDealInfoDto.LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId;
-                contentPlatFOrmOrderDealInfoDto.IsDeal = ContentPlatFOrmOrderDealInfo.IsDeal;
-                contentPlatFOrmOrderDealInfoDto.DealPicture = ContentPlatFOrmOrderDealInfo.DealPicture;
-                contentPlatFOrmOrderDealInfoDto.Remark = ContentPlatFOrmOrderDealInfo.Remark;
-                contentPlatFOrmOrderDealInfoDto.Price = ContentPlatFOrmOrderDealInfo.Price;
-                contentPlatFOrmOrderDealInfoDto.DealDate = ContentPlatFOrmOrderDealInfo.DealDate;
-                contentPlatFOrmOrderDealInfoDto.OtherAppOrderId = ContentPlatFOrmOrderDealInfo.OtherAppOrderId;
-                contentPlatFOrmOrderDealInfoDto.IsAcompanying = ContentPlatFOrmOrderDealInfo.IsAcompanying;
-                contentPlatFOrmOrderDealInfoDto.IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer;
-                contentPlatFOrmOrderDealInfoDto.CommissionRatio = ContentPlatFOrmOrderDealInfo.CommissionRatio;
-                return contentPlatFOrmOrderDealInfoDto;
+                foreach (var ContentPlatFOrmOrderDealInfo in selectResult)
+                {
+                    ContentPlatFormOrderDealInfoDto contentPlatFOrmOrderDealInfoDto = new ContentPlatFormOrderDealInfoDto();
+                    contentPlatFOrmOrderDealInfoDto.Id = ContentPlatFOrmOrderDealInfo.Id;
+                    contentPlatFOrmOrderDealInfoDto.ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId;
+                    contentPlatFOrmOrderDealInfoDto.CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate;
+                    contentPlatFOrmOrderDealInfoDto.IsToHospital = ContentPlatFOrmOrderDealInfo.IsToHospital;
+                    contentPlatFOrmOrderDealInfoDto.ToHospitalType = ContentPlatFOrmOrderDealInfo.ToHospitalType;
+                    contentPlatFOrmOrderDealInfoDto.ToHospitalDate = ContentPlatFOrmOrderDealInfo.ToHospitalDate;
+                    contentPlatFOrmOrderDealInfoDto.LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId;
+                    contentPlatFOrmOrderDealInfoDto.IsDeal = ContentPlatFOrmOrderDealInfo.IsDeal;
+                    contentPlatFOrmOrderDealInfoDto.DealPicture = ContentPlatFOrmOrderDealInfo.DealPicture;
+                    contentPlatFOrmOrderDealInfoDto.Remark = ContentPlatFOrmOrderDealInfo.Remark;
+                    contentPlatFOrmOrderDealInfoDto.Price = ContentPlatFOrmOrderDealInfo.Price;
+                    contentPlatFOrmOrderDealInfoDto.DealDate = ContentPlatFOrmOrderDealInfo.DealDate;
+                    contentPlatFOrmOrderDealInfoDto.OtherAppOrderId = ContentPlatFOrmOrderDealInfo.OtherAppOrderId;
+                    contentPlatFOrmOrderDealInfoDto.IsAcompanying = ContentPlatFOrmOrderDealInfo.IsAcompanying;
+                    contentPlatFOrmOrderDealInfoDto.IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer;
+                    contentPlatFOrmOrderDealInfoDto.CommissionRatio = ContentPlatFOrmOrderDealInfo.CommissionRatio;
+                    contentPlatFOrmOrderDealInfoDto.CheckState = ContentPlatFOrmOrderDealInfo.CheckState;
+                    contentPlatFOrmOrderDealInfoDto.CheckStateText = ServiceClass.GetCheckTypeText(ContentPlatFOrmOrderDealInfo.CheckState.Value);
+                    contentPlatFOrmOrderDealInfoDto.CheckPrice = ContentPlatFOrmOrderDealInfo.CheckPrice;
+                    contentPlatFOrmOrderDealInfoDto.CheckDate = ContentPlatFOrmOrderDealInfo.CheckDate;
+                    contentPlatFOrmOrderDealInfoDto.CheckBy = ContentPlatFOrmOrderDealInfo.CheckBy;
+                    contentPlatFOrmOrderDealInfoDto.SettlePrice = ContentPlatFOrmOrderDealInfo.SettlePrice;
+                    contentPlatFOrmOrderDealInfoDto.CheckRemark = ContentPlatFOrmOrderDealInfo.CheckRemark;
+                    contentPlatFOrmOrderDealInfoDto.IsReturnBackPrice = ContentPlatFOrmOrderDealInfo.IsReturnBackPrice;
+                    contentPlatFOrmOrderDealInfoDto.ReturnBackDate = ContentPlatFOrmOrderDealInfo.ReturnBackDate;
+                    contentPlatFOrmOrderDealInfoDto.ReturnBackPrice = ContentPlatFOrmOrderDealInfo.ReturnBackPrice;
+                    contentPlatFOrmOrderDealInfoDto.CreateBy = ContentPlatFOrmOrderDealInfo.CreateBy;
+                    returnList.Add(contentPlatFOrmOrderDealInfoDto);
+                }
+                return returnList;
             }
             catch (Exception ex)
             {

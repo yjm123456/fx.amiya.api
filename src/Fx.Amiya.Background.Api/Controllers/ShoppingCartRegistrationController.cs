@@ -103,6 +103,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
+                var isExistPhone = await shoppingCartRegistrationService.GetByPhoneAsync(addVo.Phone);
+                if(!string.IsNullOrEmpty(isExistPhone.Id))
+                {
+                    throw new Exception("已存在该客户手机号，无法录入，请重新填写！");
+                }
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
                 AddShoppingCartRegistrationDto addDto = new AddShoppingCartRegistrationDto();
@@ -179,6 +184,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
+                var isExistPhone = await shoppingCartRegistrationService.GetByPhoneAsync(updateVo.Phone);
+                if (!string.IsNullOrEmpty(isExistPhone.Id))
+                {
+                    throw new Exception("已存在该客户手机号，无法录入，请重新填写！");
+                }
                 UpdateShoppingCartRegistrationDto updateDto = new UpdateShoppingCartRegistrationDto();
                 updateDto.Id = updateVo.Id;
                 updateDto.RecordDate = updateVo.RecordDate;

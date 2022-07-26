@@ -36,6 +36,13 @@ namespace Fx.Amiya.IService
 
 
         /// <summary>
+        /// 根据id获取回访类型
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        Task<TrackTypeDto> GetbyIdAsync(int Id);
+
+        /// <summary>
         /// 修改回访类型
         /// </summary>
         /// <param name="updateDto"></param>

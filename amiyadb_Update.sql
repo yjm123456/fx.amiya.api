@@ -811,6 +811,19 @@ ADD COLUMN `to_hospital_type` INT NOT NULL DEFAULT 0 AFTER `is_to_hospital`;
 ALTER TABLE `amiyadb`.`tbl_content_platform_order` 
 ADD COLUMN `to_hospital_type` INT NOT NULL DEFAULT 0 AFTER `is_to_hospital`;
 
+
+ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
+ADD INDEX `fl_content_plat_form_order_dealinfo_idx` (`content_platform_order_id` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
+ADD CONSTRAINT `fl_content_plat_form_order_dealinfo`
+  FOREIGN KEY (`content_platform_order_id`)
+  REFERENCES `amiyadb`.`tbl_content_platform_order` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
@@ -868,9 +881,25 @@ ADD COLUMN `video_url` VARCHAR(300) NULL AFTER `detail_picture`,
 ADD COLUMN `contract_url` VARCHAR(300) NULL AFTER `video_url`,
 ADD COLUMN `due_time` DATETIME NULL AFTER `contract_url`;
 
+ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
+ADD COLUMN `create_by` INT NOT NULL DEFAULT 0 AFTER `commission_ratio`;
+
+
+ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
+ADD COLUMN `check_state` INT NOT NULL DEFAULT 0 AFTER `create_by`,
+ADD COLUMN `check_price` DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER `check_state`,
+ADD COLUMN `settle_price` DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER `check_price`,
+ADD COLUMN `check_by` INT NOT NULL DEFAULT 0 AFTER `settle_price`,
+ADD COLUMN `check_remark` VARCHAR(300) NULL AFTER `check_by`,
+ADD COLUMN `check_date` DATETIME NULL AFTER `check_remark`,
+ADD COLUMN `is_return_back_price` BIT(1) NOT NULL AFTER `check_date`,
+ADD COLUMN `return_back_price` DECIMAL(12,2) NULL AFTER `is_return_back_price`,
+ADD COLUMN `return_back_date` DATETIME NULL AFTER `return_back_price`;
 
   
------------------------------------------------余建明 2022/07/12 END--------------------------------------------;
+  ALTER TABLE `amiyadb`.`tbl_track_type` 
+ADD COLUMN `has_model` BIT(1) NOT NULL AFTER `valid`;
+-----------------------------------------------余建明 2022/07/21 END--------------------------------------------;
 
 
 -----------------------------------------------余建明 2022/07/18  BEGIN--------------------------------------------;
@@ -881,6 +910,8 @@ UPDATE `amiyadb`.`tbl_config` SET `config_json` = '{\"FxJwtConfig\":{\"Key\":\"k
 --tbl_order_app_info表加入抖店商户号配置
 INSERT INTO `amiyadb`.`tbl_order_app_info` (`id`, `app_key`, `app_secret`, `access_token`, `authorize_date`, `app_type`, `expire_date`, `refresh_token`) VALUES ('5', '7109321803654252040', '1', 'edae7c30-8386-443b-88a1-031111596fdd', '2022-07-18 16:20:00', '4', '2022-07-19 16:20:00', '1');
 
+--维多医院订单对接功能
+INSERT INTO `amiyadb`.`tbl_docking_hospital_customer_info` (`id`, `app_key`, `app_secret`, `hospital_id`, `base_url`, `token_url`, `get_customer_url`, `get_customer_order_url`) VALUES ('1001', 'p00001', 'bf701b37ef67a5f99cd473dae1bc', '1', 'https://app.victoriazj.com/fxgate/main', '/Login/partnerAuth', '/partner/Customer/getCustomerList', '/partner/FinanceTotal/getCustomerConsumptionRecords');
 
 
 -----------------------------------------------余建明 2022/07/18 END--------------------------------------------;

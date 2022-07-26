@@ -14,5 +14,7 @@ namespace Fx.Amiya.DbModels.Model
         public TrackType TrackType { get; set; }
         public List<TrackRecord> TrackRecordList { get; set; }
         public List<WaitTrackCustomer> WaitTrackCustomerList { get; set; }
+
+        public List<TrackTypeThemeModel> TrackThemeModel { get; set; }
     }
 }

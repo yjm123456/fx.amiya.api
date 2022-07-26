@@ -408,6 +408,7 @@ namespace Fx.Amiya.Service
                            where d.IsCustomerService && d.Valid
                            && d.AmiyaPositionInfo.Name.Contains("客服")
                            || d.AmiyaPositionInfo.Name.Contains("面诊员")
+                           || d.AmiyaPositionInfo.Name.Contains("客服管理员")
                            select new AmiyaEmployeeNameDto
                            {
                                Id = d.Id,
@@ -425,6 +426,24 @@ namespace Fx.Amiya.Service
             var employee = from d in dalAmiyaEmployee.GetAll()
                            where d.Valid
                            && d.AmiyaPositionInfo.Id == 19
+                           select new AmiyaEmployeeNameDto
+                           {
+                               Id = d.Id,
+                               Name = d.Name,
+                           };
+            return await employee.ToListAsync();
+
+        }
+
+        /// <summary>
+        /// 获取财务人员姓名列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<AmiyaEmployeeNameDto>> GetFinancialNameListAsync()
+        {
+            var employee = from d in dalAmiyaEmployee.GetAll()
+                           where d.Valid
+                           && d.AmiyaPositionInfo.Id == 13
                            select new AmiyaEmployeeNameDto
                            {
                                Id = d.Id,

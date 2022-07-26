@@ -98,5 +98,7 @@ namespace Fx.Amiya.DbModels.Model
         public List<ContentPlatformOrder> ContentPlatformOrderList { get; set; }
         public List<GoodsShopCar> GoodsShopCar { get; set; }
 
+        public List<DockingHospitalCustomerInfo> HospitalDockingHospitalCustomerInfo { get; set; }
+
     }
 }

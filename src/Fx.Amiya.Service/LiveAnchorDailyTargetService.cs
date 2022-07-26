@@ -163,7 +163,7 @@ namespace Fx.Amiya.Service
         public async Task<LiveAnchorDailyTargetDto> GetLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate)
         {
             var liveAnchorDiaryInfo = from d in dalLiveAnchorDailyTarget.GetAll()
-                                      where d.RecordDate == recordDate && d.LiveanchorMonthlyTargetId == monthlyTargetId
+                                      where (d.RecordDate == recordDate) && (d.LiveanchorMonthlyTargetId == monthlyTargetId)
                                       select new LiveAnchorDailyTargetDto
                                       {
                                           Id = d.Id,
