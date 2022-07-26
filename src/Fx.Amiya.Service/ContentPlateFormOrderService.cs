@@ -1358,10 +1358,19 @@ namespace Fx.Amiya.Service
                 {
                     throw new Exception("未找到该订单的相关信息！");
                 }
-                order.CheckState = input.CheckState;
+                var dealInfo = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
+                var checkInfo = dealInfo.Where(x => x.CheckState == (int)CheckType.CheckedSuccess).Count();
+                if(checkInfo==dealInfo.Count)
+                {
+                    order.CheckState = (int)CheckType.CheckedSuccess; 
+                }
+                else
+                {
+                    order.CheckState = (int)CheckType.Checking;
+                }
                 order.CheckBy = input.employeeId;
-                order.CheckPrice = input.CheckPrice;
-                order.SettlePrice = input.SettlePrice;
+                order.CheckPrice += input.CheckPrice;
+                order.SettlePrice += input.SettlePrice;
                 order.CheckRemark = input.CheckRemark;
                 order.CheckDate = DateTime.Now;
                 await _dalContentPlatformOrder.UpdateAsync(order, true);
@@ -1370,10 +1379,21 @@ namespace Fx.Amiya.Service
                 {
                     AddOrderCheckPictureDto addCheckPic = new AddOrderCheckPictureDto();
                     addCheckPic.OrderFrom = (int)OrderFrom.ContentPlatFormOrder;
-                    addCheckPic.OrderId = input.Id;
+                    addCheckPic.OrderId = input.OrderDealInfoId;
                     addCheckPic.PictureUrl = x;
                     await _orderCheckPictureService.AddAsync(addCheckPic);
                 }
+
+                //修改成交情况审核信息
+                var dealInfoUpdate = dealInfo.Where(x => x.Id == input.OrderDealInfoId);
+                UpdateContentPlatFormOrderDealInfoDto dealInfoCheck = new UpdateContentPlatFormOrderDealInfoDto();
+                dealInfoCheck.Id = input.OrderDealInfoId;
+                dealInfoCheck.CheckBy = input.employeeId;
+                dealInfoCheck.CheckPrice = input.CheckPrice;
+                dealInfoCheck.CheckRemark = input.CheckRemark;
+                dealInfoCheck.CheckState = input.CheckState;
+                dealInfoCheck.SettlePrice = input.SettlePrice;
+                await _contentPlatFormOrderDalService.CheckAsync(dealInfoCheck);
                 unitOfWork.Commit();
             }
             catch (Exception err)
@@ -1397,10 +1417,27 @@ namespace Fx.Amiya.Service
                 {
                     throw new Exception("未找到该订单的相关信息！");
                 }
-                order.IsReturnBackPrice = true;
-                order.ReturnBackPrice = input.ReturnBackPrice;
+                var dealInfo = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.OrderDealId);
+                var checkInfo = dealInfo.Where(x => x.IsReturnBackPrice == true).Count();
+                if (checkInfo == dealInfo.Count)
+                {
+                    order.IsReturnBackPrice = true;
+                }
+                else
+                {
+                    order.IsReturnBackPrice = false;
+                }
+                order.ReturnBackPrice += input.ReturnBackPrice;
                 order.ReturnBackDate = input.ReturnBackDate;
                 await _dalContentPlatformOrder.UpdateAsync(order, true);
+
+                //修改成交情况回款信息
+                var dealInfoUpdate = dealInfo.Where(x => x.Id == input.OrderDealId);
+                UpdateContentPlatFormOrderDealInfoDto dealInfoCheck = new UpdateContentPlatFormOrderDealInfoDto();
+                dealInfoCheck.Id = input.OrderDealId;
+                dealInfoCheck.ReturnBackDate = input.ReturnBackDate;
+                dealInfoCheck.ReturnBackPrice = input.ReturnBackPrice;
+                await _contentPlatFormOrderDalService.SettleAsync(dealInfoCheck);
 
                 unitOfWork.Commit();
             }
@@ -1578,6 +1615,7 @@ namespace Fx.Amiya.Service
                     orderDealDto.Remark = input.UnDealReason;
                     orderDealDto.Price = 0.00M;
                 }
+                orderDealDto.CreateBy = input.EmpId;
                 await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
                 unitOfWork.Commit();
             }

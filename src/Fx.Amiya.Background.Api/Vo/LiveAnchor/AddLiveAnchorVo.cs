@@ -22,6 +22,10 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchor
         /// </summary>
         public string ContentPlateFormId { get; set; }
         /// <summary>
+        /// 主播基础信息id
+        /// </summary>
+        public string LiveAnchorBaseId { get; set; }
+        /// <summary>
         /// 是否有效
         /// </summary>
         public bool Valid { get; set; }

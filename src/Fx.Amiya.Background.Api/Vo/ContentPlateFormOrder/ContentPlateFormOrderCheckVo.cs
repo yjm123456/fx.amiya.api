@@ -14,6 +14,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         [Required]
         public string Id { get; set; }
+
+        /// <summary>
+        /// 成交情况id
+        /// </summary>
+        public string OrderDealInfoId { get; set; }
         /// <summary>
         /// 审核状态
         /// </summary>

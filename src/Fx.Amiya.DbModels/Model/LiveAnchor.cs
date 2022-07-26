@@ -14,6 +14,8 @@ namespace Fx.Amiya.DbModels.Model
         public string ContentPlateFormId { get; set; }
         public bool Valid { get; set; }
 
+        public string LiveAnchorBaseId { get; set; }
+
         public List<LiveRequirementInfo> LiveRequirementInfoList { get; set; }
         public List<ContentPlatformOrder> ContentPlatformOrderList { get; set; }
 

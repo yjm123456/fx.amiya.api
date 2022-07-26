@@ -80,6 +80,45 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// <summary>
         /// 佣金比例
         /// </summary>
-        public decimal CommissionRatio { get; set; }    
+        public decimal CommissionRatio { get; set; }
+
+
+        /// <summary>
+        /// 审核状态
+        /// </summary>
+        public int? CheckState { get; set; }
+        /// <summary>
+        /// 审核金额
+        /// </summary>
+
+        public decimal? CheckPrice { get; set; }
+        /// <summary>
+        /// 结算金额
+        /// </summary>
+
+        public decimal? SettlePrice { get; set; }
+        /// <summary>
+        /// 审核人
+        /// </summary>
+        public int? CheckBy { get; set; }
+        /// <summary>
+        /// 审核备注
+        /// </summary>
+        public string CheckRemark { get; set; }
+        /// <summary>
+        /// 是否回款
+        /// </summary>
+
+        public bool IsReturnBackPrice { get; set; }
+        /// <summary>
+        /// 回款金额
+        /// </summary>
+
+        public decimal? ReturnBackPrice { get; set; }
+
+        /// <summary>
+        /// 回款时间
+        /// </summary>
+        public DateTime ReturnBackDate { get; set; }
     }
 }

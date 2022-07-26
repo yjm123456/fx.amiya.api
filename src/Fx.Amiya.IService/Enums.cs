@@ -44,7 +44,11 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 审核通过
         /// </summary>
-        CheckedSuccess = 2
+        CheckedSuccess = 2,
+        /// <summary>
+        /// 审核中
+        /// </summary>
+        Checking = 3,
 
     }
 
@@ -271,7 +275,7 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 退款=4
         /// </summary>
-        REFUND=4,
+        REFUND = 4,
         /// <summary>
         /// 其他
         /// </summary>
@@ -513,15 +517,15 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 跟进中
         /// </summary>
-        FollowingUp=2,
+        FollowingUp = 2,
         /// <summary>
         /// 跟进完成
         /// </summary>
-        FollowUpFinished=3,
+        FollowUpFinished = 3,
         /// <summary>
         /// 跟进失败
         /// </summary>
-        FollowUpFailed=4,
+        FollowUpFailed = 4,
     }
     public enum InventoryStatus
     {

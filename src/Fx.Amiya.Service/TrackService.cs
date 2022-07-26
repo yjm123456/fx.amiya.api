@@ -23,28 +23,25 @@ namespace Fx.Amiya.Service
         private IDalTrackType dalTrackType;
         private IDalTrackTool dalTrackTool;
         private IDalTrackRecord dalTrackRecord;
+        private ITrackTypeThemeModelService trackTypeThemeModelService;
         private IDalConfig dalConfig;
         private IDalWaitTrackCustomer dalWaitTrackCustomer;
-        private IDalBindCustomerService dalBindCustomerService;
         private IUnitOfWork unitOfWork;
-        private IDalAmiyaEmployee dalAmiyaEmployee;
         public TrackService(IDalTrackType dalTrackType,
             IDalTrackTool dalTrackTool,
+            ITrackTypeThemeModelService trackTypeThemeModelService,
             IDalTrackRecord dalTrackRecord,
             IDalConfig dalConfig,
             IDalWaitTrackCustomer dalWaitTrackCustomer,
-            IUnitOfWork unitOfWork,
-            IDalBindCustomerService dalBindCustomerService,
-            IDalAmiyaEmployee dalAmiyaEmployee)
+            IUnitOfWork unitOfWork)
         {
             this.dalTrackType = dalTrackType;
+            this.trackTypeThemeModelService = trackTypeThemeModelService;
             this.dalTrackTool = dalTrackTool;
             this.dalTrackRecord = dalTrackRecord;
             this.dalConfig = dalConfig;
             this.dalWaitTrackCustomer = dalWaitTrackCustomer;
             this.unitOfWork = unitOfWork;
-            this.dalBindCustomerService = dalBindCustomerService;
-            this.dalAmiyaEmployee = dalAmiyaEmployee;
         }
 
         #region 回访类型
@@ -62,7 +59,8 @@ namespace Fx.Amiya.Service
                             {
                                 Id = d.Id,
                                 Name = d.Name,
-                                Valid = d.Valid
+                                Valid = d.Valid,
+                                HasModel = d.HasModel,
                             };
             FxPageInfo<TrackTypeDto> trackTypePageInfo = new FxPageInfo<TrackTypeDto>();
             trackTypePageInfo.TotalCount = await trackType.CountAsync();
@@ -84,7 +82,8 @@ namespace Fx.Amiya.Service
                             {
                                 Id = d.Id,
                                 Name = d.Name,
-                                Valid = d.Valid
+                                Valid = d.Valid,
+                                HasModel = d.HasModel
                             };
 
             return await trackType.ToListAsync();
@@ -98,17 +97,42 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task AddTrackTypeAsync(AddTrackTypeDto addDto)
         {
-            var type = await dalTrackType.GetAll().SingleOrDefaultAsync(e => e.Name == addDto.Name);
-            if (type != null)
-                throw new Exception("添加失败，已存在该回访类型");
+            try
+            {
+                var type = await dalTrackType.GetAll().SingleOrDefaultAsync(e => e.Name == addDto.Name);
+                if (type != null)
+                    throw new Exception("添加失败，已存在该回访类型");
 
-            TrackType trackType = new TrackType();
-            trackType.Name = addDto.Name;
-            trackType.Valid = true;
-            await dalTrackType.AddAsync(trackType, true);
+                TrackType trackType = new TrackType();
+                trackType.Name = addDto.Name;
+                trackType.HasModel = addDto.HasModel;
+                trackType.Valid = true;
+                await dalTrackType.AddAsync(trackType, true);
+                if (addDto.HasModel == true)
+                {
+                    await trackTypeThemeModelService.AddAsync(addDto.TrackTypeThemeModelDto);
+                }
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message.ToString());
+            }
         }
 
-
+        public async Task<TrackTypeDto> GetbyIdAsync(int Id)
+        {
+            var model = await dalTrackType.GetAll().SingleOrDefaultAsync(e => e.Id == Id);
+            if (model.Id == 0)
+            { throw new Exception("未找到对应编号的回访类型！"); }
+            TrackTypeDto result = new TrackTypeDto();
+            result.Id = model.Id;
+            result.Name = model.Name;
+            result.Valid = model.Valid;
+            result.HasModel = model.HasModel;
+            var trackTypeThemeModel = await trackTypeThemeModelService.GetListAsync(Id);
+            result.TrackTypeThemeModelDto = trackTypeThemeModel;
+            return result;
+        }
 
 
         /// <summary>
@@ -127,7 +151,12 @@ namespace Fx.Amiya.Service
                 throw new Exception("修改失败，已存在该回访类型");
             trackType.Name = updateDto.Name;
             trackType.Valid = updateDto.Valid;
+            trackType.HasModel = updateDto.HasModel;
             await dalTrackType.UpdateAsync(trackType, true);
+            if (trackType.HasModel == true)
+            {
+                await trackTypeThemeModelService.AddAsync(updateDto.AddTrackTypeThemeModelDto);
+            }
         }
 
 

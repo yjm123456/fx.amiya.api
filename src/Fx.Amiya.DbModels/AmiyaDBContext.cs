@@ -19,8 +19,10 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<AmiyaWareHouse> AmiyaWareHouse { get; set; }
         public virtual DbSet<AmiyaInWarehouse> AmiyaInWarehouse { get; set; }
         public virtual DbSet<AmiyaOutWarehouse> AmiyaOutWarehouse { get; set; }
+        public virtual DbSet<LiveAnchorBaseInfo> LiveAnchorBaseInfo { get; set; }
         public virtual DbSet<LiveAnchorWeChatInfo> LiveAnchorWeChatInfo { get; set; }
         public virtual DbSet<AmiyaWareHouseNameManage> AmiyaWareHouseNameManage { get; set; }
+        public virtual DbSet<DockingHospitalCustomerInfo> DockingHospitalCustomerInfo { get; set; }
         public virtual DbSet<WxMpUserInfo> WxMpUserInfo { get; set; }
         public virtual DbSet<HospitalFeedBack> HospitalFeedBack { get; set; }
         public virtual DbSet<InventoryList> InventoryList { get; set; }
@@ -87,6 +89,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<TrackType> TrackType { get; set; }
         public virtual DbSet<TrackTool> TrackTool { get; set; }
         public virtual DbSet<TrackTheme> TrackTheme { get; set; }
+        public virtual DbSet<TrackTypeThemeModel> TrackTypeThemeModel { get; set; }
         public virtual DbSet<TrackRecord> TrackRecord { get; set; }
         public virtual DbSet<WaitTrackCustomer> WaitTrackCustomer { get; set; }
         public virtual DbSet<Initializer> OrderInitializer { get; set; }
@@ -118,7 +121,9 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new AmiyaEmployeeConfiguration());
             modelBuilder.ApplyConfiguration(new ConsumptionLevelConfiguration());
             modelBuilder.ApplyConfiguration(new ContentPlatFormCustomerPictureConfiguration());
+            modelBuilder.ApplyConfiguration(new DockingHospitalCustomerInfoConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalFeedBackConfiguration());
+            modelBuilder.ApplyConfiguration(new LiveAnchorBaseInfoConfiguration());
             modelBuilder.ApplyConfiguration(new LiveAnchorWechatInfoConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaWareHouseConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaInWarehouseConfiguration());
@@ -201,6 +206,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new TrackThemeConfiguration());
             modelBuilder.ApplyConfiguration(new TrackRecordConfiguration());
             modelBuilder.ApplyConfiguration(new WaitTrackCustomerConfiguration());
+            modelBuilder.ApplyConfiguration(new TrackTypeThemeModelConfiguration());
             modelBuilder.ApplyConfiguration(new OrderInitializerConfiguration());
             modelBuilder.ApplyConfiguration(new LiveTypeConfiguration());
             modelBuilder.ApplyConfiguration(new RequirementTypeConfiguration());

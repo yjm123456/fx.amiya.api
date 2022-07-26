@@ -335,24 +335,45 @@ namespace Fx.Amiya.Service
 
         public async Task<CustomerHospitalConsumeDto> GetByIdAsync(int Id)
         {
-            var selectResult = dalCustomerHospitalConsume.GetAll().Where(x => x.Id == Id).FirstOrDefaultAsync().Result;
+            var selectResult = dalCustomerHospitalConsume.GetAll().Include(e => e.HospitalInfo).Where(x => x.Id == Id).FirstOrDefaultAsync().Result;
             CustomerHospitalConsumeDto result = new CustomerHospitalConsumeDto();
             result.Id = selectResult.Id;
             result.ConsumeId = selectResult.ConsumeId;
             result.Channel = selectResult.Channel;
             result.HospitalId = selectResult.HospitalId;
+            result.HospitalName = selectResult.HospitalInfo.Name;
             result.Phone = selectResult.Phone;
             result.LiveAnchorId = selectResult.LiveAnchorId;
+            if (selectResult.LiveAnchorId != 0)
+            {
+                var liveanchor = await liveAnchorService.GetByIdAsync(selectResult.LiveAnchorId);
+                result.LiveAnchorName = liveanchor.Name;
+
+            }
             result.ItemName = selectResult.ItemName;
             result.Price = selectResult.Price;
+            result.CheckDate = selectResult.CheckDate;
+            result.CheckBy = selectResult.CheckBy;
+            if (selectResult.CheckBy != 0)
+            {
+                var checkEmpInfo = dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(z => z.Id == selectResult.CheckBy);
+                result.CheckByEmpName = checkEmpInfo.Result.Name;
+            }
+            result.CheckState = ServiceClass.GetCheckTypeText(selectResult.CheckState);
             result.ConsumeType = selectResult.ConsumeType;
             result.CheckSettlePrice = selectResult.CheckSettlePrice;
             result.NickName = selectResult.NickName;
             result.IsAddedOrder = selectResult.IsAddedOrder;
             result.OrderId = selectResult.OrderId;
+            result.IsReturnBackPrice = selectResult.IsReturnBackPrice;
+            result.ReturnBackDate = selectResult.ReturnBackDate;
+            result.CreateDate = selectResult.CreateDate;
+            result.ReturnBackPrice = selectResult.ReturnBackPrice;
             result.WriteOffDate = selectResult.WriteOffDate;
             result.IsCconsultationCard = selectResult.IsCconsultationCard;
             result.BuyAgainType = selectResult.BuyAgainType;
+            result.BuyAgainTypeText = ServiceClass.GetBuyAgainTypeText(selectResult.BuyAgainType);
+            result.ChannelText = ServiceClass.GerConsumeChannelText(selectResult.Channel.Value);
             result.IsSelfLiving = selectResult.IsSelfLiving;
             result.BuyAgainTime = selectResult.BuyAgainTime;
             result.HasBuyagainEvidence = selectResult.HasBuyagainEvidence;

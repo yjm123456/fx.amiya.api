@@ -28,6 +28,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IOrderService orderService;
         private ISendOrderInfoService _sendOrderInfoService;
         private IShoppingCartRegistrationService _shoppingCartRegistrationService;
+        private IContentPlatFormOrderDealInfoService _contentPlatFormOrderDealInfoService;
         private IHospitalInfoService _hospitalInfoService;
         private ICustomerService customerService;
         private IHttpContextAccessor httpContextAccessor;
@@ -43,6 +44,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             ICustomerService customerService,
             IContentPlateFormOrderService contentPlatFormOrderService,
             IHospitalInfoService hospitalInfoService,
+            IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
             ISendOrderInfoService sendOrderInfoService,
             ICustomerHospitalConsumeService customerHospitalConsumeService,
             IShoppingCartRegistrationService shoppingCartRegistrationService,
@@ -53,6 +55,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             _sendOrderInfoService = sendOrderInfoService;
             this.httpContextAccessor = httpContextAccessor;
             this.appointmentService = appointmentService;
+            _contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
             this.customerService = customerService;
             _hospitalInfoService = hospitalInfoService;
             _shoppingCartRegistrationService = shoppingCartRegistrationService;
@@ -529,6 +532,160 @@ namespace Fx.Amiya.Background.Api.Controllers
             return result;
         }
 
+        /// <summary>
+        /// 获取成交情况列表
+        /// </summary>
+        /// <param name="startDate">登记开始日期</param>
+        /// <param name="endDate">登记结束日期</param>
+        /// <param name="isToHospital">是否到院（空查询所有）</param>
+        /// <param name="tohospitalStartDate">到院开始时间</param>
+        /// <param name="toHospitalEndDate">到院结束时间</param>
+        /// <param name="toHospitalType">到院类型（空查询所有）</param>
+        /// <param name="isDeal">是否成交（空查询所有）</param>
+        /// <param name="lastDealHospitalId">最终成交医院id（空查询所有）</param>
+        /// <param name="isAccompanying">是否陪诊（空查询所有）</param>
+        /// <param name="isOldCustomer">新老客业绩（空查询所有）</param>
+        /// <param name="CheckState">审核状态（空查询所有）</param>
+        /// <param name="isReturnBakcPrice">是否回款（空查询所有）</param>
+        /// <param name="returnBackPriceStartDate">回款开始时间</param>
+        /// <param name="returnBackPriceEndDate">回款结束时间</param>
+        /// <param name="customerServiceId">跟进人员（空查询所有，0查医院）</param>
+        /// <param name="keyWord">关键字</param>
+        /// <returns></returns>
+        [HttpGet("contentPlatFormOrderDealInfo")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<List<ContentPlatFormOrderDealInfoReportVo>>> GetDealInfo(DateTime? startDate, DateTime? endDate, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord)
+        {
+
+            bool isHidePhone = true;
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            {
+                isHidePhone = false;
+            }
+            int employeeId = Convert.ToInt32(employee.Id);
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, isHidePhone);
+
+            var contentPlatformOrders = from d in result
+                                        select new ContentPlatFormOrderDealInfoReportVo
+                                        {
+                                            Id = d.Id,
+                                            ContentPlatFormOrderId = d.ContentPlatFormOrderId,
+                                            CreateDate = d.CreateDate,
+                                            SendOrderDate=d.SendDate,
+                                            OrderCreateDate=d.OrderCreateDate,
+                                            ContentPlatFormName=d.ContentPlatFormName,
+                                            LiveAnchorName=d.LiveAnchorName,
+                                            GoodsName=d.GoodsName,
+                                            CustomerNickName=d.CustomerNickName,
+                                            ConsultationEmpName=d.ConsultationEmpName,
+                                            IsDeal = d.IsDeal == true ? "是" : "否",
+                                            IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
+                                            IsAcompanying = d.IsAcompanying == true ? "是" : "否",
+                                            CommissionRatio = d.CommissionRatio,
+                                            Phone = d.Phone,
+                                            IsToHospital = d.IsToHospital == true ? "是" : "否",
+                                            ToHospitalTypeText = d.ToHospitalTypeText,
+                                            TohospitalDate = d.ToHospitalDate,
+                                            LastDealHospital = d.LastDealHospital,
+                                            Remark = d.Remark,
+                                            Price = d.Price,
+                                            DealDate = d.DealDate,
+                                            OtherOrderId = d.OtherAppOrderId,
+                                            CheckStateText = d.CheckStateText,
+                                            CheckPrice = d.CheckPrice,
+                                            CheckDate = d.CheckDate,
+                                            CheckBy = d.CheckByEmpName,
+                                            SettlePrice = d.SettlePrice,
+                                            CheckRemark = d.CheckRemark,
+                                            IsReturnBackPrice = d.IsReturnBackPrice == true ? "是" : "否",
+                                            ReturnBackDate = d.ReturnBackDate,
+                                            ReturnBackPrice = d.ReturnBackPrice,
+                                            CreateByEmpName = d.CreateByEmpName,
+                                        };
+            List<ContentPlatFormOrderDealInfoReportVo> pageInfo = new List<ContentPlatFormOrderDealInfoReportVo>();
+            pageInfo = contentPlatformOrders.ToList();
+            return ResultData<List<ContentPlatFormOrderDealInfoReportVo>>.Success().AddData("contentPlatFormOrderDealInfo", pageInfo);
+        }
+
+        /// <summary>
+        /// 导出成交情况列表
+        /// </summary>
+        /// <param name="startDate">登记开始日期</param>
+        /// <param name="endDate">登记结束日期</param>
+        /// <param name="isToHospital">是否到院（空查询所有）</param>
+        /// <param name="tohospitalStartDate">到院开始时间</param>
+        /// <param name="toHospitalEndDate">到院结束时间</param>
+        /// <param name="toHospitalType">到院类型（空查询所有）</param>
+        /// <param name="isDeal">是否成交（空查询所有）</param>
+        /// <param name="lastDealHospitalId">最终成交医院id（空查询所有）</param>
+        /// <param name="isAccompanying">是否陪诊（空查询所有）</param>
+        /// <param name="isOldCustomer">新老客业绩（空查询所有）</param>
+        /// <param name="CheckState">审核状态（空查询所有）</param>
+        /// <param name="isReturnBakcPrice">是否回款（空查询所有）</param>
+        /// <param name="returnBackPriceStartDate">回款开始时间</param>
+        /// <param name="returnBackPriceEndDate">回款结束时间</param>
+        /// <param name="customerServiceId">跟进人员（空查询所有，0查医院）</param>
+        /// <param name="keyWord">关键字</param>
+        /// <returns></returns>
+        [HttpGet("exportContentPlatFormOrderDealInfo")]
+        [FxInternalAuthorize]
+        public async Task<FileStreamResult> ExportDealInfo(DateTime? startDate, DateTime? endDate, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord)
+        {
+
+            bool isHidePhone = true;
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            {
+                isHidePhone = false;
+            }
+            int employeeId = Convert.ToInt32(employee.Id);
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, isHidePhone);
+
+            var contentPlatformOrders = from d in result
+                                        select new ContentPlatFormOrderDealInfoReportVo
+                                        {
+                                            Id = d.Id,
+                                            ContentPlatFormOrderId = d.ContentPlatFormOrderId,
+                                            CreateDate = d.CreateDate,
+                                            SendOrderDate = d.SendDate,
+                                            OrderCreateDate = d.OrderCreateDate,
+                                            ContentPlatFormName = d.ContentPlatFormName,
+                                            LiveAnchorName = d.LiveAnchorName,
+                                            GoodsName = d.GoodsName,
+                                            CustomerNickName = d.CustomerNickName,
+                                            ConsultationEmpName = d.ConsultationEmpName,
+                                            IsDeal = d.IsDeal == true ? "是" : "否",
+                                            IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
+                                            IsAcompanying = d.IsAcompanying == true ? "是" : "否",
+                                            CommissionRatio = d.CommissionRatio,
+                                            Phone = d.Phone,
+                                            IsToHospital = d.IsToHospital == true ? "是" : "否",
+                                            ToHospitalTypeText = d.ToHospitalTypeText,
+                                            TohospitalDate = d.ToHospitalDate,
+                                            LastDealHospital = d.LastDealHospital,
+                                            Remark = d.Remark,
+                                            Price = d.Price,
+                                            DealDate = d.DealDate,
+                                            OtherOrderId = d.OtherAppOrderId,
+                                            CheckStateText = d.CheckStateText,
+                                            CheckPrice = d.CheckPrice,
+                                            CheckDate = d.CheckDate,
+                                            CheckBy = d.CheckByEmpName,
+                                            SettlePrice = d.SettlePrice,
+                                            CheckRemark = d.CheckRemark,
+                                            IsReturnBackPrice = d.IsReturnBackPrice == true ? "是" : "否",
+                                            ReturnBackDate = d.ReturnBackDate,
+                                            ReturnBackPrice = d.ReturnBackPrice,
+                                            CreateByEmpName = d.CreateByEmpName,
+                                        };
+            var exportContentPlatFormDealOrder = contentPlatformOrders.ToList();
+            var stream = ExportExcelHelper.ExportExcel(exportContentPlatFormDealOrder);
+            var exportInfo = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "内容平台成交情况报表.xls");
+            return exportInfo;
+        }
+
+
 
         /// <summary>
         /// 下单平台订单派单报表
@@ -997,14 +1154,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="employeeId">派单客服id</param>
         /// <param name="belongEmpId">归属客服id</param>
         /// <param name="orderStatus">订单状态</param>
-        /// <param name="IsToHospital">是否到院， -1查询全部</param>
+        /// <param name="IsToHospital">是否到院，为空查询全部</param>
         /// <param name="toHospitalStartDate">到院时间起</param>
         /// <param name="toHospitalEndDate">到院时间止</param>        
         /// <param name="toHospitalType">到院类型，为空查询所有</param>
         /// <returns></returns>
         [HttpGet("customerSendContentPlatFormOrderReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<CustomerSendContentPlatFormOrderReportVo>>> GetCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int? liveAnchorId, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, string contentPlatFormId, int employeeId, int belongEmpId, int? orderStatus)
+        public async Task<ResultData<List<CustomerSendContentPlatFormOrderReportVo>>> GetCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int? liveAnchorId, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, string contentPlatFormId, int employeeId, int belongEmpId, int? orderStatus)
         {
             if (!startDate.HasValue && !endDate.HasValue)
             { throw new Exception("请选择时间进行查询"); }
@@ -1033,7 +1190,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           GoodsName = d.GoodsName,
                           CustomerName = d.CustomerName,
                           IsOldCustomer=d.IsOldCustomer,
-                          IsAcompanying=d.IsAcompanying,
+                          IsAcompanying=d.IsAcompanying == true ? "是" : "否",
                           CommissionRatio=d.CommissionRatio,
                           Phone = d.Phone,
                           OrderStatusText = d.OrderStatusText,
@@ -1060,14 +1217,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="employeeId">派单客服id(-1查询所有)</param>
         /// <param name="belongEmpId">归属客服id(-1查询所有)</param>
         /// <param name="orderStatus">订单状态</param>
-        /// <param name="IsToHospital">是否到院， -1查询全部</param>
+        /// <param name="IsToHospital">是否到院， 为空查询全部</param>
         /// <param name="toHospitalStartDate">到院时间起</param>
         /// <param name="toHospitalEndDate">到院时间止</param>        
         /// <param name="toHospitalType">到院类型，为空查询所有</param>
         /// <returns></returns>
         [HttpGet("customerSendContentPlatFormOrderExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? liveAnchorId, int? hospitalId, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string contentPlatFormId, int employeeId, int IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int belongEmpId, int? orderStatus)
+        public async Task<FileStreamResult> ExportCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? liveAnchorId, int? hospitalId, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string contentPlatFormId, int employeeId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int belongEmpId, int? orderStatus)
         {
             bool isHidePhone = true;
             if (!startDate.HasValue && !endDate.HasValue)
@@ -1101,7 +1258,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           GoodsName = d.GoodsName,
                           CustomerName = d.CustomerName,
                           IsOldCustomer = d.IsOldCustomer,
-                          IsAcompanying = d.IsAcompanying,
+                          IsAcompanying = d.IsAcompanying == true ? "是" : "否",
                           CommissionRatio = d.CommissionRatio,
                           Phone = d.Phone,
                           OrderStatusText = d.OrderStatusText,

@@ -66,6 +66,7 @@ namespace Fx.Amiya.Service
                                   Name = d.Name,
                                   HostAccountName = string.IsNullOrWhiteSpace(d.HostAccountName) ? "" : d.HostAccountName,
                                   ContentPlateFormId = string.IsNullOrWhiteSpace(d.ContentPlateFormId) ? "" : d.ContentPlateFormId,
+                                  LiveAnchorBaseId = d.LiveAnchorBaseId,
                                   Valid = d.Valid
                               };
             var resultList = await liveAnchors.ToListAsync();
@@ -142,6 +143,7 @@ namespace Fx.Amiya.Service
                                   Name = d.Name,
                                   HostAccountName = string.IsNullOrWhiteSpace(d.HostAccountName) ? "" : d.HostAccountName,
                                   ContentPlateFormId = string.IsNullOrWhiteSpace(d.ContentPlateFormId) ? "" : d.ContentPlateFormId,
+                                  LiveAnchorBaseId=d.LiveAnchorBaseId,
                                   Valid = d.Valid
                               };
             FxPageInfo<LiveAnchorDto> liveAnchorPageInfo = new FxPageInfo<LiveAnchorDto>();
@@ -178,6 +180,7 @@ namespace Fx.Amiya.Service
                 LiveAnchor liveAchor = new LiveAnchor();
                 liveAchor.Name = addDto.Name;
                 liveAchor.Valid = addDto.Valid;
+                liveAchor.LiveAnchorBaseId = addDto.LiveAnchorBaseId;
                 liveAchor.HostAccountName = addDto.HostAccountName;
                 liveAchor.ContentPlateFormId = addDto.ContentPlateFormId;
                 await dalLiveAnchor.AddAsync(liveAchor, true);
@@ -204,6 +207,7 @@ namespace Fx.Amiya.Service
                     Id = 0,
                     HostAccountName = "",
                     ContentPlateFormId = "",
+                    LiveAnchorBaseId = "",
                     Valid = false
                 };
             }
@@ -211,6 +215,7 @@ namespace Fx.Amiya.Service
             LiveAnchorDto liveAnchorDto = new LiveAnchorDto();
             liveAnchorDto.Id = x.Id;
             liveAnchorDto.Name = x.Name;
+            liveAnchorDto.LiveAnchorBaseId = x.LiveAnchorBaseId;
             liveAnchorDto.HostAccountName = x.HostAccountName;
             liveAnchorDto.ContentPlateFormId = x.ContentPlateFormId;
             liveAnchorDto.Valid = x.Valid;
@@ -233,6 +238,7 @@ namespace Fx.Amiya.Service
             liveAchor.Id = updateDto.Id;
             liveAchor.Name = updateDto.Name;
             liveAchor.Valid = updateDto.Valid;
+            liveAchor.LiveAnchorBaseId = updateDto.LiveAnchorBaseId;
             liveAchor.HostAccountName = updateDto.HostAccountName;
             liveAchor.ContentPlateFormId = updateDto.ContentPlateFormId;
             await dalLiveAnchor.UpdateAsync(liveAchor, true);

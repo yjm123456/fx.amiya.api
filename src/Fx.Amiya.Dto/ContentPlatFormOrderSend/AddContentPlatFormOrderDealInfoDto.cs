@@ -82,5 +82,10 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 佣金比例
         /// </summary>
         public decimal CommissionRatio { get; set; }
+
+        /// <summary>
+        /// 创建人
+        /// </summary>
+        public int CreateBy { get; set; }
     }
 }

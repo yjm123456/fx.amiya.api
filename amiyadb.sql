@@ -483,6 +483,7 @@ CREATE TABLE `amiyadb`.`tbl_goods_shopcar` (
 
 -----------------------------------------------余建明 2022/07/19 BEGIN--------------------------------------------;
 
+--主播微信号
 CREATE TABLE `amiyadb`.`tbl_live_anchor_wechat_info` (
   `id` VARCHAR(50) NOT NULL,
   `live_anchor_id` INT UNSIGNED NOT NULL,
@@ -497,6 +498,68 @@ CREATE TABLE `amiyadb`.`tbl_live_anchor_wechat_info` (
     REFERENCES `amiyadb`.`tbl_live_anchor` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
+    --主播介绍
+    CREATE TABLE `amiyadb`.`tbl_live_anchor_base_info` (
+  `id` VARCHAR(50) NOT NULL,
+  `live_anchor_name` VARCHAR(100) NULL,
+  `thumb_picture` VARCHAR(300) NULL,
+  `nick_name` VARCHAR(45) NULL,
+  `individuality_signature` VARCHAR(200) NULL,
+  `description` VARCHAR(400) NULL,
+  `detail_picture` VARCHAR(300) NULL,
+  `is_main` INT NULL, 
+  `valid` BIT NOT NULL ,
+  PRIMARY KEY (`id`));
+
+  --医院订单/客户对接基础表
+
+  CREATE TABLE `amiyadb`.`tbl_docking_hospital_customer_info` (
+  `id` VARCHAR(50) NOT NULL,
+  `app_key` VARCHAR(100) NOT NULL,
+  `app_secret` VARCHAR(5000) NOT NULL,
+  `token` VARCHAR(5000) NULL,
+  `authorize_date` DATETIME NULL,
+  `expire_date` DATETIME NULL,
+  `refresh_token` VARCHAR(3000) NULL,
+  `hospital_id` INT UNSIGNED NOT NULL,
+  `base_url` VARCHAR(500) NULL,
+  `token_url` VARCHAR(500) NULL,
+  `get_customer_url` VARCHAR(500) NULL ,
+  `get_customer_order_url` VARCHAR(500) NULL,
+  `get_order_url` VARCHAR(500) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_docking_hospital_user_info_idx` (`hospital_id` ASC) VISIBLE,
+  CONSTRAINT `fk_docking_hospital_user_info`
+    FOREIGN KEY (`hospital_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+    --回访模板基础表
+
+    CREATE TABLE `amiyadb`.`tbl_track_type_theme_model` (
+  `id` VARCHAR(50) NOT NULL,
+  `track_type_id` INT UNSIGNED NOT NULL,
+  `track_theme_id` INT UNSIGNED NOT NULL,
+  `days_later` INT NOT NULL,
+  `track_plan` VARCHAR(100) NULL,
+  `create_date` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_track_type_info_idx` (`track_type_id` ASC) VISIBLE,
+  INDEX `fk_track_theme_info_idx` (`track_theme_id` ASC) VISIBLE,
+  CONSTRAINT `fk_track_type_info`
+    FOREIGN KEY (`track_type_id`)
+    REFERENCES `amiyadb`.`tbl_track_type` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_track_theme_info`
+    FOREIGN KEY (`track_theme_id`)
+    REFERENCES `amiyadb`.`tbl_track_theme` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
 -----------------------------------------------余建明 2022/07/19END--------------------------------------------;
 
 

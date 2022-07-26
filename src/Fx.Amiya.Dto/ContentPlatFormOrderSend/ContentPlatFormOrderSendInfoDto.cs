@@ -137,5 +137,9 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         public DateTime? ToHospitalDate { get; set; }
         public int ToHospitalType { get; set; }
         public string ToHospitalTypeText { get; set; }
+        /// <summary>
+        /// 是否陪诊
+        /// </summary>
+        public bool IsAcompanying { get; set; }
     }
 }

@@ -29,6 +29,17 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.IsOldCustomer).HasColumnName("is_old_customer").HasColumnType("bit").IsRequired();
             builder.Property(t => t.IsAcompanying).HasColumnName("is_accompanying").HasColumnType("bit").IsRequired();
             builder.Property(e => e.CommissionRatio).HasColumnName("commission_ratio").HasColumnType("DECIMAL(5,2)").IsRequired();
+            builder.Property(e => e.CheckState).HasColumnName("check_state").HasColumnType("int").IsRequired(false);
+            builder.Property(e => e.CheckPrice).HasColumnName("check_price").HasColumnType("DECIMAL").IsRequired(false);
+            builder.Property(e => e.CheckDate).HasColumnName("check_date").HasColumnType("DATETIME").IsRequired(false);
+            builder.Property(e => e.SettlePrice).HasColumnName("settle_price").HasColumnType("DECIMAL").IsRequired(false);
+            builder.Property(e => e.CheckBy).HasColumnName("check_by").HasColumnType("int").IsRequired(false);
+            builder.Property(e => e.CheckRemark).HasColumnName("check_remark").HasColumnType("VARCHAR(300)").IsRequired(false);
+            builder.Property(e => e.CreateBy).HasColumnName("create_by").HasColumnType("int").IsRequired();
+            builder.Property(t => t.IsReturnBackPrice).HasColumnName("is_return_back_price").HasColumnType("bit").IsRequired();
+            builder.Property(e => e.ReturnBackPrice).HasColumnName("return_back_price").HasColumnType("DECIMAL(12,2)").IsRequired(false);
+            builder.Property(e => e.ReturnBackDate).HasColumnName("return_back_date").HasColumnType("DATETIME").IsRequired(false);
+            builder.HasOne(t => t.ContentPlatFormOrder).WithMany(t => t.ContentPlatformOrderDealInfoList).HasForeignKey(t => t.ContentPlatFormOrderId);
         }
     }
 }

@@ -179,6 +179,6 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// <summary>
         /// 是否陪诊
         /// </summary>
-        public string IsAcompanying { get; set; }
+        public bool IsAcompanying { get; set; }
     }
 }

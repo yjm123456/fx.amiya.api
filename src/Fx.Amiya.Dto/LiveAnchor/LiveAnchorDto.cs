@@ -13,6 +13,8 @@ namespace Fx.Amiya.Dto.LiveAnchor
 
         public string ContentPlateFormId { get; set; }
         public string ContentPlateFormName { get; set; }
+
+        public string LiveAnchorBaseId { get; set; }
         public bool Valid { get; set; }
     }
 }

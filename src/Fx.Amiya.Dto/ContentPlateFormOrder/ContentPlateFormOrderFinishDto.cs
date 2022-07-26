@@ -77,5 +77,10 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 三方订单号
         /// </summary>
         public string OtherContentPlatFormOrderId { get; set; }
+
+        /// <summary>
+        /// 操作人，医院为0；
+        /// </summary>
+        public int EmpId { get; set; }
     }
 }

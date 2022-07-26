@@ -137,6 +137,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var result = await liveAnchorWechatInfoService.GetByIdAsync(id);
             LiveAnchorWechatInfoVo wechatInfo = new LiveAnchorWechatInfoVo();
             wechatInfo.Id = result.Id;
+            wechatInfo.ContentPlatFormId = result.ContentPlatFormId;
             wechatInfo.LiveAnchorId = result.LiveAnchorId;
             wechatInfo.WeChatNo = result.WeChatNo;
             wechatInfo.NickName = result.NickName;

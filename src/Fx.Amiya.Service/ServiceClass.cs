@@ -636,6 +636,9 @@ namespace Fx.Amiya.Service
                 case 2:
                     CheckTypeText = "审核通过";
                     break;
+                case 3:
+                    CheckTypeText = "审核中";
+                    break;
             }
             return CheckTypeText;
         }

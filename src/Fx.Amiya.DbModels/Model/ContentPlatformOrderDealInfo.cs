@@ -87,5 +87,26 @@ namespace Fx.Amiya.DbModels.Model
         /// 佣金比例
         /// </summary>
         public decimal CommissionRatio { get; set; }
+
+        /// <summary>
+        /// 创建人（0为医院）
+        /// </summary>
+        public int CreateBy { get; set; }
+
+        public int? CheckState { get; set; }
+
+        public decimal? CheckPrice { get; set; }
+        public DateTime? CheckDate { get; set; }
+
+        public decimal? SettlePrice { get; set; }
+        public int? CheckBy { get; set; }
+        public string CheckRemark { get; set; }
+
+        public bool IsReturnBackPrice { get; set; }
+
+        public decimal? ReturnBackPrice { get; set; }
+        public DateTime? ReturnBackDate { get; set; }
+
+        public ContentPlatformOrder ContentPlatFormOrder { get; set; }
     }
 }

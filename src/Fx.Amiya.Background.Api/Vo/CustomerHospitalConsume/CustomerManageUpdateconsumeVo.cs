@@ -13,11 +13,20 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerHospitalConsume
         /// </summary>
         [Required(ErrorMessage = "编号不能为空")]
         public int Id { get; set; }
+
+        /// <summary>
+        /// 升单订单号
+        /// </summary>
+        public string ConsumeId { get; set; }
         /// <summary>
         /// 医院编号
         /// </summary>
         [Required(ErrorMessage = "请选择医院")]
         public int HospitalId { get; set; }
+        /// <summary>
+        /// 医院名称
+        /// </summary>
+        public string HospitalName { get; set; }
         /// <summary>
         /// 电话文本
         /// </summary>
@@ -45,6 +54,10 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerHospitalConsume
         /// </summary>
         public int? Channel { get; set; }
         /// <summary>
+        /// 渠道名称
+        /// </summary>
+        public string ChannelText { get; set; }
+        /// <summary>
         /// 三方订单号
         /// </summary>
         public string OtherContentPlatFormOrderId { get; set; }
@@ -53,6 +66,10 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerHospitalConsume
         /// 主播账号ID
         /// </summary>
         public int LiveAnchorId { get; set; }
+        /// <summary>
+        /// 归属主播IP
+        /// </summary>
+        public string LiveAnchorName { get; set; }
         /// <summary>
         /// 客户昵称
         /// </summary>
@@ -78,6 +95,10 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerHospitalConsume
         /// 升单类型
         /// </summary>
         public int BuyAgainType { get; set; }
+        /// <summary>
+        /// 升单类型名称
+        /// </summary>
+        public string BuyAgainTypeText { get; set; }
         /// <summary>
         /// 归属自播/外播
         /// </summary>
@@ -121,10 +142,41 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerHospitalConsume
         /// 审核结算金额
         /// </summary>
         public decimal? CheckSettlePrice { get; set; }
+        /// <summary>
+        /// 审核日期
+        /// </summary>
+        public DateTime? CheckDate { get; set; }
+        /// <summary>
+        /// 审核人员名称
+        /// </summary>
+        public string CheckByEmpName { get; set; }
+        /// <summary>
+        /// 审核状态
+        /// </summary>
+        public string CheckState { get; set; }
+
+        /// <summary>
+        /// 是否回款
+        /// </summary>
+        public bool IsReturnBackPrice { get; set; }
+
+        /// <summary>
+        /// 回款金额
+        /// </summary>
+        public decimal? ReturnBackPrice { get; set; }
+        /// <summary>
+        /// 回款日期
+        /// </summary>
+
+        public DateTime? ReturnBackDate { get; set; }
 
         /// <summary>
         /// 是否确认升单
         /// </summary>
         public bool IsConfirmOrder { get; set; }
+        /// <summary>
+        /// 登记日期
+        /// </summary>
+        public DateTime CreateDate { get; set; }
     }
 }

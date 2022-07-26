@@ -16,10 +16,12 @@ namespace Fx.Amiya.Service
     public class OrderCheckPictureService : IOrderCheckPictureService
     {
         private IDalOrderCheckPicture dalOrderCheckPicture;
+        public IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
 
-        public OrderCheckPictureService(IDalOrderCheckPicture dalOrderCheckPicture)
+        public OrderCheckPictureService(IDalOrderCheckPicture dalOrderCheckPicture, IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService)
         {
             this.dalOrderCheckPicture = dalOrderCheckPicture;
+            this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
         }
 
 
@@ -28,8 +30,21 @@ namespace Fx.Amiya.Service
         {
             try
             {
+                List<string> OrderIds = new List<string>();
+                if(OrderFrom==2)
+                {
+                    var orderDealInfo = await contentPlatFormOrderDealInfoService.GetByOrderIdAsync(orderId);
+                    foreach(var x in orderDealInfo)
+                    {
+                        OrderIds.Add(x.Id);
+                    }
+                }
+                else
+                {
+                    OrderIds.Add(orderId);
+                }
                 var orderCheckPicture = from d in dalOrderCheckPicture.GetAll()
-                                        where (string.IsNullOrEmpty(orderId) || d.OrderId.Contains(orderId))
+                                        where (OrderIds.Count == 0 || OrderIds.Contains(d.OrderId))
                                         &&(OrderFrom == 0 || d.OrderFrom==OrderFrom)
                                         select new OrderCheckPictureDto
                                         {
