@@ -81,8 +81,8 @@ namespace Fx.Amiya.Background.Api
                 if (_fxAppGlobal.AppConfig.SyncOrderConfig.DouYin == true)
                 {
                     ////获取抖音发生改变的订单，开始时间和结束时间不能超过一天
-                    var douYinOrderResult = await _syncTikTokOrder.TranslateTradesSoldChangedOrders(date.AddMinutes(-15), date);
-                    tikTokOrderList.AddRange(douYinOrderResult);
+                    //var douYinOrderResult = await _syncTikTokOrder.TranslateTradesSoldChangedOrders(date.AddMinutes(-15), date);
+                    //tikTokOrderList.AddRange(douYinOrderResult);
                 }
                 List<OrderInfoAddDto> amiyaOrderList = new List<OrderInfoAddDto>();
                 List<TikTokOrderAddDto> tikTokOrderAddList = new List<TikTokOrderAddDto>();
