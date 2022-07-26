@@ -1,11 +1,12 @@
-﻿using Fx.Amiya.Dto.TikTokOrder;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Fx.Amiya.Dto.TmallOrder
+namespace Fx.Amiya.Dto.TikTokOrder
 {
-   public class OrderTradeAddDto
+    public class TikTokOrderTradeAddDto
     {
         /// <summary>
         /// 客户编号
@@ -28,7 +29,6 @@ namespace Fx.Amiya.Dto.TmallOrder
         /// </summary>
         public bool IsAdminAdd { get; set; } = false;
 
-        public List<OrderInfoAddDto> OrderInfoAddList { get; set; }
-        public List<TikTokOrderAddDto> TikTokOrderInfoAddList { get; set; }
+        public List<TikTokOrderAddDto> OrderInfoAddList { get; set; }
     }
 }

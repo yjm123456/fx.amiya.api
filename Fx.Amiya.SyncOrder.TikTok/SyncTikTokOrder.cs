@@ -1,4 +1,8 @@
-﻿using Fx.Amiya.IService;
+﻿
+using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto.OrderAppInfo;
+using Fx.Amiya.Dto.TikTokUserInfo;
+using Fx.Amiya.IService;
 using Fx.Amiya.SyncOrder.Core;
 using Fx.Amiya.SyncOrder.TikTok.TikTokAppInfoConfig;
 using Fx.Common.Utils;
@@ -8,8 +12,11 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Fx.Amiya.SyncOrder.TikTok
 {
@@ -17,11 +24,13 @@ namespace Fx.Amiya.SyncOrder.TikTok
     {
         private ITikTokAppInfoReader _tikTokAppInfoReader;
         private ILogger<SyncTikTokOrder> _logger;
+        private ITikTokUserInfoService _tikTokUserInfoService;
 
-        public SyncTikTokOrder(ITikTokAppInfoReader tikTokAppInfoReader, ILogger<SyncTikTokOrder> logger)
+        public SyncTikTokOrder(ITikTokAppInfoReader tikTokAppInfoReader, ILogger<SyncTikTokOrder> logger, ITikTokUserInfoService tikTokUserInfoService)
         {
             _tikTokAppInfoReader = tikTokAppInfoReader;
             _logger = logger;
+            _tikTokUserInfoService = tikTokUserInfoService;
         }
 
         public Task<List<OrderLocCode>> GetOrderLocCodesAsync(DateTime startDate, DateTime endDate, int codeStatus)
@@ -44,21 +53,16 @@ namespace Fx.Amiya.SyncOrder.TikTok
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        public async Task<List<AmiyaOrder>> TranslateTradesSoldChangedOrders(DateTime startDate, DateTime endDate)
+        public async Task<List<TikTokOrder>> TranslateTradesSoldChangedOrders(DateTime startDate, DateTime endDate)
         {
             int day = (endDate - startDate).Days;
             if (day > 29)
-                throw new Exception("开始时间和结束时间不能超过一个月");
-
+                throw new Exception("开始时间和结束时间不能超过一个月");           
             int dateType = 2;  //按订单修改时间查询
-            int pageNum = 1;
-
-            var weChatOfficialAccountAppInfo = await _tikTokAppInfoReader.GetTikTokAppInfo();
-
-            List<AmiyaOrder> amiyaOrderList = new List<AmiyaOrder>();
-
-            amiyaOrderList = await RequestTikTokOrderAsync(startDate, endDate, weChatOfficialAccountAppInfo, dateType, pageNum, amiyaOrderList);
-
+            int pageNum = 0;
+            var tikTokAppInfo = await _tikTokAppInfoReader.GetTikTokAppInfo();      
+            List<TikTokOrder> amiyaOrderList = new List<TikTokOrder>();
+            amiyaOrderList = await RequestTikTokOrderAsync(startDate, endDate, tikTokAppInfo, dateType, pageNum, amiyaOrderList);
             return amiyaOrderList;
         }
 
@@ -72,95 +76,137 @@ namespace Fx.Amiya.SyncOrder.TikTok
         /// <param name="pageNum"></param>
         /// <param name="amiyaOrderList"></param>
         /// <returns></returns>
-        private async Task<List<AmiyaOrder>> RequestTikTokOrderAsync(DateTime startDate, DateTime endDate, TikTokAppInfo tikTokAppInfo, int dateType, int pageNum, List<AmiyaOrder> amiyaOrderList)
+        private async Task<List<TikTokOrder>> RequestTikTokOrderAsync(DateTime startDate, DateTime endDate, TikTokAppInfo tikTokAppInfo, int dateType, int pageNum, List<TikTokOrder> amiyaOrderList)
         {
-            int pageSize = 95;
+            try {
+                int pageSize = 100;
+                var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
 
-            string orderRequestUrl = GetRequestUrl("/order/list") + string.Format("?access_token={0}&start_modify={1}&end_modify={2}"
-                 , tikTokAppInfo.RefreshToken, startDate, endDate);
-            var res = await HttpUtil.HTTPJsonGetAsync(orderRequestUrl);
+                var host = "https://openapi-fxg.jinritemai.com";
+                var start = DateTimeOffset.Now.ToUnixTimeSeconds() - 172800;
+                var end = DateTimeOffset.Now.ToUnixTimeSeconds();
+                //请求参数
+                var param = new Dictionary<string, object> {
+                { "page",pageNum},
+                { "size",pageSize},
+                { "update_time_start",start},
+                { "update_time_end",end},
+                {"order_by","update_time" }
+            };
+                var paramJson = Marshal(param);
+                Console.WriteLine("param_json:" + paramJson);
 
-            if (res.Contains("errorcode"))
-                _logger.LogInformation(res);
+                //计算签名
+                var signVal = Sign(tikTokAppInfo.AppKey, tikTokAppInfo.AppSecret, "order.searchList", timestamp, paramJson);
+                Console.WriteLine("sign_val:" + signVal);
 
-            var order = JsonConvert.DeserializeObject<TikTokOrderResult>(res);
-            if (order.total > 0)
-            {
-                foreach (var orderItem in order.orderList)
+                //发起请求
+                var res = Fetch(tikTokAppInfo.AppKey, host, "order.searchList", timestamp, paramJson, tikTokAppInfo.AccessToken, signVal);
+
+                TikTokOrderResult order = JsonConvert.DeserializeObject<TikTokOrderResult>(res); ;
+
+                if (order.err_no > 0)
+                    _logger.LogInformation(res);
+                if (order.data.total > 0)
                 {
-                    int orderIdNum = 1;
-                    foreach (var goodsItem in orderItem.childList)
+                    foreach (var orderItem in order.data.shop_order_list)
                     {
-                        AmiyaOrder amiyaOrder = new AmiyaOrder();
-                        if (orderItem.childList.Count > 1)
+                        var currentChildList = new List<TikTokOrder>();
+                        foreach (var goodsItem in orderItem.sku_order_list)
                         {
-                            if (orderIdNum > 99)
+                            TikTokOrder tikTokOrder = new TikTokOrder();
+                            tikTokOrder.Id = goodsItem.order_id;
+                            tikTokOrder.GoodsId = goodsItem.product_id.ToString();
+                            tikTokOrder.GoodsName = goodsItem.product_name;
+                            tikTokOrder.Quantity = Convert.ToInt32(goodsItem.item_num);
+                            tikTokOrder.ThumbPicUrl = goodsItem.product_pic;
+                            tikTokOrder.AppointmentHospital = "";
+                            tikTokOrder.StatusCode = GetStatusCodeOfDouYin(goodsItem.order_status, goodsItem.after_sale_info);
+                            tikTokOrder.OrderType = goodsItem.order_type;
+                            tikTokOrder.ActualPayment = goodsItem.pay_amount/100;
+                            tikTokOrder.CreateDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(goodsItem.create_time.ToString()) ? 0 : goodsItem.create_time).AddHours(8);
+                            tikTokOrder.UpdateDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(goodsItem.update_time.ToString()) ? 0 : goodsItem.update_time).AddHours(8);
+                            tikTokOrder.WriteOffDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(goodsItem.confirm_receipt_time.ToString()) ? 0 : goodsItem.confirm_receipt_time).AddHours(8);
+                            tikTokOrder.AppType = (byte)AppType.Douyin;
+                            tikTokOrder.IsAppointment = false;
+                            if (tikTokOrder.OrderType == 0)
                             {
-                                amiyaOrder.Id = orderItem.order_no + orderIdNum.ToString();
+                                //医院根据门店参数实时循环获取
+                                //暂时占位
+                                tikTokOrder.AppointmentHospital = goodsItem.product_name;
                             }
-                            else if (orderIdNum > 9)
+                            currentChildList.Add(tikTokOrder);                            
+                        }
+
+                        AddTikTokUserDto addTikTokUserDto = new AddTikTokUserDto();
+                        addTikTokUserDto.CipherName = orderItem.encrypt_post_receiver;
+                        addTikTokUserDto.CipherPhone = orderItem.encrypt_post_tel;
+                        var userinfo = _tikTokUserInfoService.getTikTokUserInfoByCipherPhone(orderItem.encrypt_post_tel);
+                        //如果密文已存在且有对应的解密信息,直接将用户信息赋值给订单
+                        if (userinfo != null)
+                        {
+                            if (!string.IsNullOrEmpty(userinfo.Phone))
                             {
-                                amiyaOrder.Id = orderItem.order_no + "0" + orderIdNum.ToString();
+                                currentChildList.ForEach(o => {
+                                    o.Phone = userinfo.Phone;
+                                    o.BuyerNick = userinfo.Name;
+                                    o.TikTokUserId = userinfo.Id;
+                                });
                             }
-                            else
-                            {
-                                amiyaOrder.Id = orderItem.order_no + "00" + orderIdNum.ToString();
-                            }
-                            orderIdNum++;
                         }
                         else
                         {
-                            amiyaOrder.Id = orderItem.order_no;
+                            addTikTokUserDto.Id = GuidUtil.NewGuidShortString();
+                            await _tikTokUserInfoService.AddAsync(addTikTokUserDto);
+                            currentChildList.ForEach(o => o.TikTokUserId = addTikTokUserDto.Id);
                         }
-                        amiyaOrder.GoodsId = goodsItem.item_id;
-                        amiyaOrder.GoodsName = goodsItem.item_title;
-                        amiyaOrder.Quantity = string.IsNullOrEmpty(goodsItem.num) ? 0 : Convert.ToInt32(goodsItem.num);
-                        amiyaOrder.ThumbPicUrl = goodsItem.item_img;
-                        amiyaOrder.AppointmentHospital = "";
-                        amiyaOrder.StatusCode = GetStatusCodeOfWeiFenxiao(orderItem.status);
-                        if (Convert.ToInt16(goodsItem.num) == 0)
-                        {
-                            amiyaOrder.StatusCode = "TRADE_CLOSED";
-                        }
-                        amiyaOrder.OrderType = (byte)(orderItem.is_self_take == "1" ? 0 : 1);
-                        var currentPrice = string.IsNullOrEmpty(goodsItem.current_price) ? 0.00M : Convert.ToDecimal(goodsItem.current_price);
-                        amiyaOrder.ActualPayment = currentPrice * amiyaOrder.Quantity;
-                        amiyaOrder.CreateDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(orderItem.create_time) ? 0 : Convert.ToInt64(orderItem.create_time)).AddHours(8);
-                        amiyaOrder.UpdateDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(orderItem.order_update_time) ? 0 : Convert.ToInt64(orderItem.order_update_time)).AddHours(8);
-                        amiyaOrder.WriteOffDate= UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(orderItem.end_time) ? 0 : Convert.ToInt64(orderItem.end_time)).AddHours(8);
-                        amiyaOrder.AppType = (byte)AppType.WeChatOfficialAccount;
-                        amiyaOrder.IsAppointment = false;
-                        if (amiyaOrder.OrderType == 0)
-                        {
-                            //医院根据门店参数实时循环获取
-                            amiyaOrder.AppointmentHospital = goodsItem.sku_name;
-                        }
-                        //     //根据用户id获取用户信息
-                        //     string userinfoGetUrl = GetRequestUrl("/user/info") + string.Format("?access_token={0}&user_id={1}"
-                        //, tikTokAppInfo.RefreshToken, orderItem.user_id);
-                        //     var userInfoResult = await HttpUtil.HTTPJsonGetAsync(userinfoGetUrl);
-                        //     if (res.Contains("error_response"))
-                        //         throw new Exception(userInfoResult);
-
-                        //     var userInfo = JsonConvert.DeserializeObject<TikTokUserInfo>(userInfoResult);
-
-                        amiyaOrder.BuyerNick = orderItem.receiver_name;
-                        amiyaOrder.Phone = orderItem.receiver_mobile;
-                        amiyaOrderList.Add(amiyaOrder);
+                        amiyaOrderList.AddRange(currentChildList);
                     }
                 }
+
+
+                long orderCount = order.data.total;
+                if (orderCount >= (pageNum + 1) * pageSize)
+                {
+                    await RequestTikTokOrderAsync(startDate, endDate, tikTokAppInfo, dateType, pageNum + 1, amiyaOrderList);
+                }
+
+                return amiyaOrderList;
+            } catch (Exception ex) {
+                throw ex;
             }
-
-
-            int orderCount = order.total;
-            if (orderCount >= pageNum * pageSize)
-            {
-                await RequestTikTokOrderAsync(startDate, endDate, tikTokAppInfo, dateType, pageNum + 1, amiyaOrderList);
-            }
-
-            return amiyaOrderList;
         }
+        public string Fetch(string appKey, string host, string method, long timestamp, string paramJson,
+    string accessToken, string sign)
+        {
+            var methodPath = method.Replace('.', '/');
+            var u = host + "/" + methodPath +
+                    "?method=" + HttpUtility.UrlEncode(method, Encoding.UTF8) +
+                    "&app_key=" + HttpUtility.UrlEncode(appKey, Encoding.UTF8) +
+                    "&access_token=" + HttpUtility.UrlEncode(accessToken, Encoding.UTF8) +
+                    "&timestamp=" + HttpUtility.UrlEncode(timestamp.ToString(), Encoding.UTF8) +
+                    "&v=" + HttpUtility.UrlEncode("2", Encoding.UTF8) +
+                    "&sign=" + HttpUtility.UrlEncode(sign, Encoding.UTF8) +
+                    "&sign_method=" + HttpUtility.UrlEncode("hmac-sha256", Encoding.UTF8);
+            var header = new Dictionary<string, string>();
+            header.Add("Content-Type", "application/json;charset=UTF-8");
+            header.Add("Accept", "*/*");
+            var res = HttpUtil.CommonHttpRequest(paramJson, u, "POST");
+            return res;
 
+        }
+        // 序列化参数
+        private string Marshal(object o)
+        {
+            var raw = JsonConvert.SerializeObject(o);
+            // 反序列化为JObject
+            var dict = JsonConvert.DeserializeObject(raw);
+
+            // 重新序列化
+            var settings = new JsonSerializerSettings();
+            settings.Converters = new List<JsonConverter> { new JObjectConverter(), new JValueConverter() };
+            return JsonConvert.SerializeObject(dict, Formatting.None, settings);
+        }
 
         /// <summary>
         /// 获取请求url
@@ -169,57 +215,79 @@ namespace Fx.Amiya.SyncOrder.TikTok
         /// <returns></returns>
         private string GetRequestUrl(string path)
         {
-            string url = "http://api.wifenxiao.com";
+            string url = "https://openapi-fxg.jinritemai.com";
             if (!string.IsNullOrEmpty(path))
             {
                 url += path;
             }
             return url;
         }
+        /// <summary>
+        /// 获取签名
+        /// </summary>
+        /// <param name="appKey"></param>
+        /// <param name="appSecret"></param>
+        /// <param name="method">方法描述</param>
+        /// <param name="timestamp">时间戳</param>
+        /// <param name="paramJson">请求参数</param>
+        /// <returns></returns>
+        public string Sign(string appKey, string appSecret, string method, long timestamp, string paramJson)
+        {
+            // 按给定规则拼接参数
+            var paramPattern = "app_key" + appKey + "method" + method + "param_json" + paramJson + "timestamp" +
+                               timestamp + "v2";
+            var signPattern = appSecret + paramPattern + appSecret;
+            Console.WriteLine("sign_pattern:" + signPattern);
 
-
+            return HmacHelper.Hmac(signPattern, appSecret);
+        }
 
         /// <summary>
         /// 获取订单状态
         /// </summary>
         /// <param name="statusCode">抖音返回订单状态</param>
         /// <returns></returns>
-        private static string GetStatusCodeOfWeiFenxiao(string statusCode)
+        private static string GetStatusCodeOfDouYin(long statusCode, TikTokAfterSaleInfo afterSaleInfo)
         {
             string code = "";
+            //售后状态只要不是初始化状态,就视订单为退款\售后状态
+            if (afterSaleInfo.after_sale_status>0) {
+                return code = "REFUNDING";
+            }
             switch (statusCode)
             {
-                case "0":
+                case 1L:
                     code = "WAIT_BUYER_PAY";
                     break;
 
                 //待出库，即买家已付款
-                case "1":
+                case 105L:
                     code = "WAIT_SELLER_SEND_GOODS";
                     break;
 
-                //等待确认收货,即卖家已发货
-                case "2":
+                //已付款,商家备货
+                case 2L:
+                    code = "WAIT_SELLER_SEND_GOODS";
+                    break;
+                //订单中的部分商品已发货
+                case 101L:
                     code = "WAIT_BUYER_CONFIRM_GOODS";
                     break;
-                //买家确认收货，即：交易成功
-                case "3":
+                //订单中的全部商品已发货
+                case 3L:
+                    code = "WAIT_BUYER_CONFIRM_GOODS";
+                    break;
+                //订单取消
+                case 4L:
+                    code = "TRADE_CLOSED";
+                    break;
+                //订单完成
+                case 5L:
                     code = "TRADE_FINISHED";
                     break;
-                //付款以前，卖家或买家主动关闭交易
-                case "4":
-                    code = "TRADE_CLOSED";
-                    break;
-                //付款以后用户退款成功，交易自动关闭
-                case "5":
-                    code = "TRADE_CLOSED";
-                    break;
-                //用户退款中
-                case "6":
-                    code = "REFUNDING";
-                    break;
+
                 default:
-                    code = statusCode;
+                    code = statusCode.ToString();
                     break;
             }
 

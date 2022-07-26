@@ -33,7 +33,7 @@ namespace Fx.Amiya.Service
                                           where (keyword == null || d.GoodsInfo.Name.Contains(keyword))
                                                && (d.CustomerId == customerId)
                                                && (d.Status == 1)
-                                               && (d.Num > 0) 
+                                               && (d.Num > 0) orderby d.CreateDate descending
                                           select new GoodsShopCarDto
                                           {
                                               Id = d.Id,

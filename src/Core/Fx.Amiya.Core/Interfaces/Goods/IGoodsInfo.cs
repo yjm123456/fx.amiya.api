@@ -104,5 +104,6 @@ namespace Fx.Amiya.Core.Interfaces.Goods
         /// </summary>
         /// <returns></returns>
         Task<FxPageInfo<GoodsInfoForListDto>> GetLikeListAsync(bool? valid, int pageNum, int pageSize);
+        Task<FxPageInfo<GoodsInfoForListDto>> GetIntegraListAsync(bool? valid, int pageNum, int pageSize);
     }
 }

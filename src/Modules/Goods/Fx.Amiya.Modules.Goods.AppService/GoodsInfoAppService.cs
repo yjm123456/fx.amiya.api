@@ -425,7 +425,55 @@ namespace Fx.Amiya.Modules.Goods.AppService
             return exchangeTypeList;
         }
 
-       
+        public async Task<FxPageInfo<GoodsInfoForListDto>> GetIntegraListAsync(bool? valid, int pageNum, int pageSize)
+        {
+            var goodsInfos = freeSql.Select<GoodsInfoDbModel>()
+                .Include(e => e.GoodsCategory)
+                .Where(e=>e.GoodsCategory.ShowDirectionType==0 && e.GoodsCategory.Valid==valid)
+                .Where(e => valid == null || e.Valid == valid)
+                .Where(e => e.ExchangeType == 0)
+                .OrderByDescending(e => e.SaleCount);
+
+            var goodsInfoList = from d in await goodsInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync()
+                                select new GoodsInfoForListDto
+                                {
+                                    Id = d.Id,
+                                    Name = d.Name,
+                                    SimpleCode = d.SimpleCode,
+                                    Description = d.Description,
+                                    Standard = d.Standard,
+                                    Unit = d.Unit,
+                                    SalePrice = d.SalePrice,
+                                    InventoryQuantity = d.InventoryQuantity,
+                                    Valid = d.Valid,
+                                    ExchangeType = (ExchangeType)d.ExchangeType,
+                                    ExchangeTypeText = exchangeTypeDict[((ExchangeType)d.ExchangeType)],
+                                    IntegrationQuantity = d.IntegrationQuantity,
+                                    ThumbPicUrl = d.ThumbPicUrl,
+                                    IsMaterial = d.IsMaterial,
+                                    GoodsType = d.GoodsType,
+                                    GoodsTypeName = goodsTypeDict[d.GoodsType],
+                                    IsLimitBuy = d.IsLimitBuy,
+                                    LimitBuyQuantity = d.LimitBuyQuantity,
+                                    CategoryId = d.CategoryId,
+                                    CategoryName = d.GoodsCategory.Name,
+                                    GoodsDetailId = d.GoodsDetailId,
+                                    CreateBy = d.CreateBy,
+                                    CreateDate = d.CreateDate,
+                                    UpdateBy = d.UpdateBy,
+                                    UpdatedDate = d.UpdatedDate,
+                                    DetailsDescription = d.DetailsDescription,
+                                    MinShowPrice = d.MinShowPrice,
+                                    MaxShowPrice = d.MaxShowPrice,
+                                    VisitCount = d.VisitCount,
+                                    ShowSaleCount = d.ShowSaleCount
+                                };
+            FxPageInfo<GoodsInfoForListDto> goodsPageInfo = new FxPageInfo<GoodsInfoForListDto>();
+            goodsPageInfo.TotalCount = (int)await goodsInfos.CountAsync();
+            goodsPageInfo.List = goodsInfoList;
+            return goodsPageInfo;
+        }
+
         Dictionary<ExchangeType, string> exchangeTypeDict = new Dictionary<ExchangeType, string>()
         {
             { ExchangeType.Integration,"积分支付"},

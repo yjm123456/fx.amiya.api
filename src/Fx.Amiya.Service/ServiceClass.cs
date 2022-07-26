@@ -296,7 +296,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="orderType"></param>
         /// <returns></returns>
-        public static string GetOrderTypeText(byte orderType)
+        public static string GetOrderTypeText(long? orderType)
         {
             string orderTypeText = "";
             switch (orderType)
@@ -307,6 +307,32 @@ namespace Fx.Amiya.Service
 
                 case 1:
                     orderTypeText = "实物订单";
+                    break;
+            }
+            return orderTypeText;
+        }
+        /// <summary>
+        /// 获取抖点订单类型文本
+        /// </summary>
+        /// <param name="orderType"></param>
+        /// <returns></returns>
+        public static string GetTikTokOrderTypeText(byte orderType)
+        {
+            string orderTypeText = "";
+            switch (orderType)
+            {
+                case 0:
+                    orderTypeText = "实物订单";
+                    break;
+
+                case 2:
+                    orderTypeText = "虚拟订单";
+                    break;
+                case 3:
+                    orderTypeText = "电子券poi核销";
+                    break;
+                case 5:
+                    orderTypeText = "三方核销";
                     break;
             }
             return orderTypeText;
