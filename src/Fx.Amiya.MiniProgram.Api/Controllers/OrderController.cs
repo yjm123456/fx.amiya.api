@@ -737,7 +737,62 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             return ResultData<FxPageInfo<OrderTradeVo>>.Success().AddData("orders", orderTradePageInfo);
         }
 
+        /// <summary>
+        /// 获取所有平台的订单列表
+        /// </summary>
+        /// <param name="statusCode">状态码：WAIT_BUYER_PAY=待付款，WAIT_SELLER_SEND_GOODS=待发货，WAIT_BUYER_CONFIRM_GOODS=待收货</param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("alllist")]
+        public async Task<ResultData<FxPageInfo<OrderTradeVo>>> GetOrderListForAllAmiyaByCustomerId(string statusCode, int pageNum, int pageSize)
+        {
+            var token = tokenReader.GetToken();
+            var sessionInfo = sessionStorage.GetSession(token);
+            string customerId = sessionInfo.FxCustomerId;
+            var q = await orderService.GetOrderListForAllAmiyaByCustomerId(customerId, statusCode, pageNum, pageSize);
+            var orders = from d in q.List
+                         select new OrderTradeVo
+                         {
+                             TradeId = d.TradeId,
+                             CustomerId = d.CustomerId,
+                             CreateDate = d.CreateDate,
+                             AddressId = d.AddressId,
+                             TotalAmount = d.TotalAmount,
+                             TotalIntegration = d.TotalIntegration,
+                             Remark = d.Remark,
+                             StatusCode = d.StatusCode,
+                             StatusText = d.StatusText,
+                             OrderInfoList = (from o in d.OrderInfoList
+                                              select new OrderInfoVo
+                                              {
+                                                  Id = o.Id,
+                                                  GoodsName = o.GoodsName,
+                                                  GoodsId = o.GoodsId,
+                                                  ThumbPicUrl = o.ThumbPicUrl,
+                                                  ActualPayment = o.ActualPayment,
+                                                  SinglePrice = o.ActualPayment.HasValue && o.Quantity > 0 ? (o.ActualPayment / o.Quantity) : 0.00M,
+                                                  OrderType = o.OrderType,
+                                                  OrderTypeText = o.OrderTypeText,
+                                                  Quantity = o.Quantity,
+                                                  IntegrationQuantity = o.IntegrationQuantity,
+                                                  SingleIntegrationQuantity = o.IntegrationQuantity.HasValue && o.Quantity > 0 ? (o.IntegrationQuantity / o.Quantity) : 0.00M,
+                                                  ExchangeType = o.ExchangeType,
+                                                  ExchangeTypeText = o.ExchangeTypeText,
+                                                  TradeId = o.TradeId,
+                                                  Standard = goodsInfoService.GetByIdAsync(o.GoodsId).Result.Standard,
+                                                  AppType=o.AppType,
+                                                  AppTypeText=o.AppTypeText
+                                              }).ToList()
+                         };
 
+
+
+            FxPageInfo<OrderTradeVo> orderTradePageInfo = new FxPageInfo<OrderTradeVo>();
+            orderTradePageInfo.TotalCount = q.TotalCount;
+            orderTradePageInfo.List = orders;
+            return ResultData<FxPageInfo<OrderTradeVo>>.Success().AddData("orders", orderTradePageInfo);
+        }
 
 
         /// <summary>

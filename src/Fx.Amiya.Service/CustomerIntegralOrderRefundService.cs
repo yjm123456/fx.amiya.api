@@ -23,18 +23,20 @@ namespace Fx.Amiya.Service
         private IUnitOfWork unitOfWork;
         private IIntegrationAccount _interGrationAccountService;
         private IOrderService _orderService;
+        private IDalOrderTrade _orderTrade;
 
         public CustomerIntegralOrderRefundService(IDalCustomerIntegralOrderRefund dalCustomerIntegralOrderRefunds,
                IUnitOfWork unitOfWork,
             IDalAmiyaEmployee dalAmiyaEmployee,
             IIntegrationAccount interGrationAccountService,
-            IOrderService orderService)
+            IOrderService orderService, IDalOrderTrade orderTrade)
         {
             this.dalCustomerIntegralOrderRefund = dalCustomerIntegralOrderRefunds;
             this.dalAmiyaEmployee = dalAmiyaEmployee;
             this.unitOfWork = unitOfWork;
             _interGrationAccountService = interGrationAccountService;
             _orderService = orderService;
+            _orderTrade = orderTrade;
         }
 
 
@@ -119,6 +121,45 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
+                throw ex;
+            }
+        }
+
+        public async Task AddByTradeAsync(AddCustomerIntegralOrderRefundsDto addDto)
+        {
+            try {
+                var orderTradeResult = _orderTrade.GetAll().Where(o => o.TradeId == addDto.TradeId).Include(e=>e.OrderInfoList).SingleOrDefault();
+                if (orderTradeResult == null) {
+                    throw new Exception("交易不存在");
+                }
+                if (orderTradeResult.OrderInfoList.Count<=0) {
+                    throw new Exception("订单不存在");
+                }
+                List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
+                foreach (var item in orderTradeResult.OrderInfoList) {
+                    if (item.StatusCode==OrderStatusCode.REFUNDING) {
+                        throw new Exception("该订单已提交过退款申请，无法重复提交！");
+                    }
+                    CustomerIntegralOrderRefund customerIntegralOrderRefund = new CustomerIntegralOrderRefund();
+                    customerIntegralOrderRefund.Id = Guid.NewGuid().ToString();
+                    customerIntegralOrderRefund.OrderId = item.Id;
+                    customerIntegralOrderRefund.CustomerId = addDto.CustomerId;
+                    customerIntegralOrderRefund.RefundReasong = addDto.RefundReasong;
+                    customerIntegralOrderRefund.CreateDate = DateTime.Now;
+                    customerIntegralOrderRefund.CheckState = (int)CheckType.NotChecked;
+                    customerIntegralOrderRefund.CheckBy = 0;
+                    customerIntegralOrderRefund.CheckReason = "";
+                    await dalCustomerIntegralOrderRefund.AddAsync(customerIntegralOrderRefund, true);
+                    //修改订单状态
+                    UpdateOrderDto updateOrderDto = new UpdateOrderDto();
+                    updateOrderDto.OrderId = customerIntegralOrderRefund.OrderId;
+                    updateOrderDto.AppType = item.AppType;
+                    updateOrderDto.StatusCode = OrderStatusCode.REFUNDING;
+                    updateOrderDto.IntergrationQuantity = item.IntegrationQuantity;
+                    updateOrderList.Add(updateOrderDto);
+                }
+                await _orderService.UpdateAsync(updateOrderList);
+            } catch (Exception ex) {
                 throw ex;
             }
         }
@@ -290,5 +331,6 @@ namespace Fx.Amiya.Service
             }
         }
 
+        
     }
 }

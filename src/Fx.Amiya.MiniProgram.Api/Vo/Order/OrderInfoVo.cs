@@ -40,5 +40,7 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Order
         public string TradeId { get; set; }
 
         public string Standard { get; set; }
+        public byte AppType { get; set; }
+        public string AppTypeText { get; set; }
     }
 }

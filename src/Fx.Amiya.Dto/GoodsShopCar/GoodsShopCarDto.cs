@@ -83,5 +83,7 @@ namespace Fx.Amiya.Dto.GoodsShopCar
         /// 更新日期
         /// </summary>
         public DateTime? UpdateDate { get; set; }
+        public bool  IsMaterial { get; set; }
+        public decimal? HospitalSalePrice { get; set; }
     }
 }

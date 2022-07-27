@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fx.Amiya.Dto.TikTokOrder;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -28,5 +29,6 @@ namespace Fx.Amiya.Dto.TmallOrder
         public bool IsAdminAdd { get; set; } = false;
 
         public List<OrderInfoAddDto> OrderInfoAddList { get; set; }
+        public List<TikTokOrderAddDto> TikTokOrderInfoAddList { get; set; }
     }
 }

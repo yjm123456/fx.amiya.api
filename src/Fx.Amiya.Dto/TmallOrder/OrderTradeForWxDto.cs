@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fx.Amiya.Dto.TikTokOrder;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,5 +20,6 @@ namespace Fx.Amiya.Dto.TmallOrder
         
 
         public List<OrderInfoDto> OrderInfoList { get; set; }
+        public List<TikTokOrderDto> TikTokOrderInfoList { get; set; }
     }
 }

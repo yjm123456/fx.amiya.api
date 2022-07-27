@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Fx.Amiya.Background.Api.Vo.CallRecord;
 using Fx.Amiya.Common;
 using Fx.Amiya.Core.Services;
+using Fx.Amiya.SyncOrder.TikTok;
 using Fx.Amiya.SyncOrder.Tmall;
 using Fx.Amiya.SyncOrder.WeiFenXiao;
 using Fx.Authentication;
@@ -55,6 +56,7 @@ namespace Fx.Amiya.Background.Api
             services.AddScoped<IMongoRepository<CallRecordVo>, FxCallRecordMongoRepository>();
             services.AddFxAmiyaSyncTmallOrderService();
             services.AddFxAmiyaSyncWeiFenXiaoOrderService();
+            services.AddFxAmiyaSyncTikTokOrderService();
             FxAmiyaModulesRegister.RegisteModules(services);
 
             services.AddFxJwtTokenAuthenticationServices();

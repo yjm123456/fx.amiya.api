@@ -566,8 +566,70 @@ CREATE TABLE `amiyadb`.`tbl_goods_shopcar` (
     ON UPDATE NO ACTION);
 -----------------------------------------------余建明 2022/07/11 END--------------------------------------------;
 
+-----------------------------------------------王健 2022/07/26BEGIN--------------------------------------------;
 
 
+--抖店订单表
+CREATE TABLE `tbl_tiktok_order_info` (
+  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `goods_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `goods_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `appointment_hospital` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `final_consumption_hospital` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `actual_payment` decimal(10,2) DEFAULT NULL,
+  `account_receivable` decimal(10,2) DEFAULT NULL,
+  `status_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `thumb_pic_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `create_date` datetime DEFAULT NULL,
+  `update_date` datetime DEFAULT NULL,
+  `write_off_date` datetime DEFAULT NULL,
+  `buyer_nick` varchar(225) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `app_type` tinyint NOT NULL COMMENT '下单平台（0=天猫，1=京东，2=阿美雅）',
+  `is_appointment` bit(1) NOT NULL,
+  `order_type` bigint DEFAULT NULL COMMENT '订单类型（0=虚拟订单，1=实物订单）',
+  `order_nature` tinyint NOT NULL DEFAULT '0',
+  `quantity` int unsigned DEFAULT NULL COMMENT '商品数量',
+  `integration_quantity` decimal(18,2) DEFAULT NULL COMMENT '抵扣积分',
+  `exchange_type` tinyint DEFAULT NULL COMMENT '交易类型（0=积分）',
+  `trade_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '交易编号',
+  `Description` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '简介',
+  `Standard` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '规格',
+  `Parts` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '部位',
+  `write_off_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `already_write_off_amount` int NOT NULL DEFAULT '0',
+  `live_anchor_id` int NOT NULL DEFAULT '0',
+  `belong_emp_id` int NOT NULL DEFAULT '0',
+  `check_state` int NOT NULL DEFAULT '0',
+  `check_price` decimal(10,2) DEFAULT '0.00',
+  `settle_price` decimal(10,2) DEFAULT '0.00',
+  `check_by` int DEFAULT NULL,
+  `check_remark` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `check_date` datetime DEFAULT NULL,
+  `is_return_back_price` bit(1) NOT NULL,
+  `return_back_price` decimal(12,2) DEFAULT NULL,
+  `return_back_date` datetime DEFAULT NULL,
+  `tiktok_user_id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `fk_tiktokOrderInfo_tradeId_orderTrade_tradeId` (`trade_id`) USING BTREE,
+  KEY `fk_tiktokOrderInfo_tiktokUserInfoId_tiktokUserInfo_id` (`tiktok_user_id`) USING BTREE,
+  CONSTRAINT `fk_tiktokOrderInfo_tiktokuserinfoid_tiktokUserInfoId_id` FOREIGN KEY (`tiktok_user_id`) REFERENCES `tbl_tiktok_userinfo` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_tiktokOrderInfo_tradeId_orderTrade_tradeId` FOREIGN KEY (`trade_id`) REFERENCES `tbl_order_trade` (`trade_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC
+
+--抖店用户表
+
+CREATE TABLE `tbl_tiktok_userinfo` (
+  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cipher_name` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `cipher_phone` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC
+
+
+-----------------------------------------------王健 2022/07/26END--------------------------------------------;
 
 
 

@@ -24,5 +24,6 @@ namespace Fx.Amiya.DbModels.Model
         public Address Address { get; set; }
         public List<OrderInfo> OrderInfoList { get; set; }
         public SendGoodsRecord SendGoodsRecord { get; set; }
+        public List<TikTokOrderInfo> TikTokOrderInfoList { get; set; }
     }
 }

@@ -43,6 +43,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<AmiyaPositionInfo> AmiyaPositionInfo { get; set; }
         public virtual DbSet<HospitalEmployee> HospitalEmployee { get; set; }
         public virtual DbSet<GoodsShopCar> GoodsShopCar { get; set; }
+        public virtual DbSet<GoodsHospitalPrice> GoodsHospitalPrices { get; set; }
         public virtual DbSet<HospitalPositionInfo> HospitalPositionInfo { get; set; }
         public virtual DbSet<ItemInfo> ItemInfo { get; set; }
         public virtual DbSet<HomepageCarouselImage> HomepageCarouselImage { get; set; }
@@ -109,8 +110,8 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<SendOrderMessageBoard> SendOrderMessageBoard { get; set; }
         public virtual DbSet<ContentPlatformOrder> ContentPlatformOrder { get; set; }
         public virtual DbSet<ContentPlatformOrderSend> ContentPlatformOrderSend { get; set; }
-
-
+        public virtual DbSet<TikTokOrderInfo> TikTokOrderInfo { get; set; }
+        public virtual DbSet<TikTokUserInfo> TikTokUserInfo { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -153,6 +154,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new TagInfoConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalTagDetailConfiguration());
             modelBuilder.ApplyConfiguration(new GoodsShopCarConfiguration());
+            modelBuilder.ApplyConfiguration(new GoodsHospitalPriceConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalAppointmentNumerConfiguration());
             modelBuilder.ApplyConfiguration(new TmallGoodsSkuConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalBrandApplyConfiguration());
@@ -221,6 +223,8 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new OrderWriteOffInfoConfiguration());
             modelBuilder.ApplyConfiguration(new ContentPlatformOrderConfiguration());
             modelBuilder.ApplyConfiguration(new ContentPlatformOrderSendConfiguration());
+            modelBuilder.ApplyConfiguration(new TikTokOrderInfoConfiguration());
+            modelBuilder.ApplyConfiguration(new TikTokUserInfoConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

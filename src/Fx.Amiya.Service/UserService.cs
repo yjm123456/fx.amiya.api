@@ -124,7 +124,25 @@ namespace Fx.Amiya.Service
 
         }
 
-
+        public async Task<bool> UpdateUserInfo(UserInfoEditDto userInfoEditDto)
+        {
+            try {
+                var userInfo = dalUserInfo.GetAll().SingleOrDefault(e => e.Id == userInfoEditDto.Id);
+                if (userInfo != null)
+                {
+                    userInfo.Province = userInfoEditDto.Province;
+                    userInfo.City = userInfoEditDto.City;
+                    userInfo.Gender = userInfoEditDto.Gender;
+                    userInfo.NickName = userInfoEditDto.NickName;
+                    await dalUserInfo.UpdateAsync(userInfo, true);
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex) {
+                throw ex;
+            }
+        }
 
 
 
@@ -345,6 +363,8 @@ namespace Fx.Amiya.Service
 
             return user;
         }
+
+        
 
         Dictionary<byte, string> sexDict = new Dictionary<byte, string>()
         {

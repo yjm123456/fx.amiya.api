@@ -19,7 +19,7 @@ namespace Fx.Amiya.SyncOrder.Core
         /// 同步发生改变的订单
         /// </summary>
         /// <returns></returns>
-        Task<List<AmiyaOrder>> TranslateTradesSoldChangedOrders(DateTime startDate, DateTime endDate);
+        Task<List<TikTokOrder>> TranslateTradesSoldChangedOrders(DateTime startDate, DateTime endDate);
 
 
 

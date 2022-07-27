@@ -126,5 +126,25 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             await _customerIntegralOrderRefundService.AddAsync(addDto);
             return ResultData.Success();
         }
+        /// <summary>
+        /// 客户积分退款申请
+        /// </summary>
+        /// <param name="addVo">订单号</param>
+        /// <returns></returns>
+        [HttpPost("RefundTrade")]
+        public async Task<ResultData> IntegrationRefundAsync(AddCustomerIntegralOrderRefundsVo addVo)
+        {
+
+            string token = _tokenReader.GetToken();
+            var sessionInfo = _sessionStorage.GetSession(token);
+            string customerId = sessionInfo.FxCustomerId;
+            AddCustomerIntegralOrderRefundsDto addDto = new AddCustomerIntegralOrderRefundsDto();
+            addDto.OrderId = addVo.OrderId;
+            addDto.TradeId = addVo.TradeId;
+            addDto.CustomerId = customerId;
+            addDto.RefundReasong = addVo.RefundReason;
+            await _customerIntegralOrderRefundService.AddByTradeAsync(addDto);
+            return ResultData.Success();
+        }
     }
 }

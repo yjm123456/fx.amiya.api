@@ -24,8 +24,13 @@ namespace Fx.Amiya.IService
         /// <param name="miniUserEditDto"></param>
         /// <returns></returns>
         Task<bool> UpdateUserInfoByWxMiniUserAsync(WxMiniUserEditDto miniUserEditDto);
+        /// <summary>
+        /// 用户编辑个人信息
+        /// </summary>
+        /// <param name="userInfoEditDto"></param>
+        /// <returns></returns>
 
-
+        Task<bool> UpdateUserInfo(UserInfoEditDto userInfoEditDto);
 
 
         Task<string> GetCustomerIdAsync(string fxUserId);
