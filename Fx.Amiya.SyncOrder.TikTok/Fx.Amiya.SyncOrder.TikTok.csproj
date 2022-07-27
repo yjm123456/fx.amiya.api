@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\Fx.Amiya.SyncOrder.Core\Fx.Amiya.SyncOrder.Core.csproj" />
+    <ProjectReference Include="..\src\JDSDK\jos-sdk-net.csproj" />
   </ItemGroup>
 
 </Project>

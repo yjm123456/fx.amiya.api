@@ -864,6 +864,11 @@ ADD COLUMN `return_back_date` DATETIME NULL AFTER `return_back_price`;
   ALTER TABLE `amiyadb`.`tbl_track_type` 
 ADD COLUMN `has_model` BIT(1) NOT NULL AFTER `valid`;
 
+--维多医院订单对接功能
+INSERT INTO `amiyadb`.`tbl_docking_hospital_customer_info` (`id`, `app_key`, `app_secret`, `hospital_id`, `base_url`, `token_url`, `get_customer_url`, `get_customer_order_url`) VALUES ('1001', 'p00001', 'bf701b37ef67a5f99cd473dae1bc', '1', 'https://app.victoriazj.com/fxgate/main', '/Login/partnerAuth', '/partner/Customer/getCustomerList', '/partner/FinanceTotal/getCustomerConsumptionRecords');
+
+
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 -----------------------------------------------余建明 2022/07/21 END--------------------------------------------;
 
@@ -875,10 +880,6 @@ UPDATE `amiyadb`.`tbl_config` SET `config_json` = '{\"FxJwtConfig\":{\"Key\":\"k
 
 --tbl_order_app_info表加入抖店商户号配置
 INSERT INTO `amiyadb`.`tbl_order_app_info` (`id`, `app_key`, `app_secret`, `access_token`, `authorize_date`, `app_type`, `expire_date`, `refresh_token`) VALUES ('5', '7109321803654252040', '1', 'edae7c30-8386-443b-88a1-031111596fdd', '2022-07-18 16:20:00', '4', '2022-07-19 16:20:00', '1');
-
---维多医院订单对接功能
-INSERT INTO `amiyadb`.`tbl_docking_hospital_customer_info` (`id`, `app_key`, `app_secret`, `hospital_id`, `base_url`, `token_url`, `get_customer_url`, `get_customer_order_url`) VALUES ('1001', 'p00001', 'bf701b37ef67a5f99cd473dae1bc', '1', 'https://app.victoriazj.com/fxgate/main', '/Login/partnerAuth', '/partner/Customer/getCustomerList', '/partner/FinanceTotal/getCustomerConsumptionRecords');
-
 
 -----------------------------------------------余建明 2022/07/18 END--------------------------------------------;
 

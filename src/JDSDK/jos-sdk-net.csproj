@@ -113,7 +113,10 @@
     <Compile Include="Util\CreateOrderIdHelper.cs" />
     <Compile Include="Util\ExportExcelHelper.cs" />
     <Compile Include="Util\FileItem.cs" />
+    <Compile Include="Util\HmacHelper.cs" />
     <Compile Include="Util\JdUtils.cs" />
+    <Compile Include="Util\JObjectConverter.cs" />
+    <Compile Include="Util\JValueConverter.cs" />
     <Compile Include="Util\KuaiDi100Utils.cs" />
     <Compile Include="Util\RequestValidator.cs" />
     <Compile Include="Util\SendMails.cs" />

@@ -4688,6 +4688,270 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.TikTokOrderController">
+            <summary>
+            订单 API
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetTikTokOrderListWithPageAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Byte},System.Nullable{System.Byte},System.Int32,System.Int32)">
+            <summary>
+            获取tiktok订单列表
+            </summary>
+            <param name="startDate">创建开始时间</param>
+            <param name="endDate">创建结束时间</param>
+            <param name="writeOffStartDate">核销开始时间</param>
+            <param name="writeOffEndDate">核销结束时间</param>
+            <param name="belongEmpId">归属客服</param>
+            <param name="keyword"></param>
+            <param name="statusCode">状态码</param>
+            <param name="appType">渠道</param>
+            <param name="orderNature">订单性质</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.DecryptUserInfo(System.String)">
+            <summary>
+            用户信息解密
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.EntryOrderAsync(Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo)">
+            <summary>
+            录单
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.RepairOrder(Fx.Amiya.Background.Api.Vo.Order.RepairOrderVo)">
+            <summary>
+            根据订单号查询要补单的信息
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.AddOrderAsync(Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo)">
+            <summary>
+            补单
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.CheckOrderAsync(Fx.Amiya.Background.Api.Vo.Order.RepairOrderVo)">
+            <summary>
+            订单校对
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.LiveAnchorOrderAsync(Fx.Amiya.Background.Api.Vo.Order.LiveAnchorOrderVo)">
+            <summary>
+            订单归属主播
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.BelongEmployeeOrderAsync(Fx.Amiya.Background.Api.Vo.Order.BelongEmpInfoOrderVo)">
+            <summary>
+            修改下单平台订单归属客服
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.UpdateOrderAsync(Fx.Amiya.Background.Api.Vo.Order.OrderInfoUpdateVo)">
+            <summary>
+            修改订单
+            </summary>
+            <param name="UpdateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.FinishAsync(System.String)">
+            <summary>
+            完成订单
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.CheckOrderAsync(Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderCheckVo)">
+            <summary>
+            审核订单
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.ReturnBackOrderAsync(Fx.Amiya.Background.Api.Vo.OrderCheck.ReturnBackOrderVo)">
+            <summary>
+            订单审核后回款
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.DeleteAsync(System.String)">
+            <summary>
+            删除订单
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetOrderFinishListWithPageAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.Nullable{System.Byte},System.Nullable{System.Byte},System.Int32,System.Int32)">
+            <summary>
+            获取已成交订单列表
+            </summary>
+            <param name="writeOffStartDate">（必填）核销开始时间</param>
+            <param name="writeOffEndDate">（必填）核销结束时间</param>
+            <param name="keyword"></param>
+            <param name="CheckState">审核状态,为空查询所有</param>
+            <param name="ReturnBackPriceState">回款状态,为空查询所有</param>
+            <param name="appType">渠道</param>
+            <param name="orderNature">订单性质</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.ExportOrderListAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.String,System.Nullable{System.Byte},System.Nullable{System.Byte})">
+            <summary>
+            导出订单列表
+            </summary>
+            <param name="startDate">创建开始时间</param>
+            <param name="endDate">创建结束时间</param>
+            <param name="writeOffStartDate">核销开始时间</param>
+            <param name="writeOffEndDate">核销结束时间</param>
+            <param name="keyword"></param>
+            <param name="statusCode">状态码</param>
+            <param name="appType">渠道</param>
+            <param name="orderNature">订单性质</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetListByEncryptPhoneAsync(System.String,System.Int32,System.Int32)">
+            <summary>
+            根据加密手机号获取订单列表
+            </summary>
+            <param name="encryptPhone">加密手机号</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetUnBindCustomerServiceOrderListAsync(System.String,System.String,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Byte},System.Int32,System.Int32)">
+            <summary>
+            获取未绑定客服的订单列表
+            </summary>
+            <param name="statusCode"></param>
+            <param name="keyword"></param>
+            <param name="minPayment">最下金额</param>
+            <param name="maxPayment">最大金额</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetBindCustomerServieOrderListAsync(System.String,System.Nullable{System.Int32},System.Nullable{System.Byte},System.String,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)">
+            <summary>
+            获取已绑定了客服的订单列表
+            </summary>
+            <param name="keyword"></param>
+            <param name="customerServiceId"></param>
+            <param name="appType">下单平台</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetHeadOrderDataAsync(System.Nullable{System.Int32})">
+            <summary>
+            获取订单数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetOrderStatusDataAsync(System.Nullable{System.Int32})">
+            <summary>
+            订单各状态数量
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetTodayIncrementListAsync(System.Int32,System.Int32)">
+            <summary>
+            获取今天新增订单
+            </summary>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetTodayStatusChangeListAsync(System.Nullable{System.Int32},System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            获取今日订单状态发生改变的订单列表
+            </summary>
+            <param name="employeeId">-1查全部</param>
+            <param name="keyword"></param>
+            <param name="statusCode">状态码</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetOrderByEmployeeIdAsync(System.Int32,System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            根据员工编号获取订单列表
+            </summary>
+            <param name="employeeId"></param>
+            <param name="statusCode"></param>
+            <param name="keyword"></param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetByIdAsync(System.String)">
+            <summary>
+            根据订单编号获取订单信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetByWriteOffCodeAsync(System.String)">
+            <summary>
+            根据核销编号获取订单信息
+            </summary>
+            <param name="writeOffCode">核销编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.WriteOffOrderAsync(System.String,System.Int32)">
+            <summary>
+            核销订单
+            </summary>
+            <param name="orderId">订单号</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.UpdateOrderFinalConsumptionHospital(System.String,System.Int32)">
+            <summary>
+            记录订单最终核销医院
+            </summary>
+            <param name="orderId">订单号</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetListByTradeIdAsync(System.String)">
+            <summary>
+            根据交易编号获取订单列表
+            </summary>
+            <param name="tradeId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.SendGoodsAsync(Fx.Amiya.Background.Api.Vo.Order.SendGoodsVo)">
+            <summary>
+            发货
+            </summary>
+            <param name="sendGoodsVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetOrderAppTypeList">
+            <summary>
+            获取下单平台列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetOrderNatureList">
+            <summary>
+            获取订单性质列表
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.TrackController.GetTrackTypeListWithPageAsync(System.Int32,System.Int32)">
             <summary>
             获取回访类型列表（分页）
@@ -17923,6 +18187,461 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.TaobaoAppInfo.TaobaoAppSimpleInfoVo.PortionRedirectUri">
             <summary>
             回调url，需加上baseUrl
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.Id">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.GoodsName">
+            <summary>
+            商品名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.GoodsId">
+            <summary>
+            商品ID
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.ThumbPicUrl">
+            <summary>
+            商品缩略图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.NickName">
+            <summary>
+            客户昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.Phone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.AppointmentHospital">
+            <summary>
+            预约门店
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.SendOrderHospital">
+            <summary>
+            系统派单门店
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.FinalConsumptionHospital">
+            <summary>
+            核销门店
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.IsAppointment">
+            <summary>
+            是否已预约
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.ActualPayment">
+            <summary>
+            实付款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.AccountReceivable">
+            <summary>
+            应收款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.CreateDate">
+            <summary>
+            下单时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.UpdateDate">
+            <summary>
+            订单更新时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.WriteOffDate">
+            <summary>
+            核销时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.StatusCode">
+            <summary>
+            订单状态码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.StatusText">
+            <summary>
+            订单状态文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.AppType">
+            <summary>
+            平台类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.AppTypeText">
+            <summary>
+            平台类型名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.OrderNature">
+            <summary>
+            订单性质
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.OrderNatureText">
+            <summary>
+            订单性质说明
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.Quantity">
+            <summary>
+            购买数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.IntegrationQuantity">
+            <summary>
+            支付积分
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.ExchangeType">
+            <summary>
+            交易类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.LiveAnchorPlatForm">
+            <summary>
+            主播平台
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.LiveAnchor">
+            <summary>
+            归属主播
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.BelongEmpName">
+            <summary>
+            归属客服
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.CheckState">
+            <summary>
+            审核状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.CheckPrice">
+            <summary>
+            审核金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.CheckDate">
+            <summary>
+            审核日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.SettlePrice">
+            <summary>
+            结算金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.CheckByEmpName">
+            <summary>
+            审核人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.CheckRemark">
+            <summary>
+            审核备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.IsReturnBackPrice">
+            <summary>
+            是否回款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.ReturnBackPrice">
+            <summary>
+            回款金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.ReturnBackDate">
+            <summary>
+            回款时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.OrderId">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.GoodsName">
+            <summary>
+            商品名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.ThumbPictureUrl">
+            <summary>
+            缩略图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.GoodsId">
+            <summary>
+            商品id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.Phone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.AppointmentHospital">
+            <summary>
+            预约门店
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.StatusCode">
+            <summary>
+            订单状态(SEEK_ADVICE:咨询，BARGAIN_MONEY:定金)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.ActualPayment">
+            <summary>
+            实付金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.AccountReceivable">
+            <summary>
+            应收款（优惠后实际价格，财务用）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.BuyerNick">
+            <summary>
+            买家昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.AppType">
+            <summary>
+            下单平台
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.IsAppointment">
+            <summary>
+            是否预约
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.OrderType">
+            <summary>
+            订单类型（0虚拟订单，1实物订单）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.OrderNature">
+            <summary>
+            订单性质（0正常下单，1朋友推荐，2私域合作）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.Quantity">
+            <summary>
+            商品数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.ExchangeType">
+            <summary>
+            交易类型：0=积分
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.Remark">
+            <summary>
+            订单描述
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.Id">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.GoodsName">
+            <summary>
+            商品名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.GoodsId">
+            <summary>
+            商品ID
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.ThumbPicUrl">
+            <summary>
+            商品缩略图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.NickName">
+            <summary>
+            客户昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.Phone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.AppointmentHospital">
+            <summary>
+            预约门店
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.SendOrderHospital">
+            <summary>
+            系统派单门店
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.FinalConsumptionHospital">
+            <summary>
+            核销门店
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.IsAppointment">
+            <summary>
+            是否已预约
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.ActualPayment">
+            <summary>
+            实付款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.AccountReceivable">
+            <summary>
+            应收款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.CreateDate">
+            <summary>
+            下单时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.UpdateDate">
+            <summary>
+            订单更新时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.WriteOffDate">
+            <summary>
+            核销时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.StatusCode">
+            <summary>
+            订单状态码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.StatusText">
+            <summary>
+            订单状态文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.AppType">
+            <summary>
+            平台类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.AppTypeText">
+            <summary>
+            平台类型名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.OrderNature">
+            <summary>
+            订单性质
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.OrderNatureText">
+            <summary>
+            订单性质说明
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.Quantity">
+            <summary>
+            购买数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.IntegrationQuantity">
+            <summary>
+            支付积分
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.ExchangeType">
+            <summary>
+            交易类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.LiveAnchorPlatForm">
+            <summary>
+            主播平台
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.LiveAnchor">
+            <summary>
+            归属主播
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.BelongEmpName">
+            <summary>
+            归属客服
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.CheckState">
+            <summary>
+            审核状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.CheckPrice">
+            <summary>
+            审核金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.CheckDate">
+            <summary>
+            审核日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.SettlePrice">
+            <summary>
+            结算金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.CheckByEmpName">
+            <summary>
+            审核人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.CheckRemark">
+            <summary>
+            审核备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.IsReturnBackPrice">
+            <summary>
+            是否回款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.ReturnBackPrice">
+            <summary>
+            回款金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.ReturnBackDate">
+            <summary>
+            回款时间
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TrackReported.AddTrackReportedVo.Phone">
