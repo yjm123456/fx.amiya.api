@@ -1359,6 +1359,7 @@ namespace Fx.Amiya.Service
                     throw new Exception("未找到该订单的相关信息！");
                 }
                 var dealInfo = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
+                dealInfo = dealInfo.Where(x => x.IsDeal == true).ToList();
                 var checkInfo = dealInfo.Where(x => x.CheckState == (int)CheckType.CheckedSuccess).Count();
                 if(checkInfo==dealInfo.Count)
                 {

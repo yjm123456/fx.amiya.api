@@ -824,42 +824,6 @@ ADD CONSTRAINT `fl_content_plat_form_order_dealinfo`
 
 
 
-----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
-
-
---购物车
-ALTER TABLE `amiyadb`.`tbl_goods_shopcar` 
-ADD COLUMN `city_id` INT UNSIGNED NOT NULL AFTER `update_date`,
-ADD COLUMN `hosiptal_id` INT UNSIGNED NOT NULL AFTER `city_id`,
-ADD INDEX `fk_city_info_idx` (`city_id` ASC) VISIBLE,
-ADD INDEX `fk_hospital_info_idx` (`hosiptal_id` ASC) VISIBLE;
-;
-ALTER TABLE `amiyadb`.`tbl_goods_shopcar` 
-ADD CONSTRAINT `fk_city_info`
-  FOREIGN KEY (`city_id`)
-  REFERENCES `amiyadb`.`tbl_cooperative_hospital_city` (`id`)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION,
-ADD CONSTRAINT `fk_hospital_info`
-  FOREIGN KEY (`hosiptal_id`)
-  REFERENCES `amiyadb`.`tbl_hospital_info` (`id`)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
-
-  --购物车
-  ALTER TABLE `amiyadb`.`tbl_goods_shopcar` 
-DROP FOREIGN KEY `fk_city_info`,
-DROP FOREIGN KEY `fk_hospital_info`;
-ALTER TABLE `amiyadb`.`tbl_goods_shopcar` 
-CHANGE COLUMN `city_id` `city_id` INT UNSIGNED NULL ,
-CHANGE COLUMN `hosiptal_id` `hosiptal_id` INT UNSIGNED NULL ;
-ALTER TABLE `amiyadb`.`tbl_goods_shopcar` 
-ADD CONSTRAINT `fk_city_info`
-  FOREIGN KEY (`city_id`)
-  REFERENCES `amiyadb`.`tbl_cooperative_hospital_city` (`id`),
-ADD CONSTRAINT `fk_hospital_info`
-  FOREIGN KEY (`hosiptal_id`)
-  REFERENCES `amiyadb`.`tbl_hospital_info` (`id`);
 
   ALTER TABLE `amiyadb`.`tbl_content_platform_order`
 ADD COLUMN `live_anchor_we_chat_no` VARCHAR(100) NULL AFTER `live_anchor_id`,
@@ -899,6 +863,8 @@ ADD COLUMN `return_back_date` DATETIME NULL AFTER `return_back_price`;
   
   ALTER TABLE `amiyadb`.`tbl_track_type` 
 ADD COLUMN `has_model` BIT(1) NOT NULL AFTER `valid`;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 -----------------------------------------------余建明 2022/07/21 END--------------------------------------------;
 
 
@@ -919,6 +885,40 @@ INSERT INTO `amiyadb`.`tbl_docking_hospital_customer_info` (`id`, `app_key`, `ap
 
 
 
+
+--购物车
+ALTER TABLE `amiyadb`.`tbl_goods_shopcar` 
+ADD COLUMN `city_id` INT UNSIGNED NOT NULL AFTER `update_date`,
+ADD COLUMN `hosiptal_id` INT UNSIGNED NOT NULL AFTER `city_id`,
+ADD INDEX `fk_city_info_idx` (`city_id` ASC) VISIBLE,
+ADD INDEX `fk_hospital_info_idx` (`hosiptal_id` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`tbl_goods_shopcar` 
+ADD CONSTRAINT `fk_city_info`
+  FOREIGN KEY (`city_id`)
+  REFERENCES `amiyadb`.`tbl_cooperative_hospital_city` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk_hospital_info`
+  FOREIGN KEY (`hosiptal_id`)
+  REFERENCES `amiyadb`.`tbl_hospital_info` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+  --购物车
+  ALTER TABLE `amiyadb`.`tbl_goods_shopcar` 
+DROP FOREIGN KEY `fk_city_info`,
+DROP FOREIGN KEY `fk_hospital_info`;
+ALTER TABLE `amiyadb`.`tbl_goods_shopcar` 
+CHANGE COLUMN `city_id` `city_id` INT UNSIGNED NULL ,
+CHANGE COLUMN `hosiptal_id` `hosiptal_id` INT UNSIGNED NULL ;
+ALTER TABLE `amiyadb`.`tbl_goods_shopcar` 
+ADD CONSTRAINT `fk_city_info`
+  FOREIGN KEY (`city_id`)
+  REFERENCES `amiyadb`.`tbl_cooperative_hospital_city` (`id`),
+ADD CONSTRAINT `fk_hospital_info`
+  FOREIGN KEY (`hosiptal_id`)
+  REFERENCES `amiyadb`.`tbl_hospital_info` (`id`);
 
 
 
