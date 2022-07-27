@@ -16,6 +16,7 @@ using Fx.Infrastructure.Utils;
 using Fx.Common.Utils;
 using Newtonsoft.Json.Linq;
 using System.Web;
+using Jd.Api.Util;
 
 namespace Fx.Amiya.Service
 {

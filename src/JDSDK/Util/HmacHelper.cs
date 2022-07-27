@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Fx.Common.Utils
+namespace Jd.Api.Util
 {
     public class HmacHelper
     {

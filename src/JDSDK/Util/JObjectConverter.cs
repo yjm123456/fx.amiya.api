@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Fx.Common.Utils
+namespace Jd.Api.Util
 {
     // 自定义JObject的序列化方法，确保对象的Key按字典序输出
     public class JObjectConverter:JsonConverter

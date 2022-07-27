@@ -6,6 +6,7 @@ using Fx.Amiya.IService;
 using Fx.Amiya.SyncOrder.Core;
 using Fx.Amiya.SyncOrder.TikTok.TikTokAppInfoConfig;
 using Fx.Common.Utils;
+using Jd.Api.Util;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

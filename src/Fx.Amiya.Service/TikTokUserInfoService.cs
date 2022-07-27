@@ -3,6 +3,7 @@ using Fx.Amiya.Dto.TikTokUserInfo;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common.Utils;
+using Jd.Api.Util;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

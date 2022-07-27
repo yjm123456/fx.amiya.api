@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Fx.Common.Utils
+namespace Jd.Api.Util
 {
     public class JValueConverter : JsonConverter
     {
