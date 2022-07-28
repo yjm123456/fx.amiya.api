@@ -124,10 +124,6 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// </summary>
         public int? OrderSource { get; set; }
         public string OrderSourceText { get; set; }
-        /// <summary>
-        /// 院方接诊人员
-        /// </summary>
-        public string AcceptConsulting { get; set; }
         public int? CheckState { get; set; }
         public DateTime? DealDate { get; set; }
         public bool IsToHospital { get; set; }

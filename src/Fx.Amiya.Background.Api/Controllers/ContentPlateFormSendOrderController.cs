@@ -118,7 +118,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 UnDealPictureUrl = d.UnDealPictureUrl,
                                 OrderSourceText = d.OrderSourceText,
                                 LiveAnchor=d.LiveAnchor,
-                                AcceptConsulting = d.AcceptConsulting,
                                 CheckState=d.CheckState,
                             };
 
@@ -161,7 +160,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 SendOrderRemark = d.SendOrderRemark,
                                 HospitalRemark = d.HospitalRemark,
                                 OrderSourceText = d.OrderSourceText,
-                                AcceptConsulting = d.AcceptConsulting
                             };
 
             var exportSendOrder = sendOrder.ToList();
@@ -281,7 +279,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             UnDealPictureUrl = d.UnDealPictureUrl,
                                             AcceptConsulting = d.AcceptConsulting,
                                             OrderSourceText = d.OrderSourceText,
-                                            ConsultationEmpName = d.ConsultationEmpName,
+                                            ConsultatioType = d.ConsultationTypeText,
                                             CheckState=d.CheckState,
                                             OtherContentPlatFormOrderId=d.OtherContentPlatFormOrderId,
                                         };

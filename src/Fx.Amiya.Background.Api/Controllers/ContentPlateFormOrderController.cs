@@ -73,6 +73,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.OrderType = addVo.OrderType;
             addDto.ContentPlateFormId = addVo.ContentPlateFormId;
             addDto.ConsultationEmpId = addVo.ConsultationEmpId;
+            addDto.ConsultationType = addVo.ConsultationType;
             addDto.LiveAnchorId = addVo.LiveAnchorId;
             addDto.LiveAnchorWeChatNo = addVo.LiveAnchorWeChatNo;
             addDto.CustomerName = addVo.CustomerName;
@@ -128,6 +129,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 ContentPlatformName = d.ContentPlatformName,
                                 LiveAnchorName = d.LiveAnchorName,
                                 LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
+                                ConsultationType=d.ConsultationTypeText,
                                 CreateDate = d.CreateDate,
                                 CustomerName = d.CustomerName,
                                 Phone = d.Phone,
@@ -159,7 +161,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 SendDate = d.SendDate,
                                 CheckRemark = d.CheckRemark,
                                 SettlePrice = d.SettlePrice,
-                                ConsultationEmpName = d.ConsultationEmpName,
                                 IsReturnBackPrice = d.IsReturnBackPrice,
                                 ReturnBackDate = d.ReturnBackDate,
                                 ReturnBackPrice = d.ReturnBackPrice,
@@ -213,6 +214,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   ConsultingContent = d.ConsultingContent,
                                   CustomerName = d.CustomerName,
                                   Phone = d.Phone,
+                                  ConsultationTypeText=d.ConsultationTypeText,
                                   EncryptPhone = d.EncryptPhone,
                                   DealAmount = d.DealAmount,
                                   DepositAmount = d.DepositAmount.HasValue ? d.DepositAmount : 0,
@@ -224,8 +226,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   LateProjectStage = d.LateProjectStage,
                                   UnSendReason = d.UnSendReason,
                                   OrderSourceText = d.OrderSourceText,
-                                  AcceptConsulting = d.AcceptConsulting,
-                                  ConsultationEmpName = d.ConsultationEmpName
                               };
             FxPageInfo<UnContentPlateFormSendOrderInfoVo> pageInfo = new FxPageInfo<UnContentPlateFormSendOrderInfoVo>();
             pageInfo.TotalCount = q.TotalCount;
@@ -312,7 +312,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 CheckDate = d.CheckDate,
                                 CheckByName = d.CheckByName,
                                 CheckPrice = d.CheckPrice,
-                                ConsultationEmpName = d.ConsultationEmpName,
+                                ConsultationType=d.ConsultationTypeText,
                                 CheckRemark = d.CheckRemark,
                                 SettlePrice = d.SettlePrice,
                                 BelongEmpName = d.BelongEmpName,
@@ -367,6 +367,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 LiveAnchorName = d.LiveAnchorName,
                                 LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 CreateDate = d.CreateDate,
+                                ConsultationTypeText=d.ConsultationTypeText,
                                 CustomerName = d.CustomerName,
                                 IsAcompanying = d.IsAcompanying ,
                                 Phone = d.Phone,
@@ -390,7 +391,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 SettlePrice = d.SettlePrice,
                                 CheckDate = d.CheckDate,
                                 BelongEmpName = d.BelongEmpName,
-                                ConsultationEmpName = d.ConsultationEmpName,
                                 IsReturnBackPrice = d.IsReturnBackPrice,
                                 ReturnBackDate = d.ReturnBackDate,
                                 ReturnBackPrice = d.ReturnBackPrice,
@@ -423,6 +423,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.Id = order.Id;
             orderUpdateInfo.OrderType = order.OrderType;
             orderUpdateInfo.ContentPlateFormId = order.ContentPlateFormId;
+            orderUpdateInfo.ConsultationType = order.ConsultationType;
             orderUpdateInfo.LiveAnchorId = order.LiveAnchorId;
             orderUpdateInfo.GoodsId = order.GoodsId;
             orderUpdateInfo.CustomerName = order.CustomerName;
@@ -592,6 +593,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.LiveAnchorWeChatNo = updateVo.LiveAnchorWeChatNo;
             updateDto.LiveAnchorId = updateVo.LiveAnchorId;
             updateDto.GoodsId = updateVo.GoodsId;
+            updateDto.ConsultationType = updateVo.ConsultationType;
             updateDto.HospitalDepartmentId = updateVo.HospitalDepartmentId;
             updateDto.CustomerName = updateVo.CustomerName;
             updateDto.ConsultationEmpId = updateVo.ConsultationEmpId;
@@ -902,6 +904,22 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         #region 枚举下拉框
+
+        /// <summary>
+        /// 获取内容平台面诊状态
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getOrderConsultationTypeList")]
+        public ResultData<List<ContentPlateFormOrderTypeVo>> GetOrderConsultationTypeList()
+        {
+            var orderTypes = from d in _orderService.GetOrderConsultationTypeList()
+                             select new ContentPlateFormOrderTypeVo
+                             {
+                                 OrderType = d.OrderType,
+                                 OrderTypeText = d.OrderTypeText = d.OrderTypeText
+                             };
+            return ResultData<List<ContentPlateFormOrderTypeVo>>.Success().AddData("orderConsultationTypes", orderTypes.ToList());
+        }
 
         /// <summary>
         /// 获取内容平台订单类型

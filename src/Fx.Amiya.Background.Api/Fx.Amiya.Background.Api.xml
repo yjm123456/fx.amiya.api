@@ -1122,6 +1122,12 @@
             <param name="updateVo"></param>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormOrderController.GetOrderConsultationTypeList">
+            <summary>
+            获取内容平台面诊状态
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormOrderController.GetContentPlateFormOrderTypeList">
             <summary>
             获取内容平台订单类型
@@ -1331,12 +1337,15 @@
             </summary>
             <param name="contentPlatFormOrderDealInfoService"></param>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlatFormOrderDealInfoController.GetDealInfo(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String,System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlatFormOrderDealInfoController.GetDealInfo(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String,System.Int32,System.Int32)">
             <summary>
             获取成交情况列表
             </summary>
             <param name="startDate">登记开始日期</param>
             <param name="endDate">登记结束日期</param>
+            <param name="sendStartDate">派单开始日期</param>
+            <param name="sendEndDate">派单结束日期</param>
+            <param name="consultationType">面诊状态（空查询所有）</param>
             <param name="isToHospital">是否到院（空查询所有）</param>
             <param name="tohospitalStartDate">到院开始时间</param>
             <param name="toHospitalEndDate">到院结束时间</param>
@@ -3598,12 +3607,15 @@
             <param name="liveAnchorId">主播id</param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetDealInfo(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetDealInfo(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String)">
             <summary>
             获取成交情况列表
             </summary>
             <param name="startDate">登记开始日期</param>
             <param name="endDate">登记结束日期</param>
+            <param name="sendStartDate">派单开始日期</param>
+            <param name="sendEndDate">派单结束日期</param>
+            <param name="consultationType">面诊状态（空查询所有）</param>
             <param name="isToHospital">是否到院（空查询所有）</param>
             <param name="tohospitalStartDate">到院开始时间</param>
             <param name="toHospitalEndDate">到院结束时间</param>
@@ -3620,12 +3632,15 @@
             <param name="keyWord">关键字</param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.ExportDealInfo(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.ExportDealInfo(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String)">
             <summary>
             导出成交情况列表
             </summary>
             <param name="startDate">登记开始日期</param>
             <param name="endDate">登记结束日期</param>
+            <param name="sendStartDate">派单开始日期</param>
+            <param name="sendEndDate">派单结束日期</param>
+            <param name="consultationType">面诊状态（空查询所有）</param>
             <param name="isToHospital">是否到院（空查询所有）</param>
             <param name="tohospitalStartDate">到院开始时间</param>
             <param name="toHospitalEndDate">到院结束时间</param>
@@ -4451,9 +4466,9 @@
             订单来源（1：面诊卡，2：非面诊卡）
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Controllers.SendContentPlatformOrderVo.ConsultationEmpName">
+        <member name="P:Fx.Amiya.Background.Api.Controllers.SendContentPlatformOrderVo.ConsultatioType">
             <summary>
-            面诊员
+            面诊状态
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Controllers.SendContentPlatformOrderVo.AcceptConsulting">
@@ -6447,6 +6462,11 @@
             面诊员
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.ConsultationType">
+            <summary>
+            面诊状态
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.ConsultingContent">
             <summary>
             咨询内容
@@ -6672,6 +6692,11 @@
             面诊员
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.ConsultationType">
+            <summary>
+            面诊状态
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.AppointmentDate">
             <summary>
             预约日期
@@ -6805,6 +6830,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ConsultationEmpId">
             <summary>
             面诊员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ConsultationType">
+            <summary>
+            面诊状态
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.AppointmentDate">
@@ -7077,9 +7107,9 @@
             预约医院
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.ConsultationEmpName">
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.ConsultationTypeText">
             <summary>
-            面诊员
+            面诊状态文本
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.GoodsName">
@@ -7275,6 +7305,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CreateDate">
             <summary>
             创建时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.SendDate">
+            <summary>
+            派单时间
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.Phone">
@@ -7602,9 +7637,9 @@
             派单时间
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.ConsultationEmpName">
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.ConsultationType">
             <summary>
-            面诊人员
+            面诊状态
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.AcceptConsulting">
@@ -8112,11 +8147,6 @@
             订单来源
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormOrderSendInfoVo.AcceptConsulting">
-            <summary>
-            院方接诊人员
-            </summary>
-        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormOrderSendInfoVo.CheckState">
             <summary>
             审核状态
@@ -8212,11 +8242,6 @@
             订单来源（1：面诊卡，2：非面诊卡）
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.ExportContentPlatFormSendOrderInfoVo.AcceptConsulting">
-            <summary>
-            院方接诊人员
-            </summary>
-        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.ExportContentPlatFormSendOrderInfoVo.DepositAmount">
             <summary>
             定金
@@ -8282,9 +8307,9 @@
             项目图片
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.ConsultationEmpName">
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.ConsultationTypeText">
             <summary>
-            面诊员
+            面诊状态文本
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.ConsultingContent">
@@ -8355,11 +8380,6 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.UnSendReason">
             <summary>
             未派单原因
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.AcceptConsulting">
-            <summary>
-            院方接诊人员
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend.UpdateContentPlatFormSendOrderInfoVo.HospitalId">
@@ -14332,6 +14352,11 @@
             预约时间
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.ConsultationTypeText">
+            <summary>
+            面诊状态
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.CustomerName">
             <summary>
             客户昵称
@@ -14805,6 +14830,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerSendContentPlatFormOrderReportVo.SenderName">
             <summary>
             派单人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerSendContentPlatFormOrderReportVo.ConsultationTypeText">
+            <summary>
+            面诊状态
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerSendContentPlatFormOrderReportVo.SendDate">

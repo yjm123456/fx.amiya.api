@@ -329,7 +329,7 @@
             <param name="updateVo"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GoodsShopCarController.DeleteGoodsShopCarAsync(System.Collections.Generic.List{System.String})">
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GoodsShopCarController.DeleteGoodsShopCarAsync(Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.DeleteGoodsShopCarVo)">
             <summary>
             批量删除用户购物车
             </summary>
@@ -395,6 +395,13 @@
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.IntegrationAccountController.IntegrationPayAsync(Fx.Amiya.MiniProgram.Api.Vo.Order.AddCustomerIntegralOrderRefundsVo)">
+            <summary>
+            客户积分退款申请
+            </summary>
+            <param name="addVo">订单号</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.IntegrationAccountController.IntegrationRefundAsync(Fx.Amiya.MiniProgram.Api.Vo.Order.AddCustomerIntegralOrderRefundsVo)">
             <summary>
             客户积分退款申请
             </summary>
@@ -547,6 +554,15 @@
         <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.GetOrderListForAmiyaByCustomerId(System.String,System.Int32,System.Int32)">
             <summary>
             获取订单列表
+            </summary>
+            <param name="statusCode">状态码：WAIT_BUYER_PAY=待付款，WAIT_SELLER_SEND_GOODS=待发货，WAIT_BUYER_CONFIRM_GOODS=待收货</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.GetOrderListForAllAmiyaByCustomerId(System.String,System.Int32,System.Int32)">
+            <summary>
+            获取所有平台的订单列表
             </summary>
             <param name="statusCode">状态码：WAIT_BUYER_PAY=待付款，WAIT_SELLER_SEND_GOODS=待发货，WAIT_BUYER_CONFIRM_GOODS=待收货</param>
             <param name="pageNum"></param>
@@ -1864,6 +1880,11 @@
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.AddCustomerIntegralOrderRefundsVo.OrderId">
             <summary>
             订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.AddCustomerIntegralOrderRefundsVo.TradeId">
+            <summary>
+            trade交易号
             </summary>
         </member>
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.AddCustomerIntegralOrderRefundsVo.RefundReason">

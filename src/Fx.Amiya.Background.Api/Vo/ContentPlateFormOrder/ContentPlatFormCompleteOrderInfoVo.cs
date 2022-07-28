@@ -30,10 +30,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         public string AppointmentHospitalName { get; set; }
 
         /// <summary>
-        /// 面诊员
+        /// 面诊状态文本
         /// </summary>
-        [Description("面诊员")]
-        public string ConsultationEmpName { get; set; }
+        public string ConsultationTypeText { get; set; }
         /// <summary>
         /// 项目
         /// </summary>

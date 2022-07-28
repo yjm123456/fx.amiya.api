@@ -246,6 +246,12 @@ namespace Fx.Amiya.IService
         List<ContentPlateFormOrderSourceDto> GetOrderSourceList();
 
         /// <summary>
+        /// 获取面诊状态数据
+        /// </summary>
+        /// <returns></returns>
+        List<ContentPlateFormOrderTypeDto> GetOrderConsultationTypeList();
+
+        /// <summary>
         /// 内容平台已派单数据
         /// </summary>
         /// <param name="liveAnchorId"></param>

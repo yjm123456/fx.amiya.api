@@ -25,6 +25,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public DateTime CreateDate { get; set; }
         /// <summary>
+        /// 派单时间
+        /// </summary>
+        public DateTime SendDate { get; set; }
+        /// <summary>
         /// 客户手机号
         /// </summary>
         public string Phone { get; set; }

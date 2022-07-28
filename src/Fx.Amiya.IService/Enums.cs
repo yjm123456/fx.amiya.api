@@ -255,6 +255,28 @@ namespace Fx.Amiya.IService
     }
 
     /// <summary>
+    /// 内容平台订单面诊状态
+    /// </summary>
+    public enum ContentPlateFormOrderConsultationType
+    {
+        /// <summary>
+        /// 其他=0
+        /// </summary>
+        OTHER = 0,
+
+        /// <summary>
+        /// 独立跟进=1
+        /// </summary>
+        IndependentFollowUp = 1,
+
+        /// <summary>
+        /// 协作完成=2
+        /// </summary>
+        Collaboration = 2,
+    }
+
+
+    /// <summary>
     /// 内容平台订单到院类型
     /// </summary>
     public enum ContentPlateFormOrderToHospitalType

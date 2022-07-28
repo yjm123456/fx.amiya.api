@@ -123,10 +123,5 @@ namespace Fx.Amiya.Dto.OrderReport
         /// </summary>
         public string OrderSourceText { get; set; }
 
-
-        /// <summary>
-        /// 院方接诊人员
-        /// </summary>
-        public string AcceptConsulting { get; set; }
     }
 }

@@ -66,7 +66,29 @@ namespace Fx.Amiya.Service
                          };
             return orders.ToList();
         }
-
+        /// <summary>
+        /// 根据订单号集合获取简易的派单信息
+        /// </summary>
+        /// <param name="orderIds"></param>
+        /// <returns></returns>
+        public async Task<List<ContentPlatformOrderSendOrderInfoDto>> GetSendOrderInfoByOrderId(List<string> orderIds)
+        {
+            var config = await GetCallCenterConfig();
+            var orders = from d in _dalContentPlatformOrderSend.GetAll()
+                         where orderIds.Contains(d.ContentPlatformOrderId)
+                         select new ContentPlatformOrderSendOrderInfoDto
+                         {
+                             Id = d.Id,
+                             ContentPlatFormOrderId = d.ContentPlatformOrderId,
+                             HospitalId = d.HospitalId,
+                             Sender = d.Sender,
+                             SendDate = d.SendDate,
+                             IsUnCertainDate = d.IsUncertainDate,
+                             AppointmentDate = d.AppointmentDate,
+                             Remark = d.Remark,
+                         };
+            return orders.ToList();
+        }
 
 
         /// <summary>
@@ -245,7 +267,7 @@ namespace Fx.Amiya.Service
                                 HospitalRemark = d.HospitalRemark,
                                 UnDealPictureUrl = d.ContentPlatformOrder.UnDealPictureUrl,
                                 OrderSourceText = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? ServiceClass.GerContentPlatFormOrderSourceText(d.ContentPlatformOrder.OrderSource.Value) : "****",
-                                AcceptConsulting = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.AcceptConsulting : "****",
+                               
                                 CheckState = d.ContentPlatformOrder.CheckState,
                                 DealDate = d.ContentPlatformOrder.DealDate,
                                 IsToHospital = d.ContentPlatformOrder.IsToHospital,
@@ -414,6 +436,8 @@ namespace Fx.Amiya.Service
                                             IsToHospital = d.ContentPlatformOrder.IsToHospital,
                                             ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ContentPlatformOrder.ToHospitalType),
                                             UnDealReason = d.ContentPlatformOrder.UnDealReason,
+                                            ConsultationType=d.ContentPlatformOrder.ConsultationType,
+                                            ConsultationTypeText=ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ContentPlatformOrder.ConsultationType),
                                             Sender = d.Sender,
                                             SenderName = d.AmiyaEmployee.Name,
                                             CheckState = d.ContentPlatformOrder.CheckState,
@@ -435,11 +459,6 @@ namespace Fx.Amiya.Service
             foreach (var x in pageInfo.List)
             {
                 x.SendHospital = _hospitalInfoService.GetByIdAsync(x.SendHospitalId).Result.Name;
-                if (x.ConsultationEmpId.HasValue)
-                {
-                    var empInfo = await _amiyaEmployeeService.GetByIdAsync(x.ConsultationEmpId.Value);
-                    x.ConsultationEmpName = empInfo.Name;
-                }
             }
             return pageInfo;
         }
@@ -500,6 +519,7 @@ namespace Fx.Amiya.Service
                                             LiveAnchorName = d.ContentPlatformOrder.LiveAnchor.HostAccountName,
                                             LiveAnchorWeChatNo = d.ContentPlatformOrder.LiveAnchorWeChatNo,
                                             IsOldCustomer = d.ContentPlatformOrder.IsOldCustomer == true ? "老客业绩" : "新客业绩",
+                                            ConsultationTypeText=ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ContentPlatformOrder.ConsultationType),
                                             IsAcompanying = d.ContentPlatformOrder.IsAcompanying,
                                             CommissionRatio = d.ContentPlatformOrder.CommissionRatio,
                                             CustomerName = d.ContentPlatformOrder.CustomerName,
@@ -575,7 +595,6 @@ namespace Fx.Amiya.Service
                                 SendOrderRemark = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.Remark : "****",
                                 SenderName = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.AmiyaEmployee.Name : "****",
                                 HospitalRemark = d.HospitalRemark,
-                                AcceptConsulting = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.AcceptConsulting : "****",
                                 OrderSourceText = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? ServiceClass.GerContentPlatFormOrderSourceText(d.ContentPlatformOrder.OrderSource.Value) : "****"
                             };
 

@@ -60,11 +60,15 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         public string GoodsName { get; set; }
         public string ThumbPictureUrl { get; set; }
 
-        public int? ConsultationEmpId { get; set; }
+
         /// <summary>
-        /// 面诊员
+        /// 面诊状态
         /// </summary>
-        public string ConsultationEmpName { get; set; }
+        public int ConsultationType { get; set; }
+        /// <summary>
+        /// 面诊状态文本
+        /// </summary>
+        public string ConsultationTypeText { get; set; }
 
         /// <summary>
         /// 后期项目铺垫

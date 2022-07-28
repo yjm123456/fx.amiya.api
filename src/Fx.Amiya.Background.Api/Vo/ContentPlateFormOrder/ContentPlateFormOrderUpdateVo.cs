@@ -64,6 +64,12 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         public int ConsultationEmpId { get; set; }
 
         /// <summary>
+        /// 面诊状态
+        /// </summary>
+        public int ConsultationType { get; set; }
+
+
+        /// <summary>
         /// 预约日期
         /// </summary>
         public DateTime? AppointmentDate { get; set; }

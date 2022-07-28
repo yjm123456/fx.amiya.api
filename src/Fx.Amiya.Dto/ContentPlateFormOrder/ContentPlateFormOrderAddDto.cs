@@ -104,6 +104,10 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 面诊员
         /// </summary>
         public int? ConsultationEmpId { get; set; }
+        /// <summary>
+        /// 面诊状态
+        /// </summary>
+        public int ConsultationType { get; set; }
 
         /// <summary>
         /// 院方接诊人员

@@ -14,13 +14,15 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         public string ContentPlateformId { get; set; }
         public string ContentPlatformName { get; set; }
         /// <summary>
-        /// 面诊员
+        /// 面诊状态
         /// </summary>
-        public int? ConsultationEmpId { get; set; }
+        public int ConsultationType { get; set; }
+
         /// <summary>
-        /// 面诊员
+        /// 面诊状态文本
         /// </summary>
-        public string ConsultationEmpName { get; set; }
+        public string ConsultationTypeText { get; set; }
+
         public int? LiveAnchorId { get; set; }
         public string LiveAnchorName { get; set; }
         public string LiveAnchorWeChatNo { get; set; }

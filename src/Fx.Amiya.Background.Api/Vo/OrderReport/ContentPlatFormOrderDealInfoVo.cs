@@ -19,6 +19,11 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("预约时间")]
         public string AppointmentDate { get; set; }
         /// <summary>
+        /// 面诊状态
+        /// </summary>
+        [Description("面诊状态")]
+        public string ConsultationTypeText { get; set; }
+        /// <summary>
         /// 客户昵称
         /// </summary>
         [Description("客户昵称")]

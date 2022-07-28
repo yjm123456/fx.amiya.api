@@ -81,6 +81,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public int? ConsultationEmpId { get; set; }
         /// <summary>
+        /// 面诊状态
+        /// </summary>
+        public int ConsultationType { get; set; }
+        /// <summary>
         /// 咨询内容
         /// </summary>
         public string ConsultingContent { get; set; }

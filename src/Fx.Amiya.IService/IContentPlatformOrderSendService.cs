@@ -18,7 +18,14 @@ namespace Fx.Amiya.IService
         /// <param name="orderId"></param>
         /// <returns></returns>
         Task<List<ContentPlatformOrderSendOrderInfoDto>> GetSendOrderInfoByOrderId(string orderId);
-      
+
+        /// <summary>
+        /// 根据订单号集合获取简易的派单信息
+        /// </summary>
+        /// <param name="orderIds"></param>
+        /// <returns></returns>
+        Task<List<ContentPlatformOrderSendOrderInfoDto>> GetSendOrderInfoByOrderId(List<string> orderIds);
+
 
         /// <summary>
         /// 获取简易的派单信息

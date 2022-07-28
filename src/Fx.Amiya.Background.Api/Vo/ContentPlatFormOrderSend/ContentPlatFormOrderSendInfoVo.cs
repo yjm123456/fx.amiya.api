@@ -128,10 +128,6 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// 订单来源
         /// </summary>
         public string OrderSourceText { get; set; }
-        /// <summary>
-        /// 院方接诊人员
-        /// </summary>
-        public string AcceptConsulting { get; set; }
 
         /// <summary>
         /// 审核状态

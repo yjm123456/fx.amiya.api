@@ -47,6 +47,11 @@ namespace Fx.Amiya.DbModels.Model
         public int? ConsultationEmpId { get; set; }
 
         /// <summary>
+        /// 面诊状态
+        /// </summary>
+        public int ConsultationType { get; set; }
+
+        /// <summary>
         /// 院方接诊人员
         /// </summary>
         public string AcceptConsulting { get; set; }
