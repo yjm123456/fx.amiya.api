@@ -138,6 +138,7 @@ namespace Fx.Amiya.Service
                                                        IsDeal = d.IsDeal,
                                                        IsOldCustomer = d.IsOldCustomer,
                                                        IsAcompanying = d.IsAcompanying,
+                                                       ConsultationTypeText=ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ContentPlatFormOrder.ConsultationType),
                                                        CommissionRatio = d.CommissionRatio,
                                                        IsToHospital = d.IsToHospital,
                                                        ToHospitalType = d.ToHospitalType,
@@ -272,10 +273,11 @@ namespace Fx.Amiya.Service
                                                        OrderCreateDate = d.ContentPlatFormOrder.CreateDate,
                                                        ContentPlatFormName = d.ContentPlatFormOrder.Contentplatform.ContentPlatformName,
                                                        LiveAnchorName = d.ContentPlatFormOrder.LiveAnchor.Name,
+                                                       ConsultationType=d.ContentPlatFormOrder.ConsultationType,
+                                                       ConsultationTypeText=ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ContentPlatFormOrder.ConsultationType),
                                                        GoodsName = d.ContentPlatFormOrder.AmiyaGoodsDemand.ProjectNname,
                                                        SendDate = d.ContentPlatFormOrder.SendDate,
                                                        CustomerNickName =d.ContentPlatFormOrder.CustomerName,
-                                                       ConsultationEmpId=d.ContentPlatFormOrder.ConsultationEmpId,
                                                        CreateDate = d.CreateDate,
                                                        IsDeal = d.IsDeal,
                                                        IsOldCustomer = d.IsOldCustomer,
@@ -312,11 +314,6 @@ namespace Fx.Amiya.Service
                     {
                         var dealHospital = await _hospitalInfoService.GetBaseByIdAsync(z.LastDealHospitalId.Value);
                         z.LastDealHospital = dealHospital.Name;
-                    }
-                    if (z.ConsultationEmpId.HasValue&&z.ConsultationEmpId!=0)
-                    {
-                        var empInfo = await _amiyaEmployeeService.GetByIdAsync(z.ConsultationEmpId.Value);
-                        z.ConsultationEmpName = empInfo.Name;
                     }
                     if (z.CheckBy.HasValue&&z.CheckBy!=0)
                     {

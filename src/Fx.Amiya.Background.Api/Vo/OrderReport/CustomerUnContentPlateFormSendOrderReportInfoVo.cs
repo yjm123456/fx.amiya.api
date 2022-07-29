@@ -78,11 +78,6 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("预约门店")]
         public string AppointmentHospital { get; set; }
         /// <summary>
-        /// 预约时间
-        /// </summary>
-        [Description("预约时间")]
-        public string AppointmentDate { get; set; }
-        /// <summary>
         /// 备注
         /// </summary>
         [Description("备注")]

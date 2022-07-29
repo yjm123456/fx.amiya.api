@@ -87,6 +87,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             IsToHospital = d.IsToHospital,
                                             ToHospitalType = d.ToHospitalType,
                                             ToHospitalTypeText =d.ToHospitalTypeText,
+                                            ConsultationTypeText=d.ConsultationTypeText,
                                             SendDate = d.SendDate,
                                             TohospitalDate = d.ToHospitalDate,
                                             LastDealHospitalId = d.LastDealHospitalId,

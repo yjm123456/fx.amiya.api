@@ -37,6 +37,11 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("派单时间")]
         public DateTime? SendOrderDate { get; set; }
+        /// <summary>
+        /// 面诊状态
+        /// </summary>
+        [Description("面诊状态")]
+        public string ConsultationType { get; set; }
 
 
         /// <summary>
@@ -185,11 +190,6 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("回款日期")]
         public DateTime? ReturnBackDate { get; set; }
-        /// <summary>
-        /// 面诊员
-        /// </summary>
-        [Description("面诊员")]
-        public string ConsultationEmpName { get; set; }
 
         /// <summary>
         /// 创建人
