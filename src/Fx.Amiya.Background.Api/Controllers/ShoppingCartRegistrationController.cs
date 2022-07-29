@@ -84,7 +84,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    BadReviewDate = d.BadReviewDate ==null? null:d.BadReviewDate,
                                                    RefundDate = d.RefundDate,
                                                    AdmissionId=d.AdmissionId,
-                                                   AdmissionName=d.AdmissionName
+                                                   AdmissionName=d.AdmissionName,
+                                                   IsBadReview=d.IsBadReview
                                                };
 
                 FxPageInfo<ShoppingCartRegistrationVo> shoppingCartRegistrationPageInfo = new FxPageInfo<ShoppingCartRegistrationVo>();
@@ -142,7 +143,13 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.BadReviewDate = addVo.BadReviewDate;
                 addDto.BadReviewReason = addVo.BadReviewReason;
                 addDto.AdmissionId = addVo.AdmissionId;
+                addDto.IsBadReview = addVo.IsBadReview;
+                if (addDto.AdmissionId == 0)
+                {
+                    addDto.AdmissionId = employeeId;
+                }
                 await shoppingCartRegistrationService.AddAsync(addDto);
+
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -189,6 +196,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.IsReContent = shoppingCartRegistration.IsReContent;
                 shoppingCartRegistrationVo.AdmissionName = shoppingCartRegistration.AdmissionName;
                 shoppingCartRegistrationVo.AdmissionId = shoppingCartRegistration.AdmissionId;
+                shoppingCartRegistrationVo.IsBadReview = shoppingCartRegistration.IsBadReview;
 
                 return ResultData<ShoppingCartRegistrationVo>.Success().AddData("shoppingCartRegistrationInfo", shoppingCartRegistrationVo);
             }
@@ -237,6 +245,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.BadReviewDate = updateVo.BadReviewDate;
                 updateDto.BadReviewReason = updateVo.BadReviewReason;
                 updateDto.AdmissionId = updateVo.AdmissionId;
+                updateDto.IsBadReview = updateVo.IsBadReview;
                 await shoppingCartRegistrationService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

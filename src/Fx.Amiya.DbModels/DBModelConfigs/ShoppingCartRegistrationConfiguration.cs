@@ -36,6 +36,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.IsReContent).HasColumnName("is_recontent").HasColumnType("bit(1)").IsRequired();
             builder.Property(t => t.ReContent).HasColumnName("recontent").HasColumnType("varchar(500)").IsRequired(false);
             builder.Property(t => t.AdmissionId).HasColumnName("admission_id").HasColumnType("int").IsRequired();
+            builder.Property(t => t.IsBadReview).HasColumnName("is_badreview").HasColumnType("bit(1)").IsRequired(false);
     }
     }
 }

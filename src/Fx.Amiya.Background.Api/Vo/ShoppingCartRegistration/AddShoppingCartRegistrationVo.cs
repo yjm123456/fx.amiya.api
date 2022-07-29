@@ -92,6 +92,10 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// 接诊人员
         /// </summary>
         public int AdmissionId { get; set; }
+        /// <summary>
+        /// 是否差评
+        /// </summary>
+        public bool IsBadReview { get; set; }
 
     }
 }

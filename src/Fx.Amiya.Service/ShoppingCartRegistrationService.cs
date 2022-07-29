@@ -82,6 +82,8 @@ namespace Fx.Amiya.Service
                                                    BadReviewContent = d.BadReviewContent,
                                                    BadReviewReason = d.BadReviewReason,
                                                    AdmissionId = d.AdmissionId,
+                                                   IsBadReview=d.IsBadReview,
+                                                   
                                                };
                 if (minPrice != null)
                 {
@@ -188,6 +190,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.RefundDate = addDto.RefundDate;
                 shoppingCartRegistration.RefundReason = addDto.RefundReason;
                 shoppingCartRegistration.AdmissionId = addDto.AdmissionId;
+                shoppingCartRegistration.IsBadReview = addDto.IsBadReview;
                 await dalShoppingCartRegistration.AddAsync(shoppingCartRegistration, true);
 
                 //unitOfWork.Commit();
@@ -234,6 +237,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.BadReviewContent = shoppingCartRegistration.BadReviewContent;
                 shoppingCartRegistrationDto.BadReviewReason = shoppingCartRegistration.BadReviewReason;
                 shoppingCartRegistrationDto.AdmissionId = shoppingCartRegistration.AdmissionId;
+                shoppingCartRegistrationDto.IsBadReview = shoppingCartRegistration.IsBadReview;
                 var emp = dalAmiyaEmployee.GetAll().SingleOrDefault(e=>e.Id==shoppingCartRegistrationDto.AdmissionId);
                 shoppingCartRegistrationDto.AdmissionName = emp.Name;
                 return shoppingCartRegistrationDto;
@@ -280,6 +284,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.BadReviewContent = shoppingCartRegistration.BadReviewContent;
                 shoppingCartRegistrationDto.BadReviewReason = shoppingCartRegistration.BadReviewReason;
                 shoppingCartRegistrationDto.AdmissionId = shoppingCartRegistration.AdmissionId;
+                shoppingCartRegistrationDto.IsBadReview = shoppingCartRegistration.IsBadReview;
                 var emp = dalAmiyaEmployee.GetAll().SingleOrDefault(e => e.Id == shoppingCartRegistrationDto.AdmissionId);
                 shoppingCartRegistrationDto.AdmissionName = emp.Name;
                 return shoppingCartRegistrationDto;
@@ -349,6 +354,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.BadReviewContent = updateDto.BadReviewContent;
                 shoppingCartRegistration.BadReviewReason=updateDto.BadReviewReason;
                 shoppingCartRegistration.AdmissionId = updateDto.AdmissionId;
+                shoppingCartRegistration.IsBadReview = updateDto.IsBadReview;
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
                 // unitOfWork.Commit();
             }

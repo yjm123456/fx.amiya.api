@@ -925,6 +925,10 @@ ADD COLUMN `admission_id` INT NOT null AFTER `create_by`;
 
 
 
+ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
+ADD COLUMN `is_badreview` BIT(1)  DEFAULT 0 AFTER `create_by`;
+
+
 ----------------------------------------------王健 2022/07/29 END--------------------------------------------;
 
 --购物车
