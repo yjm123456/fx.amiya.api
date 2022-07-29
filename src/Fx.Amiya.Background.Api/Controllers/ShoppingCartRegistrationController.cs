@@ -168,6 +168,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.ContentPlatFormId = shoppingCartRegistration.ContentPlatFormId;
                 shoppingCartRegistrationVo.LiveAnchorId = shoppingCartRegistration.LiveAnchorId;
                 shoppingCartRegistrationVo.LiveAnchorWechatNo = shoppingCartRegistration.LiveAnchorWechatNo;
+                shoppingCartRegistrationVo.LiveAnchorWeChatId = shoppingCartRegistration.LiveAnchorWeChatId;
                 shoppingCartRegistrationVo.CustomerNickName = shoppingCartRegistration.CustomerNickName;
                 shoppingCartRegistrationVo.Phone = shoppingCartRegistration.Phone;
                 shoppingCartRegistrationVo.IsAddWeChat = shoppingCartRegistration.IsAddWeChat;

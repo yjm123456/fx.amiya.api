@@ -523,6 +523,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task SendOrderAsync(AddContentPlatFormSendOrderInfoDto addDto)
         {
+            unitOfWork.BeginTransaction();
             try
             {
                 var orderInfo = await this.GetByOrderIdAsync(addDto.OrderId);
@@ -539,7 +540,6 @@ namespace Fx.Amiya.Service
                 {
                     throw new Exception("该客户已有订单派单到此医院，请重新选择派单医院！");
                 }
-                unitOfWork.BeginTransaction();
                 await _contentPlatformOrderSend.AddAsync(addDto);
                 var contentPlatFormOrder = await this.GetByOrderIdAsync(addDto.OrderId);
                 //修改订单状态

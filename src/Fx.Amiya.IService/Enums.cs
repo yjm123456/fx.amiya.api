@@ -259,11 +259,7 @@ namespace Fx.Amiya.IService
     /// </summary>
     public enum ContentPlateFormOrderConsultationType
     {
-        /// <summary>
-        /// 其他=0
-        /// </summary>
-        OTHER = 0,
-
+       
         /// <summary>
         /// 独立跟进=1
         /// </summary>
@@ -273,6 +269,11 @@ namespace Fx.Amiya.IService
         /// 协作完成=2
         /// </summary>
         Collaboration = 2,
+        /// <summary>
+        /// 其他=0
+        /// </summary>
+        OTHER = 0,
+
     }
 
 

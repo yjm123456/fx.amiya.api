@@ -18064,6 +18064,11 @@
             主播微信号
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.LiveAnchorWeChatId">
+            <summary>
+            主播微信号id
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.CustomerNickName">
             <summary>
             抖音昵称

@@ -18,7 +18,7 @@ namespace Fx.Amiya.Service
     {
         private IDalShoppingCartRegistration dalShoppingCartRegistration;
         private IContentPlatformService _contentPlatformService;
-        private IDalBindCustomerService _dalBindCustomerService;
+        private ILiveAnchorWeChatInfoService _liveAnchorWeChatInfoService;
         private ILiveAnchorService _liveAnchorService;
         private IUnitOfWork unitOfWork;
         private IAmiyaEmployeeService _amiyaEmployeeService;
@@ -28,14 +28,14 @@ namespace Fx.Amiya.Service
             IAmiyaEmployeeService amiyaEmployeeService,
             IUnitOfWork unitOfWork,
             ILiveAnchorService liveAnchorService,
-             IDalBindCustomerService dalBindCustomerService,
+             ILiveAnchorWeChatInfoService  liveAnchorWeChatInfoService,
             IDalAmiyaEmployee dalAmiyaEmployee)
         {
             this.dalShoppingCartRegistration = dalShoppingCartRegistration;
             _contentPlatformService = contentPlatformService;
             _liveAnchorService = liveAnchorService;
             this.unitOfWork = unitOfWork;
-            _dalBindCustomerService = dalBindCustomerService;
+            _liveAnchorWeChatInfoService = liveAnchorWeChatInfoService;
             _amiyaEmployeeService = amiyaEmployeeService;
             this.dalAmiyaEmployee = dalAmiyaEmployee;
         }
@@ -214,6 +214,9 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.ContentPlatFormId = shoppingCartRegistration.ContentPlatFormId;
                 shoppingCartRegistrationDto.LiveAnchorId = shoppingCartRegistration.LiveAnchorId;
                 shoppingCartRegistrationDto.LiveAnchorWechatNo = shoppingCartRegistration.LiveAnchorWechatNo;
+                var wechatInfo = await _liveAnchorWeChatInfoService.GetValidAsync();
+                var wechatResult = wechatInfo.FirstOrDefault(x => x.LiveAnchorId == shoppingCartRegistration.LiveAnchorId && x.WeChatNo == shoppingCartRegistration.LiveAnchorWechatNo);
+                shoppingCartRegistrationDto.LiveAnchorWeChatId = wechatResult.Id;
                 shoppingCartRegistrationDto.CustomerNickName = shoppingCartRegistration.CustomerNickName;
                 shoppingCartRegistrationDto.Phone = shoppingCartRegistration.Phone;
                 shoppingCartRegistrationDto.Price = shoppingCartRegistration.Price;
@@ -246,7 +249,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().SingleOrDefaultAsync(e => e.Id == phone);
+                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().FirstOrDefaultAsync(e => e.Phone == phone);
                 if (shoppingCartRegistration == null)
                 {
                     return new ShoppingCartRegistrationDto();

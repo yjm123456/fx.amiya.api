@@ -15,6 +15,10 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         public string ContentPlatFormName { get; set; }
         public int LiveAnchorId { get; set; }
         public string LiveAnchorName { get; set; }
+        /// <summary>
+        /// 主播微信号id
+        /// </summary>
+        public string LiveAnchorWeChatId { get; set; }
         public string LiveAnchorWechatNo { get; set; }
         public string CustomerNickName { get; set; }
         public string Phone { get; set; }

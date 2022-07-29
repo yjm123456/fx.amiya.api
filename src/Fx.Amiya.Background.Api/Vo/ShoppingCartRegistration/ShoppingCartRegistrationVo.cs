@@ -32,6 +32,11 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// 主播微信号
         /// </summary>
         public string LiveAnchorWechatNo { get; set; }
+
+        /// <summary>
+        /// 主播微信号id
+        /// </summary>
+        public string LiveAnchorWeChatId { get; set; }
         /// <summary>
         /// 抖音昵称
         /// </summary>
