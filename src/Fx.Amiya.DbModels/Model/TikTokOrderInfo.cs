@@ -90,7 +90,7 @@ namespace Fx.Amiya.DbModels.Model
 
         #endregion
 
-        public List<SendOrderInfo> SendOrderInfoList { get; set; }
+        //public List<SendOrderInfo> SendOrderInfoList { get; set; }
         public ReceiveGift ReceiveGift { get; set; }
         public OrderTrade OrderTrade { get; set; }
         public TikTokUserInfo TikTokUserInfo { get; set; }

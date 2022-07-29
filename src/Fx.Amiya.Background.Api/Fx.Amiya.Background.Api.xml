@@ -4869,12 +4869,6 @@
             <param name="pageSize"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetHeadOrderDataAsync(System.Nullable{System.Int32})">
-            <summary>
-            获取订单数据
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetOrderStatusDataAsync(System.Nullable{System.Int32})">
             <summary>
             订单各状态数量

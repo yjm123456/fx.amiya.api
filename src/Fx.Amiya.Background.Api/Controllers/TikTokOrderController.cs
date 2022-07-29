@@ -932,36 +932,36 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderPageInfo.List = order;
             return ResultData<FxPageInfo<BindCustomerServiceOrderVo>>.Success().AddData("order", orderPageInfo);
         }
-        /// <summary>
-        /// 获取订单数据
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("headOrderData")]
-        public async Task<ResultData<OrderDataVo>> GetHeadOrderDataAsync(int? employeeId)
-        {
-            OrderDataVo orderDataVo = new OrderDataVo();
-            if (employeeId == null)
-            {
-                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-                employeeId = Convert.ToInt32(employee.Id);
-                orderDataVo.TotalOrderQuantity = await tikTokOrderInfoService.GetTotalOrderQuantityAsync((int)employeeId);
-                orderDataVo.TodayIncrementQuantity = await tikTokOrderInfoService.GetTodayIncrementQuantityAsync((int)employeeId);
-                orderDataVo.LatelyStatusChangeDate = await tikTokOrderInfoService.GetLatelyStatusChangeDateAsync((int)employeeId);
-                orderDataVo.UnBindCustoemrServiceQuantity = await tikTokOrderInfoService.GetUnBindOrderQuantityAsync((int)employeeId);
-                orderDataVo.UnSendOrderQuantity = await tikTokOrderInfoService.GetUnSendOrderQuantityAsync((int)employeeId);
-                return ResultData<OrderDataVo>.Success().AddData("orderData", orderDataVo);
-            }
-            else
-            {
-                orderDataVo.TotalOrderQuantity = 0;
-                orderDataVo.TodayIncrementQuantity = 0;
-                orderDataVo.LatelyStatusChangeDate = null;
-                orderDataVo.UnBindCustoemrServiceQuantity = 0;
-                orderDataVo.UnSendOrderQuantity = 0;
-                return ResultData<OrderDataVo>.Success().AddData("orderData", orderDataVo);
-            }
+        ///// <summary>
+        ///// 获取订单数据
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpGet("headOrderData")]
+        //public async Task<ResultData<OrderDataVo>> GetHeadOrderDataAsync(int? employeeId)
+        //{
+        //    OrderDataVo orderDataVo = new OrderDataVo();
+        //    if (employeeId == null)
+        //    {
+        //        var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+        //        employeeId = Convert.ToInt32(employee.Id);
+        //        orderDataVo.TotalOrderQuantity = await tikTokOrderInfoService.GetTotalOrderQuantityAsync((int)employeeId);
+        //        orderDataVo.TodayIncrementQuantity = await tikTokOrderInfoService.GetTodayIncrementQuantityAsync((int)employeeId);
+        //        orderDataVo.LatelyStatusChangeDate = await tikTokOrderInfoService.GetLatelyStatusChangeDateAsync((int)employeeId);
+        //        orderDataVo.UnBindCustoemrServiceQuantity = await tikTokOrderInfoService.GetUnBindOrderQuantityAsync((int)employeeId);
+        //        orderDataVo.UnSendOrderQuantity = await tikTokOrderInfoService.GetUnSendOrderQuantityAsync((int)employeeId);
+        //        return ResultData<OrderDataVo>.Success().AddData("orderData", orderDataVo);
+        //    }
+        //    else
+        //    {
+        //        orderDataVo.TotalOrderQuantity = 0;
+        //        orderDataVo.TodayIncrementQuantity = 0;
+        //        orderDataVo.LatelyStatusChangeDate = null;
+        //        orderDataVo.UnBindCustoemrServiceQuantity = 0;
+        //        orderDataVo.UnSendOrderQuantity = 0;
+        //        return ResultData<OrderDataVo>.Success().AddData("orderData", orderDataVo);
+        //    }
 
-        }
+        //}
         /// <summary>
         /// 订单各状态数量
         /// </summary>

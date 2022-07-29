@@ -203,9 +203,9 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.ContentPlatFormId = shoppingCartRegistration.ContentPlatFormId;
                 shoppingCartRegistrationDto.LiveAnchorId = shoppingCartRegistration.LiveAnchorId;
                 shoppingCartRegistrationDto.LiveAnchorWechatNo = shoppingCartRegistration.LiveAnchorWechatNo;
-                var wechatInfo = await _liveAnchorWeChatInfoService.GetValidAsync();
-                var wechatResult = wechatInfo.FirstOrDefault(x => x.LiveAnchorId == shoppingCartRegistration.LiveAnchorId && x.WeChatNo == shoppingCartRegistration.LiveAnchorWechatNo);
-                shoppingCartRegistrationDto.LiveAnchorWeChatId = wechatResult.Id;
+                //var wechatInfo = await _liveAnchorWeChatInfoService.GetValidAsync();
+                //var wechatResult = wechatInfo.FirstOrDefault(x => x.LiveAnchorId == shoppingCartRegistration.LiveAnchorId && x.WeChatNo == shoppingCartRegistration.LiveAnchorWechatNo);
+                //shoppingCartRegistrationDto.LiveAnchorWeChatId = wechatResult.Id;
                 shoppingCartRegistrationDto.CustomerNickName = shoppingCartRegistration.CustomerNickName;
                 shoppingCartRegistrationDto.Phone = shoppingCartRegistration.Phone;
                 shoppingCartRegistrationDto.Price = shoppingCartRegistration.Price;

@@ -724,7 +724,9 @@ namespace Fx.Amiya.Service
         public async Task<TikTokOrderDto> GetByIdInCRMAsync(string id)
         {
             var config = await _wxAppConfigService.GetCallCenterConfig();
-            var order = await dalTikTokOrderInfo.GetAll().Include(x => x.SendOrderInfoList).SingleOrDefaultAsync(e => e.Id == id);
+            var order = await dalTikTokOrderInfo.GetAll()
+                //.Include(x => x.SendOrderInfoList)
+                .SingleOrDefaultAsync(e => e.Id == id);
             if (order == null)
                 throw new Exception("订单编号错误");
 
@@ -789,16 +791,16 @@ namespace Fx.Amiya.Service
                 var contentPlatFormInfo = await contentPlatFormService.GetByIdAsync(liveAnchorInfo.ContentPlateFormId);
                 orderInfo.LiveAnchorPlatForm = contentPlatFormInfo.ContentPlatformName;
             }
-            if (order.SendOrderInfoList != null)
-            {
-                var sendHospital = order.SendOrderInfoList.OrderByDescending(x => x.SendDate).FirstOrDefault();
-                if (sendHospital != null)
-                {
-                    var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(sendHospital.HospitalId);
-                    orderInfo.SendOrderHospital = hospitalInfo.Name;
-                    orderInfo.SendOrderHospitalId = sendHospital.HospitalId;
-                }
-            }
+            //if (order.SendOrderInfoList != null)
+            //{
+            //    var sendHospital = order.SendOrderInfoList.OrderByDescending(x => x.SendDate).FirstOrDefault();
+            //    if (sendHospital != null)
+            //    {
+            //        var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(sendHospital.HospitalId);
+            //        orderInfo.SendOrderHospital = hospitalInfo.Name;
+            //        orderInfo.SendOrderHospitalId = sendHospital.HospitalId;
+            //    }
+            //}
             orderInfo.TradeId = order.TradeId;
             return orderInfo;
         }
@@ -909,40 +911,40 @@ namespace Fx.Amiya.Service
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        public async Task<List<HospitalOrderNumAndPriceDto>> GetCustomerServicePerformanceInfoAsync(DateTime startDate, DateTime endDate)
-        {
-            DateTime startrq = ((DateTime)startDate);
-            DateTime endrq = ((DateTime)endDate).Date.AddDays(1);
-            var orders = from d in dalTikTokOrderInfo.GetAll()
-                         where d.SendOrderInfoList.Count > 0
-                         && d.OrderType == (byte)OrderType.VirtualOrder
-                         && d.SendOrderInfoList.Max(x => x.SendDate) >= startrq
-                         && d.SendOrderInfoList.Max(x => x.SendDate) < endrq
-                         select d;
-            var sendOrder = from d in orders
-                            select new HospitalOrderNumAndPriceDto
-                            {
-                                Price = d.ActualPayment.Value,
-                                HospitalName = d.SendOrderInfoList.First().SendBy.ToString(),
-                                OrderNum = 1
-                            };
-            var result = sendOrder.ToList();
-            List<HospitalOrderNumAndPriceDto> returnInfo = new List<HospitalOrderNumAndPriceDto>();
+        //public async Task<List<HospitalOrderNumAndPriceDto>> GetCustomerServicePerformanceInfoAsync(DateTime startDate, DateTime endDate)
+        //{
+        //    DateTime startrq = ((DateTime)startDate);
+        //    DateTime endrq = ((DateTime)endDate).Date.AddDays(1);
+        //    var orders = from d in dalTikTokOrderInfo.GetAll()
+        //                 where d.SendOrderInfoList.Count > 0
+        //                 && d.OrderType == (byte)OrderType.VirtualOrder
+        //                 && d.SendOrderInfoList.Max(x => x.SendDate) >= startrq
+        //                 && d.SendOrderInfoList.Max(x => x.SendDate) < endrq
+        //                 select d;
+        //    var sendOrder = from d in orders
+        //                    select new HospitalOrderNumAndPriceDto
+        //                    {
+        //                        Price = d.ActualPayment.Value,
+        //                        HospitalName = d.SendOrderInfoList.First().SendBy.ToString(),
+        //                        OrderNum = 1
+        //                    };
+        //    var result = sendOrder.ToList();
+        //    List<HospitalOrderNumAndPriceDto> returnInfo = new List<HospitalOrderNumAndPriceDto>();
 
-            foreach (var x in result)
-            {
-                if (!string.IsNullOrEmpty(x.HospitalName))
-                {
-                    HospitalOrderNumAndPriceDto returnResult = new HospitalOrderNumAndPriceDto();
-                    var empInfo = await dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(e => e.Id == Convert.ToInt32(x.HospitalName));
-                    returnResult.HospitalName = empInfo.Name;
-                    returnResult.Price = x.Price;
-                    returnResult.OrderNum = x.OrderNum;
-                    returnInfo.Add(returnResult);
-                }
-            }
-            return returnInfo;
-        }
+        //    foreach (var x in result)
+        //    {
+        //        if (!string.IsNullOrEmpty(x.HospitalName))
+        //        {
+        //            HospitalOrderNumAndPriceDto returnResult = new HospitalOrderNumAndPriceDto();
+        //            var empInfo = await dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(e => e.Id == Convert.ToInt32(x.HospitalName));
+        //            returnResult.HospitalName = empInfo.Name;
+        //            returnResult.Price = x.Price;
+        //            returnResult.OrderNum = x.OrderNum;
+        //            returnInfo.Add(returnResult);
+        //        }
+        //    }
+        //    return returnInfo;
+        //}
         /// <summary>
         /// 获取所有已核销客户注册过小程序的订单
         /// </summary>
@@ -1377,7 +1379,7 @@ namespace Fx.Amiya.Service
                                 CheckDate = d.CheckDate,
                                 CheckBy = d.CheckBy,
                                 CheckRemark = d.CheckRemark,
-                                SendOrderHospital = d.SendOrderInfoList == null ? "" : d.SendOrderInfoList.OrderByDescending(k => k.SendDate).First().HospitalInfo.Name,
+                               // SendOrderHospital = d.SendOrderInfoList == null ? "" : d.SendOrderInfoList.OrderByDescending(k => k.SendDate).First().HospitalInfo.Name,
                                 SettlePrice = d.SettlePrice,
                                 IsReturnBackPrice = d.IsReturnBackPrice,
                                 ReturnBackPrice = d.ReturnBackPrice,
@@ -2358,26 +2360,26 @@ namespace Fx.Amiya.Service
         /// 获取未派单订单数量
         /// </summary>
         /// <returns></returns>
-        public async Task<int> GetUnSendOrderQuantityAsync(int employeeId)
-        {
-            var order = from d in dalTikTokOrderInfo.GetAll()
-                        where d.SendOrderInfoList.Count() == 0
-                        select d;
-            if (employeeId != -1)
-            {
-                var bindCustomerService = await dalBindCustomerService.GetAll().Where(e => e.CustomerServiceId == employeeId).ToListAsync();
-                List<string> phoneList = new List<string>();
-                foreach (var item in bindCustomerService)
-                {
-                    phoneList.Add(item.BuyerPhone);
-                }
-                order = from d in order
-                        where phoneList.Contains(d.Phone)
-                        select d;
-            }
-            var quantity = await order.CountAsync();
-            return quantity;
-        }
+        //public async Task<int> GetUnSendOrderQuantityAsync(int employeeId)
+        //{
+        //    var order = from d in dalTikTokOrderInfo.GetAll()
+        //                where d.SendOrderInfoList.Count() == 0
+        //                select d;
+        //    if (employeeId != -1)
+        //    {
+        //        var bindCustomerService = await dalBindCustomerService.GetAll().Where(e => e.CustomerServiceId == employeeId).ToListAsync();
+        //        List<string> phoneList = new List<string>();
+        //        foreach (var item in bindCustomerService)
+        //        {
+        //            phoneList.Add(item.BuyerPhone);
+        //        }
+        //        order = from d in order
+        //                where phoneList.Contains(d.Phone)
+        //                select d;
+        //    }
+        //    var quantity = await order.CountAsync();
+        //    return quantity;
+        //}
 
         public Task<bool> IsExistPhoneAsync(string phone)
         {

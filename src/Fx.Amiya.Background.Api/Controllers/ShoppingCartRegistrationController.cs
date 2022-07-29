@@ -49,13 +49,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize,decimal? minPrice,decimal? maxPrice,int? admissionId)
+        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? admissionId)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize,minPrice,maxPrice,admissionId);
+                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, admissionId);
 
                 var shoppingCartRegistration = from d in q.List
                                                select new ShoppingCartRegistrationVo
@@ -76,14 +76,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    Remark = d.Remark,
                                                    CreateBy = d.CreateByName,
                                                    CreateDate = d.CreateDate,
-                                                   IsReContent=d.IsReContent,
-                                                   ReContent=d.ReContent,                                                 
-                                                   RefundReason=d.RefundReason,                                                   
-                                                   BadReviewContent=d.BadReviewContent,
-                                                   BadReviewReason=d.BadReviewReason,
-                                                   BadReviewDate = d.BadReviewDate ==null? null:d.BadReviewDate,
+                                                   IsReContent = d.IsReContent,
+                                                   ReContent = d.ReContent,
+                                                   RefundReason = d.RefundReason,
+                                                   BadReviewContent = d.BadReviewContent,
+                                                   BadReviewReason = d.BadReviewReason,
+                                                   BadReviewDate = d.BadReviewDate == null ? null : d.BadReviewDate,
                                                    RefundDate = d.RefundDate,
-                                                   IsBadReview=d.IsBadReview
+                                                   IsBadReview = d.IsBadReview
                                                };
 
                 FxPageInfo<ShoppingCartRegistrationVo> shoppingCartRegistrationPageInfo = new FxPageInfo<ShoppingCartRegistrationVo>();
@@ -112,7 +112,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 var isExistPhone = await shoppingCartRegistrationService.GetByPhoneAsync(addVo.Phone);
-                if(!string.IsNullOrEmpty(isExistPhone.Id))
+                if (!string.IsNullOrEmpty(isExistPhone.Id))
                 {
                     throw new Exception("已存在该客户手机号，无法录入，请重新填写！");
                 }
@@ -209,7 +209,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 var isExistPhone = await shoppingCartRegistrationService.GetByPhoneAsync(updateVo.Phone);
-                if (!string.IsNullOrEmpty(isExistPhone.Id))
+                if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.Id == updateVo.Id)
                 {
                     throw new Exception("已存在该客户手机号，无法录入，请重新填写！");
                 }

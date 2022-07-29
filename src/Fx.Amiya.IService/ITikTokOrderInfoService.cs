@@ -319,7 +319,7 @@ namespace Fx.Amiya.IService
         /// 获取未派单订单数量
         /// </summary>
         /// <returns></returns>
-        Task<int> GetUnSendOrderQuantityAsync(int employeeId);
+       // Task<int> GetUnSendOrderQuantityAsync(int employeeId);
 
 
         /// <summary>
@@ -516,12 +516,12 @@ namespace Fx.Amiya.IService
         #endregion
 
         #region  【数据中心模块】
-        Task<List<OrderPriceConditionDto>> GetOrderDealPriceDataAsync(DateTime startDate, DateTime endDate);
+        //Task<List<OrderPriceConditionDto>> GetOrderDealPriceDataAsync(DateTime startDate, DateTime endDate);
 
-        Task<List<OrderOperationConditionDto>> GetOrderToHospitalDataAsync(DateTime startDate, DateTime endDate);
-        Task<List<OrderPriceConditionDto>> GetCheckForPerformanceDataAsync(DateTime startDate, DateTime endDate);
-        Task<List<OrderPriceConditionDto>> GetReturnBackPriceDataAsync(DateTime startDate, DateTime endDate);
-        Task<List<HospitalOrderNumAndPriceDto>> GetCustomerServicePerformanceInfoAsync(DateTime startDate, DateTime endDate);
+        //Task<List<OrderOperationConditionDto>> GetOrderToHospitalDataAsync(DateTime startDate, DateTime endDate);
+        //Task<List<OrderPriceConditionDto>> GetCheckForPerformanceDataAsync(DateTime startDate, DateTime endDate);
+        //Task<List<OrderPriceConditionDto>> GetReturnBackPriceDataAsync(DateTime startDate, DateTime endDate);
+        //Task<List<HospitalOrderNumAndPriceDto>> GetCustomerServicePerformanceInfoAsync(DateTime startDate, DateTime endDate);
         #endregion
     }
 }
