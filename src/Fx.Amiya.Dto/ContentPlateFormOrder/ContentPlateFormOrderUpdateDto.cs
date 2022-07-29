@@ -58,6 +58,12 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 面诊员名字
         /// </summary>
         public string ConsultationEmpName { get; set; }
+
+        /// <summary>
+        /// 面诊状态
+        /// </summary>
+        public int ConsultationType { get; set; }
+
         /// <summary>
         /// 手机号
         /// </summary>

@@ -883,6 +883,10 @@ INSERT INTO `amiyadb`.`tbl_order_app_info` (`id`, `app_key`, `app_secret`, `acce
 
 -----------------------------------------------余建明 2022/07/18 END--------------------------------------------;
 
+-----------------------------------------------余建明 2022/07/28  BEGIN--------------------------------------------;
+ALTER TABLE `amiyadb`.`tbl_content_platform_order` 
+ADD COLUMN `consultation_type` INT NOT NULL DEFAULT 0 AFTER `consultation_emp_id`;
+-----------------------------------------------余建明 2022/07/28 END--------------------------------------------;
 
 
 

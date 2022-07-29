@@ -38,6 +38,9 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="startDate">登记开始日期</param>
         /// <param name="endDate">登记结束日期</param>
+        /// <param name="sendStartDate">派单开始日期</param>
+        /// <param name="sendEndDate">派单结束日期</param>
+        /// <param name="consultationType">面诊状态（空查询所有）</param>
         /// <param name="isToHospital">是否到院（空查询所有）</param>
         /// <param name="tohospitalStartDate">到院开始时间</param>
         /// <param name="toHospitalEndDate">到院结束时间</param>
@@ -56,7 +59,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, int pageNum, int pageSize)
         {
             try
             {
@@ -75,6 +78,14 @@ namespace Fx.Amiya.Service
                     DateTime endrq = ((DateTime)endDate).Date.AddDays(1);
                     dealInfo = from d in dealInfo
                                where (d.CreateDate >= startrq && d.CreateDate < endrq)
+                               select d;
+                }
+                if (sendStartDate != null && sendEndDate != null)
+                {
+                    DateTime startrq = ((DateTime)sendStartDate).Date;
+                    DateTime endrq = ((DateTime)sendEndDate).Date.AddDays(1);
+                    dealInfo = from d in dealInfo
+                               where (d.ContentPlatFormOrder.ContentPlatformOrderSendList[0].SendDate >= startrq && d.ContentPlatFormOrder.ContentPlatformOrderSendList[0].SendDate < endrq)
                                select d;
                 }
                 if (isToHospital == true)
@@ -116,6 +127,7 @@ namespace Fx.Amiya.Service
                                                    && (!CheckState.HasValue || d.CheckState == CheckState.Value)
                                                    && (!isReturnBakcPrice.HasValue || d.IsReturnBackPrice == isReturnBakcPrice.Value)
                                                    && (!customerServiceId.HasValue || d.CreateBy == customerServiceId)
+                                                   && (!consultationType.HasValue || d.ContentPlatFormOrder.ConsultationType == consultationType)
                                                    select new ContentPlatFormOrderDealInfoDto
                                                    {
                                                        Id = d.Id,
@@ -131,6 +143,7 @@ namespace Fx.Amiya.Service
                                                        ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
                                                        ToHospitalDate = d.ToHospitalDate,
                                                        LastDealHospitalId = d.LastDealHospitalId,
+                                                       SendDate= d.ContentPlatFormOrder.ContentPlatformOrderSendList[0].SendDate,
                                                        DealPicture = d.DealPicture,
                                                        Remark = d.Remark,
                                                        Price = d.Price,
@@ -182,7 +195,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, bool hidePhone)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, bool hidePhone)
         {
             try
             {
@@ -201,6 +214,14 @@ namespace Fx.Amiya.Service
                     DateTime endrq = ((DateTime)endDate).Date.AddDays(1);
                     dealInfo = from d in dealInfo
                                where (d.CreateDate >= startrq && d.CreateDate < endrq)
+                               select d;
+                }
+                if (sendStartDate != null && sendEndDate != null)
+                {
+                    DateTime startrq = ((DateTime)sendStartDate).Date;
+                    DateTime endrq = ((DateTime)sendEndDate).Date.AddDays(1);
+                    dealInfo = from d in dealInfo
+                               where (d.ContentPlatFormOrder.ContentPlatformOrderSendList[0].SendDate >= startrq && d.ContentPlatFormOrder.ContentPlatformOrderSendList[0].SendDate < endrq)
                                select d;
                 }
                 if (isToHospital == true)
@@ -241,6 +262,7 @@ namespace Fx.Amiya.Service
                                                    && (!isAccompanying.HasValue || d.IsAcompanying == isAccompanying.Value)
                                                    && (!CheckState.HasValue || d.CheckState == CheckState.Value)
                                                    && (!isReturnBakcPrice.HasValue || d.IsReturnBackPrice == isReturnBakcPrice.Value)
+                                                   && (!consultationType.HasValue || d.ContentPlatFormOrder.ConsultationType == consultationType.Value)
                                                    && (!customerServiceId.HasValue || d.CreateBy == customerServiceId)
                                                    select new ContentPlatFormOrderDealInfoDto
                                                    {

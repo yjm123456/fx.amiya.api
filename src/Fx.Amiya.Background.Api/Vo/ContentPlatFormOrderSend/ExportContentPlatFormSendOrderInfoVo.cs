@@ -62,11 +62,6 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         public string OrderSourceText { get; set; }
 
 
-        /// <summary>
-        /// 院方接诊人员
-        /// </summary>
-        [Description("院方接诊人员")]
-        public string AcceptConsulting { get; set; }
 
         /// <summary>
         /// 定金

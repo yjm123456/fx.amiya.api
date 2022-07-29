@@ -31,9 +31,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// </summary>
         public string ThumbPictureUrl { get; set; }
         /// <summary>
-        /// 面诊员
+        /// 面诊状态文本
         /// </summary>
-        public string ConsultationEmpName { get; set; }
+        public string ConsultationTypeText { get; set; }
 
         /// <summary>
         /// 咨询内容
@@ -94,9 +94,5 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// </summary>
         public string UnSendReason { get; set; }
 
-        /// <summary>
-        /// 院方接诊人员
-        /// </summary>
-        public string AcceptConsulting { get; set; }
     }
 }

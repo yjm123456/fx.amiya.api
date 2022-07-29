@@ -169,9 +169,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         public string OrderSourceText { get; set; }
         /// <summary>
-        /// 面诊员
+        /// 面诊状态
         /// </summary>
-        public string ConsultationEmpName { get; set; }
+        public string ConsultatioType { get; set; }
 
 
         /// <summary>

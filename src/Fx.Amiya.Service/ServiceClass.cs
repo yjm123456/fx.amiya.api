@@ -256,6 +256,26 @@ namespace Fx.Amiya.Service
             }
             return typeText;
         }
+
+        public static string GetContentPlateFormOrderConsultationTypeText(int ConsultationType)
+        {
+            string typeText = "";
+            switch (ConsultationType)
+            {
+                case 0:
+                    typeText = "其他";
+                    break;
+
+                case 1:
+                    typeText = "独立跟进";
+                    break;
+                case 2:
+                    typeText = "协作完成";
+                    break;
+
+            }
+            return typeText;
+        }
         public static string GetContentPlateFormOrderStatusText(byte appType)
         {
             string typeText = "";

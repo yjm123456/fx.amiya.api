@@ -443,6 +443,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           AppointmentDate = d.AppointmentDate == null ? "未预约时间" : d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss"),
                           AppointmentHospitalName = d.AppointmentHospitalName,
                           GoodsName = d.GoodsName,
+                          ConsultationTypeText=d.ConsultationTypeText,
                           ConsultingContent = d.ConsultingContent,
                           OrderStatusText = d.OrderStatusText,
                           DepositAmount = d.DepositAmount,
@@ -496,6 +497,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           ContentPlatformName = d.ContentPlatformName,
                           LiveAnchorName = d.LiveAnchorName,
                           LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
+                          ConsultationTypeText = d.ConsultationTypeText,
                           IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
                           IsAcompanying = d.IsAcompanying == true ? "是" : "否",
                           CreateDate = d.CreateDate,
@@ -537,6 +539,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="startDate">登记开始日期</param>
         /// <param name="endDate">登记结束日期</param>
+        /// <param name="sendStartDate">派单开始日期</param>
+        /// <param name="sendEndDate">派单结束日期</param>
+        /// <param name="consultationType">面诊状态（空查询所有）</param>
         /// <param name="isToHospital">是否到院（空查询所有）</param>
         /// <param name="tohospitalStartDate">到院开始时间</param>
         /// <param name="toHospitalEndDate">到院结束时间</param>
@@ -554,7 +559,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("contentPlatFormOrderDealInfo")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<ContentPlatFormOrderDealInfoReportVo>>> GetDealInfo(DateTime? startDate, DateTime? endDate, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord)
+        public async Task<ResultData<List<ContentPlatFormOrderDealInfoReportVo>>> GetDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord)
         {
 
             bool isHidePhone = true;
@@ -564,7 +569,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 isHidePhone = false;
             }
             int employeeId = Convert.ToInt32(employee.Id);
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, isHidePhone);
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, sendStartDate, sendEndDate, consultationType, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, isHidePhone);
 
             var contentPlatformOrders = from d in result
                                         select new ContentPlatFormOrderDealInfoReportVo
@@ -613,6 +618,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="startDate">登记开始日期</param>
         /// <param name="endDate">登记结束日期</param>
+        /// <param name="sendStartDate">派单开始日期</param>
+        /// <param name="sendEndDate">派单结束日期</param>
+        /// <param name="consultationType">面诊状态（空查询所有）</param>
         /// <param name="isToHospital">是否到院（空查询所有）</param>
         /// <param name="tohospitalStartDate">到院开始时间</param>
         /// <param name="toHospitalEndDate">到院结束时间</param>
@@ -630,7 +638,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportContentPlatFormOrderDealInfo")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportDealInfo(DateTime? startDate, DateTime? endDate, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord)
+        public async Task<FileStreamResult> ExportDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord)
         {
 
             bool isHidePhone = true;
@@ -640,7 +648,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 isHidePhone = false;
             }
             int employeeId = Convert.ToInt32(employee.Id);
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, isHidePhone);
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, sendStartDate, sendEndDate, consultationType, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, isHidePhone);
 
             var contentPlatformOrders = from d in result
                                         select new ContentPlatFormOrderDealInfoReportVo
@@ -1184,6 +1192,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           SenderName = d.SenderName,
                           SendDate = d.SendDate,
                           LiveAnchorWeChatNo=d.LiveAnchorWeChatNo,
+                          ConsultationTypeText = d.ConsultationTypeText,
                           OrderId = d.OrderId,
                           ContentPlatFormName = d.ContentPlatFormName,
                           LiveAnchorName = d.LiveAnchorName,
@@ -1254,6 +1263,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           OrderId = d.OrderId,
                           ContentPlatFormName = d.ContentPlatFormName,
                           LiveAnchorName = d.LiveAnchorName,
+                          ConsultationTypeText = d.ConsultationTypeText,
                           LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                           GoodsName = d.GoodsName,
                           CustomerName = d.CustomerName,

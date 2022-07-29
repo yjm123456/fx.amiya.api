@@ -17,6 +17,7 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         public DateTime CreateDate { get; set; }
         public string GoodsName { get; set; }
         public string ThumbPictureUrl { get; set; }
+
         public string ConsultingContent { get; set; }
         public string CustomerName { get; set; }
         public decimal? DepositAmount { get; set; }
@@ -28,14 +29,15 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         public string Phone { get; set; }
         public string EncryptPhone { get; set; }
         public string Remark { get; set; }
+
         /// <summary>
-        /// 面诊员
+        /// 面诊状态
         /// </summary>
-        public int? ConsultationEmpId { get; set; }
+        public int ConsultationType { get; set; }
         /// <summary>
-        /// 面诊员名字
+        /// 面诊状态文本
         /// </summary>
-        public string ConsultationEmpName{ get; set; }
+        public string ConsultationTypeText { get; set; }
         /// <summary>
         /// 后期项目铺垫
         /// </summary>
@@ -53,10 +55,5 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 未派单原因
         /// </summary>
         public string UnSendReason { get; set; }
-
-        /// <summary>
-        /// 院方接诊人员
-        /// </summary>
-        public string AcceptConsulting { get; set; }
     }
 }

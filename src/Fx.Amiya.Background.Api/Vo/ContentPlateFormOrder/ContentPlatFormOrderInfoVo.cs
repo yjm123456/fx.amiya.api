@@ -113,12 +113,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         [Description("派单时间")]
         public DateTime? SendDate { get; set; }
-
         /// <summary>
-        /// 面诊人员
+        /// 面诊状态
         /// </summary>
-        [Description("面诊人员")]
-        public string ConsultationEmpName { get; set; }
+        [Description("面诊状态")]
+        public string ConsultationType { get; set; }
 
         /// <summary>
         /// 院方接诊人员
