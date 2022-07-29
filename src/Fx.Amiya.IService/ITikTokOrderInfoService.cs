@@ -113,7 +113,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="orderTradeAddDto"></param>
         /// <returns>交易编号</returns>
-        Task<string> AddAmiyaOrderAsync(TikTokOrderTradeAddDto orderTradeAddDto);
+        Task<string> AddAmiyaOrderAsync(OrderTradeAddDto orderTradeAddDto);
 
         /// <summary>
         /// 获取微信支付参数

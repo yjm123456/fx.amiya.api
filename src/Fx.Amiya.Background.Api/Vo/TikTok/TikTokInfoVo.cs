@@ -110,7 +110,7 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         public string AppTypeText { get; set; }
 
 
-        public byte? OrderType { get; set; }
+        public long? OrderType { get; set; }
         public string OrderTypeText { get; set; }
 
         /// <summary>
@@ -199,5 +199,7 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
 
 
         #endregion
+        public string CipherName { get; set; }
+        public string CipherPhone { get; set; }
     }
 }

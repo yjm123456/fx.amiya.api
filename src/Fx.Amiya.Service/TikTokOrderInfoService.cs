@@ -57,8 +57,9 @@ namespace Fx.Amiya.Service
         private IOrderWriteOffInfoService _orderWriteOffInfoService;
         private IExpressManageService _expressManageService;
         private ITikTokUserInfoService tikTokUserInfoService;
+        private IBindCustomerServiceService _bindCustomerService;
 
-        public TikTokOrderInfoService(IDalTikTokOrderInfo dalTikTokOrderInfo, IFxSmsBasedTemplateSender smsSender, IDalBindCustomerService dalBindCustomerService, ISendOrderInfoService sendOrderInfoService, IDalAmiyaEmployee dalAmiyaEmployee, IDalOrderInfo dalOrderInfo, IWxAppConfigService wxAppConfigService, ILiveAnchorService liveAnchorService, IContentPlatformService contentPlatFormService, IUnitOfWork unitOfWork, IDalOrderTrade dalOrderTrade, IAmiyaGoodsDemandService amiyaGoodsDemandService, ICustomerService customerService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, IIntegrationAccount integrationAccountService, IBindCustomerServiceService bindCustomerServiceService, IOrderCheckPictureService orderCheckPictureService, IDalCustomerInfo dalCustomerInfo, IDalReceiveGift dalReceiveGift, IGoodsInfo goodsInfoService, IDalContentPlatformOrder dalContentPlatFormOrder, IHospitalInfoService hospitalInfoService, IDalSendGoodsRecord dalSendGoodsRecord, IOrderWriteOffInfoService orderWriteOffInfoService, IExpressManageService expressManageService, ITikTokUserInfoService tikTokUserInfoService)
+        public TikTokOrderInfoService(IDalTikTokOrderInfo dalTikTokOrderInfo, IFxSmsBasedTemplateSender smsSender, IDalBindCustomerService dalBindCustomerService, ISendOrderInfoService sendOrderInfoService, IDalAmiyaEmployee dalAmiyaEmployee, IDalOrderInfo dalOrderInfo, IWxAppConfigService wxAppConfigService, ILiveAnchorService liveAnchorService, IContentPlatformService contentPlatFormService, IUnitOfWork unitOfWork, IDalOrderTrade dalOrderTrade, IAmiyaGoodsDemandService amiyaGoodsDemandService, ICustomerService customerService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, IIntegrationAccount integrationAccountService, IBindCustomerServiceService bindCustomerServiceService, IOrderCheckPictureService orderCheckPictureService, IDalCustomerInfo dalCustomerInfo, IDalReceiveGift dalReceiveGift, IGoodsInfo goodsInfoService, IDalContentPlatformOrder dalContentPlatFormOrder, IHospitalInfoService hospitalInfoService, IDalSendGoodsRecord dalSendGoodsRecord, IOrderWriteOffInfoService orderWriteOffInfoService, IExpressManageService expressManageService, ITikTokUserInfoService tikTokUserInfoService, IBindCustomerServiceService bindCustomerService)
         {
             this.dalTikTokOrderInfo = dalTikTokOrderInfo;
             _smsSender = smsSender;
@@ -86,9 +87,10 @@ namespace Fx.Amiya.Service
             _orderWriteOffInfoService = orderWriteOffInfoService;
             _expressManageService = expressManageService;
             this.tikTokUserInfoService = tikTokUserInfoService;
+            _bindCustomerService = bindCustomerService;
         }
 
-        public async Task<string> AddAmiyaOrderAsync(TikTokOrderTradeAddDto orderTradeAddDto)
+        public async Task<string> AddAmiyaOrderAsync(OrderTradeAddDto orderTradeAddDto)
         {
             try
             {
@@ -111,7 +113,7 @@ namespace Fx.Amiya.Service
                 {
                     item.TradeId = orderTrade.TradeId;
                 }
-                await AddAsync(orderTradeAddDto.OrderInfoAddList);
+                await AddAsync(orderTradeAddDto.TikTokOrderInfoAddList);
 
                 unitOfWork.Commit();
                 return orderTrade.TradeId;
@@ -144,42 +146,129 @@ namespace Fx.Amiya.Service
                     var orderInfo = orderInfos.FirstOrDefault();
                     if (orderInfo != null)
                     {
-                        if (orderInfo.StatusCode == orderItem.StatusCode)
+                        //根据是否包含手机号判断该订单是否已经解密
+                        if (!string.IsNullOrEmpty(orderInfo.Phone))
                         {
-                            continue;
+                            //订单信息已解密
+                            if (orderInfo.StatusCode == orderItem.StatusCode)
+                            {
+                                continue;
+                            }
+                            if (orderItem.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || orderItem.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS)
+                            {
+                                goodsName += orderItem.GoodsName + ",";
+                                orderPhoneDict.Add(orderItem.Id, orderItem.Phone);
+                                //组织邮件信息
+                                if (emailConfig == true)
+                                {
+                                    BuildSendMailInfo(appType, orderItem.Id, goodsName, orderItem.Phone);
+                                }
+                            }
+                            orderInfo.StatusCode = orderItem.StatusCode;
+                            orderInfo.UpdateDate = orderItem.UpdateDate;
+                            orderInfo.ActualPayment = orderItem.ActualPayment;
+                            orderInfo.AccountReceivable = orderItem.AccountReceivable;
+                            orderInfo.OrderType = orderItem.OrderType;
+                            orderInfo.AppointmentHospital = orderItem.AppointmentHospital;
+                            orderInfo.ThumbPicUrl = orderItem.ThumbPicUrl;
+                            if (orderItem.StatusCode == OrderStatusCode.TRADE_FINISHED)
+                            {
+                                orderInfo.WriteOffDate = orderItem.WriteOffDate;
+                                //验证是否派过单
+                                var sendOrderInfo = await _sendOrderInfoService.GetSendOrderInfoByOrderId(orderInfo.Id);
+                                if (sendOrderInfo.Count != 0)
+                                {
+                                    orderInfo.FinalConsumptionHospital = sendOrderInfo.First().HospitalName;
+                                }
+                                else
+                                {
+                                    orderInfo.FinalConsumptionHospital = orderItem.AppointmentHospital;
+                                }
+                            }
+                            //计算积分,如果订单信息包含手机号则计算积分,否则暂时不计算
+                            if (orderInfo.StatusCode == "TRADE_FINISHED" && orderInfo.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(orderInfo.Phone))
+                            {
+                                bool isIntegrationGenerateRecord = await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAsync(orderInfo.Id);
+                                if (isIntegrationGenerateRecord == true)
+                                    continue;
+                                var customerId = await customerService.GetCustomerIdByPhoneAsync(orderInfo.Phone);
+                                if (string.IsNullOrWhiteSpace(customerId))
+                                    continue;
+                                ConsumptionIntegrationDto consumptionIntegration = new ConsumptionIntegrationDto();
+                                consumptionIntegration.CustomerId = customerId;
+                                consumptionIntegration.OrderId = orderInfo.Id;
+                                consumptionIntegration.AmountOfConsumption = (decimal)orderInfo.ActualPayment;
+                                consumptionIntegration.Date = DateTime.Now;
+
+                                var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(customerId);
+                                if (memberCard != null)
+                                {
+                                    consumptionIntegration.Quantity = Math.Floor(memberCard.GenerateIntegrationPercent * (decimal)orderInfo.ActualPayment);
+                                    consumptionIntegration.Percent = memberCard.GenerateIntegrationPercent;
+                                }
+                                else
+                                {
+                                    var memberRank = await memberRankInfoService.GetMinGeneratePercentMemberRankInfoAsync();
+                                    consumptionIntegration.Quantity = Math.Floor(memberRank.GenerateIntegrationPercent * (decimal)orderInfo.ActualPayment);
+                                    consumptionIntegration.Percent = memberRank.GenerateIntegrationPercent;
+
+                                }
+
+                                if (consumptionIntegration.Quantity > 0)
+                                    await integrationAccountService.AddByConsumptionAsync(consumptionIntegration);
+                                //根据phone获取获取绑定的员工
+                                var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(orderInfo.Phone);
+                                if (findInfo != 0)
+                                {
+                                    await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
+                                }
+                            }
+
+                            await dalTikTokOrderInfo.UpdateAsync(orderInfo, true);
                         }
-                        if (orderItem.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || orderItem.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS)
+                        else
                         {
-                            goodsName += orderItem.GoodsName + ",";
-                            orderPhoneDict.Add(orderItem.Id, orderItem.Phone);
-                            //组织邮件信息
-                            if (emailConfig == true)
+                            //订单信息没有解密
+                            if (orderInfo.StatusCode == orderItem.StatusCode)
                             {
-                                BuildSendMailInfo(appType, orderItem.Id, goodsName, orderItem.Phone);
+                                continue;
                             }
+                            if (orderItem.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || orderItem.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS)
+                            {
+                                goodsName += orderItem.GoodsName + ",";
+                                orderPhoneDict.Add(orderItem.Id, orderItem.Phone);
+                                //组织邮件信息
+                                if (emailConfig == true)
+                                {
+                                    BuildSendMailInfo(appType, orderItem.Id, goodsName, orderItem.Phone);
+                                }
+                            }
+                            orderInfo.StatusCode = orderItem.StatusCode;
+                            orderInfo.UpdateDate = orderItem.UpdateDate;
+                            orderInfo.ActualPayment = orderItem.ActualPayment;
+                            orderInfo.AccountReceivable = orderItem.AccountReceivable;
+                            orderInfo.OrderType = orderItem.OrderType;
+                            orderInfo.AppointmentHospital = orderItem.AppointmentHospital;
+                            orderInfo.ThumbPicUrl = orderItem.ThumbPicUrl;
+                            if (orderItem.StatusCode == OrderStatusCode.TRADE_FINISHED)
+                            {
+                                orderInfo.WriteOffDate = orderItem.WriteOffDate;
+                                //验证是否派过单
+                                var sendOrderInfo = await _sendOrderInfoService.GetSendOrderInfoByOrderId(orderInfo.Id);
+                                if (sendOrderInfo.Count != 0)
+                                {
+                                    orderInfo.FinalConsumptionHospital = sendOrderInfo.First().HospitalName;
+                                }
+                                else
+                                {
+                                    orderInfo.FinalConsumptionHospital = orderItem.AppointmentHospital;
+                                }
+                            }
+                            await dalTikTokOrderInfo.UpdateAsync(orderInfo, true);
+                            
                         }
-                        orderInfo.StatusCode = orderItem.StatusCode;
-                        orderInfo.UpdateDate = orderItem.UpdateDate;
-                        orderInfo.ActualPayment = orderItem.ActualPayment;
-                        orderInfo.AccountReceivable = orderItem.AccountReceivable;
-                        orderInfo.OrderType = orderItem.OrderType;
-                        orderInfo.AppointmentHospital = orderItem.AppointmentHospital;
-                        orderInfo.ThumbPicUrl = orderItem.ThumbPicUrl;
-                        if (orderItem.StatusCode == OrderStatusCode.TRADE_FINISHED)
-                        {
-                            orderInfo.WriteOffDate = orderItem.WriteOffDate;
-                            //验证是否派过单
-                            var sendOrderInfo = await _sendOrderInfoService.GetSendOrderInfoByOrderId(orderInfo.Id);
-                            if (sendOrderInfo.Count != 0)
-                            {
-                                orderInfo.FinalConsumptionHospital = sendOrderInfo.First().HospitalName;
-                            }
-                            else
-                            {
-                                orderInfo.FinalConsumptionHospital = orderItem.AppointmentHospital;
-                            }
-                        }
-                        await dalTikTokOrderInfo.UpdateAsync(orderInfo, true);
+
+
                     }
                     else
                     {
@@ -1424,31 +1513,31 @@ namespace Fx.Amiya.Service
                              StatusCode = d.StatusCode,
                              StatusText = ServiceClass.GetOrderStatusText(d.StatusCode),
                              TikTokOrderInfoList = (from o in d.TikTokOrderInfoList
-                                              select new TikTokOrderDto
-                                              {
-                                                  Id = o.Id,
-                                                  GoodsName = o.GoodsName,
-                                                  GoodsId = o.GoodsId,
-                                                  ThumbPicUrl = o.ThumbPicUrl,
-                                                  ActualPayment = o.ActualPayment,
-                                                  CreateDate = o.CreateDate,
-                                                  UpdateDate = o.UpdateDate,
-                                                  OrderType = o.OrderType,
-                                                  OrderTypeText = ServiceClass.GetOrderTypeText((byte)o.OrderType),
-                                                  Quantity = o.Quantity,
-                                                  IntegrationQuantity = o.IntegrationQuantity,
-                                                  ExchangeType = o.ExchangeType,
-                                                  ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)o.ExchangeType),
-                                                  TradeId = o.TradeId,
-                                                  AppType = o.AppType,
-                                                  AppTypeText = ServiceClass.GetAppTypeText((byte)o.AppType)
-                                              }).ToList()
+                                                    select new TikTokOrderDto
+                                                    {
+                                                        Id = o.Id,
+                                                        GoodsName = o.GoodsName,
+                                                        GoodsId = o.GoodsId,
+                                                        ThumbPicUrl = o.ThumbPicUrl,
+                                                        ActualPayment = o.ActualPayment,
+                                                        CreateDate = o.CreateDate,
+                                                        UpdateDate = o.UpdateDate,
+                                                        OrderType = o.OrderType,
+                                                        OrderTypeText = ServiceClass.GetOrderTypeText((byte)o.OrderType),
+                                                        Quantity = o.Quantity,
+                                                        IntegrationQuantity = o.IntegrationQuantity,
+                                                        ExchangeType = o.ExchangeType,
+                                                        ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)o.ExchangeType),
+                                                        TradeId = o.TradeId,
+                                                        AppType = o.AppType,
+                                                        AppTypeText = ServiceClass.GetAppTypeText((byte)o.AppType)
+                                                    }).ToList()
                          };
             FxPageInfo<OrderTradeForWxDto> orderTradePageInfo = new FxPageInfo<OrderTradeForWxDto>();
             orderTradePageInfo.TotalCount = await orders.CountAsync();
             orderTradePageInfo.List = await orders.OrderByDescending(e => e.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
             return orderTradePageInfo;
-        }       
+        }
 
         public async Task<FxPageInfo<TikTokOrderDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? writeOffStartDate, DateTime? writeOffEndDate, int? belongEmpId, string keyword, string statusCode, byte? appType, byte? orderNature, int employeeId, int pageNum, int pageSize)
         {
@@ -1656,26 +1745,26 @@ namespace Fx.Amiya.Service
             orderTradeDto.StatusCode = orderTrade.StatusCode;
             orderTradeDto.StatusText = ServiceClass.GetOrderStatusText(orderTrade.StatusCode);
             orderTradeDto.TikTokOrderInfoList = (from o in orderTrade.TikTokOrderInfoList
-                                           select new TikTokOrderDto
-                                           {
-                                               Id = o.Id,
-                                               GoodsName = o.GoodsName,
-                                               GoodsId = o.GoodsId,
-                                               ThumbPicUrl = o.ThumbPicUrl,
-                                               Phone = o.Phone,
-                                               ActualPayment = o.ActualPayment,
-                                               CreateDate = o.CreateDate,
-                                               UpdateDate = o.UpdateDate,
-                                               AppType = o.AppType,
-                                               AppTypeText = ServiceClass.GetAppTypeText(o.AppType),
-                                               OrderType = o.OrderType,
-                                               OrderTypeText = ServiceClass.GetOrderTypeText((byte)o.OrderType),
-                                               Quantity = o.Quantity,
-                                               IntegrationQuantity = o.IntegrationQuantity,
-                                               ExchangeType = o.ExchangeType,
-                                               ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)o.ExchangeType),
-                                               TradeId = o.TradeId,
-                                           }).ToList();
+                                                 select new TikTokOrderDto
+                                                 {
+                                                     Id = o.Id,
+                                                     GoodsName = o.GoodsName,
+                                                     GoodsId = o.GoodsId,
+                                                     ThumbPicUrl = o.ThumbPicUrl,
+                                                     Phone = o.Phone,
+                                                     ActualPayment = o.ActualPayment,
+                                                     CreateDate = o.CreateDate,
+                                                     UpdateDate = o.UpdateDate,
+                                                     AppType = o.AppType,
+                                                     AppTypeText = ServiceClass.GetAppTypeText(o.AppType),
+                                                     OrderType = o.OrderType,
+                                                     OrderTypeText = ServiceClass.GetOrderTypeText((byte)o.OrderType),
+                                                     Quantity = o.Quantity,
+                                                     IntegrationQuantity = o.IntegrationQuantity,
+                                                     ExchangeType = o.ExchangeType,
+                                                     ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)o.ExchangeType),
+                                                     TradeId = o.TradeId,
+                                                 }).ToList();
             return orderTradeDto;
         }
 
@@ -2804,7 +2893,8 @@ namespace Fx.Amiya.Service
             var empInfos = from k in dalAmiyaEmployee.GetAll()
                            select k;
             //如果手机号为空则直接给客服主管发送提示信息
-            if (string.IsNullOrEmpty(Phone)) {
+            if (string.IsNullOrEmpty(Phone))
+            {
                 var employee = empInfos.Include(e => e.AmiyaPositionInfo).Where(e => e.AmiyaPositionInfo.Name == "客服主管" && e.Valid == true).ToListAsync();
                 foreach (var x in employee.Result)
                 {
@@ -2819,7 +2909,7 @@ namespace Fx.Amiya.Service
             var bindCustomerInfos = from z in dalBindCustomerService.GetAll()
                                     where z.BuyerPhone == Phone
                                     select z;
-            var bindCustmerInfo = bindCustomerInfos.FirstOrDefault();           
+            var bindCustmerInfo = bindCustomerInfos.FirstOrDefault();
             if (bindCustmerInfo != null)
             {
                 var empId = bindCustmerInfo.CustomerServiceId;

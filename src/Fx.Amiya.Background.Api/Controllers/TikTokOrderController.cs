@@ -16,6 +16,7 @@ using Fx.Amiya.Service;
 using Fx.Amiya.SyncOrder.Core;
 using Fx.Authorization.Attributes;
 using Fx.Common;
+using Fx.Common.Utils;
 using Fx.Open.Infrastructure.Web;
 using Jd.Api.Util;
 using jos_sdk_net.Util;
@@ -44,7 +45,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IGoodsInfo goodsInfoService;
         private IDalBindCustomerService _dalBindCustomerService;
         private IMemberCard memberCardService;
-        private ISyncOrder syncOrder;
         private ICustomerService customerService;
         private IIntegrationAccount integrationAccountService;
         private IExpressManageService _expressManageService;
@@ -60,15 +60,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         private ILiveAnchorService liveAnchorService;
         private IContentPlatformService contentPlatFormService;
         private ISendOrderInfoService _sendOrderInfoService;
+        private ISyncTikTokOrder syncTikTokOrder;
+        private IDalCustomerBaseInfo dalCustomerBaseInfo;
 
-        public TikTokOrderController(ITikTokOrderInfoService orderService, IHttpContextAccessor httpContextAccessor, IGoodsInfo goodsInfoService, IDalBindCustomerService dalBindCustomerService, IMemberCard memberCardService, ISyncOrder syncOrder, ICustomerService customerService, IIntegrationAccount integrationAccountService, IExpressManageService expressManageService, IAmiyaGoodsDemandService amiyaGoodsDemandService, IMemberRankInfo memberRankInfoService, ITikTokOrderInfoService tikTokOrderInfoService, IDalTikTokUserInfo dalTikTokUserInfo, ITikTokUserInfoService tikTokUserInfo, IDalAmiyaEmployee dalAmiyaEmployee, IWxAppConfigService wxAppConfigService, ILiveAnchorService liveAnchorService, IContentPlatformService contentPlatFormService, ISendOrderInfoService sendOrderInfoService, ITikTokOrderInfoService tikTokOrderService, IDalTikTokOrderInfo dalTikTokOrderInfo)
+        public TikTokOrderController(ITikTokOrderInfoService orderService, IHttpContextAccessor httpContextAccessor, IGoodsInfo goodsInfoService, IDalBindCustomerService dalBindCustomerService, IMemberCard memberCardService, ICustomerService customerService, IIntegrationAccount integrationAccountService, IExpressManageService expressManageService, IAmiyaGoodsDemandService amiyaGoodsDemandService, IMemberRankInfo memberRankInfoService, ITikTokOrderInfoService tikTokOrderInfoService, IDalTikTokUserInfo dalTikTokUserInfo, ITikTokUserInfoService tikTokUserInfo, IDalAmiyaEmployee dalAmiyaEmployee, IWxAppConfigService wxAppConfigService, ILiveAnchorService liveAnchorService, IContentPlatformService contentPlatFormService, ISendOrderInfoService sendOrderInfoService, ITikTokOrderInfoService tikTokOrderService, IDalTikTokOrderInfo dalTikTokOrderInfo, ISyncTikTokOrder syncTikTokOrder, IDalCustomerBaseInfo dalCustomerBaseInfo)
         {
             this.tikTokOrderService = orderService;
             this.httpContextAccessor = httpContextAccessor;
             this.goodsInfoService = goodsInfoService;
             _dalBindCustomerService = dalBindCustomerService;
             this.memberCardService = memberCardService;
-            this.syncOrder = syncOrder;
             this.customerService = customerService;
             this.integrationAccountService = integrationAccountService;
             _expressManageService = expressManageService;
@@ -84,6 +85,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             _sendOrderInfoService = sendOrderInfoService;
             this.tikTokOrderService = tikTokOrderService;
             this.dalTikTokOrderInfo = dalTikTokOrderInfo;
+            this.syncTikTokOrder = syncTikTokOrder;
+            this.dalCustomerBaseInfo = dalCustomerBaseInfo;
         }
         /// <summary>
         /// 获取tiktok订单列表
@@ -255,12 +258,12 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.BelongEmpId = employeeId;
             addDto.Description = addVo.Remark;
             amiyaOrderList.Add(addDto);
-            TikTokOrderTradeAddDto orderTradeAdd = new TikTokOrderTradeAddDto();
+            OrderTradeAddDto orderTradeAdd = new OrderTradeAddDto();
             orderTradeAdd.CustomerId = "客服-" + employee.ToString();
             orderTradeAdd.CreateDate = DateTime.Now;
             orderTradeAdd.AddressId = 0;
             //orderTradeAdd.Remark = addVo.Remark;
-            orderTradeAdd.OrderInfoAddList = amiyaOrderList;
+            orderTradeAdd.TikTokOrderInfoAddList = amiyaOrderList;
             orderTradeAdd.IsAdminAdd = true;
             await tikTokOrderInfoService.AddAmiyaOrderAsync(orderTradeAdd);
             return ResultData.Success();
@@ -274,9 +277,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<TikTokInfoVo>> RepairOrder(RepairOrderVo input)
         {
             TikTokInfoVo result = new TikTokInfoVo();
-            if (input.OrderAppType == (byte)AppType.Tmall)
+            if (input.OrderAppType == (byte)AppType.Douyin)
             {
-                var amiyaOrder = await syncOrder.TranslateTradesSoldOrdersByOrderId(Convert.ToInt64(input.OrderId));
+                var amiyaOrder = await syncTikTokOrder.TranslateTradesSoldOrdersByOrderId(input.OrderId);
                 var FirstOrder = amiyaOrder.FirstOrDefault();
                 if (FirstOrder == null)
                 {
@@ -297,10 +300,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 result.OrderNature = 0;
                 result.Quantity = FirstOrder.Quantity;
                 result.ThumbPicUrl = FirstOrder.ThumbPicUrl;
+                result.CipherName = FirstOrder.CipherName;
+                result.CipherPhone = FirstOrder.CipherPhone;
+                result.Phone = FirstOrder.Phone;
+                result.NickName = FirstOrder.BuyerNick;
             }
             else
             {
-                throw new Exception("暂未开放天猫以外补单接口，敬请期待！");
+                throw new Exception("只支持抖店订单补单！");
             }
             return ResultData<TikTokInfoVo>.Success().AddData("orderData", result);
         }
@@ -313,107 +320,171 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpPost("AddOrder")]
         public async Task<ResultData> AddOrderAsync(TikTokOrderInfoAddVo addVo)
         {
+            var order = dalTikTokOrderInfo.GetAll().SingleOrDefault(o=>o.Id==addVo.OrderId);
+            if (order!=null) {
+                throw new Exception("该订单已存在,请勿重复录入");
+            }
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            //验证手机号是否有归属
-            if (string.IsNullOrEmpty(addVo.Phone))
+            //如果通过解密获取了手机号
+            if (!string.IsNullOrEmpty(addVo.Phone))
             {
-                throw new Exception("该订单没有手机号，不能绑定客服");
-            }
-
-            var bind = await _dalBindCustomerService.GetAll()
+                var bind = await _dalBindCustomerService.GetAll()
               .Include(e => e.CustomerServiceAmiyaEmployee)
               .SingleOrDefaultAsync(e => e.BuyerPhone == addVo.Phone);
-            if (bind != null)
-            {
-                if (bind.CustomerServiceId != employeeId)
-                    throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应人员进行补单！");
-            }
-            else
-            {
-                //添加绑定客服
-                BindCustomerService bindCustomerService = new BindCustomerService();
-                bindCustomerService.CustomerServiceId = employeeId;
-                bindCustomerService.BuyerPhone = addVo.Phone;
-                bindCustomerService.UserId = null;
-                bindCustomerService.CreateBy = employeeId;
-                bindCustomerService.CreateDate = DateTime.Now;
-                await _dalBindCustomerService.AddAsync(bindCustomerService, true);
-            }
-            //添加订单
-            List<TikTokOrderAddDto> amiyaOrderList = new List<TikTokOrderAddDto>();
-            TikTokOrderAddDto addDto = new TikTokOrderAddDto();
-            addDto.Id = addVo.OrderId;
-            addDto.GoodsName = addVo.GoodsName;
-            addDto.GoodsId = addVo.GoodsId;
-            addDto.Phone = addVo.Phone;
-            addDto.AppointmentHospital = addVo.AppointmentHospital;
-            addDto.StatusCode = addVo.StatusCode;
-            addDto.ActualPayment = addVo.ActualPayment;
-            addDto.AccountReceivable = addVo.AccountReceivable;
-            addDto.CreateDate = DateTime.Now;
-            addDto.ThumbPicUrl = addVo.ThumbPictureUrl;
-            addDto.BuyerNick = addVo.BuyerNick;
-            addDto.AppType = addVo.AppType;
-            addDto.BuyerNick = addVo.BuyerNick;
-            addDto.IsAppointment = addVo.IsAppointment;
-            addDto.BelongEmpId = employeeId;
-            addDto.OrderType = (addVo.OrderType.HasValue) ? addVo.OrderType.Value : (byte)0;
-            addDto.OrderNature = (addVo.OrderNature.HasValue) ? addVo.OrderNature.Value : (byte)0;
-            addDto.Quantity = (addVo.Quantity.HasValue) ? addVo.Quantity : 0;
-            addDto.IntegrationQuantity = 0;
-            addDto.ExchangeType = addVo.ExchangeType;
-            amiyaOrderList.Add(addDto);
-            TikTokOrderTradeAddDto orderTradeAdd = new TikTokOrderTradeAddDto();
-            orderTradeAdd.CustomerId = "客服-" + employee.Name.ToString();
-            orderTradeAdd.CreateDate = DateTime.Now;
-            orderTradeAdd.AddressId = 0;
-            orderTradeAdd.Remark = addVo.Remark;
-            orderTradeAdd.OrderInfoAddList = amiyaOrderList;
-            orderTradeAdd.IsAdminAdd = true;
-            await tikTokOrderService.AddAmiyaOrderAsync(orderTradeAdd);
-            List<ConsumptionIntegrationDto> consumptionIntegrationList = new List<ConsumptionIntegrationDto>();
-            if (addVo.StatusCode == "TRADE_FINISHED" && addVo.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(addVo.Phone))
-            {
+                if (bind != null)
+                {
+                    if (bind.CustomerServiceId != employeeId)
+                        throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应人员进行补单！");
+                }
+                else
+                {
+                    //添加绑定客服
+                    BindCustomerService bindCustomerService = new BindCustomerService();
+                    bindCustomerService.CustomerServiceId = employeeId;
+                    bindCustomerService.BuyerPhone = addVo.Phone;
+                    bindCustomerService.UserId = null;
+                    bindCustomerService.CreateBy = employeeId;
+                    bindCustomerService.CreateDate = DateTime.Now;
+                    await _dalBindCustomerService.AddAsync(bindCustomerService, true);
+                }
+                //添加customer_base_info信息
+                var custom = dalCustomerBaseInfo.GetAll().SingleOrDefaultAsync(c => c.Phone == addVo.Phone);
+                if (custom == null)
+                {
+                    CustomerBaseInfo customerBaseInfo = new CustomerBaseInfo();
+                    customerBaseInfo.Name = addVo.BuyerNick;
+                    customerBaseInfo.Phone = addVo.Phone;
+                    dalCustomerBaseInfo.Add(customerBaseInfo, true);
+                }
+                //添加tiktok用户信息
+                TikTokUserInfo tikTokUserInfo = new TikTokUserInfo();
+                tikTokUserInfo.CipherName = addVo.CipherName;
+                tikTokUserInfo.CipherPhone = addVo.CipherPhone;
+                tikTokUserInfo.Name = addVo.BuyerNick;
+                tikTokUserInfo.Phone = addVo.Phone;
+                tikTokUserInfo.Id = GuidUtil.NewGuidShortString();
+                await dalTikTokUserInfo.UpdateAsync(tikTokUserInfo, true);
 
-                bool isIntegrationGenerateRecord = await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAsync(addVo.OrderId);
-                if (isIntegrationGenerateRecord != true)
+                //添加订单
+                List<TikTokOrderAddDto> amiyaOrderList = new List<TikTokOrderAddDto>();
+                TikTokOrderAddDto addDto = new TikTokOrderAddDto();
+                addDto.Id = addVo.OrderId;
+                addDto.GoodsName = addVo.GoodsName;
+                addDto.GoodsId = addVo.GoodsId;
+                addDto.Phone = addVo.Phone;
+                addDto.AppointmentHospital = addVo.AppointmentHospital;
+                addDto.StatusCode = addVo.StatusCode;
+                addDto.ActualPayment = addVo.ActualPayment;
+                addDto.AccountReceivable = addVo.AccountReceivable;
+                addDto.CreateDate = DateTime.Now;
+                addDto.ThumbPicUrl = addVo.ThumbPictureUrl;
+                addDto.BuyerNick = addVo.BuyerNick;
+                addDto.AppType = addVo.AppType;
+                addDto.BuyerNick = addVo.BuyerNick;
+                addDto.IsAppointment = addVo.IsAppointment;
+                addDto.BelongEmpId = employeeId;
+                addDto.OrderType = (addVo.OrderType.HasValue) ? addVo.OrderType.Value : (byte)0;
+                addDto.OrderNature = (addVo.OrderNature.HasValue) ? addVo.OrderNature.Value : (byte)0;
+                addDto.Quantity = (addVo.Quantity.HasValue) ? addVo.Quantity : 0;
+                addDto.IntegrationQuantity = 0;
+                addDto.ExchangeType = addVo.ExchangeType;
+                addDto.TikTokUserId = tikTokUserInfo.Id;
+                amiyaOrderList.Add(addDto);
+                OrderTradeAddDto orderTradeAdd = new OrderTradeAddDto();
+                orderTradeAdd.CustomerId = "客服-" + employee.Name.ToString();
+                orderTradeAdd.CreateDate = DateTime.Now;
+                orderTradeAdd.AddressId = 0;
+                orderTradeAdd.Remark = addVo.Remark;
+                orderTradeAdd.TikTokOrderInfoAddList = amiyaOrderList;
+                orderTradeAdd.IsAdminAdd = true;
+                await tikTokOrderService.AddAmiyaOrderAsync(orderTradeAdd);
+                List<ConsumptionIntegrationDto> consumptionIntegrationList = new List<ConsumptionIntegrationDto>();
+                if (addVo.StatusCode == "TRADE_FINISHED" && addVo.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(addVo.Phone))
                 {
 
-                    var customerId = await customerService.GetCustomerIdByPhoneAsync(addVo.Phone);
-                    if (!string.IsNullOrWhiteSpace(customerId))
+                    bool isIntegrationGenerateRecord = await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAsync(addVo.OrderId);
+                    if (isIntegrationGenerateRecord != true)
                     {
 
-                        ConsumptionIntegrationDto consumptionIntegration = new ConsumptionIntegrationDto();
-                        consumptionIntegration.CustomerId = customerId;
-                        consumptionIntegration.OrderId = addVo.OrderId;
-                        consumptionIntegration.AmountOfConsumption = (decimal)addVo.ActualPayment;
-                        consumptionIntegration.Date = DateTime.Now;
-
-                        var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(customerId);
-                        if (memberCard != null)
+                        var customerId = await customerService.GetCustomerIdByPhoneAsync(addVo.Phone);
+                        if (!string.IsNullOrWhiteSpace(customerId))
                         {
-                            consumptionIntegration.Quantity = Math.Floor(memberCard.GenerateIntegrationPercent * (decimal)addVo.ActualPayment);
-                            consumptionIntegration.Percent = memberCard.GenerateIntegrationPercent;
-                        }
-                        else
-                        {
-                            var memberRank = await memberRankInfoService.GetMinGeneratePercentMemberRankInfoAsync();
-                            consumptionIntegration.Quantity = Math.Floor(memberRank.GenerateIntegrationPercent * (decimal)addVo.ActualPayment);
-                            consumptionIntegration.Percent = memberRank.GenerateIntegrationPercent;
+
+                            ConsumptionIntegrationDto consumptionIntegration = new ConsumptionIntegrationDto();
+                            consumptionIntegration.CustomerId = customerId;
+                            consumptionIntegration.OrderId = addVo.OrderId;
+                            consumptionIntegration.AmountOfConsumption = (decimal)addVo.ActualPayment;
+                            consumptionIntegration.Date = DateTime.Now;
+
+                            var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(customerId);
+                            if (memberCard != null)
+                            {
+                                consumptionIntegration.Quantity = Math.Floor(memberCard.GenerateIntegrationPercent * (decimal)addVo.ActualPayment);
+                                consumptionIntegration.Percent = memberCard.GenerateIntegrationPercent;
+                            }
+                            else
+                            {
+                                var memberRank = await memberRankInfoService.GetMinGeneratePercentMemberRankInfoAsync();
+                                consumptionIntegration.Quantity = Math.Floor(memberRank.GenerateIntegrationPercent * (decimal)addVo.ActualPayment);
+                                consumptionIntegration.Percent = memberRank.GenerateIntegrationPercent;
+                            }
+
+                            if (consumptionIntegration.Quantity > 0)
+                                consumptionIntegrationList.Add(consumptionIntegration);
 
                         }
-
-                        if (consumptionIntegration.Quantity > 0)
-                            consumptionIntegrationList.Add(consumptionIntegration);
-
                     }
                 }
-            }
 
-            foreach (var item in consumptionIntegrationList)
-            {
-                await integrationAccountService.AddByConsumptionAsync(item);
+                foreach (var item in consumptionIntegrationList)
+                {
+                    await integrationAccountService.AddByConsumptionAsync(item);
+                }
+            }
+            else {
+                //如果没有解密信息
+ 
+                //添加tiktok用户信息
+                TikTokUserInfo tikTokUserInfo = new TikTokUserInfo();
+                tikTokUserInfo.CipherName = addVo.CipherName;
+                tikTokUserInfo.CipherPhone = addVo.CipherPhone;
+                tikTokUserInfo.Id = GuidUtil.NewGuidShortString();
+                await dalTikTokUserInfo.AddAsync(tikTokUserInfo, true);
+
+                //添加订单
+                List<TikTokOrderAddDto> amiyaOrderList = new List<TikTokOrderAddDto>();
+                TikTokOrderAddDto addDto = new TikTokOrderAddDto();
+                addDto.Id = addVo.OrderId;
+                addDto.GoodsName = addVo.GoodsName;
+                addDto.GoodsId = addVo.GoodsId;
+                addDto.Phone = addVo.Phone;
+                addDto.AppointmentHospital = addVo.AppointmentHospital;
+                addDto.StatusCode = addVo.StatusCode;
+                addDto.ActualPayment = addVo.ActualPayment;
+                addDto.AccountReceivable = addVo.AccountReceivable;
+                addDto.CreateDate = DateTime.Now;
+                addDto.ThumbPicUrl = addVo.ThumbPictureUrl;
+                addDto.BuyerNick = addVo.BuyerNick;
+                addDto.AppType = addVo.AppType;
+                addDto.BuyerNick = addVo.BuyerNick;
+                addDto.IsAppointment = addVo.IsAppointment;
+                addDto.BelongEmpId = employeeId;
+                addDto.OrderType = (addVo.OrderType.HasValue) ? addVo.OrderType.Value : (byte)0;
+                addDto.OrderNature = (addVo.OrderNature.HasValue) ? addVo.OrderNature.Value : (byte)0;
+                addDto.Quantity = (addVo.Quantity.HasValue) ? addVo.Quantity : 0;
+                addDto.IntegrationQuantity = 0;
+                addDto.ExchangeType = addVo.ExchangeType;
+                addDto.TikTokUserId = tikTokUserInfo.Id;
+                amiyaOrderList.Add(addDto);
+                OrderTradeAddDto orderTradeAdd = new OrderTradeAddDto();
+                orderTradeAdd.CustomerId = "客服-" + employee.Name.ToString();
+                orderTradeAdd.CreateDate = DateTime.Now;
+                orderTradeAdd.AddressId = 0;
+                orderTradeAdd.Remark = addVo.Remark;
+                orderTradeAdd.TikTokOrderInfoAddList = amiyaOrderList;
+                orderTradeAdd.IsAdminAdd = true;
+                await tikTokOrderService.AddAmiyaOrderAsync(orderTradeAdd);
             }
             return ResultData.Success();
         }
@@ -428,7 +499,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             TikTokInfoVo result = new TikTokInfoVo();
             if (input.OrderAppType == (byte)AppType.Tmall)
             {
-                var amiyaOrder = await syncOrder.TranslateTradesSoldOrdersByOrderId(Convert.ToInt64(input.OrderId));
+                var amiyaOrder = await syncTikTokOrder.TranslateTradesSoldOrdersByOrderId(input.OrderId);
                 var FirstOrder = amiyaOrder.FirstOrDefault();
                 if (FirstOrder == null)
                 {

@@ -190,46 +190,6 @@ namespace Fx.Amiya.Background.Api
                         { tikTokOrder.BelongEmpId = belongEmpId; }
                     }                    
                     tikTokOrderAddList.Add(tikTokOrder);
-                    //计算积分,如果订单信息包含手机号则计算积分,否则暂时不计算
-                    if (!string.IsNullOrEmpty(order.Phone)) {
-                        if (order.StatusCode == "TRADE_FINISHED" && order.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(order.Phone))
-                        {
-                            bool isIntegrationGenerateRecord = await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAsync(order.Id);
-                            if (isIntegrationGenerateRecord == true)
-                                continue;
-                            var customerId = await customerService.GetCustomerIdByPhoneAsync(order.Phone);
-                            if (string.IsNullOrWhiteSpace(customerId))
-                                continue;
-                            ConsumptionIntegrationDto consumptionIntegration = new ConsumptionIntegrationDto();
-                            consumptionIntegration.CustomerId = customerId;
-                            consumptionIntegration.OrderId = order.Id;
-                            consumptionIntegration.AmountOfConsumption = (decimal)order.ActualPayment;
-                            consumptionIntegration.Date = date;
-
-                            var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(customerId);
-                            if (memberCard != null)
-                            {
-                                consumptionIntegration.Quantity = Math.Floor(memberCard.GenerateIntegrationPercent * (decimal)order.ActualPayment);
-                                consumptionIntegration.Percent = memberCard.GenerateIntegrationPercent;
-                            }
-                            else
-                            {
-                                var memberRank = await memberRankInfoService.GetMinGeneratePercentMemberRankInfoAsync();
-                                consumptionIntegration.Quantity = Math.Floor(memberRank.GenerateIntegrationPercent * (decimal)order.ActualPayment);
-                                consumptionIntegration.Percent = memberRank.GenerateIntegrationPercent;
-
-                            }
-
-                            if (consumptionIntegration.Quantity > 0)
-                                consumptionIntegrationList.Add(consumptionIntegration);
-                            var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(order.Phone);
-                            if (findInfo != 0)
-                            {
-                                await _bindCustomerService.UpdateConsumePriceAsync(order.Phone, order.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
-                            }
-
-                        }
-                    }
                 }
                 await orderService.AddOrderAsync(amiyaOrderList);
                 await _tikTokOrderInfoService.AddAsync(tikTokOrderAddList);

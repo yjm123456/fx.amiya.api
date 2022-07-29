@@ -32,7 +32,6 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// <summary>
         /// 手机号
         /// </summary>
-        [Required]
         public string Phone { get; set; }
         /// <summary>
         /// 预约门店
@@ -55,7 +54,6 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// <summary>
         /// 买家昵称
         /// </summary>
-        [Required]
         public string BuyerNick { get; set; }
         /// <summary>
         /// 下单平台
@@ -91,6 +89,14 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// 订单描述
         /// </summary>
         public string Remark { get; set; }
+        /// <summary>
+        /// 加密手机号
+        /// </summary>
+        public string CipherName { get; set; }
+        /// <summary>
+        /// 加密昵称
+        /// </summary>
+        public string CipherPhone { get; set; }
     }
 }
 

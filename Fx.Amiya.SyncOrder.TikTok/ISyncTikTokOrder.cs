@@ -40,6 +40,12 @@ namespace Fx.Amiya.SyncOrder.Core
         /// <param name="codeStatus">码状态(-1：已退款，0：等待发码，1：未消费，2：已消费，3：已过期，101：退款锁定，103：过期锁定)</param>
         /// <returns></returns>
         Task<List<OrderLocCode>> GetOrderLocCodesAsync(DateTime startDate, DateTime endDate,int codeStatus);
+        /// <summary>
+        /// 根据订单id获取订单详情
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        Task<List<TikTokOrder>> TranslateTradesSoldOrdersByOrderId(string orderId);
 
 
     }

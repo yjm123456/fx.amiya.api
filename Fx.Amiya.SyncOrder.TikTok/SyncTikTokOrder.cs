@@ -130,37 +130,15 @@ namespace Fx.Amiya.SyncOrder.TikTok
                             tikTokOrder.WriteOffDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(goodsItem.confirm_receipt_time.ToString()) ? 0 : goodsItem.confirm_receipt_time).AddHours(8);
                             tikTokOrder.AppType = (byte)AppType.Douyin;
                             tikTokOrder.IsAppointment = false;
-                            if (tikTokOrder.OrderType == 0)
+                            /*if (tikTokOrder.OrderType == 0)
                             {
                                 //医院根据门店参数实时循环获取
                                 //暂时占位
                                 tikTokOrder.AppointmentHospital = goodsItem.product_name;
-                            }
+                            }*/
                             currentChildList.Add(tikTokOrder);                            
                         }
                         currentChildList.ForEach(o=> { o.CipherPhone = orderItem.encrypt_post_tel;o.CipherName = orderItem.encrypt_post_receiver; });
-                        /*AddTikTokUserDto addTikTokUserDto = new AddTikTokUserDto();
-                        addTikTokUserDto.CipherName = orderItem.encrypt_post_receiver;
-                        addTikTokUserDto.CipherPhone = orderItem.encrypt_post_tel;
-                        var userinfo = _tikTokUserInfoService.getTikTokUserInfoByCipherPhone(orderItem.encrypt_post_tel);*/
-                        //如果密文已存在且有对应的解密信息,直接将用户信息赋值给订单
-                        /*if (userinfo != null)
-                        {
-                            if (!string.IsNullOrEmpty(userinfo.Phone))
-                            {
-                                currentChildList.ForEach(o => {
-                                    o.Phone = userinfo.Phone;
-                                    o.BuyerNick = userinfo.Name;
-                                    o.TikTokUserId = userinfo.Id;
-                                });
-                            }
-                        }
-                        else
-                        {
-                            addTikTokUserDto.Id = GuidUtil.NewGuidShortString();
-                            await _tikTokUserInfoService.AddAsync(addTikTokUserDto);
-                            currentChildList.ForEach(o => o.TikTokUserId = addTikTokUserDto.Id);
-                        }*/
                         amiyaOrderList.AddRange(currentChildList);
                     }
                 }
@@ -304,6 +282,74 @@ namespace Fx.Amiya.SyncOrder.TikTok
         {
             var start = new DateTime(1970, 1, 1, 0, 0, 0, target.Kind);
             return start.AddSeconds(timestamp);
+        }
+
+        public async Task<List<TikTokOrder>> TranslateTradesSoldOrdersByOrderId(string orderId)
+        {
+            try
+            {
+                var tikTokAppInfo =await _tikTokAppInfoReader.GetTikTokAppInfo();
+                var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
+                var host = "https://openapi-fxg.jinritemai.com";
+                //请求参数
+                var param = new Dictionary<string, object> {
+                { "shop_order_id",orderId},
+                };
+                var paramJson = Marshal(param);
+
+                //计算签名
+                var signVal = Sign(tikTokAppInfo.AppKey, tikTokAppInfo.AppSecret, "order.orderDetail", timestamp, paramJson);
+
+                //发起请求
+                var res = Fetch(tikTokAppInfo.AppKey, host, "order.orderDetail", timestamp, paramJson, tikTokAppInfo.AccessToken, signVal);
+
+                var order = JsonConvert.DeserializeObject<dynamic>(res); ;
+
+                if (order.err_no > 0) {
+                    return null;
+                }
+                List<TikTokOrder> tiktokOrderInfoList = new List<TikTokOrder>();
+                foreach (var item in order.data.shop_order_detail.sku_order_list) {
+                    TikTokOrder tikTokOrder = new TikTokOrder();
+                    tikTokOrder.Id = item.order_id;
+                    tikTokOrder.GoodsId = item.product_id.ToString();
+                    tikTokOrder.GoodsName = item.product_name;
+                    tikTokOrder.Quantity = Convert.ToInt32(item.item_num);
+                    tikTokOrder.ThumbPicUrl = item.product_pic;
+                    tikTokOrder.AppointmentHospital = "";
+                    Console.WriteLine("售后信息为"+item.after_sale_info);
+                    TikTokAfterSaleInfo tikTokAfterSaleInfo = new TikTokAfterSaleInfo();
+                    tikTokAfterSaleInfo.after_sale_status = item.after_sale_info.after_sale_status;
+                    tikTokAfterSaleInfo.after_sale_type = item.after_sale_info.after_sale_type;
+                    tikTokAfterSaleInfo.refund_status = item.after_sale_info.refund_status;                   
+                    tikTokOrder.OrderType = item.order_type;
+                    tikTokOrder.StatusCode = GetStatusCodeOfDouYin(tikTokOrder.OrderType, tikTokAfterSaleInfo);
+                    tikTokOrder.ActualPayment = item.pay_amount / 100;
+                    long createTime = item.create_time;
+                    long updateTime = item.update_time;
+                    long confirmTime = item.confirm_receipt_time;
+                    tikTokOrder.CreateDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(createTime.ToString()) ? 0 : createTime).AddHours(8);
+                    tikTokOrder.UpdateDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(updateTime.ToString()) ? 0 : updateTime).AddHours(8);
+                    tikTokOrder.WriteOffDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(confirmTime.ToString()) ? 0 : confirmTime).AddHours(8);
+                    tikTokOrder.AppType = (byte)AppType.Douyin;
+                    tikTokOrder.IsAppointment = false;
+                    tikTokOrder.CipherName = item.encrypt_post_receiver;
+                    tikTokOrder.CipherPhone = item.encrypt_post_tel;
+                    var userInfo =await  _tikTokUserInfoService.DecryptUserInfoByOrderIdAsync(tikTokOrder.Id,tikTokOrder.CipherName,tikTokOrder.CipherPhone);
+                    //解密成功
+                    if (userInfo != null)
+                    {
+                        tikTokOrder.Phone = userInfo.Phone;
+                        tikTokOrder.BuyerNick = userInfo.Name;
+                    }
+                    tiktokOrderInfoList.Add(tikTokOrder);
+                }
+                return tiktokOrderInfoList;   
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
