@@ -27,7 +27,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// <summary>
         /// 派单时间
         /// </summary>
-        public DateTime SendDate { get; set; }
+        public DateTime? SendDate { get; set; }
+        /// <summary>
+        /// 面诊状态文本
+        /// </summary>
+        public string ConsultationTypeText { get; set; }
         /// <summary>
         /// 客户手机号
         /// </summary>

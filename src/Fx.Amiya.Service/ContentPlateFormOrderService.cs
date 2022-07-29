@@ -198,12 +198,12 @@ namespace Fx.Amiya.Service
         /// <param name="keyword"></param>
         /// <param name="statusCode"></param>
         /// <param name="appType"></param>
-        /// <param name="consultationEmpId">面诊员</param>
+        /// <param name="consultationType">面诊状态</param>
         /// <param name="employeeId"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? appointmentHospital, int? consultationEmpId, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId, int orderSource, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId, int orderSource, int pageNum, int pageSize)
         {
             try
             {
@@ -229,6 +229,7 @@ namespace Fx.Amiya.Service
                              || d.Phone.Contains(keyword))
                              && (orderStatus == null || d.OrderStatus == orderStatus)
                              && (!appointmentHospital.HasValue || d.AppointmentHospitalId == appointmentHospital)
+                             && (!consultationType.HasValue || d.ConsultationType == consultationType)
                              && (!belongEmpId.HasValue || d.BelongEmpId == belongEmpId)
                              && (orderSource == -1 || d.OrderSource == orderSource)
                              && (string.IsNullOrWhiteSpace(hospitalDepartmentId) || d.HospitalDepartmentId == hospitalDepartmentId)
@@ -493,7 +494,6 @@ namespace Fx.Amiya.Service
                                   OrderTypeText = ServiceClass.GetContentPlateFormOrderTypeText(Convert.ToByte(o.OrderType)),
                                   OrderStatusText = ServiceClass.GetContentPlateFormOrderStatusText(Convert.ToByte(o.OrderStatus)),
                                   AppointmentHospital = o.HospitalInfo.Name,
-                                  AppointmentDate = o.AppointmentDate.HasValue ? o.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确认时间",
                                   Remark = o.Remark,
                                   LateProjectStage = o.LateProjectStage,
                                   BelongEmpId = o.BelongEmpId.Value
@@ -816,7 +816,6 @@ namespace Fx.Amiya.Service
                                 CustomerName = d.CustomerName,
                                 IsAcompanying = d.IsAcompanying,
                                 Phone = hidePhone == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
-                                AppointmentDate = d.AppointmentDate,
                                 AppointmentHospitalId = d.AppointmentHospitalId,
                                 IsOldCustomer = d.IsOldCustomer,
                                 AppointmentHospitalName = d.HospitalInfo.Name,
@@ -1068,6 +1067,7 @@ namespace Fx.Amiya.Service
             result.LiveAnchorWeChatNo = order.LiveAnchorWeChatNo;
             result.IsOldCustomer = order.IsOldCustomer;
             result.IsAcompanying = order.IsAcompanying;
+            
             result.ConsultationType = order.ConsultationType;
             result.CommissionRatio = order.CommissionRatio;
             result.UnSendReason = order.UnSendReason;
@@ -1306,6 +1306,7 @@ namespace Fx.Amiya.Service
             order.ContentPlateformId = input.ContentPlateFormId;
             order.LiveAnchorWeChatNo = input.LiveAnchorWeChatNo;
             order.LiveAnchorId = input.LiveAnchorId;
+            order.ConsultationType = input.ConsultationType;
             order.GoodsId = input.GoodsId;
             order.CustomerName = input.CustomerName;
             order.Phone = input.Phone;
@@ -1509,6 +1510,7 @@ namespace Fx.Amiya.Service
             }
             order.RepeatOrderPictureUrl = "";
             order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.SendOrder);
+            order.SendDate = DateTime.Now;
             await _dalContentPlatformOrder.UpdateAsync(order, true);
         }
 

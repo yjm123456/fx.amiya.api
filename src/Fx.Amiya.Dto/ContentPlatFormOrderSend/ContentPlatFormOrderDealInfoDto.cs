@@ -36,7 +36,7 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// <summary>
         /// 派单时间
         /// </summary>
-        public DateTime SendDate { get; set; }
+        public DateTime? SendDate { get; set; }
 
 
         /// <summary>
@@ -184,13 +184,13 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         public DateTime? ReturnBackDate { get; set; }
 
         /// <summary>
-        /// 面诊员id
+        /// 面诊员状态id
         /// </summary>
-        public int? ConsultationEmpId { get; set; }
+        public int? ConsultationType { get; set; }
         /// <summary>
-        /// 面诊员
+        /// 面诊状态文本
         /// </summary>
-        public string ConsultationEmpName { get; set; }
+        public string ConsultationTypeText { get; set; }
 
         /// <summary>
         /// 创建人（0为医院）

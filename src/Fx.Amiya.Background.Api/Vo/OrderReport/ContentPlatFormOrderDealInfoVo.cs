@@ -14,11 +14,6 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("订单号")]
         public string Id { get; set; }
         /// <summary>
-        /// 预约时间
-        /// </summary>
-        [Description("预约时间")]
-        public string AppointmentDate { get; set; }
-        /// <summary>
         /// 面诊状态
         /// </summary>
         [Description("面诊状态")]

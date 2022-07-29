@@ -29,12 +29,12 @@ namespace Fx.Amiya.IService
         /// <param name="keyword"></param>
         /// <param name="orderStatus"></param>
         /// <param name="contentPlateFormId"></param>
-        /// <param name="consultationEmpId">面诊员</param>
+        /// <param name="consultationEmpId">面诊类型</param>
         /// <param name="employeeId"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? appointmentHospital, int? consultationEmpId, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId, int orderSource, int pageNum, int pageSize);
+        Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId, int orderSource, int pageNum, int pageSize);
 
         /// <summary>
         /// 获取内容平台已完成订单

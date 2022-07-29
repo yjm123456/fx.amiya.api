@@ -440,7 +440,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                           CreateDate = d.CreateDate,
                           CustomerName = d.CustomerName,
                           Phone = d.Phone,
-                          AppointmentDate = d.AppointmentDate == null ? "未预约时间" : d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss"),
                           AppointmentHospitalName = d.AppointmentHospitalName,
                           GoodsName = d.GoodsName,
                           ConsultationTypeText=d.ConsultationTypeText,
@@ -503,7 +502,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                           CreateDate = d.CreateDate,
                           CustomerName = d.CustomerName,
                           Phone = d.Phone,
-                          AppointmentDate = d.AppointmentDate == null ? "未预约时间" : d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss"),
                           AppointmentHospitalName = d.AppointmentHospitalName,
                           GoodsName = d.GoodsName,
                           ConsultingContent = d.ConsultingContent,
@@ -583,7 +581,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             LiveAnchorName=d.LiveAnchorName,
                                             GoodsName=d.GoodsName,
                                             CustomerNickName=d.CustomerNickName,
-                                            ConsultationEmpName=d.ConsultationEmpName,
+                                            ConsultationType = d.ConsultationTypeText,
                                             IsDeal = d.IsDeal == true ? "是" : "否",
                                             IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
                                             IsAcompanying = d.IsAcompanying == true ? "是" : "否",
@@ -662,7 +660,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             LiveAnchorName = d.LiveAnchorName,
                                             GoodsName = d.GoodsName,
                                             CustomerNickName = d.CustomerNickName,
-                                            ConsultationEmpName = d.ConsultationEmpName,
+                                            ConsultationType = d.ConsultationTypeText,
                                             IsDeal = d.IsDeal == true ? "是" : "否",
                                             IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
                                             IsAcompanying = d.IsAcompanying == true ? "是" : "否",
@@ -1333,7 +1331,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   OrderTypeText = d.OrderTypeText,
                                   OrderStatusText = d.OrderStatusText,
                                   AppointmentHospital = d.AppointmentHospital,
-                                  AppointmentDate = d.AppointmentDate,
                                   Remark = d.Remark,
                                   LateProjectStage = d.LateProjectStage
                               };
@@ -1393,7 +1390,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   OrderTypeText = d.OrderTypeText,
                                   OrderStatusText = d.OrderStatusText,
                                   AppointmentHospital = d.AppointmentHospital,
-                                  AppointmentDate = d.AppointmentDate,
                                   Remark = d.Remark,
                                   LateProjectStage = d.LateProjectStage
                               };

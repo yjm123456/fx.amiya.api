@@ -105,7 +105,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="hospitalDepartmentId">科室id</param>
         /// <param name="orderStatus">订单状态</param>
         /// <param name="appointmentHospital">预约医院</param>
-        /// <param name="consultationEmpId">面诊员</param>
+        /// <param name="consultationType">面诊状态</param>
         /// <param name="contentPlateFormId">内容平台</param>
         /// <param name="orderSource">订单来源(-1查询全部)</param>
         /// <param name="belongEmpId">归属客服id</param>
@@ -114,13 +114,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("contentPlateFormOrderLlistWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>> GetOrderListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? appointmentHospital, int? consultationEmpId, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int orderSource, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>> GetOrderListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int orderSource, int pageNum, int pageSize)
         {
             try
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorId, startDate, endDate, appointmentHospital, consultationEmpId, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
+                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorId, startDate, endDate, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
                 var order = from d in q.List
                             select new ContentPlatFormOrderInfoVo
                             {

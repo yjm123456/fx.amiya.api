@@ -20,8 +20,9 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.ContentPlateformId).HasColumnName("content_plateform_id").HasColumnType("VARCHAR(50)").IsRequired();
             builder.Property(e => e.LiveAnchorId).HasColumnName("live_anchor_id").HasColumnType("int").IsRequired(false);
             builder.Property(e => e.LiveAnchorWeChatNo).HasColumnName("live_anchor_we_chat_no").HasColumnType("VARCHAR(100)").IsRequired(false);
-            builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("DATETIME").IsRequired();
+            builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("DATETIME").IsRequired(); 
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("DATETIME").IsRequired(false);
+            builder.Property(e => e.SendDate).HasColumnName("send_date").HasColumnType("DATETIME").IsRequired(false);
             builder.Property(e => e.GoodsId).HasColumnName("goods_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(e => e.HospitalDepartmentId).HasColumnName("hospital_department_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(e => e.CustomerName).HasColumnName("customer_name").HasColumnType("VARCHAR(50)").IsRequired(false);
