@@ -55,6 +55,8 @@ namespace Fx.Amiya.Service
                                                && (!isConsultation.HasValue || d.IsConsultation == isConsultation)
                                                && (!isReturnBackPrice.HasValue || d.IsReturnBackPrice == isReturnBackPrice)
                                                && (!admissionId.HasValue || d.CreateBy == admissionId)
+                                               && (!minPrice.HasValue || d.Price >= minPrice)
+                                               && (!maxPrice.HasValue || d.Price <= maxPrice)
                                                && (!LiveAnchorId.HasValue || d.LiveAnchorId == LiveAnchorId)
                                                select new ShoppingCartRegistrationDto
                                                {
@@ -84,19 +86,6 @@ namespace Fx.Amiya.Service
                                                    IsBadReview=d.IsBadReview,
                                                    
                                                };
-                if (minPrice != null)
-                {
-                    shoppingCartRegistration.Where(s => s.Price >= minPrice);
-                    if (maxPrice != null)
-                    {
-                        shoppingCartRegistration.Where(s => s.Price <= maxPrice);
-                    }
-                }
-                else {
-                    if (maxPrice!=null) {
-                        shoppingCartRegistration.Where(s=>s.Price<=maxPrice);
-                    }
-                }
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
                 if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
                 {
