@@ -36,7 +36,7 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// 派单时间
         /// </summary>
         [Description("派单时间")]
-        public DateTime SendOrderDate { get; set; }
+        public DateTime? SendOrderDate { get; set; }
 
 
         /// <summary>

@@ -15,6 +15,8 @@ namespace Fx.Amiya.DbModels.Model
         public string LiveAnchorWeChatNo { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
+
+        public DateTime? SendDate { get; set; }
         public string GoodsId { get; set; }
         /// <summary>
         /// 医院科室id

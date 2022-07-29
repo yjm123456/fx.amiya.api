@@ -1068,6 +1068,7 @@ namespace Fx.Amiya.Service
             result.LiveAnchorWeChatNo = order.LiveAnchorWeChatNo;
             result.IsOldCustomer = order.IsOldCustomer;
             result.IsAcompanying = order.IsAcompanying;
+            
             result.ConsultationType = order.ConsultationType;
             result.CommissionRatio = order.CommissionRatio;
             result.UnSendReason = order.UnSendReason;
@@ -1509,6 +1510,7 @@ namespace Fx.Amiya.Service
             }
             order.RepeatOrderPictureUrl = "";
             order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.SendOrder);
+            order.SendDate = DateTime.Now;
             await _dalContentPlatformOrder.UpdateAsync(order, true);
         }
 

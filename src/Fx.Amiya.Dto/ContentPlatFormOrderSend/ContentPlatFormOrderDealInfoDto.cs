@@ -36,7 +36,7 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// <summary>
         /// 派单时间
         /// </summary>
-        public DateTime SendDate { get; set; }
+        public DateTime? SendDate { get; set; }
 
 
         /// <summary>
