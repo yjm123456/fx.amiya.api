@@ -426,6 +426,10 @@ namespace Fx.Amiya.Service
         {
             var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == enployeeId);
             var result = dalCustomerHospitalConsume.GetAll().Where(x => x.Id == Id).FirstOrDefaultAsync().Result;
+            if(result.CheckState==(int)CheckType.CheckedSuccess)
+            {
+                throw new Exception("该订单已审核，无法删除！");
+            }
             if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
             {
                 var bindCustomerServiceInfo = _dalBindCustomerService.GetAll().FirstOrDefaultAsync(x => x.BuyerPhone == result.Phone && x.CustomerServiceId == enployeeId);
