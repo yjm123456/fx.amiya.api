@@ -54,8 +54,8 @@ namespace Fx.Amiya.Service
                                                && (!isWriteOff.HasValue || d.IsWriteOff == isWriteOff)
                                                && (!isConsultation.HasValue || d.IsConsultation == isConsultation)
                                                && (!isReturnBackPrice.HasValue || d.IsReturnBackPrice == isReturnBackPrice)
+                                               && (!admissionId.HasValue || d.CreateBy == admissionId)
                                                && (!LiveAnchorId.HasValue || d.LiveAnchorId == LiveAnchorId)
-                                               && (admissionId == null || d.AdmissionId == admissionId)
                                                select new ShoppingCartRegistrationDto
                                                {
                                                    Id = d.Id,
@@ -81,7 +81,6 @@ namespace Fx.Amiya.Service
                                                    BadReviewDate = d.BadReviewDate,
                                                    BadReviewContent = d.BadReviewContent,
                                                    BadReviewReason = d.BadReviewReason,
-                                                   AdmissionId = d.AdmissionId,
                                                    IsBadReview=d.IsBadReview,
                                                    
                                                };
@@ -116,8 +115,6 @@ namespace Fx.Amiya.Service
                     x.LiveAnchorName = liveAnchorInfo.Name;
                     var empInfo = await _amiyaEmployeeService.GetByIdAsync(x.CreateBy);
                     x.CreateByName = empInfo.Name;
-                    var admissionInfo = await _amiyaEmployeeService.GetByIdAsync(x.AdmissionId);
-                    x.AdmissionName =admissionInfo.Name;
                 }
                 return shoppingCartRegistrationPageInfo;
             }
@@ -189,7 +186,6 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.ReContent = addDto.ReContent;
                 shoppingCartRegistration.RefundDate = addDto.RefundDate;
                 shoppingCartRegistration.RefundReason = addDto.RefundReason;
-                shoppingCartRegistration.AdmissionId = addDto.AdmissionId;
                 shoppingCartRegistration.IsBadReview = addDto.IsBadReview;
                 await dalShoppingCartRegistration.AddAsync(shoppingCartRegistration, true);
 
@@ -236,10 +232,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.BadReviewDate = shoppingCartRegistration.BadReviewDate;
                 shoppingCartRegistrationDto.BadReviewContent = shoppingCartRegistration.BadReviewContent;
                 shoppingCartRegistrationDto.BadReviewReason = shoppingCartRegistration.BadReviewReason;
-                shoppingCartRegistrationDto.AdmissionId = shoppingCartRegistration.AdmissionId;
                 shoppingCartRegistrationDto.IsBadReview = shoppingCartRegistration.IsBadReview;
-                var emp = dalAmiyaEmployee.GetAll().SingleOrDefault(e=>e.Id==shoppingCartRegistrationDto.AdmissionId);
-                shoppingCartRegistrationDto.AdmissionName = emp.Name;
                 return shoppingCartRegistrationDto;
             }
             catch (Exception ex)
@@ -283,10 +276,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.BadReviewDate = shoppingCartRegistration.BadReviewDate;
                 shoppingCartRegistrationDto.BadReviewContent = shoppingCartRegistration.BadReviewContent;
                 shoppingCartRegistrationDto.BadReviewReason = shoppingCartRegistration.BadReviewReason;
-                shoppingCartRegistrationDto.AdmissionId = shoppingCartRegistration.AdmissionId;
                 shoppingCartRegistrationDto.IsBadReview = shoppingCartRegistration.IsBadReview;
-                var emp = dalAmiyaEmployee.GetAll().SingleOrDefault(e => e.Id == shoppingCartRegistrationDto.AdmissionId);
-                shoppingCartRegistrationDto.AdmissionName = emp.Name;
                 return shoppingCartRegistrationDto;
             }
             catch (Exception ex)
@@ -353,8 +343,8 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.BadReviewDate = updateDto.BadReviewDate;
                 shoppingCartRegistration.BadReviewContent = updateDto.BadReviewContent;
                 shoppingCartRegistration.BadReviewReason=updateDto.BadReviewReason;
-                shoppingCartRegistration.AdmissionId = updateDto.AdmissionId;
                 shoppingCartRegistration.IsBadReview = updateDto.IsBadReview;
+                shoppingCartRegistration.CreateBy = updateDto.CreateBy;
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
                 // unitOfWork.Commit();
             }

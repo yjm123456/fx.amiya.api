@@ -69,7 +69,11 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// </summary>
         public string Remark { get; set; }
         /// <summary>
-        /// 创建人
+        /// 接诊人员id
+        /// </summary>
+        public int CreateByEmpId { get; set; }
+        /// <summary>
+        /// 接诊人员
         /// </summary>
         public string CreateBy { get; set; }
         /// <summary>
@@ -104,14 +108,6 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// 追评内容
         /// </summary>
         public string ReContent { get; set; }
-        /// <summary>
-        /// 面诊人员名称
-        /// </summary>
-        public string AdmissionName { get; set; }
-        /// <summary>
-        /// 面诊人员id
-        /// </summary>
-        public int AdmissionId { get; set; }
         /// <summary>
         /// 是否差评
         /// </summary>

@@ -920,10 +920,6 @@ ADD COLUMN `is_recontent` BIT(1)  DEFAULT 0 AFTER `create_by`;
 ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
 ADD COLUMN `recontent` VARCHAR(500)  default null AFTER `create_by`;
 
-ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
-ADD COLUMN `admission_id` INT NOT null AFTER `create_by`;
-
-
 
 ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
 ADD COLUMN `is_badreview` BIT(1)  DEFAULT 0 AFTER `create_by`;

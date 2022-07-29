@@ -51,10 +51,6 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// </summary>
         public string ReContent { get; set; }
         /// <summary>
-        /// 接诊人员
-        /// </summary>
-        public int AdmissionId { get; set; }
-        /// <summary>
         /// 是否差评
         /// </summary>
         public bool IsBadReview { get; set; }

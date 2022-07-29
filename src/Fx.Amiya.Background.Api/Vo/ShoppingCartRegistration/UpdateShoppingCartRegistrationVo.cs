@@ -93,7 +93,7 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// </summary>
         public string ReContent { get; set; }
         /// <summary>
-        /// 面诊人员id
+        /// 接诊人员id
         /// </summary>
         public int AdmissionId { get; set; }
         /// <summary>

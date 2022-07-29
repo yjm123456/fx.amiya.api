@@ -939,7 +939,7 @@
             <param name="hospitalDepartmentId">科室id</param>
             <param name="orderStatus">订单状态</param>
             <param name="appointmentHospital">预约医院</param>
-            <param name="consultationEmpId">面诊员</param>
+            <param name="consultationType">面诊状态</param>
             <param name="contentPlateFormId">内容平台</param>
             <param name="orderSource">订单来源(-1查询全部)</param>
             <param name="belongEmpId">归属客服id</param>
@@ -4611,7 +4611,7 @@
             </summary>
             <param name="shoppingCartRegistrationService"></param>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.ShoppingCartRegistrationController.GetListWithPageAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,System.String,System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ShoppingCartRegistrationController.GetListWithPageAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,System.String,System.Int32,System.Int32,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Int32})">
             <summary>
             获取小黄车登记信息列表（分页）
             </summary>
@@ -7310,6 +7310,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.SendDate">
             <summary>
             派单时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.ConsultationTypeText">
+            <summary>
+            面诊状态文本
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.Phone">
@@ -14202,6 +14207,11 @@
             派单时间
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.ConsultationType">
+            <summary>
+            面诊状态
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.ContentPlatFormName">
             <summary>
             平台
@@ -14332,11 +14342,6 @@
             回款日期
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.ConsultationEmpName">
-            <summary>
-            面诊员
-            </summary>
-        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.CreateByEmpName">
             <summary>
             创建人
@@ -14345,11 +14350,6 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.Id">
             <summary>
             订单号
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.AppointmentDate">
-            <summary>
-            预约时间
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.ConsultationTypeText">
@@ -15080,11 +15080,6 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerUnContentPlateFormSendOrderReportInfoVo.AppointmentHospital">
             <summary>
             预约门店
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerUnContentPlateFormSendOrderReportInfoVo.AppointmentDate">
-            <summary>
-            预约时间
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.CustomerUnContentPlateFormSendOrderReportInfoVo.Remark">
@@ -17994,6 +17989,51 @@
             备注
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.AddShoppingCartRegistrationVo.RefundDate">
+            <summary>
+            退款时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.AddShoppingCartRegistrationVo.RefundReason">
+            <summary>
+            退款原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.AddShoppingCartRegistrationVo.BadReviewDate">
+            <summary>
+            差评时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.AddShoppingCartRegistrationVo.BadReviewReason">
+            <summary>
+            差评原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.AddShoppingCartRegistrationVo.BadReviewContent">
+            <summary>
+            差评内容
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.AddShoppingCartRegistrationVo.IsReContent">
+            <summary>
+            是否追评
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.AddShoppingCartRegistrationVo.ReContent">
+            <summary>
+            追评内容
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.AddShoppingCartRegistrationVo.AdmissionId">
+            <summary>
+            接诊人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.AddShoppingCartRegistrationVo.IsBadReview">
+            <summary>
+            是否差评
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo">
             <summary>
             小黄车登记列表
@@ -18069,14 +18109,59 @@
             备注
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.CreateByEmpId">
+            <summary>
+            接诊人员id
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.CreateBy">
             <summary>
-            创建人
+            接诊人员
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.CreateDate">
             <summary>
             创建日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.RefundDate">
+            <summary>
+            退款时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.RefundReason">
+            <summary>
+            退款原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.BadReviewDate">
+            <summary>
+            差评时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.BadReviewReason">
+            <summary>
+            差评原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.BadReviewContent">
+            <summary>
+            差评内容
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.IsReContent">
+            <summary>
+            是否追评
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.ReContent">
+            <summary>
+            追评内容
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.IsBadReview">
+            <summary>
+            是否差评
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.UpdateShoppingCartRegistrationVo.Id">
@@ -18147,6 +18232,51 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.UpdateShoppingCartRegistrationVo.Remark">
             <summary>
             备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.UpdateShoppingCartRegistrationVo.RefundDate">
+            <summary>
+            退款时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.UpdateShoppingCartRegistrationVo.RefundReason">
+            <summary>
+            退款原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.UpdateShoppingCartRegistrationVo.BadReviewDate">
+            <summary>
+            差评时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.UpdateShoppingCartRegistrationVo.BadReviewReason">
+            <summary>
+            差评原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.UpdateShoppingCartRegistrationVo.BadReviewContent">
+            <summary>
+            差评内容
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.UpdateShoppingCartRegistrationVo.IsReContent">
+            <summary>
+            是否追评
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.UpdateShoppingCartRegistrationVo.ReContent">
+            <summary>
+            追评内容
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.UpdateShoppingCartRegistrationVo.AdmissionId">
+            <summary>
+            接诊人员id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.UpdateShoppingCartRegistrationVo.IsBadReview">
+            <summary>
+            是否差评
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TagInfo.AddTagInfoVo.Name">
@@ -18487,6 +18617,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.Remark">
             <summary>
             订单描述
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.CipherName">
+            <summary>
+            加密手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.CipherPhone">
+            <summary>
+            加密昵称
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.Id">

@@ -32,7 +32,6 @@ namespace Fx.Amiya.DbModels.Model
         public string BadReviewContent { get; set; }
         public bool IsReContent { get; set; }
         public string ReContent { get; set; }
-        public int AdmissionId { get; set; }
         public bool IsBadReview { get; set; }
     }
 }

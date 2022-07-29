@@ -36,8 +36,6 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         public string BadReviewContent { get; set; }
         public bool IsReContent { get; set; }
         public string ReContent { get; set; }
-        public int AdmissionId { get; set; }
-        public string AdmissionName { get; set; }
         public bool IsBadReview { get; set; }
     }
 }
