@@ -42,12 +42,12 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize,decimal? minPrice,decimal? maxPrice,int? admissionId)
         {
             try
             {
                 var shoppingCartRegistration = from d in dalShoppingCartRegistration.GetAll()
-                                               where (keyword == null || d.Phone.Contains(keyword) || d.CustomerNickName.Contains(keyword))
+                                               where (keyword == null || d.Phone.Contains(keyword) || d.CustomerNickName.Contains(keyword) || d.LiveAnchorWechatNo.Contains(keyword))
                                                && ((!startDate.HasValue && !endDate.HasValue) || d.RecordDate >= startDate.Value.Date && d.RecordDate < endDate.Value.AddDays(1).Date)
                                                && (string.IsNullOrEmpty(contentPlatFormId) || d.ContentPlatFormId == contentPlatFormId)
                                                && (!isAddWechat.HasValue || d.IsAddWeChat == isAddWechat)
@@ -55,6 +55,7 @@ namespace Fx.Amiya.Service
                                                && (!isConsultation.HasValue || d.IsConsultation == isConsultation)
                                                && (!isReturnBackPrice.HasValue || d.IsReturnBackPrice == isReturnBackPrice)
                                                && (!LiveAnchorId.HasValue || d.LiveAnchorId == LiveAnchorId)
+                                               && (admissionId == null || d.AdmissionId == admissionId)
                                                select new ShoppingCartRegistrationDto
                                                {
                                                    Id = d.Id,
@@ -73,7 +74,28 @@ namespace Fx.Amiya.Service
                                                    Remark = d.Remark,
                                                    CreateBy = d.CreateBy,
                                                    CreateDate = d.CreateDate,
+                                                   IsReContent = d.IsReContent,
+                                                   ReContent = d.ReContent,
+                                                   RefundDate = d.RefundDate,
+                                                   RefundReason = d.RefundReason,
+                                                   BadReviewDate = d.BadReviewDate,
+                                                   BadReviewContent = d.BadReviewContent,
+                                                   BadReviewReason = d.BadReviewReason,
+                                                   AdmissionId = d.AdmissionId,
                                                };
+                if (minPrice != null)
+                {
+                    shoppingCartRegistration.Where(s => s.Price >= minPrice);
+                    if (maxPrice != null)
+                    {
+                        shoppingCartRegistration.Where(s => s.Price <= maxPrice);
+                    }
+                }
+                else {
+                    if (maxPrice!=null) {
+                        shoppingCartRegistration.Where(s=>s.Price<=maxPrice);
+                    }
+                }
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
                 if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
                 {
@@ -92,6 +114,8 @@ namespace Fx.Amiya.Service
                     x.LiveAnchorName = liveAnchorInfo.Name;
                     var empInfo = await _amiyaEmployeeService.GetByIdAsync(x.CreateBy);
                     x.CreateByName = empInfo.Name;
+                    var admissionInfo = await _amiyaEmployeeService.GetByIdAsync(x.AdmissionId);
+                    x.AdmissionName =admissionInfo.Name;
                 }
                 return shoppingCartRegistrationPageInfo;
             }
@@ -156,7 +180,14 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.Remark = addDto.Remark;
                 shoppingCartRegistration.CreateBy = addDto.CreateBy;
                 shoppingCartRegistration.CreateDate = DateTime.Now;
-
+                shoppingCartRegistration.BadReviewContent = addDto.BadReviewContent;
+                shoppingCartRegistration.BadReviewDate = addDto.BadReviewDate;
+                shoppingCartRegistration.BadReviewReason = addDto.BadReviewReason;
+                shoppingCartRegistration.IsReContent = addDto.IsReContent;
+                shoppingCartRegistration.ReContent = addDto.ReContent;
+                shoppingCartRegistration.RefundDate = addDto.RefundDate;
+                shoppingCartRegistration.RefundReason = addDto.RefundReason;
+                shoppingCartRegistration.AdmissionId = addDto.AdmissionId;
                 await dalShoppingCartRegistration.AddAsync(shoppingCartRegistration, true);
 
                 //unitOfWork.Commit();
@@ -195,7 +226,16 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.Remark = shoppingCartRegistration.Remark;
                 shoppingCartRegistrationDto.CreateBy = shoppingCartRegistration.CreateBy;
                 shoppingCartRegistrationDto.CreateDate = shoppingCartRegistration.CreateDate;
-
+                shoppingCartRegistrationDto.IsReContent = shoppingCartRegistration.IsReContent;
+                shoppingCartRegistrationDto.ReContent = shoppingCartRegistration.ReContent;
+                shoppingCartRegistrationDto.RefundDate = shoppingCartRegistration.RefundDate;
+                shoppingCartRegistrationDto.RefundReason = shoppingCartRegistration.RefundReason;
+                shoppingCartRegistrationDto.BadReviewDate = shoppingCartRegistration.BadReviewDate;
+                shoppingCartRegistrationDto.BadReviewContent = shoppingCartRegistration.BadReviewContent;
+                shoppingCartRegistrationDto.BadReviewReason = shoppingCartRegistration.BadReviewReason;
+                shoppingCartRegistrationDto.AdmissionId = shoppingCartRegistration.AdmissionId;
+                var emp = dalAmiyaEmployee.GetAll().SingleOrDefault(e=>e.Id==shoppingCartRegistrationDto.AdmissionId);
+                shoppingCartRegistrationDto.AdmissionName = emp.Name;
                 return shoppingCartRegistrationDto;
             }
             catch (Exception ex)
@@ -232,7 +272,16 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.Remark = shoppingCartRegistration.Remark;
                 shoppingCartRegistrationDto.CreateBy = shoppingCartRegistration.CreateBy;
                 shoppingCartRegistrationDto.CreateDate = shoppingCartRegistration.CreateDate;
-
+                shoppingCartRegistrationDto.IsReContent = shoppingCartRegistration.IsReContent;
+                shoppingCartRegistrationDto.ReContent = shoppingCartRegistration.ReContent;
+                shoppingCartRegistrationDto.RefundDate = shoppingCartRegistration.RefundDate;
+                shoppingCartRegistrationDto.RefundReason = shoppingCartRegistration.RefundReason;
+                shoppingCartRegistrationDto.BadReviewDate = shoppingCartRegistration.BadReviewDate;
+                shoppingCartRegistrationDto.BadReviewContent = shoppingCartRegistration.BadReviewContent;
+                shoppingCartRegistrationDto.BadReviewReason = shoppingCartRegistration.BadReviewReason;
+                shoppingCartRegistrationDto.AdmissionId = shoppingCartRegistration.AdmissionId;
+                var emp = dalAmiyaEmployee.GetAll().SingleOrDefault(e => e.Id == shoppingCartRegistrationDto.AdmissionId);
+                shoppingCartRegistrationDto.AdmissionName = emp.Name;
                 return shoppingCartRegistrationDto;
             }
             catch (Exception ex)
@@ -292,7 +341,14 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.IsConsultation = updateDto.IsConsultation;
                 shoppingCartRegistration.IsReturnBackPrice = updateDto.IsReturnBackPrice;
                 shoppingCartRegistration.Remark = updateDto.Remark;
-
+                shoppingCartRegistration.IsReContent = updateDto.IsReContent;
+                shoppingCartRegistration.ReContent=updateDto.ReContent;
+                shoppingCartRegistration.RefundDate = updateDto.RefundDate;
+                shoppingCartRegistration.RefundReason = updateDto.RefundReason;
+                shoppingCartRegistration.BadReviewDate = updateDto.BadReviewDate;
+                shoppingCartRegistration.BadReviewContent = updateDto.BadReviewContent;
+                shoppingCartRegistration.BadReviewReason=updateDto.BadReviewReason;
+                shoppingCartRegistration.AdmissionId = updateDto.AdmissionId;
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
                 // unitOfWork.Commit();
             }

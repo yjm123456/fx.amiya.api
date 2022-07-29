@@ -25,5 +25,13 @@ namespace Fx.Amiya.DbModels.Model
         public string Remark { get; set; }
         public int CreateBy { get; set; }
         public DateTime CreateDate { get; set; }
+        public DateTime? RefundDate { get; set; }
+        public string RefundReason { get; set; }
+        public DateTime? BadReviewDate { get; set; }
+        public string BadReviewReason { get; set; }
+        public string BadReviewContent { get; set; }
+        public bool IsReContent { get; set; }
+        public string ReContent { get; set; }
+        public int AdmissionId { get; set; }
     }
 }

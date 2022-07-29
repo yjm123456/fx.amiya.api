@@ -49,13 +49,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize,decimal? minPrice,decimal? maxPrice,int? admissionId)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize);
+                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize,minPrice,maxPrice,admissionId);
 
                 var shoppingCartRegistration = from d in q.List
                                                select new ShoppingCartRegistrationVo
@@ -76,6 +76,15 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    Remark = d.Remark,
                                                    CreateBy = d.CreateByName,
                                                    CreateDate = d.CreateDate,
+                                                   IsReContent=d.IsReContent,
+                                                   ReContent=d.ReContent,                                                 
+                                                   RefundReason=d.RefundReason,                                                   
+                                                   BadReviewContent=d.BadReviewContent,
+                                                   BadReviewReason=d.BadReviewReason,
+                                                   BadReviewDate = d.BadReviewDate ==null? null:d.BadReviewDate,
+                                                   RefundDate = d.RefundDate,
+                                                   AdmissionId=d.AdmissionId,
+                                                   AdmissionName=d.AdmissionName
                                                };
 
                 FxPageInfo<ShoppingCartRegistrationVo> shoppingCartRegistrationPageInfo = new FxPageInfo<ShoppingCartRegistrationVo>();
@@ -125,7 +134,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.IsReturnBackPrice = addVo.IsReturnBackPrice;
                 addDto.Remark = addVo.Remark;
                 addDto.CreateBy = employeeId;
-
+                addDto.ReContent = addVo.ReContent;
+                addDto.IsReContent = addVo.IsReContent;
+                addDto.RefundDate = addVo.RefundDate;
+                addDto.RefundReason = addVo.RefundReason;
+                addDto.BadReviewContent = addVo.BadReviewContent;
+                addDto.BadReviewDate = addVo.BadReviewDate;
+                addDto.BadReviewReason = addVo.BadReviewReason;
+                addDto.AdmissionId = addVo.AdmissionId;
                 await shoppingCartRegistrationService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -164,6 +180,15 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.IsReturnBackPrice = shoppingCartRegistration.IsReturnBackPrice;
                 shoppingCartRegistrationVo.Remark = shoppingCartRegistration.Remark;
                 shoppingCartRegistrationVo.CreateDate = shoppingCartRegistration.CreateDate;
+                shoppingCartRegistrationVo.ReContent = shoppingCartRegistration.ReContent;
+                shoppingCartRegistrationVo.RefundDate = shoppingCartRegistration.RefundDate;
+                shoppingCartRegistrationVo.RefundReason = shoppingCartRegistration.RefundReason;
+                shoppingCartRegistrationVo.BadReviewContent = shoppingCartRegistration.BadReviewContent;
+                shoppingCartRegistrationVo.BadReviewDate = shoppingCartRegistration.BadReviewDate;
+                shoppingCartRegistrationVo.BadReviewReason = shoppingCartRegistration.BadReviewReason;
+                shoppingCartRegistrationVo.IsReContent = shoppingCartRegistration.IsReContent;
+                shoppingCartRegistrationVo.AdmissionName = shoppingCartRegistration.AdmissionName;
+                shoppingCartRegistrationVo.AdmissionId = shoppingCartRegistration.AdmissionId;
 
                 return ResultData<ShoppingCartRegistrationVo>.Success().AddData("shoppingCartRegistrationInfo", shoppingCartRegistrationVo);
             }
@@ -204,6 +229,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.IsConsultation = updateVo.IsConsultation;
                 updateDto.IsReturnBackPrice = updateVo.IsReturnBackPrice;
                 updateDto.Remark = updateVo.Remark;
+                updateDto.BadReviewContent = updateVo.BadReviewContent;
+                updateDto.IsReContent = updateVo.IsReContent;
+                updateDto.ReContent = updateVo.ReContent;
+                updateDto.RefundDate = updateVo.RefundDate;
+                updateDto.RefundReason = updateVo.RefundReason;
+                updateDto.BadReviewDate = updateVo.BadReviewDate;
+                updateDto.BadReviewReason = updateVo.BadReviewReason;
+                updateDto.AdmissionId = updateVo.AdmissionId;
                 await shoppingCartRegistrationService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

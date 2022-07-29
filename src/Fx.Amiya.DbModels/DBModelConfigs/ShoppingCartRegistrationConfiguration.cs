@@ -28,6 +28,14 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.Remark).HasColumnName("remark").HasColumnType("varchar(300)").IsRequired(false);
             builder.Property(t => t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.Property(t => t.CreateBy).HasColumnName("create_by").HasColumnType("int").IsRequired();
-        }
+            builder.Property(t => t.RefundDate).HasColumnName("refund_date").HasColumnType("datetime").IsRequired(false);
+            builder.Property(t => t.RefundReason).HasColumnName("refund_reason").HasColumnType("varchar(500)").IsRequired(false);
+            builder.Property(t => t.BadReviewDate).HasColumnName("badreview_date").HasColumnType("datetime").IsRequired(false);
+            builder.Property(t => t.BadReviewContent).HasColumnName("badreview_content").HasColumnType("varchar(500)").IsRequired(false);
+            builder.Property(t => t.BadReviewReason).HasColumnName("badreview_reason").HasColumnType("varchar(500)").IsRequired(false);
+            builder.Property(t => t.IsReContent).HasColumnName("is_recontent").HasColumnType("bit(1)").IsRequired();
+            builder.Property(t => t.ReContent).HasColumnName("recontent").HasColumnType("varchar(500)").IsRequired(false);
+            builder.Property(t => t.AdmissionId).HasColumnName("admission_id").HasColumnType("int").IsRequired();
+    }
     }
 }

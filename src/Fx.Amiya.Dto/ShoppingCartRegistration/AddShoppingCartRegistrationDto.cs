@@ -22,5 +22,37 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         public bool IsReturnBackPrice { get; set; }
         public string Remark { get; set; }
         public int CreateBy { get; set; }
+        /// <summary>
+        /// 退款时间
+        /// </summary>
+        public DateTime? RefundDate { get; set; }
+        /// <summary>
+        /// 退款原因
+        /// </summary>
+        public string RefundReason { get; set; }
+        /// <summary>
+        /// 差评时间
+        /// </summary>
+        public DateTime? BadReviewDate { get; set; }
+        /// <summary>
+        /// 差评原因
+        /// </summary>
+        public string BadReviewReason { get; set; }
+        /// <summary>
+        /// 差评内容
+        /// </summary>
+        public string BadReviewContent { get; set; }
+        /// <summary>
+        /// 是否追评
+        /// </summary>
+        public bool IsReContent { get; set; }
+        /// <summary>
+        /// 追评内容
+        /// </summary>
+        public string ReContent { get; set; }
+        /// <summary>
+        /// 接诊人员
+        /// </summary>
+        public int AdmissionId { get; set; }
     }
 }
