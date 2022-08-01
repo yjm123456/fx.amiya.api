@@ -30,6 +30,7 @@ namespace Fx.Amiya.Service
         private IContentPlatformOrderSendService _contentPlatformOrderSend;
         private IDalAmiyaEmployee _dalAmiyaEmployee;
         private ILiveAnchorService _liveAnchorService;
+        private IShoppingCartRegistrationService _shoppingCartRegistration;
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private IContentPlatformService _contentPlatformService;
         private IAmiyaHospitalDepartmentService _departmentService;
@@ -46,6 +47,7 @@ namespace Fx.Amiya.Service
             ILiveAnchorService liveAnchorService,
             IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
             IHospitalInfoService hospitalInfoService,
+            IShoppingCartRegistrationService shoppingCartRegistration,
             IBindCustomerServiceService bindCustomerServiceService,
             IContentPlatformService contentPlatformService,
             IUnitOfWork unitOfWork,
@@ -62,6 +64,7 @@ namespace Fx.Amiya.Service
         {
             _dalContentPlatformOrder = dalContentPlatformOrder;
             this.unitOfWork = unitOfWork;
+            _shoppingCartRegistration = shoppingCartRegistration;
             this.bindCustomerServiceService = bindCustomerServiceService;
             _dalBindCustomerService = dalBindCustomerService;
             _departmentService = departmentService;
@@ -179,6 +182,10 @@ namespace Fx.Amiya.Service
                     addPicture.CustomerPicture = z;
                     await _contentPlatFormCustomerPictureService.AddAsync(addPicture);
                 }
+
+                //小黄车更新录单触达
+                await _shoppingCartRegistration.UpdateCreateOrderAsync(input.Phone) ; 
+
                 unitOfWork.Commit();
             }
             catch (Exception err)
@@ -544,6 +551,10 @@ namespace Fx.Amiya.Service
                 var contentPlatFormOrder = await this.GetByOrderIdAsync(addDto.OrderId);
                 //修改订单状态
                 await this.UpdateStateAndRepeateOrderPicAsync(addDto.OrderId, addDto.SendBy, contentPlatFormOrder.BelongEmpId, addDto.EmployeeId);
+
+
+                //小黄车更新派单触达
+                await _shoppingCartRegistration.UpdateCreateOrderAsync(orderInfo.Phone);
                 unitOfWork.Commit();
             }
             catch (Exception ex)
@@ -1067,7 +1078,7 @@ namespace Fx.Amiya.Service
             result.LiveAnchorWeChatNo = order.LiveAnchorWeChatNo;
             result.IsOldCustomer = order.IsOldCustomer;
             result.IsAcompanying = order.IsAcompanying;
-            
+
             result.ConsultationType = order.ConsultationType;
             result.CommissionRatio = order.CommissionRatio;
             result.UnSendReason = order.UnSendReason;
@@ -1355,7 +1366,7 @@ namespace Fx.Amiya.Service
                 var dealInfo = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
                 dealInfo = dealInfo.Where(x => x.IsDeal == true).ToList();
                 var checkInfo = dealInfo.Where(x => x.CheckState == (int)CheckType.CheckedSuccess).Count();
-                if (checkInfo == dealInfo.Count)
+                if (checkInfo + 1 == dealInfo.Count && input.CheckState == (int)CheckType.CheckedSuccess)
                 {
                     order.CheckState = (int)CheckType.CheckedSuccess;
                 }
@@ -1565,6 +1576,7 @@ namespace Fx.Amiya.Service
                     order.UnDealPictureUrl = "";
                     order.DealDate = input.DealDate;
 
+
                 }
                 else
                 {
@@ -1581,6 +1593,10 @@ namespace Fx.Amiya.Service
                 order.ToHospitalType = input.ToHospitalType;
                 order.OtherContentPlatFormOrderId = input.OtherContentPlatFormOrderId;
                 order.UpdateDate = DateTime.Now;
+                if (order.CheckState == (int)CheckType.CheckedSuccess)
+                {
+                    order.CheckState = (int)CheckType.Checking;
+                }
                 await _dalContentPlatformOrder.UpdateAsync(order, true);
 
                 //添加订单成交情况
@@ -1634,6 +1650,10 @@ namespace Fx.Amiya.Service
             {
                 var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 var isoldCustomer = false;
+                if (order.CheckState==(int)CheckType.CheckedSuccess)
+                {
+                    throw new Exception("该订单已审核，无法编辑！");
+                }
                 if (order.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
                 {
                     isoldCustomer = true;
@@ -1673,6 +1693,10 @@ namespace Fx.Amiya.Service
                     order.ToHospitalDate = input.ToHospitalDate;
                     order.LateProjectStage = "";
                     order.DealPictureUrl = "";
+                }
+                if (order.CheckState == (int)CheckType.CheckedSuccess)
+                {
+                    order.CheckState = (int)CheckType.Checking;
                 }
                 order.IsOldCustomer = isoldCustomer;
                 order.IsAcompanying = input.IsAcompanying;

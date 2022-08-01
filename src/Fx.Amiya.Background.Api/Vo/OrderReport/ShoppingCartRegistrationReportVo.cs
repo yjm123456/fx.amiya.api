@@ -57,6 +57,18 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("面诊方式")]
         public string ConsultationTypeText { get; set; }
 
+
+        /// <summary>
+        /// 录单触达
+        /// </summary>
+        [Description("录单触达")]
+        public string IsCreateOrder { get; set; }
+        /// <summary>
+        /// 派单触达
+        /// </summary>
+        [Description("派单触达")]
+        public string IsSendOrder { get; set; }
+
         /// <summary>
         /// 是否加V
         /// </summary>

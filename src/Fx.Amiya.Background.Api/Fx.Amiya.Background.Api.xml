@@ -3563,23 +3563,35 @@
             <param name="endDate">结束时间</param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetShoppingCartRegistrationAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,System.String)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetShoppingCartRegistrationAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,System.String)">
             <summary>
             小黄车登记报表
             </summary>
             <param name="startDate">登记开始时间</param>
             <param name="endDate">登记结束时间</param>
+            <param name="isSendOrder">派单触达</param>
+            <param name="isCreateOrder">录单触达</param>
+            <param name="isAddWechat">是否加v</param>
+            <param name="isWriteOff">是否核销</param>
+            <param name="isConsultation">是否面诊</param>
+            <param name="isReturnBackPrice">是否回款</param>
             <param name="LiveAnchorId">主播id</param>
             <param name="keyword">关键词</param>
             <param name="contentPlatFormId">内容平台id</param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetShoppingCartRegistrationExportAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,System.String)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetShoppingCartRegistrationExportAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,System.String)">
             <summary>
             小黄车登记报表导出
             </summary>
             <param name="startDate">登记开始时间</param>
             <param name="endDate">登记结束时间</param>
+            <param name="isSendOrder">派单触达</param>
+            <param name="isCreateOrder">录单触达</param>
+            <param name="isAddWechat">是否加v</param>
+            <param name="isWriteOff">是否核销</param>
+            <param name="isConsultation">是否面诊</param>
+            <param name="isReturnBackPrice">是否回款</param>
             <param name="LiveAnchorId">主播id</param>
             <param name="keyword">关键词</param>
             <param name="contentPlatFormId">内容平台id</param>
@@ -4611,7 +4623,7 @@
             </summary>
             <param name="shoppingCartRegistrationService"></param>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.ShoppingCartRegistrationController.GetListWithPageAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,System.String,System.Int32,System.Int32,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Int32})">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ShoppingCartRegistrationController.GetListWithPageAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,System.String,System.Int32,System.Int32,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Int32})">
             <summary>
             获取小黄车登记信息列表（分页）
             </summary>
@@ -4620,6 +4632,15 @@
             <param name="LiveAnchorId">主播id</param>
             <param name="keyword">关键词</param>
             <param name="contentPlatFormId">内容平台id</param>
+            <param name="isCreateOrder">录单触达</param>
+            <param name="isSendOrder">派单触达</param>
+            <param name="isAddWechat">是否加v</param>
+            <param name="isWriteOff">是否核销</param>
+            <param name="isConsultation">是否面诊</param>
+            <param name="isReturnBackPrice">是否回款</param>
+            <param name="minPrice">最小金额</param>
+            <param name="maxPrice">最大金额</param>
+            <param name="admissionId">接诊人员</param>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
             <returns></returns>
@@ -16276,6 +16297,16 @@
             面诊方式
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ShoppingCartRegistrationReportVo.IsCreateOrder">
+            <summary>
+            录单触达
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ShoppingCartRegistrationReportVo.IsSendOrder">
+            <summary>
+            派单触达
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ShoppingCartRegistrationReportVo.IsAddWechat">
             <summary>
             是否加V
@@ -18081,6 +18112,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.ConsultationType">
             <summary>
             面诊方式
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.IsCreateOrder">
+            <summary>
+            录单触达
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.IsSendOrder">
+            <summary>
+            派单触达
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.IsAddWeChat">
