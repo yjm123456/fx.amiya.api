@@ -105,7 +105,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="orderList"></param>
         /// <returns></returns>
-        Task AddOrderAsync(List<OrderInfoAddDto> orderList);
+        Task AddOrderAsync(List<TikTokOrderAddDto> orderList);
 
 
         /// <summary>

@@ -98,6 +98,9 @@ namespace Fx.Amiya.Service
                     }
 
                 }
+                if (string.IsNullOrEmpty(tikTokUserDto.Phone)) {
+                    return null;
+                }
                 //解密后将解密信息更新到tiktokuserinfo表中
                 await dalTikTokUserInfo.UpdateAsync(tikTokUserInfo, true);
                 //将解密信息更新到tiktok订单表中
@@ -211,6 +214,9 @@ namespace Fx.Amiya.Service
                 }
                 tikTokUserDto.CipherName = cipherName;
                 tikTokUserDto.CipherPhone = cipherPhone;
+                if (string.IsNullOrEmpty(tikTokUserDto.Phone)) {
+                    return null;
+                }
                 return tikTokUserDto;
             }
             else

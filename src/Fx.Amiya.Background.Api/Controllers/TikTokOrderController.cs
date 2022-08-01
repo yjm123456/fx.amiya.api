@@ -2,6 +2,7 @@
 using Fx.Amiya.Background.Api.Vo.Order;
 using Fx.Amiya.Background.Api.Vo.OrderCheck;
 using Fx.Amiya.Background.Api.Vo.TikTok;
+using Fx.Amiya.Core.Dto.Goods;
 using Fx.Amiya.Core.Dto.Integration;
 using Fx.Amiya.Core.Interfaces.Goods;
 using Fx.Amiya.Core.Interfaces.Integration;
@@ -167,7 +168,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             if (!string.IsNullOrEmpty(info.Phone)) {
                 return ResultData.Fail("用户信息已解密,请勿重复解密");
             }
+            if (info.StatusCode== "TRADE_CLOSED" || info.StatusCode== "REFUNDING") {
+                return ResultData.Fail("订单已无法解密");
+            }
             var decryptRes = await tikTokUserInfo.DecryptUserInfoAsync(info.TikTokUserInfo.Id, orderid);
+            if (decryptRes==null) {
+                return ResultData.Fail("订单可解密时间已过,无法解密");
+            }
             if (decryptRes != null)
             {
                 TikTokUserInfoVo tikTokUserInfoVo = new TikTokUserInfoVo();
@@ -247,9 +254,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.CreateDate = DateTime.Now;
             var demand = await _amiyaGoodsDemandService.GetByIdAsync(addVo.GoodsId);
             addDto.ThumbPicUrl = demand.ThumbPictureUrl;
-            addDto.BuyerNick = addVo.BuyerNick;
+            addDto.BuyerNick = addVo.NickName;
             addDto.AppType = addVo.AppType;
-            addDto.BuyerNick = addVo.BuyerNick;
+            addDto.BuyerNick = addVo.NickName;
             addDto.IsAppointment = addVo.IsAppointment;
             addDto.OrderType = (addVo.OrderType.HasValue) ? addVo.OrderType.Value : (byte)0;
             addDto.Quantity = (addVo.Quantity.HasValue) ? addVo.Quantity : 0;
@@ -304,6 +311,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 result.CipherPhone = FirstOrder.CipherPhone;
                 result.Phone = FirstOrder.Phone;
                 result.NickName = FirstOrder.BuyerNick;
+                result.ExchangeType = 1;
             }
             else
             {
@@ -320,7 +328,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpPost("AddOrder")]
         public async Task<ResultData> AddOrderAsync(TikTokOrderInfoAddVo addVo)
         {
-            var order = dalTikTokOrderInfo.GetAll().SingleOrDefault(o=>o.Id==addVo.OrderId);
+            var order = dalTikTokOrderInfo.GetAll().SingleOrDefault(o=>o.Id==addVo.Id);
             if (order!=null) {
                 throw new Exception("该订单已存在,请勿重复录入");
             }
@@ -349,11 +357,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                     await _dalBindCustomerService.AddAsync(bindCustomerService, true);
                 }
                 //添加customer_base_info信息
-                var custom = dalCustomerBaseInfo.GetAll().SingleOrDefaultAsync(c => c.Phone == addVo.Phone);
+                var custom = await dalCustomerBaseInfo.GetAll().SingleOrDefaultAsync(c => c.Phone == addVo.Phone);
                 if (custom == null)
                 {
                     CustomerBaseInfo customerBaseInfo = new CustomerBaseInfo();
-                    customerBaseInfo.Name = addVo.BuyerNick;
+                    customerBaseInfo.Name = addVo.NickName;
                     customerBaseInfo.Phone = addVo.Phone;
                     dalCustomerBaseInfo.Add(customerBaseInfo, true);
                 }
@@ -361,15 +369,15 @@ namespace Fx.Amiya.Background.Api.Controllers
                 TikTokUserInfo tikTokUserInfo = new TikTokUserInfo();
                 tikTokUserInfo.CipherName = addVo.CipherName;
                 tikTokUserInfo.CipherPhone = addVo.CipherPhone;
-                tikTokUserInfo.Name = addVo.BuyerNick;
+                tikTokUserInfo.Name = addVo.NickName;
                 tikTokUserInfo.Phone = addVo.Phone;
                 tikTokUserInfo.Id = GuidUtil.NewGuidShortString();
-                await dalTikTokUserInfo.UpdateAsync(tikTokUserInfo, true);
+                await dalTikTokUserInfo.AddAsync(tikTokUserInfo, true);
 
                 //添加订单
                 List<TikTokOrderAddDto> amiyaOrderList = new List<TikTokOrderAddDto>();
                 TikTokOrderAddDto addDto = new TikTokOrderAddDto();
-                addDto.Id = addVo.OrderId;
+                addDto.Id = addVo.Id;
                 addDto.GoodsName = addVo.GoodsName;
                 addDto.GoodsId = addVo.GoodsId;
                 addDto.Phone = addVo.Phone;
@@ -378,10 +386,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.ActualPayment = addVo.ActualPayment;
                 addDto.AccountReceivable = addVo.AccountReceivable;
                 addDto.CreateDate = DateTime.Now;
-                addDto.ThumbPicUrl = addVo.ThumbPictureUrl;
-                addDto.BuyerNick = addVo.BuyerNick;
+                addDto.ThumbPicUrl = addVo.ThumbPicUrl;
+                addDto.BuyerNick = addVo.NickName;
                 addDto.AppType = addVo.AppType;
-                addDto.BuyerNick = addVo.BuyerNick;
+                addDto.BuyerNick = addVo.NickName;
                 addDto.IsAppointment = addVo.IsAppointment;
                 addDto.BelongEmpId = employeeId;
                 addDto.OrderType = (addVo.OrderType.HasValue) ? addVo.OrderType.Value : (byte)0;
@@ -390,6 +398,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.IntegrationQuantity = 0;
                 addDto.ExchangeType = addVo.ExchangeType;
                 addDto.TikTokUserId = tikTokUserInfo.Id;
+                addDto.CipherName = addVo.CipherName;
+                addDto.CipherPhone = addVo.CipherPhone;
                 amiyaOrderList.Add(addDto);
                 OrderTradeAddDto orderTradeAdd = new OrderTradeAddDto();
                 orderTradeAdd.CustomerId = "客服-" + employee.Name.ToString();
@@ -399,48 +409,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 orderTradeAdd.TikTokOrderInfoAddList = amiyaOrderList;
                 orderTradeAdd.IsAdminAdd = true;
                 await tikTokOrderService.AddAmiyaOrderAsync(orderTradeAdd);
-                List<ConsumptionIntegrationDto> consumptionIntegrationList = new List<ConsumptionIntegrationDto>();
-                if (addVo.StatusCode == "TRADE_FINISHED" && addVo.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(addVo.Phone))
-                {
-
-                    bool isIntegrationGenerateRecord = await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAsync(addVo.OrderId);
-                    if (isIntegrationGenerateRecord != true)
-                    {
-
-                        var customerId = await customerService.GetCustomerIdByPhoneAsync(addVo.Phone);
-                        if (!string.IsNullOrWhiteSpace(customerId))
-                        {
-
-                            ConsumptionIntegrationDto consumptionIntegration = new ConsumptionIntegrationDto();
-                            consumptionIntegration.CustomerId = customerId;
-                            consumptionIntegration.OrderId = addVo.OrderId;
-                            consumptionIntegration.AmountOfConsumption = (decimal)addVo.ActualPayment;
-                            consumptionIntegration.Date = DateTime.Now;
-
-                            var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(customerId);
-                            if (memberCard != null)
-                            {
-                                consumptionIntegration.Quantity = Math.Floor(memberCard.GenerateIntegrationPercent * (decimal)addVo.ActualPayment);
-                                consumptionIntegration.Percent = memberCard.GenerateIntegrationPercent;
-                            }
-                            else
-                            {
-                                var memberRank = await memberRankInfoService.GetMinGeneratePercentMemberRankInfoAsync();
-                                consumptionIntegration.Quantity = Math.Floor(memberRank.GenerateIntegrationPercent * (decimal)addVo.ActualPayment);
-                                consumptionIntegration.Percent = memberRank.GenerateIntegrationPercent;
-                            }
-
-                            if (consumptionIntegration.Quantity > 0)
-                                consumptionIntegrationList.Add(consumptionIntegration);
-
-                        }
-                    }
-                }
-
-                foreach (var item in consumptionIntegrationList)
-                {
-                    await integrationAccountService.AddByConsumptionAsync(item);
-                }
             }
             else {
                 //如果没有解密信息
@@ -455,7 +423,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 //添加订单
                 List<TikTokOrderAddDto> amiyaOrderList = new List<TikTokOrderAddDto>();
                 TikTokOrderAddDto addDto = new TikTokOrderAddDto();
-                addDto.Id = addVo.OrderId;
+                addDto.Id = addVo.Id;
                 addDto.GoodsName = addVo.GoodsName;
                 addDto.GoodsId = addVo.GoodsId;
                 addDto.Phone = addVo.Phone;
@@ -464,10 +432,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.ActualPayment = addVo.ActualPayment;
                 addDto.AccountReceivable = addVo.AccountReceivable;
                 addDto.CreateDate = DateTime.Now;
-                addDto.ThumbPicUrl = addVo.ThumbPictureUrl;
-                addDto.BuyerNick = addVo.BuyerNick;
+                addDto.ThumbPicUrl = addVo.ThumbPicUrl;
+                addDto.BuyerNick = addVo.NickName;
                 addDto.AppType = addVo.AppType;
-                addDto.BuyerNick = addVo.BuyerNick;
+                addDto.BuyerNick = addVo.NickName;
                 addDto.IsAppointment = addVo.IsAppointment;
                 addDto.BelongEmpId = employeeId;
                 addDto.OrderType = (addVo.OrderType.HasValue) ? addVo.OrderType.Value : (byte)0;
@@ -476,6 +444,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.IntegrationQuantity = 0;
                 addDto.ExchangeType = addVo.ExchangeType;
                 addDto.TikTokUserId = tikTokUserInfo.Id;
+                addDto.CipherName = addVo.CipherName;
+                addDto.CipherPhone = addVo.CipherPhone;
                 amiyaOrderList.Add(addDto);
                 OrderTradeAddDto orderTradeAdd = new OrderTradeAddDto();
                 orderTradeAdd.CustomerId = "客服-" + employee.Name.ToString();

@@ -100,20 +100,18 @@ namespace Fx.Amiya.Service
                 orderTrade.TradeId = Guid.NewGuid().ToString("N");
                 orderTrade.CustomerId = orderTradeAddDto.CustomerId;
                 orderTrade.CreateDate = orderTradeAddDto.CreateDate;
-                if (orderTradeAddDto.OrderInfoAddList.Count(e => e.OrderType == (byte)OrderType.MaterialOrder) > 0)
-                    orderTrade.AddressId = orderTradeAddDto.AddressId;
-                orderTrade.TotalAmount = orderTradeAddDto.OrderInfoAddList.Sum(e => e.ActualPayment);
-                orderTrade.TotalIntegration = orderTradeAddDto.OrderInfoAddList.Sum(e => e.IntegrationQuantity);
+                orderTrade.TotalAmount = orderTradeAddDto.TikTokOrderInfoAddList.Sum(e => e.ActualPayment);
+                //orderTrade.TotalIntegration = orderTradeAddDto.OrderInfoAddList.Sum(e => e.IntegrationQuantity);
                 orderTrade.Remark = orderTradeAddDto.Remark;
                 orderTrade.IsAdminAdd = orderTradeAddDto.IsAdminAdd;
                 orderTrade.StatusCode = OrderStatusCode.WAIT_BUYER_PAY;
                 await dalOrderTrade.AddAsync(orderTrade, true);
 
-                foreach (var item in orderTradeAddDto.OrderInfoAddList)
+                foreach (var item in orderTradeAddDto.TikTokOrderInfoAddList)
                 {
                     item.TradeId = orderTrade.TradeId;
                 }
-                await AddAsync(orderTradeAddDto.TikTokOrderInfoAddList);
+                await AddOrderAsync(orderTradeAddDto.TikTokOrderInfoAddList);
 
                 unitOfWork.Commit();
                 return orderTrade.TradeId;
@@ -149,7 +147,6 @@ namespace Fx.Amiya.Service
                         //根据是否包含手机号判断该订单是否已经解密
                         if (!string.IsNullOrEmpty(orderInfo.Phone))
                         {
-                            //订单信息已解密
                             if (orderInfo.StatusCode == orderItem.StatusCode)
                             {
                                 continue;
@@ -171,20 +168,6 @@ namespace Fx.Amiya.Service
                             orderInfo.OrderType = orderItem.OrderType;
                             orderInfo.AppointmentHospital = orderItem.AppointmentHospital;
                             orderInfo.ThumbPicUrl = orderItem.ThumbPicUrl;
-                            if (orderItem.StatusCode == OrderStatusCode.TRADE_FINISHED)
-                            {
-                                orderInfo.WriteOffDate = orderItem.WriteOffDate;
-                                //验证是否派过单
-                                var sendOrderInfo = await _sendOrderInfoService.GetSendOrderInfoByOrderId(orderInfo.Id);
-                                if (sendOrderInfo.Count != 0)
-                                {
-                                    orderInfo.FinalConsumptionHospital = sendOrderInfo.First().HospitalName;
-                                }
-                                else
-                                {
-                                    orderInfo.FinalConsumptionHospital = orderItem.AppointmentHospital;
-                                }
-                            }
                             //计算积分,如果订单信息包含手机号则计算积分,否则暂时不计算
                             if (orderInfo.StatusCode == "TRADE_FINISHED" && orderInfo.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(orderInfo.Phone))
                             {
@@ -233,16 +216,6 @@ namespace Fx.Amiya.Service
                             {
                                 continue;
                             }
-                            if (orderItem.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || orderItem.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS)
-                            {
-                                goodsName += orderItem.GoodsName + ",";
-                                orderPhoneDict.Add(orderItem.Id, orderItem.Phone);
-                                //组织邮件信息
-                                if (emailConfig == true)
-                                {
-                                    BuildSendMailInfo(appType, orderItem.Id, goodsName, orderItem.Phone);
-                                }
-                            }
                             orderInfo.StatusCode = orderItem.StatusCode;
                             orderInfo.UpdateDate = orderItem.UpdateDate;
                             orderInfo.ActualPayment = orderItem.ActualPayment;
@@ -250,25 +223,8 @@ namespace Fx.Amiya.Service
                             orderInfo.OrderType = orderItem.OrderType;
                             orderInfo.AppointmentHospital = orderItem.AppointmentHospital;
                             orderInfo.ThumbPicUrl = orderItem.ThumbPicUrl;
-                            if (orderItem.StatusCode == OrderStatusCode.TRADE_FINISHED)
-                            {
-                                orderInfo.WriteOffDate = orderItem.WriteOffDate;
-                                //验证是否派过单
-                                var sendOrderInfo = await _sendOrderInfoService.GetSendOrderInfoByOrderId(orderInfo.Id);
-                                if (sendOrderInfo.Count != 0)
-                                {
-                                    orderInfo.FinalConsumptionHospital = sendOrderInfo.First().HospitalName;
-                                }
-                                else
-                                {
-                                    orderInfo.FinalConsumptionHospital = orderItem.AppointmentHospital;
-                                }
-                            }
                             await dalTikTokOrderInfo.UpdateAsync(orderInfo, true);
-                            
                         }
-
-
                     }
                     else
                     {
@@ -279,20 +235,6 @@ namespace Fx.Amiya.Service
                         order.Phone = orderItem.Phone;
                         order.AppointmentHospital = orderItem.AppointmentHospital;
                         order.StatusCode = orderItem.StatusCode;
-                        if (orderItem.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || orderItem.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS)
-                        {
-                            goodsName += orderItem.GoodsName + ",";
-                            if (!string.IsNullOrEmpty(order.Phone))
-                            {
-                                orderPhoneDict.Add(orderItem.Id, orderItem.Phone);
-                            }
-                            //组织邮件信息
-                            if (emailConfig == true)
-                            {
-                                BuildSendMailInfo(appType, orderItem.Id, goodsName, orderItem.Phone);
-                            }
-
-                        }
                         order.ActualPayment = orderItem.ActualPayment;
                         order.AccountReceivable = orderItem.AccountReceivable;
                         order.CreateDate = orderItem.CreateDate;
@@ -315,7 +257,6 @@ namespace Fx.Amiya.Service
                         order.AlreadyWriteOffAmount = 0;
                         order.BelongEmpId = orderItem.BelongEmpId;
                         order.TikTokUserInfoId = orderItem.TikTokUserId;
-                        //order.TikTokUserInfoId=orderItem.
                         AddTikTokUserDto addTikTokUserDto = new AddTikTokUserDto();
                         addTikTokUserDto.CipherName = orderItem.CipherName;
                         addTikTokUserDto.CipherPhone = orderItem.CipherPhone;
@@ -336,9 +277,158 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public Task AddOrderAsync(List<OrderInfoAddDto> orderList)
+        public async Task AddOrderAsync(List<TikTokOrderAddDto> orderList)
         {
-            throw new NotImplementedException();
+            var emailConfig = false;
+            string goodsName = "";
+            Dictionary<string, string> orderPhoneDict = new Dictionary<string, string>();
+            byte appType = 0;
+            List<TikTokOrderInfo> orderInfoList = new List<TikTokOrderInfo>();
+            foreach (var item in orderList)
+            {
+                if (!string.IsNullOrEmpty(item.Phone))
+                {
+                    TikTokOrderInfo order = new TikTokOrderInfo();
+                    order.Id = item.Id;
+                    order.GoodsId = item.GoodsId;
+                    order.GoodsName = item.GoodsName;
+                    order.Phone = item.Phone;
+                    order.AppointmentHospital = item.AppointmentHospital;
+                    order.StatusCode = item.StatusCode;
+                    if (item.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || item.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS)
+                    {
+                        goodsName += item.GoodsName + ",";
+                        if (!string.IsNullOrEmpty(order.Phone))
+                        {
+                            orderPhoneDict.Add(item.Id, item.Phone);
+                        }
+                        //组织邮件信息
+                        if (emailConfig == true)
+                        {
+                            BuildSendMailInfo(appType, item.Id, goodsName, item.Phone);
+                        }
+
+                    }
+                    order.ActualPayment = item.ActualPayment;
+                    order.AccountReceivable = item.AccountReceivable;
+                    order.CreateDate = item.CreateDate;
+                    order.UpdateDate = item.UpdateDate;
+                    order.ThumbPicUrl = item.ThumbPicUrl;
+                    order.BuyerNick = item.BuyerNick;
+                    order.CheckState = (int)CheckType.NotChecked;
+                    order.AppType = item.AppType;
+                    order.IsAppointment = item.IsAppointment;
+                    order.OrderType = item.OrderType;
+                    order.OrderNature = item.OrderNature.HasValue ? item.OrderNature.Value : (byte)0;
+                    order.Description = item.Description;
+                    order.Standard = item.Standard;
+                    order.Parts = item.Part;
+                    order.Quantity = item.Quantity;
+                    order.IntegrationQuantity = item.IntegrationQuantity;
+                    order.ExchangeType = item.ExchangeType;
+                    order.TradeId = item.TradeId;
+                    order.WriteOffCode = "";
+                    order.AlreadyWriteOffAmount = 0;
+                    order.BelongEmpId = item.BelongEmpId;
+                    order.TikTokUserInfoId = item.TikTokUserId;
+                    AddTikTokUserDto addTikTokUserDto = new AddTikTokUserDto();
+                    addTikTokUserDto.CipherName = item.CipherName;
+                    addTikTokUserDto.CipherPhone = item.CipherPhone;
+                    addTikTokUserDto.Id = GuidUtil.NewGuidShortString();
+                    await tikTokUserInfoService.AddAsync(addTikTokUserDto);
+                    order.TikTokUserInfoId = addTikTokUserDto.Id;
+                    //计算积分,如果订单信息包含手机号则计算积分,否则暂时不计算
+                    if (item.StatusCode == "TRADE_FINISHED" && item.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(item.Phone))
+                    {
+                        bool isIntegrationGenerateRecord = await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAsync(item.Id);
+                        if (isIntegrationGenerateRecord == true)
+                            continue;
+                        var customerId = await customerService.GetCustomerIdByPhoneAsync(item.Phone);
+                        if (string.IsNullOrWhiteSpace(customerId))
+                            continue;
+                        ConsumptionIntegrationDto consumptionIntegration = new ConsumptionIntegrationDto();
+                        consumptionIntegration.CustomerId = customerId;
+                        consumptionIntegration.OrderId = item.Id;
+                        consumptionIntegration.AmountOfConsumption = (decimal)item.ActualPayment;
+                        consumptionIntegration.Date = DateTime.Now;
+
+                        var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(customerId);
+                        if (memberCard != null)
+                        {
+                            consumptionIntegration.Quantity = Math.Floor(memberCard.GenerateIntegrationPercent * (decimal)item.ActualPayment);
+                            consumptionIntegration.Percent = memberCard.GenerateIntegrationPercent;
+                        }
+                        else
+                        {
+                            var memberRank = await memberRankInfoService.GetMinGeneratePercentMemberRankInfoAsync();
+                            consumptionIntegration.Quantity = Math.Floor(memberRank.GenerateIntegrationPercent * (decimal)item.ActualPayment);
+                            consumptionIntegration.Percent = memberRank.GenerateIntegrationPercent;
+
+                        }
+
+                        if (consumptionIntegration.Quantity > 0)
+                            await integrationAccountService.AddByConsumptionAsync(consumptionIntegration);
+                        //根据phone获取获取绑定的员工
+                        var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(item.Phone);
+                        if (findInfo != 0)
+                        {
+                            await _bindCustomerService.UpdateConsumePriceAsync(item.Phone, item.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
+                        }
+                    }
+                    orderInfoList.Add(order);
+
+                }
+                else
+                {
+                    TikTokOrderInfo order = new TikTokOrderInfo();
+                    order.Id = item.Id;
+                    order.GoodsId = item.GoodsId;
+                    order.GoodsName = item.GoodsName;
+                    order.AppointmentHospital = item.AppointmentHospital;
+                    order.StatusCode = item.StatusCode;
+                    /*if (item.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || item.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS)
+                    {
+                        goodsName += item.GoodsName + ",";
+                        //组织邮件信息
+                        if (emailConfig == true)
+                        {
+                            BuildSendMailInfo(appType, item.Id, goodsName, item.Phone);
+                        }
+
+                    }*/
+                    order.ActualPayment = item.ActualPayment;
+                    order.AccountReceivable = item.AccountReceivable;
+                    order.CreateDate = item.CreateDate;
+                    order.UpdateDate = item.UpdateDate;
+                    order.ThumbPicUrl = item.ThumbPicUrl;
+                    order.CheckState = (int)CheckType.NotChecked;
+                    order.AppType = item.AppType;
+                    order.IsAppointment = item.IsAppointment;
+                    order.OrderType = item.OrderType;
+                    order.OrderNature = item.OrderNature.HasValue ? item.OrderNature.Value : (byte)0;
+                    order.Description = item.Description;
+                    order.Standard = item.Standard;
+                    order.Parts = item.Part;
+                    order.Quantity = item.Quantity;
+                    order.IntegrationQuantity = item.IntegrationQuantity;
+                    order.ExchangeType = item.ExchangeType;
+                    order.TradeId = item.TradeId;
+                    order.WriteOffCode = "";
+                    order.AlreadyWriteOffAmount = 0;
+                    order.BelongEmpId = item.BelongEmpId;
+                    order.TikTokUserInfoId = item.TikTokUserId;
+                    AddTikTokUserDto addTikTokUserDto = new AddTikTokUserDto();
+                    addTikTokUserDto.CipherName = item.CipherName;
+                    addTikTokUserDto.CipherPhone = item.CipherPhone;
+                    addTikTokUserDto.Id = GuidUtil.NewGuidShortString();
+                    await tikTokUserInfoService.AddAsync(addTikTokUserDto);
+                    order.TikTokUserInfoId = addTikTokUserDto.Id;
+                    orderInfoList.Add(order);
+                }
+                await dalTikTokOrderInfo.AddCollectionAsync(orderInfoList, true);
+                //发送短信通知
+                SendPhoneInfo(orderPhoneDict, appType);
+            }
         }
 
         public Task<WxPayRequestInfo> BuildPayRequest(WxPackageInfo packageInfo)
@@ -1379,7 +1469,7 @@ namespace Fx.Amiya.Service
                                 CheckDate = d.CheckDate,
                                 CheckBy = d.CheckBy,
                                 CheckRemark = d.CheckRemark,
-                               // SendOrderHospital = d.SendOrderInfoList == null ? "" : d.SendOrderInfoList.OrderByDescending(k => k.SendDate).First().HospitalInfo.Name,
+                                // SendOrderHospital = d.SendOrderInfoList == null ? "" : d.SendOrderInfoList.OrderByDescending(k => k.SendDate).First().HospitalInfo.Name,
                                 SettlePrice = d.SettlePrice,
                                 IsReturnBackPrice = d.IsReturnBackPrice,
                                 ReturnBackPrice = d.ReturnBackPrice,

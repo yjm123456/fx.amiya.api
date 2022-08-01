@@ -13,7 +13,7 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// <summary>
         /// 订单号
         /// </summary>
-        public string OrderId { get; set; }
+        public string Id { get; set; }
         /// <summary>
         /// 商品名称
         /// </summary>
@@ -23,7 +23,7 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// <summary>
         /// 缩略图
         /// </summary>
-        public string ThumbPictureUrl { get; set; }
+        public string ThumbPicUrl { get; set; }
         /// <summary>
         /// 商品id
         /// </summary>
@@ -54,7 +54,7 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// <summary>
         /// 买家昵称
         /// </summary>
-        public string BuyerNick { get; set; }
+        public string NickName { get; set; }
         /// <summary>
         /// 下单平台
         /// </summary>
@@ -67,7 +67,7 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// <summary>
         /// 订单类型（0虚拟订单，1实物订单）
         /// </summary>
-        public byte? OrderType { get; set; }
+        public long? OrderType { get; set; }
 
         /// <summary>
         /// 订单性质（0正常下单，1朋友推荐，2私域合作）

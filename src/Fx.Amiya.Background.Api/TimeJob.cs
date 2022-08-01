@@ -191,11 +191,11 @@ namespace Fx.Amiya.Background.Api
                     }                    
                     tikTokOrderAddList.Add(tikTokOrder);
                 }
-                await orderService.AddOrderAsync(amiyaOrderList);
+                //await orderService.AddOrderAsync(amiyaOrderList);
                 await _tikTokOrderInfoService.AddAsync(tikTokOrderAddList);
                 foreach (var item in consumptionIntegrationList)
                 {
-                    await integrationAccountService.AddByConsumptionAsync(item);
+                    //await integrationAccountService.AddByConsumptionAsync(item);
                 }
 
 

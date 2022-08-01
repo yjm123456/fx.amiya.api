@@ -84,7 +84,9 @@ namespace Fx.Amiya.SyncOrder.TikTok
                 var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
 
                 var host = "https://openapi-fxg.jinritemai.com";
-                var start = DateTimeOffset.Now.ToUnixTimeSeconds() - 900;
+                //var start = DateTimeOffset.Now.ToUnixTimeSeconds() - 900;
+                //1659239953
+                var start = 1659239900L;
                 var end = DateTimeOffset.Now.ToUnixTimeSeconds();
                 //请求参数
                 var param = new Dictionary<string, object> {
@@ -106,8 +108,6 @@ namespace Fx.Amiya.SyncOrder.TikTok
 
                 TikTokOrderResult order = JsonConvert.DeserializeObject<TikTokOrderResult>(res); ;
 
-                if (order.err_no > 0)
-                    _logger.LogInformation(res);
                 if (order.data.total > 0)
                 {
                     foreach (var orderItem in order.data.shop_order_list)
@@ -323,7 +323,8 @@ namespace Fx.Amiya.SyncOrder.TikTok
                     tikTokAfterSaleInfo.after_sale_type = item.after_sale_info.after_sale_type;
                     tikTokAfterSaleInfo.refund_status = item.after_sale_info.refund_status;                   
                     tikTokOrder.OrderType = item.order_type;
-                    tikTokOrder.StatusCode = GetStatusCodeOfDouYin(tikTokOrder.OrderType, tikTokAfterSaleInfo);
+                    long status = item.order_status;
+                    tikTokOrder.StatusCode = GetStatusCodeOfDouYin(status, tikTokAfterSaleInfo);
                     tikTokOrder.ActualPayment = item.pay_amount / 100;
                     long createTime = item.create_time;
                     long updateTime = item.update_time;
