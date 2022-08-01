@@ -53,6 +53,15 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// 面诊方式
         /// </summary>
         public int ConsultationType { get; set; }
+
+        /// <summary>
+        /// 录单触达
+        /// </summary>
+        public bool IsCreateOrder { get; set; }
+        /// <summary>
+        /// 派单触达
+        /// </summary>
+        public bool IsSendOrder { get; set; }
         /// <summary>
         /// 是否加V
         /// </summary>

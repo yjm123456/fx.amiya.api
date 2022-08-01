@@ -30,6 +30,7 @@ namespace Fx.Amiya.Service
         private IContentPlatformOrderSendService _contentPlatformOrderSend;
         private IDalAmiyaEmployee _dalAmiyaEmployee;
         private ILiveAnchorService _liveAnchorService;
+        private IShoppingCartRegistrationService _shoppingCartRegistration;
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private IContentPlatformService _contentPlatformService;
         private IAmiyaHospitalDepartmentService _departmentService;
@@ -46,6 +47,7 @@ namespace Fx.Amiya.Service
             ILiveAnchorService liveAnchorService,
             IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
             IHospitalInfoService hospitalInfoService,
+            IShoppingCartRegistrationService shoppingCartRegistration,
             IBindCustomerServiceService bindCustomerServiceService,
             IContentPlatformService contentPlatformService,
             IUnitOfWork unitOfWork,
@@ -62,6 +64,7 @@ namespace Fx.Amiya.Service
         {
             _dalContentPlatformOrder = dalContentPlatformOrder;
             this.unitOfWork = unitOfWork;
+            _shoppingCartRegistration = shoppingCartRegistration;
             this.bindCustomerServiceService = bindCustomerServiceService;
             _dalBindCustomerService = dalBindCustomerService;
             _departmentService = departmentService;
@@ -179,6 +182,10 @@ namespace Fx.Amiya.Service
                     addPicture.CustomerPicture = z;
                     await _contentPlatFormCustomerPictureService.AddAsync(addPicture);
                 }
+
+                //小黄车更新录单触达
+                await _shoppingCartRegistration.UpdateCreateOrderAsync(input.Phone) ; 
+
                 unitOfWork.Commit();
             }
             catch (Exception err)
@@ -544,6 +551,10 @@ namespace Fx.Amiya.Service
                 var contentPlatFormOrder = await this.GetByOrderIdAsync(addDto.OrderId);
                 //修改订单状态
                 await this.UpdateStateAndRepeateOrderPicAsync(addDto.OrderId, addDto.SendBy, contentPlatFormOrder.BelongEmpId, addDto.EmployeeId);
+
+
+                //小黄车更新派单触达
+                await _shoppingCartRegistration.UpdateCreateOrderAsync(orderInfo.Phone);
                 unitOfWork.Commit();
             }
             catch (Exception ex)

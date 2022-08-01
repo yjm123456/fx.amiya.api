@@ -929,7 +929,12 @@ ADD COLUMN `is_badreview` BIT(1)  DEFAULT 0 AFTER `create_by`;
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
+-----------------------------------------------余建明 2022/08/01  BEGIN--------------------------------------------;
+ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
+ADD COLUMN `is_create_order` BIT(1) NOT NULL AFTER `refund_date`,
+ADD COLUMN `is_send_order` BIT(1) NOT NULL AFTER `is_create_order`;
 
+-----------------------------------------------余建明 2022/08/01 END--------------------------------------------;
 
 
 

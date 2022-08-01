@@ -45,17 +45,26 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="LiveAnchorId">主播id</param>
         /// <param name="keyword">关键词</param>
         /// <param name="contentPlatFormId">内容平台id</param>
+        /// <param name="isCreateOrder">录单触达</param>
+        /// <param name="isSendOrder">派单触达</param>
+        /// <param name="isAddWechat">是否加v</param>
+        /// <param name="isWriteOff">是否核销</param>
+        /// <param name="isConsultation">是否面诊</param>
+        /// <param name="isReturnBackPrice">是否回款</param>
+        /// <param name="minPrice">最小金额</param>
+        /// <param name="maxPrice">最大金额</param>
+        /// <param name="admissionId">接诊人员</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? admissionId)
+        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? admissionId)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, admissionId);
+                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder,  isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, admissionId);
 
                 var shoppingCartRegistration = from d in q.List
                                                select new ShoppingCartRegistrationVo
@@ -68,6 +77,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    CustomerNickName = d.CustomerNickName,
                                                    Phone = d.Phone,
                                                    Price = d.Price,
+                                                   IsCreateOrder=d.IsCreateOrder,
+                                                   IsSendOrder=d.IsSendOrder,
                                                    ConsultationType = d.ConsultationType,
                                                    IsWriteOff = d.IsWriteOff,
                                                    IsConsultation = d.IsConsultation,
@@ -181,6 +192,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.CreateByEmpId = shoppingCartRegistration.CreateBy;
                 shoppingCartRegistrationVo.CreateDate = shoppingCartRegistration.CreateDate;
                 shoppingCartRegistrationVo.ReContent = shoppingCartRegistration.ReContent;
+                shoppingCartRegistrationVo.IsSendOrder = shoppingCartRegistration.IsSendOrder;
+                shoppingCartRegistrationVo.IsCreateOrder = shoppingCartRegistration.IsCreateOrder;
                 shoppingCartRegistrationVo.RefundDate = shoppingCartRegistration.RefundDate;
                 shoppingCartRegistrationVo.RefundReason = shoppingCartRegistration.RefundReason;
                 shoppingCartRegistrationVo.BadReviewContent = shoppingCartRegistration.BadReviewContent;

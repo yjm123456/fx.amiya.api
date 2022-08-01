@@ -28,7 +28,7 @@ namespace Fx.Amiya.Service
             IAmiyaEmployeeService amiyaEmployeeService,
             IUnitOfWork unitOfWork,
             ILiveAnchorService liveAnchorService,
-             ILiveAnchorWeChatInfoService  liveAnchorWeChatInfoService,
+             ILiveAnchorWeChatInfoService liveAnchorWeChatInfoService,
             IDalAmiyaEmployee dalAmiyaEmployee)
         {
             this.dalShoppingCartRegistration = dalShoppingCartRegistration;
@@ -42,7 +42,7 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize,decimal? minPrice,decimal? maxPrice,int? admissionId)
+        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? admissionId)
         {
             try
             {
@@ -52,6 +52,8 @@ namespace Fx.Amiya.Service
                                                && (string.IsNullOrEmpty(contentPlatFormId) || d.ContentPlatFormId == contentPlatFormId)
                                                && (!isAddWechat.HasValue || d.IsAddWeChat == isAddWechat)
                                                && (!isWriteOff.HasValue || d.IsWriteOff == isWriteOff)
+                                               && (!isSendOrder.HasValue || d.IsSendOrder == isSendOrder)
+                                               && (!isCreateOrder.HasValue || d.IsCreateOrder == isCreateOrder)
                                                && (!isConsultation.HasValue || d.IsConsultation == isConsultation)
                                                && (!isReturnBackPrice.HasValue || d.IsReturnBackPrice == isReturnBackPrice)
                                                && (!admissionId.HasValue || d.CreateBy == admissionId)
@@ -70,6 +72,8 @@ namespace Fx.Amiya.Service
                                                    Price = d.Price,
                                                    ConsultationType = d.ConsultationType,
                                                    IsWriteOff = d.IsWriteOff,
+                                                   IsCreateOrder = d.IsCreateOrder,
+                                                   IsSendOrder = d.IsSendOrder,
                                                    IsConsultation = d.IsConsultation,
                                                    IsAddWeChat = d.IsAddWeChat,
                                                    IsReturnBackPrice = d.IsReturnBackPrice,
@@ -83,8 +87,8 @@ namespace Fx.Amiya.Service
                                                    BadReviewDate = d.BadReviewDate,
                                                    BadReviewContent = d.BadReviewContent,
                                                    BadReviewReason = d.BadReviewReason,
-                                                   IsBadReview=d.IsBadReview,
-                                                   
+                                                   IsBadReview = d.IsBadReview,
+
                                                };
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
                 if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
@@ -176,6 +180,8 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.RefundDate = addDto.RefundDate;
                 shoppingCartRegistration.RefundReason = addDto.RefundReason;
                 shoppingCartRegistration.IsBadReview = addDto.IsBadReview;
+                shoppingCartRegistration.IsCreateOrder = false;
+                shoppingCartRegistration.IsSendOrder = false;
                 await dalShoppingCartRegistration.AddAsync(shoppingCartRegistration, true);
 
                 //unitOfWork.Commit();
@@ -216,6 +222,8 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.IsReturnBackPrice = shoppingCartRegistration.IsReturnBackPrice;
                 shoppingCartRegistrationDto.Remark = shoppingCartRegistration.Remark;
                 shoppingCartRegistrationDto.CreateBy = shoppingCartRegistration.CreateBy;
+                shoppingCartRegistrationDto.IsCreateOrder = shoppingCartRegistration.IsCreateOrder;
+                shoppingCartRegistrationDto.IsSendOrder = shoppingCartRegistration.IsSendOrder;
                 shoppingCartRegistrationDto.CreateDate = shoppingCartRegistration.CreateDate;
                 shoppingCartRegistrationDto.IsReContent = shoppingCartRegistration.IsReContent;
                 shoppingCartRegistrationDto.ReContent = shoppingCartRegistration.ReContent;
@@ -253,6 +261,8 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.CustomerNickName = shoppingCartRegistration.CustomerNickName;
                 shoppingCartRegistrationDto.Phone = shoppingCartRegistration.Phone;
                 shoppingCartRegistrationDto.Price = shoppingCartRegistration.Price;
+                shoppingCartRegistrationDto.IsCreateOrder = shoppingCartRegistration.IsCreateOrder;
+                shoppingCartRegistrationDto.IsSendOrder = shoppingCartRegistration.IsSendOrder;
                 shoppingCartRegistrationDto.IsAddWeChat = shoppingCartRegistration.IsAddWeChat;
                 shoppingCartRegistrationDto.ConsultationType = shoppingCartRegistration.ConsultationType;
                 shoppingCartRegistrationDto.IsWriteOff = shoppingCartRegistration.IsWriteOff;
@@ -329,12 +339,12 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.IsReturnBackPrice = updateDto.IsReturnBackPrice;
                 shoppingCartRegistration.Remark = updateDto.Remark;
                 shoppingCartRegistration.IsReContent = updateDto.IsReContent;
-                shoppingCartRegistration.ReContent=updateDto.ReContent;
+                shoppingCartRegistration.ReContent = updateDto.ReContent;
                 shoppingCartRegistration.RefundDate = updateDto.RefundDate;
                 shoppingCartRegistration.RefundReason = updateDto.RefundReason;
                 shoppingCartRegistration.BadReviewDate = updateDto.BadReviewDate;
                 shoppingCartRegistration.BadReviewContent = updateDto.BadReviewContent;
-                shoppingCartRegistration.BadReviewReason=updateDto.BadReviewReason;
+                shoppingCartRegistration.BadReviewReason = updateDto.BadReviewReason;
                 shoppingCartRegistration.IsBadReview = updateDto.IsBadReview;
                 shoppingCartRegistration.CreateBy = updateDto.CreateBy;
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
@@ -343,6 +353,54 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 // unitOfWork.RollBack();
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 录单触达
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        public async Task UpdateCreateOrderAsync(string phone)
+        {
+            //   unitOfWork.BeginTransaction();
+            try
+            {
+                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().SingleOrDefaultAsync(e => e.Phone == phone);
+                if (shoppingCartRegistration != null)
+                {
+                    shoppingCartRegistration.IsCreateOrder = true;
+                    await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 派单触达
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        public async Task UpdateSendOrderAsync(string phone)
+        {
+            //   unitOfWork.BeginTransaction();
+            try
+            {
+                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().SingleOrDefaultAsync(e => e.Phone == phone);
+                if (shoppingCartRegistration != null)
+                {
+                    shoppingCartRegistration.IsSendOrder = true;
+                    await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
+                }
+
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
         }
@@ -366,7 +424,7 @@ namespace Fx.Amiya.Service
         }
 
         #region 【报表相关】
-        public async Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistrationReportAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, bool isHidePhone)
+        public async Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistrationReportAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, bool isHidePhone)
         {
             try
             {
@@ -377,6 +435,8 @@ namespace Fx.Amiya.Service
                                                && (!LiveAnchorId.HasValue || d.LiveAnchorId == LiveAnchorId) && (!isAddWechat.HasValue || d.IsAddWeChat == isAddWechat)
                                                && (!isWriteOff.HasValue || d.IsWriteOff == isWriteOff)
                                                && (!isConsultation.HasValue || d.IsConsultation == isConsultation)
+                                               && (!isSendOrder.HasValue || d.IsSendOrder == isSendOrder)
+                                               && (!isCreateOrder.HasValue || d.IsCreateOrder == isCreateOrder)
                                                && (!isReturnBackPrice.HasValue || d.IsReturnBackPrice == isReturnBackPrice)
                                                select new ShoppingCartRegistrationDto
                                                {
@@ -384,6 +444,8 @@ namespace Fx.Amiya.Service
                                                    RecordDate = d.RecordDate,
                                                    ContentPlatFormId = d.ContentPlatFormId,
                                                    LiveAnchorId = d.LiveAnchorId,
+                                                   IsCreateOrder = d.IsCreateOrder,
+                                                   IsSendOrder = d.IsSendOrder,
                                                    LiveAnchorWechatNo = d.LiveAnchorWechatNo,
                                                    CustomerNickName = d.CustomerNickName,
                                                    Phone = isHidePhone == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
