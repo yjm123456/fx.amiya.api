@@ -209,7 +209,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 var isExistPhone = await shoppingCartRegistrationService.GetByPhoneAsync(updateVo.Phone);
-                if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.Id == updateVo.Id)
+                if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.Id != updateVo.Id)
                 {
                     throw new Exception("已存在该客户手机号，无法录入，请重新填写！");
                 }

@@ -310,6 +310,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             ContentPlatFormOrderId = d.ContentPlatFormOrderId,
                                             CreateDate = d.CreateDate,
                                             IsDeal = d.IsDeal,
+                                            CheckState=d.CheckState,
                                             IsToHospital = d.IsToHospital,
                                             ToHospitalType = d.ToHospitalType,
                                             ToHospitalTypeText = d.ToHospitalTypeText,
