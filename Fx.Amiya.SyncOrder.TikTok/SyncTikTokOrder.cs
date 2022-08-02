@@ -316,7 +316,7 @@ namespace Fx.Amiya.SyncOrder.TikTok
                     long confirmTime = item.confirm_receipt_time;
                     tikTokOrder.CreateDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(createTime.ToString()) ? 0 : createTime).AddHours(8);
                     tikTokOrder.UpdateDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(updateTime.ToString()) ? 0 : updateTime).AddHours(8);
-                    tikTokOrder.WriteOffDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(confirmTime.ToString()) ? 0 : confirmTime).AddHours(8);
+                    /*tikTokOrder.WriteOffDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(confirmTime.ToString()) ? 0 : confirmTime).AddHours(8);*/
                     tikTokOrder.AppType = (byte)AppType.Douyin;
                     tikTokOrder.IsAppointment = false;
                     tikTokOrder.CipherName = item.encrypt_post_receiver;

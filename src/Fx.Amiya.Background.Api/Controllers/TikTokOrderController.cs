@@ -34,7 +34,7 @@ using System.Threading.Tasks;
 namespace Fx.Amiya.Background.Api.Controllers
 {
     /// <summary>
-    /// 订单 API
+    /// 抖点订单 API
     /// </summary>
     [Route("[controller]")]
     [ApiController]
@@ -120,6 +120,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 StatusCode = d.StatusCode,
                                 StatusText = d.StatusText,
                                 ActualPayment = d.ActualPayment,
+                                AccountReceivable=d.AccountReceivable,
                                 CreateDate = d.CreateDate,
                                 AppType = d.AppType,
                                 AppTypeText = d.AppTypeText,
@@ -132,7 +133,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 TradeId = d.TradeId,
                                 LiveAnchor = d.LiveAnchorName,
                                 LiveAnchorPlatForm = d.LiveAnchorPlatForm,
-                                BelongEmpName = d.BelongEmpName,
+                                UpdateDate=d.UpdateDate
                             };
                 FxPageInfo<TikTokOrderInfoVo> orderPageInfo = new FxPageInfo<TikTokOrderInfoVo>();
                 orderPageInfo.TotalCount = q.TotalCount;
@@ -283,7 +284,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.StatusCode = addVo.StatusCode;
                 addDto.ActualPayment = addVo.ActualPayment;
                 addDto.AccountReceivable = addVo.AccountReceivable;
-                addDto.CreateDate = DateTime.Now;
+                addDto.CreateDate = addVo.CreateDate;
+                addDto.UpdateDate = addVo.UpdateDate;
                 addDto.ThumbPicUrl = addVo.ThumbPicUrl;
                 addDto.BuyerNick = addVo.NickName;
                 addDto.AppType = (byte)AppType.Douyin;
@@ -326,7 +328,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.StatusCode = addVo.StatusCode;
                 addDto.ActualPayment = addVo.ActualPayment;
                 addDto.AccountReceivable = addVo.AccountReceivable;
-                addDto.CreateDate = DateTime.Now;
+                addDto.CreateDate = addVo.CreateDate;
+                addDto.UpdateDate = addVo.UpdateDate;
                 addDto.ThumbPicUrl = addVo.ThumbPicUrl;
                 addDto.BuyerNick = addVo.NickName;
                 addDto.AppType = (byte)AppType.Douyin;
