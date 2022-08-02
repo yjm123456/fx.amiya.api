@@ -82,5 +82,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 佣金比例
         /// </summary>
         public decimal CommissionRatio { get; set; }
+        /// <summary>
+        /// 邀约凭证图片
+        /// </summary>
+        public List<string> InvitationDocuments { get; set; }
     }
 }

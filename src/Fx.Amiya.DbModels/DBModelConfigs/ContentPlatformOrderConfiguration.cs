@@ -16,6 +16,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.ToTable("tbl_content_platform_order");
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).HasColumnName("id").HasColumnType("VARCHAR(50)").IsRequired();
+            builder.Property(e => e.BelongMonth).HasColumnName("belong_month").HasColumnType("int").IsRequired();
             builder.Property(e => e.OrderType).HasColumnName("order_type").HasColumnType("int").IsRequired();
             builder.Property(e => e.ContentPlateformId).HasColumnName("content_plateform_id").HasColumnType("VARCHAR(50)").IsRequired();
             builder.Property(e => e.LiveAnchorId).HasColumnName("live_anchor_id").HasColumnType("int").IsRequired(false);
@@ -26,6 +27,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.GoodsId).HasColumnName("goods_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(e => e.HospitalDepartmentId).HasColumnName("hospital_department_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(e => e.CustomerName).HasColumnName("customer_name").HasColumnType("VARCHAR(50)").IsRequired(false);
+            builder.Property(e => e.AddOrderPrice).HasColumnName("add_order_price").HasColumnType("DECIMAL(12,2)").IsRequired();
             builder.Property(e => e.Phone).HasColumnName("phone").HasColumnType("VARCHAR(20)").IsRequired();
             builder.Property(e => e.AppointmentDate).HasColumnName("appointment_date").HasColumnType("DATETIME").IsRequired(false);
             builder.Property(e => e.ConsultationEmpId).HasColumnName("consultation_emp_id").HasColumnType("int").IsRequired(false);

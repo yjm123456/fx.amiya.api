@@ -82,5 +82,9 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 操作人，医院为0；
         /// </summary>
         public int EmpId { get; set; }
+        /// <summary>
+        /// 邀约凭证
+        /// </summary>
+        public List<string> InvitationDocuments { get; set; }
     }
 }

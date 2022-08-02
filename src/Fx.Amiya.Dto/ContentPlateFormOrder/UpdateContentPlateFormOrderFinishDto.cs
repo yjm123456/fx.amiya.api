@@ -83,6 +83,10 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 是否陪诊
         /// </summary>
         public bool IsAcompanying { get; set; }
+        /// <summary>
+        /// 邀约凭证图片
+        /// </summary>
+        public List<string> InvitationDocuments { get; set; }
 
     }
 }

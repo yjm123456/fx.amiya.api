@@ -17,9 +17,19 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         public int OrderType { get; set; }
 
         /// <summary>
+        /// 归属月份
+        /// </summary>
+        public int BelongMonth { get; set; }
+
+        /// <summary>
+        /// 下单金额
+        /// </summary>
+        public decimal AddOrderPrice { get; set; }
+
+        /// <summary>
         /// 内容平台id（下单平台）
         /// </summary>
-        
+
         public string  ContentPlateFormId { get; set; }
 
         /// <summary>

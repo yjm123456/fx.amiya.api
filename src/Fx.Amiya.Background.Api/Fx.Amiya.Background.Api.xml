@@ -928,7 +928,7 @@
             <param name="addVo"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormOrderController.GetOrderListWithPageAsync(System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Int32,System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormOrderController.GetOrderListWithPageAsync(System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Int32,System.Int32,System.Int32)">
             <summary>
             根据条件获取内容平台订单
             </summary>
@@ -936,6 +936,9 @@
             <param name="startDate">开始时间</param>
             <param name="endDate">结束时间</param>
             <param name="keyword">关键词</param>
+            <param name="belongMonth">归属月份</param>
+            <param name="minAddOrderPrice">最小下单金额</param>
+            <param name="maxAddOrderPrice">最大下单金额</param>
             <param name="hospitalDepartmentId">科室id</param>
             <param name="orderStatus">订单状态</param>
             <param name="appointmentHospital">预约医院</param>
@@ -984,13 +987,16 @@
             <param name="contentPlateFormId">内容平台</param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormOrderController.GetOrderDealListWithPageAsync(System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormOrderController.GetOrderDealListWithPageAsync(System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Int32,System.Int32)">
             <summary>
             根据条件获取已成交内容平台订单
             </summary>
             <param name="liveAnchorId">主播ID</param>
             <param name="startDate">开始时间</param>
             <param name="endDate">结束时间</param>
+            <param name="belongMonth">归属月份</param>
+            <param name="minAddOrderPrice">最小下单金额</param>
+            <param name="maxAddOrderPrice">最大下单金额</param>
             <param name="consultationEmpId">面诊人员</param>
             <param name="hospitalId">医院id</param>
             <param name="contentPlateFormId">内容平台</param>
@@ -1201,7 +1207,7 @@
             <param name="updateVo"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormSendOrderController.GetSendOrderList(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},System.Nullable{System.Int32},System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Int32,System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormSendOrderController.GetSendOrderList(System.String,System.Nullable{System.Int32},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},System.Nullable{System.Int32},System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Int32,System.Int32,System.Int32)">
             <summary>
             获取内容平台订单已派单信息列表
             </summary>
@@ -1211,6 +1217,9 @@
             <param name="isAcompanying">是否陪诊，为空查询所有</param>
             <param name="isOldCustomer">新老客业绩，为空查询所有</param>
             <param name="commissionRatio">佣金比例，为空查询所有</param>
+            <param name="belongMonth">归属月份</param>
+            <param name="minAddOrderPrice">最小下单金额</param>
+            <param name="maxAddOrderPrice">最大下单金额</param>
             <param name="liveAnchorId">归属主播ID</param>
             <param name="orderStatus">订单状态</param>
             <param name="contentPlatFormId">内容平台id</param>
@@ -1310,11 +1319,12 @@
             </summary>
             <param name="contentPlatFormCustomerPictureService"></param>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlatFormCustomerPictureController.GetListWithPageAsync(System.String,System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlatFormCustomerPictureController.GetListWithPageAsync(System.String,System.String,System.Int32,System.Int32)">
             <summary>
             获取客户照片信息列表（分页）
             </summary>
             <param name="contentPlatFormOrderId">内容平台订单号</param>
+            <param name="orderDealId">内容平台成交编号</param>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
             <returns></returns>
@@ -3597,7 +3607,7 @@
             <param name="contentPlatFormId">内容平台id</param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetContentPlatFormOrderDealAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetContentPlatFormOrderDealAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
             内容平台订单成交报表
             </summary>
@@ -3606,9 +3616,12 @@
             <param name="checkState">审核情况（查询全部传空）</param>
             <param name="liveAnchorId">主播id</param>
             <param name="dealHospitalId">成交医院（全部则不传）</param>
+            <param name="belongMonth">归属月份</param>
+            <param name="minAddOrderPrice">最小下单金额</param>
+            <param name="maxAddOrderPrice">最大下单金额</param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.ExportContentPlatFormOrderDealAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.ExportContentPlatFormOrderDealAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
             内容平台订单成交报表导出
             </summary>
@@ -3617,6 +3630,9 @@
             <param name="checkState">审核情况（查询全部传空）</param>
             <param name="dealHospitalId">成交医院（全部则不传）</param>
             <param name="liveAnchorId">主播id</param>
+            <param name="belongMonth">归属月份</param>
+            <param name="minAddOrderPrice">最小下单金额</param>
+            <param name="maxAddOrderPrice">最大下单金额</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetDealInfo(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String)">
@@ -3782,7 +3798,7 @@
             <param name="orderStatus"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetCustomerSendContentPlatFormOrderAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String,System.Int32,System.Int32,System.Nullable{System.Int32})">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetCustomerSendContentPlatFormOrderAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String,System.Int32,System.Int32,System.Nullable{System.Int32})">
             <summary>
              内容平台客服已派单报表
             </summary>
@@ -3798,9 +3814,15 @@
             <param name="toHospitalStartDate">到院时间起</param>
             <param name="toHospitalEndDate">到院时间止</param>        
             <param name="toHospitalType">到院类型，为空查询所有</param>
+            <param name="commissionRatio">佣金比例</param>
+            <param name="isAcompanying">是否陪诊</param>
+            <param name="isOldCustomer">新/老客业绩</param>
+            <param name="belongMonth">归属月份</param>
+            <param name="minAddOrderPrice">最小下单金额</param>
+            <param name="maxAddOrderPrice">最大下单金额</param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.ExportCustomerSendContentPlatFormOrderAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},System.String,System.Int32,System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Int32,System.Nullable{System.Int32})">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.ExportCustomerSendContentPlatFormOrderAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String,System.Int32,System.Int32,System.Nullable{System.Int32})">
             <summary>
              内容平台客服已派单报表导出
             </summary>
@@ -3808,14 +3830,20 @@
             <param name="endDate">派单结束时间</param>
             <param name="contentPlatFormId">平台id</param>
             <param name="hospitalId">医院id（为空查询所有）</param>
-            <param name="liveAnchorId">主播id（不传查询所有）</param>
-            <param name="employeeId">派单客服id(-1查询所有)</param>
-            <param name="belongEmpId">归属客服id(-1查询所有)</param>
+            <param name="liveAnchorId">主播id</param>
+            <param name="employeeId">派单客服id</param>
+            <param name="belongEmpId">归属客服id</param>
             <param name="orderStatus">订单状态</param>
-            <param name="IsToHospital">是否到院， 为空查询全部</param>
+            <param name="IsToHospital">是否到院，为空查询全部</param>
             <param name="toHospitalStartDate">到院时间起</param>
             <param name="toHospitalEndDate">到院时间止</param>        
             <param name="toHospitalType">到院类型，为空查询所有</param>
+            <param name="commissionRatio">佣金比例</param>
+            <param name="isAcompanying">是否陪诊</param>
+            <param name="isOldCustomer">新/老客业绩</param>
+            <param name="belongMonth">归属月份</param>
+            <param name="minAddOrderPrice">最小下单金额</param>
+            <param name="maxAddOrderPrice">最大下单金额</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetUnSendOrderListWithPageAsync(System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.Nullable{System.Int32},System.Int32)">
@@ -4729,19 +4757,13 @@
             订单 API
             </summary>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetTikTokOrderListWithPageAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Byte},System.Nullable{System.Byte},System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetTikTokOrderListWithPageAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.Int32,System.Int32)">
             <summary>
             获取tiktok订单列表
             </summary>
             <param name="startDate">创建开始时间</param>
             <param name="endDate">创建结束时间</param>
-            <param name="writeOffStartDate">核销开始时间</param>
-            <param name="writeOffEndDate">核销结束时间</param>
-            <param name="belongEmpId">归属客服</param>
             <param name="keyword"></param>
-            <param name="statusCode">状态码</param>
-            <param name="appType">渠道</param>
-            <param name="orderNature">订单性质</param>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
             <returns></returns>
@@ -4750,16 +4772,17 @@
             <summary>
             用户信息解密
             </summary>
+            <param name="orderid">订单id</param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.EntryOrderAsync(Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.EntryOrderAsync(Fx.Amiya.Background.Api.Vo.TikTok.TikTokEntryOrderAddVo)">
             <summary>
             录单
             </summary>
             <param name="addVo"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.RepairOrder(Fx.Amiya.Background.Api.Vo.Order.RepairOrderVo)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.RepairOrder(Fx.Amiya.Background.Api.Vo.TikTok.TikTokRepairOrderVo)">
             <summary>
             根据订单号查询要补单的信息
             </summary>
@@ -4771,215 +4794,6 @@
             补单
             </summary>
             <param name="addVo"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.CheckOrderAsync(Fx.Amiya.Background.Api.Vo.Order.RepairOrderVo)">
-            <summary>
-            订单校对
-            </summary>
-            <param name="input"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.LiveAnchorOrderAsync(Fx.Amiya.Background.Api.Vo.Order.LiveAnchorOrderVo)">
-            <summary>
-            订单归属主播
-            </summary>
-            <param name="input"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.BelongEmployeeOrderAsync(Fx.Amiya.Background.Api.Vo.Order.BelongEmpInfoOrderVo)">
-            <summary>
-            修改下单平台订单归属客服
-            </summary>
-            <param name="input"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.UpdateOrderAsync(Fx.Amiya.Background.Api.Vo.Order.OrderInfoUpdateVo)">
-            <summary>
-            修改订单
-            </summary>
-            <param name="UpdateVo"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.FinishAsync(System.String)">
-            <summary>
-            完成订单
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.CheckOrderAsync(Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderCheckVo)">
-            <summary>
-            审核订单
-            </summary>
-            <param name="updateVo"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.ReturnBackOrderAsync(Fx.Amiya.Background.Api.Vo.OrderCheck.ReturnBackOrderVo)">
-            <summary>
-            订单审核后回款
-            </summary>
-            <param name="updateVo"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.DeleteAsync(System.String)">
-            <summary>
-            删除订单
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetOrderFinishListWithPageAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.Nullable{System.Byte},System.Nullable{System.Byte},System.Int32,System.Int32)">
-            <summary>
-            获取已成交订单列表
-            </summary>
-            <param name="writeOffStartDate">（必填）核销开始时间</param>
-            <param name="writeOffEndDate">（必填）核销结束时间</param>
-            <param name="keyword"></param>
-            <param name="CheckState">审核状态,为空查询所有</param>
-            <param name="ReturnBackPriceState">回款状态,为空查询所有</param>
-            <param name="appType">渠道</param>
-            <param name="orderNature">订单性质</param>
-            <param name="pageNum"></param>
-            <param name="pageSize"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.ExportOrderListAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.String,System.Nullable{System.Byte},System.Nullable{System.Byte})">
-            <summary>
-            导出订单列表
-            </summary>
-            <param name="startDate">创建开始时间</param>
-            <param name="endDate">创建结束时间</param>
-            <param name="writeOffStartDate">核销开始时间</param>
-            <param name="writeOffEndDate">核销结束时间</param>
-            <param name="keyword"></param>
-            <param name="statusCode">状态码</param>
-            <param name="appType">渠道</param>
-            <param name="orderNature">订单性质</param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetListByEncryptPhoneAsync(System.String,System.Int32,System.Int32)">
-            <summary>
-            根据加密手机号获取订单列表
-            </summary>
-            <param name="encryptPhone">加密手机号</param>
-            <param name="pageNum"></param>
-            <param name="pageSize"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetUnBindCustomerServiceOrderListAsync(System.String,System.String,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Byte},System.Int32,System.Int32)">
-            <summary>
-            获取未绑定客服的订单列表
-            </summary>
-            <param name="statusCode"></param>
-            <param name="keyword"></param>
-            <param name="minPayment">最下金额</param>
-            <param name="maxPayment">最大金额</param>
-            <param name="pageNum"></param>
-            <param name="pageSize"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetBindCustomerServieOrderListAsync(System.String,System.Nullable{System.Int32},System.Nullable{System.Byte},System.String,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)">
-            <summary>
-            获取已绑定了客服的订单列表
-            </summary>
-            <param name="keyword"></param>
-            <param name="customerServiceId"></param>
-            <param name="appType">下单平台</param>
-            <param name="pageNum"></param>
-            <param name="pageSize"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetOrderStatusDataAsync(System.Nullable{System.Int32})">
-            <summary>
-            订单各状态数量
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetTodayIncrementListAsync(System.Int32,System.Int32)">
-            <summary>
-            获取今天新增订单
-            </summary>
-            <param name="pageNum"></param>
-            <param name="pageSize"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetTodayStatusChangeListAsync(System.Nullable{System.Int32},System.String,System.String,System.Int32,System.Int32)">
-            <summary>
-            获取今日订单状态发生改变的订单列表
-            </summary>
-            <param name="employeeId">-1查全部</param>
-            <param name="keyword"></param>
-            <param name="statusCode">状态码</param>
-            <param name="pageNum"></param>
-            <param name="pageSize"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetOrderByEmployeeIdAsync(System.Int32,System.String,System.String,System.Int32,System.Int32)">
-            <summary>
-            根据员工编号获取订单列表
-            </summary>
-            <param name="employeeId"></param>
-            <param name="statusCode"></param>
-            <param name="keyword"></param>
-            <param name="pageNum"></param>
-            <param name="pageSize"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetByIdAsync(System.String)">
-            <summary>
-            根据订单编号获取订单信息
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetByWriteOffCodeAsync(System.String)">
-            <summary>
-            根据核销编号获取订单信息
-            </summary>
-            <param name="writeOffCode">核销编号</param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.WriteOffOrderAsync(System.String,System.Int32)">
-            <summary>
-            核销订单
-            </summary>
-            <param name="orderId">订单号</param>
-            <param name="hospitalId">医院id</param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.UpdateOrderFinalConsumptionHospital(System.String,System.Int32)">
-            <summary>
-            记录订单最终核销医院
-            </summary>
-            <param name="orderId">订单号</param>
-            <param name="hospitalId">医院id</param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetListByTradeIdAsync(System.String)">
-            <summary>
-            根据交易编号获取订单列表
-            </summary>
-            <param name="tradeId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.SendGoodsAsync(Fx.Amiya.Background.Api.Vo.Order.SendGoodsVo)">
-            <summary>
-            发货
-            </summary>
-            <param name="sendGoodsVo"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetOrderAppTypeList">
-            <summary>
-            获取下单平台列表
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetOrderNatureList">
-            <summary>
-            获取订单性质列表
-            </summary>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.TrackController.GetTrackTypeListWithPageAsync(System.Int32,System.Int32)">
@@ -6422,6 +6236,16 @@
             内容平台id（下单平台）
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.BelongMonth">
+            <summary>
+            归属月份
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.AddOrderPrice">
+            <summary>
+            下单金额
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.LiveAnchorId">
             <summary>
             主播账号id
@@ -6627,6 +6451,11 @@
             三方订单号
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.InvitationDocuments">
+            <summary>
+            邀约凭证
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderRepeateVo.Id">
             <summary>
             派单编号
@@ -6665,6 +6494,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.OrderType">
             <summary>
             订单类型(1：咨询:2：定金)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.AddOrderPirce">
+            <summary>
+            下单金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.BelongMonth">
+            <summary>
+            归属月份
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.ContentPlateFormId">
@@ -6797,6 +6636,11 @@
             订单类型
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.BelongMonth">
+            <summary>
+            归属月份
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.OrderStatus">
             <summary>
             订单状态
@@ -6840,6 +6684,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.Phone">
             <summary>
             手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.AddOrderPrice">
+            <summary>
+            下单金额
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ConsultationEmpId">
@@ -7477,6 +7326,11 @@
             创建人名称
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.InvitationDocuments">
+            <summary>
+            邀约凭证图片
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoSimpleVo">
             <summary>
             根据加密手机号获取的简易订单信息内容
@@ -7860,6 +7714,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.CommissionRatio">
             <summary>
             佣金比例
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.InvitationDocuments">
+            <summary>
+            邀约凭证图片
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo">
@@ -18389,6 +18248,81 @@
             回调url，需加上baseUrl
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokEntryOrderAddVo.GoodsName">
+            <summary>
+            商品名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokEntryOrderAddVo.ThumbPicUrl">
+            <summary>
+            缩略图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokEntryOrderAddVo.GoodsId">
+            <summary>
+            商品id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokEntryOrderAddVo.Phone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokEntryOrderAddVo.StatusCode">
+            <summary>
+            订单状态(SEEK_ADVICE:咨询，BARGAIN_MONEY:定金)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokEntryOrderAddVo.ActualPayment">
+            <summary>
+            实付金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokEntryOrderAddVo.AccountReceivable">
+            <summary>
+            应收款（优惠后实际价格，财务用）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokEntryOrderAddVo.NickName">
+            <summary>
+            买家昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokEntryOrderAddVo.IsAppointment">
+            <summary>
+            是否预约
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokEntryOrderAddVo.OrderType">
+            <summary>
+            订单类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokEntryOrderAddVo.Quantity">
+            <summary>
+            商品数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokEntryOrderAddVo.ExchangeType">
+            <summary>
+            交易类型：0=积分
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokEntryOrderAddVo.Remark">
+            <summary>
+            订单描述
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokEntryOrderAddVo.UpdateDate">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokEntryOrderAddVo.CreateDate">
+            <summary>
+            创建时间
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.Id">
             <summary>
             订单号
@@ -18419,21 +18353,6 @@
             手机号
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.AppointmentHospital">
-            <summary>
-            预约门店
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.SendOrderHospital">
-            <summary>
-            系统派单门店
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.FinalConsumptionHospital">
-            <summary>
-            核销门店
-            </summary>
-        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.IsAppointment">
             <summary>
             是否已预约
@@ -18457,11 +18376,6 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.UpdateDate">
             <summary>
             订单更新时间
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.WriteOffDate">
-            <summary>
-            核销时间
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.Description">
@@ -18489,14 +18403,14 @@
             平台类型名称
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.OrderNature">
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.OrderType">
             <summary>
-            订单性质
+            订单类型
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.OrderNatureText">
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.OrderTypeText">
             <summary>
-            订单性质说明
+            订单类型名称
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.Quantity">
@@ -18504,14 +18418,14 @@
             购买数量
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.IntegrationQuantity">
-            <summary>
-            支付积分
-            </summary>
-        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.ExchangeType">
             <summary>
-            交易类型
+            交易类型 0积分,1,三方支付
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.ExchangeTypeText">
+            <summary>
+            交易类型名称
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.LiveAnchorPlatForm">
@@ -18574,7 +18488,17 @@
             回款时间
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.OrderId">
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.CipherName">
+            <summary>
+            加密昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokInfoVo.CipherPhone">
+            <summary>
+            加密手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.Id">
             <summary>
             订单号
             </summary>
@@ -18584,7 +18508,7 @@
             商品名称
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.ThumbPictureUrl">
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.ThumbPicUrl">
             <summary>
             缩略图
             </summary>
@@ -18597,11 +18521,6 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.Phone">
             <summary>
             手机号
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.AppointmentHospital">
-            <summary>
-            预约门店
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.StatusCode">
@@ -18619,14 +18538,9 @@
             应收款（优惠后实际价格，财务用）
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.BuyerNick">
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.NickName">
             <summary>
             买家昵称
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.AppType">
-            <summary>
-            下单平台
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.IsAppointment">
@@ -18636,12 +18550,7 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.OrderType">
             <summary>
-            订单类型（0虚拟订单，1实物订单）
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.OrderNature">
-            <summary>
-            订单性质（0正常下单，1朋友推荐，2私域合作）
+            订单类型
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.Quantity">
@@ -18667,6 +18576,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.CipherPhone">
             <summary>
             加密昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.UpdateDate">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoAddVo.CreateDate">
+            <summary>
+            创建时间
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.Id">
@@ -18699,21 +18618,6 @@
             手机号
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.AppointmentHospital">
-            <summary>
-            预约门店
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.SendOrderHospital">
-            <summary>
-            系统派单门店
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.FinalConsumptionHospital">
-            <summary>
-            核销门店
-            </summary>
-        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.IsAppointment">
             <summary>
             是否已预约
@@ -18737,11 +18641,6 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.UpdateDate">
             <summary>
             订单更新时间
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.WriteOffDate">
-            <summary>
-            核销时间
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.Description">
@@ -18769,24 +18668,9 @@
             平台类型名称
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.OrderNature">
-            <summary>
-            订单性质
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.OrderNatureText">
-            <summary>
-            订单性质说明
-            </summary>
-        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.Quantity">
             <summary>
             购买数量
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.IntegrationQuantity">
-            <summary>
-            支付积分
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.ExchangeType">
@@ -18852,6 +18736,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokOrderInfoVo.ReturnBackDate">
             <summary>
             回款时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.TikTok.TikTokRepairOrderVo.OrderId">
+            <summary>
+            订单id
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TrackReported.AddTrackReportedVo.Phone">

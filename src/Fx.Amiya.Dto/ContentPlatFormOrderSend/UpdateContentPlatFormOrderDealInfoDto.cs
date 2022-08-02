@@ -120,5 +120,9 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 回款时间
         /// </summary>
         public DateTime ReturnBackDate { get; set; }
+        /// <summary>
+        /// 邀约凭证图片
+        /// </summary>
+        public List<string> InvitationDocuments { get; set; }
     }
 }

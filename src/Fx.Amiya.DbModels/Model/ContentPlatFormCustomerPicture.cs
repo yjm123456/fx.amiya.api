@@ -12,6 +12,9 @@ namespace Fx.Amiya.DbModels.Model
         public string ContentPlatFormOrderId { get; set; }
         public string CustomerPicture { get; set; }
 
+        public string OrderDealId { get; set; }
+        public string Description { get; set; }
+
         public ContentPlatformOrder ContentPlatFormOrderInfo { get; set; }
     }
 }

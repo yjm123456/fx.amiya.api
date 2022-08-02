@@ -10,5 +10,8 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
     {
         public string ContentPlatFormOrderId { get; set; }
         public string CustomerPicture { get; set; }
+
+        public string OrderDealId { get; set; }
+        public string Description { get; set; }
     }
 }

@@ -201,5 +201,9 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 创建人名称
         /// </summary>
         public string CreateByEmpName { get; set; }
+        /// <summary>
+        /// 邀约凭证
+        /// </summary>
+        public List<string> InvitationDocuments { get; set; }
     }
 }

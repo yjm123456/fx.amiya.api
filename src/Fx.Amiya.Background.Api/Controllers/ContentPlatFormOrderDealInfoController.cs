@@ -146,6 +146,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 contentPlatFormOrderDealInfoVo.Price = contentPlatFormOrderDealInfo.Price;
                 contentPlatFormOrderDealInfoVo.DealDate = contentPlatFormOrderDealInfo.DealDate;
                 contentPlatFormOrderDealInfoVo.OtherOrderId = contentPlatFormOrderDealInfo.OtherAppOrderId;
+                contentPlatFormOrderDealInfoVo.InvitationDocuments = contentPlatFormOrderDealInfo.InvitationDocuments;
                 return ResultData<ContentPlatFormOrderDealInfoVo>.Success().AddData("contentPlatFormOrderDealInfoInfo", contentPlatFormOrderDealInfoVo);
             }
             catch (Exception ex)
