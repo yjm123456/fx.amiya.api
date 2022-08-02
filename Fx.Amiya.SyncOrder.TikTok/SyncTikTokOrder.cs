@@ -56,14 +56,10 @@ namespace Fx.Amiya.SyncOrder.TikTok
         /// <returns></returns>
         public async Task<List<TikTokOrder>> TranslateTradesSoldChangedOrders(DateTime startDate, DateTime endDate)
         {
-            int day = (endDate - startDate).Days;
-            if (day > 29)
-                throw new Exception("开始时间和结束时间不能超过一个月");           
-            int dateType = 2;  //按订单修改时间查询
             int pageNum = 0;
             var tikTokAppInfo = await _tikTokAppInfoReader.GetTikTokAppInfo();      
             List<TikTokOrder> amiyaOrderList = new List<TikTokOrder>();
-            amiyaOrderList = await RequestTikTokOrderAsync(startDate, endDate, tikTokAppInfo, dateType, pageNum, amiyaOrderList);
+            amiyaOrderList = await RequestTikTokOrderAsync(startDate, endDate, tikTokAppInfo,  pageNum, amiyaOrderList);
             return amiyaOrderList;
         }
 
@@ -77,16 +73,14 @@ namespace Fx.Amiya.SyncOrder.TikTok
         /// <param name="pageNum"></param>
         /// <param name="amiyaOrderList"></param>
         /// <returns></returns>
-        private async Task<List<TikTokOrder>> RequestTikTokOrderAsync(DateTime startDate, DateTime endDate, TikTokAppInfo tikTokAppInfo, int dateType, int pageNum, List<TikTokOrder> amiyaOrderList)
+        private async Task<List<TikTokOrder>> RequestTikTokOrderAsync(DateTime startDate, DateTime endDate, TikTokAppInfo tikTokAppInfo,  int pageNum, List<TikTokOrder> amiyaOrderList)
         {
             try {
                 int pageSize = 100;
                 var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
 
                 var host = "https://openapi-fxg.jinritemai.com";
-                //var start = DateTimeOffset.Now.ToUnixTimeSeconds() - 900;
-                //1659239953
-                var start = 1659239900L;
+                var start = DateTimeOffset.Now.ToUnixTimeSeconds() - 900;
                 var end = DateTimeOffset.Now.ToUnixTimeSeconds();
                 //请求参数
                 var param = new Dictionary<string, object> {
@@ -97,11 +91,9 @@ namespace Fx.Amiya.SyncOrder.TikTok
                 {"order_by","update_time" }
             };
                 var paramJson = Marshal(param);
-                Console.WriteLine("param_json:" + paramJson);
 
                 //计算签名
                 var signVal = Sign(tikTokAppInfo.AppKey, tikTokAppInfo.AppSecret, "order.searchList", timestamp, paramJson);
-                Console.WriteLine("sign_val:" + signVal);
 
                 //发起请求
                 var res = Fetch(tikTokAppInfo.AppKey, host, "order.searchList", timestamp, paramJson, tikTokAppInfo.AccessToken, signVal);
@@ -130,12 +122,6 @@ namespace Fx.Amiya.SyncOrder.TikTok
                             tikTokOrder.WriteOffDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(goodsItem.confirm_receipt_time.ToString()) ? 0 : goodsItem.confirm_receipt_time).AddHours(8);
                             tikTokOrder.AppType = (byte)AppType.Douyin;
                             tikTokOrder.IsAppointment = false;
-                            /*if (tikTokOrder.OrderType == 0)
-                            {
-                                //医院根据门店参数实时循环获取
-                                //暂时占位
-                                tikTokOrder.AppointmentHospital = goodsItem.product_name;
-                            }*/
                             currentChildList.Add(tikTokOrder);                            
                         }
                         currentChildList.ForEach(o=> { o.CipherPhone = orderItem.encrypt_post_tel;o.CipherName = orderItem.encrypt_post_receiver; });
@@ -147,7 +133,7 @@ namespace Fx.Amiya.SyncOrder.TikTok
                 long orderCount = order.data.total;
                 if (orderCount >= (pageNum + 1) * pageSize)
                 {
-                    await RequestTikTokOrderAsync(startDate, endDate, tikTokAppInfo, dateType, pageNum + 1, amiyaOrderList);
+                    await RequestTikTokOrderAsync(startDate, endDate, tikTokAppInfo, pageNum + 1, amiyaOrderList);
                 }
 
                 return amiyaOrderList;
@@ -317,7 +303,6 @@ namespace Fx.Amiya.SyncOrder.TikTok
                     tikTokOrder.Quantity = Convert.ToInt32(item.item_num);
                     tikTokOrder.ThumbPicUrl = item.product_pic;
                     tikTokOrder.AppointmentHospital = "";
-                    Console.WriteLine("售后信息为"+item.after_sale_info);
                     TikTokAfterSaleInfo tikTokAfterSaleInfo = new TikTokAfterSaleInfo();
                     tikTokAfterSaleInfo.after_sale_status = item.after_sale_info.after_sale_status;
                     tikTokAfterSaleInfo.after_sale_type = item.after_sale_info.after_sale_type;

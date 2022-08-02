@@ -2,18 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Fx.Amiya.Background.Api.Vo.TikTok
 {
-    public class TikTokOrderInfoAddVo
+    public class TikTokEntryOrderAddVo
     {
-
-        /// <summary>
-        /// 订单号
-        /// </summary>
-        public string Id { get; set; }
         /// <summary>
         /// 商品名称
         /// </summary>
@@ -32,6 +26,7 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// <summary>
         /// 手机号
         /// </summary>
+        [Required]
         public string Phone { get; set; }
         /// <summary>
         /// 订单状态(SEEK_ADVICE:咨询，BARGAIN_MONEY:定金)
@@ -77,14 +72,6 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// </summary>
         public string Remark { get; set; }
         /// <summary>
-        /// 加密手机号
-        /// </summary>
-        public string CipherName { get; set; }
-        /// <summary>
-        /// 加密昵称
-        /// </summary>
-        public string CipherPhone { get; set; }
-        /// <summary>
         /// 更新时间
         /// </summary>
         public DateTime? UpdateDate { get; set; }
@@ -94,4 +81,3 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         public DateTime? CreateDate { get; set; }
     }
 }
-

@@ -101,7 +101,6 @@ namespace Fx.Amiya.Service
                 orderTrade.CustomerId = orderTradeAddDto.CustomerId;
                 orderTrade.CreateDate = orderTradeAddDto.CreateDate;
                 orderTrade.TotalAmount = orderTradeAddDto.TikTokOrderInfoAddList.Sum(e => e.ActualPayment);
-                //orderTrade.TotalIntegration = orderTradeAddDto.OrderInfoAddList.Sum(e => e.IntegrationQuantity);
                 orderTrade.Remark = orderTradeAddDto.Remark;
                 orderTrade.IsAdminAdd = orderTradeAddDto.IsAdminAdd;
                 orderTrade.StatusCode = OrderStatusCode.WAIT_BUYER_PAY;
@@ -168,6 +167,7 @@ namespace Fx.Amiya.Service
                             orderInfo.OrderType = orderItem.OrderType;
                             orderInfo.AppointmentHospital = orderItem.AppointmentHospital;
                             orderInfo.ThumbPicUrl = orderItem.ThumbPicUrl;
+                            await dalTikTokOrderInfo.UpdateAsync(orderInfo, true);
                             //计算积分,如果订单信息包含手机号则计算积分,否则暂时不计算
                             if (orderInfo.StatusCode == "TRADE_FINISHED" && orderInfo.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(orderInfo.Phone))
                             {
@@ -207,7 +207,7 @@ namespace Fx.Amiya.Service
                                 }
                             }
 
-                            await dalTikTokOrderInfo.UpdateAsync(orderInfo, true);
+                            
                         }
                         else
                         {
@@ -331,12 +331,14 @@ namespace Fx.Amiya.Service
                     order.AlreadyWriteOffAmount = 0;
                     order.BelongEmpId = item.BelongEmpId;
                     order.TikTokUserInfoId = item.TikTokUserId;
-                    AddTikTokUserDto addTikTokUserDto = new AddTikTokUserDto();
+                    //如果订单信息中包含手机号则不需要添加tiktokuserinfo
+                    /*AddTikTokUserDto addTikTokUserDto = new AddTikTokUserDto();
                     addTikTokUserDto.CipherName = item.CipherName;
                     addTikTokUserDto.CipherPhone = item.CipherPhone;
                     addTikTokUserDto.Id = GuidUtil.NewGuidShortString();
                     await tikTokUserInfoService.AddAsync(addTikTokUserDto);
-                    order.TikTokUserInfoId = addTikTokUserDto.Id;
+                    order.TikTokUserInfoId = addTikTokUserDto.Id;*/
+                    orderInfoList.Add(order);
                     //计算积分,如果订单信息包含手机号则计算积分,否则暂时不计算
                     if (item.StatusCode == "TRADE_FINISHED" && item.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(item.Phone))
                     {
@@ -374,9 +376,7 @@ namespace Fx.Amiya.Service
                         {
                             await _bindCustomerService.UpdateConsumePriceAsync(item.Phone, item.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
                         }
-                    }
-                    orderInfoList.Add(order);
-
+                    }                  
                 }
                 else
                 {
@@ -386,7 +386,7 @@ namespace Fx.Amiya.Service
                     order.GoodsName = item.GoodsName;
                     order.AppointmentHospital = item.AppointmentHospital;
                     order.StatusCode = item.StatusCode;
-                    /*if (item.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || item.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS)
+                    if (item.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || item.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS)
                     {
                         goodsName += item.GoodsName + ",";
                         //组织邮件信息
@@ -395,7 +395,7 @@ namespace Fx.Amiya.Service
                             BuildSendMailInfo(appType, item.Id, goodsName, item.Phone);
                         }
 
-                    }*/
+                    }
                     order.ActualPayment = item.ActualPayment;
                     order.AccountReceivable = item.AccountReceivable;
                     order.CreateDate = item.CreateDate;
@@ -425,10 +425,11 @@ namespace Fx.Amiya.Service
                     order.TikTokUserInfoId = addTikTokUserDto.Id;
                     orderInfoList.Add(order);
                 }
-                await dalTikTokOrderInfo.AddCollectionAsync(orderInfoList, true);
-                //发送短信通知
-                SendPhoneInfo(orderPhoneDict, appType);
+                
             }
+            await dalTikTokOrderInfo.AddCollectionAsync(orderInfoList, true);
+            //发送短信通知
+            SendPhoneInfo(orderPhoneDict, appType);
         }
 
         public Task<WxPayRequestInfo> BuildPayRequest(WxPackageInfo packageInfo)
@@ -1631,17 +1632,13 @@ namespace Fx.Amiya.Service
             return orderTradePageInfo;
         }
 
-        public async Task<FxPageInfo<TikTokOrderDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? writeOffStartDate, DateTime? writeOffEndDate, int? belongEmpId, string keyword, string statusCode, byte? appType, byte? orderNature, int employeeId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<TikTokOrderDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, string keyword,  int pageNum, int pageSize)
         {
             try
             {
                 var orders = from d in dalTikTokOrderInfo.GetAll()
                              where (string.IsNullOrWhiteSpace(keyword) || d.Id.Contains(keyword) || d.GoodsName.Contains(keyword)
                              || d.Phone == keyword || d.AppointmentHospital.Contains(keyword))
-                             && (string.IsNullOrWhiteSpace(statusCode) || d.StatusCode == statusCode.Trim())
-                             && (appType == null || d.AppType == appType)
-                             && (!belongEmpId.HasValue || d.BelongEmpId == belongEmpId)
-                             && (orderNature == null || d.OrderNature == orderNature)
                              select d;
 
                 if (startDate != null && endDate != null)
@@ -1650,21 +1647,6 @@ namespace Fx.Amiya.Service
                     DateTime endrq = ((DateTime)endDate).AddDays(1);
                     orders = from d in orders
                              where d.CreateDate >= startrq && d.CreateDate < endrq
-                             select d;
-                }
-                if (writeOffStartDate != null && writeOffEndDate != null)
-                {
-                    DateTime startrqWriteOff = ((DateTime)writeOffStartDate);
-                    DateTime endrqWriteOff = ((DateTime)writeOffEndDate).AddDays(1);
-                    orders = from d in orders
-                             where d.WriteOffDate >= startrqWriteOff && d.WriteOffDate < endrqWriteOff
-                             select d;
-                }
-                var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
-                if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
-                {
-                    orders = from d in orders
-                             where dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.Phone) > 0
                              select d;
                 }
 
@@ -1676,30 +1658,22 @@ namespace Fx.Amiya.Service
                                 GoodsId = d.GoodsId,
                                 GoodsName = d.GoodsName,
                                 BuyerNick = d.BuyerNick,
-                                BelongEmpId = d.BelongEmpId,
                                 ThumbPicUrl = d.ThumbPicUrl,
                                 Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
-                                EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
-                                AppointmentHospital = d.AppointmentHospital,
                                 IsAppointment = d.IsAppointment,
                                 StatusCode = d.StatusCode,
                                 StatusText = ServiceClass.GetOrderStatusText(d.StatusCode),
                                 ActualPayment = d.ActualPayment,
                                 CreateDate = d.CreateDate,
-                                WriteOffDate = d.WriteOffDate,
                                 AppType = d.AppType,
                                 AppTypeText = ServiceClass.GetAppTypeText(d.AppType),
                                 OrderType = d.OrderType,
                                 Description = d.Description,
                                 OrderTypeText = d.OrderType != null ? ServiceClass.GetOrderTypeText((byte)d.OrderType) : "",
-                                OrderNature = d.OrderNature,
-                                OrderNatureText = d.OrderNature != null ? ServiceClass.GetOrderNatureText((byte)d.OrderNature) : "",
                                 Quantity = d.Quantity,
-                                IntegrationQuantity = d.IntegrationQuantity,
                                 ExchangeType = d.ExchangeType,
                                 ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)d.ExchangeType),
                                 TradeId = d.TradeId,
-                                FinalConsumptionHospital = d.FinalConsumptionHospital,
                                 LiveAnchorId = d.LiveAnchorId,
                             };
 

@@ -94,24 +94,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="startDate">创建开始时间</param>
         /// <param name="endDate">创建结束时间</param>
-        /// <param name="writeOffStartDate">核销开始时间</param>
-        /// <param name="writeOffEndDate">核销结束时间</param>
-        /// <param name="belongEmpId">归属客服</param>
         /// <param name="keyword"></param>
-        /// <param name="statusCode">状态码</param>
-        /// <param name="appType">渠道</param>
-        /// <param name="orderNature">订单性质</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("tikTokOrderLlistWithPage")]
-        public async Task<ResultData<FxPageInfo<TikTokOrderInfoVo>>> GetTikTokOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? writeOffStartDate, DateTime? writeOffEndDate, int? belongEmpId, string keyword, string statusCode, byte? appType, byte? orderNature, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<TikTokOrderInfoVo>>> GetTikTokOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, string keyword, int pageNum, int pageSize)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await tikTokOrderInfoService.GetOrderListWithPageAsync(startDate, endDate, writeOffStartDate, writeOffEndDate, belongEmpId, keyword, statusCode, appType, orderNature, employeeId, pageNum, pageSize);
+                var q = await tikTokOrderInfoService.GetOrderListWithPageAsync(startDate, endDate, keyword, pageNum, pageSize);
                 var order = from d in q.List
                             select new TikTokOrderInfoVo
                             {
@@ -122,27 +116,20 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 GoodsId = d.GoodsId,
                                 Phone = d.Phone,
                                 EncryptPhone = d.EncryptPhone,
-                                AppointmentHospital = d.AppointmentHospital,
-                                SendOrderHospital = d.SendOrderHospital,
                                 IsAppointment = d.IsAppointment,
                                 StatusCode = d.StatusCode,
                                 StatusText = d.StatusText,
                                 ActualPayment = d.ActualPayment,
                                 CreateDate = d.CreateDate,
-                                WriteOffDate = d.WriteOffDate,
                                 AppType = d.AppType,
                                 AppTypeText = d.AppTypeText,
                                 OrderType = d.OrderType,
                                 OrderTypeText = d.OrderTypeText,
-                                OrderNature = d.OrderNature,
-                                OrderNatureText = d.OrderNatureText,
                                 Quantity = d.Quantity,
-                                IntegrationQuantity = d.IntegrationQuantity,
                                 ExchangeType = d.ExchangeType,
                                 Description = d.Description,
                                 ExchangeTypeText = d.ExchangeTypeText,
                                 TradeId = d.TradeId,
-                                FinalConsumptionHospital = d.FinalConsumptionHospital,
                                 LiveAnchor = d.LiveAnchorName,
                                 LiveAnchorPlatForm = d.LiveAnchorPlatForm,
                                 BelongEmpName = d.BelongEmpName,
@@ -160,6 +147,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 用户信息解密
         /// </summary>
+        /// <param name="orderid">订单id</param>
         /// <returns></returns>
         [HttpGet("decryptUserInfo")]
         public async Task<ResultData> DecryptUserInfo(string orderid)
@@ -192,54 +180,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="addVo"></param>
         /// <returns></returns>
         [HttpPost("EntryOrder")]
-        public async Task<ResultData> EntryOrderAsync(TikTokOrderInfoAddVo addVo)
+        public async Task<ResultData> EntryOrderAsync(TikTokEntryOrderAddVo addVo)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int employeeId = Convert.ToInt32(employee.Id);
-            //验证手机号是否有归属
-            if (string.IsNullOrEmpty(addVo.Phone))
-            {
-                throw new Exception("该订单没有手机号，不能绑定客服");
-            }
-            if (employee.PositionName == "客服" || employee.PositionName == "客服管理员" || employee.PositionName == "客服主管" || employee.PositionName == "财务")
-            {
-                var bind = await _dalBindCustomerService.GetAll()
-              .Include(e => e.CustomerServiceAmiyaEmployee)
-              .SingleOrDefaultAsync(e => e.BuyerPhone == addVo.Phone);
-                if (bind != null)
-                {
-                    if (bind.CustomerServiceId != employeeId)
-                    {
-                        throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应客人员进行录单！");
-                    }
-                    else
-                    {
-                        bind.NewConsumptionDate = DateTime.Now;
-                        bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
-                        bind.NewContentPlatForm = ServiceClass.GetAppTypeText(addVo.AppType);
-                        await _dalBindCustomerService.UpdateAsync(bind, true);
-                    }
-
-                }
-                else
-                {
-                    //添加绑定客服
-                    BindCustomerService bindCustomerService = new BindCustomerService();
-                    bindCustomerService.CustomerServiceId = employeeId;
-                    bindCustomerService.BuyerPhone = addVo.Phone;
-                    bindCustomerService.UserId = null;
-                    bindCustomerService.CreateBy = employeeId;
-                    bindCustomerService.CreateDate = DateTime.Now;
-                    var goodsInfo = await _amiyaGoodsDemandService.GetByIdAsync(addVo.GoodsId);
-                    bindCustomerService.FirstProjectDemand = "(" + goodsInfo.HospitalDepartmentName + ")" + goodsInfo.ProjectNname;
-                    bindCustomerService.FirstConsumptionDate = DateTime.Now;
-                    bindCustomerService.NewConsumptionDate = DateTime.Now;
-                    bindCustomerService.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
-                    bindCustomerService.NewContentPlatForm = ServiceClass.GetAppTypeText(addVo.AppType);
-                    await _dalBindCustomerService.AddAsync(bindCustomerService, true);
-                }
-            }
-
+            int employeeId = Convert.ToInt32(employee.Id);          
             //添加订单
             List<TikTokOrderAddDto> amiyaOrderList = new List<TikTokOrderAddDto>();
             TikTokOrderAddDto addDto = new TikTokOrderAddDto();
@@ -247,29 +191,24 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.GoodsName = addVo.GoodsName;
             addDto.GoodsId = addVo.GoodsId;
             addDto.Phone = addVo.Phone;
-            addDto.AppointmentHospital = addVo.AppointmentHospital;
             addDto.StatusCode = addVo.StatusCode;
             addDto.ActualPayment = addVo.ActualPayment;
-            addDto.OrderNature = addVo.OrderNature;
+            addDto.AccountReceivable = addVo.AccountReceivable;
             addDto.CreateDate = DateTime.Now;
-            var demand = await _amiyaGoodsDemandService.GetByIdAsync(addVo.GoodsId);
-            addDto.ThumbPicUrl = demand.ThumbPictureUrl;
+            addDto.ThumbPicUrl = addVo.ThumbPicUrl;
             addDto.BuyerNick = addVo.NickName;
-            addDto.AppType = addVo.AppType;
-            addDto.BuyerNick = addVo.NickName;
+            addDto.AppType = (byte)AppType.Douyin;
             addDto.IsAppointment = addVo.IsAppointment;
-            addDto.OrderType = (addVo.OrderType.HasValue) ? addVo.OrderType.Value : (byte)0;
+            addDto.OrderType = (addVo.OrderType.HasValue) ? addVo.OrderType.Value : 2;
             addDto.Quantity = (addVo.Quantity.HasValue) ? addVo.Quantity : 0;
-            addDto.IntegrationQuantity = 0;
             addDto.ExchangeType = addVo.ExchangeType;
-            addDto.BelongEmpId = employeeId;
             addDto.Description = addVo.Remark;
             amiyaOrderList.Add(addDto);
             OrderTradeAddDto orderTradeAdd = new OrderTradeAddDto();
             orderTradeAdd.CustomerId = "客服-" + employee.ToString();
             orderTradeAdd.CreateDate = DateTime.Now;
             orderTradeAdd.AddressId = 0;
-            //orderTradeAdd.Remark = addVo.Remark;
+            orderTradeAdd.Remark = addVo.Remark;
             orderTradeAdd.TikTokOrderInfoAddList = amiyaOrderList;
             orderTradeAdd.IsAdminAdd = true;
             await tikTokOrderInfoService.AddAmiyaOrderAsync(orderTradeAdd);
@@ -281,11 +220,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost("repairOrder")]
-        public async Task<ResultData<TikTokInfoVo>> RepairOrder(RepairOrderVo input)
+        public async Task<ResultData<TikTokInfoVo>> RepairOrder(TikTokRepairOrderVo input)
         {
-            TikTokInfoVo result = new TikTokInfoVo();
-            if (input.OrderAppType == (byte)AppType.Douyin)
-            {
+                TikTokInfoVo result = new TikTokInfoVo();
                 var amiyaOrder = await syncTikTokOrder.TranslateTradesSoldOrdersByOrderId(input.OrderId);
                 var FirstOrder = amiyaOrder.FirstOrDefault();
                 if (FirstOrder == null)
@@ -296,15 +233,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 result.GoodsName = FirstOrder.GoodsName;
                 result.GoodsId = FirstOrder.GoodsId;
                 result.Phone = FirstOrder.Phone;
-                result.AppointmentHospital = FirstOrder.AppointmentHospital;
                 result.StatusCode = FirstOrder.StatusCode;
                 result.ActualPayment = FirstOrder.ActualPayment;
-                result.AccountReceivable = FirstOrder.AccountReceivable;
+                result.AccountReceivable = FirstOrder.ActualPayment;
                 result.NickName = FirstOrder.BuyerNick;
-                result.AppType = input.OrderAppType;
+                result.AppType = (byte)AppType.Douyin;
                 result.IsAppointment = FirstOrder.IsAppointment;
                 result.OrderType = FirstOrder.OrderType;
-                result.OrderNature = 0;
+                result.OrderTypeText = ServiceClass.GetTikTokOrderTypeText((byte)FirstOrder.OrderType);
                 result.Quantity = FirstOrder.Quantity;
                 result.ThumbPicUrl = FirstOrder.ThumbPicUrl;
                 result.CipherName = FirstOrder.CipherName;
@@ -312,11 +248,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 result.Phone = FirstOrder.Phone;
                 result.NickName = FirstOrder.BuyerNick;
                 result.ExchangeType = 1;
-            }
-            else
-            {
-                throw new Exception("只支持抖店订单补单！");
-            }
+                result.ExchangeTypeText = ServiceClass.GetExchangeTypeText(1);
+                result.UpdateDate = FirstOrder.UpdateDate;
+                result.CreateDate = FirstOrder.CreateDate;
+            
+            
             return ResultData<TikTokInfoVo>.Success().AddData("orderData", result);
         }
 
@@ -336,44 +272,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             int employeeId = Convert.ToInt32(employee.Id);
             //如果通过解密获取了手机号
             if (!string.IsNullOrEmpty(addVo.Phone))
-            {
-                var bind = await _dalBindCustomerService.GetAll()
-              .Include(e => e.CustomerServiceAmiyaEmployee)
-              .SingleOrDefaultAsync(e => e.BuyerPhone == addVo.Phone);
-                if (bind != null)
-                {
-                    if (bind.CustomerServiceId != employeeId)
-                        throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应人员进行补单！");
-                }
-                else
-                {
-                    //添加绑定客服
-                    BindCustomerService bindCustomerService = new BindCustomerService();
-                    bindCustomerService.CustomerServiceId = employeeId;
-                    bindCustomerService.BuyerPhone = addVo.Phone;
-                    bindCustomerService.UserId = null;
-                    bindCustomerService.CreateBy = employeeId;
-                    bindCustomerService.CreateDate = DateTime.Now;
-                    await _dalBindCustomerService.AddAsync(bindCustomerService, true);
-                }
-                //添加customer_base_info信息
-                var custom = await dalCustomerBaseInfo.GetAll().SingleOrDefaultAsync(c => c.Phone == addVo.Phone);
-                if (custom == null)
-                {
-                    CustomerBaseInfo customerBaseInfo = new CustomerBaseInfo();
-                    customerBaseInfo.Name = addVo.NickName;
-                    customerBaseInfo.Phone = addVo.Phone;
-                    dalCustomerBaseInfo.Add(customerBaseInfo, true);
-                }
-                //添加tiktok用户信息
-                TikTokUserInfo tikTokUserInfo = new TikTokUserInfo();
-                tikTokUserInfo.CipherName = addVo.CipherName;
-                tikTokUserInfo.CipherPhone = addVo.CipherPhone;
-                tikTokUserInfo.Name = addVo.NickName;
-                tikTokUserInfo.Phone = addVo.Phone;
-                tikTokUserInfo.Id = GuidUtil.NewGuidShortString();
-                await dalTikTokUserInfo.AddAsync(tikTokUserInfo, true);
-
+            {             
                 //添加订单
                 List<TikTokOrderAddDto> amiyaOrderList = new List<TikTokOrderAddDto>();
                 TikTokOrderAddDto addDto = new TikTokOrderAddDto();
@@ -381,23 +280,20 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.GoodsName = addVo.GoodsName;
                 addDto.GoodsId = addVo.GoodsId;
                 addDto.Phone = addVo.Phone;
-                addDto.AppointmentHospital = addVo.AppointmentHospital;
                 addDto.StatusCode = addVo.StatusCode;
                 addDto.ActualPayment = addVo.ActualPayment;
                 addDto.AccountReceivable = addVo.AccountReceivable;
                 addDto.CreateDate = DateTime.Now;
                 addDto.ThumbPicUrl = addVo.ThumbPicUrl;
                 addDto.BuyerNick = addVo.NickName;
-                addDto.AppType = addVo.AppType;
+                addDto.AppType = (byte)AppType.Douyin;
                 addDto.BuyerNick = addVo.NickName;
                 addDto.IsAppointment = addVo.IsAppointment;
                 addDto.BelongEmpId = employeeId;
                 addDto.OrderType = (addVo.OrderType.HasValue) ? addVo.OrderType.Value : (byte)0;
-                addDto.OrderNature = (addVo.OrderNature.HasValue) ? addVo.OrderNature.Value : (byte)0;
                 addDto.Quantity = (addVo.Quantity.HasValue) ? addVo.Quantity : 0;
                 addDto.IntegrationQuantity = 0;
                 addDto.ExchangeType = addVo.ExchangeType;
-                addDto.TikTokUserId = tikTokUserInfo.Id;
                 addDto.CipherName = addVo.CipherName;
                 addDto.CipherPhone = addVo.CipherPhone;
                 amiyaOrderList.Add(addDto);
@@ -427,25 +323,24 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.GoodsName = addVo.GoodsName;
                 addDto.GoodsId = addVo.GoodsId;
                 addDto.Phone = addVo.Phone;
-                addDto.AppointmentHospital = addVo.AppointmentHospital;
                 addDto.StatusCode = addVo.StatusCode;
                 addDto.ActualPayment = addVo.ActualPayment;
                 addDto.AccountReceivable = addVo.AccountReceivable;
                 addDto.CreateDate = DateTime.Now;
                 addDto.ThumbPicUrl = addVo.ThumbPicUrl;
                 addDto.BuyerNick = addVo.NickName;
-                addDto.AppType = addVo.AppType;
+                addDto.AppType = (byte)AppType.Douyin;
                 addDto.BuyerNick = addVo.NickName;
                 addDto.IsAppointment = addVo.IsAppointment;
                 addDto.BelongEmpId = employeeId;
                 addDto.OrderType = (addVo.OrderType.HasValue) ? addVo.OrderType.Value : (byte)0;
-                addDto.OrderNature = (addVo.OrderNature.HasValue) ? addVo.OrderNature.Value : (byte)0;
                 addDto.Quantity = (addVo.Quantity.HasValue) ? addVo.Quantity : 0;
                 addDto.IntegrationQuantity = 0;
                 addDto.ExchangeType = addVo.ExchangeType;
                 addDto.TikTokUserId = tikTokUserInfo.Id;
                 addDto.CipherName = addVo.CipherName;
                 addDto.CipherPhone = addVo.CipherPhone;
+                addDto.UpdateDate = addVo.UpdateDate;
                 amiyaOrderList.Add(addDto);
                 OrderTradeAddDto orderTradeAdd = new OrderTradeAddDto();
                 orderTradeAdd.CustomerId = "客服-" + employee.Name.ToString();
@@ -463,7 +358,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [HttpPost("CheckOrder")]
+        /*[HttpPost("CheckOrder")]
         public async Task<ResultData> CheckOrderAsync(RepairOrderVo input)
         {
             TikTokInfoVo result = new TikTokInfoVo();
@@ -484,13 +379,13 @@ namespace Fx.Amiya.Background.Api.Controllers
                 await tikTokOrderService.UpdateOrderStatusAsync(result.Id, result.StatusCode, result.ActualPayment, result.AccountReceivable, result.UpdateDate, result.WriteOffDate);
             }
             return ResultData.Success();
-        }
+        }*/
         /// <summary>
         /// 订单归属主播
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [HttpPost("LiveAnchorOrder")]
+        /*[HttpPost("LiveAnchorOrder")]
         public async Task<ResultData> LiveAnchorOrderAsync(LiveAnchorOrderVo input)
         {
             UpdateLiveAnchorOrderDto dto = new UpdateLiveAnchorOrderDto();
@@ -498,13 +393,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             dto.LiveAnchorId = input.LiveAnchorId;
             await tikTokOrderService.UpdateOrderLiveAnchorAsync(dto);
             return ResultData.Success();
-        }
+        }*/
         /// <summary>
         /// 修改下单平台订单归属客服
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [HttpPost("BelongEmployeeOrder")]
+        /*[HttpPost("BelongEmployeeOrder")]
         public async Task<ResultData> BelongEmployeeOrderAsync(BelongEmpInfoOrderVo input)
         {
             UpdateBelongEmpInfoOrderDto dto = new UpdateBelongEmpInfoOrderDto();
@@ -512,13 +407,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             dto.BelongEmpId = input.BelongEmpInfo;
             await tikTokOrderService.UpdateOrderBelongEmpIdAsync(dto);
             return ResultData.Success();
-        }
+        }*/
         /// <summary>
         /// 修改订单
         /// </summary>
         /// <param name="UpdateVo"></param>
         /// <returns></returns>
-        [HttpPut("UpdateOrder")]
+        /*[HttpPut("UpdateOrder")]
         public async Task<ResultData> UpdateOrderAsync(OrderInfoUpdateVo UpdateVo)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
@@ -571,24 +466,24 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.ExchangeType = UpdateVo.ExchangeType;
             await tikTokOrderService.UpdateAddedOrderAsync(updateDto);
             return ResultData.Success();
-        }
+        }*/
         /// <summary>
         /// 完成订单
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpPost("{id}")]
+        /*[HttpPost("{id}")]
         public async Task<ResultData> FinishAsync(string id)
         {
             await tikTokOrderService.FinishOrderAsync(id);
             return ResultData.Success();
-        }
+        }*/
         /// <summary>
         /// 审核订单
         /// </summary>
         /// <param name="updateVo"></param>
         /// <returns></returns>
-        [HttpPut("checkOrder")]
+        /*[HttpPut("checkOrder")]
         [FxInternalAuthorize]
         public async Task<ResultData> CheckOrderAsync(ContentPlateFormOrderCheckVo updateVo)
         {
@@ -612,13 +507,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.CheckPicture = updateVo.CheckPicture;
             await tikTokOrderService.CheckOrderAsync(updateDto);
             return ResultData.Success();
-        }
+        }*/
         /// <summary>
         /// 订单审核后回款
         /// </summary>
         /// <param name="updateVo"></param>
         /// <returns></returns>
-        [HttpPut("returnBackOrder")]
+        /*[HttpPut("returnBackOrder")]
         [FxInternalAuthorize]
         public async Task<ResultData> ReturnBackOrderAsync(ReturnBackOrderVo updateVo)
         {
@@ -638,18 +533,18 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.ReturnBackDate = updateVo.ReturnBackDate;
             await tikTokOrderService.ReturnBackOrderAsync(updateDto);
             return ResultData.Success();
-        }
+        }*/
         /// <summary>
         /// 删除订单
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        /*[HttpDelete("{id}")]
         public async Task<ResultData> DeleteAsync(string id)
         {
             await tikTokOrderService.DeleteAsync(id);
             return ResultData.Success();
-        }
+        }*/
         /// <summary>
         /// 获取已成交订单列表
         /// </summary>
@@ -663,7 +558,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        [HttpGet("tikTokOrderFinishLlistWithPage")]
+        /*[HttpGet("tikTokOrderFinishLlistWithPage")]
         public async Task<ResultData<FxPageInfo<TikTokOrderInfoVo>>> GetOrderFinishListWithPageAsync(DateTime? writeOffStartDate, DateTime? writeOffEndDate, int? CheckState, bool? ReturnBackPriceState, string keyword, byte? appType, byte? orderNature, int pageNum, int pageSize)
         {
             try
@@ -723,7 +618,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 return ResultData<FxPageInfo<TikTokOrderInfoVo>>.Fail(ex.Message);
             }
-        }
+        }*/
         /// <summary>
         /// 导出订单列表
         /// </summary>
@@ -736,7 +631,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="appType">渠道</param>
         /// <param name="orderNature">订单性质</param>
         /// <returns></returns>
-        [HttpGet("exportTikTokOrderLlist")]
+        /*[HttpGet("exportTikTokOrderLlist")]
         [FxInternalAuthorize]
         public async Task<FileStreamResult> ExportOrderListAsync(DateTime? startDate, DateTime? endDate, DateTime? writeOffStartDate, DateTime? writeOffEndDate, string keyword, string statusCode, byte? appType, byte? orderNature)
         {
@@ -771,7 +666,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var stream = ExportExcelHelper.ExportExcel(exportOrder);
             var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "订单列表.xls");
             return result;
-        }
+        }*/
         /// <summary>
         /// 根据加密手机号获取订单列表
         /// </summary>
@@ -779,7 +674,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        [HttpGet("listByEncryptPhone")]
+        /*[HttpGet("listByEncryptPhone")]
         public async Task<ResultData<FxPageInfo<TikTokOrderInfoVo>>> GetListByEncryptPhoneAsync(string encryptPhone, int pageNum, int pageSize)
         {
             try
@@ -817,7 +712,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 return ResultData<FxPageInfo<TikTokOrderInfoVo>>.Fail(ex.Message);
             }
-        }
+        }*/
         /// <summary>
         /// 获取未绑定客服的订单列表
         /// </summary>
@@ -828,7 +723,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        [HttpGet("unBindCustomerService")]
+        /*[HttpGet("unBindCustomerService")]
         public async Task<ResultData<FxPageInfo<TikTokOrderInfoVo>>> GetUnBindCustomerServiceOrderListAsync(string statusCode, string keyword, decimal? minPayment, decimal? maxPayment, byte? appType, int pageNum, int pageSize)
         {
             var q = await tikTokOrderService.GetUnBindCustomerServiceOrderListAsync(statusCode, keyword, minPayment, maxPayment, appType, pageNum, pageSize);
@@ -859,7 +754,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderPageInfo.TotalCount = q.TotalCount;
             orderPageInfo.List = order;
             return ResultData<FxPageInfo<TikTokOrderInfoVo>>.Success().AddData("order", orderPageInfo);
-        }
+        }*/
         /// <summary>
         /// 获取已绑定了客服的订单列表
         /// </summary>
@@ -869,7 +764,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        [HttpGet("bindCustomerServieOrderList")]
+        /*[HttpGet("bindCustomerServieOrderList")]
         public async Task<ResultData<FxPageInfo<BindCustomerServiceOrderVo>>> GetBindCustomerServieOrderListAsync(string keyword, int? customerServiceId, byte? appType, string statusCode, decimal? minPayment, decimal? maxPayment, int pageNum, int pageSize)
         {
             var q = await tikTokOrderInfoService.GetBindCustomerServieOrderListAsync(keyword, customerServiceId, appType, statusCode, minPayment, maxPayment, pageNum, pageSize);
@@ -901,7 +796,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderPageInfo.TotalCount = q.TotalCount;
             orderPageInfo.List = order;
             return ResultData<FxPageInfo<BindCustomerServiceOrderVo>>.Success().AddData("order", orderPageInfo);
-        }
+        }*/
         ///// <summary>
         ///// 获取订单数据
         ///// </summary>
@@ -936,7 +831,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 订单各状态数量
         /// </summary>
         /// <returns></returns>
-        [HttpGet("orderStatusData")]
+        /*[HttpGet("orderStatusData")]
         public async Task<ResultData<List<OrderStatusDataVo>>> GetOrderStatusDataAsync(int? employeeId)
         {
             if (employeeId == null)
@@ -954,14 +849,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                         };
 
             return ResultData<List<OrderStatusDataVo>>.Success().AddData("order", order.ToList());
-        }
+        }*/
         /// <summary>
         /// 获取今天新增订单
         /// </summary>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        [HttpGet("todayIncrementList")]
+        /*[HttpGet("todayIncrementList")]
         public async Task<FxPageInfo<TikTokOrderInfoVo>> GetTodayIncrementListAsync(int pageNum, int pageSize)
         {
             var q = await tikTokOrderInfoService.GetTodayIncrementListAsync(pageNum, pageSize);
@@ -992,7 +887,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderPageInfo.TotalCount = q.TotalCount;
             orderPageInfo.List = order;
             return orderPageInfo;
-        }
+        }*/
         /// <summary>
         /// 获取今日订单状态发生改变的订单列表
         /// </summary>
@@ -1002,7 +897,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        [HttpGet("todayStatusChangeList")]
+        /*[HttpGet("todayStatusChangeList")]
         public async Task<ResultData<FxPageInfo<TikTokOrderInfoVo>>> GetTodayStatusChangeListAsync(int? employeeId, string keyword, string statusCode, int pageNum, int pageSize)
         {
             if (employeeId == null)
@@ -1040,7 +935,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderPageInfo.TotalCount = q.TotalCount;
             orderPageInfo.List = order;
             return ResultData<FxPageInfo<TikTokOrderInfoVo>>.Success().AddData("order", orderPageInfo);
-        }
+        }*/
         /// <summary>
         /// 根据员工编号获取订单列表
         /// </summary>
@@ -1050,7 +945,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        [HttpGet("orderListByEmployeeId")]
+        /*[HttpGet("orderListByEmployeeId")]
         public async Task<ResultData<FxPageInfo<TikTokOrderInfoVo>>> GetOrderByEmployeeIdAsync(int employeeId, string statusCode, string keyword, int pageNum, int pageSize)
         {
             var q = await tikTokOrderInfoService.GetOrderByEmployeeIdAsync(employeeId, statusCode, keyword, pageNum, pageSize);
@@ -1081,13 +976,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderPageInfo.TotalCount = q.TotalCount;
             orderPageInfo.List = order;
             return ResultData<FxPageInfo<TikTokOrderInfoVo>>.Success().AddData("order", orderPageInfo);
-        }
+        }*/
         /// <summary>
         /// 根据订单编号获取订单信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("byId/{id}")]
+        /*[HttpGet("byId/{id}")]
         public async Task<ResultData<TikTokOrderInfoVo>> GetByIdAsync(string id)
         {
             var order = await tikTokOrderInfoService.GetByIdInCRMAsync(id);
@@ -1135,13 +1030,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             tikTokOrderVo.ReturnBackDate = order.ReturnBackDate;
 
             return ResultData<TikTokOrderInfoVo>.Success().AddData("order", tikTokOrderVo);
-        }
+        }*/
         /// <summary>
         /// 根据核销编号获取订单信息
         /// </summary>
         /// <param name="writeOffCode">核销编号</param>
         /// <returns></returns>
-        [HttpGet("byWriteOffCode")]
+        /*[HttpGet("byWriteOffCode")]
         public async Task<ResultData<List<TikTokOrderInfoVo>>> GetByWriteOffCodeAsync([Required] string writeOffCode)
         {
             List<TikTokOrderInfoVo> orderInfoResultList = new List<TikTokOrderInfoVo>();
@@ -1176,37 +1071,37 @@ namespace Fx.Amiya.Background.Api.Controllers
                 }
             }
             return ResultData<List<TikTokOrderInfoVo>>.Success().AddData("order", orderInfoResultList);
-        }
+        }*/
         /// <summary>
         /// 核销订单
         /// </summary>
         /// <param name="orderId">订单号</param>
         /// <param name="hospitalId">医院id</param>
         /// <returns></returns>
-        [HttpPut("WriteOff")]
+        /*[HttpPut("WriteOff")]
         public async Task<ResultData> WriteOffOrderAsync([Required] string orderId, [Required] int hospitalId)
         {
             await tikTokOrderInfoService.WriteOffAsync(orderId, hospitalId);
             return ResultData.Success();
-        }
+        }*/
         /// <summary>
         /// 记录订单最终核销医院
         /// </summary>
         /// <param name="orderId">订单号</param>
         /// <param name="hospitalId">医院id</param>
         /// <returns></returns>
-        [HttpPut("UpdateOrderFinalConsumptionHospital")]
+        /*[HttpPut("UpdateOrderFinalConsumptionHospital")]
         public async Task<ResultData> UpdateOrderFinalConsumptionHospital([Required] string orderId, [Required] int hospitalId)
         {
             await tikTokOrderInfoService.UpdateOrderFinalConsumptionHospital(orderId, hospitalId);
             return ResultData.Success();
-        }
+        }*/
         /// <summary>
         /// 根据交易编号获取订单列表
         /// </summary>
         /// <param name="tradeId"></param>
         /// <returns></returns>
-        [HttpGet("listByTradeId/{tradeId}")]
+        /*[HttpGet("listByTradeId/{tradeId}")]
         public async Task<ResultData<List<TikTokOrderInfoVo>>> GetListByTradeIdAsync(string tradeId)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
@@ -1238,13 +1133,13 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                          };
             return ResultData<List<TikTokOrderInfoVo>>.Success().AddData("orders", orders.ToList());
-        }
+        }*/
         /// <summary>
         /// 发货
         /// </summary>
         /// <param name="sendGoodsVo"></param>
         /// <returns></returns>
-        [HttpPost("sendGoods")]
+        /*[HttpPost("sendGoods")]
         public async Task<ResultData> SendGoodsAsync(SendGoodsVo sendGoodsVo)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
@@ -1256,12 +1151,12 @@ namespace Fx.Amiya.Background.Api.Controllers
             sendGoodsDto.ExpressId = sendGoodsVo.ExpressId;
             await tikTokOrderInfoService.SendGoodsAsync(sendGoodsDto);
             return ResultData.Success();
-        }
+        }*/
         /// <summary>
         /// 获取下单平台列表
         /// </summary>
         /// <returns></returns>
-        [HttpGet("appTypeList")]
+        /*[HttpGet("appTypeList")]
         public ResultData<List<OrderAppTypeVo>> GetOrderAppTypeList()
         {
             var orderAppTypes = from d in tikTokOrderInfoService.GetOrderAppTypeList()
@@ -1271,12 +1166,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                                     AppTypeText = d.AppTypeText
                                 };
             return ResultData<List<OrderAppTypeVo>>.Success().AddData("orderAppTypes", orderAppTypes.ToList());
-        }
+        }*/
         /// <summary>
         /// 获取订单性质列表
         /// </summary>
         /// <returns></returns>
-        [HttpGet("orderNatureList")]
+        /*[HttpGet("orderNatureList")]
         public ResultData<List<OrderNatureTypeVo>> GetOrderNatureList()
         {
             var orderNatures = from d in tikTokOrderInfoService.GetOrderNatureList()
@@ -1286,7 +1181,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                    OrderNatureText = d.OrderNatureText
                                };
             return ResultData<List<OrderNatureTypeVo>>.Success().AddData("orderNatureList", orderNatures.ToList());
-        }
+        }*/
 
     }
 

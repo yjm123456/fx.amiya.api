@@ -39,20 +39,10 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
 
         public string EncryptPhone { get; set; }
 
-        /// <summary>
-        /// 预约门店
-        /// </summary>
-        public string AppointmentHospital { get; set; }
 
-        /// <summary>
-        /// 系统派单门店
-        /// </summary>
-        public string SendOrderHospital { get; set; }
 
-        /// <summary>
-        /// 核销门店
-        /// </summary>
-        public string FinalConsumptionHospital { get; set; }
+
+
 
         /// <summary>
         /// 是否已预约
@@ -79,10 +69,7 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// </summary>
         public DateTime? UpdateDate { get; set; }
 
-        /// <summary>
-        /// 核销时间
-        /// </summary>
-        public DateTime? WriteOffDate { get; set; }
+
         /// <summary>
         /// 描述
         /// </summary>
@@ -113,14 +100,8 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         public long? OrderType { get; set; }
         public string OrderTypeText { get; set; }
 
-        /// <summary>
-        /// 订单性质
-        /// </summary>
-        public byte? OrderNature { get; set; }
-        /// <summary>
-        /// 订单性质说明
-        /// </summary>
-        public string OrderNatureText { get; set; }
+
+
 
 
 
@@ -129,10 +110,7 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// </summary>
         public int? Quantity { get; set; }
 
-        /// <summary>
-        /// 支付积分
-        /// </summary>
-        public decimal? IntegrationQuantity { get; set; }
+
 
         /// <summary>
         /// 交易类型
