@@ -76,5 +76,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 三方订单号
         /// </summary>
         public string OtherContentPlatFormOrderId { get; set; }
+
+        /// <summary>
+        /// 邀约凭证
+        /// </summary>
+        public List<string> InvitationDocuments { get; set; }
     }
 }

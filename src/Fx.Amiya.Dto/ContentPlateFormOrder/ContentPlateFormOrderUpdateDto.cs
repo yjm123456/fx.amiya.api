@@ -22,6 +22,11 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         public string OrderTypeText { get; set; }
 
         /// <summary>
+        /// 下单金额
+        /// </summary>
+        public decimal AddOrderPirce { get; set; }
+
+        /// <summary>
         /// 内容平台id（下单平台）
         /// </summary>
 
@@ -45,6 +50,8 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 主播微信号
         /// </summary>
         public string LiveAnchorWeChatNo { get; set; }
+
+        public int BelongMonth { get; set; }
         /// <summary>
         /// 客户姓名
         /// </summary>
@@ -171,6 +178,7 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         public DateTime? ToHospitalDate { get; set; }
         public bool IsReturnBackPrice { get; set; }
         public decimal? ReturnBackPrice { get; set; }
+        public decimal AddOrderPrice { get; set; }
         public DateTime? ReturnBackDate { get; set; }
 
         public decimal? SettlePrice { get; set; }

@@ -54,6 +54,14 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         [Description("下单时间")]
         public DateTime CreateDate { get; set; }
         /// <summary>
+        /// 归属月份
+        /// </summary>
+        public int BelongMonth { get; set; }
+        /// <summary>
+        /// 下单金额
+        /// </summary>
+        public decimal AddOrderPrice { get; set; }
+        /// <summary>
         /// 下单平台
         /// </summary>
         [Description("下单平台")]

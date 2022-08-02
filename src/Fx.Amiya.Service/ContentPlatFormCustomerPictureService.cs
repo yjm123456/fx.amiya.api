@@ -23,12 +23,13 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<ContentPlatFormOrderCustomerPictureDto>> GetListWithPageAsync(string contentPlatFormId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderCustomerPictureDto>> GetListWithPageAsync(string contentPlatFormId,string orderDealId, int pageNum, int pageSize)
         {
             try
             {
                 var contentPlatFormCustomerPicture = from d in dalContentPlatFormCustomerPicture.GetAll()
-                                                     where contentPlatFormId == null || d.ContentPlatFormOrderId.Contains(contentPlatFormId)
+                                                     where (contentPlatFormId == null || d.ContentPlatFormOrderId.Contains(contentPlatFormId))
+                                                     && (orderDealId == null || d.OrderDealId.Contains(orderDealId))
                                                      select new ContentPlatFormOrderCustomerPictureDto
                                                      {
                                                          Id = d.Id,
@@ -79,7 +80,8 @@ namespace Fx.Amiya.Service
                 contentPlatFormCustomerPicture.Id = Guid.NewGuid().ToString();
                 contentPlatFormCustomerPicture.ContentPlatFormOrderId = addDto.ContentPlatFormOrderId;
                 contentPlatFormCustomerPicture.CustomerPicture = addDto.CustomerPicture;
-
+                contentPlatFormCustomerPicture.OrderDealId = addDto.OrderDealId;
+                contentPlatFormCustomerPicture.Description = addDto.Description;
                 await dalContentPlatFormCustomerPicture.AddAsync(contentPlatFormCustomerPicture, true);
             }
             catch (Exception ex)
@@ -141,6 +143,27 @@ namespace Fx.Amiya.Service
             try
             {
                 var contentPlatFormCustomerPicture = await dalContentPlatFormCustomerPicture.GetAll().Where(e => e.ContentPlatFormOrderId == contentPlatFormOrderId).ToListAsync();
+
+                if (contentPlatFormCustomerPicture != null)
+                {
+                    foreach (var x in contentPlatFormCustomerPicture)
+                    {
+                        await dalContentPlatFormCustomerPicture.DeleteAsync(x, true);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task DeleteByContentPlatFormOrderDealIdAsync(string contentPlatFormOrderDealId)
+        {
+            try
+            {
+                var contentPlatFormCustomerPicture = await dalContentPlatFormCustomerPicture.GetAll().Where(e => e.OrderDealId == contentPlatFormOrderDealId).ToListAsync();
 
                 if (contentPlatFormCustomerPicture != null)
                 {

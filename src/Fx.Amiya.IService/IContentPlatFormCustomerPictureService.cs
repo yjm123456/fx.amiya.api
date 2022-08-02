@@ -18,7 +18,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<ContentPlatFormOrderCustomerPictureDto>> GetListWithPageAsync(string contentPlatFormId, int pageNum, int pageSize);
+        Task<FxPageInfo<ContentPlatFormOrderCustomerPictureDto>> GetListWithPageAsync(string contentPlatFormId, string orderDealId, int pageNum, int pageSize);
 
         /// <summary>
         /// 根据内容平台订单编号获取客户图片
@@ -50,5 +50,7 @@ namespace Fx.Amiya.IService
         /// <param name="contentPlatFormOrderId"></param>
         /// <returns></returns>
         Task DeleteByContentPlatFormOrderIdAsync(string contentPlatFormOrderId);
+
+        Task DeleteByContentPlatFormOrderDealIdAsync(string contentPlatFormOrderDealId);
     }
 }

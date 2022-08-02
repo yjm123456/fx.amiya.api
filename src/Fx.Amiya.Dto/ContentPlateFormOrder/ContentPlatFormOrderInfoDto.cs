@@ -11,6 +11,8 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         public string Id { get; set; }
         public int OrderType { get; set; }
         public string OrderTypeText { get; set; }
+        public int BelongMonth { get; set; }
+        public decimal AddOrderPrice { get; set; }
         public string ContentPlateformId { get; set; }
         public string ContentPlatformName { get; set; }
         /// <summary>

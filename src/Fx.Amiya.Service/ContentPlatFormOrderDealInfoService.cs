@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -16,6 +17,7 @@ namespace Fx.Amiya.Service
     public class ContentPlatFormOrderDealInfoService : IContentPlatFormOrderDealInfoService
     {
         private IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo;
+        private IContentPlatFormCustomerPictureService _contentPlatFormCustomerPictureService;
         private IHospitalInfoService _hospitalInfoService;
         private IDalBindCustomerService _dalBindCustomerService;
         private IAmiyaEmployeeService _amiyaEmployeeService;
@@ -23,6 +25,7 @@ namespace Fx.Amiya.Service
 
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
+            IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
             IDalBindCustomerService dalBindCustomerService,
             IDalAmiyaEmployee dalAmiyaEmployee,
             IHospitalInfoService hospitalInfoService)
@@ -30,6 +33,7 @@ namespace Fx.Amiya.Service
             this.dalContentPlatFormOrderDealInfo = dalContentPlatFormOrderDealInfo;
             _hospitalInfoService = hospitalInfoService;
             _amiyaEmployeeService = amiyaEmployeeService;
+            _contentPlatFormCustomerPictureService = contentPlatFormCustomerPictureService;
             _dalBindCustomerService = dalBindCustomerService;
             _dalAmiyaEmployee = dalAmiyaEmployee;
         }
@@ -441,6 +445,16 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.CheckState = 0;
                 ContentPlatFOrmOrderDealInfo.SettlePrice = 0.00M;
                 await dalContentPlatFormOrderDealInfo.AddAsync(ContentPlatFOrmOrderDealInfo, true);
+
+                //添加邀约凭证图片
+                foreach (var z in addDto.InvitationDocuments)
+                {
+                    AddContentPlatFormCustomerPictureDto addPicture = new AddContentPlatFormCustomerPictureDto();
+                    addPicture.ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.Id;
+                    addPicture.CustomerPicture = z;
+                    addPicture.Description = "邀约凭证";
+                    await _contentPlatFormCustomerPictureService.AddAsync(addPicture);
+                }
             }
             catch (Exception ex)
             {
@@ -486,6 +500,11 @@ namespace Fx.Amiya.Service
                 contentPlatFOrmOrderDealInfoDto.ReturnBackDate = ContentPlatFOrmOrderDealInfo.ReturnBackDate;
                 contentPlatFOrmOrderDealInfoDto.ReturnBackPrice = ContentPlatFOrmOrderDealInfo.ReturnBackPrice;
                 contentPlatFOrmOrderDealInfoDto.CreateBy = ContentPlatFOrmOrderDealInfo.CreateBy;
+                var InvitationDocuments = await _contentPlatFormCustomerPictureService.GetListWithPageAsync(null, ContentPlatFOrmOrderDealInfo.Id, 1, 5);
+                foreach (var x in InvitationDocuments.List)
+                {
+                    contentPlatFOrmOrderDealInfoDto.InvitationDocuments.Add(x.CustomerPicture);
+                }
                 return contentPlatFOrmOrderDealInfoDto;
             }
             catch (Exception ex)
@@ -520,6 +539,16 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.IsOldCustomer = updateDto.IsOldCustomer;
                 ContentPlatFOrmOrderDealInfo.CommissionRatio = updateDto.CommissionRatio;
                 await dalContentPlatFormOrderDealInfo.UpdateAsync(ContentPlatFOrmOrderDealInfo, true);
+                await _contentPlatFormCustomerPictureService.DeleteByContentPlatFormOrderDealIdAsync(updateDto.Id);
+                //添加邀约凭证图片
+                foreach (var z in updateDto.InvitationDocuments)
+                {
+                    AddContentPlatFormCustomerPictureDto addPicture = new AddContentPlatFormCustomerPictureDto();
+                    addPicture.ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.Id;
+                    addPicture.CustomerPicture = z;
+                    addPicture.Description = "邀约凭证";
+                    await _contentPlatFormCustomerPictureService.AddAsync(addPicture);
+                }
 
             }
             catch (Exception ex)

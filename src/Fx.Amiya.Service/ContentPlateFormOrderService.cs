@@ -151,6 +151,8 @@ namespace Fx.Amiya.Service
                 order.GoodsId = input.GoodsId;
                 order.ConsultationType = input.ConsultationType;
                 order.CustomerName = input.CustomerName;
+                order.AddOrderPrice = input.AddOrderPrice;
+                order.BelongMonth = input.BelongMonth;
                 order.OrderSource = input.OrderSource;
                 order.UnSendReason = input.UnSendReason;
                 order.ConsultationEmpId = input.ConsultationEmpId;
@@ -180,11 +182,12 @@ namespace Fx.Amiya.Service
                     AddContentPlatFormCustomerPictureDto addPicture = new AddContentPlatFormCustomerPictureDto();
                     addPicture.ContentPlatFormOrderId = order.Id;
                     addPicture.CustomerPicture = z;
+                    addPicture.Description = "顾客照片";
                     await _contentPlatFormCustomerPictureService.AddAsync(addPicture);
                 }
 
                 //小黄车更新录单触达
-                await _shoppingCartRegistration.UpdateCreateOrderAsync(input.Phone) ; 
+                await _shoppingCartRegistration.UpdateCreateOrderAsync(input.Phone);
 
                 unitOfWork.Commit();
             }
@@ -210,7 +213,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId, int orderSource, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId, int orderSource, int pageNum, int pageSize)
         {
             try
             {
@@ -236,6 +239,9 @@ namespace Fx.Amiya.Service
                              || d.Phone.Contains(keyword))
                              && (orderStatus == null || d.OrderStatus == orderStatus)
                              && (!appointmentHospital.HasValue || d.AppointmentHospitalId == appointmentHospital)
+                             && (!belongMonth.HasValue || d.BelongMonth == belongMonth)
+                             && (!minAddOrderPrice.HasValue || d.AddOrderPrice >= minAddOrderPrice)
+                             && (!maxAddOrderPrice.HasValue || d.AddOrderPrice <= maxAddOrderPrice)
                              && (!consultationType.HasValue || d.ConsultationType == consultationType)
                              && (!belongEmpId.HasValue || d.BelongEmpId == belongEmpId)
                              && (orderSource == -1 || d.OrderSource == orderSource)
@@ -274,6 +280,8 @@ namespace Fx.Amiya.Service
                                 ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ConsultationType),
                                 LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 CreateDate = d.CreateDate,
+                                BelongMonth=d.BelongMonth,
+                                AddOrderPrice=d.AddOrderPrice,
                                 CustomerName = d.CustomerName,
                                 Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                                 EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
@@ -677,7 +685,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderDealListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int? checkState, bool? ReturnBackPriceState, string keyword, string contentPlateFormId, int? hospitalId, int? toHospitalType, int employeeId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderDealListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationEmpId, int? checkState, bool? ReturnBackPriceState, string keyword, string contentPlateFormId, int? hospitalId, int? toHospitalType, int employeeId, int pageNum, int pageSize)
         {
             try
             {
@@ -687,6 +695,9 @@ namespace Fx.Amiya.Service
                              && (!liveAnchorId.HasValue || d.LiveAnchorId == liveAnchorId.Value)
                              && (!hospitalId.HasValue || d.AppointmentHospitalId == hospitalId)
                              && (!toHospitalType.HasValue || d.ToHospitalType == toHospitalType.Value)
+                             && (!belongMonth.HasValue || d.BelongMonth == belongMonth.Value)
+                             && (!minAddOrderPrice.HasValue || d.AddOrderPrice >= minAddOrderPrice.Value)
+                             && (!maxAddOrderPrice.HasValue || d.AddOrderPrice == maxAddOrderPrice.Value)
                              && (!checkState.HasValue || d.CheckState == checkState)
                              && (!ReturnBackPriceState.HasValue || d.IsReturnBackPrice == ReturnBackPriceState)
                              && (!consultationEmpId.HasValue || d.ConsultationEmpId == consultationEmpId)
@@ -725,6 +736,8 @@ namespace Fx.Amiya.Service
                                 LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 CreateDate = d.CreateDate,
                                 CustomerName = d.CustomerName,
+                                BelongMonth=d.BelongMonth,
+                                AddOrderPrice=d.AddOrderPrice,
                                 IsOldCustomer = d.IsOldCustomer,
                                 IsAcompanying = d.IsAcompanying,
                                 Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
@@ -792,7 +805,7 @@ namespace Fx.Amiya.Service
         /// <param name="employeeId"></param>
         /// <param name="hidePhone"></param>
         /// <returns></returns>
-        public async Task<List<ContentPlatFormOrderInfoDto>> GetOrderDealAsync(DateTime? startDate, DateTime? endDate, int? dealHospitalId, int? checkState, int? liveAnchorId, bool hidePhone)
+        public async Task<List<ContentPlatFormOrderInfoDto>> GetOrderDealAsync(DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? dealHospitalId, int? checkState, int? liveAnchorId, bool hidePhone)
         {
             try
             {
@@ -801,6 +814,9 @@ namespace Fx.Amiya.Service
                              && (d.OrderStatus == Convert.ToInt32(ContentPlateFormOrderStatus.OrderComplete))
                              && (!liveAnchorId.HasValue || d.LiveAnchorId == liveAnchorId)
                              && (!dealHospitalId.HasValue || d.LastDealHospitalId == dealHospitalId)
+                             && (!belongMonth.HasValue || d.BelongMonth == belongMonth)
+                             && (!minAddOrderPrice.HasValue || d.AddOrderPrice >=minAddOrderPrice)
+                             && (!maxAddOrderPrice.HasValue || d.AddOrderPrice <= maxAddOrderPrice)
                              select d;
 
                 if (startDate != null && endDate != null)
@@ -830,6 +846,8 @@ namespace Fx.Amiya.Service
                                 AppointmentHospitalId = d.AppointmentHospitalId,
                                 IsOldCustomer = d.IsOldCustomer,
                                 AppointmentHospitalName = d.HospitalInfo.Name,
+                                BelongMonth = d.BelongMonth,
+                                AddOrderPrice=d.AddOrderPrice,
                                 GoodsId = d.GoodsId,
                                 GoodsName = d.AmiyaGoodsDemand.ProjectNname,
                                 ConsultingContent = d.ConsultingContent,
@@ -970,6 +988,8 @@ namespace Fx.Amiya.Service
                                 LiveAnchorId = d.LiveAnchorId,
                                 LiveAnchorName = d.LiveAnchor.HostAccountName,
                                 CreateDate = d.CreateDate,
+                                BelongMonth=d.BelongMonth,
+                                AddOrderPrice=d.AddOrderPrice,
                                 CustomerName = d.CustomerName,
                                 Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                                 EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
@@ -1081,6 +1101,8 @@ namespace Fx.Amiya.Service
 
             result.ConsultationType = order.ConsultationType;
             result.CommissionRatio = order.CommissionRatio;
+            result.BelongMonth = order.BelongMonth;
+            result.AddOrderPrice = order.AddOrderPrice;
             result.UnSendReason = order.UnSendReason;
             result.OrderTypeText = ServiceClass.GetContentPlateFormOrderTypeText((byte)order.OrderType);
             result.UpdateDate = order.UpdateDate;
@@ -1321,6 +1343,8 @@ namespace Fx.Amiya.Service
             order.GoodsId = input.GoodsId;
             order.CustomerName = input.CustomerName;
             order.Phone = input.Phone;
+            order.BelongMonth = input.BelongMonth;
+            order.AddOrderPrice = input.AddOrderPrice;
             order.AppointmentDate = input.AppointmentDate;
             order.AppointmentHospitalId = input.AppointmentHospitalId;
             order.HospitalDepartmentId = input.HospitalDepartmentId;
@@ -1333,16 +1357,14 @@ namespace Fx.Amiya.Service
             order.OrderSource = input.OrderSource;
             order.AcceptConsulting = input.AcceptConsulting;
             order.UnSendReason = input.UnSendReason;
-            var pictureInfoList = await _contentPlatFormCustomerPictureService.GetListAsync(input.Id);
-            foreach (var k in pictureInfoList)
-            {
-                await _contentPlatFormCustomerPictureService.DeleteAsync(k.Id);
-            }
+
+            await _contentPlatFormCustomerPictureService.DeleteByContentPlatFormOrderIdAsync(order.Id);
             foreach (var z in input.CustomerPictures)
             {
                 AddContentPlatFormCustomerPictureDto addPicture = new AddContentPlatFormCustomerPictureDto();
                 addPicture.ContentPlatFormOrderId = order.Id;
                 addPicture.CustomerPicture = z;
+                addPicture.Description = "顾客照片";
                 await _contentPlatFormCustomerPictureService.AddAsync(addPicture);
             }
             await _dalContentPlatformOrder.UpdateAsync(order, true);
@@ -1628,7 +1650,10 @@ namespace Fx.Amiya.Service
                     orderDealDto.Price = 0.00M;
                 }
                 orderDealDto.CreateBy = input.EmpId;
+                orderDealDto.InvitationDocuments = input.InvitationDocuments;
                 await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
+
+
                 unitOfWork.Commit();
             }
             catch (Exception err)
@@ -1650,7 +1675,7 @@ namespace Fx.Amiya.Service
             {
                 var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 var isoldCustomer = false;
-                if (order.CheckState==(int)CheckType.CheckedSuccess)
+                if (order.CheckState == (int)CheckType.CheckedSuccess)
                 {
                     throw new Exception("该订单已审核，无法编辑！");
                 }
@@ -1733,6 +1758,7 @@ namespace Fx.Amiya.Service
                     orderDealDto.Remark = input.UnDealReason;
                     orderDealDto.Price = 0.00M;
                 }
+                orderDealDto.InvitationDocuments = input.InvitationDocuments;
                 await _contentPlatFormOrderDalService.UpdateAsync(orderDealDto);
                 unitOfWork.Commit();
             }

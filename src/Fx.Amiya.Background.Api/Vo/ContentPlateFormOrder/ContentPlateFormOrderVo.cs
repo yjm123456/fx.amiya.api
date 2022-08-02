@@ -27,6 +27,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
 
 
         public string OrderTypeText { get; set; }
+
+        /// <summary>
+        /// 归属月份
+        /// </summary>
+        public int BelongMonth { get; set; }
         /// <summary>
         /// 订单状态
         /// </summary>
@@ -73,9 +78,13 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         
         public string Phone { get; set; }
         /// <summary>
+        /// 下单金额
+        /// </summary>
+        public decimal AddOrderPrice { get; set; }
+        /// <summary>
         /// 面诊员
         /// </summary>
-        
+
         public int ConsultationEmpId { get; set; }
 
         /// <summary>

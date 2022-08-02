@@ -12,6 +12,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 内容平台订单编号
         /// </summary>
         public string OrderId { get; set; }
+        /// <summary>
+        /// 归属月份
+        /// </summary>
+        public int BelongMonth { get; set; }
 
         /// <summary>
         /// 内容平台名称
@@ -36,6 +40,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 电话
         /// </summary>
         public string Phone { get; set; }
+        /// <summary>   
+        /// 下单金额
+        /// </summary>
+        public decimal AddOrderPrice { get; set; }
 
         /// <summary>
         /// 加密电话

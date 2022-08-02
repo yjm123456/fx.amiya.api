@@ -87,5 +87,10 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 创建人
         /// </summary>
         public int CreateBy { get; set; }
+
+        /// <summary>
+        /// 邀约凭证
+        /// </summary>
+        public List<string> InvitationDocuments { get; set; }
     }
 }

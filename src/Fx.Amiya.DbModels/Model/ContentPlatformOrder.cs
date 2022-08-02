@@ -13,6 +13,8 @@ namespace Fx.Amiya.DbModels.Model
         public string ContentPlateformId { get; set; }
         public int? LiveAnchorId { get; set; }
         public string LiveAnchorWeChatNo { get; set; }
+
+        public int BelongMonth { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
 
@@ -24,6 +26,7 @@ namespace Fx.Amiya.DbModels.Model
         public string HospitalDepartmentId { get; set; }
         public string CustomerName { get; set; }
         public string Phone { get; set; }
+        public decimal AddOrderPrice { get; set; }
         public DateTime? AppointmentDate { get; set; }
         public int? AppointmentHospitalId { get; set; }
         public int OrderStatus { get; set; }

@@ -401,7 +401,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 isHidePhone = false;
             }
-            var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(startDate, endDate, LiveAnchorId,  isCreateOrder,isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, isHidePhone);
+            var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(startDate, endDate, LiveAnchorId, isCreateOrder, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, isHidePhone);
             var res = from d in q
                       select new ShoppingCartRegistrationReportVo()
                       {
@@ -437,12 +437,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="checkState">审核情况（查询全部传空）</param>
         /// <param name="liveAnchorId">主播id</param>
         /// <param name="dealHospitalId">成交医院（全部则不传）</param>
+        /// <param name="belongMonth">归属月份</param>
+        /// <param name="minAddOrderPrice">最小下单金额</param>
+        /// <param name="maxAddOrderPrice">最大下单金额</param>
         /// <returns></returns>
         [HttpGet("ContentPlatFormOrderDealReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<ContentPlatFormOrderDealInfoVo>>> GetContentPlatFormOrderDealAsync(DateTime? startDate, DateTime? endDate, int? dealHospitalId, int? checkState, int? liveAnchorId)
+        public async Task<ResultData<List<ContentPlatFormOrderDealInfoVo>>> GetContentPlatFormOrderDealAsync(DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? dealHospitalId, int? checkState, int? liveAnchorId)
         {
-            var q = await _contentPlatFormOrderService.GetOrderDealAsync(startDate, endDate, dealHospitalId, checkState, liveAnchorId, true);
+            var q = await _contentPlatFormOrderService.GetOrderDealAsync(startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, dealHospitalId, checkState, liveAnchorId, true);
             var res = from d in q
                       select new ContentPlatFormOrderDealInfoVo()
                       {
@@ -450,6 +453,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                           OrderTypeText = d.OrderTypeText,
                           ContentPlatformName = d.ContentPlatformName,
                           LiveAnchorName = d.LiveAnchorName,
+                          BelongMonth = d.BelongMonth == 0 ?"当月":"次月",
+                          AddOrderPrice = d.AddOrderPrice,
                           LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                           IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
                           IsAcompanying = d.IsAcompanying == true ? "是" : "否",
@@ -492,10 +497,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="checkState">审核情况（查询全部传空）</param>
         /// <param name="dealHospitalId">成交医院（全部则不传）</param>
         /// <param name="liveAnchorId">主播id</param>
+        /// <param name="belongMonth">归属月份</param>
+        /// <param name="minAddOrderPrice">最小下单金额</param>
+        /// <param name="maxAddOrderPrice">最大下单金额</param>
         /// <returns></returns>
         [HttpGet("ExportContentPlatFormOrderDealReport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportContentPlatFormOrderDealAsync(DateTime? startDate, DateTime? endDate, int? dealHospitalId, int? checkState, int? liveAnchorId)
+        public async Task<FileStreamResult> ExportContentPlatFormOrderDealAsync(DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? dealHospitalId, int? checkState, int? liveAnchorId)
         {
             bool isHidePhone = true;
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
@@ -503,12 +511,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 isHidePhone = false;
             }
-            var q = await _contentPlatFormOrderService.GetOrderDealAsync(startDate, endDate, dealHospitalId, checkState, liveAnchorId, isHidePhone);
+            var q = await _contentPlatFormOrderService.GetOrderDealAsync(startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, dealHospitalId, checkState, liveAnchorId, isHidePhone);
             var res = from d in q
                       select new ContentPlatFormOrderDealInfoVo()
                       {
                           Id = d.Id,
                           OrderTypeText = d.OrderTypeText,
+                          BelongMonth = d.BelongMonth == 0 ? "当月" : "次月",
+                          AddOrderPrice = d.AddOrderPrice,
                           ContentPlatformName = d.ContentPlatformName,
                           LiveAnchorName = d.LiveAnchorName,
                           LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
@@ -1180,10 +1190,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="toHospitalStartDate">到院时间起</param>
         /// <param name="toHospitalEndDate">到院时间止</param>        
         /// <param name="toHospitalType">到院类型，为空查询所有</param>
+        /// <param name="commissionRatio">佣金比例</param>
+        /// <param name="isAcompanying">是否陪诊</param>
+        /// <param name="isOldCustomer">新/老客业绩</param>
+        /// <param name="belongMonth">归属月份</param>
+        /// <param name="minAddOrderPrice">最小下单金额</param>
+        /// <param name="maxAddOrderPrice">最大下单金额</param>
         /// <returns></returns>
         [HttpGet("customerSendContentPlatFormOrderReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<CustomerSendContentPlatFormOrderReportVo>>> GetCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int? liveAnchorId, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, string contentPlatFormId, int employeeId, int belongEmpId, int? orderStatus)
+        public async Task<ResultData<List<CustomerSendContentPlatFormOrderReportVo>>> GetCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? hospitalId, int? liveAnchorId, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, string contentPlatFormId, int employeeId, int belongEmpId, int? orderStatus)
         {
             if (!startDate.HasValue && !endDate.HasValue)
             { throw new Exception("请选择时间进行查询"); }
@@ -1199,7 +1215,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 employeeId = Convert.ToInt32(employee.Id);
             }
-            var q = await _sendContentPlatFormOrderInfoService.GetSendOrderReportList(liveAnchorId, hospitalId, employeeId, belongEmpId, orderStatus, isAcompanying, isOldCustomer, commissionRatio, contentPlatFormId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, startDate, endDate, true);
+            var q = await _sendContentPlatFormOrderInfoService.GetSendOrderReportList(liveAnchorId, belongMonth, minAddOrderPrice, maxAddOrderPrice, hospitalId, employeeId, belongEmpId, orderStatus, isAcompanying, isOldCustomer, commissionRatio, contentPlatFormId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, startDate, endDate, true);
             var res = from d in q
                       select new CustomerSendContentPlatFormOrderReportVo()
                       {
@@ -1236,18 +1252,24 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="endDate">派单结束时间</param>
         /// <param name="contentPlatFormId">平台id</param>
         /// <param name="hospitalId">医院id（为空查询所有）</param>
-        /// <param name="liveAnchorId">主播id（不传查询所有）</param>
-        /// <param name="employeeId">派单客服id(-1查询所有)</param>
-        /// <param name="belongEmpId">归属客服id(-1查询所有)</param>
+        /// <param name="liveAnchorId">主播id</param>
+        /// <param name="employeeId">派单客服id</param>
+        /// <param name="belongEmpId">归属客服id</param>
         /// <param name="orderStatus">订单状态</param>
-        /// <param name="IsToHospital">是否到院， 为空查询全部</param>
+        /// <param name="IsToHospital">是否到院，为空查询全部</param>
         /// <param name="toHospitalStartDate">到院时间起</param>
         /// <param name="toHospitalEndDate">到院时间止</param>        
         /// <param name="toHospitalType">到院类型，为空查询所有</param>
+        /// <param name="commissionRatio">佣金比例</param>
+        /// <param name="isAcompanying">是否陪诊</param>
+        /// <param name="isOldCustomer">新/老客业绩</param>
+        /// <param name="belongMonth">归属月份</param>
+        /// <param name="minAddOrderPrice">最小下单金额</param>
+        /// <param name="maxAddOrderPrice">最大下单金额</param>
         /// <returns></returns>
         [HttpGet("customerSendContentPlatFormOrderExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? liveAnchorId, int? hospitalId, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string contentPlatFormId, int employeeId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int belongEmpId, int? orderStatus)
+        public async Task<FileStreamResult> ExportCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? hospitalId, int? liveAnchorId, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, string contentPlatFormId, int employeeId, int belongEmpId, int? orderStatus)
         {
             bool isHidePhone = true;
             if (!startDate.HasValue && !endDate.HasValue)
@@ -1268,7 +1290,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 employeeId = Convert.ToInt32(employee.Id);
             }
-            var q = await _sendContentPlatFormOrderInfoService.GetSendOrderReportList(liveAnchorId, hospitalId, employeeId, belongEmpId, orderStatus, isAcompanying, isOldCustomer, commissionRatio, contentPlatFormId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, startDate, endDate, true);
+            var q = await _sendContentPlatFormOrderInfoService.GetSendOrderReportList(liveAnchorId, belongMonth, minAddOrderPrice, maxAddOrderPrice, hospitalId, employeeId, belongEmpId, orderStatus, isAcompanying, isOldCustomer, commissionRatio, contentPlatFormId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, startDate, endDate, isHidePhone);
             var res = from d in q
                       select new CustomerSendContentPlatFormOrderReportVo()
                       {

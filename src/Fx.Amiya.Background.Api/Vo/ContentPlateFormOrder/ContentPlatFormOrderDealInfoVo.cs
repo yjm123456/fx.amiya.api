@@ -171,5 +171,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 创建人名称
         /// </summary>
         public string CreateByEmpName { get; set; }
+        /// <summary>
+        /// 邀约凭证图片
+        /// </summary>
+        public List<string> InvitationDocuments { get; set; }
     }
 }

@@ -934,13 +934,25 @@ ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration`
 ADD COLUMN `is_create_order` BIT(1) NOT NULL AFTER `refund_date`,
 ADD COLUMN `is_send_order` BIT(1) NOT NULL AFTER `is_create_order`;
 
------------------------------------------------余建明 2022/08/01 END--------------------------------------------;
+ALTER TABLE `amiyadb`.`tbl_content_plat_form_customer_picture` 
+ADD COLUMN `order_deal_id` VARCHAR(50) NULL AFTER `customer_picture`,
+ADD COLUMN `description` VARCHAR(200) NULL AFTER `order_deal_id`;
 
------------------------------------------------余建明 2022/08/02  BEGIN--------------------------------------------;
+update amiyadb.tbl_content_plat_form_customer_picture set description='顾客照片';
+
+ALTER TABLE `amiyadb`.`tbl_content_platform_order` 
+ADD COLUMN `belong_month` INT NOT NULL DEFAULT 0 AFTER `order_type`,
+ADD COLUMN `add_order_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `phone`;
+
+
+-----------------------------------------------余建明 2022/08/02 END--------------------------------------------;
+
+-----------------------------------------------王健 2022/08/02  BEGIN--------------------------------------------;
 
 ALTER  TABLE tbl_tiktok_order_info MODIFY COLUMN tiktok_user_id VARCHAR(100) DEFAULT null;
 
------------------------------------------------余建明 2022/08/02 END--------------------------------------------;
+
+-----------------------------------------------王健 2022/08/02 END--------------------------------------------;
 
 
 

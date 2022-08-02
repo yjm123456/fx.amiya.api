@@ -93,6 +93,10 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 定金
         /// </summary>
         public decimal? DepositAmount { get; set; }
+        /// <summary>
+        /// 下单金额
+        /// </summary>
+        public decimal AddOrderPrice { get; set; }
 
         /// <summary>
         /// 成交金额
@@ -129,6 +133,11 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 归属客服id
         /// </summary>
         public int BelongEmpId { get; set; }
+
+        /// <summary>
+        /// 归属月份
+        /// </summary>
+        public int BelongMonth { get; set; }
 
         /// <summary>
         /// 归属客服姓名
