@@ -420,6 +420,8 @@ namespace Fx.Amiya.Service
                                             IsOldCustomer = d.ContentPlatformOrder.IsOldCustomer == true ? "老客业绩" : "新客业绩",
                                             IsAcompanying = d.ContentPlatformOrder.IsAcompanying,
                                             CommissionRatio = d.ContentPlatformOrder.CommissionRatio,
+                                            BelongMonth=d.ContentPlatformOrder.BelongMonth,
+                                            AddOrderPrice=d.ContentPlatformOrder.AddOrderPrice,
                                             CustomerName = d.ContentPlatformOrder.CustomerName,
                                             Phone = config.EnablePhoneEncrypt == true ? ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone) : d.ContentPlatformOrder.Phone,
                                             EncryptPhone = ServiceClass.Encrypt(d.ContentPlatformOrder.Phone, config.PhoneEncryptKey),

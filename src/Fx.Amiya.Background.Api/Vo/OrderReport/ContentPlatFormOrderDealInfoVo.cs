@@ -14,6 +14,11 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("订单号")]
         public string Id { get; set; }
         /// <summary>
+        /// 归属月份
+        /// </summary>
+        [Description("归属月份")]
+        public string BelongMonth { get; set; }
+        /// <summary>
         /// 面诊状态
         /// </summary>
         [Description("面诊状态")]
@@ -23,6 +28,11 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("客户昵称")]
         public string CustomerName { get; set; }
+        /// <summary>
+        /// 下单金额
+        /// </summary>
+        [Description("下单金额")]
+        public decimal AddOrderPrice { get; set; }
         /// <summary>
         /// 预约医院
         /// </summary>

@@ -401,7 +401,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 isHidePhone = false;
             }
-            var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(startDate, endDate, LiveAnchorId,  isCreateOrder,isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, isHidePhone);
+            var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(startDate, endDate, LiveAnchorId, isCreateOrder, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, isHidePhone);
             var res = from d in q
                       select new ShoppingCartRegistrationReportVo()
                       {
@@ -445,7 +445,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData<List<ContentPlatFormOrderDealInfoVo>>> GetContentPlatFormOrderDealAsync(DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? dealHospitalId, int? checkState, int? liveAnchorId)
         {
-            var q = await _contentPlatFormOrderService.GetOrderDealAsync(startDate, endDate, belongMonth,  minAddOrderPrice,  maxAddOrderPrice, dealHospitalId, checkState, liveAnchorId, true);
+            var q = await _contentPlatFormOrderService.GetOrderDealAsync(startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, dealHospitalId, checkState, liveAnchorId, true);
             var res = from d in q
                       select new ContentPlatFormOrderDealInfoVo()
                       {
@@ -453,6 +453,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                           OrderTypeText = d.OrderTypeText,
                           ContentPlatformName = d.ContentPlatformName,
                           LiveAnchorName = d.LiveAnchorName,
+                          BelongMonth = d.BelongMonth == 0 ?"当月":"次月",
+                          AddOrderPrice = d.AddOrderPrice,
                           LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                           IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
                           IsAcompanying = d.IsAcompanying == true ? "是" : "否",
@@ -515,6 +517,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                       {
                           Id = d.Id,
                           OrderTypeText = d.OrderTypeText,
+                          BelongMonth = d.BelongMonth == 0 ? "当月" : "次月",
+                          AddOrderPrice = d.AddOrderPrice,
                           ContentPlatformName = d.ContentPlatformName,
                           LiveAnchorName = d.LiveAnchorName,
                           LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
@@ -1211,7 +1215,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 employeeId = Convert.ToInt32(employee.Id);
             }
-            var q = await _sendContentPlatFormOrderInfoService.GetSendOrderReportList(liveAnchorId,  belongMonth, minAddOrderPrice, maxAddOrderPrice, hospitalId, employeeId, belongEmpId, orderStatus, isAcompanying, isOldCustomer, commissionRatio, contentPlatFormId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, startDate, endDate, true);
+            var q = await _sendContentPlatFormOrderInfoService.GetSendOrderReportList(liveAnchorId, belongMonth, minAddOrderPrice, maxAddOrderPrice, hospitalId, employeeId, belongEmpId, orderStatus, isAcompanying, isOldCustomer, commissionRatio, contentPlatFormId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, startDate, endDate, true);
             var res = from d in q
                       select new CustomerSendContentPlatFormOrderReportVo()
                       {

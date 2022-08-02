@@ -254,6 +254,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             CustomerName = d.CustomerName,
                                             Phone = d.Phone,
                                             EncryptPhone = d.EncryptPhone,
+                                            BelongMonth=d.BelongMonth,
+                                            AddOrderPrice=d.AddOrderPrice,
                                             SendHospitalId = d.SendHospitalId,
                                             IsHospitalCheckPhone = d.IsHospitalCheckPhone,
                                             AppointmentHospital = d.AppointmentHospital,

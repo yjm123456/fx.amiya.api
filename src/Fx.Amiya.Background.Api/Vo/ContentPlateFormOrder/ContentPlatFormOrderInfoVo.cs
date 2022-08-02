@@ -37,6 +37,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         [Description("电话")]
         public string Phone { get; set; }
         /// <summary>
+        /// 下单金额
+        /// </summary>
+        [Description("下单金额")]
+        public decimal AddOrderPrice { get; set; }
+        /// <summary>
         /// 预约医院
         /// </summary>
         [Description("预约医院")]
@@ -88,6 +93,12 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         [Description("订单类型")]
         public string OrderTypeText { get; set; }
         /// <summary>
+        /// 归属月份
+        /// </summary>
+        [Description("归属月份")]
+
+        public int BelongMonth { get; set; }
+        /// <summary>
         /// 订单状态
         /// </summary>
         [Description("订单状态")]
@@ -118,7 +129,6 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         [Description("面诊状态")]
         public string ConsultationType { get; set; }
-
         /// <summary>
         /// 院方接诊人员
         /// </summary>
