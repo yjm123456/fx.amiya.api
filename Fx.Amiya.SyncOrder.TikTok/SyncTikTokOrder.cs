@@ -80,8 +80,8 @@ namespace Fx.Amiya.SyncOrder.TikTok
                 var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
 
                 var host = "https://openapi-fxg.jinritemai.com";
-                var start = DateTimeOffset.Now.ToUnixTimeSeconds() - 900;
-                var end = DateTimeOffset.Now.ToUnixTimeSeconds();
+                var start = DateTimeOffset.Now.ToUnixTimeSeconds() - 2400;
+                var end = DateTimeOffset.Now.ToUnixTimeSeconds()-1200;
                 //请求参数
                 var param = new Dictionary<string, object> {
                 { "page",pageNum},
@@ -136,7 +136,11 @@ namespace Fx.Amiya.SyncOrder.TikTok
                     await RequestTikTokOrderAsync(startDate, endDate, tikTokAppInfo, pageNum + 1, amiyaOrderList);
                 }
 
+                if (amiyaOrderList.Count>0) {
+                    Console.WriteLine("");
+                }
                 return amiyaOrderList;
+                
             } catch (Exception ex) {
                 throw ex;
             }
