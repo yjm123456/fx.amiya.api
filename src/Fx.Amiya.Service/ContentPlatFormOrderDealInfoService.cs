@@ -307,7 +307,7 @@ namespace Fx.Amiya.Service
                                                        IsReturnBackPrice = d.IsReturnBackPrice,
                                                        ReturnBackDate = d.ReturnBackDate,
                                                        ReturnBackPrice = d.ReturnBackPrice,
-                                                       CreateBy = d.ContentPlatFormOrder.BelongEmpId.HasValue?d.ContentPlatFormOrder.BelongEmpId.Value:-1,
+                                                       CreateBy = d.CreateBy,
                                                    };
 
                 List<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new List<ContentPlatFormOrderDealInfoDto>();
