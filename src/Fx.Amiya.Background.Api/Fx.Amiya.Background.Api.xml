@@ -4764,7 +4764,7 @@
         </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.TikTokOrderController">
             <summary>
-            订单 API
+            抖点订单 API
             </summary>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.TikTokOrderController.GetTikTokOrderListWithPageAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.Int32,System.Int32)">

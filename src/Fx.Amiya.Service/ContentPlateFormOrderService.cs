@@ -562,7 +562,7 @@ namespace Fx.Amiya.Service
 
 
                 //小黄车更新派单触达
-                await _shoppingCartRegistration.UpdateCreateOrderAsync(orderInfo.Phone);
+                await _shoppingCartRegistration.UpdateSendOrderAsync(orderInfo.Phone);
                 unitOfWork.Commit();
             }
             catch (Exception ex)
