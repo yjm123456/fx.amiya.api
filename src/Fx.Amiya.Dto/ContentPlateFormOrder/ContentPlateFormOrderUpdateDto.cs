@@ -70,6 +70,10 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 面诊状态
         /// </summary>
         public int ConsultationType { get; set; }
+        /// <summary>
+        /// 面诊状态文本
+        /// </summary>
+        public string ConsultationTypeText { get; set; }
 
         /// <summary>
         /// 手机号

@@ -4341,6 +4341,11 @@
             内容平台订单编号
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Controllers.SendContentPlatformOrderVo.BelongMonth">
+            <summary>
+            归属月份
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Controllers.SendContentPlatformOrderVo.ContentPlatFormName">
             <summary>
             内容平台名称
@@ -4364,6 +4369,11 @@
         <member name="P:Fx.Amiya.Background.Api.Controllers.SendContentPlatformOrderVo.Phone">
             <summary>
             电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Controllers.SendContentPlatformOrderVo.AddOrderPrice">
+            <summary>   
+            下单金额
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Controllers.SendContentPlatformOrderVo.EncryptPhone">
@@ -6701,6 +6711,11 @@
             面诊状态
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ConsultationTypeText">
+            <summary>
+            面诊状态文本
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.AppointmentDate">
             <summary>
             预约日期
@@ -6994,6 +7009,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.CreateDate">
             <summary>
             下单时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.BelongMonth">
+            <summary>
+            归属月份
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.AddOrderPrice">
+            <summary>
+            下单金额
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormCompleteOrderInfoVo.ContentPlatformName">
@@ -7436,6 +7461,11 @@
             电话
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.AddOrderPrice">
+            <summary>
+            下单金额
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.AppointmentHospitalName">
             <summary>
             预约医院
@@ -7484,6 +7514,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.OrderTypeText">
             <summary>
             订单类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.BelongMonth">
+            <summary>
+            归属月份
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.OrderStatusText">
@@ -14226,6 +14261,11 @@
             订单号
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.BelongMonth">
+            <summary>
+            归属月份
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.ConsultationTypeText">
             <summary>
             面诊状态
@@ -14234,6 +14274,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.CustomerName">
             <summary>
             客户昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.AddOrderPrice">
+            <summary>
+            下单金额
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoVo.AppointmentHospitalName">

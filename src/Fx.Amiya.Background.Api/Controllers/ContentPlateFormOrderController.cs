@@ -438,6 +438,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.OrderType = order.OrderType;
             orderUpdateInfo.ContentPlateFormId = order.ContentPlateFormId;
             orderUpdateInfo.ConsultationType = order.ConsultationType;
+            orderUpdateInfo.ConsultationTypeText = order.ConsultationTypeText;
             orderUpdateInfo.BelongMonth = order.BelongMonth;
             orderUpdateInfo.AddOrderPrice = order.AddOrderPrice;
             orderUpdateInfo.LiveAnchorId = order.LiveAnchorId;

@@ -91,6 +91,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 面诊状态
         /// </summary>
         public int ConsultationType { get; set; }
+        /// <summary>
+        /// 面诊状态文本
+        /// </summary>
+        public string ConsultationTypeText { get; set; }
 
         /// <summary>
         /// 预约日期

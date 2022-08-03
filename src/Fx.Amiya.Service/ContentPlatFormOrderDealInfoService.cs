@@ -450,7 +450,8 @@ namespace Fx.Amiya.Service
                 foreach (var z in addDto.InvitationDocuments)
                 {
                     AddContentPlatFormCustomerPictureDto addPicture = new AddContentPlatFormCustomerPictureDto();
-                    addPicture.ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.Id;
+                    addPicture.OrderDealId = ContentPlatFOrmOrderDealInfo.Id;
+                    addPicture.ContentPlatFormOrderId = addDto.ContentPlatFormOrderId;
                     addPicture.CustomerPicture = z;
                     addPicture.Description = "邀约凭证";
                     await _contentPlatFormCustomerPictureService.AddAsync(addPicture);
@@ -501,6 +502,7 @@ namespace Fx.Amiya.Service
                 contentPlatFOrmOrderDealInfoDto.ReturnBackPrice = ContentPlatFOrmOrderDealInfo.ReturnBackPrice;
                 contentPlatFOrmOrderDealInfoDto.CreateBy = ContentPlatFOrmOrderDealInfo.CreateBy;
                 var InvitationDocuments = await _contentPlatFormCustomerPictureService.GetListWithPageAsync(null, ContentPlatFOrmOrderDealInfo.Id, 1, 5);
+                contentPlatFOrmOrderDealInfoDto.InvitationDocuments = new List<string>();
                 foreach (var x in InvitationDocuments.List)
                 {
                     contentPlatFOrmOrderDealInfoDto.InvitationDocuments.Add(x.CustomerPicture);
@@ -544,7 +546,8 @@ namespace Fx.Amiya.Service
                 foreach (var z in updateDto.InvitationDocuments)
                 {
                     AddContentPlatFormCustomerPictureDto addPicture = new AddContentPlatFormCustomerPictureDto();
-                    addPicture.ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.Id;
+                    addPicture.OrderDealId = ContentPlatFOrmOrderDealInfo.Id;
+                    addPicture.ContentPlatFormOrderId = updateDto.ContentPlatFormOrderId;
                     addPicture.CustomerPicture = z;
                     addPicture.Description = "邀约凭证";
                     await _contentPlatFormCustomerPictureService.AddAsync(addPicture);
