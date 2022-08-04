@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Dto.TikTokOrder
+namespace Fx.Amiya.Background.Api.Vo.TikTok
 {
-    public class TikTokOrderInfoUpdateDto
+    /// <summary>
+    /// 抖店修改订单信息
+    /// </summary>
+    public class TikTokOrderInfoUpdateVo
     {
         /// <summary>
-        /// 订单id
+        /// 订单号
         /// </summary>
         public string Id { get; set; }
         /// <summary>
         /// 手机号
         /// </summary>
+        [Required]
         public string Phone { get; set; }
         /// <summary>
         /// 昵称

@@ -36,14 +36,7 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// 手机号
         /// </summary>
         public string Phone { get; set; }
-
         public string EncryptPhone { get; set; }
-
-
-
-
-
-
         /// <summary>
         /// 是否已预约
         /// </summary>
@@ -96,26 +89,25 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// </summary>
         public string AppTypeText { get; set; }
 
-
+        /// <summary>
+        /// 订单类型
+        /// </summary>
         public long? OrderType { get; set; }
+        /// <summary>
+        /// 订单类型名称
+        /// </summary>
         public string OrderTypeText { get; set; }
-
-
-
-
-
-
         /// <summary>
         /// 购买数量
         /// </summary>
         public int? Quantity { get; set; }
-
-
-
         /// <summary>
         /// 交易类型
         /// </summary>
         public byte? ExchangeType { get; set; }
+        /// <summary>
+        /// 交易类型名称
+        /// </summary>
         public string ExchangeTypeText { get; set; }
         public string TradeId { get; set; }
         /// <summary>

@@ -75,6 +75,47 @@ namespace Fx.Amiya.Service
             return statusText;
         }
 
+        /// <summary>
+        /// 获取抖店订单状态文本
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public static string GetTikTokOrderStatusText(string status)
+        {
+            string statusText = "";
+            switch (status)
+            {
+                case "PENDING_REFUND":
+                    statusText = "待退款";
+                    break;
+                case "TRADE_CLOSED_AFTER_REFUND":
+                    statusText = "退款成功交易关闭";
+                    break;
+                case "REFUND_FAIL":
+                    statusText = "退款失败";
+                    break;
+                case "WAIT_BUYER_PAY":
+                    statusText = "等待买家付款";
+                    break;
+
+                case "WAIT_SELLER_SEND_GOODS":
+                    statusText = "等待卖家发货";
+                    break;
+                case "TRADE_BUYER_SIGNED":
+                    statusText = "买家已签收";
+                    break;
+
+                case "TRADE_FINISHED":
+                    statusText = "交易成功";
+                    break;
+
+                case "TRADE_CLOSED":
+                    statusText = "订单付款前取消";
+                    break;
+            }
+            return statusText;
+        }
+
         #region 获取小程序模块订单状态文本展示
 
         /// <summary>
@@ -348,7 +389,7 @@ namespace Fx.Amiya.Service
                 case 2:
                     orderTypeText = "虚拟订单";
                     break;
-                case 3:
+                case 4:
                     orderTypeText = "电子券poi核销";
                     break;
                 case 5:

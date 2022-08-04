@@ -115,7 +115,7 @@ namespace Fx.Amiya.SyncOrder.TikTok
                             tikTokOrder.ThumbPicUrl = goodsItem.product_pic;
                             tikTokOrder.AppointmentHospital = "";
                             tikTokOrder.StatusCode = GetStatusCodeOfDouYin(goodsItem.order_status, goodsItem.after_sale_info);
-                            tikTokOrder.OrderType = goodsItem.order_type;
+                            tikTokOrder.OrderType = goodsItem.order_type; 
                             tikTokOrder.ActualPayment = goodsItem.pay_amount/100;
                             tikTokOrder.CreateDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(goodsItem.create_time.ToString()) ? 0 : goodsItem.create_time).AddHours(8);
                             tikTokOrder.UpdateDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(goodsItem.update_time.ToString()) ? 0 : goodsItem.update_time).AddHours(8);
@@ -134,10 +134,6 @@ namespace Fx.Amiya.SyncOrder.TikTok
                 if (orderCount >= (pageNum + 1) * pageSize)
                 {
                     await RequestTikTokOrderAsync(startDate, endDate, tikTokAppInfo, pageNum + 1, amiyaOrderList);
-                }
-
-                if (amiyaOrderList.Count>0) {
-                    Console.WriteLine("");
                 }
                 return amiyaOrderList;
                 
@@ -206,7 +202,6 @@ namespace Fx.Amiya.SyncOrder.TikTok
             var paramPattern = "app_key" + appKey + "method" + method + "param_json" + paramJson + "timestamp" +
                                timestamp + "v2";
             var signPattern = appSecret + paramPattern + appSecret;
-            Console.WriteLine("sign_pattern:" + signPattern);
 
             return HmacHelper.Hmac(signPattern, appSecret);
         }
@@ -219,9 +214,32 @@ namespace Fx.Amiya.SyncOrder.TikTok
         private static string GetStatusCodeOfDouYin(long statusCode, TikTokAfterSaleInfo afterSaleInfo)
         {
             string code = "";
+            // refund_status 退款状态: 0 - 无需退款 1 - 待退款 2 - 退款中 3 - 退款成功 4 - 退款失败
             //售后状态只要不是初始化状态,就视订单为退款\售后状态
             if (afterSaleInfo.after_sale_status>0) {
-                return code = "REFUNDING";
+
+                if (afterSaleInfo.refund_status>0) {
+                    switch (afterSaleInfo.refund_status) {
+                        //待退款
+                        case 1L:
+                            code = "PENDING_REFUND";
+                            break;
+                       //退款中
+                        case 2L:
+                            code = "REFUNDING";
+                            break;
+                        //退款成功
+                        case 3L:
+                            code = "TRADE_CLOSED_AFTER_REFUND";
+                            break;
+                        //退款失败
+                        case 4L:
+                            code = "REFUND_FAIL";
+                            break;
+                    }
+                    return code;
+                  
+                }
             }
             switch (statusCode)
             {
@@ -315,6 +333,7 @@ namespace Fx.Amiya.SyncOrder.TikTok
                     long status = item.order_status;
                     tikTokOrder.StatusCode = GetStatusCodeOfDouYin(status, tikTokAfterSaleInfo);
                     tikTokOrder.ActualPayment = item.pay_amount / 100;
+                    tikTokOrder.AccountReceivable = item.pay_amount / 100;
                     long createTime = item.create_time;
                     long updateTime = item.update_time;
                     long confirmTime = item.confirm_receipt_time;
