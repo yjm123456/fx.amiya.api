@@ -18,7 +18,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<ContentPlatFormOrderCustomerPictureDto>> GetListWithPageAsync(string contentPlatFormId, string orderDealId, int pageNum, int pageSize);
+        Task<FxPageInfo<ContentPlatFormOrderCustomerPictureDto>> GetListWithPageAsync(string contentPlatFormId, string orderDealId, string description, int pageNum, int pageSize);
 
         /// <summary>
         /// 根据内容平台订单编号获取客户图片
