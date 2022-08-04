@@ -1319,12 +1319,13 @@
             </summary>
             <param name="contentPlatFormCustomerPictureService"></param>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlatFormCustomerPictureController.GetListWithPageAsync(System.String,System.String,System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlatFormCustomerPictureController.GetListWithPageAsync(System.String,System.String,System.String,System.Int32,System.Int32)">
             <summary>
             获取客户照片信息列表（分页）
             </summary>
             <param name="contentPlatFormOrderId">内容平台订单号</param>
             <param name="orderDealId">内容平台成交编号</param>
+            <param name="description">描述（顾客照片/邀约凭证）</param>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
             <returns></returns>

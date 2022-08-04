@@ -41,15 +41,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="contentPlatFormOrderId">内容平台订单号</param>
         /// <param name="orderDealId">内容平台成交编号</param>
+        /// <param name="description">描述（顾客照片/邀约凭证）</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormCustomerPictureVo>>> GetListWithPageAsync(string contentPlatFormOrderId,string orderDealId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormCustomerPictureVo>>> GetListWithPageAsync(string contentPlatFormOrderId,string orderDealId,string description, int pageNum, int pageSize)
         {
             try
             {
-                var q = await contentPlatFormCustomerPictureService.GetListWithPageAsync(contentPlatFormOrderId,orderDealId, pageNum, pageSize);
+                var q = await contentPlatFormCustomerPictureService.GetListWithPageAsync(contentPlatFormOrderId,orderDealId,description, pageNum, pageSize);
 
                 var contentPlatFormCustomerPicture = from d in q.List
                               select new ContentPlatFormCustomerPictureVo

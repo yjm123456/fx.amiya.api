@@ -31,10 +31,10 @@ namespace Fx.Amiya.Service
             try
             {
                 List<string> OrderIds = new List<string>();
-                if(OrderFrom==2)
+                if (OrderFrom == 2)
                 {
                     var orderDealInfo = await contentPlatFormOrderDealInfoService.GetByOrderIdAsync(orderId);
-                    foreach(var x in orderDealInfo)
+                    foreach (var x in orderDealInfo)
                     {
                         OrderIds.Add(x.Id);
                     }
@@ -43,9 +43,13 @@ namespace Fx.Amiya.Service
                 {
                     OrderIds.Add(orderId);
                 }
+                if (OrderIds.Count == 0)
+                {
+                    throw new Exception("暂无审核图片！");
+                }
                 var orderCheckPicture = from d in dalOrderCheckPicture.GetAll()
-                                        where (OrderIds.Count == 0 || OrderIds.Contains(d.OrderId))
-                                        &&(OrderFrom == 0 || d.OrderFrom==OrderFrom)
+                                        where OrderIds.Contains(d.OrderId)
+                                        && (OrderFrom == 0 || d.OrderFrom == OrderFrom)
                                         select new OrderCheckPictureDto
                                         {
                                             Id = d.Id,

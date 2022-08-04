@@ -23,13 +23,14 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<ContentPlatFormOrderCustomerPictureDto>> GetListWithPageAsync(string contentPlatFormId,string orderDealId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderCustomerPictureDto>> GetListWithPageAsync(string contentPlatFormId,string orderDealId, string description, int pageNum, int pageSize)
         {
             try
             {
                 var contentPlatFormCustomerPicture = from d in dalContentPlatFormCustomerPicture.GetAll()
                                                      where (contentPlatFormId == null || d.ContentPlatFormOrderId.Contains(contentPlatFormId))
                                                      && (orderDealId == null || d.OrderDealId.Contains(orderDealId))
+                                                     && (string.IsNullOrEmpty(description) || d.Description==description)
                                                      select new ContentPlatFormOrderCustomerPictureDto
                                                      {
                                                          Id = d.Id,
