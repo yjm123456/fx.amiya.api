@@ -69,6 +69,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 归属客服
         /// </summary>
         public int BelongEmpId { get; set; }
+        /// <summary>
+        /// 订单完成时间
+        /// </summary>
+        public DateTime? FinishDate { get; set; }
 
         #region  财务审核板块
         /// <summary>

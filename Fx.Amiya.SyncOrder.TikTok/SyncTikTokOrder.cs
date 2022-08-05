@@ -120,8 +120,17 @@ namespace Fx.Amiya.SyncOrder.TikTok
                             tikTokOrder.CreateDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(goodsItem.create_time.ToString()) ? 0 : goodsItem.create_time).AddHours(8);
                             tikTokOrder.UpdateDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(goodsItem.update_time.ToString()) ? 0 : goodsItem.update_time).AddHours(8);
                             tikTokOrder.WriteOffDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(goodsItem.confirm_receipt_time.ToString()) ? 0 : goodsItem.confirm_receipt_time).AddHours(8);
+                            long finishDate = goodsItem.finish_time;
+                            if (finishDate != 0)
+                            {
+                                tikTokOrder.FinishDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(goodsItem.finish_time.ToString()) ? 0 : goodsItem.finish_time).AddHours(8);
+                            }
+                            else {
+                                tikTokOrder.FinishDate = null;
+                            }
                             tikTokOrder.AppType = (byte)AppType.Douyin;
                             tikTokOrder.IsAppointment = false;
+ 
                             currentChildList.Add(tikTokOrder);                            
                         }
                         currentChildList.ForEach(o=> { o.CipherPhone = orderItem.encrypt_post_tel;o.CipherName = orderItem.encrypt_post_receiver; });
@@ -236,6 +245,9 @@ namespace Fx.Amiya.SyncOrder.TikTok
                         case 4L:
                             code = "REFUND_FAIL";
                             break;
+                        default:
+                            code = "UNKNOW";
+                            break;
                     }
                     return code;
                   
@@ -274,7 +286,7 @@ namespace Fx.Amiya.SyncOrder.TikTok
                     break;
 
                 default:
-                    code = statusCode.ToString();
+                    code = "UNKNOW";
                     break;
             }
 
@@ -336,10 +348,17 @@ namespace Fx.Amiya.SyncOrder.TikTok
                     tikTokOrder.AccountReceivable = item.pay_amount / 100;
                     long createTime = item.create_time;
                     long updateTime = item.update_time;
+                    long finishTime = item.finish_time;
                     long confirmTime = item.confirm_receipt_time;
                     tikTokOrder.CreateDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(createTime.ToString()) ? 0 : createTime).AddHours(8);
                     tikTokOrder.UpdateDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(updateTime.ToString()) ? 0 : updateTime).AddHours(8);
-                    /*tikTokOrder.WriteOffDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(confirmTime.ToString()) ? 0 : confirmTime).AddHours(8);*/
+                    if (finishTime != 0)
+                    {
+                        tikTokOrder.FinishDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(finishTime.ToString()) ? 0 : finishTime).AddHours(8);
+                    }
+                    else { 
+                        tikTokOrder.FinishDate=null;
+                    }                   
                     tikTokOrder.AppType = (byte)AppType.Douyin;
                     tikTokOrder.IsAppointment = false;
                     tikTokOrder.CipherName = item.encrypt_post_receiver;

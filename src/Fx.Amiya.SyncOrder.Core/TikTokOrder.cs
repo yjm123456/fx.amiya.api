@@ -35,9 +35,23 @@ namespace Fx.Amiya.SyncOrder.Core
         /// 订单类型：0、普通订单 2、虚拟商品订单 4、电子券（poi核销） 5、三方核销
         /// </summary>
         public long OrderType { get; set; }
+        /// <summary>
+        /// 数量
+        /// </summary>
         public int Quantity { get; set; }
         public string TikTokUserId { get; set; }
+        /// <summary>
+        /// 加密手机号
+        /// </summary>
         public string CipherPhone { get; set; }
+        /// <summary>
+        /// 加密昵称
+        /// </summary>
         public string CipherName { get; set; }
+        /// <summary>
+        /// 订单完成时间
+        /// </summary>
+        public DateTime? FinishDate { get; set; }
+
     }
 }

@@ -184,5 +184,9 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// 加密手机号
         /// </summary>
         public string CipherPhone { get; set; }
+        /// <summary>
+        /// 订单完成时间
+        /// </summary>
+        public DateTime? FinishDate { get; set; }
     }
 }

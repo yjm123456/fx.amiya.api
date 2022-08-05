@@ -67,7 +67,17 @@ namespace Fx.Amiya.Dto.TikTokOrder
 
         public string TradeId { get; set; }
         public string TikTokUserId { get; set; }
+        /// <summary>
+        /// 加密手机号
+        /// </summary>
         public string CipherPhone { get; set; }
+        /// <summary>
+        /// 加密昵称
+        /// </summary>
         public string CipherName { get; set; }
+        /// <summary>
+        /// 订单完成时间
+        /// </summary>
+        public DateTime? FinishDate { get; set; }
     }
 }

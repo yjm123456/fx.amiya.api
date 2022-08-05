@@ -133,7 +133,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 TradeId = d.TradeId,
                                 LiveAnchor = d.LiveAnchorName,
                                 LiveAnchorPlatForm = d.LiveAnchorPlatForm,
-                                UpdateDate = d.UpdateDate
+                                UpdateDate = d.UpdateDate,
+                                FinishDate=d.FinishDate
+                                
                             };
                 FxPageInfo<TikTokOrderInfoVo> orderPageInfo = new FxPageInfo<TikTokOrderInfoVo>();
                 orderPageInfo.TotalCount = q.TotalCount;
@@ -255,8 +257,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.ExchangeTypeText = ServiceClass.GetExchangeTypeText(1);
             result.UpdateDate = FirstOrder.UpdateDate;
             result.CreateDate = FirstOrder.CreateDate;
-
-
+            result.FinishDate = FirstOrder.FinishDate;
             return ResultData<TikTokInfoVo>.Success().AddData("orderData", result);
         }
 
@@ -302,6 +303,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.ExchangeType = addVo.ExchangeType;
                 addDto.CipherName = addVo.CipherName;
                 addDto.CipherPhone = addVo.CipherPhone;
+                //addDto.FinishDate = addVo.FinishDate;
                 amiyaOrderList.Add(addDto);
                 OrderTradeAddDto orderTradeAdd = new OrderTradeAddDto();
                 orderTradeAdd.CustomerId = "客服-" + employee.Name.ToString();
@@ -349,6 +351,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.CipherName = addVo.CipherName;
                 addDto.CipherPhone = addVo.CipherPhone;
                 addDto.UpdateDate = addVo.UpdateDate;
+                //addDto.FinishDate = addVo.FinishDate;
                 amiyaOrderList.Add(addDto);
                 OrderTradeAddDto orderTradeAdd = new OrderTradeAddDto();
                 orderTradeAdd.CustomerId = "客服-" + employee.Name.ToString();
@@ -446,7 +449,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 result.ActualPayment = FirstOrder.ActualPayment;
                 result.AccountReceivable = FirstOrder.AccountReceivable;
                 result.UpdateDate = FirstOrder.UpdateDate;
-                await tikTokOrderService.UpdateOrderStatusAsync(result.Id, result.StatusCode, result.ActualPayment, result.AccountReceivable, result.UpdateDate);
+                result.FinishDate = FirstOrder.FinishDate;
+                await tikTokOrderService.UpdateOrderStatusAsync(result.Id, result.StatusCode, result.ActualPayment, result.AccountReceivable, result.UpdateDate,result.FinishDate);
                 return ResultData.Success();
             }
         }

@@ -173,6 +173,7 @@ namespace Fx.Amiya.Background.Api
                     tikTokOrder.CreateDate = order.CreateDate;
                     tikTokOrder.UpdateDate = order.UpdateDate;
                     tikTokOrder.WriteOffDate = order.WriteOffDate;
+                    tikTokOrder.FinishDate = order.FinishDate;
                     tikTokOrder.ThumbPicUrl = order.ThumbPicUrl;
                     tikTokOrder.AppType = order.AppType;
                     tikTokOrder.AccountReceivable = order.ActualPayment;

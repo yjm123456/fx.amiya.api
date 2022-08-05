@@ -99,6 +99,10 @@ namespace Fx.Amiya.Dto.TikTokOrder
         public decimal? ReturnBackPrice { get; set; }
         public DateTime? ReturnBackDate { get; set; }
         public string TikTokUserId { get; set; }
+        /// <summary>
+        /// 订单完成时间
+        /// </summary>
+        public DateTime? FinishDate { get; set; }
 
 
     }

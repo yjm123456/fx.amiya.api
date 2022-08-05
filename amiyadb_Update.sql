@@ -957,7 +957,13 @@ ALTER  TABLE tbl_tiktok_order_info MODIFY COLUMN tiktok_user_id VARCHAR(100) DEF
 
 
 
+-----------------------------------------------王健 2022/08/05  BEGIN--------------------------------------------;
 
+ALTER TABLE `amiyadb`.`tbl_tiktok_order_info` 
+ADD COLUMN `finish_date` datetime default null AFTER `tiktok_user_id`;
+
+
+-----------------------------------------------王健 2022/08/05 END--------------------------------------------;
 
 
 

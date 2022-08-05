@@ -123,6 +123,10 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// 归属客服
         /// </summary>
         public string BelongEmpName { get; set; }
+        /// <summary>
+        /// 订单完成时间
+        /// </summary>
+        public DateTime? FinishDate { get; set; }
 
         #region  财务审核板块
         /// <summary>

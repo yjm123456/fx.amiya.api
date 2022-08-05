@@ -53,6 +53,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.ReturnBackPrice).HasColumnName("return_back_price").HasColumnType("DECIMAL(12,2)").IsRequired(false);
             builder.Property(e => e.ReturnBackDate).HasColumnName("return_back_date").HasColumnType("DATETIME").IsRequired(false);
             builder.Property(e => e.TikTokUserInfoId).HasColumnName("tiktok_user_id").HasColumnType("varchar(100)").IsRequired(false);
+            builder.Property(e => e.FinishDate).HasColumnName("finish_date").HasColumnType("datetime").IsRequired(false);
             builder.HasOne(t=>t.TikTokUserInfo).WithMany(t=>t.TikTokOrderInfoList).HasForeignKey(t=>t.TikTokUserInfoId);
             builder.HasOne(t => t.OrderTrade).WithMany(t => t.TikTokOrderInfoList).HasForeignKey(t=>t.TradeId);
         }

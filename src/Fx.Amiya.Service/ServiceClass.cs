@@ -88,6 +88,9 @@ namespace Fx.Amiya.Service
                 case "PENDING_REFUND":
                     statusText = "待退款";
                     break;
+                case "REFUNDING":
+                    statusText = "退款中";
+                    break;
                 case "TRADE_CLOSED_AFTER_REFUND":
                     statusText = "退款成功交易关闭";
                     break;
@@ -101,8 +104,8 @@ namespace Fx.Amiya.Service
                 case "WAIT_SELLER_SEND_GOODS":
                     statusText = "等待卖家发货";
                     break;
-                case "TRADE_BUYER_SIGNED":
-                    statusText = "买家已签收";
+                case "WAIT_BUYER_CONFIRM_GOODS":
+                    statusText = "等待买家收货";
                     break;
 
                 case "TRADE_FINISHED":
@@ -111,6 +114,9 @@ namespace Fx.Amiya.Service
 
                 case "TRADE_CLOSED":
                     statusText = "订单付款前取消";
+                    break;
+                case "UNKNOW":
+                    statusText = "未知状态";
                     break;
             }
             return statusText;

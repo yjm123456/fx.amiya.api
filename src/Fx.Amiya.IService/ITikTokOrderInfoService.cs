@@ -61,7 +61,17 @@ namespace Fx.Amiya.IService
         /// <param name="tikTokOrderInfoUpdateDto"></param>
         /// <returns></returns>
         Task UpdateOrderAsync(TikTokOrderInfoUpdateDto tikTokOrderInfoUpdateDto);
-        Task UpdateOrderStatusAsync(string id, string statusCode, decimal? actualPayment,decimal? accountReceivable, DateTime? updateDate);
+        /// <summary>
+        /// 校对订单修改订单信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="statusCode"></param>
+        /// <param name="actualPayment"></param>
+        /// <param name="accountReceivable"></param>
+        /// <param name="updateDate"></param>
+        /// <param name="finishDate"></param>
+        /// <returns></returns>
+        Task UpdateOrderStatusAsync(string id, string statusCode, decimal? actualPayment,decimal? accountReceivable, DateTime? updateDate,DateTime? finishDate);
 
     }
 }

@@ -167,6 +167,7 @@ namespace Fx.Amiya.Service
                             orderInfo.OrderType = orderItem.OrderType;
                             orderInfo.AppointmentHospital = orderItem.AppointmentHospital;
                             orderInfo.ThumbPicUrl = orderItem.ThumbPicUrl;
+                            orderInfo.FinishDate = orderItem.FinishDate;
                             await dalTikTokOrderInfo.UpdateAsync(orderInfo, true);
                             //计算积分,如果订单信息包含手机号则计算积分,否则暂时不计算
                             if (orderInfo.StatusCode == "TRADE_FINISHED" && orderInfo.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(orderInfo.Phone))
@@ -223,6 +224,7 @@ namespace Fx.Amiya.Service
                             orderInfo.OrderType = orderItem.OrderType;
                             orderInfo.AppointmentHospital = orderItem.AppointmentHospital;
                             orderInfo.ThumbPicUrl = orderItem.ThumbPicUrl;
+                            orderInfo.FinishDate = orderItem.FinishDate;
                             await dalTikTokOrderInfo.UpdateAsync(orderInfo, true);
                         }
                     }
@@ -239,6 +241,7 @@ namespace Fx.Amiya.Service
                         order.AccountReceivable = orderItem.AccountReceivable;
                         order.CreateDate = orderItem.CreateDate;
                         order.UpdateDate = orderItem.UpdateDate;
+                        order.FinishDate = orderItem.FinishDate;
                         order.ThumbPicUrl = orderItem.ThumbPicUrl;
                         order.BuyerNick = orderItem.BuyerNick;
                         order.CheckState = (int)CheckType.NotChecked;
@@ -524,6 +527,7 @@ namespace Fx.Amiya.Service
                                 ActualPayment = d.ActualPayment,
                                 CreateDate = d.CreateDate,
                                 UpdateDate=d.UpdateDate,
+                                FinishDate=d.FinishDate,
                                 AppType = d.AppType,
                                 AppTypeText = ServiceClass.GetAppTypeText(d.AppType),
                                 OrderType = d.OrderType,
@@ -642,7 +646,7 @@ namespace Fx.Amiya.Service
         /// <param name="accountReceivable"></param>
         /// <param name="updateDate"></param>
         /// <returns></returns>
-        public async Task UpdateOrderStatusAsync(string id, string statusCode, decimal? actualPayment, decimal? accountReceivable, DateTime? updateDate)
+        public async Task UpdateOrderStatusAsync(string id, string statusCode, decimal? actualPayment, decimal? accountReceivable, DateTime? updateDate,DateTime? finishDate)
         {
             var order = dalTikTokOrderInfo.GetAll().FirstOrDefault(o=>o.Id==id);
             if (order==null) {
@@ -652,6 +656,7 @@ namespace Fx.Amiya.Service
             order.ActualPayment = actualPayment;
             order.AccountReceivable = accountReceivable;
             order.UpdateDate = updateDate;
+            order.FinishDate = finishDate;
             await dalTikTokOrderInfo.UpdateAsync(order,true);
         }
 
