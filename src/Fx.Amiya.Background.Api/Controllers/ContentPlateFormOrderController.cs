@@ -91,6 +91,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.ConsultingContent = addVo.ConsultingContent;
             addDto.Remark = addVo.Remark;
             addDto.LateProjectStage = addVo.LateProjectStage;
+            addDto.CustomerPictures = new List<string>();
             addDto.CustomerPictures = addVo.CustomerPictures;
             await _orderService.AddContentPlateFormOrderAsync(addDto);
             return ResultData.Success();
@@ -918,6 +919,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
             updateDto.DealDate = updateVo.DealDate;
             updateDto.IsAcompanying = updateVo.IsAcompanying;
+            updateDto.InvitationDocuments = updateVo.InvitationDocuments;
             updateDto.EmpId = 0;
             await _orderService.FinishContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
