@@ -391,6 +391,8 @@ namespace Fx.Amiya.Service
         public async Task<CustomerHospitalConsumeDto> GetByConsumeIdAsync(string consumeId)
         {
             var selectResult = dalCustomerHospitalConsume.GetAll().Where(x => x.ConsumeId == consumeId).FirstOrDefaultAsync().Result;
+            if(selectResult==null)
+            { return new CustomerHospitalConsumeDto(); }
             CustomerHospitalConsumeDto result = new CustomerHospitalConsumeDto();
             result.Id = selectResult.Id;
             result.ConsumeId = selectResult.ConsumeId;

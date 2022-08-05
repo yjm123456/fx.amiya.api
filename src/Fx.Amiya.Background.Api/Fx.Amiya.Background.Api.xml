@@ -14164,7 +14164,7 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.LastDealHospital">
             <summary>
-            成交医院
+            到院医院
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.IsDeal">

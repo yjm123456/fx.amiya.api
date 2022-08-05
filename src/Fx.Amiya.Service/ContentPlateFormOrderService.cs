@@ -1080,6 +1080,10 @@ namespace Fx.Amiya.Service
         public async Task<ContentPlateFormOrderUpdateDto> GetByOrderIdAsync(string orderId)
         {
             var order = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList).Where(x => x.Id == orderId).FirstOrDefaultAsync();
+            if(order==null)
+            {
+               return new ContentPlateFormOrderUpdateDto();
+            }
             ContentPlateFormOrderUpdateDto result = new ContentPlateFormOrderUpdateDto();
             result.Id = order.Id;
             result.OrderType = order.OrderType;
@@ -1572,7 +1576,10 @@ namespace Fx.Amiya.Service
             {
                 var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 var isoldCustomer = false;
-                if (order.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
+                var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
+                var dealCount = orderDealInfoList.Where(x => x.IsDeal == true).Count();
+                if (dealCount >0)
+                //if (order.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
                 {
                     isoldCustomer = true;
                 }
@@ -1679,7 +1686,9 @@ namespace Fx.Amiya.Service
                 {
                     throw new Exception("该订单已审核，无法编辑！");
                 }
-                if (order.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
+                var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
+                var dealCount = orderDealInfoList.Where(x => x.IsOldCustomer == true).Count();
+                if (dealCount > 0)
                 {
                     isoldCustomer = true;
                 }

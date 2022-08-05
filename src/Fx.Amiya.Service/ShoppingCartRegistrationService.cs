@@ -367,11 +367,16 @@ namespace Fx.Amiya.Service
             //   unitOfWork.BeginTransaction();
             try
             {
-                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().SingleOrDefaultAsync(e => e.Phone == phone);
-                if (shoppingCartRegistration != null)
+                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().Where(e => e.Phone == phone).ToListAsync();
+                if(shoppingCartRegistration.Count>0)
                 {
-                    shoppingCartRegistration.IsCreateOrder = true;
-                    await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
+                   foreach(var x in shoppingCartRegistration) { 
+                        x.IsCreateOrder = true;
+                        x.IsAddWeChat = true;
+                        x.IsWriteOff = true;
+                        x.IsConsultation = true;
+                        await dalShoppingCartRegistration.UpdateAsync(x, true);
+                    }
                 }
 
             }
@@ -391,11 +396,14 @@ namespace Fx.Amiya.Service
             //   unitOfWork.BeginTransaction();
             try
             {
-                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().SingleOrDefaultAsync(e => e.Phone == phone);
-                if (shoppingCartRegistration != null)
+                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().Where(e => e.Phone == phone).ToListAsync();
+                if (shoppingCartRegistration.Count > 0)
                 {
-                    shoppingCartRegistration.IsSendOrder = true;
-                    await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
+                    foreach (var x in shoppingCartRegistration)
+                    {
+                        x.IsSendOrder = true;
+                        await dalShoppingCartRegistration.UpdateAsync(x, true);
+                    }
                 }
 
             }

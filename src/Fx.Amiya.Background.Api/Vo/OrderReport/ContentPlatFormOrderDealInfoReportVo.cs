@@ -92,9 +92,9 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         public DateTime? TohospitalDate { get; set; }
 
         /// <summary>
-        /// 成交医院
+        /// 到院医院
         /// </summary>
-        [Description("成交医院")]
+        [Description("到院医院")]
         public string LastDealHospital { get; set; }
 
         /// <summary>
