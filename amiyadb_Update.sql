@@ -955,7 +955,32 @@ ALTER  TABLE tbl_tiktok_order_info MODIFY COLUMN tiktok_user_id VARCHAR(100) DEF
 ----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
+-----------------------------------------------余建明 2022/08/06  BEGIN--------------------------------------------;
 
+ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
+CHANGE COLUMN `live_anchor_id` `live_anchor_id` INT UNSIGNED NOT NULL ,
+CHANGE COLUMN `create_by` `create_by` INT UNSIGNED NOT NULL ,
+ADD INDEX `fk_shopcart_contentplat_name_idx` (`content_plat_form_id` ASC) VISIBLE,
+ADD INDEX `fk_shopcart_liveanchor_idx` (`live_anchor_id` ASC) VISIBLE,
+ADD INDEX `fk_shopcart_create_by_idx` (`create_by` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
+ADD CONSTRAINT `fk_shopcart_contentplat_name`
+  FOREIGN KEY (`content_plat_form_id`)
+  REFERENCES `amiyadb`.`tbl_content_platform` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk_shopcart_liveanchor`
+  FOREIGN KEY (`live_anchor_id`)
+  REFERENCES `amiyadb`.`tbl_live_anchor` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk_shopcart_create_by`
+  FOREIGN KEY (`create_by`)
+  REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+-----------------------------------------------余建明 2022/08/06 END--------------------------------------------;
 
 
 

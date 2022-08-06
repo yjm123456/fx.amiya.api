@@ -36,5 +36,9 @@ namespace Fx.Amiya.DbModels.Model
 
         public bool IsCreateOrder { get; set; }
         public bool IsSendOrder { get; set; }
+
+        public Contentplatform Contentplatform { get; set; }
+        public LiveAnchor LiveAnchor { get; set; }
+        public AmiyaEmployee AmiyaEmployee { get; set; }
     }
 }

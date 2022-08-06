@@ -14,5 +14,7 @@ namespace Fx.Amiya.DbModels.Model
         public bool Valid { get; set; }
 
         public List<ContentPlatformOrder> ContentPlatformOrderList { get; set; }
+
+        public List<ShoppingCartRegistration> ShoppingCartRegistrationList { get; set; }
     }
 }

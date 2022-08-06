@@ -436,7 +436,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var shoppingCartRegistration = from d in dalShoppingCartRegistration.GetAll()
+                var shoppingCartRegistration = from d in dalShoppingCartRegistration.GetAll().Include(x => x.Contentplatform).Include(x => x.LiveAnchor).Include(x => x.AmiyaEmployee)
                                                where (keyword == null || d.Phone.Contains(keyword) || d.CustomerNickName.Contains(keyword))
                                                && ((!startDate.HasValue && !endDate.HasValue) || d.RecordDate >= startDate.Value.Date && d.RecordDate < endDate.Value.AddDays(1).Date)
                                                && (string.IsNullOrEmpty(contentPlatFormId) || d.ContentPlatFormId == contentPlatFormId)
@@ -451,7 +451,9 @@ namespace Fx.Amiya.Service
                                                    Id = d.Id,
                                                    RecordDate = d.RecordDate,
                                                    ContentPlatFormId = d.ContentPlatFormId,
+                                                   ContentPlatFormName = d.Contentplatform.ContentPlatformName,
                                                    LiveAnchorId = d.LiveAnchorId,
+                                                   LiveAnchorName = d.LiveAnchor.Name,
                                                    IsCreateOrder = d.IsCreateOrder,
                                                    IsSendOrder = d.IsSendOrder,
                                                    LiveAnchorWechatNo = d.LiveAnchorWechatNo,
@@ -465,7 +467,9 @@ namespace Fx.Amiya.Service
                                                    IsReturnBackPrice = d.IsReturnBackPrice,
                                                    Remark = d.Remark,
                                                    CreateBy = d.CreateBy,
+                                                   CreateByName=d.AmiyaEmployee.Name,
                                                    CreateDate = d.CreateDate,
+                                                   ConsultationTypeText=ServiceClass.GetConsulationTypeText(d.ConsultationType)
                                                };
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
                 if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
@@ -476,39 +480,6 @@ namespace Fx.Amiya.Service
                 }
                 List<ShoppingCartRegistrationDto> shoppingCartRegistrationPageInfo = new List<ShoppingCartRegistrationDto>();
                 shoppingCartRegistrationPageInfo = await shoppingCartRegistration.OrderByDescending(x => x.RecordDate).ToListAsync();
-                foreach (var x in shoppingCartRegistrationPageInfo)
-                {
-                    var contentPlatFormInfo = await _contentPlatformService.GetByIdAsync(x.ContentPlatFormId);
-                    x.ContentPlatFormName = contentPlatFormInfo.ContentPlatformName;
-                    var liveAnchorInfo = await _liveAnchorService.GetByIdAsync(x.LiveAnchorId);
-                    x.LiveAnchorName = liveAnchorInfo.Name;
-                    var empInfo = await _amiyaEmployeeService.GetByIdAsync(x.CreateBy);
-                    x.CreateByName = empInfo.Name;
-                    if (x.ConsultationType == 1)
-                    {
-                        x.ConsultationTypeText = "视频";
-                    }
-                    if (x.ConsultationType == 2)
-                    {
-                        x.ConsultationTypeText = "图片";
-                    }
-                    if (x.ConsultationType == 3)
-                    {
-                        x.ConsultationTypeText = "私信";
-                    }
-                    if (x.ConsultationType == 4)
-                    {
-                        x.ConsultationTypeText = "其他";
-                    }
-                    if (x.ConsultationType == 5)
-                    {
-                        x.ConsultationTypeText = "短视频";
-                    }
-                    if (x.ConsultationType == 6)
-                    {
-                        x.ConsultationTypeText = "其他";
-                    }
-                }
                 return shoppingCartRegistrationPageInfo;
             }
             catch (Exception ex)
