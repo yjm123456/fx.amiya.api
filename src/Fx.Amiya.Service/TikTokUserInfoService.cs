@@ -116,60 +116,7 @@ namespace Fx.Amiya.Service
                 if (customBaseInfo == null)
                 {
                     await dalCustomerBaseInfo.AddAsync(customerBaseInfo, true);
-                }
-
-                //判断订单此时的状态
-                var order = dalTikTokOrderInfo.GetAll().SingleOrDefault(o => o.Id == orderid);
-                if (order != null) {
-                    List<ConsumptionIntegrationDto> consumptionIntegrationList = new List<ConsumptionIntegrationDto>();
-                    //如果此时订单为完成状态则计算积分
-                    if (order.StatusCode == "TRADE_FINISHED" && order.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(order.Phone))
-                    {
-
-                        bool isIntegrationGenerateRecord = await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAsync(order.Id);
-                        if (isIntegrationGenerateRecord != true)
-                        {
-
-                            var customerId = await customerService.GetCustomerIdByPhoneAsync(order.Phone);
-                            if (!string.IsNullOrWhiteSpace(customerId))
-                            {
-
-                                ConsumptionIntegrationDto consumptionIntegration = new ConsumptionIntegrationDto();
-                                consumptionIntegration.CustomerId = customerId;
-                                consumptionIntegration.OrderId = order.Id;
-                                consumptionIntegration.AmountOfConsumption = (decimal)order.ActualPayment;
-                                consumptionIntegration.Date = DateTime.Now;
-
-                                var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(customerId);
-                                if (memberCard != null)
-                                {
-                                    consumptionIntegration.Quantity = Math.Floor(memberCard.GenerateIntegrationPercent * (decimal)order.ActualPayment);
-                                    consumptionIntegration.Percent = memberCard.GenerateIntegrationPercent;
-                                }
-                                else
-                                {
-                                    var memberRank = await memberRankInfoService.GetMinGeneratePercentMemberRankInfoAsync();
-                                    consumptionIntegration.Quantity = Math.Floor(memberRank.GenerateIntegrationPercent * (decimal)order.ActualPayment);
-                                    consumptionIntegration.Percent = memberRank.GenerateIntegrationPercent;
-
-                                }
-
-                                if (consumptionIntegration.Quantity > 0)
-                                    consumptionIntegrationList.Add(consumptionIntegration);
-
-                            }
-                        }
-                    }
-
-                    foreach (var item in consumptionIntegrationList)
-                    {
-                        await integrationAccountService.AddByConsumptionAsync(item);
-                    }
-                }
-                else
-                {
-                    throw new Exception("订单不存在");
-                }
+                }              
             }
             return tikTokUserDto;
         }

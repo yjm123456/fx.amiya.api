@@ -871,7 +871,8 @@ INSERT INTO `amiyadb`.`tbl_docking_hospital_customer_info` (`id`, `app_key`, `ap
 -----------------------------------------------余建明 2022/07/18  BEGIN--------------------------------------------;
 
 --tbl_config表修改config列【加入抖店渠道】
-UPDATE `amiyadb`.`tbl_config` SET `config_json` = '{\"FxJwtConfig\":{\"Key\":\"kljdsf982734jkldg!@#\",\"ExpireInSeconds\":7200,\"RefreshTokenExpireInSeconds\":14400},\"FxOpenConfig\":{\"Enable\":true,\"RequestBaseUrl\":\"https://app.hsltm.com/fxgatetest\"},\"FxOSSConfig\":null,\"FxRedisConfig\":{\"ConnectionString\":\"app.hsltm.com:6379,allowadmin=true,password=hsltm\"},\"FxSmsConfig\":{\"AliyunSmsList\":[{\"Name\":\"send_validate_code\",\"AccessKeyId\":\"LTAIlyCdQbQnA96C\",\"AccessSecret\":\"nXtBYoUzt3nw3v5DasAjNdLliuBB0h\",\"RegionId\":\"cn_hangzhou\",\"SignName\":\"杭州华山医院\",\"TemplateCode\":\"SMS_126464576\",\"Remark\":\"发送验证码\"}]},\"FxUniteWxAccessTokenConfig\":{\"Enable\":true,\"RequestBaseUrl\":\"https://app.hsltm.com/fxwxaccesstoken\"},\"WxPayConfig\":null,\"FxMessageCenterConfig\":{\"EnableMessageCenter\":true,\"EnableMessageQueue\":true,\"MQHostName\":\"app.hsltm.com\",\"MQUserName\":\"admin\",\"Port\":5672,\"MQPassword\":\"hsltm1007\",\"MQQueueName\":\"fx_wxmp_message_queue\",\"MessageCenterWebSocketUrl\":null},\"ChatInMinute\":1440,\"CallCenterConfig\":{\"CallRecordStoreAddress\":\"mongodb://192.168.11.72:27890\",\"EnablevoiceCardCallable\":false,\"SupportOldCallBox\":false,\"SwitchSimCardInCallCount\":5,\"VoiceCardManagerAddress\":\"\",\"PhoneEncryptKey\":\"test\",\"EnablePhoneEncrypt\":true,\"HidePhoneNumber\":true},\"SyncOrderConfig\":{\"Jd\":false,\"Tmall\":true,\"WeiFenXiao\":true,\"DouYin\":true}}' WHERE (`id` = '1');
+
+UPDATE `amiyadb`.`tbl_config` SET `config_json` = '{"FxJwtConfig":{"Key":"kljdsf982734jkldg!@#","ExpireInSeconds":7200,"RefreshTokenExpireInSeconds":14400},"FxOpenConfig":{"Enable":true,"RequestBaseUrl":"https://app.hsltm.com/fxgatetest"},"FxOSSConfig":null,"FxRedisConfig":{"ConnectionString":"app.hsltm.com:6379,allowadmin=true,password=hsltm"},"FxSmsConfig":{"AliyunSmsList":[{"Name":"send_validate_code","AccessKeyId":"LTAIlyCdQbQnA96C","AccessSecret":"nXtBYoUzt3nw3v5DasAjNdLliuBB0h","RegionId":"cn_hangzhou","SignName":"杭州华山医院","TemplateCode":"SMS_126464576","Remark":"发送验证码"},{"Name":"order_buyerpay_commit","AccessKeyId":"LTAI4FyjkURk6usCWjWucQ7o","AccessSecret":"T0GFcYOVS6FJyRj9HzzEtC3ljFdxjs","RegionId":"cn_hangzhou","SignName":"阿美雅","TemplateCode":"SMS_224341042","Remark":"订单下单通知"},{"Name":"order_intergrationpay_commit","AccessKeyId":"LTAI4FyjkURk6usCWjWucQ7o","AccessSecret":"T0GFcYOVS6FJyRj9HzzEtC3ljFdxjs","RegionId":"cn_hangzhou","SignName":"阿美雅","TemplateCode":"SMS_224351049","Remark":"积分兑换通知"},{"Name":"order_gift_commit","AccessKeyId":"LTAI4FyjkURk6usCWjWucQ7o","AccessSecret":"T0GFcYOVS6FJyRj9HzzEtC3ljFdxjs","RegionId":"cn_hangzhou","SignName":"阿美雅","TemplateCode":"SMS_224346105","Remark":"礼品兑换通知"}]},"FxUniteWxAccessTokenConfig":{"Enable":true,"RequestBaseUrl":"https://app.hsltm.com/fxwxaccesstoken"},"WxPayConfig":null,"FxMessageCenterConfig":{"EnableMessageCenter":true,"EnableMessageQueue":true,"MQHostName":"app.hsltm.com","MQUserName":"admin","Port":5672,"MQPassword":"hsltm1007","MQQueueName":"fx_wxmp_message_queue","MessageCenterWebSocketUrl":null},"ChatInMinute":1440,"CallCenterConfig":{"CallRecordStoreAddress":"mongodb://192.168.11.72:27890","EnablevoiceCardCallable":false,"SupportOldCallBox":false,"SwitchSimCardInCallCount":5,"VoiceCardManagerAddress":"","PhoneEncryptKey":"test","EnablePhoneEncrypt":true,"HidePhoneNumber":true},"SyncOrderConfig":{"Jd":false,"Tmall":false,"WeiFenXiao":false,"DouYin":true},"NoticeConfig":{"EmailNoticeConfig":true}}' WHERE (`id` = '1');
 
 --tbl_order_app_info表加入抖店商户号配置
 INSERT INTO `amiyadb`.`tbl_order_app_info` (`id`, `app_key`, `app_secret`, `access_token`, `authorize_date`, `app_type`, `expire_date`, `refresh_token`) VALUES ('5', '7109321803654252040', '1', 'edae7c30-8386-443b-88a1-031111596fdd', '2022-07-18 16:20:00', '4', '2022-07-19 16:20:00', '1');
@@ -952,18 +953,10 @@ ALTER  TABLE tbl_tiktok_order_info MODIFY COLUMN tiktok_user_id VARCHAR(100) DEF
 
 
 -----------------------------------------------王健 2022/08/02 END--------------------------------------------;
-----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
 
 
------------------------------------------------王健 2022/08/05  BEGIN--------------------------------------------;
-
-ALTER TABLE `amiyadb`.`tbl_tiktok_order_info` 
-ADD COLUMN `finish_date` datetime default null AFTER `tiktok_user_id`;
-
-
------------------------------------------------王健 2022/08/05 END--------------------------------------------;
 
 
 
@@ -1021,6 +1014,65 @@ ADD CONSTRAINT `fk_city_info`
 ADD CONSTRAINT `fk_hospital_info`
   FOREIGN KEY (`hosiptal_id`)
   REFERENCES `amiyadb`.`tbl_hospital_info` (`id`);
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+-----------------------------------------------余建明 2022/08/06  BEGIN--------------------------------------------;
+
+ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
+CHANGE COLUMN `live_anchor_id` `live_anchor_id` INT UNSIGNED NOT NULL ,
+CHANGE COLUMN `create_by` `create_by` INT UNSIGNED NOT NULL ,
+ADD INDEX `fk_shopcart_contentplat_name_idx` (`content_plat_form_id` ASC) VISIBLE,
+ADD INDEX `fk_shopcart_liveanchor_idx` (`live_anchor_id` ASC) VISIBLE,
+ADD INDEX `fk_shopcart_create_by_idx` (`create_by` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
+ADD CONSTRAINT `fk_shopcart_contentplat_name`
+  FOREIGN KEY (`content_plat_form_id`)
+  REFERENCES `amiyadb`.`tbl_content_platform` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk_shopcart_liveanchor`
+  FOREIGN KEY (`live_anchor_id`)
+  REFERENCES `amiyadb`.`tbl_live_anchor` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk_shopcart_create_by`
+  FOREIGN KEY (`create_by`)
+  REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+-----------------------------------------------余建明 2022/08/06 END--------------------------------------------;
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------王健 2022/08/6  BEGIN--------------------------------------------;
+
+ALTER TABLE `amiyadb`.`tbl_tiktok_order_info` 
+ADD COLUMN `finish_date` datetime default null AFTER `tiktok_user_id`;
+
+
+-----------------------------------------------王健 2022/08/06 END--------------------------------------------;
+
+
+
+
+
+
+
+
+
+
+
 
 
 

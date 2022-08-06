@@ -39,7 +39,7 @@ namespace Fx.Amiya.DbModels.Model
         public int? Quantity { get; set; }
         public decimal? IntegrationQuantity { get; set; }
         public byte? ExchangeType { get; set; }
-        public string TradeId { get; set; }
+        //public string TradeId { get; set; }
         /// <summary>
         /// 简介
         /// </summary>
@@ -94,9 +94,6 @@ namespace Fx.Amiya.DbModels.Model
 
         #endregion
 
-        //public List<SendOrderInfo> SendOrderInfoList { get; set; }
-        public ReceiveGift ReceiveGift { get; set; }
-        public OrderTrade OrderTrade { get; set; }
         public TikTokUserInfo TikTokUserInfo { get; set; }
     }
 }

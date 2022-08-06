@@ -35,7 +35,6 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.Quantity).HasColumnName("quantity").HasColumnType("int").IsRequired(false);
             builder.Property(t => t.IntegrationQuantity).HasColumnName("integration_quantity").HasColumnType("decimal(18,2)").IsRequired(false);
             builder.Property(t => t.ExchangeType).HasColumnName("exchange_type").HasColumnType("tinyint").IsRequired(false);
-            builder.Property(t => t.TradeId).HasColumnName("trade_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(t => t.Description).HasColumnName("Description").HasColumnType("varchar(200)").IsRequired(false);
             builder.Property(t => t.Standard).HasColumnName("Standard").HasColumnType("varchar(100)").IsRequired(false);
             builder.Property(t => t.Parts).HasColumnName("Parts").HasColumnType("varchar(100)").IsRequired(false);
@@ -55,7 +54,6 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.TikTokUserInfoId).HasColumnName("tiktok_user_id").HasColumnType("varchar(100)").IsRequired(false);
             builder.Property(e => e.FinishDate).HasColumnName("finish_date").HasColumnType("datetime").IsRequired(false);
             builder.HasOne(t=>t.TikTokUserInfo).WithMany(t=>t.TikTokOrderInfoList).HasForeignKey(t=>t.TikTokUserInfoId);
-            builder.HasOne(t => t.OrderTrade).WithMany(t => t.TikTokOrderInfoList).HasForeignKey(t=>t.TradeId);
         }
     }
 }

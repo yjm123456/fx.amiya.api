@@ -96,7 +96,7 @@ namespace Fx.Amiya.Service
             {
                 unitOfWork.BeginTransaction();
 
-                OrderTrade orderTrade = new OrderTrade();
+                /*OrderTrade orderTrade = new OrderTrade();
                 orderTrade.TradeId = Guid.NewGuid().ToString("N");
                 orderTrade.CustomerId = orderTradeAddDto.CustomerId;
                 orderTrade.CreateDate = orderTradeAddDto.CreateDate;
@@ -109,11 +109,11 @@ namespace Fx.Amiya.Service
                 foreach (var item in orderTradeAddDto.TikTokOrderInfoAddList)
                 {
                     item.TradeId = orderTrade.TradeId;
-                }
+                }*/
                 await AddOrderAsync(orderTradeAddDto.TikTokOrderInfoAddList);
 
                 unitOfWork.Commit();
-                return orderTrade.TradeId;
+                return "";
             }
             catch (Exception ex)
             {
@@ -255,7 +255,6 @@ namespace Fx.Amiya.Service
                         order.Quantity = orderItem.Quantity;
                         order.IntegrationQuantity = orderItem.IntegrationQuantity;
                         order.ExchangeType = orderItem.ExchangeType;
-                        order.TradeId = orderItem.TradeId;
                         order.WriteOffCode = "";
                         order.AlreadyWriteOffAmount = 0;
                         order.BelongEmpId = orderItem.BelongEmpId;
@@ -329,56 +328,10 @@ namespace Fx.Amiya.Service
                     order.Quantity = item.Quantity;
                     order.IntegrationQuantity = item.IntegrationQuantity;
                     order.ExchangeType = item.ExchangeType;
-                    order.TradeId = item.TradeId;
                     order.WriteOffCode = "";
                     order.AlreadyWriteOffAmount = 0;
                     order.TikTokUserInfoId = item.TikTokUserId;
-                    //如果订单信息中包含手机号则不需要添加tiktokuserinfo
-                    /*AddTikTokUserDto addTikTokUserDto = new AddTikTokUserDto();
-                    addTikTokUserDto.CipherName = item.CipherName;
-                    addTikTokUserDto.CipherPhone = item.CipherPhone;
-                    addTikTokUserDto.Id = GuidUtil.NewGuidShortString();
-                    await tikTokUserInfoService.AddAsync(addTikTokUserDto);
-                    order.TikTokUserInfoId = addTikTokUserDto.Id;*/
-                    orderInfoList.Add(order);
-                    //计算积分,如果订单信息包含手机号则计算积分,否则暂时不计算
-                    if (item.StatusCode == "TRADE_FINISHED" && item.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(item.Phone))
-                    {
-                        bool isIntegrationGenerateRecord = await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAsync(item.Id);
-                        if (isIntegrationGenerateRecord == true)
-                            continue;
-                        var customerId = await customerService.GetCustomerIdByPhoneAsync(item.Phone);
-                        if (string.IsNullOrWhiteSpace(customerId))
-                            continue;
-                        ConsumptionIntegrationDto consumptionIntegration = new ConsumptionIntegrationDto();
-                        consumptionIntegration.CustomerId = customerId;
-                        consumptionIntegration.OrderId = item.Id;
-                        consumptionIntegration.AmountOfConsumption = (decimal)item.ActualPayment;
-                        consumptionIntegration.Date = DateTime.Now;
-
-                        var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(customerId);
-                        if (memberCard != null)
-                        {
-                            consumptionIntegration.Quantity = Math.Floor(memberCard.GenerateIntegrationPercent * (decimal)item.ActualPayment);
-                            consumptionIntegration.Percent = memberCard.GenerateIntegrationPercent;
-                        }
-                        else
-                        {
-                            var memberRank = await memberRankInfoService.GetMinGeneratePercentMemberRankInfoAsync();
-                            consumptionIntegration.Quantity = Math.Floor(memberRank.GenerateIntegrationPercent * (decimal)item.ActualPayment);
-                            consumptionIntegration.Percent = memberRank.GenerateIntegrationPercent;
-
-                        }
-
-                        if (consumptionIntegration.Quantity > 0)
-                            await integrationAccountService.AddByConsumptionAsync(consumptionIntegration);
-                        //根据phone获取获取绑定的员工
-                        var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(item.Phone);
-                        if (findInfo != 0)
-                        {
-                            await _bindCustomerService.UpdateConsumePriceAsync(item.Phone, item.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
-                        }
-                    }                  
+                    orderInfoList.Add(order);                                   
                 }
                 else
                 {
@@ -414,7 +367,6 @@ namespace Fx.Amiya.Service
                     order.Quantity = item.Quantity;
                     order.IntegrationQuantity = item.IntegrationQuantity;
                     order.ExchangeType = item.ExchangeType;
-                    order.TradeId = item.TradeId;
                     order.WriteOffCode = "";
                     order.AlreadyWriteOffAmount = 0;
                     order.BelongEmpId = item.BelongEmpId;
@@ -489,7 +441,6 @@ namespace Fx.Amiya.Service
             }
             orderInfo.Quantity = order.Quantity;
             orderInfo.AccountReceivable = order.AccountReceivable;
-            orderInfo.TradeId = order.TradeId;
             return orderInfo;
         }
 
@@ -536,7 +487,6 @@ namespace Fx.Amiya.Service
                                 Quantity = d.Quantity,
                                 ExchangeType = d.ExchangeType,
                                 ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)d.ExchangeType),
-                                TradeId = d.TradeId,
                                 LiveAnchorId = d.LiveAnchorId,
                             };
 

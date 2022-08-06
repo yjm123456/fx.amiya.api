@@ -792,6 +792,43 @@ namespace Fx.Amiya.Service
 
 
         /// <summary>
+        /// 获取面诊方式
+        /// </summary>
+        /// <param name="consulationType"></param>
+        /// <returns></returns>
+        public static string GetConsulationTypeText(int consulationType)
+        {
+            string inventoryStateText = "";
+            switch (consulationType)
+            {
+                case 1:
+                    inventoryStateText = "视频";
+                    break;
+
+                case 2:
+                    inventoryStateText = "图片";
+                    break;
+
+                case 3:
+                    inventoryStateText = "私信";
+                    break;
+
+                case 4:
+                    inventoryStateText = "其他";
+                    break;
+
+                case 5:
+                    inventoryStateText = "短视频";
+                    break;
+
+                case 6:
+                    inventoryStateText = "其他";
+                    break;
+            }
+            return inventoryStateText;
+        }
+
+        /// <summary>
         /// 加密
         /// </summary>
         /// <param name="content">需要加密的内容</param>

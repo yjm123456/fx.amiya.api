@@ -38,6 +38,10 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.IsBadReview).HasColumnName("is_badreview").HasColumnType("bit(1)").IsRequired();
             builder.Property(t => t.IsCreateOrder).HasColumnName("is_create_order").HasColumnType("bit(1)").IsRequired();
             builder.Property(t => t.IsSendOrder).HasColumnName("is_send_order").HasColumnType("bit(1)").IsRequired();
+
+            builder.HasOne(e => e.Contentplatform).WithMany(e => e.ShoppingCartRegistrationList).HasForeignKey(e => e.ContentPlatFormId);
+            builder.HasOne(e => e.LiveAnchor).WithMany(e => e.ShoppingCartRegistrationList).HasForeignKey(e => e.LiveAnchorId);
+            builder.HasOne(e => e.AmiyaEmployee).WithMany(e => e.ShoppingCartRegistrationList).HasForeignKey(e => e.CreateBy);
         }
     }
 }
