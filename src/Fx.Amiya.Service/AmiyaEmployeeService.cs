@@ -405,10 +405,10 @@ namespace Fx.Amiya.Service
         public async Task<List<AmiyaEmployeeNameDto>> GetCustomerServiceNameListAsync()
         {
             var employee = from d in dalAmiyaEmployee.GetAll()
-                           where d.IsCustomerService && d.Valid
-                           && d.AmiyaPositionInfo.Name.Contains("客服")
-                           || d.AmiyaPositionInfo.Name.Contains("面诊员")
-                           || d.AmiyaPositionInfo.Name.Contains("客服管理员")
+                           where d.IsCustomerService==true
+                           && d.Valid==true
+                           && (d.AmiyaPositionInfo.Name.Contains("客服")
+                           || d.AmiyaPositionInfo.Name.Contains("客服管理员"))
                            select new AmiyaEmployeeNameDto
                            {
                                Id = d.Id,
