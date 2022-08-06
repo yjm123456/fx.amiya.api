@@ -35,7 +35,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.HasOne(t=>t.AmiyaEmployee).WithMany(t=>t.ReceiveGiftList).HasForeignKey(t=>t.SendGoodsBy);
             builder.HasOne(t=>t.OrderInfo).WithOne(t=>t.ReceiveGift).HasForeignKey<ReceiveGift>(t=>t.OrderId);
             builder.HasOne(t=>t.AddressInfo).WithMany(t=>t.ReceiveGiftList).HasForeignKey(t=>t.AddressId);
-            builder.HasOne(t => t.TikTokOrderInfo).WithOne(t => t.ReceiveGift).HasForeignKey<ReceiveGift>(t=>t.TikTokOrderId);
+           // builder.HasOne(t => t.TikTokOrderInfo).WithOne(t => t.ReceiveGift).HasForeignKey<ReceiveGift>(t=>t.TikTokOrderId);
         }
     }
 }
