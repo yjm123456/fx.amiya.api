@@ -24,5 +24,9 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalPartakeItem
         public decimal HospitalPrice { get; set; }
         public bool IsLimitBuy { get; set; }
         public int? LimitBuyQuantity { get; set; }
+        /// <summary>
+        /// 医院名称
+        /// </summary>
+        public string HospitalName { get; set; }
     }
 }

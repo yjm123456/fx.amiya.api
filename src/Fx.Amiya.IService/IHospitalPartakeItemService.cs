@@ -74,7 +74,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<PartakeItemInfoDto>> GetItemListByHospitalIdWithPageAsync(int? activityId, int hospitalId, int pageNum, int pageSize);
+        Task<FxPageInfo<PartakeItemInfoDto>> GetItemListByHospitalIdWithPageAsync(int? activityId, int? hospitalId, int pageNum, int pageSize);
 
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Fx.Amiya.IService
         /// <param name="activityId"></param>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
-        Task<List<PartakeItemInfoDto>> GetItemListByHospitalIdAsync(int? activityId, int hospitalId);
+        Task<List<PartakeItemInfoDto>> GetItemListByHospitalIdAsync(int? activityId, int? hospitalId);
 
 
         /// <summary>

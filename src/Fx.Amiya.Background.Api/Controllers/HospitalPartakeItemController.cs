@@ -192,7 +192,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("itemListByHospitalIdWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<PartakeItemInfoVo>>> GetItemListByHospitalIdWithPageAsync(int? activityId, int hospitalId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<PartakeItemInfoVo>>> GetItemListByHospitalIdWithPageAsync(int? activityId, int? hospitalId, int pageNum, int pageSize)
         {
             var q = await hospitalPartakeItemService.GetItemListByHospitalIdWithPageAsync(activityId, hospitalId, pageNum, pageSize);
             var partakeItems = from d in q.List
@@ -209,6 +209,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                    HospitalPrice = d.HospitalPrice,
                                    IsLimitBuy = d.IsLimitBuy,
                                    LimitBuyQuantity = d.LimitBuyQuantity,
+                                   HospitalName=d.HosiptalName                                  
                                };
             FxPageInfo<PartakeItemInfoVo> partakeItemPageInfo = new FxPageInfo<PartakeItemInfoVo>();
             partakeItemPageInfo.TotalCount = q.TotalCount;
@@ -312,7 +313,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportItemListByHospitalId")]
         [FxInternalAuthorize]
-        public async Task<IActionResult> ExportItemListByHospitalIdAsync(int? activityId, int hospitalId)
+        public async Task<IActionResult> ExportItemListByHospitalIdAsync(int? activityId, int? hospitalId)
         {
 
             string fileName = $"{Guid.NewGuid().ToString("N")}.xlsx";
@@ -329,6 +330,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 worksheet.Cells[1, 6].Value = "是否同意直播价";
                 worksheet.Cells[1, 7].Value = "直播价";
                 worksheet.Cells[1, 8].Value = "医院提报价格";
+                worksheet.Cells[1, 9].Value = "所属医院";
 
 
                 int rowNum = 2;
@@ -338,12 +340,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                     worksheet.Cells["B" + rowNum].Value = item.Description;
                     worksheet.Cells["C" + rowNum].Value = item.Standard;
                     worksheet.Cells["D" + rowNum].Value = item.IsLimitBuy == true ? "是" : "否";
-                    worksheet.Cells["E" + rowNum].Value = item.SalePrice;
-                    worksheet.Cells["F" + rowNum].Value = item.LimitBuyQuantity;
-                    worksheet.Cells["G" + rowNum].Value = item.IsAgreeLivingPrice == true ? "是" : "否";
-                    worksheet.Cells["H" + rowNum].Value = item.LivePrice;
-                    worksheet.Cells["I" + rowNum].Value = item.HospitalPrice;
-
+                    worksheet.Cells["E" + rowNum].Value = item.LimitBuyQuantity;
+                    worksheet.Cells["F" + rowNum].Value = item.IsAgreeLivingPrice == true ? "是" : "否";
+                    worksheet.Cells["G" + rowNum].Value = item.LivePrice;
+                    worksheet.Cells["H" + rowNum].Value = item.HospitalPrice;
+                    worksheet.Cells["I" + rowNum].Value = item.HosiptalName;
                     rowNum++;
                 }
                 package.Save();

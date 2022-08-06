@@ -237,7 +237,6 @@ namespace Fx.Amiya.Service
 
             }
             return await partakeHospitals.ToListAsync();
-
         }
 
 
@@ -251,12 +250,13 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<PartakeItemInfoDto>> GetItemListByHospitalIdWithPageAsync(int? activityId, int hospitalId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<PartakeItemInfoDto>> GetItemListByHospitalIdWithPageAsync(int? activityId, int? hospitalId, int pageNum, int pageSize)
         {
-            var hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll()
-                                       where d.HospitalId == hospitalId
-                                       select d;
-
+            IQueryable<HospitalPartakeItem> hospitalPartakeItems= dalHospitalPartakeItem.GetAll();
+            if (hospitalId != null)
+            {
+                hospitalPartakeItems = hospitalPartakeItems.Where(h=>h.HospitalId==hospitalId);
+            }
             IQueryable<PartakeItemInfoDto> partakeItems;
             if (activityId != null)
             {
@@ -275,11 +275,13 @@ namespace Fx.Amiya.Service
                                    HospitalPrice = d.HospitalPrice,
                                    IsLimitBuy = d.ItemInfo.IsLimitBuy,
                                    LimitBuyQuantity = d.ItemInfo.LimitBuyQuantity,
+                                   HosiptalName=d.HospitalInfo.Name
 
                                };
             }
             else
             {
+
                 partakeItems = from d in hospitalPartakeItems
                                group d by new
                                {
@@ -293,7 +295,8 @@ namespace Fx.Amiya.Service
                                    d.ItemInfo.IsLimitBuy,
                                    d.ItemInfo.LimitBuyQuantity,
                                    d.HospitalPrice,
-                                   d.IsAgreeLivingPrice
+                                   d.IsAgreeLivingPrice,
+                                   HospitalName=d.HospitalInfo.Name
                                } into g
                                select new PartakeItemInfoDto
                                {
@@ -307,7 +310,8 @@ namespace Fx.Amiya.Service
                                    IsLimitBuy = g.Key.IsLimitBuy,
                                    LimitBuyQuantity = g.Key.LimitBuyQuantity,
                                    HospitalPrice = g.Key.HospitalPrice,
-                                   IsAgreeLivingPrice = g.Key.IsAgreeLivingPrice
+                                   IsAgreeLivingPrice = g.Key.IsAgreeLivingPrice,
+                                   HosiptalName=g.Key.HospitalName
                                };
             }
 
@@ -325,12 +329,13 @@ namespace Fx.Amiya.Service
         /// <param name="activityId"></param>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
-        public async Task<List<PartakeItemInfoDto>> GetItemListByHospitalIdAsync(int? activityId, int hospitalId)
+        public async Task<List<PartakeItemInfoDto>> GetItemListByHospitalIdAsync(int? activityId, int? hospitalId)
         {
-            var hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll()
-                                       where d.HospitalId == hospitalId
-                                       select d;
 
+            IQueryable<HospitalPartakeItem> hospitalPartakeItems = dalHospitalPartakeItem.GetAll();
+            if (hospitalId!=null) {
+                hospitalPartakeItems.Where(h=>h.HospitalId==hospitalId);
+            }
             IQueryable<PartakeItemInfoDto> partakeItems;
             if (activityId != null)
             {
@@ -349,7 +354,8 @@ namespace Fx.Amiya.Service
                                    IsLimitBuy = d.ItemInfo.IsLimitBuy,
                                    LimitBuyQuantity = d.ItemInfo.LimitBuyQuantity,
                                    IsAgreeLivingPrice=d.IsAgreeLivingPrice,
-                                   HospitalPrice=d.HospitalPrice
+                                   HospitalPrice=d.HospitalPrice,
+                                   HosiptalName=d.HospitalInfo.Name
                                };
             }
             else
@@ -368,7 +374,8 @@ namespace Fx.Amiya.Service
                                    d.ItemInfo.LimitBuyQuantity,
                                    d.ActivityInfo,
                                    d.IsAgreeLivingPrice,
-                                   d.HospitalPrice
+                                   d.HospitalPrice,
+                                   HospitalName=d.HospitalInfo.Name
                                } into g
                                select new PartakeItemInfoDto
                                {
@@ -383,7 +390,9 @@ namespace Fx.Amiya.Service
                                    LimitBuyQuantity = g.Key.LimitBuyQuantity,
                                    LivePrice = g.Key.ActivityInfo.ActivityItemDetailList.SingleOrDefault(e => e.ItemId == g.Key.ItemId).LivePrice,
                                    IsAgreeLivingPrice=g.Key.IsAgreeLivingPrice,
-                                   HospitalPrice=g.Key.HospitalPrice
+                                   HospitalPrice=g.Key.HospitalPrice,
+                                   HosiptalName=g.Key.HospitalName
+                                   
                                };
             }
             return await partakeItems.ToListAsync();
