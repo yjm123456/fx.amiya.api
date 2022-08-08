@@ -1050,11 +1050,6 @@ ADD CONSTRAINT `fk_shopcart_create_by`
 
 
 
-
-
-
-
-
 -----------------------------------------------王健 2022/08/6  BEGIN--------------------------------------------;
 
 ALTER TABLE `amiyadb`.`tbl_tiktok_order_info` 
