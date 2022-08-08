@@ -126,5 +126,13 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// 是否差评
         /// </summary>
         public bool  IsBadReview { get; set; }
+        /// <summary>
+        /// 重要程度
+        /// </summary>
+        public int EmergencyLevel { get; set; }
+        /// <summary>
+        /// 重要程度名称
+        /// </summary>
+        public string EmergencyLevelText { get; set; }
     }
 }

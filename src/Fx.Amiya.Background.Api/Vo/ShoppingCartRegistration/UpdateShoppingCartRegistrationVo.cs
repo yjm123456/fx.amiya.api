@@ -100,5 +100,9 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// 是否差评
         /// </summary>
         public bool IsBadReview { get; set; }
+        /// <summary>
+        /// 重要程度 0可忽略，1轻微，2一般，3重要，4非常重要
+        /// </summary>
+        public int EmergencyLevel { get; set; }
     }
 }

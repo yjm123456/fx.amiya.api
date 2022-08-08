@@ -42,7 +42,7 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? admissionId)
+        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? admissionId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime)
         {
             try
             {
@@ -60,6 +60,8 @@ namespace Fx.Amiya.Service
                                                && (!minPrice.HasValue || d.Price >= minPrice)
                                                && (!maxPrice.HasValue || d.Price <= maxPrice)
                                                && (!LiveAnchorId.HasValue || d.LiveAnchorId == LiveAnchorId)
+                                               && (!startRefundTime.HasValue&&!endRefundTime.HasValue || d.RefundDate>=startRefundTime.Value.Date && d.RefundDate<endRefundTime.Value.AddDays(1).Date)
+                                               && (!startBadReviewTime.HasValue&&!endBadReviewTime.HasValue || d.BadReviewDate>=startBadReviewTime.Value.Date && d.BadReviewDate.Value.Date<endBadReviewTime.Value.AddDays(1).Date)
                                                select new ShoppingCartRegistrationDto
                                                {
                                                    Id = d.Id,
@@ -88,6 +90,7 @@ namespace Fx.Amiya.Service
                                                    BadReviewContent = d.BadReviewContent,
                                                    BadReviewReason = d.BadReviewReason,
                                                    IsBadReview = d.IsBadReview,
+                                                   EmergencyLevel=d.EmergencyLevel
 
                                                };
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
@@ -233,6 +236,8 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.BadReviewContent = shoppingCartRegistration.BadReviewContent;
                 shoppingCartRegistrationDto.BadReviewReason = shoppingCartRegistration.BadReviewReason;
                 shoppingCartRegistrationDto.IsBadReview = shoppingCartRegistration.IsBadReview;
+                shoppingCartRegistrationDto.EmergencyLevel = shoppingCartRegistration.EmergencyLevel;
+               
                 return shoppingCartRegistrationDto;
             }
             catch (Exception ex)
@@ -347,6 +352,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.BadReviewReason = updateDto.BadReviewReason;
                 shoppingCartRegistration.IsBadReview = updateDto.IsBadReview;
                 shoppingCartRegistration.CreateBy = updateDto.CreateBy;
+                shoppingCartRegistration.EmergencyLevel = updateDto.EmergencyLevel;
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
                 // unitOfWork.Commit();
             }

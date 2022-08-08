@@ -1060,7 +1060,13 @@ ADD COLUMN `finish_date` datetime default null AFTER `tiktok_user_id`;
 
 
 
+-----------------------------------------------王健 2022/08/8  BEGIN--------------------------------------------;
 
+ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
+ADD COLUMN `emergency_level` int DEFAULT 0 AFTER `is_send_order`;
+
+
+-----------------------------------------------王健 2022/08/08 END--------------------------------------------;
 
 
 

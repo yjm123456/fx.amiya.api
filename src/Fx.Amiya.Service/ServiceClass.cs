@@ -404,6 +404,36 @@ namespace Fx.Amiya.Service
             }
             return orderTypeText;
         }
+        /// <summary>
+        /// 获取重要程度文本,0可忽略，1轻微，2一般，3重要，4非常重要
+        /// </summary>
+        /// <param name="emergencyLevel"></param>
+        /// <returns></returns>
+        public static string GetShopCartRegisterEmergencyLevelText(int emergencyLevel) {
+            string emergencyLevelText ="";
+            switch (emergencyLevel) {
+                case 0:
+                    emergencyLevelText = "可忽略";
+                    break;
+                case 1:
+                    emergencyLevelText = "轻微";
+                    break;
+                case 2:
+                    emergencyLevelText = "一般";
+                    break;
+                case 3:
+                    emergencyLevelText = "重要";
+                    break;
+                case 4:
+                    emergencyLevelText = "非常重要";
+                    break;
+                default:
+                    emergencyLevelText = "可忽略";
+                    break;
+
+            }
+            return emergencyLevelText;
+        }
 
         /// <summary>
         /// 获取订单性质文本

@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration;
 using Fx.Amiya.Dto.ShoppingCartRegistration;
 using Fx.Amiya.IService;
+using Fx.Amiya.Service;
 using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
@@ -54,17 +55,21 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="minPrice">最小金额</param>
         /// <param name="maxPrice">最大金额</param>
         /// <param name="admissionId">接诊人员</param>
+        /// <param name="startBadReviewTime">差评开始时间</param>
+        /// <param name="endBadReviewTime">差评结束时间</param>
+        /// <param name="startRefundTime">退款开始时间</param>
+        /// <param name="endRefundTime">退款结束时间</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? admissionId)
+        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? admissionId,DateTime? startRefundTime,DateTime? endRefundTime,DateTime? startBadReviewTime,DateTime? endBadReviewTime)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder,  isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, admissionId);
+                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder,  isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, admissionId,startRefundTime,endRefundTime,startBadReviewTime,endBadReviewTime);
 
                 var shoppingCartRegistration = from d in q.List
                                                select new ShoppingCartRegistrationVo
@@ -77,8 +82,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    CustomerNickName = d.CustomerNickName,
                                                    Phone = d.Phone,
                                                    Price = d.Price,
-                                                   IsCreateOrder=d.IsCreateOrder,
-                                                   IsSendOrder=d.IsSendOrder,
+                                                   IsCreateOrder = d.IsCreateOrder,
+                                                   IsSendOrder = d.IsSendOrder,
                                                    ConsultationType = d.ConsultationType,
                                                    IsWriteOff = d.IsWriteOff,
                                                    IsConsultation = d.IsConsultation,
@@ -94,7 +99,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    BadReviewReason = d.BadReviewReason,
                                                    BadReviewDate = d.BadReviewDate == null ? null : d.BadReviewDate,
                                                    RefundDate = d.RefundDate,
-                                                   IsBadReview = d.IsBadReview
+                                                   IsBadReview = d.IsBadReview,
+                                                   EmergencyLevel = d.EmergencyLevel,
+                                                   EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(d.EmergencyLevel)
                                                };
 
                 FxPageInfo<ShoppingCartRegistrationVo> shoppingCartRegistrationPageInfo = new FxPageInfo<ShoppingCartRegistrationVo>();
@@ -201,7 +208,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.BadReviewReason = shoppingCartRegistration.BadReviewReason;
                 shoppingCartRegistrationVo.IsReContent = shoppingCartRegistration.IsReContent;
                 shoppingCartRegistrationVo.IsBadReview = shoppingCartRegistration.IsBadReview;
-
+                shoppingCartRegistrationVo.EmergencyLevel = shoppingCartRegistration.EmergencyLevel;
+                shoppingCartRegistrationVo.EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(shoppingCartRegistration.EmergencyLevel);
                 return ResultData<ShoppingCartRegistrationVo>.Success().AddData("shoppingCartRegistrationInfo", shoppingCartRegistrationVo);
             }
             catch (Exception ex)
@@ -250,6 +258,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.BadReviewReason = updateVo.BadReviewReason;
                 updateDto.IsBadReview = updateVo.IsBadReview;
                 updateDto.CreateBy = updateVo.AdmissionId;
+                updateDto.EmergencyLevel = updateVo.EmergencyLevel;
                 await shoppingCartRegistrationService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

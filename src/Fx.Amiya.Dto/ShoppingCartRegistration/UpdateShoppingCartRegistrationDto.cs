@@ -35,5 +35,9 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// </summary>
         public int CreateBy { get; set; }
         public bool IsBadReview { get; set; }
+        /// <summary>
+        /// 紧急程度
+        /// </summary>
+        public int EmergencyLevel { get; set; }
     }
 }
