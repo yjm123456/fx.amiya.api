@@ -321,33 +321,64 @@ namespace Fx.Amiya.Background.Api.Controllers
             var partakeItems = await hospitalPartakeItemService.GetItemListByHospitalIdAsync(activityId, hospitalId);
             using (ExcelPackage package = new ExcelPackage(stream))
             {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Conversation Message");
-                worksheet.Cells[1, 1].Value = "项目";
-                worksheet.Cells[1, 2].Value = "简介";
-                worksheet.Cells[1, 3].Value = "规格";
-                worksheet.Cells[1, 4].Value = "是否限购";
-                worksheet.Cells[1, 5].Value = "限购数量";
-                worksheet.Cells[1, 6].Value = "是否同意直播价";
-                worksheet.Cells[1, 7].Value = "直播价";
-                worksheet.Cells[1, 8].Value = "医院提报价格";
-                worksheet.Cells[1, 9].Value = "所属医院";
 
-
-                int rowNum = 2;
-                foreach (var item in partakeItems)
                 {
-                    worksheet.Cells["A" + rowNum].Value = item.Name;
-                    worksheet.Cells["B" + rowNum].Value = item.Description;
-                    worksheet.Cells["C" + rowNum].Value = item.Standard;
-                    worksheet.Cells["D" + rowNum].Value = item.IsLimitBuy == true ? "是" : "否";
-                    worksheet.Cells["E" + rowNum].Value = item.LimitBuyQuantity;
-                    worksheet.Cells["F" + rowNum].Value = item.IsAgreeLivingPrice == true ? "是" : "否";
-                    worksheet.Cells["G" + rowNum].Value = item.LivePrice;
-                    worksheet.Cells["H" + rowNum].Value = item.HospitalPrice;
-                    worksheet.Cells["I" + rowNum].Value = item.HosiptalName;
-                    rowNum++;
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Conversation Message");
+                    worksheet.Cells[1, 1].Value = "项目";
+                    worksheet.Cells[1, 2].Value = "简介";
+                    worksheet.Cells[1, 3].Value = "规格";
+                    worksheet.Cells[1, 4].Value = "是否限购";
+                    worksheet.Cells[1, 5].Value = "限购数量";
+                    worksheet.Cells[1, 6].Value = "是否同意直播价";
+                    worksheet.Cells[1, 7].Value = "直播价";
+                    worksheet.Cells[1, 8].Value = "医院提报价格";
+
+
+                    int rowNum = 2;
+                    foreach (var item in partakeItems)
+                    {
+                        worksheet.Cells["A" + rowNum].Value = item.Name;
+                        worksheet.Cells["B" + rowNum].Value = item.Description;
+                        worksheet.Cells["C" + rowNum].Value = item.Standard;
+                        worksheet.Cells["D" + rowNum].Value = item.IsLimitBuy == true ? "是" : "否";
+                        worksheet.Cells["E" + rowNum].Value = item.LimitBuyQuantity;
+                        worksheet.Cells["F" + rowNum].Value = item.IsAgreeLivingPrice == true ? "是" : "否";
+                        worksheet.Cells["G" + rowNum].Value = item.LivePrice;
+                        worksheet.Cells["H" + rowNum].Value = item.HospitalPrice;
+
+                        rowNum++;
+                    }
+                    package.Save();
                 }
-                package.Save();
+
+
+                /* ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Conversation Message");
+                 worksheet.Cells[1, 1].Value = "项目";
+                 worksheet.Cells[1, 2].Value = "简介";
+                 worksheet.Cells[1, 3].Value = "规格";
+                 worksheet.Cells[1, 4].Value = "是否限购";
+                 worksheet.Cells[1, 5].Value = "限购数量";
+                 worksheet.Cells[1, 6].Value = "是否同意直播价";
+                 worksheet.Cells[1, 7].Value = "直播价";
+                 worksheet.Cells[1, 8].Value = "医院提报价格";
+                 worksheet.Cells[1, 9].Value = "所属医院";
+
+
+                 int rowNum = 2;
+                 foreach (var item in partakeItems)
+                 {
+                     worksheet.Cells["A" + rowNum].Value = item.Name;
+                     worksheet.Cells["B" + rowNum].Value = item.Description;
+                     worksheet.Cells["C" + rowNum].Value = item.Standard;
+                     worksheet.Cells["D" + rowNum].Value = item.IsLimitBuy == true ? "是" : "否";
+                     worksheet.Cells["E" + rowNum].Value = item.LimitBuyQuantity;
+                     worksheet.Cells["F" + rowNum].Value = item.IsAgreeLivingPrice == true ? "是" : "否";
+                     worksheet.Cells["G" + rowNum].Value = item.LivePrice;
+                     worksheet.Cells["H" + rowNum].Value = item.HospitalPrice;
+                     worksheet.Cells["I" + rowNum].Value = item.HosiptalName;
+                     rowNum++;
+                 }
+                 package.Save();*/
             }
             stream.Position = 0;
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
