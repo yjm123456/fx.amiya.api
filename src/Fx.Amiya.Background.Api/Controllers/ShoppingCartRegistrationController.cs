@@ -59,17 +59,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="endBadReviewTime">差评结束时间</param>
         /// <param name="startRefundTime">退款开始时间</param>
         /// <param name="endRefundTime">退款结束时间</param>
+        /// <param name="emergencyLevel">紧急程度</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? admissionId,DateTime? startRefundTime,DateTime? endRefundTime,DateTime? startBadReviewTime,DateTime? endBadReviewTime)
+        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? admissionId,DateTime? startRefundTime,DateTime? endRefundTime,DateTime? startBadReviewTime,DateTime? endBadReviewTime,int? emergencyLevel)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder,  isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, admissionId,startRefundTime,endRefundTime,startBadReviewTime,endBadReviewTime);
+                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder,  isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, admissionId,startRefundTime,endRefundTime,startBadReviewTime,endBadReviewTime,emergencyLevel);
 
                 var shoppingCartRegistration = from d in q.List
                                                select new ShoppingCartRegistrationVo
@@ -268,6 +269,19 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// 输出紧急程度列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("emergencyLevels")]
+        public ResultData<List<EmergencyLevelVo>> GetEmergencyLevel() {
+            var emergencyLevel = from d in shoppingCartRegistrationService.GetEmergencyLevelList()
+                                 select new EmergencyLevelVo {
+                                     EmergencyLevel = d.EmergencyLevel,
+                                     EmergencyLevelText=d.EmergencyText
+                                 };
+            return ResultData<List<EmergencyLevelVo>>.Success().AddData("emergencyLevels", emergencyLevel.ToList());
+        }
 
         /// <summary>
         /// 删除小黄车登记信息

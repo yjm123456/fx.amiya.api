@@ -42,7 +42,7 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? admissionId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime)
+        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? admissionId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime,int? emergencyLevel)
         {
             try
             {
@@ -62,6 +62,7 @@ namespace Fx.Amiya.Service
                                                && (!LiveAnchorId.HasValue || d.LiveAnchorId == LiveAnchorId)
                                                && (!startRefundTime.HasValue&&!endRefundTime.HasValue || d.RefundDate>=startRefundTime.Value.Date && d.RefundDate<endRefundTime.Value.AddDays(1).Date)
                                                && (!startBadReviewTime.HasValue&&!endBadReviewTime.HasValue || d.BadReviewDate>=startBadReviewTime.Value.Date && d.BadReviewDate.Value.Date<endBadReviewTime.Value.AddDays(1).Date)
+                                               &&(!emergencyLevel.HasValue || d.EmergencyLevel==emergencyLevel)
                                                select new ShoppingCartRegistrationDto
                                                {
                                                    Id = d.Id,
@@ -437,6 +438,20 @@ namespace Fx.Amiya.Service
             }
         }
 
+        public List<EmergencyLevelDto> GetEmergencyLevelList()
+        {
+            var emergencyLevels = Enum.GetValues(typeof(EmergencyLevel));
+            List<EmergencyLevelDto> emergencyLevelList = new List<EmergencyLevelDto>();
+            foreach (var item in emergencyLevels)
+            {
+                EmergencyLevelDto emergencyLevelDto = new EmergencyLevelDto();
+                emergencyLevelDto.EmergencyLevel = Convert.ToInt32(item);
+                emergencyLevelDto.EmergencyText = ServiceClass.GetShopCartRegisterEmergencyLevelText(emergencyLevelDto.EmergencyLevel);
+                emergencyLevelList.Add(emergencyLevelDto);
+            }
+            return emergencyLevelList;
+        }
+
         #region 【报表相关】
         public async Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistrationReportAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, bool isHidePhone)
         {
@@ -493,6 +508,8 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
+
+      
 
         #endregion
     }

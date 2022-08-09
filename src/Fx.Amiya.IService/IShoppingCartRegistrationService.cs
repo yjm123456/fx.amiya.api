@@ -10,7 +10,7 @@ namespace Fx.Amiya.IService
 {
     public interface IShoppingCartRegistrationService
     {
-        Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize,decimal? minPrice,decimal? maxPrice,int? AdmissionId,DateTime? startRefundTime,DateTime? endRefundTime,DateTime? startBadReviewTime,DateTime? endBadReviewTime);
+        Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize,decimal? minPrice,decimal? maxPrice,int? AdmissionId,DateTime? startRefundTime,DateTime? endRefundTime,DateTime? startBadReviewTime,DateTime? endBadReviewTime,int? emergencyLevel);
         Task AddAsync(AddShoppingCartRegistrationDto addDto);
         Task<ShoppingCartRegistrationDto> GetByIdAsync(string id);
         Task<ShoppingCartRegistrationDto> GetByPhoneAsync(string phone);
@@ -28,6 +28,12 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task UpdateSendOrderAsync(string phone);
         Task DeleteAsync(string id);
+        /// <summary>
+        /// 输出紧急程度列表
+        /// </summary>
+        /// <returns></returns>
+        List<EmergencyLevelDto> GetEmergencyLevelList();
+
 
         #region 【报表相关】
         Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistrationReportAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, bool isHidePhone);
