@@ -42,7 +42,7 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? admissionId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime,int? emergencyLevel)
+        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? admissionId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? emergencyLevel, bool? isBadReview, bool? isRefund)
         {
             try
             {
@@ -60,9 +60,11 @@ namespace Fx.Amiya.Service
                                                && (!minPrice.HasValue || d.Price >= minPrice)
                                                && (!maxPrice.HasValue || d.Price <= maxPrice)
                                                && (!LiveAnchorId.HasValue || d.LiveAnchorId == LiveAnchorId)
-                                               && (!startRefundTime.HasValue&&!endRefundTime.HasValue || d.RefundDate>=startRefundTime.Value.Date && d.RefundDate<endRefundTime.Value.AddDays(1).Date)
-                                               && (!startBadReviewTime.HasValue&&!endBadReviewTime.HasValue || d.BadReviewDate>=startBadReviewTime.Value.Date && d.BadReviewDate.Value.Date<endBadReviewTime.Value.AddDays(1).Date)
-                                               &&(!emergencyLevel.HasValue || d.EmergencyLevel==emergencyLevel)
+                                               && (!startRefundTime.HasValue && !endRefundTime.HasValue || d.RefundDate >= startRefundTime.Value.Date && d.RefundDate < endRefundTime.Value.AddDays(1).Date)
+                                               && (!startBadReviewTime.HasValue && !endBadReviewTime.HasValue || d.BadReviewDate >= startBadReviewTime.Value.Date && d.BadReviewDate.Value.Date < endBadReviewTime.Value.AddDays(1).Date)
+                                               && (!emergencyLevel.HasValue || d.EmergencyLevel == emergencyLevel)
+                                               && (!isBadReview.HasValue || d.IsBadReview==isBadReview)
+                                               &&(!isRefund.HasValue || (isRefund.Value ? d.RefundDate != null : d.RefundDate == null))
                                                select new ShoppingCartRegistrationDto
                                                {
                                                    Id = d.Id,
