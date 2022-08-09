@@ -158,6 +158,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.BadReviewDate = addVo.BadReviewDate;
                 addDto.BadReviewReason = addVo.BadReviewReason;
                 addDto.IsBadReview = addVo.IsBadReview;
+                addDto.EmergencyLevel = addVo.EmergencyLevel;
                 await shoppingCartRegistrationService.AddAsync(addDto);
 
                 return ResultData.Success();

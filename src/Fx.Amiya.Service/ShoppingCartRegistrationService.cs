@@ -186,6 +186,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.IsBadReview = addDto.IsBadReview;
                 shoppingCartRegistration.IsCreateOrder = false;
                 shoppingCartRegistration.IsSendOrder = false;
+                shoppingCartRegistration.EmergencyLevel = addDto.EmergencyLevel;
                 await dalShoppingCartRegistration.AddAsync(shoppingCartRegistration, true);
 
                 //unitOfWork.Commit();
