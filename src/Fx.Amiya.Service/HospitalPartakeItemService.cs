@@ -145,12 +145,19 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<PartakeHospitalInfoDto>> GetHospitalListByItemIdWithPageAsync(int? activityId, int itemId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<PartakeHospitalInfoDto>> GetHospitalListByItemIdWithPageAsync(int? activityId, int? itemId, int pageNum, int pageSize)
         {
-            var hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll()
+            IQueryable<HospitalPartakeItem> hospitalPartakeItems;
+            if (itemId != null)
+            {
+                hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll()
                                        where (d.ItemId == 0 || d.ItemId == itemId)
                                        select d;
-
+            }
+            else
+            {
+                hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll() select d;
+            }
             IQueryable<PartakeHospitalInfoDto> partakeHospitals;
             if (activityId != null)
             {
@@ -198,11 +205,19 @@ namespace Fx.Amiya.Service
         /// <param name="activityId"></param>
         /// <param name="itemId"></param>
         /// <returns></returns>
-        public async Task<List<PartakeHospitalInfoDto>> GetHospitalListByItemIdAsync(int? activityId, int itemId)
+        public async Task<List<PartakeHospitalInfoDto>> GetHospitalListByItemIdAsync(int? activityId, int? itemId)
         {
-            var hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll()
-                                       where d.ItemId == itemId
+            IQueryable<HospitalPartakeItem> hospitalPartakeItems;
+            if (itemId != null)
+            {
+                hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll()
+                                       where (d.ItemId == 0 || d.ItemId == itemId)
                                        select d;
+            }
+            else
+            {
+                hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll() select d;
+            }
 
             IQueryable<PartakeHospitalInfoDto> partakeHospitals;
             if (activityId != null)
@@ -215,9 +230,9 @@ namespace Fx.Amiya.Service
                                        HospitalName = d.HospitalInfo.Name,
                                        ThumbPicUrl = d.HospitalInfo.ThumbPicUrl,
                                        Address = d.HospitalInfo.Address,
-                                       IsAgreeLivingPrice=d.IsAgreeLivingPrice,
+                                       IsAgreeLivingPrice = d.IsAgreeLivingPrice,
                                        LivingPrice = d.ActivityInfo.ActivityItemDetailList.SingleOrDefault(e => e.ItemId == d.ItemId).LivePrice,
-                                       HospitalPrice =d.HospitalPrice
+                                       HospitalPrice = d.HospitalPrice
                                    };
             }
             else
@@ -252,10 +267,10 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<FxPageInfo<PartakeItemInfoDto>> GetItemListByHospitalIdWithPageAsync(int? activityId, int? hospitalId, int pageNum, int pageSize)
         {
-            IQueryable<HospitalPartakeItem> hospitalPartakeItems= dalHospitalPartakeItem.GetAll();
+            IQueryable<HospitalPartakeItem> hospitalPartakeItems = dalHospitalPartakeItem.GetAll();
             if (hospitalId != null)
             {
-                hospitalPartakeItems = hospitalPartakeItems.Where(h=>h.HospitalId==hospitalId);
+                hospitalPartakeItems = hospitalPartakeItems.Where(h => h.HospitalId == hospitalId);
             }
             IQueryable<PartakeItemInfoDto> partakeItems;
             if (activityId != null)
@@ -275,7 +290,7 @@ namespace Fx.Amiya.Service
                                    HospitalPrice = d.HospitalPrice,
                                    IsLimitBuy = d.ItemInfo.IsLimitBuy,
                                    LimitBuyQuantity = d.ItemInfo.LimitBuyQuantity,
-                                   HosiptalName=d.HospitalInfo.Name
+                                   HosiptalName = d.HospitalInfo.Name
 
                                };
             }
@@ -318,8 +333,9 @@ namespace Fx.Amiya.Service
         {
 
             IQueryable<HospitalPartakeItem> hospitalPartakeItems = dalHospitalPartakeItem.GetAll();
-            if (hospitalId!=null) {
-                hospitalPartakeItems.Where(h=>h.HospitalId==hospitalId);
+            if (hospitalId != null)
+            {
+                hospitalPartakeItems.Where(h => h.HospitalId == hospitalId);
             }
             IQueryable<PartakeItemInfoDto> partakeItems;
             if (activityId != null)
@@ -338,31 +354,31 @@ namespace Fx.Amiya.Service
                                    LivePrice = d.ActivityInfo.ActivityItemDetailList.SingleOrDefault(e => e.ItemId == d.ItemId).LivePrice,
                                    IsLimitBuy = d.ItemInfo.IsLimitBuy,
                                    LimitBuyQuantity = d.ItemInfo.LimitBuyQuantity,
-                                   IsAgreeLivingPrice=d.IsAgreeLivingPrice,
-                                   HospitalPrice=d.HospitalPrice,
-                                   HosiptalName=d.HospitalInfo.Name
+                                   IsAgreeLivingPrice = d.IsAgreeLivingPrice,
+                                   HospitalPrice = d.HospitalPrice,
+                                   HosiptalName = d.HospitalInfo.Name
                                };
             }
             else
             {
-                partakeItems=from d in hospitalPartakeItems.Include(d => d.ItemInfo).Include(h => h.HospitalInfo).Include(a => a.ActivityInfo).ThenInclude(a => a.ActivityItemDetailList)
-                             select new PartakeItemInfoDto
-                             {
-                                 ItemId = d.ItemId,
-                                 Name = d.ItemInfo.Name,
-                                 ThumbPicUrl = d.ItemInfo.ThumbPicUrl,
-                                 Description = d.ItemInfo.Description,
-                                 Standard = d.ItemInfo.Standard,
-                                 Parts = d.ItemInfo.Parts,
-                                 SalePrice = d.ItemInfo.SalePrice,
-                                 IsLimitBuy = d.ItemInfo.IsLimitBuy,
-                                 LimitBuyQuantity = d.ItemInfo.LimitBuyQuantity,
-                                 LivePrice = d.ActivityInfo.ActivityItemDetailList.SingleOrDefault(e => e.ItemId == d.ItemId).LivePrice,
-                                 IsAgreeLivingPrice = d.IsAgreeLivingPrice,
-                                 HospitalPrice = d.HospitalPrice,
-                                 HosiptalName = d.HospitalInfo.Name
+                partakeItems = from d in hospitalPartakeItems.Include(d => d.ItemInfo).Include(h => h.HospitalInfo).Include(a => a.ActivityInfo).ThenInclude(a => a.ActivityItemDetailList)
+                               select new PartakeItemInfoDto
+                               {
+                                   ItemId = d.ItemId,
+                                   Name = d.ItemInfo.Name,
+                                   ThumbPicUrl = d.ItemInfo.ThumbPicUrl,
+                                   Description = d.ItemInfo.Description,
+                                   Standard = d.ItemInfo.Standard,
+                                   Parts = d.ItemInfo.Parts,
+                                   SalePrice = d.ItemInfo.SalePrice,
+                                   IsLimitBuy = d.ItemInfo.IsLimitBuy,
+                                   LimitBuyQuantity = d.ItemInfo.LimitBuyQuantity,
+                                   LivePrice = d.ActivityInfo.ActivityItemDetailList.SingleOrDefault(e => e.ItemId == d.ItemId).LivePrice,
+                                   IsAgreeLivingPrice = d.IsAgreeLivingPrice,
+                                   HospitalPrice = d.HospitalPrice,
+                                   HosiptalName = d.HospitalInfo.Name
 
-                             };
+                               };
                 /*partakeItems = from d in hospitalPartakeItems
                                group d by new
                                {
@@ -413,11 +429,33 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<PartakeHospitalInfoDto>> GetHospitalListByCityWithPageAsync(int? activityId, int cityId, int itemId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<PartakeHospitalInfoDto>> GetHospitalListByCityWithPageAsync(int? activityId, int? cityId, int? itemId, int pageNum, int pageSize)
         {
-            var hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll()
+            IQueryable<HospitalPartakeItem> hospitalPartakeItems;
+            if (itemId != null && cityId != null)
+            {
+                hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll()
                                        where d.ItemId == itemId && d.HospitalInfo.CityId == cityId
                                        select d;
+            }
+            else if (cityId != null && itemId == null)
+            {
+                hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll()
+                                       where d.HospitalInfo.CityId == cityId
+                                       select d;
+            }
+            else if (cityId == null && itemId != null)
+            {
+                hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll()
+                                       where d.ItemId == itemId
+                                       select d;
+            }
+            else
+            {
+                hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll()
+                                       select d;
+            }
+
 
             IQueryable<PartakeHospitalInfoDto> partakeHospitals;
             if (activityId != null)
@@ -466,12 +504,36 @@ namespace Fx.Amiya.Service
         /// <param name="cityId"></param>
         /// <param name="itemId"></param>
         /// <returns></returns>
-        public async Task<List<PartakeHospitalInfoDto>> GetHospitalListByCityAsync(int? activityId, int cityId, int itemId)
+        public async Task<List<PartakeHospitalInfoDto>> GetHospitalListByCityAsync(int? activityId, int? cityId, int? itemId)
         {
-            var hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll()
+            /*var hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll()
+                                      where d.ItemId == itemId && d.HospitalInfo.CityId == cityId
+                                      select d;*/
+
+            IQueryable<HospitalPartakeItem> hospitalPartakeItems;
+            if (itemId != null && cityId != null)
+            {
+                hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll()
                                        where d.ItemId == itemId && d.HospitalInfo.CityId == cityId
                                        select d;
-
+            }
+            else if (cityId != null && itemId == null)
+            {
+                hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll()
+                                       where d.HospitalInfo.CityId == cityId
+                                       select d;
+            }
+            else if (cityId == null && itemId != null)
+            {
+                hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll()
+                                       where d.ItemId == itemId
+                                       select d;
+            }
+            else
+            {
+                hospitalPartakeItems = from d in dalHospitalPartakeItem.GetAll()
+                                       select d;
+            }
             IQueryable<PartakeHospitalInfoDto> partakeHospitals;
             if (activityId != null)
             {
@@ -491,7 +553,7 @@ namespace Fx.Amiya.Service
             else
             {
                 partakeHospitals = from d in hospitalPartakeItems
-                                   group d by new { d.HospitalId, d.HospitalInfo.Name, d.HospitalInfo.ThumbPicUrl, d.HospitalInfo.Address, d.ActivityInfo,d.ItemId, d.IsAgreeLivingPrice, d.HospitalPrice } into g
+                                   group d by new { d.HospitalId, d.HospitalInfo.Name, d.HospitalInfo.ThumbPicUrl, d.HospitalInfo.Address, d.ActivityInfo, d.ItemId, d.IsAgreeLivingPrice, d.HospitalPrice } into g
                                    select new PartakeHospitalInfoDto
                                    {
                                        HospitalId = g.Key.HospitalId,

@@ -52,7 +52,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<PartakeHospitalInfoDto>> GetHospitalListByItemIdWithPageAsync(int? activityId, int itemId, int pageNum, int pageSize);
+        Task<FxPageInfo<PartakeHospitalInfoDto>> GetHospitalListByItemIdWithPageAsync(int? activityId, int? itemId, int pageNum, int pageSize);
 
 
 
@@ -62,7 +62,7 @@ namespace Fx.Amiya.IService
         /// <param name="activityId"></param>
         /// <param name="itemId"></param>
         /// <returns></returns>
-        Task<List<PartakeHospitalInfoDto>> GetHospitalListByItemIdAsync(int? activityId, int itemId);
+        Task<List<PartakeHospitalInfoDto>> GetHospitalListByItemIdAsync(int? activityId, int? itemId);
 
 
 
@@ -95,7 +95,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-         Task<FxPageInfo<PartakeHospitalInfoDto>> GetHospitalListByCityWithPageAsync(int? activityId, int cityId, int itemId, int pageNum, int pageSize);
+         Task<FxPageInfo<PartakeHospitalInfoDto>> GetHospitalListByCityWithPageAsync(int? activityId, int? cityId, int? itemId, int pageNum, int pageSize);
 
         /// <summary>
         /// 根据城市和项目获取参与的医院列表（不分页）
@@ -104,6 +104,6 @@ namespace Fx.Amiya.IService
         /// <param name="cityId"></param>
         /// <param name="itemId"></param>
         /// <returns></returns>
-        Task<List<PartakeHospitalInfoDto>> GetHospitalListByCityAsync(int? activityId, int cityId, int itemId);
+        Task<List<PartakeHospitalInfoDto>> GetHospitalListByCityAsync(int? activityId, int? cityId, int? itemId);
     }
 }

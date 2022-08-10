@@ -155,7 +155,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("hospitalListByItemIdWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<PartakeHospitalInfoVo>>> GetHospitalListByItemIdWithPageAsync(int? activityId, int itemId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<PartakeHospitalInfoVo>>> GetHospitalListByItemIdWithPageAsync(int? activityId, int? itemId, int pageNum, int pageSize)
         {
             var q = await hospitalPartakeItemService.GetHospitalListByItemIdWithPageAsync(activityId, itemId, pageNum, pageSize);
             var partakeHospitals = from d in q.List
@@ -233,7 +233,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("hospitalListByCityWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<PartakeHospitalInfoVo>>> GetHospitalListByCityWithPageAsync(int? activityId, int cityId, int itemId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<PartakeHospitalInfoVo>>> GetHospitalListByCityWithPageAsync(int? activityId, int? cityId, int? itemId, int pageNum, int pageSize)
         {
             var q = await hospitalPartakeItemService.GetHospitalListByCityWithPageAsync(activityId, cityId, itemId, pageNum, pageSize);
             var partakeHospitals = from d in q.List
@@ -266,7 +266,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportHospitalListByCity")]
         [FxInternalAuthorize]
-        public async Task<IActionResult> ExportHospitalListByCity(int? activityId, int cityId, int itemId)
+        public async Task<IActionResult> ExportHospitalListByCity(int? activityId, int? cityId, int? itemId)
         {
 
             string fileName = $"{Guid.NewGuid().ToString("N")}.xlsx";
@@ -397,7 +397,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportHospitalListByItemId")]
         [FxInternalAuthorize]
-        public async Task<IActionResult> ExportHospitalListByItemIdAsync(int? activityId, int itemId)
+        public async Task<IActionResult> ExportHospitalListByItemIdAsync(int? activityId, int? itemId)
         {
             var partakeHoapitals = await hospitalPartakeItemService.GetHospitalListByItemIdAsync(activityId, itemId);
 
