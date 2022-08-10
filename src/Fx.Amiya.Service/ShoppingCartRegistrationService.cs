@@ -456,7 +456,7 @@ namespace Fx.Amiya.Service
         }
 
         #region 【报表相关】
-        public async Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistrationReportAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, bool isHidePhone)
+        public async Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistrationReportAsync(DateTime? startDate, DateTime? endDate, int? emergencyLevel, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, bool isHidePhone)
         {
             try
             {
@@ -466,6 +466,7 @@ namespace Fx.Amiya.Service
                                                && (string.IsNullOrEmpty(contentPlatFormId) || d.ContentPlatFormId == contentPlatFormId)
                                                && (!LiveAnchorId.HasValue || d.LiveAnchorId == LiveAnchorId) && (!isAddWechat.HasValue || d.IsAddWeChat == isAddWechat)
                                                && (!isWriteOff.HasValue || d.IsWriteOff == isWriteOff)
+                                               && (!emergencyLevel.HasValue || d.EmergencyLevel == emergencyLevel)
                                                && (!isConsultation.HasValue || d.IsConsultation == isConsultation)
                                                && (!isSendOrder.HasValue || d.IsSendOrder == isSendOrder)
                                                && (!isCreateOrder.HasValue || d.IsCreateOrder == isCreateOrder)
@@ -477,6 +478,7 @@ namespace Fx.Amiya.Service
                                                    ContentPlatFormId = d.ContentPlatFormId,
                                                    ContentPlatFormName = d.Contentplatform.ContentPlatformName,
                                                    LiveAnchorId = d.LiveAnchorId,
+                                                   EmergencyLevel=d.EmergencyLevel,
                                                    LiveAnchorName = d.LiveAnchor.Name,
                                                    IsCreateOrder = d.IsCreateOrder,
                                                    IsSendOrder = d.IsSendOrder,

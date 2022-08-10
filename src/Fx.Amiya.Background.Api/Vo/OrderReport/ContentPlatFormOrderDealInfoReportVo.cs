@@ -33,6 +33,12 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         public DateTime OrderCreateDate { get; set; }
 
         /// <summary>
+        /// 下单金额
+        /// </summary>
+        [Description("下单金额")]
+        public decimal? AddOrderPrice { get; set; }
+
+        /// <summary>
         /// 派单时间
         /// </summary>
         [Description("派单时间")]

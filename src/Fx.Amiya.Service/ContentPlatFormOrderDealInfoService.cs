@@ -52,6 +52,8 @@ namespace Fx.Amiya.Service
         /// <param name="isDeal">是否成交（空查询所有）</param>
         /// <param name="lastDealHospitalId">最终成交医院id（空查询所有）</param>
         /// <param name="isAccompanying">是否陪诊（空查询所有）</param>
+        /// <param name="minAddOrderPrice">最小下单金额（空查询所有）</param>
+        /// <param name="maxAddOrderPrice">最大下单金额（空查询所有）</param>
         /// <param name="isOldCustomer">新老客业绩（空查询所有）</param>
         /// <param name="CheckState">审核状态（空查询所有）</param>
         /// <param name="isReturnBakcPrice">是否回款（空查询所有）</param>
@@ -63,7 +65,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, int pageNum, int pageSize)
         {
             try
             {
@@ -133,6 +135,8 @@ namespace Fx.Amiya.Service
                                                    && (!isReturnBakcPrice.HasValue || d.IsReturnBackPrice == isReturnBakcPrice.Value)
                                                    && (!customerServiceId.HasValue || d.CreateBy == customerServiceId)
                                                    && (!consultationType.HasValue || d.ContentPlatFormOrder.ConsultationType == consultationType)
+                                                   && (!minAddOrderPrice.HasValue || d.ContentPlatFormOrder.AddOrderPrice >= minAddOrderPrice)
+                                                   && (!maxAddOrderPrice.HasValue || d.ContentPlatFormOrder.AddOrderPrice <= maxAddOrderPrice)
                                                    select new ContentPlatFormOrderDealInfoDto
                                                    {
                                                        Id = d.Id,
@@ -145,6 +149,7 @@ namespace Fx.Amiya.Service
                                                        ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ContentPlatFormOrder.ConsultationType),
                                                        CommissionRatio = d.CommissionRatio,
                                                        IsToHospital = d.IsToHospital,
+                                                       AddOrderPrice = d.ContentPlatFormOrder.AddOrderPrice,
                                                        ToHospitalType = d.ToHospitalType,
                                                        ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
                                                        ToHospitalDate = d.ToHospitalDate,
@@ -201,7 +206,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, bool hidePhone)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, bool hidePhone)
         {
             try
             {
@@ -270,6 +275,8 @@ namespace Fx.Amiya.Service
                                                    && (!isReturnBakcPrice.HasValue || d.IsReturnBackPrice == isReturnBakcPrice.Value)
                                                    && (!consultationType.HasValue || d.ContentPlatFormOrder.ConsultationType == consultationType.Value)
                                                    && (!customerServiceId.HasValue || d.ContentPlatFormOrder.BelongEmpId == customerServiceId)
+                                                   && (!minAddOrderPrice.HasValue || d.ContentPlatFormOrder.AddOrderPrice >= minAddOrderPrice)
+                                                   && (!maxAddOrderPrice.HasValue || d.ContentPlatFormOrder.AddOrderPrice <= maxAddOrderPrice)
                                                    select new ContentPlatFormOrderDealInfoDto
                                                    {
                                                        Id = d.Id,
@@ -282,6 +289,7 @@ namespace Fx.Amiya.Service
                                                        GoodsName = d.ContentPlatFormOrder.AmiyaGoodsDemand.ProjectNname,
                                                        SendDate = d.ContentPlatFormOrder.SendDate,
                                                        CustomerNickName = d.ContentPlatFormOrder.CustomerName,
+                                                       AddOrderPrice=d.ContentPlatFormOrder.AddOrderPrice,
                                                        CreateDate = d.CreateDate,
                                                        IsDeal = d.IsDeal,
                                                        IsOldCustomer = d.IsOldCustomer,

@@ -21,6 +21,11 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("登记日期")]
         public DateTime RecordDate { get; set; }
+
+        /// <summary>
+        /// 紧急程度
+        /// </summary>
+        public string EmergencyLevelText { get; set; }
         /// <summary>
         /// 来源渠道
         /// </summary>

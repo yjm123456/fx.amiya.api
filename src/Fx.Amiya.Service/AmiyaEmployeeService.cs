@@ -407,8 +407,6 @@ namespace Fx.Amiya.Service
             var employee = from d in dalAmiyaEmployee.GetAll()
                            where d.IsCustomerService==true
                            && d.Valid==true
-                           && (d.AmiyaPositionInfo.Name.Contains("客服")
-                           || d.AmiyaPositionInfo.Name.Contains("客服管理员"))
                            select new AmiyaEmployeeNameDto
                            {
                                Id = d.Id,
