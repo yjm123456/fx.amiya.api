@@ -177,17 +177,16 @@ namespace Fx.Amiya.Service
             }
             else
             {
-                partakeHospitals = from d in hospitalPartakeItems
-                                   group d by new { d.HospitalId, d.HospitalInfo.Name, d.HospitalInfo.ThumbPicUrl, d.HospitalInfo.Address, d.ActivityInfo, d.ItemId, d.IsAgreeLivingPrice, d.HospitalPrice } into g
+                partakeHospitals = from d in hospitalPartakeItems.Include(d => d.ItemInfo).Include(h => h.HospitalInfo).Include(a => a.ActivityInfo).ThenInclude(a => a.ActivityItemDetailList)
                                    select new PartakeHospitalInfoDto
                                    {
-                                       HospitalId = g.Key.HospitalId,
-                                       HospitalName = g.Key.Name,
-                                       ThumbPicUrl = g.Key.ThumbPicUrl,
-                                       Address = g.Key.Address,
-                                       LivingPrice = g.Key.ActivityInfo.ActivityItemDetailList.SingleOrDefault(e => e.ItemId == g.Key.ItemId).LivePrice,
-                                       IsAgreeLivingPrice = g.Key.IsAgreeLivingPrice,
-                                       HospitalPrice = g.Key.HospitalPrice
+                                       HospitalId = d.HospitalId,
+                                       HospitalName = d.ItemInfo.Name,
+                                       ThumbPicUrl = d.ItemInfo.ThumbPicUrl,
+                                       Address = d.HospitalInfo.Address,
+                                       LivingPrice = d.ActivityInfo.ActivityItemDetailList.SingleOrDefault(e => e.ItemId == d.ItemId).LivePrice,
+                                       IsAgreeLivingPrice = d.IsAgreeLivingPrice,
+                                       HospitalPrice = d.HospitalPrice
                                    };
 
             }
@@ -237,17 +236,16 @@ namespace Fx.Amiya.Service
             }
             else
             {
-                partakeHospitals = from d in hospitalPartakeItems
-                                   group d by new { d.HospitalId, d.HospitalInfo.Name, d.HospitalInfo.ThumbPicUrl, d.HospitalInfo.Address, d.ActivityInfo, d.ItemId, d.IsAgreeLivingPrice, d.HospitalPrice } into g
+                partakeHospitals = from d in hospitalPartakeItems.Include(d => d.ItemInfo).Include(h => h.HospitalInfo).Include(a => a.ActivityInfo).ThenInclude(a => a.ActivityItemDetailList)
                                    select new PartakeHospitalInfoDto
                                    {
-                                       HospitalId = g.Key.HospitalId,
-                                       HospitalName = g.Key.Name,
-                                       ThumbPicUrl = g.Key.ThumbPicUrl,
-                                       Address = g.Key.Address,
-                                       LivingPrice = g.Key.ActivityInfo.ActivityItemDetailList.SingleOrDefault(e => e.ItemId == g.Key.ItemId).LivePrice,
-                                       IsAgreeLivingPrice = g.Key.IsAgreeLivingPrice,
-                                       HospitalPrice = g.Key.HospitalPrice
+                                       HospitalId = d.HospitalId,
+                                       HospitalName = d.ItemInfo.Name,
+                                       ThumbPicUrl = d.ItemInfo.ThumbPicUrl,
+                                       Address = d.HospitalInfo.Address,
+                                       LivingPrice = d.ActivityInfo.ActivityItemDetailList.SingleOrDefault(e => e.ItemId == d.ItemId).LivePrice,
+                                       IsAgreeLivingPrice = d.IsAgreeLivingPrice,
+                                       HospitalPrice = d.HospitalPrice
                                    };
 
             }
@@ -475,17 +473,16 @@ namespace Fx.Amiya.Service
             }
             else
             {
-                partakeHospitals = from d in hospitalPartakeItems
-                                   group d by new { d.HospitalId, d.HospitalInfo.Name, d.HospitalInfo.ThumbPicUrl, d.HospitalInfo.Address, d.ActivityInfo, d.ItemId, d.IsAgreeLivingPrice, d.HospitalPrice } into g
+                partakeHospitals = from d in hospitalPartakeItems.Include(d => d.ItemInfo).Include(h => h.HospitalInfo).Include(a => a.ActivityInfo).ThenInclude(a => a.ActivityItemDetailList)
                                    select new PartakeHospitalInfoDto
                                    {
-                                       HospitalId = g.Key.HospitalId,
-                                       HospitalName = g.Key.Name,
-                                       ThumbPicUrl = g.Key.ThumbPicUrl,
-                                       Address = g.Key.Address,
-                                       LivingPrice = g.Key.ActivityInfo.ActivityItemDetailList.SingleOrDefault(e => e.ItemId == g.Key.ItemId).LivePrice,
-                                       IsAgreeLivingPrice = g.Key.IsAgreeLivingPrice,
-                                       HospitalPrice = g.Key.HospitalPrice
+                                       HospitalId = d.HospitalId,
+                                       HospitalName = d.ItemInfo.Name,
+                                       ThumbPicUrl = d.ItemInfo.ThumbPicUrl,
+                                       Address = d.HospitalInfo.Address,
+                                       LivingPrice = d.ActivityInfo.ActivityItemDetailList.SingleOrDefault(e => e.ItemId == d.ItemId).LivePrice,
+                                       IsAgreeLivingPrice = d.IsAgreeLivingPrice,
+                                       HospitalPrice = d.HospitalPrice
                                    };
             }
 
@@ -552,17 +549,16 @@ namespace Fx.Amiya.Service
             }
             else
             {
-                partakeHospitals = from d in hospitalPartakeItems
-                                   group d by new { d.HospitalId, d.HospitalInfo.Name, d.HospitalInfo.ThumbPicUrl, d.HospitalInfo.Address, d.ActivityInfo, d.ItemId, d.IsAgreeLivingPrice, d.HospitalPrice } into g
+                partakeHospitals = from d in hospitalPartakeItems.Include(d => d.ItemInfo).Include(h => h.HospitalInfo).Include(a => a.ActivityInfo).ThenInclude(a => a.ActivityItemDetailList)
                                    select new PartakeHospitalInfoDto
                                    {
-                                       HospitalId = g.Key.HospitalId,
-                                       HospitalName = g.Key.Name,
-                                       ThumbPicUrl = g.Key.ThumbPicUrl,
-                                       Address = g.Key.Address,
-                                       LivingPrice = g.Key.ActivityInfo.ActivityItemDetailList.SingleOrDefault(e => e.ItemId == g.Key.ItemId).LivePrice,
-                                       IsAgreeLivingPrice = g.Key.IsAgreeLivingPrice,
-                                       HospitalPrice = g.Key.HospitalPrice
+                                       HospitalId = d.HospitalId,
+                                       HospitalName = d.ItemInfo.Name,
+                                       ThumbPicUrl = d.ItemInfo.ThumbPicUrl,
+                                       Address = d.HospitalInfo.Address,
+                                       LivingPrice = d.ActivityInfo.ActivityItemDetailList.SingleOrDefault(e => e.ItemId == d.ItemId).LivePrice,
+                                       IsAgreeLivingPrice =d.IsAgreeLivingPrice,
+                                       HospitalPrice = d.HospitalPrice
                                    };
             }
             return await partakeHospitals.ToListAsync();
