@@ -25,6 +25,7 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// <summary>
         /// 紧急程度
         /// </summary>
+        [Description("紧急程度")]
         public string EmergencyLevelText { get; set; }
         /// <summary>
         /// 来源渠道

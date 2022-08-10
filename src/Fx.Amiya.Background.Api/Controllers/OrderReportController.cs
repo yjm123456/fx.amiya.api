@@ -619,7 +619,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             IsDeal = d.IsDeal == true ? "是" : "否",
                                             IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
                                             IsAcompanying = d.IsAcompanying == true ? "是" : "否",
-                                            CommissionRatio = d.CommissionRatio,
+                                            /*CommissionRatio = d.CommissionRatio,*/
                                             Phone = d.Phone,
                                             IsToHospital = d.IsToHospital == true ? "是" : "否",
                                             ToHospitalTypeText = d.ToHospitalTypeText,
@@ -700,7 +700,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             IsDeal = d.IsDeal == true ? "是" : "否",
                                             IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
                                             IsAcompanying = d.IsAcompanying == true ? "是" : "否",
-                                            CommissionRatio = d.CommissionRatio,
+                                           /* CommissionRatio = d.CommissionRatio,*/
                                             AddOrderPrice = d.AddOrderPrice,
                                             Phone = d.Phone,
                                             IsToHospital = d.IsToHospital == true ? "是" : "否",
@@ -1241,7 +1241,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           CustomerName = d.CustomerName,
                           IsOldCustomer = d.IsOldCustomer,
                           IsAcompanying = d.IsAcompanying == true ? "是" : "否",
-                          CommissionRatio = d.CommissionRatio,
+                          /*CommissionRatio = d.CommissionRatio,*/
                           Phone = d.Phone,
                           OrderStatusText = d.OrderStatusText,
                           IsToHospital = d.IsToHospital == true ? "是" : "否",
@@ -1316,7 +1316,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           CustomerName = d.CustomerName,
                           IsOldCustomer = d.IsOldCustomer,
                           IsAcompanying = d.IsAcompanying == true ? "是" : "否",
-                          CommissionRatio = d.CommissionRatio,
+                          /*CommissionRatio = d.CommissionRatio,*/
                           Phone = d.Phone,
                           OrderStatusText = d.OrderStatusText,
                           IsToHospital = d.IsToHospital == true ? "是" : "否",

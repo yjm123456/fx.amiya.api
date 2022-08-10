@@ -126,8 +126,8 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// <summary>
         /// 佣金比例
         /// </summary>
-        [Description("佣金比例")]
-        public decimal CommissionRatio { get; set; }
+        /*[Description("佣金比例")]
+        public decimal CommissionRatio { get; set; }*/
         /// <summary>
         /// 派单医院
         /// </summary>
