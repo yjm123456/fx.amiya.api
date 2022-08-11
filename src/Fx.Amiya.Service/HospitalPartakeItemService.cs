@@ -544,7 +544,7 @@ namespace Fx.Amiya.Service
                                        Address = d.HospitalInfo.Address,
                                        LivingPrice = d.ActivityInfo.ActivityItemDetailList.SingleOrDefault(e => e.ItemId == d.ItemId).LivePrice,
                                        IsAgreeLivingPrice = d.IsAgreeLivingPrice,
-                                       HospitalPrice = d.HospitalPrice
+                                       HospitalPrice = d.HospitalPrice                                      
                                    };
             }
             else

@@ -25,11 +25,19 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private IHospitalPartakeItemService hospitalPartakeItemService;
         private IHttpContextAccessor httpContextAccessor;
+        private ICooperativeHospitalCityService cooperativeHospitalCityService;
+        private IActivityService activityService;
+        private IHospitalInfoService hospitalInfoService;
+        private IItemInfoService itemInfoService;
         public HospitalPartakeItemController(IHospitalPartakeItemService hospitalPartakeItemService,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, ICooperativeHospitalCityService cooperativeHospitalCityService, IActivityService activityService, IHospitalInfoService hospitalInfoService, IItemInfoService itemInfoService)
         {
             this.hospitalPartakeItemService = hospitalPartakeItemService;
             this.httpContextAccessor = httpContextAccessor;
+            this.cooperativeHospitalCityService = cooperativeHospitalCityService;
+            this.activityService = activityService;
+            this.hospitalInfoService = hospitalInfoService;
+            this.itemInfoService = itemInfoService;
         }
 
 
@@ -268,11 +276,33 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<IActionResult> ExportHospitalListByCity(int? activityId, int? cityId, int? itemId)
         {
-
-            string fileName = $"{Guid.NewGuid().ToString("N")}.xlsx";
+            //城市名称
+            string cityname = "";
+            //报价名称
+            string activityName = "";
+            //项目名称
+            string itemName = "";
+            //文件名
+            string fileName = "";
+            if (activityId != null&&cityId!=null&&itemId!=null)
+            {
+                activityName = (await activityService.GetInfoByIdAsync(activityId.Value)).Name;
+                cityname = (await cooperativeHospitalCityService.GetByIdAsync(cityId.Value)).Name;
+                itemName = (await itemInfoService.GetByIdAsync(itemId.Value)).Name;
+                fileName = $"{activityName}列表-{cityname}-{itemName}.xlsx";
+            }
+            if (activityId==null && cityId==null && itemId==null) {
+                fileName = "所有城市全部报价列表.xlsx";
+            }
+            if (activityId != null && !(cityId!=null&& itemId!=null)) {
+                activityName = (await activityService.GetInfoByIdAsync(activityId.Value)).Name;
+                fileName = $"{activityName}列表.xlsx";
+            }
+            if (string.IsNullOrEmpty(fileName)) {
+                fileName = "项目报价导出列表.xlsx";
+            }
             var stream = new MemoryStream();
-            var partakeHospitals = await hospitalPartakeItemService.GetHospitalListByCityAsync(activityId, cityId, itemId);
-
+            var partakeHospitals = await hospitalPartakeItemService.GetHospitalListByCityAsync(activityId, cityId, itemId);                    
             //ExcelPackage 操作excel的主要对象
             using (ExcelPackage package = new ExcelPackage(stream))
             {
@@ -298,7 +328,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 package.Save();
             }
-            stream.Position = 0;
+            stream.Position = 0;          
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
 
@@ -315,8 +345,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<IActionResult> ExportItemListByHospitalIdAsync(int? activityId, int? hospitalId)
         {
-
-            string fileName = $"{Guid.NewGuid().ToString("N")}.xlsx";
+            string hospitalName = "";
+            string activityName = "";
+            string fileName = "";
             var stream = new MemoryStream();
             var partakeItems = await hospitalPartakeItemService.GetItemListByHospitalIdAsync(activityId, hospitalId);
             using (ExcelPackage package = new ExcelPackage(stream))
@@ -382,6 +413,25 @@ namespace Fx.Amiya.Background.Api.Controllers
                  }
                  package.Save();*/
             }
+            if (activityId==null&&hospitalId==null) {
+                fileName = "全部医院所有报价列表.xlsx";
+            }
+            if (activityId==null&&hospitalId!=null) {
+                hospitalName = (await hospitalInfoService.GetBaseByIdAsync(hospitalId.Value)).Name;
+                fileName = $"{hospitalName}所有报价列表.xlsx";
+            }
+            if (activityId!=null&&hospitalId==null) {
+                activityName = (await activityService.GetInfoByIdAsync(activityId.Value)).Name;
+                fileName = $"{activityName}列表.xlsx";
+            }
+            if (activityId!=null&&hospitalId!=null) {
+                activityName = (await activityService.GetInfoByIdAsync(activityId.Value)).Name;
+                hospitalName = (await hospitalInfoService.GetBaseByIdAsync(hospitalId.Value)).Name;
+                fileName = $"{activityName}-{hospitalName}列表.xlsx";
+            }
+            if (string.IsNullOrEmpty(fileName)) {
+                fileName = "项目报价导出列表.xlsx";
+            }
             stream.Position = 0;
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
@@ -399,9 +449,31 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<IActionResult> ExportHospitalListByItemIdAsync(int? activityId, int? itemId)
         {
+            string activityName = "";
+            string itemName = "";
+            string fileName = "";
+            if (activityId!=null&&itemId!=null) {
+                activityName = (await activityService.GetInfoByIdAsync(activityId.Value)).Name;
+                itemName = (await itemInfoService.GetByIdAsync(itemId.Value)).Name;
+                fileName = $"{activityName}-{itemName}列表.xlsx";
+            }
+            if (activityId==null&&itemId==null) {
+                fileName = "所有报价的所有项目列表.xlsx";
+            }
+            if (activityId!=null&&itemId==null) {
+                activityName = (await activityService.GetInfoByIdAsync(activityId.Value)).Name;
+                fileName = $"{activityName}列表.xlsx";
+            }
+            if (activityId==null&&itemId!=null) {
+                itemName = (await itemInfoService.GetByIdAsync(itemId.Value)).Name;
+                fileName = $"{itemName}所有报价列表.xlsx";
+            }
+            if (string.IsNullOrEmpty(fileName)) {
+                fileName = "项目报价列表导出.xlsx";
+            }
             var partakeHoapitals = await hospitalPartakeItemService.GetHospitalListByItemIdAsync(activityId, itemId);
 
-            string fileName = $"{Guid.NewGuid().ToString("N")}.xlsx";
+            
             var stream = new MemoryStream();
             using (ExcelPackage package = new ExcelPackage(stream))
             {

@@ -415,18 +415,18 @@ namespace Fx.Amiya.Service
                 case 0:
                     emergencyLevelText = "可忽略";
                     break;
-                case 1:
+                /*case 1:
                     emergencyLevelText = "轻微";
-                    break;
+                    break;*/
                 case 2:
                     emergencyLevelText = "一般";
                     break;
                 case 3:
                     emergencyLevelText = "重要";
                     break;
-                case 4:
+                /*case 4:
                     emergencyLevelText = "非常重要";
-                    break;
+                    break;*/
                 default:
                     emergencyLevelText = "可忽略";
                     break;

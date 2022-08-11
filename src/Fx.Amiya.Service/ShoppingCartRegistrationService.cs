@@ -60,8 +60,10 @@ namespace Fx.Amiya.Service
                                                && (!minPrice.HasValue || d.Price >= minPrice)
                                                && (!maxPrice.HasValue || d.Price <= maxPrice)
                                                && (!LiveAnchorId.HasValue || d.LiveAnchorId == LiveAnchorId)
-                                               && (!startRefundTime.HasValue && !endRefundTime.HasValue || d.RefundDate >= startRefundTime.Value.Date && d.RefundDate < endRefundTime.Value.AddDays(1).Date)
-                                               && (!startBadReviewTime.HasValue && !endBadReviewTime.HasValue || d.BadReviewDate >= startBadReviewTime.Value.Date && d.BadReviewDate.Value.Date < endBadReviewTime.Value.AddDays(1).Date)
+                                               && (!startRefundTime.HasValue || d.RefundDate >= startRefundTime.Value.Date)
+                                               && (!endRefundTime.HasValue || d.RefundDate <= endRefundTime.Value.AddDays(1).Date)
+                                               &&(!startBadReviewTime.HasValue || d.BadReviewDate>=startBadReviewTime.Value.Date)
+                                               &&(!endBadReviewTime.HasValue || d.BadReviewDate<=endBadReviewTime.Value.AddDays(1).Date)              
                                                && (!emergencyLevel.HasValue || d.EmergencyLevel == emergencyLevel)
                                                && (!isBadReview.HasValue || d.IsBadReview==isBadReview)
                                      

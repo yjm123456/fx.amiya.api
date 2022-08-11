@@ -573,13 +573,13 @@ namespace Fx.Amiya.IService
         //可忽略
         Ignorable=0,
         //轻微
-        Slight=1,
+        //Slight=1,
         //一般
         Generally=2,
         //重要
         Important=3,
         //非常重要
-        VeryImportant=4
+       // VeryImportant=4
     }
     
 }
