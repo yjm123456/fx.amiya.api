@@ -1382,9 +1382,27 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.ContentPlatFormOrderDealInfoController">
+            <summary>
+            成交情况数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlatFormOrderDealInfoController.#ctor(Fx.Amiya.IService.IContentPlatFormOrderDealInfoService,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="contentPlatFormOrderDealInfoService"></param>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlatFormOrderDealInfoController.GetByIdAsync(System.String)">
+            <summary>
+            根据成交情况编号获取成交情况信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlatFormOrderDealInfoController.UpdateAsync(Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.UpdateContentPlatFormOrderDealInfoVo)">
             <summary>
-            修改成交情况信息(暂停使用)
+            修改成交情况信息
             </summary>
             <param name="updateVo"></param>
             <returns></returns>
