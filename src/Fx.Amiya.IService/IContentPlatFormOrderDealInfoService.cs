@@ -25,13 +25,7 @@ namespace Fx.Amiya.IService
         Task CheckAsync(UpdateContentPlatFormOrderDealInfoDto updateDto);
 
         Task SettleAsync(UpdateContentPlatFormOrderDealInfoDto updateDto);
-        /// <summary>
-        /// 根据年和月获取相关的业绩数据信息
-        /// </summary>
-        /// <param name="year"></param>
-        /// <param name="month"></param>
-        /// <returns></returns>
-        Task<PerformanceInfoDto> GetOrderDetailInfoPerformance(int year,int month);
+     
         /// <summary>
         /// 获取指定年月的业绩(可选择是否筛选新老客)
         /// </summary>
@@ -39,7 +33,7 @@ namespace Fx.Amiya.IService
         /// <param name="month"></param>
         /// <param name="isCustomer"></param>
         /// <returns></returns>
-        Task<PerformanceDto> GetPerformanceByYearAndMonth(int year, int month, bool? isCustomer);
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByYearAndMonth(int year, int month, bool? isCustomer);
         /// <summary>
         /// 按月筛选新老客数据
         /// </summary>

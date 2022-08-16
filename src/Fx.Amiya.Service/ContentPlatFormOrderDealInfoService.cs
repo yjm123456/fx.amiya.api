@@ -701,257 +701,49 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<PerformanceInfoDto> GetOrderDetailInfoPerformance(int year, int month)
-        {
-
-            //查找当前月ip运营总业绩目标
-            PerformanceDto totalPerformanceTarget = await _liveAnchorMonthlyTargetService.GetLiveAnchorMonthlyTargetTotalPerformance(year, month);
-            //查找当前月IP运营带货总业绩目标
-            PerformanceDto totalCommerceTarget = await _liveAnchorMonthlyTargetService.GetLiveAnchorMonthTargetTotalCommercePerformance(year, month);
-            //查找当前月份老客业绩目标
-            PerformanceDto oldCustomerTarget = await _liveAnchorMonthlyTargetService.GetLiveAnchorMonthOldPerformanceTarget(year,month);
-            //查找当前月份新诊业绩目标
-            PerformanceDto newCustomerTarget = await _liveAnchorMonthlyTargetService.GetLiveAnchorMonthNewPerformanceTarget(year,month);
-
-            //总业绩目标 业绩目标+带货目标
-            totalPerformanceTarget.PerformanceCount = totalPerformanceTarget.PerformanceCount + totalCommerceTarget.PerformanceCount;
-
-            //获取当前选中月的已完成业绩
-            PerformanceDto sumAlreadyCompletePerformance = await GetPerformanceByYearAndMonth(year, month, null);
-            //获取当前选中月已完成的带货总业绩
-            PerformanceDto sumAlreadyCompleteCommercePerformance = await _liveAnchorMonthlyTargetService.GetLiveAnchorMonthTargetAlreadyCompleteCommercePerformance(year, month);
-
-            //已完成的总业绩 成交业绩+带货业绩
-            sumAlreadyCompletePerformance.PerformanceCount = sumAlreadyCompletePerformance.PerformanceCount + sumAlreadyCompleteCommercePerformance.PerformanceCount;
-
-            //获取当前月份老客总业绩
-            PerformanceDto sumOldPerformance = await GetPerformanceByYearAndMonth(year, month, true);
-            //获取当前月份新客总业绩
-            PerformanceDto sumNewPerformance = await GetPerformanceByYearAndMonth(year, month, false);
-            //获取同比月份总业绩
-            PerformanceDto TotalPerfomanceYearOnYear = await GetPerformanceByYearAndMonth(year - 1, month, null);
-            //获取环比月份总业绩
-            PerformanceDto TotalPerfomanceChainRatio = null;
-            if (month == 1) {
-                TotalPerfomanceChainRatio = await GetPerformanceByYearAndMonth(year-1, 12, null);
-            } else {
-                TotalPerfomanceChainRatio = await GetPerformanceByYearAndMonth(year, month - 1, null);
-            }
-             
-            //获取同比月份新诊业绩
-            PerformanceDto sumNewPerfomanceYearOnYear = await GetPerformanceByYearAndMonth(year - 1, month, false);
-            //获取环比月份新诊业绩
-            PerformanceDto sumNewPerfomanceChainRatio = null;
-            if (month == 1) {
-                sumNewPerfomanceChainRatio = await GetPerformanceByYearAndMonth(year-1, 12, false);
-            } else {
-                sumNewPerfomanceChainRatio = await GetPerformanceByYearAndMonth(year, month - 1, false);
-            }
-            //获取同比月份老客业绩
-            PerformanceDto sumOldPerfomanceYearOnYear = await GetPerformanceByYearAndMonth(year - 1, month, true);
-            //获取环比月份老客业绩
-            PerformanceDto sumOldPerfomanceChainRatio = null;
-            if (month==1) {
-                sumOldPerfomanceChainRatio = await GetPerformanceByYearAndMonth(year-1, 12, true);
-            } else {
-                sumOldPerfomanceChainRatio = await GetPerformanceByYearAndMonth(year, month - 1, true);
-            }
-
-            
-            //获取同比月份带货业绩
-            PerformanceDto sumCommercePerfomanceYearOnYear = await _liveAnchorMonthlyTargetService.GetLiveAnchorMonthTargetAlreadyCompleteCommercePerformance(year - 1, month);
-
-            TotalPerfomanceYearOnYear.PerformanceCount = TotalPerfomanceYearOnYear.PerformanceCount + sumCommercePerfomanceYearOnYear.PerformanceCount;
-
-            //获取环比月份带货业绩
-            PerformanceDto sumCommercePerfomanceChainRatio = null;
-            if (month==1) {
-                sumCommercePerfomanceChainRatio = await _liveAnchorMonthlyTargetService.GetLiveAnchorMonthTargetAlreadyCompleteCommercePerformance(year-1, 12);
-            }
-            else
-            {
-                sumCommercePerfomanceChainRatio = await _liveAnchorMonthlyTargetService.GetLiveAnchorMonthTargetAlreadyCompleteCommercePerformance(year, month - 1);
-            }
-
-            
-
-            TotalPerfomanceChainRatio.PerformanceCount = TotalPerfomanceChainRatio.PerformanceCount + sumCommercePerfomanceChainRatio.PerformanceCount;
-
-            //总业绩目标达成
-            decimal? totalTargetComplete = totalPerformanceTarget.PerformanceCount == 0m ? null : Math.Round(sumAlreadyCompletePerformance.PerformanceCount / totalPerformanceTarget.PerformanceCount * 100, 2);
-            //新诊目标达成
-            decimal? newCustomerTargetComplete = newCustomerTarget.PerformanceCount == 0m ? null : Math.Round(sumNewPerformance.PerformanceCount / newCustomerTarget.PerformanceCount * 100, 2);
-            //老客业绩目标达成
-            decimal? oldCustomerTargetComplete = oldCustomerTarget.PerformanceCount == 0m ? null : Math.Round(sumOldPerformance.PerformanceCount / oldCustomerTarget.PerformanceCount * 100, 2);
-            //带货业绩目标达成
-            decimal? commerceTargetComplete = totalCommerceTarget.PerformanceCount == 0m ? null : Math.Round(sumAlreadyCompleteCommercePerformance.PerformanceCount / totalCommerceTarget.PerformanceCount * 100, 2);
-
-            //业绩同比
-            decimal? totalPerfomanceYearOnYearRatio = TotalPerfomanceYearOnYear.PerformanceCount == 0m ? null : Math.Round((sumAlreadyCompletePerformance.PerformanceCount - TotalPerfomanceYearOnYear.PerformanceCount) / TotalPerfomanceYearOnYear.PerformanceCount * 100, 2);
-            //业绩环比
-            decimal? totalPerfomanceChainRation = TotalPerfomanceChainRatio.PerformanceCount == 0m ? null : Math.Round((sumAlreadyCompletePerformance.PerformanceCount - TotalPerfomanceChainRatio.PerformanceCount) / TotalPerfomanceChainRatio.PerformanceCount * 100, 2);
-
-            //老客业绩同比
-            decimal? oldPerfomanceYearOnYearRation = sumOldPerfomanceYearOnYear.PerformanceCount == 0m ? null : Math.Round((sumOldPerformance.PerformanceCount - sumOldPerfomanceYearOnYear.PerformanceCount) / sumOldPerfomanceYearOnYear.PerformanceCount * 100, 2);
-            //老客业绩环比
-            decimal? oldPerfomanceChainRation = sumOldPerfomanceChainRatio.PerformanceCount == 0m ? null : Math.Round((sumOldPerformance.PerformanceCount - sumOldPerfomanceChainRatio.PerformanceCount) / sumOldPerfomanceChainRatio.PerformanceCount * 100, 2);
-
-            //新诊业绩同比
-            decimal? newPerfomanceYearOnYearRation = sumNewPerfomanceYearOnYear.PerformanceCount == 0 ? null : Math.Round((sumNewPerformance.PerformanceCount - sumNewPerfomanceYearOnYear.PerformanceCount) / sumNewPerfomanceYearOnYear.PerformanceCount * 100, 2);
-            //新诊业绩环比
-            decimal? newPerfomanceChainRation = sumNewPerfomanceChainRatio.PerformanceCount == 0m ? null : Math.Round((sumNewPerformance.PerformanceCount - sumNewPerfomanceChainRatio.PerformanceCount) / sumNewPerfomanceChainRatio.PerformanceCount * 100, 2);
-
-            //带货业绩同比
-            decimal? commercePerfomanceYearOnYearRatio = sumCommercePerfomanceYearOnYear.PerformanceCount == 0m ? null : Math.Round((sumAlreadyCompleteCommercePerformance.PerformanceCount - sumCommercePerfomanceYearOnYear.PerformanceCount) / sumCommercePerfomanceYearOnYear.PerformanceCount * 100, 2);
-            //带货业绩环比
-            decimal? commercePerfomanceChainRation = sumCommercePerfomanceChainRatio.PerformanceCount == 0m ? null : Math.Round((sumAlreadyCompleteCommercePerformance.PerformanceCount - sumCommercePerfomanceChainRatio.PerformanceCount) / sumCommercePerfomanceChainRatio.PerformanceCount * 100, 2);
-
-
-            PerformanceInfoDto performanceInfoDto = new PerformanceInfoDto
-            {
-                TotalPerformance = sumAlreadyCompletePerformance.PerformanceCount,
-                TotalPerformanceTargetComplete = totalTargetComplete,
-                OldPerformanceTargetComplete = oldCustomerTargetComplete,
-                NewPerformanceTargetComplete=newCustomerTargetComplete,
-                CommercePerformanceTargetComplete= commerceTargetComplete,
-                NewPerformance = sumNewPerformance.PerformanceCount,
-                OldPerformance = sumOldPerformance.PerformanceCount,
-                CommercePerformance = sumAlreadyCompleteCommercePerformance.PerformanceCount,
-                TotalPerformanceYearOnYear = totalPerfomanceYearOnYearRatio,
-                TotalPerformanceChainRatio = totalPerfomanceChainRation,
-                OldPerformanceYearOnYear = oldPerfomanceYearOnYearRation,
-                OldPerformanceChainRatio = oldPerfomanceChainRation,
-                NewPerformanceYearOnYear = newPerfomanceYearOnYearRation,
-                NewPerformanceChainRatio = newPerfomanceChainRation,
-                CommercePerformanceYearOnYear = commercePerfomanceYearOnYearRatio,
-                CommercePerformanceChainRatio = commercePerfomanceChainRation
-            };
-            List<PerformanceRatioDto> ratioDtos = new List<PerformanceRatioDto>();
-            if (sumAlreadyCompletePerformance.PerformanceCount != 0m)
-            {
-                PerformanceRatioDto newRatio = new PerformanceRatioDto
-                {
-                    PerformanceText = "新诊业绩",
-                    PerformancePrice = sumNewPerformance.PerformanceCount,
-                    PerformanceRatio = Math.Round(sumNewPerformance.PerformanceCount / sumAlreadyCompletePerformance.PerformanceCount * 100, 2)
-                };
-                PerformanceRatioDto oldRatio = new PerformanceRatioDto
-                {
-                    PerformanceText = "老客业绩",
-                    PerformancePrice = sumOldPerformance.PerformanceCount,
-                    PerformanceRatio = Math.Round(sumOldPerformance.PerformanceCount / sumAlreadyCompletePerformance.PerformanceCount * 100, 2)
-                };
-                PerformanceRatioDto commerceRatio = new PerformanceRatioDto
-                {
-                    PerformanceText = "带货业绩",
-                    PerformancePrice = sumAlreadyCompleteCommercePerformance.PerformanceCount,
-                    PerformanceRatio = Math.Round(sumAlreadyCompleteCommercePerformance.PerformanceCount / sumAlreadyCompletePerformance.PerformanceCount * 100, 2)
-                };
-                ratioDtos.Add(newRatio);
-                ratioDtos.Add(oldRatio);
-                ratioDtos.Add(commerceRatio);
-            }
-            else {
-                PerformanceRatioDto newRatio = new PerformanceRatioDto
-                {
-                    PerformanceText = "新诊业绩",
-                    PerformancePrice = 0,
-                    PerformanceRatio = 0
-                };
-                PerformanceRatioDto oldRatio = new PerformanceRatioDto
-                {
-                    PerformanceText = "老客业绩",
-                    PerformancePrice = 0,
-                    PerformanceRatio = 0
-                };
-                PerformanceRatioDto commerceRatio = new PerformanceRatioDto
-                {
-                    PerformanceText = "带货业绩",
-                    PerformancePrice = 0,
-                    PerformanceRatio = 0
-                };
-                ratioDtos.Add(newRatio);
-                ratioDtos.Add(oldRatio);
-                ratioDtos.Add(commerceRatio);
-            }
-            //各业绩占比
-            performanceInfoDto.PerformanceRatios = ratioDtos;
-            //老客业绩数据
-            var old = await GetPerformance(year, month, true);
-
-            List<PerformanceListInfo> oldPerfomanceList = new List<PerformanceListInfo>();
-
-            for (int i = 0; i < month; i++)
-            {
-                PerformanceListInfo listInfo = new PerformanceListInfo();
-                DateTime date = new DateTime(year, i + 1, 1);
-                listInfo.date = date.Month.ToString();
-                listInfo.Performance = 0.00m;
-                oldPerfomanceList.Add(listInfo);
-            }
-
-            foreach (var oldPerfomance in old)
-            {
-                oldPerfomanceList.Find(x => x.date == oldPerfomance.Date.Month.ToString()).Performance = oldPerfomance.PerfomancePrice;
-            }
-
-
-            //新客业绩数据
-            var newp = await GetPerformance(year, month, false);
-            List<PerformanceListInfo> newPerfomanceList = new List<PerformanceListInfo>();
-            for (int i = 0; i < month; i++)
-            {
-                PerformanceListInfo listInfo = new PerformanceListInfo();
-                DateTime date = new DateTime(year, i + 1, 1);
-                listInfo.date = date.Month.ToString();
-                listInfo.Performance = 0.00m;
-                newPerfomanceList.Add(listInfo);
-            }
-            foreach (var newPerfomance in newp)
-            {
-                newPerfomanceList.Find(x => x.date == newPerfomance.Date.Month.ToString()).Performance = newPerfomance.PerfomancePrice;
-            }
-
-
-            //带货业绩数据
-            var comm = await _liveAnchorMonthlyTargetService.GetLiveAnchorCommercePerformance(year, month);
-            List<PerformanceListInfo> commercePerfomanceList = new List<PerformanceListInfo>();
-            for (int i = 0; i < month; i++)
-            {
-                PerformanceListInfo listInfo = new PerformanceListInfo();
-                DateTime date = new DateTime(year, i + 1, 1);
-                listInfo.date = date.Month.ToString();
-                listInfo.Performance = 0.00m;
-                commercePerfomanceList.Add(listInfo);
-            }
-            foreach (var commercePerfomance in comm)
-            {
-                commercePerfomanceList.Find(x => x.date == commercePerfomance.Date.Month.ToString()).Performance = commercePerfomance.PerfomancePrice;
-            }
-            performanceInfoDto.commercePerformanceList = commercePerfomanceList;
-            performanceInfoDto.oldPerformanceList = oldPerfomanceList;
-            performanceInfoDto.newPerformanceList = newPerfomanceList;
-            return performanceInfoDto;
-        }
-
-        public async Task<PerformanceDto> GetPerformanceByYearAndMonth(int year, int month, bool? isOldCustomer)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByYearAndMonth(int year, int month, bool? isOldCustomer)
         {
             //筛选结束的月份
             DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
             //选定的月份
             DateTime currentDate = new DateTime(year, month, 1);
-            var performance = dalContentPlatFormOrderDealInfo.GetAll().Where(o => o.CreateDate >= currentDate && o.CreateDate < endDate && o.IsDeal == true);
-            if (isOldCustomer != null)
-            {
-                performance = performance.Where(o => o.IsOldCustomer == isOldCustomer);
-            }
-            var sum = await performance.SumAsync(o => o.Price);
-            PerformanceDto dto = new PerformanceDto
-            {
-                PerformanceCount = sum
-            };
-            return dto;
+            return dalContentPlatFormOrderDealInfo.GetAll().Where(o => o.CreateDate >= currentDate && o.CreateDate < endDate && o.IsDeal == true).Select(
+                  ContentPlatFOrmOrderDealInfo =>
+                       new ContentPlatFormOrderDealInfoDto
+                       {
+                           Id = ContentPlatFOrmOrderDealInfo.Id,
+                           ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId,
+                           CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate,
+                           IsToHospital = ContentPlatFOrmOrderDealInfo.IsToHospital,
+                           ToHospitalType = ContentPlatFOrmOrderDealInfo.ToHospitalType,
+                           ToHospitalDate = ContentPlatFOrmOrderDealInfo.ToHospitalDate,
+                           LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId,
+                           IsDeal = ContentPlatFOrmOrderDealInfo.IsDeal,
+                           DealPicture = ContentPlatFOrmOrderDealInfo.DealPicture,
+                           Remark = ContentPlatFOrmOrderDealInfo.Remark,
+                           Price = ContentPlatFOrmOrderDealInfo.Price,
+                           DealDate = ContentPlatFOrmOrderDealInfo.DealDate,
+                           OtherAppOrderId = ContentPlatFOrmOrderDealInfo.OtherAppOrderId,
+                           IsAcompanying = ContentPlatFOrmOrderDealInfo.IsAcompanying,
+                           IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,
+                           CommissionRatio = ContentPlatFOrmOrderDealInfo.CommissionRatio,
+                           CheckState = ContentPlatFOrmOrderDealInfo.CheckState,
+                           CheckStateText = ServiceClass.GetCheckTypeText(ContentPlatFOrmOrderDealInfo.CheckState.Value),
+                           CheckPrice = ContentPlatFOrmOrderDealInfo.CheckPrice,
+                           CheckDate = ContentPlatFOrmOrderDealInfo.CheckDate,
+                           CheckBy = ContentPlatFOrmOrderDealInfo.CheckBy,
+                           SettlePrice = ContentPlatFOrmOrderDealInfo.SettlePrice,
+                           CheckRemark = ContentPlatFOrmOrderDealInfo.CheckRemark,
+                           IsReturnBackPrice = ContentPlatFOrmOrderDealInfo.IsReturnBackPrice,
+                           ReturnBackDate = ContentPlatFOrmOrderDealInfo.ReturnBackDate,
+                           ReturnBackPrice = ContentPlatFOrmOrderDealInfo.ReturnBackPrice,
+                           CreateBy = ContentPlatFOrmOrderDealInfo.CreateBy,
+                       }
+                ).ToList();
         }
+
+
+
 
         public async Task<List<PerformanceInfoByDateDto>> GetPerformance(int year, int month, bool? isCustomer)
         {
