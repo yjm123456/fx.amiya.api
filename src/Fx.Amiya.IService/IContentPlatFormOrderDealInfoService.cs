@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Dto.ContentPlatFormOrderSend;
+using Fx.Amiya.Dto.Performance;
 using Fx.Common;
 using System;
 using System.Collections.Generic;
@@ -24,5 +25,28 @@ namespace Fx.Amiya.IService
         Task CheckAsync(UpdateContentPlatFormOrderDealInfoDto updateDto);
 
         Task SettleAsync(UpdateContentPlatFormOrderDealInfoDto updateDto);
+        /// <summary>
+        /// 根据年和月获取相关的业绩数据信息
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        Task<PerformanceInfoDto> GetOrderDetailInfoPerformance(int year,int month);
+        /// <summary>
+        /// 获取指定年月的业绩(可选择是否筛选新老客)
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isCustomer"></param>
+        /// <returns></returns>
+        Task<PerformanceDto> GetPerformanceByYearAndMonth(int year, int month, bool? isCustomer);
+        /// <summary>
+        /// 按月筛选新老客数据
+        /// </summary>
+        /// <param name="year">年份</param>
+        /// <param name="month">月份</param>
+        /// <param name="isCustomer">筛选新老客(传null不筛选)</param>
+        /// <returns></returns>
+        Task<List<PerformanceInfoByDateDto>> GetPerformance(int year,int month,bool? isCustomer);
     }
 }

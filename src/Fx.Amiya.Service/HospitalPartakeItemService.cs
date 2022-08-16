@@ -333,7 +333,7 @@ namespace Fx.Amiya.Service
             IQueryable<HospitalPartakeItem> hospitalPartakeItems = dalHospitalPartakeItem.GetAll();
             if (hospitalId != null)
             {
-                hospitalPartakeItems.Where(h => h.HospitalId == hospitalId);
+                hospitalPartakeItems=hospitalPartakeItems.Where(h => h.HospitalId == hospitalId);
             }
             IQueryable<PartakeItemInfoDto> partakeItems;
             if (activityId != null)
