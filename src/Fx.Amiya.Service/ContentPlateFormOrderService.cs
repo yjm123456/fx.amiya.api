@@ -349,11 +349,7 @@ namespace Fx.Amiya.Service
                         var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(x.LastDealHospitalId.Value);
                         x.LastDealHospital = hospitalInfo.Name;
                     }
-                    if (x.ConsultationEmpId.HasValue && x.ConsultationEmpId != 0)
-                    {
-                        var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.ConsultationEmpId);
-                        x.ConsultationEmpName = empInfo.Name.ToString();
-                    }
+
                     if (x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
                     {
                         var sendOrderInfoList = await _contentPlatformOrderSend.GetSendOrderInfoByOrderId(x.Id);
