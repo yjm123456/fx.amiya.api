@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.LiveAnchorMonthlyTarget;
+using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
@@ -605,5 +606,73 @@ namespace Fx.Amiya.Service
             }
         }
 
+        public async Task<PerformanceDto> GetLiveAnchorMonthlyTargetTotalPerformance(int year, int month)
+        {
+            var totalPerformance = dalLiveAnchorMonthlyTarget.GetAll().Where(t=>t.Year==year&&t.Month==month);
+            var sum =await totalPerformance.SumAsync(t=>t.PerformanceTarget);
+            PerformanceDto performance = new PerformanceDto()
+            {
+                PerformanceCount = sum
+            };
+            return performance;
+        }
+
+        public async Task<PerformanceDto> GetLiveAnchorMonthTargetTotalCommercePerformance(int year, int month)
+        {
+            var totalPerformance = dalLiveAnchorMonthlyTarget.GetAll().Where(t => t.Year == year && t.Month == month);
+            var sum = await totalPerformance.SumAsync(t => t.CargoSettlementCommissionTarget);
+            PerformanceDto performance = new PerformanceDto()
+            {
+                PerformanceCount = sum
+            };
+            return performance;
+        }
+
+
+        
+
+        public async Task<PerformanceDto> GetLiveAnchorMonthTargetAlreadyCompleteCommercePerformance(int year, int month)
+        {
+            var totalPerformance = dalLiveAnchorMonthlyTarget.GetAll().Where(t => t.Year == year && t.Month == month);
+            var sum = await totalPerformance.SumAsync(t => t.CumulativeCargoSettlementCommission);
+            PerformanceDto performance = new PerformanceDto()
+            {
+                PerformanceCount = sum
+            };
+            return performance;
+        }
+
+        public async Task<List<PerformanceInfoByDateDto>> GetLiveAnchorCommercePerformance(int year, int month)
+        {
+            return dalLiveAnchorMonthlyTarget.GetAll().Where(o => o.Year == year&&o.Month>=1&&o.Month<=month).GroupBy(o => o.Month).Select(o => new PerformanceInfoByDateDto
+            {
+                Date = DateTime.Parse($"{year}-{o.Key}"),
+                PerfomancePrice = o.Sum(o=>o.CumulativeCargoSettlementCommission)
+            }).ToList(); ; ;
+        }
+
+        public async Task<PerformanceDto> GetLiveAnchorMonthOldPerformanceTarget(int year, int month)
+        {
+            var totalPerformance = dalLiveAnchorMonthlyTarget.GetAll().Where(t => t.Year == year && t.Month == month);
+            //var sum = await totalPerformance.SumAsync();
+            var sum = 0;
+            PerformanceDto performance = new PerformanceDto()
+            {
+                PerformanceCount = sum
+            };
+            return performance;
+        }
+
+        public async Task<PerformanceDto> GetLiveAnchorMonthNewPerformanceTarget(int year, int month)
+        {
+            var totalPerformance = dalLiveAnchorMonthlyTarget.GetAll().Where(t => t.Year == year && t.Month == month);
+            //var sum = await totalPerformance.SumAsync();
+            var sum = 0;
+            PerformanceDto performance = new PerformanceDto()
+            {
+                PerformanceCount = sum
+            };
+            return performance;
+        }
     }
 }

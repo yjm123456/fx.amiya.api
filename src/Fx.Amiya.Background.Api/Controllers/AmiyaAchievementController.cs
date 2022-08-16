@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Background.Api.Vo.Appointment;
 using Fx.Amiya.Background.Api.Vo.OrderReport;
+using Fx.Amiya.Background.Api.Vo.Performance;
 using Fx.Amiya.Core.Interfaces.Goods;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -96,6 +97,60 @@ namespace Fx.Amiya.Background.Api.Controllers
         #endregion
 
         #region 【啊美雅业绩】
+        /// <summary>
+        /// 获取啊美雅业绩数据
+        /// </summary>
+        /// <param name="year">年份</param>
+        /// <param name="month">月份</param>
+        /// <returns></returns>
+        [HttpGet("totalPerformance")]
+        public async Task<ResultData<PerformanceVo>> GetAmeiYanPerformanceAsync(int year, int month)
+        {
+            
+            var performance = await _contentPlatFormOrderDealInfoService.GetOrderDetailInfoPerformance(year, month);
+            PerformanceVo performanceVo = new PerformanceVo
+            {
+                TotalPerformance = performance.TotalPerformance,
+                TotalPerformanceYearOnYear = performance.TotalPerformanceYearOnYear,
+                TotalPerformanceChainRatio = performance.TotalPerformanceChainRatio,
+                TotalPerformanceTargetComplete = performance.TotalPerformanceTargetComplete,
+                NewPerformance = performance.NewPerformance,
+                NewPerformanceYearOnYear = performance.NewPerformanceYearOnYear,
+                NewPerformanceChainRatio = performance.NewPerformanceChainRatio,
+                NewPerformanceTargetComplete = performance.NewPerformanceTargetComplete,
+                OldPerformance = performance.OldPerformance,
+                OldPerformanceYearOnYear = performance.OldPerformanceYearOnYear,
+                OldPerformanceChainRatio = performance.OldPerformanceChainRatio,
+                OldPerformanceTargetComplete = performance.OldPerformanceTargetComplete,
+                CommercePerformance = performance.CommercePerformance,
+                CommercePerformanceYearOnYear = performance.CommercePerformanceYearOnYear,
+                CommercePerformanceChainRatio = performance.CommercePerformanceChainRatio,
+                CommercePerformanceTargetComplete = performance.CommercePerformanceTargetComplete,
+                PerformanceRatios = performance.PerformanceRatios.Select(d => new PerformanceRatioVo
+                {
+                    PerformanceText = d.PerformanceText,
+                    PerformancePrice = d.PerformancePrice,
+                    PerformanceRatio = d.PerformanceRatio
+                }).ToList(),
+                NewPerformanceData = performance.newPerformanceList.Select(data => new PerformanceListInfo
+                {
+                    date = data.date,
+                    Performance = data.Performance
+                }).ToList(),
+                OldPerformanceData = performance.oldPerformanceList.Select(data => new PerformanceListInfo
+                {
+                    date = data.date,
+                    Performance = data.Performance
+                }).ToList(),
+                CommercePerformanceData = performance.commercePerformanceList.Select(data => new PerformanceListInfo
+                {
+                    date = data.date,
+                    Performance = data.Performance
+                }).ToList()
+
+            };
+            return ResultData<PerformanceVo>.Success().AddData("performance", performanceVo);
+        }
 
         #endregion
 
