@@ -75,9 +75,22 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.CumulativeCargoSettlementCommission).HasColumnName("cumulation_cargosettlementcommission").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.CargoSettlementCommissionCompleteRate).HasColumnName("cargosettlementcommission_complete_rate").HasColumnType("decimal(5,2)").IsRequired();
 
+
+            builder.Property(t => t.NewCustomerPerformanceTarget).HasColumnName("new_customer_performance_target").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.CumulativeNewCustomerPerformance).HasColumnName("cumulative_new_customer_performance").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.NewCustomerPerformanceCompleteRate).HasColumnName("new_customer_performance_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+
+            builder.Property(t => t.SubsequentPerformanceTarget).HasColumnName("subsequent_performance_target").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.CumulativeSubsequentPerformance).HasColumnName("cumulative_subsequent_performance").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.SubsequentPerformanceCompleteRate).HasColumnName("subsequent_performance_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+
+            builder.Property(t => t.OldCustomerPerformanceTarget).HasColumnName("old_customer_performance_target").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.CumulativeOldCustomerPerformance).HasColumnName("cumulative_old_customer_performance").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.OldCustomerPerformanceCompleteRate).HasColumnName("old_customer_performance_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+
             builder.Property(t => t.PerformanceTarget).HasColumnName("performance_target").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.CumulativePerformance).HasColumnName("cumulative_performance").HasColumnType("decimal(12,2)").IsRequired();
-            builder.Property(t => t.PerformanceCompleteRate).HasColumnName("performance_complete_rate").HasColumnType("decimal(5,2)").IsRequired();
+            builder.Property(t => t.PerformanceCompleteRate).HasColumnName("performance_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
 
             builder.Property(t => t.MinivanRefundTarget).HasColumnName("minivan_refund_target").HasColumnType("int").IsRequired();
             builder.Property(t => t.CumulativeMinivanRefund).HasColumnName("cumulative_minivan_refund").HasColumnType("int").IsRequired();

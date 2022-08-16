@@ -79,6 +79,22 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 当日带货结算佣金金额
         /// </summary>
         public decimal CumulativeCargoSettlementCommission { get; set; }
+
+        /// <summary>
+        /// 当日新诊业绩金额
+        /// </summary>
+        public decimal CumulativeNewCustomerPerformance { get; set; }
+
+        /// <summary>
+        /// 当日复诊业绩金额
+        /// </summary>
+        public decimal CumulativeSubsequentPerformance { get; set; }
+
+        /// <summary>
+        /// 当日老客业绩金额
+        /// </summary>
+        public decimal CumulativeOldCustomerPerformance { get; set; }
+
         /// <summary>
         /// 当日业绩金额
         /// </summary>

@@ -116,6 +116,15 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                   PerformanceTarget = d.PerformanceTarget,
                                                   CumulativePerformance = d.CumulativePerformance,
                                                   PerformanceCompleteRate = d.PerformanceCompleteRate,
+                                                  NewCustomerPerformanceTarget = d.NewCustomerPerformanceTarget,
+                                                  NewCustomerPerformanceCompleteRate = d.NewCustomerPerformanceCompleteRate,
+                                                  CumulativeNewCustomerPerformance = d.CumulativeNewCustomerPerformance,
+                                                  OldCustomerPerformanceTarget = d.OldCustomerPerformanceTarget,
+                                                  OldCustomerPerformanceCompleteRate = d.OldCustomerPerformanceCompleteRate,
+                                                  CumulativeOldCustomerPerformance = d.CumulativeOldCustomerPerformance,
+                                                  SubsequentPerformanceCompleteRate = d.SubsequentPerformanceCompleteRate,
+                                                  SubsequentPerformanceTarget = d.SubsequentPerformanceTarget,
+                                                  CumulativeSubsequentPerformance = d.CumulativeSubsequentPerformance,
                                                   MinivanRefundTarget = d.MinivanRefundTarget,
                                                   CumulativeMinivanRefund = d.CumulativeMinivanRefund,
                                                   MinivanRefundCompleteRate = d.MinivanRefundCompleteRate,
@@ -200,6 +209,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.SendOrderTarget = addVo.SendOrderTarget;
                 addDto.VisitTarget = addVo.VisitTarget;
                 addDto.DealTarget = addVo.DealTarget;
+                addDto.NewCustomerPerformanceTarget = addVo.NewCustomerPerformanceTarget;
+                addDto.SubsequentPerformanceTarget = addVo.SubsequentPerformanceTarget;
+                addDto.OldCustomerPerformanceTarget = addVo.OldCustomerPerformanceTarget;
                 addDto.PerformanceTarget = addVo.PerformanceTarget;
                 addDto.MiniVanBadReviewsTarget = addVo.MiniVanBadReviewsTarget;
                 addDto.MinivanRefundTarget = addVo.MinivanRefundTarget;
@@ -278,6 +290,19 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorMonthlyTargetVo.CargoSettlementCommissionTarget = liveAnchorMonthlyTarget.CargoSettlementCommissionTarget;
                 liveAnchorMonthlyTargetVo.CumulativeCargoSettlementCommission = liveAnchorMonthlyTarget.CumulativeCargoSettlementCommission;
                 liveAnchorMonthlyTargetVo.CargoSettlementCommissionCompleteRate = liveAnchorMonthlyTarget.CargoSettlementCommissionCompleteRate;
+
+                liveAnchorMonthlyTargetVo.NewCustomerPerformanceTarget = liveAnchorMonthlyTarget.NewCustomerPerformanceTarget;
+                liveAnchorMonthlyTargetVo.CumulativeNewCustomerPerformance = liveAnchorMonthlyTarget.CumulativeNewCustomerPerformance;
+                liveAnchorMonthlyTargetVo.NewCustomerPerformanceCompleteRate = liveAnchorMonthlyTarget.NewCustomerPerformanceCompleteRate;
+
+                liveAnchorMonthlyTargetVo.SubsequentPerformanceTarget = liveAnchorMonthlyTarget.SubsequentPerformanceTarget;
+                liveAnchorMonthlyTargetVo.CumulativeSubsequentPerformance = liveAnchorMonthlyTarget.CumulativeSubsequentPerformance;
+                liveAnchorMonthlyTargetVo.SubsequentPerformanceCompleteRate = liveAnchorMonthlyTarget.SubsequentPerformanceCompleteRate;
+
+                liveAnchorMonthlyTargetVo.OldCustomerPerformanceTarget = liveAnchorMonthlyTarget.OldCustomerPerformanceTarget;
+                liveAnchorMonthlyTargetVo.CumulativeOldCustomerPerformance = liveAnchorMonthlyTarget.CumulativeOldCustomerPerformance;
+                liveAnchorMonthlyTargetVo.OldCustomerPerformanceCompleteRate = liveAnchorMonthlyTarget.OldCustomerPerformanceCompleteRate;
+
                 liveAnchorMonthlyTargetVo.PerformanceTarget = liveAnchorMonthlyTarget.PerformanceTarget;
                 liveAnchorMonthlyTargetVo.CumulativePerformance = liveAnchorMonthlyTarget.CumulativePerformance;
                 liveAnchorMonthlyTargetVo.PerformanceCompleteRate = liveAnchorMonthlyTarget.PerformanceCompleteRate;
@@ -329,6 +354,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.VisitTarget = updateVo.VisitTarget;
                 updateDto.DealTarget = updateVo.DealTarget;
                 updateDto.CargoSettlementCommissionTarget = updateVo.CargoSettlementCommissionTarget;
+                updateDto.NewCustomerPerformanceTarget = updateVo.NewCustomerPerformanceTarget;
+                updateDto.SubsequentPerformanceTarget = updateVo.SubsequentPerformanceTarget;
+                updateDto.OldCustomerPerformanceTarget = updateVo.OldCustomerPerformanceTarget;
                 updateDto.PerformanceTarget = updateVo.PerformanceTarget;
                 updateDto.MinivanRefundTarget = updateVo.MinivanRefundTarget;
                 updateDto.MiniVanBadReviewsTarget = updateVo.MiniVanBadReviewsTarget;

@@ -269,6 +269,9 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeVisit = addDto.VisitNum.HasValue ? addDto.VisitNum.Value : 0;
                 editLiveAnchorMonthlyTarget.CumulativeDealTarget = addDto.DealNum.HasValue ? addDto.DealNum.Value : 0;
                 editLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = addDto.CargoSettlementCommission;
+                editLiveAnchorMonthlyTarget.CumulativeNewCustomerPerformance = addDto.NewPerformanceNum.HasValue ? addDto.NewPerformanceNum.Value : 0;
+                editLiveAnchorMonthlyTarget.CumulativeSubsequentPerformance = addDto.SubsequentPerformanceNum.HasValue ? addDto.SubsequentPerformanceNum.Value : 0;
+                editLiveAnchorMonthlyTarget.CumulativeOldCustomerPerformance = addDto.OldCustomerPerformanceNum.HasValue ? addDto.OldCustomerPerformanceNum.Value : 0;
                 editLiveAnchorMonthlyTarget.CumulativePerformance = addDto.PerformanceNum.HasValue ? addDto.PerformanceNum.Value : 0;
                 editLiveAnchorMonthlyTarget.CumulativeMiniVanBadReviews = addDto.MiniVanBadReviews;
                 editLiveAnchorMonthlyTarget.CumulativeMinivanRefund = addDto.MinivanRefund;
@@ -384,6 +387,7 @@ namespace Fx.Amiya.Service
 
         public async Task UpdateAsync(UpdateLiveAnchorDailyTargetDto updateDto)
         {
+            unitOfWork.BeginTransaction();
             try
             {
                 var liveAnchorDailyTarget = await dalLiveAnchorDailyTarget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
@@ -407,6 +411,9 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeVisit = -liveAnchorDailyTarget.VisitNum;
                 editLiveAnchorMonthlyTarget.CumulativeDealTarget = -liveAnchorDailyTarget.DealNum;
                 editLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = -liveAnchorDailyTarget.CargoSettlementCommission;
+                editLiveAnchorMonthlyTarget.CumulativeNewCustomerPerformance = -liveAnchorDailyTarget.NewPerformanceNum;
+                editLiveAnchorMonthlyTarget.CumulativeSubsequentPerformance = -liveAnchorDailyTarget.SubsequentPerformanceNum;
+                editLiveAnchorMonthlyTarget.CumulativeOldCustomerPerformance = -liveAnchorDailyTarget.OldCustomerPerformanceNum;
                 editLiveAnchorMonthlyTarget.CumulativePerformance = -liveAnchorDailyTarget.PerformanceNum;
                 editLiveAnchorMonthlyTarget.CumulativeMinivanRefund = -liveAnchorDailyTarget.MinivanRefund;
                 editLiveAnchorMonthlyTarget.CumulativeMiniVanBadReviews = -liveAnchorDailyTarget.MiniVanBadReviews;
@@ -465,13 +472,18 @@ namespace Fx.Amiya.Service
                 lasteditLiveAnchorMonthlyTarget.CumulativeVisit = liveAnchorDailyTarget.VisitNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeDealTarget = liveAnchorDailyTarget.DealNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = liveAnchorDailyTarget.CargoSettlementCommission;
+                lasteditLiveAnchorMonthlyTarget.CumulativeNewCustomerPerformance = liveAnchorDailyTarget.NewPerformanceNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativeSubsequentPerformance = liveAnchorDailyTarget.SubsequentPerformanceNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativeOldCustomerPerformance = liveAnchorDailyTarget.OldCustomerPerformanceNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativePerformance = liveAnchorDailyTarget.PerformanceNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeMinivanRefund = liveAnchorDailyTarget.MinivanRefund;
                 lasteditLiveAnchorMonthlyTarget.CumulativeMiniVanBadReviews = liveAnchorDailyTarget.MiniVanBadReviews;
                 await _liveAnchorMonthlyTargetService.EditAsync(lasteditLiveAnchorMonthlyTarget);
+                unitOfWork.Commit();
             }
             catch (Exception ex)
             {
+                unitOfWork.RollBack();
                 throw ex;
             }
         }
@@ -504,6 +516,9 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeVisit = -liveAnchorDailyTarget.VisitNum;
                 editLiveAnchorMonthlyTarget.CumulativeDealTarget = -liveAnchorDailyTarget.DealNum;
                 editLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = -liveAnchorDailyTarget.CargoSettlementCommission;
+                editLiveAnchorMonthlyTarget.CumulativeNewCustomerPerformance = -liveAnchorDailyTarget.NewPerformanceNum;
+                editLiveAnchorMonthlyTarget.CumulativeSubsequentPerformance = -liveAnchorDailyTarget.SubsequentPerformanceNum;
+                editLiveAnchorMonthlyTarget.CumulativeOldCustomerPerformance = -liveAnchorDailyTarget.OldCustomerPerformanceNum;
                 editLiveAnchorMonthlyTarget.CumulativePerformance = -liveAnchorDailyTarget.PerformanceNum;
                 editLiveAnchorMonthlyTarget.CumulativeMinivanRefund = -liveAnchorDailyTarget.MinivanRefund;
                 editLiveAnchorMonthlyTarget.CumulativeMiniVanBadReviews = -liveAnchorDailyTarget.MiniVanBadReviews;

@@ -101,6 +101,21 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget
         public decimal CargoSettlementCommissionTarget { get; set; }
 
         /// <summary>
+        /// 新诊业绩目标
+        /// </summary>
+        public decimal NewCustomerPerformanceTarget { get; set; }
+
+        /// <summary>
+        /// 复诊业绩目标
+        /// </summary>
+        public decimal SubsequentPerformanceTarget { get; set; }
+
+        /// <summary>
+        /// 老客业绩目标
+        /// </summary>
+        public decimal OldCustomerPerformanceTarget { get; set; }
+
+        /// <summary>
         /// 业绩目标
         /// </summary>
         public decimal PerformanceTarget { get; set; }

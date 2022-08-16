@@ -62,11 +62,11 @@ namespace Fx.Amiya.Service
                                                && (!LiveAnchorId.HasValue || d.LiveAnchorId == LiveAnchorId)
                                                && (!startRefundTime.HasValue || d.RefundDate >= startRefundTime.Value.Date)
                                                && (!endRefundTime.HasValue || d.RefundDate <= endRefundTime.Value.AddDays(1).Date)
-                                               &&(!startBadReviewTime.HasValue || d.BadReviewDate>=startBadReviewTime.Value.Date)
-                                               &&(!endBadReviewTime.HasValue || d.BadReviewDate<=endBadReviewTime.Value.AddDays(1).Date)              
+                                               && (!startBadReviewTime.HasValue || d.BadReviewDate >= startBadReviewTime.Value.Date)
+                                               && (!endBadReviewTime.HasValue || d.BadReviewDate <= endBadReviewTime.Value.AddDays(1).Date)
                                                && (!emergencyLevel.HasValue || d.EmergencyLevel == emergencyLevel)
-                                               && (!isBadReview.HasValue || d.IsBadReview==isBadReview)
-                                     
+                                               && (!isBadReview.HasValue || d.IsBadReview == isBadReview)
+
                                                select new ShoppingCartRegistrationDto
                                                {
                                                    Id = d.Id,
@@ -95,7 +95,7 @@ namespace Fx.Amiya.Service
                                                    BadReviewContent = d.BadReviewContent,
                                                    BadReviewReason = d.BadReviewReason,
                                                    IsBadReview = d.IsBadReview,
-                                                   EmergencyLevel=d.EmergencyLevel
+                                                   EmergencyLevel = d.EmergencyLevel
 
                                                };
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
@@ -243,7 +243,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.BadReviewReason = shoppingCartRegistration.BadReviewReason;
                 shoppingCartRegistrationDto.IsBadReview = shoppingCartRegistration.IsBadReview;
                 shoppingCartRegistrationDto.EmergencyLevel = shoppingCartRegistration.EmergencyLevel;
-               
+
                 return shoppingCartRegistrationDto;
             }
             catch (Exception ex)
@@ -380,9 +380,11 @@ namespace Fx.Amiya.Service
             try
             {
                 var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().Where(e => e.Phone == phone).ToListAsync();
-                if(shoppingCartRegistration.Count>0)
+                if (shoppingCartRegistration.Count > 0)
                 {
-                   foreach(var x in shoppingCartRegistration) { 
+                    foreach (var x in shoppingCartRegistration)
+                    {
+                        x.EmergencyLevel =(int)EmergencyLevel.Important;
                         x.IsCreateOrder = true;
                         x.IsAddWeChat = true;
                         x.IsWriteOff = true;
@@ -413,6 +415,7 @@ namespace Fx.Amiya.Service
                 {
                     foreach (var x in shoppingCartRegistration)
                     {
+                        x.EmergencyLevel = (int)EmergencyLevel.Important;
                         x.IsSendOrder = true;
                         await dalShoppingCartRegistration.UpdateAsync(x, true);
                     }
@@ -480,7 +483,7 @@ namespace Fx.Amiya.Service
                                                    ContentPlatFormId = d.ContentPlatFormId,
                                                    ContentPlatFormName = d.Contentplatform.ContentPlatformName,
                                                    LiveAnchorId = d.LiveAnchorId,
-                                                   EmergencyLevel=d.EmergencyLevel,
+                                                   EmergencyLevel = d.EmergencyLevel,
                                                    LiveAnchorName = d.LiveAnchor.Name,
                                                    IsCreateOrder = d.IsCreateOrder,
                                                    IsSendOrder = d.IsSendOrder,
@@ -495,9 +498,9 @@ namespace Fx.Amiya.Service
                                                    IsReturnBackPrice = d.IsReturnBackPrice,
                                                    Remark = d.Remark,
                                                    CreateBy = d.CreateBy,
-                                                   CreateByName=d.AmiyaEmployee.Name,
+                                                   CreateByName = d.AmiyaEmployee.Name,
                                                    CreateDate = d.CreateDate,
-                                                   ConsultationTypeText=ServiceClass.GetConsulationTypeText(d.ConsultationType)
+                                                   ConsultationTypeText = ServiceClass.GetConsulationTypeText(d.ConsultationType)
                                                };
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
                 if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
@@ -516,7 +519,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-      
+
 
         #endregion
     }

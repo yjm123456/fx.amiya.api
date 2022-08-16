@@ -113,6 +113,15 @@ namespace Fx.Amiya.Service
                                                   PerformanceTarget = d.PerformanceTarget,
                                                   CumulativePerformance = d.CumulativePerformance,
                                                   PerformanceCompleteRate = d.PerformanceCompleteRate,
+                                                  NewCustomerPerformanceTarget = d.NewCustomerPerformanceTarget,
+                                                  NewCustomerPerformanceCompleteRate = d.NewCustomerPerformanceCompleteRate,
+                                                  CumulativeNewCustomerPerformance = d.CumulativeNewCustomerPerformance,
+                                                  OldCustomerPerformanceTarget = d.OldCustomerPerformanceTarget,
+                                                  OldCustomerPerformanceCompleteRate = d.OldCustomerPerformanceCompleteRate,
+                                                  CumulativeOldCustomerPerformance = d.CumulativeOldCustomerPerformance,
+                                                  SubsequentPerformanceCompleteRate = d.SubsequentPerformanceCompleteRate,
+                                                  SubsequentPerformanceTarget = d.SubsequentPerformanceTarget,
+                                                  CumulativeSubsequentPerformance = d.CumulativeSubsequentPerformance,
                                                   MinivanRefundTarget = d.MinivanRefundTarget,
                                                   CumulativeMinivanRefund = d.CumulativeMinivanRefund,
                                                   MinivanRefundCompleteRate = d.MinivanRefundCompleteRate,
@@ -192,6 +201,18 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.PerformanceTarget = addDto.PerformanceTarget;
                 liveAnchorMonthlyTarget.CumulativePerformance = 0.00M;
                 liveAnchorMonthlyTarget.PerformanceCompleteRate = 0.00M;
+
+                liveAnchorMonthlyTarget.NewCustomerPerformanceTarget = addDto.NewCustomerPerformanceTarget;
+                liveAnchorMonthlyTarget.CumulativeNewCustomerPerformance = 0.00M;
+                liveAnchorMonthlyTarget.NewCustomerPerformanceCompleteRate = 0.00M;
+
+                liveAnchorMonthlyTarget.OldCustomerPerformanceTarget = addDto.OldCustomerPerformanceTarget;
+                liveAnchorMonthlyTarget.CumulativeOldCustomerPerformance = 0.00M;
+                liveAnchorMonthlyTarget.OldCustomerPerformanceCompleteRate = 0.00M;
+
+                liveAnchorMonthlyTarget.SubsequentPerformanceTarget = addDto.SubsequentPerformanceTarget;
+                liveAnchorMonthlyTarget.CumulativeSubsequentPerformance = 0.00M;
+                liveAnchorMonthlyTarget.SubsequentPerformanceCompleteRate = 0.00M;
 
                 liveAnchorMonthlyTarget.MinivanRefundTarget = addDto.MinivanRefundTarget;
                 liveAnchorMonthlyTarget.CumulativeMinivanRefund = 0;
@@ -291,6 +312,20 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.CargoSettlementCommissionTarget = liveAnchorMonthlyTarget.CargoSettlementCommissionTarget;
                 liveAnchorMonthlyTargetDto.CumulativeCargoSettlementCommission = liveAnchorMonthlyTarget.CumulativeCargoSettlementCommission;
                 liveAnchorMonthlyTargetDto.CargoSettlementCommissionCompleteRate = liveAnchorMonthlyTarget.CargoSettlementCommissionCompleteRate;
+
+
+                liveAnchorMonthlyTargetDto.NewCustomerPerformanceTarget = liveAnchorMonthlyTarget.NewCustomerPerformanceTarget;
+                liveAnchorMonthlyTargetDto.CumulativeNewCustomerPerformance = liveAnchorMonthlyTarget.CumulativeNewCustomerPerformance;
+                liveAnchorMonthlyTargetDto.NewCustomerPerformanceCompleteRate = liveAnchorMonthlyTarget.NewCustomerPerformanceCompleteRate;
+
+                liveAnchorMonthlyTargetDto.SubsequentPerformanceTarget = liveAnchorMonthlyTarget.SubsequentPerformanceTarget;
+                liveAnchorMonthlyTargetDto.CumulativeSubsequentPerformance = liveAnchorMonthlyTarget.CumulativeSubsequentPerformance;
+                liveAnchorMonthlyTargetDto.SubsequentPerformanceCompleteRate = liveAnchorMonthlyTarget.SubsequentPerformanceCompleteRate;
+
+                liveAnchorMonthlyTargetDto.OldCustomerPerformanceTarget = liveAnchorMonthlyTarget.OldCustomerPerformanceTarget;
+                liveAnchorMonthlyTargetDto.CumulativeOldCustomerPerformance = liveAnchorMonthlyTarget.CumulativeOldCustomerPerformance;
+                liveAnchorMonthlyTargetDto.OldCustomerPerformanceCompleteRate = liveAnchorMonthlyTarget.OldCustomerPerformanceCompleteRate;
+
                 liveAnchorMonthlyTargetDto.PerformanceTarget = liveAnchorMonthlyTarget.PerformanceTarget;
                 liveAnchorMonthlyTargetDto.CumulativePerformance = liveAnchorMonthlyTarget.CumulativePerformance;
                 liveAnchorMonthlyTargetDto.PerformanceCompleteRate = liveAnchorMonthlyTarget.PerformanceCompleteRate;
@@ -341,6 +376,9 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.CargoSettlementCommissionTarget = updateDto.CargoSettlementCommissionTarget;
                 liveAnchorMonthlyTarget.MinivanRefundTarget = updateDto.MinivanRefundTarget;
                 liveAnchorMonthlyTarget.MiniVanBadReviewsTarget = updateDto.MiniVanBadReviewsTarget;
+                liveAnchorMonthlyTarget.NewCustomerPerformanceTarget = updateDto.NewCustomerPerformanceTarget;
+                liveAnchorMonthlyTarget.SubsequentPerformanceTarget = updateDto.SubsequentPerformanceTarget;
+                liveAnchorMonthlyTarget.OldCustomerPerformanceTarget = updateDto.OldCustomerPerformanceTarget;
                 liveAnchorMonthlyTarget.PerformanceTarget = updateDto.PerformanceTarget;
                 await dalLiveAnchorMonthlyTarget.UpdateAsync(liveAnchorMonthlyTarget, true);
             }
@@ -349,6 +387,7 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
+
         /// <summary>
         /// 更新每日数据时调用并且添加累计信息
         /// </summary>
@@ -564,6 +603,42 @@ namespace Fx.Amiya.Service
                 else
                 {
                     liveAnchorMonthlyTarget.MiniVanBadReviewsCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeMiniVanBadReviews) / Convert.ToDecimal(liveAnchorMonthlyTarget.MiniVanBadReviewsTarget)) * 100, 2);
+                }
+                #endregion
+
+                #region #新诊业绩量
+                liveAnchorMonthlyTarget.CumulativeNewCustomerPerformance += editDto.CumulativeNewCustomerPerformance;
+                if (liveAnchorMonthlyTarget.CumulativeNewCustomerPerformance <= 0)
+                {
+                    liveAnchorMonthlyTarget.NewCustomerPerformanceCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.NewCustomerPerformanceCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeNewCustomerPerformance) / Convert.ToDecimal(liveAnchorMonthlyTarget.NewCustomerPerformanceTarget)) * 100, 2);
+                }
+                #endregion
+
+                #region #复诊业绩量
+                liveAnchorMonthlyTarget.SubsequentPerformanceTarget += editDto.CumulativeSubsequentPerformance;
+                if (liveAnchorMonthlyTarget.CumulativeSubsequentPerformance <= 0)
+                {
+                    liveAnchorMonthlyTarget.SubsequentPerformanceCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.SubsequentPerformanceCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeSubsequentPerformance) / Convert.ToDecimal(liveAnchorMonthlyTarget.SubsequentPerformanceTarget)) * 100, 2);
+                }
+                #endregion
+
+                #region #老客业绩量
+                liveAnchorMonthlyTarget.CumulativeOldCustomerPerformance += editDto.CumulativeOldCustomerPerformance;
+                if (liveAnchorMonthlyTarget.CumulativeOldCustomerPerformance <= 0)
+                {
+                    liveAnchorMonthlyTarget.OldCustomerPerformanceCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.OldCustomerPerformanceCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeOldCustomerPerformance) / Convert.ToDecimal(liveAnchorMonthlyTarget.OldCustomerPerformanceTarget)) * 100, 2);
                 }
                 #endregion
 

@@ -265,6 +265,44 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 成交率
         /// </summary>
         public decimal DealRate { get; set; }
+        /// <summary>
+        /// 新诊业绩目标
+        /// </summary>
+        public decimal NewCustomerPerformanceTarget { get; set; }
+        /// <summary>
+        /// 月累计新诊业绩
+        /// </summary>
+        public decimal CumulativeNewCustomerPerformance { get; set; }
+        /// <summary>
+        /// 新诊业绩完成率
+        /// </summary>
+        public decimal NewCustomerPerformanceCompleteRate { get; set; }
+
+        /// <summary>
+        /// 复诊业绩目标
+        /// </summary>
+        public decimal SubsequentPerformanceTarget { get; set; }
+        /// <summary>
+        /// 月累计复诊业绩
+        /// </summary>
+        public decimal CumulativeSubsequentPerformance { get; set; }
+        /// <summary>
+        /// 复诊业绩完成率
+        /// </summary>
+        public decimal SubsequentPerformanceCompleteRate { get; set; }
+
+        /// <summary>
+        /// 老客业绩目标
+        /// </summary>
+        public decimal OldCustomerPerformanceTarget { get; set; }
+        /// <summary>
+        /// 月累计老客业绩
+        /// </summary>
+        public decimal CumulativeOldCustomerPerformance { get; set; }
+        /// <summary>
+        /// 老客业绩完成率
+        /// </summary>
+        public decimal OldCustomerPerformanceCompleteRate { get; set; }
 
         /// <summary>
         /// 业绩目标（包含面诊卡定金）

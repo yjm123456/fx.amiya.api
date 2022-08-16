@@ -1076,6 +1076,18 @@ ADD COLUMN `emergency_level` int DEFAULT 0 AFTER `is_send_order`;
 ----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
+-----------------------------------------------余建明 2022/08/15  BEGIN--------------------------------------------;
+ALTER TABLE `amiyadb`.`tbl_liveanchor_monthly_target` 
+ADD COLUMN `new_customer_performance_target` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cargosettlementcommission_complete_rate`,
+ADD COLUMN `cumulative_new_customer_performance` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `new_customer_performance_target`,
+ADD COLUMN `new_customer_performance_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT '0.00' AFTER `cumulative_new_customer_performance`,
+ADD COLUMN `subsequent_performance_target` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `new_customer_performance_complete_rate`,
+ADD COLUMN `cumulative_subsequent_performance` DECIMAL(12) NOT NULL DEFAULT 0.00 AFTER `subsequent_performance_target`,
+ADD COLUMN `subsequent_performance_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_subsequent_performance`,
+ADD COLUMN `old_customer_performance_target` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `subsequent_performance_complete_rate`,
+ADD COLUMN `cumulative_old_customer_performance` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `old_customer_performance_target`,
+ADD COLUMN `old_customer_performance_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_old_customer_performance`;
+-----------------------------------------------余建明 2022/08/15 END--------------------------------------------;
 
 
 
