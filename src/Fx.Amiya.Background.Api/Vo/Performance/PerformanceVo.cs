@@ -23,7 +23,7 @@ namespace Fx.Amiya.Background.Api.Vo.Performance
         /// </summary>
         public decimal? TotalPerformanceChainRatio { get; set; }
         /// <summary>
-        /// 总业绩目标达成度
+        /// 总业绩目标完成率
         /// </summary>
         public decimal? TotalPerformanceTargetComplete { get; set; }
         /// <summary>
@@ -39,7 +39,7 @@ namespace Fx.Amiya.Background.Api.Vo.Performance
         /// </summary>
         public decimal? NewPerformanceChainRatio { get; set; }
         /// <summary>
-        /// 新诊业绩目标达成
+        /// 新诊业绩目标完成率
         /// </summary>
         public decimal? NewPerformanceTargetComplete { get; set; }
         /// <summary>
@@ -55,7 +55,7 @@ namespace Fx.Amiya.Background.Api.Vo.Performance
         /// </summary>
         public decimal? OldPerformanceChainRatio { get; set; }
         /// <summary>
-        /// 老客业绩目标
+        /// 老客业绩目标完成率
         /// </summary>
         public decimal? OldPerformanceTargetComplete { get; set; }
         /// <summary>
@@ -71,11 +71,11 @@ namespace Fx.Amiya.Background.Api.Vo.Performance
         /// </summary>
         public decimal? CommercePerformanceChainRatio { get; set; }
         /// <summary>
-        /// 带货业绩目标达成
+        /// 带货业绩目标完成率
         /// </summary>
         public decimal? CommercePerformanceTargetComplete { get; set; }
         /// <summary>
-        /// 各业绩所占比例
+        /// 新老客,带货业绩所占比例
         /// </summary>
         public List<PerformanceRatioVo> PerformanceRatios { get; set; }
 
@@ -94,7 +94,7 @@ namespace Fx.Amiya.Background.Api.Vo.Performance
 
     }
     /// <summary>
-    /// 月业绩数
+    /// 每月业绩数
     /// </summary>
     public class PerformanceListInfo {
         //日期

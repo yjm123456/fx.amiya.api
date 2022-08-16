@@ -721,6 +721,7 @@ namespace Fx.Amiya.Service
             //获取当前选中月已完成的带货总业绩
             PerformanceDto sumAlreadyCompleteCommercePerformance = await _liveAnchorMonthlyTargetService.GetLiveAnchorMonthTargetAlreadyCompleteCommercePerformance(year, month);
 
+            //已完成的总业绩 成交业绩+带货业绩
             sumAlreadyCompletePerformance.PerformanceCount = sumAlreadyCompletePerformance.PerformanceCount + sumAlreadyCompleteCommercePerformance.PerformanceCount;
 
             //获取当前月份老客总业绩
