@@ -393,13 +393,16 @@ namespace Fx.Amiya.Background.Api.Controllers
             #endregion
 
             #region 【折线图】
-            var historySendThisMonthDealOrderList = await amiyaPerformanceService.GetHistorySendThisMonthDealOrders(year, month);
+            //历史派单当月成交折线图
+            var historySendThisMonthDealOrderList = await amiyaPerformanceService.GetHistorySendThisMonthDealOrders(year, month, true);
             performanceVo.HistorySendDuringMonthDealList = historySendThisMonthDealOrderList.Select(data => new Vo.Performance.PerformanceListInfo
             {
                 date = data.Date,
                 Performance = data.PerfomancePrice
             }).ToList();
-            var thisMonthSendThisMonthDealOrderList = await amiyaPerformanceService.GetThisMonthSendThisMonthDealOrders(year, month);
+
+            //当月派单当月成交折线图
+            var thisMonthSendThisMonthDealOrderList = await amiyaPerformanceService.GetHistorySendThisMonthDealOrders(year, month, false);
             performanceVo.DuringMonthSendDuringMonthDealList = thisMonthSendThisMonthDealOrderList.Select(data => new Vo.Performance.PerformanceListInfo
             {
                 date = data.Date,

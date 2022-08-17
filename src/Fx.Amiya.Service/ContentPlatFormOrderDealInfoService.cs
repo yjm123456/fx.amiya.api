@@ -776,33 +776,7 @@ namespace Fx.Amiya.Service
                   ContentPlatFOrmOrderDealInfo =>
                        new ContentPlatFormOrderDealInfoDto
                        {
-                           Id = ContentPlatFOrmOrderDealInfo.Id,
-                           ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId,
-                           CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate,
-                           IsToHospital = ContentPlatFOrmOrderDealInfo.IsToHospital,
-                           ToHospitalType = ContentPlatFOrmOrderDealInfo.ToHospitalType,
-                           ToHospitalDate = ContentPlatFOrmOrderDealInfo.ToHospitalDate,
-                           LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId,
-                           IsDeal = ContentPlatFOrmOrderDealInfo.IsDeal,
-                           DealPicture = ContentPlatFOrmOrderDealInfo.DealPicture,
-                           Remark = ContentPlatFOrmOrderDealInfo.Remark,
                            Price = ContentPlatFOrmOrderDealInfo.Price,
-                           DealDate = ContentPlatFOrmOrderDealInfo.DealDate,
-                           OtherAppOrderId = ContentPlatFOrmOrderDealInfo.OtherAppOrderId,
-                           IsAcompanying = ContentPlatFOrmOrderDealInfo.IsAcompanying,
-                           IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,
-                           CommissionRatio = ContentPlatFOrmOrderDealInfo.CommissionRatio,
-                           CheckState = ContentPlatFOrmOrderDealInfo.CheckState,
-                           CheckStateText = ServiceClass.GetCheckTypeText(ContentPlatFOrmOrderDealInfo.CheckState.Value),
-                           CheckPrice = ContentPlatFOrmOrderDealInfo.CheckPrice,
-                           CheckDate = ContentPlatFOrmOrderDealInfo.CheckDate,
-                           CheckBy = ContentPlatFOrmOrderDealInfo.CheckBy,
-                           SettlePrice = ContentPlatFOrmOrderDealInfo.SettlePrice,
-                           CheckRemark = ContentPlatFOrmOrderDealInfo.CheckRemark,
-                           IsReturnBackPrice = ContentPlatFOrmOrderDealInfo.IsReturnBackPrice,
-                           ReturnBackDate = ContentPlatFOrmOrderDealInfo.ReturnBackDate,
-                           ReturnBackPrice = ContentPlatFOrmOrderDealInfo.ReturnBackPrice,
-                           CreateBy = ContentPlatFOrmOrderDealInfo.CreateBy,
                        }
                 ).ToList();
 
@@ -840,7 +814,6 @@ namespace Fx.Amiya.Service
             //选定的月份
             DateTime currentDate = new DateTime(year, month, 1);
             var orderinfo = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).Where(o => o.IsDeal == true && o.CreateDate >= startTime && o.CreateDate < endDate).ToListAsync();
-          
 
             if (isOldSend == true)
             {

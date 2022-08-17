@@ -169,29 +169,16 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
-        /// 历史派单当月成交折线图
+        /// 获取当月/历史派单当月成交折线图
         /// </summary>
         /// <param name="year"></param>
         /// <param name="month"></param>
         /// <returns></returns>
-        public async Task<List<PerformanceBrokenLine>> GetHistorySendThisMonthDealOrders(int year, int month)
+        public async Task<List<PerformanceBrokenLine>> GetHistorySendThisMonthDealOrders(int year, int month,bool isOldSendOrder)
         {
-
-            var brokenLine = await contentPlatFormOrderDealInfoService.GetHistoryAndThisMonthOrderPerformance(year, month, true);
+            var brokenLine = await contentPlatFormOrderDealInfoService.GetHistoryAndThisMonthOrderPerformance(year, month, isOldSendOrder);
             return brokenLine.ToList();
         }
 
-        /// <summary>
-        /// 当月派单当月成交折线图
-        /// </summary>
-        /// <param name="year"></param>
-        /// <param name="month"></param>
-        /// <returns></returns>
-        public async Task<List<PerformanceBrokenLine>> GetThisMonthSendThisMonthDealOrders(int year, int month)
-        {
-
-            var brokenLine = await contentPlatFormOrderDealInfoService.GetHistoryAndThisMonthOrderPerformance(year, month, false);
-            return brokenLine.ToList();
-        }
     }
 }
