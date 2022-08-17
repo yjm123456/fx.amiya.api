@@ -168,9 +168,13 @@ namespace Fx.Amiya.Background.Api.Vo.Performance
     /// 每月业绩数
     /// </summary>
     public class PerformanceListInfo {
-        //日期
+        /// <summary>
+        /// 日期
+        /// </summary>
         public string date { get; set; }
-        //业绩金额
+        /// <summary>
+        /// 业绩金额
+        /// </summary>
         public decimal? Performance { get; set; }
     }
     /// <summary>

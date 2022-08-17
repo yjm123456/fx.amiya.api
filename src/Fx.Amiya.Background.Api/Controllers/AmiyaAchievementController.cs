@@ -71,35 +71,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             _liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
         }
 
-        #region 例子，可删
-        /// <summary>
-        /// 获取订单经营情况
-        /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <returns></returns>
-        [HttpGet("OrderOperationCondition")]
-        [FxInternalAuthorize]
-        public async Task<ResultData<List<OrderOperationConditionVo>>> GetOrderOperationConditionAsync(DateTime? startDate, DateTime? endDate)
-        {
-            TimeSpan timeSpan = endDate.Value - startDate.Value;
-            var date = timeSpan.TotalDays;
-            List<OrderOperationConditionVo> orderOperationCondition = new List<OrderOperationConditionVo>();
-            var q = await orderService.GetOrderOperationConditionAsync(startDate, endDate);
-            for (int x = 0; x <= date; x++)
-            {
-                OrderOperationConditionVo condition = new OrderOperationConditionVo();
-                condition.Date = endDate.Value.AddDays(-x).ToString("yyyy-MM-dd");
-                condition.OrderNum = 0;
-                orderOperationCondition.Add(condition);
-            }
-            foreach (var x in q)
-            {
-                orderOperationCondition.Find(z => z.Date == x.Date).OrderNum = x.OrderNum;
-            }
-            return ResultData<List<OrderOperationConditionVo>>.Success().AddData("orderOperationCondition", orderOperationCondition);
-        }
-        #endregion
 
         #region 【啊美雅业绩】
         /// <summary>
@@ -393,7 +364,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             performanceVo.DuringMonthSendDuringMonthDealChainRatio = performance.LastMonthTotalPerformance == 0m ? null : Math.Round((performance.ThisMonthSendOrderDealPrice - performance.LastMonthTotalPerformance) / performance.LastMonthTotalPerformance * 100, 2);
             #endregion
 
-            #region 业绩占比
+            #region 【业绩占比】
 
             decimal sumSendAndDealOrderInfo = performanceVo.HistorySendDuringMonthDeal.Value + performanceVo.DuringMonthSendDuringMonthDeal.Value;
             List<PerformanceRatioDto> ratioDtos = new List<PerformanceRatioDto>();
