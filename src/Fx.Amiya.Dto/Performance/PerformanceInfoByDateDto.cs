@@ -15,4 +15,17 @@ namespace Fx.Amiya.Dto.Performance
         //业绩
         public decimal PerfomancePrice { get; set; }
     }
+
+    /// <summary>
+    /// 折线图数据
+    /// </summary>
+    public class PerformanceBrokenLine
+    {
+        /// <summary>
+        /// 日期
+        /// </summary>
+        public string Date { get; set; }
+        //业绩
+        public decimal PerfomancePrice { get; set; }
+    }
 }

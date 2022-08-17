@@ -57,4 +57,36 @@ namespace Fx.Amiya.Dto.Performance
         /// </summary>
         public decimal NewCustomerChainRatio { get; set; }
     }
+
+    /// <summary>
+    /// 派单成交情况
+    /// </summary>
+    public class MonthDealPerformanceDto
+    {
+        /// <summary>
+        /// 当月派单当月成交
+        /// </summary>
+        public decimal ThisMonthSendOrderDealPrice { get; set; }
+        /// <summary>
+        /// 当月派单当月成交同比量
+        /// </summary>
+        public decimal LastYearTotalPerformance { get; set; }
+        /// <summary>
+        /// 当月派单当月成交环比量
+        /// </summary>
+        public decimal LastMonthTotalPerformance { get; set; }
+
+        /// <summary>
+        /// 历史派单当月成交
+        /// </summary>
+        public decimal HistoryMonthSendOrderDealPrice { get; set; }
+        /// <summary>
+        /// 历史派单当月成交同比量
+        /// </summary>
+        public decimal LastYearHistorySendTotalPerformance { get; set; }
+        /// <summary>
+        /// 历史派单当月成交环比量
+        /// </summary>
+        public decimal LastMonthHistorySendTotalPerformance { get; set; }
+    }
 }

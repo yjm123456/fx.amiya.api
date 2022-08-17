@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.LiveAnchorMonthlyTarget;
+using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.IService;
 using System;
@@ -31,7 +32,7 @@ namespace Fx.Amiya.Service
             var orderYearOnYear = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year - 1, month, null);
             var totalPerformanceYearOnYear = orderYearOnYear.Sum(o => o.Price);
 
-            //业绩环比
+            //业绩环比（todo;）
             List<ContentPlatFormOrderDealInfoDto> orderChain = null;
             if (month == 1)
             {
@@ -101,11 +102,96 @@ namespace Fx.Amiya.Service
                 NewCustomerChainRatio = newPerformanceChainRatio,
                 OldCustomerYearOnYear = oldPerformanceYearOnYear,
                 OldCustomerChainRation = oldPerformanceRatio,
-                CommercePerformanceYearOnYear=commercePerformanceYearOnYear.CommerceCompletePerformance,
-                CommercePerformanceChainRation= liveAnchorMonthTargetPerformanceDto.CommerceCompletePerformance
+                CommercePerformanceYearOnYear = commercePerformanceYearOnYear.CommerceCompletePerformance,
+                CommercePerformanceChainRation = liveAnchorMonthTargetPerformanceDto.CommerceCompletePerformance
             };
             return monthPerformanceDto;
 
+        }
+
+        public async Task<MonthDealPerformanceDto> GetMonthDealPerformance(int year, int month)
+        {
+            #region 【当月派单当月成交数据】
+            var thisMonthSendOrder = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceByYearAndMonth(year, month, false);
+            //当月派单当月成交
+            var thisMonthSendOrderDealPrice = thisMonthSendOrder.Sum(x => x.Price);
+
+            List<ContentPlatFormOrderDealInfoDto> lastThisMonthOrder = null;
+            if (month == 1)
+            {
+                lastThisMonthOrder = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceByYearAndMonth(year - 1, 12, false);
+            }
+            else
+            {
+                lastThisMonthOrder = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceByYearAndMonth(year, month - 1, false);
+            }
+            //上月的当月派单当月成交
+            var lastMonthTotalPerformance = lastThisMonthOrder.Sum(o => o.Price);
+
+            var lastYearOrder = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceByYearAndMonth(year - 1, month, false);
+            //上年的当月派单当月成交
+            var lastYearTotalPerformance = lastYearOrder.Sum(o => o.Price);
+            #endregion
+
+            #region 【历史派单当月成交数据】
+            var historyMonthSendOrder = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceByYearAndMonth(year, month, true);
+            //历史派单当月成交
+            var historyMonthSendOrderDealPrice = historyMonthSendOrder.Sum(x => x.Price);
+
+            List<ContentPlatFormOrderDealInfoDto> lastHisToryMonthOrder = null;
+            if (month == 1)
+            {
+                lastHisToryMonthOrder = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceByYearAndMonth(year - 1, 12, true);
+            }
+            else
+            {
+                lastHisToryMonthOrder = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceByYearAndMonth(year, month - 1, true);
+            }
+            //上月的历史派单当月成交
+            var lastMonthHistorySendTotalPerformance = lastHisToryMonthOrder.Sum(o => o.Price);
+
+            var lastYearHistorySendOrder = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceByYearAndMonth(year - 1, month, true);
+            //上年的历史派单当月成交
+            var lastYearHistorySendTotalPerformance = lastYearHistorySendOrder.Sum(o => o.Price);
+            #endregion
+
+            MonthDealPerformanceDto monthPerformanceDto = new MonthDealPerformanceDto
+            {
+                ThisMonthSendOrderDealPrice = thisMonthSendOrderDealPrice,
+                LastYearTotalPerformance = lastYearTotalPerformance,
+                LastMonthTotalPerformance = lastMonthTotalPerformance,
+                HistoryMonthSendOrderDealPrice = historyMonthSendOrderDealPrice,
+                LastYearHistorySendTotalPerformance = lastYearHistorySendTotalPerformance,
+                LastMonthHistorySendTotalPerformance = lastMonthHistorySendTotalPerformance,
+            };
+            return monthPerformanceDto;
+
+        }
+
+        /// <summary>
+        /// 历史派单当月成交折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        public async Task<List<PerformanceBrokenLine>> GetHistorySendThisMonthDealOrders(int year, int month)
+        {
+
+            var brokenLine = await contentPlatFormOrderDealInfoService.GetHistoryAndThisMonthOrderPerformance(year, month, true);
+            return brokenLine.ToList();
+        }
+
+        /// <summary>
+        /// 当月派单当月成交折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        public async Task<List<PerformanceBrokenLine>> GetThisMonthSendThisMonthDealOrders(int year, int month)
+        {
+
+            var brokenLine = await contentPlatFormOrderDealInfoService.GetHistoryAndThisMonthOrderPerformance(year, month, false);
+            return brokenLine.ToList();
         }
     }
 }

@@ -112,12 +112,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<PerformanceVo>> GetAmeiYanPerformanceAsync(int year, int month)
         {
             //获取当前月各目标及带货金额
-            var target =await _liveAnchorMonthlyTargetService.GetPerformance(year,month);
+            var target = await _liveAnchorMonthlyTargetService.GetPerformance(year, month);
             //获取当前月同比,环比等数据
-            var performance = await amiyaPerformanceService.GetMonthPerformance(year,month);
+            var performance = await amiyaPerformanceService.GetMonthPerformance(year, month);
 
             //查找当前月ip运营总业绩目标
-            decimal? totalPerformanceTarget = target.TotalPerformanceTarget+target.CommercePerformanceTarget;
+            decimal? totalPerformanceTarget = target.TotalPerformanceTarget + target.CommercePerformanceTarget;
             //查找当前月IP运营带货总业绩目标
             decimal? totalCommerceTarget = target.CommercePerformanceTarget;
             //查找当前月份老客业绩目标
@@ -133,11 +133,11 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
             //获取当前月份老客总业绩
-            decimal? sumOldPerformance =performance.CurrentMonthOldCustomerPerformance;
+            decimal? sumOldPerformance = performance.CurrentMonthOldCustomerPerformance;
             //获取当前月份新客总业绩
-            decimal? sumNewPerformance =performance.CurrentMonthNewCustomerPerformance;
+            decimal? sumNewPerformance = performance.CurrentMonthNewCustomerPerformance;
             //获取同比月份总业绩
-            decimal? TotalPerfomanceYearOnYear = performance.PerformanceYearOnYear+performance.CommercePerformanceYearOnYear;
+            decimal? TotalPerfomanceYearOnYear = performance.PerformanceYearOnYear + performance.CommercePerformanceYearOnYear;
             //获取环比月份总业绩
             decimal? TotalPerfomanceChainRatio = performance.PerformanceChainRatio + performance.CommercePerformanceChainRation;
 
@@ -217,7 +217,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 {
                     PerformanceText = "老客业绩",
                     PerformancePrice = sumOldPerformance,
-                    PerformanceRatio = Math.Round(sumOldPerformance.Value/ sumAlreadyCompletePerformance.Value * 100, 2)
+                    PerformanceRatio = Math.Round(sumOldPerformance.Value / sumAlreadyCompletePerformance.Value * 100, 2)
                 };
                 PerformanceRatioDto commerceRatio = new PerformanceRatioDto
                 {
@@ -310,7 +310,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             performanceInfoDto.commercePerformanceList = commercePerfomanceList;
             performanceInfoDto.oldPerformanceList = oldPerfomanceList;
             performanceInfoDto.newPerformanceList = newPerfomanceList;
-            
+
 
 
             PerformanceVo performanceVo = new PerformanceVo
@@ -364,6 +364,82 @@ namespace Fx.Amiya.Background.Api.Controllers
         #endregion
 
         #region 【派单成交业绩】
+        /// <summary>
+        /// 派单成交业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        [HttpGet("sendAndDealPerformance")]
+        public async Task<ResultData<SendAndDealInfoVo>> GetSendAndDealPerformanceAsync(int year, int month)
+        {
+            //获取当前月同比,环比等数据
+            var performance = await amiyaPerformanceService.GetMonthDealPerformance(year, month);
+            SendAndDealInfoVo performanceVo = new SendAndDealInfoVo();
+
+            #region 【历史派单，当月成交数据】
+            performanceVo.HistorySendDuringMonthDeal = performance.HistoryMonthSendOrderDealPrice;
+
+            performanceVo.HistorySendDuringMonthDealYearOnYear = performance.LastYearHistorySendTotalPerformance == 0m ? null : Math.Round((performance.HistoryMonthSendOrderDealPrice - performance.LastYearHistorySendTotalPerformance) / performance.LastYearHistorySendTotalPerformance * 100, 2);
+
+            performanceVo.HistorySendDuringMonthDealChainRatio = performance.LastMonthHistorySendTotalPerformance == 0m ? null : Math.Round((performance.HistoryMonthSendOrderDealPrice - performance.LastMonthHistorySendTotalPerformance) / performance.LastMonthHistorySendTotalPerformance * 100, 2);
+            #endregion
+
+            #region 【当月派单当月成交数据】
+            performanceVo.DuringMonthSendDuringMonthDeal = performance.ThisMonthSendOrderDealPrice;
+
+            performanceVo.DuringMonthSendDuringMonthDealYearOnYear = performance.LastYearTotalPerformance == 0m ? null : Math.Round((performance.ThisMonthSendOrderDealPrice - performance.LastYearTotalPerformance) / performance.LastYearTotalPerformance * 100, 2);
+
+            performanceVo.DuringMonthSendDuringMonthDealChainRatio = performance.LastMonthTotalPerformance == 0m ? null : Math.Round((performance.ThisMonthSendOrderDealPrice - performance.LastMonthTotalPerformance) / performance.LastMonthTotalPerformance * 100, 2);
+            #endregion
+
+            #region 业绩占比
+
+            decimal sumSendAndDealOrderInfo = performanceVo.HistorySendDuringMonthDeal.Value + performanceVo.DuringMonthSendDuringMonthDeal.Value;
+            List<PerformanceRatioDto> ratioDtos = new List<PerformanceRatioDto>();
+
+            PerformanceRatioDto newRatio = new PerformanceRatioDto
+            {
+                PerformanceText = "历史派单当月成交",
+                PerformancePrice = performanceVo.HistorySendDuringMonthDeal,
+                PerformanceRatio = sumSendAndDealOrderInfo == 0 ? 0 : Math.Round(performanceVo.HistorySendDuringMonthDeal.Value / sumSendAndDealOrderInfo * 100, 2)
+            };
+            ratioDtos.Add(newRatio);
+            PerformanceRatioDto oldRatio = new PerformanceRatioDto
+            {
+                PerformanceText = "当月派单当月成交",
+                PerformancePrice = performanceVo.DuringMonthSendDuringMonthDeal,
+                PerformanceRatio = sumSendAndDealOrderInfo == 0 ? 0 : Math.Round(performanceVo.DuringMonthSendDuringMonthDeal.Value / sumSendAndDealOrderInfo * 100, 2)
+            };
+            ratioDtos.Add(oldRatio);
+
+            performanceVo.PerformanceRatioVo = ratioDtos.Select(d => new PerformanceRatioVo
+            {
+                PerformanceText = d.PerformanceText,
+                PerformancePrice = d.PerformancePrice,
+                PerformanceRatio = d.PerformanceRatio
+            }).ToList();
+            #endregion
+
+            #region 【折线图】
+            var historySendThisMonthDealOrderList = await amiyaPerformanceService.GetHistorySendThisMonthDealOrders(year, month);
+            performanceVo.HistorySendDuringMonthDealList = historySendThisMonthDealOrderList.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+            var thisMonthSendThisMonthDealOrderList = await amiyaPerformanceService.GetThisMonthSendThisMonthDealOrders(year, month);
+            performanceVo.DuringMonthSendDuringMonthDealList = thisMonthSendThisMonthDealOrderList.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            #endregion
+
+            return ResultData<SendAndDealInfoVo>.Success().AddData("performance", performanceVo);
+        }
+
 
         #endregion
     }

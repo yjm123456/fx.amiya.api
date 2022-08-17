@@ -701,13 +701,78 @@ namespace Fx.Amiya.Service
             }
         }
 
+        /// <summary>
+        /// 获取啊美雅业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isOldCustomer">新客/老客</param>
+        /// <returns></returns>
         public async Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByYearAndMonth(int year, int month, bool? isOldCustomer)
         {
             //筛选结束的月份
             DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
             //选定的月份
             DateTime currentDate = new DateTime(year, month, 1);
-            return dalContentPlatFormOrderDealInfo.GetAll().Where(o => o.CreateDate >= currentDate && o.CreateDate < endDate && o.IsDeal == true).Select(
+            return await dalContentPlatFormOrderDealInfo.GetAll().Where(o => o.CreateDate >= currentDate && o.CreateDate < endDate && o.IsDeal == true)
+                .Where(o => isOldCustomer == null || o.IsOldCustomer == isOldCustomer).Select(
+                  ContentPlatFOrmOrderDealInfo =>
+                       new ContentPlatFormOrderDealInfoDto
+                       {
+                           Id = ContentPlatFOrmOrderDealInfo.Id,
+                           ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId,
+                           CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate,
+                           IsToHospital = ContentPlatFOrmOrderDealInfo.IsToHospital,
+                           ToHospitalType = ContentPlatFOrmOrderDealInfo.ToHospitalType,
+                           ToHospitalDate = ContentPlatFOrmOrderDealInfo.ToHospitalDate,
+                           LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId,
+                           IsDeal = ContentPlatFOrmOrderDealInfo.IsDeal,
+                           DealPicture = ContentPlatFOrmOrderDealInfo.DealPicture,
+                           Remark = ContentPlatFOrmOrderDealInfo.Remark,
+                           Price = ContentPlatFOrmOrderDealInfo.Price,
+                           DealDate = ContentPlatFOrmOrderDealInfo.DealDate,
+                           OtherAppOrderId = ContentPlatFOrmOrderDealInfo.OtherAppOrderId,
+                           IsAcompanying = ContentPlatFOrmOrderDealInfo.IsAcompanying,
+                           IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,
+                           CommissionRatio = ContentPlatFOrmOrderDealInfo.CommissionRatio,
+                           CheckState = ContentPlatFOrmOrderDealInfo.CheckState,
+                           CheckStateText = ServiceClass.GetCheckTypeText(ContentPlatFOrmOrderDealInfo.CheckState.Value),
+                           CheckPrice = ContentPlatFOrmOrderDealInfo.CheckPrice,
+                           CheckDate = ContentPlatFOrmOrderDealInfo.CheckDate,
+                           CheckBy = ContentPlatFOrmOrderDealInfo.CheckBy,
+                           SettlePrice = ContentPlatFOrmOrderDealInfo.SettlePrice,
+                           CheckRemark = ContentPlatFOrmOrderDealInfo.CheckRemark,
+                           IsReturnBackPrice = ContentPlatFOrmOrderDealInfo.IsReturnBackPrice,
+                           ReturnBackDate = ContentPlatFOrmOrderDealInfo.ReturnBackDate,
+                           ReturnBackPrice = ContentPlatFOrmOrderDealInfo.ReturnBackPrice,
+                           CreateBy = ContentPlatFOrmOrderDealInfo.CreateBy,
+                       }
+                ).ToListAsync();
+        }
+
+        /// <summary>
+        /// 获取派单成交业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isOldSend">历史/当月派单,true为历史派单当月成交，false为当月派单当月成交</param>
+        /// <returns></returns>
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetSendAndDealPerformanceByYearAndMonth(int year, int month, bool? isOldSend)
+        {
+            //筛选结束的月份
+            DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
+            //选定的月份
+            DateTime currentDate = new DateTime(year, month, 1);
+            var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).Where(o => o.CreateDate >= currentDate && o.CreateDate < endDate && o.IsDeal == true).ToListAsync();
+            if (isOldSend == true)
+            {
+                result = result.Where(x => x.ContentPlatFormOrder.SendDate.HasValue && x.ContentPlatFormOrder.SendDate.Value.Month != x.CreateDate.Month).ToList();
+            }
+            if (isOldSend == false)
+            {
+                result = result.Where(x => x.ContentPlatFormOrder.SendDate.HasValue && x.ContentPlatFormOrder.SendDate.Value.Month == x.CreateDate.Month).ToList();
+            }
+            var returnInfo = result.Select(
                   ContentPlatFOrmOrderDealInfo =>
                        new ContentPlatFormOrderDealInfoDto
                        {
@@ -740,9 +805,9 @@ namespace Fx.Amiya.Service
                            CreateBy = ContentPlatFOrmOrderDealInfo.CreateBy,
                        }
                 ).ToList();
+
+            return returnInfo;
         }
-
-
 
 
         public async Task<List<PerformanceInfoByDateDto>> GetPerformance(int year, int month, bool? isCustomer)
@@ -762,8 +827,30 @@ namespace Fx.Amiya.Service
             {
                 Date = DateTime.Parse($"{year}-{o.Key}"),
                 PerfomancePrice = o.Sum(o => o.Price)
-            }).ToList(); ;
+            }).ToList();
         }
 
+
+        public async Task<List<PerformanceBrokenLine>> GetHistoryAndThisMonthOrderPerformance(int year, int month, bool? isOldSend)
+        {
+            //开始月份
+            DateTime startTime = new DateTime(year, 1, 1);
+            //筛选结束的月份
+            DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
+            //选定的月份
+            DateTime currentDate = new DateTime(year, month, 1);
+            var orderinfo = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).Where(o => o.IsDeal == true && o.CreateDate >= startTime && o.CreateDate < endDate).ToListAsync();
+          
+
+            if (isOldSend == true)
+            {
+                orderinfo = orderinfo.Where(x => x.ContentPlatFormOrder.SendDate.HasValue && x.ContentPlatFormOrder.SendDate.Value.Month != x.CreateDate.Month).ToList();
+            }
+            if (isOldSend == false)
+            {
+                orderinfo = orderinfo.Where(x => x.ContentPlatFormOrder.SendDate.HasValue && x.ContentPlatFormOrder.SendDate.Value.Month == x.CreateDate.Month).ToList();
+            }
+            return orderinfo.GroupBy(x => x.CreateDate.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(z => z.Price) }).ToList();
+        }
     }
 }
