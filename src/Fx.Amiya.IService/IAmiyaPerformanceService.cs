@@ -11,5 +11,23 @@ namespace Fx.Amiya.IService
     {
 
         Task<MonthPerformanceDto> GetMonthPerformance(int year,int month);
+        /// <summary>
+        /// 获取当月 总/新客/老客/带货业绩已经各自的同比/环比/目标达成率
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        Task<MonthPerformanceRatioDto> GetMonthPerformanceAndRation(int year, int month);
+
+        Task<MonthDealPerformanceDto> GetMonthDealPerformance(int year, int month);
+
+        /// <summary>
+        /// 获取当月/历史派单当月成交折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isOldSendOrder">是否为历史派单订单</param>
+        /// <returns></returns>
+        Task<List<PerformanceBrokenLine>> GetHistorySendThisMonthDealOrders(int year, int month, bool isOldSendOrder);
     }
 }

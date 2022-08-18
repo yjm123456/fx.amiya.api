@@ -4,6 +4,7 @@ using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
+using jos_sdk_net.Util;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -683,11 +684,12 @@ namespace Fx.Amiya.Service
 
         public async Task<List<PerformanceInfoByDateDto>> GetLiveAnchorCommercePerformance(int year, int month)
         {
-            return dalLiveAnchorMonthlyTarget.GetAll().Where(o => o.Year == year && o.Month >= 1 && o.Month <= month).GroupBy(o => o.Month).Select(o => new PerformanceInfoByDateDto
+            var list= dalLiveAnchorMonthlyTarget.GetAll().Where(o => o.Year == year && o.Month >= 1 && o.Month <= month).GroupBy(o => o.Month).OrderBy(o=>o.Key).Select(o => new PerformanceInfoByDateDto
             {
-                Date = DateTime.Parse($"{year}-{o.Key}"),
+                Date = o.Key.ToString(),
                 PerfomancePrice = o.Sum(o => o.CumulativeCargoSettlementCommission)
             }).ToList(); ; ;
+            return BreakLineClassUtil<PerformanceInfoByDateDto>.Convert(month, list);
         }
 
         /*public async Task<PerformanceDto> GetLiveAnchorMonthlyTargetTotalPerformance(int year, int month)

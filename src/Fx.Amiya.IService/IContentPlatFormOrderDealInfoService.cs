@@ -34,6 +34,16 @@ namespace Fx.Amiya.IService
         /// <param name="isCustomer"></param>
         /// <returns></returns>
         Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByYearAndMonth(int year, int month, bool? isCustomer);
+
+
+        /// <summary>
+        /// 获取派单成交业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isOldSend">历史/当月派单,true为历史派单当月成交，false为当月派单当月成交</param>
+        /// <returns></returns>
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetSendAndDealPerformanceByYearAndMonth(int year, int month, bool? isOldSend);
         /// <summary>
         /// 按月筛选新老客数据
         /// </summary>
@@ -42,5 +52,14 @@ namespace Fx.Amiya.IService
         /// <param name="isCustomer">筛选新老客(传null不筛选)</param>
         /// <returns></returns>
         Task<List<PerformanceInfoByDateDto>> GetPerformance(int year,int month,bool? isCustomer);
+
+        /// <summary>
+        /// 获取成交情况折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isOldSend"></param>
+        /// <returns></returns>
+        Task<List<PerformanceBrokenLine>> GetHistoryAndThisMonthOrderPerformance(int year, int month, bool? isOldSend);
     }
 }

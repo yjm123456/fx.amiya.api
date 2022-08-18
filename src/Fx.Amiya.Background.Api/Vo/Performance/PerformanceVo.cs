@@ -82,24 +82,99 @@ namespace Fx.Amiya.Background.Api.Vo.Performance
         /// <summary>
         /// 新客业绩数据
         /// </summary>
-        public List<PerformanceListInfoVo> NewPerformanceData { get; set; }
+        public List<PerformanceListInfo> NewPerformanceData { get; set; }
         /// <summary>
         /// 老客业绩数据
         /// </summary>
-        public List<PerformanceListInfoVo> OldPerformanceData { get; set; }
+        public List<PerformanceListInfo> OldPerformanceData { get; set; }
         /// <summary>
         /// 带货业绩数据
         /// </summary>
-        public List<PerformanceListInfoVo> CommercePerformanceData { get; set; }
+        public List<PerformanceListInfo> CommercePerformanceData { get; set; }
 
     }
+
+    /// <summary>
+    /// 派单成交数据
+    /// </summary>
+    public class SendAndDealInfoVo
+    {
+        /// <summary>
+        /// 历史派单当月成交
+        /// </summary>
+        public decimal? HistorySendDuringMonthDeal { get; set; }
+
+        /// <summary>
+        /// 历史派单当月成交同比
+        /// </summary>
+        public decimal? HistorySendDuringMonthDealYearOnYear { get; set; }
+        /// <summary>
+        /// 历史派单当月成交环比
+        /// </summary>
+        public decimal? HistorySendDuringMonthDealChainRatio { get; set; }
+
+        /// <summary>
+        /// 历史派单当月成交明细
+        /// </summary>
+        public decimal? HistorySendDuringMonthDealDetails { get; set; }
+
+        /// <summary>
+        /// 当月派单当月成交
+        /// </summary>
+        public decimal? DuringMonthSendDuringMonthDeal { get; set; }
+
+        /// <summary>
+        /// 当月派单当月成交同比
+        /// </summary>
+        public decimal? DuringMonthSendDuringMonthDealYearOnYear { get; set; }
+        /// <summary>
+        /// 当月派单当月成交环比
+        /// </summary>
+        public decimal? DuringMonthSendDuringMonthDealChainRatio { get; set; }
+
+        /// <summary>
+        /// 当月派单当月成交明细
+        /// </summary>
+        public decimal? DuringMonthSendDuringMonthDealDetails { get; set; }
+
+
+        /// <summary>
+        /// 业绩占比
+        /// </summary>
+        public List<PerformanceRatioVo> PerformanceRatioVo { get; set; }
+
+        /// <summary>
+        /// 历史派单当月成交
+        /// </summary>
+        public List<PerformanceListInfo> HistorySendDuringMonthDealList { get; set; }
+        /// <summary>
+        /// 当月派单当月成交
+        /// </summary>
+        public List<PerformanceListInfo> DuringMonthSendDuringMonthDealList { get; set; }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     /// <summary>
     /// 每月业绩数
     /// </summary>
-    public class PerformanceListInfoVo {
-        //月份
+    public class PerformanceListInfo { 
+        /// <summary>
+        /// 日期
+        /// </summary>
         public string date { get; set; }
-        //业绩金额
+        /// <summary>
+        /// 业绩金额
+        /// </summary>
         public decimal? Performance { get; set; }
     }
     /// <summary>
