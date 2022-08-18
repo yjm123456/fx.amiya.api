@@ -41,7 +41,7 @@ namespace jos_sdk_net.Util
             catch (Exception ex)
             {
 
-                throw new Exception("转化失败,检查格式");
+                throw new Exception("转换失败,请检查格式");
             }
         }
     }

@@ -12,7 +12,7 @@ namespace Fx.Amiya.IService
 
         Task<MonthPerformanceDto> GetMonthPerformance(int year,int month);
         /// <summary>
-        /// 获取当月 总/新客/老客/带货业绩已经各自的同比/环比/目标达成率
+        /// 获取当月 总/新客/老客/带货业绩 以及各业绩同比/环比/目标达成率
         /// </summary>
         /// <param name="year"></param>
         /// <param name="month"></param>
