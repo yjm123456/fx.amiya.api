@@ -35,11 +35,11 @@ namespace Fx.Amiya.Service
             List<ContentPlatFormOrderDealInfoDto> orderChain = null;
             if (month == 1)
             {
-                orderChain = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year - 1, month, null);
+                orderChain = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year - 1, 12, null);
             }
             else
             {
-                orderChain = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year - 1, 12, null);
+                orderChain = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year, month-1, null);
             }
             var totalPerformanceChainRatio = orderChain.Sum(o => o.Price);
             //老客业绩

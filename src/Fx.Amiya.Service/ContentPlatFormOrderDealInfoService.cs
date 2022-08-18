@@ -696,7 +696,6 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
@@ -707,37 +706,20 @@ namespace Fx.Amiya.Service
             DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
             //选定的月份
             DateTime currentDate = new DateTime(year, month, 1);
-            return dalContentPlatFormOrderDealInfo.GetAll().Where(o => o.CreateDate >= currentDate && o.CreateDate < endDate && o.IsDeal == true).Select(
+            return dalContentPlatFormOrderDealInfo.GetAll()
+                .Where(o => o.CreateDate >= currentDate && o.CreateDate < endDate && o.IsDeal == true)
+                .Where(o=>isOldCustomer==null||o.IsOldCustomer==isOldCustomer)
+                .Select(
                   ContentPlatFOrmOrderDealInfo =>
                        new ContentPlatFormOrderDealInfoDto
                        {
                            Id = ContentPlatFOrmOrderDealInfo.Id,
                            ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId,
                            CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate,
-                           IsToHospital = ContentPlatFOrmOrderDealInfo.IsToHospital,
-                           ToHospitalType = ContentPlatFOrmOrderDealInfo.ToHospitalType,
-                           ToHospitalDate = ContentPlatFOrmOrderDealInfo.ToHospitalDate,
-                           LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId,
-                           IsDeal = ContentPlatFOrmOrderDealInfo.IsDeal,
-                           DealPicture = ContentPlatFOrmOrderDealInfo.DealPicture,
-                           Remark = ContentPlatFOrmOrderDealInfo.Remark,
+                           IsDeal = ContentPlatFOrmOrderDealInfo.IsDeal,                       
                            Price = ContentPlatFOrmOrderDealInfo.Price,
                            DealDate = ContentPlatFOrmOrderDealInfo.DealDate,
-                           OtherAppOrderId = ContentPlatFOrmOrderDealInfo.OtherAppOrderId,
-                           IsAcompanying = ContentPlatFOrmOrderDealInfo.IsAcompanying,
                            IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,
-                           CommissionRatio = ContentPlatFOrmOrderDealInfo.CommissionRatio,
-                           CheckState = ContentPlatFOrmOrderDealInfo.CheckState,
-                           CheckStateText = ServiceClass.GetCheckTypeText(ContentPlatFOrmOrderDealInfo.CheckState.Value),
-                           CheckPrice = ContentPlatFOrmOrderDealInfo.CheckPrice,
-                           CheckDate = ContentPlatFOrmOrderDealInfo.CheckDate,
-                           CheckBy = ContentPlatFOrmOrderDealInfo.CheckBy,
-                           SettlePrice = ContentPlatFOrmOrderDealInfo.SettlePrice,
-                           CheckRemark = ContentPlatFOrmOrderDealInfo.CheckRemark,
-                           IsReturnBackPrice = ContentPlatFOrmOrderDealInfo.IsReturnBackPrice,
-                           ReturnBackDate = ContentPlatFOrmOrderDealInfo.ReturnBackDate,
-                           ReturnBackPrice = ContentPlatFOrmOrderDealInfo.ReturnBackPrice,
-                           CreateBy = ContentPlatFOrmOrderDealInfo.CreateBy,
                        }
                 ).ToList();
         }

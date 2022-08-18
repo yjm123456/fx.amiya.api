@@ -82,22 +82,22 @@ namespace Fx.Amiya.Background.Api.Vo.Performance
         /// <summary>
         /// 新客业绩数据
         /// </summary>
-        public List<PerformanceListInfo> NewPerformanceData { get; set; }
+        public List<PerformanceListInfoVo> NewPerformanceData { get; set; }
         /// <summary>
         /// 老客业绩数据
         /// </summary>
-        public List<PerformanceListInfo> OldPerformanceData { get; set; }
+        public List<PerformanceListInfoVo> OldPerformanceData { get; set; }
         /// <summary>
         /// 带货业绩数据
         /// </summary>
-        public List<PerformanceListInfo> CommercePerformanceData { get; set; }
+        public List<PerformanceListInfoVo> CommercePerformanceData { get; set; }
 
     }
     /// <summary>
     /// 每月业绩数
     /// </summary>
-    public class PerformanceListInfo {
-        //日期
+    public class PerformanceListInfoVo {
+        //月份
         public string date { get; set; }
         //业绩金额
         public decimal? Performance { get; set; }

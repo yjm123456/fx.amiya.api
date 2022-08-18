@@ -112,12 +112,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<PerformanceVo>> GetAmeiYanPerformanceAsync(int year, int month)
         {
             //获取当前月各目标及带货金额
-            var target =await _liveAnchorMonthlyTargetService.GetPerformance(year,month);
+            var target = await _liveAnchorMonthlyTargetService.GetPerformance(year, month);
             //获取当前月同比,环比等数据
-            var performance = await amiyaPerformanceService.GetMonthPerformance(year,month);
-
+            var performance = await amiyaPerformanceService.GetMonthPerformance(year, month);
             //查找当前月ip运营总业绩目标
-            decimal? totalPerformanceTarget = target.TotalPerformanceTarget+target.CommercePerformanceTarget;
+            decimal? totalPerformanceTarget = target.TotalPerformanceTarget + target.CommercePerformanceTarget;
             //查找当前月IP运营带货总业绩目标
             decimal? totalCommerceTarget = target.CommercePerformanceTarget;
             //查找当前月份老客业绩目标
@@ -133,11 +132,11 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
             //获取当前月份老客总业绩
-            decimal? sumOldPerformance =performance.CurrentMonthOldCustomerPerformance;
+            decimal? sumOldPerformance = performance.CurrentMonthOldCustomerPerformance;
             //获取当前月份新客总业绩
-            decimal? sumNewPerformance =performance.CurrentMonthNewCustomerPerformance;
+            decimal? sumNewPerformance = performance.CurrentMonthNewCustomerPerformance;
             //获取同比月份总业绩
-            decimal? TotalPerfomanceYearOnYear = performance.PerformanceYearOnYear+performance.CommercePerformanceYearOnYear;
+            decimal? TotalPerfomanceYearOnYear = performance.PerformanceYearOnYear + performance.CommercePerformanceYearOnYear;
             //获取环比月份总业绩
             decimal? TotalPerfomanceChainRatio = performance.PerformanceChainRatio + performance.CommercePerformanceChainRation;
 
@@ -175,7 +174,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             decimal? oldPerfomanceChainRation = sumOldPerfomanceChainRatio == 0m ? null : Math.Round((sumOldPerformance.Value - sumOldPerfomanceChainRatio.Value) / sumOldPerfomanceChainRatio.Value * 100, 2);
 
             //新诊业绩同比
-            decimal? newPerfomanceYearOnYearRation = sumNewPerfomanceYearOnYear == 0 ? null : Math.Round((sumNewPerformance.Value - sumNewPerfomanceYearOnYear.Value) / sumNewPerfomanceYearOnYear.Value * 100, 2);
+            decimal? newPerfomanceYearOnYearRation = sumNewPerfomanceYearOnYear == 0m ? null : Math.Round((sumNewPerformance.Value - sumNewPerfomanceYearOnYear.Value) / sumNewPerfomanceYearOnYear.Value * 100, 2);
             //新诊业绩环比
             decimal? newPerfomanceChainRation = sumNewPerfomanceChainRatio == 0m ? null : Math.Round((sumNewPerformance.Value - sumNewPerfomanceChainRatio.Value) / sumNewPerfomanceChainRatio.Value * 100, 2);
 
@@ -217,7 +216,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 {
                     PerformanceText = "老客业绩",
                     PerformancePrice = sumOldPerformance,
-                    PerformanceRatio = Math.Round(sumOldPerformance.Value/ sumAlreadyCompletePerformance.Value * 100, 2)
+                    PerformanceRatio = Math.Round(sumOldPerformance.Value / sumAlreadyCompletePerformance.Value * 100, 2)
                 };
                 PerformanceRatioDto commerceRatio = new PerformanceRatioDto
                 {
@@ -229,7 +228,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 ratioDtos.Add(oldRatio);
                 ratioDtos.Add(commerceRatio);
             }
-            else
+            /*else
             {
                 PerformanceRatioDto newRatio = new PerformanceRatioDto
                 {
@@ -252,17 +251,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                 ratioDtos.Add(newRatio);
                 ratioDtos.Add(oldRatio);
                 ratioDtos.Add(commerceRatio);
-            }
+            }*/
             //各业绩占比
             performanceInfoDto.PerformanceRatios = ratioDtos;
             //老客业绩数据
             var old = await _contentPlatFormOrderDealInfoService.GetPerformance(year, month, true);
 
-            List<Dto.Performance.PerformanceListInfo> oldPerfomanceList = new List<Dto.Performance.PerformanceListInfo>();
+            List<PerformanceListInfo> oldPerfomanceList = new List<PerformanceListInfo>();
 
             for (int i = 0; i < month; i++)
             {
-                Dto.Performance.PerformanceListInfo listInfo = new Dto.Performance.PerformanceListInfo();
+                PerformanceListInfo listInfo = new PerformanceListInfo();
                 DateTime date = new DateTime(year, i + 1, 1);
                 listInfo.date = date.Month.ToString();
                 listInfo.Performance = 0.00m;
@@ -277,10 +276,10 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             //新客业绩数据
             var newp = await _contentPlatFormOrderDealInfoService.GetPerformance(year, month, false);
-            List<Dto.Performance.PerformanceListInfo> newPerfomanceList = new List<Dto.Performance.PerformanceListInfo>();
+            List<PerformanceListInfo> newPerfomanceList = new List<PerformanceListInfo>();
             for (int i = 0; i < month; i++)
             {
-                Dto.Performance.PerformanceListInfo listInfo = new Dto.Performance.PerformanceListInfo();
+                PerformanceListInfo listInfo = new PerformanceListInfo();
                 DateTime date = new DateTime(year, i + 1, 1);
                 listInfo.date = date.Month.ToString();
                 listInfo.Performance = 0.00m;
@@ -294,10 +293,10 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             //带货业绩数据
             var comm = await _liveAnchorMonthlyTargetService.GetLiveAnchorCommercePerformance(year, month);
-            List<Dto.Performance.PerformanceListInfo> commercePerfomanceList = new List<Dto.Performance.PerformanceListInfo>();
+            List<PerformanceListInfo> commercePerfomanceList = new List<PerformanceListInfo>();
             for (int i = 0; i < month; i++)
             {
-                Dto.Performance.PerformanceListInfo listInfo = new Dto.Performance.PerformanceListInfo();
+                PerformanceListInfo listInfo = new PerformanceListInfo();
                 DateTime date = new DateTime(year, i + 1, 1);
                 listInfo.date = date.Month.ToString();
                 listInfo.Performance = 0.00m;
@@ -310,7 +309,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             performanceInfoDto.commercePerformanceList = commercePerfomanceList;
             performanceInfoDto.oldPerformanceList = oldPerfomanceList;
             performanceInfoDto.newPerformanceList = newPerfomanceList;
-            
+
 
 
             PerformanceVo performanceVo = new PerformanceVo
@@ -337,19 +336,19 @@ namespace Fx.Amiya.Background.Api.Controllers
                     PerformancePrice = d.PerformancePrice,
                     PerformanceRatio = d.PerformanceRatio
                 }).ToList(),
-                NewPerformanceData = performanceInfoDto.newPerformanceList.Select(data => new Vo.Performance.PerformanceListInfo
+                NewPerformanceData = performanceInfoDto.newPerformanceList.Select(data => new PerformanceListInfoVo
                 {
-                    date = data.date,
+                    date = data.date+"月",
                     Performance = data.Performance
                 }).ToList(),
-                OldPerformanceData = performanceInfoDto.oldPerformanceList.Select(data => new Vo.Performance.PerformanceListInfo
+                OldPerformanceData = performanceInfoDto.oldPerformanceList.Select(data => new PerformanceListInfoVo
                 {
-                    date = data.date,
+                    date = data.date+"月",
                     Performance = data.Performance
                 }).ToList(),
-                CommercePerformanceData = performanceInfoDto.commercePerformanceList.Select(data => new Vo.Performance.PerformanceListInfo
+                CommercePerformanceData = performanceInfoDto.commercePerformanceList.Select(data => new PerformanceListInfoVo
                 {
-                    date = data.date,
+                    date = data.date+"月",
                     Performance = data.Performance
                 }).ToList()
 
