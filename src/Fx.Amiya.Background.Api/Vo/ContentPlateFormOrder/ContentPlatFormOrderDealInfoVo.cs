@@ -16,12 +16,12 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         public string Id { get; set; }
 
         /// <summary>
-        /// 派单编号
+        /// 订单编号
         /// </summary>
         public string ContentPlatFormOrderId { get; set; }
 
         /// <summary>
-        /// 创建时间
+        /// 登记时间
         /// </summary>
         public DateTime CreateDate { get; set; }
         /// <summary>
@@ -32,6 +32,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 面诊状态文本
         /// </summary>
         public string ConsultationTypeText { get; set; }
+
+        /// <summary>
+        /// 客户昵称
+        /// </summary>
+        public string CustomerNickName { get; set; }
         /// <summary>
         /// 客户手机号
         /// </summary>
@@ -86,7 +91,7 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public string Remark { get; set; }
         /// <summary>
-        /// 价格
+        /// 成交金额
         /// </summary>
         public decimal Price { get; set; }
 

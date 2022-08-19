@@ -110,6 +110,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Security\Utils\WebUtils.cs" />
+    <Compile Include="Util\BreakLineClassUtil.cs" />
     <Compile Include="Util\CreateOrderIdHelper.cs" />
     <Compile Include="Util\ExportExcelHelper.cs" />
     <Compile Include="Util\FileItem.cs" />

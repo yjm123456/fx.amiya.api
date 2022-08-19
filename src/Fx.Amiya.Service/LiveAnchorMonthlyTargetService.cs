@@ -684,7 +684,7 @@ namespace Fx.Amiya.Service
 
         public async Task<List<PerformanceInfoByDateDto>> GetLiveAnchorCommercePerformance(int year, int month)
         {
-            var list= dalLiveAnchorMonthlyTarget.GetAll().Where(o => o.Year == year && o.Month >= 1 && o.Month <= month).GroupBy(o => o.Month).OrderBy(o=>o.Key).Select(o => new PerformanceInfoByDateDto
+            var list = dalLiveAnchorMonthlyTarget.GetAll().Where(o => o.Year == year && o.Month >= 1 && o.Month <= month).GroupBy(o => o.Month).OrderBy(o => o.Key).Select(o => new PerformanceInfoByDateDto
             {
                 Date = o.Key.ToString(),
                 PerfomancePrice = o.Sum(o => o.CumulativeCargoSettlementCommission)
@@ -763,9 +763,41 @@ namespace Fx.Amiya.Service
                 CommercePerformanceTarget = await performance.SumAsync(t => t.CargoSettlementCommissionTarget),
                 OldCustomerPerformanceTarget = await performance.SumAsync(t => t.OldCustomerPerformanceTarget),
                 NewCustomerPerformanceTarget = await performance.SumAsync(t => t.NewCustomerPerformanceTarget),
-                CommerceCompletePerformance = await performance.SumAsync(t=>t.CumulativeCargoSettlementCommission)
+                CommerceCompletePerformance = await performance.SumAsync(t => t.CumulativeCargoSettlementCommission)
             };
             return performanceInfoDto;
+        }
+
+        /// <summary>
+        /// 根据平台id按年月获取数据
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="contentPlatFormId">内容平台id</param>
+        /// <returns></returns>
+        public async Task<GroupPerformanceListDto> GetCooperationLiveAnchorPerformance(int year, int month, string contentPlatFormId)
+        {
+            var performance = dalLiveAnchorMonthlyTarget.GetAll().Include(x => x.LiveAnchor).Where(t => t.Year == year && t.Month == month && t.LiveAnchor.ContentPlateFormId == contentPlatFormId);
+            GroupPerformanceListDto performanceInfoDto = new GroupPerformanceListDto
+            {
+                GroupPerformance = await performance.SumAsync(t => t.CumulativePerformance),
+                GroupTargetPerformance = await performance.SumAsync(t => t.PerformanceTarget),
+            };
+            return performanceInfoDto;
+        }
+
+        /// <summary>
+        /// 根据平台id按年月获取折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="contentPlatFormId">内容平台id</param>
+        /// <returns></returns>
+        public async Task<List<PerformanceBrokenLine>> GetLiveAnchorPerformanceBrokenLineAsync(int year, string contentPlatFormId)
+        {
+            var orderinfo = await dalLiveAnchorMonthlyTarget.GetAll().Include(x => x.LiveAnchor).Where(o => o.Year == year && o.LiveAnchor.ContentPlateFormId == contentPlatFormId).ToListAsync();
+
+            return orderinfo.GroupBy(x => x.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(z => z.CumulativePerformance) }).ToList();
         }
     }
 }

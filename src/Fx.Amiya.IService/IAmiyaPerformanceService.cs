@@ -19,7 +19,22 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<MonthPerformanceRatioDto> GetMonthPerformanceAndRation(int year, int month);
 
-        Task<MonthDealPerformanceDto> GetMonthDealPerformance(int year, int month);
+        /// <summary>
+        /// 分组业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        Task<GroupPerformanceDto> GetGroupPerformanceAsync(int year, int month);
+
+
+        /// <summary>
+        /// 派单成交业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        Task<MonthDealPerformanceDto> GetMonthDealPerformanceAsync(int year, int month);
 
         /// <summary>
         /// 获取当月/历史派单当月成交折线图
@@ -29,5 +44,14 @@ namespace Fx.Amiya.IService
         /// <param name="isOldSendOrder">是否为历史派单订单</param>
         /// <returns></returns>
         Task<List<PerformanceBrokenLine>> GetHistorySendThisMonthDealOrders(int year, int month, bool isOldSendOrder);
+
+        /// <summary>
+        /// 根据主播平台获取折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="contentPlatFormId"></param>
+        /// <returns></returns>
+        Task<List<PerformanceBrokenLine>> GetLiveAnchorPerformanceAsync(int year, int month, string contentPlatFormId);
     }
 }

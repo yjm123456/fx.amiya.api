@@ -717,9 +717,9 @@ namespace Fx.Amiya.Service
                 .Where(o => isOldCustomer == null || o.IsOldCustomer == isOldCustomer).Select(
                   ContentPlatFOrmOrderDealInfo =>
                        new ContentPlatFormOrderDealInfoDto
-                       {                                            
-                           Price = ContentPlatFOrmOrderDealInfo.Price,   
-                           IsOldCustomer= ContentPlatFOrmOrderDealInfo.IsOldCustomer
+                       {
+                           Price = ContentPlatFOrmOrderDealInfo.Price,
+                           IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer
                        }
                 ).ToListAsync();
         }
@@ -747,10 +747,19 @@ namespace Fx.Amiya.Service
                 result = result.Where(x => x.ContentPlatFormOrder.SendDate.HasValue && x.ContentPlatFormOrder.SendDate.Value.Month == x.CreateDate.Month).ToList();
             }
             var returnInfo = result.Select(
-                  ContentPlatFOrmOrderDealInfo =>
+                  d =>
                        new ContentPlatFormOrderDealInfoDto
                        {
-                           Price = ContentPlatFOrmOrderDealInfo.Price,
+                           Id = d.Id,
+                           ContentPlatFormOrderId = d.ContentPlatFormOrderId,
+                           CreateDate = d.CreateDate,
+                           SendDate = d.ContentPlatFormOrder.SendDate,
+                           CustomerNickName = d.ContentPlatFormOrder.CustomerName,
+                           Phone = ServiceClass.GetIncompletePhone(d.ContentPlatFormOrder.Phone),
+                           IsOldCustomer = d.IsOldCustomer,
+                           ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
+                           AddOrderPrice = d.ContentPlatFormOrder.AddOrderPrice,
+                           Price = d.Price,
                        }
                 ).ToList();
 
@@ -771,12 +780,12 @@ namespace Fx.Amiya.Service
             {
                 orderinfo = orderinfo.Where(o => o.IsOldCustomer == isCustomer);
             }
-            var list =orderinfo.GroupBy(o => o.CreateDate.Month).OrderBy(o=>o.Key).Select(o => new PerformanceInfoByDateDto
+            var list = orderinfo.GroupBy(o => o.CreateDate.Month).OrderBy(o => o.Key).Select(o => new PerformanceInfoByDateDto
             {
                 Date = o.Key.ToString(),
                 PerfomancePrice = o.Sum(o => o.Price)
             }).ToList();
-            return BreakLineClassUtil<PerformanceInfoByDateDto>.Convert(month,list);
+            return BreakLineClassUtil<PerformanceInfoByDateDto>.Convert(month, list);
         }
 
 
