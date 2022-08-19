@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -142,6 +143,113 @@ namespace Fx.Amiya.Dto.Performance
     }
 
     /// <summary>
+    /// 分组业绩情况
+    /// </summary>
+    public class GroupPerformanceDto{
+
+        /// <summary>
+        /// 刀刀组业绩
+        /// </summary>
+        [Description("刀刀组业绩")]
+        public decimal? GroupDaoDaoPerformance { get; set; }
+
+        /// <summary>
+        /// 刀刀组业绩同比
+        /// </summary>
+        public decimal? GroupDaoDaoPerformanceYearOnYear { get; set; }
+
+        /// <summary>
+        /// 刀刀组业绩环比
+        /// </summary>
+        public decimal? GroupDaoDaoPerformanceChainRatio { get; set; }
+
+        /// <summary>
+        /// 刀刀组业绩目标达成
+        /// </summary>
+        public decimal? GroupDaoDaoPerformanceCompleteRate { get; set; }
+
+        /// <summary>
+        /// 刀刀组业绩占比
+        /// </summary>
+        public decimal? AccountedForGroupDaoDaoPerformance { get; set; }
+
+        /// <summary>
+        /// 吉娜组业绩
+        /// </summary>
+        [Description("吉娜组业绩")]
+        public decimal? GroupJinaPerformance { get; set; }
+
+        /// <summary>
+        /// 吉娜组业绩同比
+        /// </summary>
+        public decimal? GroupJinaPerformanceYearOnYear { get; set; }
+
+        /// <summary>
+        /// 吉娜组业绩环比
+        /// </summary>
+        public decimal? GroupJinaPerformanceChainRatio { get; set; }
+
+        /// <summary>
+        /// 吉娜组业绩目标达成
+        /// </summary>
+        public decimal? GroupJinaPerformanceCompleteRate { get; set; }
+        /// <summary>
+        /// 吉娜组业绩占比
+        /// </summary>
+        public decimal? AccountedForGroupJinaPerformance { get; set; }
+
+        /// <summary>
+        /// 合作达人业绩
+        /// </summary>
+        [Description("合作达人业绩")]
+        public decimal? CooperationLiveAnchorPerformance { get; set; }
+
+        /// <summary>
+        /// 合作达人业绩同比
+        /// </summary>
+        public decimal? CooperationLiveAnchorPerformanceYearOnYear { get; set; }
+
+        /// <summary>
+        /// 合作达人业绩环比
+        /// </summary>
+        public decimal? CooperationLiveAnchorPerformanceChainRatio { get; set; }
+
+        /// <summary>
+        /// 合作达人业绩目标达成
+        /// </summary>
+        public decimal? CooperationLiveAnchorPerformanceCompleteRate { get; set; }
+        /// <summary>
+        /// 合作达人业绩占比
+        /// </summary>
+        public decimal? AccountedForCooperationLiveAnchorPerformance { get; set; }
+
+        /// <summary>
+        /// 黄V组业绩
+        /// </summary>
+        [Description("黄V组业绩")]
+        public decimal? GroupYellowVPerformance { get; set; }
+
+        /// <summary>
+        /// 黄V组业绩同比
+        /// </summary>
+        public decimal? GroupYellowVPerformanceYearOnYear { get; set; }
+
+        /// <summary>
+        /// 黄V组业绩环比
+        /// </summary>
+        public decimal? GroupYellowVPerformanceChainRatio { get; set; }
+
+        /// <summary>
+        /// 黄V组业绩目标达成
+        /// </summary>
+        public decimal? GroupYellowVPerformanceCompleteRate { get; set; }
+        /// <summary>
+        /// 黄V组业绩占比
+        /// </summary>
+        public decimal? AccountedForGroupYellowVPerformance { get; set; }
+    }
+
+    /// <summary>
     /// 派单成交情况
     /// </summary>
     public class MonthDealPerformanceDto
@@ -153,11 +261,15 @@ namespace Fx.Amiya.Dto.Performance
         /// <summary>
         /// 当月派单当月成交同比量
         /// </summary>
-        public decimal LastYearTotalPerformance { get; set; }
+        public decimal? LastYearTotalPerformance { get; set; }
         /// <summary>
         /// 当月派单当月成交环比量
         /// </summary>
-        public decimal LastMonthTotalPerformance { get; set; }
+        public decimal? LastMonthTotalPerformance { get; set; }
+        /// <summary>
+        /// 当月派单当月成交占比
+        /// </summary>
+        public decimal? AccountedForDuringMonthSendDuringMonthDealDetails { get; set; }
 
         /// <summary>
         /// 历史派单当月成交
@@ -166,10 +278,15 @@ namespace Fx.Amiya.Dto.Performance
         /// <summary>
         /// 历史派单当月成交同比量
         /// </summary>
-        public decimal LastYearHistorySendTotalPerformance { get; set; }
+        public decimal? LastYearHistorySendTotalPerformance { get; set; }
         /// <summary>
         /// 历史派单当月成交环比量
         /// </summary>
-        public decimal LastMonthHistorySendTotalPerformance { get; set; }
+        public decimal? LastMonthHistorySendTotalPerformance { get; set; }
+        /// <summary>
+        /// 历史派单当月成交占比
+        /// </summary>
+        public decimal? AccountedForHistorySendDuringMonthDealDetails { get; set; }
     }
+
 }

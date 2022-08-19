@@ -108,12 +108,14 @@ namespace Fx.Amiya.Service
 
         }
 
-        public async Task<MonthDealPerformanceDto> GetMonthDealPerformance(int year, int month)
+        public async Task<MonthDealPerformanceDto> GetMonthDealPerformanceAsync(int year, int month)
         {
+            MonthDealPerformanceDto monthPerformanceDto = new MonthDealPerformanceDto();
+
             #region 【当月派单当月成交数据】
             var thisMonthSendOrder = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceByYearAndMonth(year, month, false);
             //当月派单当月成交
-            var thisMonthSendOrderDealPrice = thisMonthSendOrder.Sum(x => x.Price);
+            monthPerformanceDto.ThisMonthSendOrderDealPrice = thisMonthSendOrder.Sum(x => x.Price);
 
             List<ContentPlatFormOrderDealInfoDto> lastThisMonthOrder = null;
             if (month == 1)
@@ -126,17 +128,18 @@ namespace Fx.Amiya.Service
             }
             //上月的当月派单当月成交
             var lastMonthTotalPerformance = lastThisMonthOrder.Sum(o => o.Price);
-
-            var lastYearOrder = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceByYearAndMonth(year - 1, month, false);
+            monthPerformanceDto.LastMonthTotalPerformance = CalculateChainratio(monthPerformanceDto.ThisMonthSendOrderDealPrice, lastMonthTotalPerformance);
             //上年的当月派单当月成交
+            var lastYearOrder = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceByYearAndMonth(year - 1, month, false);
             var lastYearTotalPerformance = lastYearOrder.Sum(o => o.Price);
+            monthPerformanceDto.LastYearTotalPerformance = CalculateYearOnYear(monthPerformanceDto.ThisMonthSendOrderDealPrice, lastYearTotalPerformance);
+
             #endregion
 
             #region 【历史派单当月成交数据】
             var historyMonthSendOrder = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceByYearAndMonth(year, month, true);
             //历史派单当月成交
-            var historyMonthSendOrderDealPrice = historyMonthSendOrder.Sum(x => x.Price);
-
+            monthPerformanceDto.HistoryMonthSendOrderDealPrice = historyMonthSendOrder.Sum(x => x.Price);
             List<ContentPlatFormOrderDealInfoDto> lastHisToryMonthOrder = null;
             if (month == 1)
             {
@@ -148,22 +151,92 @@ namespace Fx.Amiya.Service
             }
             //上月的历史派单当月成交
             var lastMonthHistorySendTotalPerformance = lastHisToryMonthOrder.Sum(o => o.Price);
+            monthPerformanceDto.LastMonthHistorySendTotalPerformance = CalculateChainratio(monthPerformanceDto.HistoryMonthSendOrderDealPrice, lastMonthHistorySendTotalPerformance);
 
-            var lastYearHistorySendOrder = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceByYearAndMonth(year - 1, month, true);
             //上年的历史派单当月成交
+            var lastYearHistorySendOrder = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceByYearAndMonth(year - 1, month, true);
             var lastYearHistorySendTotalPerformance = lastYearHistorySendOrder.Sum(o => o.Price);
+            monthPerformanceDto.LastYearHistorySendTotalPerformance = CalculateYearOnYear(monthPerformanceDto.HistoryMonthSendOrderDealPrice, lastYearHistorySendTotalPerformance);
             #endregion
 
-            MonthDealPerformanceDto monthPerformanceDto = new MonthDealPerformanceDto
-            {
-                ThisMonthSendOrderDealPrice = thisMonthSendOrderDealPrice,
-                LastYearTotalPerformance = lastYearTotalPerformance,
-                LastMonthTotalPerformance = lastMonthTotalPerformance,
-                HistoryMonthSendOrderDealPrice = historyMonthSendOrderDealPrice,
-                LastYearHistorySendTotalPerformance = lastYearHistorySendTotalPerformance,
-                LastMonthHistorySendTotalPerformance = lastMonthHistorySendTotalPerformance,
-            };
+            monthPerformanceDto.AccountedForDuringMonthSendDuringMonthDealDetails = CalculateTargetComplete(monthPerformanceDto.ThisMonthSendOrderDealPrice, monthPerformanceDto.ThisMonthSendOrderDealPrice + monthPerformanceDto.HistoryMonthSendOrderDealPrice);
+
+            monthPerformanceDto.AccountedForHistorySendDuringMonthDealDetails = CalculateTargetComplete(monthPerformanceDto.HistoryMonthSendOrderDealPrice, monthPerformanceDto.ThisMonthSendOrderDealPrice + monthPerformanceDto.HistoryMonthSendOrderDealPrice);
             return monthPerformanceDto;
+
+        }
+
+
+        public async Task<GroupPerformanceDto> GetGroupPerformanceAsync(int year, int month)
+        {
+            GroupPerformanceDto groupPerformanceDto = new GroupPerformanceDto();
+
+            #region 【刀刀组业绩】
+
+            #endregion
+
+            #region 【吉娜组业绩】
+
+            #endregion
+
+            #region 【合作达人业绩】
+            var cooperationLiveAnchorPerformance = await liveAnchorMonthlyTargetService.GetCooperationLiveAnchorPerformance(year, month, "d2e71501-7327-4883-9294-371a77c4cabd");
+            //本月量
+            groupPerformanceDto.CooperationLiveAnchorPerformance = cooperationLiveAnchorPerformance.GroupPerformance;
+            //同比
+            var cooperationLiveAnchorPerformanceYearToYear = await liveAnchorMonthlyTargetService.GetCooperationLiveAnchorPerformance(year - 1, month, "d2e71501-7327-4883-9294-371a77c4cabd");
+            groupPerformanceDto.CooperationLiveAnchorPerformanceYearOnYear = CalculateYearOnYear(cooperationLiveAnchorPerformance.GroupPerformance, cooperationLiveAnchorPerformanceYearToYear.GroupPerformance);
+            //环比
+            GroupPerformanceListDto monthCooperationLiveAnchorPerformance = new GroupPerformanceListDto();
+            if (month == 1)
+            {
+                monthCooperationLiveAnchorPerformance = await liveAnchorMonthlyTargetService.GetCooperationLiveAnchorPerformance(year - 1, 12, "d2e71501-7327-4883-9294-371a77c4cabd");
+            }
+            else
+            {
+                monthCooperationLiveAnchorPerformance = await liveAnchorMonthlyTargetService.GetCooperationLiveAnchorPerformance(year, month - 1, "d2e71501-7327-4883-9294-371a77c4cabd");
+            }
+            groupPerformanceDto.CooperationLiveAnchorPerformanceChainRatio = CalculateChainratio(cooperationLiveAnchorPerformance.GroupPerformance, monthCooperationLiveAnchorPerformance.GroupPerformance);
+            //目标达成
+            groupPerformanceDto.CooperationLiveAnchorPerformanceCompleteRate = CalculateTargetComplete(cooperationLiveAnchorPerformance.GroupPerformance, cooperationLiveAnchorPerformance.GroupTargetPerformance);
+            #endregion
+
+            #region 【黄V组业绩】
+            var groupYellowVPerformance = await liveAnchorMonthlyTargetService.GetCooperationLiveAnchorPerformance(year, month, "2bd8b9ad-afd7-4982-b783-fcad7d342f11");
+            //本月量
+            groupPerformanceDto.CooperationLiveAnchorPerformance = groupYellowVPerformance.GroupPerformance;
+            //同比
+            var groupYellowVPerformanceYearToYear = await liveAnchorMonthlyTargetService.GetCooperationLiveAnchorPerformance(year - 1, month, "2bd8b9ad-afd7-4982-b783-fcad7d342f11");
+            groupPerformanceDto.CooperationLiveAnchorPerformanceYearOnYear = CalculateYearOnYear(groupYellowVPerformance.GroupPerformance, groupYellowVPerformanceYearToYear.GroupPerformance);
+            //环比
+            GroupPerformanceListDto monthGroupYellowVPerformance = new GroupPerformanceListDto();
+            if (month == 1)
+            {
+                monthGroupYellowVPerformance = await liveAnchorMonthlyTargetService.GetCooperationLiveAnchorPerformance(year - 1, 12, "2bd8b9ad-afd7-4982-b783-fcad7d342f11");
+            }
+            else
+            {
+                monthGroupYellowVPerformance = await liveAnchorMonthlyTargetService.GetCooperationLiveAnchorPerformance(year, month - 1, "2bd8b9ad-afd7-4982-b783-fcad7d342f11");
+            }
+            groupPerformanceDto.CooperationLiveAnchorPerformanceChainRatio = CalculateChainratio(groupYellowVPerformance.GroupPerformance, monthGroupYellowVPerformance.GroupPerformance);
+            //目标达成
+            groupPerformanceDto.CooperationLiveAnchorPerformanceCompleteRate = CalculateTargetComplete(groupYellowVPerformance.GroupPerformance, groupYellowVPerformance.GroupTargetPerformance);
+            #endregion
+
+            //各分组业绩占比
+            decimal sumPerformance = groupPerformanceDto.GroupDaoDaoPerformance.Value + groupPerformanceDto.GroupJinaPerformance.Value + groupPerformanceDto.CooperationLiveAnchorPerformance.Value + groupPerformanceDto.GroupYellowVPerformance.Value;
+            groupPerformanceDto.AccountedForGroupDaoDaoPerformance = CalculateTargetComplete(groupPerformanceDto.GroupDaoDaoPerformance.Value, sumPerformance);
+
+
+            groupPerformanceDto.AccountedForGroupJinaPerformance = CalculateTargetComplete(groupPerformanceDto.GroupJinaPerformance.Value, sumPerformance);
+
+
+            groupPerformanceDto.AccountedForCooperationLiveAnchorPerformance = CalculateTargetComplete(groupPerformanceDto.CooperationLiveAnchorPerformance.Value, sumPerformance);
+
+
+            groupPerformanceDto.AccountedForGroupYellowVPerformance = CalculateTargetComplete(groupPerformanceDto.GroupYellowVPerformance.Value, sumPerformance);
+
+            return groupPerformanceDto;
 
         }
 
@@ -176,11 +249,26 @@ namespace Fx.Amiya.Service
         public async Task<List<PerformanceBrokenLine>> GetHistorySendThisMonthDealOrders(int year, int month, bool isOldSendOrder)
         {
             var brokenLine = await contentPlatFormOrderDealInfoService.GetHistoryAndThisMonthOrderPerformance(year, month, isOldSendOrder);
-            var list= brokenLine.ToList();
+            var list = brokenLine.ToList();
             return BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, list);
 
         }
-       
+
+        /// <summary>
+        /// 根据主播平台获取折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="contentPlatFormId"></param>
+        /// <returns></returns>
+        public async Task<List<PerformanceBrokenLine>> GetLiveAnchorPerformanceAsync(int year, int month, string contentPlatFormId)
+        {
+            var brokenLine = await liveAnchorMonthlyTargetService.GetLiveAnchorPerformanceBrokenLineAsync(year, contentPlatFormId);
+            var list = brokenLine.ToList();
+            return BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, list);
+
+        }
+
         public async Task<MonthPerformanceRatioDto> GetMonthPerformanceAndRation(int year, int month)
         {
 
@@ -257,8 +345,8 @@ namespace Fx.Amiya.Service
                 CurrentMonthNewCustomerPerformance = curNewCustomer,
                 CurrentMonthOldCustomerPerformance = curOldCustomer,
                 CurrentMonthCommercePerformance = target.CommerceCompletePerformance,
-                TotalPerformanceYearOnYear = CalculateYearOnYear(curTotalPerformance+target.CommerceCompletePerformance, totalPerformanceYearOnYear+commercePerformanceYearOnYear.CommerceCompletePerformance),
-                TotalPerformanceChainratio = CalculateChainratio(curTotalPerformance+target.CommerceCompletePerformance, totalPerformanceChainRatio+ liveAnchorMonthTargetPerformanceDto.CommerceCompletePerformance),
+                TotalPerformanceYearOnYear = CalculateYearOnYear(curTotalPerformance + target.CommerceCompletePerformance, totalPerformanceYearOnYear + commercePerformanceYearOnYear.CommerceCompletePerformance),
+                TotalPerformanceChainratio = CalculateChainratio(curTotalPerformance + target.CommerceCompletePerformance, totalPerformanceChainRatio + liveAnchorMonthTargetPerformanceDto.CommerceCompletePerformance),
                 TotalPerformanceTargetComplete = CalculateTargetComplete(curTotalPerformance + target.CommerceCompletePerformance, target.CommercePerformanceTarget + target.TotalPerformanceTarget),
                 NewCustomerPerformanceYearOnYear = CalculateYearOnYear(curNewCustomer, newPerformanceYearOnYear),
                 NewCustomerPerformanceChainRatio = CalculateChainratio(curNewCustomer, newPerformanceChainRatio),

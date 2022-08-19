@@ -29,4 +29,17 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
         public decimal CommerceCompletePerformance { get; set; }
     }
+
+    public class GroupPerformanceListDto
+    {
+        /// <summary>
+        /// 分组业绩量
+        /// </summary>
+        public decimal GroupPerformance { get; set; }
+
+        /// <summary>
+        /// 分组业绩目标
+        /// </summary>
+        public decimal GroupTargetPerformance { get; set; }
+    }
 }

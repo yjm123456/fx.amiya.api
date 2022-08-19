@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -95,6 +96,120 @@ namespace Fx.Amiya.Background.Api.Vo.Performance
     }
 
     /// <summary>
+    /// 分组业绩看板
+    /// </summary>
+    public class GroupPerformanceVo
+    {
+        /// <summary>
+        /// 刀刀组业绩
+        /// </summary>
+        [Description("刀刀组业绩")]
+        public decimal? GroupDaoDaoPerformance { get; set; }
+
+        /// <summary>
+        /// 刀刀组业绩同比
+        /// </summary>
+        public decimal? GroupDaoDaoPerformanceYearOnYear { get; set; }
+
+        /// <summary>
+        /// 刀刀组业绩环比
+        /// </summary>
+        public decimal? GroupDaoDaoPerformanceChainRatio { get; set; }
+
+        /// <summary>
+        /// 刀刀组业绩目标达成
+        /// </summary>
+        public decimal? GroupDaoDaoPerformanceCompleteRate { get; set; }
+
+        /// <summary>
+        /// 吉娜组业绩
+        /// </summary>
+        [Description("吉娜组业绩")]
+        public decimal? GroupJinaPerformance { get; set; }
+
+        /// <summary>
+        /// 吉娜组业绩同比
+        /// </summary>
+        public decimal? GroupJinaPerformanceYearOnYear { get; set; }
+
+        /// <summary>
+        /// 吉娜组业绩环比
+        /// </summary>
+        public decimal? GroupJinaPerformanceChainRatio { get; set; }
+
+        /// <summary>
+        /// 吉娜组业绩目标达成
+        /// </summary>
+        public decimal? GroupJinaPerformanceCompleteRate { get; set; }
+
+        /// <summary>
+        /// 合作达人业绩
+        /// </summary>
+        [Description("合作达人业绩")]
+        public decimal? CooperationLiveAnchorPerformance { get; set; }
+
+        /// <summary>
+        /// 合作达人业绩同比
+        /// </summary>
+        public decimal? CooperationLiveAnchorPerformanceYearOnYear { get; set; }
+
+        /// <summary>
+        /// 合作达人业绩环比
+        /// </summary>
+        public decimal? CooperationLiveAnchorPerformanceChainRatio { get; set; }
+
+        /// <summary>
+        /// 合作达人业绩目标达成
+        /// </summary>
+        public decimal? CooperationLiveAnchorPerformanceCompleteRate { get; set; }
+
+        /// <summary>
+        /// 黄V组业绩
+        /// </summary>
+        [Description("黄V组业绩")]
+        public decimal? GroupYellowVPerformance { get; set; }
+
+        /// <summary>
+        /// 黄V组业绩同比
+        /// </summary>
+        public decimal? GroupYellowVPerformanceYearOnYear { get; set; }
+
+        /// <summary>
+        /// 黄V组业绩环比
+        /// </summary>
+        public decimal? GroupYellowVPerformanceChainRatio { get; set; }
+
+        /// <summary>
+        /// 黄V组业绩目标达成
+        /// </summary>
+        public decimal? GroupYellowVPerformanceCompleteRate { get; set; }
+
+        /// <summary>
+        /// 各组业绩所占比例
+        /// </summary>
+        public List<PerformanceRatioVo> PerformanceRatios { get; set; }
+
+        /// <summary>
+        /// 刀刀组业绩数据折线图
+        /// </summary>
+        public List<PerformanceListInfo> GroupDaoDaoPerformanceData { get; set; }
+        /// <summary>
+        /// 吉娜组业绩数据折线图
+        /// </summary>
+        public List<PerformanceListInfo> GroupJinaPerformanceData { get; set; }
+        /// <summary>
+        /// 合作达人业绩数据折线图
+        /// </summary>
+        public List<PerformanceListInfo> CooperationLiveAnchorPerformanceData { get; set; }
+        /// <summary>
+        /// 黄V组业绩数据折线图
+        /// </summary>
+        public List<PerformanceListInfo> GroupYellowVPerformanceData { get; set; }
+
+
+    }
+
+    /// <summary>
     /// 派单成交数据
     /// </summary>
     public class SendAndDealInfoVo
@@ -102,6 +217,7 @@ namespace Fx.Amiya.Background.Api.Vo.Performance
         /// <summary>
         /// 历史派单当月成交
         /// </summary>
+        [Description("历史派单当月成交")]
         public decimal? HistorySendDuringMonthDeal { get; set; }
 
         /// <summary>
@@ -114,13 +230,14 @@ namespace Fx.Amiya.Background.Api.Vo.Performance
         public decimal? HistorySendDuringMonthDealChainRatio { get; set; }
 
         /// <summary>
-        /// 历史派单当月成交明细
+        /// 历史派单当月成交占比
         /// </summary>
-        public decimal? HistorySendDuringMonthDealDetails { get; set; }
+        public decimal? AccountedForHistorySendDuringMonthDealDetails { get; set; }
 
         /// <summary>
         /// 当月派单当月成交
         /// </summary>
+        [Description("当月派单当月成交")]
         public decimal? DuringMonthSendDuringMonthDeal { get; set; }
 
         /// <summary>
@@ -132,10 +249,6 @@ namespace Fx.Amiya.Background.Api.Vo.Performance
         /// </summary>
         public decimal? DuringMonthSendDuringMonthDealChainRatio { get; set; }
 
-        /// <summary>
-        /// 当月派单当月成交明细
-        /// </summary>
-        public decimal? DuringMonthSendDuringMonthDealDetails { get; set; }
 
 
         /// <summary>
