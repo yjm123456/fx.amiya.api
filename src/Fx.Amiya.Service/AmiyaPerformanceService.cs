@@ -16,11 +16,13 @@ namespace Fx.Amiya.Service
     {
         private readonly ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService;
         private readonly IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
+        private readonly ILiveAnchorService _liveanchorService;
 
-        public AmiyaPerformanceService(ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService, IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService)
+        public AmiyaPerformanceService(ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService, IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService, ILiveAnchorService liveAnchorService)
         {
             this.liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
             this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
+            _liveanchorService = liveAnchorService;
         }
 
         public async Task<MonthPerformanceDto> GetMonthPerformance(int year, int month)
@@ -172,10 +174,45 @@ namespace Fx.Amiya.Service
             GroupPerformanceDto groupPerformanceDto = new GroupPerformanceDto();
 
             #region 【刀刀组业绩】
+            List<int> daoDaoIds = (await _liveanchorService.GetLiveAnchorListByBaseInfoId("")).Select(l => l.Id).ToList();
+            var daoDaoPerformance = await liveAnchorMonthlyTargetService.GetLiveAnchorPerformance(year,month, daoDaoIds);
+            groupPerformanceDto.GroupDaoDaoPerformance = daoDaoPerformance.GroupPerformance;
+            var daoDaoPeformanceYearOnYear= await liveAnchorMonthlyTargetService.GetLiveAnchorPerformance(year-1, month, daoDaoIds);
+            groupPerformanceDto.GroupDaoDaoPerformanceYearOnYear = CalculateYearOnYear(daoDaoPerformance.GroupPerformance,daoDaoPeformanceYearOnYear.GroupPerformance);
 
+            GroupPerformanceListDto daoDaoPerformanceChainRatio = new GroupPerformanceListDto();
+            if (month == 1)
+            {
+                daoDaoPerformanceChainRatio = await liveAnchorMonthlyTargetService.GetLiveAnchorPerformance(year - 1, 12, daoDaoIds);
+            }
+            else
+            {
+                daoDaoPerformanceChainRatio = await liveAnchorMonthlyTargetService.GetLiveAnchorPerformance(year, month - 1, daoDaoIds);
+            }
+            groupPerformanceDto.GroupDaoDaoPerformanceChainRatio = CalculateChainratio(daoDaoPerformance.GroupPerformance,daoDaoPerformanceChainRatio.GroupPerformance);
+
+            groupPerformanceDto.GroupDaoDaoPerformanceCompleteRate = CalculateTargetComplete(daoDaoPerformance.GroupPerformance,daoDaoPerformance.GroupTargetPerformance);
             #endregion
 
             #region 【吉娜组业绩】
+            List<int> jiNaIds = (await _liveanchorService.GetLiveAnchorListByBaseInfoId("")).Select(l => l.Id).ToList();
+            var jiNaPerformance = await liveAnchorMonthlyTargetService.GetLiveAnchorPerformance(year, month, jiNaIds);
+            groupPerformanceDto.GroupJinaPerformance = jiNaPerformance.GroupPerformance;
+            var jiNaPeformanceYearOnYear = await liveAnchorMonthlyTargetService.GetLiveAnchorPerformance(year - 1, month, jiNaIds);
+            groupPerformanceDto.GroupJinaPerformanceYearOnYear = CalculateYearOnYear(jiNaPerformance.GroupPerformance, jiNaPeformanceYearOnYear.GroupPerformance);
+
+            GroupPerformanceListDto jiNaPerformanceChainRatio = new GroupPerformanceListDto();
+            if (month == 1)
+            {
+                jiNaPerformanceChainRatio = await liveAnchorMonthlyTargetService.GetLiveAnchorPerformance(year - 1, 12, jiNaIds);
+            }
+            else
+            {
+                jiNaPerformanceChainRatio = await liveAnchorMonthlyTargetService.GetLiveAnchorPerformance(year, month - 1, jiNaIds);
+            }
+            groupPerformanceDto.GroupJinaPerformanceChainRatio = CalculateChainratio(jiNaPerformance.GroupPerformance, jiNaPerformanceChainRatio.GroupPerformance);
+
+            groupPerformanceDto.GroupJinaPerformanceCompleteRate = CalculateTargetComplete(jiNaPerformance.GroupPerformance, jiNaPerformance.GroupTargetPerformance);
 
             #endregion
 
@@ -204,7 +241,7 @@ namespace Fx.Amiya.Service
             #region 【黄V组业绩】
             var groupYellowVPerformance = await liveAnchorMonthlyTargetService.GetCooperationLiveAnchorPerformance(year, month, "2bd8b9ad-afd7-4982-b783-fcad7d342f11");
             //本月量
-            groupPerformanceDto.CooperationLiveAnchorPerformance = groupYellowVPerformance.GroupPerformance;
+            groupPerformanceDto.GroupYellowVPerformance = groupYellowVPerformance.GroupPerformance;
             //同比
             var groupYellowVPerformanceYearToYear = await liveAnchorMonthlyTargetService.GetCooperationLiveAnchorPerformance(year - 1, month, "2bd8b9ad-afd7-4982-b783-fcad7d342f11");
             groupPerformanceDto.CooperationLiveAnchorPerformanceYearOnYear = CalculateYearOnYear(groupYellowVPerformance.GroupPerformance, groupYellowVPerformanceYearToYear.GroupPerformance);
@@ -268,6 +305,8 @@ namespace Fx.Amiya.Service
             return BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, list);
 
         }
+
+
 
         public async Task<MonthPerformanceRatioDto> GetMonthPerformanceAndRation(int year, int month)
         {
@@ -400,6 +439,20 @@ namespace Fx.Amiya.Service
             if (monthTarget == 0m)
                 return null;
             return Math.Round(completePerformance / monthTarget * 100, 2);
+        }
+        /// <summary>
+        /// 根据主播基础信息id获取主播ip id集合
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="baseInfoId"></param>
+        /// <returns></returns>
+        public async Task<List<PerformanceBrokenLine>> GetLivaAnchorPerformanceLineByIds(int year, int month, string baseInfoId)
+        {
+            List<int> ids = (await _liveanchorService.GetLiveAnchorListByBaseInfoId(baseInfoId)).Select(l => l.Id).ToList();
+            var list = await liveAnchorMonthlyTargetService.GetLiveAnchorPerformanceBrokenLineByLiveAnchorId(year,month,ids);
+            return BreakLineClassUtil<PerformanceBrokenLine>.Convert(month,list);
+
         }
     }
 }

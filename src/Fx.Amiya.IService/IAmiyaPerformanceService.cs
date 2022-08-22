@@ -53,5 +53,14 @@ namespace Fx.Amiya.IService
         /// <param name="contentPlatFormId"></param>
         /// <returns></returns>
         Task<List<PerformanceBrokenLine>> GetLiveAnchorPerformanceAsync(int year, int month, string contentPlatFormId);
+        /// <summary>
+        /// 根据主播基础信息id获取折线图数据
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="baseInfoId">主播基础信息id</param>
+        /// <returns></returns>
+        Task<List<PerformanceBrokenLine>> GetLivaAnchorPerformanceLineByIds(int year,int month,string baseInfoId);
+        
     }
 }

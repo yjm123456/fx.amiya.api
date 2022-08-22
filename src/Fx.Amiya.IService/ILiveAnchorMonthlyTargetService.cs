@@ -35,7 +35,11 @@ namespace Fx.Amiya.IService
         /// <param name="contentPlatFormId">内容平台id</param>
         /// <returns></returns>
         Task<GroupPerformanceListDto> GetCooperationLiveAnchorPerformance(int year, int month, string contentPlatFormId);
-
+        /// <summary>
+        /// 根据主播id获取业绩
+        /// </summary>
+        /// <returns></returns>
+        Task<GroupPerformanceListDto> GetLiveAnchorPerformance(int year,int month,List<int> liveAnchorIds);
         /// <summary>
         /// 根据平台id获取折线图
         /// </summary>
@@ -44,10 +48,19 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<PerformanceBrokenLine>> GetLiveAnchorPerformanceBrokenLineAsync(int year, string contentPlatFormId);
         /// <summary>
+        /// 根据主播id获取折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="ids">主播id集合id</param>
+        /// <returns></returns>
+        Task<List<PerformanceBrokenLine>> GetLiveAnchorPerformanceBrokenLineByLiveAnchorId(int year,int month,List<int> ids);
+        /// <summary>
         /// 按月获取主播带货业绩
         /// </summary>
         /// <returns></returns>
         Task<List<PerformanceInfoByDateDto>> GetLiveAnchorCommercePerformance(int year, int month);
+
         /* /// <summary>
          /// 获取指定月份业绩总目标
          /// </summary>

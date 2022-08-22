@@ -36,6 +36,12 @@ namespace Fx.Amiya.IService
         Task AddAsync(AddLiveAnchorDto addDto);
         Task<LiveAnchorDto> GetByIdAsync(int id);
         Task UpdateAsync(UpdateLiveAnchorDto updateDto);
+        /// <summary>
+        /// 根据主播基础信息id获取有效主播ip
+        /// </summary>
+        /// <param name="baseInfoId"></param>
+        /// <returns></returns>
+        Task<List<LiveAnchorDto>> GetLiveAnchorListByBaseInfoId(string baseInfoId);
 
     }
 }

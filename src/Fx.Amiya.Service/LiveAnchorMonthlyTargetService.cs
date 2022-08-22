@@ -799,5 +799,35 @@ namespace Fx.Amiya.Service
 
             return orderinfo.GroupBy(x => x.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(z => z.CumulativePerformance) }).ToList();
         }
+        /// <summary>
+        /// 根据主播id获取按年月获取数据
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorIds">主播id集合</param>
+        /// <returns></returns>
+        public async Task<GroupPerformanceListDto> GetLiveAnchorPerformance(int year, int month, List<int> liveAnchorIds)
+        {
+            var performance = dalLiveAnchorMonthlyTarget.GetAll().Where(l=> liveAnchorIds.Contains(l.LiveAnchorId)&& l.Month==month&&l.Year==year);
+            GroupPerformanceListDto groupPerformanceListDto = new GroupPerformanceListDto {
+                GroupPerformance = await performance.SumAsync(l => l.CumulativePerformance),
+                GroupTargetPerformance = await performance.SumAsync(l=>l.PerformanceTarget)
+            };
+            return groupPerformanceListDto;
+        }
+
+
+        /// <summary>
+        /// 根据主播id按年月获取折线图数据
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="baseInfoId">主播基础信息</param>
+        /// <returns></returns>
+        public async Task<List<PerformanceBrokenLine>> GetLiveAnchorPerformanceBrokenLineByLiveAnchorId(int year, int month, List<int> ids)
+        {          
+            var orderInfo = dalLiveAnchorMonthlyTarget.GetAll().Where(l=> ids.Contains(l.LiveAnchorId)&&l.Year==year&&l.Month<=month).ToList();
+            return orderInfo.GroupBy(x=>x.Month).Select(l=>new PerformanceBrokenLine { Date=l.Key.ToString(),PerfomancePrice=l.Sum(x=>x.CumulativePerformance)}).ToList();;
+        }
     }
 }
