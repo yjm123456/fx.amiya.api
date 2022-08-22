@@ -621,7 +621,7 @@ namespace Fx.Amiya.Service
                 #endregion
 
                 #region #复诊业绩量
-                liveAnchorMonthlyTarget.SubsequentPerformanceTarget += editDto.CumulativeSubsequentPerformance;
+                liveAnchorMonthlyTarget.CumulativeSubsequentPerformance += editDto.CumulativeSubsequentPerformance;
                 if (liveAnchorMonthlyTarget.CumulativeSubsequentPerformance <= 0)
                 {
                     liveAnchorMonthlyTarget.SubsequentPerformanceCompleteRate = 0.00M;

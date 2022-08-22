@@ -773,19 +773,15 @@ namespace Fx.Amiya.Service
             DateTime startTime = new DateTime(year, 1, 1);
             //筛选结束的月份
             DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
-            //选定的月份
-            DateTime currentDate = new DateTime(year, month, 1);
-            var orderinfo = dalContentPlatFormOrderDealInfo.GetAll().Where(o => o.IsDeal == true && o.CreateDate >= startTime && o.CreateDate < endDate);
+            var orderinfo =await dalContentPlatFormOrderDealInfo.GetAll().Where(o => o.IsDeal == true && o.CreateDate >= startTime && o.CreateDate < endDate).ToListAsync();
             if (isCustomer != null)
             {
-                orderinfo = orderinfo.Where(o => o.IsOldCustomer == isCustomer);
+                orderinfo = orderinfo.Where(o => o.IsOldCustomer == isCustomer).ToList();
             }
-            var list = orderinfo.GroupBy(o => o.CreateDate.Month).OrderBy(o => o.Key).Select(o => new PerformanceInfoByDateDto
-            {
-                Date = o.Key.ToString(),
-                PerfomancePrice = o.Sum(o => o.Price)
-            }).ToList();
-            return BreakLineClassUtil<PerformanceInfoByDateDto>.Convert(month, list);
+
+            var list = orderinfo.Select(x => new PerformanceInfoDateDto { Date = x.CreateDate, PerfomancePrice = x.Price }).ToList();
+            var returnResult = list.GroupBy(x => x.Date.Month).Select(x => new PerformanceInfoByDateDto { Date = x.Key.ToString(), PerfomancePrice = x.Sum(z => z.PerfomancePrice) }).ToList();
+            return BreakLineClassUtil<PerformanceInfoByDateDto>.Convert(month, returnResult);
         }
 
 
@@ -795,8 +791,6 @@ namespace Fx.Amiya.Service
             DateTime startTime = new DateTime(year, 1, 1);
             //筛选结束的月份
             DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
-            //选定的月份
-            DateTime currentDate = new DateTime(year, month, 1);
             var orderinfo = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).Where(o => o.IsDeal == true && o.CreateDate >= startTime && o.CreateDate < endDate).ToListAsync();
 
             if (isOldSend == true)
