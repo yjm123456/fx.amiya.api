@@ -172,10 +172,11 @@ namespace Fx.Amiya.Service
             GroupPerformanceDto groupPerformanceDto = new GroupPerformanceDto();
 
             #region 【刀刀组业绩】
-
+            groupPerformanceDto.GroupDaoDaoPerformance = 0.00M;
             #endregion
 
             #region 【吉娜组业绩】
+            groupPerformanceDto.GroupJinaPerformance = 0.00M;
 
             #endregion
 
@@ -204,10 +205,10 @@ namespace Fx.Amiya.Service
             #region 【黄V组业绩】
             var groupYellowVPerformance = await liveAnchorMonthlyTargetService.GetCooperationLiveAnchorPerformance(year, month, "2bd8b9ad-afd7-4982-b783-fcad7d342f11");
             //本月量
-            groupPerformanceDto.CooperationLiveAnchorPerformance = groupYellowVPerformance.GroupPerformance;
+            groupPerformanceDto.GroupYellowVPerformance = groupYellowVPerformance.GroupPerformance;
             //同比
             var groupYellowVPerformanceYearToYear = await liveAnchorMonthlyTargetService.GetCooperationLiveAnchorPerformance(year - 1, month, "2bd8b9ad-afd7-4982-b783-fcad7d342f11");
-            groupPerformanceDto.CooperationLiveAnchorPerformanceYearOnYear = CalculateYearOnYear(groupYellowVPerformance.GroupPerformance, groupYellowVPerformanceYearToYear.GroupPerformance);
+            groupPerformanceDto.GroupYellowVPerformanceYearOnYear = CalculateYearOnYear(groupYellowVPerformance.GroupPerformance, groupYellowVPerformanceYearToYear.GroupPerformance);
             //环比
             GroupPerformanceListDto monthGroupYellowVPerformance = new GroupPerformanceListDto();
             if (month == 1)
@@ -218,9 +219,9 @@ namespace Fx.Amiya.Service
             {
                 monthGroupYellowVPerformance = await liveAnchorMonthlyTargetService.GetCooperationLiveAnchorPerformance(year, month - 1, "2bd8b9ad-afd7-4982-b783-fcad7d342f11");
             }
-            groupPerformanceDto.CooperationLiveAnchorPerformanceChainRatio = CalculateChainratio(groupYellowVPerformance.GroupPerformance, monthGroupYellowVPerformance.GroupPerformance);
+            groupPerformanceDto.GroupYellowVPerformanceChainRatio = CalculateChainratio(groupYellowVPerformance.GroupPerformance, monthGroupYellowVPerformance.GroupPerformance);
             //目标达成
-            groupPerformanceDto.CooperationLiveAnchorPerformanceCompleteRate = CalculateTargetComplete(groupYellowVPerformance.GroupPerformance, groupYellowVPerformance.GroupTargetPerformance);
+            groupPerformanceDto.GroupYellowVPerformanceCompleteRate = CalculateTargetComplete(groupYellowVPerformance.GroupPerformance, groupYellowVPerformance.GroupTargetPerformance);
             #endregion
 
             //各分组业绩占比
@@ -265,6 +266,21 @@ namespace Fx.Amiya.Service
         {
             var brokenLine = await liveAnchorMonthlyTargetService.GetLiveAnchorPerformanceBrokenLineAsync(year, contentPlatFormId);
             var list = brokenLine.ToList();
+            return BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, list);
+
+        }
+
+
+        /// <summary>
+        /// 根据主播获取折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorBaseId"></param>
+        /// <returns></returns>
+        public async Task<List<PerformanceBrokenLine>> GetLiveAnchorPerformanceByBaseIdAsync(int year, int month, string liveAnchorBaseId)
+        {
+            List<PerformanceBrokenLine> list = new List<PerformanceBrokenLine>();
             return BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, list);
 
         }

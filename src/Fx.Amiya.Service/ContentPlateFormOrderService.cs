@@ -1595,12 +1595,10 @@ namespace Fx.Amiya.Service
                     order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.OrderComplete);
                     order.DealAmount += input.DealAmount;
                     order.LateProjectStage = input.LastProjectStage;
-                    order.LastDealHospitalId = input.LastDealHospitalId;
                     order.ToHospitalDate = input.ToHospitalDate;
                     order.DealPictureUrl = input.DealPictureUrl;
                     order.IsToHospital = true;
                     order.ToHospitalDate = input.ToHospitalDate;
-                    order.LastDealHospitalId = input.LastDealHospitalId;
                     order.CommissionRatio = input.CommissionRatio;
                     order.UnDealReason = "";
                     order.UnDealPictureUrl = "";
@@ -1618,6 +1616,7 @@ namespace Fx.Amiya.Service
                     order.LateProjectStage = "";
                     order.DealPictureUrl = "";
                 }
+                order.LastDealHospitalId = input.LastDealHospitalId;
                 order.IsOldCustomer = isoldCustomer;
                 order.IsAcompanying = input.IsAcompanying;
                 order.ToHospitalType = input.ToHospitalType;
@@ -1637,12 +1636,12 @@ namespace Fx.Amiya.Service
                 orderDealDto.OtherAppOrderId = input.OtherContentPlatFormOrderId;
                 orderDealDto.ToHospitalType = input.ToHospitalType;
                 orderDealDto.IsOldCustomer = isoldCustomer;
+                orderDealDto.LastDealHospitalId = input.LastDealHospitalId;
                 orderDealDto.IsAcompanying = input.IsAcompanying;
                 if (input.IsFinish == true)
                 {
                     orderDealDto.IsToHospital = true;
                     orderDealDto.ToHospitalDate = input.ToHospitalDate;
-                    orderDealDto.LastDealHospitalId = input.LastDealHospitalId;
                     orderDealDto.DealPicture = input.DealPictureUrl;
                     orderDealDto.DealDate = input.DealDate;
                     orderDealDto.Price = input.DealAmount.Value;
@@ -1707,13 +1706,11 @@ namespace Fx.Amiya.Service
                     order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.OrderComplete);
                     order.DealAmount += input.DealAmount;
                     order.LateProjectStage = input.LastProjectStage;
-                    order.LastDealHospitalId = input.LastDealHospitalId;
                     order.ToHospitalDate = input.ToHospitalDate;
                     order.DealPictureUrl = input.DealPictureUrl;
                     order.IsToHospital = true;
                     order.CommissionRatio = input.CommissionRatio;
                     order.ToHospitalDate = input.ToHospitalDate;
-                    order.LastDealHospitalId = input.LastDealHospitalId;
                     order.UnDealReason = "";
                     order.UnDealPictureUrl = "";
                     order.DealDate = input.DealDate;
@@ -1733,6 +1730,7 @@ namespace Fx.Amiya.Service
                 {
                     order.CheckState = (int)CheckType.Checking;
                 }
+                order.LastDealHospitalId = input.LastDealHospitalId;
                 order.IsOldCustomer = isoldCustomer;
                 order.IsAcompanying = input.IsAcompanying;
                 order.OtherContentPlatFormOrderId = input.OtherContentPlatFormOrderId;
@@ -1748,12 +1746,12 @@ namespace Fx.Amiya.Service
                 orderDealDto.IsAcompanying = input.IsAcompanying;
                 orderDealDto.IsDeal = input.IsFinish;
                 orderDealDto.OtherAppOrderId = input.OtherContentPlatFormOrderId;
+                orderDealDto.LastDealHospitalId = input.LastDealHospitalId;
                 orderDealDto.ToHospitalType = input.ToHospitalType;
                 if (input.IsFinish == true)
                 {
                     orderDealDto.IsToHospital = true;
                     orderDealDto.ToHospitalDate = input.ToHospitalDate;
-                    orderDealDto.LastDealHospitalId = input.LastDealHospitalId;
                     orderDealDto.CommissionRatio = input.CommissionRatio;
                     orderDealDto.DealPicture = input.DealPictureUrl;
                     orderDealDto.Price = input.DealAmount.Value;

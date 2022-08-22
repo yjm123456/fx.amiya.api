@@ -26,6 +26,7 @@ namespace Fx.Amiya.Background.Api.Controllers
     /// </summary>
     [Route("[controller]")]
     [ApiController]
+    [FxInternalAuthorize]
     public class AmiyaAchievementController : ControllerBase
     {
         private IOrderService orderService;
@@ -245,21 +246,21 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             #region 【折线图】
             //刀刀组业绩折线图
-            //var historySendThisMonthDealOrderList = await amiyaPerformanceService.GetHistorySendThisMonthDealOrders(year, month, true);
-            //groupPerformanceVo.HistorySendDuringMonthDealList = historySendThisMonthDealOrderList.Select(data => new Vo.Performance.PerformanceListInfo
-            //{
-            //    date = data.Date,
-            //    Performance = data.PerfomancePrice
-            //}).ToList();
+            var historySendThisMonthDealOrderList = await amiyaPerformanceService.GetLiveAnchorPerformanceByBaseIdAsync(year, month, "");
+            groupPerformanceVo.GroupDaoDaoPerformanceData = historySendThisMonthDealOrderList.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
 
             //吉娜组业绩折线图
-            //var thisMonthSendThisMonthDealOrderList = await amiyaPerformanceService.GetHistorySendThisMonthDealOrders(year, month, false);
-            //groupPerformanceVo.DuringMonthSendDuringMonthDealList = thisMonthSendThisMonthDealOrderList.Select(data => new Vo.Performance.PerformanceListInfo
-            //{
-            //    date = data.Date,
-            //    Performance = data.PerfomancePrice
-            //}).ToList();
-             //合作达人业绩折线图
+            var thisMonthSendThisMonthDealOrderList = await amiyaPerformanceService.GetLiveAnchorPerformanceByBaseIdAsync(year, month, "");
+            groupPerformanceVo.GroupJinaPerformanceData = thisMonthSendThisMonthDealOrderList.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+            //合作达人业绩折线图
             var cooperationLiveAnchorBorkenLines = await amiyaPerformanceService.GetLiveAnchorPerformanceAsync(year, month, "d2e71501-7327-4883-9294-371a77c4cabd");
             groupPerformanceVo.CooperationLiveAnchorPerformanceData = cooperationLiveAnchorBorkenLines.Select(data => new Vo.Performance.PerformanceListInfo
             {

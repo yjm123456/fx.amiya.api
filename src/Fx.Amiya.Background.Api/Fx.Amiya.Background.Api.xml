@@ -100,14 +100,6 @@
             啊美雅业绩接口
             </summary>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaAchievementController.GetOrderOperationConditionAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
-            <summary>
-            获取订单经营情况
-            </summary>
-            <param name="startDate">开始时间</param>
-            <param name="endDate">结束时间</param>
-            <returns></returns>
-        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaAchievementController.GetAmeiYanPerformanceAsync(System.Int32,System.Int32)">
             <summary>
             获取啊美雅业绩数据
@@ -116,12 +108,29 @@
             <param name="month">月份</param>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaAchievementController.GetGroupPerformanceAsync(System.Int32,System.Int32)">
+            <summary>
+            分组业绩
+            </summary>
+            <param name="year"></param>
+            <param name="month"></param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaAchievementController.GetSendAndDealPerformanceAsync(System.Int32,System.Int32)">
             <summary>
             派单成交业绩
             </summary>
             <param name="year"></param>
             <param name="month"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaAchievementController.GetSendAndDealPerformanceDetailList(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            根据年月获取派单成交明细
+            </summary>
+            <param name="year"></param>
+            <param name="month"></param>
+            <param name="isHistorySendOrder">是否为历史派单；true:历史派单当月成交，false：当月派单当月成交</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaDepartmentController.GetListWithPageAsync(System.Int32,System.Int32)">
@@ -7239,12 +7248,12 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.ContentPlatFormOrderId">
             <summary>
-            派单编号
+            订单编号
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CreateDate">
             <summary>
-            创建时间
+            登记时间
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.SendDate">
@@ -7255,6 +7264,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.ConsultationTypeText">
             <summary>
             面诊状态文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CustomerNickName">
+            <summary>
+            客户昵称
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.Phone">
@@ -7314,7 +7328,7 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.Price">
             <summary>
-            价格
+            成交金额
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.DealDate">
@@ -17417,6 +17431,116 @@
             带货业绩数据
             </summary>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo">
+            <summary>
+            分组业绩看板
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupDaoDaoPerformance">
+            <summary>
+            刀刀组业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupDaoDaoPerformanceYearOnYear">
+            <summary>
+            刀刀组业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupDaoDaoPerformanceChainRatio">
+            <summary>
+            刀刀组业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupDaoDaoPerformanceCompleteRate">
+            <summary>
+            刀刀组业绩目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupJinaPerformance">
+            <summary>
+            吉娜组业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupJinaPerformanceYearOnYear">
+            <summary>
+            吉娜组业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupJinaPerformanceChainRatio">
+            <summary>
+            吉娜组业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupJinaPerformanceCompleteRate">
+            <summary>
+            吉娜组业绩目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.CooperationLiveAnchorPerformance">
+            <summary>
+            合作达人业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.CooperationLiveAnchorPerformanceYearOnYear">
+            <summary>
+            合作达人业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.CooperationLiveAnchorPerformanceChainRatio">
+            <summary>
+            合作达人业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.CooperationLiveAnchorPerformanceCompleteRate">
+            <summary>
+            合作达人业绩目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupYellowVPerformance">
+            <summary>
+            黄V组业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupYellowVPerformanceYearOnYear">
+            <summary>
+            黄V组业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupYellowVPerformanceChainRatio">
+            <summary>
+            黄V组业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupYellowVPerformanceCompleteRate">
+            <summary>
+            黄V组业绩目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.PerformanceRatios">
+            <summary>
+            各组业绩所占比例
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupDaoDaoPerformanceData">
+            <summary>
+            刀刀组业绩数据折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupJinaPerformanceData">
+            <summary>
+            吉娜组业绩数据折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.CooperationLiveAnchorPerformanceData">
+            <summary>
+            合作达人业绩数据折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupYellowVPerformanceData">
+            <summary>
+            黄V组业绩数据折线图
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.Performance.SendAndDealInfoVo">
             <summary>
             派单成交数据
@@ -17437,9 +17561,9 @@
             历史派单当月成交环比
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendAndDealInfoVo.HistorySendDuringMonthDealDetails">
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendAndDealInfoVo.AccountedForHistorySendDuringMonthDealDetails">
             <summary>
-            历史派单当月成交明细
+            历史派单当月成交占比
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendAndDealInfoVo.DuringMonthSendDuringMonthDeal">
@@ -17455,11 +17579,6 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendAndDealInfoVo.DuringMonthSendDuringMonthDealChainRatio">
             <summary>
             当月派单当月成交环比
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendAndDealInfoVo.DuringMonthSendDuringMonthDealDetails">
-            <summary>
-            当月派单当月成交明细
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendAndDealInfoVo.PerformanceRatioVo">
@@ -17480,6 +17599,16 @@
         <member name="T:Fx.Amiya.Background.Api.Vo.Performance.PerformanceListInfo">
             <summary>
             每月业绩数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.PerformanceListInfo.date">
+            <summary>
+            日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.PerformanceListInfo.Performance">
+            <summary>
+            业绩金额
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.Performance.PerformanceRatioVo">

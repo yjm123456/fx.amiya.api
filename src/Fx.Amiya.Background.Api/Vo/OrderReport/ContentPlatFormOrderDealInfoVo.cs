@@ -41,7 +41,7 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// <summary>
         /// 最终成交医院
         /// </summary>
-        [Description("最终成交医院")]
+        [Description("到院医院")]
         public string LastDealHospital { get; set; }
         /// <summary>
         /// 项目
