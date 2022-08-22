@@ -652,15 +652,32 @@ CREATE TABLE `amiyadb`.`tbl_goods_shopcar` (
 
 
 
+-----------------------------------------------王健 2022/08/22 START--------------------------------------------
+
+
+
+
+CREATE TABLE `tbl_consumption_voucher` (
+  `id` varchar(100) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `deduct_money` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `is_specify_product` bit(1) NOT NULL DEFAULT b'0',
+  `is_accumulate` bit(1) NOT NULL DEFAULT b'0',
+  `is_share` bit(1) NOT NULL DEFAULT b'0',
+  `effective_time` bigint DEFAULT '0',
+  `type` int NOT NULL DEFAULT '0',
+  `expire_date` datetime DEFAULT '0000-00-00 00:00:00',
+  `is_valid` bit(1) NOT NULL,
+  `create_date` datetime NOT NULL,
+  `update_time` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 
 
 
 
 
-
-
-
+-----------------------------------------------王健 2022/08/22 END--------------------------------------------
 
 
 
