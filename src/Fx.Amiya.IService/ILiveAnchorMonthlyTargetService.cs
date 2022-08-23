@@ -36,10 +36,14 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<GroupPerformanceListDto> GetCooperationLiveAnchorPerformance(int year, int month, string contentPlatFormId);
         /// <summary>
-        /// 根据主播id获取业绩
+        /// 根据主播基础id按年月获取数据
         /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorBaseId"></param>
         /// <returns></returns>
-        Task<GroupPerformanceListDto> GetLiveAnchorPerformance(int year,int month,List<int> liveAnchorIds);
+        Task<GroupPerformanceListDto> GetLiveAnchorBaseIdPerformance(int year, int month, string liveAnchorBaseId);
+
         /// <summary>
         /// 根据平台id获取折线图
         /// </summary>

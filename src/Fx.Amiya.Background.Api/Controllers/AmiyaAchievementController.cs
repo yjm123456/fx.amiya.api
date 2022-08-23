@@ -181,6 +181,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             #endregion
 
             #region 【吉娜组业绩】
+
             groupPerformanceVo.GroupJinaPerformance = groupPerformance.GroupJinaPerformance;
             groupPerformanceVo.GroupJinaPerformanceYearOnYear = groupPerformance.GroupJinaPerformanceYearOnYear;
             groupPerformanceVo.GroupJinaPerformanceChainRatio = groupPerformance.GroupJinaPerformanceChainRatio;

@@ -787,6 +787,24 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
+        /// 根据主播基础id按年月获取数据
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="contentPlatFormId">内容平台id</param>
+        /// <returns></returns>
+        public async Task<GroupPerformanceListDto> GetLiveAnchorBaseIdPerformance(int year, int month, string liveAnchorBaseId)
+        {
+            var performance = dalLiveAnchorMonthlyTarget.GetAll().Include(x => x.LiveAnchor).Where(t => t.Year == year && t.Month == month && t.LiveAnchor.LiveAnchorBaseId == liveAnchorBaseId);
+            GroupPerformanceListDto performanceInfoDto = new GroupPerformanceListDto
+            {
+                GroupPerformance = await performance.SumAsync(t => t.CumulativePerformance),
+                GroupTargetPerformance = await performance.SumAsync(t => t.PerformanceTarget),
+            };
+            return performanceInfoDto;
+        }
+
+        /// <summary>
         /// 根据平台id按年月获取折线图
         /// </summary>
         /// <param name="year"></param>
