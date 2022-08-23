@@ -174,19 +174,18 @@ namespace Fx.Amiya.Background.Api.Controllers
             GroupPerformanceVo groupPerformanceVo = new GroupPerformanceVo();
 
             #region 【刀刀组业绩】
-            //performanceVo.HistorySendDuringMonthDeal = performance.HistoryMonthSendOrderDealPrice;
-
-            //performanceVo.HistorySendDuringMonthDealYearOnYear = performance.LastYearHistorySendTotalPerformance == 0m ? null : Math.Round((performance.HistoryMonthSendOrderDealPrice - performance.LastYearHistorySendTotalPerformance) / performance.LastYearHistorySendTotalPerformance * 100, 2);
-
-            //performanceVo.HistorySendDuringMonthDealChainRatio = performance.LastMonthHistorySendTotalPerformance == 0m ? null : Math.Round((performance.HistoryMonthSendOrderDealPrice - performance.LastMonthHistorySendTotalPerformance) / performance.LastMonthHistorySendTotalPerformance * 100, 2);
+            groupPerformanceVo.GroupDaoDaoPerformance = groupPerformance.GroupDaoDaoPerformance;
+            groupPerformanceVo.GroupDaoDaoPerformanceYearOnYear = groupPerformance.GroupDaoDaoPerformanceYearOnYear;
+            groupPerformanceVo.GroupDaoDaoPerformanceChainRatio = groupPerformance.GroupDaoDaoPerformanceChainRatio;
+            groupPerformanceVo.GroupDaoDaoPerformanceCompleteRate = groupPerformance.GroupDaoDaoPerformanceCompleteRate;
             #endregion
 
             #region 【吉娜组业绩】
-            //performanceVo.DuringMonthSendDuringMonthDeal = performance.ThisMonthSendOrderDealPrice;
 
-            //performanceVo.DuringMonthSendDuringMonthDealYearOnYear = performance.LastYearTotalPerformance == 0m ? null : Math.Round((performance.ThisMonthSendOrderDealPrice - performance.LastYearTotalPerformance) / performance.LastYearTotalPerformance * 100, 2);
-
-            //performanceVo.DuringMonthSendDuringMonthDealChainRatio = performance.LastMonthTotalPerformance == 0m ? null : Math.Round((performance.ThisMonthSendOrderDealPrice - performance.LastMonthTotalPerformance) / performance.LastMonthTotalPerformance * 100, 2);
+            groupPerformanceVo.GroupJinaPerformance = groupPerformance.GroupJinaPerformance;
+            groupPerformanceVo.GroupJinaPerformanceYearOnYear = groupPerformance.GroupJinaPerformanceYearOnYear;
+            groupPerformanceVo.GroupJinaPerformanceChainRatio = groupPerformance.GroupJinaPerformanceChainRatio;
+            groupPerformanceVo.GroupJinaPerformanceCompleteRate = groupPerformance.GroupJinaPerformanceCompleteRate;
             #endregion
 
             #region 【合作达人业绩】

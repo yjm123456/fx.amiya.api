@@ -29,6 +29,7 @@ namespace Fx.Amiya.IService
         Task DeleteAsync(string id);
         Task AddAsync(AddLiveAnchorBaseInfoDto addDto);
         Task<LiveAnchorBaseInfoDto> GetByIdAsync(string id);
+        Task<LiveAnchorBaseInfoDto> GetByNameAsync(string name);
         Task UpdateAsync(UpdateLiveAnchorBaseInfoDto updateDto);
 
     }

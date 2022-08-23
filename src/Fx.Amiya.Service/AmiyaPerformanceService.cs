@@ -16,11 +16,15 @@ namespace Fx.Amiya.Service
     {
         private readonly ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService;
         private readonly IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
+        private readonly ILiveAnchorBaseInfoService liveAnchorBaseInfoService;
 
-        public AmiyaPerformanceService(ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService, IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService)
+        public AmiyaPerformanceService(ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService,
+            IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
+            ILiveAnchorBaseInfoService liveAnchorBaseInfoService)
         {
             this.liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
             this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
+            this.liveAnchorBaseInfoService = liveAnchorBaseInfoService;
         }
 
         public async Task<MonthPerformanceDto> GetMonthPerformance(int year, int month)
@@ -172,11 +176,52 @@ namespace Fx.Amiya.Service
             GroupPerformanceDto groupPerformanceDto = new GroupPerformanceDto();
 
             #region 【刀刀组业绩】
-            groupPerformanceDto.GroupDaoDaoPerformance = 0.00M;
+            var liveAnchorDaoDaoBaseInfo = await liveAnchorBaseInfoService.GetByNameAsync("刀刀");
+
+            var groupDaoDaoPerformance = await liveAnchorMonthlyTargetService.GetLiveAnchorBaseIdPerformance(year, month, liveAnchorDaoDaoBaseInfo.Id);
+            //本月量
+            groupPerformanceDto.GroupDaoDaoPerformance = groupDaoDaoPerformance.GroupPerformance;
+            //同比
+            var groupDaoDaoPerformanceYearToYear = await liveAnchorMonthlyTargetService.GetLiveAnchorBaseIdPerformance(year - 1, month, liveAnchorDaoDaoBaseInfo.Id);
+            groupPerformanceDto.GroupDaoDaoPerformanceYearOnYear = CalculateYearOnYear(groupDaoDaoPerformance.GroupPerformance, groupDaoDaoPerformanceYearToYear.GroupPerformance);
+            //环比
+            GroupPerformanceListDto monthGroupDaodaoPerformance = new GroupPerformanceListDto();
+            if (month == 1)
+            {
+                monthGroupDaodaoPerformance = await liveAnchorMonthlyTargetService.GetLiveAnchorBaseIdPerformance(year - 1, 12, liveAnchorDaoDaoBaseInfo.Id);
+            }
+            else
+            {
+                monthGroupDaodaoPerformance = await liveAnchorMonthlyTargetService.GetLiveAnchorBaseIdPerformance(year, month - 1, liveAnchorDaoDaoBaseInfo.Id);
+            }
+            groupPerformanceDto.GroupDaoDaoPerformanceChainRatio = CalculateChainratio(groupDaoDaoPerformance.GroupPerformance, monthGroupDaodaoPerformance.GroupPerformance);
+            //目标达成
+            groupPerformanceDto.GroupDaoDaoPerformanceCompleteRate = CalculateTargetComplete(groupDaoDaoPerformance.GroupPerformance, groupDaoDaoPerformance.GroupTargetPerformance);
+
             #endregion
 
             #region 【吉娜组业绩】
-            groupPerformanceDto.GroupJinaPerformance = 0.00M;
+            var liveAnchorJinaBaseInfo = await liveAnchorBaseInfoService.GetByNameAsync("吉娜");
+
+            var groupJinaPerformance = await liveAnchorMonthlyTargetService.GetLiveAnchorBaseIdPerformance(year, month, liveAnchorJinaBaseInfo.Id);
+            //本月量
+            groupPerformanceDto.GroupJinaPerformance = groupJinaPerformance.GroupPerformance;
+            //同比
+            var groupJinaPerformanceYearToYear = await liveAnchorMonthlyTargetService.GetLiveAnchorBaseIdPerformance(year - 1, month, liveAnchorJinaBaseInfo.Id);
+            groupPerformanceDto.GroupJinaPerformanceYearOnYear = CalculateYearOnYear(groupJinaPerformance.GroupPerformance, groupJinaPerformanceYearToYear.GroupPerformance);
+            //环比
+            GroupPerformanceListDto monthGroupJinaPerformance = new GroupPerformanceListDto();
+            if (month == 1)
+            {
+                monthGroupJinaPerformance = await liveAnchorMonthlyTargetService.GetLiveAnchorBaseIdPerformance(year - 1, 12, liveAnchorJinaBaseInfo.Id);
+            }
+            else
+            {
+                monthGroupJinaPerformance = await liveAnchorMonthlyTargetService.GetLiveAnchorBaseIdPerformance(year, month - 1, liveAnchorJinaBaseInfo.Id);
+            }
+            groupPerformanceDto.GroupJinaPerformanceChainRatio = CalculateChainratio(groupJinaPerformance.GroupPerformance, monthGroupJinaPerformance.GroupPerformance);
+            //目标达成
+            groupPerformanceDto.GroupJinaPerformanceCompleteRate = CalculateTargetComplete(groupJinaPerformance.GroupPerformance, groupJinaPerformance.GroupTargetPerformance);
 
             #endregion
 

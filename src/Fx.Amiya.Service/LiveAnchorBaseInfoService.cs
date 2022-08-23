@@ -134,6 +134,32 @@ namespace Fx.Amiya.Service
         }
 
 
+        public async Task<LiveAnchorBaseInfoDto> GetByNameAsync(string name)
+        {
+            var result = from d in dalLiveAnchorBaseInfo.GetAll()
+                         select d;
+            var x = result.FirstOrDefault(e => e.LiveAnchorName == name);
+            if (x == null)
+            {
+                return new LiveAnchorBaseInfoDto();
+            }
+
+            LiveAnchorBaseInfoDto liveAnchorBaseInfoDto = new LiveAnchorBaseInfoDto();
+            liveAnchorBaseInfoDto.Id = x.Id;
+            liveAnchorBaseInfoDto.LiveAnchorName = x.LiveAnchorName;
+            liveAnchorBaseInfoDto.ThumbPicture = x.ThumbPicture;
+            liveAnchorBaseInfoDto.NickName = x.NickName;
+            liveAnchorBaseInfoDto.VideoUrl = x.VideoUrl;
+            liveAnchorBaseInfoDto.ContractUrl = x.ContractUrl;
+            liveAnchorBaseInfoDto.DueTime = x.DueTime;
+            liveAnchorBaseInfoDto.IndividualitySignature = x.IndividualitySignature;
+            liveAnchorBaseInfoDto.Description = x.Description;
+            liveAnchorBaseInfoDto.DetailPicture = x.DetailPicture;
+            liveAnchorBaseInfoDto.IsMain = x.IsMain;
+            liveAnchorBaseInfoDto.Valid = true;
+            return liveAnchorBaseInfoDto;
+        }
+
         /// <summary>
         /// 修改主播基础信息
         /// </summary>
