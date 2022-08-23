@@ -462,19 +462,5 @@ namespace Fx.Amiya.Service
                 return null;
             return Math.Round(completePerformance / monthTarget * 100, 2);
         }
-        /// <summary>
-        /// 根据主播基础信息id获取主播ip id集合
-        /// </summary>
-        /// <param name="year"></param>
-        /// <param name="month"></param>
-        /// <param name="baseInfoId"></param>
-        /// <returns></returns>
-        public async Task<List<PerformanceBrokenLine>> GetLivaAnchorPerformanceLineByIds(int year, int month, string baseInfoId)
-        {
-            List<int> ids = (await _liveanchorService.GetLiveAnchorListByBaseInfoId(baseInfoId)).Select(l => l.Id).ToList();
-            var list = await liveAnchorMonthlyTargetService.GetLiveAnchorPerformanceBrokenLineByLiveAnchorId(year,month,ids);
-            return BreakLineClassUtil<PerformanceBrokenLine>.Convert(month,list);
-
-        }
     }
 }

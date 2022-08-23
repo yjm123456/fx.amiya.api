@@ -245,18 +245,16 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             #region 【折线图】
             //刀刀组业绩折线图
-         
-            var daoDaoPerformanceBorkenLines = await amiyaPerformanceService.GetLivaAnchorPerformanceLineByIds(year,month, "");
-            groupPerformanceVo.GroupDaoDaoPerformanceData = daoDaoPerformanceBorkenLines.Select(data => new Vo.Performance.PerformanceListInfo
+            var historySendThisMonthDealOrderList = await amiyaPerformanceService.GetLiveAnchorPerformanceByBaseIdAsync(year, month, "");
+            groupPerformanceVo.GroupDaoDaoPerformanceData = historySendThisMonthDealOrderList.Select(data => new Vo.Performance.PerformanceListInfo
             {
                 date = data.Date,
                 Performance = data.PerfomancePrice
             }).ToList();
 
             //吉娜组业绩折线图
-  
-            var jiNaPerformanceBorkenLines = await amiyaPerformanceService.GetLivaAnchorPerformanceLineByIds(year,month, "");
-            groupPerformanceVo.GroupJinaPerformanceData=jiNaPerformanceBorkenLines.Select(data => new Vo.Performance.PerformanceListInfo
+            var thisMonthSendThisMonthDealOrderList = await amiyaPerformanceService.GetLiveAnchorPerformanceByBaseIdAsync(year, month, "");
+            groupPerformanceVo.GroupJinaPerformanceData = thisMonthSendThisMonthDealOrderList.Select(data => new Vo.Performance.PerformanceListInfo
             {
                 date = data.Date,
                 Performance = data.PerfomancePrice
@@ -298,7 +296,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             #region 【历史派单，当月成交数据】
             performanceVo.HistorySendDuringMonthDeal = performance.HistoryMonthSendOrderDealPrice;
 
-            performanceVo.HistorySendDuringMonthDealYearOnYear = performance.LastYearHistorySendTotalPerformance ;
+            performanceVo.HistorySendDuringMonthDealYearOnYear = performance.LastYearHistorySendTotalPerformance;
 
             performanceVo.HistorySendDuringMonthDealChainRatio = performance.LastMonthHistorySendTotalPerformance;
             #endregion
@@ -308,7 +306,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             performanceVo.DuringMonthSendDuringMonthDealYearOnYear = performance.LastYearTotalPerformance;
 
-            performanceVo.DuringMonthSendDuringMonthDealChainRatio = performance.LastMonthTotalPerformance ;
+            performanceVo.DuringMonthSendDuringMonthDealChainRatio = performance.LastMonthTotalPerformance;
             #endregion
 
             #region 【业绩占比】
