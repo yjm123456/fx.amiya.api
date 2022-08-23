@@ -113,6 +113,10 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<TikTokOrderInfo> TikTokOrderInfo { get; set; }
         public virtual DbSet<TikTokUserInfo> TikTokUserInfo { get; set; }
 
+        public virtual DbSet<GrowthPointsAccount> GrowthPointsAccount { get; set; }
+        public virtual DbSet<GrowthPointsRecord> GrowthPointsRecord { get; set; }
+        public virtual DbSet<ConsumptionVoucher> ConsumptionVoucher { get; set; }
+        public virtual DbSet<CustomerConsumptionVoucher> CustomerConsumptionVoucher { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -225,7 +229,10 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new ContentPlatformOrderSendConfiguration());
             modelBuilder.ApplyConfiguration(new TikTokOrderInfoConfiguration());
             modelBuilder.ApplyConfiguration(new TikTokUserInfoConfiguration());
-
+            modelBuilder.ApplyConfiguration(new GrowthPointsAccountConfiguration());
+            modelBuilder.ApplyConfiguration(new GrowthPointsRecordConfiguration());
+            modelBuilder.ApplyConfiguration(new CustomerConsumptionVoucherConfiguration());
+            modelBuilder.ApplyConfiguration(new ConsumptionVoucherConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

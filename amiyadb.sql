@@ -656,22 +656,76 @@ CREATE TABLE `amiyadb`.`tbl_goods_shopcar` (
 
 
 
-
+---抵用券
 CREATE TABLE `tbl_consumption_voucher` (
-  `id` varchar(100) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `deduct_money` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `is_specify_product` bit(1) NOT NULL DEFAULT b'0',
-  `is_accumulate` bit(1) NOT NULL DEFAULT b'0',
-  `is_share` bit(1) NOT NULL DEFAULT b'0',
-  `effective_time` bigint DEFAULT '0',
-  `type` int NOT NULL DEFAULT '0',
-  `expire_date` datetime DEFAULT '0000-00-00 00:00:00',
-  `is_valid` bit(1) NOT NULL,
-  `create_date` datetime NOT NULL,
-  `update_time` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+	`id` VARCHAR(100) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`name` VARCHAR(100) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`deduct_money` DECIMAL(10,2) NOT NULL DEFAULT '0.00',
+	`is_specify_product` BIT(1) NOT NULL DEFAULT 'b\'0\'',
+	`is_accumulate` BIT(1) NOT NULL DEFAULT 'b\'0\'',
+	`is_share` BIT(1) NOT NULL DEFAULT 'b\'0\'',
+	`effective_time` BIGINT(19) NULL DEFAULT '0',
+	`type` INT(10) NOT NULL DEFAULT '0',
+	`expire_date` DATETIME NULL DEFAULT NULL,
+	`is_valid` BIT(1) NOT NULL,
+	`create_date` DATETIME NOT NULL,
+	`update_time` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+)
+COLLATE='utf8mb4_0900_ai_ci'
+ENGINE=InnoDB
+;
 
+
+
+
+
+--用户拥有的抵用券
+CREATE TABLE `tbl_customer_consumption_voucher` (
+	`id` VARCHAR(100) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`customer_id` VARCHAR(100) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`consumption_voucher_id` VARCHAR(100) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`is_used` BIT(1) NOT NULL DEFAULT 'b\'0\'',
+	`expire_date` DATETIME NULL DEFAULT NULL,
+	`is_expire` BIT(1) NOT NULL,
+	`create_date` DATETIME NOT NULL,
+	`use_date` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`) USING BTREE
+)
+COLLATE='utf8mb4_0900_ai_ci'
+ENGINE=InnoDB
+;
+
+
+
+--用户成长值账号
+CREATE TABLE `tbl_growth_points_account` (
+	`customer_id` VARCHAR(100) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`balance` DECIMAL(10,2) NOT NULL DEFAULT '0.00',
+	PRIMARY KEY (`customer_id`) USING BTREE
+)
+COLLATE='utf8mb4_0900_ai_ci'
+ENGINE=InnoDB
+;
+
+;
+
+--用户成长值记录
+CREATE TABLE `tbl_growth_points_record` (
+	`id` VARCHAR(100) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`quantity` DECIMAL(10,2) NOT NULL DEFAULT '0.00',
+	`type` INT(10) NOT NULL DEFAULT '0',
+	`customer_id` VARCHAR(100) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`order_id` VARCHAR(100) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`create_date` DATETIME NOT NULL,
+	`expire_date` DATETIME NULL DEFAULT NULL,
+	`is_expire` BIT(1) NOT NULL DEFAULT 'b\'0\'',
+	`account_balance` DECIMAL(10,2) NOT NULL DEFAULT '0.00',
+	PRIMARY KEY (`id`) USING BTREE
+)
+COLLATE='utf8mb4_0900_ai_ci'
+ENGINE=InnoDB
+;
 
 
 

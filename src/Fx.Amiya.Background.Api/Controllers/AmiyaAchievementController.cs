@@ -244,12 +244,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             #region 【折线图】
             //刀刀组业绩折线图
-            var historySendThisMonthDealOrderList = await amiyaPerformanceService.GetLiveAnchorPerformanceByBaseIdAsync(year, month, "");
-            groupPerformanceVo.GroupDaoDaoPerformanceData = historySendThisMonthDealOrderList.Select(data => new Vo.Performance.PerformanceListInfo
-            {
-                date = data.Date,
-                Performance = data.PerfomancePrice
-            }).ToList();
+         
             var daoDaoPerformanceBorkenLines = await amiyaPerformanceService.GetLivaAnchorPerformanceLineByIds(year,month, "");
             groupPerformanceVo.GroupDaoDaoPerformanceData = daoDaoPerformanceBorkenLines.Select(data => new Vo.Performance.PerformanceListInfo
             {
@@ -258,13 +253,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }).ToList();
 
             //吉娜组业绩折线图
-            var thisMonthSendThisMonthDealOrderList = await amiyaPerformanceService.GetLiveAnchorPerformanceByBaseIdAsync(year, month, "");
-            groupPerformanceVo.GroupJinaPerformanceData = thisMonthSendThisMonthDealOrderList.Select(data => new Vo.Performance.PerformanceListInfo
-            {
-                date = data.Date,
-                Performance = data.PerfomancePrice
-            }).ToList();
-            //合作达人业绩折线图
+  
             var jiNaPerformanceBorkenLines = await amiyaPerformanceService.GetLivaAnchorPerformanceLineByIds(year,month, "");
             groupPerformanceVo.GroupJinaPerformanceData=jiNaPerformanceBorkenLines.Select(data => new Vo.Performance.PerformanceListInfo
             {

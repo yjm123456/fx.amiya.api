@@ -89,6 +89,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         await integrationAccountService.AddByConsumptionAsync(consumptionIntegration);
                 }
 
+                //初始化成长值账号
+
+                //新会员赠送抵用券
+
                 return ResultData<bool>.Success().AddData("isNewCustomer", false);
             }
             catch (Exception ex)
