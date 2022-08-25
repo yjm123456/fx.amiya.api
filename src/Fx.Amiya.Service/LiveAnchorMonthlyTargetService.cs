@@ -682,81 +682,30 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<List<PerformanceInfoByDateDto>> GetLiveAnchorCommercePerformance(int year, int month)
+        public async Task<List<PerformanceInfoByDateDto>> GetLiveAnchorCommercePerformance(int year, int month, List<int> liveAnchorIds)
         {
-            var list = dalLiveAnchorMonthlyTarget.GetAll().Where(o => o.Year == year && o.Month >= 1 && o.Month <= month).GroupBy(o => o.Month).OrderBy(o => o.Key).Select(o => new PerformanceInfoByDateDto
-            {
-                Date = o.Key.ToString(),
-                PerfomancePrice = o.Sum(o => o.CumulativeCargoSettlementCommission)
-            }).ToList(); ; ;
-            return BreakLineClassUtil<PerformanceInfoByDateDto>.Convert(month, list);
+            var list = dalLiveAnchorMonthlyTarget.GetAll()
+                .Where(o => o.Year == year && o.Month >= 1 && o.Month <= month)
+                .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.LiveAnchorId))
+                .GroupBy(o => o.Month).OrderBy(o => o.Key).Select(o => new PerformanceInfoByDateDto
+                {
+                    Date = o.Key.ToString(),
+                    PerfomancePrice = o.Sum(o => o.CumulativeCargoSettlementCommission)
+                }).ToList();
+            return list;
         }
 
-        /*public async Task<PerformanceDto> GetLiveAnchorMonthlyTargetTotalPerformance(int year, int month)
+        /// <summary>
+        /// 带货业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorIds">各个平台的主播ID集合</param>
+        /// <returns></returns>
+        public async Task<LiveAnchorMonthTargetPerformanceDto> GetPerformance(int year, int month, List<int> liveAnchorIds)
         {
-            var totalPerformance = dalLiveAnchorMonthlyTarget.GetAll().Where(t=>t.Year==year&&t.Month==month);
-            var sum =await totalPerformance.SumAsync(t=>t.PerformanceTarget);
-            PerformanceDto performance = new PerformanceDto()
-            {
-                PerformanceCount = sum
-            };
-            return performance;
-        }
-
-        public async Task<PerformanceDto> GetLiveAnchorMonthTargetTotalCommercePerformance(int year, int month)
-        {
-            var totalPerformance = dalLiveAnchorMonthlyTarget.GetAll().Where(t => t.Year == year && t.Month == month);
-            var sum = await totalPerformance.SumAsync(t => t.CargoSettlementCommissionTarget);
-            PerformanceDto performance = new PerformanceDto()
-            {
-                PerformanceCount = sum
-            };
-            return performance;
-        }
-
-
-        
-
-        public async Task<PerformanceDto> GetLiveAnchorMonthTargetAlreadyCompleteCommercePerformance(int year, int month)
-        {
-            var totalPerformance = dalLiveAnchorMonthlyTarget.GetAll().Where(t => t.Year == year && t.Month == month);
-            var sum = await totalPerformance.SumAsync(t => t.CumulativeCargoSettlementCommission);
-            PerformanceDto performance = new PerformanceDto()
-            {
-                PerformanceCount = sum
-            };
-            return performance;
-        }
-
-        
-
-        public async Task<PerformanceDto> GetLiveAnchorMonthOldPerformanceTarget(int year, int month)
-        {
-            var totalPerformance = dalLiveAnchorMonthlyTarget.GetAll().Where(t => t.Year == year && t.Month == month);
-            //var sum = await totalPerformance.SumAsync();
-            var sum = 0;
-            PerformanceDto performance = new PerformanceDto()
-            {
-                PerformanceCount = sum
-            };
-            return performance;
-        }
-
-        public async Task<PerformanceDto> GetLiveAnchorMonthNewPerformanceTarget(int year, int month)
-        {
-            var totalPerformance = dalLiveAnchorMonthlyTarget.GetAll().Where(t => t.Year == year && t.Month == month);
-            //var sum = await totalPerformance.SumAsync();
-            var sum = 0;
-            PerformanceDto performance = new PerformanceDto()
-            {
-                PerformanceCount = sum
-            };
-            return performance;
-        }*/
-
-        public async Task<LiveAnchorMonthTargetPerformanceDto> GetPerformance(int year, int month)
-        {
-            var performance = dalLiveAnchorMonthlyTarget.GetAll().Where(t => t.Year == year && t.Month == month);
+            var performance = dalLiveAnchorMonthlyTarget.GetAll().Where(t => t.Year == year && t.Month == month)
+                .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.LiveAnchorId));
             LiveAnchorMonthTargetPerformanceDto performanceInfoDto = new LiveAnchorMonthTargetPerformanceDto
             {
                 TotalPerformanceTarget = await performance.SumAsync(t => t.PerformanceTarget),
@@ -814,6 +763,20 @@ namespace Fx.Amiya.Service
         public async Task<List<PerformanceBrokenLine>> GetLiveAnchorPerformanceBrokenLineAsync(int year, string contentPlatFormId)
         {
             var orderinfo = await dalLiveAnchorMonthlyTarget.GetAll().Include(x => x.LiveAnchor).Where(o => o.Year == year && o.LiveAnchor.ContentPlateFormId == contentPlatFormId).ToListAsync();
+
+            return orderinfo.GroupBy(x => x.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(z => z.CumulativePerformance) }).ToList();
+        }
+
+        /// <summary>
+        /// 根据主播基础id按年月获取折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="contentPlatFormId">内容平台id</param>
+        /// <returns></returns>
+        public async Task<List<PerformanceBrokenLine>> GetLiveAnchorPerformanceByBaseIdBrokenLineAsync(int year, string liveAnchorBaseId)
+        {
+            var orderinfo = await dalLiveAnchorMonthlyTarget.GetAll().Include(x => x.LiveAnchor).Where(o => o.Year == year && o.LiveAnchor.LiveAnchorBaseId == liveAnchorBaseId).ToListAsync();
 
             return orderinfo.GroupBy(x => x.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(z => z.CumulativePerformance) }).ToList();
         }

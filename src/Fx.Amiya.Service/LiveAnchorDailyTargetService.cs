@@ -391,8 +391,16 @@ namespace Fx.Amiya.Service
             try
             {
                 var liveAnchorDailyTarget = await dalLiveAnchorDailyTarget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                if (updateDto.Id != liveAnchorDailyTarget.Id)
+                {
+                    unitOfWork.RollBack();
+                    throw new Exception("修改内容与当前数据编号不一致，请重新操作！");
+                }
                 if (liveAnchorDailyTarget == null)
+                {
+                    unitOfWork.RollBack();
                     throw new Exception("主播日运营目标情况编号错误！");
+                }
                 //先扣除原有的
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
                 editLiveAnchorMonthlyTarget.Id = liveAnchorDailyTarget.LiveanchorMonthlyTargetId;
@@ -456,28 +464,28 @@ namespace Fx.Amiya.Service
 
                 //添加修改后的
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
-                lasteditLiveAnchorMonthlyTarget.Id = liveAnchorDailyTarget.LiveanchorMonthlyTargetId;
-                lasteditLiveAnchorMonthlyTarget.CumulativeRelease = liveAnchorDailyTarget.TodaySendNum;
-                lasteditLiveAnchorMonthlyTarget.CumulativeFlowInvestment = liveAnchorDailyTarget.FlowInvestmentNum;
-                lasteditLiveAnchorMonthlyTarget.LivingRoomCumulativeFlowInvestment = liveAnchorDailyTarget.LivingRoomFlowInvestmentNum;
-                lasteditLiveAnchorMonthlyTarget.CumulativeCluesNum = liveAnchorDailyTarget.CluesNum;
-                lasteditLiveAnchorMonthlyTarget.CumulativeAddFansNum = liveAnchorDailyTarget.AddFansNum;
-                lasteditLiveAnchorMonthlyTarget.CumulativeAddWechat = liveAnchorDailyTarget.AddWechatNum;
-                lasteditLiveAnchorMonthlyTarget.CumulativeConsultation = liveAnchorDailyTarget.Consultation;
-                lasteditLiveAnchorMonthlyTarget.CumulativeConsultation2 = liveAnchorDailyTarget.Consultation2;
-                lasteditLiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed = liveAnchorDailyTarget.ConsultationCardConsumed;
-                lasteditLiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed2 = liveAnchorDailyTarget.ConsultationCardConsumed2;
-                lasteditLiveAnchorMonthlyTarget.CumulativeActivateHistoricalConsultation = liveAnchorDailyTarget.ActivateHistoricalConsultation;
-                lasteditLiveAnchorMonthlyTarget.CumulativeSendOrder = liveAnchorDailyTarget.SendOrderNum;
-                lasteditLiveAnchorMonthlyTarget.CumulativeVisit = liveAnchorDailyTarget.VisitNum;
-                lasteditLiveAnchorMonthlyTarget.CumulativeDealTarget = liveAnchorDailyTarget.DealNum;
-                lasteditLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = liveAnchorDailyTarget.CargoSettlementCommission;
-                lasteditLiveAnchorMonthlyTarget.CumulativeNewCustomerPerformance = liveAnchorDailyTarget.NewPerformanceNum;
-                lasteditLiveAnchorMonthlyTarget.CumulativeSubsequentPerformance = liveAnchorDailyTarget.SubsequentPerformanceNum;
-                lasteditLiveAnchorMonthlyTarget.CumulativeOldCustomerPerformance = liveAnchorDailyTarget.OldCustomerPerformanceNum;
-                lasteditLiveAnchorMonthlyTarget.CumulativePerformance = liveAnchorDailyTarget.PerformanceNum;
-                lasteditLiveAnchorMonthlyTarget.CumulativeMinivanRefund = liveAnchorDailyTarget.MinivanRefund;
-                lasteditLiveAnchorMonthlyTarget.CumulativeMiniVanBadReviews = liveAnchorDailyTarget.MiniVanBadReviews;
+                lasteditLiveAnchorMonthlyTarget.Id = updateDto.LiveanchorMonthlyTargetId;
+                lasteditLiveAnchorMonthlyTarget.CumulativeRelease = updateDto.TodaySendNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativeFlowInvestment = updateDto.FlowInvestmentNum;
+                lasteditLiveAnchorMonthlyTarget.LivingRoomCumulativeFlowInvestment = updateDto.LivingRoomFlowInvestmentNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativeCluesNum = updateDto.CluesNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativeAddFansNum = updateDto.AddFansNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativeAddWechat = updateDto.AddWechatNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativeConsultation = updateDto.Consultation;
+                lasteditLiveAnchorMonthlyTarget.CumulativeConsultation2 = updateDto.Consultation2;
+                lasteditLiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed = updateDto.ConsultationCardConsumed;
+                lasteditLiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed2 = updateDto.ConsultationCardConsumed2;
+                lasteditLiveAnchorMonthlyTarget.CumulativeActivateHistoricalConsultation = updateDto.ActivateHistoricalConsultation;
+                lasteditLiveAnchorMonthlyTarget.CumulativeSendOrder = updateDto.SendOrderNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativeVisit = updateDto.VisitNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativeDealTarget = updateDto.DealNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = updateDto.CargoSettlementCommission;
+                lasteditLiveAnchorMonthlyTarget.CumulativeNewCustomerPerformance = updateDto.NewPerformanceNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativeSubsequentPerformance = updateDto.SubsequentPerformanceNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativeOldCustomerPerformance = updateDto.OldCustomerPerformanceNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativePerformance = updateDto.PerformanceNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativeMinivanRefund = updateDto.MinivanRefund;
+                lasteditLiveAnchorMonthlyTarget.CumulativeMiniVanBadReviews = updateDto.MiniVanBadReviews;
                 await _liveAnchorMonthlyTargetService.EditAsync(lasteditLiveAnchorMonthlyTarget);
                 unitOfWork.Commit();
             }

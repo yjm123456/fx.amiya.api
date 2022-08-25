@@ -91,7 +91,7 @@ namespace Fx.Amiya.Dto.Performance
         /// <summary>
         /// 带货业绩占比
         /// </summary>
-        public decimal? CommercePerformanceRatio{ get; set; }
+        public decimal? CommercePerformanceRatio { get; set; }
         /// <summary>
         /// 总业绩同比增长
         /// </summary>
@@ -145,7 +145,8 @@ namespace Fx.Amiya.Dto.Performance
     /// <summary>
     /// 分组业绩情况
     /// </summary>
-    public class GroupPerformanceDto{
+    public class GroupPerformanceDto
+    {
 
         /// <summary>
         /// 刀刀组业绩
@@ -289,4 +290,107 @@ namespace Fx.Amiya.Dto.Performance
         public decimal? AccountedForHistorySendDuringMonthDealDetails { get; set; }
     }
 
+    /// <summary>
+    /// 照片/视频业绩
+    /// </summary>
+    public class GroupVideoAndPicturePerformanceDto
+    {
+        /// <summary>
+        /// 视频面诊
+        /// </summary>
+        public int VideoPerformance { get; set; }
+        /// <summary>
+        /// 视频面诊同比量
+        /// </summary>
+        public decimal? LastYearVideoPerformance { get; set; }
+        /// <summary>
+        /// 视频面诊环比量
+        /// </summary>
+        public decimal? LastMonthVideoPerformance { get; set; }
+        /// <summary>
+        /// 视频面诊占比
+        /// </summary>
+        public decimal? AccountedForVideoPerformance { get; set; }
+
+
+        /// <summary>
+        /// 照片面诊
+        /// </summary>
+        public int PicturePerformance { get; set; }
+        /// <summary>
+        /// 照片面诊同比量
+        /// </summary>
+        public decimal? LastYearPicturePerformance { get; set; }
+        /// <summary>
+        /// 照片面诊环比量
+        /// </summary>
+        public decimal? LastMonthPicturePerformance { get; set; }
+        /// <summary>
+        /// 照片面诊占比
+        /// </summary>
+        public decimal? AccountedForPicturePerformance { get; set; }
+    }
+
+
+    /// <summary>
+    /// 独立/协助业绩情况
+    /// </summary>
+    public class IndependentOrAssistPerformanceDto
+    {
+        /// <summary>
+        /// 主播独立业绩
+        /// </summary>
+        public decimal? LiveAnchorIndenpendentPerformance { get; set; }
+
+        /// <summary>
+        /// 主播独立业绩同比
+        /// </summary>
+        public decimal? LiveAnchorIndenpendentPerformanceYearOnYear { get; set; }
+        /// <summary>
+        /// 主播独立业绩环比
+        /// </summary>
+        public decimal? LiveAnchorIndenpendentPerformanceChainRatio { get; set; }
+        /// <summary>
+        /// 主播独立业绩占比
+        /// </summary>
+        public decimal? AccountForLiveAnchorIndenpendentPerformance { get; set; }
+
+
+        /// <summary>
+        /// 助理独立业绩
+        /// </summary>
+        public decimal? CustomerServiceIndenpendentPerformance { get; set; }
+
+        /// <summary>
+        /// 助理独立业绩同比
+        /// </summary>
+        public decimal? CustomerServiceIndenpendentPerformanceYearOnYear { get; set; }
+        /// <summary>
+        /// 助理独立业绩环比
+        /// </summary>
+        public decimal? CustomerServiceIndenpendentPerformanceChainRatio { get; set; }
+        /// <summary>
+        /// 助理独立业绩占比
+        /// </summary>
+        public decimal? AccountForCustomerServiceIndenpendentPerformance { get; set; }
+
+
+        /// <summary>
+        /// 助理协助业绩
+        /// </summary>
+        public decimal? CustomerServiceAssistPerformance { get; set; }
+
+        /// <summary>
+        /// 助理协助业绩同比
+        /// </summary>
+        public decimal? CustomerServiceAssistPerformanceYearOnYear { get; set; }
+        /// <summary>
+        /// 助理协助业绩环比
+        /// </summary>
+        public decimal? CustomerServiceAssistPerformanceChainRatio { get; set; }
+        /// <summary>
+        /// 助理协助业绩占比
+        /// </summary>
+        public decimal? AccountForCustomerServiceAssistPerformance { get; set; }
+    }
 }

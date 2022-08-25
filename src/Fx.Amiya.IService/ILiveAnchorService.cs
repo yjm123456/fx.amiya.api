@@ -11,6 +11,12 @@ namespace Fx.Amiya.IService
    public interface ILiveAnchorService
     {
         /// <summary>
+        /// 根据主播基础id获取有效的主播列表
+        /// </summary>
+        /// <param name="liveAnchorBaseId"></param>
+        /// <returns></returns>
+        Task<List<LiveAnchorDto>> GetValidListByLiveAnchorBaseIdAsync(string liveAnchorBaseId);
+        /// <summary>
         /// 根据内容平台id获取有效的主播列表
         /// </summary>
         /// <param name="contentPlatFormId">内容平台id</param>

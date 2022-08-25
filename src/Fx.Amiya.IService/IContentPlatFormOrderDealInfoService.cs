@@ -25,15 +25,19 @@ namespace Fx.Amiya.IService
         Task CheckAsync(UpdateContentPlatFormOrderDealInfoDto updateDto);
 
         Task SettleAsync(UpdateContentPlatFormOrderDealInfoDto updateDto);
-     
+
+
+        #region【业绩板块】
+
         /// <summary>
-        /// 获取指定年月的业绩(可选择是否筛选新老客)
+        /// 根据主播获取指定年月的业绩(可选择是否筛选新老客)
         /// </summary>
         /// <param name="year"></param>
         /// <param name="month"></param>
         /// <param name="isCustomer"></param>
+        /// <param name="LiveAnchorIds">各个平台主播id集合</param>
         /// <returns></returns>
-        Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByYearAndMonth(int year, int month, bool? isCustomer);
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByYearAndMonth(int year, int month, bool? isCustomer, List<int> LiveAnchorIds);
 
 
         /// <summary>
@@ -43,15 +47,16 @@ namespace Fx.Amiya.IService
         /// <param name="month"></param>
         /// <param name="isOldSend">历史/当月派单,true为历史派单当月成交，false为当月派单当月成交</param>
         /// <returns></returns>
-        Task<List<ContentPlatFormOrderDealInfoDto>> GetSendAndDealPerformanceByYearAndMonth(int year, int month, bool? isOldSend);
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetSendAndDealPerformanceByYearAndMonth(int year, int month, bool? isOldSend, List<int> liveAnchorIds);
         /// <summary>
         /// 按月筛选新老客数据
         /// </summary>
         /// <param name="year">年份</param>
         /// <param name="month">月份</param>
         /// <param name="isCustomer">筛选新老客(传null不筛选)</param>
+        /// <param name="LiveAnchorIds">各个平台主播id集合</param>
         /// <returns></returns>
-        Task<List<PerformanceInfoByDateDto>> GetPerformance(int year,int month,bool? isCustomer);
+        Task<List<PerformanceInfoByDateDto>> GetPerformanceBrokenLineAsync(int year,int month,bool? isCustomer, List<int> LiveAnchorIds);
 
         /// <summary>
         /// 获取成交情况折线图
@@ -60,6 +65,34 @@ namespace Fx.Amiya.IService
         /// <param name="month"></param>
         /// <param name="isOldSend"></param>
         /// <returns></returns>
-        Task<List<PerformanceBrokenLine>> GetHistoryAndThisMonthOrderPerformance(int year, int month, bool? isOldSend);
+        Task<List<PerformanceBrokenLine>> GetHistoryAndThisMonthOrderPerformance(int year, int month, bool? isOldSend,List<int> liveAnchorIds);
+
+
+        /// <summary>
+        /// 根据主播获取分组独立/协助业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isAssist"></param>
+        /// <param name="LiveAnchorIds"></param>
+        /// <param name="amiyaEmployeeId"></param>
+        /// <returns></returns>
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetIndependentOrAssistPerformanceByYearAndMonth(int year, int month, bool? isAssist, List<int> LiveAnchorIds, int amiyaEmployeeId);
+
+        /// <summary>
+        /// 根据条件获取独立/协助业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isAssist"></param>
+        /// <param name="LiveAnchorIds"></param>
+        /// <param name="amiyaEmployeeId"></param>
+        /// <returns></returns>
+        Task<List<PerformanceBrokenLine>> GetIndependenceOrAssistAsync(int year, int month, bool? isAssist, List<int> LiveAnchorIds, int amiyaEmployeeId);
+
+        #endregion
+
+        #region 【分组业绩板块】
+        #endregion
     }
 }

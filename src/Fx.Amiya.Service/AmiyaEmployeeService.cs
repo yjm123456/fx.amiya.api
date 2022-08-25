@@ -154,7 +154,33 @@ namespace Fx.Amiya.Service
             }
         }
 
+        public async Task<AmiyaEmployeeDto> GetByNameAsync(string name)
+        {
+            try
+            {
+                var employee = await dalAmiyaEmployee.GetAll()
+                    .SingleOrDefaultAsync(e => e.Name == name);
 
+                if (employee == null)
+                    return new AmiyaEmployeeDto();
+
+                AmiyaEmployeeDto employeeDto = new AmiyaEmployeeDto()
+                {
+                    Id = employee.Id,
+                    Name = employee.Name,
+                    UserName = employee.UserName,
+                    Valid = employee.Valid,
+                    Email = (employee.Email == "0") ? "" : employee.Email,
+                    IsCustomerService = employee.IsCustomerService,
+                };
+                return employeeDto;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
 
         public async Task<FxPageInfo<AmiyaEmployeeDto>> GetListWithPageAsync(string keyword, bool valid, int positionId, int pageNum, int pageSize)
         {

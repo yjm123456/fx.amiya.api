@@ -48,5 +48,6 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// 紧急程度
         /// </summary>
         public int EmergencyLevel { get; set; }
+        public string EmergencyLevelText { get; set; }
     }
 }

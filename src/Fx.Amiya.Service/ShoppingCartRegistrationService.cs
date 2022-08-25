@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Fx.Infrastructure.DataAccess;
 using jos_sdk_net.Util;
+using Fx.Amiya.Dto.Performance;
 
 namespace Fx.Amiya.Service
 {
@@ -384,7 +385,7 @@ namespace Fx.Amiya.Service
                 {
                     foreach (var x in shoppingCartRegistration)
                     {
-                        x.EmergencyLevel =(int)EmergencyLevel.Important;
+                        x.EmergencyLevel = (int)EmergencyLevel.Important;
                         x.IsCreateOrder = true;
                         x.IsAddWeChat = true;
                         x.IsWriteOff = true;
@@ -521,6 +522,87 @@ namespace Fx.Amiya.Service
 
 
 
+        #endregion
+
+        #region 【业绩数据】
+        /// <summary>
+        /// 根据条件获取小黄车登记业绩（照片面诊业绩与视频面诊业绩）
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isVideo"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        public async Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistrationListByLiveAnchorNameAndIsVideoAsync(int year, int month, bool isVideo, List<int> liveAnchorIds)
+        {
+            int consultationType = 0;
+            if (isVideo == true)
+            {
+                consultationType = (int)ShoppingCartConsultationType.Video;
+            }
+            else
+            {
+                consultationType = (int)ShoppingCartConsultationType.Picture;
+            }
+            //筛选结束的月份
+            DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
+            //选定的月份
+            DateTime currentDate = new DateTime(year, month, 1);
+            var result = from d in dalShoppingCartRegistration.GetAll()
+                .Where(o => o.IsConsultation == true && o.IsReturnBackPrice == false && o.IsBadReview == false)
+                .Where(o => o.CreateDate >= currentDate && o.CreateDate < endDate && o.ConsultationType == consultationType)
+                .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.LiveAnchorId))
+                         select new ShoppingCartRegistrationDto
+                         {
+                             RecordDate = d.RecordDate,
+                             EmergencyLevelText =ServiceClass.GetShopCartRegisterEmergencyLevelText(d.EmergencyLevel),
+                             CustomerNickName = d.CustomerNickName,
+                             Phone = d.Phone,
+                             Price = d.Price,
+                             IsCreateOrder=d.IsCreateOrder,
+                             IsSendOrder=d.IsSendOrder,
+                             IsConsultation = d.IsConsultation,
+                             IsAddWeChat = d.IsAddWeChat,
+                             IsWriteOff=d.IsWriteOff,
+                             IsReturnBackPrice=d.IsReturnBackPrice,
+                             IsBadReview=d.IsBadReview,
+                         };
+            return await result.OrderByDescending(x=>x.RecordDate).ToListAsync();
+        }
+
+
+        /// <summary>
+        /// 根据条件获取小黄车照片/视频面诊业绩折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isVideo"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        public async Task<List<PerformanceInfoByDateDto>> GetPictureOrVideoConsultationBrokenLineAsync(int year, int month,bool isVideo, List<int> liveAnchorIds)
+        {
+            //开始月份
+            DateTime startTime = new DateTime(year, 1, 1);
+            //筛选结束的月份
+            DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
+            int consultationType = 0;
+            if (isVideo == true)
+            {
+                consultationType = (int)ShoppingCartConsultationType.Video;
+            }
+            else
+            {
+                consultationType = (int)ShoppingCartConsultationType.Picture;
+            }
+            var list = await dalShoppingCartRegistration.GetAll()
+                .Where(o=>o.IsConsultation==true&&o.IsReturnBackPrice==false&&o.IsBadReview==false)
+                .Where(o => o.CreateDate >= startTime && o.CreateDate < endDate && o.ConsultationType == consultationType)
+                .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.LiveAnchorId)).ToListAsync();
+
+            var resultList = list.Select(x => new PerformanceInfoDateDto { Date = x.CreateDate, PerfomancePrice = x.Price }).ToList();
+            var returnResult = resultList.GroupBy(x => x.Date.Month).Select(x => new PerformanceInfoByDateDto { Date = x.Key.ToString(), PerfomancePrice = x.Count() }).ToList();
+            return returnResult;
+        }
         #endregion
     }
 }

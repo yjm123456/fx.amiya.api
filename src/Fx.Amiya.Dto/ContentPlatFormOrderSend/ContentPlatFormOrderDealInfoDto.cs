@@ -189,7 +189,7 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         public DateTime? ReturnBackDate { get; set; }
 
         /// <summary>
-        /// 面诊员状态id
+        /// 面诊状态id
         /// </summary>
         public int? ConsultationType { get; set; }
         /// <summary>

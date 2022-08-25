@@ -582,4 +582,28 @@ namespace Fx.Amiya.IService
        // VeryImportant=4
     }
     
+
+    public enum ShoppingCartConsultationType
+    {
+        /// <summary>
+        /// 视频
+        /// </summary>
+        Video=1,
+        /// <summary>
+        /// 图片
+        /// </summary>
+        Picture=2,
+        /// <summary>
+        /// 私信
+        /// </summary>
+        DirectMessages=3,
+        /// <summary>
+        /// 其他
+        /// </summary>
+        Others=4,
+        /// <summary>
+        /// 短视频
+        /// </summary>
+        ShortVideo=5
+    }
 }

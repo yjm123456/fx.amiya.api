@@ -850,10 +850,6 @@ namespace Fx.Amiya.Service
                 case 5:
                     inventoryStateText = "短视频";
                     break;
-
-                case 6:
-                    inventoryStateText = "其他";
-                    break;
             }
             return inventoryStateText;
         }
