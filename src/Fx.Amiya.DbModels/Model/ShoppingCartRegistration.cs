@@ -21,6 +21,8 @@ namespace Fx.Amiya.DbModels.Model
         public bool IsAddWeChat { get; set; }
         public bool IsWriteOff { get; set; }
         public bool IsConsultation { get; set; }
+
+        public DateTime? ConsultationDate { get; set; }
         public bool IsReturnBackPrice { get; set; }
         public string Remark { get; set; }
         public int CreateBy { get; set; }

@@ -218,6 +218,38 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public decimal SendOrderCompleteRate { get; set; }
 
+
+        /// <summary>
+        /// 新客上门目标
+        /// </summary>
+        public int NewCustomerVisitTarget { get; set; }
+
+        /// <summary>
+        /// 累计新客上门数
+        /// </summary>
+        public int CumulativeNewCustomerVisit { get; set; }
+
+        /// <summary>
+        /// 新客上门完成率
+        /// </summary>
+        public decimal NewCustomerVisitCompleteRate { get; set; }
+
+        /// <summary>
+        /// 老客上门目标
+        /// </summary>
+        public int OldCustomerVisitTarget { get; set; }
+
+        /// <summary>
+        /// 累计老客上门数
+        /// </summary>
+        public int CumulativeOldCustomerVisit { get; set; }
+
+        /// <summary>
+        /// 老客上门完成率
+        /// </summary>
+        public decimal OldCustomerVisitCompleteRate { get; set; }
+
+
         /// <summary>
         /// 上门目标
         /// </summary>
@@ -232,6 +264,39 @@ namespace Fx.Amiya.DbModels.Model
         /// 上门完成率
         /// </summary>
         public decimal VisitCompleteRate { get; set; }
+
+
+        /// <summary>
+        /// 新诊成交人数目标
+        /// </summary>
+        public int NewCustomerDealTarget { get; set; }
+
+        /// <summary>
+        /// 累计新诊成交人数
+        /// </summary>
+        public int CumulativeNewCustomerDealTarget { get; set; }
+
+        /// <summary>
+        /// 新诊成交率
+        /// </summary>
+        public decimal NewCustomerDealRate { get; set; }
+
+
+
+        /// <summary>
+        /// 老客成交人数目标
+        /// </summary>
+        public int OldCustomerDealTarget { get; set; }
+
+        /// <summary>
+        /// 累计老客成交人数
+        /// </summary>
+        public int CumulativeOldCustomerDealTarget { get; set; }
+
+        /// <summary>
+        /// 老客成交率
+        /// </summary>
+        public decimal OldCustomerDealRate { get; set; }
 
         /// <summary>
         /// 成交人数目标

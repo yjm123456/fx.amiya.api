@@ -90,6 +90,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    ConsultationType = d.ConsultationType,
                                                    IsWriteOff = d.IsWriteOff,
                                                    IsConsultation = d.IsConsultation,
+                                                   ConsultationDate=d.ConsultationDate,
                                                    IsAddWeChat = d.IsAddWeChat,
                                                    IsReturnBackPrice = d.IsReturnBackPrice,
                                                    Remark = d.Remark,
@@ -149,6 +150,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.IsWriteOff = addVo.IsWriteOff;
                 addDto.IsAddWeChat = addVo.IsAddWeChat;
                 addDto.IsConsultation = addVo.IsConsultation;
+                addDto.ConsultationDate = addVo.ConsultationDate;
                 addDto.IsReturnBackPrice = addVo.IsReturnBackPrice;
                 addDto.Remark = addVo.Remark;
                 addDto.CreateBy = addVo.AdmissionId;
@@ -198,6 +200,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.ConsultationType = shoppingCartRegistration.ConsultationType;
                 shoppingCartRegistrationVo.IsWriteOff = shoppingCartRegistration.IsWriteOff;
                 shoppingCartRegistrationVo.IsConsultation = shoppingCartRegistration.IsConsultation;
+                shoppingCartRegistrationVo.ConsultationDate = shoppingCartRegistration.ConsultationDate;
                 shoppingCartRegistrationVo.IsReturnBackPrice = shoppingCartRegistration.IsReturnBackPrice;
                 shoppingCartRegistrationVo.Remark = shoppingCartRegistration.Remark;
                 shoppingCartRegistrationVo.CreateByEmpId = shoppingCartRegistration.CreateBy;
@@ -250,6 +253,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.Price = updateVo.Price;
                 updateDto.ConsultationType = updateVo.ConsultationType;
                 updateDto.IsWriteOff = updateVo.IsWriteOff;
+                updateDto.ConsultationDate = updateVo.ConsultationDate;
                 updateDto.IsConsultation = updateVo.IsConsultation;
                 updateDto.IsReturnBackPrice = updateVo.IsReturnBackPrice;
                 updateDto.Remark = updateVo.Remark;

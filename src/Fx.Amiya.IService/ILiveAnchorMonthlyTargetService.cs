@@ -43,14 +43,7 @@ namespace Fx.Amiya.IService
         /// <param name="liveAnchorBaseId"></param>
         /// <returns></returns>
         Task<GroupPerformanceListDto> GetLiveAnchorBaseIdPerformance(int year, int month, string liveAnchorBaseId);
-
-        /// <summary>
-        /// 根据平台id获取折线图
-        /// </summary>
-        /// <param name="year"></param>
-        /// <param name="contentPlatFormId"></param>
-        /// <returns></returns>
-        Task<List<PerformanceBrokenLine>> GetLiveAnchorPerformanceBrokenLineAsync(int year, string contentPlatFormId);
+            
 
         /// <summary>
         /// 根据主播基础id按年月获取折线图
@@ -64,5 +57,24 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<PerformanceInfoByDateDto>> GetLiveAnchorCommercePerformance(int year, int month, List<int> liveAnchorIds);
+
+        /// <summary>
+        /// 基础业绩获取
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        Task<LiveAnchorBaseBusinessMonthTargetPerformanceDto> GetBasePerformanceTargetAsync(int year, int month, List<int> liveAnchorIds);
+
+
+        /// <summary>
+        /// 获取派单成交业绩目标
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        Task<LiveAnchorBaseBusinessMonthTargetSendOrDealDto> GetSendOrDealTargetAsync(int year, int month, List<int> liveAnchorIds);
     }
 }

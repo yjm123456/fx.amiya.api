@@ -80,6 +80,16 @@ namespace Fx.Amiya.IService
         Task<List<ContentPlatFormOrderDealInfoDto>> GetIndependentOrAssistPerformanceByYearAndMonth(int year, int month, bool? isAssist, List<int> LiveAnchorIds, int amiyaEmployeeId);
 
         /// <summary>
+        /// 获取主播客单价
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isOldCustomer"></param>
+        /// <param name="LiveAnchorIds"></param>
+        /// <returns></returns>
+        Task<List<PerformanceBrokenLine>> GetGuestUnitPricePerformanceBrokenLineAsync(int year, int month, bool? isOldCustomer, List<int> LiveAnchorIds);
+
+        /// <summary>
         /// 根据条件获取独立/协助业绩
         /// </summary>
         /// <param name="year"></param>

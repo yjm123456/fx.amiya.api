@@ -11,6 +11,7 @@ using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
 using Jd.Api.Util;
+using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -117,7 +118,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 PerformanceRatioVo newRatio = new PerformanceRatioVo
                 {
-                    PerformanceText = "新诊业绩",
+                    PerformanceText = "新客业绩",
                     PerformancePrice = performance.CurrentMonthNewCustomerPerformance,
                     PerformanceRatio = performance.NewCustomerPerformanceRatio
                 };
@@ -154,7 +155,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var comm = await amiyaPerformanceService.GetLiveAnchorCommercePerformanceByLiveAnchorIdAsync(year, month, null);
             performanceVo.CommercePerformanceData = comm.Select(c => new Vo.Performance.PerformanceListInfo { date = c.Date.ToString(), Performance = c.PerfomancePrice }).ToList();
 
-            #endregion
+            #endregion 
 
             return ResultData<PerformanceVo>.Success().AddData("performance", performanceVo);
         }
@@ -190,20 +191,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             groupPerformanceVo.GroupJinaPerformanceCompleteRate = groupPerformance.GroupJinaPerformanceCompleteRate;
             #endregion
 
-            #region 【合作达人业绩】
-            groupPerformanceVo.CooperationLiveAnchorPerformance = groupPerformance.CooperationLiveAnchorPerformance;
-            groupPerformanceVo.CooperationLiveAnchorPerformanceYearOnYear = groupPerformance.CooperationLiveAnchorPerformanceYearOnYear;
-            groupPerformanceVo.CooperationLiveAnchorPerformanceChainRatio = groupPerformance.CooperationLiveAnchorPerformanceChainRatio;
-            groupPerformanceVo.CooperationLiveAnchorPerformanceCompleteRate = groupPerformance.CooperationLiveAnchorPerformanceCompleteRate;
-            #endregion
-
-            #region 【黄V组业绩】
-            groupPerformanceVo.GroupYellowVPerformance = groupPerformance.GroupYellowVPerformance;
-            groupPerformanceVo.GroupYellowVPerformanceYearOnYear = groupPerformance.GroupYellowVPerformanceYearOnYear;
-            groupPerformanceVo.GroupYellowVPerformanceChainRatio = groupPerformance.GroupYellowVPerformanceChainRatio;
-            groupPerformanceVo.GroupYellowVPerformanceCompleteRate = groupPerformance.GroupYellowVPerformanceCompleteRate;
-            #endregion
-
             #region 【业绩占比】
 
             List<PerformanceRatioDto> ratioDtos = new List<PerformanceRatioDto>();
@@ -222,20 +209,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 PerformanceRatio = groupPerformance.AccountedForGroupJinaPerformance
             };
             ratioDtos.Add(jinaRatio);
-            PerformanceRatioDto cooperationLiveAnchorRatio = new PerformanceRatioDto
-            {
-                PerformanceText = "合作达人业绩",
-                PerformancePrice = groupPerformance.CooperationLiveAnchorPerformance,
-                PerformanceRatio = groupPerformance.AccountedForCooperationLiveAnchorPerformance
-            };
-            ratioDtos.Add(cooperationLiveAnchorRatio);
-            PerformanceRatioDto yellowVRatio = new PerformanceRatioDto
-            {
-                PerformanceText = "黄V组业绩",
-                PerformancePrice = groupPerformance.GroupYellowVPerformance,
-                PerformanceRatio = groupPerformance.AccountedForGroupYellowVPerformance
-            };
-            ratioDtos.Add(yellowVRatio);
 
             groupPerformanceVo.PerformanceRatios = ratioDtos.Select(d => new PerformanceRatioVo
             {
@@ -247,7 +220,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             #region 【折线图】
             //刀刀组业绩折线图
-            var historySendThisMonthDealOrderList = await amiyaPerformanceService.GetLiveAnchorPerformanceByBaseIdAsync(year, month, "刀刀");
+            var historySendThisMonthDealOrderList = await amiyaPerformanceService.GetNewOrOldPerformanceBrokenLineAsync(year, month, null, "刀刀");
             groupPerformanceVo.GroupDaoDaoPerformanceData = historySendThisMonthDealOrderList.Select(data => new Vo.Performance.PerformanceListInfo
             {
                 date = data.Date,
@@ -255,26 +228,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             }).ToList();
 
             //吉娜组业绩折线图
-            var thisMonthSendThisMonthDealOrderList = await amiyaPerformanceService.GetLiveAnchorPerformanceByBaseIdAsync(year, month, "吉娜");
+            var thisMonthSendThisMonthDealOrderList = await amiyaPerformanceService.GetNewOrOldPerformanceBrokenLineAsync(year, month, null, "吉娜");
             groupPerformanceVo.GroupJinaPerformanceData = thisMonthSendThisMonthDealOrderList.Select(data => new Vo.Performance.PerformanceListInfo
             {
                 date = data.Date,
                 Performance = data.PerfomancePrice
             }).ToList();
-            //合作达人业绩折线图
-            var cooperationLiveAnchorBorkenLines = await amiyaPerformanceService.GetLiveAnchorPerformanceAsync(year, month, "d2e71501-7327-4883-9294-371a77c4cabd");
-            groupPerformanceVo.CooperationLiveAnchorPerformanceData = cooperationLiveAnchorBorkenLines.Select(data => new Vo.Performance.PerformanceListInfo
-            {
-                date = data.Date,
-                Performance = data.PerfomancePrice
-            }).ToList();
-            //黄V组业绩折线图
-            var yellowVBorkenLines = await amiyaPerformanceService.GetLiveAnchorPerformanceAsync(year, month, "2bd8b9ad-afd7-4982-b783-fcad7d342f11");
-            groupPerformanceVo.GroupYellowVPerformanceData = yellowVBorkenLines.Select(data => new Vo.Performance.PerformanceListInfo
-            {
-                date = data.Date,
-                Performance = data.PerfomancePrice
-            }).ToList();
+
             #endregion
 
             return ResultData<GroupPerformanceVo>.Success().AddData("performance", groupPerformanceVo);
@@ -541,15 +501,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 面诊业绩
         /// </summary>
-        /// <param name="year"></param>
-        /// <param name="month"></param>
+        /// <param name="year">登记日期年</param>
+        /// <param name="month">登记日期月</param>
         /// <param name="liveAnchorName">中文主播名字（刀刀，吉娜）</param>
         /// <returns></returns>
         [HttpGet("consultationPerformanceByLiveAnchorName")]
         public async Task<ResultData<ConsultationPerformanceVo>> GetConsultationPerformanceByLiveAnchorNameAsync(int year, int month, string liveAnchorName)
         {
             //获取当前月同比,环比等数据
-            var performance = await amiyaPerformanceService.GetShoppingCartPerformanceByLiveAnchorNameAsync(year, month, liveAnchorName);
+            var performance = await amiyaPerformanceService.GetContentPlatFormOrderPerformanceByLiveAnchorNameAsync(year, month, liveAnchorName);
             ConsultationPerformanceVo performanceVo = new ConsultationPerformanceVo();
 
             #region 【照片面诊数据】
@@ -691,7 +651,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             #endregion
 
             #region 【折线图】
-            var liveAnchorIndependenceBrokenLine = await amiyaPerformanceService.GetIndependenceOrAssistAsync(year, month, false, liveAnchorName,true);
+            var liveAnchorIndependenceBrokenLine = await amiyaPerformanceService.GetIndependenceOrAssistAsync(year, month, false, liveAnchorName, true);
             performanceVo.LiveAnchorIndenpendentPerformanceBrokenLine = liveAnchorIndependenceBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
             {
                 date = data.Date,
@@ -719,19 +679,549 @@ namespace Fx.Amiya.Background.Api.Controllers
         #endregion
 
         #region 【基础经营看板】
+        /// <summary>
+        /// 基础经营看板
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorName">中文主播名字（刀刀，吉娜）</param>
+        /// <returns></returns>
+        [HttpGet("baseBusinessPerformance")]
+        public async Task<ResultData<BaseBusinessPerformanceVo>> GetBaseBusinessPerformanceByLiveAnchorNameAsync(int year, int month, string liveAnchorName)
+        {
+            //获取当前月同比,环比等数据
+            var performance = await amiyaPerformanceService.GetBaseBusinessPerformanceByLiveAnchorNameAsync(year, month, liveAnchorName);
+            BaseBusinessPerformanceVo performanceVo = new BaseBusinessPerformanceVo();
 
+            #region 【加v】
+            performanceVo.AddWeChatNum = performance.AddWeChatNum;
+
+            performanceVo.AddWeChatNumRatioVo = performance.AddWeChatNumRatioVo;
+
+            performanceVo.AddWeChatNumTargetComplete = performance.AddWeChatNumTargetComplete;
+
+            performanceVo.AddWeChatNumYearOnYear = performance.AddWeChatNumYearOnYear;
+            #endregion
+
+            #region 【面诊卡下单】
+            performanceVo.ConsulationCardNum = performance.ConsulationCardNum;
+
+            performanceVo.ConsulationCardNumYearOnYear = performance.ConsulationCardNumYearOnYear;
+
+            performanceVo.ConsulationCardNumRatioVo = performance.ConsulationCardNumRatioVo;
+
+            performanceVo.ConsulationCardNumTargetComplete = performance.ConsulationCardNumTargetComplete;
+            #endregion
+
+            #region 【当月面诊卡消耗】
+            performanceVo.ThisMonthConsulationCardConsumedNum = performance.ThisMonthConsulationCardConsumedNum;
+
+            performanceVo.ThisMonthConsulationCardConsumedNumYearOnYear = performance.ThisMonthConsulationCardConsumedNumYearOnYear;
+
+            performanceVo.ThisMonthConsulationCardConsumedNumRatioVo = performance.ThisMonthConsulationCardConsumedNumRatioVo;
+
+            performanceVo.ThisMonthConsulationCardConsumedNumTargetComplete = performance.ThisMonthConsulationCardConsumedNumTargetComplete;
+            #endregion
+
+            #region 【历史面诊卡消耗】
+            performanceVo.HistoryConsulationCardConsumedNum = performance.HistoryConsulationCardConsumedNum;
+
+            performanceVo.HistoryConsulationCardConsumedNumYearOnYear = performance.HistoryConsulationCardConsumedNumYearOnYear;
+
+            performanceVo.HistoryConsulationCardConsumedNumRatioVo = performance.HistoryConsulationCardConsumedNumRatioVo;
+
+            performanceVo.HistoryConsulationCardConsumedNumTargetComplete = performance.HistoryConsulationCardConsumedNumTargetComplete;
+            #endregion
+
+            #region 【当月面诊卡退单】
+            performanceVo.ThisMonthConsulationCardRefundNum = performance.ThisMonthConsulationCardRefundNum;
+
+            performanceVo.ThisMonthConsulationCardRefundNumYearOnYear = performance.ThisMonthConsulationCardRefundNumYearOnYear;
+
+            performanceVo.ThisMonthConsulationCardRefundNumRatioVo = performance.ThisMonthConsulationCardRefundNumRatioVo;
+
+            performanceVo.ThisMonthConsulationCardRefundNumTargetComplete = performance.ThisMonthConsulationCardRefundNumTargetComplete;
+            #endregion
+
+            #region 【库存面诊卡退单】
+            performanceVo.HistoryConsulationCardRefundNum = performance.HistoryConsulationCardRefundNum;
+
+            performanceVo.HistoryConsulationCardRefundNumYearOnYear = performance.HistoryConsulationCardRefundNumYearOnYear;
+
+            performanceVo.HistoryConsulationCardRefundNumRatioVo = performance.HistoryConsulationCardRefundNumRatioVo;
+
+            #endregion
+
+            #region 【面诊卡库存量】
+            performanceVo.ConsulationCardInventoryNum = performance.ConsulationCardInventoryNum;
+            #endregion
+
+            #region 【折线图】
+
+            var addWechatBrokenLine = await amiyaPerformanceService.GetBaseBusinessPerformanceBrokenLineAsync(year, month, null, null, true, null, liveAnchorName);
+            performanceVo.AddWechatBrokenLine = addWechatBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            var consulationCardNumBrokenLine = await amiyaPerformanceService.GetBaseBusinessPerformanceBrokenLineAsync(year, month, null, null, null, null, liveAnchorName);
+            performanceVo.ConsulationCardNumBrokenLine = consulationCardNumBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            var thisMonthConsulationCardConsumedNumBrokenLine = await amiyaPerformanceService.GetBaseBusinessPerformanceBrokenLineAsync(year, month, false, null, null, true, liveAnchorName);
+            performanceVo.ThisMonthConsulationCardConsumedNumBrokenLine = thisMonthConsulationCardConsumedNumBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            var historyConsulationCardConsumedNumBrokenLine = await amiyaPerformanceService.GetBaseBusinessPerformanceBrokenLineAsync(year, month, true, null, null, true, liveAnchorName);
+            performanceVo.HistoryConsulationCardConsumedNumBrokenLine = historyConsulationCardConsumedNumBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            var thisMonthConsulationCardRefundNumBrokenLine = await amiyaPerformanceService.GetBaseBusinessPerformanceBrokenLineAsync(year, month, null, false, null, null, liveAnchorName);
+            performanceVo.ThisMonthConsulationCardRefundNumBrokenLine = thisMonthConsulationCardRefundNumBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            var historyConsulationCardRefundNumBrokenLine = await amiyaPerformanceService.GetBaseBusinessPerformanceBrokenLineAsync(year, month, null, true, null, null, liveAnchorName);
+            performanceVo.HistoryConsulationCardRefundNumBrokenLine = historyConsulationCardRefundNumBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+
+
+            #endregion
+
+            return ResultData<BaseBusinessPerformanceVo>.Success().AddData("performance", performanceVo);
+        }
         #endregion
 
         #region 【派单成交经营看板】
+        /// <summary>
+        /// 派单成交经营看板
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorName">中文主播名字（刀刀，吉娜）</param>
+        /// <returns></returns>
+        [HttpGet("sendAndDealNumPerformance")]
+        public async Task<ResultData<SendOrDealPerformanceVo>> GetSendAndDealNumPerformanceByLiveAnchorNameAsync(int year, int month, string liveAnchorName)
+        {
+            SendOrDealPerformanceVo performanceVo = new SendOrDealPerformanceVo();
 
+            //获取当前月同比,环比等数据
+            var performance = await amiyaPerformanceService.GetSendOrDealByLiveAnchorAsync(year, month, liveAnchorName);
+
+            #region 【派单数】
+            performanceVo.SendOrderNum = performance.SendOrderNum;
+
+            performanceVo.SendOrderNumYearOnYear = performance.SendOrderNumYearOnYear;
+
+            performanceVo.SendOrderNumChainRatio = performance.SendOrderNumChainRatio;
+
+            performanceVo.SendOrderNumCompleteRate = performance.SendOrderNumCompleteRate;
+            #endregion
+
+            #region 【总上门数】
+            performanceVo.TotalVisitNum = performance.TotalVisitNum;
+
+            performanceVo.TotalVisitNumYearOnYear = performance.TotalVisitNumYearOnYear;
+
+            performanceVo.TotalVisitNumChainRatio = performance.TotalVisitNumChainRatio;
+
+            performanceVo.TotalVisitNumCompleteRate = performance.TotalVisitNumCompleteRate;
+            #endregion
+
+
+            #region 【新客上门数】
+            performanceVo.NewCustomerVisitNum = performance.NewCustomerVisitNum;
+
+            performanceVo.NewCustomerVisitNumYearOnYear = performance.NewCustomerVisitNumYearOnYear;
+
+            performanceVo.NewCustomerVisitNumChainRatio = performance.NewCustomerVisitNumChainRatio;
+
+            performanceVo.NewCustomerVisitNumCompleteRate = performance.NewCustomerVisitNumCompleteRate;
+            #endregion
+
+
+            #region 【老客上门数】
+            performanceVo.OldCustomerVisitNum = performance.OldCustomerVisitNum;
+
+            performanceVo.OldCustomerVisitNumYearOnYear = performance.OldCustomerVisitNumYearOnYear;
+
+            performanceVo.OldCustomerVisitNumChainRatio = performance.OldCustomerVisitNumChainRatio;
+
+            performanceVo.OldCustomerVisitNumCompleteRate = performance.OldCustomerVisitNumCompleteRate;
+            #endregion
+
+
+            #region 【总成交数】
+            performanceVo.TotalDealNum = performance.TotalDealNum;
+
+            performanceVo.TotalDealNumYearOnYear = performance.TotalDealNumYearOnYear;
+
+            performanceVo.TotalDealNumChainRatio = performance.TotalDealNumChainRatio;
+
+            performanceVo.TotalDealNumCompleteRate = performance.TotalDealNumCompleteRate;
+            #endregion
+
+
+            #region 【新客成交数】
+            performanceVo.NewCustomerDealNum = performance.NewCustomerDealNum;
+
+            performanceVo.NewCustomerDealNumYearOnYear = performance.NewCustomerDealNumYearOnYear;
+
+            performanceVo.NewCustomerDealNumChainRatio = performance.NewCustomerDealNumChainRatio;
+
+            performanceVo.NewCustomerDealNumCompleteRate = performance.NewCustomerDealNumCompleteRate;
+            #endregion
+
+
+            #region 【老客成交数】
+            performanceVo.OldCustomerDealNum = performance.OldCustomerDealNum;
+
+            performanceVo.OldCustomerDealNumYearOnYear = performance.OldCustomerDealNumYearOnYear;
+
+            performanceVo.OldCustomerDealNumChainRatio = performance.OldCustomerDealNumChainRatio;
+
+            performanceVo.OldCustomerDealNumCompleteRate = performance.OldCustomerDealNumCompleteRate;
+            #endregion
+
+            #region 【折线图】
+
+
+            //开始月份
+            DateTime currentDate = new DateTime(year, 1, 1);
+            //结束月份
+            DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
+            //分组派单情况
+            var sendOrder = await amiyaPerformanceService.GetSendOrDealBrokenLineAsync(true, null, null, null, liveAnchorName);
+            //派单结果
+            var sendResult = sendOrder.Where(d => d.SendDate.HasValue == true && d.SendDate.Value >= currentDate && d.SendDate.Value < endDate).ToList();
+            //派单折线图转换
+            var sendOrderBrokenLine = sendResult.GroupBy(x => x.SendDate.Value.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Count() }).ToList();
+            var changeSendOrderBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, sendOrderBrokenLine);
+            performanceVo.SendOrderBrokenLine = changeSendOrderBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            //总上门结果
+            var totalVisitInfo = sendOrder.Where(d => d.IsToHospital == true && d.ToHospitalDate.HasValue == true && d.ToHospitalDate.Value >= currentDate && d.ToHospitalDate.Value < endDate);
+            //总上门折线图转换
+            var totalVisitBrokenLine = totalVisitInfo.GroupBy(x => x.ToHospitalDate.Value.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Count() }).ToList();
+            var changetotalVisitBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, totalVisitBrokenLine);
+            performanceVo.TotalVisitBrokenLine = changetotalVisitBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            var newCustomerVisitInfo = totalVisitInfo.Where(x => x.IsOldCustomer == false);
+            //新客上门折线图转换
+            var newCustomerVisitBrokenLine = newCustomerVisitInfo.GroupBy(x => x.ToHospitalDate.Value.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Count() }).ToList();
+            var changenewCustomerVisitBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, newCustomerVisitBrokenLine);
+            performanceVo.NewCustomerVisitBrokenLine = changenewCustomerVisitBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            var oldCustomerVisitInfo = totalVisitInfo.Where(x => x.IsOldCustomer == true);
+            //老客上门折线图转换
+            var oldCustomerVisitBrokenLine = oldCustomerVisitInfo.GroupBy(x => x.ToHospitalDate.Value.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Count() }).ToList();
+            var changeoldCustomerVisitBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, oldCustomerVisitBrokenLine);
+            performanceVo.OldCustomerVisitBrokenLine = changeoldCustomerVisitBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+
+            //总成交结果
+            var totalDealInfo = sendOrder.Where(d => d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete && d.DealDate.HasValue == true && d.DealDate.Value >= currentDate && d.DealDate.Value < endDate);
+            //总成交折线图转换
+            var totalDealBrokenLine = totalDealInfo.GroupBy(x => x.DealDate.Value.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Count() }).ToList();
+            var changetotalDealBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, totalDealBrokenLine);
+            performanceVo.TotalDealBrokenLine = changetotalDealBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            var newCustomerDealInfo = totalDealInfo.Where(x => x.IsOldCustomer == false);
+            //新客成交折线图转换
+            var newCustomerDealBrokenLine = newCustomerDealInfo.GroupBy(x => x.DealDate.Value.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Count() }).ToList();
+            var changenewCustomerDealBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, newCustomerDealBrokenLine);
+            performanceVo.NewCustomerDealBrokenLine = changenewCustomerDealBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            var oldCustomerDealInfo = totalDealInfo.Where(x => x.IsOldCustomer == true);
+            //老客成交折线图转换
+            var oldCustomerDealBrokenLine = oldCustomerDealInfo.GroupBy(x => x.DealDate.Value.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Count() }).ToList();
+            var changeoldCustomerDealBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, oldCustomerDealBrokenLine);
+            performanceVo.OldCustomerDealBrokenLine = changeoldCustomerDealBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+            #endregion
+
+            return ResultData<SendOrDealPerformanceVo>.Success().AddData("performance", performanceVo);
+        }
         #endregion
 
         #region 【客单价经营看板】
+        /// <summary>
+        /// 客单价经营看板
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorName">中文主播名字（刀刀，吉娜）</param>
+        /// <returns></returns>
+        [HttpGet("GuestUnitPricePerformanceByLiveAnchorName")]
+        public async Task<ResultData<GuestUnitPricePerformanceVo>> GetGuestUnitPricePerformanceByLiveAnchorNameAsync(int year, int month, string liveAnchorName)
+        {
+            //获取当前月同比,环比等数据
+            var performance = await amiyaPerformanceService.GetGuestUnitPricePerformanceByLiveAnchorAsync(year, month, liveAnchorName);
+            GuestUnitPricePerformanceVo performanceVo = new GuestUnitPricePerformanceVo();
+
+            #region 【总客单价】
+            performanceVo.TotalGuestUnitPricePerformance = performance.TotalGuestUnitPricePerformance;
+
+            performanceVo.TotalGuestUnitPricePerformanceYearOnYear = performance.TotalGuestUnitPricePerformanceYearOnYear;
+
+            performanceVo.TotalGuestUnitPricePerformanceChainRatio = performance.TotalGuestUnitPricePerformanceChainRatio;
+            #endregion
+
+            #region 【新诊客单价】
+            performanceVo.NewGuestUnitPricePerformance = performance.NewGuestUnitPricePerformance;
+
+            performanceVo.NewGuestUnitPricePerformanceYearOnYear = performance.NewGuestUnitPricePerformanceYearOnYear;
+
+            performanceVo.NewGuestUnitPricePerformanceChainRatio = performance.NewGuestUnitPricePerformanceChainRatio;
+            #endregion
+
+            #region 【老客客单价】
+            performanceVo.OldGuestUnitPricePerformance = performance.OldGuestUnitPricePerformance;
+
+            performanceVo.OldGuestUnitPricePerformanceYearOnYear = performance.OldGuestUnitPricePerformanceYearOnYear;
+
+            performanceVo.OldGuestUnitPricePerformanceChainRatio = performance.OldGuestUnitPricePerformanceChainRatio;
+            #endregion
+
+
+            #region 【折线图】
+            var liveAnchorIndependenceBrokenLine = await amiyaPerformanceService.GetGuestUnitPricePerformanceAsync(year, month, null, liveAnchorName);
+            performanceVo.TotalGuestUnitPricePerformanceBrokenLine = liveAnchorIndependenceBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            var customerServiceIndependenceBrokenLine = await amiyaPerformanceService.GetGuestUnitPricePerformanceAsync(year, month, false, liveAnchorName);
+            performanceVo.NewGuestUnitPricePerformanceBrokenLine = customerServiceIndependenceBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            var customerServiceAssistBrokenLine = await amiyaPerformanceService.GetGuestUnitPricePerformanceAsync(year, month, true, liveAnchorName);
+            performanceVo.OldGuestUnitPricePerformanceBrokenLine = customerServiceAssistBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            #endregion
+
+            return ResultData<GuestUnitPricePerformanceVo>.Success().AddData("performance", performanceVo);
+        }
+
+
 
         #endregion
 
-        #region 【派单成交经营看板】
+        #region 【各版块占比看板】
+        /// <summary>
+        /// 各版块占比看板
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorName">中文主播名字（刀刀，吉娜）</param>
+        /// <returns></returns>
+        [HttpGet("performanceCompleteRate")]
+        public async Task<ResultData<GroupTargetCompleteRateVo>> GetPerformanceCompleteRateByLiveAnchorNameAsync(int year, int month, string liveAnchorName)
+        {
+            //获取当前月同比,环比等数据
+            var performance = await amiyaPerformanceService.GetPerformanceCompleteRateByLiveAnchorNameAsync(year, month, liveAnchorName);
+            GroupTargetCompleteRateVo performanceVo = new GroupTargetCompleteRateVo();
 
+            #region 【加v】
+            performanceVo.AddWeChatCompleteRate = performance.AddWeChatCompleteRate;
+
+            performanceVo.AddWeChatCompleteRateYearOnYear = performance.AddWeChatCompleteRateYearOnYear;
+
+            performanceVo.AddWeChatCompleteRateChainRatio = performance.AddWeChatCompleteRateChainRatio;
+
+            performanceVo.AddWeChatCompleteRateTarget = performance.AddWeChatCompleteRateTarget;
+            #endregion
+
+            #region 【下单面诊卡消耗率】
+            performanceVo.ConsulationCardUsedCompleteRate = performance.ConsulationCardUsedCompleteRate;
+
+            performanceVo.ConsulationCardUsedCompleteRateYearOnYear = performance.ConsulationCardUsedCompleteRateYearOnYear;
+
+            performanceVo.ConsulationCardUsedCompleteRateChainRatio = performance.ConsulationCardUsedCompleteRateChainRatio;
+
+            performanceVo.ConsulationCardUsedCompleteRateTarget = performance.ConsulationCardUsedCompleteRateTarget;
+            #endregion
+
+            #region 【派单率】
+            performanceVo.SendOrderCompleteRate = performance.SendOrderCompleteRate;
+
+            performanceVo.SendOrderCompleteRateChainRatio = performance.SendOrderCompleteRateChainRatio;
+
+            performanceVo.SendOrderCompleteRateYearOnYear = performance.SendOrderCompleteRateYearOnYear;
+
+            performanceVo.SendOrderCompleteRateTarget = performance.SendOrderCompleteRateTarget;
+            #endregion
+
+            #region 【新客上门率】
+            performanceVo.NewCustomerVisitCompleteRate = performance.NewCustomerVisitCompleteRate;
+
+            performanceVo.NewCustomerVisitCompleteRateYearOnYear = performance.NewCustomerVisitCompleteRateYearOnYear;
+
+            performanceVo.NewCustomerVisitCompleteRateChainRatio = performance.NewCustomerVisitCompleteRateChainRatio;
+
+            performanceVo.NewCustomerVisitCompleteRateTarget = performance.NewCustomerVisitCompleteRateTarget;
+            #endregion
+
+            #region 【新客成交率】
+            performanceVo.NewCustomerDealCompleteRate = performance.NewCustomerDealCompleteRate;
+
+            performanceVo.NewCustomerDealCompleteRateYearOnYear = performance.NewCustomerDealCompleteRateYearOnYear;
+
+            performanceVo.NewCustomerDealCompleteRateChainRatio = performance.NewCustomerDealCompleteRateChainRatio;
+
+            performanceVo.NewCustomerDealCompleteRateTarget = performance.NewCustomerDealCompleteRateTarget;
+            #endregion
+
+            #region 【当月面诊卡退单率】
+            performanceVo.ThisMonthConsulationCardRefundCompleteRate = performance.ThisMonthConsulationCardRefundCompleteRate;
+
+            performanceVo.ThisMonthConsulationCardRefundCompleteRateYearOnYear = performance.ThisMonthConsulationCardRefundCompleteRateYearOnYear;
+
+            performanceVo.ThisMonthConsulationCardRefundCompleteRateChainRatio = performance.ThisMonthConsulationCardRefundCompleteRateChainRatio;
+
+            performanceVo.ThisMonthConsulationCardRefundCompleteRateTarget = performance.ThisMonthConsulationCardRefundCompleteRateTarget;
+
+            #endregion
+
+            #region 【历史面诊卡退单率】
+            performanceVo.HistoryConsulationCardRefundCompleteRate = performance.HistoryConsulationCardRefundCompleteRate;
+
+            performanceVo.HistoryConsulationCardRefundCompleteRateYearOnYear = performance.HistoryConsulationCardRefundCompleteRateYearOnYear;
+
+            performanceVo.HistoryConsulationCardRefundCompleteRateChainRatio = performance.HistoryConsulationCardRefundCompleteRateChainRatio;
+
+            performanceVo.HistoryConsulationCardRefundCompleteRateTarget = performance.HistoryConsulationCardRefundCompleteRateTarget;
+
+            #endregion
+
+            #region 【折线图】
+
+            var addWechatBrokenLine = await amiyaPerformanceService.GetBaseBusinessPerformanceBrokenLineAsync(year, month, null, null, true, null, liveAnchorName);
+            performanceVo.AddWeChatCompleteRateBrokenLine = addWechatBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            var thisMonthConsulationCardConsumedNumBrokenLine = await amiyaPerformanceService.GetBaseBusinessPerformanceBrokenLineAsync(year, month, false, null, null, true, liveAnchorName);
+            performanceVo.ConsulationCardUsedCompleteRateBrokenLine = thisMonthConsulationCardConsumedNumBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+
+            //开始月份
+            DateTime currentDate = new DateTime(year, 1, 1);
+            //结束月份
+            DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
+            //分组派单情况
+            var sendOrder = await amiyaPerformanceService.GetSendOrDealBrokenLineAsync(true, null, null, null, liveAnchorName);
+            //派单结果
+            var sendResult = sendOrder.Where(d => d.SendDate.HasValue == true && d.SendDate.Value >= currentDate && d.SendDate.Value < endDate).ToList();
+            //派单折线图转换
+            var sendOrderBrokenLine = sendResult.GroupBy(x => x.SendDate.Value.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Count() }).ToList();
+            var changeSendOrderBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, sendOrderBrokenLine);
+            performanceVo.SendOrderCompleteRateBrokenLine = changeSendOrderBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            //总上门结果
+            var newCustomerVisitInfo = sendOrder.Where(d => d.IsToHospital == true && d.IsOldCustomer == false && d.ToHospitalDate.HasValue == true && d.ToHospitalDate.Value >= currentDate && d.ToHospitalDate.Value < endDate);
+            //新客上门折线图转换
+            var newCustomerVisitBrokenLine = newCustomerVisitInfo.GroupBy(x => x.ToHospitalDate.Value.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Count() }).ToList();
+            var changenewCustomerVisitBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, newCustomerVisitBrokenLine);
+            performanceVo.NewCustomerVisitCompleteRateBrokenLine = changenewCustomerVisitBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+
+            //总成交结果
+            var newCustomerDealInfo = sendOrder.Where(d => d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete && d.IsOldCustomer == false && d.DealDate.HasValue == true && d.DealDate.Value >= currentDate && d.DealDate.Value < endDate);
+            //新客成交折线图转换
+            var newCustomerDealBrokenLine = newCustomerDealInfo.GroupBy(x => x.DealDate.Value.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Count() }).ToList();
+            var changenewCustomerDealBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, newCustomerDealBrokenLine);
+            performanceVo.NewCustomerDealCompleteRateBrokenLine = changenewCustomerDealBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            var thisMonthConsulationCardRefundNumBrokenLine = await amiyaPerformanceService.GetBaseBusinessPerformanceBrokenLineAsync(year, month, null, false, null, null, liveAnchorName);
+            performanceVo.ThisMonthConsulationCardRefundCompleteRateBrokenLine = thisMonthConsulationCardRefundNumBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+            var historyConsulationCardRefundNumBrokenLine = await amiyaPerformanceService.GetBaseBusinessPerformanceBrokenLineAsync(year, month, null, true, null, null, liveAnchorName);
+            performanceVo.HistoryConsulationCardRefundCompleteRateBrokenLine = historyConsulationCardRefundNumBrokenLine.Select(data => new Vo.Performance.PerformanceListInfo
+            {
+                date = data.Date,
+                Performance = data.PerfomancePrice
+            }).ToList();
+
+
+
+            #endregion
+
+            return ResultData<GroupTargetCompleteRateVo>.Success().AddData("performance", performanceVo);
+        }
         #endregion
 
         #endregion

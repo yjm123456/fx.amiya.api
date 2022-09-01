@@ -222,6 +222,39 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
         public decimal SendOrderCompleteRate { get; set; }
 
+
+
+        /// <summary>
+        /// 新客上门目标
+        /// </summary>
+        public int NewCustomerVisitTarget { get; set; }
+
+        /// <summary>
+        /// 累计新客上门数
+        /// </summary>
+        public int CumulativeNewCustomerVisit { get; set; }
+
+        /// <summary>
+        /// 新客上门完成率
+        /// </summary>
+        public decimal NewCustomerVisitCompleteRate { get; set; }
+
+        /// <summary>
+        /// 老客上门目标
+        /// </summary>
+        public int OldCustomerVisitTarget { get; set; }
+
+        /// <summary>
+        /// 累计老客上门数
+        /// </summary>
+        public int CumulativeOldCustomerVisit { get; set; }
+
+        /// <summary>
+        /// 老客上门完成率
+        /// </summary>
+        public decimal OldCustomerVisitCompleteRate { get; set; }
+
+
         /// <summary>
         /// 上门目标
         /// </summary>
@@ -237,20 +270,37 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
         public decimal VisitCompleteRate { get; set; }
 
-        /// <summary>
-        /// 带货结算佣金目标
-        /// </summary>
-        public decimal CargoSettlementCommissionTarget { get; set; }
 
         /// <summary>
-        /// 月累计带货结算佣金金额
+        /// 新诊成交人数目标
         /// </summary>
-        public decimal CumulativeCargoSettlementCommission { get; set; }
+        public int NewCustomerDealTarget { get; set; }
 
         /// <summary>
-        /// 带货结算佣金完成率
+        /// 累计新诊成交人数
         /// </summary>
-        public decimal CargoSettlementCommissionCompleteRate { get; set; }
+        public int CumulativeNewCustomerDealTarget { get; set; }
+
+        /// <summary>
+        /// 新诊成交率
+        /// </summary>
+        public decimal NewCustomerDealRate { get; set; }
+
+        /// <summary>
+        /// 老客成交人数目标
+        /// </summary>
+        public int OldCustomerDealTarget { get; set; }
+
+        /// <summary>
+        /// 累计老客成交人数
+        /// </summary>
+        public int CumulativeOldCustomerDealTarget { get; set; }
+
+        /// <summary>
+        /// 老客成交率
+        /// </summary>
+        public decimal OldCustomerDealRate { get; set; }
+
         /// <summary>
         /// 成交人数目标
         /// </summary>
@@ -265,6 +315,21 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 成交率
         /// </summary>
         public decimal DealRate { get; set; }
+
+        /// <summary>
+        /// 带货结算佣金目标
+        /// </summary>
+        public decimal CargoSettlementCommissionTarget { get; set; }
+
+        /// <summary>
+        /// 月累计带货结算佣金金额
+        /// </summary>
+        public decimal CumulativeCargoSettlementCommission { get; set; }
+
+        /// <summary>
+        /// 带货结算佣金完成率
+        /// </summary>
+        public decimal CargoSettlementCommissionCompleteRate { get; set; }
         /// <summary>
         /// 新诊业绩目标
         /// </summary>

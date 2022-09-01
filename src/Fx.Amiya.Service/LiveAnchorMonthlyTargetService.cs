@@ -103,9 +103,21 @@ namespace Fx.Amiya.Service
                                                   SendOrderTarget = d.SendOrderTarget,
                                                   CumulativeSendOrder = d.CumulativeSendOrder,
                                                   SendOrderCompleteRate = d.SendOrderCompleteRate,
+                                                  NewCustomerVisitTarget = d.NewCustomerVisitTarget,
+                                                  CumulativeNewCustomerVisit = d.CumulativeNewCustomerVisit,
+                                                  NewCustomerVisitCompleteRate = d.NewCustomerVisitCompleteRate,
+                                                  OldCustomerVisitTarget = d.OldCustomerVisitTarget,
+                                                  CumulativeOldCustomerVisit = d.CumulativeOldCustomerVisit,
+                                                  OldCustomerVisitCompleteRate = d.OldCustomerVisitCompleteRate,
                                                   VisitTarget = d.VisitTarget,
                                                   CumulativeVisit = d.CumulativeVisit,
                                                   VisitCompleteRate = d.VisitCompleteRate,
+                                                  NewCustomerDealTarget = d.NewCustomerDealTarget,
+                                                  CumulativeNewCustomerDealTarget = d.CumulativeNewCustomerDealTarget,
+                                                  NewCustomerDealRate = d.NewCustomerDealRate,
+                                                  OldCustomerDealTarget = d.OldCustomerDealTarget,
+                                                  CumulativeOldCustomerDealTarget = d.CumulativeOldCustomerDealTarget,
+                                                  OldCustomerDealRate = d.OldCustomerDealRate,
                                                   DealTarget = d.DealTarget,
                                                   CumulativeDealTarget = d.CumulativeDealTarget,
                                                   DealRate = d.DealRate,
@@ -191,9 +203,27 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.SendOrderTarget = addDto.SendOrderTarget;
                 liveAnchorMonthlyTarget.CumulativeSendOrder = 0;
                 liveAnchorMonthlyTarget.SendOrderCompleteRate = 0.00M;
+
+                liveAnchorMonthlyTarget.NewCustomerVisitTarget = addDto.NewCustomerVisitTarget;
+                liveAnchorMonthlyTarget.CumulativeNewCustomerVisit = 0;
+                liveAnchorMonthlyTarget.NewCustomerVisitCompleteRate = 0.00M;
+
+                liveAnchorMonthlyTarget.OldCustomerVisitTarget = addDto.OldCustomerVisitTarget;
+                liveAnchorMonthlyTarget.CumulativeOldCustomerVisit = 0;
+                liveAnchorMonthlyTarget.OldCustomerVisitCompleteRate = 0.00M;
+
                 liveAnchorMonthlyTarget.VisitTarget = addDto.VisitTarget;
                 liveAnchorMonthlyTarget.CumulativeVisit = 0;
                 liveAnchorMonthlyTarget.VisitCompleteRate = 0.00M;
+
+                liveAnchorMonthlyTarget.NewCustomerDealTarget = addDto.NewCustomerDealTarget;
+                liveAnchorMonthlyTarget.CumulativeNewCustomerDealTarget = 0;
+                liveAnchorMonthlyTarget.NewCustomerDealRate = 0.00M;
+
+                liveAnchorMonthlyTarget.OldCustomerDealTarget = addDto.OldCustomerDealTarget;
+                liveAnchorMonthlyTarget.CumulativeOldCustomerDealTarget = 0;
+                liveAnchorMonthlyTarget.OldCustomerDealRate = 0.00M;
+
                 liveAnchorMonthlyTarget.DealTarget = addDto.DealTarget;
                 liveAnchorMonthlyTarget.CumulativeDealTarget = 0;
                 liveAnchorMonthlyTarget.DealRate = 0.00M;
@@ -305,12 +335,31 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.SendOrderTarget = liveAnchorMonthlyTarget.SendOrderTarget;
                 liveAnchorMonthlyTargetDto.CumulativeSendOrder = liveAnchorMonthlyTarget.CumulativeSendOrder;
                 liveAnchorMonthlyTargetDto.SendOrderCompleteRate = liveAnchorMonthlyTarget.SendOrderCompleteRate;
+
+                liveAnchorMonthlyTargetDto.NewCustomerVisitTarget = liveAnchorMonthlyTarget.NewCustomerVisitTarget;
+                liveAnchorMonthlyTargetDto.CumulativeNewCustomerVisit = liveAnchorMonthlyTarget.CumulativeNewCustomerVisit;
+                liveAnchorMonthlyTargetDto.NewCustomerVisitCompleteRate = liveAnchorMonthlyTarget.NewCustomerVisitCompleteRate;
+
+                liveAnchorMonthlyTargetDto.OldCustomerVisitTarget = liveAnchorMonthlyTarget.OldCustomerVisitTarget;
+                liveAnchorMonthlyTargetDto.CumulativeOldCustomerVisit = liveAnchorMonthlyTarget.CumulativeOldCustomerVisit;
+                liveAnchorMonthlyTargetDto.OldCustomerVisitCompleteRate = liveAnchorMonthlyTarget.OldCustomerVisitCompleteRate;
+
                 liveAnchorMonthlyTargetDto.VisitTarget = liveAnchorMonthlyTarget.VisitTarget;
                 liveAnchorMonthlyTargetDto.CumulativeVisit = liveAnchorMonthlyTarget.CumulativeVisit;
                 liveAnchorMonthlyTargetDto.VisitCompleteRate = liveAnchorMonthlyTarget.VisitCompleteRate;
+
+                liveAnchorMonthlyTargetDto.NewCustomerDealTarget = liveAnchorMonthlyTarget.NewCustomerDealTarget;
+                liveAnchorMonthlyTargetDto.CumulativeNewCustomerDealTarget = liveAnchorMonthlyTarget.CumulativeNewCustomerDealTarget;
+                liveAnchorMonthlyTargetDto.NewCustomerDealRate = liveAnchorMonthlyTarget.NewCustomerDealRate;
+
+                liveAnchorMonthlyTargetDto.OldCustomerDealTarget = liveAnchorMonthlyTarget.OldCustomerDealTarget;
+                liveAnchorMonthlyTargetDto.CumulativeOldCustomerDealTarget = liveAnchorMonthlyTarget.CumulativeOldCustomerDealTarget;
+                liveAnchorMonthlyTargetDto.OldCustomerDealRate = liveAnchorMonthlyTarget.OldCustomerDealRate;
+
                 liveAnchorMonthlyTargetDto.DealTarget = liveAnchorMonthlyTarget.DealTarget;
                 liveAnchorMonthlyTargetDto.CumulativeDealTarget = liveAnchorMonthlyTarget.CumulativeDealTarget;
                 liveAnchorMonthlyTargetDto.DealRate = liveAnchorMonthlyTarget.DealRate;
+
                 liveAnchorMonthlyTargetDto.CargoSettlementCommissionTarget = liveAnchorMonthlyTarget.CargoSettlementCommissionTarget;
                 liveAnchorMonthlyTargetDto.CumulativeCargoSettlementCommission = liveAnchorMonthlyTarget.CumulativeCargoSettlementCommission;
                 liveAnchorMonthlyTargetDto.CargoSettlementCommissionCompleteRate = liveAnchorMonthlyTarget.CargoSettlementCommissionCompleteRate;
@@ -373,7 +422,11 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.ConsultationCardConsumedTarget2 = updateDto.ConsultationCardConsumedTarget2;
                 liveAnchorMonthlyTarget.ActivateHistoricalConsultationTarget = updateDto.ActivateHistoricalConsultationTarget;
                 liveAnchorMonthlyTarget.SendOrderTarget = updateDto.SendOrderTarget;
+                liveAnchorMonthlyTarget.NewCustomerVisitTarget = updateDto.NewCustomerVisitTarget;
+                liveAnchorMonthlyTarget.OldCustomerVisitTarget = updateDto.OldCustomerVisitTarget;
                 liveAnchorMonthlyTarget.VisitTarget = updateDto.VisitTarget;
+                liveAnchorMonthlyTarget.NewCustomerDealTarget = updateDto.NewCustomerDealTarget;
+                liveAnchorMonthlyTarget.OldCustomerDealTarget = updateDto.OldCustomerDealTarget;
                 liveAnchorMonthlyTarget.DealTarget = updateDto.DealTarget;
                 liveAnchorMonthlyTarget.CargoSettlementCommissionTarget = updateDto.CargoSettlementCommissionTarget;
                 liveAnchorMonthlyTarget.MinivanRefundTarget = updateDto.MinivanRefundTarget;
@@ -548,6 +601,30 @@ namespace Fx.Amiya.Service
                 }
                 #endregion
 
+                #region #新诊上门数
+                liveAnchorMonthlyTarget.CumulativeNewCustomerVisit += editDto.CumulativeNewCustomerVisit;
+                if (liveAnchorMonthlyTarget.CumulativeNewCustomerVisit <= 0)
+                {
+                    liveAnchorMonthlyTarget.NewCustomerVisitCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.NewCustomerVisitCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeNewCustomerVisit) / Convert.ToDecimal(liveAnchorMonthlyTarget.NewCustomerVisitTarget)) * 100, 2);
+                }
+                #endregion
+
+                #region #复诊上门数
+                liveAnchorMonthlyTarget.CumulativeOldCustomerVisit += editDto.CumulativeOldCustomerVisit;
+                if (liveAnchorMonthlyTarget.CumulativeOldCustomerVisit <= 0)
+                {
+                    liveAnchorMonthlyTarget.OldCustomerVisitCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.OldCustomerVisitCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeOldCustomerVisit) / Convert.ToDecimal(liveAnchorMonthlyTarget.OldCustomerVisitTarget)) * 100, 2);
+                }
+                #endregion
+
                 #region #上门数
                 liveAnchorMonthlyTarget.CumulativeVisit += editDto.CumulativeVisit;
                 if (liveAnchorMonthlyTarget.CumulativeVisit <= 0)
@@ -557,6 +634,30 @@ namespace Fx.Amiya.Service
                 else
                 {
                     liveAnchorMonthlyTarget.VisitCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeVisit) / Convert.ToDecimal(liveAnchorMonthlyTarget.VisitTarget)) * 100, 2);
+                }
+                #endregion
+
+                #region #新诊成交数
+                liveAnchorMonthlyTarget.CumulativeNewCustomerDealTarget += editDto.CumulativeNewCustomerDealTarget;
+                if (liveAnchorMonthlyTarget.CumulativeNewCustomerDealTarget <= 0 || liveAnchorMonthlyTarget.CumulativeVisit <= 0)
+                {
+                    liveAnchorMonthlyTarget.NewCustomerDealRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.NewCustomerDealRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeNewCustomerDealTarget) / Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeVisit)) * 100, 2);
+                }
+                #endregion
+
+                #region #老客成交数
+                liveAnchorMonthlyTarget.CumulativeOldCustomerDealTarget += editDto.CumulativeOldCustomerDealTarget;
+                if (liveAnchorMonthlyTarget.CumulativeOldCustomerDealTarget <= 0 || liveAnchorMonthlyTarget.CumulativeVisit <= 0)
+                {
+                    liveAnchorMonthlyTarget.OldCustomerDealRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.OldCustomerDealRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeOldCustomerDealTarget) / Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeVisit)) * 100, 2);
                 }
                 #endregion
 
@@ -712,7 +813,8 @@ namespace Fx.Amiya.Service
                 CommercePerformanceTarget = await performance.SumAsync(t => t.CargoSettlementCommissionTarget),
                 OldCustomerPerformanceTarget = await performance.SumAsync(t => t.OldCustomerPerformanceTarget),
                 NewCustomerPerformanceTarget = await performance.SumAsync(t => t.NewCustomerPerformanceTarget),
-                CommerceCompletePerformance = await performance.SumAsync(t => t.CumulativeCargoSettlementCommission)
+                CommerceCompletePerformance = await performance.SumAsync(t => t.CumulativeCargoSettlementCommission),
+
             };
             return performanceInfoDto;
         }
@@ -753,19 +855,7 @@ namespace Fx.Amiya.Service
             return performanceInfoDto;
         }
 
-        /// <summary>
-        /// 根据平台id按年月获取折线图
-        /// </summary>
-        /// <param name="year"></param>
-        /// <param name="month"></param>
-        /// <param name="contentPlatFormId">内容平台id</param>
-        /// <returns></returns>
-        public async Task<List<PerformanceBrokenLine>> GetLiveAnchorPerformanceBrokenLineAsync(int year, string contentPlatFormId)
-        {
-            var orderinfo = await dalLiveAnchorMonthlyTarget.GetAll().Include(x => x.LiveAnchor).Where(o => o.Year == year && o.LiveAnchor.ContentPlateFormId == contentPlatFormId).ToListAsync();
-
-            return orderinfo.GroupBy(x => x.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(z => z.CumulativePerformance) }).ToList();
-        }
+     
 
         /// <summary>
         /// 根据主播基础id按年月获取折线图
@@ -779,6 +869,55 @@ namespace Fx.Amiya.Service
             var orderinfo = await dalLiveAnchorMonthlyTarget.GetAll().Include(x => x.LiveAnchor).Where(o => o.Year == year && o.LiveAnchor.LiveAnchorBaseId == liveAnchorBaseId).ToListAsync();
 
             return orderinfo.GroupBy(x => x.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(z => z.CumulativePerformance) }).ToList();
+        }
+
+
+        /// <summary>
+        /// 基础经营看板业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorIds">各个平台的主播ID集合</param>
+        /// <returns></returns>
+        public async Task<LiveAnchorBaseBusinessMonthTargetPerformanceDto> GetBasePerformanceTargetAsync(int year, int month, List<int> liveAnchorIds)
+        {
+            var performance = dalLiveAnchorMonthlyTarget.GetAll().Where(t => t.Year == year && t.Month == month)
+                .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.LiveAnchorId));
+            LiveAnchorBaseBusinessMonthTargetPerformanceDto performanceInfoDto = new LiveAnchorBaseBusinessMonthTargetPerformanceDto
+            {
+                AddWeChatTarget = await performance.SumAsync(t => t.AddWechatTarget),
+                ConsulationCardTarget = await performance.SumAsync(t => t.ConsultationTarget + t.ConsultationTarget2),
+                ConsulationCardConsumedTarget = await performance.SumAsync(t => t.ConsultationCardConsumedTarget + t.ConsultationCardConsumedTarget2),
+                HistoryConsulationCardConsumedTarget = await performance.SumAsync(t => t.ActivateHistoricalConsultationTarget),
+                ConsulationCardRefundTarget = await performance.SumAsync(t => t.MinivanRefundTarget),
+
+            };
+            return performanceInfoDto;
+        }
+
+        /// <summary>
+        /// 派单成交看板业绩目标
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorIds">各个平台的主播ID集合</param>
+        /// <returns></returns>
+        public async Task<LiveAnchorBaseBusinessMonthTargetSendOrDealDto> GetSendOrDealTargetAsync(int year, int month, List<int> liveAnchorIds)
+        {
+            var performance = dalLiveAnchorMonthlyTarget.GetAll().Where(t => t.Year == year && t.Month == month)
+                .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.LiveAnchorId));
+            LiveAnchorBaseBusinessMonthTargetSendOrDealDto performanceInfoDto = new LiveAnchorBaseBusinessMonthTargetSendOrDealDto
+            {
+                SendOrderTarget = await performance.SumAsync(t => t.SendOrderTarget),
+                TotalVisitTarget = await performance.SumAsync(t => t.VisitTarget),
+                NewCustomerVisitTarget = await performance.SumAsync(t => t.NewCustomerVisitTarget),
+                OldCustomerVisitTarget = await performance.SumAsync(t => t.OldCustomerVisitTarget),
+                TotalDealTarget = await performance.SumAsync(t => t.DealTarget),
+                NewCustomerDealTarget = await performance.SumAsync(t => t.NewCustomerDealTarget),
+                OldCustomerDealTarget = await performance.SumAsync(t => t.OldCustomerDealTarget),
+
+            };
+            return performanceInfoDto;
         }
     }
 }

@@ -64,9 +64,30 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.SendOrderTarget).HasColumnName("send_order_target").HasColumnType("int").IsRequired();
             builder.Property(t => t.CumulativeSendOrder).HasColumnName("cumulative_send_order").HasColumnType("int").IsRequired();
             builder.Property(t => t.SendOrderCompleteRate).HasColumnName("send_order_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+
+
+            builder.Property(t => t.NewCustomerVisitTarget).HasColumnName("new_customer_visit_target").HasColumnType("int").IsRequired();
+            builder.Property(t => t.CumulativeNewCustomerVisit).HasColumnName("cumulative_new_customer_visit").HasColumnType("int").IsRequired();
+            builder.Property(t => t.NewCustomerVisitCompleteRate).HasColumnName("new_customer_visit_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+
+            builder.Property(t => t.OldCustomerVisitTarget).HasColumnName("old_customer_visit_target").HasColumnType("int").IsRequired();
+            builder.Property(t => t.CumulativeOldCustomerVisit).HasColumnName("cumulative_old_customer_visit").HasColumnType("int").IsRequired();
+            builder.Property(t => t.OldCustomerVisitCompleteRate).HasColumnName("old_customer_visit_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+
             builder.Property(t => t.VisitTarget).HasColumnName("visit_target").HasColumnType("int").IsRequired();
             builder.Property(t => t.CumulativeVisit).HasColumnName("cumulative_visit").HasColumnType("int").IsRequired();
             builder.Property(t => t.VisitCompleteRate).HasColumnName("visit_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+
+            builder.Property(t => t.NewCustomerDealTarget).HasColumnName("new_customer_deal_target").HasColumnType("int").IsRequired();
+            builder.Property(t => t.CumulativeNewCustomerDealTarget).HasColumnName("cumulative_new_customer_deal").HasColumnType("int").IsRequired();
+            builder.Property(t => t.NewCustomerDealRate).HasColumnName("new_customer_deal_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+
+
+            builder.Property(t => t.OldCustomerDealTarget).HasColumnName("old_customer_deal_target").HasColumnType("int").IsRequired();
+            builder.Property(t => t.CumulativeOldCustomerDealTarget).HasColumnName("cumulative_old_customer_deal").HasColumnType("int").IsRequired();
+            builder.Property(t => t.OldCustomerDealRate).HasColumnName("old_customer_deal_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+
+
             builder.Property(t => t.DealTarget).HasColumnName("deal_target").HasColumnType("int").IsRequired();
             builder.Property(t => t.CumulativeDealTarget).HasColumnName("cumulative_deal_target").HasColumnType("int").IsRequired();
             builder.Property(t => t.DealRate).HasColumnName("deal_rate").HasColumnType("decimal(12,2)").IsRequired();

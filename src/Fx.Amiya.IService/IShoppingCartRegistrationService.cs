@@ -52,6 +52,24 @@ namespace Fx.Amiya.IService
         Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistrationListByLiveAnchorNameAndIsVideoAsync(int year, int month, bool isVideo, List<int> liveAnchorIds);
 
         /// <summary>
+        /// 获取面诊卡库存
+        /// </summary>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistrationInventoryAsync(List<int> liveAnchorIds);
+
+
+        /// <summary>
+        /// 根据条件获取基础经营看板信息
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isHistoryConsulationCardConsumed">是否为历史面诊卡消耗数据</param>
+        /// <param name="isConsulationCardRefund">是否为历史面诊卡退单数据</param>
+        /// <returns></returns>
+        Task<List<ShoppingCartRegistrationDto>> GetBaseBusinessPerformanceByLiveAnchorNameAsync(int year, int month, bool? isHistoryConsulationCardConsumed, bool? isConsulationCardRefund, List<int> liveAnchorIds);
+
+        /// <summary>
         /// 根据条件获取小黄车照片/视频面诊业绩折线图
         /// </summary>
         /// <param name="year"></param>
@@ -60,6 +78,17 @@ namespace Fx.Amiya.IService
         /// <param name="liveAnchorIds"></param>
         /// <returns></returns>
         Task<List<PerformanceInfoByDateDto>> GetPictureOrVideoConsultationBrokenLineAsync(int year, int month, bool isVideo, List<int> liveAnchorIds);
+
+        /// <summary>
+        /// 根据条件获取小黄车登记业绩（经营看板业绩）
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isHistoryConsulationCardConsumed">是否为历史面诊卡消耗数据</param>
+        /// <param name="isConsulationCardRefund">是否为历史面诊卡退单数据</param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        Task<List<PerformanceBrokenLine>> GetBaseBusinessPerformanceByLiveAnchorNameBrokenLineAsync(int year, int month, bool? isHistoryConsulationCardConsumed, bool? isConsulationCardRefund, bool? isAddWechat, bool? isConsulation, List<int> liveAnchorIds);
         #endregion
     }
 }

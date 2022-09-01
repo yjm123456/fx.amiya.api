@@ -24,6 +24,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.IsAddWeChat).HasColumnName("is_add_wechat").HasColumnType("bit").IsRequired();
             builder.Property(t => t.IsWriteOff).HasColumnName("is_write_off").HasColumnType("bit").IsRequired();
             builder.Property(t => t.IsConsultation).HasColumnName("is_consultation").HasColumnType("bit").IsRequired();
+            builder.Property(t => t.ConsultationDate).HasColumnName("consultation_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(t => t.IsReturnBackPrice).HasColumnName("is_return_back_price").HasColumnType("bit").IsRequired();
             builder.Property(t => t.Remark).HasColumnName("remark").HasColumnType("varchar(300)").IsRequired(false);
             builder.Property(t => t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();

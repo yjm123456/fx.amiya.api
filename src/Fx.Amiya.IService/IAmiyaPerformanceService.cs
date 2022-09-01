@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.ContentPlatFormOrderSend;
+﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
+using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.ShoppingCartRegistration;
 using System;
@@ -46,22 +47,6 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<PerformanceBrokenLine>> GetHistorySendThisMonthDealOrders(int year, int month, bool isOldSendOrder, string liveAnchorName);
 
-        /// <summary>
-        /// 根据主播平台获取折线图
-        /// </summary>
-        /// <param name="year"></param>
-        /// <param name="month"></param>
-        /// <param name="contentPlatFormId"></param>
-        /// <returns></returns>
-        Task<List<PerformanceBrokenLine>> GetLiveAnchorPerformanceAsync(int year, int month, string contentPlatFormId);
-        /// <summary>
-        /// 根据主播基础id获取折线图
-        /// </summary>
-        /// <param name="year"></param>
-        /// <param name="month"></param>
-        /// <param name="liveAnchorBaseId"></param>
-        /// <returns></returns>
-        Task<List<PerformanceBrokenLine>> GetLiveAnchorPerformanceByBaseIdAsync(int year, int month, string liveAnchorBaseId);
 
         #endregion
 
@@ -91,7 +76,7 @@ namespace Fx.Amiya.IService
         /// <param name="month"></param>
         /// <param name="liveAnchorName"></param>
         /// <returns></returns>
-        Task<GroupVideoAndPicturePerformanceDto> GetShoppingCartPerformanceByLiveAnchorNameAsync(int year, int month, string liveAnchorName);
+        Task<GroupVideoAndPicturePerformanceDto> GetContentPlatFormOrderPerformanceByLiveAnchorNameAsync(int year, int month, string liveAnchorName);
 
         /// <summary>
         /// 跟进条件获取独立跟进/协助业绩
@@ -101,6 +86,43 @@ namespace Fx.Amiya.IService
         /// <param name="liveAnchorName"></param>
         /// <returns></returns>
         Task<IndependentOrAssistPerformanceDto> GetIndependentOrAssistByLiveAnchorPerformanceAsync(int year, int month, string liveAnchorName);
+
+        /// <summary>
+        /// 获取基础经营看板业绩信息
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorName"></param>
+        /// <returns></returns>
+        Task<BaseBusinessPerformanceDto> GetBaseBusinessPerformanceByLiveAnchorNameAsync(int year, int month, string liveAnchorName);
+
+        /// <summary>
+        /// 派单成交业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorName"></param>
+        /// <returns></returns>
+        Task<SendAndDealPerformanceByLiveAnchorDto> GetSendOrDealByLiveAnchorAsync(int year, int month, string liveAnchorName);
+
+
+        /// <summary>
+        /// 主播客单价看板
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorName"></param>
+        /// <returns></returns>
+        Task<GuestUnitPricePerformanceDto> GetGuestUnitPricePerformanceByLiveAnchorAsync(int year, int month, string liveAnchorName);
+
+        /// <summary>
+        /// 各个板块完成率看板
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorName"></param>
+        /// <returns></returns>
+        Task<GroupTargetCompleteRateDto> GetPerformanceCompleteRateByLiveAnchorNameAsync(int year, int month, string liveAnchorName);
         #endregion
 
         #region【 其他相关业务接口（折线图，明细等）】
@@ -125,14 +147,14 @@ namespace Fx.Amiya.IService
         Task<List<PerformanceInfoByDateDto>> GetLiveAnchorCommercePerformanceByLiveAnchorIdAsync(int year, int month, string liveAnchorName);
 
         /// <summary>
-        /// 根据条件获取小黄车照片/视频面诊业绩折线图
+        /// 根据条件获取内容平台照片/视频面诊业绩折线图
         /// </summary>
         /// <param name="year"></param>
         /// <param name="month"></param>
         /// <param name="isVideo"></param>
         /// <param name="liveAnchorName"></param>
         /// <returns></returns>
-        Task<List<PerformanceInfoByDateDto>> GetPictureOrVideoConsultationAsync(int year, int month, bool isVideo, string liveAnchorName);
+        Task<List<PerformanceBrokenLine>> GetPictureOrVideoConsultationAsync(int year, int month, bool isVideo, string liveAnchorName);
 
         /// <summary>
         /// 根据条件获取独立/协助业绩折线图
@@ -144,6 +166,41 @@ namespace Fx.Amiya.IService
         /// <param name="isLiveAnchorIndependence"></param>
         /// <returns></returns>
         Task<List<PerformanceBrokenLine>> GetIndependenceOrAssistAsync(int year, int month, bool IsAssist, string liveAnchorName, bool isLiveAnchorIndependence);
+
+        /// <summary>
+        /// 获取分组经营看板折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isHistoryConsulationCardConsumed"></param>
+        /// <param name="isConsulationCardRefund"></param>
+        /// <param name="liveAnchorBaseName"></param>
+        /// <returns></returns>
+        Task<List<PerformanceBrokenLine>> GetBaseBusinessPerformanceBrokenLineAsync(int year, int month, bool? isHistoryConsulationCardConsumed, bool? isConsulationCardRefund, bool? isAddWechat, bool? isConsulation, string liveAnchorBaseName);
+
+
+
+
+        /// <summary>
+        /// 获取派单成交业绩（折线图使用）
+        /// </summary>
+        /// <param name="isSend">是否派单</param>
+        /// <param name="isDeal">是否成交</param>
+        /// <param name="isToHospital">是否到院</param>
+        /// <param name="isOldCustomer">是否老客</param>
+        /// <param name="liveAnchorBaseName"></param>
+        Task<List<ContentPlatFormOrderInfoDto>> GetSendOrDealBrokenLineAsync(bool? isSend, bool? isDeal, bool? isToHospital, bool? isOldCustomer, string liveAnchorBaseName);
+
+        /// <summary>
+        /// 根据主播获取客单价折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isOldCustomer"></param>
+        /// <param name="liveAnchorName"></param>
+        /// <returns></returns>
+        Task<List<PerformanceBrokenLine>> GetGuestUnitPricePerformanceAsync(int year, int month, bool? isOldCustomer, string liveAnchorName);
+
 
         /// <summary>
         /// 根据主播获取派单成交明细

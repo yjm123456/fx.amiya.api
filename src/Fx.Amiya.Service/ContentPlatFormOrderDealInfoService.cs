@@ -873,6 +873,29 @@ namespace Fx.Amiya.Service
                 ).ToListAsync();
         }
 
+        /// <summary>
+        /// 新/老客客单价折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isOldCustomer"></param>
+        /// <param name="LiveAnchorIds">各个平台主播id集合</param>
+        /// <returns></returns>
+        public async Task<List<PerformanceBrokenLine>> GetGuestUnitPricePerformanceBrokenLineAsync(int year, int month, bool? isOldCustomer, List<int> LiveAnchorIds)
+        {
+            //开始月份
+            DateTime startTime = new DateTime(year, 1, 1);
+            //筛选结束的月份
+            DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
+            var orderinfo = await dalContentPlatFormOrderDealInfo.GetAll()
+                .Where(o => o.IsDeal == true && o.CreateDate >= startTime && o.CreateDate < endDate)
+                .Where(o => isOldCustomer == null || o.IsOldCustomer == isOldCustomer)
+                .Where(o => LiveAnchorIds.Count == 0 || LiveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id)).ToListAsync();
+
+            var list = orderinfo.Select(x => new PerformanceInfoDateDto { Date = x.CreateDate, PerfomancePrice = x.Price }).ToList();
+            var returnResult = list.GroupBy(x => x.Date.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(z => z.PerfomancePrice)/x.Count() }).ToList();
+            return returnResult;
+        }
 
         /// <summary>
         /// 获取独立/协助业绩折线图

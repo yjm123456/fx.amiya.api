@@ -86,10 +86,30 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
         public int SendOrderTarget { get; set; }
 
+
+        /// <summary>
+        /// 新客上门目标
+        /// </summary>
+        public int NewCustomerVisitTarget { get; set; }
+
+        /// <summary>
+        /// 老客上门目标
+        /// </summary>
+        public int OldCustomerVisitTarget { get; set; }
+
         /// <summary>
         /// 上门目标
         /// </summary>
         public int VisitTarget { get; set; }
+        /// <summary>
+        /// 新诊成交人数目标
+        /// </summary>
+        public int NewCustomerDealTarget { get; set; }
+
+        /// <summary>
+        /// 老客成交人数目标
+        /// </summary>
+        public int OldCustomerDealTarget { get; set; }
 
         /// <summary>
         /// 成交人数目标

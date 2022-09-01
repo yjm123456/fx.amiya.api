@@ -66,9 +66,29 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         public int CumulativeSendOrder { get; set; }
 
         /// <summary>
+        /// 当日新诊上门数
+        /// </summary>
+        public int CumulativeNewCustomerVisit { get; set; }
+
+        /// <summary>
+        /// 当日老客上门数
+        /// </summary>
+        public int CumulativeOldCustomerVisit { get; set; }
+
+        /// <summary>
         /// 当日上门数
         /// </summary>
         public int CumulativeVisit { get; set; }
+
+        /// <summary>
+        /// 当日新诊成交人数
+        /// </summary>
+        public int CumulativeNewCustomerDealTarget { get; set; }
+
+        /// <summary>
+        /// 当日老客成交人数
+        /// </summary>
+        public int CumulativeOldCustomerDealTarget { get; set; }
 
         /// <summary>
         /// 当日成交人数
