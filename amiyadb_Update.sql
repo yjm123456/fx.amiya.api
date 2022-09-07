@@ -1070,33 +1070,6 @@ ADD COLUMN `emergency_level` int DEFAULT 0 AFTER `is_send_order`;
 -----------------------------------------------王健 2022/08/08 END--------------------------------------------;
 
 
------------------------------------------------余建明 2022/09/5  BEGIN--------------------------------------------;
-ALTER TABLE `amiyadb`.`tbl_liveanchor_monthly_target` 
-ADD COLUMN `zhihu_release_target` INT NOT NULL DEFAULT 0 AFTER `create_date`,
-ADD COLUMN `cumulative_zhihu_release` INT NOT NULL DEFAULT 0 AFTER `zhihu_release_target`,
-ADD COLUMN `zhihu_release_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_zhihu_release`,
-ADD COLUMN `sina_weibo_release_target` INT NOT NULL DEFAULT 0 AFTER `zhihu_release_complete_rate`,
-ADD COLUMN `cumulative_sina_weibo_release` INT NOT NULL DEFAULT 0 AFTER `sina_weibo_release_target`,
-ADD COLUMN `sina_weibo_release_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_sina_weibo_release`,
-ADD COLUMN `xiaohongshu_release_target` INT NOT NULL DEFAULT 0 AFTER `sina_weibo_release_complete_rate`,
-ADD COLUMN `cumulative_xiaohongshu_release` INT NOT NULL DEFAULT 0 AFTER `xiaohongshu_release_target`,
-ADD COLUMN `xiaohongshu_release_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_xiaohongshu_release`;
-
-
-
-
-
-ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
-ADD COLUMN `sinaweibo_send_num` INT NOT NULL DEFAULT 0 AFTER `network_consulting_employee_id`,
-ADD COLUMN `zhihu_send_num` INT NOT NULL DEFAULT 0 AFTER `sinaweibo_send_num`,
-ADD COLUMN `xiaohongshu_send_num` INT NOT NULL DEFAULT 0 AFTER `zhihu_send_num`;
-
------------------------------------------------余建明 2022/09/5 END--------------------------------------------;
-
-
-----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
-
-
 -----------------------------------------------余建明 2022/08/15  BEGIN--------------------------------------------;
 ALTER TABLE `amiyadb`.`tbl_liveanchor_monthly_target` 
 ADD COLUMN `new_customer_performance_target` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cargosettlementcommission_complete_rate`,
@@ -1143,6 +1116,51 @@ ADD COLUMN `old_customer_deal_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00
 
 -----------------------------------------------余建明 2022/08/27 END--------------------------------------------;
 
+-----------------------------------------------余建明 2022/09/5  BEGIN--------------------------------------------;
+ALTER TABLE `amiyadb`.`tbl_liveanchor_monthly_target` 
+ADD COLUMN `zhihu_release_target` INT NOT NULL DEFAULT 0 AFTER `create_date`,
+ADD COLUMN `cumulative_zhihu_release` INT NOT NULL DEFAULT 0 AFTER `zhihu_release_target`,
+ADD COLUMN `zhihu_release_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_zhihu_release`,
+ADD COLUMN `sina_weibo_release_target` INT NOT NULL DEFAULT 0 AFTER `zhihu_release_complete_rate`,
+ADD COLUMN `cumulative_sina_weibo_release` INT NOT NULL DEFAULT 0 AFTER `sina_weibo_release_target`,
+ADD COLUMN `sina_weibo_release_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_sina_weibo_release`,
+ADD COLUMN `xiaohongshu_release_target` INT NOT NULL DEFAULT 0 AFTER `sina_weibo_release_complete_rate`,
+ADD COLUMN `cumulative_xiaohongshu_release` INT NOT NULL DEFAULT 0 AFTER `xiaohongshu_release_target`,
+ADD COLUMN `xiaohongshu_release_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_xiaohongshu_release`;
+
+
+
+
+
+ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
+ADD COLUMN `sinaweibo_send_num` INT NOT NULL DEFAULT 0 AFTER `network_consulting_employee_id`,
+ADD COLUMN `zhihu_send_num` INT NOT NULL DEFAULT 0 AFTER `sinaweibo_send_num`,
+ADD COLUMN `xiaohongshu_send_num` INT NOT NULL DEFAULT 0 AFTER `zhihu_send_num`;
+
+-----------------------------------------------余建明 2022/09/5 END--------------------------------------------;
+
+
+
+-----------------------------------------------余建明 2022/09/7 BEGIN--------------------------------------------;
+
+
+ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
+ADD COLUMN `tiktok_send_num` INT NOT NULL DEFAULT 0 AFTER `xiaohongshu_send_num`;
+
+ALTER TABLE `amiyadb`.`tbl_liveanchor_monthly_target` 
+ADD COLUMN `tiktok_release_target` INT NOT NULL DEFAULT 0 AFTER `xiaohongshu_release_complete_rate`,
+ADD COLUMN `cumulative_tiktok_release` INT NOT NULL DEFAULT 0 AFTER `tiktok_release_target`,
+ADD COLUMN `tiktok_release_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_tiktok_release`;
+
+
+-----------------------------------------------余建明 2022/09/7 END--------------------------------------------;
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+
 
 
 
@@ -1187,22 +1205,6 @@ CHANGE COLUMN `effective_time` `effective_time` INT(10) NOT NULL DEFAULT 0 AFTER
 
 
 -----------------------------------------------王健 2022/09/3 END--------------------------------------------;
-
-
-
------------------------------------------------余建明 2022/09/7 BEGIN--------------------------------------------;
-
-
-ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
-ADD COLUMN `tiktok_send_num` INT NOT NULL DEFAULT 0 AFTER `xiaohongshu_send_num`;
-
-ALTER TABLE `amiyadb`.`tbl_liveanchor_monthly_target` 
-ADD COLUMN `tiktok_release_target` INT NOT NULL DEFAULT 0 AFTER `xiaohongshu_release_complete_rate`,
-ADD COLUMN `cumulative_tiktok_release` INT NOT NULL DEFAULT 0 AFTER `tiktok_release_target`,
-ADD COLUMN `tiktok_release_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_tiktok_release`;
-
-
------------------------------------------------余建明 2022/09/7 END--------------------------------------------;
 
 
 
