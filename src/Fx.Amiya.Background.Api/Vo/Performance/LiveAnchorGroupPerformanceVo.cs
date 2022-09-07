@@ -1,97 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Dto.Performance
+namespace Fx.Amiya.Background.Api.Vo.Performance
 {
-    public class MonthPerformanceDto
-    {
-        /// <summary>
-        /// 本月总业绩
-        /// </summary>
-        public decimal CueerntMonthTotalPerformance { get; set; }
-        /// <summary>
-        /// 同比总业绩
-        /// </summary>
-        public decimal PerformanceYearOnYear { get; set; }
-        /// <summary>
-        /// 环比总业绩
-        /// </summary>
-        public decimal PerformanceChainRatio { get; set; }
-        /// <summary>
-        /// 本月带货总业绩
-        /// </summary>
-        public decimal CurrentMonthCommercePerformance { get; set; }
-        /// <summary>
-        /// 同比带货业绩
-        /// </summary>
-        public decimal CommercePerformanceYearOnYear { get; set; }
-        /// <summary>
-        /// 环比带货业绩
-        /// </summary>
-        public decimal CommercePerformanceChainRation { get; set; }
-        /// <summary>
-        /// 当前月老客业绩
-        /// </summary>
-        public decimal CurrentMonthOldCustomerPerformance { get; set; }
-        /// <summary>
-        /// 当前月新客业绩
-        /// </summary>
-        public decimal CurrentMonthNewCustomerPerformance { get; set; }
-        /// <summary>
-        /// 老客同比
-        /// </summary>
-        public decimal OldCustomerYearOnYear { get; set; }
-        /// <summary>
-        /// 老客环比
-        /// </summary>
-        public decimal OldCustomerChainRation { get; set; }
-        /// <summary>
-        /// 新客同比
-        /// </summary>
-        public decimal NewCustomerYearOnYear { get; set; }
-        /// <summary>
-        /// 新客环比
-        /// </summary>
-        public decimal NewCustomerChainRatio { get; set; }
-    }
-
     /// <summary>
-    /// 当前月业绩数据和同环比增长率
+    /// 分组业绩看板
     /// </summary>
-    public class MonthPerformanceRatioDto
+    public class LiveAnchorGroupPerformanceVo
     {
         /// <summary>
         /// 本月总业绩
         /// </summary>
         public decimal CueerntMonthTotalPerformance { get; set; }
-        /// <summary>
-        /// 当前月新客业绩
-        /// </summary>
-        public decimal CurrentMonthNewCustomerPerformance { get; set; }
-        /// <summary>
-        /// 当前月老客业绩
-        /// </summary>
-        public decimal CurrentMonthOldCustomerPerformance { get; set; }
-        /// <summary>
-        /// 本月带货总业绩
-        /// </summary>
-        public decimal CurrentMonthCommercePerformance { get; set; }
-        /// <summary>
-        /// 新客业绩占比
-        /// </summary>
-        public decimal? NewCustomerPerformanceRatio { get; set; }
-        /// <summary>
-        /// 老客业绩占比
-        /// </summary>
-        public decimal? OldCustomerPerformanceRatio { get; set; }
-        /// <summary>
-        /// 带货业绩占比
-        /// </summary>
-        public decimal? CommercePerformanceRatio { get; set; }
         /// <summary>
         /// 总业绩同比增长
         /// </summary>
@@ -104,6 +26,12 @@ namespace Fx.Amiya.Dto.Performance
         /// 总业绩目标达成率
         /// </summary>
         public decimal? TotalPerformanceTargetComplete { get; set; }
+
+
+        /// <summary>
+        /// 当前月新客业绩
+        /// </summary>
+        public decimal CurrentMonthNewCustomerPerformance { get; set; }
         /// <summary>
         /// 新客业绩同比
         /// </summary>
@@ -116,6 +44,11 @@ namespace Fx.Amiya.Dto.Performance
         /// 新客业绩目标达成率
         /// </summary>
         public decimal? NewCustomerPerformanceTargetComplete { get; set; }
+
+        /// <summary>
+        /// 当前月老客业绩
+        /// </summary>
+        public decimal CurrentMonthOldCustomerPerformance { get; set; }
         /// <summary>
         /// 老客业绩同比
         /// </summary>
@@ -128,6 +61,11 @@ namespace Fx.Amiya.Dto.Performance
         /// 老客业绩目标达成率
         /// </summary>
         public decimal? OldCustomerTargetComplete { get; set; }
+
+        /// <summary>
+        /// 本月带货总业绩
+        /// </summary>
+        public decimal CurrentMonthCommercePerformance { get; set; }
         /// <summary>
         /// 带货业绩同比
         /// </summary>
@@ -140,153 +78,131 @@ namespace Fx.Amiya.Dto.Performance
         /// 带货业绩目标达成率
         /// </summary>
         public decimal? CommercePerformanceTargetComplete { get; set; }
+
+        /// <summary>
+        /// 新老客,带货业绩所占比例
+        /// </summary>
+        public List<PerformanceRatioVo> PerformanceRatios { get; set; }
+
+        /// <summary>
+        /// 新客业绩数据
+        /// </summary>
+        public List<PerformanceListInfo> NewPerformanceData { get; set; }
+        /// <summary>
+        /// 老客业绩数据
+        /// </summary>
+        public List<PerformanceListInfo> OldPerformanceData { get; set; }
+        /// <summary>
+        /// 带货业绩数据
+        /// </summary>
+        public List<PerformanceListInfo> CommercePerformanceData { get; set; }
     }
 
-    /// <summary>
-    /// 分组业绩情况
-    /// </summary>
-    public class GroupPerformanceDto
-    {
-
-        /// <summary>
-        /// 刀刀组业绩
-        /// </summary>
-        [Description("刀刀组业绩")]
-        public decimal? GroupDaoDaoPerformance { get; set; }
-
-        /// <summary>
-        /// 刀刀组业绩同比
-        /// </summary>
-        public decimal? GroupDaoDaoPerformanceYearOnYear { get; set; }
-
-        /// <summary>
-        /// 刀刀组业绩环比
-        /// </summary>
-        public decimal? GroupDaoDaoPerformanceChainRatio { get; set; }
-
-        /// <summary>
-        /// 刀刀组业绩目标达成
-        /// </summary>
-        public decimal? GroupDaoDaoPerformanceCompleteRate { get; set; }
-
-        /// <summary>
-        /// 刀刀组业绩占比
-        /// </summary>
-        public decimal? AccountedForGroupDaoDaoPerformance { get; set; }
-
-        /// <summary>
-        /// 吉娜组业绩
-        /// </summary>
-        [Description("吉娜组业绩")]
-        public decimal? GroupJinaPerformance { get; set; }
-
-        /// <summary>
-        /// 吉娜组业绩同比
-        /// </summary>
-        public decimal? GroupJinaPerformanceYearOnYear { get; set; }
-
-        /// <summary>
-        /// 吉娜组业绩环比
-        /// </summary>
-        public decimal? GroupJinaPerformanceChainRatio { get; set; }
-
-        /// <summary>
-        /// 吉娜组业绩目标达成
-        /// </summary>
-        public decimal? GroupJinaPerformanceCompleteRate { get; set; }
-        /// <summary>
-        /// 吉娜组业绩占比
-        /// </summary>
-        public decimal? AccountedForGroupJinaPerformance { get; set; }
-
-    }
 
     /// <summary>
-    /// 派单成交情况
+    /// 派单成交数据
     /// </summary>
-    public class MonthDealPerformanceDto
+    public class GroupSendAndDealInfoVo
     {
+        /// <summary>
+        /// 历史派单当月成交
+        /// </summary>
+        public decimal? HistorySendDuringMonthDeal { get; set; }
+
+        /// <summary>
+        /// 历史派单当月成交同比
+        /// </summary>
+        public decimal? HistorySendDuringMonthDealYearOnYear { get; set; }
+        /// <summary>
+        /// 历史派单当月成交环比
+        /// </summary>
+        public decimal? HistorySendDuringMonthDealChainRatio { get; set; }
+
         /// <summary>
         /// 当月派单当月成交
         /// </summary>
-        public decimal ThisMonthSendOrderDealPrice { get; set; }
+        public decimal? DuringMonthSendDuringMonthDeal { get; set; }
+
         /// <summary>
-        /// 当月派单当月成交同比量
+        /// 当月派单当月成交同比
         /// </summary>
-        public decimal? LastYearTotalPerformance { get; set; }
+        public decimal? DuringMonthSendDuringMonthDealYearOnYear { get; set; }
         /// <summary>
-        /// 当月派单当月成交环比量
+        /// 当月派单当月成交环比
         /// </summary>
-        public decimal? LastMonthTotalPerformance { get; set; }
+        public decimal? DuringMonthSendDuringMonthDealChainRatio { get; set; }
+
+
+
         /// <summary>
-        /// 当月派单当月成交占比
+        /// 业绩占比
         /// </summary>
-        public decimal? AccountedForDuringMonthSendDuringMonthDealDetails { get; set; }
+        public List<PerformanceRatioVo> PerformanceRatioVo { get; set; }
 
         /// <summary>
         /// 历史派单当月成交
         /// </summary>
-        public decimal HistoryMonthSendOrderDealPrice { get; set; }
+        public List<PerformanceListInfo> HistorySendDuringMonthDealList { get; set; }
         /// <summary>
-        /// 历史派单当月成交同比量
+        /// 当月派单当月成交
         /// </summary>
-        public decimal? LastYearHistorySendTotalPerformance { get; set; }
-        /// <summary>
-        /// 历史派单当月成交环比量
-        /// </summary>
-        public decimal? LastMonthHistorySendTotalPerformance { get; set; }
-        /// <summary>
-        /// 历史派单当月成交占比
-        /// </summary>
-        public decimal? AccountedForHistorySendDuringMonthDealDetails { get; set; }
+        public List<PerformanceListInfo> DuringMonthSendDuringMonthDealList { get; set; }
     }
 
     /// <summary>
-    /// 照片/视频业绩
+    /// 面诊业绩
     /// </summary>
-    public class GroupVideoAndPicturePerformanceDto
+    public class ConsultationPerformanceVo
     {
         /// <summary>
-        /// 视频面诊
+        /// 照片面诊业绩
         /// </summary>
-        public decimal VideoPerformance { get; set; }
+        public decimal? PictureConsultationPerformance { get; set; }
+
         /// <summary>
-        /// 视频面诊同比量
+        /// 照片面诊业绩同比
         /// </summary>
-        public decimal? LastYearVideoPerformance { get; set; }
+        public decimal? PictureConsultationPerformanceYearOnYear { get; set; }
         /// <summary>
-        /// 视频面诊环比量
+        /// 照片面诊业绩环比
         /// </summary>
-        public decimal? LastMonthVideoPerformance { get; set; }
+        public decimal? PictureConsultationPerformanceChainRatio { get; set; }
+
         /// <summary>
-        /// 视频面诊占比
+        /// 视频面诊业绩
         /// </summary>
-        public decimal? AccountedForVideoPerformance { get; set; }
+        public decimal? VideoConsultationPerformance { get; set; }
+
+        /// <summary>
+        /// 视频面诊业绩同比
+        /// </summary>
+        public decimal? VideoConsultationPerformanceYearOnYear { get; set; }
+        /// <summary>
+        /// 视频面诊业绩环比
+        /// </summary>
+        public decimal? VideoConsultationPerformanceChainRatio { get; set; }
 
 
         /// <summary>
-        /// 照片面诊
+        /// 业绩占比
         /// </summary>
-        public decimal PicturePerformance { get; set; }
+        public List<PerformanceRatioVo> PerformanceRatioVo { get; set; }
+
         /// <summary>
-        /// 照片面诊同比量
+        /// 照片面诊业绩折线图
         /// </summary>
-        public decimal? LastYearPicturePerformance { get; set; }
+        public List<PerformanceListInfo> PictureConsultationPerformanceBrokenLine { get; set; }
         /// <summary>
-        /// 照片面诊环比量
+        /// 视频面诊业绩折线图
         /// </summary>
-        public decimal? LastMonthPicturePerformance { get; set; }
-        /// <summary>
-        /// 照片面诊占比
-        /// </summary>
-        public decimal? AccountedForPicturePerformance { get; set; }
+        public List<PerformanceListInfo> VideoConsultationPerformanceBrokenLine { get; set; }
     }
 
 
     /// <summary>
-    /// 独立/协助业绩情况
+    /// 独立/协助业绩
     /// </summary>
-    public class IndependentOrAssistPerformanceDto
+    public class IndependentOrAssistPerformanceVo
     {
         /// <summary>
         /// 主播独立业绩
@@ -301,10 +217,6 @@ namespace Fx.Amiya.Dto.Performance
         /// 主播独立业绩环比
         /// </summary>
         public decimal? LiveAnchorIndenpendentPerformanceChainRatio { get; set; }
-        /// <summary>
-        /// 主播独立业绩占比
-        /// </summary>
-        public decimal? AccountForLiveAnchorIndenpendentPerformance { get; set; }
 
 
         /// <summary>
@@ -320,10 +232,6 @@ namespace Fx.Amiya.Dto.Performance
         /// 助理独立业绩环比
         /// </summary>
         public decimal? CustomerServiceIndenpendentPerformanceChainRatio { get; set; }
-        /// <summary>
-        /// 助理独立业绩占比
-        /// </summary>
-        public decimal? AccountForCustomerServiceIndenpendentPerformance { get; set; }
 
 
         /// <summary>
@@ -339,17 +247,31 @@ namespace Fx.Amiya.Dto.Performance
         /// 助理协助业绩环比
         /// </summary>
         public decimal? CustomerServiceAssistPerformanceChainRatio { get; set; }
-        /// <summary>
-        /// 助理协助业绩占比
-        /// </summary>
-        public decimal? AccountForCustomerServiceAssistPerformance { get; set; }
-    }
 
+
+        /// <summary>
+        /// 业绩占比
+        /// </summary>
+        public List<PerformanceRatioVo> PerformanceRatioVo { get; set; }
+
+        /// <summary>
+        /// 主播独立业绩折线图
+        /// </summary>
+        public List<PerformanceListInfo> LiveAnchorIndenpendentPerformanceBrokenLine { get; set; }
+        /// <summary>
+        /// 助理独立业绩折线图
+        /// </summary>
+        public List<PerformanceListInfo> CustomerServiceIndenpendentPerformanceBrokenLine { get; set; }
+        /// <summary>
+        /// 助理协助业绩折线图
+        /// </summary>
+        public List<PerformanceListInfo> CustomerServiceAssistPerformanceBrokenLine { get; set; }
+    }
 
     /// <summary>
     /// 基础经营看板业绩
     /// </summary>
-    public class BaseBusinessPerformanceDto
+    public class BaseBusinessPerformanceVo
     {
         /// <summary>
         /// 加v
@@ -385,6 +307,7 @@ namespace Fx.Amiya.Dto.Performance
         /// 面诊卡下单目标达成
         /// </summary>
         public decimal? ConsulationCardNumTargetComplete { get; set; }
+
 
         /// <summary>
         /// 当月面诊卡消耗
@@ -439,15 +362,15 @@ namespace Fx.Amiya.Dto.Performance
         public decimal? ThisMonthConsulationCardRefundNumTargetComplete { get; set; }
 
         /// <summary>
-        /// 库存面诊卡退单
+        /// 历史面诊卡（当月）退款
         /// </summary>
         public int? HistoryConsulationCardRefundNum { get; set; }
         /// <summary>
-        /// 库存面诊卡退单同比
+        /// 历史面诊卡（当月）退款同比
         /// </summary>
         public decimal? HistoryConsulationCardRefundNumYearOnYear { get; set; }
         /// <summary>
-        /// 库存面诊卡退单环比
+        /// 历史面诊卡（当月）退款环比
         /// </summary>
         public decimal? HistoryConsulationCardRefundNumRatioVo { get; set; }
 
@@ -456,15 +379,44 @@ namespace Fx.Amiya.Dto.Performance
         /// </summary>
         public int? ConsulationCardInventoryNum { get; set; }
 
+        /// <summary>
+        /// 加v折线图
+        /// </summary>
+        public List<PerformanceListInfo> AddWechatBrokenLine { get; set; }
+
+        /// <summary>
+        /// 面诊卡下单折线图
+        /// </summary>
+        public List<PerformanceListInfo> ConsulationCardNumBrokenLine { get; set; }
+
+        /// <summary>
+        /// 当月面诊卡消耗折线图
+        /// </summary>
+        public List<PerformanceListInfo> ThisMonthConsulationCardConsumedNumBrokenLine { get; set; }
+
+        /// <summary>
+        /// 历史面诊卡消耗折线图
+        /// </summary>
+        public List<PerformanceListInfo> HistoryConsulationCardConsumedNumBrokenLine { get; set; }
+
+        /// <summary>
+        /// 当月面诊卡退款折线图
+        /// </summary>
+        public List<PerformanceListInfo> ThisMonthConsulationCardRefundNumBrokenLine { get; set; }
+
+        /// <summary>
+        /// 历史面诊卡（当月）退款折线图
+        /// </summary>
+        public List<PerformanceListInfo> HistoryConsulationCardRefundNumBrokenLine { get; set; }
+
     }
 
 
     /// <summary>
-    /// 派单成交业绩看板
+    /// 派单成交经营看板
     /// </summary>
-    public class SendAndDealPerformanceByLiveAnchorDto
+    public class SendOrDealPerformanceVo
     {
-
         /// <summary>
         /// 派单数
         /// </summary>
@@ -593,14 +545,47 @@ namespace Fx.Amiya.Dto.Performance
         /// 老客成交数目标达成
         /// </summary>
         public decimal? OldCustomerDealNumCompleteRate { get; set; }
+
+
+        /// <summary>
+        /// 派单数折线图
+        /// </summary>
+        public List<PerformanceListInfo> SendOrderBrokenLine { get; set; }
+
+        /// <summary>
+        /// 总上门数折线图
+        /// </summary>
+        public List<PerformanceListInfo> TotalVisitBrokenLine { get; set; }
+        /// <summary>
+        /// 新客上门数折线图
+        /// </summary>
+        public List<PerformanceListInfo> NewCustomerVisitBrokenLine { get; set; }
+        /// <summary>
+        /// 老客上门数折线图
+        /// </summary>
+        public List<PerformanceListInfo> OldCustomerVisitBrokenLine { get; set; }
+
+        /// <summary>
+        /// 总成交数折线图
+        /// </summary>
+        public List<PerformanceListInfo> TotalDealBrokenLine { get; set; }
+        /// <summary>
+        /// 新客成交数折线图
+        /// </summary>
+        public List<PerformanceListInfo> NewCustomerDealBrokenLine { get; set; }
+        /// <summary>
+        /// 老客成交数折线图
+        /// </summary>
+        public List<PerformanceListInfo> OldCustomerDealBrokenLine { get; set; }
     }
 
-    /// <summary>
-    /// 客单价经营看板
-    /// </summary>
-    public class GuestUnitPricePerformanceDto
-    {
 
+
+    /// <summary>
+    /// 主播客单价业绩
+    /// </summary>
+    public class GuestUnitPricePerformanceVo 
+    { 
         /// <summary>
         /// 总客单价
         /// </summary>
@@ -640,13 +625,27 @@ namespace Fx.Amiya.Dto.Performance
         /// 老客客单价环比
         /// </summary>
         public decimal? OldGuestUnitPricePerformanceChainRatio { get; set; }
-    }
 
+
+
+        /// <summary>
+        /// 总客单价折线图
+        /// </summary>
+        public List<PerformanceListInfo> TotalGuestUnitPricePerformanceBrokenLine { get; set; }
+        /// <summary>
+        /// 新诊客单价折线图
+        /// </summary>
+        public List<PerformanceListInfo> NewGuestUnitPricePerformanceBrokenLine { get; set; }
+        /// <summary>
+        /// 老客客单价折线图
+        /// </summary>
+        public List<PerformanceListInfo> OldGuestUnitPricePerformanceBrokenLine { get; set; }
+    }
 
     /// <summary>
     /// 各版块完成率
     /// </summary>
-    public class GroupTargetCompleteRateDto
+    public class GroupTargetCompleteRateVo
     {
         /// <summary>
         /// 加v率
@@ -760,6 +759,7 @@ namespace Fx.Amiya.Dto.Performance
         /// 历史面诊卡退单率
         /// </summary>
         public decimal? HistoryConsulationCardRefundCompleteRate { get; set; }
+        
         /// <summary>
         /// 历史面诊卡退单率同比
         /// </summary>
@@ -772,9 +772,45 @@ namespace Fx.Amiya.Dto.Performance
         /// 历史面诊卡退单率目标达成
         /// </summary>
         public decimal? HistoryConsulationCardRefundCompleteRateTarget { get; set; }
+        
 
 
+        /// <summary>
+        /// 加v率折线图
+        /// </summary>
+        public List<PerformanceListInfo> AddWeChatCompleteRateBrokenLine { get; set; }
+
+        /// <summary>
+        /// 下单面诊卡消耗率折线图
+        /// </summary>
+        public List<PerformanceListInfo> ConsulationCardUsedCompleteRateBrokenLine { get; set; }
+
+        /// <summary>
+        /// 派单率折线图
+        /// </summary>
+        public List<PerformanceListInfo> SendOrderCompleteRateBrokenLine { get; set; }
+
+        /// <summary>
+        /// 新客上门率折线图
+        /// </summary>
+        public List<PerformanceListInfo> NewCustomerVisitCompleteRateBrokenLine { get; set; }
+
+        /// <summary>
+        /// 新客成交率折线图
+        /// </summary>
+        public List<PerformanceListInfo> NewCustomerDealCompleteRateBrokenLine { get; set; }
+
+        /// <summary>
+        /// 当月面诊卡退单率折线图
+        /// </summary>
+        public List<PerformanceListInfo> ThisMonthConsulationCardRefundCompleteRateBrokenLine { get; set; }
+
+        /// <summary>
+        /// 历史面诊卡退单率折线图
+        /// </summary>
+        public List<PerformanceListInfo> HistoryConsulationCardRefundCompleteRateBrokenLine { get; set; }
 
     }
+
 
 }

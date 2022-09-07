@@ -36,6 +36,12 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         [Description("电话")]
         public string Phone { get; set; }
+
+        /// <summary>
+        /// 新/老客业绩
+        /// </summary>
+        [Description("新/老客业绩")]
+        public string IsOldCustomer { get; set; }
         /// <summary>
         /// 下单金额
         /// </summary>

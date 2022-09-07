@@ -12,6 +12,24 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 编号
         /// </summary>
         public string Id { get; set; }
+        /// <summary>
+        /// 当日抖音发布条数
+        /// </summary>
+        public int CumulativeTikTokRelease { get; set; }
+        /// <summary>
+        /// 当日知乎发布条数
+        /// </summary>
+        public int CumulativeZhihuRelease { get; set; }
+
+        /// <summary>
+        /// 当日小红书发布条数
+        /// </summary>
+        public int CumulativeXiaoHongShuRelease { get; set; }
+
+        /// <summary>
+        /// 当日微博发布条数
+        /// </summary>
+        public int CumulativeSinaWeiBoRelease { get; set; }
 
         /// <summary>
         /// 当日发布条数
@@ -66,9 +84,29 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         public int CumulativeSendOrder { get; set; }
 
         /// <summary>
+        /// 当日新客上门数
+        /// </summary>
+        public int CumulativeNewCustomerVisit { get; set; }
+
+        /// <summary>
+        /// 当日老客上门数
+        /// </summary>
+        public int CumulativeOldCustomerVisit { get; set; }
+
+        /// <summary>
         /// 当日上门数
         /// </summary>
         public int CumulativeVisit { get; set; }
+
+        /// <summary>
+        /// 当日新客成交人数
+        /// </summary>
+        public int CumulativeNewCustomerDealTarget { get; set; }
+
+        /// <summary>
+        /// 当日老客成交人数
+        /// </summary>
+        public int CumulativeOldCustomerDealTarget { get; set; }
 
         /// <summary>
         /// 当日成交人数
@@ -81,7 +119,7 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         public decimal CumulativeCargoSettlementCommission { get; set; }
 
         /// <summary>
-        /// 当日新诊业绩金额
+        /// 当日新诊绩金额
         /// </summary>
         public decimal CumulativeNewCustomerPerformance { get; set; }
 

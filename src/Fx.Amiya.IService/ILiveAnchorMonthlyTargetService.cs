@@ -25,7 +25,7 @@ namespace Fx.Amiya.IService
         /// <param name="year"></param>
         /// <param name="month"></param>
         /// <returns></returns>
-        Task<LiveAnchorMonthTargetPerformanceDto> GetPerformance(int year,int month);
+        Task<LiveAnchorMonthTargetPerformanceDto> GetPerformance(int year,int month, List<int> liveAnchorIds);
 
         /// <summary>
         /// 根据平台id按年月获取合作达人业绩
@@ -43,61 +43,38 @@ namespace Fx.Amiya.IService
         /// <param name="liveAnchorBaseId"></param>
         /// <returns></returns>
         Task<GroupPerformanceListDto> GetLiveAnchorBaseIdPerformance(int year, int month, string liveAnchorBaseId);
+            
 
         /// <summary>
-        /// 根据平台id获取折线图
+        /// 根据主播基础id按年月获取折线图
         /// </summary>
         /// <param name="year"></param>
-        /// <param name="contentPlatFormId"></param>
+        /// <param name="liveAnchorBaseId"></param>
         /// <returns></returns>
-        Task<List<PerformanceBrokenLine>> GetLiveAnchorPerformanceBrokenLineAsync(int year, string contentPlatFormId);
-        /// <summary>
-        /// 根据主播id获取折线图
-        /// </summary>
-        /// <param name="year"></param>
-        /// <param name="month"></param>
-        /// <param name="ids">主播id集合id</param>
-        /// <returns></returns>
-        Task<List<PerformanceBrokenLine>> GetLiveAnchorPerformanceBrokenLineByLiveAnchorId(int year,int month,List<int> ids);
+        Task<List<PerformanceBrokenLine>> GetLiveAnchorPerformanceByBaseIdBrokenLineAsync(int year, string liveAnchorBaseId);
         /// <summary>
         /// 按月获取主播带货业绩
         /// </summary>
         /// <returns></returns>
-        Task<List<PerformanceInfoByDateDto>> GetLiveAnchorCommercePerformance(int year, int month);
+        Task<List<PerformanceInfoByDateDto>> GetLiveAnchorCommercePerformance(int year, int month, List<int> liveAnchorIds);
 
-        /* /// <summary>
-         /// 获取指定月份业绩总目标
-         /// </summary>
-         /// <param name="year"></param>
-         /// <param name="month"></param>
-         /// <returns></returns>
-         Task<PerformanceDto> GetLiveAnchorMonthlyTargetTotalPerformance(int year,int month);
-         /// <summary>
-         /// 获取指定月份带货业绩总目标
-         /// </summary>
-         /// <returns></returns>
-         Task<PerformanceDto> GetLiveAnchorMonthTargetTotalCommercePerformance(int year, int month);
-         /// <summary>
-         /// 获取指定月份已完成的带货业绩
-         /// </summary>
-         /// <param name="year"></param>
-         /// <param name="month"></param>
-         /// <returns></returns>
-         Task<PerformanceDto> GetLiveAnchorMonthTargetAlreadyCompleteCommercePerformance(int year,int month);
+        /// <summary>
+        /// 基础业绩获取
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        Task<LiveAnchorBaseBusinessMonthTargetPerformanceDto> GetBasePerformanceTargetAsync(int year, int month, List<int> liveAnchorIds);
 
-         /// <summary>
-         /// 获取老客业绩目标
-         /// </summary>
-         /// <param name="year"></param>
-         /// <param name="month"></param>
-         /// <returns></returns>
-         Task<PerformanceDto> GetLiveAnchorMonthOldPerformanceTarget(int year, int month);
-         /// <summary>
-         /// 获取新客业绩指标
-         /// </summary>
-         /// <param name="year"></param>
-         /// <param name="month"></param>
-         /// <returns></returns>
-         Task<PerformanceDto> GetLiveAnchorMonthNewPerformanceTarget(int year, int month);*/
+
+        /// <summary>
+        /// 获取派单成交业绩目标
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        Task<LiveAnchorBaseBusinessMonthTargetSendOrDealDto> GetSendOrDealTargetAsync(int year, int month, List<int> liveAnchorIds);
     }
 }

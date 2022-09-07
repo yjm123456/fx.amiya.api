@@ -68,6 +68,18 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                   MonthlyTargetName = d.MonthlyTargetName,
                                                   LiveAnchorId = d.LiveAnchorId,
                                                   LiveAnchorName = d.LiveAnchorName,
+                                                  TikTokReleaseTarget = d.TikTokReleaseTarget,
+                                                  CumulativeTikTokRelease = d.CumulativeTikTokRelease,
+                                                  TikTokReleaseCompleteRate = d.TikTokReleaseCompleteRate,
+                                                  ZhihuReleaseTarget = d.ZhihuReleaseTarget,
+                                                  CumulativeZhihuRelease = d.CumulativeZhihuRelease,
+                                                  ZhihuReleaseCompleteRate = d.ZhihuReleaseCompleteRate,
+                                                  XiaoHongShuReleaseTarget = d.XiaoHongShuReleaseTarget,
+                                                  CumulativeXiaoHongShuRelease = d.CumulativeXiaoHongShuRelease,
+                                                  XiaoHongShuReleaseCompleteRate = d.XiaoHongShuReleaseCompleteRate,
+                                                  SinaWeiBoReleaseTarget = d.SinaWeiBoReleaseTarget,
+                                                  CumulativeSinaWeiBoRelease = d.CumulativeSinaWeiBoRelease,
+                                                  SinaWeiBoReleaseCompleteRate = d.SinaWeiBoReleaseCompleteRate,
                                                   ReleaseTarget = d.ReleaseTarget,
                                                   CumulativeRelease = d.CumulativeRelease,
                                                   ReleaseCompleteRate = d.ReleaseCompleteRate,
@@ -104,9 +116,21 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                   SendOrderTarget = d.SendOrderTarget,
                                                   CumulativeSendOrder = d.CumulativeSendOrder,
                                                   SendOrderCompleteRate = d.SendOrderCompleteRate,
+                                                  NewCustomerVisitTarget = d.NewCustomerVisitTarget,
+                                                  CumulativeNewCustomerVisit = d.CumulativeNewCustomerVisit,
+                                                  NewCustomerVisitCompleteRate = d.NewCustomerVisitCompleteRate,
+                                                  OldCustomerVisitTarget = d.OldCustomerVisitTarget,
+                                                  CumulativeOldCustomerVisit = d.CumulativeOldCustomerVisit,
+                                                  OldCustomerVisitCompleteRate = d.OldCustomerVisitCompleteRate,
                                                   VisitTarget = d.VisitTarget,
                                                   CumulativeVisit = d.CumulativeVisit,
                                                   VisitCompleteRate = d.VisitCompleteRate,
+                                                  NewCustomerDealTarget = d.NewCustomerDealTarget,
+                                                  CumulativeNewCustomerDealTarget = d.CumulativeNewCustomerDealTarget,
+                                                  NewCustomerDealRate = d.NewCustomerDealRate,
+                                                  OldCustomerDealTarget = d.OldCustomerDealTarget,
+                                                  CumulativeOldCustomerDealTarget = d.CumulativeOldCustomerDealTarget,
+                                                  OldCustomerDealRate = d.OldCustomerDealRate,
                                                   DealTarget = d.DealTarget,
                                                   CumulativeDealTarget = d.CumulativeDealTarget,
                                                   DealRate = d.DealRate,
@@ -195,6 +219,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.Month = addVo.Month;
                 addDto.MonthlyTargetName = addVo.MonthlyTargetName;
                 addDto.LiveAnchorId = addVo.LiveAnchorId;
+                addDto.ZhihuReleaseTarget = addVo.ZhihuReleaseTarget;
+                addDto.TikTokReleaseTarget = addVo.TikTokReleaseTarget;
+                addDto.XiaoHongShuReleaseTarget = addVo.XiaoHongShuReleaseTarget;
+                addDto.SinaWeiBoReleaseTarget = addVo.SinaWeiBoReleaseTarget;
                 addDto.ReleaseTarget = addVo.ReleaseTarget;
                 addDto.FlowInvestmentTarget = addVo.FlowInvestmentTarget;
                 addDto.LivingRoomFlowInvestmentTarget = addVo.LivingRoomFlowInvestmentTarget;
@@ -207,7 +235,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.ConsultationCardConsumedTarget2 = addVo.ConsultationCardConsumedTarget2;
                 addDto.ActivateHistoricalConsultationTarget = addVo.ActivateHistoricalConsultationTarget;
                 addDto.SendOrderTarget = addVo.SendOrderTarget;
+                addDto.NewCustomerVisitTarget = addVo.NewCustomerVisitTarget;
+                addDto.OldCustomerVisitTarget = addVo.OldCustomerVisitTarget;
                 addDto.VisitTarget = addVo.VisitTarget;
+                addDto.NewCustomerDealTarget = addVo.NewCustomerDealTarget;
+                addDto.OldCustomerDealTarget = addVo.OldCustomerDealTarget;
                 addDto.DealTarget = addVo.DealTarget;
                 addDto.NewCustomerPerformanceTarget = addVo.NewCustomerPerformanceTarget;
                 addDto.SubsequentPerformanceTarget = addVo.SubsequentPerformanceTarget;
@@ -245,6 +277,23 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorMonthlyTargetVo.MonthlyTargetName = liveAnchorMonthlyTarget.MonthlyTargetName;
                 liveAnchorMonthlyTargetVo.LiveAnchorId = liveAnchorMonthlyTarget.LiveAnchorId;
                 liveAnchorMonthlyTargetVo.ContentPlatFormId = liveAnchorMonthlyTarget.ContentPlatFormId;
+
+                liveAnchorMonthlyTargetVo.TikTokReleaseTarget = liveAnchorMonthlyTarget.TikTokReleaseTarget;
+                liveAnchorMonthlyTargetVo.CumulativeTikTokRelease = liveAnchorMonthlyTarget.CumulativeTikTokRelease;
+                liveAnchorMonthlyTargetVo.TikTokReleaseCompleteRate = liveAnchorMonthlyTarget.TikTokReleaseCompleteRate;
+
+                liveAnchorMonthlyTargetVo.XiaoHongShuReleaseTarget = liveAnchorMonthlyTarget.XiaoHongShuReleaseTarget;
+                liveAnchorMonthlyTargetVo.CumulativeXiaoHongShuRelease = liveAnchorMonthlyTarget.CumulativeXiaoHongShuRelease;
+                liveAnchorMonthlyTargetVo.XiaoHongShuReleaseCompleteRate = liveAnchorMonthlyTarget.XiaoHongShuReleaseCompleteRate;
+
+                liveAnchorMonthlyTargetVo.SinaWeiBoReleaseTarget = liveAnchorMonthlyTarget.SinaWeiBoReleaseTarget;
+                liveAnchorMonthlyTargetVo.CumulativeSinaWeiBoRelease = liveAnchorMonthlyTarget.CumulativeSinaWeiBoRelease;
+                liveAnchorMonthlyTargetVo.SinaWeiBoReleaseCompleteRate = liveAnchorMonthlyTarget.SinaWeiBoReleaseCompleteRate;
+
+                liveAnchorMonthlyTargetVo.ZhihuReleaseTarget = liveAnchorMonthlyTarget.ZhihuReleaseTarget;
+                liveAnchorMonthlyTargetVo.CumulativeZhihuRelease = liveAnchorMonthlyTarget.CumulativeZhihuRelease;
+                liveAnchorMonthlyTargetVo.ZhihuReleaseCompleteRate = liveAnchorMonthlyTarget.ZhihuReleaseCompleteRate;
+
                 liveAnchorMonthlyTargetVo.ReleaseTarget = liveAnchorMonthlyTarget.ReleaseTarget;
                 liveAnchorMonthlyTargetVo.CumulativeRelease = liveAnchorMonthlyTarget.CumulativeRelease;
                 liveAnchorMonthlyTargetVo.ReleaseCompleteRate = liveAnchorMonthlyTarget.ReleaseCompleteRate;
@@ -281,12 +330,31 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorMonthlyTargetVo.SendOrderTarget = liveAnchorMonthlyTarget.SendOrderTarget;
                 liveAnchorMonthlyTargetVo.CumulativeSendOrder = liveAnchorMonthlyTarget.CumulativeSendOrder;
                 liveAnchorMonthlyTargetVo.SendOrderCompleteRate = liveAnchorMonthlyTarget.SendOrderCompleteRate;
+
+                liveAnchorMonthlyTargetVo.NewCustomerVisitTarget = liveAnchorMonthlyTarget.NewCustomerVisitTarget;
+                liveAnchorMonthlyTargetVo.CumulativeNewCustomerVisit = liveAnchorMonthlyTarget.CumulativeNewCustomerVisit;
+                liveAnchorMonthlyTargetVo.NewCustomerVisitCompleteRate = liveAnchorMonthlyTarget.NewCustomerVisitCompleteRate;
+
+                liveAnchorMonthlyTargetVo.OldCustomerVisitTarget = liveAnchorMonthlyTarget.OldCustomerVisitTarget;
+                liveAnchorMonthlyTargetVo.CumulativeOldCustomerVisit = liveAnchorMonthlyTarget.CumulativeOldCustomerVisit;
+                liveAnchorMonthlyTargetVo.OldCustomerVisitCompleteRate = liveAnchorMonthlyTarget.OldCustomerVisitCompleteRate;
+
                 liveAnchorMonthlyTargetVo.VisitTarget = liveAnchorMonthlyTarget.VisitTarget;
                 liveAnchorMonthlyTargetVo.CumulativeVisit = liveAnchorMonthlyTarget.CumulativeVisit;
                 liveAnchorMonthlyTargetVo.VisitCompleteRate = liveAnchorMonthlyTarget.VisitCompleteRate;
+
+                liveAnchorMonthlyTargetVo.NewCustomerDealTarget = liveAnchorMonthlyTarget.NewCustomerDealTarget;
+                liveAnchorMonthlyTargetVo.CumulativeNewCustomerDealTarget = liveAnchorMonthlyTarget.CumulativeNewCustomerDealTarget;
+                liveAnchorMonthlyTargetVo.NewCustomerDealRate = liveAnchorMonthlyTarget.NewCustomerDealRate;
+
+                liveAnchorMonthlyTargetVo.OldCustomerDealTarget = liveAnchorMonthlyTarget.OldCustomerDealTarget;
+                liveAnchorMonthlyTargetVo.CumulativeOldCustomerDealTarget = liveAnchorMonthlyTarget.CumulativeOldCustomerDealTarget;
+                liveAnchorMonthlyTargetVo.OldCustomerDealRate = liveAnchorMonthlyTarget.OldCustomerDealRate;
+
                 liveAnchorMonthlyTargetVo.DealTarget = liveAnchorMonthlyTarget.DealTarget;
                 liveAnchorMonthlyTargetVo.CumulativeDealTarget = liveAnchorMonthlyTarget.CumulativeDealTarget;
                 liveAnchorMonthlyTargetVo.DealRate = liveAnchorMonthlyTarget.DealRate;
+
                 liveAnchorMonthlyTargetVo.CargoSettlementCommissionTarget = liveAnchorMonthlyTarget.CargoSettlementCommissionTarget;
                 liveAnchorMonthlyTargetVo.CumulativeCargoSettlementCommission = liveAnchorMonthlyTarget.CumulativeCargoSettlementCommission;
                 liveAnchorMonthlyTargetVo.CargoSettlementCommissionCompleteRate = liveAnchorMonthlyTarget.CargoSettlementCommissionCompleteRate;
@@ -339,6 +407,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.Month = updateVo.Month;
                 updateDto.MonthlyTargetName = updateVo.MonthlyTargetName;
                 updateDto.LiveAnchorId = updateVo.LiveAnchorId;
+                updateDto.ZhihuReleaseTarget = updateVo.ZhihuReleaseTarget;
+                updateDto.XiaoHongShuReleaseTarget = updateVo.XiaoHongShuReleaseTarget;
+                updateDto.TikTokReleaseTarget = updateVo.TikTokReleaseTarget;
+                updateDto.SinaWeiBoReleaseTarget = updateVo.SinaWeiBoReleaseTarget;
                 updateDto.ReleaseTarget = updateVo.ReleaseTarget;
                 updateDto.FlowInvestmentTarget = updateVo.FlowInvestmentTarget;
                 updateDto.LivingRoomFlowInvestmentTarget = updateVo.LivingRoomFlowInvestmentTarget;
@@ -351,7 +423,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.ConsultationCardConsumedTarget2 = updateVo.ConsultationCardConsumedTarget2;
                 updateDto.ActivateHistoricalConsultationTarget = updateVo.ActivateHistoricalConsultationTarget;
                 updateDto.SendOrderTarget = updateVo.SendOrderTarget;
+                updateDto.NewCustomerVisitTarget = updateVo.NewCustomerVisitTarget;
+                updateDto.OldCustomerVisitTarget = updateVo.OldCustomerVisitTarget;
                 updateDto.VisitTarget = updateVo.VisitTarget;
+                updateDto.NewCustomerDealTarget = updateVo.NewCustomerDealTarget;
+                updateDto.OldCustomerDealTarget = updateVo.OldCustomerDealTarget;
                 updateDto.DealTarget = updateVo.DealTarget;
                 updateDto.CargoSettlementCommissionTarget = updateVo.CargoSettlementCommissionTarget;
                 updateDto.NewCustomerPerformanceTarget = updateVo.NewCustomerPerformanceTarget;

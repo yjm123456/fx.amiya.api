@@ -88,7 +88,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("amiyaRefreshToken")]
-        public async Task<ResultData<TokenVo>> AmiyaRefreshToken([Required(ErrorMessage = "refreshToken不能为空")] string refreshToken)
+        public async Task<ResultData<TokenVo>> AmiyaRefreshToken([Required(ErrorMessage = "登录超时！")] string refreshToken)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var jwtConfig = _fxAppGlobal.AppConfig.FxJwtConfig;
                 FxJwtParser fxJwtParser = new FxJwtParser(refreshToken);
                 if (!fxJwtParser.ValidateSignature(jwtConfig.Key) || fxJwtParser.IsExpired() || !fxJwtParser.IsRefreshToken())
-                    return ResultData<TokenVo>.Fail(401, "refreshToken无效！");
+                    return ResultData<TokenVo>.Fail(401, "秘钥错误或已过期，请重新登录！");
 
                 string identityType = fxJwtParser.Claims[FxIdentity.ClaimsType_IdentityType].ToString();
                 if (identityType != IdentityType.INTERNAL)
@@ -165,14 +165,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("hospitalRefreshToken")]
-        public async Task<ResultData<TokenVo>> HospitalRefreshToken([Required(ErrorMessage = "refreshToken不能为空")] string refreshToken)
+        public async Task<ResultData<TokenVo>> HospitalRefreshToken([Required(ErrorMessage = "登录超时")] string refreshToken)
         {
             try
             {
                 var jwtConfig = _fxAppGlobal.AppConfig.FxJwtConfig;
                 FxJwtParser fxJwtParser = new FxJwtParser(refreshToken);
                 if (!fxJwtParser.ValidateSignature(jwtConfig.Key) || fxJwtParser.IsExpired() || !fxJwtParser.IsRefreshToken())
-                    return ResultData<TokenVo>.Fail(401, "refreshToken无效！");
+                    return ResultData<TokenVo>.Fail(401, "秘钥错误或已过期，请重新登录！");
 
                 string identityType = fxJwtParser.Claims[FxIdentity.ClaimsType_IdentityType].ToString();
                 if (identityType != IdentityType.TENANT)

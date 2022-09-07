@@ -28,6 +28,7 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         public bool IsAddWeChat { get; set; }
         public bool IsWriteOff { get; set; }
         public bool IsConsultation { get; set; }
+        public DateTime? ConsultationDate { get; set; }
         public bool IsReturnBackPrice { get; set; }
         public string Remark { get; set; }
         public int CreateBy { get; set; }
@@ -48,5 +49,6 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// 紧急程度
         /// </summary>
         public int EmergencyLevel { get; set; }
+        public string EmergencyLevelText { get; set; }
     }
 }

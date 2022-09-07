@@ -124,7 +124,11 @@ namespace Fx.Amiya.SyncOrder.Tmall
             {
                 var strTaobaoOrder = GetTradeFullinfo(tmallAppInfo, orderId);
                 var taobaoOrder = JsonConvert.DeserializeObject<dynamic>(strTaobaoOrder);
-
+                if (strTaobaoOrder.IndexOf("error_response") > -1)
+                {
+                    var error = taobaoOrder.error_response.sub_msg;
+                    throw new Exception(error.ToObject<string>());
+                }
                 var trade = taobaoOrder.trade_fullinfo_get_response.trade;
                 var taobaoOrders = trade.orders.order;
                 foreach (var item in taobaoOrders)

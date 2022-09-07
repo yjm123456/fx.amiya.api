@@ -3,6 +3,7 @@ using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.OrderCheckPicture;
 using Fx.Amiya.Dto.OrderReport;
+using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
@@ -280,8 +281,8 @@ namespace Fx.Amiya.Service
                                 ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ConsultationType),
                                 LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 CreateDate = d.CreateDate,
-                                BelongMonth=d.BelongMonth,
-                                AddOrderPrice=d.AddOrderPrice,
+                                BelongMonth = d.BelongMonth,
+                                AddOrderPrice = d.AddOrderPrice,
                                 CustomerName = d.CustomerName,
                                 Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                                 EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
@@ -737,8 +738,8 @@ namespace Fx.Amiya.Service
                                 LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 CreateDate = d.CreateDate,
                                 CustomerName = d.CustomerName,
-                                BelongMonth=d.BelongMonth,
-                                AddOrderPrice=d.AddOrderPrice,
+                                BelongMonth = d.BelongMonth,
+                                AddOrderPrice = d.AddOrderPrice,
                                 IsOldCustomer = d.IsOldCustomer,
                                 IsAcompanying = d.IsAcompanying,
                                 Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
@@ -816,7 +817,7 @@ namespace Fx.Amiya.Service
                              && (!liveAnchorId.HasValue || d.LiveAnchorId == liveAnchorId)
                              && (!dealHospitalId.HasValue || d.LastDealHospitalId == dealHospitalId)
                              && (!belongMonth.HasValue || d.BelongMonth == belongMonth)
-                             && (!minAddOrderPrice.HasValue || d.AddOrderPrice >=minAddOrderPrice)
+                             && (!minAddOrderPrice.HasValue || d.AddOrderPrice >= minAddOrderPrice)
                              && (!maxAddOrderPrice.HasValue || d.AddOrderPrice <= maxAddOrderPrice)
                              select d;
 
@@ -848,7 +849,7 @@ namespace Fx.Amiya.Service
                                 IsOldCustomer = d.IsOldCustomer,
                                 AppointmentHospitalName = d.HospitalInfo.Name,
                                 BelongMonth = d.BelongMonth,
-                                AddOrderPrice=d.AddOrderPrice,
+                                AddOrderPrice = d.AddOrderPrice,
                                 GoodsId = d.GoodsId,
                                 GoodsName = d.AmiyaGoodsDemand.ProjectNname,
                                 ConsultingContent = d.ConsultingContent,
@@ -989,13 +990,14 @@ namespace Fx.Amiya.Service
                                 LiveAnchorId = d.LiveAnchorId,
                                 LiveAnchorName = d.LiveAnchor.HostAccountName,
                                 CreateDate = d.CreateDate,
-                                BelongMonth=d.BelongMonth,
-                                AddOrderPrice=d.AddOrderPrice,
+                                BelongMonth = d.BelongMonth,
+                                AddOrderPrice = d.AddOrderPrice,
                                 CustomerName = d.CustomerName,
                                 Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                                 EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
                                 AppointmentDate = d.AppointmentDate,
                                 AppointmentHospitalId = d.AppointmentHospitalId,
+                                IsOldCustomer=d.IsOldCustomer,
                                 AppointmentHospitalName = d.HospitalInfo.Name,
                                 IsToHospital = d.IsToHospital,
                                 ToHospitalDate = d.ToHospitalDate,
@@ -1081,9 +1083,9 @@ namespace Fx.Amiya.Service
         public async Task<ContentPlateFormOrderUpdateDto> GetByOrderIdAsync(string orderId)
         {
             var order = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList).Where(x => x.Id == orderId).FirstOrDefaultAsync();
-            if(order==null)
+            if (order == null)
             {
-               return new ContentPlateFormOrderUpdateDto();
+                return new ContentPlateFormOrderUpdateDto();
             }
             ContentPlateFormOrderUpdateDto result = new ContentPlateFormOrderUpdateDto();
             result.Id = order.Id;
@@ -1579,7 +1581,7 @@ namespace Fx.Amiya.Service
                 var isoldCustomer = false;
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
                 var dealCount = orderDealInfoList.Where(x => x.IsDeal == true).Count();
-                if (dealCount >0)
+                if (dealCount > 0)
                 //if (order.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
                 {
                     isoldCustomer = true;
@@ -2268,5 +2270,201 @@ namespace Fx.Amiya.Service
         }
         #endregion
 
+
+
+        #region 【业绩数据】
+        /// <summary>
+        ///  根据条件获取照片/视频面诊业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isVideo"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        public async Task<List<ContentPlatFormOrderInfoSimpleDto>> GetPictureOrVideoPerformanceByLiveAnchorAsync(int year, int month, bool isVideo, List<int> liveAnchorIds)
+        {
+            try
+            {
+                //开始月份
+                DateTime currentDate = new DateTime(year, month, 1);
+                //结束月份
+                DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
+                decimal? Price = 99.00M;
+                if (isVideo == true)
+                { Price = 199.00M; }
+                var order = from d in _dalContentPlatformOrder.GetAll()
+                            where (liveAnchorIds.Contains(d.LiveAnchorId.Value) && d.AddOrderPrice == Price && d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
+                            where (d.DealDate.HasValue == true && d.DealDate.Value >= currentDate && d.DealDate.Value < endDate)
+                            select new ContentPlatFormOrderInfoSimpleDto
+                            {
+                                Id = d.Id,
+                                OrderTypeText = ServiceClass.GetContentPlateFormOrderTypeText((byte)d.OrderType),
+                                ContentPlatformName = d.Contentplatform.ContentPlatformName,
+                                ConsultingContent = d.ConsultingContent,
+                                LateProjectStage = d.LateProjectStage,
+                                CreateDate = d.CreateDate,
+                                LiveAnchorName = d.LiveAnchor.HostAccountName,
+                                GoodsName = d.AmiyaGoodsDemand.ProjectNname,
+                                DepositAmount = d.DepositAmount,
+                                DealAmount = d.DealAmount,
+                                UnDealReason = d.UnDealReason,
+                                AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确认时间",
+                                AppointmentHospitalName = d.HospitalInfo.Name,
+                                OrderStatusText = ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus),
+                                Remark = d.Remark,
+                            };
+                return await order.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        /// <summary>
+        ///  根据条件获取派单成交业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isDeal">是否成交</param>
+        /// <param name="isToHospital">是否上门</param>
+        /// <param name="isOldCustomer">新/老客业绩</param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        public async Task<List<ContentPlatFormOrderInfoDto>> GetSendOrDealPerformanceByLiveAnchorAsync(List<int> liveAnchorIds)
+        {
+            try
+            {
+                var order = await _dalContentPlatformOrder.GetAll().Where(d => liveAnchorIds.Contains(d.LiveAnchorId.Value) && d.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder).ToListAsync();
+                var result = from d in order
+                             select new ContentPlatFormOrderInfoDto
+                             {
+
+                                 Id = d.Id,
+                                 SendDate = d.SendDate,
+                                 ToHospitalDate = d.ToHospitalDate,
+                                 IsToHospital = d.IsToHospital,
+                                 IsOldCustomer = d.IsOldCustomer,
+                                 OrderStatus = d.OrderStatus,
+                                 DealDate = d.DealDate,
+                                 CreateDate=d.CreateDate,
+                             };
+                var resultInfo = result.ToList();
+                return resultInfo;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 获取总订单数
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isSend"></param>
+        /// <param name="isDeal"></param>
+        /// <param name="isToHospital"></param>
+        /// <param name="isOldCustomer"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        public async Task<List<ContentPlatFormOrderInfoSimpleDto>> GetAddOrderPerformanceByLiveAnchorAsync(int year, int month, List<int> liveAnchorIds)
+        {
+            try
+            {
+                //开始月份
+                DateTime currentDate = new DateTime(year, month, 1);
+                //结束月份
+                DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
+                var order = await _dalContentPlatformOrder.GetAll().ToListAsync();
+                order = order.Where(d => liveAnchorIds.Contains(d.LiveAnchorId.Value))
+                           .Where(d => d.CreateDate >= currentDate && d.CreateDate < endDate).ToList();
+                var result = from d in order
+                             select new ContentPlatFormOrderInfoSimpleDto
+                             {
+                                 Id = d.Id,
+                             };
+                var resultInfo = result.ToList();
+                return resultInfo;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 获取照片/视频面诊业绩折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isVideo"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        public async Task<List<PerformanceBrokenLine>> GetPictureOrVideoPerformanceByLiveAnchorBrokenLineAsync(int year, int month, bool isVideo, List<int> liveAnchorIds)
+        {
+            try
+            {  //开始月份
+                DateTime startTime = new DateTime(year, 1, 1);
+                //筛选结束的月份
+                DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
+                decimal? Price = 99.00M;
+                if (isVideo == true)
+                { Price = 199.00M; }
+                var orderinfo = await _dalContentPlatformOrder.GetAll()
+                   .Where(d => d.DealDate.HasValue == true && d.DealAmount.HasValue && d.DealDate.Value >= startTime && d.DealDate.Value < endDate)
+                    .Where(d => liveAnchorIds.Contains(d.LiveAnchorId.Value) && d.AddOrderPrice == Price && d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
+                    .ToListAsync();
+
+
+                return orderinfo.GroupBy(x => x.DealDate.Value.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(z => z.DealAmount.Value) }).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 获取派单成交业绩折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isSend"></param>
+        /// <param name="isDeal"></param>
+        /// <param name="isToHospital"></param>
+        /// <param name="isOldCustomer"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        public async Task<List<ContentPlatFormOrderInfoDto>> GetSendOrDealPerformanceByLiveAnchorBrokenLineAsync(bool? isSend, bool? isDeal, bool? isToHospital, bool? isOldCustomer, List<int> liveAnchorIds)
+        {
+            try
+            {
+                var order = await _dalContentPlatformOrder.GetAll().Where(d => liveAnchorIds.Contains(d.LiveAnchorId.Value) && d.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder).ToListAsync();
+                var result = from d in order
+                             select new ContentPlatFormOrderInfoDto
+                             {
+
+                                 Id = d.Id,
+                                 SendDate = d.SendDate,
+                                 ToHospitalDate = d.ToHospitalDate,
+                                 IsToHospital = d.IsToHospital,
+                                 IsOldCustomer = d.IsOldCustomer,
+                                 OrderStatus = d.OrderStatus,
+                                 DealDate = d.DealDate,
+                                 CreateDate=d.CreateDate,
+                             };
+
+                return result.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #endregion
     }
 }

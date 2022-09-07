@@ -27,15 +27,24 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private ILiveAnchorDailyTargetService _liveAnchorDailyTargetService;
         private IHttpContextAccessor httpContextAccessor;
+        private IShoppingCartRegistrationService shoppingCartRegistrationService;
+        private IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
+        private IContentPlatformOrderSendService contentPlatformOrderSendService;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         public LiveAnchorDailyTargetController(ILiveAnchorDailyTargetService liveAnchorDailyTargetService,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IShoppingCartRegistrationService shoppingCartRegistrationService,
+            IContentPlatformOrderSendService contentPlatformOrderSendService,
+            IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService)
         {
             _liveAnchorDailyTargetService = liveAnchorDailyTargetService;
             this.httpContextAccessor = httpContextAccessor;
+            this.shoppingCartRegistrationService = shoppingCartRegistrationService;
+            this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
+            this.contentPlatformOrderSendService = contentPlatformOrderSendService;
         }
 
         /// <summary>
@@ -56,7 +65,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await _liveAnchorDailyTargetService.GetListWithPageAsync(startDate, endDate, operationEmpId, netWorkConEmpId, liveAnchorId, pageNum, pageSize,employeeId);
+                var q = await _liveAnchorDailyTargetService.GetListWithPageAsync(startDate, endDate, operationEmpId, netWorkConEmpId, liveAnchorId, pageNum, pageSize, employeeId);
 
                 var liveAnchorDailyTarget = from d in q.List
                                             select new LiveAnchorDailyTargetVo
@@ -65,6 +74,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 LiveAnchor = d.LiveAnchor,
                                                 CreateDate = d.CreateDate,
                                                 RecordDate = d.RecordDate,
+                                                SinaWeiBoSendNum = d.SinaWeiBoSendNum,
+                                                XiaoHongShuSendNum = d.XiaoHongShuSendNum,
+                                                ZhihuSendNum = d.ZhihuSendNum,
+                                                TikTokSendNum=d.TikTokSendNum,
                                                 TodaySendNum = d.TodaySendNum,
                                                 FlowInvestmentNum = d.FlowInvestmentNum,
                                                 LivingRoomFlowInvestmentNum = d.LivingRoomFlowInvestmentNum,
@@ -110,143 +123,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
-        /// <summary>
-        /// 添加主播日运营目标情况
-        /// </summary>
-        /// <param name="addVo"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<ResultData> AddAsync(AddLiveAnchorDailyTargetVo addVo)
-        {
-            try
-            {
-                var selectResult = await _liveAnchorDailyTargetService.GetLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
-                if (selectResult != null)
-                {
-                    UpdateLiveAnchorDailyTargetDto updateDto = new UpdateLiveAnchorDailyTargetDto();
-                    updateDto.Id = selectResult.Id;
-                    updateDto.LiveanchorMonthlyTargetId = selectResult.LiveanchorMonthlyTargetId;
-                    updateDto.OperationEmployeeId = selectResult.OperationEmployeeId;
-                    updateDto.LivingTrackingEmployeeId = selectResult.LivingTrackingEmployeeId;
-                    updateDto.NetWorkConsultingEmployeeId = selectResult.NetWorkConsultingEmployeeId;
-                    updateDto.TodaySendNum = selectResult.TodaySendNum;
-                    updateDto.LivingRoomFlowInvestmentNum = selectResult.LivingRoomFlowInvestmentNum;
-                    updateDto.FlowInvestmentNum = selectResult.FlowInvestmentNum;
-                    updateDto.CluesNum = selectResult.CluesNum;
-                    updateDto.AddFansNum = selectResult.AddFansNum;
-                    updateDto.AddWechatNum = selectResult.AddWechatNum;
-                    updateDto.Consultation = selectResult.Consultation;
-                    updateDto.ConsultationCardConsumed = selectResult.ConsultationCardConsumed;
-                    updateDto.Consultation2 = selectResult.Consultation2;
-                    updateDto.ConsultationCardConsumed2 = selectResult.ConsultationCardConsumed2;
-                    updateDto.ActivateHistoricalConsultation = selectResult.ActivateHistoricalConsultation;
-                    updateDto.SendOrderNum = selectResult.SendOrderNum;
-                    updateDto.NewVisitNum = selectResult.NewVisitNum;
-                    updateDto.SubsequentVisitNum = selectResult.SubsequentVisitNum;
-                    updateDto.OldCustomerVisitNum = selectResult.OldCustomerVisitNum;
-                    updateDto.VisitNum = selectResult.VisitNum;
-                    updateDto.NewDealNum = selectResult.NewDealNum;
-                    updateDto.SubsequentDealNum = selectResult.SubsequentDealNum;
-                    updateDto.OldCustomerDealNum = selectResult.OldCustomerDealNum;
-                    updateDto.DealNum = selectResult.DealNum;
-                    updateDto.CargoSettlementCommission = selectResult.CargoSettlementCommission;
-                    updateDto.NewPerformanceNum = selectResult.NewPerformanceNum;
-                    updateDto.SubsequentPerformanceNum = selectResult.SubsequentPerformanceNum;
-                    updateDto.OldCustomerPerformanceNum = selectResult.OldCustomerPerformanceNum;
-                    updateDto.NewCustomerPerformanceCountNum = selectResult.NewCustomerPerformanceCountNum;
-                    updateDto.PerformanceNum = selectResult.PerformanceNum;
-                    updateDto.MinivanRefund = selectResult.MinivanRefund;
-                    updateDto.MiniVanBadReviews = selectResult.MiniVanBadReviews;
-                    updateDto.RecordDate = selectResult.RecordDate;
-                    if (addVo.OperationEmployeeId != 0)
-                    {
-                        updateDto.TodaySendNum = addVo.TodaySendNum;
-                        updateDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
-                        updateDto.CluesNum = addVo.CluesNum;
-                        updateDto.AddFansNum = addVo.AddFansNum;
-                        updateDto.OperationEmployeeId = addVo.OperationEmployeeId;
-                    }
-                    if (addVo.LivingTrackingEmployeeId != 0)
-                    {
-                        updateDto.LivingRoomFlowInvestmentNum = addVo.LivingRoomFlowInvestmentNum;
-                        updateDto.Consultation = addVo.Consultation;
-                        updateDto.Consultation2 = addVo.Consultation2;
-                        updateDto.CargoSettlementCommission = addVo.CargoSettlementCommission;
-                        updateDto.LivingTrackingEmployeeId = addVo.LivingTrackingEmployeeId;
-                    }
-                    if (addVo.NetWorkConsultingEmployeeId != 0)
-                    {
-                        updateDto.AddWechatNum = addVo.AddWechatNum;
-                        updateDto.ConsultationCardConsumed = addVo.ConsultationCardConsumed;
-                        updateDto.ConsultationCardConsumed2 = addVo.ConsultationCardConsumed2;
-                        updateDto.ActivateHistoricalConsultation = addVo.ActivateHistoricalConsultation;
-                        updateDto.SendOrderNum = addVo.SendOrderNum.HasValue ? addVo.SendOrderNum.Value : 0;
-                        updateDto.NewVisitNum = addVo.NewVisitNum.HasValue ? addVo.NewVisitNum.Value : 0;
-                        updateDto.SubsequentVisitNum = addVo.SubsequentVisitNum.HasValue ? addVo.SubsequentVisitNum.Value : 0;
-                        updateDto.OldCustomerVisitNum = addVo.OldCustomerVisitNum.HasValue ? addVo.OldCustomerVisitNum.Value : 0;
-                        updateDto.VisitNum = addVo.VisitNum.HasValue ? addVo.VisitNum.Value : 0;
-                        updateDto.NewDealNum = addVo.NewDealNum.HasValue ? addVo.NewDealNum.Value : 0;
-                        updateDto.SubsequentDealNum = addVo.SubsequentDealNum.HasValue ? addVo.SubsequentDealNum.Value : 0;
-                        updateDto.OldCustomerDealNum = addVo.OldCustomerDealNum.HasValue ? addVo.OldCustomerDealNum.Value : 0;
-                        updateDto.DealNum = addVo.DealNum.HasValue ? addVo.DealNum.Value : 0;
-                        updateDto.NewPerformanceNum = addVo.NewPerformanceNum.HasValue ? addVo.NewPerformanceNum.Value : 0;
-                        updateDto.SubsequentPerformanceNum = addVo.SubsequentPerformanceNum.HasValue ? addVo.SubsequentPerformanceNum.Value : 0;
-                        updateDto.NewCustomerPerformanceCountNum = addVo.NewCustomerPerformanceCountNum.HasValue ? addVo.NewCustomerPerformanceCountNum.Value : 0;
-                        updateDto.OldCustomerPerformanceNum = addVo.OldCustomerPerformanceNum.HasValue ? addVo.OldCustomerPerformanceNum.Value : 0;
-                        updateDto.PerformanceNum = addVo.PerformanceNum.HasValue ? addVo.PerformanceNum.Value : 0;
-                        updateDto.MinivanRefund = addVo.MinivanRefund;
-                        updateDto.MiniVanBadReviews = addVo.MiniVanBadReviews;
-                        updateDto.NetWorkConsultingEmployeeId = addVo.NetWorkConsultingEmployeeId.Value;
-                    }
-                    await _liveAnchorDailyTargetService.UpdateAsync(updateDto);
-                    //throw new Exception("当前填报日期的主播日运营数据已创建，请根据筛选条件查询到对应数据编辑！");
-                }
-                else
-                {
-                    AddLiveAnchorDailyTargetDto addDto = new AddLiveAnchorDailyTargetDto();
-                    addDto.LiveanchorMonthlyTargetId = addVo.LiveanchorMonthlyTargetId;
-                    addDto.OperationEmployeeId = addVo.OperationEmployeeId;
-                    addDto.LivingTrackingEmployeeId = addVo.LivingTrackingEmployeeId;
-                    addDto.NetWorkConsultingEmployeeId = addVo.NetWorkConsultingEmployeeId.HasValue ? addVo.NetWorkConsultingEmployeeId.Value : 0;
-                    addDto.TodaySendNum = addVo.TodaySendNum;
-                    addDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
-                    addDto.LivingRoomFlowInvestmentNum = addVo.LivingRoomFlowInvestmentNum;
-                    addDto.CluesNum = addVo.CluesNum;
-                    addDto.AddFansNum = addVo.AddFansNum;
-                    addDto.AddWechatNum = addVo.AddWechatNum;
-                    addDto.Consultation = addVo.Consultation;
-                    addDto.ConsultationCardConsumed = addVo.ConsultationCardConsumed;
-                    addDto.Consultation2 = addVo.Consultation2;
-                    addDto.ConsultationCardConsumed2 = addVo.ConsultationCardConsumed2;
-                    addDto.ActivateHistoricalConsultation = addVo.ActivateHistoricalConsultation;
-                    addDto.SendOrderNum = addVo.SendOrderNum.HasValue ? addVo.SendOrderNum.Value : 0;
-                    addDto.NewVisitNum = addVo.NewVisitNum.HasValue ? addVo.NewVisitNum.Value : 0;
-                    addDto.SubsequentVisitNum = addVo.SubsequentVisitNum.HasValue ? addVo.SubsequentVisitNum.Value : 0;
-                    addDto.OldCustomerVisitNum = addVo.OldCustomerVisitNum.HasValue ? addVo.OldCustomerVisitNum.Value : 0;
-                    addDto.VisitNum = addVo.VisitNum.HasValue ? addVo.VisitNum.Value : 0;
-                    addDto.RecordDate = addVo.RecordDate;
-                    addDto.NewDealNum = addVo.NewDealNum.HasValue ? addVo.NewDealNum.Value : 0;
-                    addDto.SubsequentDealNum = addVo.SubsequentDealNum.HasValue ? addVo.SubsequentDealNum.Value : 0;
-                    addDto.OldCustomerDealNum = addVo.OldCustomerDealNum.HasValue ? addVo.OldCustomerDealNum.Value : 0;
-                    addDto.DealNum = addVo.DealNum.HasValue ? addVo.DealNum.Value : 0;
-                    addDto.CargoSettlementCommission = addVo.CargoSettlementCommission;
-                    addDto.NewPerformanceNum = addVo.NewPerformanceNum.HasValue ? addVo.NewPerformanceNum.Value : 0;
-                    addDto.SubsequentPerformanceNum = addVo.SubsequentPerformanceNum.HasValue ? addVo.SubsequentPerformanceNum.Value : 0;
-                    addDto.OldCustomerPerformanceNum = addVo.OldCustomerPerformanceNum.HasValue ? addVo.OldCustomerPerformanceNum.Value : 0;
-                    addDto.NewCustomerPerformanceCountNum = addVo.NewCustomerPerformanceCountNum.HasValue ? addVo.NewCustomerPerformanceCountNum.Value : 0;
-                    addDto.MinivanRefund = addVo.MinivanRefund;
-                    addDto.MiniVanBadReviews = addVo.MiniVanBadReviews;
-                    addDto.PerformanceNum = addVo.PerformanceNum.HasValue ? addVo.PerformanceNum.Value : 0;
-                    await _liveAnchorDailyTargetService.AddAsync(addDto);
-                }
-                return ResultData.Success();
-            }
-            catch (Exception ex)
-            {
-                return ResultData.Fail(ex.Message);
-            }
-        }
-
 
 
         /// <summary>
@@ -262,10 +138,15 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var liveAnchorDailyTarget = await _liveAnchorDailyTargetService.GetByIdAsync(id);
                 LiveAnchorDailyTargetByIdVo liveAnchorDailyTargetVo = new LiveAnchorDailyTargetByIdVo();
                 liveAnchorDailyTargetVo.Id = liveAnchorDailyTarget.Id;
+                liveAnchorDailyTargetVo.LiveAnchorId = liveAnchorDailyTarget.LiveAnchorId;
                 liveAnchorDailyTargetVo.LiveanchorMonthlyTargetId = liveAnchorDailyTarget.LiveanchorMonthlyTargetId;
                 liveAnchorDailyTargetVo.LivingTrackingEmployeeId = liveAnchorDailyTarget.LivingTrackingEmployeeId;
                 liveAnchorDailyTargetVo.OperationEmployeeId = liveAnchorDailyTarget.OperationEmployeeId;
                 liveAnchorDailyTargetVo.NetWorkConsultingEmployeeId = liveAnchorDailyTarget.NetWorkConsultingEmployeeId;
+                liveAnchorDailyTargetVo.TikTokSendNum = liveAnchorDailyTarget.TikTokSendNum;
+                liveAnchorDailyTargetVo.ZhihuSendNum = liveAnchorDailyTarget.ZhihuSendNum;
+                liveAnchorDailyTargetVo.SinaWeiBoSendNum = liveAnchorDailyTarget.SinaWeiBoSendNum;
+                liveAnchorDailyTargetVo.XiaoHongShuSendNum = liveAnchorDailyTarget.XiaoHongShuSendNum;
                 liveAnchorDailyTargetVo.TodaySendNum = liveAnchorDailyTarget.TodaySendNum;
                 liveAnchorDailyTargetVo.FlowInvestmentNum = liveAnchorDailyTarget.FlowInvestmentNum;
                 liveAnchorDailyTargetVo.LivingRoomFlowInvestmentNum = liveAnchorDailyTarget.LivingRoomFlowInvestmentNum;
@@ -305,34 +186,349 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
-
+        #region 【直播前】  
         /// <summary>
-        /// 修改主播日运营目标情况
+        /// 添加直播前主播日运营目标情况
         /// </summary>
-        /// <param name="updateVo"></param>
+        /// <param name="addVo"></param>
         /// <returns></returns>
-        [HttpPut]
-        public async Task<ResultData> UpdateAsync(UpdateLiveAnchorDailyTargetVo updateVo)
+        [HttpPost("BeforeLivingAdd")]
+        public async Task<ResultData> BeforeLivingAddAsync(BeforeLivingAddLiveAnchorDailyTargetVo addVo)
         {
             try
             {
-                UpdateLiveAnchorDailyTargetDto updateDto = new UpdateLiveAnchorDailyTargetDto();
+                var selectResult = await _liveAnchorDailyTargetService.GetLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
+                if (selectResult != null)
+                {
+                    #region 【编辑流程】
+                    //UpdateLiveAnchorDailyTargetDto updateDto = new UpdateLiveAnchorDailyTargetDto();
+                    //updateDto.Id = selectResult.Id;
+                    //updateDto.LiveanchorMonthlyTargetId = selectResult.LiveanchorMonthlyTargetId;
+                    //updateDto.OperationEmployeeId = selectResult.OperationEmployeeId;
+                    //updateDto.LivingTrackingEmployeeId = selectResult.LivingTrackingEmployeeId;
+                    //updateDto.NetWorkConsultingEmployeeId = selectResult.NetWorkConsultingEmployeeId;
+                    //updateDto.TodaySendNum = selectResult.TodaySendNum;
+                    //updateDto.LivingRoomFlowInvestmentNum = selectResult.LivingRoomFlowInvestmentNum;
+                    //updateDto.FlowInvestmentNum = selectResult.FlowInvestmentNum;
+                    //updateDto.CluesNum = selectResult.CluesNum;
+                    //updateDto.AddFansNum = selectResult.AddFansNum;
+                    //updateDto.AddWechatNum = selectResult.AddWechatNum;
+                    //updateDto.Consultation = selectResult.Consultation;
+                    //updateDto.ConsultationCardConsumed = selectResult.ConsultationCardConsumed;
+                    //updateDto.Consultation2 = selectResult.Consultation2;
+                    //updateDto.ConsultationCardConsumed2 = selectResult.ConsultationCardConsumed2;
+                    //updateDto.ActivateHistoricalConsultation = selectResult.ActivateHistoricalConsultation;
+                    //updateDto.SendOrderNum = selectResult.SendOrderNum;
+                    //updateDto.NewVisitNum = selectResult.NewVisitNum;
+                    //updateDto.SubsequentVisitNum = selectResult.SubsequentVisitNum;
+                    //updateDto.OldCustomerVisitNum = selectResult.OldCustomerVisitNum;
+                    //updateDto.VisitNum = selectResult.VisitNum;
+                    //updateDto.NewDealNum = selectResult.NewDealNum;
+                    //updateDto.SubsequentDealNum = selectResult.SubsequentDealNum;
+                    //updateDto.OldCustomerDealNum = selectResult.OldCustomerDealNum;
+                    //updateDto.DealNum = selectResult.DealNum;
+                    //updateDto.CargoSettlementCommission = selectResult.CargoSettlementCommission;
+                    //updateDto.NewPerformanceNum = selectResult.NewPerformanceNum;
+                    //updateDto.SubsequentPerformanceNum = selectResult.SubsequentPerformanceNum;
+                    //updateDto.OldCustomerPerformanceNum = selectResult.OldCustomerPerformanceNum;
+                    //updateDto.NewCustomerPerformanceCountNum = selectResult.NewCustomerPerformanceCountNum;
+                    //updateDto.PerformanceNum = selectResult.PerformanceNum;
+                    //updateDto.MinivanRefund = selectResult.MinivanRefund;
+                    //updateDto.MiniVanBadReviews = selectResult.MiniVanBadReviews;
+                    //updateDto.RecordDate = selectResult.RecordDate;
+                    //if (addVo.OperationEmployeeId != 0)
+                    //{
+                    //    updateDto.TodaySendNum = addVo.TodaySendNum;
+                    //    updateDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
+                    //    updateDto.CluesNum = addVo.CluesNum;
+                    //    updateDto.AddFansNum = addVo.AddFansNum;
+                    //    updateDto.OperationEmployeeId = addVo.OperationEmployeeId;
+                    //}
+                    //if (addVo.LivingTrackingEmployeeId != 0)
+                    //{
+                    //    updateDto.LivingRoomFlowInvestmentNum = addVo.LivingRoomFlowInvestmentNum;
+                    //    updateDto.Consultation = addVo.Consultation;
+                    //    updateDto.Consultation2 = addVo.Consultation2;
+                    //    updateDto.CargoSettlementCommission = addVo.CargoSettlementCommission;
+                    //    updateDto.LivingTrackingEmployeeId = addVo.LivingTrackingEmployeeId;
+                    //}
+                    //if (addVo.NetWorkConsultingEmployeeId != 0)
+                    //{
+                    //    updateDto.AddWechatNum = addVo.AddWechatNum;
+                    //    updateDto.ConsultationCardConsumed = addVo.ConsultationCardConsumed;
+                    //    updateDto.ConsultationCardConsumed2 = addVo.ConsultationCardConsumed2;
+                    //    updateDto.ActivateHistoricalConsultation = addVo.ActivateHistoricalConsultation;
+                    //    updateDto.SendOrderNum = addVo.SendOrderNum.HasValue ? addVo.SendOrderNum.Value : 0;
+                    //    updateDto.NewVisitNum = addVo.NewVisitNum.HasValue ? addVo.NewVisitNum.Value : 0;
+                    //    updateDto.SubsequentVisitNum = addVo.SubsequentVisitNum.HasValue ? addVo.SubsequentVisitNum.Value : 0;
+                    //    updateDto.OldCustomerVisitNum = addVo.OldCustomerVisitNum.HasValue ? addVo.OldCustomerVisitNum.Value : 0;
+                    //    updateDto.VisitNum = addVo.VisitNum.HasValue ? addVo.VisitNum.Value : 0;
+                    //    updateDto.NewDealNum = addVo.NewDealNum.HasValue ? addVo.NewDealNum.Value : 0;
+                    //    updateDto.SubsequentDealNum = addVo.SubsequentDealNum.HasValue ? addVo.SubsequentDealNum.Value : 0;
+                    //    updateDto.OldCustomerDealNum = addVo.OldCustomerDealNum.HasValue ? addVo.OldCustomerDealNum.Value : 0;
+                    //    updateDto.DealNum = addVo.DealNum.HasValue ? addVo.DealNum.Value : 0;
+                    //    updateDto.NewPerformanceNum = addVo.NewPerformanceNum.HasValue ? addVo.NewPerformanceNum.Value : 0;
+                    //    updateDto.SubsequentPerformanceNum = addVo.SubsequentPerformanceNum.HasValue ? addVo.SubsequentPerformanceNum.Value : 0;
+                    //    updateDto.NewCustomerPerformanceCountNum = addVo.NewCustomerPerformanceCountNum.HasValue ? addVo.NewCustomerPerformanceCountNum.Value : 0;
+                    //    updateDto.OldCustomerPerformanceNum = addVo.OldCustomerPerformanceNum.HasValue ? addVo.OldCustomerPerformanceNum.Value : 0;
+                    //    updateDto.PerformanceNum = addVo.PerformanceNum.HasValue ? addVo.PerformanceNum.Value : 0;
+                    //    updateDto.MinivanRefund = addVo.MinivanRefund;
+                    //    updateDto.MiniVanBadReviews = addVo.MiniVanBadReviews;
+                    //    updateDto.NetWorkConsultingEmployeeId = addVo.NetWorkConsultingEmployeeId.Value;
+                    //}
+                    //await _liveAnchorDailyTargetService.UpdateAsync(updateDto);
+
+                    #endregion
+
+                    throw new Exception("当前填报日期的主播日运营数据已创建，请根据筛选条件查询到对应数据编辑！");
+                }
+                else
+                {
+                    BeforeLivingAddLiveAnchorDailyTargetDto addDto = new BeforeLivingAddLiveAnchorDailyTargetDto();
+                    addDto.LiveanchorMonthlyTargetId = addVo.LiveanchorMonthlyTargetId;
+                    addDto.OperationEmployeeId = addVo.OperationEmployeeId;
+                    addDto.TikTokSendNum = addVo.TikTokSendNum;
+                    addDto.SinaWeiBoSendNum = addVo.SinaWeiBoSendNum;
+                    addDto.ZhihuSendNum = addVo.ZhihuSendNum;
+                    addDto.XiaoHongShuSendNum = addVo.XiaoHongShuSendNum;
+                    addDto.TodaySendNum = addVo.TodaySendNum;
+                    addDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
+                    addDto.CluesNum = addVo.CluesNum;
+                    addDto.AddFansNum = addVo.AddFansNum;
+                    addDto.RecordDate = addVo.RecordDate;
+                    await _liveAnchorDailyTargetService.BeforeLivingAddAsync(addDto);
+                }
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+
+
+
+        /// <summary>
+        /// 修改直播前主播日运营目标情况
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut("BeforeLivingUpdate")]
+        public async Task<ResultData> BeforeLivingUpdateAsync(BeforeLivingUpdateLiveAnchorDailyTargetVo updateVo)
+        {
+            try
+            {
+                BeforeLivingUpdateLiveAnchorDailyTargetDto updateDto = new BeforeLivingUpdateLiveAnchorDailyTargetDto();
                 updateDto.Id = updateVo.Id;
                 updateDto.LiveanchorMonthlyTargetId = updateVo.LiveanchorMonthlyTargetId;
-                updateDto.LivingTrackingEmployeeId = updateVo.LivingTrackingEmployeeId;
                 updateDto.OperationEmployeeId = updateVo.OperationEmployeeId;
-                updateDto.NetWorkConsultingEmployeeId = updateVo.NetWorkConsultingEmployeeId;
+                updateDto.TikTokSendNum = updateVo.TikTokSendNum;
+                updateDto.SinaWeiBoSendNum = updateVo.SinaWeiBoSendNum;
+                updateDto.ZhihuSendNum = updateVo.ZhihuSendNum;
+                updateDto.XiaoHongShuSendNum = updateVo.XiaoHongShuSendNum;
                 updateDto.TodaySendNum = updateVo.TodaySendNum;
-                updateDto.LivingRoomFlowInvestmentNum = updateVo.LivingRoomFlowInvestmentNum;
                 updateDto.FlowInvestmentNum = updateVo.FlowInvestmentNum;
                 updateDto.CluesNum = updateVo.CluesNum;
                 updateDto.AddFansNum = updateVo.AddFansNum;
-                updateDto.AddWechatNum = updateVo.AddWechatNum;
+                updateDto.RecordDate = updateVo.RecordDate;
+                await _liveAnchorDailyTargetService.BeforeLivingUpdateAsync(updateDto);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+        #endregion
+
+        #region 【直播中】  
+        /// <summary>
+        /// 添加直播中主播日运营目标情况
+        /// </summary>
+        /// <param name="addVo"></param>
+        /// <returns></returns>
+        [HttpPost("livingAdd")]
+        public async Task<ResultData> LivingAddAsync(LivingAddLiveAnchorDailyTargetVo addVo)
+        {
+            try
+            {
+                var selectResult = await _liveAnchorDailyTargetService.GetLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
+                if (selectResult != null)
+                {
+                    throw new Exception("当前填报日期的主播日运营数据已创建，请根据筛选条件查询到对应数据编辑！");
+                }
+                else
+                {
+                    LivingAddLiveAnchorDailyTargetDto addDto = new LivingAddLiveAnchorDailyTargetDto();
+                    addDto.LiveanchorMonthlyTargetId = addVo.LiveanchorMonthlyTargetId;
+                    addDto.LivingTrackingEmployeeId = addVo.LivingTrackingEmployeeId;
+                    addDto.LivingRoomFlowInvestmentNum = addVo.LivingRoomFlowInvestmentNum;
+                    addDto.Consultation = addVo.Consultation;
+                    addDto.Consultation2 = addVo.Consultation2;
+                    addDto.CargoSettlementCommission = addVo.CargoSettlementCommission;
+                    addDto.RecordDate = addVo.RecordDate;
+                    await _liveAnchorDailyTargetService.LivingAddAsync(addDto);
+                }
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+
+
+
+        /// <summary>
+        /// 修改直播中主播日运营目标情况
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut("livingUpdate")]
+        public async Task<ResultData> LivingUpdateAsync(LivingUpdateLiveAnchorDailyTargetVo updateVo)
+        {
+            try
+            {
+                LivingUpdateLiveAnchorDailyTargetDto updateDto = new LivingUpdateLiveAnchorDailyTargetDto();
+                updateDto.Id = updateVo.Id;
+                updateDto.LiveanchorMonthlyTargetId = updateVo.LiveanchorMonthlyTargetId;
+                updateDto.LivingTrackingEmployeeId = updateVo.LivingTrackingEmployeeId;
+                updateDto.LivingRoomFlowInvestmentNum = updateVo.LivingRoomFlowInvestmentNum;
                 updateDto.Consultation = updateVo.Consultation;
-                updateDto.ConsultationCardConsumed = updateVo.ConsultationCardConsumed;
                 updateDto.Consultation2 = updateVo.Consultation2;
+                updateDto.CargoSettlementCommission = updateVo.CargoSettlementCommission;
+                updateDto.RecordDate = updateVo.RecordDate;
+                await _liveAnchorDailyTargetService.LivingUpdateAsync(updateDto);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+        #endregion
+
+
+        #region 【直播后】  
+
+        /// <summary>
+        /// 根据主播id自动生成业绩
+        /// </summary>
+        /// <param name="liveAnchorId"></param>
+        /// <param name="recordDate">填报日期</param>
+        /// <returns></returns>
+        [HttpGet("getLiveAnchorPerformance")]
+        public async Task<AfterLivingUpdateLiveAnchorDailyTargetVo> GetAfterLivingAchievementByLiveAnchorId(int liveAnchorId, DateTime recordDate)
+        {
+            AfterLivingUpdateLiveAnchorDailyTargetVo result = new AfterLivingUpdateLiveAnchorDailyTargetVo();
+
+            var cardConsumed = await shoppingCartRegistrationService.GetDialyConsulationCardInfoByLiveAnchorId(liveAnchorId, recordDate);
+            result.ConsultationCardConsumed = cardConsumed.Where(x => x.ConsultationType == (int)ShoppingCartConsultationType.Picture).Count();
+            result.ConsultationCardConsumed2 = cardConsumed.Where(x => x.ConsultationType == (int)ShoppingCartConsultationType.Video).Count();
+            result.ActivateHistoricalConsultation = cardConsumed.Where(x => x.RecordDate.Month != x.ConsultationDate.Value.Month).Count();
+            var addWeChatOrSendOrderInfo = await shoppingCartRegistrationService.GetDialyAddWeChatInfoByLiveAnchorId(liveAnchorId, recordDate);
+            result.AddWechatNum = addWeChatOrSendOrderInfo.Count();
+            var sendOrderInfo = await contentPlatformOrderSendService.GetTodaySendOrderByLiveAnchorIdAsync(liveAnchorId, recordDate);
+
+            result.SendOrderNum = sendOrderInfo.Count();
+
+            var toHospitalAndDealInfo = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceAsync(liveAnchorId, recordDate);
+
+            result.NewVisitNum = toHospitalAndDealInfo.Where(x => x.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.FIRST_SEEK_ADVICE).Count();
+            result.SubsequentVisitNum = toHospitalAndDealInfo.Where(x => x.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.AGAIN_SEEK_ADVICE).Count();
+            result.OldCustomerVisitNum = toHospitalAndDealInfo.Where(x => x.IsOldCustomer == true).Count();
+            result.VisitNum = result.NewVisitNum + result.SubsequentVisitNum + result.OldCustomerVisitNum;
+
+            result.NewDealNum = toHospitalAndDealInfo.Where(x => x.IsDeal == true && x.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.FIRST_SEEK_ADVICE).Count();
+            result.SubsequentDealNum = toHospitalAndDealInfo.Where(x => x.IsDeal == true && x.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.AGAIN_SEEK_ADVICE).Count();
+            result.OldCustomerDealNum = toHospitalAndDealInfo.Where(x => x.IsDeal == true && x.IsOldCustomer == true).Count();
+            result.DealNum = result.NewDealNum + result.SubsequentDealNum + result.OldCustomerDealNum;
+
+            result.NewPerformanceNum = toHospitalAndDealInfo.Where(x => x.IsDeal == true && x.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.FIRST_SEEK_ADVICE).Sum(x => x.Price);
+            result.SubsequentPerformanceNum = toHospitalAndDealInfo.Where(x => x.IsDeal == true && x.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.AGAIN_SEEK_ADVICE).Sum(x => x.Price);
+            result.OldCustomerPerformanceNum = toHospitalAndDealInfo.Where(x => x.IsDeal == true && x.IsOldCustomer == true).Sum(x => x.Price);
+            result.NewCustomerPerformanceCountNum = result.NewPerformanceNum + result.SubsequentPerformanceNum;
+            result.PerformanceNum = result.NewPerformanceNum + result.SubsequentPerformanceNum + result.OldCustomerPerformanceNum;
+
+            var shoppingCardRefundInfo = await shoppingCartRegistrationService.GetDialyYellowCardRefundInfoByLiveAnchorId(liveAnchorId, recordDate);
+            result.MinivanRefund = shoppingCardRefundInfo.Count();
+            var shoppingCardBadViewInfo = await shoppingCartRegistrationService.GetDialyYellowCardBadReviewInfoByLiveAnchorId(liveAnchorId, recordDate);
+            result.MiniVanBadReviews = shoppingCardBadViewInfo.Count();
+            return result;
+        }
+
+        /// <summary>
+        /// 添加直播后主播日运营目标情况
+        /// </summary>
+        /// <param name="addVo"></param>
+        /// <returns></returns>
+        [HttpPost("afterLivingAdd")]
+        public async Task<ResultData> AfterLivingAddAsync(AfterLivingAddLiveAnchorDailyTargetVo addVo)
+        {
+            try
+            {
+                var selectResult = await _liveAnchorDailyTargetService.GetLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
+                if (selectResult != null)
+                {
+
+                    throw new Exception("当前填报日期的主播日运营数据已创建，请根据筛选条件查询到对应数据编辑！");
+                }
+                else
+                {
+                    AfterLivingAddLiveAnchorDailyTargetDto addDto = new AfterLivingAddLiveAnchorDailyTargetDto();
+                    addDto.LiveanchorMonthlyTargetId = addVo.LiveanchorMonthlyTargetId;
+                    addDto.NetWorkConsultingEmployeeId = addVo.NetWorkConsultingEmployeeId;
+                    addDto.ConsultationCardConsumed = addVo.ConsultationCardConsumed;
+                    addDto.ConsultationCardConsumed2 = addVo.ConsultationCardConsumed2;
+                    addDto.ActivateHistoricalConsultation = addVo.ActivateHistoricalConsultation;
+                    addDto.AddWechatNum = addVo.AddWechatNum;
+                    addDto.SendOrderNum = addVo.SendOrderNum;
+                    addDto.NewVisitNum = addVo.NewVisitNum;
+                    addDto.SubsequentVisitNum = addVo.SubsequentVisitNum;
+                    addDto.OldCustomerVisitNum = addVo.OldCustomerVisitNum;
+                    addDto.VisitNum = addVo.VisitNum;
+                    addDto.NewDealNum = addVo.NewDealNum;
+                    addDto.SubsequentDealNum = addVo.SubsequentDealNum;
+                    addDto.OldCustomerDealNum = addVo.OldCustomerDealNum;
+                    addDto.DealNum = addVo.DealNum;
+                    addDto.NewPerformanceNum = addVo.NewPerformanceNum;
+                    addDto.SubsequentPerformanceNum = addVo.SubsequentPerformanceNum;
+                    addDto.NewCustomerPerformanceCountNum = addVo.NewCustomerPerformanceCountNum;
+                    addDto.OldCustomerPerformanceNum = addVo.OldCustomerPerformanceNum;
+                    addDto.PerformanceNum = addVo.PerformanceNum;
+                    addDto.MinivanRefund = addVo.MinivanRefund;
+                    addDto.MiniVanBadReviews = addVo.MiniVanBadReviews;
+                    addDto.RecordDate = addVo.RecordDate;
+                    await _liveAnchorDailyTargetService.AfterLivingAddAsync(addDto);
+                }
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+
+
+
+        /// <summary>
+        /// 修改直播后主播日运营目标情况
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut("afterLivingUpdate")]
+        public async Task<ResultData> AfterLivingUpdateAsync(AfterLivingUpdateLiveAnchorDailyTargetVo updateVo)
+        {
+            try
+            {
+                AfterLivingUpdateLiveAnchorDailyTargetDto updateDto = new AfterLivingUpdateLiveAnchorDailyTargetDto();
+                updateDto.Id = updateVo.Id;
+                updateDto.LiveanchorMonthlyTargetId = updateVo.LiveanchorMonthlyTargetId;
+                updateDto.NetWorkConsultingEmployeeId = updateVo.NetWorkConsultingEmployeeId;
+                updateDto.ConsultationCardConsumed = updateVo.ConsultationCardConsumed;
                 updateDto.ConsultationCardConsumed2 = updateVo.ConsultationCardConsumed2;
                 updateDto.ActivateHistoricalConsultation = updateVo.ActivateHistoricalConsultation;
+                updateDto.AddWechatNum = updateVo.AddWechatNum;
                 updateDto.SendOrderNum = updateVo.SendOrderNum;
                 updateDto.NewVisitNum = updateVo.NewVisitNum;
                 updateDto.SubsequentVisitNum = updateVo.SubsequentVisitNum;
@@ -342,16 +538,15 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.SubsequentDealNum = updateVo.SubsequentDealNum;
                 updateDto.OldCustomerDealNum = updateVo.OldCustomerDealNum;
                 updateDto.DealNum = updateVo.DealNum;
-                updateDto.CargoSettlementCommission = updateVo.CargoSettlementCommission;
                 updateDto.NewPerformanceNum = updateVo.NewPerformanceNum;
                 updateDto.SubsequentPerformanceNum = updateVo.SubsequentPerformanceNum;
-                updateDto.OldCustomerPerformanceNum = updateVo.OldCustomerPerformanceNum;
                 updateDto.NewCustomerPerformanceCountNum = updateVo.NewCustomerPerformanceCountNum;
+                updateDto.OldCustomerPerformanceNum = updateVo.OldCustomerPerformanceNum;
                 updateDto.PerformanceNum = updateVo.PerformanceNum;
                 updateDto.MinivanRefund = updateVo.MinivanRefund;
                 updateDto.MiniVanBadReviews = updateVo.MiniVanBadReviews;
                 updateDto.RecordDate = updateVo.RecordDate;
-                await _liveAnchorDailyTargetService.UpdateAsync(updateDto);
+                await _liveAnchorDailyTargetService.AfterLivingUpdateAsync(updateDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -359,7 +554,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData.Fail(ex.Message);
             }
         }
-
+        #endregion
 
         /// <summary>
         /// 删除主播日运营目标情况

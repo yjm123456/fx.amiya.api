@@ -43,6 +43,12 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<AmiyaEmployeeDto> GetByIdAsync(int id);
 
+        /// <summary>
+        /// 跟进员工姓名获取啊美雅员工信息
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        Task<AmiyaEmployeeDto> GetByNameAsync(string name);
 
         /// <summary>
         /// 取阿美雅员工列表（分页）

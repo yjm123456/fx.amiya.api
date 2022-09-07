@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.OrderReport;
+using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Common;
 using System;
@@ -265,7 +266,7 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<SendContentPlatformOrderDto>> GetSendOrderReportList(int? liveAnchorId, int employeeId, int belongEmpId, int? orderStatus
      , string contentPlatFormId, DateTime? startDate, DateTime? endDate, bool isHidePhone);
-
+        #region 【数据中心】
         /// <summary>
         /// 获取时间段内未派单数据
         /// </summary>
@@ -284,5 +285,62 @@ namespace Fx.Amiya.IService
         Task<List<HospitalOrderNumAndPriceDto>> GetLiveAnchorPerformanceInfoAsync(DateTime startDate, DateTime endDate);
         Task<List<HospitalOrderNumAndPriceDto>> GetConsultationPerformanceInfoAsync(DateTime startDate, DateTime endDate);
         Task<List<HospitalOrderNumAndPriceDto>> GetCustomerServicePerformanceInfoAsync(DateTime startDate, DateTime endDate);
+
+        #endregion
+        #region 【业绩板块】
+        /// <summary>
+        ///  根据条件获取照片/视频面诊业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isVideo"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        Task<List<ContentPlatFormOrderInfoSimpleDto>> GetPictureOrVideoPerformanceByLiveAnchorAsync(int year, int month, bool isVideo, List<int> liveAnchorIds);
+
+        /// <summary>
+        /// 根据条件获取派单成交业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isSend"></param>
+        /// <param name="isDeal"></param>
+        /// <param name="isToHospital"></param>
+        /// <param name="isOldCustomer"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        Task<List<ContentPlatFormOrderInfoDto>> GetSendOrDealPerformanceByLiveAnchorAsync(List<int> liveAnchorIds);
+
+        /// <summary>
+        /// 根据主播获取总订单数
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        Task<List<ContentPlatFormOrderInfoSimpleDto>> GetAddOrderPerformanceByLiveAnchorAsync(int year, int month, List<int> liveAnchorIds);
+        /// <summary>
+        /// 获取派单成交业绩(折线图使用)
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isSend"></param>
+        /// <param name="isDeal"></param>
+        /// <param name="isToHospital"></param>
+        /// <param name="isOldCustomer"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        Task<List<ContentPlatFormOrderInfoDto>> GetSendOrDealPerformanceByLiveAnchorBrokenLineAsync(bool? isSend, bool? isDeal, bool? isToHospital, bool? isOldCustomer, List<int> liveAnchorIds);
+
+        /// <summary>
+        /// 获取照片/视频面诊业绩折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isVideo"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        Task<List<PerformanceBrokenLine>> GetPictureOrVideoPerformanceByLiveAnchorBrokenLineAsync(int year, int month, bool isVideo, List<int> liveAnchorIds);
+        #endregion
     }
 }

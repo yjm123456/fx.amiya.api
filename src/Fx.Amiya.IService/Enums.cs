@@ -591,4 +591,29 @@ namespace Fx.Amiya.IService
         //失败(已付款,但账号余额异常修改余额失败或订单状态改变导致修改状态失败)
         Fail=3
     }
+    
+
+    public enum ShoppingCartConsultationType
+    {
+        /// <summary>
+        /// 视频
+        /// </summary>
+        Video=1,
+        /// <summary>
+        /// 图片
+        /// </summary>
+        Picture=2,
+        /// <summary>
+        /// 私信
+        /// </summary>
+        DirectMessages=3,
+        /// <summary>
+        /// 其他
+        /// </summary>
+        Others=4,
+        /// <summary>
+        /// 短视频
+        /// </summary>
+        ShortVideo=5
+    }
 }

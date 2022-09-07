@@ -302,6 +302,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 GoodsName = d.GoodsName,
                                 DepartmentName = d.DepartmentName,
                                 ThumbPictureUrl = d.ThumbPictureUrl,
+                                IsOldCustomer=d.IsOldCustomer==true?"老客业绩":"新客业绩",
                                 ConsultingContent = d.ConsultingContent,
                                 IsToHospital = d.IsToHospital,
                                 ToHospitalDate = d.ToHospitalDate,

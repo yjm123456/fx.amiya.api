@@ -42,4 +42,61 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
         public decimal GroupTargetPerformance { get; set; }
     }
+
+    public class LiveAnchorBaseBusinessMonthTargetPerformanceDto
+    {
+        /// <summary>
+        /// 加v目标
+        /// </summary>
+        public int AddWeChatTarget { get; set; }
+        /// <summary>
+        /// 面诊卡下单目标
+        /// </summary>
+        public int ConsulationCardTarget { get; set; }
+        /// <summary>
+        /// 面诊卡消耗目标
+        /// </summary>
+        public int ConsulationCardConsumedTarget { get; set; }
+        /// <summary>
+        /// 历史面诊卡消耗目标
+        /// </summary>
+        public int HistoryConsulationCardConsumedTarget { get; set; }
+        /// <summary>
+        /// 小黄车退款上限
+        /// </summary>
+        public int ConsulationCardRefundTarget { get; set; }
+    }
+
+    public class LiveAnchorBaseBusinessMonthTargetSendOrDealDto
+    {
+        /// <summary>
+        /// 派单目标
+        /// </summary>
+        public int SendOrderTarget { get; set; }
+        /// <summary>
+        /// 上门目标
+        /// </summary>
+        public int TotalVisitTarget { get; set; }
+        /// <summary>
+        /// 新客上门目标
+        /// </summary>
+        public int NewCustomerVisitTarget { get; set; }
+        /// <summary>
+        /// 老客上门目标
+        /// </summary>
+        public int OldCustomerVisitTarget { get; set; }
+
+        /// <summary>
+        /// 成交目标
+        /// </summary>
+        public int TotalDealTarget { get; set; }
+        /// <summary>
+        /// 新客成交目标
+        /// </summary>
+        public int NewCustomerDealTarget { get; set; }
+        /// <summary>
+        /// 老客成交目标
+        /// </summary>
+        public int OldCustomerDealTarget { get; set; }
+    }
 }

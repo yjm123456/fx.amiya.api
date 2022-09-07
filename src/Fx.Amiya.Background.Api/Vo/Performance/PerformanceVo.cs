@@ -142,47 +142,6 @@ namespace Fx.Amiya.Background.Api.Vo.Performance
         /// </summary>
         public decimal? GroupJinaPerformanceCompleteRate { get; set; }
 
-        /// <summary>
-        /// 合作达人业绩
-        /// </summary>
-        [Description("合作达人业绩")]
-        public decimal? CooperationLiveAnchorPerformance { get; set; }
-
-        /// <summary>
-        /// 合作达人业绩同比
-        /// </summary>
-        public decimal? CooperationLiveAnchorPerformanceYearOnYear { get; set; }
-
-        /// <summary>
-        /// 合作达人业绩环比
-        /// </summary>
-        public decimal? CooperationLiveAnchorPerformanceChainRatio { get; set; }
-
-        /// <summary>
-        /// 合作达人业绩目标达成
-        /// </summary>
-        public decimal? CooperationLiveAnchorPerformanceCompleteRate { get; set; }
-
-        /// <summary>
-        /// 黄V组业绩
-        /// </summary>
-        [Description("黄V组业绩")]
-        public decimal? GroupYellowVPerformance { get; set; }
-
-        /// <summary>
-        /// 黄V组业绩同比
-        /// </summary>
-        public decimal? GroupYellowVPerformanceYearOnYear { get; set; }
-
-        /// <summary>
-        /// 黄V组业绩环比
-        /// </summary>
-        public decimal? GroupYellowVPerformanceChainRatio { get; set; }
-
-        /// <summary>
-        /// 黄V组业绩目标达成
-        /// </summary>
-        public decimal? GroupYellowVPerformanceCompleteRate { get; set; }
 
         /// <summary>
         /// 各组业绩所占比例
@@ -197,14 +156,6 @@ namespace Fx.Amiya.Background.Api.Vo.Performance
         /// 吉娜组业绩数据折线图
         /// </summary>
         public List<PerformanceListInfo> GroupJinaPerformanceData { get; set; }
-        /// <summary>
-        /// 合作达人业绩数据折线图
-        /// </summary>
-        public List<PerformanceListInfo> CooperationLiveAnchorPerformanceData { get; set; }
-        /// <summary>
-        /// 黄V组业绩数据折线图
-        /// </summary>
-        public List<PerformanceListInfo> GroupYellowVPerformanceData { get; set; }
 
 
     }

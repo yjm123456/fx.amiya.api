@@ -132,5 +132,12 @@ namespace Fx.Amiya.IService
         /// <param name="endDate"></param>
         /// <returns></returns>
         Task<List<OrderOperationConditionDto>> GetOrderSendDataAsync(DateTime startDate, DateTime endDate);
+
+        /// <summary>
+        /// 获取今日主播IP派单情况
+        /// </summary>
+        /// <param name="liveAnchorId"></param>
+        /// <returns></returns>
+        Task<List<OrderOperationConditionDto>> GetTodaySendOrderByLiveAnchorIdAsync(int liveAnchorId,DateTime recordDate);
     }
 }

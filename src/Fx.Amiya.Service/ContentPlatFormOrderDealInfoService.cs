@@ -700,21 +700,30 @@ namespace Fx.Amiya.Service
             }
         }
 
+
+        #region【业绩板块】
+
+
         /// <summary>
-        /// 获取啊美雅业绩
+        /// 根据主播获取啊美雅业绩
         /// </summary>
         /// <param name="year"></param>
         /// <param name="month"></param>
         /// <param name="isOldCustomer">新客/老客</param>
+        /// <param name="LiveAnchorIds">各个平台主播id集合</param>
         /// <returns></returns>
-        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByYearAndMonth(int year, int month, bool? isOldCustomer)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByYearAndMonth(int year, int month, bool? isOldCustomer, List<int> LiveAnchorIds)
         {
+
             //筛选结束的月份
             DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
             //选定的月份
             DateTime currentDate = new DateTime(year, month, 1);
-            return await dalContentPlatFormOrderDealInfo.GetAll().Where(o => o.CreateDate >= currentDate && o.CreateDate < endDate && o.IsDeal == true)
-                .Where(o => isOldCustomer == null || o.IsOldCustomer == isOldCustomer).Select(
+            return await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
+                .Where(o => o.CreateDate >= currentDate && o.CreateDate < endDate && o.IsDeal == true)
+                .Where(o => isOldCustomer == null || o.IsOldCustomer == isOldCustomer)
+                .Where(o => LiveAnchorIds.Count == 0 || LiveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id))
+                .Select(
                   ContentPlatFOrmOrderDealInfo =>
                        new ContentPlatFormOrderDealInfoDto
                        {
@@ -730,14 +739,18 @@ namespace Fx.Amiya.Service
         /// <param name="year"></param>
         /// <param name="month"></param>
         /// <param name="isOldSend">历史/当月派单,true为历史派单当月成交，false为当月派单当月成交</param>
+        /// <param name="LiveAnchorIds">各个平台主播id集合</param>
         /// <returns></returns>
-        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetSendAndDealPerformanceByYearAndMonth(int year, int month, bool? isOldSend)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetSendAndDealPerformanceByYearAndMonth(int year, int month, bool? isOldSend, List<int> liveAnchorIds)
         {
             //筛选结束的月份
             DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
             //选定的月份
             DateTime currentDate = new DateTime(year, month, 1);
-            var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).Where(o => o.CreateDate >= currentDate && o.CreateDate < endDate && o.IsDeal == true).ToListAsync();
+            var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
+                .Where(o => o.CreateDate >= currentDate && o.CreateDate < endDate && o.IsDeal == true)
+                .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id))
+                .ToListAsync();
             if (isOldSend == true)
             {
                 result = result.Where(x => x.ContentPlatFormOrder.SendDate.HasValue && x.ContentPlatFormOrder.SendDate.Value.Month != x.CreateDate.Month).ToList();
@@ -767,31 +780,80 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task<List<PerformanceInfoByDateDto>> GetPerformance(int year, int month, bool? isCustomer)
+        /// <summary>
+        /// 获取当日上门成交业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isOldSend"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceAsync(int liveAnchorId ,DateTime recordDate)
+        {
+            //筛选结束的月份
+            DateTime endDate = recordDate.Date.AddDays(1);
+            //选定的月份
+            DateTime currentDate = recordDate.Date;
+            var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)
+                .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= currentDate && o.ToHospitalDate < endDate)
+                .Where(o => o.ContentPlatFormOrder.LiveAnchorId == liveAnchorId)
+                .ToListAsync();
+            var returnInfo = result.Select(
+                  d =>
+                       new ContentPlatFormOrderDealInfoDto
+                       {
+                           IsToHospital = d.IsToHospital,
+                           IsDeal = d.IsDeal,
+                           IsOldCustomer = d.IsOldCustomer,
+                           ToHospitalType = d.ToHospitalType,
+                           Price = d.Price,
+                       }
+                ).ToList();
+
+            return returnInfo;
+        }
+
+        /// <summary>
+        /// 新/老客业绩折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isCustomer"></param>
+        /// <param name="LiveAnchorIds">各个平台主播id集合</param>
+        /// <returns></returns>
+        public async Task<List<PerformanceInfoByDateDto>> GetPerformanceBrokenLineAsync(int year, int month, bool? isCustomer, List<int> LiveAnchorIds)
         {
             //开始月份
             DateTime startTime = new DateTime(year, 1, 1);
             //筛选结束的月份
             DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
-            var orderinfo =await dalContentPlatFormOrderDealInfo.GetAll().Where(o => o.IsDeal == true && o.CreateDate >= startTime && o.CreateDate < endDate).ToListAsync();
-            if (isCustomer != null)
-            {
-                orderinfo = orderinfo.Where(o => o.IsOldCustomer == isCustomer).ToList();
-            }
+            var orderinfo = await dalContentPlatFormOrderDealInfo.GetAll()
+                .Where(o => o.IsDeal == true && o.CreateDate >= startTime && o.CreateDate < endDate)
+                .Where(o => isCustomer == null || o.IsOldCustomer == isCustomer)
+                .Where(o => LiveAnchorIds.Count == 0 || LiveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id)).ToListAsync();
 
             var list = orderinfo.Select(x => new PerformanceInfoDateDto { Date = x.CreateDate, PerfomancePrice = x.Price }).ToList();
             var returnResult = list.GroupBy(x => x.Date.Month).Select(x => new PerformanceInfoByDateDto { Date = x.Key.ToString(), PerfomancePrice = x.Sum(z => z.PerfomancePrice) }).ToList();
-            return BreakLineClassUtil<PerformanceInfoByDateDto>.Convert(month, returnResult);
+            return returnResult;
         }
 
-
-        public async Task<List<PerformanceBrokenLine>> GetHistoryAndThisMonthOrderPerformance(int year, int month, bool? isOldSend)
+        /// <summary>
+        /// 成交情况折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isOldSend"></param>
+        /// <returns></returns>
+        public async Task<List<PerformanceBrokenLine>> GetHistoryAndThisMonthOrderPerformance(int year, int month, bool? isOldSend, List<int> liveAnchorIds)
         {
             //开始月份
             DateTime startTime = new DateTime(year, 1, 1);
             //筛选结束的月份
             DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
-            var orderinfo = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).Where(o => o.IsDeal == true && o.CreateDate >= startTime && o.CreateDate < endDate).ToListAsync();
+            var orderinfo = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
+                .Where(o => o.IsDeal == true && o.CreateDate >= startTime && o.CreateDate < endDate)
+                .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id))
+                .ToListAsync();
 
             if (isOldSend == true)
             {
@@ -801,7 +863,109 @@ namespace Fx.Amiya.Service
             {
                 orderinfo = orderinfo.Where(x => x.ContentPlatFormOrder.SendDate.HasValue && x.ContentPlatFormOrder.SendDate.Value.Month == x.CreateDate.Month).ToList();
             }
+
             return orderinfo.GroupBy(x => x.CreateDate.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(z => z.Price) }).ToList();
         }
+
+
+        /// <summary>
+        /// 根据主播获取分组独立/协助业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isAssist">是否协助</param>
+        /// <param name="LiveAnchorIds">各个平台主播id集合</param>
+        /// <param name="amiyaEmployeeId">主播独立业绩获取时传入主播客服id</param>
+        /// <returns></returns>
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetIndependentOrAssistPerformanceByYearAndMonth(int year, int month, bool? isAssist, List<int> LiveAnchorIds, int amiyaEmployeeId)
+        {
+            int consultationType = 0;
+            if (isAssist == true)
+            {
+                consultationType = (int)ContentPlateFormOrderConsultationType.Collaboration;
+            }
+            else if (isAssist == false)
+            {
+                consultationType = (int)ContentPlateFormOrderConsultationType.IndependentFollowUp;
+            }
+
+            //筛选结束的月份
+            DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
+            //选定的月份
+            DateTime currentDate = new DateTime(year, month, 1);
+            return await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
+                .Where(o => o.CreateDate >= currentDate && o.CreateDate < endDate && o.IsDeal == true)
+                .Where(o => isAssist == null || o.ContentPlatFormOrder.ConsultationType == consultationType)
+                .Where(o => amiyaEmployeeId == 0 || o.CreateBy == amiyaEmployeeId)
+                .Where(o => LiveAnchorIds.Count == 0 || LiveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id))
+                .Select(
+                  ContentPlatFOrmOrderDealInfo =>
+                       new ContentPlatFormOrderDealInfoDto
+                       {
+                           Price = ContentPlatFOrmOrderDealInfo.Price,
+                           ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ConsultationType)
+                       }
+                ).ToListAsync();
+        }
+
+        /// <summary>
+        /// 新/老客客单价折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isOldCustomer"></param>
+        /// <param name="LiveAnchorIds">各个平台主播id集合</param>
+        /// <returns></returns>
+        public async Task<List<PerformanceBrokenLine>> GetGuestUnitPricePerformanceBrokenLineAsync(int year, int month, bool? isOldCustomer, List<int> LiveAnchorIds)
+        {
+            //开始月份
+            DateTime startTime = new DateTime(year, 1, 1);
+            //筛选结束的月份
+            DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
+            var orderinfo = await dalContentPlatFormOrderDealInfo.GetAll()
+                .Where(o => o.IsDeal == true && o.CreateDate >= startTime && o.CreateDate < endDate)
+                .Where(o => isOldCustomer == null || o.IsOldCustomer == isOldCustomer)
+                .Where(o => LiveAnchorIds.Count == 0 || LiveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id)).ToListAsync();
+
+            var list = orderinfo.Select(x => new PerformanceInfoDateDto { Date = x.CreateDate, PerfomancePrice = x.Price }).ToList();
+            var returnResult = list.GroupBy(x => x.Date.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(z => z.PerfomancePrice) / x.Count() }).ToList();
+            return returnResult;
+        }
+
+        /// <summary>
+        /// 获取独立/协助业绩折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isOldSend"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        public async Task<List<PerformanceBrokenLine>> GetIndependenceOrAssistAsync(int year, int month, bool? isAssist, List<int> LiveAnchorIds, int amiyaEmployeeId)
+        {
+            int consultationType = 0;
+            if (isAssist == true)
+            {
+                consultationType = (int)ContentPlateFormOrderConsultationType.Collaboration;
+            }
+            else if (isAssist == false)
+            {
+                consultationType = (int)ContentPlateFormOrderConsultationType.IndependentFollowUp;
+            }
+            //开始月份
+            DateTime startTime = new DateTime(year, 1, 1);
+            //筛选结束的月份
+            DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
+            var orderinfo = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
+               .Where(o => o.CreateDate >= startTime && o.CreateDate < endDate && o.IsDeal == true)
+                .Where(o => isAssist == null || o.ContentPlatFormOrder.ConsultationType == consultationType)
+                .Where(o => amiyaEmployeeId == 0 || o.CreateBy == amiyaEmployeeId)
+                .Where(o => LiveAnchorIds.Count == 0 || LiveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id))
+                .ToListAsync();
+
+
+            return orderinfo.GroupBy(x => x.CreateDate.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(z => z.Price) }).ToList();
+        }
+        #endregion
+
     }
 }

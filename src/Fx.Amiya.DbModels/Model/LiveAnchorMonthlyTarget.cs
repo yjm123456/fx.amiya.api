@@ -35,6 +35,68 @@ namespace Fx.Amiya.DbModels.Model
         public int LiveAnchorId { get; set; }
 
         /// <summary>
+        /// 抖音发布目标
+        /// </summary>
+        public int TikTokReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计抖音发布条数
+        /// </summary>
+        public int CumulativeTikTokRelease { get; set; }
+
+        /// <summary>
+        /// 抖音发布目标完成率
+        /// </summary>
+        public decimal TikTokReleaseCompleteRate { get; set; }
+
+        /// <summary>
+        /// 知乎发布目标
+        /// </summary>
+        public int ZhihuReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计知乎发布条数
+        /// </summary>
+        public int CumulativeZhihuRelease { get; set; }
+
+        /// <summary>
+        /// 知乎发布目标完成率
+        /// </summary>
+        public decimal ZhihuReleaseCompleteRate { get; set; }
+
+
+        /// <summary>
+        /// 小红书发布目标
+        /// </summary>
+        public int XiaoHongShuReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计小红书发布条数
+        /// </summary>
+        public int CumulativeXiaoHongShuRelease { get; set; }
+
+        /// <summary>
+        /// 小红书发布目标完成率
+        /// </summary>
+        public decimal XiaoHongShuReleaseCompleteRate { get; set; }
+
+
+        /// <summary>
+        /// 微博发布目标
+        /// </summary>
+        public int SinaWeiBoReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计微博发布条数
+        /// </summary>
+        public int CumulativeSinaWeiBoRelease { get; set; }
+
+        /// <summary>
+        /// 微博发布目标完成率
+        /// </summary>
+        public decimal SinaWeiBoReleaseCompleteRate { get; set; }
+
+        /// <summary>
         /// 月发布目标
         /// </summary>
         public int ReleaseTarget { get; set; }
@@ -218,6 +280,38 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public decimal SendOrderCompleteRate { get; set; }
 
+
+        /// <summary>
+        /// 新客上门目标
+        /// </summary>
+        public int NewCustomerVisitTarget { get; set; }
+
+        /// <summary>
+        /// 累计新客上门数
+        /// </summary>
+        public int CumulativeNewCustomerVisit { get; set; }
+
+        /// <summary>
+        /// 新客上门完成率
+        /// </summary>
+        public decimal NewCustomerVisitCompleteRate { get; set; }
+
+        /// <summary>
+        /// 老客上门目标
+        /// </summary>
+        public int OldCustomerVisitTarget { get; set; }
+
+        /// <summary>
+        /// 累计老客上门数
+        /// </summary>
+        public int CumulativeOldCustomerVisit { get; set; }
+
+        /// <summary>
+        /// 老客上门完成率
+        /// </summary>
+        public decimal OldCustomerVisitCompleteRate { get; set; }
+
+
         /// <summary>
         /// 上门目标
         /// </summary>
@@ -232,6 +326,39 @@ namespace Fx.Amiya.DbModels.Model
         /// 上门完成率
         /// </summary>
         public decimal VisitCompleteRate { get; set; }
+
+
+        /// <summary>
+        /// 新诊成交人数目标
+        /// </summary>
+        public int NewCustomerDealTarget { get; set; }
+
+        /// <summary>
+        /// 累计新诊成交人数
+        /// </summary>
+        public int CumulativeNewCustomerDealTarget { get; set; }
+
+        /// <summary>
+        /// 新诊成交率
+        /// </summary>
+        public decimal NewCustomerDealRate { get; set; }
+
+
+
+        /// <summary>
+        /// 老客成交人数目标
+        /// </summary>
+        public int OldCustomerDealTarget { get; set; }
+
+        /// <summary>
+        /// 累计老客成交人数
+        /// </summary>
+        public int CumulativeOldCustomerDealTarget { get; set; }
+
+        /// <summary>
+        /// 老客成交率
+        /// </summary>
+        public decimal OldCustomerDealRate { get; set; }
 
         /// <summary>
         /// 成交人数目标

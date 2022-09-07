@@ -124,13 +124,96 @@
             <param name="month"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaAchievementController.GetSendAndDealPerformanceDetailList(System.Int32,System.Int32,System.Boolean)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaAchievementController.GetPerformanceByGroupAsync(System.Int32,System.Int32,System.String)">
+            <summary>
+            分组总业绩
+            </summary>
+            <param name="year"></param>
+            <param name="month"></param>
+            <param name="liveAnchorName">中文主播名字（刀刀，吉娜）</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaAchievementController.GetSendAndDealPerformanceByLiveAnchorNameAsync(System.Int32,System.Int32,System.String)">
+            <summary>
+            派单成交业绩
+            </summary>
+            <param name="year"></param>
+            <param name="month"></param>
+            <param name="liveAnchorName">中文主播名字（刀刀，吉娜）</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaAchievementController.GetConsultationPerformanceByLiveAnchorNameAsync(System.Int32,System.Int32,System.String)">
+            <summary>
+            面诊业绩
+            </summary>
+            <param name="year">登记日期年</param>
+            <param name="month">登记日期月</param>
+            <param name="liveAnchorName">中文主播名字（刀刀，吉娜）</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaAchievementController.GetIndependentOrAssistPerformanceByLiveAnchorNameAsync(System.Int32,System.Int32,System.String)">
+            <summary>
+            独立/协助业绩
+            </summary>
+            <param name="year"></param>
+            <param name="month"></param>
+            <param name="liveAnchorName">中文主播名字（刀刀，吉娜）</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaAchievementController.GetBaseBusinessPerformanceByLiveAnchorNameAsync(System.Int32,System.Int32,System.String)">
+            <summary>
+            基础经营看板
+            </summary>
+            <param name="year"></param>
+            <param name="month"></param>
+            <param name="liveAnchorName">中文主播名字（刀刀，吉娜）</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaAchievementController.GetSendAndDealNumPerformanceByLiveAnchorNameAsync(System.Int32,System.Int32,System.String)">
+            <summary>
+            派单成交经营看板
+            </summary>
+            <param name="year"></param>
+            <param name="month"></param>
+            <param name="liveAnchorName">中文主播名字（刀刀，吉娜）</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaAchievementController.GetGuestUnitPricePerformanceByLiveAnchorNameAsync(System.Int32,System.Int32,System.String)">
+            <summary>
+            客单价经营看板
+            </summary>
+            <param name="year"></param>
+            <param name="month"></param>
+            <param name="liveAnchorName">中文主播名字（刀刀，吉娜）</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaAchievementController.GetPerformanceCompleteRateByLiveAnchorNameAsync(System.Int32,System.Int32,System.String)">
+            <summary>
+            各版块占比看板
+            </summary>
+            <param name="year"></param>
+            <param name="month"></param>
+            <param name="liveAnchorName">中文主播名字（刀刀，吉娜）</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaAchievementController.GetSendAndDealPerformanceDetailListAsync(System.Int32,System.Int32,System.Boolean,System.String)">
             <summary>
             根据年月获取派单成交明细
             </summary>
             <param name="year"></param>
             <param name="month"></param>
             <param name="isHistorySendOrder">是否为历史派单；true:历史派单当月成交，false：当月派单当月成交</param>
+            <param name="liveAnchorName">主播名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaAchievementController.GetPictureOrVideoPerformanceListAsync(System.Int32,System.Int32,System.Boolean,System.String)">
+            <summary>
+            根据年月与主播名字获取照片/视频面诊明细
+            </summary>
+            <param name="year"></param>
+            <param name="month"></param>
+            <param name="isVideo">是否为视频面诊；true:视频面诊，false：照片面诊</param>
+            <param name="liveAnchorName">主播名称</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaDepartmentController.GetListWithPageAsync(System.Int32,System.Int32)">
@@ -2833,7 +2916,7 @@
             主播日运营目标情况数据接口
             </summary>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.#ctor(Fx.Amiya.IService.ILiveAnchorDailyTargetService,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.#ctor(Fx.Amiya.IService.ILiveAnchorDailyTargetService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Fx.Amiya.IService.IShoppingCartRegistrationService,Fx.Amiya.IService.IContentPlatformOrderSendService,Fx.Amiya.IService.IContentPlatFormOrderDealInfoService)">
             <summary>
             构造函数
             </summary>
@@ -2851,13 +2934,6 @@
             <param name="pageSize"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.AddAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AddLiveAnchorDailyTargetVo)">
-            <summary>
-            添加主播日运营目标情况
-            </summary>
-            <param name="addVo"></param>
-            <returns></returns>
-        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.GetByIdAsync(System.String)">
             <summary>
             根据id获取主播日运营目标情况
@@ -2865,9 +2941,52 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.UpdateAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.UpdateLiveAnchorDailyTargetVo)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.BeforeLivingAddAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo)">
             <summary>
-            修改主播日运营目标情况
+            添加直播前主播日运营目标情况
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.BeforeLivingUpdateAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo)">
+            <summary>
+            修改直播前主播日运营目标情况
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.LivingAddAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingAddLiveAnchorDailyTargetVo)">
+            <summary>
+            添加直播中主播日运营目标情况
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.LivingUpdateAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingUpdateLiveAnchorDailyTargetVo)">
+            <summary>
+            修改直播中主播日运营目标情况
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.GetAfterLivingAchievementByLiveAnchorId(System.Int32,System.DateTime)">
+            <summary>
+            根据主播id自动生成业绩
+            </summary>
+            <param name="liveAnchorId"></param>
+            <param name="recordDate">填报日期</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.AfterLivingAddAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo)">
+            <summary>
+            添加直播后主播日运营目标情况
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.AfterLivingUpdateAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo)">
+            <summary>
+            修改直播后主播日运营目标情况
             </summary>
             <param name="updateVo"></param>
             <returns></returns>
@@ -3991,7 +4110,6 @@
             </summary>
             <param name="startDate">开始时间</param>
             <param name="endDate">结束时间</param>
-            <param name="customerName">客户名称</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.ExportLiveAnchorOperatingReportAsync(System.DateTime,System.DateTime)">
@@ -7529,6 +7647,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.Phone">
             <summary>
             电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.IsOldCustomer">
+            <summary>
+            新/老客业绩
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.AddOrderPrice">
@@ -12486,6 +12609,231 @@
             填报日期
             </summary>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo">
+            <summary>
+            直播前新增主播日运营情况数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
+            <summary>
+            主播月目标关联id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.OperationEmployeeId">
+            <summary>
+            运营人员Id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.TikTokSendNum">
+            <summary>
+            抖音发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.ZhihuSendNum">
+            <summary>
+            知乎今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.XiaoHongShuSendNum">
+            <summary>
+            小红书今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.SinaWeiBoSendNum">
+            <summary>
+            微博今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.TodaySendNum">
+            <summary>
+            今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.FlowInvestmentNum">
+            <summary>
+            今日视频号投流量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.CluesNum">
+            <summary>
+            今日线索量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.AddFansNum">
+            <summary>
+            今日涨粉量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.RecordDate">
+            <summary>
+            填报日期
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingAddLiveAnchorDailyTargetVo">
+            <summary>
+            直播中新增主播日运营数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingAddLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
+            <summary>
+            主播月目标关联id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingAddLiveAnchorDailyTargetVo.LivingTrackingEmployeeId">
+            <summary>
+            直播中人员id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingAddLiveAnchorDailyTargetVo.LivingRoomFlowInvestmentNum">
+            <summary>
+            今日直播间投流量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingAddLiveAnchorDailyTargetVo.Consultation">
+            <summary>
+            今日99面诊卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingAddLiveAnchorDailyTargetVo.Consultation2">
+            <summary>
+            今日199面诊卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingAddLiveAnchorDailyTargetVo.CargoSettlementCommission">
+            <summary>
+            今日带货结算佣金
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingAddLiveAnchorDailyTargetVo.RecordDate">
+            <summary>
+            填报日期
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo">
+            <summary>
+            直播后新增主播日运营数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
+            <summary>
+            主播月目标关联id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.NetWorkConsultingEmployeeId">
+            <summary>
+            网咨人员Id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.ConsultationCardConsumed">
+            <summary>
+            今日99消耗卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.ConsultationCardConsumed2">
+            <summary>
+            今日199消耗卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.ActivateHistoricalConsultation">
+            <summary>
+            今日激活历史面诊数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.AddWechatNum">
+            <summary>
+            今日加V量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.SendOrderNum">
+            <summary>
+            今日派单量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.NewVisitNum">
+            <summary>
+            今日新诊上门人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.SubsequentVisitNum">
+            <summary>
+            今日复诊上门人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.OldCustomerVisitNum">
+            <summary>
+            今日老客上门人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.VisitNum">
+            <summary>
+            今日上门人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.NewDealNum">
+            <summary>
+            今日新诊成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.SubsequentDealNum">
+            <summary>
+            今日复诊成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.OldCustomerDealNum">
+            <summary>
+            今日老客成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.DealNum">
+            <summary>
+            今日成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.CargoSettlementCommission">
+            <summary>
+            今日带货结算佣金
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.NewPerformanceNum">
+            <summary>
+            今日新诊业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.SubsequentPerformanceNum">
+            <summary>
+            今日复诊业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.NewCustomerPerformanceCountNum">
+            <summary>
+            今日总新客业绩(新诊业绩+复诊业绩)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.OldCustomerPerformanceNum">
+            <summary>
+            今日老客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.PerformanceNum">
+            <summary>
+            今日业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.MinivanRefund">
+            <summary>
+            今日小黄车退单量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.MiniVanBadReviews">
+            <summary>
+            今日小黄车差评量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingAddLiveAnchorDailyTargetVo.RecordDate">
+            <summary>
+            填报日期
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.Id">
             <summary>
             编号
@@ -12494,6 +12842,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.LiveanchorMonthlyTargetId">
             <summary>
             主播月目标关联id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.LiveAnchorId">
+            <summary>
+            主播id
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.CreateDate">
@@ -12519,6 +12872,26 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.NetWorkConsultingEmployeeId">
             <summary>
             网咨人员Id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.TikTokSendNum">
+            <summary>
+            抖音今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.ZhihuSendNum">
+            <summary>
+            知乎今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.XiaoHongShuSendNum">
+            <summary>
+            小红书今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.SinaWeiBoSendNum">
+            <summary>
+            微博今日发布量
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.TodaySendNum">
@@ -12699,6 +13072,26 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.NetWorkConsultingEmployeeName">
             <summary>
             网咨人员名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.TikTokSendNum">
+            <summary>
+            抖音今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.ZhihuSendNum">
+            <summary>
+            知乎今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.XiaoHongShuSendNum">
+            <summary>
+            小红书今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.SinaWeiBoSendNum">
+            <summary>
+            微博今日发布量
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.TodaySendNum">
@@ -13011,6 +13404,246 @@
             填报日期
             </summary>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo">
+            <summary>
+            直播前编辑主播日运营情况数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
+            <summary>
+            主播月目标关联id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.OperationEmployeeId">
+            <summary>
+            运营人员Id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.TikTokSendNum">
+            <summary>
+            抖音发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.ZhihuSendNum">
+            <summary>
+            知乎今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.XiaoHongShuSendNum">
+            <summary>
+            小红书今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.SinaWeiBoSendNum">
+            <summary>
+            微博今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.TodaySendNum">
+            <summary>
+            今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.FlowInvestmentNum">
+            <summary>
+            今日视频号投流量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.CluesNum">
+            <summary>
+            今日线索量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.AddFansNum">
+            <summary>
+            今日涨粉量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.RecordDate">
+            <summary>
+            填报日期
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingUpdateLiveAnchorDailyTargetVo">
+            <summary>
+            直播中编辑主播日运营数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingUpdateLiveAnchorDailyTargetVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingUpdateLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
+            <summary>
+            主播月目标关联id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingUpdateLiveAnchorDailyTargetVo.LivingTrackingEmployeeId">
+            <summary>
+            直播中人员id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingUpdateLiveAnchorDailyTargetVo.LivingRoomFlowInvestmentNum">
+            <summary>
+            今日直播间投流量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingUpdateLiveAnchorDailyTargetVo.Consultation">
+            <summary>
+            今日99面诊卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingUpdateLiveAnchorDailyTargetVo.Consultation2">
+            <summary>
+            今日199面诊卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingUpdateLiveAnchorDailyTargetVo.CargoSettlementCommission">
+            <summary>
+            今日带货结算佣金
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingUpdateLiveAnchorDailyTargetVo.RecordDate">
+            <summary>
+            填报日期
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo">
+            <summary>
+            直播后编辑
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
+            <summary>
+            主播月目标关联id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.NetWorkConsultingEmployeeId">
+            <summary>
+            网咨人员Id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.ConsultationCardConsumed">
+            <summary>
+            今日99消耗卡数量（小黄车订单列表-是否面诊为true，面诊时间为今日）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.ConsultationCardConsumed2">
+            <summary>
+            今日199消耗卡数量（小黄车订单列表-是否面诊为true，面诊时间为今日）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.ActivateHistoricalConsultation">
+            <summary>
+            今日激活历史面诊数量（小黄车订单列表-是否面诊为true，面诊时间为今日，登记时间非当月）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.AddWechatNum">
+            <summary>
+            今日加V量（小黄车订单列表-登记时间为今日，已加v状态）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.SendOrderNum">
+            <summary>
+            今日派单量（内容平台成交情况-订单实际派单时间为今日）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.NewVisitNum">
+            <summary>
+            今日新诊上门人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.SubsequentVisitNum">
+            <summary>
+            今日复诊上门人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.OldCustomerVisitNum">
+            <summary>
+            今日老客上门人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.VisitNum">
+            <summary>
+            今日上门人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.NewDealNum">
+            <summary>
+            今日新诊成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.SubsequentDealNum">
+            <summary>
+            今日复诊成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.OldCustomerDealNum">
+            <summary>
+            今日老客成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.DealNum">
+            <summary>
+            今日成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.CargoSettlementCommission">
+            <summary>
+            今日带货结算佣金
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.NewPerformanceNum">
+            <summary>
+            今日新诊业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.SubsequentPerformanceNum">
+            <summary>
+            今日复诊业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.NewCustomerPerformanceCountNum">
+            <summary>
+            今日总新客业绩(新诊业绩+复诊业绩)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.OldCustomerPerformanceNum">
+            <summary>
+            今日老客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.PerformanceNum">
+            <summary>
+            今日业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.MinivanRefund">
+            <summary>
+            今日小黄车退单量(小黄车登记列表-是否退款：true，退款时间为今日)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.MiniVanBadReviews">
+            <summary>
+            今日小黄车差评量(小黄车登记列表-是否差评：true，差评时间为今日)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingUpdateLiveAnchorDailyTargetVo.RecordDate">
+            <summary>
+            填报日期
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo">
             <summary>
             添加主播月度目标情况
@@ -13034,6 +13667,26 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.LiveAnchorId">
             <summary>
             主播ID
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.ZhihuReleaseTarget">
+            <summary>
+            知乎发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.TikTokReleaseTarget">
+            <summary>
+            抖音发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.XiaoHongShuReleaseTarget">
+            <summary>
+            小红书发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.SinaWeiBoReleaseTarget">
+            <summary>
+            微博发布目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.ReleaseTarget">
@@ -13096,9 +13749,29 @@
             派单目标
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.NewCustomerVisitTarget">
+            <summary>
+            新客上门目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.OldCustomerVisitTarget">
+            <summary>
+            老客上门目标
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.VisitTarget">
             <summary>
             上门目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.NewCustomerDealTarget">
+            <summary>
+            新诊成交人数目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.OldCustomerDealTarget">
+            <summary>
+            老客成交人数目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.DealTarget">
@@ -13179,6 +13852,66 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ContentPlatFormId">
             <summary>
             主播归属平台id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.TikTokReleaseTarget">
+            <summary>
+            抖音发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeTikTokRelease">
+            <summary>
+            月累计抖音发布条数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.TikTokReleaseCompleteRate">
+            <summary>
+            抖音发布目标完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ZhihuReleaseTarget">
+            <summary>
+            知乎发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeZhihuRelease">
+            <summary>
+            月累计知乎发布条数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ZhihuReleaseCompleteRate">
+            <summary>
+            知乎发布目标完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.XiaoHongShuReleaseTarget">
+            <summary>
+            小红书发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeXiaoHongShuRelease">
+            <summary>
+            月累计小红书发布条数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.XiaoHongShuReleaseCompleteRate">
+            <summary>
+            小红书发布目标完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.SinaWeiBoReleaseTarget">
+            <summary>
+            微博发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeSinaWeiBoRelease">
+            <summary>
+            月累计微博发布条数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.SinaWeiBoReleaseCompleteRate">
+            <summary>
+            微博发布目标完成率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ReleaseTarget">
@@ -13361,6 +14094,36 @@
             派单完成率
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.NewCustomerVisitTarget">
+            <summary>
+            新客上门目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeNewCustomerVisit">
+            <summary>
+            累计新客上门数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.NewCustomerVisitCompleteRate">
+            <summary>
+            新客上门完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.OldCustomerVisitTarget">
+            <summary>
+            老客上门目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeOldCustomerVisit">
+            <summary>
+            累计老客上门数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.OldCustomerVisitCompleteRate">
+            <summary>
+            老客上门完成率
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.VisitTarget">
             <summary>
             上门目标
@@ -13374,6 +14137,36 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.VisitCompleteRate">
             <summary>
             上门完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.NewCustomerDealTarget">
+            <summary>
+            新诊成交人数目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeNewCustomerDealTarget">
+            <summary>
+            累计新诊成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.NewCustomerDealRate">
+            <summary>
+            新诊成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.OldCustomerDealTarget">
+            <summary>
+            老客成交人数目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeOldCustomerDealTarget">
+            <summary>
+            累计老客成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.OldCustomerDealRate">
+            <summary>
+            老客成交率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.DealTarget">
@@ -13526,6 +14319,26 @@
             主播ID
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.TikTokReleaseTarget">
+            <summary>
+            抖音发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.ZhihuReleaseTarget">
+            <summary>
+            知乎发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.XiaoHongShuReleaseTarget">
+            <summary>
+            小红书发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.SinaWeiBoReleaseTarget">
+            <summary>
+            微博发布目标
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.ReleaseTarget">
             <summary>
             月发布目标
@@ -13586,9 +14399,29 @@
             派单目标
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.NewCustomerVisitTarget">
+            <summary>
+            新客上门目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.OldCustomerVisitTarget">
+            <summary>
+            老客上门目标
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.VisitTarget">
             <summary>
             上门目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.NewCustomerDealTarget">
+            <summary>
+            新诊成交人数目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.OldCustomerDealTarget">
+            <summary>
+            老客成交人数目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.DealTarget">
@@ -15334,6 +16167,86 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.LiveAnchor">
             <summary>
             主播
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.TikTokSendNum">
+            <summary>
+            今日抖音发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.TikTokReleaseTarget">
+            <summary>
+            月抖音发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.TikTokCumulativeRelease">
+            <summary>
+            月累计抖音发布条数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.TikTokReleaseCompleteRate">
+            <summary>
+            抖音发布目标完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.XiaoHongShuSendNum">
+            <summary>
+            今日小红书发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.XiaoHongShuReleaseTarget">
+            <summary>
+            月小红书发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.XiaoHongShuCumulativeRelease">
+            <summary>
+            月累计小红书发布条数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.XiaoHongShuReleaseCompleteRate">
+            <summary>
+            小红书发布目标完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.SinaWeiBoSendNum">
+            <summary>
+            今日微博发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.SinaWeiBoReleaseTarget">
+            <summary>
+            月微博发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.SinaWeiBoCumulativeRelease">
+            <summary>
+            月累计微博发布条数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.SinaWeiBoReleaseCompleteRate">
+            <summary>
+            微博发布目标完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ZhihuSendNum">
+            <summary>
+            今日知乎发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ZhihuReleaseTarget">
+            <summary>
+            月知乎发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ZhihuCumulativeRelease">
+            <summary>
+            月累计知乎发布条数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ZhihuReleaseCompleteRate">
+            <summary>
+            知乎发布目标完成率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.TodaySendNum">
@@ -17326,6 +18239,861 @@
             订单编号
             </summary>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo">
+            <summary>
+            分组业绩看板
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.CueerntMonthTotalPerformance">
+            <summary>
+            本月总业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.TotalPerformanceYearOnYear">
+            <summary>
+            总业绩同比增长
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.TotalPerformanceChainratio">
+            <summary>
+            总业绩环比增长
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.TotalPerformanceTargetComplete">
+            <summary>
+            总业绩目标达成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.CurrentMonthNewCustomerPerformance">
+            <summary>
+            当前月新客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.NewCustomerPerformanceYearOnYear">
+            <summary>
+            新客业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.NewCustomerPerformanceChainRatio">
+            <summary>
+            新客业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.NewCustomerPerformanceTargetComplete">
+            <summary>
+            新客业绩目标达成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.CurrentMonthOldCustomerPerformance">
+            <summary>
+            当前月老客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.OldCustomerPerformanceYearOnYear">
+            <summary>
+            老客业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.OldCustomerPerformanceChainRatio">
+            <summary>
+            老客业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.OldCustomerTargetComplete">
+            <summary>
+            老客业绩目标达成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.CurrentMonthCommercePerformance">
+            <summary>
+            本月带货总业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.CommercePerformanceYearOnYear">
+            <summary>
+            带货业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.CommercePerformanceChainRatio">
+            <summary>
+            带货业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.CommercePerformanceTargetComplete">
+            <summary>
+            带货业绩目标达成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.PerformanceRatios">
+            <summary>
+            新老客,带货业绩所占比例
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.NewPerformanceData">
+            <summary>
+            新客业绩数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.OldPerformanceData">
+            <summary>
+            老客业绩数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo.CommercePerformanceData">
+            <summary>
+            带货业绩数据
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Performance.GroupSendAndDealInfoVo">
+            <summary>
+            派单成交数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupSendAndDealInfoVo.HistorySendDuringMonthDeal">
+            <summary>
+            历史派单当月成交
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupSendAndDealInfoVo.HistorySendDuringMonthDealYearOnYear">
+            <summary>
+            历史派单当月成交同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupSendAndDealInfoVo.HistorySendDuringMonthDealChainRatio">
+            <summary>
+            历史派单当月成交环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupSendAndDealInfoVo.DuringMonthSendDuringMonthDeal">
+            <summary>
+            当月派单当月成交
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupSendAndDealInfoVo.DuringMonthSendDuringMonthDealYearOnYear">
+            <summary>
+            当月派单当月成交同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupSendAndDealInfoVo.DuringMonthSendDuringMonthDealChainRatio">
+            <summary>
+            当月派单当月成交环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupSendAndDealInfoVo.PerformanceRatioVo">
+            <summary>
+            业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupSendAndDealInfoVo.HistorySendDuringMonthDealList">
+            <summary>
+            历史派单当月成交
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupSendAndDealInfoVo.DuringMonthSendDuringMonthDealList">
+            <summary>
+            当月派单当月成交
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Performance.ConsultationPerformanceVo">
+            <summary>
+            面诊业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.ConsultationPerformanceVo.PictureConsultationPerformance">
+            <summary>
+            照片面诊业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.ConsultationPerformanceVo.PictureConsultationPerformanceYearOnYear">
+            <summary>
+            照片面诊业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.ConsultationPerformanceVo.PictureConsultationPerformanceChainRatio">
+            <summary>
+            照片面诊业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.ConsultationPerformanceVo.VideoConsultationPerformance">
+            <summary>
+            视频面诊业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.ConsultationPerformanceVo.VideoConsultationPerformanceYearOnYear">
+            <summary>
+            视频面诊业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.ConsultationPerformanceVo.VideoConsultationPerformanceChainRatio">
+            <summary>
+            视频面诊业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.ConsultationPerformanceVo.PerformanceRatioVo">
+            <summary>
+            业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.ConsultationPerformanceVo.PictureConsultationPerformanceBrokenLine">
+            <summary>
+            照片面诊业绩折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.ConsultationPerformanceVo.VideoConsultationPerformanceBrokenLine">
+            <summary>
+            视频面诊业绩折线图
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Performance.IndependentOrAssistPerformanceVo">
+            <summary>
+            独立/协助业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.IndependentOrAssistPerformanceVo.LiveAnchorIndenpendentPerformance">
+            <summary>
+            主播独立业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.IndependentOrAssistPerformanceVo.LiveAnchorIndenpendentPerformanceYearOnYear">
+            <summary>
+            主播独立业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.IndependentOrAssistPerformanceVo.LiveAnchorIndenpendentPerformanceChainRatio">
+            <summary>
+            主播独立业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.IndependentOrAssistPerformanceVo.CustomerServiceIndenpendentPerformance">
+            <summary>
+            助理独立业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.IndependentOrAssistPerformanceVo.CustomerServiceIndenpendentPerformanceYearOnYear">
+            <summary>
+            助理独立业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.IndependentOrAssistPerformanceVo.CustomerServiceIndenpendentPerformanceChainRatio">
+            <summary>
+            助理独立业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.IndependentOrAssistPerformanceVo.CustomerServiceAssistPerformance">
+            <summary>
+            助理协助业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.IndependentOrAssistPerformanceVo.CustomerServiceAssistPerformanceYearOnYear">
+            <summary>
+            助理协助业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.IndependentOrAssistPerformanceVo.CustomerServiceAssistPerformanceChainRatio">
+            <summary>
+            助理协助业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.IndependentOrAssistPerformanceVo.PerformanceRatioVo">
+            <summary>
+            业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.IndependentOrAssistPerformanceVo.LiveAnchorIndenpendentPerformanceBrokenLine">
+            <summary>
+            主播独立业绩折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.IndependentOrAssistPerformanceVo.CustomerServiceIndenpendentPerformanceBrokenLine">
+            <summary>
+            助理独立业绩折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.IndependentOrAssistPerformanceVo.CustomerServiceAssistPerformanceBrokenLine">
+            <summary>
+            助理协助业绩折线图
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo">
+            <summary>
+            基础经营看板业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.AddWeChatNum">
+            <summary>
+            加v
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.AddWeChatNumYearOnYear">
+            <summary>
+            加v同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.AddWeChatNumRatioVo">
+            <summary>
+            加v环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.AddWeChatNumTargetComplete">
+            <summary>
+            加v目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.ConsulationCardNum">
+            <summary>
+            面诊卡下单
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.ConsulationCardNumYearOnYear">
+            <summary>
+            面诊卡下单同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.ConsulationCardNumRatioVo">
+            <summary>
+            面诊卡下单环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.ConsulationCardNumTargetComplete">
+            <summary>
+            面诊卡下单目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.ThisMonthConsulationCardConsumedNum">
+            <summary>
+            当月面诊卡消耗
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.ThisMonthConsulationCardConsumedNumYearOnYear">
+            <summary>
+            当月面诊卡消耗同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.ThisMonthConsulationCardConsumedNumRatioVo">
+            <summary>
+            当月面诊卡消耗环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.ThisMonthConsulationCardConsumedNumTargetComplete">
+            <summary>
+            当月面诊卡消耗目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.HistoryConsulationCardConsumedNum">
+            <summary>
+            历史面诊卡消耗
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.HistoryConsulationCardConsumedNumYearOnYear">
+            <summary>
+            历史面诊卡消耗同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.HistoryConsulationCardConsumedNumRatioVo">
+            <summary>
+            历史面诊卡消耗环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.HistoryConsulationCardConsumedNumTargetComplete">
+            <summary>
+            历史面诊卡消耗目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.ThisMonthConsulationCardRefundNum">
+            <summary>
+            当月面诊卡退单
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.ThisMonthConsulationCardRefundNumYearOnYear">
+            <summary>
+            当月面诊卡退单同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.ThisMonthConsulationCardRefundNumRatioVo">
+            <summary>
+            当月面诊卡退单环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.ThisMonthConsulationCardRefundNumTargetComplete">
+            <summary>
+            当月面诊卡退单目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.HistoryConsulationCardRefundNum">
+            <summary>
+            历史面诊卡（当月）退款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.HistoryConsulationCardRefundNumYearOnYear">
+            <summary>
+            历史面诊卡（当月）退款同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.HistoryConsulationCardRefundNumRatioVo">
+            <summary>
+            历史面诊卡（当月）退款环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.ConsulationCardInventoryNum">
+            <summary>
+            面诊卡库存量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.AddWechatBrokenLine">
+            <summary>
+            加v折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.ConsulationCardNumBrokenLine">
+            <summary>
+            面诊卡下单折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.ThisMonthConsulationCardConsumedNumBrokenLine">
+            <summary>
+            当月面诊卡消耗折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.HistoryConsulationCardConsumedNumBrokenLine">
+            <summary>
+            历史面诊卡消耗折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.ThisMonthConsulationCardRefundNumBrokenLine">
+            <summary>
+            当月面诊卡退款折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.BaseBusinessPerformanceVo.HistoryConsulationCardRefundNumBrokenLine">
+            <summary>
+            历史面诊卡（当月）退款折线图
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo">
+            <summary>
+            派单成交经营看板
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.SendOrderNum">
+            <summary>
+            派单数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.SendOrderNumYearOnYear">
+            <summary>
+            派单数同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.SendOrderNumChainRatio">
+            <summary>
+            派单数环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.SendOrderNumCompleteRate">
+            <summary>
+            派单数目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.TotalVisitNum">
+            <summary>
+            总上门数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.TotalVisitNumYearOnYear">
+            <summary>
+            总上门数同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.TotalVisitNumChainRatio">
+            <summary>
+            总上门数环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.TotalVisitNumCompleteRate">
+            <summary>
+            总上门数目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.NewCustomerVisitNum">
+            <summary>
+            新客上门数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.NewCustomerVisitNumYearOnYear">
+            <summary>
+            新客上门数同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.NewCustomerVisitNumChainRatio">
+            <summary>
+            新客上门数环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.NewCustomerVisitNumCompleteRate">
+            <summary>
+            新客上门数目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.OldCustomerVisitNum">
+            <summary>
+            老客上门数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.OldCustomerVisitNumYearOnYear">
+            <summary>
+            老客上门数同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.OldCustomerVisitNumChainRatio">
+            <summary>
+            老客上门数环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.OldCustomerVisitNumCompleteRate">
+            <summary>
+            老客上门数目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.TotalDealNum">
+            <summary>
+            总成交数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.TotalDealNumYearOnYear">
+            <summary>
+            总成交数同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.TotalDealNumChainRatio">
+            <summary>
+            总成交数环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.TotalDealNumCompleteRate">
+            <summary>
+            总成交数目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.NewCustomerDealNum">
+            <summary>
+            新客成交数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.NewCustomerDealNumYearOnYear">
+            <summary>
+            新客成交数同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.NewCustomerDealNumChainRatio">
+            <summary>
+            新客成交数环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.NewCustomerDealNumCompleteRate">
+            <summary>
+            新客成交数目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.OldCustomerDealNum">
+            <summary>
+            老客成交数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.OldCustomerDealNumYearOnYear">
+            <summary>
+            老客成交数同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.OldCustomerDealNumChainRatio">
+            <summary>
+            老客成交数环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.OldCustomerDealNumCompleteRate">
+            <summary>
+            老客成交数目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.SendOrderBrokenLine">
+            <summary>
+            派单数折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.TotalVisitBrokenLine">
+            <summary>
+            总上门数折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.NewCustomerVisitBrokenLine">
+            <summary>
+            新客上门数折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.OldCustomerVisitBrokenLine">
+            <summary>
+            老客上门数折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.TotalDealBrokenLine">
+            <summary>
+            总成交数折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.NewCustomerDealBrokenLine">
+            <summary>
+            新客成交数折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.SendOrDealPerformanceVo.OldCustomerDealBrokenLine">
+            <summary>
+            老客成交数折线图
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Performance.GuestUnitPricePerformanceVo">
+            <summary>
+            主播客单价业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GuestUnitPricePerformanceVo.TotalGuestUnitPricePerformance">
+            <summary>
+            总客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GuestUnitPricePerformanceVo.TotalGuestUnitPricePerformanceYearOnYear">
+            <summary>
+            总客单价同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GuestUnitPricePerformanceVo.TotalGuestUnitPricePerformanceChainRatio">
+            <summary>
+            总客单价环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GuestUnitPricePerformanceVo.NewGuestUnitPricePerformance">
+            <summary>
+            新诊客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GuestUnitPricePerformanceVo.NewGuestUnitPricePerformanceYearOnYear">
+            <summary>
+            新诊客单价同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GuestUnitPricePerformanceVo.NewGuestUnitPricePerformanceChainRatio">
+            <summary>
+            新诊客单价环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GuestUnitPricePerformanceVo.OldGuestUnitPricePerformance">
+            <summary>
+            老客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GuestUnitPricePerformanceVo.OldGuestUnitPricePerformanceYearOnYear">
+            <summary>
+            老客客单价同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GuestUnitPricePerformanceVo.OldGuestUnitPricePerformanceChainRatio">
+            <summary>
+            老客客单价环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GuestUnitPricePerformanceVo.TotalGuestUnitPricePerformanceBrokenLine">
+            <summary>
+            总客单价折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GuestUnitPricePerformanceVo.NewGuestUnitPricePerformanceBrokenLine">
+            <summary>
+            新诊客单价折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GuestUnitPricePerformanceVo.OldGuestUnitPricePerformanceBrokenLine">
+            <summary>
+            老客客单价折线图
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo">
+            <summary>
+            各版块完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.AddWeChatCompleteRate">
+            <summary>
+            加v率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.AddWeChatCompleteRateYearOnYear">
+            <summary>
+            加v率同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.AddWeChatCompleteRateChainRatio">
+            <summary>
+            加v率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.AddWeChatCompleteRateTarget">
+            <summary>
+            加v率目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.ConsulationCardUsedCompleteRate">
+            <summary>
+            下单面诊卡消耗率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.ConsulationCardUsedCompleteRateYearOnYear">
+            <summary>
+            下单面诊卡消耗率同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.ConsulationCardUsedCompleteRateChainRatio">
+            <summary>
+            下单面诊卡消耗率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.ConsulationCardUsedCompleteRateTarget">
+            <summary>
+            下单面诊卡消耗率目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.SendOrderCompleteRate">
+            <summary>
+            派单率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.SendOrderCompleteRateYearOnYear">
+            <summary>
+            派单率同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.SendOrderCompleteRateChainRatio">
+            <summary>
+            派单率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.SendOrderCompleteRateTarget">
+            <summary>
+            派单率目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.NewCustomerVisitCompleteRate">
+            <summary>
+            新客上门率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.NewCustomerVisitCompleteRateYearOnYear">
+            <summary>
+            新客上门率同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.NewCustomerVisitCompleteRateChainRatio">
+            <summary>
+            新客上门率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.NewCustomerVisitCompleteRateTarget">
+            <summary>
+            新客上门率目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.NewCustomerDealCompleteRate">
+            <summary>
+            新客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.NewCustomerDealCompleteRateYearOnYear">
+            <summary>
+            新客成交率同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.NewCustomerDealCompleteRateChainRatio">
+            <summary>
+            新客成交率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.NewCustomerDealCompleteRateTarget">
+            <summary>
+            新客成交率目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.ThisMonthConsulationCardRefundCompleteRate">
+            <summary>
+            当月面诊卡退单率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.ThisMonthConsulationCardRefundCompleteRateYearOnYear">
+            <summary>
+            当月面诊卡退单率同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.ThisMonthConsulationCardRefundCompleteRateChainRatio">
+            <summary>
+            当月面诊卡退单率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.ThisMonthConsulationCardRefundCompleteRateTarget">
+            <summary>
+            当月面诊卡退单率目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.HistoryConsulationCardRefundCompleteRate">
+            <summary>
+            历史面诊卡退单率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.HistoryConsulationCardRefundCompleteRateYearOnYear">
+            <summary>
+            历史面诊卡退单率同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.HistoryConsulationCardRefundCompleteRateChainRatio">
+            <summary>
+            历史面诊卡退单率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.HistoryConsulationCardRefundCompleteRateTarget">
+            <summary>
+            历史面诊卡退单率目标达成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.AddWeChatCompleteRateBrokenLine">
+            <summary>
+            加v率折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.ConsulationCardUsedCompleteRateBrokenLine">
+            <summary>
+            下单面诊卡消耗率折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.SendOrderCompleteRateBrokenLine">
+            <summary>
+            派单率折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.NewCustomerVisitCompleteRateBrokenLine">
+            <summary>
+            新客上门率折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.NewCustomerDealCompleteRateBrokenLine">
+            <summary>
+            新客成交率折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.ThisMonthConsulationCardRefundCompleteRateBrokenLine">
+            <summary>
+            当月面诊卡退单率折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupTargetCompleteRateVo.HistoryConsulationCardRefundCompleteRateBrokenLine">
+            <summary>
+            历史面诊卡退单率折线图
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.Performance.PerformanceVo">
             <summary>
             啊美雅业绩看板
@@ -17476,46 +19244,6 @@
             吉娜组业绩目标达成
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.CooperationLiveAnchorPerformance">
-            <summary>
-            合作达人业绩
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.CooperationLiveAnchorPerformanceYearOnYear">
-            <summary>
-            合作达人业绩同比
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.CooperationLiveAnchorPerformanceChainRatio">
-            <summary>
-            合作达人业绩环比
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.CooperationLiveAnchorPerformanceCompleteRate">
-            <summary>
-            合作达人业绩目标达成
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupYellowVPerformance">
-            <summary>
-            黄V组业绩
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupYellowVPerformanceYearOnYear">
-            <summary>
-            黄V组业绩同比
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupYellowVPerformanceChainRatio">
-            <summary>
-            黄V组业绩环比
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupYellowVPerformanceCompleteRate">
-            <summary>
-            黄V组业绩目标达成
-            </summary>
-        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.PerformanceRatios">
             <summary>
             各组业绩所占比例
@@ -17529,16 +19257,6 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupJinaPerformanceData">
             <summary>
             吉娜组业绩数据折线图
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.CooperationLiveAnchorPerformanceData">
-            <summary>
-            合作达人业绩数据折线图
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.GroupPerformanceVo.GroupYellowVPerformanceData">
-            <summary>
-            黄V组业绩数据折线图
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.Performance.SendAndDealInfoVo">
@@ -18363,6 +20081,11 @@
             是否面诊
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.AddShoppingCartRegistrationVo.ConsultationDate">
+            <summary>
+            面诊时间
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.AddShoppingCartRegistrationVo.IsReturnBackPrice">
             <summary>
             是否退款
@@ -18513,6 +20236,11 @@
             是否面诊
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.ConsultationDate">
+            <summary>
+            面诊时间
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.IsReturnBackPrice">
             <summary>
             是否退款
@@ -18646,6 +20374,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.UpdateShoppingCartRegistrationVo.IsConsultation">
             <summary>
             是否面诊
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.UpdateShoppingCartRegistrationVo.ConsultationDate">
+            <summary>
+            面诊时间
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.UpdateShoppingCartRegistrationVo.IsReturnBackPrice">
