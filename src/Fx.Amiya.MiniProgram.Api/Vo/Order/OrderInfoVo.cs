@@ -42,5 +42,13 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Order
         public string Standard { get; set; }
         public byte AppType { get; set; }
         public string AppTypeText { get; set; }
+        /// <summary>
+        /// 是否使用抵用券
+        /// </summary>
+        public bool IsUseCoupon { get; set; }
+        /// <summary>
+        /// 抵用券抵扣金额
+        /// </summary>
+        public decimal DeductMoney { get; set; }
     }
 }

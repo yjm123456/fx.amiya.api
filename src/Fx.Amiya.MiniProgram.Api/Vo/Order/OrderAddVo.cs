@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fx.Amiya.Core.Dto.Goods;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +18,14 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Order
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+        /// <summary>
+        /// 支付方式 1:三方支付 3:余额支付
+        /// </summary>
+        public int ExchangeType { get; set; }
+        /// <summary>
+        /// 抵用券id
+        /// </summary>
+        public string VoucherId { get; set; }
 
         public List<OrderItemVo> OrderItemList { get; set; }
 

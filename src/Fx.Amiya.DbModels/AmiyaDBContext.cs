@@ -117,6 +117,15 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<GrowthPointsRecord> GrowthPointsRecord { get; set; }
         public virtual DbSet<ConsumptionVoucher> ConsumptionVoucher { get; set; }
         public virtual DbSet<CustomerConsumptionVoucher> CustomerConsumptionVoucher { get; set; }
+        public virtual DbSet<MemberCardRankInfo> MemberCard { get; set; }
+        public virtual DbSet<MemberCardSendRecord> MemberCardSendRecord { get; set; }
+        public virtual DbSet<MemberCardHandle> MemberCardHandle { get; set; }
+        public virtual DbSet<BalanceAccount> BalanceAccounts { get; set; }
+        public virtual DbSet<BalanceRechargeRecord> BalanceRechargeRecords { get; set; }
+        public virtual DbSet<BalanceUseRecord> BalanceUseRecords { get; set; }
+        public virtual DbSet<RechargeRewardRule> RechargeRewardRules { get; set; }
+        public virtual  DbSet<RechargeAmount> RechargeAmounts { get; set; }
+        public virtual DbSet<GrowthPointsRule> GrowthPointsRules { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -233,6 +242,15 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new GrowthPointsRecordConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerConsumptionVoucherConfiguration());
             modelBuilder.ApplyConfiguration(new ConsumptionVoucherConfiguration());
+            modelBuilder.ApplyConfiguration(new MemberCardRankInfoConfiguration());
+            modelBuilder.ApplyConfiguration(new MemberCardHandleConfiguration());
+            modelBuilder.ApplyConfiguration(new MemberCardSendRecordConfiguration());
+            modelBuilder.ApplyConfiguration(new BalanceAccountConfiguration());
+            modelBuilder.ApplyConfiguration(new BalanceRechargeRecordConfiguration());
+            modelBuilder.ApplyConfiguration(new BalanceUseRecordConfiguration());
+            modelBuilder.ApplyConfiguration(new RechargeRewardRuleConfiguration());
+            modelBuilder.ApplyConfiguration(new RechargeAmountConfiguration());
+            modelBuilder.ApplyConfiguration(new GrowthpointsRuleConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

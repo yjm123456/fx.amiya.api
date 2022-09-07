@@ -254,6 +254,17 @@ namespace Fx.Amiya.Modules.Integration.AppService
             });
             await _integrationAccountRepository.SaveIntegrationAccountAsync(integrationAccount);
         }
-
+        /// <summary>
+        /// 是否存在指定的储值奖励积分记录
+        /// </summary>
+        /// <param name="customerId">用户id</param>
+        /// <param name="amount">奖励金额</param>
+        /// <param name="percent">奖励比例</param>
+        /// <returns></returns>
+        public async Task<bool> ExistRechargeRewardAsync(string customerId, decimal amount, decimal percent)
+        {
+            var record= await freeSql.Select<IntegrationGenerateRecordDbModel>().Where(e=>e.CustomerId==customerId&&e.Quantity==amount&&e.Percents==percent).FirstAsync();
+            return record == null ? false : true;
+        }
     }
 }

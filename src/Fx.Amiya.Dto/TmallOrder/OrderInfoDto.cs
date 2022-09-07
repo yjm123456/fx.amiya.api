@@ -48,6 +48,9 @@ namespace Fx.Amiya.Dto.TmallOrder
         public int? Quantity { get; set; }
         public decimal? IntegrationQuantity { get; set; }
         public decimal? SingleQuantity { get; set; }
+        /// <summary>
+        /// 0积分支付,1三方支付,2线下支付,3余额支付
+        /// </summary>
         public byte? ExchangeType { get; set; }
         public string ExchangeTypeText { get; set; }
         /// <summary>
@@ -75,6 +78,18 @@ namespace Fx.Amiya.Dto.TmallOrder
 
         public int LiveAnchorId { get; set; }
         public int BelongEmpId { get; set; }
+        /// <summary>
+        /// 是否使用抵扣券
+        /// </summary>
+        public bool IsUseCoupon { get; set; }
+        /// <summary>
+        /// 使用的抵扣券id
+        /// </summary>
+        public string CouponId { get; set; }
+        /// <summary>
+        /// 抵扣金额
+        /// </summary>
+        public decimal DeductMoney { get; set; }
         /// <summary>
         /// 归属客服
         /// </summary>

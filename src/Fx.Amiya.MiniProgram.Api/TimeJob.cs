@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Core.Interfaces.Goods;
+using Fx.Amiya.Dto.ConsumptionVoucher;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IService;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,11 +46,11 @@ namespace Fx.Amiya.MiniProgram.Api
                 throw ex;
             }
         }
-
+        
 
 
         /// <summary>
-        /// 处理阿美雅超时未支付的订单
+        /// 处理阿美雅超时未支付的商城订单
         /// </summary>
         /// <returns></returns>
         [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 5, SkipWhileExecuting = false)]
@@ -59,6 +60,7 @@ namespace Fx.Amiya.MiniProgram.Api
             {
                 var orderService = scope.ServiceProvider.GetService<IOrderService>();
                 var goodsService = scope.ServiceProvider.GetService<IGoodsInfo>();
+                var customerConsumptionVoucherService = scope.ServiceProvider.GetService<ICustomerConsumptionVoucherService>();
                 var ordres = await orderService.TimeOutOrderAsync();
                 List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
                 foreach (var item in ordres)
@@ -69,10 +71,45 @@ namespace Fx.Amiya.MiniProgram.Api
                     updateOrder.AppType = (byte)AppType.MiniProgram;
                     updateOrderList.Add(updateOrder);
                     await goodsService.AddGoodsInventoryQuantityAsync(item.GoodsId, (int)item.Quantity);
+                    
                 }
                 await orderService.UpdateAsync(updateOrderList);
+                //退还抵用券
+                foreach (var item in ordres)
+                {
+                    if (item.IsUseCoupon)
+                    {
+                        UpdateCustomerConsumptionVoucherDto updateCustomerConsumptionVoucherDto = new UpdateCustomerConsumptionVoucherDto();
+                        updateCustomerConsumptionVoucherDto.CustomerVoucherId = item.CouponId;
+                        updateCustomerConsumptionVoucherDto.IsUsed = false;
+                        updateCustomerConsumptionVoucherDto.UseDate = DateTime.Now;
+                        await customerConsumptionVoucherService.UpdateCustomerConsumptionVoucherUseStatusAsync(updateCustomerConsumptionVoucherDto);
+                    }
+
+                }
             }
                
+        }
+        /// <summary>
+        /// 处理超时未支付的充值订单
+        /// </summary>
+        /// <returns></returns>
+
+        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 5, SkipWhileExecuting = true)]
+        public async Task HandleTimeOutRecharge()
+        {
+            try
+            {
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var balanceRechargeRecordService = scope.ServiceProvider.GetService<IBalanceRechargeService>();
+                    await balanceRechargeRecordService.CancelUnPayREchargeOrderAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("处理超时订单失败");
+            }
         }
 
 

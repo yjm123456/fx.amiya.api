@@ -34,7 +34,11 @@ namespace Fx.Amiya.Core.Dto.Goods
         /// <summary>
         /// 线下支付
         /// </summary>
-        OffLinePay
+        OffLinePay,
+        /// <summary>
+        /// 余额支付
+        /// </summary>
+        BalancePay
     }
 
     /// <summary>

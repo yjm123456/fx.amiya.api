@@ -12,8 +12,10 @@ using Fx.Amiya.Core.Dto.Integration;
 using Fx.Amiya.Core.Infrastructure;
 using Fx.Amiya.Core.Interfaces.Goods;
 using Fx.Amiya.Core.Interfaces.Integration;
+using Fx.Amiya.Core.Interfaces.MemberCard;
 using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.ConsumptionVoucher;
 using Fx.Amiya.Dto.OrderAppInfo;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IDal;
@@ -24,6 +26,7 @@ using Fx.Amiya.MiniProgram.Api.Vo.TmallOrder;
 using Fx.Amiya.Service;
 using Fx.Common;
 using Fx.Common.Utils;
+using Fx.Infrastructure.DataAccess;
 using Fx.Infrastructure.Utils;
 using Fx.Open.Infrastructure.Web;
 using jos_sdk_net.Util;
@@ -56,6 +59,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private IIntegrationAccount integrationAccountService;
         private IAliPayService _aliPayService;
         private ICustomerIntegralOrderRefundService _customerIntegralOrderRefundService;
+        private IMemberCard memberCardService;
+        private IMemberRankInfo memberRankInfoService;
+        private readonly ITaskService taskService;
+        private readonly IBalanceAccountService balanceAccountService;
+        private readonly IBalanceService balanceService;
+        private readonly ICustomerConsumptionVoucherService customerConsumptionVoucherService;
+        private readonly IUnitOfWork unitOfWork;
         public OrderController(IOrderService orderService,
             IOrderHistoryService orderHistoryService,
             TokenReader tokenReader,
@@ -69,7 +79,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             IAliPayService aliPayService,
             Domain.IRepository.IWxMiniUserRepository wxMiniUserRepository,
             IIntegrationAccount integrationAccountService,
-            ICustomerIntegralOrderRefundService customerIntegralOrderRefundService)
+            ICustomerIntegralOrderRefundService customerIntegralOrderRefundService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, ITaskService taskService, IBalanceAccountService balanceAccountService, IBalanceService balanceService, IUnitOfWork unitOfWork, ICustomerConsumptionVoucherService customerConsumptionVoucherService)
         {
             this.orderHistoryService = orderHistoryService;
             this.orderService = orderService;
@@ -84,6 +94,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             _aliPayService = aliPayService;
             _customerIntegralOrderRefundService = customerIntegralOrderRefundService;
             _bindCustomerService = bindCustomerServiceService;
+            this.memberCardService = memberCardService;
+            this.memberRankInfoService = memberRankInfoService;
+            this.taskService = taskService;
+            this.balanceAccountService = balanceAccountService;
+            this.balanceService = balanceService;
+            this.unitOfWork = unitOfWork;
+            this.customerConsumptionVoucherService = customerConsumptionVoucherService;
         }
 
 
@@ -186,7 +203,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
             orderInfoResult.Quantity = (orderInfo.Quantity.HasValue) ? orderInfo.Quantity.Value : 0;
             orderInfoResult.BuyerNick = orderInfo.BuyerNick;
-
+            orderInfoResult.DeductMoney = orderInfo.DeductMoney;
             return ResultData<OrderInfoMiniProgramDetailVo>.Success().AddData("orderDetailResult", orderInfoResult);
         }
 
@@ -370,6 +387,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             DateTime date = DateTime.Now;
             //订单中是否存在金额支付
             bool IsExistThirdPartPay = false;
+            //是否存在余额支付订单
+            bool IsExistBalancePay = false;
             List<OrderInfoAddDto> amiyaOrderList = new List<OrderInfoAddDto>();
             Dictionary<string, int> inventoryQuantityDict = new Dictionary<string, int>();
             foreach (var item in orderAdd.OrderItemList)
@@ -383,6 +402,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 if (goodsInfo.ExchangeType == ExchangeType.Integration)
                 {
                     amiyaOrder.IntegrationQuantity = goodsInfo.IntegrationQuantity * item.Quantity;
+                }
+                if (orderAdd.ExchangeType==(int)ExchangeType.BalancePay) {
+                    IsExistBalancePay = true;
                 }
                 if (goodsInfo.IsMaterial == true)
                 {
@@ -424,9 +446,39 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 amiyaOrder.ThumbPicUrl = goodsInfo.ThumbPicUrl;
                 amiyaOrder.AppType = (byte)AppType.MiniProgram;
                 amiyaOrder.OrderType = goodsInfo.IsMaterial == true ? (byte)OrderType.MaterialOrder : (byte)OrderType.VirtualOrder;
-                amiyaOrder.ExchangeType = (byte)goodsInfo.ExchangeType;
-                amiyaOrder.Phone = phone;
                 amiyaOrder.ActualPayment = item.ActualPayment;
+                if (IsExistThirdPartPay)
+                {
+                    if (!string.IsNullOrEmpty(orderAdd.VoucherId))
+                    {
+                        var voucher = await customerConsumptionVoucherService.GetVoucherByCustomerIdAndVoucherIdAsync(customerId, orderAdd.VoucherId);
+                        if (voucher == null) throw new Exception("没有此抵用券信息");
+                        if (voucher.IsUsed) throw new Exception("该抵用券已被使用");
+                        amiyaOrder.IsUseCoupon = true;
+                        amiyaOrder.CouponId = voucher.Id;
+                        amiyaOrder.DeductMoney = voucher.DeductMoney;
+                        amiyaOrder.ActualPayment = amiyaOrder.ActualPayment - voucher.DeductMoney;
+                        if (amiyaOrder.ActualPayment < 0) throw new Exception("该订单不能使用此优惠券,抵扣金额应小于支付金额");
+                        UpdateCustomerConsumptionVoucherDto update = new UpdateCustomerConsumptionVoucherDto
+                        {
+                            CustomerVoucherId = voucher.Id,
+                            IsUsed = true,
+                            UseDate = DateTime.Now
+                        };
+                        await customerConsumptionVoucherService.UpdateCustomerConsumptionVoucherUseStatusAsync(update);
+                    }
+                }
+
+                if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
+                {
+                    //余额支付
+                    amiyaOrder.ExchangeType = (byte)ExchangeType.BalancePay;
+                }
+                else
+                {
+                    amiyaOrder.ExchangeType = (byte)goodsInfo.ExchangeType;
+                }
+                amiyaOrder.Phone = phone;
                 amiyaOrder.TradeId = phone;
                 var bindCustomerId = await _bindCustomerService.GetEmployeeIdByPhone(phone);
                 amiyaOrder.BelongEmpId = bindCustomerId;
@@ -435,6 +487,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
             if (amiyaOrderList.Sum(e => e.IntegrationQuantity) > integrationBalance)
                 throw new Exception("积分余额不足");
+            if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
+            {
+                var balance = await balanceAccountService.GetAccountInfoAsync(customerId);
+                if (balance == null || amiyaOrderList.Sum(e => e.ActualPayment.Value) > balance.Balance)
+                    throw new Exception("余额不足");
+            }
 
             //减库存
             foreach (KeyValuePair<string, int> item in inventoryQuantityDict)
@@ -449,12 +507,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             orderTradeAdd.Remark = orderAdd.Remark;
             orderTradeAdd.OrderInfoAddList = amiyaOrderList;
             string tradeId = await orderService.AddAmiyaOrderAsync(orderTradeAdd);
-
             OrderAddResultVo orderAddResult = new OrderAddResultVo();
             orderAddResult.TradeId = tradeId;
-            if (IsExistThirdPartPay == true)
+            if (IsExistThirdPartPay == true&& !IsExistBalancePay)
             {
 
+                //三方支付
                 string orderId = "";
                 string goodsName = "";
                 decimal totalFee = 0M;
@@ -520,6 +578,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 orderAddResult.AlipayUrl = res.Result;
                 #endregion
             }
+
             return ResultData<OrderAddResultVo>.Success().AddData("orderAddResult", orderAddResult);
         }
 
@@ -543,6 +602,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             string goodsName = "";
             decimal totalFee = 0M;
             bool IsExistThirdPartPay = false;
+
             foreach (var x in orderTrade.OrderInfoList)
             {
                 orderId += x.Id + ",";
@@ -679,6 +739,57 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             return ResultData.Success();
         }
 
+        /// <summary>
+        /// 余额支付
+        /// </summary>
+        /// <param name="tradeId"></param>
+        /// <returns></returns>
+        [HttpPost("balancePay/{tradeId}")]
+        public async Task<ResultData> BalancePayAsync(string tradeId)
+        {
+            var token = tokenReader.GetToken();
+            var sessionInfo = sessionStorage.GetSession(token);
+            string customerId = sessionInfo.FxCustomerId;
+
+            var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(tradeId);
+            //余额支付
+            foreach (var x in orderTrade.OrderInfoList)
+            {
+                await balanceService.BalancePayAsync(customerId, x.Id, x.ActualPayment.Value);
+            }
+            //修改订单状态
+            List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
+            foreach (var item in orderTrade.OrderInfoList)
+            {
+
+                UpdateOrderDto updateOrder = new UpdateOrderDto();
+                updateOrder.OrderId = item.Id;
+                updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                if (item.ActualPayment.HasValue)
+                {
+                    updateOrder.Actual_payment = item.ActualPayment.Value;
+                }
+                if (item.IntegrationQuantity.HasValue)
+                {
+                    updateOrder.IntergrationQuantity = item.IntegrationQuantity;
+                }
+                Random random = new Random();
+                updateOrder.AppType = item.AppType;
+                updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
+                updateOrderList.Add(updateOrder);
+            }
+
+            //修改订单状态
+            await orderService.UpdateAsync(updateOrderList);
+
+            UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
+            updateOrderTrade.TradeId = tradeId;
+            updateOrderTrade.AddressId = orderTrade.AddressId;
+            updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+            await orderService.UpdateOrderTradeAsync(updateOrderTrade);
+            return ResultData.Success();
+        }
+
 
 
 
@@ -725,7 +836,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                                   ExchangeType = o.ExchangeType,
                                                   ExchangeTypeText = o.ExchangeTypeText,
                                                   TradeId = o.TradeId,
-                                                  Standard = goodsInfoService.GetByIdAsync(o.GoodsId).Result.Standard
+                                                  Standard = goodsInfoService.GetByIdAsync(o.GoodsId).Result.Standard,
+                                                  IsUseCoupon = o.IsUseCoupon,
+                                                  DeductMoney = o.DeductMoney
                                               }).ToList()
                          };
 
@@ -781,8 +894,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                                   ExchangeTypeText = o.ExchangeTypeText,
                                                   TradeId = o.TradeId,
                                                   Standard = goodsInfoService.GetByIdAsync(o.GoodsId).Result.Standard,
-                                                  AppType=o.AppType,
-                                                  AppTypeText=o.AppTypeText
+                                                  AppType = o.AppType,
+                                                  AppTypeText = o.AppTypeText
                                               }).ToList()
                          };
 
@@ -879,6 +992,14 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 updateOrder.AppType = (byte)AppType.MiniProgram;
                 updateOrderList.Add(updateOrder);
                 await goodsInfoService.AddGoodsInventoryQuantityAsync(item.GoodsId, (int)item.Quantity);
+
+                //退还抵用券
+                if (item.IsUseCoupon) {
+                    UpdateCustomerConsumptionVoucherDto updateCustomerConsumptionVoucherDto = new UpdateCustomerConsumptionVoucherDto();
+                    updateCustomerConsumptionVoucherDto.CustomerVoucherId = item.CouponId;
+                    updateCustomerConsumptionVoucherDto.IsUsed = false;
+                    await customerConsumptionVoucherService.UpdateCustomerConsumptionVoucherUseStatusAsync(updateCustomerConsumptionVoucherDto);
+                }
             }
             await orderService.UpdateAsync(updateOrderList);
             return ResultData.Success();
@@ -894,6 +1015,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         [HttpGet("confirmReceive/{tradeId}")]
         public async Task<ResultData> ConfirmReceiveByTradeIdAsync(string tradeId)
         {
+            var token = tokenReader.GetToken();
+            var sessionInfo = sessionStorage.GetSession(token);
+            string customerId = sessionInfo.FxCustomerId;
             var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(tradeId);
             List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
             foreach (var item in orderTrade.OrderInfoList)
@@ -905,6 +1029,52 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 updateOrderList.Add(updateOrder);
             }
             await orderService.UpdateAsync(updateOrderList);
+
+            #region 积分奖励
+            decimal integrationPercent = 0m;
+            var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(customerId);
+            if (memberCard != null)
+            {
+                integrationPercent = memberCard.GenerateIntegrationPercent;
+            }
+            else
+            {
+                var memberRank = await memberRankInfoService.GetMinGeneratePercentMemberRankInfoAsync();
+                integrationPercent = memberRank.GenerateIntegrationPercent;
+            }
+            foreach (var item in orderTrade.OrderInfoList)
+            {
+                if (item.ExchangeType != 0 && item.ExchangeType != null)
+                {
+                    ConsumptionIntegrationDto consumptionIntegrationDto = new ConsumptionIntegrationDto
+                    {
+                        Quantity = Math.Floor(integrationPercent * (decimal)item.ActualPayment),
+                        Percent = integrationPercent,
+                        AmountOfConsumption = item.ActualPayment.Value,
+                        Date = DateTime.Now,
+                        CustomerId = customerId,
+                        ExpiredDate = DateTime.Now.AddMonths(12),
+                        OrderId=item.Id
+                    };
+                    await integrationAccountService.AddByConsumptionAsync(consumptionIntegrationDto);
+                }
+
+            }
+            #endregion
+
+            #region 成长值奖励
+            foreach (var item in orderTrade.OrderInfoList)
+            {
+                if (item.ExchangeType!=0&&item.ExchangeType!=null) {
+                    if (item.ActualPayment.HasValue && item.ActualPayment.Value >= 1)
+                    {
+                        await taskService.CompleteShopOrderTaskAsync(customerId, item.ActualPayment.Value, item.Id);
+                    }
+                }               
+            }
+            #endregion
+
+            
             return ResultData.Success();
         }
 

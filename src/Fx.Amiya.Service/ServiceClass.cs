@@ -501,6 +501,9 @@ namespace Fx.Amiya.Service
                 case 2:
                     orderTypeText = "线下支付";
                     break;
+                case 3:
+                    orderTypeText = "余额支付";
+                    break;
             }
             return orderTypeText;
         }
@@ -896,6 +899,134 @@ namespace Fx.Amiya.Service
             if (string.IsNullOrWhiteSpace(phone))
                 return "";
             return phone.Substring(0, 3) + "****" + phone.Substring(phone.Length - 4);
+        }
+
+        /// <summary>
+        /// 根据会员卡编号获取会员卡所需成长值范围
+        /// </summary>
+        /// <param name="rankcode"></param>
+        /// <returns></returns>
+        public static Dictionary<string, decimal> GetMemberCradScope(string rankcode) {
+            Dictionary<string, decimal> dic = new Dictionary<string, decimal>();
+            switch (rankcode) {
+                case "62":
+                    dic= new Dictionary<string, decimal>
+                    {
+                        ["min_amount"] = 0,
+                        ["max_amount"] = 200
+                    };
+                    break;
+                case "68":
+                    dic = new Dictionary<string, decimal> { 
+                        ["min_amount"]=200,
+                        ["max_amount"] = 500
+                    };
+                    break;
+                case "70":
+                    dic = new Dictionary<string, decimal>
+                    {
+                        ["min_amount"] = 500,
+                        ["max_amount"] = 10000000
+                    };
+                    break;
+                default:throw new Exception("请输入正确的会员卡编码");
+            }
+            return dic;
+        }
+        /// <summary>
+        /// 根据会员卡编号获取会员卡名称
+        /// </summary>
+        /// <param name="rankcode"></param>
+        /// <returns></returns>
+        public static string GetMemberCradName(string rankcode)
+        {
+            string rankCodeText = "";
+            switch (rankcode)
+            {
+                case "62":
+                    rankCodeText = "普通会员";
+                    break;
+                case "68":
+                    rankCodeText = "MEIYA白金会员";
+                    break;
+                case "70":
+                    rankCodeText = "MEIYA黑金会员";
+                    break;
+                default: throw new Exception("请输入正确的会员卡编码");
+            }
+            return rankCodeText;
+        }
+        /// <summary>
+        /// 根据类型exchangetype获取支付方式名称
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string GetRechargeExchangeTypeText(int type) {
+            string typeText = "";
+            switch (type) {
+                case 0:
+                    typeText = "支付宝";
+                    break;
+                case 1:
+                    typeText = "微信";
+                    break;
+                case 2:
+                    typeText = "商品退款";
+                    break;
+                case 3:
+                    typeText = "储值赠送";
+                    break;
+                default:
+                    typeText = "其他";
+                    break;
+            }
+            return typeText;
+        }
+        /// <summary>
+        /// 根据支付类型编码获取支付类型
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public static int GetRechargeTypeByExchangeCode(string code) {
+            int type = 0;
+            switch (code) {
+                case "ALIPAY":
+                    type = 0;
+                    break;
+                case "WECHAT":
+                    type = 1;
+                    break;
+                default:
+                    type = -1;
+                    break;
+            }
+            return type;
+        }
+        /// <summary>
+        /// 获取充值状态文本
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public static string GetRechargeStatusText(int status) {
+            string statusText = "";
+            switch (status) {
+                case 0:
+                    statusText = "待付款";
+                    break;
+                case 1:
+                    statusText = "成功";
+                    break;
+                case 2:
+                    statusText = "取消";
+                    break;
+                case 3:
+                    statusText = "支付中";
+                    break;
+                default:
+                    statusText = "其他";
+                    break;
+            };
+            return statusText;
         }
     }
 }

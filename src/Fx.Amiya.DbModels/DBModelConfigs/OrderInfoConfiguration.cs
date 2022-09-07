@@ -51,6 +51,9 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.IsReturnBackPrice).HasColumnName("is_return_back_price").HasColumnType("bit").IsRequired();
             builder.Property(e => e.ReturnBackPrice).HasColumnName("return_back_price").HasColumnType("DECIMAL(12,2)").IsRequired(false);
             builder.Property(e => e.ReturnBackDate).HasColumnName("return_back_date").HasColumnType("DATETIME").IsRequired(false);
+            builder.Property(e => e.IsUseCoupon).HasColumnName("is_use_coupon").HasColumnType("bit").IsRequired();
+            builder.Property(e => e.CouponId).HasColumnName("coupon_id").HasColumnType("varchar(100)").IsRequired(false);
+            builder.Property(e => e.DeductMoney).HasColumnName("deduct_money").HasColumnType("decimal(10,2)").IsRequired().HasDefaultValue(0);
             builder.HasOne(t => t.OrderTrade).WithMany(t => t.OrderInfoList).HasForeignKey(t=>t.TradeId);
           
 

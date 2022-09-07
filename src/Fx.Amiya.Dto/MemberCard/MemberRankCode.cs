@@ -1,0 +1,25 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Fx.Amiya.Dto.MemberCard
+{
+    public class MemberRankCode
+    {
+        /// <summary>
+        /// 普通会员级别码
+        /// </summary>
+        public static string OrdinaryMember = "62";
+
+        /// <summary>
+        /// 黑卡会员级别码
+        /// </summary>
+        public static string BlackCardMember = "70";
+        /// <summary>
+        /// 白金卡会员
+        /// </summary>
+        public static string MEIYAWhiteCardMember = "68";
+    }
+}

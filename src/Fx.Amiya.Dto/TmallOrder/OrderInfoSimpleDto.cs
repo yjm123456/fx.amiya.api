@@ -66,6 +66,14 @@ namespace Fx.Amiya.Dto.TmallOrder
         /// 交易编号
         /// </summary>
         public string TradeId { get; set; }
+        /// <summary>
+        /// 是否使用抵用券
+        /// </summary>
+        public bool IsUseCoupon { get; set; }
+        /// <summary>
+        /// 订单使用的抵用券id
+        /// </summary>
+        public string CouponId { get; set; }
 
     }
 }

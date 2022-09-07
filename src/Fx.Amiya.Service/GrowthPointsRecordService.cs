@@ -71,7 +71,7 @@ namespace Fx.Amiya.Service
 
         public async Task<FxPageInfo<GrowthPointsRecordListInfoDto>> GetGrowthPointsRecordListPageByCustomerId(string customerid,int pageNum,int pageSize)
         {
-            var result = await  _dalGrowthPointsRecord.GetAll().Where(g => g.CustomerId == customerid).Select(g => new GrowthPointsRecordListInfoDto
+            var result =  _dalGrowthPointsRecord.GetAll().Where(g => g.CustomerId == customerid).Select(g => new GrowthPointsRecordListInfoDto
             {
                 Quantity = g.Quantity,
                 IsExpire = g.IsExpire,
@@ -79,11 +79,11 @@ namespace Fx.Amiya.Service
                 ExpireDate = g.ExpireDate,
                 Type = g.Type
 
-            }).Skip((pageNum-1) *pageSize).Take(pageSize).ToListAsync();
+            });
 
             FxPageInfo<GrowthPointsRecordListInfoDto> pageInfo = new FxPageInfo<GrowthPointsRecordListInfoDto> {
-                TotalCount = result.Count,
-                List=result
+                TotalCount = result.Count(),
+                List=await result.OrderByDescending(e => e.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync()
             };
             return pageInfo;
         }

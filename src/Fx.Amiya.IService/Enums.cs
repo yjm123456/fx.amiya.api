@@ -581,5 +581,14 @@ namespace Fx.Amiya.IService
         //非常重要
        // VeryImportant=4
     }
-    
+    public enum RechargeStatus {
+        //待付款/余额退款初始化
+        PendingPayment=0,
+        //成功(充值成功/余额退款审核通过)
+        Success=1,
+        //取消(充值取消/余额退款未通过)
+        Cacncel=2,
+        //失败(已付款,但账号余额异常修改余额失败或订单状态改变导致修改状态失败)
+        Fail=3
+    }
 }

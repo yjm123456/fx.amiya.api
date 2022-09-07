@@ -33,11 +33,11 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public bool IsShare { get; set; }
         /// <summary>
-        /// 有效期时长
+        /// 有效期时长(天)
         /// </summary>
-        public long? EffectiveTime { get; set; }
+        public int EffectiveTime { get; set; }
         /// <summary>
-        /// 抵用券类型 0指定时长过期,1指定日期过期
+        /// 抵用券类型0:实体商品折扣,1:面诊卡抵用券
         /// </summary>
         public int Type { get; set; }
         /// <summary>
@@ -56,5 +56,9 @@ namespace Fx.Amiya.DbModels.Model
         /// 修改时间
         /// </summary>
         public DateTime? UpdateTime { get; set; }
+        /// <summary>
+        /// 抵用券编码
+        /// </summary>
+        public string ConsumptionVoucherCode { get; set; }
     }
 }

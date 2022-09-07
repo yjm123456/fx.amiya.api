@@ -17,7 +17,7 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public string CustomerId { get; set; }
         /// <summary>
-        /// 消费券类型id
+        /// 抵用券id
         /// </summary>
         public string ConsumptionVoucherId { get; set; }
         /// <summary>
@@ -40,6 +40,18 @@ namespace Fx.Amiya.DbModels.Model
         /// 使用时间
         /// </summary>
         public DateTime? UseDate { get; set; }
-        
+        /// <summary>
+        /// 来源 0:升级会员赠送,1:用户分享,2:每月领取
+        /// </summary>
+        public int Source { get; set; }
+        /// <summary>
+        /// 分享人
+        /// </summary>
+        public string ShareBy { get; set; }
+        /// <summary>
+        /// 核销码
+        /// </summary>
+        public string WriteOfCode { get; set; }
+
     }
 }

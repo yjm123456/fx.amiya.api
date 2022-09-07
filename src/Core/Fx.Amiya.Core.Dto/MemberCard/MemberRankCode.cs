@@ -12,10 +12,14 @@ namespace Fx.Amiya.Core.Dto.MemberCard
         /// 普通会员级别码
         /// </summary>
         public static string OrdinaryMember = "62";
-
+        /// <summary>
+        /// 白金卡会员
+        /// </summary>
+        public static string MEIYAWhiteCardMember = "68";
         /// <summary>
         /// 黑卡会员级别码
         /// </summary>
-        public static string BlackCardMember = "68";
+        public static string BlackCardMember = "70";
+        
     }
 }

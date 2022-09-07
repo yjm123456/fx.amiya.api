@@ -1070,7 +1070,28 @@ ADD COLUMN `emergency_level` int DEFAULT 0 AFTER `is_send_order`;
 -----------------------------------------------王健 2022/08/08 END--------------------------------------------;
 
 
+-----------------------------------------------余建明 2022/09/5  BEGIN--------------------------------------------;
+ALTER TABLE `amiyadb`.`tbl_liveanchor_monthly_target` 
+ADD COLUMN `zhihu_release_target` INT NOT NULL DEFAULT 0 AFTER `create_date`,
+ADD COLUMN `cumulative_zhihu_release` INT NOT NULL DEFAULT 0 AFTER `zhihu_release_target`,
+ADD COLUMN `zhihu_release_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_zhihu_release`,
+ADD COLUMN `sina_weibo_release_target` INT NOT NULL DEFAULT 0 AFTER `zhihu_release_complete_rate`,
+ADD COLUMN `cumulative_sina_weibo_release` INT NOT NULL DEFAULT 0 AFTER `sina_weibo_release_target`,
+ADD COLUMN `sina_weibo_release_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_sina_weibo_release`,
+ADD COLUMN `xiaohongshu_release_target` INT NOT NULL DEFAULT 0 AFTER `sina_weibo_release_complete_rate`,
+ADD COLUMN `cumulative_xiaohongshu_release` INT NOT NULL DEFAULT 0 AFTER `xiaohongshu_release_target`,
+ADD COLUMN `xiaohongshu_release_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_xiaohongshu_release`;
 
+
+
+
+
+ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
+ADD COLUMN `sinaweibo_send_num` INT NOT NULL DEFAULT 0 AFTER `network_consulting_employee_id`,
+ADD COLUMN `zhihu_send_num` INT NOT NULL DEFAULT 0 AFTER `sinaweibo_send_num`,
+ADD COLUMN `xiaohongshu_send_num` INT NOT NULL DEFAULT 0 AFTER `zhihu_send_num`;
+
+-----------------------------------------------余建明 2022/09/5 END--------------------------------------------;
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
@@ -1093,25 +1114,95 @@ ADD COLUMN `old_customer_performance_complete_rate` DECIMAL(12,2) NOT NULL DEFAU
 
 
 
+-----------------------------------------------余建明 2022/08/26 BEGIN--------------------------------------------;
+
+ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
+ADD COLUMN `consultation_date` DATETIME NULL AFTER `is_consultation`;
+
+-----------------------------------------------余建明 2022/08/26 END--------------------------------------------;
 
 
 
 
+-----------------------------------------------余建明 2022/08/27 BEGIN--------------------------------------------;
+
+ALTER TABLE `amiyadb`.`tbl_liveanchor_monthly_target` 
+ADD COLUMN `new_customer_visit_target` INT NOT NULL DEFAULT 0 AFTER `send_order_complete_rate`,
+ADD COLUMN `cumulative_new_customer_visit` INT NOT NULL DEFAULT 0 AFTER `new_customer_visit_target`,
+ADD COLUMN `new_customer_visit_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_new_customer_visit`,
+ADD COLUMN `old_customer_visit_target` INT NOT NULL DEFAULT 0 AFTER `new_customer_visit_complete_rate`,
+ADD COLUMN `cumulative_old_customer_visit` INT NOT NULL DEFAULT 0 AFTER `old_customer_visit_target`,
+ADD COLUMN `old_customer_visit_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_old_customer_visit`,
+ADD COLUMN `new_customer_deal_target` INT NOT NULL DEFAULT 0 AFTER `visit_complete_rate`,
+ADD COLUMN `cumulative_new_customer_deal` INT NOT NULL DEFAULT 0 AFTER `new_customer_deal_target`,
+ADD COLUMN `new_customer_deal_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_new_customer_deal`,
+ADD COLUMN `old_customer_deal_target` INT NOT NULL DEFAULT 0 AFTER `new_customer_deal_complete_rate`,
+ADD COLUMN `cumulative_old_customer_deal` INT NOT NULL DEFAULT 0 AFTER `old_customer_deal_target`,
+ADD COLUMN `old_customer_deal_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_old_customer_deal`;
+
+
+-----------------------------------------------余建明 2022/08/27 END--------------------------------------------;
 
 
 
 
+-----------------------------------------------王健 2022/08/31 BEGIN--------------------------------------------;
+---tbl_order_info 添加是否使用优惠券
+
+ALTER TABLE `tbl_order_info`
+ADD COLUMN `is_use_coupon` BIT NOT NULL AFTER `return_back_date`;
+
+---tbl_order_info 添加订单使用的抵用券id
+ALTER TABLE `tbl_order_info`
+ADD COLUMN `coupon_id` VARCHAR(100) NULL DEFAULT NULL AFTER `is_use_coupon`;
+
+
+---tbl_order_info 添加抵用券抵扣金额
+ALTER TABLE `tbl_order_info`
+ADD COLUMN `deduct_money` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `coupon_id`;
+-----------------------------------------------王健 2022/08/31 END--------------------------------------------;
 
 
 
+-----------------------------------------------王健 2022/09/1 BEGIN--------------------------------------------;
+
+
+---修改tbl_integration_generate_record表的积分生成比例字段
+ALTER TABLE `tbl_integration_generate_record`
+CHANGE COLUMN `percents` `percents` DECIMAL(4,3) NOT NULL  AFTER `amount_of_consumption`;
+
+
+---修改tbl_member_rank_info会员卡信息表本人产生积分比例
+ALTER TABLE `tbl_member_rank_info`
+CHANGE COLUMN `generate_integration_percent` `generate_integration_percent` DECIMAL(4,3) NOT NULL  AFTER `sconto`;
+
+-----------------------------------------------王健 2022/09/1 END--------------------------------------------;
+
+
+-----------------------------------------------王健 2022/09/3 BEGIN--------------------------------------------;
+
+--抵用券有效期
+ALTER TABLE `tbl_consumption_voucher`
+CHANGE COLUMN `effective_time` `effective_time` INT(10) NOT NULL DEFAULT 0 AFTER `is_share`;
+
+
+-----------------------------------------------王健 2022/09/3 END--------------------------------------------;
 
 
 
+-----------------------------------------------余建明 2022/09/7 BEGIN--------------------------------------------;
 
 
+ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
+ADD COLUMN `tiktok_send_num` INT NOT NULL DEFAULT 0 AFTER `xiaohongshu_send_num`;
+
+ALTER TABLE `amiyadb`.`tbl_liveanchor_monthly_target` 
+ADD COLUMN `tiktok_release_target` INT NOT NULL DEFAULT 0 AFTER `xiaohongshu_release_complete_rate`,
+ADD COLUMN `cumulative_tiktok_release` INT NOT NULL DEFAULT 0 AFTER `tiktok_release_target`,
+ADD COLUMN `tiktok_release_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_tiktok_release`;
 
 
-
+-----------------------------------------------余建明 2022/09/7 END--------------------------------------------;
 
 
 

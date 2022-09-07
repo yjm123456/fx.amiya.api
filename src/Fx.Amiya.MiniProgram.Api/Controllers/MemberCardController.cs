@@ -24,17 +24,21 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private IMiniSessionStorage _sessionStorage;
         private ICustomerService _customerService;
         private IOrderService _orderService;
+        private IMemberCardHandleService memberCardHandleService;
+        private readonly IMemberCardService _memberCardService;
         public MemberCardController(IMemberCard memberCardService,
             TokenReader tokenReader,
             IMiniSessionStorage sessionStorage,
             ICustomerService customerService,
-            IOrderService orderService)
+            IOrderService orderService, IMemberCardService memberCardService1, IMemberCardHandleService memberCardHandleService,IMemberCardService memberCardService2)
         {
             this.memberCardService = memberCardService;
             _tokenReader = tokenReader;
             _sessionStorage = sessionStorage;
             _customerService = customerService;
             _orderService = orderService;
+            this.memberCardHandleService = memberCardHandleService;
+            _memberCardService = memberCardService2;
         }
         private static readonly AsyncLock _mutex = new AsyncLock();
 
@@ -68,9 +72,36 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 return ResultData.Success();
             }
         }
+        /// <summary>
+        /// 获取新的会员卡信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("cardInfo")]
+        public async Task<ResultData<MemberCardHandleVo>> GetMemberCardByCustomerIdAsync()
+        {
+            string token = _tokenReader.GetToken();
+            var sessionInfo = _sessionStorage.GetSession(token);
+            string customerId = sessionInfo.FxCustomerId;
+            var card =await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
+            
+            if (card == null)
+                 await _memberCardService.SendMemberCardAsync(customerId);
 
-         
-
+            card = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
+            MemberCardHandleVo memberCardHandle = new MemberCardHandleVo()
+            {
+                Date = card.Date,
+                CustomerId = card.CustomerId,
+                MemberCardNum = card.MemberCardNum,
+                MemberRankId = card.MemberRankId,
+                MemberRankName = card.MemberRankName,
+                HandleBy = card.HandleBy,
+                Valid = card.Valid,
+                Description = card.Description,
+                ImageUrl = card.ImageUrl
+            };
+            return ResultData<MemberCardHandleVo>.Success().AddData("memberCard", memberCardHandle);
+        }
 
 
         /// <summary>

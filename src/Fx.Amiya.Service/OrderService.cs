@@ -884,6 +884,9 @@ namespace Fx.Amiya.Service
                         order.WriteOffCode = "";
                         order.AlreadyWriteOffAmount = 0;
                         order.BelongEmpId = orderItem.BelongEmpId;
+                        order.IsUseCoupon = orderItem.IsUseCoupon;
+                        order.CouponId = orderItem.CouponId;
+                        order.DeductMoney = orderItem.DeductMoney;
                         orderInfoList.Add(order);
                     }
                 }
@@ -1015,15 +1018,15 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task UpdateAsync(List<UpdateOrderDto> updateListDto)
         {
+            var emailConfig = true;
+            //订单号集合
+            string orderId = "";
+            string phone = "";
+            string goodsName = "";
+            byte appType = 0;
+            decimal intergration_quantity = 0M;
             try
             {
-                var emailConfig = true;
-                //订单号集合
-                string orderId = "";
-                string phone = "";
-                string goodsName = "";
-                byte appType = 0;
-                decimal intergration_quantity = 0M;
                 unitOfWork.BeginTransaction();
                 DateTime date = DateTime.Now;
                 List<OrderTradeForWxDto> tradeList = new List<OrderTradeForWxDto>();
@@ -1081,6 +1084,14 @@ namespace Fx.Amiya.Service
                 }
 
                 unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex;
+            }
+            try
+            {
                 //发送短信通知(todo;)
                 if (!string.IsNullOrEmpty(orderId))
                 {
@@ -1100,9 +1111,10 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                unitOfWork.RollBack();
-                throw ex;
+
+                
             }
+
         }
 
         /// <summary>
@@ -1405,7 +1417,9 @@ namespace Fx.Amiya.Service
                              GoodsName = d.GoodsName,
                              ActualPayment = d.ActualPayment.Value,
                              Phone = d.Phone,
-                             Quantity = d.Quantity.Value
+                             Quantity = d.Quantity.Value,
+                             IsUseCoupon=d.IsUseCoupon,
+                             CouponId=d.CouponId
                          };
 
             return await orders.ToListAsync();
@@ -2046,6 +2060,8 @@ namespace Fx.Amiya.Service
             orderInfo.ExchangeType = order.ExchangeType;
             orderInfo.WriteOffCode = order.WriteOffCode;
             orderInfo.TradeId = order.TradeId;
+            orderInfo.IsUseCoupon = order.IsUseCoupon;
+            orderInfo.DeductMoney = order.DeductMoney;
             return orderInfo;
 
         }
@@ -2267,6 +2283,8 @@ namespace Fx.Amiya.Service
                                                   ExchangeType = o.ExchangeType,
                                                   ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)o.ExchangeType),
                                                   TradeId = o.TradeId,
+                                                  IsUseCoupon = o.IsUseCoupon,
+                                                  DeductMoney = o.DeductMoney
                                               }).ToList()
                          };
             FxPageInfo<OrderTradeForWxDto> orderTradePageInfo = new FxPageInfo<OrderTradeForWxDto>();
@@ -2313,6 +2331,9 @@ namespace Fx.Amiya.Service
                                                ExchangeType = o.ExchangeType,
                                                ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)o.ExchangeType),
                                                TradeId = o.TradeId,
+                                               IsUseCoupon = o.IsUseCoupon,
+                                               CouponId = o.CouponId,
+                                               DeductMoney = o.DeductMoney
                                            }).ToList();
             return orderTradeDto;
         }
@@ -3660,7 +3681,8 @@ namespace Fx.Amiya.Service
             var orders = from d in dalOrderTrade.GetAll()
                          .Include(e => e.OrderInfoList)
                          where d.CustomerId == customerId
-                         && (string.IsNullOrWhiteSpace(statusCode) || d.StatusCode == statusCode ) orderby d.CreateDate
+                         && (string.IsNullOrWhiteSpace(statusCode) || d.StatusCode == statusCode)
+                         orderby d.CreateDate
                          select new OrderTradeForWxDto
                          {
                              TradeId = d.TradeId,
@@ -3689,8 +3711,8 @@ namespace Fx.Amiya.Service
                                                   ExchangeType = o.ExchangeType,
                                                   ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)o.ExchangeType),
                                                   TradeId = o.TradeId,
-                                                  AppType=o.AppType,
-                                                  AppTypeText=ServiceClass.GetAppTypeText((byte)o.AppType)
+                                                  AppType = o.AppType,
+                                                  AppTypeText = ServiceClass.GetAppTypeText((byte)o.AppType)
                                               }).ToList()
                          };
             FxPageInfo<OrderTradeForWxDto> orderTradePageInfo = new FxPageInfo<OrderTradeForWxDto>();

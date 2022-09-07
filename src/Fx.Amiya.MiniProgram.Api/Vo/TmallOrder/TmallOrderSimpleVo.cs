@@ -80,6 +80,10 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.TmallOrder
         /// 退款信息
         /// </summary>
         public RefundOrderInfo RefundOrderInfo { get; set; }
+        /// <summary>
+        /// 抵扣金额
+        /// </summary>
+        public decimal DeductMoney { get; set; }
 
     }
 
@@ -191,5 +195,6 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.TmallOrder
         /// 医院
         /// </summary>
         public string AppointmentHospital { get; set; }
+  
     }
 }

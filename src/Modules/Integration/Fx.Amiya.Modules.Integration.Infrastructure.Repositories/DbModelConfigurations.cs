@@ -30,7 +30,7 @@ namespace Fx.Amiya.Modules.Integration.Infrastructure.Repositories
                 entity.Property(t => t.Quantity).HasColumnName("quantity").HasColumnType("decimal(18,2)").IsRequired();
                 entity.Property(t => t.OrderId).HasColumnName("order_id").HasColumnType("varchar(100)");
                 entity.Property(t => t.AmountOfConsumption).HasColumnName("amount_of_consumption").HasColumnType("decimal(18,2)").IsRequired();
-                entity.Property(t => t.Percents).HasColumnName("percents").HasColumnType("decimal(3,2)").IsRequired();
+                entity.Property(t => t.Percents).HasColumnName("percents").HasColumnType("decimal(4,3)").IsRequired();
                 entity.Property(t => t.ProviderId).HasColumnName("provider_id").HasColumnType("varchar(50)");
                 entity.Property(t => t.ExpiredDate).HasColumnName("expired_date").HasColumnType("date");
                 entity.Property(t => t.StockQuantity).HasColumnName("stock_quantity").HasColumnType("decimal(18,2)").IsRequired();

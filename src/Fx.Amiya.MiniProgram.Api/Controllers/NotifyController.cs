@@ -1,7 +1,13 @@
-﻿using Fx.Amiya.Dto.TmallOrder;
+﻿using Fx.Amiya.Core.Dto.Integration;
+using Fx.Amiya.Core.Interfaces.Integration;
+using Fx.Amiya.Dto.Balance;
+using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IService;
 using Fx.Amiya.MiniProgram.Api.Vo.Notify;
+using Fx.Amiya.Modules.Integration.Domin;
 using Fx.Amiya.Service;
+using Fx.Infrastructure.DataAccess;
+using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -24,13 +30,23 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private IOrderService orderService;
         private IAliPayService _aliPayService;
         private ILogger<AliPayService> logger;
+        private IBalanceRechargeService balanceRechargeRecordService;
+        private IBalanceAccountService balanceAccountService;
+        private IUnitOfWork unitOfWork;
+        private IIntegrationAccount integrationAccount;
+        private readonly IRechargeRewardRuleService rechargeRewardRuleService;
         public NotifyController(IOrderService orderService,
             IAliPayService aliPayService,
-            ILogger<AliPayService> logger)
+            ILogger<AliPayService> logger, IBalanceRechargeService balanceRechargeRecordService, IBalanceAccountService balanceAccountService, IUnitOfWork unitOfWork, IIntegrationAccount integrationAccount, IRechargeRewardRuleService rechargeRewardRuleService)
         {
             this.orderService = orderService;
             _aliPayService = aliPayService;
             this.logger = logger;
+            this.balanceRechargeRecordService = balanceRechargeRecordService;
+            this.balanceAccountService = balanceAccountService;
+            this.unitOfWork = unitOfWork;
+            this.integrationAccount = integrationAccount;
+            this.rechargeRewardRuleService = rechargeRewardRuleService;
         }
         /// <summary>
         /// 支付宝订单回调地址
@@ -48,37 +64,137 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             {
                 return "fail";
             }
-            var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(input.out_trade_no);
-            List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
-            foreach (var item in orderTrade.OrderInfoList)
-            {
+            if (input.body== "RECHARGE") {
+                try
+                {
+                    unitOfWork.BeginTransaction();
+                    var rechargeRecord = await balanceRechargeRecordService.GetRechargeRecordByIdAsync(input.out_trade_no);
+                    //如果订单记录状态为success直接返回success
+                    if (rechargeRecord.Status == (int)RechargeStatus.Success) {
+                        return "success";
+                    }
+                    UpdateRechargeRecordStatusDto update = new UpdateRechargeRecordStatusDto
+                    {
+                        Id = rechargeRecord.Id,
+                        Status = (int)RechargeStatus.Success,
+                        OrderId = input.trade_no,
+                        CompleteDate = DateTime.Now
+                    };
+                    //更新记录状态
+                    await balanceRechargeRecordService.UpdateRechargeRecordStatusAsync(update);
+                    //更新余额
+                    await balanceAccountService.UpdateAccountBalanceAsync(rechargeRecord.CustomerId);
 
-                UpdateOrderDto updateOrder = new UpdateOrderDto();
-                updateOrder.OrderId = item.Id;
-                updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
-                if (item.ActualPayment.HasValue)
-                {
-                    updateOrder.Actual_payment = item.ActualPayment.Value;
+                    var balance =await balanceAccountService.GetAccountInfoAsync(rechargeRecord.CustomerId);
+
+                    #region 储值奖励积分
+
+                    var totalRecharge = await balanceRechargeRecordService.GetAllRechargeAmountAsync(rechargeRecord.CustomerId);
+
+                    var rechargeRewardRuleList = await rechargeRewardRuleService.GetRewardListAsync();
+
+                    foreach (var rule in rechargeRewardRuleList)
+                    {
+                        if (totalRecharge>=rule.MinAmount) {
+                            var integrationRecord = await CreateIntegrationRecordAsync(rechargeRecord.CustomerId, rule.GiveIntegration, 1);
+                            if(integrationRecord!=null) await integrationAccount.AddByConsumptionAsync(integrationRecord);
+                        }
+                    }                   
+
+                    #endregion
+
+                    unitOfWork.Commit();
                 }
-                if (item.IntegrationQuantity.HasValue)
+                catch (Exception ex)
                 {
-                    updateOrder.IntergrationQuantity = item.IntegrationQuantity;
+                    unitOfWork.RollBack();
+                    return "fail";
                 }
-                Random random = new Random();
-                updateOrder.AppType = item.AppType;
-                updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
-                updateOrderList.Add(updateOrder);
+                
+                
+            } else {
+                var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(input.out_trade_no);
+                List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
+                foreach (var item in orderTrade.OrderInfoList)
+                {
+
+                    UpdateOrderDto updateOrder = new UpdateOrderDto();
+                    updateOrder.OrderId = item.Id;
+                    updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                    if (item.ActualPayment.HasValue)
+                    {
+                        updateOrder.Actual_payment = item.ActualPayment.Value;
+                    }
+                    if (item.IntegrationQuantity.HasValue)
+                    {
+                        updateOrder.IntergrationQuantity = item.IntegrationQuantity;
+                    }
+                    Random random = new Random();
+                    updateOrder.AppType = item.AppType;
+                    updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
+                    updateOrderList.Add(updateOrder);
+                }
+
+                //修改订单状态
+                await orderService.UpdateAsync(updateOrderList);
+
+                UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
+                updateOrderTrade.TradeId = input.out_trade_no;
+                updateOrderTrade.AddressId = orderTrade.AddressId;
+                updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                await orderService.UpdateOrderTradeAsync(updateOrderTrade);
             }
-
-            //修改订单状态
-            await orderService.UpdateAsync(updateOrderList);
-
-            UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
-            updateOrderTrade.TradeId = input.out_trade_no;
-            updateOrderTrade.AddressId = orderTrade.AddressId;
-            updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
-            await orderService.UpdateOrderTradeAsync(updateOrderTrade);
             return "success";
+        }
+        /// <summary>
+        /// 创建储值奖励记录
+        /// </summary>
+        /// <param name="awardAmount">储值奖励金额</param>
+        /// <param name="customerId">用户id</param>
+        /// <param name="accountBalance">账户操作前余额</param>
+        /// <returns></returns>
+       /* private async Task<CreateBalanceRechargeRecordDto> CreateRecordAsync(decimal awardAmount,string customerId,decimal accountBalance) {
+            var awardRecord = await balanceRechargeRecordService.GetRechargeRecordByExchangeTypeAsync(customerId, 3);
+            var record = awardRecord.Find(e => e.RechargeAmount == awardAmount);
+            if (record == null)
+            {
+                CreateBalanceRechargeRecordDto createBalanceRechargeRecordDto = new CreateBalanceRechargeRecordDto
+                {
+                    Id = CreateOrderIdHelper.GetNextNumber(),
+                    CustomerId=customerId,
+                    ExchangeType=3,
+                    RechargeAmount=awardAmount,
+                    Balance=accountBalance,
+                    RechargeDate=DateTime.Now,
+                    Status=1
+                };
+                return createBalanceRechargeRecordDto;
+            }
+            else {
+                return null;
+            }
+        }*/
+        /// <summary>
+        /// 创建积分奖励记录
+        /// </summary>
+        /// <param name="customerId">用户id</param>
+        /// <param name="awardAmount">奖励积分金额</param>
+        /// <param name="percent">奖励比率</param>
+        /// <returns></returns>
+        private async Task<ConsumptionIntegrationDto> CreateIntegrationRecordAsync(string customerId,decimal awardAmount,decimal percent) {
+            var exist= await integrationAccount.ExistRechargeRewardAsync(customerId,awardAmount,percent);
+            if (exist) {
+                return null;
+            }
+            ConsumptionIntegrationDto consumptionIntegrationDto = new ConsumptionIntegrationDto { 
+                Quantity=awardAmount,
+                Percent=1,
+                AmountOfConsumption=awardAmount,
+                Date=DateTime.Now,
+                CustomerId=customerId,
+                ExpiredDate=DateTime.Now.AddMonths(12),
+            };
+            return consumptionIntegrationDto;
         }
 
         /// <summary>

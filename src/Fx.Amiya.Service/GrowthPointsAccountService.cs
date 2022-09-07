@@ -21,7 +21,7 @@ namespace Fx.Amiya.Service
             this.dalGrowthPointsRecord = dalGrowthPointsRecord;
         }
 
-        public async Task AddAsync(CreateGrowthPointsAccountDto create)
+        public async Task<GrowthPointsAccountDto> AddAsync(CreateGrowthPointsAccountDto create)
         {
             try
             {
@@ -29,6 +29,11 @@ namespace Fx.Amiya.Service
                 account.CustomerId = create.CustomerId;
                 account.Balance = 0m;
                 await _dalGrowthPointsAccount.AddAsync(account, true);
+                GrowthPointsAccountDto growthPointsAccountDto = new GrowthPointsAccountDto {
+                    CustomerId=create.CustomerId,
+                    Balance=account.Balance
+                };
+                return growthPointsAccountDto;
             }
             catch (Exception ex)
             {

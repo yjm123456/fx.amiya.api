@@ -36,7 +36,8 @@ namespace Fx.Amiya.Modules.Integration.Domin
         /// <summary>
         /// 退还礼品=5
         /// </summary>
-        ReturnGift
+        ReturnGift,
+
     }
 
 

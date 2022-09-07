@@ -67,6 +67,18 @@ namespace Fx.Amiya.DbModels.Model
         /// 归属客服
         /// </summary>
         public int BelongEmpId { get; set; }
+        /// <summary>
+        /// 是否使用抵用券
+        /// </summary>
+        public bool IsUseCoupon { get; set; }
+        /// <summary>
+        /// 使用的抵用券id
+        /// </summary>
+        public string CouponId { get; set; }
+        /// <summary>
+        /// 抵用券抵扣金额
+        /// </summary>
+        public decimal DeductMoney { get; set; }
 
         #region  财务审核板块
         /// <summary>

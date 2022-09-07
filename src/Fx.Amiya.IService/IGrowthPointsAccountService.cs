@@ -20,7 +20,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="create"></param>
         /// <returns></returns>
-        Task AddAsync(CreateGrowthPointsAccountDto create);
+        Task<GrowthPointsAccountDto> AddAsync(CreateGrowthPointsAccountDto create);
         /// <summary>
         /// 修改成长值
         /// </summary>

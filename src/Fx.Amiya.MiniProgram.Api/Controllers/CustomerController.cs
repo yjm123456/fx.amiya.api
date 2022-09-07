@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Fx.Amiya.Core.Dto.Integration;
 using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.Core.Interfaces.MemberCard;
+using Fx.Amiya.Dto.GrowthPoints;
 using Fx.Amiya.IService;
 using Fx.Amiya.MiniProgram.Api.Filters;
 using Fx.Open.Infrastructure.Web;
@@ -27,7 +28,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private IMemberRankInfo memberRankInfoService;
         private IOrderService orderService;
         private IIntegrationAccount integrationAccountService;
+        private IGrowthPointsAccountService growthPointsAccountService;
         private ILogger<CustomerController> logger;
+        private IMemberCardService cardService;
         public CustomerController(
             TokenReader tokenReader,
             IMiniSessionStorage sessionStorage,
@@ -37,7 +40,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
              IMemberRankInfo memberRankInfoService,
              IOrderService orderService,
             IIntegrationAccount integrationAccountService,
-             ILogger<CustomerController> logger)
+             ILogger<CustomerController> logger, IGrowthPointsAccountService growthPointsAccountService, IMemberCardService cardService)
         {
             this.tokenReader = tokenReader;
             this.sessionStorage = sessionStorage;
@@ -48,6 +51,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             this.orderService = orderService;
             this.integrationAccountService = integrationAccountService;
             this.logger = logger;
+            this.growthPointsAccountService = growthPointsAccountService;
+            this.cardService = cardService;
         }
         /// <summary>
         /// 绑定客户
@@ -90,14 +95,14 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 }
 
                 //初始化成长值账号
-
-                //新会员赠送抵用券
-
+                await growthPointsAccountService.AddAsync(new CreateGrowthPointsAccountDto {CustomerId= fxCustomerId,Balance=0});
+                //发放会员卡
+                await cardService.SendMemberCardAsync(fxCustomerId);
                 return ResultData<bool>.Success().AddData("isNewCustomer", false);
             }
             catch (Exception ex)
             {
-                return ResultData<bool>.Fail(ex.Message);
+                return ResultData<bool>.Fail("绑定账户失败");
             }
         }
 

@@ -22,26 +22,29 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private readonly IGrowthPointsRecordService growthPointsRecordService;
         private TokenReader _tokenReader;
         private IMiniSessionStorage _sessionStorage;
+        private readonly IMemberCardService memberCardService;
 
 
-        public GrowthPointsAccountController(IGrowthPointsAccountService growthPointsAccountService, IGrowthPointsRecordService growthPointsRecordService, TokenReader tokenReader, IMiniSessionStorage sessionStorage)
+        public GrowthPointsAccountController(IGrowthPointsAccountService growthPointsAccountService, IGrowthPointsRecordService growthPointsRecordService, TokenReader tokenReader, IMiniSessionStorage sessionStorage, IMemberCardService memberCardService)
         {
             this.growthPointsAccountService = growthPointsAccountService;
             this.growthPointsRecordService = growthPointsRecordService;
             _tokenReader = tokenReader;
             _sessionStorage = sessionStorage;
+            this.memberCardService = memberCardService;
         }
         /// <summary>
         /// 获取用户成长值
         /// </summary>
         /// <returns></returns>
         [HttpGet("balance")]
-        public async Task<ResultData<decimal>> GetGrowthPointsAccount() {
-
+        public async Task<ResultData<GrowthPointsVo>> GetGrowthPointsAccount() {
+            GrowthPointsVo pointsVo = new GrowthPointsVo();
             string token = _tokenReader.GetToken();
             var sessionInfo = _sessionStorage.GetSession(token);
             string customerId = sessionInfo.FxCustomerId;
             var balance = await growthPointsAccountService.GetGrowthPointAccountByCustomerId(customerId);
+            
             if (balance==null) {
                 CreateGrowthPointsAccountDto createGrowth = new CreateGrowthPointsAccountDto
                 {
@@ -50,7 +53,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 };
                 await growthPointsAccountService.AddAsync(createGrowth);
             }
-            return ResultData<decimal>.Success().AddData("growthbalance",balance==null?0:balance.Balance);
+            var upgrade = await memberCardService.GetUpgradeInfoAsync(balance.Balance);
+            pointsVo.Balance = balance.Balance;
+            pointsVo.UpgradeGrowthPoints = upgrade.UpgardeNeedGrowthPoints;
+            pointsVo.NextLeaveText = upgrade.NextLeaveText;
+            return ResultData<GrowthPointsVo>.Success().AddData("growthBalanceInfo",pointsVo);
         }
         /// <summary>
         /// 分页获取用户成长值记录列表

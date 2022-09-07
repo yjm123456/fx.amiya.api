@@ -25,13 +25,18 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             _tokenReader = tokenReader;
             _sessionStorage = sessionStorage;
         }
+        /// <summary>
+        /// 签到任务
+        /// </summary>
+        /// <returns></returns>
         [HttpPost("signIn")]
         public async Task<ResultData<string>> CompleteSignTask() {
             string token = _tokenReader.GetToken();
             var sessionInfo = _sessionStorage.GetSession(token);
             string customerId = sessionInfo.FxCustomerId;
-            await taskService.CompleteSignTask(customerId);
+            await taskService.CompleteSignTaskAsync(customerId);
             return ResultData<string>.Success().AddData("签到成功");
         }
+        
     }
 }

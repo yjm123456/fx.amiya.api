@@ -115,5 +115,13 @@ namespace Fx.Amiya.Core.Interfaces.Integration
         /// <param name="useIntegration"></param>
         /// <returns></returns>
         Task ExpiredGoodsConsumption();
+        /// <summary>
+        /// 是否存在指定的储值奖励积分记录
+        /// </summary>
+        /// <param name="customerId">用户id</param>
+        /// <param name="amount">奖励金额</param>
+        /// <param name="percent">奖励比例</param>
+        /// <returns></returns>
+        Task<bool> ExistRechargeRewardAsync(string customerId,decimal amount,decimal percent);
     }
 }
