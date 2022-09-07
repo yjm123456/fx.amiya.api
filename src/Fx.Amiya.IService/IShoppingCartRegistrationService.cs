@@ -34,6 +34,37 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         List<EmergencyLevelDto> GetEmergencyLevelList();
+        #region 【日数据业绩生成】
+
+        /// <summary>
+        /// 根据主播ID获取当日面诊卡情况
+        /// </summary>
+        /// <param name="liveAnchorId"></param>
+        /// <returns></returns>
+        Task<List<ShoppingCartRegistrationDto>> GetDialyConsulationCardInfoByLiveAnchorId(int liveAnchorId,DateTime recordDate);
+
+        /// <summary>
+        /// 根据主播ID获取当日加v派单情况
+        /// </summary>
+        /// <param name="liveAnchorId"></param>
+        /// <returns></returns>
+        Task<List<ShoppingCartRegistrationDto>> GetDialyAddWeChatInfoByLiveAnchorId(int liveAnchorId,DateTime recordDate);
+
+        /// <summary>
+        /// 根据条件获取今日小黄车退款量
+        /// </summary>
+        /// <param name="liveAnchorId"></param>
+        /// <returns></returns>
+        Task<List<ShoppingCartRegistrationDto>> GetDialyYellowCardRefundInfoByLiveAnchorId(int liveAnchorId,DateTime recordDate);
+
+        /// <summary>
+        /// 根据条件获取今日小黄车差评量
+        /// </summary>
+        /// <param name="liveAnchorId"></param>
+        /// <returns></returns>
+        Task<List<ShoppingCartRegistrationDto>> GetDialyYellowCardBadReviewInfoByLiveAnchorId(int liveAnchorId,DateTime recordDate);
+
+        #endregion
 
 
         #region 【报表相关】

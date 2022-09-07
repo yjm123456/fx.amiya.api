@@ -42,6 +42,69 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget
         /// </summary>
         public string ContentPlatFormId { get; set; }
 
+
+        /// <summary>
+        /// 抖音发布目标
+        /// </summary>
+        public int TikTokReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计抖音发布条数
+        /// </summary>
+        public int CumulativeTikTokRelease { get; set; }
+
+        /// <summary>
+        /// 抖音发布目标完成率
+        /// </summary>
+        public decimal TikTokReleaseCompleteRate { get; set; }
+
+        /// <summary>
+        /// 知乎发布目标
+        /// </summary>
+        public int ZhihuReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计知乎发布条数
+        /// </summary>
+        public int CumulativeZhihuRelease { get; set; }
+
+        /// <summary>
+        /// 知乎发布目标完成率
+        /// </summary>
+        public decimal ZhihuReleaseCompleteRate { get; set; }
+
+
+        /// <summary>
+        /// 小红书发布目标
+        /// </summary>
+        public int XiaoHongShuReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计小红书发布条数
+        /// </summary>
+        public int CumulativeXiaoHongShuRelease { get; set; }
+
+        /// <summary>
+        /// 小红书发布目标完成率
+        /// </summary>
+        public decimal XiaoHongShuReleaseCompleteRate { get; set; }
+
+
+        /// <summary>
+        /// 微博发布目标
+        /// </summary>
+        public int SinaWeiBoReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计微博发布条数
+        /// </summary>
+        public int CumulativeSinaWeiBoRelease { get; set; }
+
+        /// <summary>
+        /// 微博发布目标完成率
+        /// </summary>
+        public decimal SinaWeiBoReleaseCompleteRate { get; set; }
+
         /// <summary>
         /// 月发布目标
         /// </summary>

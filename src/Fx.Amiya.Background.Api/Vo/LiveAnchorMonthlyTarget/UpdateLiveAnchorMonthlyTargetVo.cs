@@ -29,6 +29,25 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget
         /// 主播ID
         /// </summary>
         public int LiveAnchorId { get; set; }
+        /// <summary>
+        /// 抖音发布目标
+        /// </summary>
+        public int TikTokReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 知乎发布目标
+        /// </summary>
+        public int ZhihuReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 小红书发布目标
+        /// </summary>
+        public int XiaoHongShuReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 微博发布目标
+        /// </summary>
+        public int SinaWeiBoReleaseTarget { get; set; }
 
         /// <summary>
         /// 月发布目标

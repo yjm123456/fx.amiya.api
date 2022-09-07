@@ -1771,7 +1771,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="startDate">开始时间</param>
         /// <param name="endDate">结束时间</param>
-        /// <param name="customerName">客户名称</param>
         /// <returns></returns>
         [HttpGet("liveAnchorOperatingReport")]
         [FxInternalAuthorize]
@@ -1785,6 +1784,27 @@ namespace Fx.Amiya.Background.Api.Controllers
                           RecordDate = d.RecordDate,
                           LiveAnchor = d.LiveAnchor,
                           CreateDate = d.CreateDate,
+
+                          TikTokSendNum = d.TikTokSendNum,
+                          TikTokReleaseTarget = d.TikTokReleaseTarget,
+                          TikTokCumulativeRelease = d.TikTokCumulativeRelease,
+                          TikTokReleaseCompleteRate = d.TikTokReleaseCompleteRate,
+
+                          XiaoHongShuSendNum = d.XiaoHongShuSendNum,
+                          XiaoHongShuReleaseTarget = d.XiaoHongShuReleaseTarget,
+                          XiaoHongShuCumulativeRelease = d.XiaoHongShuCumulativeRelease,
+                          XiaoHongShuReleaseCompleteRate = d.XiaoHongShuReleaseCompleteRate,
+
+                          SinaWeiBoSendNum = d.SinaWeiBoSendNum,
+                          SinaWeiBoReleaseTarget = d.SinaWeiBoReleaseTarget,
+                          SinaWeiBoCumulativeRelease = d.SinaWeiBoCumulativeRelease,
+                          SinaWeiBoReleaseCompleteRate = d.SinaWeiBoReleaseCompleteRate,
+
+                          ZhihuSendNum = d.ZhihuSendNum,
+                          ZhihuReleaseTarget = d.ZhihuReleaseTarget,
+                          ZhihuCumulativeRelease = d.ZhihuCumulativeRelease,
+                          ZhihuReleaseCompleteRate = d.ZhihuReleaseCompleteRate,
+
                           TodaySendNum = d.TodaySendNum,
                           ReleaseTarget = d.ReleaseTarget,
                           CumulativeRelease = d.CumulativeRelease,
@@ -1891,6 +1911,26 @@ namespace Fx.Amiya.Background.Api.Controllers
                           RecordDate = d.RecordDate,
                           LiveAnchor = d.LiveAnchor,
                           CreateDate = d.CreateDate,
+
+                          TikTokSendNum = d.TikTokSendNum,
+                          TikTokReleaseTarget = d.TikTokReleaseTarget,
+                          TikTokCumulativeRelease = d.TikTokCumulativeRelease,
+                          TikTokReleaseCompleteRate = d.TikTokReleaseCompleteRate,
+
+                          XiaoHongShuSendNum = d.XiaoHongShuSendNum,
+                          XiaoHongShuReleaseTarget = d.XiaoHongShuReleaseTarget,
+                          XiaoHongShuCumulativeRelease = d.XiaoHongShuCumulativeRelease,
+                          XiaoHongShuReleaseCompleteRate = d.XiaoHongShuReleaseCompleteRate,
+
+                          SinaWeiBoSendNum = d.SinaWeiBoSendNum,
+                          SinaWeiBoReleaseTarget = d.SinaWeiBoReleaseTarget,
+                          SinaWeiBoCumulativeRelease = d.SinaWeiBoCumulativeRelease,
+                          SinaWeiBoReleaseCompleteRate = d.SinaWeiBoReleaseCompleteRate,
+
+                          ZhihuSendNum = d.ZhihuSendNum,
+                          ZhihuReleaseTarget = d.ZhihuReleaseTarget,
+                          ZhihuCumulativeRelease = d.ZhihuCumulativeRelease,
+                          ZhihuReleaseCompleteRate = d.ZhihuReleaseCompleteRate,
                           TodaySendNum = d.TodaySendNum,
                           ReleaseTarget = d.ReleaseTarget,
                           CumulativeRelease = d.CumulativeRelease,

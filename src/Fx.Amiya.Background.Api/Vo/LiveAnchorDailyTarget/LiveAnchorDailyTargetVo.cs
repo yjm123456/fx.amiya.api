@@ -44,6 +44,25 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 网咨人员名称
         /// </summary>
         public string NetWorkConsultingEmployeeName { get; set; }
+        /// <summary>
+        /// 抖音今日发布量
+        /// </summary>
+        public int TikTokSendNum { get; set; }
+
+        /// <summary>
+        /// 知乎今日发布量
+        /// </summary>
+        public int ZhihuSendNum { get; set; }
+
+        /// <summary>
+        /// 小红书今日发布量
+        /// </summary>
+        public int XiaoHongShuSendNum { get; set; }
+
+        /// <summary>
+        /// 微博今日发布量
+        /// </summary>
+        public int SinaWeiBoSendNum { get; set; }
 
         /// <summary>
         /// 今日发布量

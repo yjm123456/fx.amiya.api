@@ -23,6 +23,108 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("主播")]
         public string LiveAnchor { get; set; }
 
+
+        /// <summary>
+        /// 今日抖音发布量
+        /// </summary>
+        [Description("今日抖音发布量")]
+        public int TikTokSendNum { get; set; }
+
+        /// <summary>
+        /// 月抖音发布目标
+        /// </summary>
+        [Description("月抖音发布目标")]
+        public int TikTokReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计抖音发布条数
+        /// </summary>
+        [Description("月累计抖音发布条数")]
+        public int TikTokCumulativeRelease { get; set; }
+
+        /// <summary>
+        /// 抖音发布目标完成率
+        /// </summary>
+        [Description("抖音发布目标完成率")]
+        public string TikTokReleaseCompleteRate { get; set; }
+
+        /// <summary>
+        /// 今日小红书发布量
+        /// </summary>
+        [Description("今日小红书发布量")]
+        public int XiaoHongShuSendNum { get; set; }
+
+        /// <summary>
+        /// 月小红书发布目标
+        /// </summary>
+        [Description("月小红书发布目标")]
+        public int XiaoHongShuReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计小红书发布条数
+        /// </summary>
+        [Description("月累计小红书发布条数")]
+        public int XiaoHongShuCumulativeRelease { get; set; }
+
+        /// <summary>
+        /// 小红书发布目标完成率
+        /// </summary>
+        [Description("小红书发布目标完成率")]
+        public string XiaoHongShuReleaseCompleteRate { get; set; }
+
+
+
+        /// <summary>
+        /// 今日微博发布量
+        /// </summary>
+        [Description("今日微博发布量")]
+        public int SinaWeiBoSendNum { get; set; }
+
+        /// <summary>
+        /// 月微博发布目标
+        /// </summary>
+        [Description("月微博发布目标")]
+        public int SinaWeiBoReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计微博发布条数
+        /// </summary>
+        [Description("月累计微博发布条数")]
+        public int SinaWeiBoCumulativeRelease { get; set; }
+
+        /// <summary>
+        /// 微博发布目标完成率
+        /// </summary>
+        [Description("微博发布目标完成率")]
+        public string SinaWeiBoReleaseCompleteRate { get; set; }
+
+
+
+        /// <summary>
+        /// 今日知乎发布量
+        /// </summary>
+        [Description("今日知乎发布量")]
+        public int ZhihuSendNum { get; set; }
+
+        /// <summary>
+        /// 月知乎发布目标
+        /// </summary>
+        [Description("月知乎发布目标")]
+        public int ZhihuReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计知乎发布条数
+        /// </summary>
+        [Description("月累计知乎发布条数")]
+        public int ZhihuCumulativeRelease { get; set; }
+
+        /// <summary>
+        /// 知乎发布目标完成率
+        /// </summary>
+        [Description("知乎发布目标完成率")]
+        public string ZhihuReleaseCompleteRate { get; set; }
+
+
         /// <summary>
         /// 今日发布量
         /// </summary>

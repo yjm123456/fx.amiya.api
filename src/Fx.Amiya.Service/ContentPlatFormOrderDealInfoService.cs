@@ -699,6 +699,8 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
+
+
         #region【业绩板块】
 
 
@@ -777,6 +779,39 @@ namespace Fx.Amiya.Service
             return returnInfo;
         }
 
+
+        /// <summary>
+        /// 获取当日上门成交业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isOldSend"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceAsync(int liveAnchorId ,DateTime recordDate)
+        {
+            //筛选结束的月份
+            DateTime endDate = recordDate.Date.AddDays(1);
+            //选定的月份
+            DateTime currentDate = recordDate.Date;
+            var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)
+                .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= currentDate && o.ToHospitalDate < endDate)
+                .Where(o => o.ContentPlatFormOrder.LiveAnchorId == liveAnchorId)
+                .ToListAsync();
+            var returnInfo = result.Select(
+                  d =>
+                       new ContentPlatFormOrderDealInfoDto
+                       {
+                           IsToHospital = d.IsToHospital,
+                           IsDeal = d.IsDeal,
+                           IsOldCustomer = d.IsOldCustomer,
+                           ToHospitalType = d.ToHospitalType,
+                           Price = d.Price,
+                       }
+                ).ToList();
+
+            return returnInfo;
+        }
 
         /// <summary>
         /// 新/老客业绩折线图
@@ -893,7 +928,7 @@ namespace Fx.Amiya.Service
                 .Where(o => LiveAnchorIds.Count == 0 || LiveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id)).ToListAsync();
 
             var list = orderinfo.Select(x => new PerformanceInfoDateDto { Date = x.CreateDate, PerfomancePrice = x.Price }).ToList();
-            var returnResult = list.GroupBy(x => x.Date.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(z => z.PerfomancePrice)/x.Count() }).ToList();
+            var returnResult = list.GroupBy(x => x.Date.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(z => z.PerfomancePrice) / x.Count() }).ToList();
             return returnResult;
         }
 

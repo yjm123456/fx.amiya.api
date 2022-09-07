@@ -67,6 +67,18 @@ namespace Fx.Amiya.Service
                                                   MonthlyTargetName = d.MonthlyTargetName,
                                                   LiveAnchorId = d.LiveAnchorId,
                                                   LiveAnchorName = d.LiveAnchor.Name,
+                                                  ZhihuReleaseTarget = d.ZhihuReleaseTarget,
+                                                  CumulativeZhihuRelease = d.CumulativeZhihuRelease,
+                                                  ZhihuReleaseCompleteRate = d.ZhihuReleaseCompleteRate,
+                                                  TikTokReleaseTarget = d.TikTokReleaseTarget,
+                                                  CumulativeTikTokRelease = d.CumulativeTikTokRelease,
+                                                  TikTokReleaseCompleteRate = d.TikTokReleaseCompleteRate,
+                                                  XiaoHongShuReleaseTarget = d.XiaoHongShuReleaseTarget,
+                                                  CumulativeXiaoHongShuRelease = d.CumulativeXiaoHongShuRelease,
+                                                  XiaoHongShuReleaseCompleteRate = d.XiaoHongShuReleaseCompleteRate,
+                                                  SinaWeiBoReleaseTarget = d.SinaWeiBoReleaseTarget,
+                                                  CumulativeSinaWeiBoRelease = d.CumulativeSinaWeiBoRelease,
+                                                  SinaWeiBoReleaseCompleteRate = d.SinaWeiBoReleaseCompleteRate,
                                                   ReleaseTarget = d.ReleaseTarget,
                                                   CumulativeRelease = d.CumulativeRelease,
                                                   ReleaseCompleteRate = d.ReleaseCompleteRate,
@@ -167,6 +179,18 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.Month = addDto.Month;
                 liveAnchorMonthlyTarget.MonthlyTargetName = addDto.MonthlyTargetName;
                 liveAnchorMonthlyTarget.LiveAnchorId = addDto.LiveAnchorId;
+                liveAnchorMonthlyTarget.ZhihuReleaseTarget = addDto.ZhihuReleaseTarget;
+                liveAnchorMonthlyTarget.CumulativeZhihuRelease = 0;
+                liveAnchorMonthlyTarget.ZhihuReleaseCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.TikTokReleaseTarget = addDto.TikTokReleaseTarget;
+                liveAnchorMonthlyTarget.CumulativeTikTokRelease = 0;
+                liveAnchorMonthlyTarget.TikTokReleaseCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.XiaoHongShuReleaseTarget = addDto.XiaoHongShuReleaseTarget;
+                liveAnchorMonthlyTarget.CumulativeXiaoHongShuRelease = 0;
+                liveAnchorMonthlyTarget.XiaoHongShuReleaseCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.SinaWeiBoReleaseTarget = addDto.SinaWeiBoReleaseTarget;
+                liveAnchorMonthlyTarget.CumulativeSinaWeiBoRelease = 0;
+                liveAnchorMonthlyTarget.SinaWeiBoReleaseCompleteRate = 0.00M;
                 liveAnchorMonthlyTarget.ReleaseTarget = addDto.ReleaseTarget;
                 liveAnchorMonthlyTarget.CumulativeRelease = 0;
                 liveAnchorMonthlyTarget.ReleaseCompleteRate = 0.00M;
@@ -227,7 +251,7 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.DealTarget = addDto.DealTarget;
                 liveAnchorMonthlyTarget.CumulativeDealTarget = 0;
                 liveAnchorMonthlyTarget.DealRate = 0.00M;
-                liveAnchorMonthlyTarget.CargoSettlementCommissionTarget = addDto.PerformanceTarget;
+                liveAnchorMonthlyTarget.CargoSettlementCommissionTarget = addDto.CargoSettlementCommissionTarget;
                 liveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = 0.00M;
                 liveAnchorMonthlyTarget.CargoSettlementCommissionCompleteRate = 0.00M;
                 liveAnchorMonthlyTarget.PerformanceTarget = addDto.PerformanceTarget;
@@ -299,6 +323,23 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.Month = liveAnchorMonthlyTarget.Month;
                 liveAnchorMonthlyTargetDto.MonthlyTargetName = liveAnchorMonthlyTarget.MonthlyTargetName;
                 liveAnchorMonthlyTargetDto.LiveAnchorId = liveAnchorMonthlyTarget.LiveAnchorId;
+
+                liveAnchorMonthlyTargetDto.TikTokReleaseTarget = liveAnchorMonthlyTarget.TikTokReleaseTarget;
+                liveAnchorMonthlyTargetDto.CumulativeTikTokRelease = liveAnchorMonthlyTarget.CumulativeTikTokRelease;
+                liveAnchorMonthlyTargetDto.TikTokReleaseCompleteRate = liveAnchorMonthlyTarget.TikTokReleaseCompleteRate;
+
+                liveAnchorMonthlyTargetDto.XiaoHongShuReleaseTarget = liveAnchorMonthlyTarget.XiaoHongShuReleaseTarget;
+                liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuRelease = liveAnchorMonthlyTarget.CumulativeXiaoHongShuRelease;
+                liveAnchorMonthlyTargetDto.XiaoHongShuReleaseCompleteRate = liveAnchorMonthlyTarget.XiaoHongShuReleaseCompleteRate;
+
+                liveAnchorMonthlyTargetDto.SinaWeiBoReleaseTarget = liveAnchorMonthlyTarget.SinaWeiBoReleaseTarget;
+                liveAnchorMonthlyTargetDto.CumulativeSinaWeiBoRelease = liveAnchorMonthlyTarget.CumulativeSinaWeiBoRelease;
+                liveAnchorMonthlyTargetDto.SinaWeiBoReleaseCompleteRate = liveAnchorMonthlyTarget.SinaWeiBoReleaseCompleteRate;
+
+                liveAnchorMonthlyTargetDto.ZhihuReleaseTarget = liveAnchorMonthlyTarget.ZhihuReleaseTarget;
+                liveAnchorMonthlyTargetDto.CumulativeZhihuRelease = liveAnchorMonthlyTarget.CumulativeZhihuRelease;
+                liveAnchorMonthlyTargetDto.ZhihuReleaseCompleteRate = liveAnchorMonthlyTarget.ZhihuReleaseCompleteRate;
+
                 liveAnchorMonthlyTargetDto.ReleaseTarget = liveAnchorMonthlyTarget.ReleaseTarget;
                 liveAnchorMonthlyTargetDto.CumulativeRelease = liveAnchorMonthlyTarget.CumulativeRelease;
                 liveAnchorMonthlyTargetDto.ReleaseCompleteRate = liveAnchorMonthlyTarget.ReleaseCompleteRate;
@@ -410,6 +451,10 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.Month = updateDto.Month;
                 liveAnchorMonthlyTarget.MonthlyTargetName = updateDto.MonthlyTargetName;
                 liveAnchorMonthlyTarget.LiveAnchorId = updateDto.LiveAnchorId;
+                liveAnchorMonthlyTarget.TikTokReleaseTarget = updateDto.TikTokReleaseTarget;
+                liveAnchorMonthlyTarget.ZhihuReleaseTarget = updateDto.ZhihuReleaseTarget;
+                liveAnchorMonthlyTarget.XiaoHongShuReleaseTarget = updateDto.XiaoHongShuReleaseTarget;
+                liveAnchorMonthlyTarget.SinaWeiBoReleaseTarget = updateDto.SinaWeiBoReleaseTarget;
                 liveAnchorMonthlyTarget.ReleaseTarget = updateDto.ReleaseTarget;
                 liveAnchorMonthlyTarget.FlowInvestmentTarget = updateDto.FlowInvestmentTarget;
                 liveAnchorMonthlyTarget.LivingRoomFlowInvestmentTarget = updateDto.LivingRoomFlowInvestmentTarget;
@@ -455,6 +500,55 @@ namespace Fx.Amiya.Service
                 var liveAnchorMonthlyTarget = await dalLiveAnchorMonthlyTarget.GetAll().SingleOrDefaultAsync(e => e.Id == editDto.Id);
                 if (liveAnchorMonthlyTarget == null)
                     throw new Exception("主播月度运营目标情况编号错误！");
+                #region #知乎发布
+                liveAnchorMonthlyTarget.CumulativeZhihuRelease += editDto.CumulativeZhihuRelease;
+                if (liveAnchorMonthlyTarget.CumulativeZhihuRelease <= 0)
+                {
+                    liveAnchorMonthlyTarget.ZhihuReleaseCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.ZhihuReleaseCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeZhihuRelease) / Convert.ToDecimal(liveAnchorMonthlyTarget.ZhihuReleaseTarget)) * 100, 2);
+                }
+                #endregion
+
+
+                #region #小红书发布
+                liveAnchorMonthlyTarget.CumulativeTikTokRelease += editDto.CumulativeTikTokRelease;
+                if (liveAnchorMonthlyTarget.CumulativeTikTokRelease <= 0)
+                {
+                    liveAnchorMonthlyTarget.TikTokReleaseCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.TikTokReleaseCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeTikTokRelease) / Convert.ToDecimal(liveAnchorMonthlyTarget.TikTokReleaseTarget)) * 100, 2);
+                }
+                #endregion
+
+                #region #小红书发布
+                liveAnchorMonthlyTarget.CumulativeXiaoHongShuRelease += editDto.CumulativeXiaoHongShuRelease;
+                if (liveAnchorMonthlyTarget.CumulativeXiaoHongShuRelease <= 0)
+                {
+                    liveAnchorMonthlyTarget.XiaoHongShuReleaseCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.XiaoHongShuReleaseCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeXiaoHongShuRelease) / Convert.ToDecimal(liveAnchorMonthlyTarget.XiaoHongShuReleaseTarget)) * 100, 2);
+                }
+                #endregion
+
+                #region #微博发布
+                liveAnchorMonthlyTarget.CumulativeSinaWeiBoRelease += editDto.CumulativeSinaWeiBoRelease;
+                if (liveAnchorMonthlyTarget.CumulativeSinaWeiBoRelease <= 0)
+                {
+                    liveAnchorMonthlyTarget.SinaWeiBoReleaseCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.SinaWeiBoReleaseCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeSinaWeiBoRelease) / Convert.ToDecimal(liveAnchorMonthlyTarget.SinaWeiBoReleaseTarget)) * 100, 2);
+                }
+                #endregion
+
                 #region #发布
                 liveAnchorMonthlyTarget.CumulativeRelease += editDto.CumulativeRelease;
                 if (liveAnchorMonthlyTarget.CumulativeRelease <= 0)
@@ -601,7 +695,7 @@ namespace Fx.Amiya.Service
                 }
                 #endregion
 
-                #region #新诊上门数
+                #region #新客上门数
                 liveAnchorMonthlyTarget.CumulativeNewCustomerVisit += editDto.CumulativeNewCustomerVisit;
                 if (liveAnchorMonthlyTarget.CumulativeNewCustomerVisit <= 0)
                 {
@@ -613,7 +707,7 @@ namespace Fx.Amiya.Service
                 }
                 #endregion
 
-                #region #复诊上门数
+                #region #老客上门数
                 liveAnchorMonthlyTarget.CumulativeOldCustomerVisit += editDto.CumulativeOldCustomerVisit;
                 if (liveAnchorMonthlyTarget.CumulativeOldCustomerVisit <= 0)
                 {

@@ -64,6 +64,92 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// </summary>
         public string NetWorkConsultingEmployeeName { get; set; }
 
+
+
+        /// <summary>
+        /// 今日知乎发布量
+        /// </summary>
+        public int ZhihuSendNum { get; set; }
+
+        /// <summary>
+        /// 月知乎发布目标
+        /// </summary>
+        public int ZhihuReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计知乎发布条数
+        /// </summary>
+        public int ZhihuCumulativeRelease { get; set; }
+
+        /// <summary>
+        /// 知乎发布目标完成率
+        /// </summary>
+        public string ZhihuReleaseCompleteRate { get; set; }
+
+
+
+        /// <summary>
+        /// 今日微博发布量
+        /// </summary>
+        public int SinaWeiBoSendNum { get; set; }
+
+        /// <summary>
+        /// 月微博发布目标
+        /// </summary>
+        public int SinaWeiBoReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计微博发布条数
+        /// </summary>
+        public int SinaWeiBoCumulativeRelease { get; set; }
+
+        /// <summary>
+        /// 微博发布目标完成率
+        /// </summary>
+        public string SinaWeiBoReleaseCompleteRate { get; set; }
+
+
+
+        /// <summary>
+        /// 今日抖音发布量
+        /// </summary>
+        public int TikTokSendNum { get; set; }
+
+        /// <summary>
+        /// 月抖音发布目标
+        /// </summary>
+        public int TikTokReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计抖音发布条数
+        /// </summary>
+        public int TikTokCumulativeRelease { get; set; }
+
+        /// <summary>
+        /// 抖音发布目标完成率
+        /// </summary>
+        public string TikTokReleaseCompleteRate { get; set; }
+
+        /// <summary>
+        /// 今日小红书发布量
+        /// </summary>
+        public int XiaoHongShuSendNum { get; set; }
+
+        /// <summary>
+        /// 月小红书发布目标
+        /// </summary>
+        public int XiaoHongShuReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计小红书发布条数
+        /// </summary>
+        public int XiaoHongShuCumulativeRelease { get; set; }
+
+        /// <summary>
+        /// 小红书发布目标完成率
+        /// </summary>
+        public string XiaoHongShuReleaseCompleteRate { get; set; }
+
         /// <summary>
         /// 今日发布量
         /// </summary>

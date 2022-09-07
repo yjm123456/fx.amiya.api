@@ -12,17 +12,34 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
         public void Configure(EntityTypeBuilder<LiveAnchorMonthlyTarget> builder)
         {
             builder.ToTable("tbl_liveanchor_monthly_target");
-            builder.Property(t => t.Id).HasColumnName("id").HasColumnType("varchar(50)").IsRequired();
+            builder.Property(t => t.Id).HasColumnName("id").HasColumnType("varchar(120)").IsRequired();
             builder.Property(t => t.Year).HasColumnName("year").HasColumnType("int").IsRequired();
             builder.Property(t => t.Month).HasColumnName("month").HasColumnType("int").IsRequired();
             builder.Property(t => t.MonthlyTargetName).HasColumnName("monthly_target_name").HasColumnType("varchar(200)").IsRequired(false);
             builder.Property(t => t.LiveAnchorId).HasColumnName("live_anchor_id").HasColumnType("int").IsRequired();
+
+            builder.Property(t => t.ZhihuReleaseTarget).HasColumnName("zhihu_release_target").HasColumnType("int").IsRequired();
+            builder.Property(t => t.CumulativeZhihuRelease).HasColumnName("cumulative_zhihu_release").HasColumnType("int").IsRequired();
+            builder.Property(t => t.ZhihuReleaseCompleteRate).HasColumnName("zhihu_release_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+
+            builder.Property(t => t.SinaWeiBoReleaseTarget).HasColumnName("sina_weibo_release_target").HasColumnType("int").IsRequired();
+            builder.Property(t => t.CumulativeSinaWeiBoRelease).HasColumnName("cumulative_sina_weibo_release").HasColumnType("int").IsRequired();
+            builder.Property(t => t.SinaWeiBoReleaseCompleteRate).HasColumnName("sina_weibo_release_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+
+            builder.Property(t => t.TikTokReleaseTarget).HasColumnName("tiktok_release_target").HasColumnType("int").IsRequired();
+            builder.Property(t => t.CumulativeTikTokRelease).HasColumnName("cumulative_tiktok_release").HasColumnType("int").IsRequired();
+            builder.Property(t => t.TikTokReleaseCompleteRate).HasColumnName("tiktok_release_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+
+            builder.Property(t => t.XiaoHongShuReleaseTarget).HasColumnName("xiaohongshu_release_target").HasColumnType("int").IsRequired();
+            builder.Property(t => t.CumulativeXiaoHongShuRelease).HasColumnName("cumulative_xiaohongshu_release").HasColumnType("int").IsRequired();
+            builder.Property(t => t.XiaoHongShuReleaseCompleteRate).HasColumnName("xiaohongshu_release_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+
             builder.Property(t => t.ReleaseTarget).HasColumnName("release_target").HasColumnType("int").IsRequired();
             builder.Property(t => t.CumulativeRelease).HasColumnName("cumulative_release").HasColumnType("int").IsRequired();
-            builder.Property(t => t.ReleaseCompleteRate).HasColumnName("release_complete_rate").HasColumnType("decimal(5,2)").IsRequired();
+            builder.Property(t => t.ReleaseCompleteRate).HasColumnName("release_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.FlowInvestmentTarget).HasColumnName("flow_investment_target").HasColumnType("int").IsRequired();
             builder.Property(t => t.CumulativeFlowInvestment).HasColumnName("cumulative_flow_investment").HasColumnType("int").IsRequired();
-            builder.Property(t => t.FlowInvestmentCompleteRate).HasColumnName("flow_investment_complete_rate").HasColumnType("decimal(5,2)").IsRequired();
+            builder.Property(t => t.FlowInvestmentCompleteRate).HasColumnName("flow_investment_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.LivingRoomFlowInvestmentTarget).HasColumnName("livingroomflow_investment_target").HasColumnType("int").IsRequired();
             builder.Property(t => t.LivingRoomCumulativeFlowInvestment).HasColumnName("cumulative_livingroomflow_investment").HasColumnType("int").IsRequired();
             builder.Property(t => t.LivingRoomFlowInvestmentCompleteRate).HasColumnName("livingroomflow_investment_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
@@ -37,7 +54,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
 
             builder.Property(t => t.AddWechatTarget).HasColumnName("add_wechat_target").HasColumnType("int").IsRequired();
             builder.Property(t => t.CumulativeAddWechat).HasColumnName("cumulative_add_wechat").HasColumnType("int").IsRequired();
-            builder.Property(t => t.AddWechatCompleteRate).HasColumnName("add_wechat_complete_rate").HasColumnType("decimal(5,2)").IsRequired();
+            builder.Property(t => t.AddWechatCompleteRate).HasColumnName("add_wechat_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
 
             builder.Property(t => t.ConsultationTarget).HasColumnName("consultation_target").HasColumnType("int").IsRequired();
             builder.Property(t => t.CumulativeConsultation).HasColumnName("cumulative_consultation").HasColumnType("int").IsRequired();
@@ -94,7 +111,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
 
             builder.Property(t => t.CargoSettlementCommissionTarget).HasColumnName("cargosettlementcommission_target").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.CumulativeCargoSettlementCommission).HasColumnName("cumulation_cargosettlementcommission").HasColumnType("decimal(12,2)").IsRequired();
-            builder.Property(t => t.CargoSettlementCommissionCompleteRate).HasColumnName("cargosettlementcommission_complete_rate").HasColumnType("decimal(5,2)").IsRequired();
+            builder.Property(t => t.CargoSettlementCommissionCompleteRate).HasColumnName("cargosettlementcommission_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
 
 
             builder.Property(t => t.NewCustomerPerformanceTarget).HasColumnName("new_customer_performance_target").HasColumnType("decimal(12,2)").IsRequired();

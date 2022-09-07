@@ -19,6 +19,10 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.OperationEmployeeId).HasColumnName("operation_employee_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.LivingTrackingEmployeeId).HasColumnName("living_tracking_employee_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.NetWorkConsultingEmployeeId).HasColumnName("network_consulting_employee_id").HasColumnType("int").IsRequired();
+            builder.Property(t => t.SinaWeiBoSendNum).HasColumnName("sinaweibo_send_num").HasColumnType("int").IsRequired();
+            builder.Property(t => t.TikTokSendNum).HasColumnName("tiktok_send_num").HasColumnType("int").IsRequired();
+            builder.Property(t => t.ZhihuSendNum).HasColumnName("zhihu_send_num").HasColumnType("int").IsRequired();
+            builder.Property(t => t.XiaoHongShuSendNum).HasColumnName("xiaohongshu_send_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.TodaySendNum).HasColumnName("today_send_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.FlowInvestmentNum).HasColumnName("flow_investment_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.LivingRoomFlowInvestmentNum).HasColumnName("livingroomflow_investment_num").HasColumnType("int").IsRequired();

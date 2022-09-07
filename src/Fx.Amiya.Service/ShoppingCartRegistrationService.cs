@@ -191,6 +191,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.RefundDate = addDto.RefundDate;
                 shoppingCartRegistration.RefundReason = addDto.RefundReason;
                 shoppingCartRegistration.IsBadReview = addDto.IsBadReview;
+                //（todo;）根据内容平台订单修改录单/派单触达
                 shoppingCartRegistration.IsCreateOrder = false;
                 shoppingCartRegistration.IsSendOrder = false;
                 shoppingCartRegistration.EmergencyLevel = addDto.EmergencyLevel;
@@ -364,6 +365,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.BadReviewReason = updateDto.BadReviewReason;
                 shoppingCartRegistration.IsBadReview = updateDto.IsBadReview;
                 shoppingCartRegistration.CreateBy = updateDto.CreateBy;
+                //（todo;）根据内容平台订单修改录单/派单触达
                 shoppingCartRegistration.EmergencyLevel = updateDto.EmergencyLevel;
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
                 // unitOfWork.Commit();
@@ -467,6 +469,98 @@ namespace Fx.Amiya.Service
             return emergencyLevelList;
         }
 
+        #region 【日数据业绩生成】
+
+        /// <summary>
+        /// 根据条件获取今日面诊业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isVideo"></param>
+        /// <param name="liveAnchorId"></param>
+        /// <returns></returns>
+        public async Task<List<ShoppingCartRegistrationDto>> GetDialyConsulationCardInfoByLiveAnchorId(int liveAnchorId,DateTime recordDate)
+        {
+            //筛选结束的月份
+            DateTime endDate = recordDate.AddDays(1);
+            //选定的月份
+            DateTime currentDate = recordDate.Date;
+            var result = from d in dalShoppingCartRegistration.GetAll()
+                .Where(o => o.IsConsultation == true && o.ConsultationDate.HasValue == true && o.IsReturnBackPrice == false && o.IsBadReview == false)
+                .Where(o => o.ConsultationDate >= currentDate && o.ConsultationDate < endDate && o.LiveAnchorId == liveAnchorId)
+                         select new ShoppingCartRegistrationDto
+                         {
+                             ConsultationDate = d.ConsultationDate,
+                             RecordDate = d.RecordDate,
+                             ConsultationType = d.ConsultationType,
+                         };
+            return await result.OrderByDescending(x => x.RecordDate).ToListAsync();
+        }
+
+        /// <summary>
+        /// 根据条件获取今日加v派单业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isVideo"></param>
+        /// <param name="liveAnchorId"></param>
+        /// <returns></returns>
+        public async Task<List<ShoppingCartRegistrationDto>> GetDialyAddWeChatInfoByLiveAnchorId(int liveAnchorId,DateTime recordDate)
+        {
+            //筛选结束的月份
+            DateTime endDate = recordDate.Date.AddDays(1);
+            //选定的月份
+            DateTime currentDate = recordDate.Date;
+            var result = from d in dalShoppingCartRegistration.GetAll()
+                .Where(o => o.RecordDate >= currentDate && o.RecordDate < endDate && o.LiveAnchorId == liveAnchorId && o.IsAddWeChat == true)
+                         select new ShoppingCartRegistrationDto
+                         {
+                             IsSendOrder = d.IsSendOrder,
+                         };
+            return await result.ToListAsync();
+        }
+
+        /// <summary>
+        /// 根据条件获取今日小黄车退款量
+        /// </summary>
+        /// <param name="liveAnchorId"></param>
+        /// <returns></returns>
+        public async Task<List<ShoppingCartRegistrationDto>> GetDialyYellowCardRefundInfoByLiveAnchorId(int liveAnchorId,DateTime recordDate)
+        {
+            //筛选结束的月份
+            DateTime endDate = recordDate.Date.AddDays(1);
+            //选定的月份
+            DateTime currentDate = recordDate.Date;
+            var result = from d in dalShoppingCartRegistration.GetAll()
+                .Where(o => o.RefundDate.Value >= currentDate && o.RefundDate.Value < endDate && o.LiveAnchorId == liveAnchorId && o.IsReturnBackPrice == true)
+                         select new ShoppingCartRegistrationDto
+                         {
+                             IsSendOrder = d.IsSendOrder,
+                         };
+            return await result.ToListAsync();
+        }
+
+        /// <summary>
+        /// 根据条件获取今日小黄车差评量
+        /// </summary>
+        /// <param name="liveAnchorId"></param>
+        /// <returns></returns>
+        public async Task<List<ShoppingCartRegistrationDto>> GetDialyYellowCardBadReviewInfoByLiveAnchorId(int liveAnchorId ,DateTime recordDate)
+        {
+            //筛选结束的月份
+            DateTime endDate = DateTime.Now.Date.AddDays(1);
+            //选定的月份
+            DateTime currentDate = DateTime.Now.Date;
+            var result = from d in dalShoppingCartRegistration.GetAll()
+                .Where(o => o.BadReviewDate.Value >= currentDate && o.BadReviewDate.Value < endDate && o.LiveAnchorId == liveAnchorId && o.IsBadReview == true)
+                         select new ShoppingCartRegistrationDto
+                         {
+                             IsSendOrder = d.IsSendOrder,
+                         };
+            return await result.ToListAsync();
+        }
+        #endregion
+
         #region 【报表相关】
         public async Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistrationReportAsync(DateTime? startDate, DateTime? endDate, int? emergencyLevel, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, bool isHidePhone)
         {
@@ -556,7 +650,7 @@ namespace Fx.Amiya.Service
             DateTime currentDate = new DateTime(year, month, 1);
             var result = from d in dalShoppingCartRegistration.GetAll()
                 .Where(o => o.IsConsultation == true && o.IsReturnBackPrice == false && o.IsBadReview == false)
-                .Where(o => o.RecordDate >= currentDate && o.RecordDate < endDate && o.ConsultationType == consultationType)
+                .Where(o => o.ConsultationDate >= currentDate && o.ConsultationDate < endDate && o.ConsultationType == consultationType)
                 .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.LiveAnchorId))
                          select new ShoppingCartRegistrationDto
                          {
@@ -573,7 +667,7 @@ namespace Fx.Amiya.Service
                              IsReturnBackPrice = d.IsReturnBackPrice,
                              IsBadReview = d.IsBadReview,
                          };
-            return await result.OrderByDescending(x => x.RecordDate).ToListAsync();
+            return await result.ToListAsync();
         }
 
         /// <summary>
@@ -681,7 +775,7 @@ namespace Fx.Amiya.Service
                              IsReturnBackPrice = d.IsReturnBackPrice,
                              IsBadReview = d.IsBadReview,
                          };
-            return await result.OrderByDescending(x => x.RecordDate).ToListAsync();
+            return await result.ToListAsync();
         }
 
 

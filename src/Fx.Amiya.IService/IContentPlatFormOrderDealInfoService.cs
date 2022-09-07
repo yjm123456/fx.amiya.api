@@ -25,6 +25,12 @@ namespace Fx.Amiya.IService
         Task CheckAsync(UpdateContentPlatFormOrderDealInfoDto updateDto);
 
         Task SettleAsync(UpdateContentPlatFormOrderDealInfoDto updateDto);
+        /// <summary>
+        /// 获取当日上门成交业绩
+        /// </summary>
+        /// <param name="liveAnchorId"></param>
+        /// <returns></returns>
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceAsync(int liveAnchorId,DateTime recordDate);
 
 
         #region【业绩板块】
@@ -48,6 +54,7 @@ namespace Fx.Amiya.IService
         /// <param name="isOldSend">历史/当月派单,true为历史派单当月成交，false为当月派单当月成交</param>
         /// <returns></returns>
         Task<List<ContentPlatFormOrderDealInfoDto>> GetSendAndDealPerformanceByYearAndMonth(int year, int month, bool? isOldSend, List<int> liveAnchorIds);
+
         /// <summary>
         /// 按月筛选新老客数据
         /// </summary>
