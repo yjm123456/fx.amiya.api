@@ -58,13 +58,14 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         {
             string notifyLog = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 开始回调，回调id：" + input.notify_id;
             logger.LogInformation(notifyLog);
-            SortedDictionary<string, string> sPara = GetRequestPost(input);
+            /*SortedDictionary<string, string> sPara = GetRequestPost(input);
             var verifyResult = _aliPayService.Verify(sPara, input.notify_id, input.sign);
             if (verifyResult.Result != true)
             {
                 return "fail";
-            }
+            }*/
             if (input.body== "RECHARGE") {
+                //储值
                 try
                 {
                     unitOfWork.BeginTransaction();
@@ -113,6 +114,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 
                 
             } else {
+                //商城下单
                 var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(input.out_trade_no);
                 List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
                 foreach (var item in orderTrade.OrderInfoList)

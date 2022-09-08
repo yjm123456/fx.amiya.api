@@ -17,7 +17,7 @@ namespace Fx.Amiya.MiniProgram.Api
        
         private ILogger<TimeJob> logger;
         private IServiceProvider _serviceProvider;
-        public TimeJob(ILogger<TimeJob> logger,
+        public TimeJob(ILogger<TimeJob> logger, 
             IServiceProvider serviceProvider)
         {
             this.logger = logger;
@@ -108,7 +108,7 @@ namespace Fx.Amiya.MiniProgram.Api
             }
             catch (Exception ex)
             {
-                throw new Exception("处理超时订单失败");
+                throw new Exception("处理超时充值订单失败");
             }
         }
 
