@@ -117,6 +117,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<GrowthPointsRecord> GrowthPointsRecord { get; set; }
         public virtual DbSet<ConsumptionVoucher> ConsumptionVoucher { get; set; }
         public virtual DbSet<CustomerConsumptionVoucher> CustomerConsumptionVoucher { get; set; }
+        public virtual DbSet<GoodsMemberRankPrice> GoodsMemberRankPrice { get; set; }
         public virtual DbSet<MemberCardRankInfo> MemberCard { get; set; }
         public virtual DbSet<MemberCardSendRecord> MemberCardSendRecord { get; set; }
         public virtual DbSet<MemberCardHandle> MemberCardHandle { get; set; }
@@ -242,6 +243,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new GrowthPointsRecordConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerConsumptionVoucherConfiguration());
             modelBuilder.ApplyConfiguration(new ConsumptionVoucherConfiguration());
+            modelBuilder.ApplyConfiguration(new GoodsMemberRankPriceConfiguration());
             modelBuilder.ApplyConfiguration(new MemberCardRankInfoConfiguration());
             modelBuilder.ApplyConfiguration(new MemberCardHandleConfiguration());
             modelBuilder.ApplyConfiguration(new MemberCardSendRecordConfiguration());

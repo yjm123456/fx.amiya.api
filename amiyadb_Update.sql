@@ -1209,6 +1209,64 @@ CHANGE COLUMN `effective_time` `effective_time` INT(10) NOT NULL DEFAULT 0 AFTER
 
 
 
+-----------------------------------------------余建明 2022/09/7 BEGIN--------------------------------------------;
+ALTER TABLE `amiyadb`.`goods_member_rank_price` 
+CHANGE COLUMN `goods_id` `goods_id` VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL ,
+CHANGE COLUMN `member_rank_id` `member_rank_id` TINYINT UNSIGNED NOT NULL ,
+ADD INDEX `fk_price_goods_id_idx` (`goods_id` ASC) VISIBLE,
+ADD INDEX `fk_price_member_rank_idx` (`member_rank_id` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`goods_member_rank_price` 
+ADD CONSTRAINT `fk_price_goods_id`
+  FOREIGN KEY (`goods_id`)
+  REFERENCES `amiyadb`.`tbl_goods_info` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk_price_member_rank`
+  FOREIGN KEY (`member_rank_id`)
+  REFERENCES `amiyadb`.`tbl_member_rank_info` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+  
+-----------------------------------------------余建明 2022/09/7 END--------------------------------------------;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 -----------------------------------------------余建明 2022/05/05 BEGIN--------------------------------------------;
 --商学院板块
 ALTER TABLE `amiyadb`.`tbl_business_college_monthly_target` 

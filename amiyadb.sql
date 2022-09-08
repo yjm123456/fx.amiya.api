@@ -796,6 +796,14 @@ CREATE TABLE `tbl_growth_points_rule` (
 
 
 
+-----------------------------------------------余建明 2022/09/07 BEGIN--------------------------------------------;
+CREATE TABLE `amiyadb`.`goods_member_rank_price` (
+  `id` VARCHAR(50) NOT NULL,
+  `goods_id` VARCHAR(50) NOT NULL,
+  `member_rank_id` INT NOT NULL,
+  `price` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  PRIMARY KEY (`id`));
+-----------------------------------------------余建明 2022/09/07 END--------------------------------------------;
 
 
 
