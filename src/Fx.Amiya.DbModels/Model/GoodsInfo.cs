@@ -127,5 +127,7 @@ namespace Fx.Amiya.DbModels.Model
         public int Version { get; set; }
 
         public List<GoodsShopCar> GoodsShopCars { get; set; }
+
+        public List<GoodsMemberRankPrice> GoodsMemberRankPrice { get; set; }
     }
 }

@@ -52,5 +52,7 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public string RankCode { get; set; }
         public List<MemberCardHandle> MemberCardhandleList { get; set; }
+
+        public List<GoodsMemberRankPrice> GoodsMemberRankPrice { get; set; }
     }
 }

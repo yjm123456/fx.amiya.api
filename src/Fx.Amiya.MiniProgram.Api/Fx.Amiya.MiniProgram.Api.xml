@@ -181,6 +181,42 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CustomerConsumptionVoucherController.GetCustomerConsumptionVoucherList(System.Int32,System.Int32,System.Nullable{System.Int32})">
+            <summary>
+            分页获取用户抵用券
+            </summary>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <param name="type">类型0全部,1未使用,2已使用,3已过期</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CustomerConsumptionVoucherController.GetCustomerConsumptionVoucherList(System.Nullable{System.Boolean})">
+            <summary>
+            获取所有支付抵用券
+            </summary>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <param name="isUsed"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CustomerConsumptionVoucherController.ReceiveShareVoucher(Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher.ShareConsumptionVoucherVo)">
+            <summary>
+            领取分享的抵用券
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CustomerConsumptionVoucherController.IsReciveConsumptionVoucher">
+            <summary>
+            当前月是否已领取抵用券
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CustomerConsumptionVoucherController.ReciveConsumptionVoucher">
+            <summary>
+            每月领取抵用券
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CustomerController.Bind(System.String)">
             <summary>
             绑定客户
@@ -336,6 +372,20 @@
             <param name="idList">购物车id</param>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GrowthPointsAccountController.GetGrowthPointsAccount">
+            <summary>
+            获取用户成长值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GrowthPointsAccountController.GetGrowthPointsRecordList(System.Int32,System.Int32)">
+            <summary>
+            分页获取用户成长值记录列表
+            </summary>
+            <param name="pageNum">页码</param>
+            <param name="pageSize">页面大小</param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.HospitalInfoController.GetSimpleListAsync(System.String,System.String)">
             <summary>
             获取医院列表
@@ -458,6 +508,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.MemberCardController.GetMemberCardByCustomerIdAsync">
+            <summary>
+            获取新的会员卡信息
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.MemberCardController.GetMemberCardInfoByCustomerIdAsync">
             <summary>
             获取会员卡信息
@@ -474,6 +530,15 @@
             支付宝订单回调地址
             </summary>
             <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.NotifyController.CreateIntegrationRecordAsync(System.String,System.Decimal,System.Decimal)">
+            <summary>
+            创建积分奖励记录
+            </summary>
+            <param name="customerId">用户id</param>
+            <param name="awardAmount">奖励积分金额</param>
+            <param name="percent">奖励比率</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.NotifyController.GetRequestPost(Fx.Amiya.MiniProgram.Api.Vo.Notify.AliPayNotifyVo)">
@@ -551,6 +616,13 @@
             <param name="tradeId"></param>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.BalancePayAsync(System.String)">
+            <summary>
+            余额支付
+            </summary>
+            <param name="tradeId"></param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.OrderController.GetOrderListForAmiyaByCustomerId(System.String,System.Int32,System.Int32)">
             <summary>
             获取订单列表
@@ -595,6 +667,52 @@
             确认收货
             </summary>
             <param name="tradeId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.RechargeController.GetCustomerBalance">
+            <summary>
+            获取用户余额
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.RechargeController.GetRechargeRecordList(System.Int32,System.Int32,System.Nullable{System.Int32})">
+            <summary>
+            分页获取充值记录
+            </summary>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <param name="type">1:三方支付记录,2:余额退款记录</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.RechargeController.GetBalanceUseRecord(System.Int32,System.Int32)">
+            <summary>
+            获取余额消费记录
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.RechargeController.AddRechargeRecord(Fx.Amiya.MiniProgram.Api.Vo.Balance.RechargeVo)">
+            <summary>
+            生成订单
+            </summary>
+            <returns>交易编号</returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.RechargeController.CancelRecharge(Fx.Amiya.MiniProgram.Api.Vo.Balance.CancelRechargeVo)">
+            <summary>
+            取消充值订单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.RechargeController.PayAsync(System.String)">
+            <summary>
+            支付订单重新支付
+            </summary>
+            <param name="recordId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.TaskController.CompleteSignTask">
+            <summary>
+            签到任务
+            </summary>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.UserController.Login(Fx.Amiya.MiniProgram.Api.Vo.Login.LoginVo)">
@@ -683,7 +801,13 @@
         </member>
         <member name="M:Fx.Amiya.MiniProgram.Api.TimeJob.HandleTimeOutOrderAsync">
             <summary>
-            处理阿美雅超时未支付的订单
+            处理阿美雅超时未支付的商城订单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.TimeJob.HandleTimeOutRecharge">
+            <summary>
+            处理超时未支付的充值订单
             </summary>
             <returns></returns>
         </member>
@@ -1017,6 +1141,56 @@
             项目图片地址
             </summary>
         </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Balance.BalanceRechargeRecordVo.ExchangeType">
+            <summary>
+            充值类型 0,支付宝,1,微信,2商品退款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Balance.BalanceUseRecordVo.Amount">
+            <summary>
+            消费金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Balance.BalanceUseRecordVo.UseDate">
+            <summary>
+            消费时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Balance.BalanceUseRecordVo.GoodsName">
+            <summary>
+            商品名称
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.MiniProgram.Api.Vo.Balance.RechargeResultVo">
+            <summary>
+            充值返回类
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Balance.RechargeResultVo.TradeId">
+            <summary>
+            交易编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Balance.RechargeResultVo.PayRequestInfo">
+            <summary>
+            拉起微信支付参数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Balance.RechargeResultVo.AlipayUrl">
+            <summary>
+            支付宝跳转页面
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Balance.RechargeVo.AmountId">
+            <summary>
+            金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Balance.RechargeVo.ExchangeCode">
+            <summary>
+            充值方式编码 ALIPAY,WECHAT
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryManageBannerImageVo">
             <summary>
             日记轮播图
@@ -1145,6 +1319,81 @@
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.BeautyDiary.BeautyDiaryTagNameVo.Name">
             <summary>
             标签名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher.CustomerConsumptionVoucherInfoVo.CustomerId">
+            <summary>
+            用户id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher.CustomerConsumptionVoucherInfoVo.ConsumptionVoucherName">
+            <summary>
+            抵用券名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher.CustomerConsumptionVoucherInfoVo.DeductMoney">
+            <summary>
+            抵用券抵扣金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher.CustomerConsumptionVoucherInfoVo.IsShare">
+            <summary>
+            是否可分享
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher.CustomerConsumptionVoucherInfoVo.IsSpecifyProduct">
+            <summary>
+            是否只能用于指定商品
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher.CustomerConsumptionVoucherInfoVo.ConsumptionVoucherId">
+            <summary>
+            抵用券id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher.CustomerConsumptionVoucherInfoVo.IsUsed">
+            <summary>
+            是否已经使用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher.CustomerConsumptionVoucherInfoVo.ExpireDate">
+            <summary>
+            过期时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher.CustomerConsumptionVoucherInfoVo.IsExpire">
+            <summary>
+            是否过期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher.CustomerConsumptionVoucherInfoVo.CreateDate">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher.CustomerConsumptionVoucherInfoVo.UseDate">
+            <summary>
+            使用时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher.CustomerConsumptionVoucherInfoVo.Source">
+            <summary>
+            优惠券来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher.CustomerConsumptionVoucherInfoVo.Type">
+            <summary>
+            抵用券类型 0:商品抵用券,1:面诊卡抵用券
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher.ShareConsumptionVoucherVo.ShareBy">
+            <summary>
+            分享人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher.ShareConsumptionVoucherVo.ConsumerConsumptionVoucherId">
+            <summary>
+            被分享的用户优惠券id
             </summary>
         </member>
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.CooperativeHospitalCity.CooperativeHospitalCityVo.Name">
@@ -1727,6 +1976,46 @@
             限购数量
             </summary>
         </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GrowthPoints.GrowthPointsInfoListVo.Quantity">
+            <summary>
+            数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GrowthPoints.GrowthPointsInfoListVo.IsExpire">
+            <summary>
+            是否过期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GrowthPoints.GrowthPointsInfoListVo.ExpireDate">
+            <summary>
+            过期时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GrowthPoints.GrowthPointsInfoListVo.CreateDate">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GrowthPoints.GrowthPointsInfoListVo.Type">
+            <summary>
+            成长值来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GrowthPoints.GrowthPointsVo.Balance">
+            <summary>
+            当前成长值
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GrowthPoints.GrowthPointsVo.UpgradeGrowthPoints">
+            <summary>
+            升级所需的成长值
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GrowthPoints.GrowthPointsVo.NextLeaveText">
+            <summary>
+            下一级会员
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.HospitalInfo.HospitalInfoSimpleVo.Longitude">
             <summary>
             经度
@@ -1937,6 +2226,16 @@
             备注
             </summary>
         </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderAddVo.ExchangeType">
+            <summary>
+            支付方式 1:三方支付 3:余额支付
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderAddVo.VoucherId">
+            <summary>
+            抵用券id
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderExpressInfoVo">
             <summary>
             订单物流信息
@@ -1985,6 +2284,16 @@
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderInfoVo.SingleIntegrationQuantity">
             <summary>
             积分单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderInfoVo.IsUseCoupon">
+            <summary>
+            是否使用抵用券
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderInfoVo.DeductMoney">
+            <summary>
+            抵用券抵扣金额
             </summary>
         </member>
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.OrderItemVo.GoodsId">
@@ -2040,6 +2349,11 @@
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Order.PayRequestInfoVo.signType">
             <summary>
             签名方式
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Recharge.RechargeAmountVo.Amount">
+            <summary>
+            充值金额
             </summary>
         </member>
         <member name="T:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo">
@@ -2125,6 +2439,11 @@
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.RefundOrderInfo">
             <summary>
             退款信息
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.OrderInfoMiniProgramDetailVo.DeductMoney">
+            <summary>
+            抵扣金额
             </summary>
         </member>
         <member name="T:Fx.Amiya.MiniProgram.Api.Vo.TmallOrder.RefundOrderInfo">
