@@ -14,8 +14,27 @@ namespace Fx.Amiya.IService
         Task<FxPageInfo<LiveAnchorDailyTargetDto>> GetListWithPageAsync(DateTime startDate, DateTime endDate, int? operationEmpId, int? netWorkConEmpId, int? liveAnchorId, int pageNum, int pageSize,int employeeId);
         Task AddAsync(AddLiveAnchorDailyTargetDto addDto);
 
-        Task BeforeLivingAddAsync(BeforeLivingAddLiveAnchorDailyTargetDto addDto);
-        Task BeforeLivingUpdateAsync(BeforeLivingUpdateLiveAnchorDailyTargetDto updateDto);
+
+        #region[抖音]
+        Task BeforeLivingTikTokAddAsync(BeforeLivingTikTokAddLiveAnchorDailyTargetDto addDto);
+        Task BeforeLivingTikTokUpdateAsync(BeforeLivingTikTokUpdateLiveAnchorDailyTargetDto updateDto);
+        #endregion
+        #region[知乎]
+        Task BeforeLivingZhihuAddAsync(BeforeLivingZhihuAddLiveAnchorDailyTargetDto addDto);
+        Task BeforeLivingZhihuUpdateAsync(BeforeLivingZhihuUpdateLiveAnchorDailyTargetDto updateDto);
+        #endregion
+        #region[小红书]
+        Task BeforeLivingXiaoHongShuAddAsync(BeforeLivingXiaoHongShuAddLiveAnchorDailyTargetDto addDto);
+        Task BeforeLivingXiaoHongShuUpdateAsync(BeforeLivingXiaoHongShuUpdateLiveAnchorDailyTargetDto updateDto);
+        #endregion
+        #region[微博]
+        Task BeforeLivingSinaWeiBoAddAsync(BeforeLivingSinaWeiBoAddLiveAnchorDailyTargetDto addDto);
+        Task BeforeLivingSinaWeiBoUpdateAsync(BeforeLivingSinaWeiBoUpdateLiveAnchorDailyTargetDto updateDto);
+        #endregion
+        #region[视频号]
+        Task BeforeLivingVideoAddAsync(BeforeLivingVideoAddLiveAnchorDailyTargetDto addDto);
+        Task BeforeLivingVideoUpdateAsync(BeforeLivingVideoUpdateLiveAnchorDailyTargetDto updateDto);
+        #endregion
 
         Task LivingAddAsync(LivingAddLiveAnchorDailyTargetDto addDto);
         Task LivingUpdateAsync(LivingUpdateLiveAnchorDailyTargetDto updateDto);

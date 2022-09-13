@@ -178,8 +178,9 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         public DateTime RecordDate { get; set; }
     }
 
+    #region 【抖音】
 
-    public class BeforeLivingAddLiveAnchorDailyTargetDto
+    public class BeforeLivingTikTokAddLiveAnchorDailyTargetDto
     {
         /// <summary>
         /// 主播月目标关联id
@@ -189,55 +190,41 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// <summary>
         /// 运营人员Id
         /// </summary>
-        public int OperationEmployeeId { get; set; }
-
+        public int TikTokOperationEmployeeId { get; set; }
         /// <summary>
         /// 抖音发布量
         /// </summary>
         public int TikTokSendNum { get; set; }
-
         /// <summary>
-        /// 知乎今日发布量
+        /// 抖音今日投流费用
         /// </summary>
-        public int ZhihuSendNum { get; set; }
+        public decimal TikTokFlowInvestmentNum { get; set; }
 
         /// <summary>
-        /// 小红书今日发布量
-        /// </summary>
-        public int XiaoHongShuSendNum { get; set; }
-
-        /// <summary>
-        /// 微博今日发布量
-        /// </summary>
-        public int SinaWeiBoSendNum { get; set; }
-
-        /// <summary>
-        /// 今日发布量
+        /// 今日发布量（当前渠道发布量）
         /// </summary>
         public int TodaySendNum { get; set; }
 
         /// <summary>
-        /// 今日视频号投流量
+        /// 今日运营渠道投流费用（当前渠道投流费用）
         /// </summary>
-        public int FlowInvestmentNum { get; set; }
+        public decimal FlowInvestmentNum { get; set; }
+        ///// <summary>
+        ///// 今日线索量
+        ///// </summary>
+        //public int CluesNum { get; set; }
 
-        /// <summary>
-        /// 今日线索量
-        /// </summary>
-        public int CluesNum { get; set; }
-
-        /// <summary>
-        /// 今日涨粉量
-        /// </summary>
-        public int AddFansNum { get; set; }
-
+        ///// <summary>
+        ///// 今日涨粉量
+        ///// </summary>
+        //public int AddFansNum { get; set; }
         /// <summary>
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
     }
 
-    public class BeforeLivingUpdateLiveAnchorDailyTargetDto
+    public class BeforeLivingTikTokUpdateLiveAnchorDailyTargetDto
     {
         /// <summary>
         /// 编号
@@ -252,52 +239,427 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// <summary>
         /// 运营人员Id
         /// </summary>
-        public int OperationEmployeeId { get; set; }
+        public int TikTokOperationEmployeeId { get; set; }
         /// <summary>
         /// 抖音发布量
         /// </summary>
         public int TikTokSendNum { get; set; }
-
         /// <summary>
-        /// 知乎今日发布量
+        /// 抖音今日投流费用
         /// </summary>
-        public int ZhihuSendNum { get; set; }
+        public decimal TikTokFlowInvestmentNum { get; set; }
 
         /// <summary>
-        /// 小红书今日发布量
-        /// </summary>
-        public int XiaoHongShuSendNum { get; set; }
-
-        /// <summary>
-        /// 微博今日发布量
-        /// </summary>
-        public int SinaWeiBoSendNum { get; set; }
-
-        /// <summary>
-        /// 今日发布量
+        /// 今日发布量（当前渠道发布量）
         /// </summary>
         public int TodaySendNum { get; set; }
 
         /// <summary>
-        /// 今日视频号投流量
+        /// 今日运营渠道投流费用（当前渠道投流费用）
         /// </summary>
-        public int FlowInvestmentNum { get; set; }
+        public decimal FlowInvestmentNum { get; set; }
+        ///// <summary>
+        ///// 今日线索量
+        ///// </summary>
+        //public int CluesNum { get; set; }
 
-        /// <summary>
-        /// 今日线索量
-        /// </summary>
-        public int CluesNum { get; set; }
-
-        /// <summary>
-        /// 今日涨粉量
-        /// </summary>
-        public int AddFansNum { get; set; }
-
+        ///// <summary>
+        ///// 今日涨粉量
+        ///// </summary>
+        //public int AddFansNum { get; set; }
         /// <summary>
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
     }
+
+    #endregion
+
+    #region 【知乎】
+    public class BeforeLivingZhihuAddLiveAnchorDailyTargetDto
+    {
+        /// <summary>
+        /// 主播月目标关联id
+        /// </summary>
+        public string LiveanchorMonthlyTargetId { get; set; }
+
+        /// <summary>
+        /// 运营人员Id
+        /// </summary>
+        public int ZhihuOperationEmployeeId { get; set; }
+        /// <summary>
+        /// 知乎发布量
+        /// </summary>
+        public int ZhihuSendNum { get; set; }
+        /// <summary>
+        /// 知乎今日投流费用
+        /// </summary>
+        public decimal ZhihuFlowInvestmentNum { get; set; }
+
+        /// <summary>
+        /// 今日发布量（当前渠道发布量）
+        /// </summary>
+        public int TodaySendNum { get; set; }
+
+        /// <summary>
+        /// 今日运营渠道投流费用（当前渠道投流费用）
+        /// </summary>
+        public decimal FlowInvestmentNum { get; set; }
+        ///// <summary>
+        ///// 今日线索量
+        ///// </summary>
+        //public int CluesNum { get; set; }
+
+        ///// <summary>
+        ///// 今日涨粉量
+        ///// </summary>
+        //public int AddFansNum { get; set; }
+        /// <summary>
+        /// 填报日期
+        /// </summary>
+        public DateTime RecordDate { get; set; }
+    }
+
+    public class BeforeLivingZhihuUpdateLiveAnchorDailyTargetDto
+    {
+        /// <summary>
+        /// 编号
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// 主播月目标关联id
+        /// </summary>
+        public string LiveanchorMonthlyTargetId { get; set; }
+
+        /// <summary>
+        /// 运营人员Id
+        /// </summary>
+        public int ZhihuOperationEmployeeId { get; set; }
+        /// <summary>
+        /// 知乎发布量
+        /// </summary>
+        public int ZhihuSendNum { get; set; }
+        /// <summary>
+        /// 知乎今日投流费用
+        /// </summary>
+        public decimal ZhihuFlowInvestmentNum { get; set; }
+
+        /// <summary>
+        /// 今日发布量（当前渠道发布量）
+        /// </summary>
+        public int TodaySendNum { get; set; }
+
+        /// <summary>
+        /// 今日运营渠道投流费用（当前渠道投流费用）
+        /// </summary>
+        public decimal FlowInvestmentNum { get; set; }
+        ///// <summary>
+        ///// 今日线索量
+        ///// </summary>
+        //public int CluesNum { get; set; }
+
+        ///// <summary>
+        ///// 今日涨粉量
+        ///// </summary>
+        //public int AddFansNum { get; set; }
+        /// <summary>
+        /// 填报日期
+        /// </summary>
+        public DateTime RecordDate { get; set; }
+    }
+    #endregion
+
+    #region 【微博】
+
+    public class BeforeLivingSinaWeiBoAddLiveAnchorDailyTargetDto
+    {
+        /// <summary>
+        /// 主播月目标关联id
+        /// </summary>
+        public string LiveanchorMonthlyTargetId { get; set; }
+
+        /// <summary>
+        /// 运营人员Id
+        /// </summary>
+        public int SinaWeiBoOperationEmployeeId { get; set; }
+        /// <summary>
+        /// 微博发布量
+        /// </summary>
+        public int SinaWeiBoSendNum { get; set; }
+        /// <summary>
+        /// 微博今日投流费用
+        /// </summary>
+        public decimal SinaWeiBoFlowInvestmentNum { get; set; }
+
+        /// <summary>
+        /// 今日发布量（当前渠道发布量）
+        /// </summary>
+        public int TodaySendNum { get; set; }
+
+        /// <summary>
+        /// 今日运营渠道投流费用（当前渠道投流费用）
+        /// </summary>
+        public decimal FlowInvestmentNum { get; set; }
+        ///// <summary>
+        ///// 今日线索量
+        ///// </summary>
+        //public int CluesNum { get; set; }
+
+        ///// <summary>
+        ///// 今日涨粉量
+        ///// </summary>
+        //public int AddFansNum { get; set; }
+        /// <summary>
+        /// 填报日期
+        /// </summary>
+        public DateTime RecordDate { get; set; }
+    }
+
+    public class BeforeLivingSinaWeiBoUpdateLiveAnchorDailyTargetDto
+    {
+        /// <summary>
+        /// 编号
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// 主播月目标关联id
+        /// </summary>
+        public string LiveanchorMonthlyTargetId { get; set; }
+
+        /// <summary>
+        /// 运营人员Id
+        /// </summary>
+        public int SinaWeiBoOperationEmployeeId { get; set; }
+        /// <summary>
+        /// 微博发布量
+        /// </summary>
+        public int SinaWeiBoSendNum { get; set; }
+        /// <summary>
+        /// 微博今日投流费用
+        /// </summary>
+        public decimal SinaWeiBoFlowInvestmentNum { get; set; }
+
+        /// <summary>
+        /// 今日发布量（当前渠道发布量）
+        /// </summary>
+        public int TodaySendNum { get; set; }
+
+        /// <summary>
+        /// 今日运营渠道投流费用（当前渠道投流费用）
+        /// </summary>
+        public decimal FlowInvestmentNum { get; set; }
+        ///// <summary>
+        ///// 今日线索量
+        ///// </summary>
+        //public int CluesNum { get; set; }
+
+        ///// <summary>
+        ///// 今日涨粉量
+        ///// </summary>
+        //public int AddFansNum { get; set; }
+        /// <summary>
+        /// 填报日期
+        /// </summary>
+        public DateTime RecordDate { get; set; }
+    }
+
+    #endregion
+
+    #region 【小红书】
+
+    public class BeforeLivingXiaoHongShuAddLiveAnchorDailyTargetDto
+    {
+        /// <summary>
+        /// 主播月目标关联id
+        /// </summary>
+        public string LiveanchorMonthlyTargetId { get; set; }
+
+        /// <summary>
+        /// 运营人员Id
+        /// </summary>
+        public int XiaoHongShuOperationEmployeeId { get; set; }
+        /// <summary>
+        /// 小红书发布量
+        /// </summary>
+        public int XiaoHongShuSendNum { get; set; }
+        /// <summary>
+        /// 小红书今日投流费用
+        /// </summary>
+        public decimal XiaoHongShuFlowInvestmentNum { get; set; }
+
+        /// <summary>
+        /// 今日发布量（当前渠道发布量）
+        /// </summary>
+        public int TodaySendNum { get; set; }
+
+        /// <summary>
+        /// 今日运营渠道投流费用（当前渠道投流费用）
+        /// </summary>
+        public decimal FlowInvestmentNum { get; set; }
+        ///// <summary>
+        ///// 今日线索量
+        ///// </summary>
+        //public int CluesNum { get; set; }
+
+        ///// <summary>
+        ///// 今日涨粉量
+        ///// </summary>
+        //public int AddFansNum { get; set; }
+        /// <summary>
+        /// 填报日期
+        /// </summary>
+        public DateTime RecordDate { get; set; }
+    }
+
+    public class BeforeLivingXiaoHongShuUpdateLiveAnchorDailyTargetDto
+    {
+        /// <summary>
+        /// 编号
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// 主播月目标关联id
+        /// </summary>
+        public string LiveanchorMonthlyTargetId { get; set; }
+
+        /// <summary>
+        /// 运营人员Id
+        /// </summary>
+        public int XiaoHongShuOperationEmployeeId { get; set; }
+        /// <summary>
+        /// 小红书发布量
+        /// </summary>
+        public int XiaoHongShuSendNum { get; set; }
+        /// <summary>
+        /// 小红书今日投流费用
+        /// </summary>
+        public decimal XiaoHongShuFlowInvestmentNum { get; set; }
+
+        /// <summary>
+        /// 今日发布量（当前渠道发布量）
+        /// </summary>
+        public int TodaySendNum { get; set; }
+
+        /// <summary>
+        /// 今日运营渠道投流费用（当前渠道投流费用）
+        /// </summary>
+        public decimal FlowInvestmentNum { get; set; }
+        ///// <summary>
+        ///// 今日线索量
+        ///// </summary>
+        //public int CluesNum { get; set; }
+
+        ///// <summary>
+        ///// 今日涨粉量
+        ///// </summary>
+        //public int AddFansNum { get; set; }
+        /// <summary>
+        /// 填报日期
+        /// </summary>
+        public DateTime RecordDate { get; set; }
+    }
+
+    #endregion
+
+    #region 【视频号】
+
+    public class BeforeLivingVideoAddLiveAnchorDailyTargetDto
+    {
+        /// <summary>
+        /// 主播月目标关联id
+        /// </summary>
+        public string LiveanchorMonthlyTargetId { get; set; }
+
+        /// <summary>
+        /// 运营人员Id
+        /// </summary>
+        public int VideoOperationEmployeeId { get; set; }
+        /// <summary>
+        /// 视频号发布量
+        /// </summary>
+        public int VideoSendNum { get; set; }
+        /// <summary>
+        /// 视频号今日投流费用
+        /// </summary>
+        public decimal VideoFlowInvestmentNum { get; set; }
+
+        /// <summary>
+        /// 今日发布量（当前渠道发布量）
+        /// </summary>
+        public int TodaySendNum { get; set; }
+
+        /// <summary>
+        /// 今日运营渠道投流费用（当前渠道投流费用）
+        /// </summary>
+        public decimal FlowInvestmentNum { get; set; }
+        ///// <summary>
+        ///// 今日线索量
+        ///// </summary>
+        //public int CluesNum { get; set; }
+
+        ///// <summary>
+        ///// 今日涨粉量
+        ///// </summary>
+        //public int AddFansNum { get; set; }
+        /// <summary>
+        /// 填报日期
+        /// </summary>
+        public DateTime RecordDate { get; set; }
+    }
+
+    public class BeforeLivingVideoUpdateLiveAnchorDailyTargetDto
+    {
+        /// <summary>
+        /// 编号
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// 主播月目标关联id
+        /// </summary>
+        public string LiveanchorMonthlyTargetId { get; set; }
+
+        /// <summary>
+        /// 运营人员Id
+        /// </summary>
+        public int VideoOperationEmployeeId { get; set; }
+        /// <summary>
+        /// 视频号发布量
+        /// </summary>
+        public int VideoSendNum { get; set; }
+        /// <summary>
+        /// 视频号今日投流费用
+        /// </summary>
+        public decimal VideoFlowInvestmentNum { get; set; }
+
+        /// <summary>
+        /// 今日发布量（当前渠道发布量）
+        /// </summary>
+        public int TodaySendNum { get; set; }
+
+        /// <summary>
+        /// 今日运营渠道投流费用（当前渠道投流费用）
+        /// </summary>
+        public decimal FlowInvestmentNum { get; set; }
+        ///// <summary>
+        ///// 今日线索量
+        ///// </summary>
+        //public int CluesNum { get; set; }
+
+        ///// <summary>
+        ///// 今日涨粉量
+        ///// </summary>
+        //public int AddFansNum { get; set; }
+        /// <summary>
+        /// 填报日期
+        /// </summary>
+        public DateTime RecordDate { get; set; }
+    }
+
+    #endregion
 
     public class LivingAddLiveAnchorDailyTargetDto
     {
@@ -313,7 +675,7 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// <summary>
         /// 今日直播间投流量
         /// </summary>
-        public int LivingRoomFlowInvestmentNum { get; set; }
+        public decimal LivingRoomFlowInvestmentNum { get; set; }
 
         /// <summary>
         /// 今日99面诊卡数量
@@ -353,7 +715,7 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// <summary>
         /// 今日直播间投流量
         /// </summary>
-        public int LivingRoomFlowInvestmentNum { get; set; }
+        public decimal LivingRoomFlowInvestmentNum { get; set; }
 
         /// <summary>
         /// 今日99面诊卡数量

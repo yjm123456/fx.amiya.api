@@ -16,16 +16,32 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.LiveanchorMonthlyTargetId).HasColumnName("liveanchor_monthly_target_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(t => t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.Property(t => t.RecordDate).HasColumnName("record_date").HasColumnType("datetime").IsRequired();
-            builder.Property(t => t.OperationEmployeeId).HasColumnName("operation_employee_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.LivingTrackingEmployeeId).HasColumnName("living_tracking_employee_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.NetWorkConsultingEmployeeId).HasColumnName("network_consulting_employee_id").HasColumnType("int").IsRequired();
-            builder.Property(t => t.SinaWeiBoSendNum).HasColumnName("sinaweibo_send_num").HasColumnType("int").IsRequired();
+
+            builder.Property(t => t.TikTokOperationEmployeeId).HasColumnName("tik_tok_operation_employee_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.TikTokSendNum).HasColumnName("tiktok_send_num").HasColumnType("int").IsRequired();
+            builder.Property(t => t.TikTokFlowInvestmentNum).HasColumnName("tiktok_flow_investment_num").HasColumnType("decimal(12,2)").IsRequired();
+
+            builder.Property(t => t.ZhihuOperationEmployeeId).HasColumnName("zhihu_operation_employee_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.ZhihuSendNum).HasColumnName("zhihu_send_num").HasColumnType("int").IsRequired();
+            builder.Property(t => t.ZhihuFlowInvestmentNum).HasColumnName("zhihu_flow_investment_num").HasColumnType("decimal(12,2)").IsRequired();
+
+            builder.Property(t => t.XiaoHongShuOperationEmployeeId).HasColumnName("xiaohongshu_operation_employee_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.XiaoHongShuSendNum).HasColumnName("xiaohongshu_send_num").HasColumnType("int").IsRequired();
+            builder.Property(t => t.XiaoHongShuFlowInvestmentNum).HasColumnName("xiaohongshu_flow_investment_num").HasColumnType("decimal(12,2)").IsRequired();
+
+            builder.Property(t => t.VideoOperationEmployeeId).HasColumnName("video_operation_employee_id").HasColumnType("int").IsRequired();
+            builder.Property(t => t.VideoSendNum).HasColumnName("video_send_num").HasColumnType("int").IsRequired();
+            builder.Property(t => t.VideoFlowInvestmentNum).HasColumnName("video_flow_investment_num").HasColumnType("decimal(12,2)").IsRequired();
+
+            builder.Property(t => t.SinaWeiBoOperationEmployeeId).HasColumnName("sina_weibo_operation_employee_id").HasColumnType("int").IsRequired();
+            builder.Property(t => t.SinaWeiBoSendNum).HasColumnName("sinaweibo_send_num").HasColumnType("int").IsRequired();
+            builder.Property(t => t.SinaWeiBoFlowInvestmentNum).HasColumnName("sinaweibo_flow_investment_num").HasColumnType("decimal(12,2)").IsRequired();
+
             builder.Property(t => t.TodaySendNum).HasColumnName("today_send_num").HasColumnType("int").IsRequired();
-            builder.Property(t => t.FlowInvestmentNum).HasColumnName("flow_investment_num").HasColumnType("int").IsRequired();
-            builder.Property(t => t.LivingRoomFlowInvestmentNum).HasColumnName("livingroomflow_investment_num").HasColumnType("int").IsRequired();
+            builder.Property(t => t.FlowInvestmentNum).HasColumnName("flow_investment_num").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.LivingRoomFlowInvestmentNum).HasColumnName("livingroomflow_investment_num").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.CluesNum).HasColumnName("clue_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.AddFansNum).HasColumnName("add_fans_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.AddWechatNum).HasColumnName("add_wechat_num").HasColumnType("int").IsRequired();

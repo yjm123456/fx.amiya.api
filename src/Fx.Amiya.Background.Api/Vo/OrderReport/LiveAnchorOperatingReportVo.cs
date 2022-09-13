@@ -23,7 +23,13 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("主播")]
         public string LiveAnchor { get; set; }
 
+        #region [抖音]
 
+        /// <summary>
+        /// 抖音运营人员
+        /// </summary>
+        [Description("抖音运营人员")]
+        public string TikTokOperationEmployeeName { get; set; }
         /// <summary>
         /// 今日抖音发布量
         /// </summary>
@@ -49,6 +55,36 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         public string TikTokReleaseCompleteRate { get; set; }
 
         /// <summary>
+        /// 抖音今日投流费用
+        /// </summary>
+        [Description("抖音今日投流费用")]
+        public decimal TikTokFlowInvestmentNum { get; set; }
+
+        /// <summary>
+        /// 抖音投流费用目标
+        /// </summary>
+        [Description("抖音投流费用目标")]
+        public decimal TikTokFlowinvestmentTarget { get; set; }
+        /// <summary>
+        /// 累计抖音投流费用
+        /// </summary>
+        [Description("累计抖音投流费用")]
+
+        public decimal CumulativeTikTokFlowinvestment { get; set; }
+        /// <summary>
+        /// 抖音投流费用完成率
+        /// </summary>
+        [Description("抖音投流费用完成率")]
+        public string TikTokFlowinvestmentCompleteRate { get; set; }
+        #endregion
+
+        #region [小红书]
+        /// <summary>
+        /// 小红书运营人员
+        /// </summary>
+        [Description("小红书运营人员")]
+        public string XiaoHongShuOperationEmployeeName { get; set; }
+        /// <summary>
         /// 今日小红书发布量
         /// </summary>
         [Description("今日小红书发布量")]
@@ -72,8 +108,36 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("小红书发布目标完成率")]
         public string XiaoHongShuReleaseCompleteRate { get; set; }
 
+        /// <summary>
+        /// 小红书今日投流费用
+        /// </summary>
+        [Description("小红书今日投流费用")]
+        public decimal XiaoHongShuFlowInvestmentNum { get; set; }
+        /// <summary>
+        /// 小红书投流费用目标
+        /// </summary>
+        [Description("小红书投流费用目标")]
+        public decimal XiaoHongShuFlowinvestmentTarget { get; set; }
+        /// <summary>
+        /// 累计小红书投流费用
+        /// </summary>
 
+        [Description("累计小红书投流费用")]
+        public decimal CumulativeXiaoHongShuFlowinvestment { get; set; }
+        /// <summary>
+        /// 小红书投流费用完成率
+        /// </summary>
+        [Description("小红书投流费用完成率")]
+        public string XiaoHongShuFlowinvestmentCompleteRate { get; set; }
 
+        #endregion
+
+        #region[微博]
+        /// <summary>
+        /// 微博运营人员
+        /// </summary>
+        [Description("微博运营人员")]
+        public string SinaWeiBoOperationEmployeeName { get; set; }
         /// <summary>
         /// 今日微博发布量
         /// </summary>
@@ -98,7 +162,88 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("微博发布目标完成率")]
         public string SinaWeiBoReleaseCompleteRate { get; set; }
 
+        /// <summary>
+        /// 微博今日投流费用
+        /// </summary>
+        [Description("微博今日投流费用")]
+        public decimal SinaWeiBoFlowInvestmentNum { get; set; }
+        /// <summary>
+        /// 微博投流费用目标
+        /// </summary>
+        [Description("微博投流费用目标")]
+        public decimal SinaWeiBoFlowinvestmentTarget { get; set; }
+        /// <summary>
+        /// 累计微博投流费用
+        /// </summary>
+        [Description("累计微博投流费用")]
 
+        public decimal CumulativeSinaWeiBoFlowinvestment { get; set; }
+        /// <summary>
+        /// 微博投流费用完成率
+        /// </summary>
+        [Description("微博投流费用完成率")]
+        public string SinaWeiBoFlowinvestmentCompleteRate { get; set; }
+        #endregion
+
+        #region[视频号]
+        /// <summary>
+        /// 视频号运营人员
+        /// </summary>
+        [Description("视频号运营人员")]
+        public string VideoOperationEmployeeName { get; set; }
+        /// <summary>
+        /// 今日视频号发布量
+        /// </summary>
+        [Description("今日视频号发布量")]
+        public int VideoSendNum { get; set; }
+
+        /// <summary>
+        /// 月视频号发布目标
+        /// </summary>
+        [Description("月视频号发布目标")]
+        public int VideoReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计视频号发布条数
+        /// </summary>
+        [Description("月累计视频号发布条数")]
+        public int VideoCumulativeRelease { get; set; }
+
+        /// <summary>
+        /// 视频号发布目标完成率
+        /// </summary>
+        [Description("视频号发布目标完成率")]
+        public string VideoReleaseCompleteRate { get; set; }
+
+        /// <summary>
+        /// 视频号今日投流费用
+        /// </summary>
+        [Description("视频号今日投流费用")]
+        public decimal VideoFlowInvestmentNum { get; set; }
+        /// <summary>
+        /// 视频号投流费用目标
+        /// </summary>
+        [Description("视频号投流费用目标")]
+        public decimal VideoFlowinvestmentTarget { get; set; }
+        /// <summary>
+        /// 累计视频号投流费用
+        /// </summary>
+        [Description("累计视频号投流费用")]
+
+        public decimal CumulativeVideoFlowinvestment { get; set; }
+        /// <summary>
+        /// 视频号投流费用完成率
+        /// </summary>
+        [Description("视频号投流费用完成率")]
+        public string VideoFlowinvestmentCompleteRate { get; set; }
+        #endregion
+
+        #region[知乎]
+        /// <summary>
+        /// 知乎运营人员
+        /// </summary>
+        [Description("知乎运营人员")]
+        public string ZhihuOperationEmployeeName { get; set; }
 
         /// <summary>
         /// 今日知乎发布量
@@ -124,6 +269,28 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("知乎发布目标完成率")]
         public string ZhihuReleaseCompleteRate { get; set; }
 
+        /// <summary>
+        /// 知乎今日投流费用
+        /// </summary>
+        [Description("知乎今日投流费用")]
+        public decimal ZhihuFlowInvestmentNum { get; set; }
+        /// <summary>
+        /// 知乎投流费用目标
+        /// </summary>
+        [Description("知乎投流费用目标")]
+        public decimal ZhihuFlowinvestmentTarget { get; set; }
+        /// <summary>
+        /// 累计知乎投流费用
+        /// </summary>
+        [Description("累计知乎投流费用")]
+
+        public decimal CumulativeZhihuFlowinvestment { get; set; }
+        /// <summary>
+        /// 知乎投流费用完成率
+        /// </summary>
+        [Description("知乎投流费用完成率")]
+        public string ZhihuFlowinvestmentCompleteRate { get; set; }
+        #endregion
 
         /// <summary>
         /// 今日发布量
@@ -150,48 +317,48 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         public string ReleaseCompleteRate { get; set; }
 
         /// <summary>
-        /// 今日视频号投流量
+        /// 今日运营渠道投流费用
         /// </summary>
-        [Description("今日视频号投流量")]
-        public int FlowInvestmentNum { get; set; }
+        [Description("今日运营渠道投流费用")]
+        public decimal FlowInvestmentNum { get; set; }
 
         /// <summary>
-        /// 视频号投流目标
+        /// 运营渠道投流费用目标
         /// </summary>
-        [Description("视频号投流目标")]
-        public int FlowInvestmentTarget { get; set; }
+        [Description("运营渠道投流费用目标")]
+        public decimal FlowInvestmentTarget { get; set; }
 
         /// <summary>
-        /// 月累计视频号投流数量
+        /// 月累计运营渠道投流费用数
         /// </summary>
-        [Description("月累计视频号投流数量")]
-        public int CumulativeFlowInvestment { get; set; }
+        [Description("月累计运营渠道投流费用")]
+        public decimal CumulativeFlowInvestment { get; set; }
 
         /// <summary>
-        /// 视频号投流完成率
+        /// 运营渠道投流费用完成率
         /// </summary>
-        [Description("视频号投流完成率")]
+        [Description("运营渠道投流费用完成率")]
         public string FlowInvestmentCompleteRate { get; set; }
         /// <summary>
-        /// 今日直播间投流量
+        /// 今日直播间投流费用
         /// </summary>
-        [Description("今日直播间投流量")]
-        public int LivingRoomFlowInvestmentNum { get; set; }
+        [Description("今日直播间投流费用")]
+        public decimal LivingRoomFlowInvestmentNum { get; set; }
         /// <summary>
-        /// 直播间投流目标
+        /// 直播间投流费用目标
         /// </summary>
-        [Description("直播间投流目标")]
-        public int LivingRoomFlowInvestmentTarget { get; set; }
+        [Description("直播间投流费用目标")]
+        public decimal LivingRoomFlowInvestmentTarget { get; set; }
 
         /// <summary>
-        /// 月累计直播间投流数量
+        /// 月累计直播间投流费用数
         /// </summary>
-        [Description("月累计直播间投流数量")]
-        public int LivingRoomCumulativeFlowInvestment { get; set; }
+        [Description("月累计直播间投流费用")]
+        public decimal LivingRoomCumulativeFlowInvestment { get; set; }
         /// <summary>
-        /// 直播间投流完成率
+        /// 直播间投流费用完成率
         /// </summary>
-        [Description("直播间投流完成率")]
+        [Description("直播间投流费用完成率")]
         public string LivingRoomFlowInvestmentCompleteRate { get; set; }
 
         /// <summary>
@@ -601,12 +768,6 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("小黄车差评率")]
         public string MiniVanBadReviewsCompleteRate { get; set; }
-
-        /// <summary>
-        /// 运营人员
-        /// </summary>
-        [Description("运营人员")]
-        public string OperationEmployeeName { get; set; }
         /// <summary>
         /// 直播中人员
         /// </summary>
