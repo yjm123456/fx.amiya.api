@@ -1,4 +1,6 @@
-﻿using Fx.Amiya.Core.Dto.Goods;
+﻿using Fx.Amiya.Background.Api.Vo.GoodsConsumptionVoucher;
+using Fx.Amiya.Background.Api.Vo.GoodsMemberRankPrice;
+using Fx.Amiya.Core.Dto.Goods;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -115,8 +117,16 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         /// 门店医院价格
         /// </summary>
         public List<GoodsHospitalPriceAddVo> UpdateGoodsHospitalPrice { get; set; }
+        /// <summary>
+        /// 会员价格
+        /// </summary>
 
-
+        public List<GoodsMemberRankPriceAddVo> UpdateGoodsMemberRankPrice { get; set; }
+        /// <summary>
+        /// 抵用券
+        /// </summary>
+        public List<GoodsConsumptionVoucherAddVo> UpdateGoodsConsumptionVoucher { get; set; } 
+        
         /// <summary>
         /// 商品详情编号
         /// </summary>

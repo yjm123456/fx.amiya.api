@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Core.Interfaces.Goods;
+using Fx.Amiya.IService;
 using Fx.Amiya.MiniProgram.Api.Vo.Goods;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
@@ -18,15 +19,17 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private IGoodsInfo goodsInfoService;
         private TokenReader _tokenReader;
         private IMiniSessionStorage _sessionStorage;
+        private readonly IMemberCardHandleService memberCardHandleService;
         public GoodsController(IGoodsCategory goodsCategoryService,
             IGoodsInfo goodsInfoService,
             TokenReader tokenReader,
-            IMiniSessionStorage sessionStorage)
+            IMiniSessionStorage sessionStorage, IMemberCardHandleService memberCardHandleService)
         {
             this.goodsCategoryService = goodsCategoryService;
             this.goodsInfoService = goodsInfoService;
             _tokenReader = tokenReader;
             _sessionStorage = sessionStorage;
+            this.memberCardHandleService = memberCardHandleService;
         }
 
         /// <summary>
@@ -60,10 +63,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("infoList")]
-        public async Task<ResultData<FxPageInfo<GoodsInfoForListVo>>> GetGoodsInfoListAsync(string keyword,int?exchangeType, int? categoryId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<GoodsInfoForListVo>>> GetGoodsInfoListAsync(string keyword, int? exchangeType, int? categoryId, int pageNum, int pageSize)
         {
 
-            var q = await goodsInfoService.GetListAsync(keyword,exchangeType, categoryId, true, pageNum, pageSize);
+            var q = await goodsInfoService.GetListAsync(keyword, exchangeType, categoryId, true, pageNum, pageSize);
             var goodsInfos = from d in q.List
                              select new GoodsInfoForListVo
                              {
@@ -77,11 +80,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                  IntegrationQuantity = d.IntegrationQuantity,
                                  IsLimitBuy = d.IsLimitBuy,
                                  LimitBuyQuantity = d.LimitBuyQuantity,
-                                 DetailsDescription=d.DetailsDescription,
-                                 MaxShowPrice=d.MaxShowPrice,
-                                 MinShowPrice=d.MinShowPrice,
-                                 ShowSaleCount=d.ShowSaleCount,
-                                 VisitCount=d.VisitCount
+                                 DetailsDescription = d.DetailsDescription,
+                                 MaxShowPrice = d.MaxShowPrice,
+                                 MinShowPrice = d.MinShowPrice,
+                                 ShowSaleCount = d.ShowSaleCount,
+                                 VisitCount = d.VisitCount
                              };
             FxPageInfo<GoodsInfoForListVo> goodsPageInfo = new FxPageInfo<GoodsInfoForListVo>();
             goodsPageInfo.TotalCount = q.TotalCount;
@@ -100,6 +103,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         [HttpGet("infoById/{id}")]
         public async Task<ResultData<GoodsInfoForSingleVo>> GetGoodsInfoByIdAsync(string id)
         {
+            var token = _tokenReader.GetToken();
+            var sesssionInfo = _sessionStorage.GetSession(token);
+            string customerId = sesssionInfo.FxCustomerId;
             var goodsInfo = await goodsInfoService.GetByIdAsync(id);
             GoodsInfoForSingleVo goods = new GoodsInfoForSingleVo()
             {
@@ -132,9 +138,27 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                      {
                                          PicUrl = d.PicUrl,
                                          DisplayIndex = d.DisplayIndex
-                                     }).ToList()
+                                     }).ToList(),
+                IsMember = false,
+                MemberRankPrice = goodsInfo.SalePrice.Value,
+                CanUseVoucher = false
             };
-
+            //当前用户的会员价格
+            var member = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
+            if (member != null)
+            {
+                var memberPrice = goodsInfo.GoodsMemberRankPrice.Find(e => e.MemberRankId == member.MemberRankId);
+                if (memberPrice != null)
+                {
+                    goods.IsMember = true;
+                    goods.MemberRankPrice = memberPrice.Price;
+                    goods.MemberName = memberPrice.MemberRankName;
+                }
+            }
+            //是否可以使用抵用券
+            if (goodsInfo.GoodsConsumptionVoucher.Any()) {
+                goods.CanUseVoucher = true;
+            }
             return ResultData<GoodsInfoForSingleVo>.Success().AddData("goodsInfo", goods);
         }
 
@@ -145,7 +169,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// </summary>
         /// <param name="goodsId"></param>
         /// <returns></returns>
-      [HttpGet("infoListForGoodsGroup/{goodsId}")]
+        [HttpGet("infoListForGoodsGroup/{goodsId}")]
         public async Task<ResultData<List<GoodsInfoSimpleVo>>> GetGoodsListForGoodsGroupByGoodsIdAsync(string goodsId)
         {
             var goodsInfos = from d in await goodsInfoService.GetGoodsListForGoodsGroupByGoodsIdAsync(goodsId)
@@ -168,7 +192,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                              };
             return ResultData<List<GoodsInfoSimpleVo>>.Success().AddData("goodsInfos", goodsInfos.ToList());
         }
-
+        /// <summary>
+        /// 首页商品列表
+        /// </summary>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         [HttpGet("likeInfoList")]
         public async Task<ResultData<FxPageInfo<GoodsInfoForListVo>>> GetLikeGoodsInfoListAsync(int pageNum, int pageSize)
         {
@@ -191,14 +220,15 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                  MaxShowPrice = d.MaxShowPrice,
                                  MinShowPrice = d.MinShowPrice,
                                  ShowSaleCount = d.ShowSaleCount,
-                                 VisitCount = d.VisitCount
+                                 VisitCount = d.VisitCount,
+                                 isMember=d.IsMember
                              };
             FxPageInfo<GoodsInfoForListVo> goodsPageInfo = new FxPageInfo<GoodsInfoForListVo>();
             goodsPageInfo.TotalCount = q.TotalCount;
             goodsPageInfo.List = goodsInfos;
             return ResultData<FxPageInfo<GoodsInfoForListVo>>.Success().AddData("goodsInfos", goodsPageInfo);
         }
-       [HttpGet("integralList")]
+        [HttpGet("integralList")]
         public async Task<ResultData<FxPageInfo<GoodsInfoForListVo>>> GetIntegraGoodsInfoListAsync(int pageNum, int pageSize)
         {
 

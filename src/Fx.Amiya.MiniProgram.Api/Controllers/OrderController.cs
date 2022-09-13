@@ -458,7 +458,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         amiyaOrder.CouponId = voucher.Id;
                         amiyaOrder.DeductMoney = voucher.DeductMoney;
                         amiyaOrder.ActualPayment = amiyaOrder.ActualPayment - voucher.DeductMoney;
-                        if (amiyaOrder.ActualPayment < 0) throw new Exception("该订单不能使用此优惠券,抵扣金额应小于支付金额");
+                        //抵用券抵扣后付款小于0,直接赋值0
+                        if (amiyaOrder.ActualPayment < 0) {
+                            amiyaOrder.ActualPayment = 0;
+                        }
                         UpdateCustomerConsumptionVoucherDto update = new UpdateCustomerConsumptionVoucherDto
                         {
                             CustomerVoucherId = voucher.Id,

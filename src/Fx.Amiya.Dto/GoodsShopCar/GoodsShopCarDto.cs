@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fx.Amiya.Dto.MemberRankPrice;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -84,6 +85,13 @@ namespace Fx.Amiya.Dto.GoodsShopCar
         /// </summary>
         public DateTime? UpdateDate { get; set; }
         public bool  IsMaterial { get; set; }
+        /// <summary>
+        /// 医院门店价格
+        /// </summary>
         public decimal? HospitalSalePrice { get; set; }
+        /// <summary>
+        /// 会员价格列表
+        /// </summary>
+        public List<GoodsMemberRankPriceDto> GoodsMemberRankPriceList { get; set; }
     }
 }

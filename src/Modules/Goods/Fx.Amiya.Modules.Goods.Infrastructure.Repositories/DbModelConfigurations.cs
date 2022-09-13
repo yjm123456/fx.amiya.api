@@ -93,6 +93,16 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                 entity.HasOne(t => t.GoodsInfo).WithMany(e => e.GoodsInfoCarouselImageList).HasForeignKey(e => e.GoodsInfoId);
             });
 
+            freeSql.CodeFirst.Entity<GoodsMemberRankPriceDbModel>(entity =>
+            {
+                entity.ToTable("goods_member_rank_price");
+                entity.HasKey(t => t.Id);
+                entity.Property(t => t.Id).HasColumnName("id").HasColumnType("varchar(50)").IsRequired();
+                entity.Property(t => t.GoodsId).HasColumnName("goods_id").HasColumnType("varchar(50)").IsRequired();
+                entity.Property(t => t.MemberRankId).HasColumnName("member_rank_id").HasColumnType("tinyint").IsRequired();
+                entity.Property(t => t.Price).HasColumnName("price").HasColumnType("decimal(12,2)").IsRequired();
+                entity.HasOne(t => t.GoodsInfo).WithMany(e => e.GoodsMemberRankPriceList).HasForeignKey(e => e.GoodsId);
+            });
 
         }
 

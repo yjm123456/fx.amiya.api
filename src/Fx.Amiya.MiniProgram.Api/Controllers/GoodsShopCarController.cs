@@ -18,13 +18,15 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private IGoodsShopCarService goodsShopCarService;
         private TokenReader _tokenReader;
         private IMiniSessionStorage _sessionStorage;
+        private IMemberCardHandleService memberCardHandleService;
         public GoodsShopCarController(IGoodsShopCarService goodsShopCarService,
             TokenReader tokenReader,
-            IMiniSessionStorage sessionStorage)
+            IMiniSessionStorage sessionStorage, IMemberCardHandleService memberCardHandleService)
         {
             this.goodsShopCarService = goodsShopCarService;
             _tokenReader = tokenReader;
             _sessionStorage = sessionStorage;
+            this.memberCardHandleService = memberCardHandleService;
         }
 
         /// <summary>
@@ -41,6 +43,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             var sesssionInfo = _sessionStorage.GetSession(token);
             string customerId = sesssionInfo.FxCustomerId;
 
+            var member = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
             var q = await goodsShopCarService.GetListWithPageAsync(keyword, customerId, pageNum, pageSize);
             var goodsShopCarInfos = from d in q.List
                                     select new GoodsShopCarVo
@@ -63,7 +66,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                         UpdateDate = d.UpdateDate,
                                         CreateDate = d.CreateDate,
                                         IsMaterial=d.IsMaterial,
-                                        HospitalSalePrice=d.HospitalSalePrice
+                                        HospitalSalePrice=d.HospitalSalePrice,
+                                        IsMember=d.GoodsMemberRankPriceList.Find(e=>e.MemberRankId==member.MemberRankId)==null?false:true,
+                                        MemberPrice= d.GoodsMemberRankPriceList.Find(e=>e.MemberRankId==member.MemberRankId) ==null?d.Price.Value: d.GoodsMemberRankPriceList.Find(e => e.MemberRankId == member.MemberRankId).Price
                                     };
             FxPageInfo<GoodsShopCarVo> goodsShopCarPageInfo = new FxPageInfo<GoodsShopCarVo>();
             goodsShopCarPageInfo.TotalCount = q.TotalCount;

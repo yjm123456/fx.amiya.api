@@ -117,7 +117,11 @@ namespace Fx.Amiya.Core.Dto.Goods
         public int? CreateBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public int? UpdateBy { get; set; }
+        /// <summary>
+        /// 是否是会员优惠商品
+        /// </summary>
+        public bool IsMember { get; set; }
 
-    
+
     }
 }

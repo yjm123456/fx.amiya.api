@@ -1156,14 +1156,6 @@ ADD COLUMN `tiktok_release_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AF
 -----------------------------------------------余建明 2022/09/7 END--------------------------------------------;
 
 
-
-----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
-
-
-
-
-
-
 -----------------------------------------------王健 2022/08/31 BEGIN--------------------------------------------;
 ---tbl_order_info 添加是否使用优惠券
 
@@ -1197,6 +1189,16 @@ CHANGE COLUMN `generate_integration_percent` `generate_integration_percent` DECI
 -----------------------------------------------王健 2022/09/1 END--------------------------------------------;
 
 
+----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+
+
+
+
+
+
+
 -----------------------------------------------王健 2022/09/3 BEGIN--------------------------------------------;
 
 --抵用券有效期
@@ -1215,7 +1217,7 @@ CHANGE COLUMN `goods_id` `goods_id` VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 
 CHANGE COLUMN `member_rank_id` `member_rank_id` TINYINT UNSIGNED NOT NULL ,
 ADD INDEX `fk_price_goods_id_idx` (`goods_id` ASC) VISIBLE,
 ADD INDEX `fk_price_member_rank_idx` (`member_rank_id` ASC) VISIBLE;
-;
+
 ALTER TABLE `amiyadb`.`goods_member_rank_price` 
 ADD CONSTRAINT `fk_price_goods_id`
   FOREIGN KEY (`goods_id`)

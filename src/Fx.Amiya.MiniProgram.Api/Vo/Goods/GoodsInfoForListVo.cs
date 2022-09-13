@@ -80,6 +80,10 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Goods
         /// 限购数量
         /// </summary>
         public int? LimitBuyQuantity { get; set; }
+        /// <summary>
+        /// 是否是会员优惠商品
+        /// </summary>
+        public bool isMember { get; set; }
 
     }
 }

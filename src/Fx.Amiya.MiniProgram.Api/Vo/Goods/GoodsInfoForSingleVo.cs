@@ -127,5 +127,21 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Goods
         /// 浏览量
         /// </summary>
         public int VisitCount { get; set; }
+        /// <summary>
+        /// 会员价格
+        /// </summary>
+        public decimal MemberRankPrice { get; set; }
+        /// <summary>
+        /// 是否是会员指定商品
+        /// </summary>
+        public bool IsMember { get; set; }
+        /// <summary>
+        /// 会员名称
+        /// </summary>
+        public string MemberName { get; set; }
+        /// <summary>
+        /// 是否可使用抵用券
+        /// </summary>
+        public bool CanUseVoucher { get; set; }
     }
 }

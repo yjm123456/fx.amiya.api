@@ -127,6 +127,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<RechargeRewardRule> RechargeRewardRules { get; set; }
         public virtual  DbSet<RechargeAmount> RechargeAmounts { get; set; }
         public virtual DbSet<GrowthPointsRule> GrowthPointsRules { get; set; }
+        public virtual DbSet<GoodsConsumptionVoucher> GoodsConsumptionVouchers { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -253,6 +254,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new RechargeRewardRuleConfiguration());
             modelBuilder.ApplyConfiguration(new RechargeAmountConfiguration());
             modelBuilder.ApplyConfiguration(new GrowthpointsRuleConfiguration());
+            modelBuilder.ApplyConfiguration(new GoodsConsumptionVoucherConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

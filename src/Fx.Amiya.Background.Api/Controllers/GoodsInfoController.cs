@@ -1,8 +1,12 @@
-﻿using Fx.Amiya.Background.Api.Vo.GoodsInfo;
+﻿using Fx.Amiya.Background.Api.Vo.GoodsConsumptionVoucher;
+using Fx.Amiya.Background.Api.Vo.GoodsInfo;
+using Fx.Amiya.Background.Api.Vo.GoodsMemberRankPrice;
 using Fx.Amiya.Core.Dto.Goods;
 using Fx.Amiya.Core.Dto.GoodsHospitalPrice;
 using Fx.Amiya.Core.Infrastructure;
 using Fx.Amiya.Core.Interfaces.Goods;
+using Fx.Amiya.Dto.GoodsConsumptionVoucher;
+using Fx.Amiya.Dto.MemberRankPrice;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -150,6 +154,16 @@ namespace Fx.Amiya.Background.Api.Controllers
                 ShowSaleCount = goodsInfo.ShowSaleCount,
                 VisitCount = goodsInfo.VisitCount,
                 GoodsHospitalPrice = goodsHospitalPriceVoList,
+                GoodsMemberRankPrices= goodsInfo.GoodsMemberRankPrice.Select(e => new GoodsMemberRankPriceVo
+                {
+                    MemberRankId = e.MemberRankId,
+                    MemberCardName = e.MemberRankName,
+                    Price = e.Price
+                }).ToList(),
+                GoodsConsumptionVoucher=goodsInfo.GoodsConsumptionVoucher.Select(e=>new GoodsConsumptionVoucherVo {
+                    ConsumptionVoucherId=e.ConsumptionVoucherId,
+                    ConsumptionName=e.ConsumptionVoucherName
+                }).ToList(),
                 CarouselImageUrls = (from d in goodsInfo.CarouselImageUrls
                                      select new GoodsInfoCarouselImageVo
                                      {
@@ -209,7 +223,16 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                PicUrl = d.PicUrl,
                                                DisplayIndex = d.DisplayIndex
                                            }).ToList();
+            //添加会员价格
+            goodsInfo.GoodsMemberRankPrice = goodsInfoAdd.AddGoodsMemberRankPrice.Select(e => new GoodsMemberRankPriceAddDto {
+                MemberRankId=e.MemberRankId,
+                Price=e.Price
 
+            }).ToList();
+            //添加抵用券
+            goodsInfo.GoodsConsumptionVouchers = goodsInfoAdd.AddGoodsConsumptionVoucher.Select(e => new GoodsConsumptionVoucherAddDto {
+                ConsumptionVoucherId=e.ConsumptionVoucherId
+            }).ToList();
             await goodsInfoService.AddAsync(goodsInfo);
             return ResultData.Success();
         }
@@ -264,6 +287,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                PicUrl = d.PicUrl,
                                                DisplayIndex = d.DisplayIndex
                                            }).ToList();
+            //会员价
+            goodsInfo.GoodsMemberRankPrice = goodsInfoUpdate.UpdateGoodsMemberRankPrice.Select(e => new GoodsMemberRankPriceAddDto {
+                MemberRankId=e.MemberRankId,
+                Price=e.Price,
+                GoodsId=goodsInfoUpdate.Id
+            }).ToList();
+            //抵用券
+            goodsInfo.GoodsConsumptionVoucher = goodsInfoUpdate.UpdateGoodsConsumptionVoucher.Select(e => new GoodsConsumptionVoucherAddDto { 
+                ConsumptionVoucherId=e.ConsumptionVoucherId,
+                GoodsId=goodsInfoUpdate.Id
+            }).ToList();
             await goodsInfoService.UpdateAsync(goodsInfo);
             return ResultData.Success();
         }

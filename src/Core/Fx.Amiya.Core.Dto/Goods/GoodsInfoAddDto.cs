@@ -1,4 +1,6 @@
 ﻿using Fx.Amiya.Core.Dto.GoodsHospitalPrice;
+using Fx.Amiya.Dto.GoodsConsumptionVoucher;
+using Fx.Amiya.Dto.MemberRankPrice;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -122,5 +124,14 @@ namespace Fx.Amiya.Core.Dto.Goods
         /// </summary>
         public string GoodsDetailHtml { get; set; }
         public List<GoodsInfoCarouselImageAddDto> CarouselImageUrls { get; set; }
+        /// <summary>
+        /// 会员价格
+        /// </summary>
+        public List<GoodsMemberRankPriceAddDto> GoodsMemberRankPrice { get; set; }
+        /// <summary>
+        /// 抵用券
+        /// </summary>
+        public List<GoodsConsumptionVoucherAddDto> GoodsConsumptionVouchers { get; set; }
+
     }
 }

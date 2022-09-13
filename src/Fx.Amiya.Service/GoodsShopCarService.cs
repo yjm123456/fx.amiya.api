@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.GoodsShopCar;
+using Fx.Amiya.Dto.MemberRankPrice;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
@@ -29,7 +30,7 @@ namespace Fx.Amiya.Service
             try
             {
 
-                var goodsShopCarService = from d in dalGoodsShopCarService.GetAll()
+                var goodsShopCarService = from d in dalGoodsShopCarService.GetAll().Include(e=>e.GoodsInfo).ThenInclude(e=>e.GoodsMemberRankPrice)
                                           where (keyword == null || d.GoodsInfo.Name.Contains(keyword))
                                                && (d.CustomerId == customerId)
                                                && (d.Status == 1)
@@ -54,7 +55,11 @@ namespace Fx.Amiya.Service
                                               CityId = d.CityId,
                                               City = d.CityId.HasValue ? d.City.Name : "",
                                               IsMaterial=d.GoodsInfo.IsMaterial,
-                                              HospitalSalePrice =  d.GoodsInfo.IsMaterial ?0:dalGoodsHospitalPrice.GetAll().Where(e=>e.GoodsId==d.GoodsId && e.HospitalId==d.HospitalId).FirstOrDefault().Price*d.Num
+                                              HospitalSalePrice =  d.GoodsInfo.IsMaterial ?0:dalGoodsHospitalPrice.GetAll().Where(e=>e.GoodsId==d.GoodsId && e.HospitalId==d.HospitalId).FirstOrDefault().Price*d.Num,
+                                              GoodsMemberRankPriceList=d.GoodsInfo.GoodsMemberRankPrice.Select(e=>new GoodsMemberRankPriceDto {
+                                                MemberRankId=e.MemberRankId,
+                                                Price=e.Price
+                                              }).ToList()
                                           };
                 FxPageInfo<GoodsShopCarDto> goodsShopCarServicePageInfo = new FxPageInfo<GoodsShopCarDto>();
                 goodsShopCarServicePageInfo.TotalCount = await goodsShopCarService.CountAsync();

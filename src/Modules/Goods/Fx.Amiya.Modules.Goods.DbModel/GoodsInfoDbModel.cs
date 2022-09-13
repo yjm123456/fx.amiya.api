@@ -67,5 +67,6 @@ namespace Fx.Amiya.Modules.Goods.DbModel
         public GoodsCategoryDbModel GoodsCategory { get; set; }
         public GoodsDetailDbModel GoodsDetail { get; set; }
         public List<GoodsInfoCarouselImageDbModel> GoodsInfoCarouselImageList { get; set; }
+        public List<GoodsMemberRankPriceDbModel> GoodsMemberRankPriceList { get; set; }
     }
 }

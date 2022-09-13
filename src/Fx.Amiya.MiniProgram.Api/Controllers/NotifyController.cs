@@ -58,12 +58,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         {
             string notifyLog = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 开始回调，回调id：" + input.notify_id;
             logger.LogInformation(notifyLog);
-            /*SortedDictionary<string, string> sPara = GetRequestPost(input);
+            SortedDictionary<string, string> sPara = GetRequestPost(input);
             var verifyResult = _aliPayService.Verify(sPara, input.notify_id, input.sign);
             if (verifyResult.Result != true)
             {
                 return "fail";
-            }*/
+            }
             if (input.body== "RECHARGE") {
                 //储值
                 try

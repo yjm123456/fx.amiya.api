@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fx.Amiya.MiniProgram.Api.Vo.GoodsMemberRankPrice;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -86,5 +87,13 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar
         public DateTime? UpdateDate { get; set; }
         public bool IsMaterial { get; set; }
         public decimal? HospitalSalePrice { get; set; }
+        /// <summary>
+        /// 是否是会员商品
+        /// </summary>
+        public bool IsMember { get; set; }
+        /// <summary>
+        /// 会员价格
+        /// </summary>
+        public decimal MemberPrice { get; set; }
     }
 }

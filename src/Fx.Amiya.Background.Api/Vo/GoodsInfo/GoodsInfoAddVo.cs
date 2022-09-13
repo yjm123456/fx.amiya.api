@@ -1,4 +1,6 @@
-﻿using Fx.Amiya.Core.Dto.Goods;
+﻿using Fx.Amiya.Background.Api.Vo.GoodsConsumptionVoucher;
+using Fx.Amiya.Background.Api.Vo.GoodsMemberRankPrice;
+using Fx.Amiya.Core.Dto.Goods;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -127,5 +129,13 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         [StringLength(8000, ErrorMessage = "商品详情内容最多不超过{1}个字符")]
         public string GoodsDetailHtml { get; set; }
         public List<GoodsInfoCarouselImageAddVo> CarouselImageUrls { get; set; }
+        /// <summary>
+        /// 会员价格
+        /// </summary>
+        public List<GoodsMemberRankPriceAddVo> AddGoodsMemberRankPrice { get; set; }
+        /// <summary>
+        /// 抵用券
+        /// </summary>
+        public List<GoodsConsumptionVoucherAddVo> AddGoodsConsumptionVoucher { get; set; }
     }
 }

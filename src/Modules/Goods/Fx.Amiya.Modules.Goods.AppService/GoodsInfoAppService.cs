@@ -3,6 +3,8 @@ using Fx.Amiya.Core.Dto.GoodsHospitalPrice;
 using Fx.Amiya.Core.Infrastructure;
 using Fx.Amiya.Core.Interfaces.Goods;
 using Fx.Amiya.Core.Interfaces.GoodsHospitalPrice;
+using Fx.Amiya.Dto.MemberRankPrice;
+using Fx.Amiya.IService;
 using Fx.Amiya.Modules.Goods.DbModel;
 using Fx.Amiya.Modules.Goods.Domin;
 using Fx.Amiya.Modules.Goods.Domin.IRepository;
@@ -21,13 +23,17 @@ namespace Fx.Amiya.Modules.Goods.AppService
         private IFreeSql<GoodsFlag> freeSql;
         private IGoodsInfoRepository _goodsInfoRepository;
         private IGoodsHospitalsPrice _goodsHospitalsPrice;
+        private readonly IGoodsMemberRankPriceService goodsMemberRankPriceService;
+        private readonly IGoodsConsumptionVoucherService goodsConsumptionVoucherService;
         public GoodsInfoAppService(IFreeSql<GoodsFlag> freeSql,
             IGoodsInfoRepository goodsInfoRepository,
-            IGoodsHospitalsPrice goodsHospitalsPrice)
+            IGoodsHospitalsPrice goodsHospitalsPrice, IGoodsMemberRankPriceService goodsMemberRankPriceService, IGoodsConsumptionVoucherService goodsConsumptionVoucherService)
         {
             this.freeSql = freeSql;
             _goodsInfoRepository = goodsInfoRepository;
             _goodsHospitalsPrice = goodsHospitalsPrice;
+            this.goodsMemberRankPriceService = goodsMemberRankPriceService;
+            this.goodsConsumptionVoucherService = goodsConsumptionVoucherService;
         }
         public async Task AddAsync(GoodsInfoAddDto goodsInfoAdd)
         {
@@ -82,8 +88,20 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 goodsHospitalPrice.HospitalId = x.HospitalId;
                 goodsHospitalPrice.Price = x.Price;
                 await _goodsHospitalsPrice.AddAsync(goodsHospitalPrice);
-            }
+            }            
             await _goodsInfoRepository.AddAsync(goodsInfo);
+            //添加会员价格
+            foreach (var item in goodsInfoAdd.GoodsMemberRankPrice)
+            {
+                item.GoodsId = goodsInfo.Id;
+                await goodsMemberRankPriceService.AddAsync(item);
+            }
+            //添加抵用券
+            foreach (var voucher in goodsInfoAdd.GoodsConsumptionVouchers) {
+                voucher.GoodsId = goodsInfo.Id;
+                await goodsConsumptionVoucherService.AddAsync(voucher);
+
+            }
         }
 
 
@@ -124,6 +142,12 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     goodsHospitalPricedto.Price = z.Price;
                     goodsHospitalPriceList.Add(goodsHospitalPricedto);
                 }
+
+                //会员价格
+                var goodsMemberrankPrice =await goodsMemberRankPriceService.GetMemeberRankPriceByGoodsIdAsync(id);
+                //可用抵用券
+                var consumptionVoucher = await goodsConsumptionVoucherService.GetGoodsConsumptionVoucherByGoodsIdAsync(id);
+                
                 GoodsInfoForSingleDto goods = new GoodsInfoForSingleDto()
                 {
                     Id = goodsInfo.Id,
@@ -158,13 +182,15 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     ShowSaleCount = goodsInfo.ShowSaleCount,
                     VisitCount = goodsInfo.VisitCount,
                     GoodsHospitalPrice = goodsHospitalPriceList,
+                    GoodsMemberRankPrice=goodsMemberrankPrice,
                     CarouselImageUrls = (from d in goodsInfo.GoodsInfoCarouselImages
                                          select new GoodsInfoCarouselImageDto
                                          {
                                              Id = d.Id,
                                              PicUrl = d.PicUrl,
                                              DisplayIndex = d.DisplayIndex
-                                         }).ToList()
+                                         }).ToList(),
+                    GoodsConsumptionVoucher= consumptionVoucher
                 };
                 return goods;
             }
@@ -185,7 +211,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 .Where(e => exchangeType == null || e.ExchangeType == exchangeType)
                 .Where(e => categoryId == null || e.CategoryId == categoryId)
                 .Where(e => valid == null || e.Valid == valid);
-
+                
             var goodsInfoList = from d in await goodsInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync()
                                 select new GoodsInfoForListDto
                                 {
@@ -230,11 +256,11 @@ namespace Fx.Amiya.Modules.Goods.AppService
         {
             var goodsInfos = freeSql.Select<GoodsInfoDbModel>()
                 .Include(e => e.GoodsCategory)
+                .IncludeMany(e=>e.GoodsMemberRankPriceList)
                 .Where(e => valid == null || e.Valid == valid)
                 .Where(e=>e.ExchangeType==1)
                 .OrderByDescending(e=>e.SaleCount);
-
-            var goodsInfoList = from d in await goodsInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync()
+            var goodsInfoList = from d in await goodsInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync() 
                                 select new GoodsInfoForListDto
                                 {
                                     Id = d.Id,
@@ -266,7 +292,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
                                     MinShowPrice = d.MinShowPrice,
                                     MaxShowPrice = d.MaxShowPrice,
                                     VisitCount = d.VisitCount,
-                                    ShowSaleCount = d.ShowSaleCount
+                                    ShowSaleCount = d.ShowSaleCount,  
+                                    IsMember=d.GoodsMemberRankPriceList.Any()
                                 };
             FxPageInfo<GoodsInfoForListDto> goodsPageInfo = new FxPageInfo<GoodsInfoForListDto>();
             goodsPageInfo.TotalCount = (int)await goodsInfos.CountAsync();
@@ -332,6 +359,20 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 await _goodsHospitalsPrice.AddAsync(goodsHospitalPrice);
             }
             await _goodsInfoRepository.UpdateAsync(goodsInfo);
+            //移除会员价格
+            await goodsMemberRankPriceService.DeleteByGoodsIdAsync(goodsInfoUpdate.Id);
+            //新增会员价格
+            foreach (var item in goodsInfoUpdate.GoodsMemberRankPrice)
+            {
+                await goodsMemberRankPriceService.AddAsync(item);
+            }
+            //移除抵用券
+            await goodsConsumptionVoucherService.DeleteByGoodsIdAsync(goodsInfoUpdate.Id);
+            //新增抵用券
+            foreach (var item in goodsInfoUpdate.GoodsConsumptionVoucher)
+            {
+                await goodsConsumptionVoucherService.AddAsync(item);
+            }
         }
 
 

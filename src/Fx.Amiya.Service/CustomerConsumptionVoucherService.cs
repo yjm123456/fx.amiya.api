@@ -24,15 +24,17 @@ namespace Fx.Amiya.Service
         private readonly IDalConsumptionVoucher dalConsumptionVoucher;
         private readonly IConsumptionVoucherService consumptionVoucherService;
         private readonly IMemberCardHandleService memberCardHandleService;
+        private readonly IDalGoodsConsumptionVoucher dalGoodsConsumptionVoucher;
         private readonly IUnitOfWork unitOfWork;
 
-        public CustomerConsumptionVoucherService(IDalCustomerConsumptionVoucher dalCustomerConsumptionVoucher, IDalConsumptionVoucher dalConsumptionVoucher, IConsumptionVoucherService consumptionVoucherService, IUnitOfWork unitOfWork, IMemberCardHandleService memberCardHandleService)
+        public CustomerConsumptionVoucherService(IDalCustomerConsumptionVoucher dalCustomerConsumptionVoucher, IDalConsumptionVoucher dalConsumptionVoucher, IConsumptionVoucherService consumptionVoucherService, IUnitOfWork unitOfWork, IMemberCardHandleService memberCardHandleService, IDalGoodsConsumptionVoucher dalGoodsConsumptionVoucher)
         {
             this.dalCustomerConsumptionVoucher = dalCustomerConsumptionVoucher;
             this.dalConsumptionVoucher = dalConsumptionVoucher;
             this.consumptionVoucherService = consumptionVoucherService;
             this.unitOfWork = unitOfWork;
             this.memberCardHandleService = memberCardHandleService;
+            this.dalGoodsConsumptionVoucher = dalGoodsConsumptionVoucher;
         }
         /// <summary>
         /// 给用户添加新的抵用券
@@ -108,17 +110,19 @@ namespace Fx.Amiya.Service
             return fxPageInfo;
         }
         /// <summary>
-        /// 分类获取用户知乎抵用券列表
+        /// 获取当前商品可用的抵用券
         /// </summary>
         /// <param name="customerId"></param>
         /// <param name="isUsed">是否使用</param>
+        /// <param name="goodsId">商品id</param>
         /// <returns></returns>
-        public async Task<List<CustomerConsumptioVoucherInfoDto>> GetAllCustomerConsumptionVoucherListAsync(string customerId, bool? isUsed)
+        public async Task<List<CustomerConsumptioVoucherInfoDto>> GetAllCustomerConsumptionVoucherListAsync(string customerId, bool? isUsed,string goodsId)
         {
             FxPageInfo<CustomerConsumptioVoucherInfoDto> fxPageInfo = new FxPageInfo<CustomerConsumptioVoucherInfoDto>();
             var list = from ccv in dalCustomerConsumptionVoucher.GetAll()
                        join cv in dalConsumptionVoucher.GetAll() on ccv.ConsumptionVoucherId equals cv.Id
-                       where ccv.CustomerId == customerId && (isUsed == null || ccv.IsUsed == isUsed) && cv.Type==0 &&ccv.IsExpire==false&&ccv.ExpireDate>DateTime.Now orderby cv.DeductMoney descending
+                       join gv in dalGoodsConsumptionVoucher.GetAll() on cv.Id equals gv.ConsumptionVoucherId
+                       where ccv.CustomerId == customerId && (isUsed == null || ccv.IsUsed == isUsed) && cv.Type==0 &&ccv.IsExpire==false&&ccv.ExpireDate>DateTime.Now&&ccv.ConsumptionVoucherId==gv.ConsumptionVoucherId&&gv.GoodsId==goodsId orderby cv.DeductMoney descending
                        select new CustomerConsumptioVoucherInfoDto
                        {
                            Id = ccv.Id,

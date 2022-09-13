@@ -807,7 +807,16 @@ CREATE TABLE `amiyadb`.`goods_member_rank_price` (
 
 
 
+-----------------------------------------------王健 2022/09/09 BEGIN--------------------------------------------;
+--商品可使用抵用券
+ CREATE TABLE `tbl_goods_consumption_voucher` (
+  `id` varchar(100) NOT NULL,
+  `goods_id` varchar(100) NOT NULL,
+  `consumption_voucher_id` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
+-----------------------------------------------王健 2022/09/09 END--------------------------------------------;
 
 
 

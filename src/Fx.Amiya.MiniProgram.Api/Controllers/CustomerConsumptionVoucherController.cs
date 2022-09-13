@@ -63,19 +63,20 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         }
 
         /// <summary>
-        /// 获取所有支付抵用券
+        /// 获取当前商品可用的抵用券
         /// </summary>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <param name="isUsed"></param>
+        /// <param name="goodsId">商品id</param>
         /// <returns></returns>
         [HttpGet("allList")]
-        public async Task<ResultData<List<CustomerConsumptionVoucherInfoVo>>> GetCustomerConsumptionVoucherList( bool? isUsed)
+        public async Task<ResultData<List<CustomerConsumptionVoucherInfoVo>>> GetCustomerConsumptionVoucherList( bool? isUsed,string goodsId)
         {
             string token = _tokenReader.GetToken();
             var sessionInfo = _sessionStorage.GetSession(token);
             string customerId = sessionInfo.FxCustomerId;
-            var list = await customerConsumptionVoucherService.GetAllCustomerConsumptionVoucherListAsync( customerId, isUsed);
+            var list = await customerConsumptionVoucherService.GetAllCustomerConsumptionVoucherListAsync( customerId, isUsed, goodsId);
             var voucherList= list.Select(s => new CustomerConsumptionVoucherInfoVo
             {
                 Id = s.Id,

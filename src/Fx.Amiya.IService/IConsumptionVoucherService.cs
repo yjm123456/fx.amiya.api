@@ -21,5 +21,10 @@ namespace Fx.Amiya.IService
         /// <param name="code"></param>
         /// <returns></returns>
         Task<ConsumptionVoucherDto> GetConsumptionVoucherByCodeAsync(string code);
+        /// <summary>
+        /// 获取抵用券名称列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<ConsumptionVoucherDto>> GetConsumptionVoucherkNameListAsync();
     }
 }

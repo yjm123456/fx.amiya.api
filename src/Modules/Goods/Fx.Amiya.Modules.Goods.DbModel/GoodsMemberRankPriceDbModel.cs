@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Fx.Amiya.DbModels.Model
+namespace Fx.Amiya.Modules.Goods.DbModel
 {
-   public class GoodsMemberRankPrice
+    public class GoodsMemberRankPriceDbModel
     {
         public string Id { get; set; }
         public string GoodsId { get; set; }
         public byte MemberRankId { get; set; }
         public decimal Price { get; set; }
+        public GoodsInfoDbModel GoodsInfo { get; set; }
 
-        public  GoodsInfo GoodsInfo { get; set; }
-
-        public MemberCardRankInfo MemberCardRankInfo { get; set; }
     }
 }

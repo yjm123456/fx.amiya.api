@@ -26,12 +26,13 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<FxPageInfo<CustomerConsumptioVoucherInfoDto>> GetCustomerConsumptionVoucherListAsync(int pageNum,int pageSize,string customerId, int? type);
         /// <summary>
-        /// 分类获取用户抵用券列表
+        /// 获取当前商品可用的抵用券
         /// </summary>
         /// <param name="customerId"></param>
-        /// <param name="isUsed"></param>
+        /// <param name="isUsed">是否使用</param>
+        /// <param name="goodsId">商品id</param>
         /// <returns></returns>
-        Task<List<CustomerConsumptioVoucherInfoDto>> GetAllCustomerConsumptionVoucherListAsync(string customerId, bool? isUsed);
+        Task<List<CustomerConsumptioVoucherInfoDto>> GetAllCustomerConsumptionVoucherListAsync(string customerId, bool? isUsed,string goodsId);
         /// <summary>
         /// 普通会员发放抵用券
         /// </summary>

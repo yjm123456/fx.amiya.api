@@ -74,6 +74,16 @@ namespace Fx.Amiya.Service
                 throw new Exception("请输入正确的抵用券编号");
             }
         }
-        
+        /// <summary>
+        /// 获取抵用券名称列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ConsumptionVoucherDto>> GetConsumptionVoucherkNameListAsync()
+        {
+            return dalConsumptionVoucher.GetAll().Select(v => new ConsumptionVoucherDto { 
+                Id=v.Id,
+                Name=v.Name
+            }).ToList();
+        }
     }
 }
