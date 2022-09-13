@@ -74,10 +74,27 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 LiveAnchor = d.LiveAnchor,
                                                 CreateDate = d.CreateDate,
                                                 RecordDate = d.RecordDate,
+
+                                                SinaWeiBoOperationEmployeeName = d.SinaWeiBoOperationEmployeeName,
                                                 SinaWeiBoSendNum = d.SinaWeiBoSendNum,
+                                                SinaWeiBoFlowInvestmentNum = d.SinaWeiBoFlowInvestmentNum,
+
+                                                TikTokOperationEmployeeName = d.TikTokOperationEmployeeName,
+                                                TikTokSendNum = d.TikTokSendNum,
+                                                TikTokFlowInvestmentNum = d.TikTokFlowInvestmentNum,
+
+                                                VideoOperationEmployeeName = d.VideoOperationEmployeeName,
+                                                VideoSendNum = d.VideoSendNum,
+                                                VideoFlowInvestmentNum = d.VideoFlowInvestmentNum,
+
+                                                XiaoHongShuOperationEmployeeName = d.XiaoHongShuOperationEmployeeName,
                                                 XiaoHongShuSendNum = d.XiaoHongShuSendNum,
+                                                XiaoHongShuFlowInvestmentNum = d.XiaoHongShuFlowInvestmentNum,
+
+                                                ZhihuOperationEmployeeName = d.ZhihuOperationEmployeeName,
                                                 ZhihuSendNum = d.ZhihuSendNum,
-                                                TikTokSendNum=d.TikTokSendNum,
+                                                ZhihuFlowInvestmentNum = d.ZhihuFlowInvestmentNum,
+
                                                 TodaySendNum = d.TodaySendNum,
                                                 FlowInvestmentNum = d.FlowInvestmentNum,
                                                 LivingRoomFlowInvestmentNum = d.LivingRoomFlowInvestmentNum,
@@ -104,7 +121,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 OldCustomerPerformanceNum = d.OldCustomerPerformanceNum,
                                                 NewCustomerPerformanceCountNum = d.NewCustomerPerformanceCountNum,
                                                 PerformanceNum = d.PerformanceNum,
-                                                OperationEmployeeName = d.OperationEmployeeName,
                                                 MinivanRefund = d.MinivanRefund,
                                                 MiniVanBadReviews = d.MiniVanBadReviews,
                                                 NetWorkConsultingEmployeeName = d.NetWorkConsultingEmployeeName,
@@ -141,12 +157,27 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorDailyTargetVo.LiveAnchorId = liveAnchorDailyTarget.LiveAnchorId;
                 liveAnchorDailyTargetVo.LiveanchorMonthlyTargetId = liveAnchorDailyTarget.LiveanchorMonthlyTargetId;
                 liveAnchorDailyTargetVo.LivingTrackingEmployeeId = liveAnchorDailyTarget.LivingTrackingEmployeeId;
-                liveAnchorDailyTargetVo.OperationEmployeeId = liveAnchorDailyTarget.OperationEmployeeId;
                 liveAnchorDailyTargetVo.NetWorkConsultingEmployeeId = liveAnchorDailyTarget.NetWorkConsultingEmployeeId;
+
+                liveAnchorDailyTargetVo.TikTokOperationEmployeeId = liveAnchorDailyTarget.TikTokOperationEmployeeId;
                 liveAnchorDailyTargetVo.TikTokSendNum = liveAnchorDailyTarget.TikTokSendNum;
+                liveAnchorDailyTargetVo.TikTokFlowInvestmentNum = liveAnchorDailyTarget.TikTokFlowInvestmentNum;
+
+                liveAnchorDailyTargetVo.ZhihuOperationEmployeeId = liveAnchorDailyTarget.ZhihuOperationEmployeeId;
                 liveAnchorDailyTargetVo.ZhihuSendNum = liveAnchorDailyTarget.ZhihuSendNum;
-                liveAnchorDailyTargetVo.SinaWeiBoSendNum = liveAnchorDailyTarget.SinaWeiBoSendNum;
+                liveAnchorDailyTargetVo.ZhihuFlowInvestmentNum = liveAnchorDailyTarget.ZhihuFlowInvestmentNum;
+
+                liveAnchorDailyTargetVo.XiaoHongShuOperationEmployeeId = liveAnchorDailyTarget.XiaoHongShuOperationEmployeeId;
                 liveAnchorDailyTargetVo.XiaoHongShuSendNum = liveAnchorDailyTarget.XiaoHongShuSendNum;
+                liveAnchorDailyTargetVo.XiaoHongShuFlowInvestmentNum = liveAnchorDailyTarget.XiaoHongShuFlowInvestmentNum;
+
+                liveAnchorDailyTargetVo.SinaWeiBoOperationEmployeeId = liveAnchorDailyTarget.SinaWeiBoOperationEmployeeId;
+                liveAnchorDailyTargetVo.SinaWeiBoSendNum = liveAnchorDailyTarget.SinaWeiBoSendNum;
+                liveAnchorDailyTargetVo.SinaWeiBoFlowInvestmentNum = liveAnchorDailyTarget.SinaWeiBoFlowInvestmentNum;
+
+                liveAnchorDailyTargetVo.VideoOperationEmployeeId = liveAnchorDailyTarget.VideoOperationEmployeeId;
+                liveAnchorDailyTargetVo.VideoSendNum = liveAnchorDailyTarget.VideoSendNum;
+                liveAnchorDailyTargetVo.VideoFlowInvestmentNum = liveAnchorDailyTarget.VideoFlowInvestmentNum;
                 liveAnchorDailyTargetVo.TodaySendNum = liveAnchorDailyTarget.TodaySendNum;
                 liveAnchorDailyTargetVo.FlowInvestmentNum = liveAnchorDailyTarget.FlowInvestmentNum;
                 liveAnchorDailyTargetVo.LivingRoomFlowInvestmentNum = liveAnchorDailyTarget.LivingRoomFlowInvestmentNum;
@@ -187,13 +218,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
         #region 【直播前】  
+
+        #region [抖音]
         /// <summary>
-        /// 添加直播前主播日运营目标情况
+        /// 添加直播前抖音主播日运营目标情况
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
-        [HttpPost("BeforeLivingAdd")]
-        public async Task<ResultData> BeforeLivingAddAsync(BeforeLivingAddLiveAnchorDailyTargetVo addVo)
+        [HttpPost("BeforeTikTokLivingAdd")]
+        public async Task<ResultData> BeforeLivingTikTokAddAsync(BeforeLivingTikTokAddLiveAnchorDailyTargetVo addVo)
         {
             try
             {
@@ -284,19 +317,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                 }
                 else
                 {
-                    BeforeLivingAddLiveAnchorDailyTargetDto addDto = new BeforeLivingAddLiveAnchorDailyTargetDto();
+                    BeforeLivingTikTokAddLiveAnchorDailyTargetDto addDto = new BeforeLivingTikTokAddLiveAnchorDailyTargetDto();
                     addDto.LiveanchorMonthlyTargetId = addVo.LiveanchorMonthlyTargetId;
-                    addDto.OperationEmployeeId = addVo.OperationEmployeeId;
+                    addDto.TikTokOperationEmployeeId = addVo.TikTokOperationEmployeeId;
+                    addDto.TikTokFlowInvestmentNum = addVo.TikTokFlowInvestmentNum;
                     addDto.TikTokSendNum = addVo.TikTokSendNum;
-                    addDto.SinaWeiBoSendNum = addVo.SinaWeiBoSendNum;
-                    addDto.ZhihuSendNum = addVo.ZhihuSendNum;
-                    addDto.XiaoHongShuSendNum = addVo.XiaoHongShuSendNum;
                     addDto.TodaySendNum = addVo.TodaySendNum;
                     addDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
-                    addDto.CluesNum = addVo.CluesNum;
-                    addDto.AddFansNum = addVo.AddFansNum;
+                    //addDto.CluesNum = addVo.CluesNum;
+                    //addDto.AddFansNum = addVo.AddFansNum;
                     addDto.RecordDate = addVo.RecordDate;
-                    await _liveAnchorDailyTargetService.BeforeLivingAddAsync(addDto);
+                    await _liveAnchorDailyTargetService.BeforeLivingTikTokAddAsync(addDto);
                 }
                 return ResultData.Success();
             }
@@ -309,29 +340,27 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 修改直播前主播日运营目标情况
+        /// 修改直播前抖音主播日运营目标情况
         /// </summary>
         /// <param name="updateVo"></param>
         /// <returns></returns>
-        [HttpPut("BeforeLivingUpdate")]
-        public async Task<ResultData> BeforeLivingUpdateAsync(BeforeLivingUpdateLiveAnchorDailyTargetVo updateVo)
+        [HttpPut("BeforeLivingTikTokUpdate")]
+        public async Task<ResultData> BeforeLivingTikTokUpdateAsync(BeforeLivingTikTokUpdateLiveAnchorDailyTargetVo updateVo)
         {
             try
             {
-                BeforeLivingUpdateLiveAnchorDailyTargetDto updateDto = new BeforeLivingUpdateLiveAnchorDailyTargetDto();
+                BeforeLivingTikTokUpdateLiveAnchorDailyTargetDto updateDto = new BeforeLivingTikTokUpdateLiveAnchorDailyTargetDto();
                 updateDto.Id = updateVo.Id;
                 updateDto.LiveanchorMonthlyTargetId = updateVo.LiveanchorMonthlyTargetId;
-                updateDto.OperationEmployeeId = updateVo.OperationEmployeeId;
+                updateDto.TikTokOperationEmployeeId = updateVo.TikTokOperationEmployeeId;
                 updateDto.TikTokSendNum = updateVo.TikTokSendNum;
-                updateDto.SinaWeiBoSendNum = updateVo.SinaWeiBoSendNum;
-                updateDto.ZhihuSendNum = updateVo.ZhihuSendNum;
-                updateDto.XiaoHongShuSendNum = updateVo.XiaoHongShuSendNum;
+                updateDto.TikTokFlowInvestmentNum = updateVo.TikTokFlowInvestmentNum;
                 updateDto.TodaySendNum = updateVo.TodaySendNum;
                 updateDto.FlowInvestmentNum = updateVo.FlowInvestmentNum;
-                updateDto.CluesNum = updateVo.CluesNum;
-                updateDto.AddFansNum = updateVo.AddFansNum;
+                //updateDto.CluesNum = updateVo.CluesNum;
+                //updateDto.AddFansNum = updateVo.AddFansNum;
                 updateDto.RecordDate = updateVo.RecordDate;
-                await _liveAnchorDailyTargetService.BeforeLivingUpdateAsync(updateDto);
+                await _liveAnchorDailyTargetService.BeforeLivingTikTokUpdateAsync(updateDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -339,6 +368,292 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData.Fail(ex.Message);
             }
         }
+        #endregion
+
+        #region [知乎]
+        /// <summary>
+        /// 添加直播前知乎主播日运营目标情况
+        /// </summary>
+        /// <param name="addVo"></param>
+        /// <returns></returns>
+        [HttpPost("BeforeZhihuLivingAdd")]
+        public async Task<ResultData> BeforeLivingZhihuAddAsync(BeforeLivingZhihuAddLiveAnchorDailyTargetVo addVo)
+        {
+            try
+            {
+                var selectResult = await _liveAnchorDailyTargetService.GetLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
+                if (selectResult != null)
+                {
+                    throw new Exception("当前填报日期的主播日运营数据已创建，请根据筛选条件查询到对应数据编辑！");
+                }
+                else
+                {
+                    BeforeLivingZhihuAddLiveAnchorDailyTargetDto addDto = new BeforeLivingZhihuAddLiveAnchorDailyTargetDto();
+                    addDto.LiveanchorMonthlyTargetId = addVo.LiveanchorMonthlyTargetId;
+                    addDto.ZhihuOperationEmployeeId = addVo.ZhihuOperationEmployeeId;
+                    addDto.ZhihuSendNum = addVo.ZhihuSendNum;
+                    addDto.ZhihuFlowInvestmentNum = addVo.ZhihuFlowInvestmentNum;
+                    addDto.TodaySendNum = addVo.TodaySendNum;
+                    addDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
+                    //addDto.CluesNum = addVo.CluesNum;
+                    //addDto.AddFansNum = addVo.AddFansNum;
+                    addDto.RecordDate = addVo.RecordDate;
+                    await _liveAnchorDailyTargetService.BeforeLivingZhihuAddAsync(addDto);
+                }
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+
+
+
+        /// <summary>
+        /// 修改直播前知乎主播日运营目标情况
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut("BeforeLivingZhihuUpdate")]
+        public async Task<ResultData> BeforeLivingZhihuUpdateAsync(BeforeLivingZhihuUpdateLiveAnchorDailyTargetVo updateVo)
+        {
+            try
+            {
+                BeforeLivingZhihuUpdateLiveAnchorDailyTargetDto updateDto = new BeforeLivingZhihuUpdateLiveAnchorDailyTargetDto();
+                updateDto.Id = updateVo.Id;
+                updateDto.LiveanchorMonthlyTargetId = updateVo.LiveanchorMonthlyTargetId;
+                updateDto.ZhihuOperationEmployeeId = updateVo.ZhihuOperationEmployeeId;
+                updateDto.ZhihuSendNum = updateVo.ZhihuSendNum;
+                updateDto.ZhihuFlowInvestmentNum = updateVo.ZhihuFlowInvestmentNum;
+                updateDto.TodaySendNum = updateVo.TodaySendNum;
+                updateDto.FlowInvestmentNum = updateVo.FlowInvestmentNum;
+                //updateDto.CluesNum = updateVo.CluesNum;
+                //updateDto.AddFansNum = updateVo.AddFansNum;
+                updateDto.RecordDate = updateVo.RecordDate;
+                await _liveAnchorDailyTargetService.BeforeLivingZhihuUpdateAsync(updateDto);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+        #endregion
+
+        #region [微博]
+        /// <summary>
+        /// 添加直播前微博主播日运营目标情况
+        /// </summary>
+        /// <param name="addVo"></param>
+        /// <returns></returns>
+        [HttpPost("BeforeSinaWeiBoLivingAdd")]
+        public async Task<ResultData> BeforeLivingSinaWeiBoAddAsync(BeforeLivingSinaWeiBoAddLiveAnchorDailyTargetVo addVo)
+        {
+            try
+            {
+                var selectResult = await _liveAnchorDailyTargetService.GetLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
+                if (selectResult != null)
+                {
+                    throw new Exception("当前填报日期的主播日运营数据已创建，请根据筛选条件查询到对应数据编辑！");
+                }
+                else
+                {
+                    BeforeLivingSinaWeiBoAddLiveAnchorDailyTargetDto addDto = new BeforeLivingSinaWeiBoAddLiveAnchorDailyTargetDto();
+                    addDto.LiveanchorMonthlyTargetId = addVo.LiveanchorMonthlyTargetId;
+                    addDto.SinaWeiBoOperationEmployeeId = addVo.SinaWeiBoOperationEmployeeId;
+                    addDto.SinaWeiBoSendNum = addVo.SinaWeiBoSendNum;
+                    addDto.SinaWeiBoFlowInvestmentNum = addVo.SinaWeiBoFlowInvestmentNum;
+                    addDto.TodaySendNum = addVo.TodaySendNum;
+                    addDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
+                    //addDto.CluesNum = addVo.CluesNum;
+                    //addDto.AddFansNum = addVo.AddFansNum;
+                    addDto.RecordDate = addVo.RecordDate;
+                    await _liveAnchorDailyTargetService.BeforeLivingSinaWeiBoAddAsync(addDto);
+                }
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+
+
+
+        /// <summary>
+        /// 修改直播前微博主播日运营目标情况
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut("BeforeLivingSinaWeiBoUpdate")]
+        public async Task<ResultData> BeforeLivingSinaWeiBoUpdateAsync(BeforeLivingSinaWeiBoUpdateLiveAnchorDailyTargetVo updateVo)
+        {
+            try
+            {
+                BeforeLivingSinaWeiBoUpdateLiveAnchorDailyTargetDto updateDto = new BeforeLivingSinaWeiBoUpdateLiveAnchorDailyTargetDto();
+                updateDto.Id = updateVo.Id;
+                updateDto.LiveanchorMonthlyTargetId = updateVo.LiveanchorMonthlyTargetId;
+                updateDto.SinaWeiBoOperationEmployeeId = updateVo.SinaWeiBoOperationEmployeeId;
+                updateDto.SinaWeiBoSendNum = updateVo.SinaWeiBoSendNum;
+                updateDto.SinaWeiBoFlowInvestmentNum = updateVo.SinaWeiBoFlowInvestmentNum;
+                updateDto.TodaySendNum = updateVo.TodaySendNum;
+                updateDto.FlowInvestmentNum = updateVo.FlowInvestmentNum;
+                //updateDto.CluesNum = updateVo.CluesNum;
+                //updateDto.AddFansNum = updateVo.AddFansNum;
+                updateDto.RecordDate = updateVo.RecordDate;
+                await _liveAnchorDailyTargetService.BeforeLivingSinaWeiBoUpdateAsync(updateDto);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+        #endregion
+
+        #region [小红书]
+        /// <summary>
+        /// 添加直播前小红书主播日运营目标情况
+        /// </summary>
+        /// <param name="addVo"></param>
+        /// <returns></returns>
+        [HttpPost("BeforeXiaoHongShuLivingAdd")]
+        public async Task<ResultData> BeforeLivingXiaoHongShuAddAsync(BeforeLivingXiaoHongShuAddLiveAnchorDailyTargetVo addVo)
+        {
+            try
+            {
+                var selectResult = await _liveAnchorDailyTargetService.GetLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
+                if (selectResult != null)
+                {
+                    throw new Exception("当前填报日期的主播日运营数据已创建，请根据筛选条件查询到对应数据编辑！");
+                }
+                else
+                {
+                    BeforeLivingXiaoHongShuAddLiveAnchorDailyTargetDto addDto = new BeforeLivingXiaoHongShuAddLiveAnchorDailyTargetDto();
+                    addDto.LiveanchorMonthlyTargetId = addVo.LiveanchorMonthlyTargetId;
+                    addDto.XiaoHongShuOperationEmployeeId = addVo.XiaoHongShuOperationEmployeeId;
+                    addDto.XiaoHongShuSendNum = addVo.XiaoHongShuSendNum;
+                    addDto.XiaoHongShuFlowInvestmentNum = addVo.XiaoHongShuFlowInvestmentNum;
+                    addDto.TodaySendNum = addVo.TodaySendNum;
+                    addDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
+                    //addDto.CluesNum = addVo.CluesNum;
+                    //addDto.AddFansNum = addVo.AddFansNum;
+                    addDto.RecordDate = addVo.RecordDate;
+                    await _liveAnchorDailyTargetService.BeforeLivingXiaoHongShuAddAsync(addDto);
+                }
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+
+
+
+        /// <summary>
+        /// 修改直播前小红书主播日运营目标情况
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut("BeforeLivingXiaoHongShuUpdate")]
+        public async Task<ResultData> BeforeLivingXiaoHongShuUpdateAsync(BeforeLivingXiaoHongShuUpdateLiveAnchorDailyTargetVo updateVo)
+        {
+            try
+            {
+                BeforeLivingXiaoHongShuUpdateLiveAnchorDailyTargetDto updateDto = new BeforeLivingXiaoHongShuUpdateLiveAnchorDailyTargetDto();
+                updateDto.Id = updateVo.Id;
+                updateDto.LiveanchorMonthlyTargetId = updateVo.LiveanchorMonthlyTargetId;
+                updateDto.XiaoHongShuOperationEmployeeId = updateVo.XiaoHongShuOperationEmployeeId;
+                updateDto.XiaoHongShuSendNum = updateVo.XiaoHongShuSendNum;
+                updateDto.XiaoHongShuFlowInvestmentNum = updateVo.XiaoHongShuFlowInvestmentNum;
+                updateDto.TodaySendNum = updateVo.TodaySendNum;
+                updateDto.FlowInvestmentNum = updateVo.FlowInvestmentNum;
+                //updateDto.CluesNum = updateVo.CluesNum;
+                //updateDto.AddFansNum = updateVo.AddFansNum;
+                updateDto.RecordDate = updateVo.RecordDate;
+                await _liveAnchorDailyTargetService.BeforeLivingXiaoHongShuUpdateAsync(updateDto);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+        #endregion
+
+        #region [视频号]
+        /// <summary>
+        /// 添加直播前视频号主播日运营目标情况
+        /// </summary>
+        /// <param name="addVo"></param>
+        /// <returns></returns>
+        [HttpPost("BeforeVideoLivingAdd")]
+        public async Task<ResultData> BeforeLivingVideoAddAsync(BeforeLivingVideoAddLiveAnchorDailyTargetVo addVo)
+        {
+            try
+            {
+                var selectResult = await _liveAnchorDailyTargetService.GetLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
+                if (selectResult != null)
+                {
+                    throw new Exception("当前填报日期的主播日运营数据已创建，请根据筛选条件查询到对应数据编辑！");
+                }
+                else
+                {
+                    BeforeLivingVideoAddLiveAnchorDailyTargetDto addDto = new BeforeLivingVideoAddLiveAnchorDailyTargetDto();
+                    addDto.LiveanchorMonthlyTargetId = addVo.LiveanchorMonthlyTargetId;
+                    addDto.VideoOperationEmployeeId = addVo.VideoOperationEmployeeId;
+                    addDto.VideoSendNum = addVo.VideoSendNum;
+                    addDto.VideoFlowInvestmentNum = addVo.VideoFlowInvestmentNum;
+                    addDto.TodaySendNum = addVo.TodaySendNum;
+                    addDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
+                    //addDto.CluesNum = addVo.CluesNum;
+                    //addDto.AddFansNum = addVo.AddFansNum;
+                    addDto.RecordDate = addVo.RecordDate;
+                    await _liveAnchorDailyTargetService.BeforeLivingVideoAddAsync(addDto);
+                }
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+
+
+
+        /// <summary>
+        /// 修改直播前视频号主播日运营目标情况
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut("BeforeLivingVideoUpdate")]
+        public async Task<ResultData> BeforeLivingVideoUpdateAsync(BeforeLivingVideoUpdateLiveAnchorDailyTargetVo updateVo)
+        {
+            try
+            {
+                BeforeLivingVideoUpdateLiveAnchorDailyTargetDto updateDto = new BeforeLivingVideoUpdateLiveAnchorDailyTargetDto();
+                updateDto.Id = updateVo.Id;
+                updateDto.LiveanchorMonthlyTargetId = updateVo.LiveanchorMonthlyTargetId;
+                updateDto.VideoOperationEmployeeId = updateVo.VideoOperationEmployeeId;
+                updateDto.VideoSendNum = updateVo.VideoSendNum;
+                updateDto.VideoFlowInvestmentNum = updateVo.VideoFlowInvestmentNum;
+                updateDto.TodaySendNum = updateVo.TodaySendNum;
+                updateDto.FlowInvestmentNum = updateVo.FlowInvestmentNum;
+                //updateDto.CluesNum = updateVo.CluesNum;
+                //updateDto.AddFansNum = updateVo.AddFansNum;
+                updateDto.RecordDate = updateVo.RecordDate;
+                await _liveAnchorDailyTargetService.BeforeLivingVideoUpdateAsync(updateDto);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+        #endregion
+
         #endregion
 
         #region 【直播中】  

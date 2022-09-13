@@ -67,18 +67,42 @@ namespace Fx.Amiya.Service
                                                   MonthlyTargetName = d.MonthlyTargetName,
                                                   LiveAnchorId = d.LiveAnchorId,
                                                   LiveAnchorName = d.LiveAnchor.Name,
+
                                                   ZhihuReleaseTarget = d.ZhihuReleaseTarget,
                                                   CumulativeZhihuRelease = d.CumulativeZhihuRelease,
                                                   ZhihuReleaseCompleteRate = d.ZhihuReleaseCompleteRate,
+                                                  ZhihuFlowinvestmentTarget = d.ZhihuFlowinvestmentTarget,
+                                                  CumulativeZhihuFlowinvestment = d.CumulativeZhihuFlowinvestment,
+                                                  ZhihuFlowinvestmentCompleteRate = d.ZhihuFlowinvestmentCompleteRate,
+                                                 
+                                                  VideoReleaseTarget = d.VideoReleaseTarget,
+                                                  CumulativeVideoRelease = d.CumulativeVideoRelease,
+                                                  VideoReleaseCompleteRate = d.VideoReleaseCompleteRate,
+                                                  VideoFlowinvestmentTarget = d.VideoFlowinvestmentTarget,
+                                                  CumulativeVideoFlowinvestment = d.CumulativeVideoFlowinvestment,
+                                                  VideoFlowinvestmentCompleteRate = d.VideoFlowinvestmentCompleteRate,
+                                                  
                                                   TikTokReleaseTarget = d.TikTokReleaseTarget,
                                                   CumulativeTikTokRelease = d.CumulativeTikTokRelease,
                                                   TikTokReleaseCompleteRate = d.TikTokReleaseCompleteRate,
+                                                  TikTokFlowinvestmentTarget = d.TikTokFlowinvestmentTarget,
+                                                  CumulativeTikTokFlowinvestment = d.CumulativeTikTokFlowinvestment,
+                                                  TikTokFlowinvestmentCompleteRate = d.TikTokFlowinvestmentCompleteRate,
+                                                 
                                                   XiaoHongShuReleaseTarget = d.XiaoHongShuReleaseTarget,
                                                   CumulativeXiaoHongShuRelease = d.CumulativeXiaoHongShuRelease,
                                                   XiaoHongShuReleaseCompleteRate = d.XiaoHongShuReleaseCompleteRate,
+                                                  XiaoHongShuFlowinvestmentTarget = d.XiaoHongShuFlowinvestmentTarget,
+                                                  CumulativeXiaoHongShuFlowinvestment = d.CumulativeXiaoHongShuFlowinvestment,
+                                                  XiaoHongShuFlowinvestmentCompleteRate = d.XiaoHongShuFlowinvestmentCompleteRate,
+                                                 
                                                   SinaWeiBoReleaseTarget = d.SinaWeiBoReleaseTarget,
                                                   CumulativeSinaWeiBoRelease = d.CumulativeSinaWeiBoRelease,
                                                   SinaWeiBoReleaseCompleteRate = d.SinaWeiBoReleaseCompleteRate,
+                                                  SinaWeiBoFlowinvestmentTarget = d.SinaWeiBoFlowinvestmentTarget,
+                                                  CumulativeSinaWeiBoFlowinvestment = d.CumulativeSinaWeiBoFlowinvestment,
+                                                  SinaWeiBoFlowinvestmentCompleteRate = d.SinaWeiBoFlowinvestmentCompleteRate,
+                                                  
                                                   ReleaseTarget = d.ReleaseTarget,
                                                   CumulativeRelease = d.CumulativeRelease,
                                                   ReleaseCompleteRate = d.ReleaseCompleteRate,
@@ -179,18 +203,45 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.Month = addDto.Month;
                 liveAnchorMonthlyTarget.MonthlyTargetName = addDto.MonthlyTargetName;
                 liveAnchorMonthlyTarget.LiveAnchorId = addDto.LiveAnchorId;
+
                 liveAnchorMonthlyTarget.ZhihuReleaseTarget = addDto.ZhihuReleaseTarget;
                 liveAnchorMonthlyTarget.CumulativeZhihuRelease = 0;
                 liveAnchorMonthlyTarget.ZhihuReleaseCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.ZhihuFlowinvestmentTarget = addDto.ZhihuFlowinvestmentTarget;
+                liveAnchorMonthlyTarget.CumulativeZhihuFlowinvestment = 0;
+                liveAnchorMonthlyTarget.ZhihuFlowinvestmentCompleteRate = 0.00M;
+
+                liveAnchorMonthlyTarget.VideoReleaseTarget = addDto.VideoReleaseTarget;
+                liveAnchorMonthlyTarget.CumulativeVideoRelease = 0;
+                liveAnchorMonthlyTarget.VideoReleaseCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.VideoFlowinvestmentTarget = addDto.VideoFlowinvestmentTarget;
+                liveAnchorMonthlyTarget.CumulativeVideoFlowinvestment = 0;
+                liveAnchorMonthlyTarget.VideoFlowinvestmentCompleteRate = 0.00M;
+
                 liveAnchorMonthlyTarget.TikTokReleaseTarget = addDto.TikTokReleaseTarget;
                 liveAnchorMonthlyTarget.CumulativeTikTokRelease = 0;
                 liveAnchorMonthlyTarget.TikTokReleaseCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.TikTokFlowinvestmentTarget = addDto.TikTokFlowinvestmentTarget;
+                liveAnchorMonthlyTarget.CumulativeTikTokFlowinvestment = 0;
+                liveAnchorMonthlyTarget.TikTokFlowinvestmentCompleteRate = 0.00M;
+
                 liveAnchorMonthlyTarget.XiaoHongShuReleaseTarget = addDto.XiaoHongShuReleaseTarget;
                 liveAnchorMonthlyTarget.CumulativeXiaoHongShuRelease = 0;
                 liveAnchorMonthlyTarget.XiaoHongShuReleaseCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.XiaoHongShuFlowinvestmentTarget = addDto.XiaoHongShuFlowinvestmentTarget;
+                liveAnchorMonthlyTarget.CumulativeXiaoHongShuFlowinvestment = 0;
+                liveAnchorMonthlyTarget.XiaoHongShuFlowinvestmentCompleteRate = 0.00M;
+
+
+
                 liveAnchorMonthlyTarget.SinaWeiBoReleaseTarget = addDto.SinaWeiBoReleaseTarget;
                 liveAnchorMonthlyTarget.CumulativeSinaWeiBoRelease = 0;
                 liveAnchorMonthlyTarget.SinaWeiBoReleaseCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.SinaWeiBoFlowinvestmentTarget = addDto.SinaWeiBoFlowinvestmentTarget;
+                liveAnchorMonthlyTarget.CumulativeSinaWeiBoFlowinvestment = 0;
+                liveAnchorMonthlyTarget.SinaWeiBoFlowinvestmentCompleteRate = 0.00M;
+
+
                 liveAnchorMonthlyTarget.ReleaseTarget = addDto.ReleaseTarget;
                 liveAnchorMonthlyTarget.CumulativeRelease = 0;
                 liveAnchorMonthlyTarget.ReleaseCompleteRate = 0.00M;
@@ -327,18 +378,37 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.TikTokReleaseTarget = liveAnchorMonthlyTarget.TikTokReleaseTarget;
                 liveAnchorMonthlyTargetDto.CumulativeTikTokRelease = liveAnchorMonthlyTarget.CumulativeTikTokRelease;
                 liveAnchorMonthlyTargetDto.TikTokReleaseCompleteRate = liveAnchorMonthlyTarget.TikTokReleaseCompleteRate;
+                liveAnchorMonthlyTargetDto.TikTokFlowinvestmentTarget = liveAnchorMonthlyTarget.TikTokFlowinvestmentTarget;
+                liveAnchorMonthlyTargetDto.CumulativeTikTokFlowinvestment = liveAnchorMonthlyTarget.CumulativeTikTokFlowinvestment;
+                liveAnchorMonthlyTargetDto.TikTokFlowinvestmentCompleteRate = liveAnchorMonthlyTarget.TikTokFlowinvestmentCompleteRate;
 
                 liveAnchorMonthlyTargetDto.XiaoHongShuReleaseTarget = liveAnchorMonthlyTarget.XiaoHongShuReleaseTarget;
                 liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuRelease = liveAnchorMonthlyTarget.CumulativeXiaoHongShuRelease;
                 liveAnchorMonthlyTargetDto.XiaoHongShuReleaseCompleteRate = liveAnchorMonthlyTarget.XiaoHongShuReleaseCompleteRate;
+                liveAnchorMonthlyTargetDto.XiaoHongShuFlowinvestmentTarget = liveAnchorMonthlyTarget.XiaoHongShuFlowinvestmentTarget;
+                liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuFlowinvestment = liveAnchorMonthlyTarget.CumulativeXiaoHongShuFlowinvestment;
+                liveAnchorMonthlyTargetDto.XiaoHongShuFlowinvestmentCompleteRate = liveAnchorMonthlyTarget.XiaoHongShuFlowinvestmentCompleteRate;
 
                 liveAnchorMonthlyTargetDto.SinaWeiBoReleaseTarget = liveAnchorMonthlyTarget.SinaWeiBoReleaseTarget;
                 liveAnchorMonthlyTargetDto.CumulativeSinaWeiBoRelease = liveAnchorMonthlyTarget.CumulativeSinaWeiBoRelease;
                 liveAnchorMonthlyTargetDto.SinaWeiBoReleaseCompleteRate = liveAnchorMonthlyTarget.SinaWeiBoReleaseCompleteRate;
+                liveAnchorMonthlyTargetDto.SinaWeiBoFlowinvestmentTarget = liveAnchorMonthlyTarget.SinaWeiBoFlowinvestmentTarget;
+                liveAnchorMonthlyTargetDto.CumulativeSinaWeiBoFlowinvestment = liveAnchorMonthlyTarget.CumulativeSinaWeiBoFlowinvestment;
+                liveAnchorMonthlyTargetDto.SinaWeiBoFlowinvestmentCompleteRate = liveAnchorMonthlyTarget.SinaWeiBoFlowinvestmentCompleteRate;
 
                 liveAnchorMonthlyTargetDto.ZhihuReleaseTarget = liveAnchorMonthlyTarget.ZhihuReleaseTarget;
                 liveAnchorMonthlyTargetDto.CumulativeZhihuRelease = liveAnchorMonthlyTarget.CumulativeZhihuRelease;
                 liveAnchorMonthlyTargetDto.ZhihuReleaseCompleteRate = liveAnchorMonthlyTarget.ZhihuReleaseCompleteRate;
+                liveAnchorMonthlyTargetDto.ZhihuFlowinvestmentTarget = liveAnchorMonthlyTarget.ZhihuFlowinvestmentTarget;
+                liveAnchorMonthlyTargetDto.CumulativeZhihuFlowinvestment = liveAnchorMonthlyTarget.CumulativeZhihuFlowinvestment;
+                liveAnchorMonthlyTargetDto.ZhihuFlowinvestmentCompleteRate = liveAnchorMonthlyTarget.ZhihuFlowinvestmentCompleteRate;
+
+                liveAnchorMonthlyTargetDto.VideoReleaseTarget = liveAnchorMonthlyTarget.VideoReleaseTarget;
+                liveAnchorMonthlyTargetDto.CumulativeVideoRelease = liveAnchorMonthlyTarget.CumulativeVideoRelease;
+                liveAnchorMonthlyTargetDto.VideoReleaseCompleteRate = liveAnchorMonthlyTarget.VideoReleaseCompleteRate;
+                liveAnchorMonthlyTargetDto.VideoFlowinvestmentTarget = liveAnchorMonthlyTarget.VideoFlowinvestmentTarget;
+                liveAnchorMonthlyTargetDto.CumulativeVideoFlowinvestment = liveAnchorMonthlyTarget.CumulativeVideoFlowinvestment;
+                liveAnchorMonthlyTargetDto.VideoFlowinvestmentCompleteRate = liveAnchorMonthlyTarget.VideoFlowinvestmentCompleteRate;
 
                 liveAnchorMonthlyTargetDto.ReleaseTarget = liveAnchorMonthlyTarget.ReleaseTarget;
                 liveAnchorMonthlyTargetDto.CumulativeRelease = liveAnchorMonthlyTarget.CumulativeRelease;
@@ -451,10 +521,20 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.Month = updateDto.Month;
                 liveAnchorMonthlyTarget.MonthlyTargetName = updateDto.MonthlyTargetName;
                 liveAnchorMonthlyTarget.LiveAnchorId = updateDto.LiveAnchorId;
+
                 liveAnchorMonthlyTarget.TikTokReleaseTarget = updateDto.TikTokReleaseTarget;
                 liveAnchorMonthlyTarget.ZhihuReleaseTarget = updateDto.ZhihuReleaseTarget;
                 liveAnchorMonthlyTarget.XiaoHongShuReleaseTarget = updateDto.XiaoHongShuReleaseTarget;
                 liveAnchorMonthlyTarget.SinaWeiBoReleaseTarget = updateDto.SinaWeiBoReleaseTarget;
+                liveAnchorMonthlyTarget.VideoReleaseTarget = updateDto.VideoReleaseTarget;
+
+
+                liveAnchorMonthlyTarget.TikTokFlowinvestmentTarget = updateDto.TikTokFlowinvestmentTarget;
+                liveAnchorMonthlyTarget.ZhihuFlowinvestmentTarget = updateDto.ZhihuFlowinvestmentTarget;
+                liveAnchorMonthlyTarget.XiaoHongShuFlowinvestmentTarget = updateDto.XiaoHongShuFlowinvestmentTarget;
+                liveAnchorMonthlyTarget.SinaWeiBoFlowinvestmentTarget = updateDto.SinaWeiBoFlowinvestmentTarget;
+                liveAnchorMonthlyTarget.VideoFlowinvestmentTarget = updateDto.VideoFlowinvestmentTarget;
+
                 liveAnchorMonthlyTarget.ReleaseTarget = updateDto.ReleaseTarget;
                 liveAnchorMonthlyTarget.FlowInvestmentTarget = updateDto.FlowInvestmentTarget;
                 liveAnchorMonthlyTarget.LivingRoomFlowInvestmentTarget = updateDto.LivingRoomFlowInvestmentTarget;
@@ -500,6 +580,7 @@ namespace Fx.Amiya.Service
                 var liveAnchorMonthlyTarget = await dalLiveAnchorMonthlyTarget.GetAll().SingleOrDefaultAsync(e => e.Id == editDto.Id);
                 if (liveAnchorMonthlyTarget == null)
                     throw new Exception("主播月度运营目标情况编号错误！");
+
                 #region #知乎发布
                 liveAnchorMonthlyTarget.CumulativeZhihuRelease += editDto.CumulativeZhihuRelease;
                 if (liveAnchorMonthlyTarget.CumulativeZhihuRelease <= 0)
@@ -511,9 +592,42 @@ namespace Fx.Amiya.Service
                     liveAnchorMonthlyTarget.ZhihuReleaseCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeZhihuRelease) / Convert.ToDecimal(liveAnchorMonthlyTarget.ZhihuReleaseTarget)) * 100, 2);
                 }
                 #endregion
+                #region #知乎投流
+                liveAnchorMonthlyTarget.CumulativeZhihuFlowinvestment += editDto.CumulativeZhihuFlowinvestment;
+                if (liveAnchorMonthlyTarget.CumulativeZhihuFlowinvestment <= 0)
+                {
+                    liveAnchorMonthlyTarget.ZhihuFlowinvestmentCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.ZhihuFlowinvestmentCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeZhihuFlowinvestment) / Convert.ToDecimal(liveAnchorMonthlyTarget.ZhihuFlowinvestmentTarget)) * 100, 2);
+                }
+                #endregion
 
+                #region #视频号发布
+                liveAnchorMonthlyTarget.CumulativeVideoRelease += editDto.CumulativeVideoRelease;
+                if (liveAnchorMonthlyTarget.CumulativeVideoRelease <= 0)
+                {
+                    liveAnchorMonthlyTarget.VideoReleaseCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.VideoReleaseCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeVideoRelease) / Convert.ToDecimal(liveAnchorMonthlyTarget.VideoReleaseTarget)) * 100, 2);
+                }
+                #endregion
+                #region #视频号投流
+                liveAnchorMonthlyTarget.CumulativeVideoFlowinvestment += editDto.CumulativeVideoFlowinvestment;
+                if (liveAnchorMonthlyTarget.CumulativeVideoFlowinvestment <= 0)
+                {
+                    liveAnchorMonthlyTarget.VideoFlowinvestmentCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.VideoFlowinvestmentCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeVideoFlowinvestment) / Convert.ToDecimal(liveAnchorMonthlyTarget.VideoFlowinvestmentTarget)) * 100, 2);
+                }
+                #endregion
 
-                #region #小红书发布
+                #region #抖音发布
                 liveAnchorMonthlyTarget.CumulativeTikTokRelease += editDto.CumulativeTikTokRelease;
                 if (liveAnchorMonthlyTarget.CumulativeTikTokRelease <= 0)
                 {
@@ -522,6 +636,17 @@ namespace Fx.Amiya.Service
                 else
                 {
                     liveAnchorMonthlyTarget.TikTokReleaseCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeTikTokRelease) / Convert.ToDecimal(liveAnchorMonthlyTarget.TikTokReleaseTarget)) * 100, 2);
+                }
+                #endregion
+                #region #抖音投流
+                liveAnchorMonthlyTarget.CumulativeTikTokFlowinvestment += editDto.CumulativeTikTokFlowinvestment;
+                if (liveAnchorMonthlyTarget.CumulativeTikTokFlowinvestment <= 0)
+                {
+                    liveAnchorMonthlyTarget.TikTokFlowinvestmentCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.TikTokFlowinvestmentCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeTikTokFlowinvestment) / Convert.ToDecimal(liveAnchorMonthlyTarget.TikTokFlowinvestmentTarget)) * 100, 2);
                 }
                 #endregion
 
@@ -536,6 +661,17 @@ namespace Fx.Amiya.Service
                     liveAnchorMonthlyTarget.XiaoHongShuReleaseCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeXiaoHongShuRelease) / Convert.ToDecimal(liveAnchorMonthlyTarget.XiaoHongShuReleaseTarget)) * 100, 2);
                 }
                 #endregion
+                #region #小红书投流
+                liveAnchorMonthlyTarget.CumulativeXiaoHongShuFlowinvestment += editDto.CumulativeXiaoHongShuFlowinvestment;
+                if (liveAnchorMonthlyTarget.CumulativeXiaoHongShuFlowinvestment <= 0)
+                {
+                    liveAnchorMonthlyTarget.XiaoHongShuFlowinvestmentCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.XiaoHongShuFlowinvestmentCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeXiaoHongShuFlowinvestment) / Convert.ToDecimal(liveAnchorMonthlyTarget.XiaoHongShuFlowinvestmentTarget)) * 100, 2);
+                }
+                #endregion
 
                 #region #微博发布
                 liveAnchorMonthlyTarget.CumulativeSinaWeiBoRelease += editDto.CumulativeSinaWeiBoRelease;
@@ -546,6 +682,17 @@ namespace Fx.Amiya.Service
                 else
                 {
                     liveAnchorMonthlyTarget.SinaWeiBoReleaseCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeSinaWeiBoRelease) / Convert.ToDecimal(liveAnchorMonthlyTarget.SinaWeiBoReleaseTarget)) * 100, 2);
+                }
+                #endregion
+                #region #微博投流
+                liveAnchorMonthlyTarget.CumulativeSinaWeiBoFlowinvestment += editDto.CumulativeSinaWeiBoFlowinvestment;
+                if (liveAnchorMonthlyTarget.CumulativeSinaWeiBoFlowinvestment <= 0)
+                {
+                    liveAnchorMonthlyTarget.SinaWeiBoFlowinvestmentCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTarget.SinaWeiBoFlowinvestmentCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeSinaWeiBoFlowinvestment) / Convert.ToDecimal(liveAnchorMonthlyTarget.SinaWeiBoFlowinvestmentTarget)) * 100, 2);
                 }
                 #endregion
 
@@ -561,7 +708,7 @@ namespace Fx.Amiya.Service
                 }
                 #endregion
 
-                #region #视频号投流
+                #region #运营渠道投流
                 liveAnchorMonthlyTarget.CumulativeFlowInvestment += editDto.CumulativeFlowInvestment;
                 if (liveAnchorMonthlyTarget.CumulativeFlowInvestment <= 0)
                 {
@@ -588,27 +735,27 @@ namespace Fx.Amiya.Service
                 #endregion
 
                 #region #线索量
-                liveAnchorMonthlyTarget.CumulativeClues += editDto.CumulativeCluesNum;
-                if (liveAnchorMonthlyTarget.CumulativeClues <= 0)
-                {
-                    liveAnchorMonthlyTarget.CluesCompleteRate = 0.00M;
-                }
-                else
-                {
-                    liveAnchorMonthlyTarget.CluesCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeClues) / Convert.ToDecimal(liveAnchorMonthlyTarget.CluesTarget)) * 100, 2);
-                }
+                //liveAnchorMonthlyTarget.CumulativeClues += editDto.CumulativeCluesNum;
+                //if (liveAnchorMonthlyTarget.CumulativeClues <= 0)
+                //{
+                //    liveAnchorMonthlyTarget.CluesCompleteRate = 0.00M;
+                //}
+                //else
+                //{
+                //    liveAnchorMonthlyTarget.CluesCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeClues) / Convert.ToDecimal(liveAnchorMonthlyTarget.CluesTarget)) * 100, 2);
+                //}
                 #endregion
 
                 #region #涨粉量
-                liveAnchorMonthlyTarget.CumulativeAddFans += editDto.CumulativeAddFansNum;
-                if (liveAnchorMonthlyTarget.CumulativeAddFans <= 0)
-                {
-                    liveAnchorMonthlyTarget.AddFansCompleteRate = 0.00M;
-                }
-                else
-                {
-                    liveAnchorMonthlyTarget.AddFansCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeAddFans) / Convert.ToDecimal(liveAnchorMonthlyTarget.AddFansTarget)) * 100, 2);
-                }
+                //liveAnchorMonthlyTarget.CumulativeAddFans += editDto.CumulativeAddFansNum;
+                //if (liveAnchorMonthlyTarget.CumulativeAddFans <= 0)
+                //{
+                //    liveAnchorMonthlyTarget.AddFansCompleteRate = 0.00M;
+                //}
+                //else
+                //{
+                //    liveAnchorMonthlyTarget.AddFansCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTarget.CumulativeAddFans) / Convert.ToDecimal(liveAnchorMonthlyTarget.AddFansTarget)) * 100, 2);
+                //}
                 #endregion
 
                 #region #加V量

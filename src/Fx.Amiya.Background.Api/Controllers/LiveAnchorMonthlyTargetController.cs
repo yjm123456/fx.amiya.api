@@ -68,18 +68,43 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                   MonthlyTargetName = d.MonthlyTargetName,
                                                   LiveAnchorId = d.LiveAnchorId,
                                                   LiveAnchorName = d.LiveAnchorName,
-                                                  TikTokReleaseTarget = d.TikTokReleaseTarget,
-                                                  CumulativeTikTokRelease = d.CumulativeTikTokRelease,
-                                                  TikTokReleaseCompleteRate = d.TikTokReleaseCompleteRate,
+
+
                                                   ZhihuReleaseTarget = d.ZhihuReleaseTarget,
                                                   CumulativeZhihuRelease = d.CumulativeZhihuRelease,
                                                   ZhihuReleaseCompleteRate = d.ZhihuReleaseCompleteRate,
+                                                  ZhihuFlowinvestmentTarget = d.ZhihuFlowinvestmentTarget,
+                                                  CumulativeZhihuFlowinvestment = d.CumulativeZhihuFlowinvestment,
+                                                  ZhihuFlowinvestmentCompleteRate = d.ZhihuFlowinvestmentCompleteRate,
+
+                                                  VideoReleaseTarget = d.VideoReleaseTarget,
+                                                  CumulativeVideoRelease = d.CumulativeVideoRelease,
+                                                  VideoReleaseCompleteRate = d.VideoReleaseCompleteRate,
+                                                  VideoFlowinvestmentTarget = d.VideoFlowinvestmentTarget,
+                                                  CumulativeVideoFlowinvestment = d.CumulativeVideoFlowinvestment,
+                                                  VideoFlowinvestmentCompleteRate = d.VideoFlowinvestmentCompleteRate,
+
+                                                  TikTokReleaseTarget = d.TikTokReleaseTarget,
+                                                  CumulativeTikTokRelease = d.CumulativeTikTokRelease,
+                                                  TikTokReleaseCompleteRate = d.TikTokReleaseCompleteRate,
+                                                  TikTokFlowinvestmentTarget = d.TikTokFlowinvestmentTarget,
+                                                  CumulativeTikTokFlowinvestment = d.CumulativeTikTokFlowinvestment,
+                                                  TikTokFlowinvestmentCompleteRate = d.TikTokFlowinvestmentCompleteRate,
+
                                                   XiaoHongShuReleaseTarget = d.XiaoHongShuReleaseTarget,
                                                   CumulativeXiaoHongShuRelease = d.CumulativeXiaoHongShuRelease,
                                                   XiaoHongShuReleaseCompleteRate = d.XiaoHongShuReleaseCompleteRate,
+                                                  XiaoHongShuFlowinvestmentTarget = d.XiaoHongShuFlowinvestmentTarget,
+                                                  CumulativeXiaoHongShuFlowinvestment = d.CumulativeXiaoHongShuFlowinvestment,
+                                                  XiaoHongShuFlowinvestmentCompleteRate = d.XiaoHongShuFlowinvestmentCompleteRate,
+
                                                   SinaWeiBoReleaseTarget = d.SinaWeiBoReleaseTarget,
                                                   CumulativeSinaWeiBoRelease = d.CumulativeSinaWeiBoRelease,
                                                   SinaWeiBoReleaseCompleteRate = d.SinaWeiBoReleaseCompleteRate,
+                                                  SinaWeiBoFlowinvestmentTarget = d.SinaWeiBoFlowinvestmentTarget,
+                                                  CumulativeSinaWeiBoFlowinvestment = d.CumulativeSinaWeiBoFlowinvestment,
+                                                  SinaWeiBoFlowinvestmentCompleteRate = d.SinaWeiBoFlowinvestmentCompleteRate,
+
                                                   ReleaseTarget = d.ReleaseTarget,
                                                   CumulativeRelease = d.CumulativeRelease,
                                                   ReleaseCompleteRate = d.ReleaseCompleteRate,
@@ -219,10 +244,22 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.Month = addVo.Month;
                 addDto.MonthlyTargetName = addVo.MonthlyTargetName;
                 addDto.LiveAnchorId = addVo.LiveAnchorId;
+
                 addDto.ZhihuReleaseTarget = addVo.ZhihuReleaseTarget;
+                addDto.ZhihuFlowinvestmentTarget = addVo.ZhihuFlowinvestmentTarget;
+
+                addDto.VideoReleaseTarget = addVo.VideoReleaseTarget;
+                addDto.VideoFlowinvestmentTarget = addVo.VideoFlowinvestmentTarget;
+
                 addDto.TikTokReleaseTarget = addVo.TikTokReleaseTarget;
+                addDto.TikTokFlowinvestmentTarget = addVo.TikTokFlowinvestmentTarget;
+
                 addDto.XiaoHongShuReleaseTarget = addVo.XiaoHongShuReleaseTarget;
+                addDto.XiaoHongShuFlowinvestmentTarget = addVo.XiaoHongShuFlowinvestmentTarget;
+
                 addDto.SinaWeiBoReleaseTarget = addVo.SinaWeiBoReleaseTarget;
+                addDto.SinaWeiBoFlowinvestmentTarget = addVo.SinaWeiBoFlowinvestmentTarget;
+
                 addDto.ReleaseTarget = addVo.ReleaseTarget;
                 addDto.FlowInvestmentTarget = addVo.FlowInvestmentTarget;
                 addDto.LivingRoomFlowInvestmentTarget = addVo.LivingRoomFlowInvestmentTarget;
@@ -281,18 +318,37 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorMonthlyTargetVo.TikTokReleaseTarget = liveAnchorMonthlyTarget.TikTokReleaseTarget;
                 liveAnchorMonthlyTargetVo.CumulativeTikTokRelease = liveAnchorMonthlyTarget.CumulativeTikTokRelease;
                 liveAnchorMonthlyTargetVo.TikTokReleaseCompleteRate = liveAnchorMonthlyTarget.TikTokReleaseCompleteRate;
+                liveAnchorMonthlyTargetVo.TikTokFlowinvestmentTarget = liveAnchorMonthlyTarget.TikTokFlowinvestmentTarget;
+                liveAnchorMonthlyTargetVo.CumulativeTikTokFlowinvestment = liveAnchorMonthlyTarget.CumulativeTikTokFlowinvestment;
+                liveAnchorMonthlyTargetVo.TikTokFlowinvestmentCompleteRate = liveAnchorMonthlyTarget.TikTokFlowinvestmentCompleteRate;
 
                 liveAnchorMonthlyTargetVo.XiaoHongShuReleaseTarget = liveAnchorMonthlyTarget.XiaoHongShuReleaseTarget;
                 liveAnchorMonthlyTargetVo.CumulativeXiaoHongShuRelease = liveAnchorMonthlyTarget.CumulativeXiaoHongShuRelease;
                 liveAnchorMonthlyTargetVo.XiaoHongShuReleaseCompleteRate = liveAnchorMonthlyTarget.XiaoHongShuReleaseCompleteRate;
+                liveAnchorMonthlyTargetVo.XiaoHongShuFlowinvestmentTarget = liveAnchorMonthlyTarget.XiaoHongShuFlowinvestmentTarget;
+                liveAnchorMonthlyTargetVo.CumulativeXiaoHongShuFlowinvestment = liveAnchorMonthlyTarget.CumulativeXiaoHongShuFlowinvestment;
+                liveAnchorMonthlyTargetVo.XiaoHongShuFlowinvestmentCompleteRate = liveAnchorMonthlyTarget.XiaoHongShuFlowinvestmentCompleteRate;
 
                 liveAnchorMonthlyTargetVo.SinaWeiBoReleaseTarget = liveAnchorMonthlyTarget.SinaWeiBoReleaseTarget;
                 liveAnchorMonthlyTargetVo.CumulativeSinaWeiBoRelease = liveAnchorMonthlyTarget.CumulativeSinaWeiBoRelease;
                 liveAnchorMonthlyTargetVo.SinaWeiBoReleaseCompleteRate = liveAnchorMonthlyTarget.SinaWeiBoReleaseCompleteRate;
+                liveAnchorMonthlyTargetVo.SinaWeiBoFlowinvestmentTarget = liveAnchorMonthlyTarget.SinaWeiBoFlowinvestmentTarget;
+                liveAnchorMonthlyTargetVo.CumulativeSinaWeiBoFlowinvestment = liveAnchorMonthlyTarget.CumulativeSinaWeiBoFlowinvestment;
+                liveAnchorMonthlyTargetVo.SinaWeiBoFlowinvestmentCompleteRate = liveAnchorMonthlyTarget.SinaWeiBoFlowinvestmentCompleteRate;
 
                 liveAnchorMonthlyTargetVo.ZhihuReleaseTarget = liveAnchorMonthlyTarget.ZhihuReleaseTarget;
                 liveAnchorMonthlyTargetVo.CumulativeZhihuRelease = liveAnchorMonthlyTarget.CumulativeZhihuRelease;
                 liveAnchorMonthlyTargetVo.ZhihuReleaseCompleteRate = liveAnchorMonthlyTarget.ZhihuReleaseCompleteRate;
+                liveAnchorMonthlyTargetVo.ZhihuFlowinvestmentTarget = liveAnchorMonthlyTarget.ZhihuFlowinvestmentTarget;
+                liveAnchorMonthlyTargetVo.CumulativeZhihuFlowinvestment = liveAnchorMonthlyTarget.CumulativeZhihuFlowinvestment;
+                liveAnchorMonthlyTargetVo.ZhihuFlowinvestmentCompleteRate = liveAnchorMonthlyTarget.ZhihuFlowinvestmentCompleteRate;
+
+                liveAnchorMonthlyTargetVo.VideoReleaseTarget = liveAnchorMonthlyTarget.VideoReleaseTarget;
+                liveAnchorMonthlyTargetVo.CumulativeVideoRelease = liveAnchorMonthlyTarget.CumulativeVideoRelease;
+                liveAnchorMonthlyTargetVo.VideoReleaseCompleteRate = liveAnchorMonthlyTarget.VideoReleaseCompleteRate;
+                liveAnchorMonthlyTargetVo.VideoFlowinvestmentTarget = liveAnchorMonthlyTarget.VideoFlowinvestmentTarget;
+                liveAnchorMonthlyTargetVo.CumulativeVideoFlowinvestment = liveAnchorMonthlyTarget.CumulativeVideoFlowinvestment;
+                liveAnchorMonthlyTargetVo.VideoFlowinvestmentCompleteRate = liveAnchorMonthlyTarget.VideoFlowinvestmentCompleteRate;
 
                 liveAnchorMonthlyTargetVo.ReleaseTarget = liveAnchorMonthlyTarget.ReleaseTarget;
                 liveAnchorMonthlyTargetVo.CumulativeRelease = liveAnchorMonthlyTarget.CumulativeRelease;
@@ -407,10 +463,20 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.Month = updateVo.Month;
                 updateDto.MonthlyTargetName = updateVo.MonthlyTargetName;
                 updateDto.LiveAnchorId = updateVo.LiveAnchorId;
+
+                updateDto.TikTokReleaseTarget = updateVo.TikTokReleaseTarget;
                 updateDto.ZhihuReleaseTarget = updateVo.ZhihuReleaseTarget;
                 updateDto.XiaoHongShuReleaseTarget = updateVo.XiaoHongShuReleaseTarget;
-                updateDto.TikTokReleaseTarget = updateVo.TikTokReleaseTarget;
                 updateDto.SinaWeiBoReleaseTarget = updateVo.SinaWeiBoReleaseTarget;
+                updateDto.VideoReleaseTarget = updateVo.VideoReleaseTarget;
+
+
+                updateDto.TikTokFlowinvestmentTarget = updateVo.TikTokFlowinvestmentTarget;
+                updateDto.ZhihuFlowinvestmentTarget = updateVo.ZhihuFlowinvestmentTarget;
+                updateDto.XiaoHongShuFlowinvestmentTarget = updateVo.XiaoHongShuFlowinvestmentTarget;
+                updateDto.SinaWeiBoFlowinvestmentTarget = updateVo.SinaWeiBoFlowinvestmentTarget;
+                updateDto.VideoFlowinvestmentTarget = updateVo.VideoFlowinvestmentTarget;
+
                 updateDto.ReleaseTarget = updateVo.ReleaseTarget;
                 updateDto.FlowInvestmentTarget = updateVo.FlowInvestmentTarget;
                 updateDto.LivingRoomFlowInvestmentTarget = updateVo.LivingRoomFlowInvestmentTarget;

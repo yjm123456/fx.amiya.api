@@ -1156,6 +1156,152 @@ ADD COLUMN `tiktok_release_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AF
 -----------------------------------------------余建明 2022/09/7 END--------------------------------------------;
 
 
+
+----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+
+
+-----------------------------------------------余建明 2022/09/7 BEGIN--------------------------------------------;
+--商品对应会员价板块数据库表更改
+ALTER TABLE `amiyadb`.`goods_member_rank_price` 
+CHANGE COLUMN `goods_id` `goods_id` VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL ,
+CHANGE COLUMN `member_rank_id` `member_rank_id` TINYINT UNSIGNED NOT NULL ,
+ADD INDEX `fk_price_goods_id_idx` (`goods_id` ASC) VISIBLE,
+ADD INDEX `fk_price_member_rank_idx` (`member_rank_id` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`goods_member_rank_price` 
+ADD CONSTRAINT `fk_price_goods_id`
+  FOREIGN KEY (`goods_id`)
+  REFERENCES `amiyadb`.`tbl_goods_info` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk_price_member_rank`
+  FOREIGN KEY (`member_rank_id`)
+  REFERENCES `amiyadb`.`tbl_member_rank_info` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+  --主播月目标调整投流为decimal类型
+  ALTER TABLE `amiyadb`.`tbl_liveanchor_monthly_target` 
+CHANGE COLUMN `flow_investment_target` `flow_investment_target` DECIMAL(12,2) NOT NULL DEFAULT 0.00 ,
+CHANGE COLUMN `cumulative_flow_investment` `cumulative_flow_investment` DECIMAL(12,2) NOT NULL DEFAULT 0.00 ,
+CHANGE COLUMN `flow_investment_complete_rate` `flow_investment_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT '0.00' ,
+CHANGE COLUMN `livingroomflow_investment_target` `livingroomflow_investment_target` DECIMAL(12,2) NOT NULL DEFAULT 0.00 ,
+CHANGE COLUMN `cumulative_livingroomflow_investment` `cumulative_livingroomflow_investment` DECIMAL(12,2) NOT NULL DEFAULT 0.00 ;
+
+  --主播日目标调整投流为decimal类型
+ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
+CHANGE COLUMN `flow_investment_num` `flow_investment_num` DECIMAL(12,2) NOT NULL DEFAULT 0.00 ,
+CHANGE COLUMN `livingroomflow_investment_num` `livingroomflow_investment_num` DECIMAL(12,2) NOT NULL DEFAULT 0.00 ;
+
+--主播月目标新增视频号发布目标，小红书，知乎抖音等投流费用数据
+ALTER TABLE `amiyadb`.`tbl_liveanchor_monthly_target` 
+ADD COLUMN `zhihu_flow_investment_target` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `zhihu_release_complete_rate`,
+ADD COLUMN `cumulative_zhihu_flow_investment` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `zhihu_flow_investment_target`,
+ADD COLUMN `zhihu_flow_investment_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_zhihu_flow_investment`,
+ADD COLUMN `sina_weibo_flow_investment_target` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `sina_weibo_release_complete_rate`,
+ADD COLUMN `cumulative_sina_weibo_flow_investment` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `sina_weibo_flow_investment_target`,
+ADD COLUMN `sina_weibo_flow_investment_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_sina_weibo_flow_investment`,
+ADD COLUMN `xiaohongshu_flow_investment_target` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `xiaohongshu_release_complete_rate`,
+ADD COLUMN `cumulative_xiaohongshu_flow_investment` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `xiaohongshu_flow_investment_target`,
+ADD COLUMN `xiaohongshu_flow_investment_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_xiaohongshu_flow_investment`,
+ADD COLUMN `tik_tok_flow_investment_target` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `tiktok_release_complete_rate`,
+ADD COLUMN `cumulative_tik_tok_flow_investment` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `tik_tok_flow_investment_target`,
+ADD COLUMN `tik_tok_flow_investment_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_tik_tok_flow_investment`,
+ADD COLUMN `video_release_target` INT NOT NULL DEFAULT 0 AFTER `tik_tok_flow_investment_complete_rate`,
+ADD COLUMN `cumulative_video_release` INT NOT NULL DEFAULT 0 AFTER `video_release_target`,
+ADD COLUMN `video_release_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_video_release`,
+ADD COLUMN `video_flow_investment_target` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `video_release_complete_rate`,
+ADD COLUMN `cumulative_video_flow_investment` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `video_flow_investment_target`,
+ADD COLUMN `video_flow_investment_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_video_flow_investment`;
+
+
+--主播日数据填写新增视频号发布目标，小红书，知乎抖音等投流费用数据
+ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
+ADD COLUMN `sinaweibo_flow_investment_num` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `sinaweibo_send_num`,
+ADD COLUMN `video_send_num` INT NOT NULL DEFAULT 0 AFTER `sinaweibo_flow_investment_num`,
+ADD COLUMN `video_flow_investment_num` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `video_send_num`,
+ADD COLUMN `zhihu_flow_investment_num` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `zhihu_send_num`,
+ADD COLUMN `xiaohongshu_flow_investment_num` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `xiaohongshu_send_num`,
+ADD COLUMN `tiktok_flow_investment_num` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `tiktok_send_num`;
+
+--主播日数据直播前人员新增
+ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
+DROP FOREIGN KEY `fk_operation_empinfo`;
+ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
+ADD COLUMN `sina_weibo_operation_employee_id` INT UNSIGNED NOT NULL DEFAULT 0 AFTER `network_consulting_employee_id`,
+ADD COLUMN `video_operation_employee_id` INT UNSIGNED NOT NULL DEFAULT 0 AFTER `sinaweibo_flow_investment_num`,
+ADD COLUMN `zhihu_operation_employee_id` INT UNSIGNED NOT NULL DEFAULT 0 AFTER `video_flow_investment_num`,
+ADD COLUMN `xiaohongshu_operation_employee_id` INT UNSIGNED NOT NULL DEFAULT 0 AFTER `zhihu_flow_investment_num`,
+CHANGE COLUMN `operation_employee_id` `tik_tok_operation_employee_id` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `xiaohongshu_flow_investment_num`;
+ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
+ADD CONSTRAINT `fk_operation_empinfo`
+  FOREIGN KEY (`tik_tok_operation_employee_id`)
+  REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`);
+
+
+  --直播前人员主外键关系
+  ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
+DROP FOREIGN KEY `fk_operation_empinfo`;
+ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
+ADD INDEX `fk_xiaohongshu__operation_empinfo_idx` (`xiaohongshu_operation_employee_id` ASC) VISIBLE,
+ADD INDEX `fk_zhihu__operation_empinfo_idx` (`zhihu_operation_employee_id` ASC) VISIBLE,
+ADD INDEX `fk_sina_weibo__operation_empinfo_idx` (`sina_weibo_operation_employee_id` ASC) VISIBLE,
+ADD INDEX `fk_video_operation_empinfo_idx` (`video_operation_employee_id` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
+ADD CONSTRAINT `fk_tiktok_operation_empinfo`
+  FOREIGN KEY (`tik_tok_operation_employee_id`)
+  REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`),
+ADD CONSTRAINT `fk_xiaohongshu_operation_empinfo`
+  FOREIGN KEY (`xiaohongshu_operation_employee_id`)
+  REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk_zhihu_operation_empinfo`
+  FOREIGN KEY (`zhihu_operation_employee_id`)
+  REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk_sina_weibo_operation_empinfo`
+  FOREIGN KEY (`sina_weibo_operation_employee_id`)
+  REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk_video_operation_empinfo`
+  FOREIGN KEY (`video_operation_employee_id`)
+  REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
+
+-----------------------------------------------余建明 2022/09/7 END--------------------------------------------;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--小程序更新
+
+
 -----------------------------------------------王健 2022/08/31 BEGIN--------------------------------------------;
 ---tbl_order_info 添加是否使用优惠券
 

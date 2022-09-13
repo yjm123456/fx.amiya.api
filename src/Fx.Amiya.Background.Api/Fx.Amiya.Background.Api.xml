@@ -2941,16 +2941,72 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.BeforeLivingAddAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.BeforeLivingTikTokAddAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokAddLiveAnchorDailyTargetVo)">
             <summary>
-            添加直播前主播日运营目标情况
+            添加直播前抖音主播日运营目标情况
             </summary>
             <param name="addVo"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.BeforeLivingUpdateAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.BeforeLivingTikTokUpdateAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokUpdateLiveAnchorDailyTargetVo)">
             <summary>
-            修改直播前主播日运营目标情况
+            修改直播前抖音主播日运营目标情况
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.BeforeLivingZhihuAddAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuAddLiveAnchorDailyTargetVo)">
+            <summary>
+            添加直播前知乎主播日运营目标情况
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.BeforeLivingZhihuUpdateAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuUpdateLiveAnchorDailyTargetVo)">
+            <summary>
+            修改直播前知乎主播日运营目标情况
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.BeforeLivingSinaWeiBoAddAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoAddLiveAnchorDailyTargetVo)">
+            <summary>
+            添加直播前微博主播日运营目标情况
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.BeforeLivingSinaWeiBoUpdateAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoUpdateLiveAnchorDailyTargetVo)">
+            <summary>
+            修改直播前微博主播日运营目标情况
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.BeforeLivingXiaoHongShuAddAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuAddLiveAnchorDailyTargetVo)">
+            <summary>
+            添加直播前小红书主播日运营目标情况
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.BeforeLivingXiaoHongShuUpdateAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuUpdateLiveAnchorDailyTargetVo)">
+            <summary>
+            修改直播前小红书主播日运营目标情况
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.BeforeLivingVideoAddAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoAddLiveAnchorDailyTargetVo)">
+            <summary>
+            添加直播前视频号主播日运营目标情况
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.BeforeLivingVideoUpdateAsync(Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoUpdateLiveAnchorDailyTargetVo)">
+            <summary>
+            修改直播前视频号主播日运营目标情况
             </summary>
             <param name="updateVo"></param>
             <returns></returns>
@@ -12609,62 +12665,202 @@
             填报日期
             </summary>
         </member>
-        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo">
+        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokAddLiveAnchorDailyTargetVo">
             <summary>
-            直播前新增主播日运营情况数据
+            直播前抖音新增主播日运营情况数据
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokAddLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
             <summary>
             主播月目标关联id
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.OperationEmployeeId">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokAddLiveAnchorDailyTargetVo.TikTokOperationEmployeeId">
             <summary>
             运营人员Id
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.TikTokSendNum">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokAddLiveAnchorDailyTargetVo.TikTokSendNum">
             <summary>
             抖音发布量
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.ZhihuSendNum">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokAddLiveAnchorDailyTargetVo.TikTokFlowInvestmentNum">
             <summary>
-            知乎今日发布量
+            抖音今日投流费用
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.XiaoHongShuSendNum">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokAddLiveAnchorDailyTargetVo.TodaySendNum">
             <summary>
-            小红书今日发布量
+            今日发布量（当前渠道发布量）
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.SinaWeiBoSendNum">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokAddLiveAnchorDailyTargetVo.FlowInvestmentNum">
             <summary>
-            微博今日发布量
+            今日运营渠道投流费用（当前渠道投流费用）
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.TodaySendNum">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokAddLiveAnchorDailyTargetVo.RecordDate">
             <summary>
-            今日发布量
+            填报日期
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.FlowInvestmentNum">
+        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuAddLiveAnchorDailyTargetVo">
             <summary>
-            今日视频号投流量
+            直播前知乎新增主播日运营情况数据
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.CluesNum">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuAddLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
             <summary>
-            今日线索量
+            主播月目标关联id
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.AddFansNum">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuAddLiveAnchorDailyTargetVo.ZhihuOperationEmployeeId">
             <summary>
-            今日涨粉量
+            运营人员Id
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingAddLiveAnchorDailyTargetVo.RecordDate">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuAddLiveAnchorDailyTargetVo.ZhihuSendNum">
+            <summary>
+            知乎发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuAddLiveAnchorDailyTargetVo.ZhihuFlowInvestmentNum">
+            <summary>
+            知乎今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuAddLiveAnchorDailyTargetVo.TodaySendNum">
+            <summary>
+            今日发布量（当前渠道发布量）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuAddLiveAnchorDailyTargetVo.FlowInvestmentNum">
+            <summary>
+            今日运营渠道投流费用（当前渠道投流费用）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuAddLiveAnchorDailyTargetVo.RecordDate">
+            <summary>
+            填报日期
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoAddLiveAnchorDailyTargetVo">
+            <summary>
+            直播前视频号新增主播日运营情况数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoAddLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
+            <summary>
+            主播月目标关联id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoAddLiveAnchorDailyTargetVo.VideoOperationEmployeeId">
+            <summary>
+            运营人员Id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoAddLiveAnchorDailyTargetVo.VideoSendNum">
+            <summary>
+            视频号发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoAddLiveAnchorDailyTargetVo.VideoFlowInvestmentNum">
+            <summary>
+            视频号今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoAddLiveAnchorDailyTargetVo.TodaySendNum">
+            <summary>
+            今日发布量（当前渠道发布量）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoAddLiveAnchorDailyTargetVo.FlowInvestmentNum">
+            <summary>
+            今日运营渠道投流费用（当前渠道投流费用）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoAddLiveAnchorDailyTargetVo.RecordDate">
+            <summary>
+            填报日期
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoAddLiveAnchorDailyTargetVo">
+            <summary>
+            直播前微博新增主播日运营情况数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoAddLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
+            <summary>
+            主播月目标关联id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoAddLiveAnchorDailyTargetVo.SinaWeiBoOperationEmployeeId">
+            <summary>
+            运营人员Id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoAddLiveAnchorDailyTargetVo.SinaWeiBoSendNum">
+            <summary>
+            微博发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoAddLiveAnchorDailyTargetVo.SinaWeiBoFlowInvestmentNum">
+            <summary>
+            微博今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoAddLiveAnchorDailyTargetVo.TodaySendNum">
+            <summary>
+            今日发布量（当前渠道发布量）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoAddLiveAnchorDailyTargetVo.FlowInvestmentNum">
+            <summary>
+            今日运营渠道投流费用（当前渠道投流费用）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoAddLiveAnchorDailyTargetVo.RecordDate">
+            <summary>
+            填报日期
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuAddLiveAnchorDailyTargetVo">
+            <summary>
+            直播前小红书新增主播日运营情况数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuAddLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
+            <summary>
+            主播月目标关联id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuAddLiveAnchorDailyTargetVo.XiaoHongShuOperationEmployeeId">
+            <summary>
+            运营人员Id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuAddLiveAnchorDailyTargetVo.XiaoHongShuSendNum">
+            <summary>
+            小红书发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuAddLiveAnchorDailyTargetVo.XiaoHongShuFlowInvestmentNum">
+            <summary>
+            小红书今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuAddLiveAnchorDailyTargetVo.TodaySendNum">
+            <summary>
+            今日发布量（当前渠道发布量）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuAddLiveAnchorDailyTargetVo.FlowInvestmentNum">
+            <summary>
+            今日运营渠道投流费用（当前渠道投流费用）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuAddLiveAnchorDailyTargetVo.RecordDate">
             <summary>
             填报日期
             </summary>
@@ -12859,11 +13055,6 @@
             填报日期
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.OperationEmployeeId">
-            <summary>
-            运营人员Id
-            </summary>
-        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.LivingTrackingEmployeeId">
             <summary>
             直播中人员id
@@ -12874,9 +13065,24 @@
             网咨人员Id
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.TikTokOperationEmployeeId">
+            <summary>
+            抖音运营人员Id
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.TikTokSendNum">
             <summary>
             抖音今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.TikTokFlowInvestmentNum">
+            <summary>
+            抖音今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.ZhihuOperationEmployeeId">
+            <summary>
+            知乎运营人员Id
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.ZhihuSendNum">
@@ -12884,14 +13090,54 @@
             知乎今日发布量
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.ZhihuFlowInvestmentNum">
+            <summary>
+            知乎今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.XiaoHongShuOperationEmployeeId">
+            <summary>
+            小红书运营人员Id
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.XiaoHongShuSendNum">
             <summary>
             小红书今日发布量
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.XiaoHongShuFlowInvestmentNum">
+            <summary>
+            小红书今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.SinaWeiBoOperationEmployeeId">
+            <summary>
+            微博运营人员Id
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.SinaWeiBoSendNum">
             <summary>
             微博今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.SinaWeiBoFlowInvestmentNum">
+            <summary>
+            微博今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.VideoOperationEmployeeId">
+            <summary>
+            视频号运营人员Id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.VideoSendNum">
+            <summary>
+            视频号今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.VideoFlowInvestmentNum">
+            <summary>
+            视频号今日投流费用
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.TodaySendNum">
@@ -12901,12 +13147,12 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.FlowInvestmentNum">
             <summary>
-            今日视频号投流量
+            今日运营渠道投流费用
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.LivingRoomFlowInvestmentNum">
             <summary>
-            今日直播间投流量
+            今日直播间投流费用
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.CluesNum">
@@ -13074,14 +13320,24 @@
             网咨人员名称
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.TikTokSendNum">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.SinaWeiBoOperationEmployeeName">
             <summary>
-            抖音今日发布量
+            微博运营人员名称
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.ZhihuSendNum">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.SinaWeiBoSendNum">
             <summary>
-            知乎今日发布量
+            微博今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.SinaWeiBoFlowInvestmentNum">
+            <summary>
+            微博今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.XiaoHongShuOperationEmployeeName">
+            <summary>
+            小红书运营人员名称
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.XiaoHongShuSendNum">
@@ -13089,9 +13345,54 @@
             小红书今日发布量
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.SinaWeiBoSendNum">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.XiaoHongShuFlowInvestmentNum">
             <summary>
-            微博今日发布量
+            小红书今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.TikTokOperationEmployeeName">
+            <summary>
+            抖音运营人员名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.TikTokSendNum">
+            <summary>
+            抖音今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.TikTokFlowInvestmentNum">
+            <summary>
+            抖音今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.VideoOperationEmployeeName">
+            <summary>
+            视频号运营人员名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.VideoSendNum">
+            <summary>
+            视频号今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.VideoFlowInvestmentNum">
+            <summary>
+            视频号今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.ZhihuOperationEmployeeName">
+            <summary>
+            知乎运营人员名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.ZhihuSendNum">
+            <summary>
+            知乎今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.ZhihuFlowInvestmentNum">
+            <summary>
+            知乎今日投流费用
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.TodaySendNum">
@@ -13101,12 +13402,12 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.FlowInvestmentNum">
             <summary>
-            今日视频号投流量
+            今日运营渠道投流费用
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.LivingRoomFlowInvestmentNum">
             <summary>
-            今日直播间投流量
+            今日直播间投流费用
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.CluesNum">
@@ -13404,67 +13705,227 @@
             填报日期
             </summary>
         </member>
-        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo">
+        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokUpdateLiveAnchorDailyTargetVo">
             <summary>
-            直播前编辑主播日运营情况数据
+            直播前抖音编辑主播日运营情况数据
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.Id">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokUpdateLiveAnchorDailyTargetVo.Id">
             <summary>
             编号
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokUpdateLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
             <summary>
             主播月目标关联id
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.OperationEmployeeId">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokUpdateLiveAnchorDailyTargetVo.TikTokOperationEmployeeId">
             <summary>
             运营人员Id
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.TikTokSendNum">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokUpdateLiveAnchorDailyTargetVo.TikTokSendNum">
             <summary>
             抖音发布量
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.ZhihuSendNum">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokUpdateLiveAnchorDailyTargetVo.TikTokFlowInvestmentNum">
             <summary>
-            知乎今日发布量
+            抖音今日投流费用
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.XiaoHongShuSendNum">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokUpdateLiveAnchorDailyTargetVo.TodaySendNum">
             <summary>
-            小红书今日发布量
+            今日发布量（所有发布量相加）
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.SinaWeiBoSendNum">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokUpdateLiveAnchorDailyTargetVo.FlowInvestmentNum">
             <summary>
-            微博今日发布量
+            今日运营渠道投流费用（所有投流费用相加）
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.TodaySendNum">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingTikTokUpdateLiveAnchorDailyTargetVo.RecordDate">
             <summary>
-            今日发布量
+            填报日期
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.FlowInvestmentNum">
+        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuUpdateLiveAnchorDailyTargetVo">
             <summary>
-            今日视频号投流量
+            直播前小红书编辑主播日运营情况数据
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.CluesNum">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuUpdateLiveAnchorDailyTargetVo.Id">
             <summary>
-            今日线索量
+            编号
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.AddFansNum">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuUpdateLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
             <summary>
-            今日涨粉量
+            主播月目标关联id
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingUpdateLiveAnchorDailyTargetVo.RecordDate">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuUpdateLiveAnchorDailyTargetVo.XiaoHongShuOperationEmployeeId">
+            <summary>
+            运营人员Id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuUpdateLiveAnchorDailyTargetVo.XiaoHongShuSendNum">
+            <summary>
+            小红书发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuUpdateLiveAnchorDailyTargetVo.XiaoHongShuFlowInvestmentNum">
+            <summary>
+            小红书今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuUpdateLiveAnchorDailyTargetVo.TodaySendNum">
+            <summary>
+            今日发布量（所有发布量相加）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuUpdateLiveAnchorDailyTargetVo.FlowInvestmentNum">
+            <summary>
+            今日运营渠道投流费用（所有投流费用相加）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingXiaoHongShuUpdateLiveAnchorDailyTargetVo.RecordDate">
+            <summary>
+            填报日期
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuUpdateLiveAnchorDailyTargetVo">
+            <summary>
+            直播前知乎编辑主播日运营情况数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuUpdateLiveAnchorDailyTargetVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuUpdateLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
+            <summary>
+            主播月目标关联id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuUpdateLiveAnchorDailyTargetVo.ZhihuOperationEmployeeId">
+            <summary>
+            运营人员Id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuUpdateLiveAnchorDailyTargetVo.ZhihuSendNum">
+            <summary>
+            知乎发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuUpdateLiveAnchorDailyTargetVo.ZhihuFlowInvestmentNum">
+            <summary>
+            知乎今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuUpdateLiveAnchorDailyTargetVo.TodaySendNum">
+            <summary>
+            今日发布量（所有发布量相加）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuUpdateLiveAnchorDailyTargetVo.FlowInvestmentNum">
+            <summary>
+            今日运营渠道投流费用（所有投流费用相加）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingZhihuUpdateLiveAnchorDailyTargetVo.RecordDate">
+            <summary>
+            填报日期
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoUpdateLiveAnchorDailyTargetVo">
+            <summary>
+            直播前微博编辑主播日运营情况数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoUpdateLiveAnchorDailyTargetVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoUpdateLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
+            <summary>
+            主播月目标关联id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoUpdateLiveAnchorDailyTargetVo.SinaWeiBoOperationEmployeeId">
+            <summary>
+            运营人员Id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoUpdateLiveAnchorDailyTargetVo.SinaWeiBoSendNum">
+            <summary>
+            微博发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoUpdateLiveAnchorDailyTargetVo.SinaWeiBoFlowInvestmentNum">
+            <summary>
+            微博今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoUpdateLiveAnchorDailyTargetVo.TodaySendNum">
+            <summary>
+            今日发布量（所有发布量相加）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoUpdateLiveAnchorDailyTargetVo.FlowInvestmentNum">
+            <summary>
+            今日运营渠道投流费用（所有投流费用相加）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingSinaWeiBoUpdateLiveAnchorDailyTargetVo.RecordDate">
+            <summary>
+            填报日期
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoUpdateLiveAnchorDailyTargetVo">
+            <summary>
+            直播前视频号编辑主播日运营情况数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoUpdateLiveAnchorDailyTargetVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoUpdateLiveAnchorDailyTargetVo.LiveanchorMonthlyTargetId">
+            <summary>
+            主播月目标关联id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoUpdateLiveAnchorDailyTargetVo.VideoOperationEmployeeId">
+            <summary>
+            运营人员Id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoUpdateLiveAnchorDailyTargetVo.VideoSendNum">
+            <summary>
+            视频号发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoUpdateLiveAnchorDailyTargetVo.VideoFlowInvestmentNum">
+            <summary>
+            视频号今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoUpdateLiveAnchorDailyTargetVo.TodaySendNum">
+            <summary>
+            今日发布量（所有发布量相加）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoUpdateLiveAnchorDailyTargetVo.FlowInvestmentNum">
+            <summary>
+            今日运营渠道投流费用（所有投流费用相加）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingVideoUpdateLiveAnchorDailyTargetVo.RecordDate">
             <summary>
             填报日期
             </summary>
@@ -13674,9 +14135,29 @@
             知乎发布目标
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.ZhihuFlowinvestmentTarget">
+            <summary>
+            知乎投流费用目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.VideoReleaseTarget">
+            <summary>
+            视频号发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.VideoFlowinvestmentTarget">
+            <summary>
+            视频号投流费用目标
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.TikTokReleaseTarget">
             <summary>
             抖音发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.TikTokFlowinvestmentTarget">
+            <summary>
+            抖音投流费用目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.XiaoHongShuReleaseTarget">
@@ -13684,9 +14165,19 @@
             小红书发布目标
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.XiaoHongShuFlowinvestmentTarget">
+            <summary>
+            小红书投流费用目标
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.SinaWeiBoReleaseTarget">
             <summary>
             微博发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.SinaWeiBoFlowinvestmentTarget">
+            <summary>
+            微博投流费用目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.ReleaseTarget">
@@ -13696,7 +14187,7 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.FlowInvestmentTarget">
             <summary>
-            视频号投流目标
+            月运营渠道投流目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AddLiveAnchorMonthlyTargetVo.LivingRoomFlowInvestmentTarget">
@@ -13869,6 +14360,21 @@
             抖音发布目标完成率
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.TikTokFlowinvestmentTarget">
+            <summary>
+            抖音投流费用目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeTikTokFlowinvestment">
+            <summary>
+            累计抖音投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.TikTokFlowinvestmentCompleteRate">
+            <summary>
+            抖音投流费用完成率
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ZhihuReleaseTarget">
             <summary>
             知乎发布目标
@@ -13882,6 +14388,51 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ZhihuReleaseCompleteRate">
             <summary>
             知乎发布目标完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ZhihuFlowinvestmentTarget">
+            <summary>
+            知乎投流费用目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeZhihuFlowinvestment">
+            <summary>
+            累计知乎投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ZhihuFlowinvestmentCompleteRate">
+            <summary>
+            知乎投流费用完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.VideoReleaseTarget">
+            <summary>
+            视频号发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeVideoRelease">
+            <summary>
+            月累计视频号发布条数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.VideoReleaseCompleteRate">
+            <summary>
+            视频号发布目标完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.VideoFlowinvestmentTarget">
+            <summary>
+            视频号投流费用目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeVideoFlowinvestment">
+            <summary>
+            累计视频号投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.VideoFlowinvestmentCompleteRate">
+            <summary>
+            视频号投流费用完成率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.XiaoHongShuReleaseTarget">
@@ -13899,6 +14450,21 @@
             小红书发布目标完成率
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.XiaoHongShuFlowinvestmentTarget">
+            <summary>
+            小红书投流费用目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeXiaoHongShuFlowinvestment">
+            <summary>
+            累计小红书投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.XiaoHongShuFlowinvestmentCompleteRate">
+            <summary>
+            小红书投流费用完成率
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.SinaWeiBoReleaseTarget">
             <summary>
             微博发布目标
@@ -13912,6 +14478,21 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.SinaWeiBoReleaseCompleteRate">
             <summary>
             微博发布目标完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.SinaWeiBoFlowinvestmentTarget">
+            <summary>
+            微博投流费用目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeSinaWeiBoFlowinvestment">
+            <summary>
+            累计微博投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.SinaWeiBoFlowinvestmentCompleteRate">
+            <summary>
+            微博投流费用完成率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.ReleaseTarget">
@@ -13931,17 +14512,17 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.FlowInvestmentTarget">
             <summary>
-            视频号投流目标
+            运营渠道投流目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.CumulativeFlowInvestment">
             <summary>
-            月累计视频号投流数量
+            月累计运营渠道投流数量
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.FlowInvestmentCompleteRate">
             <summary>
-            视频号投流完成率
+            运营渠道投流完成率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.LiveAnchorMonthlyTargetVo.LivingRoomFlowInvestmentTarget">
@@ -14324,9 +14905,19 @@
             抖音发布目标
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.TikTokFlowinvestmentTarget">
+            <summary>
+            抖音投流费用目标
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.ZhihuReleaseTarget">
             <summary>
             知乎发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.ZhihuFlowinvestmentTarget">
+            <summary>
+            知乎投流费用目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.XiaoHongShuReleaseTarget">
@@ -14334,9 +14925,29 @@
             小红书发布目标
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.XiaoHongShuFlowinvestmentTarget">
+            <summary>
+            小红书投流费用目标
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.SinaWeiBoReleaseTarget">
             <summary>
             微博发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.SinaWeiBoFlowinvestmentTarget">
+            <summary>
+            微博投流费用目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.VideoReleaseTarget">
+            <summary>
+            视频号发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.VideoFlowinvestmentTarget">
+            <summary>
+            视频号投流费用目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.ReleaseTarget">
@@ -14346,7 +14957,7 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.FlowInvestmentTarget">
             <summary>
-            视频号投流目标
+            运营渠道投流目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.UpdateLiveAnchorMonthlyTargetVo.LivingRoomFlowInvestmentTarget">
@@ -16169,6 +16780,11 @@
             主播
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.TikTokOperationEmployeeName">
+            <summary>
+            抖音运营人员
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.TikTokSendNum">
             <summary>
             今日抖音发布量
@@ -16187,6 +16803,31 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.TikTokReleaseCompleteRate">
             <summary>
             抖音发布目标完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.TikTokFlowInvestmentNum">
+            <summary>
+            抖音今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.TikTokFlowinvestmentTarget">
+            <summary>
+            抖音投流费用目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.CumulativeTikTokFlowinvestment">
+            <summary>
+            累计抖音投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.TikTokFlowinvestmentCompleteRate">
+            <summary>
+            抖音投流费用完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.XiaoHongShuOperationEmployeeName">
+            <summary>
+            小红书运营人员
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.XiaoHongShuSendNum">
@@ -16209,6 +16850,31 @@
             小红书发布目标完成率
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.XiaoHongShuFlowInvestmentNum">
+            <summary>
+            小红书今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.XiaoHongShuFlowinvestmentTarget">
+            <summary>
+            小红书投流费用目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.CumulativeXiaoHongShuFlowinvestment">
+            <summary>
+            累计小红书投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.XiaoHongShuFlowinvestmentCompleteRate">
+            <summary>
+            小红书投流费用完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.SinaWeiBoOperationEmployeeName">
+            <summary>
+            微博运营人员
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.SinaWeiBoSendNum">
             <summary>
             今日微博发布量
@@ -16229,6 +16895,76 @@
             微博发布目标完成率
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.SinaWeiBoFlowInvestmentNum">
+            <summary>
+            微博今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.SinaWeiBoFlowinvestmentTarget">
+            <summary>
+            微博投流费用目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.CumulativeSinaWeiBoFlowinvestment">
+            <summary>
+            累计微博投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.SinaWeiBoFlowinvestmentCompleteRate">
+            <summary>
+            微博投流费用完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.VideoOperationEmployeeName">
+            <summary>
+            视频号运营人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.VideoSendNum">
+            <summary>
+            今日视频号发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.VideoReleaseTarget">
+            <summary>
+            月视频号发布目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.VideoCumulativeRelease">
+            <summary>
+            月累计视频号发布条数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.VideoReleaseCompleteRate">
+            <summary>
+            视频号发布目标完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.VideoFlowInvestmentNum">
+            <summary>
+            视频号今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.VideoFlowinvestmentTarget">
+            <summary>
+            视频号投流费用目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.CumulativeVideoFlowinvestment">
+            <summary>
+            累计视频号投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.VideoFlowinvestmentCompleteRate">
+            <summary>
+            视频号投流费用完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ZhihuOperationEmployeeName">
+            <summary>
+            知乎运营人员
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ZhihuSendNum">
             <summary>
             今日知乎发布量
@@ -16247,6 +16983,26 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ZhihuReleaseCompleteRate">
             <summary>
             知乎发布目标完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ZhihuFlowInvestmentNum">
+            <summary>
+            知乎今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ZhihuFlowinvestmentTarget">
+            <summary>
+            知乎投流费用目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.CumulativeZhihuFlowinvestment">
+            <summary>
+            累计知乎投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.ZhihuFlowinvestmentCompleteRate">
+            <summary>
+            知乎投流费用完成率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.TodaySendNum">
@@ -16271,42 +17027,42 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.FlowInvestmentNum">
             <summary>
-            今日视频号投流量
+            今日运营渠道投流费用
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.FlowInvestmentTarget">
             <summary>
-            视频号投流目标
+            运营渠道投流费用目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.CumulativeFlowInvestment">
             <summary>
-            月累计视频号投流数量
+            月累计运营渠道投流费用数
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.FlowInvestmentCompleteRate">
             <summary>
-            视频号投流完成率
+            运营渠道投流费用完成率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.LivingRoomFlowInvestmentNum">
             <summary>
-            今日直播间投流量
+            今日直播间投流费用
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.LivingRoomFlowInvestmentTarget">
             <summary>
-            直播间投流目标
+            直播间投流费用目标
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.LivingRoomCumulativeFlowInvestment">
             <summary>
-            月累计直播间投流数量
+            月累计直播间投流费用数
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.LivingRoomFlowInvestmentCompleteRate">
             <summary>
-            直播间投流完成率
+            直播间投流费用完成率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.CluesNum">
@@ -16657,11 +17413,6 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.MiniVanBadReviewsCompleteRate">
             <summary>
             小黄车差评率
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.OperationEmployeeName">
-            <summary>
-            运营人员
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.LivingTrackingEmployeeName">

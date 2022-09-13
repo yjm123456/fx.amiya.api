@@ -59,6 +59,20 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget
         public decimal TikTokReleaseCompleteRate { get; set; }
 
         /// <summary>
+        /// 抖音投流费用目标
+        /// </summary>
+        public decimal TikTokFlowinvestmentTarget { get; set; }
+        /// <summary>
+        /// 累计抖音投流费用
+        /// </summary>
+
+        public decimal CumulativeTikTokFlowinvestment { get; set; }
+        /// <summary>
+        /// 抖音投流费用完成率
+        /// </summary>
+        public decimal TikTokFlowinvestmentCompleteRate { get; set; }
+
+        /// <summary>
         /// 知乎发布目标
         /// </summary>
         public int ZhihuReleaseTarget { get; set; }
@@ -75,6 +89,49 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget
 
 
         /// <summary>
+        /// 知乎投流费用目标
+        /// </summary>
+        public decimal ZhihuFlowinvestmentTarget { get; set; }
+        /// <summary>
+        /// 累计知乎投流费用
+        /// </summary>
+
+        public decimal CumulativeZhihuFlowinvestment { get; set; }
+        /// <summary>
+        /// 知乎投流费用完成率
+        /// </summary>
+        public decimal ZhihuFlowinvestmentCompleteRate { get; set; }
+
+        /// <summary>
+        /// 视频号发布目标
+        /// </summary>
+        public int VideoReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计视频号发布条数
+        /// </summary>
+        public int CumulativeVideoRelease { get; set; }
+
+        /// <summary>
+        /// 视频号发布目标完成率
+        /// </summary>
+        public decimal VideoReleaseCompleteRate { get; set; }
+        /// <summary>
+        /// 视频号投流费用目标
+        /// </summary>
+        public decimal VideoFlowinvestmentTarget { get; set; }
+        /// <summary>
+        /// 累计视频号投流费用
+        /// </summary>
+
+        public decimal CumulativeVideoFlowinvestment { get; set; }
+        /// <summary>
+        /// 视频号投流费用完成率
+        /// </summary>
+        public decimal VideoFlowinvestmentCompleteRate { get; set; }
+
+
+        /// <summary>
         /// 小红书发布目标
         /// </summary>
         public int XiaoHongShuReleaseTarget { get; set; }
@@ -88,6 +145,19 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget
         /// 小红书发布目标完成率
         /// </summary>
         public decimal XiaoHongShuReleaseCompleteRate { get; set; }
+        /// <summary>
+        /// 小红书投流费用目标
+        /// </summary>
+        public decimal XiaoHongShuFlowinvestmentTarget { get; set; }
+        /// <summary>
+        /// 累计小红书投流费用
+        /// </summary>
+
+        public decimal CumulativeXiaoHongShuFlowinvestment { get; set; }
+        /// <summary>
+        /// 小红书投流费用完成率
+        /// </summary>
+        public decimal XiaoHongShuFlowinvestmentCompleteRate { get; set; }
 
 
         /// <summary>
@@ -104,6 +174,19 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget
         /// 微博发布目标完成率
         /// </summary>
         public decimal SinaWeiBoReleaseCompleteRate { get; set; }
+        /// <summary>
+        /// 微博投流费用目标
+        /// </summary>
+        public decimal SinaWeiBoFlowinvestmentTarget { get; set; }
+        /// <summary>
+        /// 累计微博投流费用
+        /// </summary>
+
+        public decimal CumulativeSinaWeiBoFlowinvestment { get; set; }
+        /// <summary>
+        /// 微博投流费用完成率
+        /// </summary>
+        public decimal SinaWeiBoFlowinvestmentCompleteRate { get; set; }
 
         /// <summary>
         /// 月发布目标
@@ -121,28 +204,28 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget
         public decimal ReleaseCompleteRate { get; set; }
 
         /// <summary>
-        /// 视频号投流目标
+        /// 运营渠道投流目标
         /// </summary>
-        public int FlowInvestmentTarget { get; set; }
+        public decimal FlowInvestmentTarget { get; set; }
 
         /// <summary>
-        /// 月累计视频号投流数量
+        /// 月累计运营渠道投流数量
         /// </summary>
-        public int CumulativeFlowInvestment { get; set; }
+        public decimal CumulativeFlowInvestment { get; set; }
 
         /// <summary>
-        /// 视频号投流完成率
+        /// 运营渠道投流完成率
         /// </summary>
         public decimal FlowInvestmentCompleteRate { get; set; }
         /// <summary>
         /// 直播间投流目标
         /// </summary>
-        public int LivingRoomFlowInvestmentTarget { get; set; }
+        public decimal LivingRoomFlowInvestmentTarget { get; set; }
 
         /// <summary>
         /// 月累计直播间投流数量
         /// </summary>
-        public int LivingRoomCumulativeFlowInvestment { get; set; }
+        public decimal LivingRoomCumulativeFlowInvestment { get; set; }
 
         /// <summary>
         /// 直播间投流完成率

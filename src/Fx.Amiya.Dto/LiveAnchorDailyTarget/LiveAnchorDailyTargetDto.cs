@@ -37,11 +37,6 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
-
-        /// <summary>
-        /// 运营人员Id
-        /// </summary>
-        public int OperationEmployeeId { get; set; }
         /// <summary>
         /// 直播中人员id
         /// </summary>
@@ -57,22 +52,76 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         public int NetWorkConsultingEmployeeId { get; set; }
 
         /// <summary>
-        /// 运营人员名称
-        /// </summary>
-        public string OperationEmployeeName { get; set; }
-
-        /// <summary>
         /// 网咨人员名称
         /// </summary>
         public string NetWorkConsultingEmployeeName { get; set; }
         /// <summary>
-        /// 知乎今日发布量
+        /// 抖音运营人员Id
         /// </summary>
-        public int ZhihuSendNum { get; set; }
+        public int TikTokOperationEmployeeId { get; set; }
+        /// <summary>
+        /// 抖音运营人员名称
+        /// </summary>
+        public string TikTokOperationEmployeeName { get; set; }
+
         /// <summary>
         /// 抖音今日发布量
         /// </summary>
         public int TikTokSendNum { get; set; }
+
+        /// <summary>
+        /// 抖音今日投流费用
+        /// </summary>
+        public decimal TikTokFlowInvestmentNum { get; set; }
+
+        /// <summary>
+        /// 知乎运营人员Id
+        /// </summary>
+        public int ZhihuOperationEmployeeId { get; set; }
+        /// <summary>
+        /// 知乎运营人员名称
+        /// </summary>
+        public string ZhihuOperationEmployeeName { get; set; }
+
+        /// <summary>
+        /// 知乎今日发布量
+        /// </summary>
+        public int ZhihuSendNum { get; set; }
+
+        /// <summary>
+        /// 知乎今日投流费用
+        /// </summary>
+        public decimal ZhihuFlowInvestmentNum { get; set; }
+
+
+        /// <summary>
+        /// 视频号运营人员Id
+        /// </summary>
+        public int VideoOperationEmployeeId { get; set; }
+        /// <summary>
+        /// 视频号运营人员名称
+        /// </summary>
+        public string VideoOperationEmployeeName { get; set; }
+
+        /// <summary>
+        /// 视频号今日发布量
+        /// </summary>
+        public int VideoSendNum { get; set; }
+
+        /// <summary>
+        /// 视频号今日投流费用
+        /// </summary>
+        public decimal VideoFlowInvestmentNum { get; set; }
+
+
+        /// <summary>
+        /// 小红书运营人员Id
+        /// </summary>
+        public int XiaoHongShuOperationEmployeeId { get; set; }
+        /// <summary>
+        /// 小红书运营人员名称
+        /// </summary>
+        public string XiaoHongShuOperationEmployeeName { get; set; }
 
         /// <summary>
         /// 小红书今日发布量
@@ -80,9 +129,28 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         public int XiaoHongShuSendNum { get; set; }
 
         /// <summary>
+        /// 小红书今日投流费用
+        /// </summary>
+        public decimal XiaoHongShuFlowInvestmentNum { get; set; }
+
+        /// <summary>
+        /// 微博运营人员Id
+        /// </summary>
+        public int SinaWeiBoOperationEmployeeId { get; set; }
+        /// <summary>
+        /// 微博运营人员名称
+        /// </summary>
+        public string SinaWeiBoOperationEmployeeName { get; set; }
+
+        /// <summary>
         /// 微博今日发布量
         /// </summary>
         public int SinaWeiBoSendNum { get; set; }
+
+        /// <summary>
+        /// 微博今日投流费用
+        /// </summary>
+        public decimal SinaWeiBoFlowInvestmentNum { get; set; }
 
         /// <summary>
         /// 今日发布量
@@ -90,13 +158,13 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         public int TodaySendNum { get; set; }
 
         /// <summary>
-        /// 今日视频号投流量
+        /// 今日运营渠道投流费用
         /// </summary>
-        public int FlowInvestmentNum { get; set; }
+        public decimal FlowInvestmentNum { get; set; }
         /// <summary>
         /// 今日直播间投流量
         /// </summary>
-        public int LivingRoomFlowInvestmentNum { get; set; }
+        public decimal LivingRoomFlowInvestmentNum { get; set; }
         /// <summary>
         /// 今日线索量
         /// </summary>
