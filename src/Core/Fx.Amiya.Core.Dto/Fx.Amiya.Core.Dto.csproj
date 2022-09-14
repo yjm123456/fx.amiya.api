@@ -4,4 +4,8 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Fx.Amiya.Dto\Fx.Amiya.Dto.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -191,9 +191,8 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.RefundDate = addDto.RefundDate;
                 shoppingCartRegistration.RefundReason = addDto.RefundReason;
                 shoppingCartRegistration.IsBadReview = addDto.IsBadReview;
-                //（todo;）根据内容平台订单修改录单/派单触达
-                shoppingCartRegistration.IsCreateOrder = false;
-                shoppingCartRegistration.IsSendOrder = false;
+                shoppingCartRegistration.IsCreateOrder = addDto.IsCreateOrder;
+                shoppingCartRegistration.IsSendOrder = addDto.IsSendOrder;
                 shoppingCartRegistration.EmergencyLevel = addDto.EmergencyLevel;
                 await dalShoppingCartRegistration.AddAsync(shoppingCartRegistration, true);
 
@@ -365,7 +364,8 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.BadReviewReason = updateDto.BadReviewReason;
                 shoppingCartRegistration.IsBadReview = updateDto.IsBadReview;
                 shoppingCartRegistration.CreateBy = updateDto.CreateBy;
-                //（todo;）根据内容平台订单修改录单/派单触达
+                shoppingCartRegistration.IsCreateOrder = updateDto.IsCreateOrder;
+                shoppingCartRegistration.IsSendOrder = updateDto.IsSendOrder;
                 shoppingCartRegistration.EmergencyLevel = updateDto.EmergencyLevel;
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
                 // unitOfWork.Commit();

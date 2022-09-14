@@ -190,13 +190,14 @@
             <param name="type">类型0全部,1未使用,2已使用,3已过期</param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CustomerConsumptionVoucherController.GetCustomerConsumptionVoucherList(System.Nullable{System.Boolean})">
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CustomerConsumptionVoucherController.GetCustomerConsumptionVoucherList(System.Nullable{System.Boolean},System.String)">
             <summary>
-            获取所有支付抵用券
+            获取当前商品可用的抵用券
             </summary>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
             <param name="isUsed"></param>
+            <param name="goodsId">商品id</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.CustomerConsumptionVoucherController.ReceiveShareVoucher(Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher.ShareConsumptionVoucherVo)">
@@ -310,6 +311,14 @@
             根据商品编号获取同商品组的所有商品列表
             </summary>
             <param name="goodsId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.MiniProgram.Api.Controllers.GoodsController.GetLikeGoodsInfoListAsync(System.Int32,System.Int32)">
+            <summary>
+            首页商品列表
+            </summary>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
             <returns></returns>
         </member>
         <member name="T:Fx.Amiya.MiniProgram.Api.Controllers.GoodsDemandController">
@@ -1626,6 +1635,16 @@
             更新日期
             </summary>
         </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.IsMember">
+            <summary>
+            是否是会员商品
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.GoodsShopCarVo.MemberPrice">
+            <summary>
+            会员价格
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar.UpdateGoodsShopCarVo.Id">
             <summary>
             编号
@@ -1724,6 +1743,11 @@
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForListVo.LimitBuyQuantity">
             <summary>
             限购数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForListVo.isMember">
+            <summary>
+            是否是会员优惠商品
             </summary>
         </member>
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.ThumbPicUrl">
@@ -1839,6 +1863,26 @@
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.VisitCount">
             <summary>
             浏览量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.MemberRankPrice">
+            <summary>
+            会员价格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.IsMember">
+            <summary>
+            是否是会员指定商品
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.MemberName">
+            <summary>
+            会员名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoForSingleVo.CanUseVoucher">
+            <summary>
+            是否可使用抵用券
             </summary>
         </member>
         <member name="P:Fx.Amiya.MiniProgram.Api.Vo.Goods.GoodsInfoSimpleVo.GoodsGroupId">

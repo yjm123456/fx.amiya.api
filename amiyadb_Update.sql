@@ -1157,7 +1157,6 @@ ADD COLUMN `tiktok_release_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AF
 
 
 
-----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
 
@@ -1358,6 +1357,7 @@ CHANGE COLUMN `effective_time` `effective_time` INT(10) NOT NULL DEFAULT 0 AFTER
 
 
 -----------------------------------------------余建明 2022/09/7 BEGIN--------------------------------------------;
+--商品对应会员价数据库表
 ALTER TABLE `amiyadb`.`goods_member_rank_price` 
 CHANGE COLUMN `goods_id` `goods_id` VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL ,
 CHANGE COLUMN `member_rank_id` `member_rank_id` TINYINT UNSIGNED NOT NULL ,

@@ -17,6 +17,7 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         public string AppointmentHospitalName { get; set; }
         public string GoodsName { get; set; }
         public string ConsultingContent { get; set; }
+        public int OrderStatus { get; set; }
         public string OrderStatusText { get; set; }
         public decimal? DepositAmount { get; set; }
         public decimal? DealAmount { get; set; }
