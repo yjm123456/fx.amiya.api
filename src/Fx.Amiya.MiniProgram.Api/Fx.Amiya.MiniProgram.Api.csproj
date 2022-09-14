@@ -12,8 +12,8 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>E:\新建文件夹\fx.amiya.api\src\Fx.Amiya.MiniProgram.Api\Fx.Amiya.MiniProgram.Api.xml</DocumentationFile>
-    <OutputPath>C:\Users\FLH\Desktop\新建文件夹\</OutputPath>
+    <DocumentationFile></DocumentationFile>
+    <OutputPath>C:\Users\Desktop\新建文件夹\</OutputPath>
   </PropertyGroup>
 
 
@@ -42,6 +42,9 @@
 
   <ItemGroup>
     <None Update="Dockerfile">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fx.Amiya.MiniProgram.Api.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
