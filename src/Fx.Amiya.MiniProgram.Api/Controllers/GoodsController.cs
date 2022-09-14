@@ -84,7 +84,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                  MaxShowPrice = d.MaxShowPrice,
                                  MinShowPrice = d.MinShowPrice,
                                  ShowSaleCount = d.ShowSaleCount,
-                                 VisitCount = d.VisitCount
+                                 VisitCount = d.VisitCount,
+                                 isMember=d.IsMember
                              };
             FxPageInfo<GoodsInfoForListVo> goodsPageInfo = new FxPageInfo<GoodsInfoForListVo>();
             goodsPageInfo.TotalCount = q.TotalCount;

@@ -86,8 +86,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     //更新余额
                     await balanceAccountService.UpdateAccountBalanceAsync(rechargeRecord.CustomerId);
 
-                    var balance =await balanceAccountService.GetAccountInfoAsync(rechargeRecord.CustomerId);
-
                     #region 储值奖励积分
 
                     var totalRecharge = await balanceRechargeRecordService.GetAllRechargeAmountAsync(rechargeRecord.CustomerId);

@@ -207,6 +207,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
         {
             var goodsInfos = freeSql.Select<GoodsInfoDbModel>()
                 .Include(e => e.GoodsCategory)
+                .IncludeMany(e=>e.GoodsMemberRankPriceList)
                 .Where(e => string.IsNullOrWhiteSpace(keyword) || e.Name.Contains(keyword) || e.SimpleCode.Contains(keyword) || e.Description.Contains(keyword))
                 .Where(e => exchangeType == null || e.ExchangeType == exchangeType)
                 .Where(e => categoryId == null || e.CategoryId == categoryId)
@@ -244,7 +245,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
                                     MinShowPrice = d.MinShowPrice,
                                     MaxShowPrice = d.MaxShowPrice,
                                     VisitCount = d.VisitCount,
-                                    ShowSaleCount = d.ShowSaleCount
+                                    ShowSaleCount = d.ShowSaleCount,
+                                    IsMember=d.GoodsMemberRankPriceList.Any()                                                                                                 
                                 };
             FxPageInfo<GoodsInfoForListDto> goodsPageInfo = new FxPageInfo<GoodsInfoForListDto>();
             goodsPageInfo.TotalCount = (int)await goodsInfos.CountAsync();
