@@ -1286,6 +1286,7 @@ namespace Fx.Amiya.Service
                                 UnDealReason = d.UnDealReason,
                                 AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确认时间",
                                 AppointmentHospitalName = d.HospitalInfo.Name,
+                                OrderStatus=d.OrderStatus,
                                 OrderStatusText = ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus),
                                 Remark = d.Remark,
                             };

@@ -1037,6 +1037,17 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.ConsumptionVoucherController">
+            <summary>
+            抵用券
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ConsumptionVoucherController.GetMemberRankNameListAsync">
+            <summary>
+            获取抵用券名称列表
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.ContentPlateFormOrderController">
             <summary>
             内容平台订单模块
@@ -4876,7 +4887,7 @@
             小黄车登记板块数据接口
             </summary>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.ShoppingCartRegistrationController.#ctor(Fx.Amiya.IService.IShoppingCartRegistrationService,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ShoppingCartRegistrationController.#ctor(Fx.Amiya.IService.IShoppingCartRegistrationService,Fx.Amiya.IService.IContentPlateFormOrderService,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
             <summary>
             构造函数
             </summary>
@@ -10120,6 +10131,21 @@
             方向说明
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GoodsConsumptionVoucher.GoodsConsumptionVoucherAddVo.ConsumptionVoucherId">
+            <summary>
+            抵用券id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GoodsConsumptionVoucher.GoodsConsumptionVoucherVo.ConsumptionVoucherId">
+            <summary>
+            抵用券id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GoodsConsumptionVoucher.GoodsConsumptionVoucherVo.ConsumptionName">
+            <summary>
+            抵用券名称
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.GoodsInfo.AddTmallGoodsSkuVo">
             <summary>
             SKU信息
@@ -10318,6 +10344,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.GoodsInfo.GoodsInfoAddVo.GoodsDetailHtml">
             <summary>
             商品html内容
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GoodsInfo.GoodsInfoAddVo.AddGoodsMemberRankPrice">
+            <summary>
+            会员价格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GoodsInfo.GoodsInfoAddVo.AddGoodsConsumptionVoucher">
+            <summary>
+            抵用券
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GoodsInfo.GoodsInfoCarouselImageAddVo.PicUrl">
@@ -10545,6 +10581,16 @@
             关联门店价格
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GoodsInfo.GoodsInfoForSingleVo.GoodsMemberRankPrices">
+            <summary>
+            关联会员价格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GoodsInfo.GoodsInfoForSingleVo.GoodsConsumptionVoucher">
+            <summary>
+            关联抵用券
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GoodsInfo.GoodsInfoForSingleVo.GoodsDetailHtml">
             <summary>
             商品html详情
@@ -10680,6 +10726,16 @@
             门店医院价格
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GoodsInfo.GoodsInfoUpdateVo.UpdateGoodsMemberRankPrice">
+            <summary>
+            会员价格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GoodsInfo.GoodsInfoUpdateVo.UpdateGoodsConsumptionVoucher">
+            <summary>
+            抵用券
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GoodsInfo.GoodsInfoUpdateVo.GoodsDetailId">
             <summary>
             商品详情编号
@@ -10718,6 +10774,31 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.GoodsInfo.TmallGoodsSkuVo.AllCount">
             <summary>
             总数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GoodsMemberRankPrice.GoodsMemberRankPriceAddVo.MemberRankId">
+            <summary>
+            会员编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GoodsMemberRankPrice.GoodsMemberRankPriceAddVo.Price">
+            <summary>
+            会员价格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GoodsMemberRankPrice.GoodsMemberRankPriceVo.MemberRankId">
+            <summary>
+            会员卡id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GoodsMemberRankPrice.GoodsMemberRankPriceVo.MemberCardName">
+            <summary>
+            会员卡名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GoodsMemberRankPrice.GoodsMemberRankPriceVo.Price">
+            <summary>
+            会员价格
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalAppointmentQuantity.AddHospitalAppointmentQuantityVo.HospitalId">

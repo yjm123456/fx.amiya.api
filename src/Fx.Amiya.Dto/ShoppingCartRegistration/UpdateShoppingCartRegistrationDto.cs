@@ -25,6 +25,9 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         public bool IsReturnBackPrice { get; set; }
         public string Remark { get; set; }
         public DateTime? RefundDate { get; set; }
+
+        public bool IsCreateOrder { get; set; }
+        public bool IsSendOrder { get; set; }
         public string RefundReason { get; set; }
         public DateTime? BadReviewDate { get; set; }
         public string BadReviewReason { get; set; }
