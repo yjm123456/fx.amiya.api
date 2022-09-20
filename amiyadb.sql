@@ -827,7 +827,8 @@ CREATE TABLE `amiyadb`.`tbl_shooting_and_clip` (
   `clip_empid` INT UNSIGNED NOT NULL,
   `live_anchor_id` INT UNSIGNED NOT NULL,
   `title` VARCHAR(1000) NULL,
-  `create_date` DATETIME NOT NULL;
+  `create_date` DATETIME NOT NULL,
+  `record_date` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_shooting_empid_idx` (`shooting_empid` ASC) VISIBLE,
   INDEX `fk_clip_empid_idx` (`clip_empid` ASC) VISIBLE,

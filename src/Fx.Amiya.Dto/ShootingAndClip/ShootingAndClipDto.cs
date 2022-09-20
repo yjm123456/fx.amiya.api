@@ -29,6 +29,11 @@ namespace Fx.Amiya.Dto.ShootingAndClip
         /// 剪辑人员文本
         /// </summary>
         public string ClipEmpName { get; set; }
+
+        /// <summary>
+        /// 主播平台id
+        /// </summary>
+        public string ContentPlatFormId { get; set; }
         /// <summary>
         /// 主播id
         /// </summary>
