@@ -39,5 +39,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   };
             return ResultData<List<ConsumptionVoucherVo>>.Success().AddData("consumptionVoucherNames", consumptionVoucherInfos.ToList());
         }
+
+        
     }
 }

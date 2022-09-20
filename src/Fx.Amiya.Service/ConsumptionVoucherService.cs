@@ -2,6 +2,7 @@
 using Fx.Amiya.Dto.ConsumptionVoucher;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
+using Fx.Common;
 using jos_sdk_net.Util;
 using System;
 using System.Collections.Generic;
@@ -85,5 +86,6 @@ namespace Fx.Amiya.Service
                 Name=v.Name
             }).ToList();
         }
+        
     }
 }

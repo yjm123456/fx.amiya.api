@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Dto.ConsumptionVoucher;
+using Fx.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,6 @@ namespace Fx.Amiya.IService
         /// 获取抵用券名称列表
         /// </summary>
         /// <returns></returns>
-        Task<List<ConsumptionVoucherDto>> GetConsumptionVoucherkNameListAsync();
+        Task<List<ConsumptionVoucherDto>> GetConsumptionVoucherkNameListAsync();   
     }
 }
