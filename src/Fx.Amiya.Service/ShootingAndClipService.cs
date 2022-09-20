@@ -114,7 +114,7 @@ namespace Fx.Amiya.Service
 
         public async Task<ShootingAndClipDto> GetByIdAsync(string id)
         {
-            var shootingAndClip = await dalShootingAndClip.GetAll().SingleOrDefaultAsync(e => e.Id == id);
+            var shootingAndClip = await dalShootingAndClip.GetAll().Include(x=>x.LiveAnchor).SingleOrDefaultAsync(e => e.Id == id);
             if (shootingAndClip == null)
             {
                 return new ShootingAndClipDto();
@@ -125,6 +125,7 @@ namespace Fx.Amiya.Service
             shootingAndClipDto.ShootingEmpId = shootingAndClip.ShootingEmpId;
             shootingAndClipDto.ClipEmpId = shootingAndClip.ClipEmpId;
             shootingAndClipDto.Title = shootingAndClip.Title;
+            shootingAndClipDto.ContentPlatFormId = shootingAndClip.LiveAnchor.ContentPlateFormId;
             shootingAndClipDto.LiveAnchorId = shootingAndClip.LiveAnchorId;
             shootingAndClipDto.CreateDate = shootingAndClip.CreateDate;
             shootingAndClipDto.RecordDate = shootingAndClip.RecordDate;

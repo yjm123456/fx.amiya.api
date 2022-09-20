@@ -116,6 +116,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 ShootingAndClipVo shootingAndClipVo = new ShootingAndClipVo();
                 shootingAndClipVo.Id = shootingAndClip.Id;
                 shootingAndClipVo.ShootingEmpId = shootingAndClip.ShootingEmpId;
+                shootingAndClipVo.ContentPlatFormId = shootingAndClip.ContentPlatFormId;
                 shootingAndClipVo.ClipEmpId = shootingAndClip.ClipEmpId;
                 shootingAndClipVo.Title = shootingAndClip.Title;
                 shootingAndClipVo.LiveAnchorId = shootingAndClip.LiveAnchorId;
