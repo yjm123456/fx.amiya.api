@@ -50,5 +50,8 @@ namespace Fx.Amiya.DbModels.Model
         public List<SendOrderMessageBoard> SendOrderMessageBoardList { get; set; }
         public List<ContentPlatformOrderSend> ContentPlatformOrderSendList { get; set; }
         public List<ShoppingCartRegistration> ShoppingCartRegistrationList { get; set; }
+
+        public List<ShootingAndClip> ShootingInfo { get; set; }
+        public List<ShootingAndClip> ClipInfo { get; set; }
     }
 }

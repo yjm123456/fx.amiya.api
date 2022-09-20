@@ -4187,6 +4187,28 @@
             <param name="endDate">结束时间</param>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetShootingAndClipReportAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            拍剪组数据报表
+            </summary>
+            <param name="startDate">登记开始时间</param>
+            <param name="endDate">登记结束时间</param>
+            <param name="shootingEmpId">拍摄人员id</param>
+            <param name="clipEmpId">剪辑人员id</param>
+            <param name="liveAnchorId">主播id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetShootingAndClipReportExportAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            拍剪组数据报表导出
+            </summary>
+            <param name="startDate">开始时间</param>
+            <param name="endDate">结束时间</param>
+            <param name="shootingEmpId">派单客服</param>
+            <param name="clipEmpId">归属客服</param>
+            <param name="liveAnchorId">订单状态</param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetOrderCenterDataAsync">
             <summary>
             数据中台接口
@@ -4880,6 +4902,51 @@
             <param name="id">派单信息编号</param>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.ShootingAndClipController">
+            <summary>
+            拍剪组数据 API
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ShootingAndClipController.GetListWithPageAsync(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Int32,System.Int32)">
+            <summary>
+            获取拍剪组数据信息列表（分页）
+            </summary>
+            <param name="shootingEmpId">拍摄人员id</param>
+            <param name="clipEmpId">剪辑人员id</param>
+            <param name="liveAnchorId">主播id</param>
+            <param name="keyWord">标题关键词</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ShootingAndClipController.AddAsync(Fx.Amiya.Background.Api.Vo.ShootingAndClip.AddShootingAndClipVo)">
+            <summary>
+            添加拍剪组数据信息
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ShootingAndClipController.GetByIdAsync(System.String)">
+            <summary>
+            根据拍剪组数据编号获取拍剪组数据信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ShootingAndClipController.UpdateAsync(Fx.Amiya.Background.Api.Vo.ShootingAndClip.UpdateShootingAndClipVo)">
+            <summary>
+            修改拍剪组数据信息
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ShootingAndClipController.DeleteAsync(System.String)">
+            <summary>
+            删除拍剪组数据信息
+            </summary>
+            <param name="id"></param>
             <returns></returns>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.ShoppingCartRegistrationController">
@@ -6404,6 +6471,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.BindCustomerService.UpdateBindCustomerServiceVo.EncryptPhoneList">
             <summary>
             订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherVo.ConsumptionVoiucherId">
+            <summary>
+            抵用券id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherVo.ConsumptionVoucherName">
+            <summary>
+            抵用券名称
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.BindCustomerServiceContentPlatformOrderVo.OrderTypeText">
@@ -18041,6 +18118,36 @@
             派单日期
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ShootingAndClipReportVo.RecordDate">
+            <summary>
+            登记日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ShootingAndClipReportVo.ShootingEmpName">
+            <summary>
+            拍摄人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ShootingAndClipReportVo.ClipEmpName">
+            <summary>
+            剪辑人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ShootingAndClipReportVo.LiveAnchorName">
+            <summary>
+            主播
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ShootingAndClipReportVo.Title">
+            <summary>
+            视频标题
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ShootingAndClipReportVo.CreateDate">
+            <summary>
+            创建日期
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.OrderReport.ShoppingCartRegistrationReportVo">
             <summary>
             小黄车登记列表
@@ -20856,6 +20963,111 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.SendOrderInfo.UpdateSendOrderInfoVo.Content">
             <summary>
             留言内容
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.AddShootingAndClipVo.ShootingEmpId">
+            <summary>
+            拍摄人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.AddShootingAndClipVo.ClipEmpId">
+            <summary>
+            剪辑人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.AddShootingAndClipVo.LiveAnchorId">
+            <summary>
+            主播id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.AddShootingAndClipVo.RecordDate">
+            <summary>
+            登记日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.AddShootingAndClipVo.Title">
+            <summary>
+            视频标题
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.ShootingAndClipVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.ShootingAndClipVo.ShootingEmpId">
+            <summary>
+            拍摄人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.ShootingAndClipVo.ShootingEmpName">
+            <summary>
+            拍摄人员文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.ShootingAndClipVo.ClipEmpId">
+            <summary>
+            剪辑人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.ShootingAndClipVo.ClipEmpName">
+            <summary>
+            剪辑人员文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.ShootingAndClipVo.LiveAnchorId">
+            <summary>
+            主播id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.ShootingAndClipVo.LiveAnchorName">
+            <summary>
+            主播名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.ShootingAndClipVo.CreateDate">
+            <summary>
+            创建日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.ShootingAndClipVo.RecordDate">
+            <summary>
+            登记日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.ShootingAndClipVo.Title">
+            <summary>
+            视频标题
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.UpdateShootingAndClipVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.UpdateShootingAndClipVo.ShootingEmpId">
+            <summary>
+            拍摄人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.UpdateShootingAndClipVo.ClipEmpId">
+            <summary>
+            剪辑人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.UpdateShootingAndClipVo.LiveAnchorId">
+            <summary>
+            主播id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.UpdateShootingAndClipVo.RecordDate">
+            <summary>
+            登记日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.UpdateShootingAndClipVo.Title">
+            <summary>
+            视频标题
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.AddShoppingCartRegistrationVo.RecordDate">

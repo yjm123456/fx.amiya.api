@@ -31,6 +31,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IShoppingCartRegistrationService _shoppingCartRegistrationService;
         private IContentPlatFormOrderDealInfoService _contentPlatFormOrderDealInfoService;
         private IHospitalInfoService _hospitalInfoService;
+        private IShootingAndClipService shootingAndClipService;
         private ICustomerService customerService;
         private IHttpContextAccessor httpContextAccessor;
         private IContentPlateFormOrderService _contentPlatFormOrderService;
@@ -42,6 +43,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             IContentPlatformOrderSendService sendContentPlatFormOrderInfoService,
             IAppointmentService appointmentService,
             IHttpContextAccessor httpContextAccessor,
+            IShootingAndClipService shootingAndClipService,
             ICustomerService customerService,
             IContentPlateFormOrderService contentPlatFormOrderService,
             IHospitalInfoService hospitalInfoService,
@@ -57,6 +59,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             this.httpContextAccessor = httpContextAccessor;
             this.appointmentService = appointmentService;
             _contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
+            this.shootingAndClipService = shootingAndClipService;
             this.customerService = customerService;
             _hospitalInfoService = hospitalInfoService;
             _shoppingCartRegistrationService = shoppingCartRegistrationService;
@@ -348,11 +351,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("ShoppingCartRegistrationReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<ShoppingCartRegistrationReportVo>>> GetShoppingCartRegistrationAsync(DateTime? startDate, DateTime? endDate,int? emergencyLevel, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId)
+        public async Task<ResultData<List<ShoppingCartRegistrationReportVo>>> GetShoppingCartRegistrationAsync(DateTime? startDate, DateTime? endDate, int? emergencyLevel, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(startDate, endDate,emergencyLevel, LiveAnchorId, isCreateOrder, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, true);
+            var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(startDate, endDate, emergencyLevel, LiveAnchorId, isCreateOrder, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, true);
             var res = from d in q
                       select new ShoppingCartRegistrationReportVo()
                       {
@@ -405,7 +408,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 isHidePhone = false;
             }
-            var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(startDate, endDate,emergencyLevel, LiveAnchorId, isCreateOrder, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, isHidePhone);
+            var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(startDate, endDate, emergencyLevel, LiveAnchorId, isCreateOrder, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, isHidePhone);
             var res = from d in q
                       select new ShoppingCartRegistrationReportVo()
                       {
@@ -458,7 +461,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           OrderTypeText = d.OrderTypeText,
                           ContentPlatformName = d.ContentPlatformName,
                           LiveAnchorName = d.LiveAnchorName,
-                          BelongMonth = d.BelongMonth == 0 ?"当月":"次月",
+                          BelongMonth = d.BelongMonth == 0 ? "当月" : "次月",
                           AddOrderPrice = d.AddOrderPrice,
                           LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                           IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
@@ -600,7 +603,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 isHidePhone = false;
             }
             int employeeId = Convert.ToInt32(employee.Id);
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, sendStartDate, sendEndDate,minAddOrderPrice,maxAddOrderPrice, consultationType, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, isHidePhone);
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, sendStartDate, sendEndDate, minAddOrderPrice, maxAddOrderPrice, consultationType, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, isHidePhone);
 
             var contentPlatformOrders = from d in result
                                         select new ContentPlatFormOrderDealInfoReportVo
@@ -700,7 +703,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             IsDeal = d.IsDeal == true ? "是" : "否",
                                             IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
                                             IsAcompanying = d.IsAcompanying == true ? "是" : "否",
-                                           /* CommissionRatio = d.CommissionRatio,*/
+                                            /* CommissionRatio = d.CommissionRatio,*/
                                             AddOrderPrice = d.AddOrderPrice,
                                             Phone = d.Phone,
                                             IsToHospital = d.IsToHospital == true ? "是" : "否",
@@ -2082,6 +2085,83 @@ namespace Fx.Amiya.Background.Api.Controllers
             return result;
         }
 
+
+
+        /// <summary>
+        /// 拍剪组数据报表
+        /// </summary>
+        /// <param name="startDate">登记开始时间</param>
+        /// <param name="endDate">登记结束时间</param>
+        /// <param name="shootingEmpId">拍摄人员id</param>
+        /// <param name="clipEmpId">剪辑人员id</param>
+        /// <param name="liveAnchorId">主播id</param>
+        /// <returns></returns>
+        [HttpGet("shootingAndClipReport")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<List<ShootingAndClipReportVo>>> GetShootingAndClipReportAsync(DateTime? startDate, DateTime? endDate, int? shootingEmpId, int? clipEmpId, int? liveAnchorId)
+        {
+            if (!startDate.HasValue && !endDate.HasValue)
+            { throw new Exception("请选择时间进行查询"); }
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                if ((endDate.Value - startDate.Value).TotalDays > 31)
+                {
+                    throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
+                }
+            }
+            var q = await shootingAndClipService.GetReportListAsync(startDate, endDate, shootingEmpId, clipEmpId, liveAnchorId);
+            var res = from d in q
+                      select new ShootingAndClipReportVo()
+                      {
+                          Title = d.Title,
+                          ShootingEmpName = d.ShootingEmpName,
+                          ClipEmpName = d.ClipEmpName,
+                          LiveAnchorName = d.LiveAnchorName,
+                          CreateDate = d.CreateDate,
+                          RecordDate = d.RecordDate,
+                      };
+            return ResultData<List<ShootingAndClipReportVo>>.Success().AddData("customerSendOrderReport", res.ToList());
+        }
+
+
+        /// <summary>
+        /// 拍剪组数据报表导出
+        /// </summary>
+        /// <param name="startDate">开始时间</param>
+        /// <param name="endDate">结束时间</param>
+        /// <param name="shootingEmpId">派单客服</param>
+        /// <param name="clipEmpId">归属客服</param>
+        /// <param name="liveAnchorId">订单状态</param>
+        /// <returns></returns>
+        [HttpGet("shootingAndClipReportExport")]
+        [FxInternalAuthorize]
+        public async Task<FileStreamResult> GetShootingAndClipReportExportAsync(DateTime? startDate, DateTime? endDate, int? shootingEmpId, int? clipEmpId, int? liveAnchorId)
+        {
+            if (!startDate.HasValue && !endDate.HasValue)
+            { throw new Exception("请选择时间进行查询"); }
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                if ((endDate.Value - startDate.Value).TotalDays > 31)
+                {
+                    throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
+                }
+            }
+            var q = await shootingAndClipService.GetReportListAsync(startDate, endDate, shootingEmpId, clipEmpId, liveAnchorId);
+            var res = from d in q
+                      select new ShootingAndClipReportVo()
+                      {
+                          Title = d.Title,
+                          ShootingEmpName = d.ShootingEmpName,
+                          ClipEmpName = d.ClipEmpName,
+                          LiveAnchorName = d.LiveAnchorName,
+                          CreateDate = d.CreateDate,
+                          RecordDate = d.RecordDate,
+                      };
+            var exportSendOrder = res.ToList();
+            var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
+            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "拍剪组数据报表.xls");
+            return result;
+        }
 
 
 

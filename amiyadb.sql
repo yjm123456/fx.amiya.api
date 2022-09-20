@@ -819,6 +819,39 @@ CREATE TABLE `amiyadb`.`goods_member_rank_price` (
 -----------------------------------------------王健 2022/09/09 END--------------------------------------------;
 
 
+-----------------------------------------------余建明 2022/09/20 BEGIN--------------------------------------------;
+--拍剪组工作数据填写
+CREATE TABLE `amiyadb`.`tbl_shooting_and_clip` (
+  `id` VARCHAR(50) NOT NULL,
+  `shooting_empid` INT UNSIGNED NOT NULL,
+  `clip_empid` INT UNSIGNED NOT NULL,
+  `live_anchor_id` INT UNSIGNED NOT NULL,
+  `title` VARCHAR(1000) NULL,
+  `create_date` DATETIME NOT NULL;
+  PRIMARY KEY (`id`),
+  INDEX `fk_shooting_empid_idx` (`shooting_empid` ASC) VISIBLE,
+  INDEX `fk_clip_empid_idx` (`clip_empid` ASC) VISIBLE,
+  INDEX `fk_live_anchor_idx` (`live_anchor_id` ASC) VISIBLE,
+  CONSTRAINT `fk_shooting_empid`
+    FOREIGN KEY (`shooting_empid`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_clip_empid`
+    FOREIGN KEY (`clip_empid`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_shootingandclip_live_anchor`
+    FOREIGN KEY (`live_anchor_id`)
+    REFERENCES `amiyadb`.`tbl_live_anchor` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+-----------------------------------------------余建明 2022/09/20 END--------------------------------------------;
+
+ 
+
+
 
 
 
