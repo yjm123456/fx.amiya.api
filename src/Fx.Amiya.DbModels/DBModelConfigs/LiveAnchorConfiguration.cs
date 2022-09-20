@@ -19,6 +19,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.ContentPlateFormId).HasColumnName("content_plateform_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(t => t.LiveAnchorBaseId).HasColumnName("live_anchor_base_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(t => t.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();
+
         }
     }
 }

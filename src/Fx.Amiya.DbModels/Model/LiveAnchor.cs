@@ -24,5 +24,7 @@ namespace Fx.Amiya.DbModels.Model
         public List<LiveAnchorWeChatInfo> LiveAnchorWeChatInfo { get; set; }
 
         public List<ShoppingCartRegistration> ShoppingCartRegistrationList { get; set; }
+
+        public List<ShootingAndClip> ShootingAndClips { get; set; }
     }
 }
