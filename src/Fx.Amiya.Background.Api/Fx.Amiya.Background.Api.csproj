@@ -8,13 +8,13 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>F:\net\Fx.Amiya\src\Fx.Amiya.Background.Api\Fx.Amiya.Background.Api.xml</DocumentationFile>
+    <DocumentationFile>C:\AmiyaDev\fx.amiya.api\src\Fx.Amiya.Background.Api\Fx.Amiya.Background.Api.xml</DocumentationFile>
     <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile></DocumentationFile>
-    <OutputPath>C:\Users\FLH\Desktop\api生成注释\微信后台api\</OutputPath>
+    <OutputPath>C:\Users\1\Desktop\新建文件夹\api生成注释\微信后台api\</OutputPath>
   </PropertyGroup>
 
 
