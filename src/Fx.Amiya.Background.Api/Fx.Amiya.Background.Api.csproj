@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\AmiyaDev\fx.amiya.api\src\Fx.Amiya.Background.Api\Fx.Amiya.Background.Api.xml</DocumentationFile>
+    <DocumentationFile>E:\新建文件夹\fx.amiya.api\src\Fx.Amiya.Background.Api\Fx.Amiya.Background.Api.xml</DocumentationFile>
     <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
 
