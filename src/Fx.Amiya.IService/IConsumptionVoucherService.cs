@@ -19,13 +19,34 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 根据抵用券编码获取抵用券信息
         /// </summary>
-        /// <param name="code"></param>
+        /// <param name="code">抵用券编码</param>
         /// <returns></returns>
         Task<ConsumptionVoucherDto> GetConsumptionVoucherByCodeAsync(string code);
         /// <summary>
         /// 获取抵用券名称列表
         /// </summary>
         /// <returns></returns>
-        Task<List<ConsumptionVoucherDto>> GetConsumptionVoucherkNameListAsync();   
+        Task<List<ConsumptionVoucherDto>> GetConsumptionVoucherkNameListAsync();
+        /// <summary>
+        /// 获取抵用券类型列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<ConsumptionVoucherTypeDto>> GetConsumptionVoucherTypeListAsync();
+        /// <summary>
+        /// 获取抵用券信息列表
+        /// </summary>
+        /// <returns></returns>
+        Task<FxPageInfo<ConsumptionVoucherDto>> GetConsumptionListAsync(int pageNum,int pageSize);
+        /// <summary>
+        /// 根据抵用券id获取抵用券信息
+        /// </summary>
+        /// <returns></returns>
+        Task<ConsumptionVoucherDto> GetConsumptionVoucherInfoByIdAsync(string voucherId);
+        /// <summary>
+        /// 修改抵用券信息
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <returns></returns>
+        Task UpdateConsumptionVoucherAsync(UpdateConsumptionVoucherDto updateDto);
     }
 }

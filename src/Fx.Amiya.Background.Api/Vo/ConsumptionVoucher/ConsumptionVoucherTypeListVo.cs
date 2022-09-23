@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 namespace Fx.Amiya.Background.Api.Vo.ConsumptionVoucher
 {
     /// <summary>
-    /// 抵用券名称列表
+    /// 抵用券类型列表
     /// </summary>
-    public class ConsumptionVoucherVo
+    public class ConsumptionVoucherTypeListVo
     {
         /// <summary>
-        /// 抵用券id
+        /// 类型
         /// </summary>
-        public string ConsumptionVoiucherId { get; set; }
+        public int Type { get; set; }
         /// <summary>
-        /// 抵用券名称
+        /// 类型名称
         /// </summary>
-        public string ConsumptionVoucherName { get; set; }
+        public string TypeText { get; set; }
     }
 }

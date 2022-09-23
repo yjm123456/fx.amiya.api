@@ -56,4 +56,17 @@ namespace Fx.Amiya.Core.Dto.Goods
         Store
        
     }
+    /// <summary>
+    /// 抵用券类型
+    /// </summary>
+    public enum ConsumptionVoucherType { 
+        /// <summary>
+        /// 现金抵用券
+        /// </summary>
+        Material,
+        /// <summary>
+        /// 虚拟商品抵用券(如面诊卡抵用券)
+        /// </summary>
+        Virtual
+    }
 }

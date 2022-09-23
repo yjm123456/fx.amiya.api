@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.DbModels.Model
+namespace Fx.Amiya.Background.Api.Vo.ConsumptionVoucher
 {
-    /// <summary>
-    /// 抵用券
-    /// </summary>
-    public class ConsumptionVoucher:BaseDbModel
+    public class AddConsumptionVoucherVo
     {
         /// <summary>
         /// 抵用券名称
@@ -32,17 +28,9 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public bool IsShare { get; set; }
         /// <summary>
-        /// 有效期时长(天)
-        /// </summary>
-        public int EffectiveTime { get; set; }
-        /// <summary>
-        /// 抵用券类型0:实体商品折扣,1:面诊卡抵用券
+        /// 抵用券类型0:实体商品抵扣,1:虚拟商品抵扣(如面诊卡)
         /// </summary>
         public int Type { get; set; }
-        /// <summary>
-        /// 过期时间
-        /// </summary>
-        public DateTime? ExpireDate { get; set; }
         /// <summary>
         /// 当前抵用券是否有效
         /// </summary>

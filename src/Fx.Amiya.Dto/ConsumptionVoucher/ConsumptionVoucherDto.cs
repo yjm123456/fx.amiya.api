@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Dto.ConsumptionVoucher
 {
-    public class ConsumptionVoucherDto
+    public class ConsumptionVoucherDto:BaseDto
     {
-        public string Id { get; set; }
         /// <summary>
         /// 抵用券名称
         /// </summary>
@@ -46,16 +45,12 @@ namespace Fx.Amiya.Dto.ConsumptionVoucher
         /// </summary>
         public bool IsValid { get; set; }
         /// <summary>
-        /// 创建时间
-        /// </summary>
-        public DateTime CreateDate { get; set; }
-        /// <summary>
-        /// 修改时间
-        /// </summary>
-        public DateTime? UpdateTime { get; set; }
-        /// <summary>
         /// 抵用券编码
         /// </summary>
         public string ConsumptionVoucherCode { get; set; }
+        /// <summary>
+        /// 抵用券类型名称
+        /// </summary>
+        public string TypeText { get; set; }
     }
 }

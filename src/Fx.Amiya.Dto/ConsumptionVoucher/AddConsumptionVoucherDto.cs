@@ -52,6 +52,10 @@ namespace Fx.Amiya.Dto.ConsumptionVoucher
         /// 修改时间
         /// </summary>
         public DateTime? UpdateTime { get; set; }
-       
+        /// <summary>
+        /// 抵用券编码
+        /// </summary>
+        public string ConsumptionVoucherCode { get; set; }
+
     }
 }

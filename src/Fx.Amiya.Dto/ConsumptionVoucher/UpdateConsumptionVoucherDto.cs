@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.DbModels.Model
+namespace Fx.Amiya.Dto.ConsumptionVoucher
 {
-    /// <summary>
-    /// 抵用券
-    /// </summary>
-    public class ConsumptionVoucher:BaseDbModel
+    public class UpdateConsumptionVoucherDto
     {
+        public string  Id { get; set; }
         /// <summary>
         /// 抵用券名称
         /// </summary>
@@ -32,17 +30,9 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public bool IsShare { get; set; }
         /// <summary>
-        /// 有效期时长(天)
-        /// </summary>
-        public int EffectiveTime { get; set; }
-        /// <summary>
         /// 抵用券类型0:实体商品折扣,1:面诊卡抵用券
         /// </summary>
         public int Type { get; set; }
-        /// <summary>
-        /// 过期时间
-        /// </summary>
-        public DateTime? ExpireDate { get; set; }
         /// <summary>
         /// 当前抵用券是否有效
         /// </summary>
@@ -51,5 +41,9 @@ namespace Fx.Amiya.DbModels.Model
         /// 抵用券编码
         /// </summary>
         public string ConsumptionVoucherCode { get; set; }
+        /// <summary>
+        /// 修改时间
+        /// </summary>
+        public DateTime? UpdateTime { get; set; }
     }
 }

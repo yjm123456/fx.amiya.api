@@ -9,9 +9,8 @@ namespace Fx.Amiya.DbModels.Model
     /// <summary>
     /// 用户抵用券
     /// </summary>
-    public class CustomerConsumptionVoucher
+    public class CustomerConsumptionVoucher:BaseDbModel
     {
-        public string Id { get; set; }
         /// <summary>
         /// 用户id
         /// </summary>
@@ -32,10 +31,6 @@ namespace Fx.Amiya.DbModels.Model
         /// 是否过期
         /// </summary>
         public bool IsExpire { get; set; }
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        public DateTime CreateDate { get; set; }
         /// <summary>
         /// 使用时间
         /// </summary>

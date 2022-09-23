@@ -403,7 +403,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 {
                     amiyaOrder.IntegrationQuantity = goodsInfo.IntegrationQuantity * item.Quantity;
                 }
-                if (orderAdd.ExchangeType==(int)ExchangeType.BalancePay) {
+                if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
+                {
                     IsExistBalancePay = true;
                 }
                 if (goodsInfo.IsMaterial == true)
@@ -459,7 +460,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         amiyaOrder.DeductMoney = voucher.DeductMoney;
                         amiyaOrder.ActualPayment = amiyaOrder.ActualPayment - voucher.DeductMoney;
                         //抵用券抵扣后付款小于0,直接赋值0
-                        if (amiyaOrder.ActualPayment < 0) {
+                        if (amiyaOrder.ActualPayment < 0)
+                        {
                             amiyaOrder.ActualPayment = 0;
                         }
                         UpdateCustomerConsumptionVoucherDto update = new UpdateCustomerConsumptionVoucherDto
@@ -512,7 +514,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             string tradeId = await orderService.AddAmiyaOrderAsync(orderTradeAdd);
             OrderAddResultVo orderAddResult = new OrderAddResultVo();
             orderAddResult.TradeId = tradeId;
-            if (IsExistThirdPartPay == true&& !IsExistBalancePay)
+            if (IsExistThirdPartPay == true && !IsExistBalancePay)
             {
 
                 //三方支付
@@ -997,7 +999,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 await goodsInfoService.AddGoodsInventoryQuantityAsync(item.GoodsId, (int)item.Quantity);
 
                 //退还抵用券
-                if (item.IsUseCoupon) {
+                if (item.IsUseCoupon)
+                {
                     UpdateCustomerConsumptionVoucherDto updateCustomerConsumptionVoucherDto = new UpdateCustomerConsumptionVoucherDto();
                     updateCustomerConsumptionVoucherDto.CustomerVoucherId = item.CouponId;
                     updateCustomerConsumptionVoucherDto.IsUsed = false;
@@ -1057,7 +1060,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         Date = DateTime.Now,
                         CustomerId = customerId,
                         ExpiredDate = DateTime.Now.AddMonths(12),
-                        OrderId=item.Id
+                        OrderId = item.Id
                     };
                     await integrationAccountService.AddByConsumptionAsync(consumptionIntegrationDto);
                 }
@@ -1068,16 +1071,17 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             #region 成长值奖励
             foreach (var item in orderTrade.OrderInfoList)
             {
-                if (item.ExchangeType!=0&&item.ExchangeType!=null) {
+                if (item.ExchangeType != 0 && item.ExchangeType != null)
+                {
                     if (item.ActualPayment.HasValue && item.ActualPayment.Value >= 1)
                     {
                         await taskService.CompleteShopOrderTaskAsync(customerId, item.ActualPayment.Value, item.Id);
                     }
-                }               
+                }
             }
             #endregion
 
-            
+
             return ResultData.Success();
         }
 

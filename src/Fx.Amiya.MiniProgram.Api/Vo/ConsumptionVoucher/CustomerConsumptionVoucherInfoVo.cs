@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher
 {
-    public class CustomerConsumptionVoucherInfoVo
+    public class CustomerConsumptionVoucherInfoVo:BaseVo
     {
-        public string Id { get; set; }
         /// <summary>
         /// 用户id
         /// </summary>
@@ -45,10 +44,6 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher
         /// 是否过期
         /// </summary>
         public bool IsExpire { get; set; }
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        public DateTime CreateDate { get; set; }
         /// <summary>
         /// 使用时间
         /// </summary>
