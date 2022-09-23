@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.ShootingAndClip;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.ShootingAndClip;
 using Fx.Common;
 using Fx.Infrastructure;
 using System;
@@ -59,5 +60,7 @@ namespace Fx.Amiya.IService
         /// <param name="id"></param>
         /// <returns></returns>
         Task DeleteAsync(string id);
+
+        List<BaseIdAndNameDto> GetVideoTypeTextList();
     }
 }

@@ -2114,6 +2114,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                       select new ShootingAndClipReportVo()
                       {
                           Title = d.Title,
+                          VideoType=d.VideoTypeText,
                           ShootingEmpName = d.ShootingEmpName,
                           ClipEmpName = d.ClipEmpName,
                           LiveAnchorName = d.LiveAnchorName,
@@ -2152,6 +2153,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                       {
                           Title = d.Title,
                           ShootingEmpName = d.ShootingEmpName,
+                          VideoType = d.VideoTypeText,
                           ClipEmpName = d.ClipEmpName,
                           LiveAnchorName = d.LiveAnchorName,
                           CreateDate = d.CreateDate,

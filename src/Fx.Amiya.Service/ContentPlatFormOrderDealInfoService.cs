@@ -75,10 +75,18 @@ namespace Fx.Amiya.Service
                 var dealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(z => z.ContentPlatformOrderSendList) select d;
 
                 var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
-                if (employee.IsCustomerService)//employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector
+                if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
                 {
                     dealInfo = from d in dealInfo
-                               where d.CreateBy == employeeId
+                               where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0
+                               select d;
+                }
+                //财务录入数据只有管理员研发与财务能看到
+                if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16)
+                {
+
+                    dealInfo = from d in dealInfo
+                               where d.CreateBy != 61 && d.CreateBy != 80
                                select d;
                 }
                 if (startDate != null && endDate != null)
@@ -216,10 +224,19 @@ namespace Fx.Amiya.Service
                 var dealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder) select d;
 
                 var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
-                if (employee.IsCustomerService)//employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector  
+
+                if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
                 {
                     dealInfo = from d in dealInfo
-                               where d.CreateBy == employeeId
+                               where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0
+                               select d;
+                }
+                //财务录入数据只有管理员研发与财务能看到
+                if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16)
+                {
+
+                    dealInfo = from d in dealInfo
+                               where d.CreateBy != 61 && d.CreateBy != 80
                                select d;
                 }
                 if (startDate != null && endDate != null)

@@ -31,5 +31,9 @@ namespace Fx.Amiya.Background.Api.Vo.ShootingAndClip
         /// 视频标题
         /// </summary>
         public string Title { get; set; }
+        /// <summary>
+        /// 视频类型
+        /// </summary>
+        public int VideoType { get; set; }
     }
 }

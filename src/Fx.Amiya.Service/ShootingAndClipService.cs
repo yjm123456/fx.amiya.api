@@ -11,6 +11,7 @@ using System.Linq;
 using Fx.Amiya.DbModels.Model;
 using Fx.Common;
 using Fx.Amiya.Core.Interfaces.GoodsHospitalPrice;
+using Fx.Amiya.Dto;
 
 namespace Fx.Amiya.Service
 {
@@ -51,6 +52,8 @@ namespace Fx.Amiya.Service
                                       LiveAnchorName = d.LiveAnchor.Name,
                                       CreateDate = d.CreateDate,
                                       RecordDate = d.RecordDate,
+                                      VideoType = d.VideoType,
+                                      VideoTypeText = ServiceClass.GerShootingAndClipVideoTypeText(d.VideoType)
                                   };
             FxPageInfo<ShootingAndClipDto> cityPageInfo = new FxPageInfo<ShootingAndClipDto>();
             cityPageInfo.TotalCount = await shootingAndClip.CountAsync();
@@ -73,7 +76,7 @@ namespace Fx.Amiya.Service
                                   where (!shootingEmpId.HasValue || d.ShootingEmpId == shootingEmpId.Value)
                                   where (!clipEmpId.HasValue || d.ClipEmpId == clipEmpId.Value)
                                   where (!liveAnchorId.HasValue || d.LiveAnchorId == liveAnchorId.Value)
-                                  where (d.RecordDate >= startDate && d.RecordDate < endDate)
+                                  where (d.RecordDate >= startDate && d.RecordDate < endDate.Value.AddDays(1).Date)
                                   select new ShootingAndClipDto
                                   {
                                       Id = d.Id,
@@ -86,6 +89,7 @@ namespace Fx.Amiya.Service
                                       LiveAnchorName = d.LiveAnchor.Name,
                                       CreateDate = d.CreateDate,
                                       RecordDate = d.RecordDate,
+                                      VideoTypeText = ServiceClass.GerShootingAndClipVideoTypeText(d.VideoType)
                                   };
             List<ShootingAndClipDto> shootingAndClipDto = new List<ShootingAndClipDto>();
             shootingAndClipDto = await shootingAndClip.OrderBy(z => z.RecordDate).ToListAsync();
@@ -106,6 +110,7 @@ namespace Fx.Amiya.Service
             shootingAndClip.ShootingEmpId = addDto.ShootingEmpId;
             shootingAndClip.ClipEmpId = addDto.ClipEmpId;
             shootingAndClip.LiveAnchorId = addDto.LiveAnchorId;
+            shootingAndClip.VideoType = addDto.VideoType;
             shootingAndClip.Title = addDto.Title;
             shootingAndClip.RecordDate = addDto.RecordDate;
             shootingAndClip.CreateDate = DateTime.Now;
@@ -114,7 +119,7 @@ namespace Fx.Amiya.Service
 
         public async Task<ShootingAndClipDto> GetByIdAsync(string id)
         {
-            var shootingAndClip = await dalShootingAndClip.GetAll().Include(x=>x.LiveAnchor).SingleOrDefaultAsync(e => e.Id == id);
+            var shootingAndClip = await dalShootingAndClip.GetAll().Include(x => x.LiveAnchor).SingleOrDefaultAsync(e => e.Id == id);
             if (shootingAndClip == null)
             {
                 return new ShootingAndClipDto();
@@ -128,6 +133,7 @@ namespace Fx.Amiya.Service
             shootingAndClipDto.ContentPlatFormId = shootingAndClip.LiveAnchor.ContentPlateFormId;
             shootingAndClipDto.LiveAnchorId = shootingAndClip.LiveAnchorId;
             shootingAndClipDto.CreateDate = shootingAndClip.CreateDate;
+            shootingAndClipDto.VideoType = shootingAndClip.VideoType;
             shootingAndClipDto.RecordDate = shootingAndClip.RecordDate;
 
             return shootingAndClipDto;
@@ -149,6 +155,7 @@ namespace Fx.Amiya.Service
             shootingAndClip.ClipEmpId = updateDto.ClipEmpId;
             shootingAndClip.LiveAnchorId = updateDto.LiveAnchorId;
             shootingAndClip.Title = updateDto.Title;
+            shootingAndClip.VideoType = updateDto.VideoType;
             shootingAndClip.RecordDate = updateDto.RecordDate;
 
             await dalShootingAndClip.UpdateAsync(shootingAndClip, true);
@@ -189,8 +196,23 @@ namespace Fx.Amiya.Service
             shootingAndClipDto.LiveAnchorId = shootingAndClip.LiveAnchorId;
             shootingAndClipDto.CreateDate = shootingAndClip.CreateDate;
             shootingAndClipDto.RecordDate = shootingAndClip.RecordDate;
+            shootingAndClipDto.VideoType = shootingAndClip.VideoType;
 
             return shootingAndClipDto;
+        }
+
+        public List<BaseIdAndNameDto> GetVideoTypeTextList()
+        {
+            var sendStatus = Enum.GetValues(typeof(ShootingAndClipVideoType));
+            List<BaseIdAndNameDto> orderAppTypeList = new List<BaseIdAndNameDto>();
+            foreach (var item in sendStatus)
+            {
+                BaseIdAndNameDto orderAppType = new BaseIdAndNameDto();
+                orderAppType.Id = Convert.ToString(Convert.ToInt16(item));
+                orderAppType.Name = ServiceClass.GerShootingAndClipVideoTypeText(Convert.ToInt16(item));
+                orderAppTypeList.Add(orderAppType);
+            }
+            return orderAppTypeList;
         }
     }
 }

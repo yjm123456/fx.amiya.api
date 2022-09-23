@@ -38,6 +38,11 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public DateTime RecordDate { get; set; }
 
+        /// <summary>
+        /// 视频类型
+        /// </summary>
+        public int VideoType { get; set; }
+
         public AmiyaEmployee ShootingEmoloyee { get; set; }
         public AmiyaEmployee ClipEmoloyee { get; set; }
 

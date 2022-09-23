@@ -116,7 +116,6 @@ CREATE TABLE `amiyadb`.`tbl_beauty_diary_manage` (
 -----------------------------------------------余建明 2021/09/23 END--------------------------------------------
 
 
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 -----------------------------------------------余建明 2021/11/10 BEGIN--------------------------------------------
 
@@ -631,6 +630,79 @@ CREATE TABLE `amiyadb`.`tbl_goods_shopcar` (
 
 
 
+-----------------------------------------------余建明 2022/09/20 BEGIN--------------------------------------------;
+--拍剪组工作数据填写
+CREATE TABLE `amiyadb`.`tbl_shooting_and_clip` (
+  `id` VARCHAR(50) NOT NULL,
+  `shooting_empid` INT UNSIGNED NOT NULL,
+  `clip_empid` INT UNSIGNED NOT NULL,
+  `live_anchor_id` INT UNSIGNED NOT NULL,
+  `title` VARCHAR(1000) NULL,
+  `create_date` DATETIME NOT NULL,
+  `record_date` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_shooting_empid_idx` (`shooting_empid` ASC) VISIBLE,
+  INDEX `fk_clip_empid_idx` (`clip_empid` ASC) VISIBLE,
+  INDEX `fk_live_anchor_idx` (`live_anchor_id` ASC) VISIBLE,
+  CONSTRAINT `fk_shooting_empid`
+    FOREIGN KEY (`shooting_empid`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_clip_empid`
+    FOREIGN KEY (`clip_empid`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_shootingandclip_live_anchor`
+    FOREIGN KEY (`live_anchor_id`)
+    REFERENCES `amiyadb`.`tbl_live_anchor` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+-----------------------------------------------余建明 2022/09/20 END--------------------------------------------;
+---抵用券
+CREATE TABLE `tbl_consumption_voucher` (
+  `id` varchar(100) NOT NULL,
+  `consumption_voucher_code` varchar(100) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `deduct_money` decimal(10,2) DEFAULT '0.00',
+  `is_specify_product` bit(1) NOT NULL DEFAULT b'0',
+  `is_accumulate` bit(1) NOT NULL DEFAULT b'0',
+  `is_share` bit(1) NOT NULL DEFAULT b'0',
+  `effective_time` bigint DEFAULT '0',
+  `type` int NOT NULL DEFAULT '0',
+  `expire_date` datetime DEFAULT NULL,
+  `is_valid` bit(1) NOT NULL,
+  `create_date` datetime NOT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-----------------------------------------------余建明 2022/09/07 BEGIN--------------------------------------------;
+CREATE TABLE `amiyadb`.`goods_member_rank_price` (
+  `id` VARCHAR(50) NOT NULL,
+  `goods_id` VARCHAR(50) NOT NULL,
+  `member_rank_id` INT NOT NULL,
+  `price` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  PRIMARY KEY (`id`));
+-----------------------------------------------余建明 2022/09/07 END--------------------------------------------;
+
+
+
+-----------------------------------------------王健 2022/09/09 BEGIN--------------------------------------------;
+--商品可使用抵用券
+ CREATE TABLE `tbl_goods_consumption_voucher` (
+  `id` varchar(100) NOT NULL,
+  `goods_id` varchar(100) NOT NULL,
+  `consumption_voucher_id` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+-----------------------------------------------王健 2022/09/09 END--------------------------------------------;
+
+
+
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
@@ -652,27 +724,29 @@ CREATE TABLE `amiyadb`.`tbl_goods_shopcar` (
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------小程序---------------------------------------------------------------------------
+
+
+
 -----------------------------------------------王健 2022/08/22 START--------------------------------------------
 
 
 
----抵用券
-CREATE TABLE `tbl_consumption_voucher` (
-  `id` varchar(100) NOT NULL,
-  `consumption_voucher_code` varchar(100) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `deduct_money` decimal(10,2) DEFAULT '0.00',
-  `is_specify_product` bit(1) NOT NULL DEFAULT b'0',
-  `is_accumulate` bit(1) NOT NULL DEFAULT b'0',
-  `is_share` bit(1) NOT NULL DEFAULT b'0',
-  `effective_time` bigint DEFAULT '0',
-  `type` int NOT NULL DEFAULT '0',
-  `expire_date` datetime DEFAULT NULL,
-  `is_valid` bit(1) NOT NULL,
-  `create_date` datetime NOT NULL,
-  `update_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
@@ -795,60 +869,6 @@ CREATE TABLE `tbl_growth_points_rule` (
 
 
 
-
------------------------------------------------余建明 2022/09/07 BEGIN--------------------------------------------;
-CREATE TABLE `amiyadb`.`goods_member_rank_price` (
-  `id` VARCHAR(50) NOT NULL,
-  `goods_id` VARCHAR(50) NOT NULL,
-  `member_rank_id` INT NOT NULL,
-  `price` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-  PRIMARY KEY (`id`));
------------------------------------------------余建明 2022/09/07 END--------------------------------------------;
-
-
-
------------------------------------------------王健 2022/09/09 BEGIN--------------------------------------------;
---商品可使用抵用券
- CREATE TABLE `tbl_goods_consumption_voucher` (
-  `id` varchar(100) NOT NULL,
-  `goods_id` varchar(100) NOT NULL,
-  `consumption_voucher_id` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
------------------------------------------------王健 2022/09/09 END--------------------------------------------;
-
-
------------------------------------------------余建明 2022/09/20 BEGIN--------------------------------------------;
---拍剪组工作数据填写
-CREATE TABLE `amiyadb`.`tbl_shooting_and_clip` (
-  `id` VARCHAR(50) NOT NULL,
-  `shooting_empid` INT UNSIGNED NOT NULL,
-  `clip_empid` INT UNSIGNED NOT NULL,
-  `live_anchor_id` INT UNSIGNED NOT NULL,
-  `title` VARCHAR(1000) NULL,
-  `create_date` DATETIME NOT NULL,
-  `record_date` DATETIME NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_shooting_empid_idx` (`shooting_empid` ASC) VISIBLE,
-  INDEX `fk_clip_empid_idx` (`clip_empid` ASC) VISIBLE,
-  INDEX `fk_live_anchor_idx` (`live_anchor_id` ASC) VISIBLE,
-  CONSTRAINT `fk_shooting_empid`
-    FOREIGN KEY (`shooting_empid`)
-    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_clip_empid`
-    FOREIGN KEY (`clip_empid`)
-    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_shootingandclip_live_anchor`
-    FOREIGN KEY (`live_anchor_id`)
-    REFERENCES `amiyadb`.`tbl_live_anchor` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
------------------------------------------------余建明 2022/09/20 END--------------------------------------------;
 
  
 

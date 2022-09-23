@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.ShootingAndClip;
 using Fx.Amiya.Dto.ShootingAndClip;
 using Fx.Amiya.IService;
@@ -60,6 +61,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                           LiveAnchorName = d.LiveAnchorName,
                                           CreateDate = d.CreateDate,
                                           RecordDate = d.RecordDate,
+                                          VideoType = d.VideoType,
+                                          VideoTypeText = d.VideoTypeText
+
                                       };
 
                 FxPageInfo<ShootingAndClipVo> shootingAndClipPageInfo = new FxPageInfo<ShootingAndClipVo>();
@@ -91,6 +95,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.LiveAnchorId = addVo.LiveAnchorId;
                 addDto.Title = addVo.Title;
                 addDto.RecordDate = addVo.RecordDate;
+                addDto.VideoType = addVo.VideoType;
                 await shootingAndClipService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -120,6 +125,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shootingAndClipVo.ClipEmpId = shootingAndClip.ClipEmpId;
                 shootingAndClipVo.Title = shootingAndClip.Title;
                 shootingAndClipVo.LiveAnchorId = shootingAndClip.LiveAnchorId;
+                shootingAndClipVo.VideoType = shootingAndClip.VideoType;
+                shootingAndClipVo.VideoTypeText = shootingAndClip.VideoTypeText;
                 shootingAndClipVo.CreateDate = shootingAndClip.CreateDate;
                 shootingAndClipVo.RecordDate = shootingAndClip.RecordDate;
 
@@ -148,6 +155,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.ClipEmpId = updateVo.ClipEmpId;
                 updateDto.LiveAnchorId = updateVo.LiveAnchorId;
                 updateDto.Title = updateVo.Title;
+                updateDto.VideoType = updateVo.VideoType;
                 updateDto.RecordDate = updateVo.RecordDate;
                 await shootingAndClipService.UpdateAsync(updateDto);
                 return ResultData.Success();
@@ -177,6 +185,22 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 throw ex;
             }
+        }
+
+        /// <summary>
+        /// 获取拍剪组视频类型
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getVideoType")]
+        public ResultData<List<BaseIdAndNameVo>> GeBuyAgainTypeList()
+        {
+            var orderAppTypes = from d in shootingAndClipService.GetVideoTypeTextList()
+                                select new BaseIdAndNameVo
+                                {
+                                    Id = d.Id,
+                                    Name = d.Name
+                                };
+            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("videoType", orderAppTypes.ToList());
         }
     }
 }

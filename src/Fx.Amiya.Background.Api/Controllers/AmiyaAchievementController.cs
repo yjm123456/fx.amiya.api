@@ -74,6 +74,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             _liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
         }
 
+        #region{啊美雅业绩}
+
         #region 【总业绩】
 
         #region 【啊美雅业绩】
@@ -1290,5 +1292,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
         #endregion
 
+        #endregion
+
+        #region {机构业绩}
+
+        #endregion
     }
 }
