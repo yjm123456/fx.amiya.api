@@ -19,6 +19,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.Title).HasColumnName("title").HasColumnType("varchar(1000)").IsRequired();
             builder.Property(t => t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.Property(t => t.RecordDate).HasColumnName("record_date").HasColumnType("datetime").IsRequired();
+            builder.Property(t => t.VideoType).HasColumnName("video_type").HasColumnType("int").IsRequired();
 
             builder.HasOne(t => t.LiveAnchor).WithMany(t => t.ShootingAndClips).HasForeignKey(t => t.LiveAnchorId);
             builder.HasOne(t => t.ClipEmoloyee).WithMany(t => t.ClipInfo).HasForeignKey(t => t.ClipEmpId);

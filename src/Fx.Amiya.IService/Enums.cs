@@ -616,4 +616,29 @@ namespace Fx.Amiya.IService
         /// </summary>
         ShortVideo=5
     }
+
+    public enum ShootingAndClipVideoType
+    {
+        /// <summary>
+        /// 广告片
+        /// </summary>
+        AdvertisingFilm=1,
+        /// <summary>
+        /// 口播
+        /// </summary>
+        MouthBroadcast=2,
+
+        /// <summary>
+        /// vlong
+        /// </summary>
+        Vlong = 3,
+        /// <summary>
+        ///  企业宣传文化片
+        /// </summary>
+        EnterprisePropagandaCultureFilm= 4,
+        /// <summary>
+        /// 其他
+        /// </summary>
+        Other = 0,
+    }
 }

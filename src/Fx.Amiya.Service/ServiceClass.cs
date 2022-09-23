@@ -409,9 +409,11 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="emergencyLevel"></param>
         /// <returns></returns>
-        public static string GetShopCartRegisterEmergencyLevelText(int emergencyLevel) {
-            string emergencyLevelText ="";
-            switch (emergencyLevel) {
+        public static string GetShopCartRegisterEmergencyLevelText(int emergencyLevel)
+        {
+            string emergencyLevelText = "";
+            switch (emergencyLevel)
+            {
                 case 0:
                     emergencyLevelText = "可忽略";
                     break;
@@ -902,19 +904,22 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="rankcode"></param>
         /// <returns></returns>
-        public static Dictionary<string, decimal> GetMemberCradScope(string rankcode) {
+        public static Dictionary<string, decimal> GetMemberCradScope(string rankcode)
+        {
             Dictionary<string, decimal> dic = new Dictionary<string, decimal>();
-            switch (rankcode) {
+            switch (rankcode)
+            {
                 case "62":
-                    dic= new Dictionary<string, decimal>
+                    dic = new Dictionary<string, decimal>
                     {
                         ["min_amount"] = 0,
                         ["max_amount"] = 200
                     };
                     break;
                 case "68":
-                    dic = new Dictionary<string, decimal> { 
-                        ["min_amount"]=200,
+                    dic = new Dictionary<string, decimal>
+                    {
+                        ["min_amount"] = 200,
                         ["max_amount"] = 500
                     };
                     break;
@@ -925,7 +930,7 @@ namespace Fx.Amiya.Service
                         ["max_amount"] = 10000000
                     };
                     break;
-                default:throw new Exception("请输入正确的会员卡编码");
+                default: throw new Exception("请输入正确的会员卡编码");
             }
             return dic;
         }
@@ -957,9 +962,11 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static string GetRechargeExchangeTypeText(int type) {
+        public static string GetRechargeExchangeTypeText(int type)
+        {
             string typeText = "";
-            switch (type) {
+            switch (type)
+            {
                 case 0:
                     typeText = "支付宝";
                     break;
@@ -983,9 +990,11 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
-        public static int GetRechargeTypeByExchangeCode(string code) {
+        public static int GetRechargeTypeByExchangeCode(string code)
+        {
             int type = 0;
-            switch (code) {
+            switch (code)
+            {
                 case "ALIPAY":
                     type = 0;
                     break;
@@ -1003,9 +1012,11 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        public static string GetRechargeStatusText(int status) {
+        public static string GetRechargeStatusText(int status)
+        {
             string statusText = "";
-            switch (status) {
+            switch (status)
+            {
                 case 0:
                     statusText = "待付款";
                     break;
@@ -1023,6 +1034,39 @@ namespace Fx.Amiya.Service
                     break;
             };
             return statusText;
+        }
+
+        /// <summary>
+        /// 获取拍剪组视频类型文本
+        /// </summary>
+        /// <param name="consumeType"></param>
+        /// <returns></returns>
+        public static string GerShootingAndClipVideoTypeText(int type)
+        {
+            string channelTypeText = "";
+            switch (type)
+            {
+
+                case 1:
+                    channelTypeText = "广告片";
+                    break;
+
+                case 2:
+                    channelTypeText = "口播";
+                    break;
+
+                case 3:
+                    channelTypeText = "vlong";
+                    break;
+
+                case 4:
+                    channelTypeText = "企业宣传文化片";
+                    break;
+                case 0:
+                    channelTypeText = "其他";
+                    break;
+            }
+            return channelTypeText;
         }
     }
 }

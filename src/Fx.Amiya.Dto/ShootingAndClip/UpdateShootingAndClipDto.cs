@@ -29,6 +29,10 @@ namespace Fx.Amiya.Dto.ShootingAndClip
         /// </summary>
         public string Title { get; set; }
         /// <summary>
+        /// 视频类型
+        /// </summary>
+        public int VideoType { get; set; }
+        /// <summary>
         /// 登记日期
         /// </summary>
         public DateTime RecordDate { get; set; }

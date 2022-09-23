@@ -35,6 +35,11 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("视频标题")]
         public string Title { get; set; }
         /// <summary>
+        /// 视频类型
+        /// </summary>
+        [Description("视频类型")]
+        public string VideoType { get; set; }
+        /// <summary>
         /// 创建日期
         /// </summary>
         [Description("创建日期")]

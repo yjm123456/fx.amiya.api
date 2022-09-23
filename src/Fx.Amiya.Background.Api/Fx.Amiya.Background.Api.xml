@@ -4949,6 +4949,12 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ShootingAndClipController.GeBuyAgainTypeList">
+            <summary>
+            获取拍剪组视频类型
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.ShoppingCartRegistrationController">
             <summary>
             小黄车登记板块数据接口
@@ -18143,6 +18149,11 @@
             视频标题
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ShootingAndClipReportVo.VideoType">
+            <summary>
+            视频类型
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ShootingAndClipReportVo.CreateDate">
             <summary>
             创建日期
@@ -20990,6 +21001,11 @@
             视频标题
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.AddShootingAndClipVo.VideoType">
+            <summary>
+            视频类型
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.ShootingAndClipVo.Id">
             <summary>
             编号
@@ -21015,6 +21031,11 @@
             剪辑人员文本
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.ShootingAndClipVo.ContentPlatFormId">
+            <summary>
+            主播平台id
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.ShootingAndClipVo.LiveAnchorId">
             <summary>
             主播id
@@ -21038,6 +21059,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.ShootingAndClipVo.Title">
             <summary>
             视频标题
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.ShootingAndClipVo.VideoType">
+            <summary>
+            视频类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.ShootingAndClipVo.VideoTypeText">
+            <summary>
+            视频类型文本
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.UpdateShootingAndClipVo.Id">
@@ -21068,6 +21099,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.UpdateShootingAndClipVo.Title">
             <summary>
             视频标题
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ShootingAndClip.UpdateShootingAndClipVo.VideoType">
+            <summary>
+            视频类型
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.AddShoppingCartRegistrationVo.RecordDate">
