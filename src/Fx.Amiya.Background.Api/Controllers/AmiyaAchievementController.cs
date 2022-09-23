@@ -39,6 +39,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private ICustomerService customerService;
         private IHttpContextAccessor httpContextAccessor;
         private IContentPlateFormOrderService _contentPlatFormOrderService;
+        private IHospitalPerformanceService hospitalPerformanceService;
         private IContentPlatformOrderSendService _sendContentPlatFormOrderInfoService;
         private IAppointmentService appointmentService;
         private ICustomerHospitalConsumeService _customerHospitalConsumeService;
@@ -56,7 +57,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             ISendOrderInfoService sendOrderInfoService,
             ICustomerHospitalConsumeService customerHospitalConsumeService,
             IShoppingCartRegistrationService shoppingCartRegistrationService,
-            ILiveAnchorDailyTargetService liveAnchorDailyTargetService, IAmiyaPerformanceService amiyaPerformanceService, ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService)
+            ILiveAnchorDailyTargetService liveAnchorDailyTargetService,
+            IAmiyaPerformanceService amiyaPerformanceService,
+            ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService,
+            IHospitalPerformanceService hospitalPerformanceService)
         {
             this.orderService = orderService;
             _sendContentPlatFormOrderInfoService = sendContentPlatFormOrderInfoService;
@@ -70,11 +74,11 @@ namespace Fx.Amiya.Background.Api.Controllers
             _contentPlatFormOrderService = contentPlatFormOrderService;
             _customerHospitalConsumeService = customerHospitalConsumeService;
             _liveAnchorDailyTargetService = liveAnchorDailyTargetService;
+            this.hospitalPerformanceService = hospitalPerformanceService;
             this.amiyaPerformanceService = amiyaPerformanceService;
             _liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
         }
 
-        #region{啊美雅业绩}
 
         #region 【总业绩】
 
@@ -1292,10 +1296,5 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
         #endregion
 
-        #endregion
-
-        #region {机构业绩}
-
-        #endregion
     }
 }
