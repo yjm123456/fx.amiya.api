@@ -2151,6 +2151,103 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController">
+            <summary>
+            机构业绩接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetHospitalOperationDairyData(System.Nullable{System.Int32})">
+            <summary>
+            全国机构运营当日数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetHospitalOperationDairyByYearData(System.Nullable{System.Int32})">
+            <summary>
+            全国机构运营当年数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetSendOrderBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取派单折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetVisitBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取上门数折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetVisitRateBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取上门率折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetNewCustomerDealBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取新客成交数折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetNewCustomerDealRateBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取新客成交率折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetNewCustomerPerformanceBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取新客业绩折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetNewCustomerUnitPriceBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取新客客单价折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetOldCustomerDealBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取老客成交数折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetOldCustomerPerformanceBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取老客业绩折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetOldCustomerUnitPriceBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取老客客单价折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalAppointmentQuantityController">
             <summary>
             医院预约人数API
@@ -12077,6 +12174,106 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPartakeItem.UpdateHospitalPartakeItemVo.AfternoonCanAppointmentQuantity">
             <summary>
             下午可预约人数
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo">
+            <summary>
+            全国机构运营数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.City">
+            <summary>
+            城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.HospitalName">
+            <summary>
+            医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.SendNum">
+            <summary>
+            派单量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.VisitNum">
+            <summary>
+            上门数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.VisitRate">
+            <summary>
+            上门率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.NewCustomerDealNum">
+            <summary>
+            新客成交（人数）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.NewCustomerDealRate">
+            <summary>
+            新客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.NewCustomerAchievement">
+            <summary>
+            新客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.NewCustomerUnitPrice">
+            <summary>
+            新客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.OldCustomerDealNum">
+            <summary>
+            老客成交（人数）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.OldCustomerAchievement">
+            <summary>
+            老客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.OldCustomerUnitPrice">
+            <summary>
+            老客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.TotalAchievement">
+            <summary>
+            总业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.NewOrOldCustomerRate">
+            <summary>
+            新老客占比
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingYearDataVo">
+            <summary>
+            全国机构运营数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingYearDataVo.TopTenHospitalOperatingDataVo">
+            <summary>
+            前十机构运营数据（11条数据10条+1条总计）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingYearDataVo.OtherHospitalOperatingDataVo">
+            <summary>
+            其他机构运营数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingYearDataVo.TotalSum">
+            <summary>
+            统计数据(一条数据)
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPosition.AddHospitalPositionInfoVo.Name">

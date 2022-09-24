@@ -616,7 +616,7 @@ namespace Fx.Amiya.Service
         #endregion
 
         /// <summary>
-        /// 获取时间段内已派单数据
+        /// 获取时间段内已派单数据(分组)
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
@@ -632,16 +632,51 @@ namespace Fx.Amiya.Service
             return orderList.GroupBy(x => x.SendDate.Date).Select(x => new OrderOperationConditionDto { Date = x.Key.ToString("yyyy-MM-dd"), OrderNum = x.ToList().Count }).ToList();
         }
 
-        public async Task<List<OrderOperationConditionDto>> GetTodaySendOrderByLiveAnchorIdAsync(int liveAnchorId,DateTime recordDate)
+        public async Task<List<OrderOperationConditionDto>> GetTodaySendOrderByLiveAnchorIdAsync(int liveAnchorId, DateTime recordDate)
         {
             DateTime startrq = recordDate.Date;
             DateTime endrq = recordDate.Date.AddDays(1);
             var orders = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder)
                          where d.SendDate >= startrq && d.SendDate < endrq && d.ContentPlatformOrder.LiveAnchorId == liveAnchorId
-            select d;
+                         select d;
             var orderList = orders.ToList();
             return orderList.GroupBy(x => x.SendDate.Date).Select(x => new OrderOperationConditionDto { Date = x.Key.ToString("yyyy-MM-dd"), OrderNum = x.ToList().Count }).ToList();
         }
+
+        /// <summary>
+        /// 获取今天已派单数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        public async Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(int? year)
+        {
+            DateTime startrq = DateTime.Now.Date;
+            if (year.HasValue == true)
+            {
+                startrq = Convert.ToDateTime(year.Value + "-01-01");
+            }
+            DateTime endrq = DateTime.Now.Date.AddDays(1);
+            var orders = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.HospitalInfo).ThenInclude(x => x.CooperativeHospitalCity)
+                         where d.SendDate >= startrq && d.SendDate < endrq 
+                         select new SendContentPlatformOrderDto
+                         {
+                             OrderId = d.ContentPlatformOrderId,
+                             SendHospitalId = d.HospitalId,
+                             SendHospital = d.HospitalInfo.Name,
+                             City = d.HospitalInfo.CooperativeHospitalCity.Name,
+                             SendDate=d.SendDate,
+                         };
+            var result = orders.ToList();
+            //foreach (var x in result)
+            //{
+            //    var hospitalInfo = await _hospitalInfoService.GetByIdAsync(x.SendHospitalId);
+            //    x.SendHospital = hospitalInfo.Name;
+            //    x.City = hospitalInfo.City;
+            //}
+            return result;
+        }
+
         private async Task<CallCenterConfigDto> GetCallCenterConfig()
         {
             var config = await _dalConfig.GetAll().SingleOrDefaultAsync();

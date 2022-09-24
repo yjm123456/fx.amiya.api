@@ -826,7 +826,41 @@ namespace Fx.Amiya.Service
 
 
         /// <summary>
-        /// 获取当日上门成交业绩
+        /// 根据到院id获取上门成交业绩
+        /// </summary>
+        /// <param name="recordDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceByHospitalIdAsync(int hospitalId, DateTime recordDate)
+        {
+            //筛选结束的月份
+            DateTime endDate = DateTime.Now.Date.AddDays(1);
+            //选定的月份
+            DateTime currentDate = recordDate.Date;
+            var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)
+                .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= currentDate && o.ToHospitalDate < endDate)
+                .Where(o => hospitalId == 0 || o.LastDealHospitalId == hospitalId)
+                .ToListAsync();
+            var returnInfo = result.Select(
+                  d =>
+                       new ContentPlatFormOrderDealInfoDto
+                       {
+                           IsToHospital = d.IsToHospital,
+                           IsDeal = d.IsDeal,
+                           IsOldCustomer = d.IsOldCustomer,
+                           ToHospitalType = d.ToHospitalType,
+                           Price = d.Price,
+                           ToHospitalDate=d.ToHospitalDate,
+                           DealDate=d.DealDate,
+                       }
+                ).ToList();
+
+            return returnInfo;
+        }
+
+
+        /// <summary>
+        /// 根据主播id获取当日上门成交业绩
         /// </summary>
         /// <param name="year"></param>
         /// <param name="month"></param>
@@ -841,7 +875,7 @@ namespace Fx.Amiya.Service
             DateTime currentDate = recordDate.Date;
             var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)
                 .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= currentDate && o.ToHospitalDate < endDate)
-                .Where(o => o.ContentPlatFormOrder.LiveAnchorId == liveAnchorId)
+                .Where(o => liveAnchorId == 0 || o.ContentPlatFormOrder.LiveAnchorId == liveAnchorId)
                 .ToListAsync();
             var returnInfo = result.Select(
                   d =>

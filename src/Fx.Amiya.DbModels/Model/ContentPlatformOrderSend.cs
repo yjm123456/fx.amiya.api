@@ -20,5 +20,6 @@ namespace Fx.Amiya.DbModels.Model
 
         public ContentPlatformOrder ContentPlatformOrder { get; set; }
         public AmiyaEmployee AmiyaEmployee { get; set; }
+        public HospitalInfo HospitalInfo { get; set; }
     }
 }

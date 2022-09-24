@@ -55,6 +55,8 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
 
         public string ToHospitalTypeText { get; set; }
         public string SendHospital { get; set; }
+
+        public string City { get; set; }
         public string AppointmentDate { get; set; }
        
         public string GoodsName { get; set; }

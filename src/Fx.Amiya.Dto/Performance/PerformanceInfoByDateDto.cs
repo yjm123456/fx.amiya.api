@@ -28,6 +28,16 @@ namespace Fx.Amiya.Dto.Performance
         //业绩
         public decimal PerfomancePrice { get; set; }
     }
+
+    public class PerformanceStringBrokenLine
+    {
+        /// <summary>
+        /// 日期
+        /// </summary>
+        public string Date { get; set; }
+        //业绩
+        public string PerfomancePrice { get; set; }
+    }
     public class PerformanceInfoDateDto
     {
         /// <summary>

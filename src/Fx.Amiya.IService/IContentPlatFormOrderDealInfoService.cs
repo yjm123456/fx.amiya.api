@@ -49,6 +49,15 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<decimal> GetNewCustomerDealCount();
 
+        /// <summary>
+        /// 根据到院id获取当日上门成交业绩
+        /// </summary>
+        /// <param name="recordDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceByHospitalIdAsync(int hospitalId, DateTime recordDate);
+
+
         #region【业绩板块】
 
         /// <summary>

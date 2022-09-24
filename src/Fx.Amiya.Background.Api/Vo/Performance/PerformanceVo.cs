@@ -227,7 +227,6 @@ namespace Fx.Amiya.Background.Api.Vo.Performance
 
 
 
-
     /// <summary>
     /// 每月业绩数
     /// </summary>
