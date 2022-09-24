@@ -18,9 +18,16 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<HospitalPerformanceDto>> GetHospitalDailyPerformanceAsync();
-
-
-
+        /// <summary>
+        /// 获取全国机构top10运营数据占比
+        /// </summary>
+        /// <returns></returns>
+        Task<HospitalAccumulatePerformanceDto> GetTopTenHospitalPerfromance();
+        /// <summary>
+        /// 获取合作城市top10运营数据占比
+        /// </summary>
+        /// <returns></returns>
+        Task<CityAccumulatePerformanceDto> GetTopTenCityPerformance();
 
         #region【 其他相关业务接口（折线图，明细等）】
 

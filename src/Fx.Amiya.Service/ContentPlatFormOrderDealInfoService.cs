@@ -24,13 +24,13 @@ namespace Fx.Amiya.Service
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private IDalAmiyaEmployee _dalAmiyaEmployee;
         private ILiveAnchorMonthlyTargetService _liveAnchorMonthlyTargetService;
-
+        private IDalHospitalInfo _dalHospitalInfo;
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
             IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
             IDalBindCustomerService dalBindCustomerService,
             IDalAmiyaEmployee dalAmiyaEmployee,
-            IHospitalInfoService hospitalInfoService, ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService)
+            IHospitalInfoService hospitalInfoService, ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService, IDalHospitalInfo dalHospitalInfo)
         {
             this.dalContentPlatFormOrderDealInfo = dalContentPlatFormOrderDealInfo;
             _hospitalInfoService = hospitalInfoService;
@@ -39,6 +39,7 @@ namespace Fx.Amiya.Service
             _dalBindCustomerService = dalBindCustomerService;
             _dalAmiyaEmployee = dalAmiyaEmployee;
             _liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
+            _dalHospitalInfo = dalHospitalInfo;
         }
         /// <summary>
         /// 获取成交情况列表
@@ -716,7 +717,34 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
-
+        /// <summary>
+        /// 获取总业绩
+        /// </summary>
+        /// <param name="IsOldCustomer">新老客</param>
+        /// <returns></returns>
+        public async Task<decimal> GetPerformance(bool? IsOldCustomer)
+        {
+            var performance = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.IsToHospital == true && (IsOldCustomer == null || e.IsOldCustomer == IsOldCustomer)).SumAsync(e => e.Price);
+            return performance;
+        }
+        /// <summary>
+        /// 新客上门人数
+        /// </summary>
+        /// <returns></returns>
+        public async Task<decimal> GetNewCustomerToHospitalCount()
+        {
+            var count = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.IsToHospital == true&&e.IsOldCustomer==false).CountAsync();
+            return count;
+        }
+        /// <summary>
+        /// 新客成交人数
+        /// </summary>
+        /// <returns></returns>
+        public async Task<decimal> GetNewCustomerDealCount()
+        {
+            var count = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.IsDeal == true&&e.IsOldCustomer==false).CountAsync();
+            return count;
+        }
 
         #region【业绩板块】
 
@@ -982,7 +1010,199 @@ namespace Fx.Amiya.Service
 
             return orderinfo.GroupBy(x => x.CreateDate.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(z => z.Price) }).ToList();
         }
-        #endregion
 
+
+        #endregion
+        #region 全国机构top10运营数据
+
+        /// <summary>
+        /// 总业绩
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ContentPlateformOrderDealInfoHospitalPerformanceDto>> GetTopTenHospitalTotalPerformance()
+        {
+            var performanceList = (from d in _dalHospitalInfo.GetAll()
+                                   from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.IsDeal == true && c.LastDealHospitalId != null)
+                                   where d.Id == h.LastDealHospitalId
+                                   group h by d.Name into g
+                                   orderby g.Sum(item => item.Price) descending
+                                   select new ContentPlateformOrderDealInfoHospitalPerformanceDto
+                                   {
+                                       HospitalName = g.Key,
+                                       Performance = g.Sum(item => item.Price)
+                                   });
+            return performanceList.Skip(0).Take(10).ToList();
+        }
+        /// <summary>
+        /// 新客业绩
+        /// </summary>
+        /// <returns></returns>
+
+        public async Task<List<ContentPlateformOrderDealInfoHospitalPerformanceDto>> GetTopTenNewCustomerPerformance()
+        {
+            var performanceList = (from d in _dalHospitalInfo.GetAll()
+                                   from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.IsDeal == true && c.LastDealHospitalId != null && c.IsOldCustomer == false)
+                                   where d.Id == h.LastDealHospitalId
+                                   group h by d.Name into g
+                                   orderby g.Sum(item => item.Price) descending
+                                   select new ContentPlateformOrderDealInfoHospitalPerformanceDto
+                                   {
+                                       HospitalName = g.Key,
+                                       Performance = g.Sum(item => item.Price)
+                                   });
+            return performanceList.Skip(0).Take(10).ToList();
+        }
+        /// <summary>
+        /// 老客业绩
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ContentPlateformOrderDealInfoHospitalPerformanceDto>> GetTopTenOldCustomerPerformance()
+        {
+            var performanceList = (from d in _dalHospitalInfo.GetAll()
+                                   from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.IsDeal == true && c.LastDealHospitalId != null && c.IsOldCustomer == true)
+                                   where d.Id == h.LastDealHospitalId
+                                   group h by d.Name into g
+                                   orderby g.Sum(item => item.Price) descending
+                                   select new ContentPlateformOrderDealInfoHospitalPerformanceDto
+                                   {
+                                       HospitalName = g.Key,
+                                       Performance = g.Sum(item => item.Price)
+                                   });
+            return performanceList.Skip(0).Take(10).ToList();
+        }
+        /// <summary>
+        /// 新客上门人数占比
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ContentPlateformOrderDealInfoHospitalPerformanceDto>> GetTopTenNewCustomerToHospitalPformance()
+        {
+            var performanceList = (from d in _dalHospitalInfo.GetAll()
+                                   from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.LastDealHospitalId != null && c.IsOldCustomer == false&& c.IsToHospital==true)
+                                   where d.Id == h.LastDealHospitalId
+                                   group h by d.Name into g
+                                   orderby g.Count() descending
+                                   select new ContentPlateformOrderDealInfoHospitalPerformanceDto
+                                   {
+                                       HospitalName = g.Key,
+                                       Performance = g.Count()
+                                   });
+            return performanceList.Skip(0).Take(10).ToList();
+
+        }
+        /// <summary>
+        /// 新客成交人数占比
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ContentPlateformOrderDealInfoHospitalPerformanceDto>> GetTopTenNewCustomerDealPerformance()
+        {
+            var performanceList = (from d in _dalHospitalInfo.GetAll()
+                                   from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.LastDealHospitalId != null && c.IsOldCustomer == false)
+                                   where d.Id == h.LastDealHospitalId
+                                   group h by d.Name into g
+                                   orderby g.Count() descending
+                                   select new ContentPlateformOrderDealInfoHospitalPerformanceDto
+                                   {
+                                       HospitalName = g.Key,
+                                       Performance = g.Count()
+                                   });
+            return performanceList.Skip(0).Take(10).ToList();
+        }
+
+
+
+        #endregion
+        #region 全国城市top10运营数据
+
+        /// <summary>
+        /// 获取总业绩业绩前10的城市业绩数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ContentPlateformOrderDealInfoCityPerformanceDto>> GetTopTenCityTotalPerformance()
+        {
+            var performanceList = from d in _dalHospitalInfo.GetAll()
+                                   from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.IsDeal == true && c.LastDealHospitalId != null)
+                                   where d.Id == h.LastDealHospitalId
+                                   group h by d.CooperativeHospitalCity.Name into g
+                                   orderby g.Sum(item => item.Price) descending
+                                   select new ContentPlateformOrderDealInfoCityPerformanceDto
+                                   {
+                                       CityName = g.Key,
+                                       Performance = g.Sum(item => item.Price)
+                                   };
+            return await performanceList.Skip(0).Take(10).ToListAsync();
+        }
+        /// <summary>
+        /// 获取新客业绩前10的城市业绩数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ContentPlateformOrderDealInfoCityPerformanceDto>> GetTopTenCityNewCustomerPerformance()
+        {
+            var performanceList = from d in _dalHospitalInfo.GetAll()
+                                  from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.IsDeal == true && c.LastDealHospitalId != null&&c.IsOldCustomer==false)
+                                  where d.Id == h.LastDealHospitalId
+                                  group h by d.CooperativeHospitalCity.Name into g
+                                  orderby g.Sum(item => item.Price) descending
+                                  select new ContentPlateformOrderDealInfoCityPerformanceDto
+                                  {
+                                      CityName = g.Key,
+                                      Performance = g.Sum(item => item.Price)
+                                  };
+            return await performanceList.Skip(0).Take(10).ToListAsync();
+        }
+        /// <summary>
+        /// 获取老客业绩前10的城市业绩数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ContentPlateformOrderDealInfoCityPerformanceDto>> GetTopTenCityOldCustomerPerformance()
+        {
+            var performanceList = from d in _dalHospitalInfo.GetAll()
+                                  from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.IsDeal == true && c.LastDealHospitalId != null && c.IsOldCustomer == true)
+                                  where d.Id == h.LastDealHospitalId
+                                  group h by d.CooperativeHospitalCity.Name into g
+                                  orderby g.Sum(item => item.Price) descending
+                                  select new ContentPlateformOrderDealInfoCityPerformanceDto
+                                  {
+                                      CityName = g.Key,
+                                      Performance = g.Sum(item => item.Price)
+                                  };
+            return await performanceList.Skip(0).Take(10).ToListAsync();
+        }
+        /// <summary>
+        /// 获取新客上门前10的城市业绩数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ContentPlateformOrderDealInfoCityPerformanceDto>> GetTopTenCityNewCustomerToHospitalPformance()
+        {
+            var performanceList = from d in _dalHospitalInfo.GetAll()
+                                  from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.LastDealHospitalId != null && c.IsOldCustomer == false&&c.IsToHospital==true)
+                                  where d.Id == h.LastDealHospitalId
+                                  group h by d.CooperativeHospitalCity.Name into g
+                                  orderby g.Count() descending
+                                  select new ContentPlateformOrderDealInfoCityPerformanceDto
+                                  {
+                                      CityName = g.Key,
+                                      Performance = g.Count()
+                                  };
+            return await performanceList.Skip(0).Take(10).ToListAsync();
+        }
+        /// <summary>
+        /// 获取新客成交人数前10的城市业绩数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ContentPlateformOrderDealInfoCityPerformanceDto>> GetTopTenCityNewCustomerDealPerformance()
+        {
+            var performanceList = from d in _dalHospitalInfo.GetAll()
+                                  from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.LastDealHospitalId != null && c.IsOldCustomer == false && c.IsToHospital == true)
+                                  where d.Id == h.LastDealHospitalId
+                                  group h by d.CooperativeHospitalCity.Name into g
+                                  orderby g.Count() descending
+                                  select new ContentPlateformOrderDealInfoCityPerformanceDto
+                                  {
+                                      CityName = g.Key,
+                                      Performance = g.Count()
+                                  };
+            return await performanceList.Skip(0).Take(10).ToListAsync();
+        }
+        #endregion
     }
 }

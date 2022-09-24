@@ -117,7 +117,11 @@ namespace Fx.Amiya.IService
         /// <param name="pageSize"></param>
         /// <returns></returns>
         Task<FxPageInfo<SendOrderMessageBoardDto>> GetSendOrderMessageBoardListByIdAsync(int? hospitalId, int id, int pageNum, int pageSize);
-
+        /// <summary>
+        /// 获取总派单量
+        /// </summary>
+        /// <returns></returns>
+        Task<decimal> GetTotalSendCount();
 
         #region 报表模块
 
@@ -166,6 +170,21 @@ namespace Fx.Amiya.IService
 
         Task<List<HospitalOrderNumAndPriceDto>> GetHospitalOrderNumAsync(DateTime startDate, DateTime endDate);
 
+        #endregion
+
+        #region 全国机构运营板块
+        /// <summary>
+        /// 获取派单量前10的医院运营数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<SendOrderInfoPerformanceDto>> GetTopTenHospitalSendOrderPerformance();
+        #endregion
+        #region 全国城市运营板块
+        /// <summary>
+        /// 获取派单量前10的城市运营数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<SendOrderInfoCityPerformanceDto>> GetTopTenCitySendOrderPerformance();
         #endregion
     }
 }

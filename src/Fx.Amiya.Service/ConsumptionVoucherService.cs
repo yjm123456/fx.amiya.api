@@ -32,7 +32,7 @@ namespace Fx.Amiya.Service
         public async Task AddAsync(AddConsumptionVoucherDto addConsumptionVoucher)
         {
             var consumerVoucher = dalConsumptionVoucher.GetAll().Where(e => e.ConsumptionVoucherCode == addConsumptionVoucher.ConsumptionVoucherCode).SingleOrDefault();
-            if (consumerVoucher != null) throw new Exception("抵用券编码重复,请输入重新设置抵用券编码");
+            if (consumerVoucher != null) throw new Exception("抵用券编码重复,请重新设置抵用券编码");
             if (addConsumptionVoucher.Type != 0 && addConsumptionVoucher.DeductMoney > 0) throw new Exception("只有现金抵用券才能设置抵扣金额!");
             if (addConsumptionVoucher.Type == 0 && addConsumptionVoucher.DeductMoney <= 0) throw new Exception("现金抵用券抵扣金额不能小于0!");
             ConsumptionVoucher consumptionVoucher = new ConsumptionVoucher

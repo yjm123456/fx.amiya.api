@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.ContentPlatFormOrderSend;
+﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
+using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.Performance;
 using Fx.Common;
 using System;
@@ -31,7 +32,22 @@ namespace Fx.Amiya.IService
         /// <param name="liveAnchorId"></param>
         /// <returns></returns>
         Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceAsync(int liveAnchorId,DateTime recordDate);
-
+        /// <summary>
+        /// 查询总业绩
+        /// </summary>
+        /// <param name="IsOldCustomer">新老客</param>
+        /// <returns></returns>
+        Task<decimal> GetPerformance(bool? IsOldCustomer);
+        /// <summary>
+        /// 新客上门总人数
+        /// </summary>
+        /// <returns></returns>
+        Task<decimal> GetNewCustomerToHospitalCount();
+        /// <summary>
+        /// 新客成交总人数
+        /// </summary>
+        /// <returns></returns>
+        Task<decimal> GetNewCustomerDealCount();
 
         #region【业绩板块】
 
@@ -107,9 +123,78 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<PerformanceBrokenLine>> GetIndependenceOrAssistAsync(int year, int month, bool? isAssist, List<int> LiveAnchorIds, int amiyaEmployeeId);
 
+
         #endregion
 
         #region 【分组业绩板块】
+        #endregion
+
+
+        #region 全国机构top10运营占比
+        /// <summary>
+        /// 获取总业绩业绩前10的医院业绩数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<ContentPlateformOrderDealInfoHospitalPerformanceDto>> GetTopTenHospitalTotalPerformance();
+
+        /// <summary>
+        /// 获取新客业绩前10的医院业绩数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<ContentPlateformOrderDealInfoHospitalPerformanceDto>> GetTopTenNewCustomerPerformance();
+
+
+        /// <summary>
+        /// 获取老客业绩前10的医院业绩数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<ContentPlateformOrderDealInfoHospitalPerformanceDto>> GetTopTenOldCustomerPerformance();
+
+
+        /// <summary>
+        /// 获取新客上门前10的医院业绩数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<ContentPlateformOrderDealInfoHospitalPerformanceDto>> GetTopTenNewCustomerToHospitalPformance();
+
+        /// <summary>
+        /// 获取新客成交人数前10的医院业绩数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<ContentPlateformOrderDealInfoHospitalPerformanceDto>> GetTopTenNewCustomerDealPerformance();
+        #endregion
+        #region 城市top10运营占比
+        /// <summary>
+        /// 获取总业绩业绩前10的城市业绩数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<ContentPlateformOrderDealInfoCityPerformanceDto>> GetTopTenCityTotalPerformance();
+
+        /// <summary>
+        /// 获取新客业绩前10的城市业绩数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<ContentPlateformOrderDealInfoCityPerformanceDto>> GetTopTenCityNewCustomerPerformance();
+
+
+        /// <summary>
+        /// 获取老客业绩前10的城市业绩数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<ContentPlateformOrderDealInfoCityPerformanceDto>> GetTopTenCityOldCustomerPerformance();
+
+
+        /// <summary>
+        /// 获取新客上门前10的城市业绩数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<ContentPlateformOrderDealInfoCityPerformanceDto>> GetTopTenCityNewCustomerToHospitalPformance();
+
+        /// <summary>
+        /// 获取新客成交人数前10的城市业绩数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<ContentPlateformOrderDealInfoCityPerformanceDto>> GetTopTenCityNewCustomerDealPerformance();
         #endregion
     }
 }
