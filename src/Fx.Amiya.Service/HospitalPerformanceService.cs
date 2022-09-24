@@ -11,35 +11,21 @@ namespace Fx.Amiya.Service
 {
     public class HospitalPerformanceService : IHospitalPerformanceService
     {
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        //private IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
-        private IContentPlatformOrderSendService contentPlatformOrderSendService;
-
         
+        private IContentPlatformOrderSendService contentPlatformOrderSendService;       
         private IContentPlateFormOrderService contentPlateFormOrderService;
         private readonly IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
         private readonly ISendOrderInfoService sendOrderInfoService;
-
+        /// <summary>
+        /// 构造函数
+        /// </summary>
         public HospitalPerformanceService(IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService, IContentPlatformOrderSendService contentPlatformOrderSendService, IContentPlateFormOrderService contentPlateFormOrderService, ISendOrderInfoService sendOrderInfoService)
         {
             this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
             this.contentPlatformOrderSendService = contentPlatformOrderSendService;
-            this.contentPlateFormOrderService = contentPlateFormOrderService;
-         
+            this.contentPlateFormOrderService = contentPlateFormOrderService;         
             this.sendOrderInfoService = sendOrderInfoService;
         }
-
-        /*ublic HospitalPerformanceService(IContentPlateFormOrderService contentPlateFormOrderService, IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService, ISendOrderInfoService sendOrderInfoService, IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
-            IContentPlatformOrderSendService contentPlatformOrderSendService)
-        {
-            this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
-            this.contentPlatformOrderSendService = contentPlatformOrderSendService;
-            this.contentPlateFormOrderService = contentPlateFormOrderService;
-            this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
-            this.sendOrderInfoService = sendOrderInfoService;
-        }*/
 
         /// <summary>
         /// 获取全国机构日/年运营数据概况
