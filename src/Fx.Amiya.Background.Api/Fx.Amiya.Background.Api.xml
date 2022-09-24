@@ -2188,16 +2188,16 @@
         </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController">
             <summary>
-            机构业绩接口
+            全国机构运营总览
             </summary>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetHospitalOperationDairyData(System.Nullable{System.Int32})">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetHospitalOperationDailyData(System.Nullable{System.Int32})">
             <summary>
             全国机构运营当日数据
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetHospitalOperationDairyByYearData(System.Nullable{System.Int32})">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetHospitalOperationYearData(System.Nullable{System.Int32})">
             <summary>
             全国机构运营当年数据
             </summary>
@@ -2281,6 +2281,12 @@
             </summary>
             <param name="year">年份</param>
             <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetHospitalOperationMonthlyData(System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            全国机构运营当月数据
+            </summary>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetTopTenHospitalPerformanceData">

@@ -32,9 +32,11 @@ namespace Fx.Amiya.Service
         /// <summary>
         /// 根据时间获取全国机构运营数据概况
         /// </summary>
-        /// <param name="year">年份</param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isCity"></param>
         /// <returns></returns>
-        public async Task<List<HospitalPerformanceDto>> GetHospitalPerformanceByDateAsync(int? year, int? month)
+        public async Task<List<HospitalPerformanceDto>> GetHospitalPerformanceByDateAsync(int? year, int? month, bool isCity)
         {
             List<HospitalPerformanceDto> resultList = new List<HospitalPerformanceDto>();
             DateTime date = DateTime.Now;
@@ -49,8 +51,16 @@ namespace Fx.Amiya.Service
             var contentPlatFormOrderSendList = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(date);
             foreach (var x in contentPlatFormOrderSendList)
             {
-                var isExistHosiptal = resultList.Where(z => z.HospitalId == x.SendHospitalId).Count();
-                if (isExistHosiptal > 0)
+                var isExist = 0;
+                if (isCity == true)
+                {
+                    isExist = resultList.Where(z => z.City == x.City).Count();
+                }
+                else
+                {
+                    isExist = resultList.Where(z => z.HospitalId == x.SendHospitalId).Count();
+                }
+                if (isExist > 0)
                 {
                     continue;
                 }
@@ -79,6 +89,7 @@ namespace Fx.Amiya.Service
 
             return resultList;
         }
+
 
         #region 累计运营数据
 

@@ -37,7 +37,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<HospitalOperatingDataVo>>> GetHospitalOperationDailyData(int? year)
         {
             List<HospitalOperatingDataVo> hospitalPerformanceVo = new List<HospitalOperatingDataVo>();
-            var hospitalPerformanceDatas = await hospitalPerformanceService.GetHospitalPerformanceByDateAsync(year, null);
+            var hospitalPerformanceDatas = await hospitalPerformanceService.GetHospitalPerformanceByDateAsync(year, null, false);
             hospitalPerformanceDatas = hospitalPerformanceDatas.OrderByDescending(x => x.SendNum).ToList();
             foreach (var x in hospitalPerformanceDatas)
             {
@@ -71,7 +71,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<HospitalOperatingYearDataVo>> GetHospitalOperationYearData(int? year)
         {
             HospitalOperatingYearDataVo hospitalPerformanceVo = new HospitalOperatingYearDataVo();
-            var hospitalPerformanceDatas = await hospitalPerformanceService.GetHospitalPerformanceByDateAsync(year, null);
+            var hospitalPerformanceDatas = await hospitalPerformanceService.GetHospitalPerformanceByDateAsync(year, null, false);
             hospitalPerformanceDatas = hospitalPerformanceDatas.OrderByDescending(x => x.SendNum).ToList();
 
 
@@ -377,16 +377,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
         #endregion
 
-        #region{机构top10运营数据健康指标}
+        #region{机构/城市top10运营数据健康指标}
         /// <summary>
-        /// 全国机构运营当月数据
+        /// 全国机构/城市运营当月数据
         /// </summary>
+        /// <param name="year">年</param>
+        /// <param name="month">月</param>
+        /// <param name="isCity">是否为城市运营数据</param>
         /// <returns></returns>
         [HttpGet("getHospitalOperationMonthlyData")]
-        public async Task<ResultData<List<HospitalOperatingDataVo>>> GetHospitalOperationMonthlyData(int? year, int? month)
+        public async Task<ResultData<List<HospitalOperatingDataVo>>> GetHospitalOperationMonthlyData(int? year, int? month, bool isCity)
         {
             List<HospitalOperatingDataVo> hospitalPerformanceVo = new List<HospitalOperatingDataVo>();
-            var hospitalPerformanceDatas = await hospitalPerformanceService.GetHospitalPerformanceByDateAsync(year, month);
+            var hospitalPerformanceDatas = await hospitalPerformanceService.GetHospitalPerformanceByDateAsync(year, month, isCity);
             hospitalPerformanceDatas = hospitalPerformanceDatas.OrderByDescending(x => x.SendNum).Take(10).ToList();
             foreach (var x in hospitalPerformanceDatas)
             {
@@ -411,9 +414,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
         #endregion
 
-        #region {城市top10运营数据健康指标}
 
-        #endregion
         #region {机构top10运营数据占比}
 
         /// <summary>
