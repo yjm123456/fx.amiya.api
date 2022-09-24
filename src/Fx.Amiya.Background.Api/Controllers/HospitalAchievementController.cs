@@ -16,7 +16,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 {
 
     /// <summary>
-    /// 机构业绩接口
+    /// 全国机构运营总览
     /// </summary>
     [Route("[controller]")]
     [ApiController]
@@ -28,19 +28,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             this.hospitalPerformanceService = hospitalPerformanceService;
         }
-
-
-        #region 【全国机构运营总览】
-
+        #region {当日数据}
         /// <summary>
         /// 全国机构运营当日数据
         /// </summary>
         /// <returns></returns>
         [HttpGet("getHospitalOperationDailyData")]
-        public async Task<ResultData<List<HospitalOperatingDataVo>>> GetHospitalOperationDairyData(int? year)
+        public async Task<ResultData<List<HospitalOperatingDataVo>>> GetHospitalOperationDailyData(int? year)
         {
             List<HospitalOperatingDataVo> hospitalPerformanceVo = new List<HospitalOperatingDataVo>();
-            var hospitalPerformanceDatas = await hospitalPerformanceService.GetHospitalDailyPerformanceAsync(year);
+            var hospitalPerformanceDatas = await hospitalPerformanceService.GetHospitalPerformanceByDateAsync(year, null);
             hospitalPerformanceDatas = hospitalPerformanceDatas.OrderByDescending(x => x.SendNum).ToList();
             foreach (var x in hospitalPerformanceDatas)
             {
@@ -63,16 +60,18 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             return ResultData<List<HospitalOperatingDataVo>>.Success().AddData("performance", hospitalPerformanceVo);
         }
+        #endregion
 
+        #region {当年数据}
         /// <summary>
         /// 全国机构运营当年数据
         /// </summary>
         /// <returns></returns>
         [HttpGet("getHospitalOperationYearData")]
-        public async Task<ResultData<HospitalOperatingYearDataVo>> GetHospitalOperationDairyByYearData(int? year)
+        public async Task<ResultData<HospitalOperatingYearDataVo>> GetHospitalOperationYearData(int? year)
         {
             HospitalOperatingYearDataVo hospitalPerformanceVo = new HospitalOperatingYearDataVo();
-            var hospitalPerformanceDatas = await hospitalPerformanceService.GetHospitalDailyPerformanceAsync(year);
+            var hospitalPerformanceDatas = await hospitalPerformanceService.GetHospitalPerformanceByDateAsync(year, null);
             hospitalPerformanceDatas = hospitalPerformanceDatas.OrderByDescending(x => x.SendNum).ToList();
 
 
@@ -377,13 +376,53 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<List<PerformanceBrokenLine>>.Success().AddData("OldCustomerUnitPricePerformance", changeOldCustomerUnitPriceBrokenLine);
         }
         #endregion
-        
+
+        #region{机构top10运营数据健康指标}
+        /// <summary>
+        /// 全国机构运营当月数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getHospitalOperationMonthlyData")]
+        public async Task<ResultData<List<HospitalOperatingDataVo>>> GetHospitalOperationMonthlyData(int? year, int? month)
+        {
+            List<HospitalOperatingDataVo> hospitalPerformanceVo = new List<HospitalOperatingDataVo>();
+            var hospitalPerformanceDatas = await hospitalPerformanceService.GetHospitalPerformanceByDateAsync(year, month);
+            hospitalPerformanceDatas = hospitalPerformanceDatas.OrderByDescending(x => x.SendNum).Take(10).ToList();
+            foreach (var x in hospitalPerformanceDatas)
+            {
+                HospitalOperatingDataVo hospitalOperatingDataVo = new HospitalOperatingDataVo();
+                hospitalOperatingDataVo.HospitalName = x.HospitalName;
+                hospitalOperatingDataVo.City = x.City;
+                hospitalOperatingDataVo.SendNum = x.SendNum;
+                hospitalOperatingDataVo.VisitNum = x.VisitNum;
+                hospitalOperatingDataVo.VisitRate = x.VisitRate;
+                hospitalOperatingDataVo.NewCustomerDealNum = x.NewCustomerDealNum;
+                hospitalOperatingDataVo.NewCustomerDealRate = x.NewCustomerDealRate;
+                hospitalOperatingDataVo.NewCustomerAchievement = x.NewCustomerAchievement;
+                hospitalOperatingDataVo.NewCustomerUnitPrice = x.NewCustomerUnitPrice;
+                hospitalOperatingDataVo.OldCustomerDealNum = x.OldCustomerDealNum;
+                hospitalOperatingDataVo.OldCustomerAchievement = x.OldCustomerAchievement;
+                hospitalOperatingDataVo.OldCustomerUnitPrice = x.OldCustomerUnitPrice;
+                hospitalOperatingDataVo.TotalAchievement = x.TotalAchievement;
+                hospitalOperatingDataVo.NewOrOldCustomerRate = x.NewOrOldCustomerRate;
+                hospitalPerformanceVo.Add(hospitalOperatingDataVo);
+            }
+            return ResultData<List<HospitalOperatingDataVo>>.Success().AddData("performance", hospitalPerformanceVo);
+        }
+        #endregion
+
+        #region {城市top10运营数据健康指标}
+
+        #endregion
+        #region {机构top10运营数据占比}
+
         /// <summary>
         /// 全国合作机构top10运营数据占比
         /// </summary>
         /// <returns></returns>
         [HttpGet("topTenHospitalPerformanceData")]
-        public async Task<ResultData<TopTenHospitalPerformanceVo>> GetTopTenHospitalPerformanceData() {
+        public async Task<ResultData<TopTenHospitalPerformanceVo>> GetTopTenHospitalPerformanceData()
+        {
             TopTenHospitalPerformanceVo topTenHospitalPerformance = new TopTenHospitalPerformanceVo();
             var performance = await hospitalPerformanceService.GetTopTenHospitalPerfromance();
             #region 总业绩
@@ -401,8 +440,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             topTenHospitalPerformance.TotalPerformnaceRatio = hospitalPerformanceItem;
             #endregion
 
-
-
             #region 新客业绩
 
 
@@ -416,11 +453,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 }).ToList()
             };
 
-            topTenHospitalPerformance.NewCustomerPerformanceRatio=newCustomerPerformanceItem;
+            topTenHospitalPerformance.NewCustomerPerformanceRatio = newCustomerPerformanceItem;
 
             #endregion
-
-
 
             #region 老客业绩
 
@@ -438,8 +473,6 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             #endregion
 
-
-
             #region 派单占比
 
             HospitalPerformanceItem sendOrderPerformanceItem = new HospitalPerformanceItem
@@ -456,14 +489,12 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             #endregion
 
-
-
             #region 新客上门
 
 
             HospitalPerformanceItem newCustomerToHospitalPerformanceItem = new HospitalPerformanceItem
             {
-                TotalPerformmance =performance.NewCustomerToHospitalPerformanceRatio.TotalPerformmance,
+                TotalPerformmance = performance.NewCustomerToHospitalPerformanceRatio.TotalPerformmance,
                 PerformanceList = performance.NewCustomerToHospitalPerformanceRatio.PerformanceList.Select(c => new HospitalPerformanceListItem
                 {
                     Performance = c.Performance,
@@ -473,8 +504,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             topTenHospitalPerformance.NewCustomerToHospitalPerformanceRatio = newCustomerToHospitalPerformanceItem;
 
             #endregion
-
-
 
             #region 新客成交
 
@@ -495,14 +524,16 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<TopTenHospitalPerformanceVo>.Success().AddData("hospitalPerformanceData", topTenHospitalPerformance);
 
         }
-        
+        #endregion
 
+        #region {城市top10运营数据占比}
         /// <summary>
         /// 全国城市top10运营数据占比
         /// </summary>
         /// <returns></returns>
         [HttpGet("topTenCityPerformanceData")]
-        public async Task<ResultData<TopTenCityPerformanceVo>> GetTopTenCityPerformanceData() {
+        public async Task<ResultData<TopTenCityPerformanceVo>> GetTopTenCityPerformanceData()
+        {
 
             TopTenCityPerformanceVo topTenCityPerformanceVo = new TopTenCityPerformanceVo();
             var performance = await hospitalPerformanceService.GetTopTenCityPerformance();
@@ -535,7 +566,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             };
 
             topTenCityPerformanceVo.NewCustomerPerformanceRatio = newCustomerPerformanceItem;
-;
+            ;
 
             #endregion
 
@@ -603,10 +634,10 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             #endregion
 
-            return ResultData<TopTenCityPerformanceVo>.Success().AddData("cityPerformanceData",topTenCityPerformanceVo);
+            return ResultData<TopTenCityPerformanceVo>.Success().AddData("cityPerformanceData", topTenCityPerformanceVo);
 
         }
-
+        #endregion
 
     }
 }

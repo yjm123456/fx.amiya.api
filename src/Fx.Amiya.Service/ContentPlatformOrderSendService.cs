@@ -647,15 +647,10 @@ namespace Fx.Amiya.Service
         /// 获取今天已派单数据
         /// </summary>
         /// <param name="startDate"></param>
-        /// <param name="endDate"></param>
         /// <returns></returns>
-        public async Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(int? year)
+        public async Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(DateTime startDate)
         {
-            DateTime startrq = DateTime.Now.Date;
-            if (year.HasValue == true)
-            {
-                startrq = Convert.ToDateTime(year.Value + "-01-01");
-            }
+            DateTime startrq = startDate;
             DateTime endrq = DateTime.Now.Date.AddDays(1);
             var orders = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.HospitalInfo).ThenInclude(x => x.CooperativeHospitalCity)
                          where d.SendDate >= startrq && d.SendDate < endrq 

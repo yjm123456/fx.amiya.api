@@ -145,6 +145,6 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="year">年份</param>
         /// <returns></returns>
-        Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(int? year);
+        Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(DateTime startDate);
     }
 }
