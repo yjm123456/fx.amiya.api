@@ -2156,16 +2156,96 @@
             机构业绩接口
             </summary>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetHospitalOperationDairyData">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetHospitalOperationDairyData(System.Nullable{System.Int32})">
             <summary>
             全国机构运营当日数据
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetHospitalOperationDairyByYearData(System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetHospitalOperationDairyByYearData(System.Nullable{System.Int32})">
             <summary>
             全国机构运营当年数据
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetSendOrderBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取派单折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetVisitBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取上门数折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetVisitRateBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取上门率折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetNewCustomerDealBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取新客成交数折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetNewCustomerDealRateBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取新客成交率折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetNewCustomerPerformanceBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取新客业绩折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetNewCustomerUnitPriceBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取新客客单价折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetOldCustomerDealBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取老客成交数折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetOldCustomerPerformanceBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取老客业绩折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetOldCustomerUnitPriceBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取老客客单价折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
             <returns></returns>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalAppointmentQuantityController">
@@ -12104,6 +12184,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.City">
             <summary>
             城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.HospitalId">
+            <summary>
+            医院id
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo.HospitalName">

@@ -14,6 +14,11 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalPerformance
         /// 城市
         /// </summary>
         public string City { get; set; }
+
+        /// <summary>
+        /// 医院id
+        /// </summary>
+        public int HospitalId { get; set; }
         /// <summary>
         /// 医院
         /// </summary>

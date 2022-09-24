@@ -141,9 +141,10 @@ namespace Fx.Amiya.IService
         Task<List<OrderOperationConditionDto>> GetTodaySendOrderByLiveAnchorIdAsync(int liveAnchorId,DateTime recordDate);
 
         /// <summary>
-        /// 获取今天已派单订单号
+        /// 获取根据年份获取已派单订单号
         /// </summary>
+        /// <param name="year">年份</param>
         /// <returns></returns>
-        Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync();
+        Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(int? year);
     }
 }

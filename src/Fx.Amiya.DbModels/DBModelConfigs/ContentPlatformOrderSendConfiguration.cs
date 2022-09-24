@@ -25,8 +25,10 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.Remark).HasColumnName("remark").HasColumnType("varchar(500)").IsRequired(false);
             builder.Property(e => e.HospitalRemark).HasColumnName("hospital_remark").HasColumnType("varchar(200)").IsRequired(false);
 
-            builder.HasOne(e => e.ContentPlatformOrder).WithMany(e => e.ContentPlatformOrderSendList).HasForeignKey(e=>e.ContentPlatformOrderId);
-            builder.HasOne(e => e.AmiyaEmployee).WithMany(e => e.ContentPlatformOrderSendList).HasForeignKey(e=>e.Sender);
+            builder.HasOne(e => e.ContentPlatformOrder).WithMany(e => e.ContentPlatformOrderSendList).HasForeignKey(e => e.ContentPlatformOrderId);
+            builder.HasOne(e => e.AmiyaEmployee).WithMany(e => e.ContentPlatformOrderSendList).HasForeignKey(e => e.Sender);
+
+            builder.HasOne(t => t.HospitalInfo).WithMany(t => t.ContentPlatformOrderSendList).HasForeignKey(t => t.HospitalId);
         }
     }
 }

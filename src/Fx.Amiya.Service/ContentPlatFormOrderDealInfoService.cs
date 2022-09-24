@@ -798,7 +798,7 @@ namespace Fx.Amiya.Service
 
 
         /// <summary>
-        /// 根据到院id获取当日上门成交业绩
+        /// 根据到院id获取上门成交业绩
         /// </summary>
         /// <param name="recordDate"></param>
         /// <param name="hospitalId"></param>
@@ -806,7 +806,7 @@ namespace Fx.Amiya.Service
         public async Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceByHospitalIdAsync(int hospitalId, DateTime recordDate)
         {
             //筛选结束的月份
-            DateTime endDate = recordDate.Date.AddDays(1);
+            DateTime endDate = DateTime.Now.Date.AddDays(1);
             //选定的月份
             DateTime currentDate = recordDate.Date;
             var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)
@@ -822,6 +822,8 @@ namespace Fx.Amiya.Service
                            IsOldCustomer = d.IsOldCustomer,
                            ToHospitalType = d.ToHospitalType,
                            Price = d.Price,
+                           ToHospitalDate=d.ToHospitalDate,
+                           DealDate=d.DealDate,
                        }
                 ).ToList();
 

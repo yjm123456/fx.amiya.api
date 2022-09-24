@@ -649,24 +649,31 @@ namespace Fx.Amiya.Service
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        public async Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync()
+        public async Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(int? year)
         {
             DateTime startrq = DateTime.Now.Date;
+            if (year.HasValue == true)
+            {
+                startrq = Convert.ToDateTime(year.Value + "-01-01");
+            }
             DateTime endrq = DateTime.Now.Date.AddDays(1);
-            var orders = from d in _dalContentPlatformOrderSend.GetAll()
-                         where d.SendDate >= startrq && d.SendDate < endrq
+            var orders = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.HospitalInfo).ThenInclude(x => x.CooperativeHospitalCity)
+                         where d.SendDate >= startrq && d.SendDate < endrq 
                          select new SendContentPlatformOrderDto
                          {
                              OrderId = d.ContentPlatformOrderId,
                              SendHospitalId = d.HospitalId,
+                             SendHospital = d.HospitalInfo.Name,
+                             City = d.HospitalInfo.CooperativeHospitalCity.Name,
+                             SendDate=d.SendDate,
                          };
             var result = orders.ToList();
-            foreach (var x in result)
-            {
-                var hospitalInfo = await _hospitalInfoService.GetByIdAsync(x.SendHospitalId);
-                x.SendHospital = hospitalInfo.Name;
-                x.City = hospitalInfo.City;
-            }
+            //foreach (var x in result)
+            //{
+            //    var hospitalInfo = await _hospitalInfoService.GetByIdAsync(x.SendHospitalId);
+            //    x.SendHospital = hospitalInfo.Name;
+            //    x.City = hospitalInfo.City;
+            //}
             return result;
         }
 
