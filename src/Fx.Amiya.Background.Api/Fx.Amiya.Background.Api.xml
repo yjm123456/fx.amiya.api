@@ -1048,6 +1048,41 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ConsumptionVoucherController.AddAsync(Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.AddConsumptionVoucherVo)">
+            <summary>
+            添加抵用券
+            </summary>
+            <param name="add"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ConsumptionVoucherController.GetConsumptionVoucherTypeListAsync">
+            <summary>
+            获取抵用券类型列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ConsumptionVoucherController.GetConsumptionVoucherInfoList(System.Int32,System.Int32)">
+            <summary>
+            获取抵用券列表
+            </summary>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ConsumptionVoucherController.GetConsumptionVoucherInfoByIdAsync(System.String)">
+            <summary>
+            根据抵用券id获取抵用券信息
+            </summary>
+            <param name="voucherId">抵用券id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ConsumptionVoucherController.UpdateConsumptionVoucherInfoAsync(Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.UpdateConsumptionVoucherInfoVo)">
+            <summary>
+            修改抵用券信息
+            </summary>
+            <param name="updateConsumption"></param>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.ContentPlateFormOrderController">
             <summary>
             内容平台订单模块
@@ -2246,6 +2281,18 @@
             </summary>
             <param name="year">年份</param>
             <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetTopTenHospitalPerformanceData">
+            <summary>
+            全国合作机构top10运营数据占比
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetTopTenCityPerformanceData">
+            <summary>
+            全国城市top10运营数据占比
+            </summary>
             <returns></returns>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalAppointmentQuantityController">
@@ -6576,6 +6623,146 @@
             订单号
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.AddConsumptionVoucherVo.Name">
+            <summary>
+            抵用券名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.AddConsumptionVoucherVo.DeductMoney">
+            <summary>
+            抵扣金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.AddConsumptionVoucherVo.IsSpecifyProduct">
+            <summary>
+            是否只能用于指定商品
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.AddConsumptionVoucherVo.IsAccumulate">
+            <summary>
+            是否可累加使用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.AddConsumptionVoucherVo.IsShare">
+            <summary>
+            是否可分享
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.AddConsumptionVoucherVo.Type">
+            <summary>
+            抵用券类型0:实体商品抵扣,1:虚拟商品抵扣(如面诊卡)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.AddConsumptionVoucherVo.IsValid">
+            <summary>
+            当前抵用券是否有效
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.AddConsumptionVoucherVo.ConsumptionVoucherCode">
+            <summary>
+            抵用券编码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoListVo.Name">
+            <summary>
+            抵用券名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoListVo.DeductMoney">
+            <summary>
+            抵扣金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoListVo.IsSpecifyProduct">
+            <summary>
+            是否只能用于指定商品
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoListVo.IsAccumulate">
+            <summary>
+            是否可累加使用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoListVo.IsShare">
+            <summary>
+            是否可分享
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoListVo.IsValid">
+            <summary>
+            当前抵用券是否有效
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoListVo.ConsumptionVoucherCode">
+            <summary>
+            抵用券编码
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoVo">
+            <summary>
+            抵用券详细信息
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoVo.Name">
+            <summary>
+            抵用券名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoVo.DeductMoney">
+            <summary>
+            抵扣金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoVo.IsSpecifyProduct">
+            <summary>
+            是否只能用于指定商品
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoVo.IsAccumulate">
+            <summary>
+            是否可累加使用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoVo.IsShare">
+            <summary>
+            是否可分享
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoVo.Type">
+            <summary>
+            类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoVo.IsValid">
+            <summary>
+            当前抵用券是否有效
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoVo.ConsumptionVoucherCode">
+            <summary>
+            抵用券编码
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherTypeListVo">
+            <summary>
+            抵用券类型列表
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherTypeListVo.Type">
+            <summary>
+            类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherTypeListVo.TypeText">
+            <summary>
+            类型名称
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherVo">
+            <summary>
+            抵用券名称列表
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherVo.ConsumptionVoiucherId">
             <summary>
             抵用券id
@@ -6584,6 +6771,51 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherVo.ConsumptionVoucherName">
             <summary>
             抵用券名称
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.UpdateConsumptionVoucherInfoVo">
+            <summary>
+            更新抵用券信息
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.UpdateConsumptionVoucherInfoVo.Name">
+            <summary>
+            抵用券名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.UpdateConsumptionVoucherInfoVo.DeductMoney">
+            <summary>
+            抵扣金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.UpdateConsumptionVoucherInfoVo.IsSpecifyProduct">
+            <summary>
+            是否只能用于指定商品
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.UpdateConsumptionVoucherInfoVo.IsAccumulate">
+            <summary>
+            是否可累加使用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.UpdateConsumptionVoucherInfoVo.IsShare">
+            <summary>
+            是否可分享
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.UpdateConsumptionVoucherInfoVo.Type">
+            <summary>
+            抵用券类型0:实体商品折扣,1:面诊卡抵用券
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.UpdateConsumptionVoucherInfoVo.IsValid">
+            <summary>
+            当前抵用券是否有效
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.UpdateConsumptionVoucherInfoVo.ConsumptionVoucherCode">
+            <summary>
+            抵用券编码
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.BindCustomerServiceContentPlatformOrderVo.OrderTypeText">
@@ -12176,6 +12408,16 @@
             下午可预约人数
             </summary>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.HospitalPerformance.ExcellentHospitalPerformanceVo">
+            <summary>
+            全国优秀机构运营健康指标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.ExcellentHospitalPerformanceVo.HospitalName">
+            <summary>
+            医院名称
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo">
             <summary>
             全国机构运营数据
@@ -12274,6 +12516,101 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingYearDataVo.TotalSum">
             <summary>
             统计数据(一条数据)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.TopTenCityPerformanceVo.TotalPerformnaceRatio">
+            <summary>
+            总业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.TopTenCityPerformanceVo.NewCustomerPerformanceRatio">
+            <summary>
+            新客业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.TopTenCityPerformanceVo.OldCustomerPerformanceRatio">
+            <summary>
+            老客业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.TopTenCityPerformanceVo.SendOrderPerformanceRatio">
+            <summary>
+            派单量占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.TopTenCityPerformanceVo.NewCustomerToHospitalPerformanceRatio">
+            <summary>
+            新客上门人数占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.TopTenCityPerformanceVo.NewCustomerDealCountRatio">
+            <summary>
+            新客成交人数占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.CityPerformanceItem.TotalPerformmance">
+            <summary>
+            总业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.CityPerformanceListItem.Performance">
+            <summary>
+            城市业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.CityPerformanceListItem.CityName">
+            <summary>
+            城市名称
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.HospitalPerformance.TopTenHospitalPerformanceVo">
+            <summary>
+            全国机构top10累计运营数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.TopTenHospitalPerformanceVo.TotalPerformnaceRatio">
+            <summary>
+            总业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.TopTenHospitalPerformanceVo.NewCustomerPerformanceRatio">
+            <summary>
+            新客业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.TopTenHospitalPerformanceVo.OldCustomerPerformanceRatio">
+            <summary>
+            老客业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.TopTenHospitalPerformanceVo.SendOrderPerformanceRatio">
+            <summary>
+            派单量占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.TopTenHospitalPerformanceVo.NewCustomerToHospitalPerformanceRatio">
+            <summary>
+            新客上门人数占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.TopTenHospitalPerformanceVo.NewCustomerDealCountRatio">
+            <summary>
+            新客成交人数占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalPerformanceItem.TotalPerformmance">
+            <summary>
+            总业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalPerformanceListItem.Performance">
+            <summary>
+            机构业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalPerformanceListItem.HospitalName">
+            <summary>
+            机构名称
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPosition.AddHospitalPositionInfoVo.Name">
