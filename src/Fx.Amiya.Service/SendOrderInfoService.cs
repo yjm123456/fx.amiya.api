@@ -946,15 +946,7 @@ namespace Fx.Amiya.Service
             }
             return result;
         }
-        /// <summary>
-        /// 获取总排单量
-        /// </summary>
-        /// <returns></returns>
-        public async Task<decimal> GetTotalSendCount()
-        {
-            return await dalSendOrderInfo.GetAll().CountAsync();
-        }
-
+        
         #region 【数据中心板块】
 
         /// <summary>
@@ -1028,43 +1020,6 @@ namespace Fx.Amiya.Service
 
         #endregion
 
-        #region 全国机构运营数据
-        /// <summary>
-        /// 获取派单量前10的医院运营数据
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<SendOrderInfoPerformanceDto>> GetTopTenHospitalSendOrderPerformance()
-        {
-            var performanceList = from d in _dalHospitalInfo.GetAll()
-                                   from h in dalSendOrderInfo.GetAll()
-                                    where d.Id==h.HospitalId
-                                   group h by d.Name into g
-                                   orderby g.Count() descending
-                                   select new SendOrderInfoPerformanceDto
-                                   {
-                                       HospitalName = g.Key,
-                                       Performance = g.Count()
-                                   };
-            return await performanceList.Skip(0).Take(10).ToListAsync();
-        }
-
-
-        #endregion
-        #region 全国城市运营数据
-        public async Task<List<SendOrderInfoCityPerformanceDto>> GetTopTenCitySendOrderPerformance()
-        {
-            var performanceList = from d in _dalHospitalInfo.GetAll()
-                                  from h in dalSendOrderInfo.GetAll()
-                                  where d.Id == h.HospitalId
-                                  group h by d.CooperativeHospitalCity.Name into g
-                                  orderby g.Count() descending
-                                  select new SendOrderInfoCityPerformanceDto
-                                  {
-                                     CityName = g.Key,
-                                      Performance = g.Count()
-                                  };
-            return await performanceList.Skip(0).Take(10).ToListAsync();
-        }
-        #endregion
+        
     }
 }

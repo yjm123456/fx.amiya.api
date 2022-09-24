@@ -2,6 +2,7 @@
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.OrderReport;
+using Fx.Amiya.Dto.SendOrderInfo;
 using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -26,13 +27,14 @@ namespace Fx.Amiya.Service
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private IWxAppConfigService _wxAppConfigService;
         private IDalHospitalCheckPhoneRecord _dalHospitalCheckPhoneRecord;
+        private IDalHospitalInfo _dalHospitalInfo;
         public ContentPlatformOrderSendService(IDalContentPlatformOrderSend dalContentPlatformOrderSend,
             IHospitalInfoService hospitalInfoService,
             IDalBindCustomerService dalBindCustomerService,
             IAmiyaEmployeeService amiyaEmployeeService,
             IDalConfig dalConfig,
             IWxAppConfigService wxAppConfigService,
-            IDalHospitalCheckPhoneRecord dalHospitalCheckPhoneRecord)
+            IDalHospitalCheckPhoneRecord dalHospitalCheckPhoneRecord, IDalHospitalInfo dalHospitalInfo)
         {
             _dalContentPlatformOrderSend = dalContentPlatformOrderSend;
             _dalConfig = dalConfig;
@@ -41,6 +43,7 @@ namespace Fx.Amiya.Service
             _dalHospitalCheckPhoneRecord = dalHospitalCheckPhoneRecord;
             _hospitalInfoService = hospitalInfoService;
             _amiyaEmployeeService = amiyaEmployeeService;
+            _dalHospitalInfo = dalHospitalInfo;
         }
 
         /// <summary>
@@ -647,15 +650,10 @@ namespace Fx.Amiya.Service
         /// 获取今天已派单数据
         /// </summary>
         /// <param name="startDate"></param>
-        /// <param name="endDate"></param>
         /// <returns></returns>
-        public async Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(int? year)
+        public async Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(DateTime startDate)
         {
-            DateTime startrq = DateTime.Now.Date;
-            if (year.HasValue == true)
-            {
-                startrq = Convert.ToDateTime(year.Value + "-01-01");
-            }
+            DateTime startrq = startDate;
             DateTime endrq = DateTime.Now.Date.AddDays(1);
             var orders = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.HospitalInfo).ThenInclude(x => x.CooperativeHospitalCity)
                          where d.SendDate >= startrq && d.SendDate < endrq 
@@ -682,6 +680,57 @@ namespace Fx.Amiya.Service
             var config = await _dalConfig.GetAll().SingleOrDefaultAsync();
             return JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig;
         }
+
+        /// <summary>
+        /// 获取总派单量
+        /// </summary>
+        /// <returns></returns>
+        public async Task<decimal> GetTotalSendCount()
+        {
+            return await _dalContentPlatformOrderSend.GetAll().CountAsync();
+        }
+
+        #region 全国机构运营数据
+        /// <summary>
+        /// 获取派单量前10的医院运营数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<SendOrderInfoPerformanceDto>> GetTopTenHospitalSendOrderPerformance()
+        {
+            var performanceList = from d in _dalHospitalInfo.GetAll()
+                                  from h in _dalContentPlatformOrderSend.GetAll()
+                                  where d.Id == h.HospitalId
+                                  group h by d.Name into g
+                                  orderby g.Count() descending
+                                  select new SendOrderInfoPerformanceDto
+                                  {
+                                      HospitalName = g.Key,
+                                      Performance = g.Count()
+                                  };
+            return await performanceList.Skip(0).Take(10).ToListAsync();
+        }
+
+
+        #endregion
+        #region 全国城市运营数据
+        public async Task<List<SendOrderInfoCityPerformanceDto>> GetTopTenCitySendOrderPerformance()
+        {
+            var performanceList = from d in _dalHospitalInfo.GetAll()
+                                  from h in _dalContentPlatformOrderSend.GetAll()
+                                  where d.Id == h.HospitalId
+                                  group h by d.CooperativeHospitalCity.Name into g
+                                  orderby g.Count() descending
+                                  select new SendOrderInfoCityPerformanceDto
+                                  {
+                                      CityName = g.Key,
+                                      Performance = g.Count()
+                                  };
+            return await performanceList.Skip(0).Take(10).ToListAsync();
+        }
+
+
+        
+        #endregion
 
     }
 }

@@ -14,11 +14,11 @@ namespace Fx.Amiya.IService
     public interface IHospitalPerformanceService
     {
         /// <summary>
-        /// 获取全国机构日运营数据概况
+        /// 根据时间获取全国机构运营数据概况
         /// </summary>
         /// <param name="year">年份</param>
         /// <returns></returns>
-        Task<List<HospitalPerformanceDto>> GetHospitalDailyPerformanceAsync(int? year);
+        Task<List<HospitalPerformanceDto>> GetHospitalPerformanceByDateAsync(int? year, int? month);
 
 
 
@@ -105,8 +105,30 @@ namespace Fx.Amiya.IService
         Task<CityAccumulatePerformanceDto> GetTopTenCityPerformance();
 
 
+        #endregion
+
+        #region 【转换接口】
+        /// <summary>
+        /// 计算占比
+        /// </summary>
+        /// <param name="completePerformance"></param>
+        /// <param name="monthTarget"></param>
+        /// <returns></returns>
         decimal? CalculateTargetComplete(decimal completePerformance, decimal monthTarget);
+
+        /// <summary>
+        /// 两数相比
+        /// </summary>
+        /// <param name="dataA"></param>
+        /// <param name="dataB"></param>
+        /// <returns></returns>
         string CalculateAccounted(decimal dataA, decimal dataB);
+        /// <summary>
+        /// 两数相除
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         decimal? Division(decimal? a, int? b);
         #endregion
     }

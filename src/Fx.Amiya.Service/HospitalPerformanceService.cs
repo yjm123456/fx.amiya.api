@@ -11,36 +11,42 @@ namespace Fx.Amiya.Service
 {
     public class HospitalPerformanceService : IHospitalPerformanceService
     {
-        
-        private IContentPlatformOrderSendService contentPlatformOrderSendService;       
-        private IContentPlateFormOrderService contentPlateFormOrderService;
-        private readonly IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
-        private readonly ISendOrderInfoService sendOrderInfoService;
         /// <summary>
         /// 构造函数
         /// </summary>
-        public HospitalPerformanceService(IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService, IContentPlatformOrderSendService contentPlatformOrderSendService, IContentPlateFormOrderService contentPlateFormOrderService, ISendOrderInfoService sendOrderInfoService)
+        private IContentPlatformOrderSendService contentPlatformOrderSendService;
+        private IContentPlateFormOrderService contentPlateFormOrderService;
+        private readonly IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
+        private readonly ISendOrderInfoService sendOrderInfoService;
+
+        public HospitalPerformanceService(IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
+            IContentPlatformOrderSendService contentPlatformOrderSendService,
+            IContentPlateFormOrderService contentPlateFormOrderService,
+            ISendOrderInfoService sendOrderInfoService)
         {
             this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
             this.contentPlatformOrderSendService = contentPlatformOrderSendService;
-            this.contentPlateFormOrderService = contentPlateFormOrderService;         
+            this.contentPlateFormOrderService = contentPlateFormOrderService;
             this.sendOrderInfoService = sendOrderInfoService;
         }
-
         /// <summary>
-        /// 获取全国机构日/年运营数据概况
+        /// 根据时间获取全国机构运营数据概况
         /// </summary>
         /// <param name="year">年份</param>
         /// <returns></returns>
-        public async Task<List<HospitalPerformanceDto>> GetHospitalDailyPerformanceAsync(int? year)
+        public async Task<List<HospitalPerformanceDto>> GetHospitalPerformanceByDateAsync(int? year, int? month)
         {
             List<HospitalPerformanceDto> resultList = new List<HospitalPerformanceDto>();
-            var contentPlatFormOrderSendList = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(year);
             DateTime date = DateTime.Now;
             if (year.HasValue == true)
             {
                 date = Convert.ToDateTime(year + "-01-01");
             }
+            if (month.HasValue == true)
+            {
+                date = Convert.ToDateTime(DateTime.Now.Year + "-" + month.Value + "-01");
+            }
+            var contentPlatFormOrderSendList = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(date);
             foreach (var x in contentPlatFormOrderSendList)
             {
                 var isExistHosiptal = resultList.Where(z => z.HospitalId == x.SendHospitalId).Count();
@@ -82,10 +88,11 @@ namespace Fx.Amiya.Service
         {
             HospitalAccumulatePerformanceDto performanceDto = new HospitalAccumulatePerformanceDto();
             #region 总业绩
-            var totalPerformanceList =await contentPlatFormOrderDealInfoService.GetTopTenHospitalTotalPerformance();
-            var totalPerformance =await contentPlatFormOrderDealInfoService.GetPerformance(null);
+            var totalPerformanceList = await contentPlatFormOrderDealInfoService.GetTopTenHospitalTotalPerformance();
+            var totalPerformance = await contentPlatFormOrderDealInfoService.GetPerformance(null);
 
-            HospitalPerformanceItem hospitalPerformanceItem = new HospitalPerformanceItem {
+            HospitalPerformanceItem hospitalPerformanceItem = new HospitalPerformanceItem
+            {
                 TotalPerformmance = totalPerformance,
                 PerformanceList = totalPerformanceList.Select(c => new HospitalPerformanceListItem
                 {
@@ -129,13 +136,13 @@ namespace Fx.Amiya.Service
                     HospitalName = c.HospitalName
                 }).ToList()
             };
-            performanceDto.OldCustomerPerformanceRatio=oldCustomerPerformanceItem;
+            performanceDto.OldCustomerPerformanceRatio = oldCustomerPerformanceItem;
             performanceDto.OldCustomerPerformanceRatio.PerformanceList.Add(new HospitalPerformanceListItem { HospitalName = "其他", Performance = oldCustomerPerformance - performanceDto.OldCustomerPerformanceRatio.PerformanceList.Sum(c => c.Performance) });
             #endregion
 
             #region 派单量
-            var sendOrderPerformanceList = await sendOrderInfoService.GetTopTenHospitalSendOrderPerformance();
-            var sendOrderPerformance = await sendOrderInfoService.GetTotalSendCount();
+            var sendOrderPerformanceList = await contentPlatformOrderSendService.GetTopTenHospitalSendOrderPerformance();
+            var sendOrderPerformance = await contentPlatformOrderSendService.GetTotalSendCount();
 
 
             HospitalPerformanceItem sendOrderPerformanceItem = new HospitalPerformanceItem
@@ -152,7 +159,7 @@ namespace Fx.Amiya.Service
             #endregion
 
             #region 新客上门人数
-            var newCustomerToHospitalPerformanceList= await contentPlatFormOrderDealInfoService.GetTopTenNewCustomerToHospitalPformance();
+            var newCustomerToHospitalPerformanceList = await contentPlatFormOrderDealInfoService.GetTopTenNewCustomerToHospitalPformance();
             var newCustomerToHospitalPerformance = await contentPlatFormOrderDealInfoService.GetNewCustomerToHospitalCount();
 
 
@@ -165,7 +172,7 @@ namespace Fx.Amiya.Service
                     HospitalName = c.HospitalName
                 }).ToList()
             };
-            performanceDto.NewCustomerToHospitalPerformanceRatio=newCustomerToHospitalPerformanceItem;
+            performanceDto.NewCustomerToHospitalPerformanceRatio = newCustomerToHospitalPerformanceItem;
             performanceDto.NewCustomerToHospitalPerformanceRatio.PerformanceList.Add(new HospitalPerformanceListItem { HospitalName = "其他", Performance = newCustomerToHospitalPerformance - performanceDto.NewCustomerToHospitalPerformanceRatio.PerformanceList.Sum(c => c.Performance) });
             #endregion
 
@@ -205,16 +212,18 @@ namespace Fx.Amiya.Service
             #region 总业绩
 
             var totalPerformanceList = await contentPlatFormOrderDealInfoService.GetTopTenCityTotalPerformance();
-            var totalPerformance= await contentPlatFormOrderDealInfoService.GetPerformance(null);
-            CityPerformanceItem totalPerformanceItem = new CityPerformanceItem {
-                TotalPerformmance=totalPerformance,
-                PerformanceList= totalPerformanceList.Select(c=>new CityPerformanceListItem { 
-                    Performance=c.Performance,
-                    CityName=c.CityName
+            var totalPerformance = await contentPlatFormOrderDealInfoService.GetPerformance(null);
+            CityPerformanceItem totalPerformanceItem = new CityPerformanceItem
+            {
+                TotalPerformmance = totalPerformance,
+                PerformanceList = totalPerformanceList.Select(c => new CityPerformanceListItem
+                {
+                    Performance = c.Performance,
+                    CityName = c.CityName
                 }).ToList()
             };
             cityAccumulatePerformance.TotalPerformnaceRatio = totalPerformanceItem;
-            cityAccumulatePerformance.TotalPerformnaceRatio.PerformanceList.Add(new CityPerformanceListItem {  CityName= "其他", Performance = totalPerformance - cityAccumulatePerformance.TotalPerformnaceRatio.PerformanceList.Sum(c => c.Performance) });
+            cityAccumulatePerformance.TotalPerformnaceRatio.PerformanceList.Add(new CityPerformanceListItem { CityName = "其他", Performance = totalPerformance - cityAccumulatePerformance.TotalPerformnaceRatio.PerformanceList.Sum(c => c.Performance) });
             #endregion
 
             #region 新客业绩
@@ -256,8 +265,8 @@ namespace Fx.Amiya.Service
 
             #region 派单占比
 
-            var sendOrderPerformanceList = await sendOrderInfoService.GetTopTenCitySendOrderPerformance();
-            var sendOrderPerformance = await sendOrderInfoService.GetTotalSendCount();
+            var sendOrderPerformanceList = await contentPlatformOrderSendService.GetTopTenCitySendOrderPerformance();
+            var sendOrderPerformance = await contentPlatformOrderSendService.GetTotalSendCount();
             CityPerformanceItem sendOrderPerformanceItem = new CityPerformanceItem
             {
                 TotalPerformmance = sendOrderPerformance,
@@ -325,8 +334,9 @@ namespace Fx.Amiya.Service
         public async Task<List<PerformanceBrokenLine>> GetHospitalSendOrderNum(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
+            DateTime date = Convert.ToDateTime(year + "-01-01");
             //派单情况
-            var sendOrder = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(year);
+            var sendOrder = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(date);
             //派单折线图转换
             var sendOrderBrokenLine = sendOrder.Where(x => x.SendHospitalId == hospitalId).GroupBy(x => x.SendDate.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Count() }).ToList();
             var changeSendOrderBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, sendOrderBrokenLine);
@@ -358,9 +368,10 @@ namespace Fx.Amiya.Service
         public async Task<List<HospitalVisitRateDto>> GetHospitalVisitRateNum(int year, int hospitalId)
         {
             //当前医院派单情况
-            var sendOrder = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(year);
+            DateTime date = Convert.ToDateTime(year + "-01-01");
+            //派单情况
+            var sendOrder = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(date);
             var sendOrderBrokenLine = sendOrder.Where(x => x.SendHospitalId == hospitalId).GroupBy(x => x.SendDate.Month).Select(x => new HospitalVisitRateDto { Date = x.Key.ToString(), SendOrderNum = x.Count() }).ToList();
-            DateTime date = date = Convert.ToDateTime(year + "-01-01");
             int month = DateTime.Now.Month;
             var visit = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(hospitalId, date);
             var visitBrokenLine = visit.Where(x => x.IsToHospital == true).GroupBy(x => x.ToHospitalDate.Value.Month).Select(x => new HospitalVisitRateDto { Date = x.Key.ToString(), VisitNum = x.Count() }).ToList();
@@ -557,7 +568,7 @@ namespace Fx.Amiya.Service
             return Math.Round(a.Value / b.Value, 2);
         }
 
-       
+
         #endregion
     }
 }
