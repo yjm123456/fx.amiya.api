@@ -377,6 +377,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<List<PerformanceBrokenLine>>.Success().AddData("OldCustomerUnitPricePerformance", changeOldCustomerUnitPriceBrokenLine);
         }
         #endregion
+        
         /// <summary>
         /// 全国合作机构top10运营数据占比
         /// </summary>
@@ -494,7 +495,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<TopTenHospitalPerformanceVo>.Success().AddData("hospitalPerformanceData", topTenHospitalPerformance);
 
         }
-        #endregion
+        
 
         /// <summary>
         /// 全国城市top10运营数据占比

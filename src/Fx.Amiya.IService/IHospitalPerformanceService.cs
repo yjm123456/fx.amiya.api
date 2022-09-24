@@ -93,7 +93,6 @@ namespace Fx.Amiya.IService
         /// <param name="hospitalId"></param>
         /// <returns></returns>
         Task<List<HospitalUnitPriceDto>> GetHospitalOldCustomerUnitPriceNum(int year, int hospitalId);
-        Task<List<HospitalPerformanceDto>> GetHospitalDailyPerformanceAsync();
         /// <summary>
         /// 获取全国机构top10运营数据占比
         /// </summary>
