@@ -129,6 +129,9 @@ namespace Fx.Amiya.DbModels
         public virtual  DbSet<RechargeAmount> RechargeAmounts { get; set; }
         public virtual DbSet<GrowthPointsRule> GrowthPointsRules { get; set; }
         public virtual DbSet<GoodsConsumptionVoucher> GoodsConsumptionVouchers { get; set; }
+        public virtual DbSet<HospitalOperationsbeIndicator> HospitalOperationsbeIndicators { get; set; }
+        public virtual DbSet<OperationsbeIndicatorToHospital> OperationsbeIndicatorToHospitals { get; set; }
+        public virtual DbSet<ExcellentHospitalOperationsbeRemark> ExcellentHospitalOperationsbeRemark { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -257,6 +260,9 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new RechargeAmountConfiguration());
             modelBuilder.ApplyConfiguration(new GrowthpointsRuleConfiguration());
             modelBuilder.ApplyConfiguration(new GoodsConsumptionVoucherConfiguration());
+            modelBuilder.ApplyConfiguration(new HospitalOperationsbeIndicatorConfiguration());
+            modelBuilder.ApplyConfiguration(new OperationsbeIndicatorToHospitalConfiguration());
+            modelBuilder.ApplyConfiguration(new ExcellentHospitalOperationsbeRemarkConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }
