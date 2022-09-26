@@ -70,8 +70,16 @@ namespace Fx.Amiya.Service
                 hospitalPerformanceDto.City = x.City;
                 hospitalPerformanceDto.SendNum = contentPlatFormOrderSendList.Where(z => z.SendHospitalId == x.SendHospitalId).Count();
 
-
-                var contentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(x.SendHospitalId, date);
+                List<int> hospitalIds = new List<int>();
+                if (isCity)
+                {
+                    hospitalIds = contentPlatFormOrderSendList.Where(c => c.City == x.City).Select(c => c.SendHospitalId).Distinct().ToList();
+                }
+                else
+                {
+                    hospitalIds.Add(x.SendHospitalId);
+                }
+                var contentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(hospitalIds, date);
                 hospitalPerformanceDto.VisitNum = contentPlatFormOrderDealInfoList.Count();
                 hospitalPerformanceDto.VisitRate = CalculateTargetComplete(hospitalPerformanceDto.VisitNum, hospitalPerformanceDto.SendNum).Value;
                 var dealInfoList = contentPlatFormOrderDealInfoList.Where(x => x.IsDeal == true);
@@ -366,7 +374,7 @@ namespace Fx.Amiya.Service
         {
             DateTime date = date = Convert.ToDateTime(year + "-01-01");
             int month = DateTime.Now.Month;
-            var visit = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(hospitalId, date);
+            var visit = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(new List<int> { hospitalId }, date);
             var visitBrokenLine = visit.Where(x => x.IsToHospital == true).GroupBy(x => x.ToHospitalDate.Value.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Count() }).ToList();
             var changevisitBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, visitBrokenLine);
             return changevisitBrokenLine;
@@ -385,7 +393,7 @@ namespace Fx.Amiya.Service
             var sendOrder = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(date);
             var sendOrderBrokenLine = sendOrder.Where(x => x.SendHospitalId == hospitalId).GroupBy(x => x.SendDate.Month).Select(x => new HospitalVisitRateDto { Date = x.Key.ToString(), SendOrderNum = x.Count() }).ToList();
             int month = DateTime.Now.Month;
-            var visit = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(hospitalId, date);
+            var visit = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(new List<int> { hospitalId }, date);
             var visitBrokenLine = visit.Where(x => x.IsToHospital == true).GroupBy(x => x.ToHospitalDate.Value.Month).Select(x => new HospitalVisitRateDto { Date = x.Key.ToString(), VisitNum = x.Count() }).ToList();
             foreach (var x in sendOrderBrokenLine)
             {
@@ -407,7 +415,7 @@ namespace Fx.Amiya.Service
         {
             DateTime date = date = Convert.ToDateTime(year + "-01-01");
             int month = DateTime.Now.Month;
-            var newCustomerDeal = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(hospitalId, date);
+            var newCustomerDeal = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(new List<int> { hospitalId }, date);
             var newCustomerDealBrokenLine = newCustomerDeal.Where(x => x.IsToHospital == true && x.IsDeal == true && x.DealDate.HasValue == true && x.IsOldCustomer == false).GroupBy(x => x.DealDate.Value.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Count() }).ToList();
             var changedealBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, newCustomerDealBrokenLine);
             return changedealBrokenLine;
@@ -424,11 +432,11 @@ namespace Fx.Amiya.Service
             DateTime date = date = Convert.ToDateTime(year + "-01-01");
             int month = DateTime.Now.Month;
             //当前医院上门情况
-            var visit = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(hospitalId, date);
+            var visit = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(new List<int> { hospitalId }, date);
             var visitBrokenLine = visit.Where(x => x.IsToHospital == true).GroupBy(x => x.ToHospitalDate.Value.Month).Select(x => new HospitalDealRateDto { Date = x.Key.ToString(), VisitNum = x.Count() }).ToList();
 
             //当前医院新客成交情况
-            var newCustomerDeal = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(hospitalId, date);
+            var newCustomerDeal = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(new List<int> { hospitalId }, date);
             var newCustomerDealBrokenLine = newCustomerDeal.Where(x => x.IsToHospital == true && x.IsDeal == true && x.DealDate.HasValue == true && x.IsOldCustomer == false).GroupBy(x => x.DealDate.Value.Month).Select(x => new HospitalDealRateDto { Date = x.Key.ToString(), DealNum = x.Count() }).ToList();
             foreach (var x in visitBrokenLine)
             {
@@ -450,7 +458,7 @@ namespace Fx.Amiya.Service
         {
             DateTime date = date = Convert.ToDateTime(year + "-01-01");
             int month = DateTime.Now.Month;
-            var newCustomerDeal = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(hospitalId, date);
+            var newCustomerDeal = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(new List<int> { hospitalId }, date);
             var newCustomerDealPriceBrokenLine = newCustomerDeal.Where(x => x.IsToHospital == true && x.IsDeal == true && x.DealDate.HasValue == true && x.IsOldCustomer == false).GroupBy(x => x.DealDate.Value.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(p => p.Price) }).ToList();
             var changedealBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, newCustomerDealPriceBrokenLine);
             return changedealBrokenLine;
@@ -467,7 +475,7 @@ namespace Fx.Amiya.Service
             DateTime date = date = Convert.ToDateTime(year + "-01-01");
             int month = DateTime.Now.Month;
             //当前医院新客成交情况
-            var newCustomerDeal = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(hospitalId, date);
+            var newCustomerDeal = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(new List<int> { hospitalId }, date);
             var newCustomerDealBrokenLine = newCustomerDeal.Where(x => x.IsToHospital == true && x.IsDeal == true && x.DealDate.HasValue == true && x.IsOldCustomer == false).GroupBy(x => x.DealDate.Value.Month).Select(x => new HospitalUnitPriceDto { Date = x.Key.ToString(), CustomerDealNum = x.Count() }).ToList();
 
             //当前医院新客业绩情况
@@ -493,7 +501,7 @@ namespace Fx.Amiya.Service
         {
             DateTime date = date = Convert.ToDateTime(year + "-01-01");
             int month = DateTime.Now.Month;
-            var newCustomerDeal = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(hospitalId, date);
+            var newCustomerDeal = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(new List<int> { hospitalId }, date);
             var newCustomerDealBrokenLine = newCustomerDeal.Where(x => x.IsToHospital == true && x.IsDeal == true && x.DealDate.HasValue == true && x.IsOldCustomer == true).GroupBy(x => x.DealDate.Value.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Count() }).ToList();
             var changedealBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, newCustomerDealBrokenLine);
             return changedealBrokenLine;
@@ -509,7 +517,7 @@ namespace Fx.Amiya.Service
         {
             DateTime date = date = Convert.ToDateTime(year + "-01-01");
             int month = DateTime.Now.Month;
-            var newCustomerDeal = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(hospitalId, date);
+            var newCustomerDeal = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(new List<int> { hospitalId }, date);
             var newCustomerDealPriceBrokenLine = newCustomerDeal.Where(x => x.IsToHospital == true && x.IsDeal == true && x.DealDate.HasValue == true && x.IsOldCustomer == true).GroupBy(x => x.DealDate.Value.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(p => p.Price) }).ToList();
             var changedealBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, newCustomerDealPriceBrokenLine);
             return changedealBrokenLine;
@@ -526,7 +534,7 @@ namespace Fx.Amiya.Service
             DateTime date = date = Convert.ToDateTime(year + "-01-01");
             int month = DateTime.Now.Month;
             //当前医院老客成交情况
-            var newCustomerDeal = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(hospitalId, date);
+            var newCustomerDeal = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(new List<int> { hospitalId }, date);
             var newCustomerDealBrokenLine = newCustomerDeal.Where(x => x.IsToHospital == true && x.IsDeal == true && x.DealDate.HasValue == true && x.IsOldCustomer == true).GroupBy(x => x.DealDate.Value.Month).Select(x => new HospitalUnitPriceDto { Date = x.Key.ToString(), CustomerDealNum = x.Count() }).ToList();
 
             //当前医院老客业绩情况

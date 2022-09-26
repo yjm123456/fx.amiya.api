@@ -733,7 +733,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<decimal> GetNewCustomerToHospitalCount()
         {
-            var count = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.IsToHospital == true&&e.IsOldCustomer==false).CountAsync();
+            var count = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.IsToHospital == true && e.IsOldCustomer == false).CountAsync();
             return count;
         }
         /// <summary>
@@ -742,7 +742,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<decimal> GetNewCustomerDealCount()
         {
-            var count = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.IsDeal == true&&e.IsOldCustomer==false).CountAsync();
+            var count = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.IsDeal == true && e.IsOldCustomer == false).CountAsync();
             return count;
         }
 
@@ -831,7 +831,7 @@ namespace Fx.Amiya.Service
         /// <param name="recordDate"></param>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
-        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceByHospitalIdAsync(int hospitalId, DateTime recordDate)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceByHospitalIdAsync(List<int> hospitalId, DateTime recordDate)
         {
             //筛选结束的月份
             DateTime endDate = DateTime.Now.Date.AddDays(1);
@@ -839,7 +839,7 @@ namespace Fx.Amiya.Service
             DateTime currentDate = recordDate.Date;
             var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)
                 .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= currentDate && o.ToHospitalDate < endDate)
-                .Where(o => hospitalId == 0 || o.LastDealHospitalId == hospitalId)
+                .Where(o => hospitalId.Count == 0 || hospitalId.Contains(o.LastDealHospitalId.Value))
                 .ToListAsync();
             var returnInfo = result.Select(
                   d =>
@@ -850,8 +850,8 @@ namespace Fx.Amiya.Service
                            IsOldCustomer = d.IsOldCustomer,
                            ToHospitalType = d.ToHospitalType,
                            Price = d.Price,
-                           ToHospitalDate=d.ToHospitalDate,
-                           DealDate=d.DealDate,
+                           ToHospitalDate = d.ToHospitalDate,
+                           DealDate = d.DealDate,
                        }
                 ).ToList();
 
@@ -1119,7 +1119,7 @@ namespace Fx.Amiya.Service
         public async Task<List<ContentPlateformOrderDealInfoHospitalPerformanceDto>> GetTopTenNewCustomerToHospitalPformance()
         {
             var performanceList = (from d in _dalHospitalInfo.GetAll()
-                                   from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.LastDealHospitalId != null && c.IsOldCustomer == false&& c.IsToHospital==true)
+                                   from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.LastDealHospitalId != null && c.IsOldCustomer == false && c.IsToHospital == true)
                                    where d.Id == h.LastDealHospitalId
                                    group h by d.Name into g
                                    orderby g.Count() descending
@@ -1162,15 +1162,15 @@ namespace Fx.Amiya.Service
         public async Task<List<ContentPlateformOrderDealInfoCityPerformanceDto>> GetTopTenCityTotalPerformance()
         {
             var performanceList = from d in _dalHospitalInfo.GetAll()
-                                   from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.IsDeal == true && c.LastDealHospitalId != null)
-                                   where d.Id == h.LastDealHospitalId
-                                   group h by d.CooperativeHospitalCity.Name into g
-                                   orderby g.Sum(item => item.Price) descending
-                                   select new ContentPlateformOrderDealInfoCityPerformanceDto
-                                   {
-                                       CityName = g.Key,
-                                       Performance = g.Sum(item => item.Price)
-                                   };
+                                  from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.IsDeal == true && c.LastDealHospitalId != null)
+                                  where d.Id == h.LastDealHospitalId
+                                  group h by d.CooperativeHospitalCity.Name into g
+                                  orderby g.Sum(item => item.Price) descending
+                                  select new ContentPlateformOrderDealInfoCityPerformanceDto
+                                  {
+                                      CityName = g.Key,
+                                      Performance = g.Sum(item => item.Price)
+                                  };
             return await performanceList.Skip(0).Take(10).ToListAsync();
         }
         /// <summary>
@@ -1180,7 +1180,7 @@ namespace Fx.Amiya.Service
         public async Task<List<ContentPlateformOrderDealInfoCityPerformanceDto>> GetTopTenCityNewCustomerPerformance()
         {
             var performanceList = from d in _dalHospitalInfo.GetAll()
-                                  from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.IsDeal == true && c.LastDealHospitalId != null&&c.IsOldCustomer==false)
+                                  from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.IsDeal == true && c.LastDealHospitalId != null && c.IsOldCustomer == false)
                                   where d.Id == h.LastDealHospitalId
                                   group h by d.CooperativeHospitalCity.Name into g
                                   orderby g.Sum(item => item.Price) descending
@@ -1216,7 +1216,7 @@ namespace Fx.Amiya.Service
         public async Task<List<ContentPlateformOrderDealInfoCityPerformanceDto>> GetTopTenCityNewCustomerToHospitalPformance()
         {
             var performanceList = from d in _dalHospitalInfo.GetAll()
-                                  from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.LastDealHospitalId != null && c.IsOldCustomer == false&&c.IsToHospital==true)
+                                  from h in dalContentPlatFormOrderDealInfo.GetAll().Where(c => c.LastDealHospitalId != null && c.IsOldCustomer == false && c.IsToHospital == true)
                                   where d.Id == h.LastDealHospitalId
                                   group h by d.CooperativeHospitalCity.Name into g
                                   orderby g.Count() descending
