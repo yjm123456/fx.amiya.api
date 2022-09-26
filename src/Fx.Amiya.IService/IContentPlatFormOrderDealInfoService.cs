@@ -31,7 +31,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="liveAnchorId"></param>
         /// <returns></returns>
-        Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceAsync(int liveAnchorId,DateTime recordDate);
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceAsync(int liveAnchorId, DateTime recordDate);
         /// <summary>
         /// 查询总业绩
         /// </summary>
@@ -55,7 +55,7 @@ namespace Fx.Amiya.IService
         /// <param name="recordDate"></param>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
-        Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceByHospitalIdAsync(int hospitalId, DateTime recordDate);
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceByHospitalIdAsync(List<int> hospitalId, DateTime recordDate);
 
 
         #region【业绩板块】
@@ -88,7 +88,7 @@ namespace Fx.Amiya.IService
         /// <param name="isCustomer">筛选新老客(传null不筛选)</param>
         /// <param name="LiveAnchorIds">各个平台主播id集合</param>
         /// <returns></returns>
-        Task<List<PerformanceInfoByDateDto>> GetPerformanceBrokenLineAsync(int year,int month,bool? isCustomer, List<int> LiveAnchorIds);
+        Task<List<PerformanceInfoByDateDto>> GetPerformanceBrokenLineAsync(int year, int month, bool? isCustomer, List<int> LiveAnchorIds);
 
         /// <summary>
         /// 获取成交情况折线图
@@ -97,7 +97,7 @@ namespace Fx.Amiya.IService
         /// <param name="month"></param>
         /// <param name="isOldSend"></param>
         /// <returns></returns>
-        Task<List<PerformanceBrokenLine>> GetHistoryAndThisMonthOrderPerformance(int year, int month, bool? isOldSend,List<int> liveAnchorIds);
+        Task<List<PerformanceBrokenLine>> GetHistoryAndThisMonthOrderPerformance(int year, int month, bool? isOldSend, List<int> liveAnchorIds);
 
 
         /// <summary>
