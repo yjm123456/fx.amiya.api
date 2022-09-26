@@ -48,24 +48,18 @@ namespace Fx.Amiya.Service
             {
                 date = Convert.ToDateTime(DateTime.Now.Year + "-" + month.Value + "-01");
             }
-            //获取所有时间符合的派单数据
             var contentPlatFormOrderSendList = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(date);
-            //遍历数据
             foreach (var x in contentPlatFormOrderSendList)
             {
                 var isExist = 0;
-                //判断是按城市还是医院
                 if (isCity == true)
                 {
-                    //按城市先判断结果列表中是否已包含当前城市
                     isExist = resultList.Where(z => z.City == x.City).Count();
                 }
                 else
                 {
-                    //判断当前医院是否已存在
                     isExist = resultList.Where(z => z.HospitalId == x.SendHospitalId).Count();
                 }
-                //已存在返回
                 if (isExist > 0)
                 {
                     continue;
@@ -77,7 +71,6 @@ namespace Fx.Amiya.Service
                 hospitalPerformanceDto.SendNum = contentPlatFormOrderSendList.Where(z => z.SendHospitalId == x.SendHospitalId).Count();
 
                 List<int> hospitalIds = new List<int>();
-                //如果是按城市获取该城市的所有医院
                 if (isCity)
                 {
                     hospitalIds = contentPlatFormOrderSendList.Where(c => c.City == x.City).Select(c => c.SendHospitalId).Distinct().ToList();
