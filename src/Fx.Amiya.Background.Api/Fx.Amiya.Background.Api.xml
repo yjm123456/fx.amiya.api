@@ -2283,10 +2283,13 @@
             <param name="hospitalId">医院id</param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetHospitalOperationMonthlyData(System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetHospitalOperationMonthlyData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Boolean)">
             <summary>
-            全国机构运营当月数据
+            全国机构/城市运营当月数据
             </summary>
+            <param name="year">年</param>
+            <param name="month">月</param>
+            <param name="isCity">是否为城市运营数据</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetTopTenHospitalPerformanceData">

@@ -39,7 +39,7 @@ namespace Fx.Amiya.Service
         public async Task<List<HospitalPerformanceDto>> GetHospitalPerformanceByDateAsync(int? year, int? month, bool isCity)
         {
             List<HospitalPerformanceDto> resultList = new List<HospitalPerformanceDto>();
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.Today;
             if (year.HasValue == true)
             {
                 date = Convert.ToDateTime(year + "-01-01");
