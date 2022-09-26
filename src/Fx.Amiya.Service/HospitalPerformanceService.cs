@@ -70,6 +70,7 @@ namespace Fx.Amiya.Service
                 hospitalPerformanceDto.City = x.City;
                 hospitalPerformanceDto.SendNum = contentPlatFormOrderSendList.Where(z => z.SendHospitalId == x.SendHospitalId).Count();
 
+
                 var contentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(x.SendHospitalId, date);
                 hospitalPerformanceDto.VisitNum = contentPlatFormOrderDealInfoList.Count();
                 hospitalPerformanceDto.VisitRate = CalculateTargetComplete(hospitalPerformanceDto.VisitNum, hospitalPerformanceDto.SendNum).Value;

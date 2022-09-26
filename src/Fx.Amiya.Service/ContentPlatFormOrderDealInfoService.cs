@@ -858,7 +858,15 @@ namespace Fx.Amiya.Service
             return returnInfo;
         }
 
-
+        /// <summary>
+        /// 根据到院id获取当日上门成交业绩
+        /// </summary>
+        /// <param name="recordDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetSendPerformanceByHospitalIdListAsync(List<int?> hospitalIds, DateTime recordDate) {
+            throw new NotImplementedException("没有实现");
+        }
         /// <summary>
         /// 根据主播id获取当日上门成交业绩
         /// </summary>
@@ -1237,6 +1245,15 @@ namespace Fx.Amiya.Service
                                   };
             return await performanceList.Skip(0).Take(10).ToListAsync();
         }
+
+        public Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceByHospitalIdListAsync(List<int?> hospitalIds, DateTime recordDate)
+        {
+            throw new NotImplementedException();
+        }
+
+
+
+
         #endregion
     }
 }
