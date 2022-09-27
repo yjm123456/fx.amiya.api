@@ -70,7 +70,7 @@ namespace Fx.Amiya.Service
                     IsAccumulate = e.IsAccumulate,
                     IsShare = e.IsShare,
                     CreateDate = e.CreateDate,
-                    UpdateTime = e.UpdateDate,
+                    UpdateDate = e.UpdateDate,
                     ConsumptionVoucherCode = e.ConsumptionVoucherCode,
                     Type = e.Type
                 }).SingleOrDefault();

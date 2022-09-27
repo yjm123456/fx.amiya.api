@@ -10,7 +10,7 @@ namespace Fx.Amiya.Dto
     {
         public string Id { get; set; }
         public DateTime CreateDate { get; set; }
-        public DateTime? UpdateTime { get; set; }
+        public DateTime? UpdateDate { get; set; }
         public bool Valid { get; set; }
         public DateTime? DeleteDate { get; set; }
     }
