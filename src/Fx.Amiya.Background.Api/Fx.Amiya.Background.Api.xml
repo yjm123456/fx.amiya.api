@@ -2186,6 +2186,53 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.GreatHospitalOperationHealthController">
+            <summary>
+            优秀机构运营健康指标板块数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GreatHospitalOperationHealthController.#ctor">
+            <summary>
+            构造函数
+            </summary>
+            <param name="greatHospitalOperationHealthService"></param>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GreatHospitalOperationHealthController.GetListWithPageAsync(System.String,System.String)">
+            <summary>
+            获取优秀机构运营健康指标信息列表
+            </summary>
+            <param name="keyword">关键词</param>
+            <param name="indicatorsId">归属指标id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GreatHospitalOperationHealthController.AddAsync(Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo)">
+            <summary>
+            添加优秀机构运营健康指标信息
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GreatHospitalOperationHealthController.GetByIdAsync(System.String)">
+            <summary>
+            根据优秀机构运营健康指标编号获取优秀机构运营健康指标信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GreatHospitalOperationHealthController.UpdateAsync(Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo)">
+            <summary>
+            修改优秀机构运营健康指标信息
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GreatHospitalOperationHealthController.DeleteAsync(System.String)">
+            <summary>
+            删除优秀机构运营健康指标信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController">
             <summary>
             全国机构运营总览
@@ -11220,6 +11267,201 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.GoodsMemberRankPrice.GoodsMemberRankPriceVo.Price">
             <summary>
             会员价格
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo">
+            <summary>
+            新增优秀机构运营健康指标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.IndicatorsId">
+            <summary>
+            归属指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.LastNewCustomerVisitRate">
+            <summary>
+            上月新客上门率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.ThisNewCustomerVisitRate">
+            <summary>
+            本月新客上门率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.NewCustomerVisitChainRatio">
+            <summary>
+            新客上门率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.LastNewCustomerDealRate">
+            <summary>
+            上月新客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.ThisNewCustomerDealRate">
+            <summary>
+            本月新客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.NewCustomerDealChainRatio">
+            <summary>
+            新客成交率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.LastNewCustomerUnitPrice">
+            <summary>
+            上月新客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.ThisNewCustomerUnitPrice">
+            <summary>
+            本月新客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.NewCustomerUnitPriceChainRatio">
+            <summary>
+            新客客单价环比
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo">
+            <summary>
+            优秀机构运营健康指标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.HospitalName">
+            <summary>
+            医院名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.IndicatorsId">
+            <summary>
+            归属指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.IndicatorsName">
+            <summary>
+            归属指标名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.LastNewCustomerVisitRate">
+            <summary>
+            上月新客上门率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.ThisNewCustomerVisitRate">
+            <summary>
+            本月新客上门率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.NewCustomerVisitChainRatio">
+            <summary>
+            新客上门率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.LastNewCustomerDealRate">
+            <summary>
+            上月新客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.ThisNewCustomerDealRate">
+            <summary>
+            本月新客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.NewCustomerDealChainRatio">
+            <summary>
+            新客成交率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.LastNewCustomerUnitPrice">
+            <summary>
+            上月新客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.ThisNewCustomerUnitPrice">
+            <summary>
+            本月新客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.NewCustomerUnitPriceChainRatio">
+            <summary>
+            新客客单价环比
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo">
+            <summary>
+            修改优秀机构运营健康指标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.IndicatorsId">
+            <summary>
+            归属指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.LastNewCustomerVisitRate">
+            <summary>
+            上月新客上门率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.ThisNewCustomerVisitRate">
+            <summary>
+            本月新客上门率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.NewCustomerVisitChainRatio">
+            <summary>
+            新客上门率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.LastNewCustomerDealRate">
+            <summary>
+            上月新客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.ThisNewCustomerDealRate">
+            <summary>
+            本月新客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.NewCustomerDealChainRatio">
+            <summary>
+            新客成交率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.LastNewCustomerUnitPrice">
+            <summary>
+            上月新客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.ThisNewCustomerUnitPrice">
+            <summary>
+            本月新客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.NewCustomerUnitPriceChainRatio">
+            <summary>
+            新客客单价环比
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalAppointmentQuantity.AddHospitalAppointmentQuantityVo.HospitalId">
