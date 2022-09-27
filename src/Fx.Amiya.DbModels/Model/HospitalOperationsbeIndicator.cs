@@ -28,5 +28,7 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public bool RemarkStatus { get; set; }
         public List<IndicatorSendHospital> IndicatorSendHospitalList { get; set; }
+
+        public List<GreatHospitalOperationHealth> GreatHospitalOperationHealthList { get; set; }
     }
 }

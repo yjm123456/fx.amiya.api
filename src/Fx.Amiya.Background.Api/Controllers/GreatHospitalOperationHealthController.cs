@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.ExpressInfo;
 using Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth;
+using Fx.Amiya.Dto.GreatHospitalOperationHealth;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -22,17 +23,17 @@ namespace Fx.Amiya.Background.Api.Controllers
     [ApiController]
     public class GreatHospitalOperationHealthController : ControllerBase
     {
-        //private IGreatHospitalOperationHealthService greatHospitalOperationHealthService;
+        private IGreatHospitalOperationHealthService greatHospitalOperationHealthService;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="greatHospitalOperationHealthService"></param>
         public GreatHospitalOperationHealthController(
-           // IGreatHospitalOperationHealthService greatHospitalOperationHealthService
+            IGreatHospitalOperationHealthService greatHospitalOperationHealthService
             )
         {
-            //this.greatHospitalOperationHealthService = greatHospitalOperationHealthService;
+            this.greatHospitalOperationHealthService = greatHospitalOperationHealthService;
         }
 
 
@@ -44,20 +45,30 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<List<GreatHospitalOperationHealthVo>>> GetListAsync(string keyword,string indicatorsId)
+        public async Task<ResultData<List<GreatHospitalOperationHealthVo>>> GetListAsync(string keyword, string indicatorsId)
         {
             try
             {
-                //  var q = await greatHospitalOperationHealthService.GetListAsync(keyword, indicatorsId);
+                var q = await greatHospitalOperationHealthService.GetListAsync(keyword, indicatorsId);
 
-                //var greatHospitalOperationHealth = from d in q.List
-                //              select new GreatHospitalOperationHealthVo
-                //              {
-                //                  Id = d.Id,
-                //                  ExpressCode = d.ExpressCode,
-                //                  ExpressName = d.ExpressName,
-                //                  Valid = d.Valid
-                //              };
+                var greatHospitalOperationHealth = from d in q
+                                                   select new GreatHospitalOperationHealthVo
+                                                   {
+                                                       Id = d.Id,
+                                                       HospitalId = d.HospitalId,
+                                                       HospitalName = d.HospitalName,
+                                                       IndicatorsId = d.IndicatorsId,
+                                                       IndicatorsName = d.IndicatorsName,
+                                                       LastNewCustomerVisitRate = d.LastNewCustomerVisitRate,
+                                                       ThisNewCustomerVisitRate = d.ThisNewCustomerVisitRate,
+                                                       NewCustomerVisitChainRatio = d.NewCustomerVisitChainRatio,
+                                                       LastNewCustomerDealRate = d.LastNewCustomerDealRate,
+                                                       ThisNewCustomerDealRate = d.ThisNewCustomerDealRate,
+                                                       NewCustomerDealChainRatio = d.NewCustomerDealChainRatio,
+                                                       LastNewCustomerUnitPrice = d.LastNewCustomerUnitPrice,
+                                                       ThisNewCustomerUnitPrice = d.ThisNewCustomerUnitPrice,
+                                                       NewCustomerUnitPriceChainRatio = d.NewCustomerUnitPriceChainRatio,
+                                                   };
 
                 List<GreatHospitalOperationHealthVo> greatHospitalOperationHealthPageInfo = new List<GreatHospitalOperationHealthVo>();
 
@@ -80,12 +91,20 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //AddExpressDto addDto = new AddExpressDto();
-                //addDto.ExpressCode = addVo.ExpressCode;
-                //addDto.ExpressName = addVo.ExpressName;
-                //addDto.Valid = addVo.Valid;
+                AddGreatHospitalOperationHealthDto addDto = new AddGreatHospitalOperationHealthDto();
+                addDto.HospitalId = addVo.HospitalId;
+                addDto.IndicatorsId = addVo.IndicatorsId;
+                addDto.LastNewCustomerVisitRate = addVo.LastNewCustomerVisitRate;
+                addDto.ThisNewCustomerVisitRate = addVo.ThisNewCustomerVisitRate;
+                addDto.NewCustomerVisitChainRatio = addVo.NewCustomerVisitChainRatio;
+                addDto.LastNewCustomerDealRate = addVo.LastNewCustomerDealRate;
+                addDto.ThisNewCustomerDealRate = addVo.ThisNewCustomerDealRate;
+                addDto.NewCustomerDealChainRatio = addVo.NewCustomerDealChainRatio;
+                addDto.LastNewCustomerUnitPrice = addVo.LastNewCustomerUnitPrice;
+                addDto.ThisNewCustomerUnitPrice = addVo.ThisNewCustomerUnitPrice;
+                addDto.NewCustomerUnitPriceChainRatio = addVo.NewCustomerUnitPriceChainRatio;
 
-                //await greatHospitalOperationHealthService.AddAsync(addDto);
+                await greatHospitalOperationHealthService.AddAsync(addDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -107,12 +126,24 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //var greatHospitalOperationHealth = await greatHospitalOperationHealthService.GetByIdAsync(id);
+                var greatHospitalOperationHealth = await greatHospitalOperationHealthService.GetByIdAsync(id);
                 GreatHospitalOperationHealthVo greatHospitalOperationHealthVo = new GreatHospitalOperationHealthVo();
-                //greatHospitalOperationHealthVo.Id = greatHospitalOperationHealth.Id;
-                //greatHospitalOperationHealthVo.ExpressCode = greatHospitalOperationHealth.ExpressCode;
-                //greatHospitalOperationHealthVo.ExpressName = greatHospitalOperationHealth.ExpressName;
-                //greatHospitalOperationHealthVo.Valid = greatHospitalOperationHealth.Valid;
+                greatHospitalOperationHealthVo.Id = greatHospitalOperationHealth.Id;
+                greatHospitalOperationHealthVo.CreateDate = greatHospitalOperationHealth.CreateDate;
+                greatHospitalOperationHealthVo.UpdateDate = greatHospitalOperationHealth.UpdateDate;
+                greatHospitalOperationHealthVo.DeleteDate = greatHospitalOperationHealth.DeleteDate;
+                greatHospitalOperationHealthVo.Valid = greatHospitalOperationHealth.Valid;
+                greatHospitalOperationHealthVo.HospitalId = greatHospitalOperationHealth.HospitalId;
+                greatHospitalOperationHealthVo.IndicatorsId = greatHospitalOperationHealth.IndicatorsId;
+                greatHospitalOperationHealthVo.LastNewCustomerVisitRate = greatHospitalOperationHealth.LastNewCustomerVisitRate;
+                greatHospitalOperationHealthVo.ThisNewCustomerVisitRate = greatHospitalOperationHealth.ThisNewCustomerVisitRate;
+                greatHospitalOperationHealthVo.NewCustomerVisitChainRatio = greatHospitalOperationHealth.NewCustomerVisitChainRatio;
+                greatHospitalOperationHealthVo.LastNewCustomerDealRate = greatHospitalOperationHealth.LastNewCustomerDealRate;
+                greatHospitalOperationHealthVo.ThisNewCustomerDealRate = greatHospitalOperationHealth.ThisNewCustomerDealRate;
+                greatHospitalOperationHealthVo.NewCustomerDealChainRatio = greatHospitalOperationHealth.NewCustomerDealChainRatio;
+                greatHospitalOperationHealthVo.LastNewCustomerUnitPrice = greatHospitalOperationHealth.LastNewCustomerUnitPrice;
+                greatHospitalOperationHealthVo.ThisNewCustomerUnitPrice = greatHospitalOperationHealth.ThisNewCustomerUnitPrice;
+                greatHospitalOperationHealthVo.NewCustomerUnitPriceChainRatio = greatHospitalOperationHealth.NewCustomerUnitPriceChainRatio;
 
                 return ResultData<GreatHospitalOperationHealthVo>.Success().AddData("greatHospitalOperationHealthInfo", greatHospitalOperationHealthVo);
             }
@@ -134,12 +165,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //UpdateExpressDto updateDto = new UpdateExpressDto();
-                //updateDto.Id = updateVo.Id;
-                //updateDto.ExpressName = updateVo.ExpressName;
-                //updateDto.ExpressCode = updateVo.ExpressCode;
-                //updateDto.Valid = updateVo.Valid;
-                //await greatHospitalOperationHealthService.UpdateAsync(updateDto);
+                UpdateGreatHospitalOperationHealthDto updateDto = new UpdateGreatHospitalOperationHealthDto();
+                updateDto.HospitalId = updateVo.HospitalId;
+                updateDto.IndicatorsId = updateVo.IndicatorsId;
+                updateDto.LastNewCustomerVisitRate = updateVo.LastNewCustomerVisitRate;
+                updateDto.ThisNewCustomerVisitRate = updateVo.ThisNewCustomerVisitRate;
+                updateDto.NewCustomerVisitChainRatio = updateVo.NewCustomerVisitChainRatio;
+                updateDto.LastNewCustomerDealRate = updateVo.LastNewCustomerDealRate;
+                updateDto.ThisNewCustomerDealRate = updateVo.ThisNewCustomerDealRate;
+                updateDto.NewCustomerDealChainRatio = updateVo.NewCustomerDealChainRatio;
+                updateDto.LastNewCustomerUnitPrice = updateVo.LastNewCustomerUnitPrice;
+                updateDto.ThisNewCustomerUnitPrice = updateVo.ThisNewCustomerUnitPrice;
+                updateDto.NewCustomerUnitPriceChainRatio = updateVo.NewCustomerUnitPriceChainRatio;
+                await greatHospitalOperationHealthService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -160,7 +198,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //await greatHospitalOperationHealthService.DeleteAsync(id);
+                await greatHospitalOperationHealthService.DeleteAsync(id);
                 return ResultData.Success();
             }
             catch (Exception ex)

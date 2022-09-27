@@ -24,6 +24,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<LiveAnchorWeChatInfo> LiveAnchorWeChatInfo { get; set; }
         public virtual DbSet<AmiyaWareHouseNameManage> AmiyaWareHouseNameManage { get; set; }
         public virtual DbSet<DockingHospitalCustomerInfo> DockingHospitalCustomerInfo { get; set; }
+        public virtual DbSet<GreatHospitalOperationHealth> GreatHospitalOperationHealth { get; set; }
         public virtual DbSet<WxMpUserInfo> WxMpUserInfo { get; set; }
         public virtual DbSet<HospitalFeedBack> HospitalFeedBack { get; set; }
         public virtual DbSet<InventoryList> InventoryList { get; set; }
@@ -249,6 +250,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new GrowthPointsAccountConfiguration());
             modelBuilder.ApplyConfiguration(new GrowthPointsRecordConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerConsumptionVoucherConfiguration());
+            modelBuilder.ApplyConfiguration(new GreatHospitalOperationHealthConfiguration());
             modelBuilder.ApplyConfiguration(new ConsumptionVoucherConfiguration());
             modelBuilder.ApplyConfiguration(new GoodsMemberRankPriceConfiguration());
             modelBuilder.ApplyConfiguration(new MemberCardRankInfoConfiguration());

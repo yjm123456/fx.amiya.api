@@ -2191,7 +2191,7 @@
             优秀机构运营健康指标板块数据接口
             </summary>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.GreatHospitalOperationHealthController.#ctor">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GreatHospitalOperationHealthController.#ctor(Fx.Amiya.IService.IGreatHospitalOperationHealthService)">
             <summary>
             构造函数
             </summary>
@@ -2490,12 +2490,13 @@
             </summary>
             <param name="hospitalOperationDataService"></param>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalConsulationOperationDataController.GetListAsync(System.String,System.String)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalConsulationOperationDataController.GetListAsync(System.String,System.String,System.Int32)">
             <summary>
             获取机构咨询师运营数据分析信息列表
             </summary>
             <param name="keyword">关键词</param>
             <param name="indicatorsId">归属指标id</param>
+            <param name="hospitalId">医院id</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalConsulationOperationDataController.AddAsync(Fx.Amiya.Background.Api.Vo.HospitalConsulationOperationData.AddHospitalConsulationOperationDataVo)">
@@ -2865,12 +2866,13 @@
             </summary>
             <param name="hospitalOperationDataService"></param>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalNetWorkConsulationOperationDataController.GetListAsync(System.String,System.String)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalNetWorkConsulationOperationDataController.GetListAsync(System.String,System.String,System.Int32)">
             <summary>
             获取机构网咨运营数据分析信息列表
             </summary>
             <param name="keyword">关键词</param>
             <param name="indicatorsId">归属指标id</param>
+            <param name="hospitalId">医院id</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalNetWorkConsulationOperationDataController.AddAsync(Fx.Amiya.Background.Api.Vo.HospitalNetWorkConsulationOperationData.AddHospitalNetWorkConsulationOperationDataVo)">
@@ -2912,12 +2914,13 @@
             </summary>
             <param name="hospitalOperationDataService"></param>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalOperationDataController.GetListAsync(System.String,System.String)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalOperationDataController.GetListAsync(System.String,System.String,System.Int32)">
             <summary>
             获取机构运营数据分析信息列表
             </summary>
             <param name="keyword">关键词</param>
             <param name="indicatorsId">归属指标id</param>
+            <param name="hospitalId">医院id</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalOperationDataController.AddAsync(Fx.Amiya.Background.Api.Vo.HospitalOperationData.AddHospitalOperationDataVo)">
