@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.OrderReport;
+using Fx.Amiya.Dto.SendOrderInfo;
 using Fx.Common;
 using System;
 using System.Collections.Generic;
@@ -154,5 +155,20 @@ namespace Fx.Amiya.IService
         /// <param name="month"></param>
         /// <returns></returns>
         Task<List<SendContentPlatformOrderDto>> GetSendDataByHospitalIdAndMonthAsync(int hospitalId, int month);
+        /// <summary>
+        /// 全国前10城市运营数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<SendOrderInfoCityPerformanceDto>> GetTopTenCitySendOrderPerformance();
+        /// <summary>
+        /// 全国前10医院运营数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<SendOrderInfoPerformanceDto>> GetTopTenHospitalSendOrderPerformance();
+        /// <summary>
+        /// 获取总派单量
+        /// </summary>
+        /// <returns></returns>
+        Task<decimal> GetTotalSendCount();
     }
 }

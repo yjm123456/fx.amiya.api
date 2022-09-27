@@ -230,8 +230,8 @@ namespace Fx.Amiya.Service
             #endregion
 
             #region 派单量
-            var sendOrderPerformanceList = await sendOrderInfoService.GetTopTenHospitalSendOrderPerformance();
-            var sendOrderPerformance = await sendOrderInfoService.GetTotalSendCount();
+            var sendOrderPerformanceList = await contentPlatformOrderSendService.GetTopTenHospitalSendOrderPerformance();
+            var sendOrderPerformance = await contentPlatformOrderSendService.GetTotalSendCount();
 
 
             HospitalPerformanceItem sendOrderPerformanceItem = new HospitalPerformanceItem
@@ -354,8 +354,8 @@ namespace Fx.Amiya.Service
 
             #region 派单占比
 
-            var sendOrderPerformanceList = await sendOrderInfoService.GetTopTenCitySendOrderPerformance();
-            var sendOrderPerformance = await sendOrderInfoService.GetTotalSendCount();
+            var sendOrderPerformanceList = await contentPlatformOrderSendService.GetTopTenCitySendOrderPerformance();
+            var sendOrderPerformance = await contentPlatformOrderSendService.GetTotalSendCount();
             CityPerformanceItem sendOrderPerformanceItem = new CityPerformanceItem
             {
                 TotalPerformmance = sendOrderPerformance,

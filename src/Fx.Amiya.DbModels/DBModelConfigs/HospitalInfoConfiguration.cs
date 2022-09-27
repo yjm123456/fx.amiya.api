@@ -44,6 +44,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.HasOne(t => t.CreateByAmiyaEmployee).WithMany(t => t.CreateByHospitalInfoList).HasForeignKey(t=>t.CreateBy);
             builder.HasOne(t => t.UpdateByAmiyaEmployee).WithMany(t => t.UpdateByHospitalInfoList).HasForeignKey(t=>t.UpdateBy);
             builder.HasOne(t => t.CooperativeHospitalCity).WithMany(t => t.HospitalInfoList).HasForeignKey(t=>t.CityId);
+            
         }
     }
 }

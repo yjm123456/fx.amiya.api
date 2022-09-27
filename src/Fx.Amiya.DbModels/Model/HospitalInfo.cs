@@ -101,6 +101,7 @@ namespace Fx.Amiya.DbModels.Model
         public List<ContentPlatformOrderSend> ContentPlatformOrderSendList { get; set; }
 
         public List<DockingHospitalCustomerInfo> HospitalDockingHospitalCustomerInfo { get; set; }
+        public List<IndicatorSendHospital> IndicatorSendHospitalList { get; set; }
 
     }
 }

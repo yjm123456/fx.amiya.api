@@ -66,6 +66,7 @@ namespace Fx.Amiya.IService
         Task<List<ContentPlatFormOrderDealInfoDto>> GetSendPerformanceByHospitalIdAndMonthAsync(int hospitalId, int month);
 
 
+
         #region【业绩板块】
 
         /// <summary>

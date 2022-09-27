@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.DbModels
+namespace Fx.Amiya.DbModels.Model
 {
-    public class BaseDbModel
+    /// <summary>
+    /// 优秀机构运营健康指标标注
+    /// </summary>
+    public class ExcellentHospitalOperationsbeRemark:BaseDbModel
     {
         public string Id { get; set; }
+        public string Remark { get; set; }
         public DateTime CreateDate { get; set; }
-        public DateTime? UpdateDate { get; set; }
-        public bool Valid { get; set; }
-        public DateTime? DeleteDate { get; set; }
     }
 }

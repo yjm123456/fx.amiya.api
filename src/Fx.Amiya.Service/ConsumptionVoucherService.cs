@@ -70,7 +70,7 @@ namespace Fx.Amiya.Service
                     IsAccumulate = e.IsAccumulate,
                     IsShare = e.IsShare,
                     CreateDate = e.CreateDate,
-                    UpdateTime = e.UpdateTime,
+                    UpdateDate = e.UpdateDate,
                     ConsumptionVoucherCode = e.ConsumptionVoucherCode,
                     Type = e.Type
                 }).SingleOrDefault();
@@ -172,7 +172,7 @@ namespace Fx.Amiya.Service
                 voucher.Type = updateDto.Type;
                 voucher.IsValid = updateDto.IsValid;
                 voucher.ConsumptionVoucherCode = updateDto.ConsumptionVoucherCode;
-                voucher.UpdateTime = updateDto.UpdateTime;
+                voucher.UpdateDate = updateDto.UpdateTime;
                 if (voucher.Type != 0 && voucher.DeductMoney > 0) throw new Exception("只有现金抵用券才能设置抵扣金额!");
                 if (voucher.Type == 0 && voucher.DeductMoney <= 0) throw new Exception("现金抵用券抵扣金额不能小于0!");
                 var existVoucher = dalConsumptionVoucher.GetAll().Where(e => e.Id != updateDto.Id && e.ConsumptionVoucherCode == updateDto.ConsumptionVoucherCode).SingleOrDefault();
