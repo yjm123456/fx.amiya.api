@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Dal
 {
-    public class DalOperationsbeIndicatorToHospital : DalEFCore<OperationsbeIndicatorToHospital>, IDalOperationsbeIndicatorToHospital
+    public class DalIndicatorSendHospital : DalEFCore<IndicatorSendHospital>, IDalIndicatorSendHospital
     {
-        public DalOperationsbeIndicatorToHospital(AmiyaDbContext dbContext) : base(dbContext)
+        public DalIndicatorSendHospital(AmiyaDbContext dbContext) : base(dbContext)
         {
         }
     }

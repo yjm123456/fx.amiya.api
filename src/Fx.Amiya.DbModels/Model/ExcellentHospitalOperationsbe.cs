@@ -51,11 +51,5 @@ namespace Fx.Amiya.DbModels.Model
         /// 新客客单价环比
         /// </summary>
         public decimal NewCustomerOrderPriceChainRation { get; set; }
-        /// <summary>
-        /// 运营指标id
-        /// </summary>
-        public string HospitalOperationsbeIndicatorId { get; set; }
-        public HospitalOperationsbeIndicator HospitalOperationsbeIndicator { get; set; }
-
     }
 }

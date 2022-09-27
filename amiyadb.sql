@@ -874,7 +874,42 @@ CREATE TABLE `tbl_growth_points_rule` (
 
 
 
+ -----------------------------------------------王健 2022/09/27 BEGIN--------------------------------------------
 
+ CREATE TABLE `tbl_hospital_operational_indicator` (
+  `id` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
+  `describe` varchar(500) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
+  `start_date` datetime NOT NULL,
+  `end_date` datetime NOT NULL,
+  `excellent_hospital` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
+  `submit_status` bit(1) NOT NULL,
+  `remark_status` bit(1) NOT NULL,
+  `create_date` datetime NOT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `valid` int NOT NULL,
+  `delete_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC
+
+
+
+
+CREATE TABLE `tbl_indicator_send_hospital` (
+  `id` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
+  `indicator_id` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
+  `hospital_id` int unsigned NOT NULL,
+  `submit_status` bit(1) NOT NULL,
+  `remark_status` bit(1) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `fk_indicatorsendhosiptal _hospital_id_hospitalinfo_id` (`hospital_id`) USING BTREE,
+  KEY `fk_indicatorsendhosiptal _indicator_id_hospitaloperational_id` (`indicator_id`) USING BTREE,
+  CONSTRAINT `fk_indicatorsendhosiptal _hospital_id_hospitalinfo_id` FOREIGN KEY (`hospital_id`) REFERENCES `tbl_hospital_info` (`id`),
+  CONSTRAINT `fk_indicatorsendhosiptal _indicator_id_hospitaloperational_id` FOREIGN KEY (`indicator_id`) REFERENCES `tbl_hospital_operational_indicator` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC
+
+
+-----------------------------------------------王健 2022/09/27 END--------------------------------------------
 
 
 

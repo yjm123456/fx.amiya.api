@@ -26,7 +26,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(c => c.Source).HasColumnName("source").HasColumnType("int").IsRequired().HasDefaultValue(0);
             builder.Property(c => c.ShareBy).HasColumnName("share_by").HasColumnType("varchar(100)").IsRequired(false);
             builder.Property(c => c.WriteOfCode).HasColumnName("write_of_code").HasColumnType("varchar(100)").IsRequired(false);
-            builder.Ignore(c => c.UpdateTime);
+            builder.Ignore(c => c.UpdateDate);
             builder.Ignore(c => c.DeleteDate);
             builder.Ignore(c => c.Valid);
             builder.Ignore(c => c.DeleteDate);

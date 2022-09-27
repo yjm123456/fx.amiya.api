@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.IDal
 {
-    public interface IDalHospitalOperationsbeIndicator:IDAL<HospitalOperationsbeIndicator>
+    public interface IDalExcellentHospitalOperationsbe : IDAL<ExcellentHospitalOperationsbe>
     {
     }
 }

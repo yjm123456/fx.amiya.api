@@ -9,18 +9,14 @@ namespace Fx.Amiya.DbModels.Model
     /// <summary>
     /// 运营指标派发医院
     /// </summary>
-    public class OperationsbeIndicatorToHospital
+    public class IndicatorSendHospital
     {
         public string Id { get; set; }
-        /// <summary>
-        /// 运营指标id
-        /// </summary>
-        public string OperationsbeIndicatorId { get; set; }
-        /// <summary>
-        /// 派发医院id
-        /// </summary>
+        public string IndicatorId { get; set; }
         public int HospitalId { get; set; }
+        public bool SubmitStatus { get; set; }
+        public bool RemarkStatus { get; set; }
         public HospitalInfo HospitalInfo { get; set; }
-        public HospitalOperationsbeIndicator HospitalOperationsbeIndicator { get; set; }
+        public HospitalOperationalIndicator HospitalOperationalIndicator { get; set; }
     }
 }

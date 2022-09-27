@@ -129,8 +129,9 @@ namespace Fx.Amiya.DbModels
         public virtual  DbSet<RechargeAmount> RechargeAmounts { get; set; }
         public virtual DbSet<GrowthPointsRule> GrowthPointsRules { get; set; }
         public virtual DbSet<GoodsConsumptionVoucher> GoodsConsumptionVouchers { get; set; }
-        public virtual DbSet<HospitalOperationsbeIndicator> HospitalOperationsbeIndicators { get; set; }
-        public virtual DbSet<OperationsbeIndicatorToHospital> OperationsbeIndicatorToHospitals { get; set; }
+        public virtual DbSet<HospitalOperationalIndicator> HospitalOperationalIndicator { get; set; }
+        public virtual DbSet<IndicatorSendHospital> IndicatorSendHospital { get; set; }
+        public virtual DbSet<ExcellentHospitalOperationsbe> ExcellentHospitalOperationsbe { get; set; }
         public virtual DbSet<ExcellentHospitalOperationsbeRemark> ExcellentHospitalOperationsbeRemark { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -260,8 +261,9 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new RechargeAmountConfiguration());
             modelBuilder.ApplyConfiguration(new GrowthpointsRuleConfiguration());
             modelBuilder.ApplyConfiguration(new GoodsConsumptionVoucherConfiguration());
-            modelBuilder.ApplyConfiguration(new HospitalOperationsbeIndicatorConfiguration());
-            modelBuilder.ApplyConfiguration(new OperationsbeIndicatorToHospitalConfiguration());
+            modelBuilder.ApplyConfiguration(new HospitalOperationalIndicatorConfiguration());
+            modelBuilder.ApplyConfiguration(new IndicatorSendHospitalConfiguration());
+            modelBuilder.ApplyConfiguration(new ExcellentHospitalOperationsbeConfiguration());
             modelBuilder.ApplyConfiguration(new ExcellentHospitalOperationsbeRemarkConfiguration());
             base.OnModelCreating(modelBuilder);
         }
