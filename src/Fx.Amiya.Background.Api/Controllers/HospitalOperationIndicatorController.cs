@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
+    /// <summary>
+    /// 机构运营指标数据
+    /// </summary>
     [Route("[controller]")]
     [ApiController]
     [FxInternalAuthorize]
