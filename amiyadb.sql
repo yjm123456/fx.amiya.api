@@ -941,6 +941,33 @@ CREATE TABLE `tbl_indicator_send_hospital` (
     ON UPDATE NO ACTION);
 
 
+    CREATE TABLE `amiyadb`.`hospital_operation_data` (
+  `id` VARCHAR(50) NOT NULL,
+  `indicator_id` VARCHAR(100) NOT NULL,
+  `hospital_id` INT UNSIGNED NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `operation_name` VARCHAR(100) NULL,
+  `last_month_data` DECIMAL(12,2) NOT NULL,
+  `before_month_data` DECIMAL(12,2) NOT NULL,
+  `chain_ratio` DECIMAL(12,2) NOT NULL,
+  `great_hospital` VARCHAR(500) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_hospital_operation_hospital_id_idx` (`hospital_id` ASC) VISIBLE,
+  INDEX `fk_hospital_operation_indicator_idx` (`indicator_id` ASC) VISIBLE,
+  CONSTRAINT `fk_hospital_operation_hospital_id`
+    FOREIGN KEY (`hospital_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_hospital_operation_indicator`
+    FOREIGN KEY (`indicator_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_operational_indicator` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
 
 -----------------------------------------------余建明 2022/09/27 END--------------------------------------------
 

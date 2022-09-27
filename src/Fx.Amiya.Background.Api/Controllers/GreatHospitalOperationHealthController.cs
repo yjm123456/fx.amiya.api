@@ -166,6 +166,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 UpdateGreatHospitalOperationHealthDto updateDto = new UpdateGreatHospitalOperationHealthDto();
+                updateDto.Id = updateVo.Id;
                 updateDto.HospitalId = updateVo.HospitalId;
                 updateDto.IndicatorsId = updateVo.IndicatorsId;
                 updateDto.LastNewCustomerVisitRate = updateVo.LastNewCustomerVisitRate;
