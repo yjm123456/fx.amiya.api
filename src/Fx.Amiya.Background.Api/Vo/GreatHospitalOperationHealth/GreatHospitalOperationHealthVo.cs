@@ -29,11 +29,11 @@ namespace Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth
         /// </summary>
         public string IndicatorsName { get; set; }
         /// <summary>
-        /// 上月新客上门率
+        /// 前月新客上门率
         /// </summary>
         public decimal LastNewCustomerVisitRate { get; set; }
         /// <summary>
-        /// 本月新客上门率
+        /// 上月新客上门率
         /// </summary>
         public decimal ThisNewCustomerVisitRate { get; set; }
         /// <summary>
@@ -43,11 +43,11 @@ namespace Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth
 
 
         /// <summary>
-        /// 上月新客成交率
+        /// 前月新客成交率
         /// </summary>
         public decimal LastNewCustomerDealRate { get; set; }
         /// <summary>
-        /// 本月新客成交率
+        /// 上月新客成交率
         /// </summary>
         public decimal ThisNewCustomerDealRate { get; set; }
         /// <summary>
@@ -57,11 +57,11 @@ namespace Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth
 
 
         /// <summary>
-        /// 上月新客客单价
+        /// 前月新客客单价
         /// </summary>
         public decimal LastNewCustomerUnitPrice { get; set; }
         /// <summary>
-        /// 本月新客客单价
+        /// 上月新客客单价
         /// </summary>
         public decimal ThisNewCustomerUnitPrice { get; set; }
         /// <summary>

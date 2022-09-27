@@ -656,22 +656,43 @@ namespace Fx.Amiya.Service
             DateTime startrq = startDate;
             DateTime endrq = DateTime.Now.Date.AddDays(1);
             var orders = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.HospitalInfo).ThenInclude(x => x.CooperativeHospitalCity)
-                         where d.SendDate >= startrq && d.SendDate < endrq 
+                         where d.SendDate >= startrq && d.SendDate < endrq
                          select new SendContentPlatformOrderDto
                          {
                              OrderId = d.ContentPlatformOrderId,
                              SendHospitalId = d.HospitalId,
                              SendHospital = d.HospitalInfo.Name,
                              City = d.HospitalInfo.CooperativeHospitalCity.Name,
-                             SendDate=d.SendDate,
+                             SendDate = d.SendDate,
                          };
             var result = orders.ToList();
-            //foreach (var x in result)
-            //{
-            //    var hospitalInfo = await _hospitalInfoService.GetByIdAsync(x.SendHospitalId);
-            //    x.SendHospital = hospitalInfo.Name;
-            //    x.City = hospitalInfo.City;
-            //}
+            return result;
+        }
+
+        /// <summary>
+        /// 根据医院id与月份获取派单业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <returns></returns>
+        public async Task<List<SendContentPlatformOrderDto>> GetSendDataByHospitalIdAndMonthAsync(int hospitalId, int month)
+        {
+            //筛选结束的月份
+            DateTime dtNow = DateTime.Now;
+            int days = DateTime.DaysInMonth(dtNow.Year, dtNow.Month);
+            DateTime endDate = Convert.ToDateTime(DateTime.Now.Year + "-" + month + "-" + days);
+            //选定的月份
+            DateTime currentDate = Convert.ToDateTime(DateTime.Now.Year + "-" + month + "-01");
+            var orders = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.HospitalInfo).ThenInclude(x => x.CooperativeHospitalCity)
+                         where d.SendDate >= currentDate && d.SendDate < endDate && d.HospitalId == hospitalId
+                         select new SendContentPlatformOrderDto
+                         {
+                             OrderId = d.ContentPlatformOrderId,
+                             SendHospitalId = d.HospitalId,
+                             SendHospital = d.HospitalInfo.Name,
+                             City = d.HospitalInfo.CooperativeHospitalCity.Name,
+                             SendDate = d.SendDate,
+                         };
+            var result = orders.ToList();
             return result;
         }
 

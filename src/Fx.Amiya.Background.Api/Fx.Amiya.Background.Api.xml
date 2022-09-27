@@ -2351,6 +2351,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetHospitalNewCustomerAchievementAsync(System.Int32)">
+            <summary>
+            根据机构id获取上月与前月新客业绩
+            </summary>
+            <param name="hospitalId"></param>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalAppointmentQuantityController">
             <summary>
             医院预约人数API
@@ -11286,12 +11293,12 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.LastNewCustomerVisitRate">
             <summary>
-            上月新客上门率
+            前月新客上门率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.ThisNewCustomerVisitRate">
             <summary>
-            本月新客上门率
+            上月新客上门率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.NewCustomerVisitChainRatio">
@@ -11301,12 +11308,12 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.LastNewCustomerDealRate">
             <summary>
-            上月新客成交率
+            前月新客成交率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.ThisNewCustomerDealRate">
             <summary>
-            本月新客成交率
+            上月新客成交率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.NewCustomerDealChainRatio">
@@ -11316,12 +11323,12 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.LastNewCustomerUnitPrice">
             <summary>
-            上月新客客单价
+            前月新客客单价
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.ThisNewCustomerUnitPrice">
             <summary>
-            本月新客客单价
+            上月新客客单价
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.NewCustomerUnitPriceChainRatio">
@@ -11356,12 +11363,12 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.LastNewCustomerVisitRate">
             <summary>
-            上月新客上门率
+            前月新客上门率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.ThisNewCustomerVisitRate">
             <summary>
-            本月新客上门率
+            上月新客上门率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.NewCustomerVisitChainRatio">
@@ -11371,12 +11378,12 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.LastNewCustomerDealRate">
             <summary>
-            上月新客成交率
+            前月新客成交率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.ThisNewCustomerDealRate">
             <summary>
-            本月新客成交率
+            上月新客成交率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.NewCustomerDealChainRatio">
@@ -11386,12 +11393,12 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.LastNewCustomerUnitPrice">
             <summary>
-            上月新客客单价
+            前月新客客单价
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.ThisNewCustomerUnitPrice">
             <summary>
-            本月新客客单价
+            上月新客客单价
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.NewCustomerUnitPriceChainRatio">
@@ -11421,12 +11428,12 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.LastNewCustomerVisitRate">
             <summary>
-            上月新客上门率
+            前月新客上门率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.ThisNewCustomerVisitRate">
             <summary>
-            本月新客上门率
+            上月新客上门率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.NewCustomerVisitChainRatio">
@@ -11436,12 +11443,12 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.LastNewCustomerDealRate">
             <summary>
-            上月新客成交率
+            前月新客成交率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.ThisNewCustomerDealRate">
             <summary>
-            本月新客成交率
+            上月新客成交率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.NewCustomerDealChainRatio">
@@ -11451,12 +11458,12 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.LastNewCustomerUnitPrice">
             <summary>
-            上月新客客单价
+            前月新客客单价
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.ThisNewCustomerUnitPrice">
             <summary>
-            本月新客客单价
+            上月新客客单价
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.NewCustomerUnitPriceChainRatio">
@@ -12659,14 +12666,49 @@
             下午可预约人数
             </summary>
         </member>
-        <member name="T:Fx.Amiya.Background.Api.Vo.HospitalPerformance.ExcellentHospitalPerformanceVo">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalNewCustomerAchievementVo.LastNewCustomerVisitRate">
             <summary>
-            全国优秀机构运营健康指标
+            前月新客上门率
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.ExcellentHospitalPerformanceVo.HospitalName">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalNewCustomerAchievementVo.ThisNewCustomerVisitRate">
             <summary>
-            医院名称
+            上月新客上门率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalNewCustomerAchievementVo.NewCustomerVisitChainRatio">
+            <summary>
+            新客上门率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalNewCustomerAchievementVo.LastNewCustomerDealRate">
+            <summary>
+            前月新客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalNewCustomerAchievementVo.ThisNewCustomerDealRate">
+            <summary>
+            上月新客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalNewCustomerAchievementVo.NewCustomerDealChainRatio">
+            <summary>
+            新客成交率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalNewCustomerAchievementVo.LastNewCustomerUnitPrice">
+            <summary>
+            前月新客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalNewCustomerAchievementVo.ThisNewCustomerUnitPrice">
+            <summary>
+            上月新客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalNewCustomerAchievementVo.NewCustomerUnitPriceChainRatio">
+            <summary>
+            新客客单价环比
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.HospitalPerformance.HospitalOperatingDataVo">

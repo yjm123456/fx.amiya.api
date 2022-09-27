@@ -640,5 +640,29 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
         #endregion
 
+        #region {根据条件获取机构数据}
+        /// <summary>
+        /// 根据机构id获取上月与前月新客业绩
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        [HttpGet("gethospitalNewCustomerAchievement")]
+        public async Task<ResultData<HospitalNewCustomerAchievementVo>> GetHospitalNewCustomerAchievementAsync(int hospitalId)
+        {
+            HospitalNewCustomerAchievementVo result = new HospitalNewCustomerAchievementVo();
+            var hospitalNewCustomerAchievementInfo = await hospitalPerformanceService.GetHospitalOperationDailyData(hospitalId);
+            result.LastNewCustomerVisitRate = hospitalNewCustomerAchievementInfo.LastNewCustomerVisitRate;
+            result.ThisNewCustomerVisitRate = hospitalNewCustomerAchievementInfo.ThisNewCustomerVisitRate;
+            result.NewCustomerVisitChainRatio = hospitalNewCustomerAchievementInfo.NewCustomerVisitChainRatio;
+            result.LastNewCustomerDealRate = hospitalNewCustomerAchievementInfo.LastNewCustomerDealRate;
+            result.ThisNewCustomerDealRate = hospitalNewCustomerAchievementInfo.ThisNewCustomerDealRate;
+            result.NewCustomerDealChainRatio = hospitalNewCustomerAchievementInfo.NewCustomerDealChainRatio;
+            result.LastNewCustomerUnitPrice = hospitalNewCustomerAchievementInfo.LastNewCustomerUnitPrice;
+            result.ThisNewCustomerUnitPrice = hospitalNewCustomerAchievementInfo.ThisNewCustomerUnitPrice;
+            result.NewCustomerUnitPriceChainRatio = hospitalNewCustomerAchievementInfo.NewCustomerUnitPriceChainRatio;
+
+            return ResultData<HospitalNewCustomerAchievementVo>.Success().AddData("hospitalNewCustomerAchievement", result);
+        }
+        #endregion
     }
 }
