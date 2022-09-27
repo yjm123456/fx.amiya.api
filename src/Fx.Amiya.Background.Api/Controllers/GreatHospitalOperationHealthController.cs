@@ -1,7 +1,6 @@
 ﻿using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.ExpressInfo;
 using Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth;
-using Fx.Amiya.Dto.GreatHospitalOperationHealth;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
