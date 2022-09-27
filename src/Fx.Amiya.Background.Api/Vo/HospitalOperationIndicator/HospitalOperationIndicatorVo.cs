@@ -35,6 +35,11 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator
         /// 批注状态
         /// </summary>
         public bool RemarkStatus { get; set; }
-        
+        /// <summary>
+        /// 派发医院
+        /// </summary>
+        public List<HospitalNameList> SendHospital{ get; set; }
+
+
     }
 }

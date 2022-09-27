@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator;
 using Fx.Authorization.Attributes;
+using Fx.Common;
 using Fx.Open.Infrastructure.Web;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,7 +18,7 @@ namespace Fx.Amiya.Background.Api.Controllers
     [FxInternalAuthorize]
     public class HospitalOperationIndicatorController : ControllerBase
     {
-        
+
         public HospitalOperationIndicatorController(
             // IGreatHospitalOperationHealthService greatHospitalOperationHealthService
             )
@@ -35,10 +36,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<List<HospitalOperationIndicatorVo>>> GetListWithPageAsync(string keyword, string valid,int pageNum,int pageSize)
+        public async Task<ResultData<FxPageInfo<HospitalOperationIndicatorVo>>> GetListWithPageAsync(string keyword, bool valid, int pageNum, int pageSize)
         {
             try
             {
+                FxPageInfo<HospitalOperationIndicatorVo> fxPageInfo = new FxPageInfo<HospitalOperationIndicatorVo>();
                 //  var q = await greatHospitalOperationHealthService.GetListAsync(keyword, indicatorsId);
 
                 //var greatHospitalOperationHealth = from d in q.List
@@ -50,13 +52,26 @@ namespace Fx.Amiya.Background.Api.Controllers
                 //                  Valid = d.Valid
                 //              };
 
-                List<HospitalOperationIndicatorVo> hospitalOperationIndicatorPageInfo = new List<HospitalOperationIndicatorVo>();
-
-                return ResultData<List<HospitalOperationIndicatorVo>>.Success().AddData("hospitalOperationIndicatorListInfo", hospitalOperationIndicatorPageInfo);
+                List <HospitalOperationIndicatorVo> hospitalOperationIndicatorPageInfo = new List<HospitalOperationIndicatorVo>();
+                HospitalOperationIndicatorVo hospitalOperationIndicatorVo = new HospitalOperationIndicatorVo {
+                    Id = "1234567",
+                    Name = "9月机构运营指标",
+                    Describe = "运营指标",
+                    StartDate = DateTime.Now.AddDays(-1),
+                    EndDate=DateTime.Now.AddDays(1),
+                    ExcellentHospital="优秀机构",
+                    SubmitStatus=false,
+                    RemarkStatus=false,
+                    CreateDate= DateTime.Now.AddDays(-2),
+                };
+                fxPageInfo.TotalCount = 1;
+                fxPageInfo.List = hospitalOperationIndicatorPageInfo;
+                hospitalOperationIndicatorPageInfo.Add(hospitalOperationIndicatorVo);
+                return ResultData<FxPageInfo<HospitalOperationIndicatorVo>>.Success().AddData("hospitalOperationIndicatorListInfo", fxPageInfo);
             }
             catch (Exception ex)
             {
-                return ResultData<List<HospitalOperationIndicatorVo>>.Fail(ex.Message);
+                return ResultData<FxPageInfo<HospitalOperationIndicatorVo>>.Fail(ex.Message);
             }
         }
 
@@ -161,10 +176,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("nameList")]
-        public async Task<ResultData<List<IndicatorNameVo>>> IndicatorNAmeList() {
+        public async Task<ResultData<List<IndicatorNameVo>>> IndicatorNAmeList()
+        {
             try
             {
                 List<IndicatorNameVo> indicatorNameList = new List<IndicatorNameVo>();
+                indicatorNameList.Add(new IndicatorNameVo { 
+                    Id= "1234567",
+                    Name= "9月机构运营指标"
+                });
                 return ResultData<List<IndicatorNameVo>>.Success().AddData("indicatorNameList", indicatorNameList);
             }
             catch (Exception ex)

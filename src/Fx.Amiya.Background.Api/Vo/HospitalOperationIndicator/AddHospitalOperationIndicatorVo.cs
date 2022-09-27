@@ -29,14 +29,6 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator
         /// </summary>
         public string ExcellentHospital { get; set; }
         /// <summary>
-        /// 提报状态
-        /// </summary>
-        public bool SubmitStatus { get; set; }
-        /// <summary>
-        /// 批注状态
-        /// </summary>
-        public bool RemarkStatus { get; set; }
-        /// <summary>
         /// 是否有效
         /// </summary>
         public bool Valid { get; set; }

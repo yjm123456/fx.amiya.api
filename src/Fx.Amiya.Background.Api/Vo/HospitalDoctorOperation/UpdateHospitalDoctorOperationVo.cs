@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation
 {
-    public class AddHospitalDoctorOperationVo
+    public class UpdateHospitalDoctorOperationVo
     {
+        public string Id { get; set; }
         /// <summary>
         /// 医生名称
         /// </summary>
