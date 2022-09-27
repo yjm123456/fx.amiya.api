@@ -9,17 +9,15 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
+    /// <summary>
+    /// 机构运营指标数据
+    /// </summary>
     [Route("[controller]")]
     [ApiController]
     [FxInternalAuthorize]
     public class HospitalOperationIndicatorController : ControllerBase
     {
-        //private IGreatHospitalOperationHealthService greatHospitalOperationHealthService;
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="greatHospitalOperationHealthService"></param>
+        
         public HospitalOperationIndicatorController(
             // IGreatHospitalOperationHealthService greatHospitalOperationHealthService
             )
@@ -29,10 +27,12 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 获取机构运营指标数据列表
+        /// 分页获取机构运营指标
         /// </summary>
-        /// <param name="keyword">关键词</param>
-        /// <param name="indicatorsId">归属指标id</param>
+        /// <param name="keyword"></param>
+        /// <param name="valid">是否有效</param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
         public async Task<ResultData<List<HospitalOperationIndicatorVo>>> GetListWithPageAsync(string keyword, string valid,int pageNum,int pageSize)
