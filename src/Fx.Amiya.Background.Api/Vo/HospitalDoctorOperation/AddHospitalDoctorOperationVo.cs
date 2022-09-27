@@ -8,6 +8,14 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation
     public class AddHospitalDoctorOperationVo
     {
         /// <summary>
+        /// 指标id
+        /// </summary>
+        public string IndicatorId { get; set; }
+        /// <summary>
+        /// 医院id
+        /// </summary>
+        public int HospitalId { get; set; }
+        /// <summary>
         /// 医生名称
         /// </summary>
         public string DoctorName { get; set; }
