@@ -1381,6 +1381,18 @@ ALTER TABLE `amiyadb`.`tbl_shooting_and_clip`
 ADD COLUMN `video_type` INT NOT NULL DEFAULT 0 AFTER `record_date`;
 -----------------------------------------------余建明 2022/09/22 END--------------------------------------------;
 
+ -----------------------------------------------余建明 2022/09/27 BEGIN--------------------------------------------
+
+ALTER TABLE `amiyadb`.`tbl_great_hospital_operation_health` 
+ADD INDEX `fk_hospital_operation_indicator_id_idx` (`indicator_id` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`tbl_great_hospital_operation_health` 
+ADD CONSTRAINT `fk_hospital_operation_indicator_id`
+  FOREIGN KEY (`indicator_id`)
+  REFERENCES `amiyadb`.`tbl_hospital_operational_indicator` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+-----------------------------------------------余建明 2022/09/27 END--------------------------------------------
 
 
 

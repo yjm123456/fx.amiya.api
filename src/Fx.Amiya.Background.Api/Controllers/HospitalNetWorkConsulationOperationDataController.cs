@@ -41,10 +41,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="keyword">关键词</param>
         /// <param name="indicatorsId">归属指标id</param>
+        /// <param name="hospitalId">医院id</param>
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<List<HospitalNetWorkConsulationOperationDataVo>>> GetListAsync(string keyword, string indicatorsId)
+        public async Task<ResultData<List<HospitalNetWorkConsulationOperationDataVo>>> GetListAsync(string keyword, string indicatorsId,int hospitalId)
         {
             try
             {

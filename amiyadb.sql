@@ -913,6 +913,37 @@ CREATE TABLE `tbl_indicator_send_hospital` (
 
 -----------------------------------------------王健 2022/09/27 END--------------------------------------------
 
+ -----------------------------------------------余建明 2022/09/27 BEGIN--------------------------------------------
+
+ CREATE TABLE `amiyadb`.`tbl_great_hospital_operation_health` (
+  `id` VARCHAR(50) NOT NULL,
+  `indicator_id` VARCHAR(100) NOT NULL,
+  `hospital_id` INT UNSIGNED NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `last_new_customer_visit_rate` DECIMAL(12,2) NOT NULL,
+  `this_new_customer_visit_rate` DECIMAL(12,2) NOT NULL,
+  `new_customer_visit_chain_ratio` DECIMAL(12,2) NOT NULL,
+  `last_new_customer_deal_rate` DECIMAL(12,2) NOT NULL,
+  `this_new_customer_deal_rate` DECIMAL(12,2) NOT NULL,
+  `new_customer_deal_chain_ratio` DECIMAL(12,2) NOT NULL,
+  `last_new_customer_unit_price` DECIMAL(12,2) NOT NULL,
+  `this_new_customer_unit_price` DECIMAL(12,2) NOT NULL,
+  `new_customer_unit_price_chain_ratio` DECIMAL(12,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_hospital_info_id_idx` (`hospital_id` ASC) VISIBLE,
+  CONSTRAINT `fk_hospital_info_id`
+    FOREIGN KEY (`hospital_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+
+-----------------------------------------------余建明 2022/09/27 END--------------------------------------------
+
 
 
 
