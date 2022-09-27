@@ -39,7 +39,7 @@ namespace Fx.Amiya.Service
         public async Task<List<HospitalPerformanceDto>> GetHospitalPerformanceByDateAsync(int? year, int? month, bool isCity)
         {
             List<HospitalPerformanceDto> resultList = new List<HospitalPerformanceDto>();
-            DateTime date = DateTime.Today;
+            DateTime date = Convert.ToDateTime("2022-09-27");
             if (year.HasValue == true)
             {
                 date = Convert.ToDateTime(year + "-01-01");
@@ -68,7 +68,6 @@ namespace Fx.Amiya.Service
                 hospitalPerformanceDto.HospitalId = x.SendHospitalId;
                 hospitalPerformanceDto.HospitalName = x.SendHospital;
                 hospitalPerformanceDto.City = x.City;
-                hospitalPerformanceDto.SendNum = contentPlatFormOrderSendList.Where(z => z.SendHospitalId == x.SendHospitalId).Count();
 
                 List<int> hospitalIds = new List<int>();
                 if (isCity)
@@ -79,6 +78,7 @@ namespace Fx.Amiya.Service
                 {
                     hospitalIds.Add(x.SendHospitalId);
                 }
+                hospitalPerformanceDto.SendNum = contentPlatFormOrderSendList.Where(z => hospitalIds.Contains(z.SendHospitalId)).Count();
                 var contentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(hospitalIds, date);
                 hospitalPerformanceDto.VisitNum = contentPlatFormOrderDealInfoList.Count();
                 hospitalPerformanceDto.VisitRate = CalculateTargetComplete(hospitalPerformanceDto.VisitNum, hospitalPerformanceDto.SendNum).Value;
