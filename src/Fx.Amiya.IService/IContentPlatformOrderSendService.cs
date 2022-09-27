@@ -146,5 +146,13 @@ namespace Fx.Amiya.IService
         /// <param name="year">年份</param>
         /// <returns></returns>
         Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(DateTime startDate);
+
+        /// <summary>
+        /// 根据医院id与月份获取派单业绩
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        Task<List<SendContentPlatformOrderDto>> GetSendDataByHospitalIdAndMonthAsync(int hospitalId, int month);
     }
 }

@@ -3,27 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth
+namespace Fx.Amiya.Background.Api.Vo.HospitalPerformance
 {
-    /// <summary>
-    /// 修改优秀机构运营健康指标
-    /// </summary>
-    public class UpdateGreatHospitalOperationHealthVo
+    public class HospitalNewCustomerAchievementVo
     {
-        
-        /// <summary>
-        /// 编号
-        /// </summary>
-        public string Id { get; set; }
-        /// <summary>
-        /// 医院id
-        /// </summary>
-        public int HospitalId { get; set; }
 
-        /// <summary>
-        /// 归属指标id
-        /// </summary>
-        public string IndicatorsId { get; set; }
         /// <summary>
         /// 前月新客上门率
         /// </summary>

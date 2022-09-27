@@ -19,6 +19,12 @@ namespace Fx.Amiya.IService
         /// <param name="year">年份</param>
         /// <returns></returns>
         Task<List<HospitalPerformanceDto>> GetHospitalPerformanceByDateAsync(int? year, int? month, bool isCity);
+        /// <summary>
+        /// 根据医院id获取医院新客上月与前月业绩
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<HospitalNewCustomerAchievementDto> GetHospitalOperationDailyData(int hospitalId);
 
 
 
