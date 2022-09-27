@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.DbModels.Model
 {
+    /// <summary>
+    /// 机构运营批注
+    /// </summary>
     public class Remark:BaseDbModel
     {
         /// <summary>

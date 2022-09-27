@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace Fx.Amiya.DbModels.Model
 {
     /// <summary>
-    /// 优秀机构运营健康指标
+    /// 优秀机构运营健康指标标注
     /// </summary>
-    public class ExcellentHospitalOperationsbeRemark
+    public class ExcellentHospitalOperationsbeRemark:BaseDbModel
     {
         public string Id { get; set; }
         public string Remark { get; set; }

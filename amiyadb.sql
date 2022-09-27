@@ -876,6 +876,8 @@ CREATE TABLE `tbl_growth_points_rule` (
 
  -----------------------------------------------王健 2022/09/27 BEGIN--------------------------------------------
 
+ --机构运营指标
+
  CREATE TABLE `tbl_hospital_operational_indicator` (
   `id` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
   `name` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
@@ -894,7 +896,7 @@ CREATE TABLE `tbl_growth_points_rule` (
 
 
 
-
+--运营指标派发医院
 CREATE TABLE `tbl_indicator_send_hospital` (
   `id` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
   `indicator_id` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
