@@ -1,6 +1,6 @@
 ﻿using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.ExpressInfo;
-using Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth;
+using Fx.Amiya.Background.Api.Vo.HospitalOperationData;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -16,42 +16,42 @@ using System.Threading.Tasks;
 namespace Fx.Amiya.Background.Api.Controllers
 {
     /// <summary>
-    /// 优秀机构运营健康指标板块数据接口
+    /// 机构运营数据分析板块数据接口
     /// </summary>
     [Route("[controller]")]
     [ApiController]
-    public class GreatHospitalOperationHealthController : ControllerBase
+    public class HospitalOperationDataController : ControllerBase
     {
-        //private IGreatHospitalOperationHealthService greatHospitalOperationHealthService;
+        //private IHospitalOperationDataService hospitalOperationDataService;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="greatHospitalOperationHealthService"></param>
-        public GreatHospitalOperationHealthController(
-           // IGreatHospitalOperationHealthService greatHospitalOperationHealthService
+        /// <param name="hospitalOperationDataService"></param>
+        public HospitalOperationDataController(
+           // IHospitalOperationDataService hospitalOperationDataService
             )
         {
-            //this.greatHospitalOperationHealthService = greatHospitalOperationHealthService;
+            //this.hospitalOperationDataService = hospitalOperationDataService;
         }
 
 
         /// <summary>
-        /// 获取优秀机构运营健康指标信息列表
+        /// 获取机构运营数据分析信息列表
         /// </summary>
         /// <param name="keyword">关键词</param>
         /// <param name="indicatorsId">归属指标id</param>
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<List<GreatHospitalOperationHealthVo>>> GetListAsync(string keyword,string indicatorsId)
+        public async Task<ResultData<List<HospitalOperationDataVo>>> GetListAsync(string keyword,string indicatorsId)
         {
             try
             {
-                //  var q = await greatHospitalOperationHealthService.GetListAsync(keyword, indicatorsId);
+                //  var q = await hospitalOperationDataService.GetListAsync(keyword, indicatorsId);
 
-                //var greatHospitalOperationHealth = from d in q.List
-                //              select new GreatHospitalOperationHealthVo
+                //var hospitalOperationData = from d in q.List
+                //              select new HospitalOperationDataVo
                 //              {
                 //                  Id = d.Id,
                 //                  ExpressCode = d.ExpressCode,
@@ -59,24 +59,24 @@ namespace Fx.Amiya.Background.Api.Controllers
                 //                  Valid = d.Valid
                 //              };
 
-                List<GreatHospitalOperationHealthVo> greatHospitalOperationHealthPageInfo = new List<GreatHospitalOperationHealthVo>();
+                List<HospitalOperationDataVo> hospitalOperationDataPageInfo = new List<HospitalOperationDataVo>();
 
-                return ResultData<List<GreatHospitalOperationHealthVo>>.Success().AddData("greatHospitalOperationHealthInfo", greatHospitalOperationHealthPageInfo);
+                return ResultData<List<HospitalOperationDataVo>>.Success().AddData("hospitalOperationDataInfo", hospitalOperationDataPageInfo);
             }
             catch (Exception ex)
             {
-                return ResultData<List<GreatHospitalOperationHealthVo>>.Fail(ex.Message);
+                return ResultData<List<HospitalOperationDataVo>>.Fail(ex.Message);
             }
         }
 
         /// <summary>
-        /// 添加优秀机构运营健康指标信息
+        /// 添加机构运营数据分析信息
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
-        [FxInternalAuthorize]
+        [FxTenantAuthorize]
         [HttpPost]
-        public async Task<ResultData> AddAsync(AddGreatHospitalOperationHealthVo addVo)
+        public async Task<ResultData> AddAsync(AddHospitalOperationDataVo addVo)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 //addDto.ExpressName = addVo.ExpressName;
                 //addDto.Valid = addVo.Valid;
 
-                //await greatHospitalOperationHealthService.AddAsync(addDto);
+                //await hospitalOperationDataService.AddAsync(addDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -97,40 +97,40 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 根据优秀机构运营健康指标编号获取优秀机构运营健康指标信息
+        /// 根据机构运营数据分析编号获取机构运营数据分析信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("byId/{id}")]
-        [FxInternalAuthorize]
-        public async Task<ResultData<GreatHospitalOperationHealthVo>> GetByIdAsync(string id)
+        [FxTenantAuthorize]
+        public async Task<ResultData<HospitalOperationDataVo>> GetByIdAsync(string id)
         {
             try
             {
-                //var greatHospitalOperationHealth = await greatHospitalOperationHealthService.GetByIdAsync(id);
-                GreatHospitalOperationHealthVo greatHospitalOperationHealthVo = new GreatHospitalOperationHealthVo();
-                //greatHospitalOperationHealthVo.Id = greatHospitalOperationHealth.Id;
-                //greatHospitalOperationHealthVo.ExpressCode = greatHospitalOperationHealth.ExpressCode;
-                //greatHospitalOperationHealthVo.ExpressName = greatHospitalOperationHealth.ExpressName;
-                //greatHospitalOperationHealthVo.Valid = greatHospitalOperationHealth.Valid;
+                //var hospitalOperationData = await hospitalOperationDataService.GetByIdAsync(id);
+                HospitalOperationDataVo hospitalOperationDataVo = new HospitalOperationDataVo();
+                //hospitalOperationDataVo.Id = hospitalOperationData.Id;
+                //hospitalOperationDataVo.ExpressCode = hospitalOperationData.ExpressCode;
+                //hospitalOperationDataVo.ExpressName = hospitalOperationData.ExpressName;
+                //hospitalOperationDataVo.Valid = hospitalOperationData.Valid;
 
-                return ResultData<GreatHospitalOperationHealthVo>.Success().AddData("greatHospitalOperationHealthInfo", greatHospitalOperationHealthVo);
+                return ResultData<HospitalOperationDataVo>.Success().AddData("hospitalOperationDataInfo", hospitalOperationDataVo);
             }
             catch (Exception ex)
             {
-                return ResultData<GreatHospitalOperationHealthVo>.Fail(ex.Message);
+                return ResultData<HospitalOperationDataVo>.Fail(ex.Message);
             }
         }
 
 
         /// <summary>
-        /// 修改优秀机构运营健康指标信息
+        /// 修改机构运营数据分析信息
         /// </summary>
         /// <param name="updateVo"></param>
         /// <returns></returns>
         [HttpPut]
-        [FxInternalAuthorize]
-        public async Task<ResultData> UpdateAsync(UpdateGreatHospitalOperationHealthVo updateVo)
+        [FxTenantAuthorize]
+        public async Task<ResultData> UpdateAsync(UpdateHospitalOperationDataVo updateVo)
         {
             try
             {
@@ -139,7 +139,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 //updateDto.ExpressName = updateVo.ExpressName;
                 //updateDto.ExpressCode = updateVo.ExpressCode;
                 //updateDto.Valid = updateVo.Valid;
-                //await greatHospitalOperationHealthService.UpdateAsync(updateDto);
+                //await hospitalOperationDataService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -150,17 +150,17 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 删除优秀机构运营健康指标信息
+        /// 删除机构运营数据分析信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        [FxInternalAuthorize]
+        [FxTenantAuthorize]
         public async Task<ResultData> DeleteAsync(string id)
         {
             try
             {
-                //await greatHospitalOperationHealthService.DeleteAsync(id);
+                //await hospitalOperationDataService.DeleteAsync(id);
                 return ResultData.Success();
             }
             catch (Exception ex)

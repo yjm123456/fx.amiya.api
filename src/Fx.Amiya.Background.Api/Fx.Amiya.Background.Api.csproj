@@ -8,13 +8,14 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\Users\1\Desktop\新建文件夹\Fx.Amiya.Background.Api.xml</DocumentationFile>
+    <DocumentationFile>E:\新建文件夹\Fx.Amiya.Background.Api.xml</DocumentationFile>
     <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>E:\新建文件夹\fx.amiya.api\src\Fx.Amiya.Background.Api\Fx.Amiya.Background.Api.xml</DocumentationFile>
     <OutputPath></OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
 
 
