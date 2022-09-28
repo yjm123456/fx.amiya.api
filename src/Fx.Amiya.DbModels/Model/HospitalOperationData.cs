@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace Fx.Amiya.Background.Api.Vo.HospitalOperationData
+namespace Fx.Amiya.DbModels.Model
 {
-    /// <summary>
-    /// 机构运营数据分析新增
-    /// </summary>
-    public class AddHospitalOperationDataVo
+    public class HospitalOperationData : BaseDbModel
     {
-
+    
         /// <summary>
         /// 医院id
         /// </summary>
@@ -37,5 +33,14 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalOperationData
         /// 环比
         /// </summary>
         public decimal ChainRatio { get; set; }
+
+        /// <summary>
+        /// 优秀机构
+        /// </summary>
+        public string GreatHospital { get; set; }
+
+        public HospitalInfo HospitalInfo { get; set; }
+
+        public HospitalOperationalIndicator HospitalOperationalIndicator { get; set; }
     }
 }

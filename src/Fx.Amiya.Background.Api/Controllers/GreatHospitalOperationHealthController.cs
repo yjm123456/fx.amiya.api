@@ -70,9 +70,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                        NewCustomerUnitPriceChainRatio = d.NewCustomerUnitPriceChainRatio,
                                                    };
 
-                List<GreatHospitalOperationHealthVo> greatHospitalOperationHealthPageInfo = new List<GreatHospitalOperationHealthVo>();
-
-                return ResultData<List<GreatHospitalOperationHealthVo>>.Success().AddData("greatHospitalOperationHealthInfo", greatHospitalOperationHealthPageInfo);
+                List<GreatHospitalOperationHealthVo> greatHospitalOperationHealthResult = new List<GreatHospitalOperationHealthVo>();
+                greatHospitalOperationHealthResult = greatHospitalOperationHealth.ToList();
+                return ResultData<List<GreatHospitalOperationHealthVo>>.Success().AddData("greatHospitalOperationHealthInfo", greatHospitalOperationHealthResult);
             }
             catch (Exception ex)
             {
@@ -166,6 +166,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 UpdateGreatHospitalOperationHealthDto updateDto = new UpdateGreatHospitalOperationHealthDto();
+                updateDto.Id = updateVo.Id;
                 updateDto.HospitalId = updateVo.HospitalId;
                 updateDto.IndicatorsId = updateVo.IndicatorsId;
                 updateDto.LastNewCustomerVisitRate = updateVo.LastNewCustomerVisitRate;

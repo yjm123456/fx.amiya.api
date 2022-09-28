@@ -25,6 +25,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<AmiyaWareHouseNameManage> AmiyaWareHouseNameManage { get; set; }
         public virtual DbSet<DockingHospitalCustomerInfo> DockingHospitalCustomerInfo { get; set; }
         public virtual DbSet<GreatHospitalOperationHealth> GreatHospitalOperationHealth { get; set; }
+        public virtual DbSet<HospitalOperationData> HospitalOperationData { get; set; }
         public virtual DbSet<WxMpUserInfo> WxMpUserInfo { get; set; }
         public virtual DbSet<HospitalFeedBack> HospitalFeedBack { get; set; }
         public virtual DbSet<InventoryList> InventoryList { get; set; }
@@ -191,7 +192,8 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new AmiyaPositionModulePermissionConfiguration());
             modelBuilder.ApplyConfiguration(new ShootingAndClipConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalPositionDefaultRouteConfiguration());
-            modelBuilder.ApplyConfiguration(new HospitalPositionModulePermissionConfiguration()); 
+            modelBuilder.ApplyConfiguration(new HospitalPositionModulePermissionConfiguration());
+            modelBuilder.ApplyConfiguration(new HospitalOperationDataConfiguration());
             modelBuilder.ApplyConfiguration(new ContentPlatFormOrderDealInfoConfiguration());
             modelBuilder.ApplyConfiguration(new ConfigConfiguration());
             modelBuilder.ApplyConfiguration(new WxAppInfoConfiguration());

@@ -30,7 +30,7 @@ namespace Fx.Amiya.Service
                 var greatHospitalOperationHealth = from d in dalGreatHospitalOperationHealth.GetAll().Include(x => x.HospitalInfo).Include(x => x.HospitalOperationalIndicator)
                                                    where (keyword == null || d.HospitalInfo.Name.Contains(keyword))
                                                    && (d.IndicatorsId == indicatorsId)
-                                                   && (d.Valid == false)
+                                                   && (d.Valid == true)
                                                    select new GreatHospitalOperationHealthDto
                                                    {
                                                        Id = d.Id,

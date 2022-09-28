@@ -105,5 +105,7 @@ namespace Fx.Amiya.DbModels.Model
 
         public List<GreatHospitalOperationHealth> GreatHospitalOperationHealthList { get; set; }
 
+        public List<HospitalOperationData> HospitalOperationDataList { get; set; }
+
     }
 }
