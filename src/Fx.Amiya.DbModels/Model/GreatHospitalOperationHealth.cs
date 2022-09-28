@@ -15,7 +15,7 @@ namespace Fx.Amiya.DbModels.Model
         /// <summary>
         /// 归属指标id
         /// </summary>
-        public string IndicatorsId { get; set; }
+        public string IndicatorId { get; set; }
         /// <summary>
         /// 前月新客上门率
         /// </summary>

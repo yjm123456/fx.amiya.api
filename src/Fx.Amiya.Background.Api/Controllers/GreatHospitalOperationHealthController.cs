@@ -57,7 +57,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                        Id = d.Id,
                                                        HospitalId = d.HospitalId,
                                                        HospitalName = d.HospitalName,
-                                                       IndicatorsId = d.IndicatorsId,
+                                                       IndicatorsId = d.IndicatorId,
                                                        IndicatorsName = d.IndicatorsName,
                                                        LastNewCustomerVisitRate = d.LastNewCustomerVisitRate,
                                                        ThisNewCustomerVisitRate = d.ThisNewCustomerVisitRate,
@@ -134,7 +134,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 greatHospitalOperationHealthVo.DeleteDate = greatHospitalOperationHealth.DeleteDate;
                 greatHospitalOperationHealthVo.Valid = greatHospitalOperationHealth.Valid;
                 greatHospitalOperationHealthVo.HospitalId = greatHospitalOperationHealth.HospitalId;
-                greatHospitalOperationHealthVo.IndicatorsId = greatHospitalOperationHealth.IndicatorsId;
+                greatHospitalOperationHealthVo.IndicatorsId = greatHospitalOperationHealth.IndicatorId;
                 greatHospitalOperationHealthVo.LastNewCustomerVisitRate = greatHospitalOperationHealth.LastNewCustomerVisitRate;
                 greatHospitalOperationHealthVo.ThisNewCustomerVisitRate = greatHospitalOperationHealth.ThisNewCustomerVisitRate;
                 greatHospitalOperationHealthVo.NewCustomerVisitChainRatio = greatHospitalOperationHealth.NewCustomerVisitChainRatio;

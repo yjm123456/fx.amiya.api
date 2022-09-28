@@ -7,18 +7,21 @@ using System.Text;
 
 namespace Fx.Amiya.DbModels
 {
-    public class AmiyaDbContext:DbContext
+    public class AmiyaDbContext : DbContext
     {
-        public AmiyaDbContext(DbContextOptions<AmiyaDbContext> options):base(options)
+        public AmiyaDbContext(DbContextOptions<AmiyaDbContext> options) : base(options)
         {
-             
-        } 
+
+        }
         public virtual DbSet<UserInfo> UserInfo { get; set; }
         public virtual DbSet<CustomerInfo> CustomerInfo { get; set; }
         public virtual DbSet<WxMiniUserInfo> WxMiniUserInfo { get; set; }
         public virtual DbSet<AmiyaWareHouse> AmiyaWareHouse { get; set; }
         public virtual DbSet<ShootingAndClip> ShootingAndClip { get; set; }
         public virtual DbSet<AmiyaInWarehouse> AmiyaInWarehouse { get; set; }
+
+        public virtual DbSet<HospitalNetWorkConsulationOperationData> HospitalNetWorkConsulationOperationData { get; set; }
+        public virtual DbSet<HospitalConsulationOperationData> HospitalConsulationOperationData { get; set; }
         public virtual DbSet<AmiyaOutWarehouse> AmiyaOutWarehouse { get; set; }
         public virtual DbSet<LiveAnchorBaseInfo> LiveAnchorBaseInfo { get; set; }
         public virtual DbSet<LiveAnchorWeChatInfo> LiveAnchorWeChatInfo { get; set; }
@@ -128,7 +131,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<BalanceRechargeRecord> BalanceRechargeRecords { get; set; }
         public virtual DbSet<BalanceUseRecord> BalanceUseRecords { get; set; }
         public virtual DbSet<RechargeRewardRule> RechargeRewardRules { get; set; }
-        public virtual  DbSet<RechargeAmount> RechargeAmounts { get; set; }
+        public virtual DbSet<RechargeAmount> RechargeAmounts { get; set; }
         public virtual DbSet<GrowthPointsRule> GrowthPointsRules { get; set; }
         public virtual DbSet<GoodsConsumptionVoucher> GoodsConsumptionVouchers { get; set; }
         public virtual DbSet<HospitalOperationalIndicator> HospitalOperationalIndicator { get; set; }
@@ -151,6 +154,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new AmiyaInWarehouseConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaOutWarehouseConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaWareHouseNameManageConfiguration());
+            modelBuilder.ApplyConfiguration(new HospitalNetWorkConsulationOperationDataConfiguration());
             modelBuilder.ApplyConfiguration(new EmployeeBindLiveAnchorConfiguration());
             modelBuilder.ApplyConfiguration(new InventoryListConfiguration());
             modelBuilder.ApplyConfiguration(new ShoppingCartRegistrationConfiguration());
@@ -189,6 +193,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new ModuleCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new ModuleConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaPositionDefaultRouteConfiguration());
+            modelBuilder.ApplyConfiguration(new HospitalConsulationOperationDataConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaPositionModulePermissionConfiguration());
             modelBuilder.ApplyConfiguration(new ShootingAndClipConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalPositionDefaultRouteConfiguration());

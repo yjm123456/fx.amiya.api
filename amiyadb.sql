@@ -915,6 +915,8 @@ CREATE TABLE `tbl_indicator_send_hospital` (
 
  -----------------------------------------------余建明 2022/09/27 BEGIN--------------------------------------------
 
+ --优秀机构运营健康指标
+
  CREATE TABLE `amiyadb`.`tbl_great_hospital_operation_health` (
   `id` VARCHAR(50) NOT NULL,
   `indicator_id` VARCHAR(100) NOT NULL,
@@ -941,6 +943,8 @@ CREATE TABLE `tbl_indicator_send_hospital` (
     ON UPDATE NO ACTION);
 
 
+    --机构运营数据分析
+
     CREATE TABLE `amiyadb`.`tbl_hospital_operation_data` (
   `id` VARCHAR(50) NOT NULL,
   `indicator_id` VARCHAR(100) NOT NULL,
@@ -962,6 +966,110 @@ CREATE TABLE `tbl_indicator_send_hospital` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_hospital_operation_indicator`
+    FOREIGN KEY (`indicator_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_operational_indicator` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+    --本机构网咨运营数据分析
+    CREATE TABLE `amiyadb`.`tbl_hospital_network_consulation_operation_data` (
+  `id` VARCHAR(50) NOT NULL,
+  `indicator_id` VARCHAR(100) NOT NULL,
+  `hospital_id` INT UNSIGNED NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `consulation_name` VARCHAR(100) NULL,
+  `send_order_num` INT NOT NULL,
+  `new_customer_visit_num` INT NOT NULL,
+  `new_customer_visit_rate` DECIMAL (12,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_hospitalnetworkconsulationoperationdata_indicator_id_idx` (`indicator_id` ASC) VISIBLE,
+  INDEX `fk_hospitalnetworkconsulationoperationdata_hospitalid_idx` (`hospital_id` ASC) VISIBLE,
+  CONSTRAINT `fk_hospitalnetworkconsulationoperationdata_indicator_id`
+    FOREIGN KEY (`indicator_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_operational_indicator` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_hospitalnetworkconsulationoperationdata_hospitalid`
+    FOREIGN KEY (`hospital_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+    
+    --本机构咨询师运营数据分析
+    CREATE TABLE `amiyadb`.`tbl_hospital_consulation_operation_data` (
+  `id` VARCHAR(50) NOT NULL,
+  `indicator_id` VARCHAR(100) NOT NULL,
+  `hospital_id` INT UNSIGNED NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `consulation_name` VARCHAR(100) NULL,
+  `send_order_num` INT NOT NULL,
+  `new_customer_visit_num` INT NOT NULL,
+  `new_customer_visit_rate` DECIMAL(12,2) NOT NULL,
+  `new_customer_deal_num` INT NOT NULL,
+  `new_customer_deal_rate` DECIMAL(12,2) NOT NULL,
+  `new_customer_deal_price` DECIMAL(12,2) NOT NULL,
+  `new_customer_unit_price` DECIMAL(12,2) NOT NULL,
+  `old_customer_visit_num` INT NOT NULL,
+  `old_customer_deal_num` INT NOT NULL,
+  `old_customer_deal_rate` DECIMAL(12,2) NOT NULL,
+  `old_customer_deal_price` DECIMAL(12,2) NOT NULL,
+  `old_customer_unit_price` DECIMAL(12,2) NOT NULL,
+  `old_customer_achievement_rate` DECIMAL(12,2) NOT NULL,
+  `last_month_total_achievement` DECIMAL(12,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_hospital_consulation_operation_indicator_id_idx` (`indicator_id` ASC) VISIBLE,
+  INDEX `fk_hospital_consulation_operation_data_hospitalid_idx` (`hospital_id` ASC) VISIBLE,
+  CONSTRAINT `fk_hospital_consulation_operation_indicator_id`
+    FOREIGN KEY (`indicator_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_operational_indicator` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_hospital_consulation_operation_data_hospitalid`
+    FOREIGN KEY (`hospital_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+    --本机构医生数据分析
+    CREATE TABLE `amiyadb`.`tbl_hospital_doctor_operation_data` (
+  `id` VARCHAR(50) NOT NULL,
+  `indicator_id` VARCHAR(100) NOT NULL,
+  `hospital_id` INT UNSIGNED NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `doctor_name` VARCHAR(100) NULL,
+  `new_customer_accept_num` INT NOT NULL,
+  `new_customer_deal_num` INT NOT NULL,
+  `new_customer_deal_rate` DECIMAL(12,2) NOT NULL,
+  `new_customer_achievement` DECIMAL(12,2) NOT NULL,
+  `new_customer_unit_price` DECIMAL(12,2) NOT NULL,
+  `new_customer_achievement_rate` DECIMAL(12,2) NOT NULL,
+  `old_customer_accept_num` INT NOT NULL,
+  `old_customer_deal_num` INT NOT NULL,
+  `old_customer_deal_rate` DECIMAL(12,2) NOT NULL,
+  `old_customer_achievement` DECIMAL(12,2) NOT NULL,
+  `old_customer_unit_price` DECIMAL(12,2) NOT NULL,
+  `old_customer_achievement_rate` DECIMAL(12,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_hospitaldoctoroperationdata_hospital_id_idx` (`hospital_id` ASC) VISIBLE,
+  INDEX `fk_hospitaldoctoroperationdata_indicator_id_idx` (`indicator_id` ASC) VISIBLE,
+  CONSTRAINT `fk_hospitaldoctoroperationdata_hospital_id`
+    FOREIGN KEY (`hospital_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_hospitaldoctoroperationdata_indicator_id`
     FOREIGN KEY (`indicator_id`)
     REFERENCES `amiyadb`.`tbl_hospital_operational_indicator` (`id`)
     ON DELETE NO ACTION

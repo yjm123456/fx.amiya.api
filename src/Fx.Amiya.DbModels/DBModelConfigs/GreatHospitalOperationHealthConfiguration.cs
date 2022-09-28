@@ -13,7 +13,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
         {
             builder.ToTable("tbl_great_hospital_operation_health");
             builder.Property(t => t.Id).HasColumnName("id").HasColumnType("varchar(50)").IsRequired();
-            builder.Property(t => t.IndicatorsId).HasColumnName("indicator_id").HasColumnType("varchar(100)").IsRequired();
+            builder.Property(t => t.IndicatorId).HasColumnName("indicator_id").HasColumnType("varchar(100)").IsRequired();
             builder.Property(t => t.HospitalId).HasColumnName("hospital_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.Property(t => t.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);
@@ -31,7 +31,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
 
 
             builder.HasOne(t => t.HospitalInfo).WithMany(t => t.GreatHospitalOperationHealthList).HasForeignKey(t => t.HospitalId);
-            builder.HasOne(t => t.HospitalOperationalIndicator).WithMany(t => t.GreatHospitalOperationHealthList).HasForeignKey(t => t.IndicatorsId);
+            builder.HasOne(t => t.HospitalOperationalIndicator).WithMany(t => t.GreatHospitalOperationHealthList).HasForeignKey(t => t.IndicatorId);
         }
     }
 }
