@@ -1,6 +1,8 @@
 ﻿using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.ExpressInfo;
 using Fx.Amiya.Background.Api.Vo.HospitalConsulationOperationData;
+using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto.HospitalConsulationOperationData;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -16,23 +18,23 @@ using System.Threading.Tasks;
 namespace Fx.Amiya.Background.Api.Controllers
 {
     /// <summary>
-    /// 机构咨询师咨询师运营数据分析板块数据接口
+    /// 机构咨询师运营数据分析板块数据接口
     /// </summary>
     [Route("[controller]")]
     [ApiController]
     public class HospitalConsulationOperationDataController : ControllerBase
     {
-        //private IHospitalConsulationOperationDataService hospitalOperationDataService;
+        private IHospitalConsulationOperationDataService hospitalConsulationOperationDataService;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="hospitalOperationDataService"></param>
+        /// <param name="hospitalConsulationOperationDataService"></param>
         public HospitalConsulationOperationDataController(
-           // IHospitalConsulationOperationDataService hospitalOperationDataService
+            IHospitalConsulationOperationDataService hospitalConsulationOperationDataService
             )
         {
-            //this.hospitalOperationDataService = hospitalOperationDataService;
+            this.hospitalConsulationOperationDataService = hospitalConsulationOperationDataService;
         }
 
 
@@ -49,20 +51,36 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //  var q = await hospitalOperationDataService.GetListAsync(keyword, indicatorsId);
+                var q = await hospitalConsulationOperationDataService.GetListAsync(keyword, indicatorsId);
 
-                //var hospitalOperationData = from d in q.List
-                //              select new HospitalConsulationOperationDataVo
-                //              {
-                //                  Id = d.Id,
-                //                  ExpressCode = d.ExpressCode,
-                //                  ExpressName = d.ExpressName,
-                //                  Valid = d.Valid
-                //              };
+                var hospitalOperationData = from d in q
+                                            select new HospitalConsulationOperationDataVo
+                                            {
+                                                Id = d.Id,
+                                                HospitalId = d.HospitalId,
+                                                IndicatorId = d.IndicatorId,
+                                                ConsulationName = d.ConsulationName,
+                                                SendOrderNum = d.SendOrderNum,
+                                                NewCustomerVisitNum = d.NewCustomerVisitNum,
+                                                NewCustomerVisitRate = d.NewCustomerVisitRate,
+                                                NewCustomerDealNum = d.NewCustomerDealNum,
+                                                NewCustomerDealRate = d.NewCustomerDealRate,
+                                                NewCustomerDealPrice = d.NewCustomerDealPrice,
+                                                NewCustomerUnitPrice = d.NewCustomerUnitPrice,
 
-                List<HospitalConsulationOperationDataVo> hospitalOperationDataPageInfo = new List<HospitalConsulationOperationDataVo>();
+                                                OldCustomerVisitNum = d.OldCustomerVisitNum,
+                                                OldCustomerDealNum = d.OldCustomerDealNum,
+                                                OldCustomerDealRate = d.OldCustomerDealRate,
+                                                OldCustomerDealPrice = d.OldCustomerDealPrice,
+                                                OldCustomerUnitPrice = d.OldCustomerUnitPrice,
 
-                return ResultData<List<HospitalConsulationOperationDataVo>>.Success().AddData("hospitalOperationDataInfo", hospitalOperationDataPageInfo);
+                                                OldCustomerAchievementRate = d.OldCustomerAchievementRate,
+                                                LasttMonthTotalAchievement = d.LasttMonthTotalAchievement,
+                                            };
+
+                List<HospitalConsulationOperationDataVo> hospitalOperationDataResult = new List<HospitalConsulationOperationDataVo>();
+                hospitalOperationDataResult = hospitalOperationData.ToList();
+                return ResultData<List<HospitalConsulationOperationDataVo>>.Success().AddData("hospitalOperationDataInfo", hospitalOperationDataResult);
             }
             catch (Exception ex)
             {
@@ -81,12 +99,28 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //AddExpressDto addDto = new AddExpressDto();
-                //addDto.ExpressCode = addVo.ExpressCode;
-                //addDto.ExpressName = addVo.ExpressName;
-                //addDto.Valid = addVo.Valid;
+                AddHospitalConsulationOperationDataDto addDto = new AddHospitalConsulationOperationDataDto();
+                addDto.HospitalId = addVo.HospitalId;
+                addDto.IndicatorId = addVo.IndicatorId;
+                addDto.ConsulationName = addVo.ConsulationName;
+                addDto.SendOrderNum = addVo.SendOrderNum;
+                addDto.NewCustomerVisitNum = addVo.NewCustomerVisitNum;
+                addDto.NewCustomerVisitRate = addVo.NewCustomerVisitRate;
+                addDto.NewCustomerDealNum = addVo.NewCustomerDealNum;
+                addDto.NewCustomerDealRate = addVo.NewCustomerDealRate;
+                addDto.NewCustomerDealPrice = addVo.NewCustomerDealPrice;
+                addDto.NewCustomerUnitPrice = addVo.NewCustomerUnitPrice;
 
-                //await hospitalOperationDataService.AddAsync(addDto);
+                addDto.OldCustomerVisitNum = addVo.OldCustomerVisitNum;
+                addDto.OldCustomerDealNum = addVo.OldCustomerDealNum;
+                addDto.OldCustomerDealRate = addVo.OldCustomerDealRate;
+                addDto.OldCustomerDealPrice = addVo.OldCustomerDealPrice;
+                addDto.OldCustomerUnitPrice = addVo.OldCustomerUnitPrice;
+
+                addDto.OldCustomerAchievementRate = addVo.OldCustomerAchievementRate;
+                addDto.LasttMonthTotalAchievement = addVo.LasttMonthTotalAchievement;
+
+                await hospitalConsulationOperationDataService.AddAsync(addDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -108,12 +142,34 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //var hospitalOperationData = await hospitalOperationDataService.GetByIdAsync(id);
+                var hospitalOperationData = await hospitalConsulationOperationDataService.GetByIdAsync(id);
                 HospitalConsulationOperationDataVo hospitalOperationDataVo = new HospitalConsulationOperationDataVo();
-                //hospitalOperationDataVo.Id = hospitalOperationData.Id;
-                //hospitalOperationDataVo.ExpressCode = hospitalOperationData.ExpressCode;
-                //hospitalOperationDataVo.ExpressName = hospitalOperationData.ExpressName;
-                //hospitalOperationDataVo.Valid = hospitalOperationData.Valid;
+                hospitalOperationDataVo.Id = hospitalOperationData.Id;
+                hospitalOperationDataVo.CreateDate = hospitalOperationData.CreateDate;
+                hospitalOperationDataVo.UpdateDate = hospitalOperationData.UpdateDate;
+                hospitalOperationDataVo.DeleteDate = hospitalOperationData.DeleteDate;
+                hospitalOperationDataVo.Valid = hospitalOperationData.Valid;
+                hospitalOperationDataVo.HospitalId = hospitalOperationData.HospitalId;
+                hospitalOperationDataVo.IndicatorId = hospitalOperationData.IndicatorId;
+                hospitalOperationDataVo.HospitalId = hospitalOperationData.HospitalId;
+                hospitalOperationDataVo.IndicatorId = hospitalOperationData.IndicatorId;
+                hospitalOperationDataVo.ConsulationName = hospitalOperationData.ConsulationName;
+                hospitalOperationDataVo.SendOrderNum = hospitalOperationData.SendOrderNum;
+                hospitalOperationDataVo.NewCustomerVisitNum = hospitalOperationData.NewCustomerVisitNum;
+                hospitalOperationDataVo.NewCustomerVisitRate = hospitalOperationData.NewCustomerVisitRate;
+                hospitalOperationDataVo.NewCustomerDealNum = hospitalOperationData.NewCustomerDealNum;
+                hospitalOperationDataVo.NewCustomerDealRate = hospitalOperationData.NewCustomerDealRate;
+                hospitalOperationDataVo.NewCustomerDealPrice = hospitalOperationData.NewCustomerDealPrice;
+                hospitalOperationDataVo.NewCustomerUnitPrice = hospitalOperationData.NewCustomerUnitPrice;
+
+                hospitalOperationDataVo.OldCustomerVisitNum = hospitalOperationData.OldCustomerVisitNum;
+                hospitalOperationDataVo.OldCustomerDealNum = hospitalOperationData.OldCustomerDealNum;
+                hospitalOperationDataVo.OldCustomerDealRate = hospitalOperationData.OldCustomerDealRate;
+                hospitalOperationDataVo.OldCustomerDealPrice = hospitalOperationData.OldCustomerDealPrice;
+                hospitalOperationDataVo.OldCustomerUnitPrice = hospitalOperationData.OldCustomerUnitPrice;
+
+                hospitalOperationDataVo.OldCustomerAchievementRate = hospitalOperationData.OldCustomerAchievementRate;
+                hospitalOperationDataVo.LasttMonthTotalAchievement = hospitalOperationData.LasttMonthTotalAchievement;
 
                 return ResultData<HospitalConsulationOperationDataVo>.Success().AddData("hospitalOperationDataInfo", hospitalOperationDataVo);
             }
@@ -135,12 +191,32 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //UpdateExpressDto updateDto = new UpdateExpressDto();
-                //updateDto.Id = updateVo.Id;
-                //updateDto.ExpressName = updateVo.ExpressName;
-                //updateDto.ExpressCode = updateVo.ExpressCode;
-                //updateDto.Valid = updateVo.Valid;
-                //await hospitalOperationDataService.UpdateAsync(updateDto);
+                UpdateHospitalConsulationOperationDataDto updateDto = new UpdateHospitalConsulationOperationDataDto();
+
+                updateDto.Id = updateVo.Id;
+                updateDto.HospitalId = updateVo.HospitalId;
+                updateDto.IndicatorId = updateVo.IndicatorId;
+                updateDto.HospitalId = updateVo.HospitalId;
+                updateDto.IndicatorId = updateVo.IndicatorId;
+                updateDto.ConsulationName = updateVo.ConsulationName;
+                updateDto.SendOrderNum = updateVo.SendOrderNum;
+                updateDto.NewCustomerVisitNum = updateVo.NewCustomerVisitNum;
+                updateDto.NewCustomerVisitRate = updateVo.NewCustomerVisitRate;
+                updateDto.NewCustomerDealNum = updateVo.NewCustomerDealNum;
+                updateDto.NewCustomerDealRate = updateVo.NewCustomerDealRate;
+                updateDto.NewCustomerDealPrice = updateVo.NewCustomerDealPrice;
+                updateDto.NewCustomerUnitPrice = updateVo.NewCustomerUnitPrice;
+
+                updateDto.OldCustomerVisitNum = updateVo.OldCustomerVisitNum;
+                updateDto.OldCustomerDealNum = updateVo.OldCustomerDealNum;
+                updateDto.OldCustomerDealRate = updateVo.OldCustomerDealRate;
+                updateDto.OldCustomerDealPrice = updateVo.OldCustomerDealPrice;
+                updateDto.OldCustomerUnitPrice = updateVo.OldCustomerUnitPrice;
+
+                updateDto.OldCustomerAchievementRate = updateVo.OldCustomerAchievementRate;
+                updateDto.LasttMonthTotalAchievement = updateVo.LasttMonthTotalAchievement;
+
+                await hospitalConsulationOperationDataService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -161,7 +237,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //await hospitalOperationDataService.DeleteAsync(id);
+                //await hospitalConsulationOperationDataService.DeleteAsync(id);
                 return ResultData.Success();
             }
             catch (Exception ex)

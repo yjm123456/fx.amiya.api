@@ -29,14 +29,14 @@ namespace Fx.Amiya.Service
             {
                 var greatHospitalOperationHealth = from d in dalGreatHospitalOperationHealth.GetAll().Include(x => x.HospitalInfo).Include(x => x.HospitalOperationalIndicator)
                                                    where (keyword == null || d.HospitalInfo.Name.Contains(keyword))
-                                                   && (d.IndicatorsId == indicatorsId)
+                                                   && (d.IndicatorId == indicatorsId)
                                                    && (d.Valid == true)
                                                    select new GreatHospitalOperationHealthDto
                                                    {
                                                        Id = d.Id,
                                                        HospitalId = d.HospitalId,
                                                        HospitalName = d.HospitalInfo.Name,
-                                                       IndicatorsId = d.IndicatorsId,
+                                                       IndicatorId = d.IndicatorId,
                                                        IndicatorsName = d.HospitalOperationalIndicator.Name,
                                                        LastNewCustomerVisitRate = d.LastNewCustomerVisitRate,
                                                        ThisNewCustomerVisitRate = d.ThisNewCustomerVisitRate,
@@ -70,7 +70,7 @@ namespace Fx.Amiya.Service
                 greatHospitalOperationHealth.CreateDate = DateTime.Now;
                 greatHospitalOperationHealth.Valid = true;
                 greatHospitalOperationHealth.HospitalId = addDto.HospitalId;
-                greatHospitalOperationHealth.IndicatorsId = addDto.IndicatorsId;
+                greatHospitalOperationHealth.IndicatorId = addDto.IndicatorsId;
                 greatHospitalOperationHealth.LastNewCustomerVisitRate = addDto.LastNewCustomerVisitRate;
                 greatHospitalOperationHealth.ThisNewCustomerVisitRate = addDto.ThisNewCustomerVisitRate;
                 greatHospitalOperationHealth.NewCustomerVisitChainRatio = addDto.NewCustomerVisitChainRatio;
@@ -104,7 +104,7 @@ namespace Fx.Amiya.Service
                 greatHospitalOperationHealthDto.DeleteDate = greatHospitalOperationHealth.DeleteDate;
                 greatHospitalOperationHealthDto.Valid = greatHospitalOperationHealth.Valid;
                 greatHospitalOperationHealthDto.HospitalId = greatHospitalOperationHealth.HospitalId;
-                greatHospitalOperationHealthDto.IndicatorsId = greatHospitalOperationHealth.IndicatorsId;
+                greatHospitalOperationHealthDto.IndicatorId = greatHospitalOperationHealth.IndicatorId;
                 greatHospitalOperationHealthDto.LastNewCustomerVisitRate = greatHospitalOperationHealth.LastNewCustomerVisitRate;
                 greatHospitalOperationHealthDto.ThisNewCustomerVisitRate = greatHospitalOperationHealth.ThisNewCustomerVisitRate;
                 greatHospitalOperationHealthDto.NewCustomerVisitChainRatio = greatHospitalOperationHealth.NewCustomerVisitChainRatio;
@@ -132,7 +132,7 @@ namespace Fx.Amiya.Service
                     throw new Exception("优秀机构运营健康指标编号错误");
 
                 greatHospitalOperationHealth.HospitalId = updateDto.HospitalId;
-                greatHospitalOperationHealth.IndicatorsId = updateDto.IndicatorsId;
+                greatHospitalOperationHealth.IndicatorId = updateDto.IndicatorsId;
                 greatHospitalOperationHealth.LastNewCustomerVisitRate = updateDto.LastNewCustomerVisitRate;
                 greatHospitalOperationHealth.ThisNewCustomerVisitRate = updateDto.ThisNewCustomerVisitRate;
                 greatHospitalOperationHealth.NewCustomerVisitChainRatio = updateDto.NewCustomerVisitChainRatio;
