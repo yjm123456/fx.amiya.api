@@ -375,6 +375,25 @@ namespace Fx.Amiya.Background.Api.Controllers
             var changeOldCustomerUnitPriceBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, OldCustomerUnitPriceBrokenLine);
             return ResultData<List<PerformanceBrokenLine>>.Success().AddData("OldCustomerUnitPricePerformance", changeOldCustomerUnitPriceBrokenLine);
         }
+        /// <summary>
+        /// 根据医院id与年份获取总业绩折线图
+        /// </summary>
+        /// <param name="year">年份</param>
+        /// <param name="hospitalId">医院id</param>
+        /// <returns></returns>
+        [HttpGet("getHospitalTotalPriceBrokenLine")]
+        public async Task<ResultData<List<PerformanceBrokenLine>>> GetHospitalTotalPriceBrokenLine(int year, int hospitalId)
+        {
+            int month = DateTime.Now.Month;
+            var OldCustomerUnitPrice = await hospitalPerformanceService.GetHospitalTotalCustomerPerformanceNum(year, hospitalId);
+            var OldCustomerUnitPriceBrokenLine = OldCustomerUnitPrice.Select(data => new PerformanceBrokenLine
+            {
+                Date = data.Date,
+                PerfomancePrice = data.PerfomancePrice
+            }).ToList();
+            var changeOldCustomerUnitPriceBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, OldCustomerUnitPriceBrokenLine);
+            return ResultData<List<PerformanceBrokenLine>>.Success().AddData("totalCustomerPerformance", changeOldCustomerUnitPriceBrokenLine);
+        }
         #endregion
 
         #region{机构/城市top10运营数据健康指标}

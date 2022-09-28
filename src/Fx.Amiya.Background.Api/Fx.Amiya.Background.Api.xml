@@ -2330,6 +2330,14 @@
             <param name="hospitalId">医院id</param>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetHospitalTotalPriceBrokenLine(System.Int32,System.Int32)">
+            <summary>
+            根据医院id与年份获取总业绩折线图
+            </summary>
+            <param name="year">年份</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalAchievementController.GetHospitalOperationMonthlyData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Boolean)">
             <summary>
             全国机构/城市运营当月数据
