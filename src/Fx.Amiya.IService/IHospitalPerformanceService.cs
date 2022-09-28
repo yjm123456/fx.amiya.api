@@ -99,6 +99,14 @@ namespace Fx.Amiya.IService
         /// <param name="hospitalId"></param>
         /// <returns></returns>
         Task<List<HospitalUnitPriceDto>> GetHospitalOldCustomerUnitPriceNum(int year, int hospitalId);
+
+        /// <summary>
+        /// 获取全年医院总业绩折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<List<PerformanceBrokenLine>> GetHospitalTotalCustomerPerformanceNum(int year, int hospitalId);
         /// <summary>
         /// 获取全国机构top10运营数据占比
         /// </summary>

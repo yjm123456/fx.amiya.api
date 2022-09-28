@@ -82,7 +82,7 @@ namespace Fx.Amiya.Service
                 var contentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(hospitalIds, date);
                 hospitalPerformanceDto.VisitNum = contentPlatFormOrderDealInfoList.Count();
                 hospitalPerformanceDto.VisitRate = CalculateTargetComplete(hospitalPerformanceDto.VisitNum, hospitalPerformanceDto.SendNum).Value;
-                var dealInfoList = contentPlatFormOrderDealInfoList.Where(x => x.IsDeal == true);
+                var dealInfoList = contentPlatFormOrderDealInfoList.Where(x => x.IsDeal == true && x.DealDate.HasValue == true);
                 hospitalPerformanceDto.NewCustomerDealNum = dealInfoList.Where(x => x.IsOldCustomer == false).Count();
                 hospitalPerformanceDto.NewCustomerDealRate = CalculateTargetComplete(hospitalPerformanceDto.NewCustomerDealNum, hospitalPerformanceDto.VisitNum).Value;
                 hospitalPerformanceDto.NewCustomerAchievement = dealInfoList.Where(x => x.IsOldCustomer == false).Sum(x => x.Price);
@@ -617,7 +617,21 @@ namespace Fx.Amiya.Service
             var changevisitBrokenLine = BreakLineClassUtil<HospitalUnitPriceDto>.Convert(month, newCustomerDealBrokenLine);
             return changevisitBrokenLine;
         }
-
+        /// <summary>
+        /// 获取全年医院总业绩折线图
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        public async Task<List<PerformanceBrokenLine>> GetHospitalTotalCustomerPerformanceNum(int year, int hospitalId)
+        {
+            DateTime date = date = Convert.ToDateTime(year + "-01-01");
+            int month = DateTime.Now.Month;
+            var newCustomerDeal = await contentPlatFormOrderDealInfoService.GetTodaySendPerformanceByHospitalIdAsync(new List<int> { hospitalId }, date);
+            var newCustomerDealPriceBrokenLine = newCustomerDeal.Where(x => x.IsDeal == true && x.DealDate.HasValue == true).GroupBy(x => x.DealDate.Value.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Sum(p => p.Price) }).ToList();
+            var changedealBrokenLine = BreakLineClassUtil<PerformanceBrokenLine>.Convert(month, newCustomerDealPriceBrokenLine);
+            return changedealBrokenLine;
+        }
 
         #endregion
 

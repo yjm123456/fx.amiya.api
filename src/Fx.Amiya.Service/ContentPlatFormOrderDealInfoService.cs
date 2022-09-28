@@ -837,7 +837,7 @@ namespace Fx.Amiya.Service
             DateTime endDate = DateTime.Now.Date.AddDays(1);
             //选定的月份
             DateTime currentDate = recordDate.Date;
-            var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)
+            var result = await dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= currentDate && o.ToHospitalDate < endDate)
                 .Where(o => hospitalId.Count == 0 || hospitalId.Contains(o.LastDealHospitalId.Value))
                 .ToListAsync();
