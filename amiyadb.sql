@@ -879,36 +879,36 @@ CREATE TABLE `tbl_growth_points_rule` (
  --机构运营指标
 
  CREATE TABLE `tbl_hospital_operational_indicator` (
-  `id` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
-  `describe` varchar(500) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
+  `id` varchar(100) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `describe` varchar(500)  NOT NULL,
   `start_date` datetime NOT NULL,
   `end_date` datetime NOT NULL,
-  `excellent_hospital` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
+  `excellent_hospital` varchar(100)  NOT NULL,
   `submit_status` bit(1) NOT NULL,
   `remark_status` bit(1) NOT NULL,
   `create_date` datetime NOT NULL,
   `update_time` datetime DEFAULT NULL,
   `valid` int NOT NULL,
   `delete_date` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC
+  PRIMARY KEY (`id`) 
+) 
 
 
 
 --运营指标派发医院
 CREATE TABLE `tbl_indicator_send_hospital` (
-  `id` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
-  `indicator_id` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
+  `id` varchar(100)  NOT NULL,
+  `indicator_id` varchar(100)  NOT NULL,
   `hospital_id` int unsigned NOT NULL,
   `submit_status` bit(1) NOT NULL,
   `remark_status` bit(1) NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  KEY `fk_indicatorsendhosiptal _hospital_id_hospitalinfo_id` (`hospital_id`) USING BTREE,
-  KEY `fk_indicatorsendhosiptal _indicator_id_hospitaloperational_id` (`indicator_id`) USING BTREE,
-  CONSTRAINT `fk_indicatorsendhosiptal _hospital_id_hospitalinfo_id` FOREIGN KEY (`hospital_id`) REFERENCES `tbl_hospital_info` (`id`),
-  CONSTRAINT `fk_indicatorsendhosiptal _indicator_id_hospitaloperational_id` FOREIGN KEY (`indicator_id`) REFERENCES `tbl_hospital_operational_indicator` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC
+  PRIMARY KEY (`id`), 
+  KEY `fk_indicatorsendhosiptal _hospital_id_hospitalinfo_id` (`hospital_id`),
+  KEY `fk_indicatorsendhosiptal _indicator_id_hospitaloperational_id` (`indicator_id`),
+  CONSTRAINT `fk_indicatorsendhosiptal _hospital_id_hospitalinfo_id` FOREIGN KEY (`hospital_id`) REFERENCES `tbl_hospital_info` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_indicatorsendhosiptal _indicator_id_hospitaloperational_id` FOREIGN KEY (`indicator_id`) REFERENCES `tbl_hospital_operational_indicator` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+); 
 
 
 -----------------------------------------------王健 2022/09/27 END--------------------------------------------
@@ -1104,8 +1104,33 @@ CREATE TABLE `tbl_indicator_send_hospital` (
   `update_date` datetime DEFAULT NULL,
   `valid` bit(1) NOT NULL,
   `delete_date` datetime DEFAULT NULL
+  PRIMARY KEY (`id`), 
+)
+
+--机构提升计划
+CREATE TABLE `tbl_hospital_improve_plan_remark` (
+  `id` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8_general_ci DEFAULT NULL,
+  `indicator_id` varchar(100) NOT NULL,
+  `hospital_id` int unsigned NOT NULL,
+  `create_date` datetime NOT NULL,
+  `update_date` datetime DEFAULT NULL,
+  `valid` bit(1) NOT NULL,
+  `delete_date` datetime DEFAULT NULL,
+  `hospital_improve_plan` varchar(500) DEFAULT NULL,
+  `amiya_improve_plan_remark` varchar(500) DEFAULT NULL,
+  `hospital_share_success_case` varchar(500) DEFAULT NULL,
+  `amiya_share_success_case` varchar(500) DEFAULT NULL,
+  `improve_suggestion_to_amiya` varchar(500) DEFAULT NULL,
+  `amiya_improve_suggestion_remark` varchar(500) DEFAULT NULL,
+  `improve_demand_to_Amiya` varchar(500) DEFAULT NULL,
+  `amiya_improve_demand_remark` varchar(500) DEFAULT NULL,
+  KEY `fk_hospital_improve_hospitalId_hospitalinfo_id` (`hospital_id`),
+  CONSTRAINT `fk_hospital_improve_hospitalId_hospitalinfo_id` FOREIGN KEY (`hospital_id`) REFERENCES `tbl_hospital_info` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
+
+
+--成交
 -----------------------------------------------王健 2022/09/28 END--------------------------------------------
 
 

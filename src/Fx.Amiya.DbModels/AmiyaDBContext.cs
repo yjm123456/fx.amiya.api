@@ -139,6 +139,8 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<IndicatorSendHospital> IndicatorSendHospital { get; set; }
         public virtual DbSet<ExcellentHospitalOperationsbeRemark> ExcellentHospitalOperationsbeRemark { get; set; }
         public virtual DbSet<Remark> Remark { get; set; }
+        public virtual DbSet<HospitalDealItem> HospitalDealItem { get; set; }
+        public virtual DbSet<HospitalImprovePlanRemark> HospitalImprovePlanRemark { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -276,6 +278,8 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new IndicatorSendHospitalConfiguration());
             modelBuilder.ApplyConfiguration(new ExcellentHospitalOperationsbeRemarkConfiguration());
             modelBuilder.ApplyConfiguration(new RemarkConfiguration());
+            modelBuilder.ApplyConfiguration(new HospitalImprovePlanRemarkConfiguration());
+            modelBuilder.ApplyConfiguration(new HospitalDealItemConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }
