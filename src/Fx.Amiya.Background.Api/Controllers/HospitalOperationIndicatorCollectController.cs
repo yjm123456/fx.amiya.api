@@ -26,7 +26,12 @@ namespace Fx.Amiya.Background.Api.Controllers
     [ApiController]
     public class HospitalOperationIndicatorCollectController : ControllerBase
     {
-        //private IHospitalNetWorkConsulationOperationDataService hospitalOperationDataService;
+        private IIndicatorSendHospitalService _indicatorSendHospitalService;
+
+        public HospitalOperationIndicatorCollectController(IIndicatorSendHospitalService indicatorSendHospitalService)
+        {
+            _indicatorSendHospitalService = indicatorSendHospitalService;
+        }
 
         /// <summary>
         /// 构造函数
@@ -39,38 +44,36 @@ namespace Fx.Amiya.Background.Api.Controllers
             //this.hospitalOperationDataService = hospitalOperationDataService;
         }
         /// <summary>
-        /// 获取机构成交品项分析信息列表
+        /// 获取指标数据汇总列表
         /// </summary>
         /// <param name="keyword">关键词</param>
         /// <param name="indicatorsId">归属指标id</param>
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<HospitalOperationIndicatorCollectVo>>> GetListAsync(string indicatorId, int? hospitalId,int pageNum,int pageSize)
+        public async Task<ResultData<FxPageInfo<HospitalOperationIndicatorCollectVo>>> GetListAsync(string indicatorId, int? hospitalId, int pageNum, int pageSize)
         {
+            FxPageInfo<HospitalOperationIndicatorCollectVo> pageInfo = new FxPageInfo<HospitalOperationIndicatorCollectVo>();
+
             try
             {
-                //  var q = await hospitalOperationDataService.GetListAsync(keyword, indicatorsId);
+                var list = await _indicatorSendHospitalService.GetHospitalOperationIndicatorCollectList(indicatorId, hospitalId, pageNum, pageSize, null);
+                pageInfo.TotalCount = list.TotalCount;
+                pageInfo.List = list.List.Select(e => new HospitalOperationIndicatorCollectVo
+                {
+                    HospitalId = e.HospitalId,
+                    IndicatorId = e.IndicatorId,
+                    IndicatorName = e.IndicatorName,
+                    HospitalName = e.HospitalName,
+                    HospitalAddress = e.HospitalAddress,
+                    IsSubmit = e.IsSubmit
+                });
 
-                //var hospitalOperationData = from d in q.List
-                //              select new HospitalOperationIndicatorCollectVo
-                //              {
-                //                  Id = d.Id,
-                //                  ExpressCode = d.ExpressCode,
-                //                  ExpressName = d.ExpressName,
-                //                  Valid = d.Valid
-                //              };
-
-                List<HospitalOperationIndicatorCollectVo> hospitalOperationDataPageInfo = new List<HospitalOperationIndicatorCollectVo>();
-                HospitalOperationIndicatorCollectVo re = new HospitalOperationIndicatorCollectVo();
-
-
-
-                return ResultData<List<HospitalOperationIndicatorCollectVo>>.Success().AddData("hospitalOperationIndicatorCollectData", hospitalOperationDataPageInfo);
+                return ResultData<FxPageInfo<HospitalOperationIndicatorCollectVo>>.Success().AddData("hospitalOperationIndicatorCollectData", pageInfo);
             }
             catch (Exception ex)
             {
-                return ResultData<List<HospitalOperationIndicatorCollectVo>>.Fail(ex.Message);
+                return ResultData<FxPageInfo<HospitalOperationIndicatorCollectVo>>.Fail(ex.Message);
             }
         }
     }

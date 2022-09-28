@@ -27,50 +27,50 @@ namespace Fx.Amiya.Background.Api.Controllers
     [ApiController]
     public class HospitalIndicatorFillController : ControllerBase
     {
-        //private IHospitalNetWorkConsulationOperationDataService hospitalOperationDataService;
-
+        private IIndicatorSendHospitalService _indicatorSendHospitalService;
+        private IHttpContextAccessor httpContextAccessor;
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="hospitalOperationDataService"></param>
-        public HospitalIndicatorFillController(
-            // IHospitalNetWorkConsulationOperationDataService hospitalOperationDataService
-            )
+        public HospitalIndicatorFillController(IIndicatorSendHospitalService indicatorSendHospitalService, IHttpContextAccessor httpContextAccessor)
         {
-            //this.hospitalOperationDataService = hospitalOperationDataService;
+            _indicatorSendHospitalService = indicatorSendHospitalService;
+            this.httpContextAccessor = httpContextAccessor;
         }
         /// <summary>
         /// 获取机构填报数据列表
         /// </summary>
         /// <param name="submit">是否提报</param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
-        [FxTenantAuthorize]
-        public async Task<ResultData<List<HospitalIndicatorFillVo>>> GetListAsync(bool submit)
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData<FxPageInfo<HospitalIndicatorFillVo>>> GetListAsync(bool? submit, int pageNum, int pageSize)
         {
+            FxPageInfo<HospitalIndicatorFillVo> fxPageInfo = new FxPageInfo<HospitalIndicatorFillVo>();
             try
             {
-                //  var q = await hospitalOperationDataService.GetListAsync(keyword, indicatorsId);
+                //var employee = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+                //int hospitalId = employee.HospitalId;
+                var list = await _indicatorSendHospitalService.GetHospitalOperationIndicatorFillList(2, pageNum, pageSize, submit);
+                fxPageInfo.TotalCount = list.TotalCount;
+                fxPageInfo.List = list.List.Select(e => new HospitalIndicatorFillVo
+                {
+                    HospitalId = e.HospitalId,
+                    IndicatorId = e.IndicatorId,
+                    IndicatorName = e.IndicatorName,
+                    Describe = e.Describe,
+                    StartDate = e.StartDate,
+                    EndDate = e.EndDate
+                }).ToList();
 
-                //var hospitalOperationData = from d in q.List
-                //              select new HospitalIndicatorFillVo
-                //              {
-                //                  Id = d.Id,
-                //                  ExpressCode = d.ExpressCode,
-                //                  ExpressName = d.ExpressName,
-                //                  Valid = d.Valid
-                //              };
-
-                List<HospitalIndicatorFillVo> hospitalOperationDataPageInfo = new List<HospitalIndicatorFillVo>();
-                HospitalIndicatorFillVo re = new HospitalIndicatorFillVo();
-
-
-
-                return ResultData<List<HospitalIndicatorFillVo>>.Success().AddData("hospitalIndicatorFillData", hospitalOperationDataPageInfo);
+                return ResultData<FxPageInfo<HospitalIndicatorFillVo>>.Success().AddData("hospitalIndicatorFillData", fxPageInfo);
             }
             catch (Exception ex)
             {
-                return ResultData<List<HospitalIndicatorFillVo>>.Fail(ex.Message);
+                return ResultData<FxPageInfo<HospitalIndicatorFillVo>>.Fail(ex.Message);
             }
         }
     }

@@ -18,6 +18,10 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.Id).HasColumnName("id").HasColumnType("varchar(100)").IsRequired();
             builder.Property(e => e.IndicatorId).HasColumnName("indicator_id").HasColumnType("varchar(100)").IsRequired();
             builder.Property(e => e.HospitalId).HasColumnName("hospital_id").HasColumnType("int").IsRequired();
+            builder.Property(t => t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
+            builder.Property(t => t.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);
+            builder.Property(t => t.Valid).HasColumnName("valid").HasColumnType("BIT(1)").IsRequired();
+            builder.Property(t => t.DeleteDate).HasColumnName("delete_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.SubmitStatus).HasColumnName("submit_status").HasColumnType("bit").IsRequired();
             builder.Property(e => e.RemarkStatus).HasColumnName("remark_status").HasColumnType("bit").IsRequired();
             builder.HasOne(e => e.HospitalOperationalIndicator).WithMany(h => h.IndicatorSendHospitalList).HasForeignKey(e => e.IndicatorId);

@@ -1,4 +1,6 @@
 ﻿using Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator;
+using Fx.Amiya.Dto.HospitalOperationIndicator;
+using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
@@ -18,12 +20,10 @@ namespace Fx.Amiya.Background.Api.Controllers
     [FxInternalAuthorize]
     public class HospitalOperationIndicatorController : ControllerBase
     {
-
-        public HospitalOperationIndicatorController(
-            // IGreatHospitalOperationHealthService greatHospitalOperationHealthService
-            )
+        private IHospitalOperationIndicatorService hospitalOperationIndicatorService;
+        public HospitalOperationIndicatorController(IHospitalOperationIndicatorService hospitalOperationIndicatorService)
         {
-            //this.greatHospitalOperationHealthService = greatHospitalOperationHealthService;
+            this.hospitalOperationIndicatorService = hospitalOperationIndicatorService;
         }
 
 
@@ -36,37 +36,29 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<HospitalOperationIndicatorVo>>> GetListWithPageAsync(string keyword, bool valid, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<HospitalOperationIndicatorVo>>> GetListWithPageAsync(string keyword, bool? valid, int pageNum, int pageSize)
         {
             try
             {
                 FxPageInfo<HospitalOperationIndicatorVo> fxPageInfo = new FxPageInfo<HospitalOperationIndicatorVo>();
-                //  var q = await greatHospitalOperationHealthService.GetListAsync(keyword, indicatorsId);
+                var q = await hospitalOperationIndicatorService.GetListAsync(keyword, valid, pageNum, pageSize);
 
-                //var greatHospitalOperationHealth = from d in q.List
-                //              select new GreatHospitalOperationHealthVo
-                //              {
-                //                  Id = d.Id,
-                //                  ExpressCode = d.ExpressCode,
-                //                  ExpressName = d.ExpressName,
-                //                  Valid = d.Valid
-                //              };
-
-                List <HospitalOperationIndicatorVo> hospitalOperationIndicatorPageInfo = new List<HospitalOperationIndicatorVo>();
-                HospitalOperationIndicatorVo hospitalOperationIndicatorVo = new HospitalOperationIndicatorVo {
-                    Id = "1234567",
-                    Name = "9月机构运营指标",
-                    Describe = "运营指标",
-                    StartDate = DateTime.Now.AddDays(-1),
-                    EndDate=DateTime.Now.AddDays(1),
-                    ExcellentHospital="优秀机构",
-                    SubmitStatus=false,
-                    RemarkStatus=false,
-                    CreateDate= DateTime.Now.AddDays(-2),
-                };
-                fxPageInfo.TotalCount = 1;
-                fxPageInfo.List = hospitalOperationIndicatorPageInfo;
-                hospitalOperationIndicatorPageInfo.Add(hospitalOperationIndicatorVo);
+                var hospitalOperationIndicatorList = from d in q.List
+                                                     select new HospitalOperationIndicatorVo
+                                                     {
+                                                         Id = d.Id,
+                                                         Name = d.Name,
+                                                         Describe = d.Describe,
+                                                         StartDate = d.StartDate,
+                                                         EndDate = d.EndDate,
+                                                         ExcellentHospital = d.ExcellentHospital,
+                                                         SubmitStatus = d.SubmitStatus,
+                                                         RemarkStatus = d.RemarkStatus,
+                                                         CreateDate = d.CreateDate,
+                                                         Valid = d.Valid
+                                                     };
+                fxPageInfo.TotalCount = q.TotalCount;
+                fxPageInfo.List = hospitalOperationIndicatorList;
                 return ResultData<FxPageInfo<HospitalOperationIndicatorVo>>.Success().AddData("hospitalOperationIndicatorListInfo", fxPageInfo);
             }
             catch (Exception ex)
@@ -85,12 +77,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //AddExpressDto addDto = new AddExpressDto();
-                //addDto.ExpressCode = addVo.ExpressCode;
-                //addDto.ExpressName = addVo.ExpressName;
-                //addDto.Valid = addVo.Valid;
-
-                //await greatHospitalOperationHealthService.AddAsync(addDto);
+                AddHospitalOperationIndicatorDto addHospitalOperationIndicatorVo = new AddHospitalOperationIndicatorDto()
+                {
+                    Name = addVo.Name,
+                    Describe = addVo.Describe,
+                    StartDate = addVo.StartDate,
+                    EndDate = addVo.EndDate,
+                    ExcellentHospital = addVo.ExcellentHospital,
+                    Valid = addVo.Valid,
+                    SendHospital = addVo.IndicatorIds.Select(e => new HospitalNameListDto { HospitalId = e }).ToList()
+                };
+                await hospitalOperationIndicatorService.AddAsync(addHospitalOperationIndicatorVo);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -111,13 +108,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //var greatHospitalOperationHealth = await greatHospitalOperationHealthService.GetByIdAsync(id);
-                HospitalOperationIndicatorVo hospitalOperationIndicatorVo = new HospitalOperationIndicatorVo();
-                //greatHospitalOperationHealthVo.Id = greatHospitalOperationHealth.Id;
-                //greatHospitalOperationHealthVo.ExpressCode = greatHospitalOperationHealth.ExpressCode;
-                //greatHospitalOperationHealthVo.ExpressName = greatHospitalOperationHealth.ExpressName;
-                //greatHospitalOperationHealthVo.Valid = greatHospitalOperationHealth.Valid;
 
+                HospitalOperationIndicatorVo hospitalOperationIndicatorVo = new HospitalOperationIndicatorVo();
+                var info = await hospitalOperationIndicatorService.GetByIdAsync(id);
+                hospitalOperationIndicatorVo.Name = info.Name;
+                hospitalOperationIndicatorVo.Describe = info.Describe;
+                hospitalOperationIndicatorVo.StartDate = info.StartDate;
+                hospitalOperationIndicatorVo.EndDate = info.EndDate;
+                hospitalOperationIndicatorVo.ExcellentHospital = info.ExcellentHospital;
+                hospitalOperationIndicatorVo.Valid = info.Valid;
+                hospitalOperationIndicatorVo.SendHospital = info.SendHospital.Select(e => new HospitalNameList { HospitalId = e.HospitalId, HospitalName = e.HospitalName }).ToList();
                 return ResultData<HospitalOperationIndicatorVo>.Success().AddData("hospitalOperationIndicatorInfo", hospitalOperationIndicatorVo);
             }
             catch (Exception ex)
@@ -137,12 +137,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //UpdateExpressDto updateDto = new UpdateExpressDto();
-                //updateDto.Id = updateVo.Id;
-                //updateDto.ExpressName = updateVo.ExpressName;
-                //updateDto.ExpressCode = updateVo.ExpressCode;
-                //updateDto.Valid = updateVo.Valid;
-                //await greatHospitalOperationHealthService.UpdateAsync(updateDto);
+                UpdateHospitalOperationIndicatorDto addHospitalOperationIndicatorDto = new UpdateHospitalOperationIndicatorDto()
+                {
+                    Id = updateVo.Id,
+                    Name = updateVo.Name,
+                    Describe = updateVo.Describe,
+                    StartDate = updateVo.StartDate,
+                    EndDate = updateVo.EndDate,
+                    ExcellentHospital = updateVo.ExcellentHospital,
+                    Valid = updateVo.Valid,
+                    SendHospital = updateVo.IndicatorIds.Select(e => new HospitalNameListDto { HospitalId = e }).ToList()
+                };
+                await hospitalOperationIndicatorService.UpdateAsync(addHospitalOperationIndicatorDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -162,7 +168,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //await greatHospitalOperationHealthService.DeleteAsync(id);
+                await hospitalOperationIndicatorService.DeleteAsync(id);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -180,12 +186,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                List<IndicatorNameVo> indicatorNameList = new List<IndicatorNameVo>();
-                indicatorNameList.Add(new IndicatorNameVo { 
-                    Id= "1234567",
-                    Name= "9月机构运营指标"
-                });
-                return ResultData<List<IndicatorNameVo>>.Success().AddData("indicatorNameList", indicatorNameList);
+                var list = await hospitalOperationIndicatorService.GetIndicatorListAsync();
+                return ResultData<List<IndicatorNameVo>>.Success().AddData("indicatorNameList", list.Select(e => new IndicatorNameVo { Id = e.Id, Name = e.IndicatorName }).ToList());
             }
             catch (Exception ex)
             {

@@ -19,6 +19,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(t => t.Valid).HasColumnName("valid").HasColumnType("BIT(1)").IsRequired();
             builder.Property(t => t.DeleteDate).HasColumnName("delete_date").HasColumnType("datetime").IsRequired(false);
+
+
             builder.Property(t => t.LastNewCustomerVisitRate).HasColumnName("last_new_customer_visit_rate").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.ThisNewCustomerVisitRate).HasColumnName("this_new_customer_visit_rate").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.NewCustomerVisitChainRatio).HasColumnName("new_customer_visit_chain_ratio").HasColumnType("decimal(12,2)").IsRequired();

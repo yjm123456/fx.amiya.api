@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator
+namespace Fx.Amiya.Dto.HospitalOperationIndicator
 {
-    public class AddHospitalOperationIndicatorVo
+    public class HospitalOperationIndicatorDto:BaseDto
     {
-        public string Id { get; set; }
-        /// <summary>
-        /// 名称
-        /// </summary>
         public string Name { get; set; }
         /// <summary>
         /// 描述
@@ -29,12 +26,22 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator
         /// </summary>
         public string ExcellentHospital { get; set; }
         /// <summary>
-        /// 是否有效
+        /// 提报状态
         /// </summary>
-        public bool Valid { get; set; }
+        public bool SubmitStatus { get; set; }
         /// <summary>
-        /// 医院id集合
+        /// 批注状态
         /// </summary>
-        public List<int> IndicatorIds { get; set; }
+        public bool RemarkStatus { get; set; }
+        /// <summary>
+        /// 派发医院
+        /// </summary>
+        public List<HospitalNameListDto> SendHospital { get; set; }
     }
+    public class HospitalNameListDto {
+        public int HospitalId { get; set; }
+        public string HospitalName { get; set; }
+    }
+
+
 }
