@@ -11,8 +11,6 @@ namespace Fx.Amiya.Background.Api.Vo.Remark
     public class HospitalOperationRemarkVo
     {
         public string Id { get; set; }
-        public string IndicatorId { get; set; }
-        public int HospitalId { get; set; }
         public string HospitalOperationRemark { get; set; }
         public string AmiyaOperationRemark { get; set; }
     }

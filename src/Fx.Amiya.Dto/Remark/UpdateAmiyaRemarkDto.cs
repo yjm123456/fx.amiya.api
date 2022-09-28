@@ -10,10 +10,7 @@ namespace Fx.Amiya.Background.Api.Vo.Remark
     /// </summary>
     public class UpdateAmiyaRemarkDto
     {
-        /// <summary>
-        /// 机构运营指标id
-        /// </summary>
-        public string IndicatorId { get; set; }
+        public string Id { get; set; }
         /// <summary>
         /// 批注
         /// </summary>

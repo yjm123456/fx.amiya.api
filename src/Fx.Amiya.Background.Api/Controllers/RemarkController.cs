@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Background.Api.Vo.Remark;
+using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Open.Infrastructure.Web;
 using Microsoft.AspNetCore.Http;
@@ -14,17 +15,16 @@ namespace Fx.Amiya.Background.Api.Controllers
     [ApiController]
     public class RemarkController : ControllerBase
     {
-        public RemarkController(
-            // IGreatHospitalOperationHealthService greatHospitalOperationHealthService
-            )
+        private IRemarkService remarkService;
+        public RemarkController(IRemarkService remarkService)
         {
-            //this.greatHospitalOperationHealthService = greatHospitalOperationHealthService;
+            this.remarkService = remarkService;
         }
 
-        #region 运营指标批注
+        #region 优秀机构运营健康指标批注
 
         /// <summary>
-        /// 添加机构运营指标批注
+        /// 添加优秀机构运营健康指标批注
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
@@ -34,12 +34,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //AddExpressDto addDto = new AddExpressDto();
-                //addDto.ExpressCode = addVo.ExpressCode;
-                //addDto.ExpressName = addVo.ExpressName;
-                //addDto.Valid = addVo.Valid;
-
-                //await greatHospitalOperationHealthService.AddAsync(addDto);
+                AddAmiyaRemarkDto addDto = new AddAmiyaRemarkDto() { 
+                    IndicatorId=addVo.IndicatorId,
+                    Remark=addVo.Remark
+                };
+                await remarkService.AddAmiyaRemark(addDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -48,16 +47,22 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
         /// <summary>
-        /// 修改机构运营数据批注
+        /// 修改优秀机构运营健康批注
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
         [HttpPut("updateAmiyaRemark")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData> UpdateAmiyaRemarkAsync(AddAmiyaRemarkVo addVo)
+        public async Task<ResultData> UpdateAmiyaRemarkAsync(UpdateAmiyaRemarkVo updateVo)
         {
             try
             {
+                UpdateAmiyaRemarkDto updateDto = new UpdateAmiyaRemarkDto()
+                {
+                    Id=updateVo.Id,
+                    Remark=updateVo.Remark
+                };
+                await remarkService.UpdateAmiyaRemark(updateDto);
                 //AddExpressDto addDto = new AddExpressDto();
                 //addDto.ExpressCode = addVo.ExpressCode;
                 //addDto.ExpressName = addVo.ExpressName;
@@ -73,28 +78,26 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
         /// <summary>
-        /// 获取指标啊美雅批注
+        /// 获取优秀机构运营健康啊美雅批注
         /// </summary>
         /// <param name="indicatorId"></param>
         /// <returns></returns>
         [HttpGet("getAmiyaRemark")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<HospitalOperationRemarkVo>> GetAmiyaRemarkByIdAsync(string indicatorId)
+        public async Task<ResultData<AmiyaRemarkVo>> GetAmiyaRemarkByIdAsync(string indicatorId)
         {
             try
             {
-                //var greatHospitalOperationHealth = await greatHospitalOperationHealthService.GetByIdAsync(id);
-                HospitalOperationRemarkVo hospitalOperationRemarkVo = new HospitalOperationRemarkVo();
-                //greatHospitalOperationHealthVo.Id = greatHospitalOperationHealth.Id;
-                //greatHospitalOperationHealthVo.ExpressCode = greatHospitalOperationHealth.ExpressCode;
-                //greatHospitalOperationHealthVo.ExpressName = greatHospitalOperationHealth.ExpressName;
-                //greatHospitalOperationHealthVo.Valid = greatHospitalOperationHealth.Valid;
-
-                return ResultData<HospitalOperationRemarkVo>.Success().AddData("amiyaRemark", hospitalOperationRemarkVo);
+                var remark =await remarkService.GetAmiyaRemark(indicatorId);
+                AmiyaRemarkVo hospitalOperationRemarkVo = new AmiyaRemarkVo() { 
+                    Id= remark.Id,
+                    AmiyaRemark= remark.AmiyaRemark
+                };
+                return ResultData<AmiyaRemarkVo>.Success().AddData("amiyaRemark", hospitalOperationRemarkVo);
             }
             catch (Exception ex)
             {
-                return ResultData<HospitalOperationRemarkVo>.Fail(ex.Message);
+                return ResultData<AmiyaRemarkVo>.Fail(ex.Message);
             }
         }
 
@@ -114,12 +117,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //AddExpressDto addDto = new AddExpressDto();
-                //addDto.ExpressCode = addVo.ExpressCode;
-                //addDto.ExpressName = addVo.ExpressName;
-                //addDto.Valid = addVo.Valid;
-
-                //await greatHospitalOperationHealthService.AddAsync(addDto);
+                AddHospitalOperationRemarkDto addDto = new AddHospitalOperationRemarkDto()
+                {
+                    IndicatorId=addVo.IndicatorId,
+                    HospitalId=addVo.HospitalId,
+                    HospitalOperationRemark=addVo.HospitalOperationRemark,
+                    AmiyaOperationRemark=addVo.AmiyaOperationRemark
+                };
+                await remarkService.AddHospitalOperationRemark(addDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -134,16 +139,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpPut("updateHospitalOperationRemark")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData> UpdateHospitalOperationRemarkAsync(AddHospitalOperationRemarkVo addVo)
+        public async Task<ResultData> UpdateHospitalOperationRemarkAsync(UpdateHospitalOperationRemarkVo updateVo)
         {
             try
             {
-                //AddExpressDto addDto = new AddExpressDto();
-                //addDto.ExpressCode = addVo.ExpressCode;
-                //addDto.ExpressName = addVo.ExpressName;
-                //addDto.Valid = addVo.Valid;
-
-                //await greatHospitalOperationHealthService.AddAsync(addDto);
+                UpdateHospitalOperationRemarkDto updateDto = new UpdateHospitalOperationRemarkDto {
+                    Id = updateVo.Id,
+                    HospitalOperationRemark = updateVo.HospitalOperationRemark,
+                    AmiyaOperationRemark=updateVo.AmiyaOperationRemark
+                };
+                await remarkService.UpdateHospitalOperationRemark(updateDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -159,17 +164,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("getHospitalOperationRemark")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<HospitalOperationRemarkVo>> GetHospitalOperationRemarkByIdAsync(string indicatorId, string hospitalId)
+        public async Task<ResultData<HospitalOperationRemarkVo>> GetHospitalOperationRemarkByIdAsync(string indicatorId, int hospitalId)
         {
             try
             {
-                //var greatHospitalOperationHealth = await greatHospitalOperationHealthService.GetByIdAsync(id);
-                HospitalOperationRemarkVo hospitalOperationRemarkVo = new HospitalOperationRemarkVo();
-                //greatHospitalOperationHealthVo.Id = greatHospitalOperationHealth.Id;
-                //greatHospitalOperationHealthVo.ExpressCode = greatHospitalOperationHealth.ExpressCode;
-                //greatHospitalOperationHealthVo.ExpressName = greatHospitalOperationHealth.ExpressName;
-                //greatHospitalOperationHealthVo.Valid = greatHospitalOperationHealth.Valid;
-
+                var remark =await remarkService.GetHospitalOperationRemark(indicatorId,hospitalId);
+                HospitalOperationRemarkVo hospitalOperationRemarkVo = new HospitalOperationRemarkVo() {
+                    Id = remark.Id,
+                    HospitalOperationRemark = remark.HospitalOperationRemark,
+                    AmiyaOperationRemark=remark.AmiyaOperationRemark
+                };
                 return ResultData<HospitalOperationRemarkVo>.Success().AddData("hospitalOperationRemark", hospitalOperationRemarkVo);
             }
             catch (Exception ex)
@@ -194,12 +198,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //AddExpressDto addDto = new AddExpressDto();
-                //addDto.ExpressCode = addVo.ExpressCode;
-                //addDto.ExpressName = addVo.ExpressName;
-                //addDto.Valid = addVo.Valid;
-
-                //await greatHospitalOperationHealthService.AddAsync(addDto);
+                AddHospitalOnlineConsultRemarkDto addDto = new AddHospitalOnlineConsultRemarkDto()
+                {
+                    IndicatorId = addVo.IndicatorId,
+                    HospitalId = addVo.HospitalId,
+                    HospitalOnlineConsultRemark = addVo.HospitalOnlineConsultRemark,
+                    AmiyaOnlineConsultRemark = addVo.AmiyaOnlineConsultRemark
+                };
+                await remarkService.AddHospitalOnlineConsultRemark(addDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -214,16 +220,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpPut("updateHospitalOnlineConsultRemark")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData> UpdateHospitalOnlineConsultRemarkAsync(AddHospitalOnlineConsultRemarkVo addVo)
+        public async Task<ResultData> UpdateHospitalOnlineConsultRemarkAsync(UpdateHospitalOnlineConsultRemarkVo updateVo)
         {
             try
             {
-                //AddExpressDto addDto = new AddExpressDto();
-                //addDto.ExpressCode = addVo.ExpressCode;
-                //addDto.ExpressName = addVo.ExpressName;
-                //addDto.Valid = addVo.Valid;
-
-                //await greatHospitalOperationHealthService.AddAsync(addDto);
+                UpdateHospitalOnlineConsultRemarkDto updateDto = new UpdateHospitalOnlineConsultRemarkDto
+                {
+                    Id = updateVo.Id,
+                    HospitalOnlineConsultRemark = updateVo.HospitalOnlineConsultRemark,
+                    AmiyaOnlineConsultRemark = updateVo.AmiyaOnlineConsultRemark
+                };
+                await remarkService.UpdateHospitalOnlineConsultRemark(updateDto);
+                
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -239,16 +247,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("getHospitalOnlineConsultRemark")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<HospitalOnlineConsultRemarkVo>> GetHospitalOnlineConsultRemarkAsync(string indicatorId, string hospitalId)
+        public async Task<ResultData<HospitalOnlineConsultRemarkVo>> GetHospitalOnlineConsultRemarkAsync(string indicatorId, int hospitalId)
         {
             try
             {
-                //var greatHospitalOperationHealth = await greatHospitalOperationHealthService.GetByIdAsync(id);
-                HospitalOnlineConsultRemarkVo hospitalOperationRemarkVo = new HospitalOnlineConsultRemarkVo();
-                //greatHospitalOperationHealthVo.Id = greatHospitalOperationHealth.Id;
-                //greatHospitalOperationHealthVo.ExpressCode = greatHospitalOperationHealth.ExpressCode;
-                //greatHospitalOperationHealthVo.ExpressName = greatHospitalOperationHealth.ExpressName;
-                //greatHospitalOperationHealthVo.Valid = greatHospitalOperationHealth.Valid;
+                var remark = await remarkService.GetHospitalOnlineConsultRemark(indicatorId, hospitalId);
+                HospitalOnlineConsultRemarkVo hospitalOperationRemarkVo = new HospitalOnlineConsultRemarkVo()
+                {
+                    Id = remark.Id,
+                    HospitalOnlineConsultRemark = remark.HospitalOnlineConsultRemark,
+                    AmiyaOnlineConsultRemark = remark.AmiyaOnlineConsultRemark
+                };
 
                 return ResultData<HospitalOnlineConsultRemarkVo>.Success().AddData("hospitalOnlineConsultRemark", hospitalOperationRemarkVo);
             }
@@ -270,16 +279,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpPost("addHospitalConsultRemark")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData> AddHospitalConsultRemarkAsync(HospitalConsultRemarkVo addVo)
+        public async Task<ResultData> AddHospitalConsultRemarkAsync(AddHospitalConsultRemarkVo addVo)
         {
             try
             {
-                //AddExpressDto addDto = new AddExpressDto();
-                //addDto.ExpressCode = addVo.ExpressCode;
-                //addDto.ExpressName = addVo.ExpressName;
-                //addDto.Valid = addVo.Valid;
-
-                //await greatHospitalOperationHealthService.AddAsync(addDto);
+                AddHospitalConsultRemarkDto addDto = new AddHospitalConsultRemarkDto()
+                {
+                    IndicatorId = addVo.IndicatorId,
+                    HospitalId = addVo.HospitalId,
+                    HospitalConsultRemark = addVo.HospitalConsultRemark,
+                    AmiyaConsultRemark = addVo.AmiyaConsultRemark
+                };
+                await remarkService.AddHospitalConsultRemark(addDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -294,16 +305,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpPut("updateHospitalConsultRemark")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData> UpdateHospitalConsultRemarkAsync(AddHospitalConsultRemarkVo addVo)
+        public async Task<ResultData> UpdateHospitalConsultRemarkAsync(UpdateHospitalConsultRemarkVo updateVo)
         {
             try
             {
-                //AddExpressDto addDto = new AddExpressDto();
-                //addDto.ExpressCode = addVo.ExpressCode;
-                //addDto.ExpressName = addVo.ExpressName;
-                //addDto.Valid = addVo.Valid;
+                UpdateHospitalConsultRemarkDto updateDto = new UpdateHospitalConsultRemarkDto
+                {
+                    Id = updateVo.Id,
+                    HospitalConsultRemark = updateVo.HospitalConsultRemark,
+                    AmiyaConsultRemark = updateVo.AmiyaConsultRemark
+                };
+                await remarkService.UpdateHospitalConsultRemark(updateDto);
 
-                //await greatHospitalOperationHealthService.AddAsync(addDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -319,16 +332,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("getHospitalConsultRemark")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<HospitalConsultRemarkVo>> GetHospitalConsultRemarkByIdAsync(string indicatorId, string hospitalId)
+        public async Task<ResultData<HospitalConsultRemarkVo>> GetHospitalConsultRemarkByIdAsync(string indicatorId, int hospitalId)
         {
             try
             {
-                //var greatHospitalOperationHealth = await greatHospitalOperationHealthService.GetByIdAsync(id);
-                HospitalConsultRemarkVo hospitalOperationRemarkVo = new HospitalConsultRemarkVo();
-                //greatHospitalOperationHealthVo.Id = greatHospitalOperationHealth.Id;
-                //greatHospitalOperationHealthVo.ExpressCode = greatHospitalOperationHealth.ExpressCode;
-                //greatHospitalOperationHealthVo.ExpressName = greatHospitalOperationHealth.ExpressName;
-                //greatHospitalOperationHealthVo.Valid = greatHospitalOperationHealth.Valid;
+                var remark = await remarkService.GetHospitalConsultRemark(indicatorId, hospitalId);
+                HospitalConsultRemarkVo hospitalOperationRemarkVo = new HospitalConsultRemarkVo()
+                {
+                    Id = remark.Id,
+                    HospitalConsultRemark = remark.HospitalConsultRemark,
+                    AmiyaConsultRemark = remark.AmiyaConsultRemark
+                };
 
                 return ResultData<HospitalConsultRemarkVo>.Success().AddData("hospitalConsultRemark", hospitalOperationRemarkVo);
             }
@@ -350,16 +364,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpPost("addHospitalDoctorRemark")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData> AddHospitalDoctorRemarkAsync(HospitalDoctorRemarkVo addVo)
+        public async Task<ResultData> AddHospitalDoctorRemarkAsync(AddHospitalDoctorRemarkVo addVo)
         {
             try
             {
-                //AddExpressDto addDto = new AddExpressDto();
-                //addDto.ExpressCode = addVo.ExpressCode;
-                //addDto.ExpressName = addVo.ExpressName;
-                //addDto.Valid = addVo.Valid;
-
-                //await greatHospitalOperationHealthService.AddAsync(addDto);
+                AddHospitalDoctorRemarkDto addDto = new AddHospitalDoctorRemarkDto()
+                {
+                    IndicatorId = addVo.IndicatorId,
+                    HospitalId = addVo.HospitalId,
+                    HospitalDoctorRemark = addVo.HospitalDoctorRemark,
+                    AmiyaDoctorRemark = addVo.AmiyaDoctorRemark
+                };
+                await remarkService.AddHospitalDoctorRemark(addDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -374,16 +390,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpPut("updateHospitalDoctorRemark")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData> UpdateHospitalDoctorRemarkAsync(AddHospitalDoctorRemarkVo addVo)
+        public async Task<ResultData> UpdateHospitalDoctorRemarkAsync(UpdateHospitalDoctorRemarkVo updateVo)
         {
             try
             {
-                //AddExpressDto addDto = new AddExpressDto();
-                //addDto.ExpressCode = addVo.ExpressCode;
-                //addDto.ExpressName = addVo.ExpressName;
-                //addDto.Valid = addVo.Valid;
-
-                //await greatHospitalOperationHealthService.AddAsync(addDto);
+                UpdateHospitalDoctorRemarkDto updateDto = new UpdateHospitalDoctorRemarkDto
+                {
+                    Id = updateVo.Id,
+                    HospitalDoctorRemark = updateVo.HospitalDoctorRemark,
+                    AmiyaDoctorRemark = updateVo.AmiyaDoctorRemark
+                };
+                await remarkService.UpdateHospitalDoctorRemark(updateDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -399,16 +416,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("getHospitalDoctorRemark")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<HospitalDoctorRemarkVo>> GetHospitalDoctorRemarkByIdAsync(string indicatorId, string hospitalId)
+        public async Task<ResultData<HospitalDoctorRemarkVo>> GetHospitalDoctorRemarkByIdAsync(string indicatorId, int hospitalId)
         {
             try
             {
-                //var greatHospitalOperationHealth = await greatHospitalOperationHealthService.GetByIdAsync(id);
-                HospitalDoctorRemarkVo hospitalOperationRemarkVo = new HospitalDoctorRemarkVo();
-                //greatHospitalOperationHealthVo.Id = greatHospitalOperationHealth.Id;
-                //greatHospitalOperationHealthVo.ExpressCode = greatHospitalOperationHealth.ExpressCode;
-                //greatHospitalOperationHealthVo.ExpressName = greatHospitalOperationHealth.ExpressName;
-                //greatHospitalOperationHealthVo.Valid = greatHospitalOperationHealth.Valid;
+                var remark = await remarkService.GetHospitalDoctorRemark(indicatorId, hospitalId);
+                HospitalDoctorRemarkVo hospitalOperationRemarkVo = new HospitalDoctorRemarkVo()
+                {
+                    Id = remark.Id,
+                    HospitalDoctorRemark = remark.HospitalDoctorRemark,
+                    AmiyaDoctorRemark = remark.AmiyaDoctorRemark
+                };
 
                 return ResultData<HospitalDoctorRemarkVo>.Success().AddData("hospitalDoctorRemark", hospitalOperationRemarkVo);
             }
@@ -430,16 +448,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpPost("addHospitalDealRemark")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData> AddHospitalDealRemarkAsync(HospitalDealRemarkVo addVo)
+        public async Task<ResultData> AddHospitalDealRemarkAsync(AddHospitalDealRemarkVo addVo)
         {
             try
             {
-                //AddExpressDto addDto = new AddExpressDto();
-                //addDto.ExpressCode = addVo.ExpressCode;
-                //addDto.ExpressName = addVo.ExpressName;
-                //addDto.Valid = addVo.Valid;
-
-                //await greatHospitalOperationHealthService.AddAsync(addDto);
+                AddHospitalDealRemarkDto addDto = new AddHospitalDealRemarkDto()
+                {
+                    IndicatorId = addVo.IndicatorId,
+                    HospitalId = addVo.HospitalId,
+                    HospitalDealRemark = addVo.HospitalDealRemark,
+                    AmiyaDealRemark = addVo.AmiyaDealRemark
+                };
+                await remarkService.AddHospitalDealRemark(addDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -454,17 +474,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpPut("updateHospitalDealRemark")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData> UpdateHospitalDealRemarkAsync(AddHospitalDealRemarkVo addVo)
+        public async Task<ResultData> UpdateHospitalDealRemarkAsync(UpdateHospitalDealRemarkVo updateVo)
         {
             try
             {
-                //AddExpressDto addDto = new AddExpressDto();
-                //addDto.ExpressCode = addVo.ExpressCode;
-                //addDto.ExpressName = addVo.ExpressName;
-                //addDto.Valid = addVo.Valid;
-
-                //await greatHospitalOperationHealthService.AddAsync(addDto);
-                return ResultData.Success();
+                UpdateHospitalDealRemarkDto updateDto = new UpdateHospitalDealRemarkDto
+                {
+                    Id=updateVo.Id,
+                    HospitalDealRemark = updateVo.HospitalDealRemark,
+                    AmiyaDealRemark = updateVo.AmiyaDealRemark
+                };
+                await remarkService.UpdateHospitalDealRemark(updateDto);
+                return ResultData.Success();            
             }
             catch (Exception ex)
             {
@@ -479,16 +500,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("getHospitalDealRemark")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<HospitalDealRemarkVo>> GetHospitalDealRemarkByIdAsync(string indicatorId)
+        public async Task<ResultData<HospitalDealRemarkVo>> GetHospitalDealRemarkByIdAsync(string indicatorId,int hospitalId)
         {
             try
             {
-                //var greatHospitalOperationHealth = await greatHospitalOperationHealthService.GetByIdAsync(id);
-                HospitalDealRemarkVo hospitalOperationRemarkVo = new HospitalDealRemarkVo();
-                //greatHospitalOperationHealthVo.Id = greatHospitalOperationHealth.Id;
-                //greatHospitalOperationHealthVo.ExpressCode = greatHospitalOperationHealth.ExpressCode;
-                //greatHospitalOperationHealthVo.ExpressName = greatHospitalOperationHealth.ExpressName;
-                //greatHospitalOperationHealthVo.Valid = greatHospitalOperationHealth.Valid;
+                var remark = await remarkService.GetHospitalDealRemark(indicatorId, hospitalId);
+                HospitalDealRemarkVo hospitalOperationRemarkVo = new HospitalDealRemarkVo()
+                {
+                    Id = remark.Id,
+                    HospitalDealRemark = remark.HospitalDealRemark,
+                    AmiyaDealRemark = remark.AmiyaDealRemark
+                };
+
 
                 return ResultData<HospitalDealRemarkVo>.Success().AddData("hospitalDealRemark", hospitalOperationRemarkVo);
             }

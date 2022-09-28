@@ -7,14 +7,7 @@ namespace Fx.Amiya.Background.Api.Vo.Remark
 {
     public class UpdateHospitalDealRemarkDto
     {
-        /// <summary>
-        /// 运营指标id
-        /// </summary>
-        public string IndicatorId { get; set; }
-        /// <summary>
-        /// 医院id
-        /// </summary>
-        public string HospitalId { get; set; }
+        public string Id { get; set; }
         /// <summary>
         /// 医院咨询师数据分析批注
         /// </summary>

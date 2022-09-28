@@ -7,6 +7,7 @@ namespace Fx.Amiya.Background.Api.Vo.Remark
 {
     public class UpdateHospitalDoctorRemarkDto
     {
+        public string Id { get; set; }
         /// <summary>
         /// 运营指标id
         /// </summary>

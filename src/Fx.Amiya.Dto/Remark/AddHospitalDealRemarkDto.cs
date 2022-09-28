@@ -14,7 +14,7 @@ namespace Fx.Amiya.Background.Api.Vo.Remark
         /// <summary>
         /// 医院id
         /// </summary>
-        public string HospitalId { get; set; }
+        public int HospitalId { get; set; }
         /// <summary>
         /// 医院咨询师数据分析批注
         /// </summary>
