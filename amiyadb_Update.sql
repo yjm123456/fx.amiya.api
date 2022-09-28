@@ -1393,6 +1393,10 @@ ADD CONSTRAINT `fk_hospital_operation_indicator_id`
   REFERENCES `amiyadb`.`tbl_hospital_operational_indicator` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
+
+  ALTER TABLE `amiyadb`.`tbl_hospital_operation_data` 
+ADD COLUMN `delete_date` DATETIME NULL AFTER `update_date`;
+
 -----------------------------------------------余建明 2022/09/27 END--------------------------------------------
 
 
