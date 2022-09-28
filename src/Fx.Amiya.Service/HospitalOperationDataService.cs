@@ -16,9 +16,12 @@ namespace Fx.Amiya.Service
     public class HospitalOperationDataService : IHospitalOperationDataService
     {
         private IDalHospitalOperationData dalHospitalOperationData;
-        public HospitalOperationDataService(IDalHospitalOperationData dalHospitalOperationData)
+        private IHospitalOperationIndicatorService hospitalOperationIndicatorService;
+        public HospitalOperationDataService(IDalHospitalOperationData dalHospitalOperationData,
+            IHospitalOperationIndicatorService hospitalOperationIndicatorService)
         {
             this.dalHospitalOperationData = dalHospitalOperationData;
+            this.hospitalOperationIndicatorService = hospitalOperationIndicatorService;
         }
 
 
@@ -60,7 +63,7 @@ namespace Fx.Amiya.Service
             try
             {
                 //获取主表优秀机构名称
-                // var hospitalOperationInfo=await 
+                var hospitalOperationInfo = await hospitalOperationIndicatorService.GetByIdAsync(addDtoList.First().IndicatorsId);
                 foreach (var x in addDtoList)
                 {
                     HospitalOperationData hospitalOperationData = new HospitalOperationData();
@@ -73,7 +76,7 @@ namespace Fx.Amiya.Service
                     hospitalOperationData.LastMonthData = x.LastMonthData;
                     hospitalOperationData.BeforeMonthData = x.BeforeMonthData;
                     hospitalOperationData.ChainRatio = x.ChainRatio;
-                    //hospitalOperationData.GreatHospital = ;（todo;）
+                    hospitalOperationData.GreatHospital = hospitalOperationInfo.ExcellentHospital;
                     await dalHospitalOperationData.AddAsync(hospitalOperationData, true);
                 }
             }
