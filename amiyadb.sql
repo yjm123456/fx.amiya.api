@@ -941,7 +941,7 @@ CREATE TABLE `tbl_indicator_send_hospital` (
     ON UPDATE NO ACTION);
 
 
-    CREATE TABLE `amiyadb`.`hospital_operation_data` (
+    CREATE TABLE `amiyadb`.`tbl_hospital_operation_data` (
   `id` VARCHAR(50) NOT NULL,
   `indicator_id` VARCHAR(100) NOT NULL,
   `hospital_id` INT UNSIGNED NOT NULL,
