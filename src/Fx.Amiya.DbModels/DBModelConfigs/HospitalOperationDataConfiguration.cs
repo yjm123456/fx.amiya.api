@@ -20,7 +20,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.Valid).HasColumnName("valid").HasColumnType("BIT(1)").IsRequired();
             builder.Property(t => t.DeleteDate).HasColumnName("delete_date").HasColumnType("datetime").IsRequired(false);
 
-            builder.Property(t => t.OperationName).HasColumnName("OperationName").HasColumnType("varchar(100)").IsRequired();
+            builder.Property(t => t.OperationName).HasColumnName("operation_name").HasColumnType("varchar(100)").IsRequired();
             builder.Property(t => t.LastMonthData).HasColumnName("last_month_data").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.BeforeMonthData).HasColumnName("before_month_data").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.ChainRatio).HasColumnName("chain_ratio").HasColumnType("decimal(12,2)").IsRequired();
