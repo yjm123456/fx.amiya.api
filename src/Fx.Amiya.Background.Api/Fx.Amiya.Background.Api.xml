@@ -14041,11 +14041,6 @@
             环比
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.UpdateHospitalOperationDataVo.GreatHospital">
-            <summary>
-            优秀机构
-            </summary>
-        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicatorSubmit.HospitalOperationIndicatorCollectVo">
             <summary>
             机构提报数据汇总
