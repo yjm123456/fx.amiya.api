@@ -26,16 +26,14 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class HospitalImprovePlanController : ControllerBase
     {
         //private IHospitalNetWorkConsulationOperationDataService hospitalOperationDataService;
-
+        private IHospitalImprovePlanRemarkService hospitalImprovePlanRemarkService;
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="hospitalOperationDataService"></param>
-        public HospitalImprovePlanController(
-            // IHospitalNetWorkConsulationOperationDataService hospitalOperationDataService
-            )
+        public HospitalImprovePlanController(IHospitalImprovePlanRemarkService hospitalImprovePlanRemarkService )
         {
-            //this.hospitalOperationDataService = hospitalOperationDataService;
+            this.hospitalImprovePlanRemarkService = hospitalImprovePlanRemarkService;
         }
         /// <summary>
         /// 添加机构运营提升计划
@@ -48,12 +46,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //AddExpressDto addDto = new AddExpressDto();
-                //addDto.ExpressCode = addVo.ExpressCode;
-                //addDto.ExpressName = addVo.ExpressName;
-                //addDto.Valid = addVo.Valid;
-
-                //await hospitalOperationDataService.AddAsync(addDto);
+                AddHospitalImprovePlanDto addDto = new AddHospitalImprovePlanDto() {
+                    IndicatorId = addVo.IndicatorId,
+                    HospitalId = addVo.HospitalId,
+                    HospitalImprovePlan = addVo.HospitalImprovePlan,
+                    AmiyaImprovePlanRemark = addVo.AmiyaImprovePlanRemark,
+                    HospitalShareSuccessCase = addVo.HospitalShareSuccessCase,
+                    AmiyaShareSuccessCase = addVo.AmiyaShareSuccessCase,
+                    ImproveSuggestionToAmiya = addVo.ImproveSuggestionToAmiya,
+                    AmiyaImproveSuggestionRemark = addVo.AmiyaImproveSuggestionRemark,
+                    ImproveDemandToAmiya = addVo.ImproveDemandToAmiya,
+                    AmiyaImproveDemandRemark = addVo.AmiyaImproveDemandRemark
+                };
+                await hospitalImprovePlanRemarkService.AddHospitalImprovePlan(addDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -76,13 +81,21 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //var hospitalOperationData = await hospitalOperationDataService.GetByIdAsync(id);
-                HospitalImprovePlanVo hospitalOperationDataVo = new HospitalImprovePlanVo();
-                //hospitalOperationDataVo.Id = hospitalOperationData.Id;
-                //hospitalOperationDataVo.ExpressCode = hospitalOperationData.ExpressCode;
-                //hospitalOperationDataVo.ExpressName = hospitalOperationData.ExpressName;
-                //hospitalOperationDataVo.Valid = hospitalOperationData.Valid;
+                var plan =await hospitalImprovePlanRemarkService.GetHospitalImprovePlan(indicatorId,hospitalId);
 
+                HospitalImprovePlanVo hospitalOperationDataVo = new HospitalImprovePlanVo() {
+                    Id = plan.Id,
+                    IndicatorId = plan.IndicatorId,
+                    HospitalId = plan.HospitalId,
+                    HospitalImprovePlan = plan.HospitalImprovePlan,
+                    AmiyaImprovePlanRemark = plan.AmiyaImprovePlanRemark,
+                    HospitalShareSuccessCase = plan.HospitalShareSuccessCase,
+                    AmiyaShareSuccessCase = plan.AmiyaShareSuccessCase,
+                    ImproveSuggestionToAmiya = plan.ImproveSuggestionToAmiya,
+                    AmiyaImproveSuggestionRemark = plan.AmiyaImproveSuggestionRemark,
+                    ImproveDemandToAmiya = plan.ImproveDemandToAmiya,
+                    AmiyaImproveDemandRemark = plan.AmiyaImproveDemandRemark,
+                };
                 return ResultData<HospitalImprovePlanVo>.Success().AddData("hospitalImprovePlanInfo", hospitalOperationDataVo);
             }
             catch (Exception ex)
@@ -101,14 +114,23 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> UpdateAsync(UpdateHospitalImprovePlanVo updateVo)
         {
-            try { 
-            
-                //UpdateExpressDto updateDto = new UpdateExpressDto();
-                //updateDto.Id = updateVo.Id;
-                //updateDto.ExpressName = updateVo.ExpressName;
-                //updateDto.ExpressCode = updateVo.ExpressCode;
-                //updateDto.Valid = updateVo.Valid;
-                //await hospitalOperationDataService.UpdateAsync(updateDto);
+            try {
+
+                UpdateHospitalImprovePlanDto updateDto = new UpdateHospitalImprovePlanDto()
+                {
+                    Id = updateVo.Id,
+                    IndicatorId = updateVo.IndicatorId,
+                    HospitalId = updateVo.HospitalId,
+                    HospitalImprovePlan = updateVo.HospitalImprovePlan,
+                    AmiyaImprovePlanRemark = updateVo.AmiyaImprovePlanRemark,
+                    HospitalShareSuccessCase = updateVo.HospitalShareSuccessCase,
+                    AmiyaShareSuccessCase = updateVo.AmiyaShareSuccessCase,
+                    ImproveSuggestionToAmiya = updateVo.ImproveSuggestionToAmiya,
+                    AmiyaImproveSuggestionRemark = updateVo.AmiyaImproveSuggestionRemark,
+                    ImproveDemandToAmiya = updateVo.ImproveDemandToAmiya,
+                    AmiyaImproveDemandRemark = updateVo.AmiyaImproveDemandRemark,
+                };
+                await hospitalImprovePlanRemarkService.UpdateHospitalImprovePlan(updateDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
