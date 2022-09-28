@@ -24,15 +24,15 @@ namespace Fx.Amiya.DbModels.Model
         /// <summary>
         /// 成交数量
         /// </summary>
-        public int DealCount { get; set; }
+        public int? DealCount { get; set; }
         /// <summary>
         /// 成交金额
         /// </summary>
-        public decimal DealPrice { get; set; }
+        public decimal? DealPrice { get; set; }
         /// <summary>
         /// 业绩占比
         /// </summary>
-        public decimal PerformanceRatio { get; set; }
+        public decimal? PerformanceRatio { get; set; }
         public HospitalInfo HospitalInfo { get; set; }
 
         public HospitalOperationalIndicator HospitalOperationalIndicator { get; set; }
