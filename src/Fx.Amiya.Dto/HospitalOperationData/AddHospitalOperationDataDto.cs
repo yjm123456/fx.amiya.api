@@ -35,10 +35,5 @@ namespace Fx.Amiya.Dto.HospitalOperationData
         /// 环比
         /// </summary>
         public decimal ChainRatio { get; set; }
-
-        /// <summary>
-        /// 优秀机构
-        /// </summary>
-        public string GreatHospital { get; set; }
     }
 }

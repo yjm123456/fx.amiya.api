@@ -127,10 +127,10 @@ namespace Fx.Amiya.Service
 
                 hospitalOperationData.HospitalId = updateDto.HospitalId;
                 hospitalOperationData.IndicatorsId = updateDto.IndicatorsId;
-                hospitalOperationData.OperationName = hospitalOperationData.OperationName;
-                hospitalOperationData.LastMonthData = hospitalOperationData.LastMonthData;
-                hospitalOperationData.BeforeMonthData = hospitalOperationData.BeforeMonthData;
-                hospitalOperationData.ChainRatio = hospitalOperationData.ChainRatio;
+                hospitalOperationData.OperationName = updateDto.OperationName;
+                hospitalOperationData.LastMonthData = updateDto.LastMonthData;
+                hospitalOperationData.BeforeMonthData = updateDto.BeforeMonthData;
+                hospitalOperationData.ChainRatio = updateDto.ChainRatio;
                 hospitalOperationData.UpdateDate = DateTime.Now;
 
                 await dalHospitalOperationData.UpdateAsync(hospitalOperationData, true);
