@@ -185,7 +185,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //await hospitalOperationDataService.DeleteAsync(id);
+                await hospitalOperationDataService.DeleteAsync(id);
                 return ResultData.Success();
             }
             catch (Exception ex)

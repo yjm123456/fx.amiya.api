@@ -11,7 +11,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
     {
         public void Configure(EntityTypeBuilder<HospitalNetWorkConsulationOperationData> builder)
         {
-            builder.ToTable("tbl_great_hospital_operation_health");
+            builder.ToTable("tbl_hospital_network_consulation_operation_data");
             builder.Property(t => t.Id).HasColumnName("id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(t => t.IndicatorId).HasColumnName("indicator_id").HasColumnType("varchar(100)").IsRequired();
             builder.Property(t => t.HospitalId).HasColumnName("hospital_id").HasColumnType("int").IsRequired();

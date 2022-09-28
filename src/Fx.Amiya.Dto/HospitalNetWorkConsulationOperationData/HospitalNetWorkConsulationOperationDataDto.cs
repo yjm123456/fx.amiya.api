@@ -22,7 +22,7 @@ namespace Fx.Amiya.Dto.HospitalNetWorkConsulationOperationData
         /// <summary>
         /// 归属指标id
         /// </summary>
-        public string IndicatorsId { get; set; }
+        public string IndicatorId { get; set; }
         /// <summary>
         /// 归属指标名称
         /// </summary>

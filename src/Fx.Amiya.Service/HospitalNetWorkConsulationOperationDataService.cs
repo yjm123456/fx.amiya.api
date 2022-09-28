@@ -36,7 +36,7 @@ namespace Fx.Amiya.Service
                                                                   Id = d.Id,
                                                                   HospitalId = d.HospitalId,
                                                                   HospitalName = d.HospitalInfo.Name,
-                                                                  IndicatorsId = d.IndicatorId,
+                                                                  IndicatorId = d.IndicatorId,
                                                                   IndicatorsName = d.HospitalOperationalIndicator.Name,
                                                                   ConsulationName = d.ConsulationName,
                                                                   SendOrderNum = d.SendOrderNum,
@@ -94,7 +94,7 @@ namespace Fx.Amiya.Service
                 hospitalNetWorkConsulationOperationDataDto.DeleteDate = hospitalNetWorkConsulationOperationData.DeleteDate;
                 hospitalNetWorkConsulationOperationDataDto.Valid = hospitalNetWorkConsulationOperationData.Valid;
                 hospitalNetWorkConsulationOperationDataDto.HospitalId = hospitalNetWorkConsulationOperationData.HospitalId;
-                hospitalNetWorkConsulationOperationDataDto.IndicatorsId = hospitalNetWorkConsulationOperationData.IndicatorId;
+                hospitalNetWorkConsulationOperationDataDto.IndicatorId = hospitalNetWorkConsulationOperationData.IndicatorId;
                 hospitalNetWorkConsulationOperationDataDto.ConsulationName = hospitalNetWorkConsulationOperationData.ConsulationName;
                 hospitalNetWorkConsulationOperationDataDto.SendOrderNum = hospitalNetWorkConsulationOperationData.SendOrderNum;
                 hospitalNetWorkConsulationOperationDataDto.NewCustomerVisitNum = hospitalNetWorkConsulationOperationData.NewCustomerVisitNum;

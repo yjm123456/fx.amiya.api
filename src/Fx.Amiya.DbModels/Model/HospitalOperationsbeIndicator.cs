@@ -9,7 +9,7 @@ namespace Fx.Amiya.DbModels.Model
     /// <summary>
     /// 机构运营指标
     /// </summary>
-    public class HospitalOperationalIndicator: BaseDbModel
+    public class HospitalOperationalIndicator : BaseDbModel
     {
         public string Name { get; set; }
         public string Describe { get; set; }
@@ -34,5 +34,7 @@ namespace Fx.Amiya.DbModels.Model
 
         public List<HospitalNetWorkConsulationOperationData> HospitalNetWorkConsulationOperationDataList { get; set; }
         public List<HospitalConsulationOperationData> HospitalConsulationOperationDataList { get; set; }
+
+        public List<HospitalDoctorOperationData> HospitalDoctorOperationDataList { get; set; }
     }
 }

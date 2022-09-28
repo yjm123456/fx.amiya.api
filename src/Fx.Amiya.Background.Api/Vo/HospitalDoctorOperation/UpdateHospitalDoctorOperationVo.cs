@@ -26,11 +26,11 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation
         /// <summary>
         /// 新客接诊人数
         /// </summary>
-        public int NewCustomerTreatCount { get; set; }
+        public int NewCustomerAcceptNum { get; set; }
         /// <summary>
         /// 新客成交人数
         /// </summary>
-        public int NewCustomerDealCount { get; set; }
+        public int NewCustomerDealNum { get; set; }
         /// <summary>
         /// 新客成交率
         /// </summary>
@@ -38,23 +38,23 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation
         /// <summary>
         /// 新客业绩
         /// </summary>
-        public decimal NewCustomerPerformance { get; set; }
+        public decimal NewCustomerAchievement { get; set; }
         /// <summary>
         /// 新客客单价
         /// </summary>
-        public decimal NewCustomerOrderPrice { get; set; }
+        public decimal NewCustomerUnitPrice { get; set; }
         /// <summary>
         /// 新客业绩占比
         /// </summary>
-        public decimal NewCustomerPerformanceRatio { get; set; }
+        public decimal NewCustomerAchievementRate { get; set; }
         /// <summary>
         /// 老客接诊人数
         /// </summary>
-        public int OldCustomerTreatCount { get; set; }
+        public int OldCustomerAcceptNum { get; set; }
         /// <summary>
         /// 老客成交人数
         /// </summary>
-        public int OldCustomerDealCount { get; set; }
+        public int OldCustomerDealNum { get; set; }
         /// <summary>
         /// 老客成交率
         /// </summary>
@@ -62,18 +62,14 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation
         /// <summary>
         /// 老客业绩
         /// </summary>
-        public decimal OldCustomerPerformance { get; set; }
+        public decimal OldCustomerAchievement { get; set; }
         /// <summary>
         /// 老客客单价
         /// </summary>
-        public decimal OldCustomerOrderPrice { get; set; }
+        public decimal OldCustomerUnitPrice { get; set; }
         /// <summary>
         /// 老客业绩占比
         /// </summary>
-        public decimal OldCustomerPerformanceRatio { get; set; }
-        /// <summary>
-        /// 是否有效
-        /// </summary>
-        public bool Valid { get; set; }
+        public decimal OldCustomerAchievementRate { get; set; }
     }
 }

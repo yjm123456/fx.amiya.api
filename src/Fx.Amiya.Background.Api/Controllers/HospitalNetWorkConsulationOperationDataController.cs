@@ -122,7 +122,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 hospitalOperationDataVo.DeleteDate = hospitalNetWorkConsulationOperationData.DeleteDate;
                 hospitalOperationDataVo.Valid = hospitalNetWorkConsulationOperationData.Valid;
                 hospitalOperationDataVo.HospitalId = hospitalNetWorkConsulationOperationData.HospitalId;
-                hospitalOperationDataVo.IndicatorId = hospitalNetWorkConsulationOperationData.IndicatorsId;
+                hospitalOperationDataVo.IndicatorId = hospitalNetWorkConsulationOperationData.IndicatorId;
                 hospitalOperationDataVo.ConsulationName = hospitalNetWorkConsulationOperationData.ConsulationName;
                 hospitalOperationDataVo.SendOrderNum = hospitalNetWorkConsulationOperationData.SendOrderNum;
                 hospitalOperationDataVo.NewCustomerVisitNum = hospitalNetWorkConsulationOperationData.NewCustomerVisitNum;
@@ -178,7 +178,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //await hospitalOperationDataService.DeleteAsync(id);
+                await hospitalOperationDataService.DeleteAsync(id);
                 return ResultData.Success();
             }
             catch (Exception ex)
