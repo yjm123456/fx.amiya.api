@@ -6,56 +6,67 @@ namespace Fx.Amiya.DbModels.Model
 {
     public class HospitalDoctorOperationData : BaseDbModel
     {
-    
+
+        /// <summary>
+        /// 指标id
+        /// </summary>
+        public string IndicatorId { get; set; }
         /// <summary>
         /// 医院id
         /// </summary>
         public int HospitalId { get; set; }
-
         /// <summary>
-        /// 归属指标id
+        /// 医生名称
         /// </summary>
-        public string IndicatorId { get; set; }
+        public string DoctorName { get; set; }
         /// <summary>
-        /// 前月新客上门率
+        /// 新客接诊人数
         /// </summary>
-        public decimal LastNewCustomerVisitRate { get; set; }
+        public int NewCustomerAcceptNum { get; set; }
         /// <summary>
-        /// 上月新客上门率
+        /// 新客成交人数
         /// </summary>
-        public decimal ThisNewCustomerVisitRate { get; set; }
+        public int NewCustomerDealNum { get; set; }
         /// <summary>
-        /// 新客上门率环比
+        /// 新客成交率
         /// </summary>
-        public decimal NewCustomerVisitChainRatio { get; set; }
-
-
+        public decimal NewCustomerDealRate { get; set; }
         /// <summary>
-        /// 前月新客成交率
+        /// 新客业绩
         /// </summary>
-        public decimal LastNewCustomerDealRate { get; set; }
+        public decimal NewCustomerAchievement { get; set; }
         /// <summary>
-        /// 上月新客成交率
+        /// 新客客单价
         /// </summary>
-        public decimal ThisNewCustomerDealRate { get; set; }
+        public decimal NewCustomerUnitPrice { get; set; }
         /// <summary>
-        /// 新客成交率环比
+        /// 新客业绩占比
         /// </summary>
-        public decimal NewCustomerDealChainRatio { get; set; }
-
-
+        public decimal NewCustomerAchievementRate { get; set; }
         /// <summary>
-        /// 前月新客客单价
+        /// 老客接诊人数
         /// </summary>
-        public decimal LastNewCustomerUnitPrice { get; set; }
+        public int OldCustomerAcceptNum { get; set; }
         /// <summary>
-        /// 上月新客客单价
+        /// 老客成交人数
         /// </summary>
-        public decimal ThisNewCustomerUnitPrice { get; set; }
+        public int OldCustomerDealNum { get; set; }
         /// <summary>
-        /// 新客客单价环比
+        /// 老客成交率
         /// </summary>
-        public decimal NewCustomerUnitPriceChainRatio { get; set; }
+        public decimal OldCustomerDealRate { get; set; }
+        /// <summary>
+        /// 老客业绩
+        /// </summary>
+        public decimal OldCustomerAchievement { get; set; }
+        /// <summary>
+        /// 老客客单价
+        /// </summary>
+        public decimal OldCustomerUnitPrice { get; set; }
+        /// <summary>
+        /// 老客业绩占比
+        /// </summary>
+        public decimal OldCustomerAchievementRate { get; set; }
 
         public HospitalInfo HospitalInfo { get; set; }
 

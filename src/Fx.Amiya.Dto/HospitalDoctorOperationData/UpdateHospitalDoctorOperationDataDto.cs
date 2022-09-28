@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation
+namespace Fx.Amiya.Dto.HospitalDoctorOperationData
 {
-    public class HospitalDoctorOperationVo:BaseVo
+    public class UpdateHospitalDoctorOperationDataDto
     {
+
+        /// <summary>
+        /// 编号
+        /// </summary>
+        public string Id { get; set; }
         /// <summary>
         /// 指标id
         /// </summary>
@@ -67,6 +73,5 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation
         /// 老客业绩占比
         /// </summary>
         public decimal OldCustomerAchievementRate { get; set; }
-
     }
 }

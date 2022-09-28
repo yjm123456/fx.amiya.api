@@ -2481,14 +2481,14 @@
         </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalConsulationOperationDataController">
             <summary>
-            机构咨询师咨询师运营数据分析板块数据接口
+            机构咨询师运营数据分析板块数据接口
             </summary>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalConsulationOperationDataController.#ctor">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalConsulationOperationDataController.#ctor(Fx.Amiya.IService.IHospitalConsulationOperationDataService)">
             <summary>
             构造函数
             </summary>
-            <param name="hospitalOperationDataService"></param>
+            <param name="hospitalConsulationOperationDataService"></param>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalConsulationOperationDataController.GetListAsync(System.String,System.String,System.Int32)">
             <summary>
@@ -2578,6 +2578,100 @@
             <summary>
             获取已配置对接订单客户的医院信息
             </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalDealItemOperationController">
+            <summary>
+            机构成交品项分析板块数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDealItemOperationController.#ctor">
+            <summary>
+            构造函数
+            </summary>
+            <param name="hospitalOperationDataService"></param>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDealItemOperationController.GetListAsync(System.String,System.String)">
+            <summary>
+            获取机构成交品项分析信息列表
+            </summary>
+            <param name="keyword">关键词</param>
+            <param name="indicatorsId">归属指标id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDealItemOperationController.AddAsync(Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.AddHospitalDealItemOperationVo)">
+            <summary>
+            添加机构成交品项分析信息
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDealItemOperationController.GetByIdAsync(System.String)">
+            <summary>
+            根据机构成交品项分析编号获取机构成交品项分析信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDealItemOperationController.UpdateAsync(Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.HospitalDealItemOperationVo)">
+            <summary>
+            修改机构成交品项分析信息
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDealItemOperationController.DeleteAsync(System.String)">
+            <summary>
+            删除机构成交品项分析信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalDoctorOperationController">
+            <summary>
+            机构医生运营数据分析板块数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDoctorOperationController.#ctor(Fx.Amiya.IService.IHospitalDoctorOperationDataService)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="hospitalDoctorOperationDataService"></param>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDoctorOperationController.GetListAsync(System.String,System.String)">
+            <summary>
+            获取医生运营数据分析板块信息列表
+            </summary>
+            <param name="keyword">关键词</param>
+            <param name="indicatorsId">归属指标id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDoctorOperationController.AddAsync(Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo)">
+            <summary>
+            添加医生运营数据分析信息
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDoctorOperationController.GetByIdAsync(System.String)">
+            <summary>
+            根据医生运营数据板块分析编号获取机构医生运营数据分析信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDoctorOperationController.UpdateAsync(Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo)">
+            <summary>
+            修改机构医生运营数据分析信息
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDoctorOperationController.DeleteAsync(System.String)">
+            <summary>
+            删除机构医生运营数据分析信息
+            </summary>
+            <param name="id"></param>
             <returns></returns>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalEmployeeController">
@@ -2755,6 +2849,66 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalImprovePlanController">
+            <summary>
+            机构运营提升计划板块数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalImprovePlanController.#ctor">
+            <summary>
+            构造函数
+            </summary>
+            <param name="hospitalOperationDataService"></param>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalImprovePlanController.AddAsync(Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.AddHospitalImprovePlanVo)">
+            <summary>
+            添加机构运营提升计划
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalImprovePlanController.GetByIdAsync(System.String,System.Int32)">
+            <summary>
+            根据指标id和医院id获取提升计划
+            </summary>
+            <param name="indicatorId"></param>
+            <param name="hospitalId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalImprovePlanController.UpdateAsync(Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.UpdateHospitalImprovePlanVo)">
+            <summary>
+            修改机构提升计划信息
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalImprovePlanController.DeleteAsync(System.String)">
+            <summary>
+            删除机构提升计划
+            </summary>
+            <param name="id">提升计划id</param>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalIndicatorFillController">
+            <summary>
+            医院指标数据填报列表接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalIndicatorFillController.#ctor(Fx.Amiya.IService.IIndicatorSendHospitalService,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="hospitalOperationDataService"></param>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalIndicatorFillController.GetListAsync(System.Nullable{System.Boolean},System.Int32,System.Int32)">
+            <summary>
+            获取机构填报数据列表
+            </summary>
+            <param name="submit">是否提报</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalInfoController.GetListWithAsync(System.String,System.Nullable{System.Int32},System.Int32,System.Int32,System.Nullable{System.Boolean})">
             <summary>
             获取医院列表
@@ -2860,7 +3014,7 @@
             机构网咨运营数据分析板块数据接口
             </summary>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalNetWorkConsulationOperationDataController.#ctor">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalNetWorkConsulationOperationDataController.#ctor(Fx.Amiya.IService.IHospitalNetWorkConsulationOperationDataService)">
             <summary>
             构造函数
             </summary>
@@ -2951,23 +3105,38 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalOperationIndicatorCollectController">
+            <summary>
+            机构指标数据汇总
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalOperationIndicatorCollectController.#ctor">
+            <summary>
+            构造函数
+            </summary>
+            <param name="hospitalOperationDataService"></param>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalOperationIndicatorCollectController.GetListAsync(System.String,System.Nullable{System.Int32},System.Int32,System.Int32)">
+            <summary>
+            获取指标数据汇总列表
+            </summary>
+            <param name="keyword">关键词</param>
+            <param name="indicatorsId">归属指标id</param>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalOperationIndicatorController">
             <summary>
             机构运营指标数据
             </summary>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalOperationIndicatorController.#ctor">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalOperationIndicatorController.GetListWithPageAsync(System.String,System.Nullable{System.Boolean},System.Int32,System.Int32)">
             <summary>
-            构造函数
+            分页获取机构运营指标
             </summary>
-            <param name="greatHospitalOperationHealthService"></param>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalOperationIndicatorController.GetListWithPageAsync(System.String,System.String,System.Int32,System.Int32)">
-            <summary>
-            获取机构运营指标数据列表
-            </summary>
-            <param name="keyword">关键词</param>
-            <param name="indicatorsId">归属指标id</param>
+            <param name="keyword"></param>
+            <param name="valid">是否有效</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalOperationIndicatorController.AddAsync(Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator.AddHospitalOperationIndicatorVo)">
@@ -4990,6 +5159,132 @@
         <member name="M:Fx.Amiya.Background.Api.Controllers.RecommendHospitalController.DeleteAsync(System.Int32)">
             <summary>
             医院推荐信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.AddAmiyaRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.AddAmiyaRemarkVo)">
+            <summary>
+            添加机构运营指标批注
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.UpdateAmiyaRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.AddAmiyaRemarkVo)">
+            <summary>
+            修改机构运营数据批注
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.GetAmiyaRemarkByIdAsync(System.String)">
+            <summary>
+            获取指标啊美雅批注
+            </summary>
+            <param name="indicatorId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.AddHospitalOperationRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.AddHospitalOperationRemarkVo)">
+            <summary>
+            添加机构运营数据批注
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.UpdateHospitalOperationRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.AddHospitalOperationRemarkVo)">
+            <summary>
+            修改机构运营数据批注
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.GetHospitalOperationRemarkByIdAsync(System.String,System.String)">
+            <summary>
+            获取机构运营数据批注
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.AddHospitalOnlineConsultRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.AddHospitalOnlineConsultRemarkVo)">
+            <summary>
+            添加机构网咨运营数据分析批注
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.UpdateHospitalOnlineConsultRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.AddHospitalOnlineConsultRemarkVo)">
+            <summary>
+            修改机构网咨运营数据分析批注
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.GetHospitalOnlineConsultRemarkAsync(System.String,System.String)">
+            <summary>
+            获取机构网咨运营数据分析批注
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.AddHospitalConsultRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.HospitalConsultRemarkVo)">
+            <summary>
+            添加机构咨询师运营数据分析批注
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.UpdateHospitalConsultRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.AddHospitalConsultRemarkVo)">
+            <summary>
+            修改机构咨询师运营数据分析批注
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.GetHospitalConsultRemarkByIdAsync(System.String,System.String)">
+            <summary>
+            获取机构咨询师运营数据分析批注
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.AddHospitalDoctorRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.HospitalDoctorRemarkVo)">
+            <summary>
+            添加机构医生运营数据分析
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.UpdateHospitalDoctorRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.AddHospitalDoctorRemarkVo)">
+            <summary>
+            修改机构医生运营数据分析
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.GetHospitalDoctorRemarkByIdAsync(System.String,System.String)">
+            <summary>
+            获取机构医生运营数据分析
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.AddHospitalDealRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.HospitalDealRemarkVo)">
+            <summary>
+            添加机构成交品项数据分析批注
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.UpdateHospitalDealRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.AddHospitalDealRemarkVo)">
+            <summary>
+            修改机构成交品项数据分析批注
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.GetHospitalDealRemarkByIdAsync(System.String)">
+            <summary>
+            获取机构成交品项数据分析批注
             </summary>
             <param name="id"></param>
             <returns></returns>
@@ -12168,17 +12463,117 @@
             欠款
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.AddHospitalDealItemOperationVo.IndicatorId">
+            <summary>
+            指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.AddHospitalDealItemOperationVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.AddHospitalDealItemOperationVo.DealItemName">
+            <summary>
+            成交品项名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.AddHospitalDealItemOperationVo.DealCount">
+            <summary>
+            成交数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.AddHospitalDealItemOperationVo.DealPrice">
+            <summary>
+            成交金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.AddHospitalDealItemOperationVo.PerformanceRatio">
+            <summary>
+            业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.HospitalDealItemOperationVo.IndicatorId">
+            <summary>
+            指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.HospitalDealItemOperationVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.HospitalDealItemOperationVo.DealItemName">
+            <summary>
+            成交品项名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.HospitalDealItemOperationVo.DealCount">
+            <summary>
+            成交数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.HospitalDealItemOperationVo.DealPrice">
+            <summary>
+            成交金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.HospitalDealItemOperationVo.PerformanceRatio">
+            <summary>
+            业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.UpdateHospitalDealItemOperation.IndicatorId">
+            <summary>
+            指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.UpdateHospitalDealItemOperation.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.UpdateHospitalDealItemOperation.DealItemName">
+            <summary>
+            成交品项名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.UpdateHospitalDealItemOperation.DealCount">
+            <summary>
+            成交数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.UpdateHospitalDealItemOperation.DealPrice">
+            <summary>
+            成交金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.UpdateHospitalDealItemOperation.PerformanceRatio">
+            <summary>
+            业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.IndicatorId">
+            <summary>
+            指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.DoctorName">
             <summary>
             医生名称
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.NewCustomerTreatCount">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.NewCustomerAcceptNum">
             <summary>
             新客接诊人数
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.NewCustomerDealCount">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.NewCustomerDealNum">
             <summary>
             新客成交人数
             </summary>
@@ -12188,27 +12583,27 @@
             新客成交率
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.NewCustomerPerformance">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.NewCustomerAchievement">
             <summary>
             新客业绩
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.NewCustomerOrderPrice">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.NewCustomerUnitPrice">
             <summary>
             新客客单价
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.NewCustomerPerformanceRatio">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.NewCustomerAchievementRate">
             <summary>
             新客业绩占比
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.OldCustomerTreatCount">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.OldCustomerAcceptNum">
             <summary>
             老客接诊人数
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.OldCustomerDealCount">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.OldCustomerDealNum">
             <summary>
             老客成交人数
             </summary>
@@ -12218,19 +12613,29 @@
             老客成交率
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.OldCustomerPerformance">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.OldCustomerAchievement">
             <summary>
             老客业绩
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.OldCustomerOrderPrice">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.OldCustomerUnitPrice">
             <summary>
             老客客单价
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.OldCustomerPerformanceRatio">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.AddHospitalDoctorOperationVo.OldCustomerAchievementRate">
             <summary>
             老客业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.IndicatorId">
+            <summary>
+            指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.HospitalId">
+            <summary>
+            医院id
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.DoctorName">
@@ -12238,12 +12643,12 @@
             医生名称
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.NewCustomerTreatCount">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.NewCustomerAcceptNum">
             <summary>
             新客接诊人数
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.NewCustomerDealCount">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.NewCustomerDealNum">
             <summary>
             新客成交人数
             </summary>
@@ -12253,27 +12658,27 @@
             新客成交率
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.NewCustomerPerformance">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.NewCustomerAchievement">
             <summary>
             新客业绩
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.NewCustomerOrderPrice">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.NewCustomerUnitPrice">
             <summary>
             新客客单价
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.NewCustomerPerformanceRatio">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.NewCustomerAchievementRate">
             <summary>
             新客业绩占比
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.OldCustomerTreatCount">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.OldCustomerAcceptNum">
             <summary>
             老客接诊人数
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.OldCustomerDealCount">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.OldCustomerDealNum">
             <summary>
             老客成交人数
             </summary>
@@ -12283,17 +12688,97 @@
             老客成交率
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.OldCustomerPerformance">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.OldCustomerAchievement">
             <summary>
             老客业绩
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.OldCustomerOrderPrice">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.OldCustomerUnitPrice">
             <summary>
             老客客单价
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.OldCustomerPerformanceRatio">
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.HospitalDoctorOperationVo.OldCustomerAchievementRate">
+            <summary>
+            老客业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo.IndicatorId">
+            <summary>
+            指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo.DoctorName">
+            <summary>
+            医生名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo.NewCustomerAcceptNum">
+            <summary>
+            新客接诊人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo.NewCustomerDealNum">
+            <summary>
+            新客成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo.NewCustomerDealRate">
+            <summary>
+            新客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo.NewCustomerAchievement">
+            <summary>
+            新客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo.NewCustomerUnitPrice">
+            <summary>
+            新客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo.NewCustomerAchievementRate">
+            <summary>
+            新客业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo.OldCustomerAcceptNum">
+            <summary>
+            老客接诊人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo.OldCustomerDealNum">
+            <summary>
+            老客成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo.OldCustomerDealRate">
+            <summary>
+            老客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo.OldCustomerAchievement">
+            <summary>
+            老客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo.OldCustomerUnitPrice">
+            <summary>
+            老客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo.OldCustomerAchievementRate">
             <summary>
             老客业绩占比
             </summary>
@@ -12561,6 +13046,191 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalFeedBack.UpdateHospitalFeedBackVo.Level">
             <summary>
             等级，默认0
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.AddHospitalImprovePlanVo.IndicatorId">
+            <summary>
+            指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.AddHospitalImprovePlanVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.AddHospitalImprovePlanVo.HospitalImprovePlan">
+            <summary>
+            机构提升措施与计划
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.AddHospitalImprovePlanVo.AmiyaImprovePlanRemark">
+            <summary>
+            啊美雅对机构提升措施与计划批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.AddHospitalImprovePlanVo.HospitalShareSuccessCase">
+            <summary>
+            机构分享成功案例
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.AddHospitalImprovePlanVo.AmiyaShareSuccessCase">
+            <summary>
+            啊美雅对机构分享成功案例批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.AddHospitalImprovePlanVo.ImproveSuggestionToAmiya">
+            <summary>
+            机构对啊美雅的提升建议
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.AddHospitalImprovePlanVo.AmiyaImproveSuggestionRemark">
+            <summary>
+            啊美雅批注机构提升建议
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.AddHospitalImprovePlanVo.ImproveDemandToAmiya">
+            <summary>
+            机构对啊美雅的提升需求
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.AddHospitalImprovePlanVo.AmiyaImproveDemandRemark">
+            <summary>
+            啊美雅批注机构提升需求
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.HospitalImprovePlanVo.IndicatorId">
+            <summary>
+            指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.HospitalImprovePlanVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.HospitalImprovePlanVo.HospitalImprovePlan">
+            <summary>
+            机构提升措施与计划
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.HospitalImprovePlanVo.AmiyaImprovePlanRemark">
+            <summary>
+            啊美雅对机构提升措施与计划批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.HospitalImprovePlanVo.HospitalShareSuccessCase">
+            <summary>
+            机构分享成功案例
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.HospitalImprovePlanVo.AmiyaShareSuccessCase">
+            <summary>
+            啊美雅对机构分享成功案例批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.HospitalImprovePlanVo.ImproveSuggestionToAmiya">
+            <summary>
+            机构对啊美雅的提升建议
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.HospitalImprovePlanVo.AmiyaImproveSuggestionRemark">
+            <summary>
+            啊美雅批注机构提升建议
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.HospitalImprovePlanVo.ImproveDemandToAmiya">
+            <summary>
+            机构对啊美雅的提升需求
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.HospitalImprovePlanVo.AmiyaImproveDemandRemark">
+            <summary>
+            啊美雅批注机构提升需求
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.UpdateHospitalImprovePlanVo.IndicatorId">
+            <summary>
+            指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.UpdateHospitalImprovePlanVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.UpdateHospitalImprovePlanVo.HospitalImprovePlan">
+            <summary>
+            机构提升措施与计划
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.UpdateHospitalImprovePlanVo.AmiyaImprovePlanRemark">
+            <summary>
+            啊美雅对机构提升措施与计划批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.UpdateHospitalImprovePlanVo.HospitalShareSuccessCase">
+            <summary>
+            机构分享成功案例
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.UpdateHospitalImprovePlanVo.AmiyaShareSuccessCase">
+            <summary>
+            啊美雅对机构分享成功案例批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.UpdateHospitalImprovePlanVo.ImproveSuggestionToAmiya">
+            <summary>
+            机构对啊美雅的提升建议
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.UpdateHospitalImprovePlanVo.AmiyaImproveSuggestionRemark">
+            <summary>
+            啊美雅批注机构提升建议
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.UpdateHospitalImprovePlanVo.ImproveDemandToAmiya">
+            <summary>
+            机构对啊美雅的提升需求
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalImprovePlan.UpdateHospitalImprovePlanVo.AmiyaImproveDemandRemark">
+            <summary>
+            啊美雅批注机构提升需求
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.HospitalIndeicatorInput.HospitalIndicatorFillVo">
+            <summary>
+            医院指标填报
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalIndeicatorInput.HospitalIndicatorFillVo.IndicatorId">
+            <summary>
+            指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalIndeicatorInput.HospitalIndicatorFillVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalIndeicatorInput.HospitalIndicatorFillVo.IndicatorName">
+            <summary>
+            指标名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalIndeicatorInput.HospitalIndicatorFillVo.Describe">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalIndeicatorInput.HospitalIndicatorFillVo.StartDate">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalIndeicatorInput.HospitalIndicatorFillVo.EndDate">
+            <summary>
+            结束时间
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.HospitalInfo.AddHospitalBrandApplyInHospitalVo">
@@ -13368,6 +14038,41 @@
             优秀机构
             </summary>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicatorSubmit.HospitalOperationIndicatorCollectVo">
+            <summary>
+            机构提报数据汇总
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicatorSubmit.HospitalOperationIndicatorCollectVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicatorSubmit.HospitalOperationIndicatorCollectVo.IndicatorId">
+            <summary>
+            指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicatorSubmit.HospitalOperationIndicatorCollectVo.IndicatorName">
+            <summary>
+            指标名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicatorSubmit.HospitalOperationIndicatorCollectVo.HospitalName">
+            <summary>
+            医院名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicatorSubmit.HospitalOperationIndicatorCollectVo.HospitalAddress">
+            <summary>
+            医院地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicatorSubmit.HospitalOperationIndicatorCollectVo.IsSubmit">
+            <summary>
+            是否提报
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator.AddHospitalOperationIndicatorVo.Name">
             <summary>
             名称
@@ -13393,16 +14098,6 @@
             优秀机构
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator.AddHospitalOperationIndicatorVo.SubmitStatus">
-            <summary>
-            提报状态
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator.AddHospitalOperationIndicatorVo.RemarkStatus">
-            <summary>
-            批注状态
-            </summary>
-        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator.AddHospitalOperationIndicatorVo.Valid">
             <summary>
             是否有效
@@ -13410,7 +14105,17 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator.AddHospitalOperationIndicatorVo.IndicatorIds">
             <summary>
-            指标id集合
+            医院id集合
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator.HospitalNameList.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator.HospitalNameList.HospitalName">
+            <summary>
+            医院名称
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator.HospitalOperationIndicatorVo.Name">
@@ -13448,6 +14153,11 @@
             批注状态
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator.HospitalOperationIndicatorVo.SendHospital">
+            <summary>
+            派发医院
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator.IndicatorNameVo.Id">
             <summary>
             指标id
@@ -13478,19 +14188,14 @@
             优秀机构
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator.UpdateHospitalOperationIndicatorVo.SubmitStatus">
-            <summary>
-            提报状态
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator.UpdateHospitalOperationIndicatorVo.RemarkStatus">
-            <summary>
-            批注状态
-            </summary>
-        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator.UpdateHospitalOperationIndicatorVo.Valid">
             <summary>
             是否有效
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator.UpdateHospitalOperationIndicatorVo.IndicatorIds">
+            <summary>
+            指标id集合
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalPartakeItem.AddHospitalPartakeItemVo.ActivityId">
@@ -22443,6 +23148,286 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.RecommendHospital.UpdateRecommendHospitalInfoVo.Valid">
             <summary>
             是否有效
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Remark.AddAmiyaRemarkVo">
+            <summary>
+            添加优秀机构啊
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddAmiyaRemarkVo.IndicatorId">
+            <summary>
+            机构运营指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddAmiyaRemarkVo.Remark">
+            <summary>
+            批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalConsultRemarkVo.IndicatorId">
+            <summary>
+            运营指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalConsultRemarkVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalConsultRemarkVo.HospitalConsultRemark">
+            <summary>
+            医院咨询师数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalConsultRemarkVo.AmiyaConsultRemark">
+            <summary>
+            啊美雅咨询师数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalDealRemarkVo.IndicatorId">
+            <summary>
+            运营指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalDealRemarkVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalDealRemarkVo.HospitalDealRemark">
+            <summary>
+            医院咨询师数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalDealRemarkVo.AmiyaDealRemark">
+            <summary>
+            啊美雅咨询师数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalDoctorRemarkVo.IndicatorId">
+            <summary>
+            运营指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalDoctorRemarkVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalDoctorRemarkVo.HospitalDoctorRemark">
+            <summary>
+            医院医生数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalDoctorRemarkVo.AmiyaDoctorRemark">
+            <summary>
+            啊美雅医生数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalOnlineConsultRemarkVo.IndicatorId">
+            <summary>
+            运营指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalOnlineConsultRemarkVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalOnlineConsultRemarkVo.HospitalOnlineConsultRemark">
+            <summary>
+            医院网咨运营数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalOnlineConsultRemarkVo.AmiyaOnlineConsultRemark">
+            <summary>
+            啊美雅网咨运营数据分析批注
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalOperationRemarkVo">
+            <summary>
+            添加医院运营数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalOperationRemarkVo.IndicatorId">
+            <summary>
+            运营指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalOperationRemarkVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalOperationRemarkVo.HospitalOperationRemark">
+            <summary>
+            医院运营数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AddHospitalOperationRemarkVo.AmiyaOperationRemark">
+            <summary>
+            啊美雅运营数据分析批注
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Remark.AmiyaRemarkVo">
+            <summary>
+            优秀机构批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AmiyaRemarkVo.IndicatorId">
+            <summary>
+            运营指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.AmiyaRemarkVo.AmiyaRemark">
+            <summary>
+            优秀机构啊美雅批注
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Remark.HospitalConsultRemarkVo">
+            <summary>
+            机构咨询师运营数据分析批注
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Remark.HospitalDealRemarkVo">
+            <summary>
+            机构成交品项数据分析批注
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Remark.HospitalDoctorRemarkVo">
+            <summary>
+            机构医生运营数据分析
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Remark.HospitalOnlineConsultRemarkVo">
+            <summary>
+            机构网咨运营数据分析批注
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Remark.HospitalOperationRemarkVo">
+            <summary>
+            机构运营数据分析批注
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Remark.UpdateAmiyaRemarkVo">
+            <summary>
+            添加优秀机构啊
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateAmiyaRemarkVo.IndicatorId">
+            <summary>
+            机构运营指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateAmiyaRemarkVo.Remark">
+            <summary>
+            批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalConsultRemarkVo.IndicatorId">
+            <summary>
+            运营指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalConsultRemarkVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalConsultRemarkVo.HospitalConsultRemark">
+            <summary>
+            医院咨询师数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalConsultRemarkVo.AmiyaConsultRemark">
+            <summary>
+            啊美雅咨询师数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalDealRemarkVo.IndicatorId">
+            <summary>
+            运营指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalDealRemarkVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalDealRemarkVo.HospitalDealRemark">
+            <summary>
+            医院咨询师数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalDealRemarkVo.AmiyaDealRemark">
+            <summary>
+            啊美雅咨询师数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalDoctorRemarkVo.IndicatorId">
+            <summary>
+            运营指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalDoctorRemarkVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalDoctorRemarkVo.HospitalDoctorRemark">
+            <summary>
+            医院医生数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalDoctorRemarkVo.AmiyaDoctorRemark">
+            <summary>
+            啊美雅医生数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalOnlineConsultRemarkVo.IndicatorId">
+            <summary>
+            运营指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalOnlineConsultRemarkVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalOnlineConsultRemarkVo.HospitalOnlineConsultRemark">
+            <summary>
+            医院网咨运营数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalOnlineConsultRemarkVo.AmiyaOnlineConsultRemark">
+            <summary>
+            啊美雅网咨运营数据分析批注
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalOperationRemarkVo">
+            <summary>
+            添加医院运营数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalOperationRemarkVo.IndicatorId">
+            <summary>
+            运营指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalOperationRemarkVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalOperationRemarkVo.HospitalOperationRemark">
+            <summary>
+            医院运营数据分析批注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalOperationRemarkVo.AmiyaOperationRemark">
+            <summary>
+            啊美雅运营数据分析批注
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.SendOrderInfo.AddSendOrderInfoVo.OrderId">
