@@ -123,7 +123,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 根据医生运营数据板块分析编号获取机构网咨运营数据分析信息
+        /// 根据医生运营数据板块分析编号获取机构医生运营数据分析信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -165,7 +165,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 修改机构网咨运营数据分析信息
+        /// 修改机构医生运营数据分析信息
         /// </summary>
         /// <param name="updateVo"></param>
         /// <returns></returns>
@@ -201,7 +201,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 删除机构网咨运营数据分析信息
+        /// 删除机构医生运营数据分析信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

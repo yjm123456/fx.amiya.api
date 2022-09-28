@@ -2655,21 +2655,21 @@
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDoctorOperationController.GetByIdAsync(System.String)">
             <summary>
-            根据医生运营数据板块分析编号获取机构网咨运营数据分析信息
+            根据医生运营数据板块分析编号获取机构医生运营数据分析信息
             </summary>
             <param name="id"></param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDoctorOperationController.UpdateAsync(Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation.UpdateHospitalDoctorOperationVo)">
             <summary>
-            修改机构网咨运营数据分析信息
+            修改机构医生运营数据分析信息
             </summary>
             <param name="updateVo"></param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDoctorOperationController.DeleteAsync(System.String)">
             <summary>
-            删除机构网咨运营数据分析信息
+            删除机构医生运营数据分析信息
             </summary>
             <param name="id"></param>
             <returns></returns>
