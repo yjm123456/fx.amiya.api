@@ -25,16 +25,14 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class HospitalDealItemOperationController : ControllerBase
     {
         //private IHospitalNetWorkConsulationOperationDataService hospitalOperationDataService;
-
+        private IHospitalDealItemService hospitalDealItemService;
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="hospitalOperationDataService"></param>
-        public HospitalDealItemOperationController(
-            // IHospitalNetWorkConsulationOperationDataService hospitalOperationDataService
-            )
+        public HospitalDealItemOperationController(IHospitalDealItemService hospitalDealItemService )
         {
-            //this.hospitalOperationDataService = hospitalOperationDataService;
+            this.hospitalDealItemService = hospitalDealItemService;
         }
 
 
@@ -50,16 +48,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                //  var q = await hospitalOperationDataService.GetListAsync(keyword, indicatorsId);
-
-                //var hospitalOperationData = from d in q.List
-                //              select new HospitalDealItemOperationVo
-                //              {
-                //                  Id = d.Id,
-                //                  ExpressCode = d.ExpressCode,
-                //                  ExpressName = d.ExpressName,
-                //                  Valid = d.Valid
-                //              };
+                var list = await hospitalDealItemService.GetListAsync(keyword,indicatorsId);
 
                 List<HospitalDealItemOperationVo> hospitalOperationDataPageInfo = new List<HospitalDealItemOperationVo>();
                 HospitalDealItemOperationVo re = new HospitalDealItemOperationVo();

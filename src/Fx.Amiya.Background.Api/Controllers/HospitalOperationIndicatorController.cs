@@ -17,7 +17,7 @@ namespace Fx.Amiya.Background.Api.Controllers
     /// </summary>
     [Route("[controller]")]
     [ApiController]
-    [FxInternalAuthorize]
+    
     public class HospitalOperationIndicatorController : ControllerBase
     {
         private IHospitalOperationIndicatorService hospitalOperationIndicatorService;
@@ -183,6 +183,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("nameList")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<List<IndicatorNameVo>>> IndicatorNAmeList()
         {
             try

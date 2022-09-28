@@ -390,7 +390,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             List<HospitalOperatingDataVo> hospitalPerformanceVo = new List<HospitalOperatingDataVo>();
             var hospitalPerformanceDatas = await hospitalPerformanceService.GetHospitalPerformanceByDateAsync(year, month, isCity);
-            hospitalPerformanceDatas = hospitalPerformanceDatas.OrderByDescending(x => x.SendNum).Take(10).ToList();
+            hospitalPerformanceDatas = hospitalPerformanceDatas.OrderByDescending(x => x.TotalAchievement).Take(10).ToList();
             foreach (var x in hospitalPerformanceDatas)
             {
                 HospitalOperatingDataVo hospitalOperatingDataVo = new HospitalOperatingDataVo();
