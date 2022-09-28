@@ -30,7 +30,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 构造函数
         /// </summary>
         /// <param name="hospitalOperationDataService"></param>
-        public HospitalDealItemOperationController(IHospitalDealItemService hospitalDealItemService )
+        public HospitalDealItemOperationController(IHospitalDealItemService hospitalDealItemService)
         {
             this.hospitalDealItemService = hospitalDealItemService;
         }
@@ -44,13 +44,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<List<HospitalDealItemOperationVo>>> GetListAsync(string keyword, string indicatorsId)
+        public async Task<ResultData<List<HospitalDealItemOperationVo>>> GetListAsync(string keyword, string indicatorsId, int hospitalId)
         {
             try
             {
-                var list = await hospitalDealItemService.GetListAsync(keyword,indicatorsId);
+                var list = await hospitalDealItemService.GetListAsync(keyword, indicatorsId, hospitalId);
 
-                List<HospitalDealItemOperationVo> hospitalOperationDataPageInfo = list.Select(e=> new HospitalDealItemOperationVo
+                List<HospitalDealItemOperationVo> hospitalOperationDataPageInfo = list.Select(e => new HospitalDealItemOperationVo
                 {
                     Id = e.Id,
                     HospitalId = e.HospitalId,
@@ -60,8 +60,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                     DealPrice = e.DealPrice,
                     PerformanceRatio = e.PerformanceRatio,
                 }).ToList();
-                
-                
+
+
 
                 return ResultData<List<HospitalDealItemOperationVo>>.Success().AddData("hospitalDealItemData", hospitalOperationDataPageInfo);
             }
@@ -115,9 +115,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                
+
                 HospitalDealItemOperationVo hospitalOperationDataVo = new HospitalDealItemOperationVo();
-                var item=await hospitalDealItemService.GetByIdAsync(id);
+                var item = await hospitalDealItemService.GetByIdAsync(id);
                 hospitalOperationDataVo.Id = item.Id;
                 hospitalOperationDataVo.HospitalId = item.HospitalId;
                 hospitalOperationDataVo.IndicatorId = item.IndicatorId;
@@ -143,7 +143,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxTenantAuthorize]
         public async Task<ResultData> UpdateAsync(HospitalDealItemOperationVo updateVo)
         {
-            try {
+            try
+            {
                 UpdateHospitalDealItemOperationDto updateDto = new UpdateHospitalDealItemOperationDto();
                 updateDto.Id = updateDto.Id;
                 updateDto.HospitalId = updateDto.HospitalId;
@@ -152,7 +153,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.DealCount = updateDto.DealCount;
                 updateDto.DealPrice = updateDto.DealPrice;
                 updateDto.PerformanceRatio = updateDto.PerformanceRatio;
-               await hospitalDealItemService.UpdateAsync(updateDto);
+                await hospitalDealItemService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
             catch (Exception ex)

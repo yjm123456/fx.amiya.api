@@ -53,7 +53,7 @@ namespace Fx.Amiya.Service
                                                      Valid = d.Valid
                                                  };
                 fxPageInfo.TotalCount = hospitalOperationIndicator.Count();
-                fxPageInfo.List = hospitalOperationIndicator.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+                fxPageInfo.List = hospitalOperationIndicator.OrderByDescending(x => x.StartDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
                 return fxPageInfo;
             }
             catch (Exception ex)
@@ -239,7 +239,7 @@ namespace Fx.Amiya.Service
 
         public async Task<List<IndicatorNameList>> GetIndicatorListAsync()
         {
-            var hospitalOperationIndicator = from d in dalHospitalOperationIndicator.GetAll().Where(e => e.Valid == true)
+            var hospitalOperationIndicator = from d in dalHospitalOperationIndicator.GetAll().OrderByDescending(x => x.StartDate).Where(e => e.Valid == true)
                                              select new IndicatorNameList
                                              {
                                                  Id = d.Id,

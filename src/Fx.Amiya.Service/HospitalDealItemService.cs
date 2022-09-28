@@ -11,35 +11,43 @@ using Microsoft.EntityFrameworkCore;
 using Fx.Amiya.DbModels.Model;
 using Fx.Common;
 using Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation;
+using Fx.Infrastructure.DataAccess;
 
 namespace Fx.Amiya.Service
 {
     public class HospitalDealItemService : IHospitalDealItemService
     {
         private IDalHospitalDealItem dalHospitalDealItem;
+        private IIndicatorSendHospitalService indicatorSendHospitalService;
+        private IUnitOfWork unitOfWork;
 
-        public HospitalDealItemService(IDalHospitalDealItem dalHospitalDealItem)
+        public HospitalDealItemService(IDalHospitalDealItem dalHospitalDealItem,
+            IIndicatorSendHospitalService indicatorSendHospitalService,
+            IUnitOfWork unitOfWork)
         {
             this.dalHospitalDealItem = dalHospitalDealItem;
+            this.indicatorSendHospitalService = indicatorSendHospitalService;
+            this.unitOfWork = unitOfWork;
         }
 
-        public async Task<List<HospitalDealItemOperationDto>> GetListAsync(string keyword, string indicatorsId)
+        public async Task<List<HospitalDealItemOperationDto>> GetListAsync(string keyword, string indicatorsId,int hospitalId)
         {
             try
             {
                 var greatHospitalOperationHealth = from d in dalHospitalDealItem.GetAll().Include(x => x.HospitalInfo).Include(x => x.HospitalOperationalIndicator)
                                                    where (keyword == null || d.HospitalInfo.Name.Contains(keyword))
+                                                   && (d.HospitalId == hospitalId)
                                                    && (d.IndicatorId == indicatorsId)
                                                    && (d.Valid == true)
                                                    select new HospitalDealItemOperationDto
                                                    {
                                                        Id = d.Id,
-                                                       HospitalId = d.HospitalId,                                                      
+                                                       HospitalId = d.HospitalId,
                                                        IndicatorId = d.IndicatorId,
                                                        DealItemName = d.ItemName,
                                                        DealCount = d.DealCount,
                                                        DealPrice = d.DealPrice,
-                                                       PerformanceRatio = d.PerformanceRatio,                                          
+                                                       PerformanceRatio = d.PerformanceRatio,
                                                    };
 
                 List<HospitalDealItemOperationDto> hospitalDealItemOperationList = new List<HospitalDealItemOperationDto>();
@@ -56,6 +64,7 @@ namespace Fx.Amiya.Service
 
         public async Task AddAsync(AddHospitalDealItemOperationDto addDto)
         {
+            unitOfWork.BeginTransaction();
             try
             {
                 HospitalDealItem hospitalDealItemOperation = new HospitalDealItem();
@@ -67,12 +76,14 @@ namespace Fx.Amiya.Service
                 hospitalDealItemOperation.ItemName = addDto.DealItemName;
                 hospitalDealItemOperation.DealCount = addDto.DealCount;
                 hospitalDealItemOperation.DealPrice = addDto.DealPrice;
-                hospitalDealItemOperation.PerformanceRatio = addDto.PerformanceRatio;  
+                hospitalDealItemOperation.PerformanceRatio = addDto.PerformanceRatio;
                 await dalHospitalDealItem.AddAsync(hospitalDealItemOperation, true);
+                await indicatorSendHospitalService.UpdateSubmitStateAsync(addDto.IndicatorId, addDto.HospitalId);
+                unitOfWork.Commit();
             }
             catch (Exception ex)
             {
-
+                unitOfWork.RollBack();
                 throw ex;
             }
         }
@@ -115,7 +126,7 @@ namespace Fx.Amiya.Service
                     throw new Exception("优秀机构运营健康指标编号错误");
 
                 hospitalDealItemOperation.HospitalId = updateDto.HospitalId;
-                hospitalDealItemOperation.IndicatorId = updateDto.IndicatorId;              
+                hospitalDealItemOperation.IndicatorId = updateDto.IndicatorId;
                 hospitalDealItemOperation.UpdateDate = DateTime.Now;
                 hospitalDealItemOperation.ItemName = updateDto.DealItemName;
                 hospitalDealItemOperation.DealCount = updateDto.DealCount;

@@ -10,27 +10,35 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Fx.Amiya.DbModels.Model;
 using Fx.Common;
+using Fx.Infrastructure.DataAccess;
 
 namespace Fx.Amiya.Service
 {
     public class HospitalDoctorOperationDataService : IHospitalDoctorOperationDataService
     {
         private IDalHospitalDoctorOperationData dalHospitalDoctorOperationData;
-        public HospitalDoctorOperationDataService(IDalHospitalDoctorOperationData dalHospitalDoctorOperationData)
+        private IIndicatorSendHospitalService indicatorSendHospitalService;
+        private IUnitOfWork unitOfWork;
+        public HospitalDoctorOperationDataService(IDalHospitalDoctorOperationData dalHospitalDoctorOperationData,
+            IIndicatorSendHospitalService indicatorSendHospitalService,
+            IUnitOfWork unitOfWork)
         {
             this.dalHospitalDoctorOperationData = dalHospitalDoctorOperationData;
+            this.indicatorSendHospitalService = indicatorSendHospitalService;
+            this.unitOfWork = unitOfWork;
         }
 
 
 
-        public async Task<List<HospitalDoctorOperationDataDto>> GetListAsync(string keyword, string indicatorsId)
+        public async Task<List<HospitalDoctorOperationDataDto>> GetListAsync(string keyword, string indicatorsId, int hospitalId)
         {
             try
             {
                 var hospitalDoctorOperationData = from d in dalHospitalDoctorOperationData.GetAll().Include(x => x.HospitalInfo).Include(x => x.HospitalOperationalIndicator)
-                                                  where (keyword == null || d.HospitalInfo.Name.Contains(keyword))
+                                                  where (keyword == null || d.HospitalInfo.Name.Contains(keyword)
+                                                  && (d.HospitalId == hospitalId)
                                                   && (d.IndicatorId == indicatorsId)
-                                                  && (d.Valid == true)
+                                                  && (d.Valid == true))
                                                   select new HospitalDoctorOperationDataDto
                                                   {
                                                       Id = d.Id,
@@ -65,6 +73,7 @@ namespace Fx.Amiya.Service
 
         public async Task AddAsync(AddHospitalDoctorOperationDataDto addDto)
         {
+            unitOfWork.BeginTransaction();
             try
             {
                 HospitalDoctorOperationData hospitalDoctorOperationData = new HospitalDoctorOperationData();
@@ -86,10 +95,13 @@ namespace Fx.Amiya.Service
                 hospitalDoctorOperationData.OldCustomerUnitPrice = addDto.OldCustomerUnitPrice;
                 hospitalDoctorOperationData.OldCustomerAchievementRate = addDto.OldCustomerAchievementRate;
                 await dalHospitalDoctorOperationData.AddAsync(hospitalDoctorOperationData, true);
+                await indicatorSendHospitalService.UpdateSubmitStateAsync(addDto.IndicatorId, addDto.HospitalId);
+                unitOfWork.Commit();
             }
             catch (Exception ex)
             {
 
+                unitOfWork.RollBack();
                 throw ex;
             }
         }

@@ -46,11 +46,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<List<HospitalDoctorOperationVo>>> GetListAsync(string keyword, string indicatorsId)
+        public async Task<ResultData<List<HospitalDoctorOperationVo>>> GetListAsync(string keyword, string indicatorsId,int hospitalId)
         {
             try
             {
-                var q = await hospitalDoctorOperationDataService.GetListAsync(keyword, indicatorsId);
+                var q = await hospitalDoctorOperationDataService.GetListAsync(keyword, indicatorsId,hospitalId);
 
                 var hospitalDoctorOperationData = from d in q
                                             select new HospitalDoctorOperationVo

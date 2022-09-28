@@ -59,5 +59,54 @@ namespace Fx.Amiya.Service
             fxPageInfo.List = list.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
             return fxPageInfo;
         }
+
+        /// <summary>
+        /// 修改提交状态
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task UpdateSubmitStateAsync(string IndicatorId, int hospitalId)
+        {
+            try
+            {
+                var greatHospitalOperationHealth = await dalIndicatorSendHospital.GetAll().SingleOrDefaultAsync(e => e.IndicatorId == IndicatorId && e.HospitalId == hospitalId);
+
+                if (greatHospitalOperationHealth == null)
+                    throw new Exception("派发医院编号错误");
+                greatHospitalOperationHealth.UpdateDate = DateTime.Now;
+                greatHospitalOperationHealth.SubmitStatus = true;
+
+                await dalIndicatorSendHospital.UpdateAsync(greatHospitalOperationHealth, true);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        /// <summary>
+        /// 修改批注状态
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task UpdateRemarkStatusAsync(string IndicatorId, int hospitalId)
+        {
+            try
+            {
+                var greatHospitalOperationHealth = await dalIndicatorSendHospital.GetAll().SingleOrDefaultAsync(e => e.IndicatorId == IndicatorId && e.HospitalId == hospitalId);
+
+                if (greatHospitalOperationHealth == null)
+                    throw new Exception("派发医院编号错误");
+                greatHospitalOperationHealth.UpdateDate = DateTime.Now;
+                greatHospitalOperationHealth.RemarkStatus = true;
+
+                await dalIndicatorSendHospital.UpdateAsync(greatHospitalOperationHealth, true);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }
