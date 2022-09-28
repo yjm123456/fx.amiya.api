@@ -1397,9 +1397,38 @@ ADD CONSTRAINT `fk_hospital_operation_indicator_id`
 
 
 
+-----------------------------------------------王健 2022/09/28 BEGIN--------------------------------------------
+
+ALTER TABLE `tbl_indicator_send_hospital`
+	ADD COLUMN `valid` BIT NOT NULL AFTER `remark_status`,
+	ADD COLUMN `create_date` DATETIME NOT NULL AFTER `valid`,
+	ADD COLUMN `update_date` DATETIME NULL AFTER `create_date`,
+	ADD COLUMN `delete_date` DATETIME NULL AFTER `update_date`;
 
 
 
+ CREATE TABLE `tbl_remark` (
+  `id` varchar(100) DEFAULT NULL,
+  `hospital_id` int unsigned DEFAULT NULL,
+  `indicator_id` varchar(100) NOT NULL,
+  `amiya_remark` varchar(500) DEFAULT NULL,
+  `hospital_operation_remark` varchar(50) DEFAULT NULL,
+  `hospital_onlineconsult_remark` varchar(50) DEFAULT NULL,
+  `hospital_consult_remark` varchar(50) DEFAULT NULL,
+  `hospital_doctor_remark` varchar(50) DEFAULT NULL,
+  `hospital_deal_remark` varchar(50) DEFAULT NULL,
+  `amiya_operation_remark` varchar(50) DEFAULT NULL,
+  `amiya_onlineconsult_remark` varchar(50) DEFAULT NULL,
+  `amiya_consult_remark` varchar(50) DEFAULT NULL,
+  `amiya_doctor_remark` varchar(50) DEFAULT NULL,
+  `amiya_deal_remark` varchar(50) DEFAULT NULL,
+  `create_date` datetime NOT NULL,
+  `update_date` datetime DEFAULT NULL,
+  `valid` bit(1) NOT NULL,
+  `delete_date` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+-----------------------------------------------王健 2022/09/28 END--------------------------------------------
 
 
 

@@ -111,6 +111,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 HospitalOperationIndicatorVo hospitalOperationIndicatorVo = new HospitalOperationIndicatorVo();
                 var info = await hospitalOperationIndicatorService.GetByIdAsync(id);
+                hospitalOperationIndicatorVo.Id = info.Id;
                 hospitalOperationIndicatorVo.Name = info.Name;
                 hospitalOperationIndicatorVo.Describe = info.Describe;
                 hospitalOperationIndicatorVo.StartDate = info.StartDate;

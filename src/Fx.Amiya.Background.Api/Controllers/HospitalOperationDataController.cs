@@ -29,9 +29,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 构造函数
         /// </summary>
         /// <param name="hospitalOperationDataService"></param>
-        public HospitalOperationDataController(
-            IHospitalOperationDataService hospitalOperationDataService
-            )
+        public HospitalOperationDataController(IHospitalOperationDataService hospitalOperationDataService)
         {
             this.hospitalOperationDataService = hospitalOperationDataService;
         }

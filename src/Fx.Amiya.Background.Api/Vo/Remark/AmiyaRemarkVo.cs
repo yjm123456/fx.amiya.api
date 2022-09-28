@@ -8,7 +8,7 @@ namespace Fx.Amiya.Background.Api.Vo.Remark
     /// <summary>
     /// 优秀机构批注
     /// </summary>
-    public class ExcellentAmiyaRemarkVo
+    public class AmiyaRemarkVo
     {
         /// <summary>
         /// 运营指标id

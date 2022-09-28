@@ -25,7 +25,7 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<HospitalOperationIndicatorCollectDto>> GetHospitalOperationIndicatorCollectList(string indicatorId, int? hospitalId, int pageNum, int pageSize, bool? isSubmit)
         {
             FxPageInfo<HospitalOperationIndicatorCollectDto> fxPageInfo = new FxPageInfo<HospitalOperationIndicatorCollectDto>();
-            var list = dalIndicatorSendHospital.GetAll().Include(e => e.HospitalInfo).Include(e => e.HospitalOperationalIndicator).Where(e => (indicatorId == null || e.IndicatorId == indicatorId) && (hospitalId == null || e.HospitalId == hospitalId) && e.Valid == true && (isSubmit == null || e.SubmitStatus == isSubmit)).Select(
+            var list = dalIndicatorSendHospital.GetAll().Include(e => e.HospitalInfo).Include(e => e.HospitalOperationalIndicator).Where(e => (indicatorId == null || e.IndicatorId == indicatorId) && (hospitalId == null || e.HospitalId == hospitalId)  && (isSubmit == null || e.SubmitStatus == isSubmit)).Select(
                     e => new HospitalOperationIndicatorCollectDto
                     {
                         HospitalId = e.HospitalId,
