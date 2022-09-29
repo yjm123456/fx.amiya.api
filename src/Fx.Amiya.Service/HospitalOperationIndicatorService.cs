@@ -162,10 +162,8 @@ namespace Fx.Amiya.Service
                 var sendHospitals = dalIndicatorSendHospital.GetAll().Where(e => e.Valid == true && e.IndicatorId == updateDto.Id).Select(e => e.HospitalId).ToList();
                 foreach (var item in sendHospitals)
                 {
-                    var sendHospital = dalIndicatorSendHospital.GetAll().Where(e => e.Valid == true && e.HospitalId == item && e.IndicatorId == updateDto.Id).SingleOrDefault();
-                    sendHospital.Valid = false;
-                    sendHospital.DeleteDate = DateTime.Now;
-                    dalIndicatorSendHospital.Update(sendHospital, true);
+                    var sendHospital = dalIndicatorSendHospital.GetAll().Where(e=> e.HospitalId == item && e.IndicatorId == updateDto.Id).SingleOrDefault();
+                    await dalIndicatorSendHospital.DeleteAsync(sendHospital,true);
                 }
                 List<IndicatorSendHospital> indicatorSendHospitalList = new List<IndicatorSendHospital>();
                 foreach (var item in sendList)
