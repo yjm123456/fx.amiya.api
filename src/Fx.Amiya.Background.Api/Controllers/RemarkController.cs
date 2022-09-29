@@ -16,9 +16,11 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class RemarkController : ControllerBase
     {
         private IRemarkService remarkService;
-        public RemarkController(IRemarkService remarkService)
+        private IIndicatorSendHospitalService indicatorSendHospitalService;
+        public RemarkController(IRemarkService remarkService, IIndicatorSendHospitalService indicatorSendHospitalService)
         {
             this.remarkService = remarkService;
+            this.indicatorSendHospitalService = indicatorSendHospitalService;
         }
 
         #region 优秀机构运营健康指标批注
@@ -63,12 +65,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                     Remark=updateVo.Remark
                 };
                 await remarkService.UpdateAmiyaRemark(updateDto);
-                //AddExpressDto addDto = new AddExpressDto();
-                //addDto.ExpressCode = addVo.ExpressCode;
-                //addDto.ExpressName = addVo.ExpressName;
-                //addDto.Valid = addVo.Valid;
-
-                //await greatHospitalOperationHealthService.AddAsync(addDto);
                 return ResultData.Success();
             }
             catch (Exception ex)

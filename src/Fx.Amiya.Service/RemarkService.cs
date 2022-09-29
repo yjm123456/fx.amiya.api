@@ -14,10 +14,12 @@ namespace Fx.Amiya.Service
     public class RemarkService : IRemarkService
     {
         private readonly IDalRemark dalRemark;
+        private IIndicatorSendHospitalService indicatorSendHospitalService;
 
-        public RemarkService(IDalRemark dalRemark)
+        public RemarkService(IDalRemark dalRemark, IIndicatorSendHospitalService indicatorSendHospitalService)
         {
             this.dalRemark = dalRemark;
+            this.indicatorSendHospitalService = indicatorSendHospitalService;
         }
 
         #region 优秀机构运营健康指标批注
@@ -94,6 +96,7 @@ namespace Fx.Amiya.Service
             {
                 exsit.HospitalConsultRemark = add.HospitalConsultRemark;
                 exsit.AmiyaConsultRemark = add.AmiyaConsultRemark;
+                await indicatorSendHospitalService.UpdateRemarkStatusAsync(add.IndicatorId,add.HospitalId);
                 await dalRemark.UpdateAsync(exsit, true);
             }
         }
@@ -156,6 +159,7 @@ namespace Fx.Amiya.Service
             {
                 exsit.HospitalDealRemark = add.HospitalDealRemark;
                 exsit.AmiyaDealRemark = add.AmiyaDealRemark;
+                await indicatorSendHospitalService.UpdateRemarkStatusAsync(add.IndicatorId, add.HospitalId);
                 await dalRemark.UpdateAsync(exsit, true);
             }
         }

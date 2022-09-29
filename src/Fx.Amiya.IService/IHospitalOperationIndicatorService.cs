@@ -70,7 +70,7 @@ namespace Fx.Amiya.IService
         /// 修改运营指标提报和批注状态
         /// </summary>
         /// <returns></returns>
-        Task UpdateRemarkAndSubmitStatusAsync();
+        Task UpdateRemarkAndSubmitStatusAsync(UpdateSubmitAndRemarkStatus updateDto);
 
     }
 }

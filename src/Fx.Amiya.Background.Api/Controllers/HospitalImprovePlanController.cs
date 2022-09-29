@@ -46,6 +46,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
+
                 AddHospitalImprovePlanDto addDto = new AddHospitalImprovePlanDto() {
                     IndicatorId = addVo.IndicatorId,
                     HospitalId = addVo.HospitalId,

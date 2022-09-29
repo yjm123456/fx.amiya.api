@@ -266,9 +266,13 @@ namespace Fx.Amiya.Service
         /// 修改运营指标提报和批注状态
         /// </summary>
         /// <returns></returns>
-        public Task UpdateRemarkAndSubmitStatusAsync()
+        public async Task UpdateRemarkAndSubmitStatusAsync(UpdateSubmitAndRemarkStatus updateDto)
         {
-            return null;
+            var indicator =await dalHospitalOperationIndicator.GetAll().Where(e=>e.Id==updateDto.Id).SingleOrDefaultAsync();
+            indicator.SubmitStatus = updateDto.SubmitStatus;
+            indicator.RemarkStatus = updateDto.RemarkStatus;
+            indicator.UpdateDate = DateTime.Now;
+            await dalHospitalOperationIndicator.UpdateAsync(indicator,true);
         }
     }
 }

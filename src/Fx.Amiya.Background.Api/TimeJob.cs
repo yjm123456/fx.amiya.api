@@ -18,6 +18,7 @@ using Fx.Amiya.Core.Dto.Goods;
 using Fx.Amiya.SyncOrder.TikTok;
 using Fx.Amiya.Dto.TikTokOrder;
 using Microsoft.Extensions.DependencyInjection;
+using Fx.Amiya.Dto.HospitalOperationIndicator;
 
 namespace Fx.Amiya.Background.Api
 {
@@ -217,9 +218,15 @@ namespace Fx.Amiya.Background.Api
                 foreach (var indicator in indicatorList)
                 {
                     var status= await indicatorSendToHospital.SubmitAndRemarkStatusAsync(indicator.Id);
+                    UpdateSubmitAndRemarkStatus update = new UpdateSubmitAndRemarkStatus(); 
                     if (status.RemarkStatus==true) {
-                        
+                        update.RemarkStatus = true;
                     }
+                    if (status.SumbitStatus==true) {
+                        update.SubmitStatus = true;
+                    }
+                    update.Id = indicator.Id;
+                    await hospitalOperationIndicator.UpdateRemarkAndSubmitStatusAsync(update);
                 }
             }
         }
