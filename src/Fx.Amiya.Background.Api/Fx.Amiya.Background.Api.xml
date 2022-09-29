@@ -6146,6 +6146,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.TimeJob.HandleOperationIndicatorAsync">
+            <summary>
+            修改运营指标提报/批注状态
+            </summary>
+            <returns></returns>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.Activity.ActivityInfoSimpleVo.Id">
             <summary>
             活动编号
