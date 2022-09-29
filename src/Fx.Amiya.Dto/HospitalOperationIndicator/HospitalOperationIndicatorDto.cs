@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Dto.HospitalOperationIndicator
 {
-    public class HospitalOperationIndicatorDto:BaseDto
+    public class HospitalOperationIndicatorDto : BaseDto
     {
         public string Name { get; set; }
         /// <summary>
@@ -38,7 +38,8 @@ namespace Fx.Amiya.Dto.HospitalOperationIndicator
         /// </summary>
         public List<HospitalNameListDto> SendHospital { get; set; }
     }
-    public class HospitalNameListDto {
+    public class HospitalNameListDto
+    {
         public int HospitalId { get; set; }
         public string HospitalName { get; set; }
     }

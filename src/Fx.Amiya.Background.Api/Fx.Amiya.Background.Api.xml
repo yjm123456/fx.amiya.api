@@ -3118,11 +3118,11 @@
             机构指标数据汇总
             </summary>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalOperationIndicatorCollectController.#ctor">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalOperationIndicatorCollectController.#ctor(Fx.Amiya.IService.IIndicatorSendHospitalService)">
             <summary>
             构造函数
             </summary>
-            <param name="hospitalOperationDataService"></param>
+            <param name="indicatorSendHospitalService"></param>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalOperationIndicatorCollectController.GetListAsync(System.String,System.Nullable{System.Int32},System.Int32,System.Int32)">
             <summary>

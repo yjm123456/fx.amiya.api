@@ -19,7 +19,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<List<HospitalDealItemOperationDto>> GetListAsync(string keyword, string indicatorsId);
+        Task<List<HospitalDealItemOperationDto>> GetListAsync(string keyword, string indicatorsId, int hospitalId);
 
         /// <summary>
         /// 添加

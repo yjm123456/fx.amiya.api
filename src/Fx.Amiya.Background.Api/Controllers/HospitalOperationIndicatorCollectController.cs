@@ -28,10 +28,21 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private IIndicatorSendHospitalService _indicatorSendHospitalService;
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="indicatorSendHospitalService"></param>
         public HospitalOperationIndicatorCollectController(IIndicatorSendHospitalService indicatorSendHospitalService)
         {
             _indicatorSendHospitalService = indicatorSendHospitalService;
         }
+
+        //public HospitalOperationIndicatorCollectController(
+        //    // IHospitalNetWorkConsulationOperationDataService hospitalOperationDataService
+        //    )
+        //{
+        //    //this.hospitalOperationDataService = hospitalOperationDataService;
+        //}
         /// <summary>
         /// 获取指标数据汇总列表
         /// </summary>

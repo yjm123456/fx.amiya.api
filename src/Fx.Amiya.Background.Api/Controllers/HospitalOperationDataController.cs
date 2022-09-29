@@ -48,7 +48,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var q = await hospitalOperationDataService.GetListAsync(keyword, indicatorsId);
+                var q = await hospitalOperationDataService.GetListAsync(keyword, indicatorsId,hospitalId);
 
                 var hospitalOperationData = from d in q
                                             select new HospitalOperationDataVo
