@@ -49,14 +49,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 AddHospitalImprovePlanDto addDto = new AddHospitalImprovePlanDto() {
                     IndicatorId = addVo.IndicatorId,
                     HospitalId = addVo.HospitalId,
-                    HospitalImprovePlan = addVo.HospitalImprovePlan,
-                    AmiyaImprovePlanRemark = addVo.AmiyaImprovePlanRemark,
-                    HospitalShareSuccessCase = addVo.HospitalShareSuccessCase,
-                    AmiyaShareSuccessCase = addVo.AmiyaShareSuccessCase,
-                    ImproveSuggestionToAmiya = addVo.ImproveSuggestionToAmiya,
-                    AmiyaImproveSuggestionRemark = addVo.AmiyaImproveSuggestionRemark,
-                    ImproveDemandToAmiya = addVo.ImproveDemandToAmiya,
-                    AmiyaImproveDemandRemark = addVo.AmiyaImproveDemandRemark
+                    HospitalImprovePlan = addVo.HospitalImprovePlan,                    
+                    HospitalShareSuccessCase = addVo.HospitalShareSuccessCase,                   
+                    ImproveSuggestionToAmiya = addVo.ImproveSuggestionToAmiya,                   
+                    ImproveDemandToAmiya = addVo.ImproveDemandToAmiya                   
                 };
                 await hospitalImprovePlanRemarkService.AddHospitalImprovePlan(addDto);
                 return ResultData.Success();

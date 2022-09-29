@@ -1086,7 +1086,7 @@ CREATE TABLE `tbl_indicator_send_hospital` (
 
 --批注表
  CREATE TABLE `tbl_remark` (
-  `id` varchar(100) DEFAULT NULL,
+  `id` varchar(100) NOT NULL,
   `hospital_id` int unsigned DEFAULT NULL,
   `indicator_id` varchar(100) NOT NULL,
   `amiya_remark` varchar(500) DEFAULT NULL,
