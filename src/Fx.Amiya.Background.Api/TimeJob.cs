@@ -17,6 +17,7 @@ using System.Threading;
 using Fx.Amiya.Core.Dto.Goods;
 using Fx.Amiya.SyncOrder.TikTok;
 using Fx.Amiya.Dto.TikTokOrder;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Fx.Amiya.Background.Api
 {
@@ -33,12 +34,13 @@ namespace Fx.Amiya.Background.Api
         private IMemberRankInfo memberRankInfoService;
         private IBindCustomerServiceService _bindCustomerService;
         private ITikTokOrderInfoService _tikTokOrderInfoService;
+        private IServiceProvider _serviceProvider;
         public TimeJob(IOrderService orderService, ISyncOrder syncOrder, ISyncWeiFenXiaoOrder syncWeiFenXiaoOrder, FxAppGlobal fxAppGlobal, IBindCustomerServiceService bindCustomerService,
           IIntegrationAccount integrationAccountService,
             ICustomerService customerService,
              IMemberCard memberCardService,
              ISyncTikTokOrder syncTikTokOrder,
-             IMemberRankInfo memberRankInfoService, ITikTokOrderInfoService tokOrderInfoService)
+             IMemberRankInfo memberRankInfoService, ITikTokOrderInfoService tokOrderInfoService, IServiceProvider serviceProvider)
         {
             this.orderService = orderService;
             this.syncOrder = syncOrder;
@@ -51,6 +53,7 @@ namespace Fx.Amiya.Background.Api
             this.memberRankInfoService = memberRankInfoService;
             _bindCustomerService = bindCustomerService;
             _tikTokOrderInfoService = tokOrderInfoService;
+            _serviceProvider = serviceProvider;
         }
 
 
@@ -201,8 +204,16 @@ namespace Fx.Amiya.Background.Api
             }
 
         }
-
-
+        /// <summary>
+        /// 修改运营指标提报/批注状态
+        /// </summary>
+        /// <returns></returns>
+        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 5, SkipWhileExecuting = true)]
+        public async Task HandleOperationIndicatorAsync() {
+            using (var scope= _serviceProvider.CreateScope()) {
+                //var hospitalOperationIndicator = scope.ServiceProvider.GetService<>();
+            }
+        }
 
     }
 }

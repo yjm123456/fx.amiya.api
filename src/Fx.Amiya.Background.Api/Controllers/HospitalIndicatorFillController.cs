@@ -46,15 +46,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
-        [FxInternalOrTenantAuthroize]
+        [FxTenantAuthorize]
         public async Task<ResultData<FxPageInfo<HospitalIndicatorFillVo>>> GetListAsync(bool? submit, int pageNum, int pageSize)
         {
             FxPageInfo<HospitalIndicatorFillVo> fxPageInfo = new FxPageInfo<HospitalIndicatorFillVo>();
             try
             {
-                //var employee = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
-                //int hospitalId = employee.HospitalId;
-                var list = await _indicatorSendHospitalService.GetHospitalOperationIndicatorFillList(2, pageNum, pageSize, submit);
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+                int hospitalId = employee.HospitalId;
+                var list = await _indicatorSendHospitalService.GetHospitalOperationIndicatorFillList(hospitalId, pageNum, pageSize, submit);
                 fxPageInfo.TotalCount = list.TotalCount;
                 fxPageInfo.List = list.List.Select(e => new HospitalIndicatorFillVo
                 {
