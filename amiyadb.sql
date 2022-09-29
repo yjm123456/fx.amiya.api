@@ -703,176 +703,6 @@ CREATE TABLE `amiyadb`.`goods_member_rank_price` (
 
 
 
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-------------------------------------------------------------------------------------------------------小程序---------------------------------------------------------------------------
-
-
-
------------------------------------------------王健 2022/08/22 START--------------------------------------------
-
-
-
-
-
-
-
-
-
-
---用户拥有的抵用券
-CREATE TABLE `tbl_customer_consumption_voucher` (
-  `id` varchar(100) NOT NULL,
-  `customer_id` varchar(100) NOT NULL,
-  `consumption_voucher_id` varchar(100) NOT NULL,
-  `is_used` bit(1) NOT NULL DEFAULT b'0',
-  `expire_date` datetime DEFAULT NULL,
-  `is_expire` bit(1) NOT NULL,
-  `create_date` datetime NOT NULL,
-  `use_date` datetime DEFAULT NULL,
-  `source` int NOT NULL DEFAULT '0',
-  `share_by` varchar(100) DEFAULT NULL,
-  `write_of_code` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-
-
-
---用户成长值账号
-CREATE TABLE `tbl_growth_points_account` (
-  `customer_id` varchar(100) NOT NULL,
-  `balance` decimal(10,2) NOT NULL DEFAULT '0.00',
-  PRIMARY KEY (`customer_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-
-
-
---用户成长值记录
-CREATE TABLE `tbl_growth_points_record` (
-  `id` varchar(100) NOT NULL,
-  `quantity` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `type` int NOT NULL DEFAULT '0',
-  `customer_id` varchar(100) NOT NULL,
-  `order_id` varchar(100) DEFAULT NULL,
-  `create_date` datetime NOT NULL,
-  `expire_date` datetime DEFAULT NULL,
-  `is_expire` bit(1) NOT NULL DEFAULT b'0',
-  `account_balance` decimal(10,2) NOT NULL DEFAULT '0.00',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
---用户余额账号表
-CREATE TABLE `tbl_customer_balance_account` (
-  `customer_id` varchar(100) NOT NULL,
-  `balance` decimal(10,2) NOT NULL DEFAULT '0.00',
-  PRIMARY KEY (`customer_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---用户充值记录
-CREATE TABLE `tbl_customer_balance_recharge_record` (
-  `id` varchar(100) NOT NULL,
-  `customer_id` varchar(100) NOT NULL,
-  `exchage_type` int NOT NULL DEFAULT '0',
-  `recharge_amount` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `order_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `status` int NOT NULL DEFAULT '0',
-  `recharge_date` datetime NOT NULL,
-  `balance` decimal(10,2) NOT NULL,
-  `complete_date` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `order_id` (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
---用户余额
-CREATE TABLE `tbl_customer_balance_use_record` (
-  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `amount` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `create_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `order_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
-  `balance` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `use_type` int NOT NULL DEFAULT '0',
-  `customer_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-----储值赠送规则
-CREATE TABLE `tbl_recharge_reward_rule` (
-  `id` varchar(100) NOT NULL,
-  `min_amount` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `give_integration` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `give_money` decimal(10,2) NOT NULL DEFAULT '0.00',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-----充值金额
-CREATE TABLE `tbl_recharge_amount` (
-  `id` varchar(100) NOT NULL,
-  `amount` decimal(10,2) NOT NULL DEFAULT '0.00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-;
-
-
-----成长值获取规则
-CREATE TABLE `tbl_growth_points_rule` (
-  `id` varchar(100) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `reward_quantity` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `task_code` varchar(100) NOT NULL,
-  `type` int NOT NULL DEFAULT '0',
-  `reward_quantity_percent` decimal(10,2) NOT NULL DEFAULT '0.00',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
------------------------------------------------王健 2022/08/22 END--------------------------------------------
-
-
-
-
- 
-
-
 
  -----------------------------------------------王健 2022/09/27 BEGIN--------------------------------------------
 
@@ -912,6 +742,8 @@ CREATE TABLE `tbl_indicator_send_hospital` (
 
 
 -----------------------------------------------王健 2022/09/27 END--------------------------------------------
+
+
 
  -----------------------------------------------余建明 2022/09/27 BEGIN--------------------------------------------
 
@@ -1109,7 +941,7 @@ CREATE TABLE `tbl_indicator_send_hospital` (
 
 --机构提升计划
 CREATE TABLE `tbl_hospital_improve_plan_remark` (
-  `id` varchar(50) DEFAULT NULL,
+  `id` varchar(50) NOT NULL,
   `indicator_id` varchar(100) NOT NULL,
   `hospital_id` int unsigned NOT NULL,
   `create_date` datetime NOT NULL,
@@ -1133,7 +965,7 @@ CREATE TABLE `tbl_hospital_improve_plan_remark` (
 
 
 
---成交
+--成交品项
 CREATE TABLE `tbl_hospital_deal_item` (
   `id` varchar(50) NOT NULL,
   `indicator_id` varchar(100)  NOT NULL,
@@ -1158,6 +990,178 @@ CREATE TABLE `tbl_hospital_deal_item` (
 
 
 
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------小程序---------------------------------------------------------------------------
+
+
+
+-----------------------------------------------王健 2022/08/22 START--------------------------------------------
+
+
+
+
+
+
+
+
+
+
+--用户拥有的抵用券
+CREATE TABLE `tbl_customer_consumption_voucher` (
+  `id` varchar(100) NOT NULL,
+  `customer_id` varchar(100) NOT NULL,
+  `consumption_voucher_id` varchar(100) NOT NULL,
+  `is_used` bit(1) NOT NULL DEFAULT b'0',
+  `expire_date` datetime DEFAULT NULL,
+  `is_expire` bit(1) NOT NULL,
+  `create_date` datetime NOT NULL,
+  `use_date` datetime DEFAULT NULL,
+  `source` int NOT NULL DEFAULT '0',
+  `share_by` varchar(100) DEFAULT NULL,
+  `write_of_code` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+
+
+--用户成长值账号
+CREATE TABLE `tbl_growth_points_account` (
+  `customer_id` varchar(100) NOT NULL,
+  `balance` decimal(10,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`customer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+
+
+--用户成长值记录
+CREATE TABLE `tbl_growth_points_record` (
+  `id` varchar(100) NOT NULL,
+  `quantity` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `type` int NOT NULL DEFAULT '0',
+  `customer_id` varchar(100) NOT NULL,
+  `order_id` varchar(100) DEFAULT NULL,
+  `create_date` datetime NOT NULL,
+  `expire_date` datetime DEFAULT NULL,
+  `is_expire` bit(1) NOT NULL DEFAULT b'0',
+  `account_balance` decimal(10,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+--用户余额账号表
+CREATE TABLE `tbl_customer_balance_account` (
+  `customer_id` varchar(100) NOT NULL,
+  `balance` decimal(10,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`customer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--用户充值记录
+CREATE TABLE `tbl_customer_balance_recharge_record` (
+  `id` varchar(100) NOT NULL,
+  `customer_id` varchar(100) NOT NULL,
+  `exchage_type` int NOT NULL DEFAULT '0',
+  `recharge_amount` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `order_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `status` int NOT NULL DEFAULT '0',
+  `recharge_date` datetime NOT NULL,
+  `balance` decimal(10,2) NOT NULL,
+  `complete_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `order_id` (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+--用户余额
+CREATE TABLE `tbl_customer_balance_use_record` (
+  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `amount` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `create_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `order_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
+  `balance` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `use_type` int NOT NULL DEFAULT '0',
+  `customer_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+----储值赠送规则
+CREATE TABLE `tbl_recharge_reward_rule` (
+  `id` varchar(100) NOT NULL,
+  `min_amount` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `give_integration` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `give_money` decimal(10,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+----充值金额
+CREATE TABLE `tbl_recharge_amount` (
+  `id` varchar(100) NOT NULL,
+  `amount` decimal(10,2) NOT NULL DEFAULT '0.00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+;
+
+
+----成长值获取规则
+CREATE TABLE `tbl_growth_points_rule` (
+  `id` varchar(100) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `reward_quantity` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `task_code` varchar(100) NOT NULL,
+  `type` int NOT NULL DEFAULT '0',
+  `reward_quantity_percent` decimal(10,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+-----------------------------------------------王健 2022/08/22 END--------------------------------------------
+
+
+
+
+ 
 
 
 
