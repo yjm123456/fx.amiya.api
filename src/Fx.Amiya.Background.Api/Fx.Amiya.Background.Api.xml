@@ -2599,7 +2599,7 @@
             </summary>
             <param name="hospitalOperationDataService"></param>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDealItemOperationController.GetListAsync(System.String,System.String)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDealItemOperationController.GetListAsync(System.String,System.String,System.Int32)">
             <summary>
             获取机构成交品项分析信息列表
             </summary>
@@ -2646,7 +2646,7 @@
             </summary>
             <param name="hospitalDoctorOperationDataService"></param>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDoctorOperationController.GetListAsync(System.String,System.String)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDoctorOperationController.GetListAsync(System.String,System.String,System.Int32)">
             <summary>
             获取医生运营数据分析板块信息列表
             </summary>
@@ -2862,7 +2862,7 @@
             机构运营提升计划板块数据接口
             </summary>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalImprovePlanController.#ctor">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalImprovePlanController.#ctor(Fx.Amiya.IService.IHospitalImprovePlanRemarkService)">
             <summary>
             构造函数
             </summary>
