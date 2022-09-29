@@ -211,7 +211,16 @@ namespace Fx.Amiya.Background.Api
         [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 5, SkipWhileExecuting = true)]
         public async Task HandleOperationIndicatorAsync() {
             using (var scope= _serviceProvider.CreateScope()) {
-                //var hospitalOperationIndicator = scope.ServiceProvider.GetService<>();
+                var hospitalOperationIndicator = scope.ServiceProvider.GetService<IHospitalOperationIndicatorService>();
+                var indicatorSendToHospital = scope.ServiceProvider.GetService<IIndicatorSendHospitalService>();
+                var indicatorList =await hospitalOperationIndicator.GetUnSumbitAndUnRemarkIndicatorAsync();
+                foreach (var indicator in indicatorList)
+                {
+                    var status= await indicatorSendToHospital.SubmitAndRemarkStatusAsync(indicator.Id);
+                    if (status.RemarkStatus==true) {
+                        
+                    }
+                }
             }
         }
 

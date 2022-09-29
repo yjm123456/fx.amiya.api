@@ -246,5 +246,29 @@ namespace Fx.Amiya.Service
 
             return await hospitalOperationIndicator.ToListAsync();
         }
+        /// <summary>
+        /// 获取未提报/未批注的运营指标
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<OperationIndicatorSubmitAndRemarkDto>> GetUnSumbitAndUnRemarkIndicatorAsync()
+        {
+            var month = DateTime.Now.Month;
+            var startDate = new DateTime(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month,1);
+            var endDate = new DateTime(DateTime.Now.AddMonths(1).Year, DateTime.Now.AddMonths(1).Month,1);
+            var indicatorList= dalHospitalOperationIndicator.GetAll().Where(e=>e.Valid==true&&e.StartDate>=startDate&&endDate<=endDate).Select(e=>new OperationIndicatorSubmitAndRemarkDto {
+                Id=e.Id,
+                SubmitStatus=e.SubmitStatus,
+                RemarkStatus=e.RemarkStatus
+            }).ToList();
+            return indicatorList;
+        }
+        /// <summary>
+        /// 修改运营指标提报和批注状态
+        /// </summary>
+        /// <returns></returns>
+        public Task UpdateRemarkAndSubmitStatusAsync()
+        {
+            return null;
+        }
     }
 }

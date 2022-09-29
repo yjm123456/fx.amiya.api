@@ -61,6 +61,16 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<IndicatorNameList>> GetIndicatorListAsync();
+        /// <summary>
+        /// 获取未提报/未批注的运营指标
+        /// </summary>
+        /// <returns></returns>
+        Task<List<OperationIndicatorSubmitAndRemarkDto>> GetUnSumbitAndUnRemarkIndicatorAsync();
+        /// <summary>
+        /// 修改运营指标提报和批注状态
+        /// </summary>
+        /// <returns></returns>
+        Task UpdateRemarkAndSubmitStatusAsync();
 
     }
 }

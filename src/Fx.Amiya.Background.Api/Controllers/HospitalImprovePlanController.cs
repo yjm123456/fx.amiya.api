@@ -40,7 +40,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
-        [FxTenantAuthorize]
+        [FxInternalOrTenantAuthroize]
         [HttpPost]
         public async Task<ResultData> AddAsync(AddHospitalImprovePlanVo addVo)
         {
@@ -49,10 +49,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 AddHospitalImprovePlanDto addDto = new AddHospitalImprovePlanDto() {
                     IndicatorId = addVo.IndicatorId,
                     HospitalId = addVo.HospitalId,
-                    HospitalImprovePlan = addVo.HospitalImprovePlan,                    
-                    HospitalShareSuccessCase = addVo.HospitalShareSuccessCase,                   
-                    ImproveSuggestionToAmiya = addVo.ImproveSuggestionToAmiya,                   
-                    ImproveDemandToAmiya = addVo.ImproveDemandToAmiya                   
+                    HospitalImprovePlan = addVo.HospitalImprovePlan,
+                    AmiyaImprovePlanRemark = addVo.AmiyaImprovePlanRemark,
+                    HospitalShareSuccessCase = addVo.HospitalShareSuccessCase,
+                    AmiyaShareSuccessCase = addVo.AmiyaShareSuccessCase,
+                    ImproveSuggestionToAmiya = addVo.ImproveSuggestionToAmiya,
+                    AmiyaImproveSuggestionRemark = addVo.AmiyaImproveSuggestionRemark,
+                    ImproveDemandToAmiya = addVo.ImproveDemandToAmiya,
+                    AmiyaImproveDemandRemark = addVo.AmiyaImproveDemandRemark
                 };
                 await hospitalImprovePlanRemarkService.AddHospitalImprovePlan(addDto);
                 return ResultData.Success();
