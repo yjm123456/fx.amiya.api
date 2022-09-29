@@ -1124,6 +1124,7 @@ CREATE TABLE `tbl_hospital_improve_plan_remark` (
   `amiya_improve_suggestion_remark` varchar(500) DEFAULT NULL,
   `improve_demand_to_Amiya` varchar(500) DEFAULT NULL,
   `amiya_improve_demand_remark` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`),
   KEY `fk_hospital_improve_hospitalId_hospitalinfo_id` (`hospital_id`),
   KEY `fk_hospital_improve_indicator_id_indicator_id` (`indicator_id`),
   CONSTRAINT `fk_hospital_improve_hospitalId_hospitalinfo_id` FOREIGN KEY (`hospital_id`) REFERENCES `tbl_hospital_info` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,

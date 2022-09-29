@@ -9,6 +9,8 @@ namespace Fx.Amiya.IService
 {
     public interface IRemarkService
     {
+        #region 优秀机构批注
+
         /// <summary>
         /// 获取优秀机构批注
         /// </summary>
@@ -28,14 +30,18 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task UpdateAmiyaRemark(UpdateAmiyaRemarkDto update);
 
+        #endregion
 
+
+
+        #region 机构运营数据批注
 
         /// <summary>
         /// 获取机构运营数据批注
         /// </summary>
         /// <param name="indicatorId"></param>
         /// <returns></returns>
-        Task<HospitalOperationRemarkDto> GetHospitalOperationRemark(string indicatorId,int hospitalId);
+        Task<HospitalOperationRemarkDto> GetHospitalOperationRemark(string indicatorId, int hospitalId);
         /// <summary>
         /// 添加机构运营批注
         /// </summary>
@@ -49,8 +55,11 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task UpdateHospitalOperationRemark(UpdateHospitalOperationRemarkDto update);
 
+        #endregion
 
 
+
+        #region 机构咨询师运营数据批注
         /// <summary>
         /// 获取机构咨询师运营数据批注
         /// </summary>
@@ -69,9 +78,11 @@ namespace Fx.Amiya.IService
         /// <param name="indicatorId"></param>
         /// <returns></returns>
         Task UpdateHospitalConsultRemark(UpdateHospitalConsultRemarkDto update);
+        #endregion
 
 
 
+        #region 机构网咨运营数据批注
         /// <summary>
         /// 获取机构网咨运营数据批注
         /// </summary>
@@ -90,10 +101,12 @@ namespace Fx.Amiya.IService
         /// <param name="indicatorId"></param>
         /// <returns></returns>
         Task UpdateHospitalOnlineConsultRemark(UpdateHospitalOnlineConsultRemarkDto update);
+        #endregion
 
 
 
 
+        #region 机构医生运营数据批注
         /// <summary>
         /// 获取机构医生运营数据批注
         /// </summary>
@@ -112,10 +125,12 @@ namespace Fx.Amiya.IService
         /// <param name="indicatorId"></param>
         /// <returns></returns>
         Task UpdateHospitalDoctorRemark(UpdateHospitalDoctorRemarkDto update);
+        #endregion
 
 
 
 
+        #region 机构成交品项运营数据批注
         /// <summary>
         /// 获取机构成交品项运营数据批注
         /// </summary>
@@ -134,6 +149,7 @@ namespace Fx.Amiya.IService
         /// <param name="indicatorId"></param>
         /// <returns></returns>
         Task UpdateHospitalDealRemark(UpdateHospitalDealRemarkDto update);
+        #endregion
 
     }
 }

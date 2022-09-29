@@ -44,7 +44,7 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<HospitalIndicatorFillDto>> GetHospitalOperationIndicatorFillList(int? hospitalId, int pageNum, int pageSize, bool? isSumbit)
         {
             FxPageInfo<HospitalIndicatorFillDto> fxPageInfo = new FxPageInfo<HospitalIndicatorFillDto>();
-            var list = dalIndicatorSendHospital.GetAll().Include(e => e.HospitalInfo).Include(e => e.HospitalOperationalIndicator).Where(e => (hospitalId == null || e.HospitalId == hospitalId) && e.Valid == true && e.HospitalOperationalIndicator.Valid == true && e.HospitalOperationalIndicator.Valid == true && (isSumbit == null || e.SubmitStatus == isSumbit)).Select(
+            var list = dalIndicatorSendHospital.GetAll().Include(e => e.HospitalInfo).Include(e => e.HospitalOperationalIndicator).Where(e => (hospitalId == null || e.HospitalId == hospitalId) && e.Valid == true && e.HospitalOperationalIndicator.Valid == true  && (isSumbit == null || e.SubmitStatus == isSumbit)).Select(
                     e => new HospitalIndicatorFillDto
                     {
                         HospitalId = e.HospitalId,
