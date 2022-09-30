@@ -2890,13 +2890,6 @@
             <param name="updateVo"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalImprovePlanController.DeleteAsync(System.String)">
-            <summary>
-            删除机构提升计划
-            </summary>
-            <param name="id">提升计划id</param>
-            <returns></returns>
-        </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalIndicatorFillController">
             <summary>
             医院指标数据填报列表接口
@@ -5178,13 +5171,6 @@
             <param name="addVo"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.UpdateAmiyaRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.UpdateAmiyaRemarkVo)">
-            <summary>
-            修改优秀机构运营健康批注
-            </summary>
-            <param name="addVo"></param>
-            <returns></returns>
-        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.GetAmiyaRemarkByIdAsync(System.String)">
             <summary>
             获取优秀机构运营健康啊美雅批注
@@ -5195,13 +5181,6 @@
         <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.AddHospitalOperationRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.AddHospitalOperationRemarkVo)">
             <summary>
             添加机构运营数据批注
-            </summary>
-            <param name="addVo"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.UpdateHospitalOperationRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalOperationRemarkVo)">
-            <summary>
-            修改机构运营数据批注
             </summary>
             <param name="addVo"></param>
             <returns></returns>
@@ -5220,13 +5199,6 @@
             <param name="addVo"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.UpdateHospitalOnlineConsultRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalOnlineConsultRemarkVo)">
-            <summary>
-            修改机构网咨运营数据分析批注
-            </summary>
-            <param name="addVo"></param>
-            <returns></returns>
-        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.GetHospitalOnlineConsultRemarkAsync(System.String,System.Int32)">
             <summary>
             获取机构网咨运营数据分析批注
@@ -5237,13 +5209,6 @@
         <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.AddHospitalConsultRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.AddHospitalConsultRemarkVo)">
             <summary>
             添加机构咨询师运营数据分析批注
-            </summary>
-            <param name="addVo"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.UpdateHospitalConsultRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalConsultRemarkVo)">
-            <summary>
-            修改机构咨询师运营数据分析批注
             </summary>
             <param name="addVo"></param>
             <returns></returns>
@@ -5262,13 +5227,6 @@
             <param name="addVo"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.UpdateHospitalDoctorRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalDoctorRemarkVo)">
-            <summary>
-            修改机构医生运营数据分析
-            </summary>
-            <param name="addVo"></param>
-            <returns></returns>
-        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.GetHospitalDoctorRemarkByIdAsync(System.String,System.Int32)">
             <summary>
             获取机构医生运营数据分析
@@ -5279,13 +5237,6 @@
         <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.AddHospitalDealRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.AddHospitalDealRemarkVo)">
             <summary>
             添加机构成交品项数据分析批注
-            </summary>
-            <param name="addVo"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.RemarkController.UpdateHospitalDealRemarkAsync(Fx.Amiya.Background.Api.Vo.Remark.UpdateHospitalDealRemarkVo)">
-            <summary>
-            修改机构成交品项数据分析批注
             </summary>
             <param name="addVo"></param>
             <returns></returns>
@@ -6148,7 +6099,7 @@
         </member>
         <member name="M:Fx.Amiya.Background.Api.TimeJob.HandleOperationIndicatorAsync">
             <summary>
-            修改运营指标提报/批注状态
+            修改运营指标提报/批注状态(一个星期运行一次)
             </summary>
             <returns></returns>
         </member>
