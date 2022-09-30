@@ -53,7 +53,7 @@ namespace Fx.Amiya.Service
         private IContentPlatformService contentPlatFormService;
         private IOrderCheckPictureService _orderCheckPictureService;
         private IDalBindCustomerService dalBindCustomerService;
-        private IBindCustomerServiceService _bindCustomerServiceService;
+        private IBindCustomerServiceService _bindCustomerService;
         private ILiveAnchorService liveAnchorService;
         private IDalAmiyaEmployee dalAmiyaEmployee;
         private ICustomerService customerService;
@@ -80,7 +80,7 @@ namespace Fx.Amiya.Service
             IDalCustomerInfo dalCustomerInfo,
             IUnitOfWork unitOfWork,
             IWxAppConfigService wxAppConfigService,
-            IBindCustomerServiceService bindCustomerServiceService,
+            IBindCustomerServiceService bindCustomerService,
             IContentPlatformService contentPlatFormService,
              IMemberCard memberCardService,
             ICustomerService customerService,
@@ -109,7 +109,7 @@ namespace Fx.Amiya.Service
             this.unitOfWork = unitOfWork;
             this.dalBindCustomerService = dalBindCustomerService;
             this.dalAmiyaEmployee = dalAmiyaEmployee;
-            _bindCustomerServiceService = bindCustomerServiceService;
+            _bindCustomerService = bindCustomerService;
             this.contentPlatFormService = contentPlatFormService;
             this.liveAnchorService = liveAnchorService;
             this.customerService = customerService;
@@ -1112,7 +1112,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
-                
+
             }
 
         }
@@ -1184,6 +1184,46 @@ namespace Fx.Amiya.Service
                 orderInfo.WriteOffDate = WriteOffDate;
             }
             await dalOrderInfo.UpdateAsync(orderInfo, true);
+            List<ConsumptionIntegrationDto> consumptionIntegrationList = new List<ConsumptionIntegrationDto>();
+            if (orderInfo.StatusCode == "TRADE_FINISHED" && orderInfo.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(orderInfo.Phone))
+            {
+
+                bool isIntegrationGenerateRecord = await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAsync(orderInfo.Id);
+                if (isIntegrationGenerateRecord == true)
+                {
+                    var customerId = await customerService.GetCustomerIdByPhoneAsync(orderInfo.Phone);
+                    if (!string.IsNullOrWhiteSpace(customerId))
+                    {
+                        ConsumptionIntegrationDto consumptionIntegration = new ConsumptionIntegrationDto();
+                        consumptionIntegration.CustomerId = customerId;
+                        consumptionIntegration.OrderId = orderInfo.Id;
+                        consumptionIntegration.AmountOfConsumption = (decimal)orderInfo.ActualPayment;
+                        consumptionIntegration.Date = orderInfo.WriteOffDate.Value;
+
+                        var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(customerId);
+                        if (memberCard != null)
+                        {
+                            consumptionIntegration.Quantity = Math.Floor(memberCard.GenerateIntegrationPercent * (decimal)orderInfo.ActualPayment);
+                            consumptionIntegration.Percent = memberCard.GenerateIntegrationPercent;
+                        }
+                        else
+                        {
+                            var memberRank = await memberRankInfoService.GetMinGeneratePercentMemberRankInfoAsync();
+                            consumptionIntegration.Quantity = Math.Floor(memberRank.GenerateIntegrationPercent * (decimal)orderInfo.ActualPayment);
+                            consumptionIntegration.Percent = memberRank.GenerateIntegrationPercent;
+
+                        }
+
+                        if (consumptionIntegration.Quantity > 0)
+                            consumptionIntegrationList.Add(consumptionIntegration);
+                        var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(orderInfo.Phone);
+                        if (findInfo != 0)
+                        {
+                            await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
+                        }
+                    }
+                }
+            }
             //退款扣除积分
             if (OrderStatus == "TRADE_CLOSED" || OrderStatus == "TRADE_CLOSED_BY_TAOBAO")
             {
@@ -1282,7 +1322,7 @@ namespace Fx.Amiya.Service
                 orderInfo.UpdateDate = DateTime.Now;
                 await dalOrderInfo.UpdateAsync(orderInfo, true);
 
-                await _bindCustomerServiceService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
+                await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
             }
             catch (Exception e)
             {
@@ -1418,8 +1458,8 @@ namespace Fx.Amiya.Service
                              ActualPayment = d.ActualPayment.Value,
                              Phone = d.Phone,
                              Quantity = d.Quantity.Value,
-                             IsUseCoupon=d.IsUseCoupon,
-                             CouponId=d.CouponId
+                             IsUseCoupon = d.IsUseCoupon,
+                             CouponId = d.CouponId
                          };
 
             return await orders.ToListAsync();
@@ -2925,10 +2965,10 @@ namespace Fx.Amiya.Service
                 addOrderWriteOffInfoAddDto.HospitalId = Convert.ToInt16(hospitalId);
                 await _orderWriteOffInfoService.AddOrderWriteOffInfoAsync(addOrderWriteOffInfoAddDto);
 
-                var findInfo = await _bindCustomerServiceService.GetEmployeeIdByPhone(orderInfo.Phone);
+                var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(orderInfo.Phone);
                 if (findInfo != 0)
                 {
-                    await _bindCustomerServiceService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
+                    await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
                 }
                 unitOfWork.Commit();
             }
