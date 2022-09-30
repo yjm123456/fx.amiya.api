@@ -206,7 +206,7 @@ namespace Fx.Amiya.Background.Api
 
         }
         /// <summary>
-        /// 修改运营指标提报/批注状态(一个星期运行一次)
+        /// 修改运营指标提报/批注状态(一天运行一次)
         /// </summary>
         /// <returns></returns>
         [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 60 * 24, SkipWhileExecuting = true)]
