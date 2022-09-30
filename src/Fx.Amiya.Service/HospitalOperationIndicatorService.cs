@@ -257,7 +257,7 @@ namespace Fx.Amiya.Service
             var startDate = new DateTime(lastMonth.Year, lastMonth.Month,1);
             var nextMonth = DateTime.Now.AddMonths(1);
             var endDate = new DateTime(nextMonth.Year, nextMonth.Month,1);
-            var indicatorList= dalHospitalOperationIndicator.GetAll().Where(e=>e.Valid==true&&e.StartDate>=startDate&&endDate<=endDate).Select(e=>new OperationIndicatorSubmitAndRemarkDto {
+            var indicatorList= dalHospitalOperationIndicator.GetAll().Where(e=>e.Valid==true&&e.StartDate>=startDate&&e.EndDate<=endDate).Select(e=>new OperationIndicatorSubmitAndRemarkDto {
                 Id=e.Id,
                 SubmitStatus=e.SubmitStatus,
                 RemarkStatus=e.RemarkStatus
