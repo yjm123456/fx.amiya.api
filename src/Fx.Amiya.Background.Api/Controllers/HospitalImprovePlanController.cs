@@ -40,7 +40,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
-        [FxTenantAuthorize]
+        [FxInternalOrTenantAuthroize]
         [HttpPost]
         public async Task<ResultData> AddAsync(AddHospitalImprovePlanVo addVo)
         {
@@ -49,10 +49,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 AddHospitalImprovePlanDto addDto = new AddHospitalImprovePlanDto() {
                     IndicatorId = addVo.IndicatorId,
                     HospitalId = addVo.HospitalId,
-                    HospitalImprovePlan = addVo.HospitalImprovePlan,                    
-                    HospitalShareSuccessCase = addVo.HospitalShareSuccessCase,                   
-                    ImproveSuggestionToAmiya = addVo.ImproveSuggestionToAmiya,                   
-                    ImproveDemandToAmiya = addVo.ImproveDemandToAmiya                   
+                    HospitalImprovePlan = addVo.HospitalImprovePlan,
+                    AmiyaImprovePlanRemark = addVo.AmiyaImprovePlanRemark,
+                    HospitalShareSuccessCase = addVo.HospitalShareSuccessCase,
+                    AmiyaShareSuccessCase = addVo.AmiyaShareSuccessCase,
+                    ImproveSuggestionToAmiya = addVo.ImproveSuggestionToAmiya,
+                    AmiyaImproveSuggestionRemark = addVo.AmiyaImproveSuggestionRemark,
+                    ImproveDemandToAmiya = addVo.ImproveDemandToAmiya,
+                    AmiyaImproveDemandRemark = addVo.AmiyaImproveDemandRemark
                 };
                 await hospitalImprovePlanRemarkService.AddHospitalImprovePlan(addDto);
                 return ResultData.Success();
@@ -78,7 +82,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 var plan =await hospitalImprovePlanRemarkService.GetHospitalImprovePlan(indicatorId,hospitalId);
-
                 HospitalImprovePlanVo hospitalOperationDataVo = new HospitalImprovePlanVo() {
                     Id = plan.Id,
                     IndicatorId = plan.IndicatorId,
@@ -125,7 +128,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     AmiyaImproveSuggestionRemark = updateVo.AmiyaImproveSuggestionRemark,
                     ImproveDemandToAmiya = updateVo.ImproveDemandToAmiya,
                     AmiyaImproveDemandRemark = updateVo.AmiyaImproveDemandRemark,
-                };
+                };              
                 await hospitalImprovePlanRemarkService.UpdateHospitalImprovePlan(updateDto);
                 return ResultData.Success();
             }
@@ -133,28 +136,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 return ResultData.Fail(ex.Message);
             }
-        }
-
-
-        /// <summary>
-        /// 删除机构提升计划
-        /// </summary>
-        /// <param name="id">提升计划id</param>
-        /// <returns></returns>
-        [HttpDelete("{id}")]
-        [FxTenantAuthorize]
-        public async Task<ResultData> DeleteAsync(string id)
-        {
-            try
-            {
-                //await hospitalOperationDataService.DeleteAsync(id);
-                return ResultData.Success();
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
+        }      
     }
 }

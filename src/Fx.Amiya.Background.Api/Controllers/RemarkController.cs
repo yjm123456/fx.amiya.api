@@ -15,7 +15,7 @@ namespace Fx.Amiya.Background.Api.Controllers
     [ApiController]
     public class RemarkController : ControllerBase
     {
-        private IRemarkService remarkService;
+        private IRemarkService remarkService;       
         public RemarkController(IRemarkService remarkService)
         {
             this.remarkService = remarkService;
@@ -51,7 +51,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
-        [HttpPut("updateAmiyaRemark")]
+        /*[HttpPut("updateAmiyaRemark")]
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> UpdateAmiyaRemarkAsync(UpdateAmiyaRemarkVo updateVo)
         {
@@ -63,19 +63,13 @@ namespace Fx.Amiya.Background.Api.Controllers
                     Remark=updateVo.Remark
                 };
                 await remarkService.UpdateAmiyaRemark(updateDto);
-                //AddExpressDto addDto = new AddExpressDto();
-                //addDto.ExpressCode = addVo.ExpressCode;
-                //addDto.ExpressName = addVo.ExpressName;
-                //addDto.Valid = addVo.Valid;
-
-                //await greatHospitalOperationHealthService.AddAsync(addDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
             {
                 return ResultData.Fail(ex.Message);
             }
-        }
+        }*/
 
         /// <summary>
         /// 获取优秀机构运营健康啊美雅批注
@@ -89,6 +83,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 var remark =await remarkService.GetAmiyaRemark(indicatorId);
+                if (remark==null) {
+                    return ResultData<AmiyaRemarkVo>.Success().AddData("amiyaRemark", new AmiyaRemarkVo());
+                } 
                 AmiyaRemarkVo hospitalOperationRemarkVo = new AmiyaRemarkVo() { 
                     Id= remark.Id,
                     AmiyaRemark= remark.AmiyaRemark
@@ -137,7 +134,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
-        [HttpPut("updateHospitalOperationRemark")]
+        /*[HttpPut("updateHospitalOperationRemark")]
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> UpdateHospitalOperationRemarkAsync(UpdateHospitalOperationRemarkVo updateVo)
         {
@@ -155,7 +152,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 return ResultData.Fail(ex.Message);
             }
-        }
+        }*/
 
         /// <summary>
         /// 获取机构运营数据批注
@@ -169,6 +166,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 var remark =await remarkService.GetHospitalOperationRemark(indicatorId,hospitalId);
+                if (remark == null)
+                {
+                    return ResultData<HospitalOperationRemarkVo>.Success().AddData("hospitalOperationRemark", new HospitalOperationRemarkVo());
+                }
                 HospitalOperationRemarkVo hospitalOperationRemarkVo = new HospitalOperationRemarkVo() {
                     Id = remark.Id,
                     HospitalOperationRemark = remark.HospitalOperationRemark,
@@ -218,7 +219,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
-        [HttpPut("updateHospitalOnlineConsultRemark")]
+        /*[HttpPut("updateHospitalOnlineConsultRemark")]
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> UpdateHospitalOnlineConsultRemarkAsync(UpdateHospitalOnlineConsultRemarkVo updateVo)
         {
@@ -238,7 +239,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 return ResultData.Fail(ex.Message);
             }
-        }
+        }*/
 
         /// <summary>
         /// 获取机构网咨运营数据分析批注
@@ -252,6 +253,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 var remark = await remarkService.GetHospitalOnlineConsultRemark(indicatorId, hospitalId);
+                if (remark == null)
+                {
+                    return ResultData<HospitalOnlineConsultRemarkVo>.Success().AddData("hospitalOnlineConsultRemark", new HospitalOnlineConsultRemarkVo());
+                }
                 HospitalOnlineConsultRemarkVo hospitalOperationRemarkVo = new HospitalOnlineConsultRemarkVo()
                 {
                     Id = remark.Id,
@@ -303,7 +308,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
-        [HttpPut("updateHospitalConsultRemark")]
+        /*[HttpPut("updateHospitalConsultRemark")]
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> UpdateHospitalConsultRemarkAsync(UpdateHospitalConsultRemarkVo updateVo)
         {
@@ -323,7 +328,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 return ResultData.Fail(ex.Message);
             }
-        }
+        }*/
 
         /// <summary>
         /// 获取机构咨询师运营数据分析批注
@@ -337,6 +342,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 var remark = await remarkService.GetHospitalConsultRemark(indicatorId, hospitalId);
+                if (remark == null)
+                {
+                    return ResultData<HospitalConsultRemarkVo>.Success().AddData("hospitalConsultRemark", new HospitalConsultRemarkVo());
+                }
                 HospitalConsultRemarkVo hospitalOperationRemarkVo = new HospitalConsultRemarkVo()
                 {
                     Id = remark.Id,
@@ -388,7 +397,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
-        [HttpPut("updateHospitalDoctorRemark")]
+        /*[HttpPut("updateHospitalDoctorRemark")]
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> UpdateHospitalDoctorRemarkAsync(UpdateHospitalDoctorRemarkVo updateVo)
         {
@@ -407,7 +416,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 return ResultData.Fail(ex.Message);
             }
-        }
+        }*/
 
         /// <summary>
         /// 获取机构医生运营数据分析
@@ -421,6 +430,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 var remark = await remarkService.GetHospitalDoctorRemark(indicatorId, hospitalId);
+                if (remark == null)
+                {
+                    return ResultData<HospitalDoctorRemarkVo>.Success().AddData("hospitalDoctorRemark", new HospitalDoctorRemarkVo());
+                }
                 HospitalDoctorRemarkVo hospitalOperationRemarkVo = new HospitalDoctorRemarkVo()
                 {
                     Id = remark.Id,
@@ -472,7 +485,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
-        [HttpPut("updateHospitalDealRemark")]
+        /*[HttpPut("updateHospitalDealRemark")]
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> UpdateHospitalDealRemarkAsync(UpdateHospitalDealRemarkVo updateVo)
         {
@@ -491,7 +504,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 return ResultData.Fail(ex.Message);
             }
-        }
+        }*/
 
         /// <summary>
         /// 获取机构成交品项数据分析批注
@@ -505,6 +518,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 var remark = await remarkService.GetHospitalDealRemark(indicatorId, hospitalId);
+                if (remark == null)
+                {
+                    return ResultData<HospitalDealRemarkVo>.Success().AddData("hospitalDealRemark", new HospitalDealRemarkVo());
+                }
                 HospitalDealRemarkVo hospitalOperationRemarkVo = new HospitalDealRemarkVo()
                 {
                     Id = remark.Id,
