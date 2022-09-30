@@ -88,6 +88,7 @@ namespace Fx.Amiya.Service
 
                 if (greatHospitalOperationHealth == null)
                     throw new Exception("派发医院编号错误");
+                if (greatHospitalOperationHealth.SubmitStatus == true) return;
                 greatHospitalOperationHealth.UpdateDate = DateTime.Now;
                 greatHospitalOperationHealth.SubmitStatus = true;
 
@@ -109,9 +110,10 @@ namespace Fx.Amiya.Service
             try
             {
                 var greatHospitalOperationHealth = await dalIndicatorSendHospital.GetAll().FirstOrDefaultAsync(e => e.IndicatorId == IndicatorId && e.Valid == true && e.HospitalId == hospitalId);
-
+                
                 if (greatHospitalOperationHealth == null)
                     throw new Exception("派发医院编号错误");
+                if (greatHospitalOperationHealth.RemarkStatus == true) return;
                 greatHospitalOperationHealth.UpdateDate = DateTime.Now;
                 greatHospitalOperationHealth.RemarkStatus = true;
 

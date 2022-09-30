@@ -163,10 +163,10 @@ namespace Fx.Amiya.Background.Api
                             await _bindCustomerService.UpdateConsumePriceAsync(order.Phone, order.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
                         }
                     }
-
                 }
                 //抖店订单
-                foreach (var order in tikTokOrderList) {
+                foreach (var order in tikTokOrderList)
+                {
                     TikTokOrderAddDto tikTokOrder = new TikTokOrderAddDto();
                     tikTokOrder.Id = order.Id;
                     tikTokOrder.GoodsName = order.GoodsName;
@@ -187,7 +187,7 @@ namespace Fx.Amiya.Background.Api
                     tikTokOrder.ExchangeType = (byte)ExchangeType.ThirdPartyPayment;
                     tikTokOrder.TikTokUserId = order.TikTokUserId;
                     tikTokOrder.CipherPhone = order.CipherPhone;
-                    tikTokOrder.CipherName = order.CipherName;                 
+                    tikTokOrder.CipherName = order.CipherName;
                     tikTokOrderAddList.Add(tikTokOrder);
                 }
                 await orderService.AddOrderAsync(amiyaOrderList);
@@ -206,23 +206,27 @@ namespace Fx.Amiya.Background.Api
 
         }
         /// <summary>
-        /// 修改运营指标提报/批注状态
+        /// 修改运营指标提报/批注状态(一个星期运行一次)
         /// </summary>
         /// <returns></returns>
-        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 5, SkipWhileExecuting = true)]
-        public async Task HandleOperationIndicatorAsync() {
-            using (var scope= _serviceProvider.CreateScope()) {
+        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 60 * 24, SkipWhileExecuting = true)]
+        public async Task HandleOperationIndicatorAsync()
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
                 var hospitalOperationIndicator = scope.ServiceProvider.GetService<IHospitalOperationIndicatorService>();
                 var indicatorSendToHospital = scope.ServiceProvider.GetService<IIndicatorSendHospitalService>();
-                var indicatorList =await hospitalOperationIndicator.GetUnSumbitAndUnRemarkIndicatorAsync();
+                var indicatorList = await hospitalOperationIndicator.GetUnSumbitAndUnRemarkIndicatorAsync();
                 foreach (var indicator in indicatorList)
                 {
-                    var status= await indicatorSendToHospital.SubmitAndRemarkStatusAsync(indicator.Id);
-                    UpdateSubmitAndRemarkStatus update = new UpdateSubmitAndRemarkStatus(); 
-                    if (status.RemarkStatus==true) {
+                    var status = await indicatorSendToHospital.SubmitAndRemarkStatusAsync(indicator.Id);
+                    UpdateSubmitAndRemarkStatus update = new UpdateSubmitAndRemarkStatus();
+                    if (status.RemarkStatus == true)
+                    {
                         update.RemarkStatus = true;
                     }
-                    if (status.SumbitStatus==true) {
+                    if (status.SumbitStatus == true)
+                    {
                         update.SubmitStatus = true;
                     }
                     update.Id = indicator.Id;

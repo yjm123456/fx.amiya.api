@@ -1421,9 +1421,22 @@ ALTER TABLE `tbl_indicator_send_hospital`
 
 
 
+------------------------------------------------------------------王健 2022/09/30 BEGIN--------------------------------------------
 
+---批注字段长度修改
+ALTER TABLE `tbl_remark`
+	CHANGE COLUMN `hospital_operation_remark` `hospital_operation_remark` VARCHAR(500) NULL DEFAULT NULL  AFTER `amiya_remark`,
+	CHANGE COLUMN `hospital_onlineconsult_remark` `hospital_onlineconsult_remark` VARCHAR(500) NULL DEFAULT NULL  AFTER `hospital_operation_remark`,
+	CHANGE COLUMN `hospital_consult_remark` `hospital_consult_remark` VARCHAR(500) NULL DEFAULT NULL  AFTER `hospital_onlineconsult_remark`,
+	CHANGE COLUMN `hospital_doctor_remark` `hospital_doctor_remark` VARCHAR(500) NULL DEFAULT NULL  AFTER `hospital_consult_remark`,
+	CHANGE COLUMN `hospital_deal_remark` `hospital_deal_remark` VARCHAR(500) NULL DEFAULT NULL  AFTER `hospital_doctor_remark`,
+	CHANGE COLUMN `amiya_operation_remark` `amiya_operation_remark` VARCHAR(500) NULL DEFAULT NULL  AFTER `hospital_deal_remark`,
+	CHANGE COLUMN `amiya_onlineconsult_remark` `amiya_onlineconsult_remark` VARCHAR(500) NULL DEFAULT NULL  AFTER `amiya_operation_remark`,
+	CHANGE COLUMN `amiya_consult_remark` `amiya_consult_remark` VARCHAR(500) NULL DEFAULT NULL  AFTER `amiya_onlineconsult_remark`,
+	CHANGE COLUMN `amiya_doctor_remark` `amiya_doctor_remark` VARCHAR(500) NULL DEFAULT NULL  AFTER `amiya_consult_remark`,
+	CHANGE COLUMN `amiya_deal_remark` `amiya_deal_remark` VARCHAR(500) NULL DEFAULT NULL  AFTER `amiya_doctor_remark`;
 
-
+------------------------------------------------------------------王健 2022/09/30 END--------------------------------------------
 
 
 

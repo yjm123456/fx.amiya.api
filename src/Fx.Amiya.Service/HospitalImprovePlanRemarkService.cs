@@ -49,7 +49,11 @@ namespace Fx.Amiya.Service
                         Valid = true
                     };
                     await dalHospitalImprovePlanRemark.AddAsync(remark, true);
-                    await indicatorSendHospitalService.UpdateSubmitStateAsync(addDto.IndicatorId,addDto.HospitalId);
+                    if (!string.IsNullOrEmpty(addDto.AmiyaImprovePlanRemark) || !string.IsNullOrEmpty(addDto.AmiyaShareSuccessCase) || !string.IsNullOrEmpty(addDto.AmiyaImproveSuggestionRemark) || !string.IsNullOrEmpty(addDto.AmiyaImproveDemandRemark))
+                    {
+                        await indicatorSendHospitalService.UpdateRemarkStatusAsync(addDto.IndicatorId, addDto.HospitalId);
+                    }
+                    await indicatorSendHospitalService.UpdateSubmitStateAsync(addDto.IndicatorId, addDto.HospitalId);
                 }
                 else
                 {
@@ -62,6 +66,10 @@ namespace Fx.Amiya.Service
                     plan.ImproveDemandToAmiya = addDto.ImproveDemandToAmiya;
                     plan.AmiyaImproveDemandRemark = addDto.AmiyaImproveDemandRemark;
                     plan.UpdateDate = DateTime.Now;
+                    if (!string.IsNullOrEmpty(addDto.AmiyaImprovePlanRemark) || !string.IsNullOrEmpty(addDto.AmiyaShareSuccessCase) || !string.IsNullOrEmpty(addDto.AmiyaImproveSuggestionRemark) || !string.IsNullOrEmpty(addDto.AmiyaImproveDemandRemark))
+                    {
+                        await indicatorSendHospitalService.UpdateRemarkStatusAsync(addDto.IndicatorId, addDto.HospitalId);
+                    }
                     await dalHospitalImprovePlanRemark.UpdateAsync(plan, true);
                 }
                 unitOfWork.Commit();
@@ -70,14 +78,15 @@ namespace Fx.Amiya.Service
             {
                 unitOfWork.RollBack();
                 throw ex;
-            }            
+            }
         }
 
         public async Task<HospitalImprovePlanDto> GetHospitalImprovePlan(string indicatorId, int hospitalId)
         {
-            var remark = dalHospitalImprovePlanRemark.GetAll().Where(e=>e.IndicatorId==indicatorId&&e.HospitalId==hospitalId&&e.Valid==true).SingleOrDefault();
+            var remark = dalHospitalImprovePlanRemark.GetAll().Where(e => e.IndicatorId == indicatorId && e.HospitalId == hospitalId && e.Valid == true).SingleOrDefault();
             if (remark == null) return new HospitalImprovePlanDto();
-            return new HospitalImprovePlanDto {
+            return new HospitalImprovePlanDto
+            {
                 Id = remark.Id,
                 IndicatorId = remark.IndicatorId,
                 HospitalId = remark.HospitalId,
@@ -94,7 +103,7 @@ namespace Fx.Amiya.Service
 
         public async Task UpdateHospitalImprovePlan(UpdateHospitalImprovePlanDto updateDto)
         {
-            var remark = dalHospitalImprovePlanRemark.GetAll().Where(e=>e.Id==updateDto.Id).SingleOrDefault();
+            var remark = dalHospitalImprovePlanRemark.GetAll().Where(e => e.Id == updateDto.Id).SingleOrDefault();
             remark.Id = updateDto.Id;
             remark.IndicatorId = updateDto.IndicatorId;
             remark.HospitalId = updateDto.HospitalId;
@@ -107,7 +116,7 @@ namespace Fx.Amiya.Service
             remark.ImproveDemandToAmiya = updateDto.ImproveDemandToAmiya;
             remark.AmiyaImproveDemandRemark = updateDto.AmiyaImproveDemandRemark;
             remark.UpdateDate = DateTime.Now;
-            await dalHospitalImprovePlanRemark.UpdateAsync(remark,true);
+            await dalHospitalImprovePlanRemark.UpdateAsync(remark, true);
         }
     }
 }

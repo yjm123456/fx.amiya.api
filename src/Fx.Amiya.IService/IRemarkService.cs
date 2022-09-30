@@ -28,7 +28,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="indicatorId"></param>
         /// <returns></returns>
-        Task UpdateAmiyaRemark(UpdateAmiyaRemarkDto update);
+        /*Task UpdateAmiyaRemark(UpdateAmiyaRemarkDto update);*/
 
         #endregion
 
@@ -53,7 +53,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="indicatorId"></param>
         /// <returns></returns>
-        Task UpdateHospitalOperationRemark(UpdateHospitalOperationRemarkDto update);
+        /*Task UpdateHospitalOperationRemark(UpdateHospitalOperationRemarkDto update);*/
 
         #endregion
 
@@ -77,7 +77,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="indicatorId"></param>
         /// <returns></returns>
-        Task UpdateHospitalConsultRemark(UpdateHospitalConsultRemarkDto update);
+        /*Task UpdateHospitalConsultRemark(UpdateHospitalConsultRemarkDto update);*/
         #endregion
 
 
@@ -100,7 +100,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="indicatorId"></param>
         /// <returns></returns>
-        Task UpdateHospitalOnlineConsultRemark(UpdateHospitalOnlineConsultRemarkDto update);
+        /*Task UpdateHospitalOnlineConsultRemark(UpdateHospitalOnlineConsultRemarkDto update);*/
         #endregion
 
 
@@ -124,7 +124,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="indicatorId"></param>
         /// <returns></returns>
-        Task UpdateHospitalDoctorRemark(UpdateHospitalDoctorRemarkDto update);
+        /*Task UpdateHospitalDoctorRemark(UpdateHospitalDoctorRemarkDto update);*/
         #endregion
 
 
@@ -148,7 +148,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="indicatorId"></param>
         /// <returns></returns>
-        Task UpdateHospitalDealRemark(UpdateHospitalDealRemarkDto update);
+        /*Task UpdateHospitalDealRemark(UpdateHospitalDealRemarkDto update);*/
         #endregion
 
     }
