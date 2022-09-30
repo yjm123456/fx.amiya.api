@@ -253,8 +253,10 @@ namespace Fx.Amiya.Service
         public async Task<List<OperationIndicatorSubmitAndRemarkDto>> GetUnSumbitAndUnRemarkIndicatorAsync()
         {
             var month = DateTime.Now.Month;
-            var startDate = new DateTime(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month,1);
-            var endDate = new DateTime(DateTime.Now.AddMonths(1).Year, DateTime.Now.AddMonths(1).Month,1);
+            var lastMonth = DateTime.Now.AddMonths(-1);
+            var startDate = new DateTime(lastMonth.Year, lastMonth.Month,1);
+            var nextMonth = DateTime.Now.AddMonths(1);
+            var endDate = new DateTime(nextMonth.Year, nextMonth.Month,1);
             var indicatorList= dalHospitalOperationIndicator.GetAll().Where(e=>e.Valid==true&&e.StartDate>=startDate&&endDate<=endDate).Select(e=>new OperationIndicatorSubmitAndRemarkDto {
                 Id=e.Id,
                 SubmitStatus=e.SubmitStatus,
