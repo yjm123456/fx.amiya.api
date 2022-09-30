@@ -6099,7 +6099,7 @@
         </member>
         <member name="M:Fx.Amiya.Background.Api.TimeJob.HandleOperationIndicatorAsync">
             <summary>
-            修改运营指标提报/批注状态(一个星期运行一次)
+            修改运营指标提报/批注状态(一天运行一次)
             </summary>
             <returns></returns>
         </member>
