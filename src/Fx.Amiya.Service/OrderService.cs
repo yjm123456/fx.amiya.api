@@ -1184,12 +1184,11 @@ namespace Fx.Amiya.Service
                 orderInfo.WriteOffDate = WriteOffDate;
             }
             await dalOrderInfo.UpdateAsync(orderInfo, true);
-            List<ConsumptionIntegrationDto> consumptionIntegrationList = new List<ConsumptionIntegrationDto>();
             if (orderInfo.StatusCode == "TRADE_FINISHED" && orderInfo.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(orderInfo.Phone))
             {
-
+                List<ConsumptionIntegrationDto> consumptionIntegrationList = new List<ConsumptionIntegrationDto>();
                 bool isIntegrationGenerateRecord = await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAsync(orderInfo.Id);
-                if (isIntegrationGenerateRecord == true)
+                if (isIntegrationGenerateRecord == false)
                 {
                     var customerId = await customerService.GetCustomerIdByPhoneAsync(orderInfo.Phone);
                     if (!string.IsNullOrWhiteSpace(customerId))
@@ -1222,6 +1221,10 @@ namespace Fx.Amiya.Service
                             await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
                         }
                     }
+                }
+                foreach (var item in consumptionIntegrationList)
+                {
+                    await integrationAccountService.AddByConsumptionAsync(item);
                 }
             }
             //退款扣除积分
