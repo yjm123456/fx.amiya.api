@@ -674,16 +674,18 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="startDate"></param>
         /// <returns></returns>
-        public async Task<List<SendContentPlatformOrderDto>> GetSendDataByHospitalIdAndMonthAsync(int hospitalId, int month)
+        public async Task<List<SendContentPlatformOrderDto>> GetSendDataByHospitalIdAndMonthAsync(int hospitalId, int year, int month)
         {
             //筛选结束的月份
-            DateTime dtNow = DateTime.Now;
-            int days = DateTime.DaysInMonth(dtNow.Year, dtNow.Month);
-            DateTime endDate = Convert.ToDateTime(DateTime.Now.Year + "-" + month + "-" + days);
+            //DateTime dtNow = DateTime.Now;
+            //int days = DateTime.DaysInMonth(dtNow.Year, month);
+            //DateTime endDate = Convert.ToDateTime(DateTime.Now.Year + "-" + month + "-" + days);
             //选定的月份
-            DateTime currentDate = Convert.ToDateTime(DateTime.Now.Year + "-" + month + "-01");
+            //DateTime currentDate = Convert.ToDateTime(DateTime.Now.Year + "-" + month + "-01");
+            DateTime startDate = Convert.ToDateTime(year + "-" + month + "-01");
+            DateTime endDate = startDate.AddMonths(1);
             var orders = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.HospitalInfo).ThenInclude(x => x.CooperativeHospitalCity)
-                         where d.SendDate >= currentDate && d.SendDate < endDate && d.HospitalId == hospitalId
+                         where d.SendDate >= startDate && d.SendDate < endDate && d.HospitalId == hospitalId
                          select new SendContentPlatformOrderDto
                          {
                              OrderId = d.ContentPlatformOrderId,
@@ -750,7 +752,7 @@ namespace Fx.Amiya.Service
         }
 
 
-        
+
         #endregion
 
     }

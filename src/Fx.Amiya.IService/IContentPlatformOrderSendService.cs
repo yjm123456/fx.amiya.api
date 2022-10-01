@@ -81,7 +81,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<TodayHospitalOrderNumDto>> GetTodayHospitalOrderNumAsync();
-       
+
 
         /// <summary>
         /// 医院填写备注
@@ -139,7 +139,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="liveAnchorId"></param>
         /// <returns></returns>
-        Task<List<OrderOperationConditionDto>> GetTodaySendOrderByLiveAnchorIdAsync(int liveAnchorId,DateTime recordDate);
+        Task<List<OrderOperationConditionDto>> GetTodaySendOrderByLiveAnchorIdAsync(int liveAnchorId, DateTime recordDate);
 
         /// <summary>
         /// 获取根据年份获取已派单订单号
@@ -154,7 +154,7 @@ namespace Fx.Amiya.IService
         /// <param name="hospitalId"></param>
         /// <param name="month"></param>
         /// <returns></returns>
-        Task<List<SendContentPlatformOrderDto>> GetSendDataByHospitalIdAndMonthAsync(int hospitalId, int month);
+        Task<List<SendContentPlatformOrderDto>> GetSendDataByHospitalIdAndMonthAsync(int hospitalId, int year, int month);
         /// <summary>
         /// 全国前10城市运营数据
         /// </summary>

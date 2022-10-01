@@ -63,7 +63,7 @@ namespace Fx.Amiya.IService
         /// <param name="hospitalId"></param>
         /// <param name="month"></param>
         /// <returns></returns>
-        Task<List<ContentPlatFormOrderDealInfoDto>> GetSendPerformanceByHospitalIdAndMonthAsync(int hospitalId, int month);
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetSendPerformanceByHospitalIdAndMonthAsync(int hospitalId, int year, int month);
 
 
 

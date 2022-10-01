@@ -108,7 +108,7 @@ namespace Fx.Amiya.Service
         public async Task<HospitalNewCustomerAchievementDto> GetHospitalOperationDailyData(int hospitalId)
         {
             HospitalNewCustomerAchievementDto result = new HospitalNewCustomerAchievementDto();
-            int month = DateTime.Now.Month;
+            /*int month = DateTime.Now.Month;
             int lastMonth = 0;
             if (month != 1)
             {
@@ -127,12 +127,16 @@ namespace Fx.Amiya.Service
             else
             {
                 beforeMonth = 12;
-            }
+            }*/
+
+            //var month = DateTime.Now.Month;
+            var lastMonth = DateTime.Now.AddMonths(-1);
+            var beforeMonth = DateTime.Now.AddMonths(-2);
             //上月派单数据
-            var lastContentPlatFormOrderSendList = await contentPlatformOrderSendService.GetSendDataByHospitalIdAndMonthAsync(hospitalId, lastMonth);
+            var lastContentPlatFormOrderSendList = await contentPlatformOrderSendService.GetSendDataByHospitalIdAndMonthAsync(hospitalId, lastMonth.Year, lastMonth.Month);
             var lastsendNum = lastContentPlatFormOrderSendList.Where(z => z.SendHospitalId == hospitalId).Count();
             //上月上门与成交数据
-            var lastContentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetSendPerformanceByHospitalIdAndMonthAsync(hospitalId, lastMonth);
+            var lastContentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetSendPerformanceByHospitalIdAndMonthAsync(hospitalId, lastMonth.Year, lastMonth.Month);
             //上月新客上门率
             var lastVisitNum = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false).Count();
             result.ThisNewCustomerVisitRate = CalculateTargetComplete(lastVisitNum, lastsendNum).Value;
@@ -144,10 +148,10 @@ namespace Fx.Amiya.Service
             result.ThisNewCustomerUnitPrice = Division(lastCustomerTotalPrice, lastDealNum.Count()).Value;
 
             //前月派单数据
-            var beforeContentPlatFormOrderSendList = await contentPlatformOrderSendService.GetSendDataByHospitalIdAndMonthAsync(hospitalId, beforeMonth);
+            var beforeContentPlatFormOrderSendList = await contentPlatformOrderSendService.GetSendDataByHospitalIdAndMonthAsync(hospitalId, beforeMonth.Year, beforeMonth.Month);
             var beforesendNum = beforeContentPlatFormOrderSendList.Where(z => z.SendHospitalId == hospitalId).Count();
             //前月上门与成交数据
-            var beforeContentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetSendPerformanceByHospitalIdAndMonthAsync(hospitalId, beforeMonth);
+            var beforeContentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetSendPerformanceByHospitalIdAndMonthAsync(hospitalId, beforeMonth.Year, beforeMonth.Month);
             //前月新客上门率
             var beforeVisitNum = beforeContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false).Count();
             result.LastNewCustomerVisitRate = CalculateTargetComplete(beforeVisitNum, beforesendNum).Value;

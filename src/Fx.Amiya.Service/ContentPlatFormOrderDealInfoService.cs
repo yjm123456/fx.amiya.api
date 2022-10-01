@@ -864,7 +864,8 @@ namespace Fx.Amiya.Service
         /// <param name="recordDate"></param>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
-        Task<List<ContentPlatFormOrderDealInfoDto>> GetSendPerformanceByHospitalIdListAsync(List<int?> hospitalIds, DateTime recordDate) {
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetSendPerformanceByHospitalIdListAsync(List<int?> hospitalIds, DateTime recordDate)
+        {
             throw new NotImplementedException("没有实现");
         }
         /// <summary>
@@ -873,16 +874,18 @@ namespace Fx.Amiya.Service
         /// <param name="month"></param>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
-        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetSendPerformanceByHospitalIdAndMonthAsync(int hospitalId, int month)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetSendPerformanceByHospitalIdAndMonthAsync(int hospitalId, int year, int month)
         {
             //筛选结束的月份
-            DateTime dtNow = DateTime.Now;
-            int days = DateTime.DaysInMonth(dtNow.Year, dtNow.Month);
-            DateTime endDate = Convert.ToDateTime(DateTime.Now.Year + "-" + month + "-" + days);
+            //DateTime dtNow = DateTime.Now;
+            //int days = DateTime.DaysInMonth(dtNow.Year, dtNow.Month);
+            //DateTime endDate = Convert.ToDateTime(DateTime.Now.Year + "-" + month + "-" + days);
             //选定的月份
-            DateTime currentDate = Convert.ToDateTime(DateTime.Now.Year + "-" + month + "-01");
+            //DateTime currentDate = Convert.ToDateTime(DateTime.Now.Year + "-" + month + "-01");
+            DateTime startDate = Convert.ToDateTime(year + "-" + month + "-01");
+            DateTime endDate = startDate.AddMonths(1);
             var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)
-                .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= currentDate && o.ToHospitalDate < endDate)
+                .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= startDate && o.ToHospitalDate < endDate)
                 .Where(o => hospitalId == 0 || o.LastDealHospitalId.Value == hospitalId)
                 .ToListAsync();
             var returnInfo = result.Select(
