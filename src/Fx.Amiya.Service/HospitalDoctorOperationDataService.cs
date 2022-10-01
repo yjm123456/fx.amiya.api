@@ -35,10 +35,10 @@ namespace Fx.Amiya.Service
             try
             {
                 var hospitalDoctorOperationData = from d in dalHospitalDoctorOperationData.GetAll().Include(x => x.HospitalInfo).Include(x => x.HospitalOperationalIndicator)
-                                                  where (keyword == null || d.HospitalInfo.Name.Contains(keyword)
+                                                  where (keyword == null || d.HospitalInfo.Name.Contains(keyword))
                                                   && (d.HospitalId == hospitalId)
                                                   && (d.IndicatorId == indicatorsId)
-                                                  && (d.Valid == true))
+                                                  && (d.Valid == true)
                                                   select new HospitalDoctorOperationDataDto
                                                   {
                                                       Id = d.Id,
@@ -82,6 +82,7 @@ namespace Fx.Amiya.Service
                 hospitalDoctorOperationData.Valid = true;
                 hospitalDoctorOperationData.HospitalId = addDto.HospitalId;
                 hospitalDoctorOperationData.IndicatorId = addDto.IndicatorId;
+                hospitalDoctorOperationData.DoctorName = addDto.DoctorName;
                 hospitalDoctorOperationData.NewCustomerAcceptNum = addDto.NewCustomerAcceptNum;
                 hospitalDoctorOperationData.NewCustomerDealNum = addDto.NewCustomerDealNum;
                 hospitalDoctorOperationData.NewCustomerDealRate = addDto.NewCustomerDealRate;
@@ -112,7 +113,7 @@ namespace Fx.Amiya.Service
             {
                 var hospitalDoctorOperationData = await dalHospitalDoctorOperationData.GetAll().Include(e => e.HospitalInfo).SingleOrDefaultAsync(e => e.Id == id && e.Valid == true);
                 if (hospitalDoctorOperationData == null)
-                    throw new Exception("优秀机构运营健康指标编号错误");
+                    throw new Exception("机构医生运营指标编号错误");
 
                 HospitalDoctorOperationDataDto hospitalDoctorOperationDataDto = new HospitalDoctorOperationDataDto();
                 hospitalDoctorOperationDataDto.Id = hospitalDoctorOperationData.Id;
@@ -122,6 +123,7 @@ namespace Fx.Amiya.Service
                 hospitalDoctorOperationDataDto.Valid = hospitalDoctorOperationData.Valid;
                 hospitalDoctorOperationDataDto.HospitalId = hospitalDoctorOperationData.HospitalId;
                 hospitalDoctorOperationDataDto.IndicatorId = hospitalDoctorOperationData.IndicatorId;
+                hospitalDoctorOperationDataDto.DoctorName = hospitalDoctorOperationData.DoctorName;
                 hospitalDoctorOperationDataDto.NewCustomerAcceptNum = hospitalDoctorOperationData.NewCustomerAcceptNum;
                 hospitalDoctorOperationDataDto.NewCustomerDealNum = hospitalDoctorOperationData.NewCustomerDealNum;
                 hospitalDoctorOperationDataDto.NewCustomerDealRate = hospitalDoctorOperationData.NewCustomerDealRate;
@@ -149,10 +151,11 @@ namespace Fx.Amiya.Service
             {
                 var hospitalDoctorOperationData = await dalHospitalDoctorOperationData.GetAll().Include(e => e.HospitalInfo).SingleOrDefaultAsync(e => e.Id == updateDto.Id);
                 if (hospitalDoctorOperationData == null)
-                    throw new Exception("优秀机构运营健康指标编号错误");
+                    throw new Exception("机构医生运营指标编号错误");
 
                 hospitalDoctorOperationData.HospitalId = updateDto.HospitalId;
                 hospitalDoctorOperationData.IndicatorId = updateDto.IndicatorId;
+                hospitalDoctorOperationData.DoctorName = updateDto.DoctorName;
                 hospitalDoctorOperationData.NewCustomerAcceptNum = updateDto.NewCustomerAcceptNum;
                 hospitalDoctorOperationData.NewCustomerDealNum = updateDto.NewCustomerDealNum;
                 hospitalDoctorOperationData.NewCustomerDealRate = updateDto.NewCustomerDealRate;

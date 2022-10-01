@@ -98,6 +98,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 AddHospitalDoctorOperationDataDto addDto = new AddHospitalDoctorOperationDataDto();
                 addDto.HospitalId = addVo.HospitalId;
                 addDto.IndicatorId = addVo.IndicatorId;
+                addDto.DoctorName = addVo.DoctorName;
                 addDto.NewCustomerAcceptNum = addVo.NewCustomerAcceptNum;
                 addDto.NewCustomerDealNum = addVo.NewCustomerDealNum;
                 addDto.NewCustomerDealRate = addVo.NewCustomerDealRate;
@@ -142,6 +143,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 hospitalDoctorOperationDataVo.Valid = hospitalDoctorOperationData.Valid;
                 hospitalDoctorOperationDataVo.HospitalId = hospitalDoctorOperationData.HospitalId;
                 hospitalDoctorOperationDataVo.IndicatorId = hospitalDoctorOperationData.IndicatorId;
+                hospitalDoctorOperationDataVo.DoctorName = hospitalDoctorOperationData.DoctorName;
                 hospitalDoctorOperationDataVo.NewCustomerAcceptNum = hospitalDoctorOperationData.NewCustomerAcceptNum;
                 hospitalDoctorOperationDataVo.NewCustomerDealNum = hospitalDoctorOperationData.NewCustomerDealNum;
                 hospitalDoctorOperationDataVo.NewCustomerDealRate = hospitalDoctorOperationData.NewCustomerDealRate;
@@ -176,8 +178,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             try {
 
                 UpdateHospitalDoctorOperationDataDto updateDto = new UpdateHospitalDoctorOperationDataDto();
+                updateDto.Id = updateVo.Id;
                 updateDto.HospitalId = updateVo.HospitalId;
                 updateDto.IndicatorId = updateVo.IndicatorId;
+                updateDto.DoctorName = updateVo.DoctorName;
                 updateDto.NewCustomerAcceptNum = updateVo.NewCustomerAcceptNum;
                 updateDto.NewCustomerDealNum = updateVo.NewCustomerDealNum;
                 updateDto.NewCustomerDealRate = updateVo.NewCustomerDealRate;

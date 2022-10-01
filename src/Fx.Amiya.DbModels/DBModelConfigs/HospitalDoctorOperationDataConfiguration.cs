@@ -20,7 +20,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.Valid).HasColumnName("valid").HasColumnType("BIT(1)").IsRequired();
             builder.Property(t => t.DeleteDate).HasColumnName("delete_date").HasColumnType("datetime").IsRequired(false);
 
-            builder.Property(t => t.DoctorName).HasColumnName("DoctorName").HasColumnType("varchar(100)").IsRequired();
+            builder.Property(t => t.DoctorName).HasColumnName("doctor_name").HasColumnType("varchar(100)").IsRequired(false);
             builder.Property(t => t.NewCustomerAcceptNum).HasColumnName("new_customer_accept_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.NewCustomerDealNum).HasColumnName("new_customer_deal_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.NewCustomerDealRate).HasColumnName("new_customer_deal_rate").HasColumnType("decimal(12,2)").IsRequired();

@@ -5,8 +5,15 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation
 {
-    public class HospitalDealItemOperationVo:BaseVo
+    /// <summary>
+    /// 修改医院成交品项
+    /// </summary>
+    public class HospitalDealItemOperationVo
     {
+        /// <summary>
+        /// 编号
+        /// </summary>
+        public string Id { get; set; }
         /// <summary>
         /// 指标id
         /// </summary>

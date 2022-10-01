@@ -94,7 +94,7 @@ namespace Fx.Amiya.Service
             {
                 var hospitalDealItemOperation = await dalHospitalDealItem.GetAll().Include(e => e.HospitalInfo).SingleOrDefaultAsync(e => e.Id == id && e.Valid == true);
                 if (hospitalDealItemOperation == null)
-                    throw new Exception("优秀机构运营健康指标编号错误");
+                    throw new Exception("机构成交品项编号错误");
 
                 HospitalDealItemOperationDto hospitalDealItemOperationDto = new HospitalDealItemOperationDto();
                 hospitalDealItemOperationDto.Id = hospitalDealItemOperation.Id;
@@ -123,7 +123,7 @@ namespace Fx.Amiya.Service
             {
                 var hospitalDealItemOperation = await dalHospitalDealItem.GetAll().Include(e => e.HospitalInfo).SingleOrDefaultAsync(e => e.Id == updateDto.Id);
                 if (hospitalDealItemOperation == null)
-                    throw new Exception("优秀机构运营健康指标编号错误");
+                    throw new Exception("机构成交品项编号错误");
 
                 hospitalDealItemOperation.HospitalId = updateDto.HospitalId;
                 hospitalDealItemOperation.IndicatorId = updateDto.IndicatorId;

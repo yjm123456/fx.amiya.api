@@ -146,13 +146,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 UpdateHospitalDealItemOperationDto updateDto = new UpdateHospitalDealItemOperationDto();
-                updateDto.Id = updateDto.Id;
-                updateDto.HospitalId = updateDto.HospitalId;
-                updateDto.IndicatorId = updateDto.IndicatorId;
-                updateDto.DealItemName = updateDto.DealItemName;
-                updateDto.DealCount = updateDto.DealCount;
-                updateDto.DealPrice = updateDto.DealPrice;
-                updateDto.PerformanceRatio = updateDto.PerformanceRatio;
+                updateDto.Id = updateVo.Id;
+                updateDto.HospitalId = updateVo.HospitalId;
+                updateDto.IndicatorId = updateVo.IndicatorId;
+                updateDto.DealItemName = updateVo.DealItemName;
+                updateDto.DealCount = updateVo.DealCount.HasValue? updateVo.DealCount.Value:0;
+                updateDto.DealPrice = updateVo.DealPrice.HasValue ? updateVo.DealPrice.Value : 0;
+                updateDto.PerformanceRatio = updateVo.PerformanceRatio.HasValue ? updateVo.PerformanceRatio.Value : 0;
                 await hospitalDealItemService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

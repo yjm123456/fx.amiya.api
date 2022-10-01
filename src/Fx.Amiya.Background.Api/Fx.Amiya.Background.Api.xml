@@ -12458,6 +12458,16 @@
             业绩占比
             </summary>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.HospitalDealItemOperationVo">
+            <summary>
+            修改医院成交品项
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.HospitalDealItemOperationVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation.HospitalDealItemOperationVo.IndicatorId">
             <summary>
             指标id
