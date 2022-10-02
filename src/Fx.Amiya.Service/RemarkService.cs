@@ -32,7 +32,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task AddAmiyaRemark(AddAmiyaRemarkDto addAmiyaRemarkDto)
         {
-            var healthIndicatorRemark = dalRemark.GetAll().Where(e => e.IndicatorId == addAmiyaRemarkDto.IndicatorId&&e.HospitalId==null).SingleOrDefault();
+            var healthIndicatorRemark = dalRemark.GetAll().Where(e => e.IndicatorId == addAmiyaRemarkDto.IndicatorId && e.HospitalId == null).SingleOrDefault();
             if (healthIndicatorRemark == null)
             {
                 Remark remark = new Remark()
@@ -42,7 +42,7 @@ namespace Fx.Amiya.Service
                     AmiyaRemark = addAmiyaRemarkDto.Remark,
                     CreateDate = DateTime.Now,
                     Valid = true
-                };               
+                };
                 await dalRemark.AddAsync(remark, true);
             }
             else
@@ -288,6 +288,7 @@ namespace Fx.Amiya.Service
         public async Task<HospitalDoctorRemarkDto> GetHospitalDoctorRemark(string indicatorId, int hospitalId)
         {
             var remark = dalRemark.GetAll().Where(e => e.IndicatorId == indicatorId && e.HospitalId == hospitalId).SingleOrDefault();
+            if (remark == null) return null;
             return new HospitalDoctorRemarkDto
             {
                 Id = remark.Id,
@@ -333,7 +334,7 @@ namespace Fx.Amiya.Service
                         IndicatorId = add.IndicatorId,
                         HospitalId = add.HospitalId,
                         HospitalOnlineConsultRemark = add.HospitalOnlineConsultRemark,
-                        AmiyaOnlineConsultRemark=add.AmiyaOnlineConsultRemark,
+                        AmiyaOnlineConsultRemark = add.AmiyaOnlineConsultRemark,
                         CreateDate = DateTime.Now,
                         Valid = true
                     };
@@ -469,7 +470,8 @@ namespace Fx.Amiya.Service
 
         #region 内部公共方法
         //判断啊美雅批注是否为空
-        private bool JudgeAmiyaRemark(string remark) {
+        private bool JudgeAmiyaRemark(string remark)
+        {
             return !string.IsNullOrEmpty(remark);
         }
         #endregion
