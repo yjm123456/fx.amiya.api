@@ -33,7 +33,7 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<HospitalOperationIndicatorCollectDto>> GetHospitalOperationIndicatorCollectList(string indicatorId, int? hospitalId, int pageNum, int pageSize, bool? isSubmit)
         {
             FxPageInfo<HospitalOperationIndicatorCollectDto> fxPageInfo = new FxPageInfo<HospitalOperationIndicatorCollectDto>();
-            var list = dalIndicatorSendHospital.GetAll().Include(e => e.HospitalInfo).Include(e => e.HospitalOperationalIndicator).Where(e => (indicatorId == null || e.IndicatorId == indicatorId) && (hospitalId == null || e.HospitalId == hospitalId) && (isSubmit == null || e.SubmitStatus == isSubmit)).Select(
+            var list = dalIndicatorSendHospital.GetAll().Include(e => e.HospitalInfo).Include(e => e.HospitalOperationalIndicator).Where(e => (indicatorId == null || e.IndicatorId == indicatorId) && (hospitalId == null || e.HospitalId == hospitalId) && (isSubmit == null || e.SubmitStatus == isSubmit) && e.HospitalOperationalIndicator.Valid == true&&e.Valid==true).Select(
                     e => new HospitalOperationIndicatorCollectDto
                     {
                         HospitalId = e.HospitalId,
@@ -110,7 +110,7 @@ namespace Fx.Amiya.Service
             try
             {
                 var greatHospitalOperationHealth = await dalIndicatorSendHospital.GetAll().FirstOrDefaultAsync(e => e.IndicatorId == IndicatorId && e.Valid == true && e.HospitalId == hospitalId);
-                
+
                 if (greatHospitalOperationHealth == null)
                     throw new Exception("派发医院编号错误");
                 if (greatHospitalOperationHealth.RemarkStatus == true) return;
@@ -132,11 +132,12 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<HospitalReamrkAndSumbitStatusDto> SubmitAndRemarkStatusAsync(string indicatorId)
         {
-            var unSubmitCount=dalIndicatorSendHospital.GetAll().Where(e => e.IndicatorId == indicatorId && e.SubmitStatus == false).Count();
+            var unSubmitCount = dalIndicatorSendHospital.GetAll().Where(e => e.IndicatorId == indicatorId && e.SubmitStatus == false).Count();
             var unRemarkCount = dalIndicatorSendHospital.GetAll().Where(e => e.IndicatorId == indicatorId && e.RemarkStatus == false).Count();
-            HospitalReamrkAndSumbitStatusDto status = new HospitalReamrkAndSumbitStatusDto {
-                SumbitStatus=unSubmitCount==0,
-                RemarkStatus=unRemarkCount==0
+            HospitalReamrkAndSumbitStatusDto status = new HospitalReamrkAndSumbitStatusDto
+            {
+                SumbitStatus = unSubmitCount == 0,
+                RemarkStatus = unRemarkCount == 0
             };
             return status;
         }
