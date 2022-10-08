@@ -13,6 +13,24 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         /// </summary>
         [Description("医院名称")]
         public string HospitalName { get; set; }
+
+        /// <summary>
+        /// 营业执照名称
+        /// </summary>
+        [Description("营业执照名称")]
+        public string BusinessLicenseName { get; set; }
+
+        /// <summary>
+        /// 医院联系人
+        /// </summary>
+        [Description("医院联系人")]
+        public string HospitalLinkMan { get; set; }
+
+        /// <summary>
+        /// 联系电话
+        /// </summary>
+        [Description("联系电话")]
+        public string HospitalLinkManPhone { get; set; }
         /// <summary>
         /// 产品类型
         /// </summary>

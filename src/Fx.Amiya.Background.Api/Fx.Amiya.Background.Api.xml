@@ -2419,11 +2419,13 @@
             </summary>
             <param name="hospitalBrandApplyService"></param>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalBrandApplyController.GetListWithPageAsync(System.String,System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalBrandApplyController.GetListWithPageAsync(System.String,System.String,System.String,System.Int32,System.Int32)">
             <summary>
             获取医院品牌报名信息列表（分页）
             </summary>
             <param name="keyword"></param>
+            <param name="hospitalLinkMan">机构联系人</param>
+            <param name="hospitalLinkManPhone">机构联系电话</param>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
             <returns></returns>
@@ -11103,6 +11105,21 @@
             医院名称
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GoodsInfo.ExportHospitalBrandApplyAndTmallGoodsVo.BusinessLicenseName">
+            <summary>
+            营业执照名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GoodsInfo.ExportHospitalBrandApplyAndTmallGoodsVo.HospitalLinkMan">
+            <summary>
+            医院联系人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GoodsInfo.ExportHospitalBrandApplyAndTmallGoodsVo.HospitalLinkManPhone">
+            <summary>
+            联系电话
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GoodsInfo.ExportHospitalBrandApplyAndTmallGoodsVo.GoodsType">
             <summary>
             产品类型
@@ -13218,6 +13235,21 @@
             医院名称
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalInfo.AddHospitalBrandApplyInHospitalVo.BusinessLicenseName">
+            <summary>
+            营业执照名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalInfo.AddHospitalBrandApplyInHospitalVo.HospitalLinkMan">
+            <summary>
+            医院联系人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalInfo.AddHospitalBrandApplyInHospitalVo.HospitalLinkManPhone">
+            <summary>
+            联系电话
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalInfo.AddHospitalBrandApplyInHospitalVo.AddHospitalBrandApplyVo">
             <summary>
             医院品牌报名数据
@@ -13326,6 +13358,21 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalInfo.HospitalBrandApplyVo.HospitalName">
             <summary>
             医院全称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalInfo.HospitalBrandApplyVo.BusinessLicenseName">
+            <summary>
+            营业执照名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalInfo.HospitalBrandApplyVo.HospitalLinkMan">
+            <summary>
+            医院联系人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalInfo.HospitalBrandApplyVo.HospitalLinkManPhone">
+            <summary>
+            联系电话
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalInfo.HospitalBrandApplyVo.GoodsId">
@@ -13706,6 +13753,21 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalInfo.UpdateHospitalBrandApplyVo.HospitalName">
             <summary>
             医院全称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalInfo.UpdateHospitalBrandApplyVo.BusinessLicenseName">
+            <summary>
+            营业执照名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalInfo.UpdateHospitalBrandApplyVo.HospitalLinkMan">
+            <summary>
+            医院联系人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalInfo.UpdateHospitalBrandApplyVo.HospitalLinkManPhone">
+            <summary>
+            联系电话
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalInfo.UpdateHospitalBrandApplyVo.GoodsId">

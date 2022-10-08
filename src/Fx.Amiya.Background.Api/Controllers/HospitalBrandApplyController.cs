@@ -42,20 +42,22 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
 
+
         /// <summary>
         /// 获取医院品牌报名信息列表（分页）
         /// </summary>
         /// <param name="keyword"></param>
+        /// <param name="hospitalLinkMan">机构联系人</param>
+        /// <param name="hospitalLinkManPhone">机构联系电话</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<HospitalBrandApplyVo>>> GetListWithPageAsync(string keyword, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<HospitalBrandApplyVo>>> GetListWithPageAsync(string keyword, string hospitalLinkMan, string hospitalLinkManPhone, int pageNum, int pageSize)
         {
             try
             {
-                var q = await hospitalBrandApplyService.GetListWithPageAsync(keyword, pageNum, pageSize);
+                var q = await hospitalBrandApplyService.GetListWithPageAsync(keyword, hospitalLinkMan, hospitalLinkManPhone, pageNum, pageSize);
 
                 var hospitalBrandApply = from d in q.List
                                          select new HospitalBrandApplyVo
@@ -66,7 +68,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                              GoodsId = d.GoodsId,
                                              GoodsType = d.GoodsType,
                                              AllSaleNum = d.AllSaleNum,
-                                             ExceededReason = d.ExceededReason
+                                             ExceededReason = d.ExceededReason,
+                                             BusinessLicenseName = d.BusinessLicenseName,
+                                             HospitalLinkMan = d.HospitalLinkMan,
+                                             HospitalLinkManPhone = d.HospitalLinkManPhone
                                          };
 
                 FxPageInfo<HospitalBrandApplyVo> hospitalBrandApplyPageInfo = new FxPageInfo<HospitalBrandApplyVo>();
@@ -97,6 +102,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 {
                     AddHospitalBrandApplyDto addDto = new AddHospitalBrandApplyDto();
                     addDto.HospitalName = addVo.HospitalName;
+                    addDto.HospitalLinkMan = addVo.HospitalLinkMan;
+                    addDto.HospitalLinkManPhone = addVo.HospitalLinkManPhone;
+                    addDto.BusinessLicenseName = addVo.BusinessLicenseName;
                     addDto.GoodsUrl = z.GoodsUrl;
                     addDto.GoodsId = z.GoodsId;
                     addDto.GoodsType = z.GoodsType;
@@ -140,12 +148,15 @@ namespace Fx.Amiya.Background.Api.Controllers
                 HospitalBrandApplyVo hospitalBrandApplyVo = new HospitalBrandApplyVo();
                 hospitalBrandApplyVo.Id = hospitalBrandApply.Id;
                 hospitalBrandApplyVo.HospitalName = hospitalBrandApply.HospitalName;
+                hospitalBrandApplyVo.BusinessLicenseName = hospitalBrandApply.BusinessLicenseName;
+                hospitalBrandApplyVo.HospitalLinkMan = hospitalBrandApply.HospitalLinkMan;
+                hospitalBrandApplyVo.HospitalLinkManPhone = hospitalBrandApply.HospitalLinkManPhone;
                 hospitalBrandApplyVo.GoodsUrl = hospitalBrandApply.GoodsUrl;
                 hospitalBrandApplyVo.GoodsId = hospitalBrandApply.GoodsId;
                 hospitalBrandApplyVo.GoodsType = hospitalBrandApply.GoodsType;
                 hospitalBrandApplyVo.AllSaleNum = hospitalBrandApply.AllSaleNum;
                 hospitalBrandApplyVo.ExceededReason = hospitalBrandApply.ExceededReason;
-                var goodsInfo = await tmallGoodsSkuService.GetListWithPageAsync(hospitalBrandApplyVo.GoodsId,hospitalBrandApplyVo.HospitalName, 1, 9999);
+                var goodsInfo = await tmallGoodsSkuService.GetListWithPageAsync(hospitalBrandApplyVo.GoodsId, hospitalBrandApplyVo.HospitalName, 1, 9999);
                 var goodsInfoList = from d in goodsInfo.List
                                     select new TmallGoodsSkuVo
                                     {
@@ -153,7 +164,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                         Price = d.Price,
                                         SkuName = d.SkuName,
                                         GoodsId = d.GoodsId,
-                                        AllCount=d.AllCount,
+                                        AllCount = d.AllCount,
                                     };
                 hospitalBrandApplyVo.TmallGoodsSkuVo = goodsInfoList.ToList(); ;
                 return ResultData<HospitalBrandApplyVo>.Success().AddData("hospitalBrandApplyInfo", hospitalBrandApplyVo);
@@ -179,6 +190,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 UpdateHospitalBrandApplyDto updateDto = new UpdateHospitalBrandApplyDto();
                 updateDto.Id = updateVo.Id;
                 updateDto.HospitalName = updateVo.HospitalName;
+                updateDto.BusinessLicenseName = updateVo.BusinessLicenseName;
+                updateDto.HospitalLinkMan = updateVo.HospitalLinkMan;
+                updateDto.HospitalLinkManPhone = updateVo.HospitalLinkManPhone;
                 updateDto.GoodsId = updateVo.GoodsId;
                 updateDto.GoodsType = updateVo.GoodsType;
                 updateDto.GoodsUrl = updateVo.GoodsUrl;
@@ -241,14 +255,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                       select new ExportHospitalBrandApplyAndTmallGoodsVo()
                       {
                           HospitalName = d.HospitalName,
+                          BusinessLicenseName = d.BusinessLicenseName,
+                          HospitalLinkMan = d.HospitalLinkMan,
+                          HospitalLinkManPhone = d.HospitalLinkManPhone,
                           GooodsUrl = d.GooodsUrl,
                           GoodsId = d.GoodsId,
                           SkuName = d.SkuName,
                           Price = d.Price,
                           AllSaleNum = d.AllSaleNum,
-                          GoodsType=d.GoodsType,
-                          AllCount=d.AllCount,
-                         ExceededReason=d.ExceededReason
+                          GoodsType = d.GoodsType,
+                          AllCount = d.AllCount,
+                          ExceededReason = d.ExceededReason
                       };
             var exportOrderWriteOff = res.ToList();
             var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);

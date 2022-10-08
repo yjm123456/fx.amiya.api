@@ -32,12 +32,14 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<HospitalBrandApplyDto>> GetListWithPageAsync(string keyword, int pageNum, int pageSize)
+        public async Task<FxPageInfo<HospitalBrandApplyDto>> GetListWithPageAsync(string keyword, string hospitalLinkMan, string hospitalLinkManPhone, int pageNum, int pageSize)
         {
             try
             {
                 var hospitalBrandApply = from d in dalHospitalBrandApply.GetAll()
-                                         where keyword == null || d.HospitalName.Contains(keyword) || d.GoodsId.Contains(keyword)
+                                         where (string.IsNullOrWhiteSpace(keyword) || d.HospitalName.Contains(keyword) || d.GoodsId.Contains(keyword))
+                                        && (string.IsNullOrWhiteSpace(hospitalLinkMan) || d.HospitalLinkMan == hospitalLinkMan)
+                                        && (string.IsNullOrWhiteSpace(hospitalLinkManPhone) || d.HospitalLinkManPhone == hospitalLinkManPhone)
                                          select new HospitalBrandApplyDto
                                          {
                                              Id = d.Id,
@@ -47,6 +49,9 @@ namespace Fx.Amiya.Service
                                              GoodsUrl = d.GoodsUrl,
                                              AllSaleNum = d.AllSaleNum,
                                              ExceededReason = d.ExceededReason,
+                                             BusinessLicenseName = d.BusinessLicenseName,
+                                             HospitalLinkMan = d.HospitalLinkMan,
+                                             HospitalLinkManPhone = d.HospitalLinkManPhone
                                          };
 
                 FxPageInfo<HospitalBrandApplyDto> hospitalBrandApplyPageInfo = new FxPageInfo<HospitalBrandApplyDto>();
@@ -66,12 +71,15 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var hospitalName = await dalHospitalBrandApply.GetAll().FirstOrDefaultAsync(e => e.HospitalName == addDto.HospitalName&&e.GoodsId==addDto.GoodsId);
+                var hospitalName = await dalHospitalBrandApply.GetAll().FirstOrDefaultAsync(e => e.HospitalName == addDto.HospitalName && e.GoodsId == addDto.GoodsId);
                 if (hospitalName != null)
                 { throw new Exception("您已参与过报名信息，请勿重复提交！"); }
                 HospitalBrandApply hospitalBrandApply = new HospitalBrandApply();
                 hospitalBrandApply.Id = Guid.NewGuid().ToString();
                 hospitalBrandApply.HospitalName = addDto.HospitalName;
+                hospitalBrandApply.HospitalLinkMan = addDto.HospitalLinkMan;
+                hospitalBrandApply.HospitalLinkManPhone = addDto.HospitalLinkManPhone;
+                hospitalBrandApply.BusinessLicenseName = addDto.BusinessLicenseName;
                 hospitalBrandApply.GoodsId = addDto.GoodsId;
                 hospitalBrandApply.GoodsType = addDto.GoodsType;
                 hospitalBrandApply.GoodsUrl = addDto.GoodsUrl;
@@ -103,6 +111,9 @@ namespace Fx.Amiya.Service
                     {
                         Id = "",
                         HospitalName = "",
+                        BusinessLicenseName = "",
+                        HospitalLinkMan = "",
+                        HospitalLinkManPhone = "",
                         GoodsId = "",
                         GoodsType = "",
                         GoodsUrl = "",
@@ -114,6 +125,9 @@ namespace Fx.Amiya.Service
                 HospitalBrandApplyDto hospitalBrandApplyDto = new HospitalBrandApplyDto();
                 hospitalBrandApplyDto.Id = hospitalBrandApply.Id;
                 hospitalBrandApplyDto.HospitalName = hospitalBrandApply.HospitalName;
+                hospitalBrandApplyDto.BusinessLicenseName = hospitalBrandApply.BusinessLicenseName;
+                hospitalBrandApplyDto.HospitalLinkMan = hospitalBrandApply.HospitalLinkMan;
+                hospitalBrandApplyDto.HospitalLinkManPhone = hospitalBrandApply.HospitalLinkManPhone;
                 hospitalBrandApplyDto.GoodsId = hospitalBrandApply.GoodsId;
                 hospitalBrandApplyDto.GoodsType = hospitalBrandApply.GoodsType;
                 hospitalBrandApplyDto.GoodsUrl = hospitalBrandApply.GoodsUrl;
@@ -173,6 +187,9 @@ namespace Fx.Amiya.Service
                     throw new Exception("医院品牌报名编号错误！");
 
                 hospitalBrandApply.HospitalName = updateDto.HospitalName;
+                hospitalBrandApply.BusinessLicenseName = updateDto.BusinessLicenseName;
+                hospitalBrandApply.HospitalLinkMan = updateDto.HospitalLinkMan;
+                hospitalBrandApply.HospitalLinkManPhone = updateDto.HospitalLinkManPhone;
                 hospitalBrandApply.GoodsId = updateDto.GoodsId;
                 hospitalBrandApply.GoodsType = updateDto.GoodsType;
                 hospitalBrandApply.GoodsUrl = updateDto.GoodsUrl;
@@ -230,6 +247,11 @@ namespace Fx.Amiya.Service
                     var brandApplyInfo = await this.GetByGoodsIdAndHospitalNameAsync(x.GoodsId, x.CreateHospital);
                     result.GoodsType = brandApplyInfo.GoodsType;
                     result.GooodsUrl = brandApplyInfo.GoodsUrl;
+                    result.HospitalName = brandApplyInfo.HospitalName;
+                    result.BusinessLicenseName = brandApplyInfo.BusinessLicenseName;
+                    result.HospitalLinkMan = brandApplyInfo.HospitalLinkMan;
+                    result.HospitalLinkManPhone = brandApplyInfo.HospitalLinkManPhone;
+                    result.HospitalName = brandApplyInfo.HospitalName;
                     result.HospitalName = brandApplyInfo.HospitalName;
                     result.AllSaleNum = brandApplyInfo.AllSaleNum;
                     result.ExceededReason = brandApplyInfo.ExceededReason;

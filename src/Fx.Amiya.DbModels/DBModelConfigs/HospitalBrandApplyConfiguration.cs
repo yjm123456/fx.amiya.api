@@ -14,6 +14,9 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.ToTable("tbl_hospital_brand_apply");
             builder.Property(t => t.Id).HasColumnName("id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(t => t.HospitalName).HasColumnName("hospital_name").HasColumnType("varchar(100)").IsRequired();
+            builder.Property(t => t.BusinessLicenseName).HasColumnName("business_license_name").HasColumnType("varchar(100)").IsRequired(false);
+            builder.Property(t => t.HospitalLinkMan).HasColumnName("hospital_link_man").HasColumnType("varchar(50)").IsRequired();
+            builder.Property(t => t.HospitalLinkManPhone).HasColumnName("hospital_link_man_phone").HasColumnType("varchar(45)").IsRequired();
             builder.Property(t => t.GoodsId).HasColumnName("goods_id").HasColumnType("varchar(12)").IsRequired(false);
             builder.Property(t => t.GoodsType).HasColumnName("goods_type").HasColumnType("varchar(45)").IsRequired(false);
             builder.Property(t => t.GoodsUrl).HasColumnName("goods_url").HasColumnType("varchar（300）").IsRequired(false);

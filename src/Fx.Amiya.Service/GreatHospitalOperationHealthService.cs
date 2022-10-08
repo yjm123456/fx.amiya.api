@@ -31,6 +31,7 @@ namespace Fx.Amiya.Service
                                                    where (keyword == null || d.HospitalInfo.Name.Contains(keyword))
                                                    && (d.IndicatorId == indicatorsId)
                                                    && (d.Valid == true)
+
                                                    select new GreatHospitalOperationHealthDto
                                                    {
                                                        Id = d.Id,
