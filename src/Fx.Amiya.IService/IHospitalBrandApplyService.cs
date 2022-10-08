@@ -19,7 +19,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<HospitalBrandApplyDto>> GetListWithPageAsync(string keyword, int pageNum, int pageSize);
+        Task<FxPageInfo<HospitalBrandApplyDto>> GetListWithPageAsync(string keyword, string hospitalLinkMan, string hospitalLinkManPhone, int pageNum, int pageSize);
 
 
 
