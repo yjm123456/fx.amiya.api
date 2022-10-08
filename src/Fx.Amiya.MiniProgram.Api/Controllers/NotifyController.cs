@@ -17,6 +17,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Fx.Amiya.MiniProgram.Api.Controllers
 {
@@ -232,6 +233,70 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             sArray.Add("gmt_refund", input.gmt_refund);
 
             return sArray;
+        }
+        [HttpPost("rechargepayresult")]
+        public async Task<string> PayNotifyUrl()
+        {
+            //获取回调POST过来的xml数据的代码
+            using Stream stream = HttpContext.Request.Body;
+            byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
+            await stream.ReadAsync(buffer, 0, buffer.Length);
+            string xml = System.Text.Encoding.UTF8.GetString(buffer);
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(xml);
+            string return_code = xmlDoc.DocumentElement.GetElementsByTagName("return_code")[0].InnerText;
+            string out_trade_no = xmlDoc.DocumentElement.GetElementsByTagName("out_trade_no")[0].InnerText;//商户订单号
+            string transaction_id = xmlDoc.DocumentElement.GetElementsByTagName("transaction_id")[0].InnerText;//微信支付订单号
+            string nonce_str = xmlDoc.DocumentElement.GetElementsByTagName("nonce_str")[0].InnerText;//随机字符串
+            string total_fee = xmlDoc.DocumentElement.GetElementsByTagName("total_fee")[0].InnerText; //金额
+            
+            try
+            {
+                unitOfWork.BeginTransaction();
+                // 业务逻辑
+                //成功通知微信
+                if (return_code.ToUpper() == "SUCCESS")
+                {
+                    var record = await balanceRechargeRecordService.GetRechargeRecordByIdAsync(out_trade_no);
+                    if (record == null) throw new Exception("没有找到该用户的充值信息");
+                    UpdateRechargeRecordStatusDto updateRechargeRecord = new UpdateRechargeRecordStatusDto();
+                    updateRechargeRecord.Id = record.Id;
+                    updateRechargeRecord.OrderId = transaction_id;
+                    updateRechargeRecord.Status = 1;
+                    updateRechargeRecord.CompleteDate = DateTime.Now;
+                    await balanceRechargeRecordService.UpdateRechargeRecordStatusAsync(updateRechargeRecord);
+                    //更新余额
+                    await balanceAccountService.UpdateAccountBalanceAsync(record.CustomerId);
+
+                    #region 储值奖励积分
+
+                    var totalRecharge = await balanceRechargeRecordService.GetAllRechargeAmountAsync(record.CustomerId);
+
+                    var rechargeRewardRuleList = await rechargeRewardRuleService.GetRewardListAsync();
+
+                    foreach (var rule in rechargeRewardRuleList)
+                    {
+                        if (totalRecharge >= rule.MinAmount)
+                        {
+                            var integrationRecord = await CreateIntegrationRecordAsync(record.CustomerId, rule.GiveIntegration, 1);
+                            if (integrationRecord != null) await integrationAccount.AddByConsumptionAsync(integrationRecord);
+                        }
+                    }
+
+                    #endregion
+                    
+                }
+                unitOfWork.Commit();
+                return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
+            }
+            catch (Exception e)
+            {
+                unitOfWork.RollBack();
+                return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>"; //回调失败返回给微信
+                throw e;
+            }
+            
+
         }
     }
 }

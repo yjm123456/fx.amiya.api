@@ -246,5 +246,13 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 今日小黄车差评量
         /// </summary>
         public int MiniVanBadReviews { get; set; }
+        /// <summary>
+        /// 抖音数据更新时间
+        /// </summary>
+        public DateTime? TikTokUpdateDate { get; set; }
+        /// <summary>
+        /// 直播中数据更新时间
+        /// </summary>
+        public DateTime? LivingUpdateDate { get; set; }
     }
 }

@@ -1,5 +1,8 @@
-﻿using Fx.Amiya.Dto;
+﻿using Fx.Amiya.Core.Dto.Integration;
+using Fx.Amiya.Core.Interfaces.Integration;
+using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.Balance;
+using Fx.Amiya.Dto.OrderAppInfo;
 using Fx.Amiya.IService;
 using Fx.Amiya.MiniProgram.Api.Filters;
 using Fx.Amiya.MiniProgram.Api.Vo.Balance;
@@ -7,14 +10,17 @@ using Fx.Amiya.MiniProgram.Api.Vo.Order;
 using Fx.Amiya.MiniProgram.Api.Vo.Recharge;
 using Fx.Amiya.Service;
 using Fx.Common;
+using Fx.Infrastructure.DataAccess;
 using Fx.Open.Infrastructure.Web;
 using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Fx.Amiya.MiniProgram.Api.Controllers
 {
@@ -30,9 +36,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private IMiniSessionStorage sessionStorage;
         private IAliPayService _aliPayService;
         private readonly IRechargeAmountService rechargeAmountService;
-        
-
-        public RechargeController(IBalanceAccountService balanceAccountService, IBalanceRechargeService balanceRechargeRecordService, TokenReader tokenReader, IMiniSessionStorage sessionStorage, IAliPayService aliPayService, IBalanceUseRecordService balanceUseRecordService, IRechargeAmountService rechargeAmountService)
+        private Domain.IRepository.IWxMiniUserRepository _wxMiniUserRepository;
+        private readonly ICustomerService customerService;
+        private readonly IOrderService orderService;
+        private readonly IRechargeRewardRuleService rechargeRewardRuleService;
+        private IIntegrationAccount integrationAccount;
+        private IUnitOfWork unitOfWork;
+        public RechargeController(IBalanceAccountService balanceAccountService, IBalanceRechargeService balanceRechargeRecordService, TokenReader tokenReader, IMiniSessionStorage sessionStorage, IAliPayService aliPayService, IBalanceUseRecordService balanceUseRecordService, IRechargeAmountService rechargeAmountService, Domain.IRepository.IWxMiniUserRepository wxMiniUserRepository, ICustomerService customerService, IOrderService orderService, IRechargeRewardRuleService rechargeRewardRuleService, IIntegrationAccount integrationAccount, IUnitOfWork unitOfWork)
         {
             this.balanceAccountService = balanceAccountService;
             this.balanceRechargeRecordService = balanceRechargeRecordService;
@@ -41,6 +51,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             _aliPayService = aliPayService;
             this.balanceUseRecordService = balanceUseRecordService;
             this.rechargeAmountService = rechargeAmountService;
+            _wxMiniUserRepository = wxMiniUserRepository;
+            this.customerService = customerService;
+            this.orderService = orderService;
+            this.rechargeRewardRuleService = rechargeRewardRuleService;
+            this.integrationAccount = integrationAccount;
+            this.unitOfWork = unitOfWork;
         }
         /// <summary>
         /// 获取用户余额
@@ -85,7 +101,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 RechargeDate = b.RechargeDate,
                 Status = b.Status,
                 StatusText = b.StatusText,
-                ExchangeType=b.ExchageType
+                ExchangeType = b.ExchageType
             }).ToList();
             return ResultData<FxPageInfo<BalanceRechargeRecordVo>>.Success().AddData("recordList", fxPageInfo);
         }
@@ -94,20 +110,22 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("useList")]
-        public async Task<ResultData<FxPageInfo<BalanceUseRecordVo>>> GetBalanceUseRecord(int pageNum,int pageSize){
+        public async Task<ResultData<FxPageInfo<BalanceUseRecordVo>>> GetBalanceUseRecord(int pageNum, int pageSize)
+        {
             FxPageInfo<BalanceUseRecordVo> fxPageInfo = new FxPageInfo<BalanceUseRecordVo>();
             var token = tokenReader.GetToken();
             var sesssionInfo = sessionStorage.GetSession(token);
             string customerId = sesssionInfo.FxCustomerId;
-            var list = await balanceUseRecordService.GetBalanceUseRecordListAsync(pageNum,pageSize,customerId);
+            var list = await balanceUseRecordService.GetBalanceUseRecordListAsync(pageNum, pageSize, customerId);
             fxPageInfo.TotalCount = list.TotalCount;
-            fxPageInfo.List = list.List.Select(b=>new BalanceUseRecordVo {
-                Amount=b.Amount,
-                UseDate=b.CreateDate,
-                GoodsName=b.GoodsName   
+            fxPageInfo.List = list.List.Select(b => new BalanceUseRecordVo
+            {
+                Amount = b.Amount,
+                UseDate = b.CreateDate,
+                GoodsName = b.GoodsName
             }).ToList();
 
-            return ResultData<FxPageInfo<BalanceUseRecordVo>>.Success().AddData("useRecordList",fxPageInfo);
+            return ResultData<FxPageInfo<BalanceUseRecordVo>>.Success().AddData("useRecordList", fxPageInfo);
         }
         /// <summary>
         /// 生成订单
@@ -122,16 +140,20 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             var token = tokenReader.GetToken();
             var sessionInfo = sessionStorage.GetSession(token);
             string customerId = sessionInfo.FxCustomerId;
+            var customerInfo = await customerService.GetByIdAsync(customerId);
+            var miniUserInfo = await _wxMiniUserRepository.GetByUserIdAsync(customerInfo.UserId);
+            string OpenId = miniUserInfo.OpenId;
+
             CreateBalanceRechargeRecordDto recordDto = new CreateBalanceRechargeRecordDto();
             var record = await balanceRechargeRecordService.GetRechargeRecordingAsync(customerId);
-            if (record != null) throw new Exception("已存在一个未支付的充值订单");
+            if (record != null) throw new Exception("已存在一个未支付的充值订单,请先取消未支付订单");
             int type = ServiceClass.GetRechargeTypeByExchangeCode(orderAdd.ExchangeCode);
             if (type == -1) throw new Exception("不支持的支付方式");
-            var amount= await rechargeAmountService.GetRechargeAmountAsync(orderAdd.AmountId);
-            if(amount==null) throw new Exception("不支持的充值金额");
+            var amount = await rechargeAmountService.GetRechargeAmountAsync(orderAdd.AmountId);
+            if (amount == null) throw new Exception("不支持的充值金额");
             recordDto.ExchangeType = type;
             recordDto.Id = CreateOrderIdHelper.GetNextNumber();
-            recordDto.CustomerId = customerId;           
+            recordDto.CustomerId = customerId;
             recordDto.RechargeAmount = amount.Amount;
             var balanceAccount = await balanceAccountService.GetAccountInfoAsync(customerId);
             recordDto.Balance = balanceAccount.Balance;
@@ -140,37 +162,37 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             string tradeId = await balanceRechargeRecordService.AddRechargeRecordAsync(recordDto);
             if (orderAdd.ExchangeCode == "WECHAT")
             {
-                throw new Exception("暂不支持微信支付");
+                //throw new Exception("暂不支持微信支付");
                 #region 微信支付
-                //WxPackageInfo packageInfo = new WxPackageInfo();
-                //packageInfo.Body = orderId;
-                ////回调地址需重新设置(todo;)
-                //packageInfo.NotifyUrl = string.Format("http://{0}/pay/wx_Pay.aspx", Request.HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString() + ":" + Request.HttpContext.Connection.LocalPort);
-                //packageInfo.OutTradeNo = orderId;
-                //packageInfo.TotalFee = (int)(totalFee * 100m);
-                //if (packageInfo.TotalFee < 1m)
-                //{
-                //    packageInfo.TotalFee = 1m;
-                //}
-                ////支付人
-                //packageInfo.OpenId = OpenId;
-                //string CheckValue = "";
-                ////验证参数
-                //if (orderService.CheckVxSetParams(out CheckValue))
-                //{
-                //    if (!orderService.CheckVxPackage(packageInfo, out CheckValue))
-                //    {
-                //        throw new Exception(CheckValue.ToString());
-                //    }
-                //    var payRequest = await orderService.BuildPayRequest(packageInfo);
-                //    PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
-                //    payRequestInfo.appId = payRequest.appId;
-                //    payRequestInfo.package = payRequest.package;
-                //    payRequestInfo.timeStamp = payRequest.timeStamp;
-                //    payRequestInfo.nonceStr = payRequest.nonceStr;
-                //    payRequestInfo.paySign = payRequest.paySign;
-                //    orderAddResult.PayRequestInfo = payRequestInfo;
-                //}
+                WxPackageInfo packageInfo = new WxPackageInfo();
+                packageInfo.Body = tradeId;
+                //回调地址需重新设置(todo;)
+                packageInfo.NotifyUrl = string.Format("http://wswjym.gnway.cc/amiya/wxmini/Notify/rechargepayresult", Request.HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString() + ":" + Request.HttpContext.Connection.LocalPort);
+                packageInfo.OutTradeNo = tradeId;
+                packageInfo.TotalFee = amount.Amount * 100m;
+                if (packageInfo.TotalFee < 1m)
+                {
+                    packageInfo.TotalFee = 1m;
+                }
+                //支付人
+                packageInfo.OpenId = OpenId;
+                string CheckValue = "";
+                //验证参数
+                if (orderService.CheckVxSetParams(out CheckValue))
+                {
+                    if (!orderService.CheckVxPackage(packageInfo, out CheckValue))
+                    {
+                        throw new Exception(CheckValue.ToString());
+                    }
+                    var payRequest = await orderService.BuildPayRequest(packageInfo);
+                    PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
+                    payRequestInfo.appId = payRequest.appId;
+                    payRequestInfo.package = payRequest.package;
+                    payRequestInfo.timeStamp = payRequest.timeStamp;
+                    payRequestInfo.nonceStr = payRequest.nonceStr;
+                    payRequestInfo.paySign = payRequest.paySign;
+                    rechargeResultVo.PayRequestInfo = payRequestInfo;
+                }
 
                 #endregion
             }
@@ -239,13 +261,15 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             var token = tokenReader.GetToken();
             var sessionInfo = sessionStorage.GetSession(token);
             string customerId = sessionInfo.FxCustomerId;
+            var customerInfo = await customerService.GetByIdAsync(customerId);
+            var miniUserInfo = await _wxMiniUserRepository.GetByUserIdAsync(customerInfo.UserId);
+            string OpenId = miniUserInfo.OpenId;
             var record = await balanceRechargeRecordService.GetRechargeRecordByRecordIdAndCustomerIdAsync(customerId, recordId);
             if (record == null) throw new Exception("没有对应订单!");
             if (record.Status != 0)
             {
                 throw new Exception("订单状态已改变,重新支付失败!");
             }
-
             if (record.ExchageType == 0)
             {
                 //支付宝支付
@@ -270,21 +294,78 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 rechargeResultVo.AlipayUrl = res.Result;
                 #endregion
             }
-            else if(record.ExchageType==1)
+            else if (record.ExchageType == 1)
             {
                 //微信支付
-                throw new Exception("暂不支持微信支付");
+                WxPackageInfo packageInfo = new WxPackageInfo();
+                packageInfo.Body = recordId;
+                //回调地址需重新设置(todo;)
+                packageInfo.NotifyUrl = string.Format("http://wswjym.gnway.cc:80/recharge/payresult/", Request.HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString() + ":" + Request.HttpContext.Connection.LocalPort);
+                packageInfo.OutTradeNo = recordId;
+                packageInfo.TotalFee = (int)(record.RechargeAmount * 100m);
+                if (packageInfo.TotalFee < 1m)
+                {
+                    packageInfo.TotalFee = 1m;
+                }
+                //支付人
+                packageInfo.OpenId = OpenId;
+                string CheckValue = "";
+                //验证参数
+                if (orderService.CheckVxSetParams(out CheckValue))
+                {
+                    if (!orderService.CheckVxPackage(packageInfo, out CheckValue))
+                    {
+                        throw new Exception(CheckValue.ToString());
+                    }
+                    var payRequest = await orderService.BuildPayRequest(packageInfo);
+                    PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
+                    payRequestInfo.appId = payRequest.appId;
+                    payRequestInfo.package = payRequest.package;
+                    payRequestInfo.timeStamp = payRequest.timeStamp;
+                    payRequestInfo.nonceStr = payRequest.nonceStr;
+                    payRequestInfo.paySign = payRequest.paySign;
+                    rechargeResultVo.PayRequestInfo = payRequestInfo;
+                }
             }
-            return ResultData<RechargeResultVo>.Success().AddData("rechargeResult",rechargeResultVo);
+            return ResultData<RechargeResultVo>.Success().AddData("rechargeResult", rechargeResultVo);
         }
         [HttpGet("amountList")]
-        public async Task<ResultData<List<RechargeAmountVo>>> GetRechargeAmountList() {
-            var list =await rechargeAmountService.GetRechargeAmountListAsync();
-            var rechargeAmountList= list.Select(r=>new RechargeAmountVo { 
-                Id=r.Id,
-                Amount=r.Amount
+        public async Task<ResultData<List<RechargeAmountVo>>> GetRechargeAmountList()
+        {
+            var list = await rechargeAmountService.GetRechargeAmountListAsync();
+            var rechargeAmountList = list.Select(r => new RechargeAmountVo
+            {
+                Id = r.Id,
+                Amount = r.Amount
             }).ToList();
-            return ResultData<List<RechargeAmountVo>>.Success().AddData("rechargeAmountList",rechargeAmountList);
+            return ResultData<List<RechargeAmountVo>>.Success().AddData("rechargeAmountList", rechargeAmountList);
+        }
+        
+
+        /// <summary>
+        /// 创建积分奖励记录
+        /// </summary>
+        /// <param name="customerId">用户id</param>
+        /// <param name="awardAmount">奖励积分金额</param>
+        /// <param name="percent">奖励比率</param>
+        /// <returns></returns>
+        private async Task<ConsumptionIntegrationDto> CreateIntegrationRecordAsync(string customerId, decimal awardAmount, decimal percent)
+        {
+            var exist = await integrationAccount.ExistRechargeRewardAsync(customerId, awardAmount, percent);
+            if (exist)
+            {
+                return null;
+            }
+            ConsumptionIntegrationDto consumptionIntegrationDto = new ConsumptionIntegrationDto
+            {
+                Quantity = awardAmount,
+                Percent = 1,
+                AmountOfConsumption = awardAmount,
+                Date = DateTime.Now,
+                CustomerId = customerId,
+                ExpiredDate = DateTime.Now.AddMonths(12),
+            };
+            return consumptionIntegrationDto;
         }
     }
 }

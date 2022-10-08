@@ -530,58 +530,97 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 orderId = orderId.Trim(',');
                 goodsName = goodsName.Trim(',');
 
-                #region 微信支付
-                //WxPackageInfo packageInfo = new WxPackageInfo();
-                //packageInfo.Body = orderId;
-                ////回调地址需重新设置(todo;)
-                //packageInfo.NotifyUrl = string.Format("http://{0}/pay/wx_Pay.aspx", Request.HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString() + ":" + Request.HttpContext.Connection.LocalPort);
-                //packageInfo.OutTradeNo = orderId;
-                //packageInfo.TotalFee = (int)(totalFee * 100m);
-                //if (packageInfo.TotalFee < 1m)
-                //{
-                //    packageInfo.TotalFee = 1m;
-                //}
-                ////支付人
-                //packageInfo.OpenId = OpenId;
-                //string CheckValue = "";
-                ////验证参数
-                //if (orderService.CheckVxSetParams(out CheckValue))
-                //{
-                //    if (!orderService.CheckVxPackage(packageInfo, out CheckValue))
-                //    {
-                //        throw new Exception(CheckValue.ToString());
-                //    }
-                //    var payRequest = await orderService.BuildPayRequest(packageInfo);
-                //    PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
-                //    payRequestInfo.appId = payRequest.appId;
-                //    payRequestInfo.package = payRequest.package;
-                //    payRequestInfo.timeStamp = payRequest.timeStamp;
-                //    payRequestInfo.nonceStr = payRequest.nonceStr;
-                //    payRequestInfo.paySign = payRequest.paySign;
-                //    orderAddResult.PayRequestInfo = payRequestInfo;
-                //}
 
-                #endregion
+                //微信支付
+                WxPackageInfo packageInfo = new WxPackageInfo();
+                packageInfo.Body = orderId;
+                //回调地址需重新设置(todo;)
+                packageInfo.NotifyUrl = string.Format("http://{0}/order/wxpay", Request.HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString() + ":" + Request.HttpContext.Connection.LocalPort);
+                packageInfo.OutTradeNo = orderId;
+                packageInfo.TotalFee = (int)(totalFee * 100m);
+                if (packageInfo.TotalFee < 1m)
+                {
+                    packageInfo.TotalFee = 1m;
+                }
+                //支付人
+                packageInfo.OpenId = OpenId;
+                string CheckValue = "";
+                //验证参数
+                if (orderService.CheckVxSetParams(out CheckValue))
+                {
+                    if (!orderService.CheckVxPackage(packageInfo, out CheckValue))
+                    {
+                        throw new Exception(CheckValue.ToString());
+                    }
+                    var payRequest = await orderService.BuildPayRequest(packageInfo);
+                    PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
+                    payRequestInfo.appId = payRequest.appId;
+                    payRequestInfo.package = payRequest.package;
+                    payRequestInfo.timeStamp = payRequest.timeStamp;
+                    payRequestInfo.nonceStr = payRequest.nonceStr;
+                    payRequestInfo.paySign = payRequest.paySign;
+                    orderAddResult.PayRequestInfo = payRequestInfo;
+                }
 
-                #region 支付宝支付
-                SortedDictionary<string, string> sParaTemp = new SortedDictionary<string, string>();
-                AliPayConfig Config = new AliPayConfig();
-                sParaTemp.Add("service", Config.service);
-                sParaTemp.Add("partner", Config.seller_id);
-                sParaTemp.Add("seller_id", Config.seller_id);
-                sParaTemp.Add("_input_charset", Config.input_charset.ToLower());
-                sParaTemp.Add("payment_type", Config.payment_type);
-                sParaTemp.Add("notify_url", Config.notify_url);
-                sParaTemp.Add("return_url", Config.return_url);
-                sParaTemp.Add("anti_phishing_key", Config.anti_phishing_key);
-                sParaTemp.Add("exter_invoke_ip", Config.exter_invoke_ip);
-                sParaTemp.Add("out_trade_no", tradeId);
-                sParaTemp.Add("subject", orderId);
-                sParaTemp.Add("total_fee", totalFee.ToString("0.00"));
-                sParaTemp.Add("body", goodsName);
-                var res = _aliPayService.BuildRequest(sParaTemp);
-                orderAddResult.AlipayUrl = res.Result;
-                #endregion
+                //微信支付
+                /*if (orderAdd.ExchangeType == 2) {
+                    #region 微信支付
+                    WxPackageInfo packageInfo = new WxPackageInfo();
+                    packageInfo.Body = orderId;
+                    //回调地址需重新设置(todo;)
+                    packageInfo.NotifyUrl = string.Format("http://{0}/pay/wx_Pay.aspx", Request.HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString() + ":" + Request.HttpContext.Connection.LocalPort);
+                    packageInfo.OutTradeNo = orderId;
+                    packageInfo.TotalFee = (int)(totalFee * 100m);
+                    if (packageInfo.TotalFee < 1m)
+                    {
+                        packageInfo.TotalFee = 1m;
+                    }
+                    //支付人
+                    packageInfo.OpenId = OpenId;
+                    string CheckValue = "";
+                    //验证参数
+                    if (orderService.CheckVxSetParams(out CheckValue))
+                    {
+                        if (!orderService.CheckVxPackage(packageInfo, out CheckValue))
+                        {
+                            throw new Exception(CheckValue.ToString());
+                        }
+                        var payRequest = await orderService.BuildPayRequest(packageInfo);
+                        PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
+                        payRequestInfo.appId = payRequest.appId;
+                        payRequestInfo.package = payRequest.package;
+                        payRequestInfo.timeStamp = payRequest.timeStamp;
+                        payRequestInfo.nonceStr = payRequest.nonceStr;
+                        payRequestInfo.paySign = payRequest.paySign;
+                        orderAddResult.PayRequestInfo = payRequestInfo;
+                    }
+                    #endregion
+                }
+                else if (orderAdd.ExchangeType==1) {
+                    #region 支付宝支付
+                    SortedDictionary<string, string> sParaTemp = new SortedDictionary<string, string>();
+                    AliPayConfig Config = new AliPayConfig();
+                    sParaTemp.Add("service", Config.service);
+                    sParaTemp.Add("partner", Config.seller_id);
+                    sParaTemp.Add("seller_id", Config.seller_id);
+                    sParaTemp.Add("_input_charset", Config.input_charset.ToLower());
+                    sParaTemp.Add("payment_type", Config.payment_type);
+                    sParaTemp.Add("notify_url", Config.notify_url);
+                    sParaTemp.Add("return_url", Config.return_url);
+                    sParaTemp.Add("anti_phishing_key", Config.anti_phishing_key);
+                    sParaTemp.Add("exter_invoke_ip", Config.exter_invoke_ip);
+                    sParaTemp.Add("out_trade_no", tradeId);
+                    sParaTemp.Add("subject", orderId);
+                    sParaTemp.Add("total_fee", totalFee.ToString("0.00"));
+                    sParaTemp.Add("body", goodsName);
+                    var res = _aliPayService.BuildRequest(sParaTemp);
+                    orderAddResult.AlipayUrl = res.Result;
+                    #endregion
+                }*/
+
+               
+
+
             }
 
             return ResultData<OrderAddResultVo>.Success().AddData("orderAddResult", orderAddResult);
@@ -623,39 +662,39 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             orderId = orderId.Trim(',');
             OrderAddResultVo orderPayResult = new OrderAddResultVo();
             #region 微信支付
-            //PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
-            //WxPackageInfo packageInfo = new WxPackageInfo();
-            //packageInfo.Body = orderId;
-            ////回调地址需重新设置(todo;)
-            //packageInfo.NotifyUrl = string.Format("http://{0}/pay/wx_Pay.aspx", Request.HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString() + ":" + Request.HttpContext.Connection.LocalPort);
-            //packageInfo.OutTradeNo = tradeId;
-            //packageInfo.TotalFee = (int)(totalFee * 100m);
-            //if (packageInfo.TotalFee < 1m)
-            //{
-            //    packageInfo.TotalFee = 1m;
-            //}
-            ////支付人
-            //packageInfo.OpenId = OpenId;
-            //string CheckValue = "";
-            ////验证参数
-            //if (orderService.CheckVxSetParams(out CheckValue))
-            //{
-            //    if (!orderService.CheckVxPackage(packageInfo, out CheckValue))
-            //    {
-            //        throw new Exception(CheckValue.ToString());
-            //    }
-            //    var payRequest = await orderService.BuildPayRequest(packageInfo);
-            //    payRequestInfo.appId = payRequest.appId;
-            //    payRequestInfo.package = payRequest.package;
-            //    payRequestInfo.timeStamp = payRequest.timeStamp;
-            //    payRequestInfo.nonceStr = payRequest.nonceStr;
-            //    payRequestInfo.paySign = payRequest.paySign;
-            //    orderPayResult.PayRequestInfo=payRequestInfo;
-            //}
+            PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
+            WxPackageInfo packageInfo = new WxPackageInfo();
+            packageInfo.Body = orderId;
+            //回调地址需重新设置(todo;)
+            packageInfo.NotifyUrl = string.Format("http://{0}/pay/wx_Pay.aspx", Request.HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString() + ":" + Request.HttpContext.Connection.LocalPort);
+            packageInfo.OutTradeNo = tradeId;
+            packageInfo.TotalFee = (int)(totalFee * 100m);
+            if (packageInfo.TotalFee < 1m)
+            {
+                packageInfo.TotalFee = 1m;
+            }
+            //支付人
+            packageInfo.OpenId = OpenId;
+            string CheckValue = "";
+            //验证参数
+            if (orderService.CheckVxSetParams(out CheckValue))
+            {
+                if (!orderService.CheckVxPackage(packageInfo, out CheckValue))
+                {
+                    throw new Exception(CheckValue.ToString());
+                }
+                var payRequest = await orderService.BuildPayRequest(packageInfo);
+                payRequestInfo.appId = payRequest.appId;
+                payRequestInfo.package = payRequest.package;
+                payRequestInfo.timeStamp = payRequest.timeStamp;
+                payRequestInfo.nonceStr = payRequest.nonceStr;
+                payRequestInfo.paySign = payRequest.paySign;
+                orderPayResult.PayRequestInfo = payRequestInfo;
+            }
             #endregion
 
             #region 支付宝支付
-            SortedDictionary<string, string> sParaTemp = new SortedDictionary<string, string>();
+            /*SortedDictionary<string, string> sParaTemp = new SortedDictionary<string, string>();
             AliPayConfig Config = new AliPayConfig();
             sParaTemp.Add("service", Config.service);
             sParaTemp.Add("partner", Config.seller_id);
@@ -671,12 +710,16 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             sParaTemp.Add("total_fee", totalFee.ToString("0.00"));
             sParaTemp.Add("body", goodsName);
             var res = _aliPayService.BuildRequest(sParaTemp);
-            orderPayResult.AlipayUrl = res.Result;
+            orderPayResult.AlipayUrl = res.Result;*/
             #endregion
 
             return ResultData<OrderAddResultVo>.Success().AddData("orderPayGetResult", orderPayResult);
         }
-
+        /// <summary>
+        /// 积分订单重新支付
+        /// </summary>
+        /// <param name="tradeId"></param>
+        /// <returns></returns>
         [HttpPost("pay/{tradeId}")]
         public async Task<ResultData> IntegrationPayAsync(string tradeId)
         {
@@ -1084,7 +1127,77 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
             return ResultData.Success();
         }
+        /// <summary>
+        /// 微信支付回调地址
+        /// </summary>
+        /// <param name="tradeId"></param>
+        /// <returns></returns>
+        [HttpPost("wxpay/{tradeId}")]
+        public async Task<ResultData> WeiXinPayAsync(string tradeId)
+        {
+            var token = tokenReader.GetToken();
+            var sessionInfo = sessionStorage.GetSession(token);
+            string customerId = sessionInfo.FxCustomerId;
 
+            var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(tradeId);
+
+
+            List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
+            foreach (var item in orderTrade.OrderInfoList)
+            {
+                if (item.ExchangeType == (byte)ExchangeType.Integration && item.IntegrationQuantity > 0)
+                {
+                    //积分余额
+                    decimal integrationBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(customerId);
+                    if (orderTrade.TotalIntegration > integrationBalance)
+                        throw new Exception("积分余额不足");
+                    UseIntegrationDto useIntegrationDto = new UseIntegrationDto();
+                    useIntegrationDto.CustomerId = customerId;
+                    useIntegrationDto.OrderId = item.Id;
+                    useIntegrationDto.Date = DateTime.Now;
+                    useIntegrationDto.UseQuantity = (decimal)item.IntegrationQuantity;
+                    await integrationAccountService.UseByGoodsConsumption(useIntegrationDto);
+                }
+
+                UpdateOrderDto updateOrder = new UpdateOrderDto();
+                updateOrder.OrderId = item.Id;
+                updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                if (item.ActualPayment.HasValue)
+                {
+                    updateOrder.Actual_payment = item.ActualPayment.Value;
+
+                    var bind = await _dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == item.Phone);
+                    if (bind != null)
+                    {
+                        bind.NewConsumptionDate = DateTime.Now;
+                        bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
+                        bind.NewContentPlatForm = ServiceClass.GetAppTypeText(item.AppType);
+                        bind.AllPrice += item.ActualPayment.Value;
+                        bind.AllOrderCount += item.Quantity;
+                        await _dalBindCustomerService.UpdateAsync(bind, true);
+                    }
+
+                }
+                if (item.IntegrationQuantity.HasValue)
+                {
+                    updateOrder.IntergrationQuantity = item.IntegrationQuantity;
+                }
+                Random random = new Random();
+                updateOrder.AppType = item.AppType;
+                updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
+                updateOrderList.Add(updateOrder);
+            }
+
+            //修改订单状态
+            await orderService.UpdateAsync(updateOrderList);
+
+            UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
+            updateOrderTrade.TradeId = tradeId;
+            updateOrderTrade.AddressId = orderTrade.AddressId;
+            updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+            await orderService.UpdateOrderTradeAsync(updateOrderTrade);
+            return ResultData.Success();
+        }
 
 
     }

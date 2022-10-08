@@ -19,7 +19,7 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Order
         /// </summary>
         public string Remark { get; set; }
         /// <summary>
-        /// 支付方式 1:三方支付 3:余额支付
+        /// 支付方式 1:支付宝支付，2:微信支付 3:余额支付
         /// </summary>
         public int ExchangeType { get; set; }
         /// <summary>

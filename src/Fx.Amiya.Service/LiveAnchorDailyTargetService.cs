@@ -137,6 +137,8 @@ namespace Fx.Amiya.Service
                                  MinivanRefund = d.MinivanRefund,
                                  MiniVanBadReviews = d.MiniVanBadReviews,
                                  PerformanceNum = d.PerformanceNum,
+                                 TikTokUpdateDate=d.TikTokUpdateDate,
+                                 LivingUpdateDate=d.LivingUpdateDate
                              };
 
                 FxPageInfo<LiveAnchorDailyTargetDto> liveAnchorDailyTargetPageInfo = new FxPageInfo<LiveAnchorDailyTargetDto>();
@@ -635,6 +637,7 @@ namespace Fx.Amiya.Service
                 //liveAnchorDailyTarget.CluesNum = updateDto.CluesNum;
                
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
+                liveAnchorDailyTarget.TikTokUpdateDate = DateTime.Now;
                 await dalLiveAnchorDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
@@ -1093,7 +1096,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.Consultation2 = addDto.Consultation2;
                 liveAnchorDailyTarget.CargoSettlementCommission = addDto.CargoSettlementCommission;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
-                liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
+                liveAnchorDailyTarget.RecordDate = addDto.RecordDate;               
                 await dalLiveAnchorDailyTarget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
@@ -1144,6 +1147,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.Consultation2 = updateDto.Consultation2;
                 liveAnchorDailyTarget.CargoSettlementCommission = updateDto.CargoSettlementCommission;
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
+                liveAnchorDailyTarget.LivingUpdateDate = DateTime.Now;
                 await dalLiveAnchorDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 //添加修改后的

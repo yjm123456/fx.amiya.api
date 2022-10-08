@@ -169,7 +169,7 @@ namespace Fx.Amiya.Service
         public async Task UpdateRechargeRecordStatusAsync(UpdateRechargeRecordStatusDto update)
         {
             var record = dalBalanceRechargeRecord.GetAll().Where(e=>e.Id==update.Id&&e.OrderId==null).SingleOrDefault();
-            if (record == null) throw new Exception("充值状态异常");
+            if (record == null) return;
             record.Status = update.Status;
             record.OrderId = update.OrderId;
             record.CompleteDate = update.CompleteDate;

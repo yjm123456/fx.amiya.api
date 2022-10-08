@@ -67,7 +67,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.MinivanRefund).HasColumnName("mini_van_refund").HasColumnType("int").IsRequired();
             builder.Property(t => t.OldCustomerPerformanceNum).HasColumnName("old_customer_performance_num").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.PerformanceNum).HasColumnName("performance_num").HasColumnType("decimal(12,2)").IsRequired();
-
+            builder.Property(t => t.TikTokUpdateDate).HasColumnName("tiktok_update_date").HasColumnType("datetime").IsRequired(false);
+            builder.Property(t => t.LivingUpdateDate).HasColumnName("living_update_date").HasColumnType("datetime").IsRequired(false);
 
             builder.HasOne(e => e.LiveAnchorMonthlyTarget).WithMany(e => e.LiveAnchorDailyTargets).HasForeignKey(e => e.LiveanchorMonthlyTargetId);
         }

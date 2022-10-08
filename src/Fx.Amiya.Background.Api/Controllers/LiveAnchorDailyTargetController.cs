@@ -124,13 +124,16 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 MinivanRefund = d.MinivanRefund,
                                                 MiniVanBadReviews = d.MiniVanBadReviews,
                                                 NetWorkConsultingEmployeeName = d.NetWorkConsultingEmployeeName,
-                                                LivingTrackingEmployeeName = d.LivingTrackingEmployeeName
+                                                LivingTrackingEmployeeName = d.LivingTrackingEmployeeName,
+                                                TikTokUpdateDate=d.TikTokUpdateDate,
+                                                LivingUpdateDate=d.LivingUpdateDate
+                                                
                                             };
 
                 FxPageInfo<LiveAnchorDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<LiveAnchorDailyTargetVo>();
                 liveAnchorDailyTargetPageInfo.TotalCount = q.TotalCount;
                 liveAnchorDailyTargetPageInfo.List = liveAnchorDailyTarget;
-
+                
                 return ResultData<FxPageInfo<LiveAnchorDailyTargetVo>>.Success().AddData("liveAnchorDailyTargetInfo", liveAnchorDailyTargetPageInfo);
             }
             catch (Exception ex)

@@ -133,8 +133,8 @@ namespace Fx.Amiya.Service
             _dalContentPlatFormOrder = dalContentPlatFormOrder;
             _expressManageService = expressManageService;
         }
-        WxPayAccount _payAccount = new WxPayAccount("wx695942e4818de445", "0b2e89d17e84a947244569d0ec63b816", "1611476157", "asdfg67890asdfg67890asdfg67890as", false, "", "");
-
+        //WxPayAccount _payAccount = new WxPayAccount("wx695942e4818de445", "0b2e89d17e84a947244569d0ec63b816", "1611476157", "asdfg67890asdfg67890asdfg67890as", false, "", "");
+        WxPayAccount _payAccount = new WxPayAccount("wx695942e4818de445", "0b2e89d17e84a947244569d0ec63b816", "1632393371", "Amy20202020202020202020202020202", false, "", "");
         /// <summary>
         /// 获取订单列表
         /// </summary>

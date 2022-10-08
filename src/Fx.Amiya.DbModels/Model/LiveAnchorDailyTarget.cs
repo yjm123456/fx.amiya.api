@@ -242,7 +242,14 @@ namespace Fx.Amiya.DbModels.Model
         /// 今日业绩
         /// </summary>
         public decimal PerformanceNum { get; set; }
-
+        /// <summary>
+        /// 抖音直播前数据更新时间
+        /// </summary>
+        public DateTime? TikTokUpdateDate { get; set; }
+        /// <summary>
+        /// 直播中数据更新时间
+        /// </summary>
+        public DateTime? LivingUpdateDate { get; set; }
         public LiveAnchorMonthlyTarget LiveAnchorMonthlyTarget { get; set; }
     }
 }

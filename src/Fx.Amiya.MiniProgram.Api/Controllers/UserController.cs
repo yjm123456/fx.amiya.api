@@ -105,9 +105,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         OpenId = sessionInfo.OpenId,
                         Scene = loginVo.Scene,
                         UnionId = sessionInfo.UnionId
-                    });
-                  
-
+                    });                 
                     string token = Guid.NewGuid().ToString().Replace("-", "");
 
                     sessionStorage.SetSession(token, new FxWxMiniUserSession()
