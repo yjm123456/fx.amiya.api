@@ -1436,10 +1436,10 @@ ALTER TABLE `tbl_remark`
 ----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
+
 ------------------------------------------------------------------王健 2022/10/08 BEGIN--------------------------------------------
 ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
 ADD COLUMN `tiktok_update_date` datetime NULL AFTER `record_date`;
-
 
 ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target` 
 ADD COLUMN `living_update_date` datetime NULL AFTER `tiktok_update_date`;
@@ -1449,6 +1449,17 @@ ALTER TABLE `amiyadb`.`tbl_liveanchor_daily_target`
 ADD COLUMN `after_living_update_date` datetime NULL AFTER `tiktok_update_date`;
 
 ------------------------------------------------------------------王健 2022/10/08 END--------------------------------------------
+
+------------------------------------------------------------------余建明 2022/10/10 BEGIN--------------------------------------------
+
+
+--本机构运营数据加入排序功能
+ALTER TABLE `amiyadb`.`tbl_hospital_operation_data` 
+ADD COLUMN `sort` INT NOT NULL AFTER `great_hospital`;
+------------------------------------------------------------------余建明 2022/10/10 END--------------------------------------------
+
+
+
 
 
 

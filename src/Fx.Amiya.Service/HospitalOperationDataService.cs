@@ -51,6 +51,7 @@ namespace Fx.Amiya.Service
                                                 LastMonthData = d.LastMonthData,
                                                 BeforeMonthData = d.BeforeMonthData,
                                                 ChainRatio = d.ChainRatio,
+                                                Sort = d.Sort,
                                                 GreatHospital = d.GreatHospital,
                                             };
 
@@ -86,6 +87,7 @@ namespace Fx.Amiya.Service
                     hospitalOperationData.LastMonthData = x.LastMonthData;
                     hospitalOperationData.BeforeMonthData = x.BeforeMonthData;
                     hospitalOperationData.ChainRatio = x.ChainRatio;
+                    hospitalOperationData.Sort = x.Sort;
                     hospitalOperationData.GreatHospital = hospitalOperationInfo.ExcellentHospital;
                     await dalHospitalOperationData.AddAsync(hospitalOperationData, true);
                 }
@@ -121,6 +123,7 @@ namespace Fx.Amiya.Service
                 hospitalOperationDataDto.LastMonthData = hospitalOperationData.LastMonthData;
                 hospitalOperationDataDto.BeforeMonthData = hospitalOperationData.BeforeMonthData;
                 hospitalOperationDataDto.ChainRatio = hospitalOperationData.ChainRatio;
+                hospitalOperationDataDto.Sort = hospitalOperationData.Sort;
                 hospitalOperationDataDto.GreatHospital = hospitalOperationData.GreatHospital;
                 return hospitalOperationDataDto;
             }

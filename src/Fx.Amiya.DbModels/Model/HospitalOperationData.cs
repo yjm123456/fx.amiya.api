@@ -38,6 +38,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 优秀机构
         /// </summary>
         public string GreatHospital { get; set; }
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int Sort { get; set; }
 
         public HospitalInfo HospitalInfo { get; set; }
 
