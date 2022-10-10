@@ -997,6 +997,26 @@ CREATE TABLE `tbl_hospital_deal_item` (
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
+------------------------------------------------------------------余建明 2022/10/10 BEGIN--------------------------------------------
+
+--优秀机构数据填写功能
+CREATE TABLE `amiyadb`.`tbl_great_hospital_data_write` (
+  `id` VARCHAR(50) NOT NULL,
+  `indicator_id` VARCHAR(100) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `operation_name` VARCHAR(100) NULL,
+  `operation_value` VARCHAR(200) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_greathospitaldatawrite_indicatorinfo_idx` (`indicator_id` ASC) VISIBLE,
+  CONSTRAINT `fk_greathospitaldatawrite_indicatorinfo`
+    FOREIGN KEY (`indicator_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_operational_indicator` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+------------------------------------------------------------------余建明 2022/10/10 END--------------------------------------------
 
 
 

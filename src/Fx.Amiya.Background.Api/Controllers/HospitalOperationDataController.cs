@@ -48,7 +48,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var q = await hospitalOperationDataService.GetListAsync(keyword, indicatorsId,hospitalId);
+                var q = await hospitalOperationDataService.GetListAsync(keyword, indicatorsId, hospitalId);
 
                 var hospitalOperationData = from d in q
                                             select new HospitalOperationDataVo
@@ -60,11 +60,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 LastMonthData = d.LastMonthData,
                                                 BeforeMonthData = d.BeforeMonthData,
                                                 ChainRatio = d.ChainRatio,
+                                                Sort = d.Sort,
                                                 GreatHospital = d.GreatHospital,
                                             };
 
                 List<HospitalOperationDataVo> hospitalOperationDataPageInfo = new List<HospitalOperationDataVo>();
-                hospitalOperationDataPageInfo = hospitalOperationData.ToList();
+                hospitalOperationDataPageInfo = hospitalOperationData.OrderBy(x => x.Sort).ToList();
 
                 return ResultData<List<HospitalOperationDataVo>>.Success().AddData("hospitalOperationDataInfo", hospitalOperationDataPageInfo);
             }
@@ -96,6 +97,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.LastMonthData = x.LastMonthData;
                     addDto.BeforeMonthData = x.BeforeMonthData;
                     addDto.ChainRatio = x.ChainRatio;
+                    addDto.Sort = x.Sort;
                     AddHospitalOperationDataDtoList.Add(addDto);
                 }
 
@@ -134,6 +136,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 hospitalOperationDataVo.LastMonthData = hospitalOperationData.LastMonthData;
                 hospitalOperationDataVo.BeforeMonthData = hospitalOperationData.BeforeMonthData;
                 hospitalOperationDataVo.ChainRatio = hospitalOperationData.ChainRatio;
+                hospitalOperationDataVo.Sort = hospitalOperationData.Sort;
                 hospitalOperationDataVo.GreatHospital = hospitalOperationData.GreatHospital;
 
                 return ResultData<HospitalOperationDataVo>.Success().AddData("hospitalOperationDataInfo", hospitalOperationDataVo);

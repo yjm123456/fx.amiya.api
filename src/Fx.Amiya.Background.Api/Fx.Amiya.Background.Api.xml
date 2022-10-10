@@ -2186,6 +2186,53 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.GreatHospitalDataWriteController">
+            <summary>
+            优秀机构数据填报板块数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GreatHospitalDataWriteController.#ctor(Fx.Amiya.IService.IGreatHospitalDataWriteService)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="greatHospitalDataWriteService"></param>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GreatHospitalDataWriteController.GetListAsync(System.String,System.String)">
+            <summary>
+            获取优秀机构数据填报信息列表
+            </summary>
+            <param name="keyword">关键词</param>
+            <param name="indicatorsId">归属指标id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GreatHospitalDataWriteController.AddAsync(Fx.Amiya.Background.Api.Vo.GreatHospitalDataWrite.AddGreatHospitalDataWriteVo)">
+            <summary>
+            添加优秀机构数据填报信息
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GreatHospitalDataWriteController.GetByIdAsync(System.String)">
+            <summary>
+            根据优秀机构数据填报编号获取优秀机构数据填报信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GreatHospitalDataWriteController.UpdateAsync(Fx.Amiya.Background.Api.Vo.GreatHospitalDataWrite.UpdateGreatHospitalDataWriteVo)">
+            <summary>
+            修改优秀机构数据填报信息
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GreatHospitalDataWriteController.DeleteAsync(System.String)">
+            <summary>
+            删除优秀机构数据填报信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.GreatHospitalOperationHealthController">
             <summary>
             优秀机构运营健康指标板块数据接口
@@ -11750,6 +11797,56 @@
             会员价格
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalDataWrite.AddGreatHospitalDataWriteVo.IndicatorId">
+            <summary>
+            归属指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalDataWrite.AddGreatHospitalDataWriteVo.OperationName">
+            <summary>
+            运营维度名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalDataWrite.AddGreatHospitalDataWriteVo.OperationValue">
+            <summary>
+            运营维度值
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalDataWrite.GreatHospitalDataWriteVo.IndicatorId">
+            <summary>
+            归属指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalDataWrite.GreatHospitalDataWriteVo.IndicatorName">
+            <summary>
+            归属指标名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalDataWrite.GreatHospitalDataWriteVo.OperationName">
+            <summary>
+            运营维度名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalDataWrite.GreatHospitalDataWriteVo.OperationValue">
+            <summary>
+            运营维度值
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalDataWrite.UpdateGreatHospitalDataWriteVo.IndicatorId">
+            <summary>
+            归属指标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalDataWrite.UpdateGreatHospitalDataWriteVo.OperationName">
+            <summary>
+            运营维度名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalDataWrite.UpdateGreatHospitalDataWriteVo.OperationValue">
+            <summary>
+            运营维度值
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo">
             <summary>
             新增优秀机构运营健康指标
@@ -13990,6 +14087,11 @@
             环比
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.AddHospitalOperationDataVo.Sort">
+            <summary>
+            排序
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataVo">
             <summary>
             机构运营数据分析
@@ -14028,6 +14130,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataVo.GreatHospital">
             <summary>
             优秀机构
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataVo.Sort">
+            <summary>
+            排序
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.HospitalOperationData.UpdateHospitalOperationDataVo">

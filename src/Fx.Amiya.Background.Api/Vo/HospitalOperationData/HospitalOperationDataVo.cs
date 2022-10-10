@@ -42,5 +42,10 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalOperationData
         /// 优秀机构
         /// </summary>
         public string GreatHospital { get; set; }
+
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int Sort { get; set; }
     }
 }

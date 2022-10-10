@@ -37,5 +37,9 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalOperationData
         /// 环比
         /// </summary>
         public decimal ChainRatio { get; set; }
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int Sort { get; set; }
     }
 }
