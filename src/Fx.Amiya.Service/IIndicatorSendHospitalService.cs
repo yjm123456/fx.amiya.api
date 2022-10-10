@@ -41,7 +41,8 @@ namespace Fx.Amiya.Service
                         IndicatorName = e.HospitalOperationalIndicator.Name,
                         HospitalName = e.HospitalInfo.Name,
                         HospitalAddress = e.HospitalInfo.Address,
-                        IsSubmit = e.SubmitStatus
+                        IsSubmit = e.SubmitStatus,
+                        IsRemark=e.RemarkStatus
                     }
                 );
             fxPageInfo.TotalCount = list.Count();
@@ -67,7 +68,8 @@ namespace Fx.Amiya.Service
                         IndicatorName = e.HospitalOperationalIndicator.Name,
                         Describe = e.HospitalOperationalIndicator.Describe,
                         StartDate = e.HospitalOperationalIndicator.StartDate,
-                        EndDate = e.HospitalOperationalIndicator.EndDate
+                        EndDate = e.HospitalOperationalIndicator.EndDate,
+                        IsRemark=e.RemarkStatus
                     }
                 );
             fxPageInfo.TotalCount = list.Count();

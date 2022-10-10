@@ -254,5 +254,9 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 直播中数据更新时间
         /// </summary>
         public DateTime? LivingUpdateDate { get; set; }
+        /// <summary>
+        /// 直播后数据更新时间
+        /// </summary>
+        public  DateTime? AfterLivingUpdateDate { get; set; }
     }
 }

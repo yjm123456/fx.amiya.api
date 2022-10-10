@@ -63,7 +63,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                     IndicatorName = e.IndicatorName,
                     Describe = e.Describe,
                     StartDate = e.StartDate,
-                    EndDate = e.EndDate
+                    EndDate = e.EndDate,
+                    IsRemark=e.IsRemark
                 }).ToList();
 
                 return ResultData<FxPageInfo<HospitalIndicatorFillVo>>.Success().AddData("hospitalIndicatorFillData", fxPageInfo);

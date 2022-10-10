@@ -276,5 +276,18 @@ namespace Fx.Amiya.Service
             indicator.UpdateDate = DateTime.Now;
             await dalHospitalOperationIndicator.UpdateAsync(indicator,true);
         }
+        /// <summary>
+        /// 获取已过期的运营指标
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<OperationIndicatorSubmitAndRemarkDto>> GetUnValidIndicatorAsync()
+        {
+            var endDate = DateTime.Now.Date;
+            var indicatorList = dalHospitalOperationIndicator.GetAll().Where(e => e.Valid == true &&  e.EndDate < endDate).Select(e => new OperationIndicatorSubmitAndRemarkDto
+            {
+                Id = e.Id,
+            }).ToList();
+            return indicatorList;
+        }
     }
 }

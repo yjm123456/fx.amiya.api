@@ -71,6 +71,11 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task UpdateRemarkAndSubmitStatusAsync(UpdateSubmitAndRemarkStatus updateDto);
+        /// <summary>
+        /// 获取已过期运营指标
+        /// </summary>
+        /// <returns></returns>
+        Task<List<OperationIndicatorSubmitAndRemarkDto>> GetUnValidIndicatorAsync();
 
     }
 }

@@ -34,5 +34,9 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalIndeicatorInput
         /// 结束时间
         /// </summary>
         public DateTime EndDate { get; set; }
+        /// <summary>
+        /// 批注状态
+        /// </summary>
+        public bool IsRemark { get; set; }
     }
 }

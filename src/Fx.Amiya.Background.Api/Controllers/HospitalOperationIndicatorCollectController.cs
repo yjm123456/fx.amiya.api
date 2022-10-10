@@ -66,7 +66,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                     IndicatorName = e.IndicatorName,
                     HospitalName = e.HospitalName,
                     HospitalAddress = e.HospitalAddress,
-                    IsSubmit = e.IsSubmit
+                    IsSubmit = e.IsSubmit,
+                    IsRemark=e.IsRemark
                 });
 
                 return ResultData<FxPageInfo<HospitalOperationIndicatorCollectVo>>.Success().AddData("hospitalOperationIndicatorCollectData", pageInfo);

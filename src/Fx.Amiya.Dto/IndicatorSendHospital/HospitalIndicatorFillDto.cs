@@ -32,5 +32,9 @@ namespace Fx.Amiya.Dto.IndicatorSendHospital
         /// 结束时间
         /// </summary>
         public DateTime EndDate { get; set; }
+        /// <summary>
+        /// 是否批注
+        /// </summary>
+        public bool IsRemark { get; set; }
     }
 }

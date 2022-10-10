@@ -2,6 +2,7 @@
 using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.Dto.Balance;
 using Fx.Amiya.Dto.TmallOrder;
+using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Amiya.MiniProgram.Api.Vo.Notify;
 using Fx.Amiya.Modules.Integration.Domin;
@@ -10,6 +11,7 @@ using Fx.Infrastructure.DataAccess;
 using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -36,9 +38,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private IUnitOfWork unitOfWork;
         private IIntegrationAccount integrationAccount;
         private readonly IRechargeRewardRuleService rechargeRewardRuleService;
+        private readonly IDalBindCustomerService _dalBindCustomerService;
         public NotifyController(IOrderService orderService,
             IAliPayService aliPayService,
-            ILogger<AliPayService> logger, IBalanceRechargeService balanceRechargeRecordService, IBalanceAccountService balanceAccountService, IUnitOfWork unitOfWork, IIntegrationAccount integrationAccount, IRechargeRewardRuleService rechargeRewardRuleService)
+            ILogger<AliPayService> logger, IBalanceRechargeService balanceRechargeRecordService, IBalanceAccountService balanceAccountService, IUnitOfWork unitOfWork, IIntegrationAccount integrationAccount, IRechargeRewardRuleService rechargeRewardRuleService, IDalBindCustomerService dalBindCustomerService)
         {
             this.orderService = orderService;
             _aliPayService = aliPayService;
@@ -48,6 +51,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             this.unitOfWork = unitOfWork;
             this.integrationAccount = integrationAccount;
             this.rechargeRewardRuleService = rechargeRewardRuleService;
+            _dalBindCustomerService = dalBindCustomerService;
         }
         /// <summary>
         /// 支付宝订单回调地址
@@ -234,8 +238,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
             return sArray;
         }
+        /// <summary>
+        /// 微信充值订单回调
+        /// </summary>
+        /// <returns></returns>
         [HttpPost("rechargepayresult")]
-        public async Task<string> PayNotifyUrl()
+        public async Task<string> PayRechargeNotifyUrl()
         {
             //获取回调POST过来的xml数据的代码
             using Stream stream = HttpContext.Request.Body;
@@ -250,6 +258,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             string nonce_str = xmlDoc.DocumentElement.GetElementsByTagName("nonce_str")[0].InnerText;//随机字符串
             string total_fee = xmlDoc.DocumentElement.GetElementsByTagName("total_fee")[0].InnerText; //金额
             
+
             try
             {
                 unitOfWork.BeginTransaction();
@@ -259,6 +268,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 {
                     var record = await balanceRechargeRecordService.GetRechargeRecordByIdAsync(out_trade_no);
                     if (record == null) throw new Exception("没有找到该用户的充值信息");
+                    if(record.Status==1) return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
                     UpdateRechargeRecordStatusDto updateRechargeRecord = new UpdateRechargeRecordStatusDto();
                     updateRechargeRecord.Id = record.Id;
                     updateRechargeRecord.OrderId = transaction_id;
@@ -296,6 +306,83 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 throw e;
             }
             
+
+        }
+        /// <summary>
+        /// 微信订单付款回调
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("orderpayresult")]
+        public async Task<string> PayOrderNotifyUrl()
+        {
+            //获取回调POST过来的xml数据的代码
+            using Stream stream = HttpContext.Request.Body;
+            byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
+            await stream.ReadAsync(buffer, 0, buffer.Length);
+            string xml = System.Text.Encoding.UTF8.GetString(buffer);
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(xml);
+            string return_code = xmlDoc.DocumentElement.GetElementsByTagName("return_code")[0].InnerText;
+            string out_trade_no = xmlDoc.DocumentElement.GetElementsByTagName("out_trade_no")[0].InnerText;//商户订单号
+            string transaction_id = xmlDoc.DocumentElement.GetElementsByTagName("transaction_id")[0].InnerText;//微信支付订单号
+            string nonce_str = xmlDoc.DocumentElement.GetElementsByTagName("nonce_str")[0].InnerText;//随机字符串
+            string total_fee = xmlDoc.DocumentElement.GetElementsByTagName("total_fee")[0].InnerText; //金额
+
+            try
+            {
+                // 业务逻辑
+                //成功通知微信
+                if (return_code.ToUpper() == "SUCCESS")
+                {
+                    var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(out_trade_no);
+
+                    List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
+                    foreach (var item in orderTrade.OrderInfoList)
+                    {                       
+                        UpdateOrderDto updateOrder = new UpdateOrderDto();
+                        updateOrder.OrderId = item.Id;
+                        updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                        if (item.ActualPayment.HasValue)
+                        {
+                            updateOrder.Actual_payment = item.ActualPayment.Value;
+
+                            var bind = await _dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == item.Phone);
+                            if (bind != null)
+                            {
+                                bind.NewConsumptionDate = DateTime.Now;
+                                bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
+                                bind.NewContentPlatForm = ServiceClass.GetAppTypeText(item.AppType);
+                                bind.AllPrice += item.ActualPayment.Value;
+                                bind.AllOrderCount += item.Quantity;
+                                await _dalBindCustomerService.UpdateAsync(bind, true);
+                            }
+                        }
+                        if (item.IntegrationQuantity.HasValue)
+                        {
+                            updateOrder.IntergrationQuantity = item.IntegrationQuantity;
+                        }
+                        Random random = new Random();
+                        updateOrder.AppType = item.AppType;
+                        updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
+                        updateOrderList.Add(updateOrder);
+                    }
+
+                    //修改订单状态
+                    await orderService.UpdateAsync(updateOrderList);
+                    /*UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
+                    updateOrderTrade.TradeId = out_trade_no;
+                    updateOrderTrade.AddressId = orderTrade.AddressId;
+                    updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                    await orderService.UpdateOrderTradeAsync(updateOrderTrade);    */              
+                }
+                return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
+            }
+            catch (Exception e)
+            {
+                return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>"; //回调失败返回给微信
+                throw e;
+            }
+
 
         }
     }

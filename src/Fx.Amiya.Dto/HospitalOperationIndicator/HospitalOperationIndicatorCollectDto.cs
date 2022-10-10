@@ -36,6 +36,10 @@ namespace Fx.Amiya.Dto.HospitalOperationIndicator
         /// 是否提报
         /// </summary>
         public bool IsSubmit { get; set; }
+        /// <summary>
+        /// 是否批注
+        /// </summary>
+        public bool IsRemark { get; set; }
     }
 }
 

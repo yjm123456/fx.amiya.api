@@ -217,6 +217,7 @@ namespace Fx.Amiya.Background.Api
                 var hospitalOperationIndicator = scope.ServiceProvider.GetService<IHospitalOperationIndicatorService>();
                 var indicatorSendToHospital = scope.ServiceProvider.GetService<IIndicatorSendHospitalService>();
                 var indicatorList = await hospitalOperationIndicator.GetUnSumbitAndUnRemarkIndicatorAsync();
+                var expireIndicatorList = await hospitalOperationIndicator.GetUnValidIndicatorAsync();
                 foreach (var indicator in indicatorList)
                 {
                     var status = await indicatorSendToHospital.SubmitAndRemarkStatusAsync(indicator.Id);
@@ -231,6 +232,10 @@ namespace Fx.Amiya.Background.Api
                     }
                     update.Id = indicator.Id;
                     await hospitalOperationIndicator.UpdateRemarkAndSubmitStatusAsync(update);
+                }
+                foreach (var item in expireIndicatorList)
+                {
+                    await hospitalOperationIndicator.DeleteAsync(item.Id);
                 }
             }
         }

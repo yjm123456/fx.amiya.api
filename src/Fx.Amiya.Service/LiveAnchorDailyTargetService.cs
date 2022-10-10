@@ -138,7 +138,8 @@ namespace Fx.Amiya.Service
                                  MiniVanBadReviews = d.MiniVanBadReviews,
                                  PerformanceNum = d.PerformanceNum,
                                  TikTokUpdateDate=d.TikTokUpdateDate,
-                                 LivingUpdateDate=d.LivingUpdateDate
+                                 LivingUpdateDate=d.LivingUpdateDate,
+                                 AfterLivingUpdateDate=d.AfterLivingUpdateDate
                              };
 
                 FxPageInfo<LiveAnchorDailyTargetDto> liveAnchorDailyTargetPageInfo = new FxPageInfo<LiveAnchorDailyTargetDto>();
@@ -1298,6 +1299,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.MinivanRefund = updateDto.MinivanRefund;
                 liveAnchorDailyTarget.MiniVanBadReviews = updateDto.MiniVanBadReviews;
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
+                liveAnchorDailyTarget.AfterLivingUpdateDate = updateDto.AfterLivingUpdateDate;
                 await dalLiveAnchorDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 //添加修改后的

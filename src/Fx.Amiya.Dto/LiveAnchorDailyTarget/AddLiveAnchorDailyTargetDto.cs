@@ -967,5 +967,9 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
+        /// <summary>
+        /// 直播后数据更新时间
+        /// </summary>
+        public DateTime? AfterLivingUpdateDate { get; set; }
     }
 }

@@ -126,7 +126,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 NetWorkConsultingEmployeeName = d.NetWorkConsultingEmployeeName,
                                                 LivingTrackingEmployeeName = d.LivingTrackingEmployeeName,
                                                 TikTokUpdateDate=d.TikTokUpdateDate,
-                                                LivingUpdateDate=d.LivingUpdateDate
+                                                LivingUpdateDate=d.LivingUpdateDate,
+                                                AfterLivingUpdateDate=d.AfterLivingUpdateDate
                                                 
                                             };
 
@@ -864,6 +865,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.MinivanRefund = updateVo.MinivanRefund;
                 updateDto.MiniVanBadReviews = updateVo.MiniVanBadReviews;
                 updateDto.RecordDate = updateVo.RecordDate;
+                updateDto.AfterLivingUpdateDate = DateTime.Now;
                 await _liveAnchorDailyTargetService.AfterLivingUpdateAsync(updateDto);
                 return ResultData.Success();
             }
