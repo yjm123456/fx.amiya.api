@@ -37,6 +37,7 @@ namespace Fx.Amiya.Service
                                                  Id = d.Id,
                                                  IndicatorId = d.IndicatorId,
                                                  IndicatorName = d.HospitalOperationalIndicator.Name,
+                                                 GreatHospitalName = d.HospitalOperationalIndicator.ExcellentHospital,
                                                  OperationName = d.OperationName,
                                                  OperationValue = d.OperationValue,
                                              };

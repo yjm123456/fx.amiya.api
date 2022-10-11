@@ -17,6 +17,11 @@ namespace Fx.Amiya.Background.Api.Vo.GreatHospitalDataWrite
         /// 归属指标名称
         /// </summary>
         public string IndicatorName { get; set; }
+
+        /// <summary>
+        /// 优秀机构
+        /// </summary>
+        public string GreatHospitalName { get; set; }
         /// <summary>
         /// 运营维度名称
         /// </summary>
