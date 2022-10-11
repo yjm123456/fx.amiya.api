@@ -20,6 +20,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace Fx.Amiya.MiniProgram.Api.Controllers
 {
@@ -59,7 +60,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost("aliPayNotifyUrl")]
-        public async Task<string> aliPayNotifyUrlAsync([FromForm]AliPayNotifyVo input)
+        public async Task<string> aliPayNotifyUrlAsync([FromForm] AliPayNotifyVo input)
         {
             string notifyLog = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 开始回调，回调id：" + input.notify_id;
             logger.LogInformation(notifyLog);
@@ -69,14 +70,16 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             {
                 return "fail";
             }
-            if (input.body== "RECHARGE") {
+            if (input.body == "RECHARGE")
+            {
                 //储值
                 try
                 {
                     unitOfWork.BeginTransaction();
                     var rechargeRecord = await balanceRechargeRecordService.GetRechargeRecordByIdAsync(input.out_trade_no);
                     //如果订单记录状态为success直接返回success
-                    if (rechargeRecord.Status == (int)RechargeStatus.Success) {
+                    if (rechargeRecord.Status == (int)RechargeStatus.Success)
+                    {
                         return "success";
                     }
                     UpdateRechargeRecordStatusDto update = new UpdateRechargeRecordStatusDto
@@ -99,11 +102,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
                     foreach (var rule in rechargeRewardRuleList)
                     {
-                        if (totalRecharge>=rule.MinAmount) {
+                        if (totalRecharge >= rule.MinAmount)
+                        {
                             var integrationRecord = await CreateIntegrationRecordAsync(rechargeRecord.CustomerId, rule.GiveIntegration, 1);
-                            if(integrationRecord!=null) await integrationAccount.AddByConsumptionAsync(integrationRecord);
+                            if (integrationRecord != null) await integrationAccount.AddByConsumptionAsync(integrationRecord);
                         }
-                    }                   
+                    }
 
                     #endregion
 
@@ -114,9 +118,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     unitOfWork.RollBack();
                     return "fail";
                 }
-                
-                
-            } else {
+
+
+            }
+            else
+            {
                 //商城下单
                 var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(input.out_trade_no);
                 List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
@@ -186,18 +192,21 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <param name="awardAmount">奖励积分金额</param>
         /// <param name="percent">奖励比率</param>
         /// <returns></returns>
-        private async Task<ConsumptionIntegrationDto> CreateIntegrationRecordAsync(string customerId,decimal awardAmount,decimal percent) {
-            var exist= await integrationAccount.ExistRechargeRewardAsync(customerId,awardAmount,percent);
-            if (exist) {
+        private async Task<ConsumptionIntegrationDto> CreateIntegrationRecordAsync(string customerId, decimal awardAmount, decimal percent)
+        {
+            var exist = await integrationAccount.ExistRechargeRewardAsync(customerId, awardAmount, percent);
+            if (exist)
+            {
                 return null;
             }
-            ConsumptionIntegrationDto consumptionIntegrationDto = new ConsumptionIntegrationDto { 
-                Quantity=awardAmount,
-                Percent=1,
-                AmountOfConsumption=awardAmount,
-                Date=DateTime.Now,
-                CustomerId=customerId,
-                ExpiredDate=DateTime.Now.AddMonths(12),
+            ConsumptionIntegrationDto consumptionIntegrationDto = new ConsumptionIntegrationDto
+            {
+                Quantity = awardAmount,
+                Percent = 1,
+                AmountOfConsumption = awardAmount,
+                Date = DateTime.Now,
+                CustomerId = customerId,
+                ExpiredDate = DateTime.Now.AddMonths(12),
             };
             return consumptionIntegrationDto;
         }
@@ -245,33 +254,31 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         [HttpPost("rechargepayresult")]
         public async Task<string> PayRechargeNotifyUrl()
         {
-            //获取回调POST过来的xml数据的代码
-            using Stream stream = HttpContext.Request.Body;
-            byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
-            await stream.ReadAsync(buffer, 0, buffer.Length);
-            string xml = System.Text.Encoding.UTF8.GetString(buffer);
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(xml);
-            string return_code = xmlDoc.DocumentElement.GetElementsByTagName("return_code")[0].InnerText;
-            string out_trade_no = xmlDoc.DocumentElement.GetElementsByTagName("out_trade_no")[0].InnerText;//商户订单号
-            string transaction_id = xmlDoc.DocumentElement.GetElementsByTagName("transaction_id")[0].InnerText;//微信支付订单号
-            string nonce_str = xmlDoc.DocumentElement.GetElementsByTagName("nonce_str")[0].InnerText;//随机字符串
-            string total_fee = xmlDoc.DocumentElement.GetElementsByTagName("total_fee")[0].InnerText; //金额
-            
-
             try
             {
                 unitOfWork.BeginTransaction();
+                //获取回调POST过来的xml数据的代码
+                using Stream stream = HttpContext.Request.Body;
+                byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
+                await stream.ReadAsync(buffer, 0, buffer.Length);
+                string xml = System.Text.Encoding.UTF8.GetString(buffer);
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(xml);
+                WeiXinPayNotifyVo weiXinPayNotifyVo = GetWeiXinRequestPostData(xmlDoc);
+                SortedDictionary<string, string> sParam = GetWeiXinRequestPostDic(weiXinPayNotifyVo);
+                SignHelper signHelper = new SignHelper();
+                string sign = await signHelper.SignPay(sParam, "Amy20202020202020202020202020202");
+                if (sign != weiXinPayNotifyVo.sign) return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
                 // 业务逻辑
                 //成功通知微信
-                if (return_code.ToUpper() == "SUCCESS")
+                if (weiXinPayNotifyVo.return_code.ToUpper() == "SUCCESS")
                 {
-                    var record = await balanceRechargeRecordService.GetRechargeRecordByIdAsync(out_trade_no);
+                    var record = await balanceRechargeRecordService.GetRechargeRecordByIdAsync(weiXinPayNotifyVo.out_trade_no);
                     if (record == null) throw new Exception("没有找到该用户的充值信息");
-                    if(record.Status==1) return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
+                    if (record.Status == 1) return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
                     UpdateRechargeRecordStatusDto updateRechargeRecord = new UpdateRechargeRecordStatusDto();
                     updateRechargeRecord.Id = record.Id;
-                    updateRechargeRecord.OrderId = transaction_id;
+                    updateRechargeRecord.OrderId = weiXinPayNotifyVo.transaction_id;
                     updateRechargeRecord.Status = 1;
                     updateRechargeRecord.CompleteDate = DateTime.Now;
                     await balanceRechargeRecordService.UpdateRechargeRecordStatusAsync(updateRechargeRecord);
@@ -294,7 +301,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     }
 
                     #endregion
-                    
+
                 }
                 unitOfWork.Commit();
                 return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
@@ -305,7 +312,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>"; //回调失败返回给微信
                 throw e;
             }
-            
+
 
         }
         /// <summary>
@@ -315,65 +322,61 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         [HttpPost("orderpayresult")]
         public async Task<string> PayOrderNotifyUrl()
         {
-            //获取回调POST过来的xml数据的代码
-            using Stream stream = HttpContext.Request.Body;
-            byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
-            await stream.ReadAsync(buffer, 0, buffer.Length);
-            string xml = System.Text.Encoding.UTF8.GetString(buffer);
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(xml);
-            string return_code = xmlDoc.DocumentElement.GetElementsByTagName("return_code")[0].InnerText;
-            string out_trade_no = xmlDoc.DocumentElement.GetElementsByTagName("out_trade_no")[0].InnerText;//商户订单号
-            string transaction_id = xmlDoc.DocumentElement.GetElementsByTagName("transaction_id")[0].InnerText;//微信支付订单号
-            string nonce_str = xmlDoc.DocumentElement.GetElementsByTagName("nonce_str")[0].InnerText;//随机字符串
-            string total_fee = xmlDoc.DocumentElement.GetElementsByTagName("total_fee")[0].InnerText; //金额
 
             try
             {
+                //获取回调POST过来的xml数据的代码
+                using Stream stream = HttpContext.Request.Body;
+                byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
+                await stream.ReadAsync(buffer, 0, buffer.Length);
+                string xml = System.Text.Encoding.UTF8.GetString(buffer);
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(xml);
+                WeiXinPayNotifyVo weiXinPayNotifyVo = GetWeiXinRequestPostData(xmlDoc);
+                SortedDictionary<string, string> sParam = GetWeiXinRequestPostDic(weiXinPayNotifyVo);
+                SignHelper signHelper = new SignHelper();
+                string sign = await signHelper.SignPay(sParam, "Amy20202020202020202020202020202");
+                if (sign != weiXinPayNotifyVo.sign) return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
                 // 业务逻辑
                 //成功通知微信
-                if (return_code.ToUpper() == "SUCCESS")
+                if (weiXinPayNotifyVo.return_code.ToUpper() == "SUCCESS")
                 {
-                    var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(out_trade_no);
-
-                    List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
-                    foreach (var item in orderTrade.OrderInfoList)
-                    {                       
-                        UpdateOrderDto updateOrder = new UpdateOrderDto();
-                        updateOrder.OrderId = item.Id;
-                        updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
-                        if (item.ActualPayment.HasValue)
+                    var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(weiXinPayNotifyVo.out_trade_no);
+                    if (orderTrade.StatusCode == OrderStatusCode.WAIT_BUYER_PAY)
+                    {
+                        List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
+                        foreach (var item in orderTrade.OrderInfoList)
                         {
-                            updateOrder.Actual_payment = item.ActualPayment.Value;
-
-                            var bind = await _dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == item.Phone);
-                            if (bind != null)
+                            UpdateOrderDto updateOrder = new UpdateOrderDto();
+                            updateOrder.OrderId = item.Id;
+                            updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                            if (item.ActualPayment.HasValue)
                             {
-                                bind.NewConsumptionDate = DateTime.Now;
-                                bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
-                                bind.NewContentPlatForm = ServiceClass.GetAppTypeText(item.AppType);
-                                bind.AllPrice += item.ActualPayment.Value;
-                                bind.AllOrderCount += item.Quantity;
-                                await _dalBindCustomerService.UpdateAsync(bind, true);
-                            }
-                        }
-                        if (item.IntegrationQuantity.HasValue)
-                        {
-                            updateOrder.IntergrationQuantity = item.IntegrationQuantity;
-                        }
-                        Random random = new Random();
-                        updateOrder.AppType = item.AppType;
-                        updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
-                        updateOrderList.Add(updateOrder);
-                    }
+                                updateOrder.Actual_payment = item.ActualPayment.Value;
 
-                    //修改订单状态
-                    await orderService.UpdateAsync(updateOrderList);
-                    /*UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
-                    updateOrderTrade.TradeId = out_trade_no;
-                    updateOrderTrade.AddressId = orderTrade.AddressId;
-                    updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
-                    await orderService.UpdateOrderTradeAsync(updateOrderTrade);    */              
+                                var bind = await _dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == item.Phone);
+                                if (bind != null)
+                                {
+                                    bind.NewConsumptionDate = DateTime.Now;
+                                    bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
+                                    bind.NewContentPlatForm = ServiceClass.GetAppTypeText(item.AppType);
+                                    bind.AllPrice += item.ActualPayment.Value;
+                                    bind.AllOrderCount += item.Quantity;
+                                    await _dalBindCustomerService.UpdateAsync(bind, true);
+                                }
+                            }
+                            if (item.IntegrationQuantity.HasValue)
+                            {
+                                updateOrder.IntergrationQuantity = item.IntegrationQuantity;
+                            }
+                            Random random = new Random();
+                            updateOrder.AppType = item.AppType;
+                            updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
+                            updateOrderList.Add(updateOrder);
+                        }
+                        //修改订单状态
+                        await orderService.UpdateAsync(updateOrderList);
+                    }
                 }
                 return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
             }
@@ -382,8 +385,57 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>"; //回调失败返回给微信
                 throw e;
             }
-
-
+        }
+        /// <summary>
+        /// 获取微信回调参数
+        /// </summary>
+        /// <param name="xmlDoc"></param>
+        /// <returns></returns>
+        private WeiXinPayNotifyVo GetWeiXinRequestPostData(XmlDocument xmlDoc)
+        {
+            WeiXinPayNotifyVo weiXinPayNotifyVo = new WeiXinPayNotifyVo();
+            weiXinPayNotifyVo.return_code = xmlDoc.DocumentElement.GetElementsByTagName("return_code")[0].InnerText;
+            weiXinPayNotifyVo.out_trade_no = xmlDoc.DocumentElement.GetElementsByTagName("out_trade_no")[0].InnerText;
+            weiXinPayNotifyVo.transaction_id = xmlDoc.DocumentElement.GetElementsByTagName("transaction_id")[0].InnerText;
+            weiXinPayNotifyVo.total_fee = xmlDoc.DocumentElement.GetElementsByTagName("total_fee")[0].InnerText;
+            weiXinPayNotifyVo.appid = xmlDoc.DocumentElement.GetElementsByTagName("appid")[0].InnerText;
+            weiXinPayNotifyVo.bank_type = xmlDoc.DocumentElement.GetElementsByTagName("bank_type")[0].InnerText;
+            weiXinPayNotifyVo.cash_fee = xmlDoc.DocumentElement.GetElementsByTagName("cash_fee")[0].InnerText;
+            weiXinPayNotifyVo.fee_type = xmlDoc.DocumentElement.GetElementsByTagName("fee_type")[0].InnerText;
+            weiXinPayNotifyVo.is_subscribe = xmlDoc.DocumentElement.GetElementsByTagName("is_subscribe")[0].InnerText;
+            weiXinPayNotifyVo.mch_id = xmlDoc.DocumentElement.GetElementsByTagName("mch_id")[0].InnerText;
+            weiXinPayNotifyVo.nonce_str = xmlDoc.DocumentElement.GetElementsByTagName("nonce_str")[0].InnerText;
+            weiXinPayNotifyVo.openid = xmlDoc.DocumentElement.GetElementsByTagName("openid")[0].InnerText;
+            weiXinPayNotifyVo.result_code = xmlDoc.DocumentElement.GetElementsByTagName("result_code")[0].InnerText;
+            weiXinPayNotifyVo.time_end = xmlDoc.DocumentElement.GetElementsByTagName("time_end")[0].InnerText;
+            weiXinPayNotifyVo.trade_type = xmlDoc.DocumentElement.GetElementsByTagName("trade_type")[0].InnerText;
+            weiXinPayNotifyVo.sign = xmlDoc.DocumentElement.GetElementsByTagName("sign")[0].InnerText;
+            return weiXinPayNotifyVo;
+        }
+        /// <summary>
+        /// 微信回调参数转换为有效字典
+        /// </summary>
+        /// <param name="weiXinPayNotifyVo"></param>
+        /// <returns></returns>
+        private SortedDictionary<string, string> GetWeiXinRequestPostDic(WeiXinPayNotifyVo weiXinPayNotifyVo)
+        {
+            SortedDictionary<string, string> sDic = new SortedDictionary<string, string>();
+            sDic.Add("appid", weiXinPayNotifyVo.appid);
+            sDic.Add("mch_id", weiXinPayNotifyVo.mch_id);
+            sDic.Add("nonce_str", weiXinPayNotifyVo.nonce_str);
+            sDic.Add("result_code", weiXinPayNotifyVo.result_code);
+            sDic.Add("openid", weiXinPayNotifyVo.openid);
+            sDic.Add("trade_type", weiXinPayNotifyVo.trade_type);
+            sDic.Add("bank_type", weiXinPayNotifyVo.bank_type);
+            sDic.Add("total_fee", weiXinPayNotifyVo.total_fee);
+            sDic.Add("cash_fee", weiXinPayNotifyVo.cash_fee);
+            sDic.Add("transaction_id", weiXinPayNotifyVo.transaction_id);
+            sDic.Add("out_trade_no", weiXinPayNotifyVo.out_trade_no);
+            sDic.Add("time_end", weiXinPayNotifyVo.time_end);
+            sDic.Add("fee_type", weiXinPayNotifyVo.fee_type);
+            sDic.Add("is_subscribe", weiXinPayNotifyVo.is_subscribe);
+            sDic.Add("return_code", weiXinPayNotifyVo.return_code);
+            return sDic;
         }
     }
 }
