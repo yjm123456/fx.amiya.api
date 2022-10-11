@@ -28,18 +28,18 @@ namespace Fx.Amiya.Service
             try
             {
                 var greatHospitalDataWrite = from d in dalGreatHospitalDataWrite.GetAll().Include(x => x.HospitalOperationalIndicator)
-                                                   where (keyword == null || d.OperationName.Contains(keyword))
-                                                   && (d.IndicatorId == indicatorsId)
-                                                   && (d.Valid == true)
+                                             where (keyword == null || d.OperationName.Contains(keyword))
+                                             && (d.IndicatorId == indicatorsId)
+                                             && (d.Valid == true)
 
-                                                   select new GreatHospitalDataWriteDto
-                                                   {
-                                                       Id = d.Id,
-                                                       IndicatorId = d.IndicatorId,
-                                                       IndicatorName=d.HospitalOperationalIndicator.Name,
-                                                       OperationName = d.OperationName,
-                                                       OperationValue = d.OperationValue,
-                                                   };
+                                             select new GreatHospitalDataWriteDto
+                                             {
+                                                 Id = d.Id,
+                                                 IndicatorId = d.IndicatorId,
+                                                 IndicatorName = d.HospitalOperationalIndicator.Name,
+                                                 OperationName = d.OperationName,
+                                                 OperationValue = d.OperationValue,
+                                             };
 
                 List<GreatHospitalDataWriteDto> greatHospitalDataWriteList = new List<GreatHospitalDataWriteDto>();
                 greatHospitalDataWriteList = await greatHospitalDataWrite.ToListAsync();
@@ -53,18 +53,21 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task AddAsync(AddGreatHospitalDataWriteDto addDto)
+        public async Task AddAsync(List<AddGreatHospitalDataWriteDto> addDto)
         {
             try
             {
-                GreatHospitalDataWrite greatHospitalDataWrite = new GreatHospitalDataWrite();
-                greatHospitalDataWrite.Id = Guid.NewGuid().ToString();
-                greatHospitalDataWrite.CreateDate = DateTime.Now;
-                greatHospitalDataWrite.Valid = true;
-                greatHospitalDataWrite.IndicatorId = addDto.IndicatorId;
-                greatHospitalDataWrite.OperationValue = addDto.OperationValue;
-                greatHospitalDataWrite.OperationName = addDto.OperationName;
-                await dalGreatHospitalDataWrite.AddAsync(greatHospitalDataWrite, true);
+                foreach (var x in addDto)
+                {
+                    GreatHospitalDataWrite greatHospitalDataWrite = new GreatHospitalDataWrite();
+                    greatHospitalDataWrite.Id = Guid.NewGuid().ToString();
+                    greatHospitalDataWrite.CreateDate = DateTime.Now;
+                    greatHospitalDataWrite.Valid = true;
+                    greatHospitalDataWrite.IndicatorId = x.IndicatorId;
+                    greatHospitalDataWrite.OperationValue = x.OperationValue;
+                    greatHospitalDataWrite.OperationName = x.OperationName;
+                    await dalGreatHospitalDataWrite.AddAsync(greatHospitalDataWrite, true);
+                }
             }
             catch (Exception ex)
             {
@@ -80,6 +83,33 @@ namespace Fx.Amiya.Service
                 var greatHospitalDataWrite = await dalGreatHospitalDataWrite.GetAll().SingleOrDefaultAsync(e => e.Id == id && e.Valid == true);
                 if (greatHospitalDataWrite == null)
                     throw new Exception("优秀机构运营数据填报编号错误");
+
+                GreatHospitalDataWriteDto greatHospitalDataWriteDto = new GreatHospitalDataWriteDto();
+                greatHospitalDataWriteDto.Id = greatHospitalDataWrite.Id;
+                greatHospitalDataWriteDto.CreateDate = greatHospitalDataWrite.CreateDate;
+                greatHospitalDataWriteDto.UpdateDate = greatHospitalDataWrite.UpdateDate;
+                greatHospitalDataWriteDto.DeleteDate = greatHospitalDataWrite.DeleteDate;
+                greatHospitalDataWriteDto.Valid = greatHospitalDataWrite.Valid;
+                greatHospitalDataWriteDto.IndicatorId = greatHospitalDataWrite.IndicatorId;
+                greatHospitalDataWriteDto.OperationValue = greatHospitalDataWrite.OperationValue;
+                greatHospitalDataWriteDto.OperationName = greatHospitalDataWrite.OperationName;
+                return greatHospitalDataWriteDto;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public async Task<GreatHospitalDataWriteDto> GetByNameAndIndicatorIdAsync(string indicatorId, string operationName)
+        {
+            try
+            {
+                var greatHospitalDataWrite = await dalGreatHospitalDataWrite.GetAll().SingleOrDefaultAsync(e => e.IndicatorId == indicatorId && e.OperationName == operationName);
+                if (greatHospitalDataWrite == null)
+                    return new GreatHospitalDataWriteDto();
 
                 GreatHospitalDataWriteDto greatHospitalDataWriteDto = new GreatHospitalDataWriteDto();
                 greatHospitalDataWriteDto.Id = greatHospitalDataWrite.Id;

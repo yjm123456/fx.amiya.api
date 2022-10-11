@@ -2205,7 +2205,7 @@
             <param name="indicatorsId">归属指标id</param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.GreatHospitalDataWriteController.AddAsync(Fx.Amiya.Background.Api.Vo.GreatHospitalDataWrite.AddGreatHospitalDataWriteVo)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GreatHospitalDataWriteController.AddAsync(System.Collections.Generic.List{Fx.Amiya.Background.Api.Vo.GreatHospitalDataWrite.AddGreatHospitalDataWriteVo})">
             <summary>
             添加优秀机构数据填报信息
             </summary>

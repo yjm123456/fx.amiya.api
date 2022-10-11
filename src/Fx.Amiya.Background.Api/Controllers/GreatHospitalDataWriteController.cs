@@ -78,16 +78,22 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [FxInternalAuthorize]
         [HttpPost]
-        public async Task<ResultData> AddAsync(AddGreatHospitalDataWriteVo addVo)
+        public async Task<ResultData> AddAsync(List<AddGreatHospitalDataWriteVo> addVo)
         {
             try
             {
-                AddGreatHospitalDataWriteDto addDto = new AddGreatHospitalDataWriteDto();
-                addDto.IndicatorId = addDto.IndicatorId;
-                addDto.OperationValue = addDto.OperationValue;
-                addDto.OperationName = addDto.OperationName;
+                List<AddGreatHospitalDataWriteDto> addList = new List<AddGreatHospitalDataWriteDto>();
+                foreach (var x in addVo)
+                {
 
-                await greatHospitalDataWriteService.AddAsync(addDto);
+                    AddGreatHospitalDataWriteDto addDto = new AddGreatHospitalDataWriteDto();
+                    addDto.IndicatorId = x.IndicatorId;
+                    addDto.OperationValue = x.OperationValue;
+                    addDto.OperationName = x.OperationName;
+                    addList.Add(addDto);
+                }
+
+                await greatHospitalDataWriteService.AddAsync(addList);
                 return ResultData.Success();
             }
             catch (Exception ex)

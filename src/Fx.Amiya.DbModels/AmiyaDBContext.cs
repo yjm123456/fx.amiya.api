@@ -19,6 +19,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<AmiyaWareHouse> AmiyaWareHouse { get; set; }
         public virtual DbSet<ShootingAndClip> ShootingAndClip { get; set; }
         public virtual DbSet<AmiyaInWarehouse> AmiyaInWarehouse { get; set; }
+        public virtual DbSet<GreatHospitalDataWrite> GreatHospitalDataWrite { get; set; }
 
         public virtual DbSet<HospitalNetWorkConsulationOperationData> HospitalNetWorkConsulationOperationData { get; set; }
         public virtual DbSet<HospitalConsulationOperationData> HospitalConsulationOperationData { get; set; }
@@ -151,6 +152,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new ContentPlatFormCustomerPictureConfiguration());
             modelBuilder.ApplyConfiguration(new DockingHospitalCustomerInfoConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalFeedBackConfiguration());
+            modelBuilder.ApplyConfiguration(new GreatHospitalDataWriteConfiguration());
             modelBuilder.ApplyConfiguration(new LiveAnchorBaseInfoConfiguration());
             modelBuilder.ApplyConfiguration(new LiveAnchorWechatInfoConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaWareHouseConfiguration());

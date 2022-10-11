@@ -37,7 +37,7 @@ namespace Fx.Amiya.Dto.HospitalOperationData
         public decimal ChainRatio { get; set; }
 
         /// <summary>
-        /// 优秀机构
+        /// 优秀机构参数
         /// </summary>
         public string GreatHospital { get; set; }
 

@@ -19,21 +19,24 @@ namespace Fx.Amiya.Service
         private IDalHospitalOperationData dalHospitalOperationData;
         private IHospitalOperationIndicatorService hospitalOperationIndicatorService;
         private IIndicatorSendHospitalService indicatorSendHospitalService;
+        private IGreatHospitalDataWriteService greatHospitalDataWriteService;
         private IUnitOfWork unitOfWork;
         public HospitalOperationDataService(IDalHospitalOperationData dalHospitalOperationData,
             IHospitalOperationIndicatorService hospitalOperationIndicatorService,
             IIndicatorSendHospitalService indicatorSendHospitalService,
+            IGreatHospitalDataWriteService greatHospitalDataWriteService,
             IUnitOfWork unitOfWork)
         {
             this.dalHospitalOperationData = dalHospitalOperationData;
             this.hospitalOperationIndicatorService = hospitalOperationIndicatorService;
             this.indicatorSendHospitalService = indicatorSendHospitalService;
             this.unitOfWork = unitOfWork;
+            this.greatHospitalDataWriteService = greatHospitalDataWriteService;
         }
 
 
 
-        public async Task<List<HospitalOperationDataDto>> GetListAsync(string keyword, string indicatorsId,int hospitalId)
+        public async Task<List<HospitalOperationDataDto>> GetListAsync(string keyword, string indicatorsId, int hospitalId)
         {
             try
             {
@@ -52,11 +55,15 @@ namespace Fx.Amiya.Service
                                                 BeforeMonthData = d.BeforeMonthData,
                                                 ChainRatio = d.ChainRatio,
                                                 Sort = d.Sort,
-                                                GreatHospital = d.GreatHospital,
                                             };
 
                 List<HospitalOperationDataDto> hospitalOperationDataList = new List<HospitalOperationDataDto>();
                 hospitalOperationDataList = await hospitalOperationData.ToListAsync();
+                foreach (var x in hospitalOperationDataList)
+                {
+                    var greatHospitalDataWrite = await greatHospitalDataWriteService.GetByNameAndIndicatorIdAsync(x.IndicatorsId, x.OperationName);
+                    x.GreatHospital = greatHospitalDataWrite.OperationValue;
+                }
                 return hospitalOperationDataList;
             }
             catch (Exception ex)

@@ -25,7 +25,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="addDto"></param>
         /// <returns></returns>
-        Task AddAsync(AddGreatHospitalDataWriteDto addDto);
+        Task AddAsync(List<AddGreatHospitalDataWriteDto> addDto);
 
 
 
@@ -35,6 +35,14 @@ namespace Fx.Amiya.IService
         /// <param name="id"></param>
         /// <returns></returns>
         Task<GreatHospitalDataWriteDto> GetByIdAsync(string id);
+
+        /// <summary>
+        /// 根据指标名称与运营指标名称获取数据
+        /// </summary>
+        /// <param name="indicatorId"></param>
+        /// <param name="operationName"></param>
+        /// <returns></returns>
+        Task<GreatHospitalDataWriteDto> GetByNameAndIndicatorIdAsync(string indicatorId, string operationName);
 
         /// <summary>
         /// 修改
