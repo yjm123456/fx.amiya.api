@@ -76,6 +76,13 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("抖音投流费用完成率")]
         public string TikTokFlowinvestmentCompleteRate { get; set; }
+
+        /// <summary>
+        /// 抖音直播前运营数据更新时间
+        /// </summary>
+        [Description("抖音运营数据更新时间")]
+        public DateTime? TikTokUpdateDate { get; set; }
+
         #endregion
 
         #region [小红书]
@@ -784,5 +791,15 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("创建日期")]
         public DateTime CreateDate { get; set; }
+        /// <summary>
+        /// 直播中运营数据更新时间
+        /// </summary>
+        [Description("直播中运营数据更新时间")]
+        public DateTime? LivingUpdateDate { get; set; }
+        /// <summary>
+        /// 直播后运营数据更新时间
+        /// </summary>
+        [Description("直播后运营数据更新时间")]
+        public DateTime? AfterLivingUpdateDate { get; set; }
     }
 }

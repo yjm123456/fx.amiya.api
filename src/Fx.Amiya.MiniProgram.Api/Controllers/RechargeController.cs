@@ -301,7 +301,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 WxPackageInfo packageInfo = new WxPackageInfo();
                 packageInfo.Body = recordId;
                 //回调地址需重新设置(todo;)
-                packageInfo.NotifyUrl = string.Format("http://wswjym.gnway.cc:80/recharge/payresult/", Request.HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString() + ":" + Request.HttpContext.Connection.LocalPort);
+                packageInfo.NotifyUrl = string.Format("http://{0}/amiya/wxmini/Notify/orderpayresult", Request.HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString() + ":" + Request.HttpContext.Connection.LocalPort);
                 packageInfo.OutTradeNo = recordId;
                 packageInfo.TotalFee = (int)(record.RechargeAmount * 100m);
                 if (packageInfo.TotalFee < 1m)

@@ -267,8 +267,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 WeiXinPayNotifyVo weiXinPayNotifyVo = GetWeiXinRequestPostData(xmlDoc);
                 SortedDictionary<string, string> sParam = GetWeiXinRequestPostDic(weiXinPayNotifyVo);
                 SignHelper signHelper = new SignHelper();
+
+                //签名验证
                 string sign = await signHelper.SignPay(sParam, "Amy20202020202020202020202020202");
                 if (sign != weiXinPayNotifyVo.sign) return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
+
                 // 业务逻辑
                 //成功通知微信
                 if (weiXinPayNotifyVo.return_code.ToUpper() == "SUCCESS")
@@ -335,8 +338,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 WeiXinPayNotifyVo weiXinPayNotifyVo = GetWeiXinRequestPostData(xmlDoc);
                 SortedDictionary<string, string> sParam = GetWeiXinRequestPostDic(weiXinPayNotifyVo);
                 SignHelper signHelper = new SignHelper();
+
+                //签名验证
                 string sign = await signHelper.SignPay(sParam, "Amy20202020202020202020202020202");
                 if (sign != weiXinPayNotifyVo.sign) return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
+
                 // 业务逻辑
                 //成功通知微信
                 if (weiXinPayNotifyVo.return_code.ToUpper() == "SUCCESS")
