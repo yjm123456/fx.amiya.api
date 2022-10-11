@@ -11822,6 +11822,11 @@
             归属指标名称
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalDataWrite.GreatHospitalDataWriteVo.GreatHospitalName">
+            <summary>
+            优秀机构
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalDataWrite.GreatHospitalDataWriteVo.OperationName">
             <summary>
             运营维度名称
@@ -13322,6 +13327,11 @@
             结束时间
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalIndeicatorInput.HospitalIndicatorFillVo.IsRemark">
+            <summary>
+            批注状态
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.HospitalInfo.AddHospitalBrandApplyInHospitalVo">
             <summary>
             医院品牌报名新增
@@ -14210,6 +14220,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicatorSubmit.HospitalOperationIndicatorCollectVo.IsSubmit">
             <summary>
             是否提报
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicatorSubmit.HospitalOperationIndicatorCollectVo.IsRemark">
+            <summary>
+            是否批注
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicator.AddHospitalOperationIndicatorVo.Name">
@@ -16305,6 +16320,21 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.MiniVanBadReviews">
             <summary>
             今日小黄车差评量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.TikTokUpdateDate">
+            <summary>
+            抖音数据更新时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.LivingUpdateDate">
+            <summary>
+            直播中数据更新时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.AfterLivingUpdateDate">
+            <summary>
+            直播后数据更新时间
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.UpdateLiveAnchorDailyTargetVo.Id">

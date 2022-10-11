@@ -57,6 +57,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                  Id = d.Id,
                                                  IndicatorId = d.IndicatorId,
                                                  IndicatorName = d.IndicatorName,
+                                                 GreatHospitalName = d.GreatHospitalName,
                                                  OperationName = d.OperationName,
                                                  OperationValue = d.OperationValue,
                                              };
