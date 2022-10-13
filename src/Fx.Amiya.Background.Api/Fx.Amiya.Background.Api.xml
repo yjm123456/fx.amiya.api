@@ -19587,6 +19587,11 @@
             抖音运营人员
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.TikTokUpdateDate">
+            <summary>
+            抖音直播前运营数据更新时间
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.TikTokSendNum">
             <summary>
             今日抖音发布量
@@ -20222,9 +20227,19 @@
             直播中人员
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.LivingUpdateDate">
+            <summary>
+            直播中运营数据更新时间
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.NetWorkConsultingEmployeeName">
             <summary>
             网咨人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.AfterLivingUpdateDate">
+            <summary>
+            直播后运营数据更新时间
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.CreateDate">
