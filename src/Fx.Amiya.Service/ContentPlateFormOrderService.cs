@@ -997,7 +997,7 @@ namespace Fx.Amiya.Service
                                 EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
                                 AppointmentDate = d.AppointmentDate,
                                 AppointmentHospitalId = d.AppointmentHospitalId,
-                                IsOldCustomer=d.IsOldCustomer,
+                                IsOldCustomer = d.IsOldCustomer,
                                 AppointmentHospitalName = d.HospitalInfo.Name,
                                 IsToHospital = d.IsToHospital,
                                 ToHospitalDate = d.ToHospitalDate,
@@ -1286,7 +1286,7 @@ namespace Fx.Amiya.Service
                                 UnDealReason = d.UnDealReason,
                                 AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确认时间",
                                 AppointmentHospitalName = d.HospitalInfo.Name,
-                                OrderStatus=d.OrderStatus,
+                                OrderStatus = d.OrderStatus,
                                 OrderStatusText = ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus),
                                 Remark = d.Remark,
                             };
@@ -1590,6 +1590,12 @@ namespace Fx.Amiya.Service
                 if (order == null)
                 {
                     throw new Exception("未找到该订单的相关信息！");
+                }
+                if (input.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
+                {
+                    //获取当前登陆账户是否为管理员
+                    var positionInfo = await _dalAmiyaEmployee.GetAll().Where(z => z.Id == input.EmpId).FirstOrDefaultAsync();
+                    
                 }
                 if (input.IsFinish == true)
                 {
@@ -2349,7 +2355,7 @@ namespace Fx.Amiya.Service
                                  IsOldCustomer = d.IsOldCustomer,
                                  OrderStatus = d.OrderStatus,
                                  DealDate = d.DealDate,
-                                 CreateDate=d.CreateDate,
+                                 CreateDate = d.CreateDate,
                              };
                 var resultInfo = result.ToList();
                 return resultInfo;
@@ -2455,7 +2461,7 @@ namespace Fx.Amiya.Service
                                  IsOldCustomer = d.IsOldCustomer,
                                  OrderStatus = d.OrderStatus,
                                  DealDate = d.DealDate,
-                                 CreateDate=d.CreateDate,
+                                 CreateDate = d.CreateDate,
                              };
 
                 return result.ToList();
