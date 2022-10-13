@@ -120,13 +120,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("contentPlateFormOrderLlistWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>> GetOrderListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate,int?belongMonth,decimal?minAddOrderPrice,decimal?maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int orderSource, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>> GetOrderListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int orderSource, int pageNum, int pageSize)
         {
             try
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorId, startDate, endDate, belongMonth,minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
+                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
                 var order = from d in q.List
                             select new ContentPlatFormOrderInfoVo
                             {
@@ -135,9 +135,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 ContentPlatformName = d.ContentPlatformName,
                                 LiveAnchorName = d.LiveAnchorName,
                                 LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
-                                ConsultationType=d.ConsultationTypeText,
-                                BelongMonth=d.BelongMonth,
-                                AddOrderPrice=d.AddOrderPrice,
+                                ConsultationType = d.ConsultationTypeText,
+                                BelongMonth = d.BelongMonth,
+                                AddOrderPrice = d.AddOrderPrice,
                                 CreateDate = d.CreateDate,
                                 CustomerName = d.CustomerName,
                                 Phone = d.Phone,
@@ -222,7 +222,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   ConsultingContent = d.ConsultingContent,
                                   CustomerName = d.CustomerName,
                                   Phone = d.Phone,
-                                  ConsultationTypeText=d.ConsultationTypeText,
+                                  ConsultationTypeText = d.ConsultationTypeText,
                                   EncryptPhone = d.EncryptPhone,
                                   DealAmount = d.DealAmount,
                                   DepositAmount = d.DepositAmount.HasValue ? d.DepositAmount : 0,
@@ -302,7 +302,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 GoodsName = d.GoodsName,
                                 DepartmentName = d.DepartmentName,
                                 ThumbPictureUrl = d.ThumbPictureUrl,
-                                IsOldCustomer=d.IsOldCustomer==true?"老客业绩":"新客业绩",
+                                IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
                                 ConsultingContent = d.ConsultingContent,
                                 IsToHospital = d.IsToHospital,
                                 ToHospitalDate = d.ToHospitalDate,
@@ -323,7 +323,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 CheckDate = d.CheckDate,
                                 CheckByName = d.CheckByName,
                                 CheckPrice = d.CheckPrice,
-                                ConsultationType=d.ConsultationTypeText,
+                                ConsultationType = d.ConsultationTypeText,
                                 CheckRemark = d.CheckRemark,
                                 SettlePrice = d.SettlePrice,
                                 BelongEmpName = d.BelongEmpName,
@@ -371,7 +371,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await _orderService.GetOrderDealListWithPageAsync(liveAnchorId, startDate, endDate,belongMonth,  minAddOrderPrice,maxAddOrderPrice, consultationEmpId, checkState, ReturnBackPriceState, keyword, contentPlateFormId, hospitalId, toHospitalType, employeeId, pageNum, pageSize);
+                var q = await _orderService.GetOrderDealListWithPageAsync(liveAnchorId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, consultationEmpId, checkState, ReturnBackPriceState, keyword, contentPlateFormId, hospitalId, toHospitalType, employeeId, pageNum, pageSize);
                 var order = from d in q.List
                             select new ContentPlatFormCompleteOrderInfoVo
                             {
@@ -381,11 +381,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 LiveAnchorName = d.LiveAnchorName,
                                 LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 CreateDate = d.CreateDate,
-                                BelongMonth=d.BelongMonth,
-                                AddOrderPrice=d.AddOrderPrice,
-                                ConsultationTypeText=d.ConsultationTypeText,
+                                BelongMonth = d.BelongMonth,
+                                AddOrderPrice = d.AddOrderPrice,
+                                ConsultationTypeText = d.ConsultationTypeText,
                                 CustomerName = d.CustomerName,
-                                IsAcompanying = d.IsAcompanying ,
+                                IsAcompanying = d.IsAcompanying,
                                 Phone = d.Phone,
                                 IsToHospital = d.IsToHospital == true ? "是" : "否",
                                 ToHospitalType = d.ToHospitalTypeText,
@@ -842,6 +842,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData> FinishOrderByEmployeeAsync(ContentPlateFormOrderFinishVo updateVo)
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
+            {
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    updateVo.DealAmount = -updateVo.DealAmount;
+                }
+                else
+                {
+                    throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
+                }
+            }
+
             ContentPlateFormOrderFinishDto updateDto = new ContentPlateFormOrderFinishDto();
             updateDto.Id = updateVo.Id;
             updateDto.IsFinish = updateVo.IsFinish;
