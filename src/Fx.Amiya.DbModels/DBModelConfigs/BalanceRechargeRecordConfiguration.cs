@@ -25,6 +25,10 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(b => b.Balance).HasColumnName("balance").HasColumnType("decimal(10,2)").IsRequired();
             builder.Property(b => b.Status).HasColumnName("status").HasColumnType("int").IsRequired().IsConcurrencyToken();
             builder.Property(b => b.CompleteDate).HasColumnName("complete_date").HasColumnType("datetime").IsRequired(false);
+            builder.Ignore(c => c.Valid);
+            builder.Ignore(c => c.DeleteDate);
+            builder.Ignore(c=>c.CreateDate);
+            builder.Ignore(c=>c.UpdateDate);
         }
     }
 }

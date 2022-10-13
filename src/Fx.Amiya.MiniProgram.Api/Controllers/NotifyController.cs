@@ -419,7 +419,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             return weiXinPayNotifyVo;
         }
         /// <summary>
-        /// 微信回调参数转换为有效字典
+        /// 微信回调参数转换为有序字典
         /// </summary>
         /// <param name="weiXinPayNotifyVo"></param>
         /// <returns></returns>

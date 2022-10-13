@@ -209,7 +209,7 @@ namespace Fx.Amiya.Background.Api
         /// 修改运营指标提报/批注状态(一天运行一次)
         /// </summary>
         /// <returns></returns>
-        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 60 * 24, SkipWhileExecuting = true)]
+        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 60 * 24 + 60 * 1000, SkipWhileExecuting = true)]
         public async Task HandleOperationIndicatorAsync()
         {
             using (var scope = _serviceProvider.CreateScope())

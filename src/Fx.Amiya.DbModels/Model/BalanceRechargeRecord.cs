@@ -9,9 +9,8 @@ namespace Fx.Amiya.DbModels.Model
     /// <summary>
     /// 充值记录
     /// </summary>
-    public class BalanceRechargeRecord
+    public class BalanceRechargeRecord:BaseDbModel
     {
-        public string Id { get; set; }
         /// <summary>
         /// 充值用户id
         /// </summary>
