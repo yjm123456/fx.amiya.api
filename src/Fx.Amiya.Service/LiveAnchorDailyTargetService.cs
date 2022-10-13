@@ -1557,6 +1557,10 @@ namespace Fx.Amiya.Service
                                                 CumulativeMinivanRefund = d.LiveAnchorMonthlyTarget.CumulativeMinivanRefund,
                                                 MinivanRefundCompleteRate = d.LiveAnchorMonthlyTarget.MinivanRefundCompleteRate.ToString("0.00") + "%",
                                                 PerformanceNum = d.PerformanceNum,
+                                                TikTokUpdateDate = d.TikTokUpdateDate,
+                                                LivingUpdateDate = d.LivingUpdateDate,
+                                                AfterLivingUpdateDate = d.AfterLivingUpdateDate
+
                                             };
                 var result = await liveAnchorDailyTarget.OrderByDescending(x => x.RecordDate).ToListAsync();
                 foreach (var x in result)

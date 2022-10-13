@@ -690,6 +690,19 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 小黄车差评率
         /// </summary>
         public string MiniVanBadReviewsCompleteRate { get; set; }
+        /// <summary>
+        /// 抖音直播前运营数据更新时间
+        /// </summary>
+        public DateTime? TikTokUpdateDate { get; set; }
+        /// <summary>
+        /// 直播中运营数据更新
+        /// </summary>
+        public DateTime? LivingUpdateDate { get; set; }
+        /// <summary>
+        /// 直播后运营数据更新时间
+        /// </summary>
+        public DateTime? AfterLivingUpdateDate { get; set; }
+        
 
     }
 }

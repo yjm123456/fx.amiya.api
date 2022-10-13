@@ -1922,6 +1922,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                           MiniVanBadReviewsCompleteRate = d.MiniVanBadReviewsCompleteRate,
                           LivingTrackingEmployeeName = d.LivingTrackingEmployeeName,
                           NetWorkConsultingEmployeeName = d.NetWorkConsultingEmployeeName,
+                          TikTokUpdateDate=d.TikTokUpdateDate,
+                          LivingUpdateDate=d.LivingUpdateDate,
+                          AfterLivingUpdateDate=d.AfterLivingUpdateDate
                       };
             return ResultData<List<LiveAnchorOperatingReportVo>>.Success().AddData("liveAnchorOperatingReport", res.ToList());
         }
@@ -2078,6 +2081,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                           MiniVanBadReviewsCompleteRate = d.MiniVanBadReviewsCompleteRate,
                           LivingTrackingEmployeeName = d.LivingTrackingEmployeeName,
                           NetWorkConsultingEmployeeName = d.NetWorkConsultingEmployeeName,
+                          TikTokUpdateDate = d.TikTokUpdateDate,
+                          LivingUpdateDate = d.LivingUpdateDate,
+                          AfterLivingUpdateDate = d.AfterLivingUpdateDate
                       };
             var exportOrderWriteOff = res.ToList();
             var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);

@@ -31,6 +31,11 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("抖音运营人员")]
         public string TikTokOperationEmployeeName { get; set; }
         /// <summary>
+        /// 抖音直播前运营数据更新时间
+        /// </summary>
+        [Description("抖音运营数据更新时间")]
+        public DateTime? TikTokUpdateDate { get; set; }
+        /// <summary>
         /// 今日抖音发布量
         /// </summary>
         [Description("今日抖音发布量")]
@@ -76,6 +81,9 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("抖音投流费用完成率")]
         public string TikTokFlowinvestmentCompleteRate { get; set; }
+
+        
+
         #endregion
 
         #region [小红书]
@@ -773,16 +781,27 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("直播中人员")]
         public string LivingTrackingEmployeeName { get; set; }
-
+        /// <summary>
+        /// 直播中运营数据更新时间
+        /// </summary>
+        [Description("直播中运营数据更新时间")]
+        public DateTime? LivingUpdateDate { get; set; }
         /// <summary>
         /// 网咨人员
         /// </summary>
         [Description("网咨人员")]
         public string NetWorkConsultingEmployeeName { get; set; }
         /// <summary>
+        /// 直播后运营数据更新时间
+        /// </summary>
+        [Description("直播后运营数据更新时间")]
+        public DateTime? AfterLivingUpdateDate { get; set; }
+        /// <summary>
         /// 创建日期
         /// </summary>
         [Description("创建日期")]
         public DateTime CreateDate { get; set; }
+        
+        
     }
 }
