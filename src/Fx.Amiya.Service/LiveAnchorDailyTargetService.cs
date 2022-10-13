@@ -577,6 +577,7 @@ namespace Fx.Amiya.Service
                 //liveAnchorDailyTarget.CluesNum = addDto.CluesNum;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
+                liveAnchorDailyTarget.TikTokUpdateDate = DateTime.Now;
                 await dalLiveAnchorDailyTarget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
@@ -1097,7 +1098,8 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.Consultation2 = addDto.Consultation2;
                 liveAnchorDailyTarget.CargoSettlementCommission = addDto.CargoSettlementCommission;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
-                liveAnchorDailyTarget.RecordDate = addDto.RecordDate;               
+                liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
+                liveAnchorDailyTarget.LivingUpdateDate = DateTime.Now;
                 await dalLiveAnchorDailyTarget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
@@ -1203,6 +1205,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.MiniVanBadReviews = addDto.MiniVanBadReviews;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
+                liveAnchorDailyTarget.AfterLivingUpdateDate = DateTime.Now;
                 await dalLiveAnchorDailyTarget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
