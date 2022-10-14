@@ -648,7 +648,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         private decimal? CalculateChainratio(decimal currentMonthPerformance, decimal performanceChainRatio)
         {
-            if (performanceChainRatio == 0m)
+            if (currentMonthPerformance == 0m || performanceChainRatio == 0m)
                 return 0.00M;
             return Math.Round((currentMonthPerformance - performanceChainRatio) / performanceChainRatio * 100, 2);
         }
@@ -673,8 +673,22 @@ namespace Fx.Amiya.Service
         public string CalculateAccounted(decimal dataA, decimal dataB)
         {
             Decimal count = dataA + dataB;
-            if (dataB == 0m && dataA == 0)
+            if (dataB == 0.00m && dataA == 0.00m)
+            {
                 return "5:5";
+            }
+            if (count == 0.00M)
+            {
+                return "5:5";
+            }
+            if (dataA == 0.00M && dataB != 0.00M)
+            {
+                return "10:0";
+            }
+            if (dataA != 0.00M && dataB == 0.00M)
+            {
+                return "0:10";
+            }
             var dataAcount = Math.Round(dataA / count * 10, 1);
             var dataBcount = Math.Round(dataB / count * 10, 1);
             return dataAcount.ToString() + ":" + dataBcount.ToString();
