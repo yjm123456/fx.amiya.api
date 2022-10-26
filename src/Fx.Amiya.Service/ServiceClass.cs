@@ -299,6 +299,9 @@ namespace Fx.Amiya.Service
                 case 2:
                     typeText = "定金订单";
                     break;
+                case 3:
+                    typeText = "预约订单";
+                    break;
 
             }
             return typeText;
@@ -614,7 +617,9 @@ namespace Fx.Amiya.Service
                 case 2:
                     channelTypeText = "非面诊卡";
                     break;
-
+                case 3:
+                    channelTypeText = "美肤卡";
+                    break;
             }
             return channelTypeText;
         }

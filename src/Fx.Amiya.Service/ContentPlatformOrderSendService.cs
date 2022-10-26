@@ -347,10 +347,10 @@ namespace Fx.Amiya.Service
             if (sendOrderInfo == null)
                 throw new Exception("派单编号错误");
 
-            if (sendOrderInfo.ContentPlatformOrder.OrderStatus == Convert.ToInt16(ContentPlateFormOrderStatus.OrderComplete))
-                throw new Exception("该订单已交易完成，无法改派医院");
-            if (sendOrderInfo.ContentPlatformOrder.OrderStatus == Convert.ToInt16(ContentPlateFormOrderStatus.WithoutCompleteOrder))
-                throw new Exception("该订单医院已经处理完毕，无法改派医院");
+            //if (sendOrderInfo.ContentPlatformOrder.OrderStatus == Convert.ToInt16(ContentPlateFormOrderStatus.OrderComplete))
+            //    throw new Exception("该订单已交易完成，无法改派医院");
+            //if (sendOrderInfo.ContentPlatformOrder.OrderStatus == Convert.ToInt16(ContentPlateFormOrderStatus.WithoutCompleteOrder))
+            //    throw new Exception("该订单医院已经处理完毕，无法改派医院");
 
             sendOrderInfo.HospitalRemark = input.HospitalRemark;
             await _dalContentPlatformOrderSend.UpdateAsync(sendOrderInfo, true);

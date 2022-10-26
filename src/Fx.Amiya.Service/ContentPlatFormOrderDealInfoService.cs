@@ -759,6 +759,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByYearAndMonth(int year, int month, bool? isOldCustomer, List<int> LiveAnchorIds)
         {
+           // int maxDays = DateTime.DaysInMonth(year, month);
 
             //筛选结束的月份
             DateTime endDate = new DateTime(year, month, 1).AddMonths(1);

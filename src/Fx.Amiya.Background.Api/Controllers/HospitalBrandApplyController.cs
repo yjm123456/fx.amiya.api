@@ -139,7 +139,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("byId/{id}")]
-        [FxInternalAuthorize]
         public async Task<ResultData<HospitalBrandApplyVo>> GetByIdAsync(string id)
         {
             try
@@ -182,7 +181,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="updateVo"></param>
         /// <returns></returns>
         [HttpPut]
-        [FxInternalAuthorize]
         public async Task<ResultData> UpdateAsync(UpdateHospitalBrandApplyVo updateVo)
         {
             try
@@ -225,7 +223,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        [FxInternalAuthorize]
         public async Task<ResultData> DeleteAsync(string id)
         {
             try
@@ -247,7 +244,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="keyWord"></param>
         /// <returns></returns>
         [HttpGet("Export")]
-        [FxInternalAuthorize]
         public async Task<FileStreamResult> GetOrderBuyExportAsync(string keyWord)
         {
             var q = await hospitalBrandApplyService.GetDetailAsync(keyWord);

@@ -252,6 +252,11 @@ namespace Fx.Amiya.IService
         /// 定金=2
         /// </summary>
         BARGAIN_MONEY = 2,
+
+        /// <summary>
+        /// 预约
+        /// </summary>
+        APPOINTMENT = 3,
     }
 
     /// <summary>
@@ -259,7 +264,7 @@ namespace Fx.Amiya.IService
     /// </summary>
     public enum ContentPlateFormOrderConsultationType
     {
-       
+
         /// <summary>
         /// 独立跟进=1
         /// </summary>
@@ -319,6 +324,10 @@ namespace Fx.Amiya.IService
         /// 非面诊卡
         /// </summary>
         Other = 2,
+        /// <summary>
+        /// 美肤卡
+        /// </summary>
+        BeautifulSkinCard = 3,
     }
 
     /// <summary>
@@ -569,52 +578,54 @@ namespace Fx.Amiya.IService
         /// </summary>
         Loss = 3,
     }
-    public enum EmergencyLevel {
+    public enum EmergencyLevel
+    {
         //可忽略
-        Ignorable=0,
+        Ignorable = 0,
         //轻微
         //Slight=1,
         //一般
-        Generally=2,
+        Generally = 2,
         //重要
-        Important=3,
+        Important = 3,
         //非常重要
-       // VeryImportant=4
+        // VeryImportant=4
     }
-    public enum RechargeStatus {
+    public enum RechargeStatus
+    {
         //待付款/余额退款初始化
-        PendingPayment=0,
+        PendingPayment = 0,
         //成功(充值成功/余额退款审核通过)
-        Success=1,
+        Success = 1,
         //取消(充值取消/余额退款未通过)
-        Cacncel=2,
+        Cacncel = 2,
         //失败(已付款,但账号余额异常修改余额失败或订单状态改变导致修改状态失败)
-        Fail=3
+        Fail = 3
     }
-    
+
 
     public enum ShoppingCartConsultationType
     {
         /// <summary>
         /// 视频
         /// </summary>
-        Video=1,
+        Video = 1,
         /// <summary>
         /// 图片
         /// </summary>
-        Picture=2,
+        Picture = 2,
         /// <summary>
         /// 私信
         /// </summary>
-        DirectMessages=3,
+        DirectMessages = 3,
         /// <summary>
         /// 其他
         /// </summary>
-        Others=4,
+        Others = 4,
         /// <summary>
         /// 短视频
         /// </summary>
-        ShortVideo=5
+        ShortVideo = 5
     }
 
     public enum ShootingAndClipVideoType
@@ -622,11 +633,11 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 广告片
         /// </summary>
-        AdvertisingFilm=1,
+        AdvertisingFilm = 1,
         /// <summary>
         /// 口播
         /// </summary>
-        MouthBroadcast=2,
+        MouthBroadcast = 2,
 
         /// <summary>
         /// vlong
@@ -635,7 +646,7 @@ namespace Fx.Amiya.IService
         /// <summary>
         ///  企业宣传文化片
         /// </summary>
-        EnterprisePropagandaCultureFilm= 4,
+        EnterprisePropagandaCultureFilm = 4,
         /// <summary>
         /// 其他
         /// </summary>
