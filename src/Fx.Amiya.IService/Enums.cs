@@ -487,7 +487,7 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 实物订单
         /// </summary>
-        MaterialOrder
+        MaterialOrder,
     }
 
 

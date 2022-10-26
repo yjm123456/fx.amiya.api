@@ -193,6 +193,40 @@ namespace Fx.Amiya.Service
                 throw new Exception("赠送抵用券失败");
             }
         }
+
+        /// <summary>
+        /// 用户绑定赠送抵用券
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="source">抵用券来源 0会员赠送,1分享,2每月领取,3新用户赠送</param>
+        /// <returns></returns>
+        public async Task NewCustomerSendVoucherAsync(string customerId)
+        {
+            try
+            {
+                AddCustomerConsumptionVoucherDto ten = new AddCustomerConsumptionVoucherDto
+                {
+                    CustomerId = customerId,
+                    ConsumptionVoucherCode = ConsumptionVoucherCode.TenDeductVoucher,
+                    ExpireDate = DateTimeUtil.GetNextMonthFirstDay(),
+                    Source = 3
+                };
+                AddCustomerConsumptionVoucherDto twenty = new AddCustomerConsumptionVoucherDto
+                {
+                    CustomerId = customerId,
+                    ConsumptionVoucherCode = ConsumptionVoucherCode.TwentyDeductVoucher,
+                    ExpireDate = DateTimeUtil.GetNextMonthFirstDay(),
+                    Source = 3
+                };
+                await AddAsyn(ten);
+                await AddAsyn(twenty);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("赠送抵用券失败");
+            }
+        }
+
         /// <summary>
         /// 普通会员发放抵用券
         /// </summary>
@@ -206,7 +240,7 @@ namespace Fx.Amiya.Service
                 AddCustomerConsumptionVoucherDto ten = new AddCustomerConsumptionVoucherDto
                 {
                     CustomerId = customerId,
-                    ConsumptionVoucherCode = ConsumptionVoucherCode.TenDeductVoucher,
+                    ConsumptionVoucherCode = ConsumptionVoucherCode.ThirtyDeductVoucher,
                     ExpireDate = DateTimeUtil.GetNextMonthFirstDay(),
                     Source=source
                 };

@@ -377,7 +377,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
             var token = tokenReader.GetToken();
             var sessionInfo = sessionStorage.GetSession(token);
-            string customerId = sessionInfo.FxCustomerId;
+            string customerId = sessionInfo.FxCustomerId;                      
             //积分余额
             decimal integrationBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(customerId);
             var customerInfo = await customerService.GetByIdAsync(customerId);
@@ -391,105 +391,145 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             bool IsExistBalancePay = false;
             List<OrderInfoAddDto> amiyaOrderList = new List<OrderInfoAddDto>();
             Dictionary<string, int> inventoryQuantityDict = new Dictionary<string, int>();
-            foreach (var item in orderAdd.OrderItemList)
+            
+            if (orderAdd.IsCard)
             {
-                var goodsInfo = await goodsInfoService.GetByIdAsync(item.GoodsId);
-                OrderInfoAddDto amiyaOrder = new OrderInfoAddDto();
-                if (goodsInfo.ExchangeType == ExchangeType.ThirdPartyPayment)
-                {
+                phone = orderAdd.Phone;
+                //美肤卡下单
+                foreach (var item in orderAdd.OrderItemList)
+                {                  
+                    OrderInfoAddDto amiyaOrder = new OrderInfoAddDto();
                     IsExistThirdPartPay = true;
-                }
-                if (goodsInfo.ExchangeType == ExchangeType.Integration)
-                {
-                    amiyaOrder.IntegrationQuantity = goodsInfo.IntegrationQuantity * item.Quantity;
-                }
-                if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
-                {
-                    IsExistBalancePay = true;
-                }
-                if (goodsInfo.IsMaterial == true)
-                {
-
-                    if (goodsInfo.IsMaterial && orderAdd.AddressId == null)
-                        throw new Exception("收货地址不能为空");
-                }
-                else
-                {
-                    if (goodsInfo.ExchangeType != ExchangeType.Integration)
+                    amiyaOrder.IntegrationQuantity = 0;
+                    if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
                     {
-                        if (item.HospitalId.Value == 0)
-                        {
-                            throw new Exception("请选择门店医院");
-                        }
-                        var hospitalInfo = await _hospitalInfoService.GetByIdAsync(item.HospitalId.Value);
-                        amiyaOrder.AppointmentHospital = hospitalInfo.Name;
-                    }
-                    amiyaOrder.Description = goodsInfo.Description;
-                    amiyaOrder.Standard = goodsInfo.Standard;
-                    amiyaOrder.Part = "";
-                }
-                if (goodsInfo.InventoryQuantity < item.Quantity)
-                    throw new Exception("库存不足");
-
-                amiyaOrder.Id = CreateOrderIdHelper.GetNextNumber();
-                amiyaOrder.GoodsId = item.GoodsId;
-                amiyaOrder.GoodsName = goodsInfo.Name;
-                amiyaOrder.StatusCode = OrderStatusCode.WAIT_BUYER_PAY;
-
-                if (goodsInfo.InventoryQuantity != null)
-                    inventoryQuantityDict.Add(item.GoodsId, item.Quantity);
-
-
-                amiyaOrder.Quantity = item.Quantity;
-                amiyaOrder.BuyerNick = customerInfo.NickName;
-                amiyaOrder.CreateDate = date;
-                amiyaOrder.UpdateDate = date;
-                amiyaOrder.ThumbPicUrl = goodsInfo.ThumbPicUrl;
-                amiyaOrder.AppType = (byte)AppType.MiniProgram;
-                amiyaOrder.OrderType = goodsInfo.IsMaterial == true ? (byte)OrderType.MaterialOrder : (byte)OrderType.VirtualOrder;
-                amiyaOrder.ActualPayment = item.ActualPayment;
-                if (IsExistThirdPartPay)
-                {
-                    if (!string.IsNullOrEmpty(orderAdd.VoucherId))
+                        IsExistBalancePay = true;
+                    }                  
+                    amiyaOrder.Id = CreateOrderIdHelper.GetNextNumber();
+                    amiyaOrder.GoodsId = "00000000";
+                    amiyaOrder.GoodsName = orderAdd.CardName;
+                    amiyaOrder.StatusCode = OrderStatusCode.WAIT_BUYER_PAY;                  
+                    amiyaOrder.Quantity = item.Quantity;
+                    amiyaOrder.BuyerNick = orderAdd.NickName;
+                    amiyaOrder.CreateDate = date;
+                    amiyaOrder.UpdateDate = date;
+                    amiyaOrder.ThumbPicUrl = orderAdd.ThumbPicUrl;
+                    amiyaOrder.AppType = (byte)AppType.MiniProgram;
+                    amiyaOrder.OrderType = (byte)OrderType.VirtualOrder;
+                    amiyaOrder.ActualPayment = 1999m;                   
+                    if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
                     {
-                        var voucher = await customerConsumptionVoucherService.GetVoucherByCustomerIdAndVoucherIdAsync(customerId, orderAdd.VoucherId);
-                        if (voucher == null) throw new Exception("没有此抵用券信息");
-                        if (voucher.IsUsed) throw new Exception("该抵用券已被使用");
-                        amiyaOrder.IsUseCoupon = true;
-                        amiyaOrder.CouponId = voucher.Id;
-                        amiyaOrder.DeductMoney = voucher.DeductMoney;
-                        amiyaOrder.ActualPayment = amiyaOrder.ActualPayment - voucher.DeductMoney;
-                        //抵用券抵扣后付款小于0,直接赋值0
-                        if (amiyaOrder.ActualPayment < 0)
-                        {
-                            amiyaOrder.ActualPayment = 0;
-                        }
-                        UpdateCustomerConsumptionVoucherDto update = new UpdateCustomerConsumptionVoucherDto
-                        {
-                            CustomerVoucherId = voucher.Id,
-                            IsUsed = true,
-                            UseDate = DateTime.Now
-                        };
-                        await customerConsumptionVoucherService.UpdateCustomerConsumptionVoucherUseStatusAsync(update);
+                        //余额支付
+                        amiyaOrder.ExchangeType = (byte)ExchangeType.BalancePay;
                     }
+                    else
+                    {
+                        amiyaOrder.ExchangeType = (byte)ExchangeType.ThirdPartyPayment;
+                    }
+                    amiyaOrder.Phone = phone;
+                    amiyaOrder.TradeId = phone;
+                    var bindCustomerId = await _bindCustomerService.GetEmployeeIdByPhone(phone);
+                    amiyaOrder.BelongEmpId = bindCustomerId;
+                    amiyaOrderList.Add(amiyaOrder);
                 }
-
-                if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
-                {
-                    //余额支付
-                    amiyaOrder.ExchangeType = (byte)ExchangeType.BalancePay;
-                }
-                else
-                {
-                    amiyaOrder.ExchangeType = (byte)goodsInfo.ExchangeType;
-                }
-                amiyaOrder.Phone = phone;
-                amiyaOrder.TradeId = phone;
-                var bindCustomerId = await _bindCustomerService.GetEmployeeIdByPhone(phone);
-                amiyaOrder.BelongEmpId = bindCustomerId;
-                amiyaOrderList.Add(amiyaOrder);
             }
+            else {
+                //商品下单
+                foreach (var item in orderAdd.OrderItemList)
+                {
+                    var goodsInfo = await goodsInfoService.GetByIdAsync(item.GoodsId);
+                    OrderInfoAddDto amiyaOrder = new OrderInfoAddDto();
+                    if (goodsInfo.ExchangeType == ExchangeType.ThirdPartyPayment)
+                    {
+                        IsExistThirdPartPay = true;
+                    }
+                    if (goodsInfo.ExchangeType == ExchangeType.Integration)
+                    {
+                        amiyaOrder.IntegrationQuantity = goodsInfo.IntegrationQuantity * item.Quantity;
+                    }
+                    if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
+                    {
+                        IsExistBalancePay = true;
+                    }
+                    if (goodsInfo.IsMaterial == true)
+                    {
+                        if (goodsInfo.IsMaterial && orderAdd.AddressId == null)
+                            throw new Exception("收货地址不能为空");
+                    }
+                    else
+                    {
+                        if (goodsInfo.ExchangeType != ExchangeType.Integration)
+                        {
+                            if (item.HospitalId.Value == 0)
+                            {
+                                throw new Exception("请选择门店医院");
+                            }
+                            var hospitalInfo = await _hospitalInfoService.GetByIdAsync(item.HospitalId.Value);
+                            amiyaOrder.AppointmentHospital = hospitalInfo.Name;
+                        }
+                        amiyaOrder.Description = goodsInfo.Description;
+                        amiyaOrder.Standard = goodsInfo.Standard;
+                        amiyaOrder.Part = "";
+                    }
+                    if (goodsInfo.InventoryQuantity < item.Quantity)
+                        throw new Exception("库存不足");
+                    amiyaOrder.Id = CreateOrderIdHelper.GetNextNumber();
+                    amiyaOrder.GoodsId = item.GoodsId;
+                    amiyaOrder.GoodsName = goodsInfo.Name;
+                    amiyaOrder.StatusCode = OrderStatusCode.WAIT_BUYER_PAY;
+                    if (goodsInfo.InventoryQuantity != null)
+                        inventoryQuantityDict.Add(item.GoodsId, item.Quantity);
+                    amiyaOrder.Quantity = item.Quantity;
+                    amiyaOrder.BuyerNick = customerInfo.NickName;
+                    amiyaOrder.CreateDate = date;
+                    amiyaOrder.UpdateDate = date;
+                    amiyaOrder.ThumbPicUrl = goodsInfo.ThumbPicUrl;
+                    amiyaOrder.AppType = (byte)AppType.MiniProgram;
+                    amiyaOrder.OrderType = goodsInfo.IsMaterial == true ? (byte)OrderType.MaterialOrder : (byte)OrderType.VirtualOrder;
+                    amiyaOrder.ActualPayment = item.ActualPayment;
+                    if (IsExistThirdPartPay)
+                    {
+                        if (!string.IsNullOrEmpty(orderAdd.VoucherId))
+                        {
+                            var voucher = await customerConsumptionVoucherService.GetVoucherByCustomerIdAndVoucherIdAsync(customerId, orderAdd.VoucherId);
+                            if (voucher == null) throw new Exception("没有此抵用券信息");
+                            if (voucher.IsUsed) throw new Exception("该抵用券已被使用");
+                            amiyaOrder.IsUseCoupon = true;
+                            amiyaOrder.CouponId = voucher.Id;
+                            amiyaOrder.DeductMoney = voucher.DeductMoney;
+                            amiyaOrder.ActualPayment = amiyaOrder.ActualPayment - voucher.DeductMoney;
+                            //抵用券抵扣后付款小于0,直接赋值0
+                            if (amiyaOrder.ActualPayment < 0)
+                            {
+                                amiyaOrder.ActualPayment = 0;
+                            }
+                            UpdateCustomerConsumptionVoucherDto update = new UpdateCustomerConsumptionVoucherDto
+                            {
+                                CustomerVoucherId = voucher.Id,
+                                IsUsed = true,
+                                UseDate = DateTime.Now
+                            };
+                            await customerConsumptionVoucherService.UpdateCustomerConsumptionVoucherUseStatusAsync(update);
+                        }
+                    }
 
+                    if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
+                    {
+                        //余额支付
+                        amiyaOrder.ExchangeType = (byte)ExchangeType.BalancePay;
+                    }
+                    else
+                    {
+                        amiyaOrder.ExchangeType = (byte)goodsInfo.ExchangeType;
+                    }
+                    amiyaOrder.Phone = phone;
+                    amiyaOrder.TradeId = phone;
+                    var bindCustomerId = await _bindCustomerService.GetEmployeeIdByPhone(phone);
+                    amiyaOrder.BelongEmpId = bindCustomerId;
+                    amiyaOrderList.Add(amiyaOrder);
+                }
+            }
+            
             if (amiyaOrderList.Sum(e => e.IntegrationQuantity) > integrationBalance)
                 throw new Exception("积分余额不足");
             if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
@@ -1040,7 +1080,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 updateOrder.StatusCode = OrderStatusCode.TRADE_CLOSED_BY_TAOBAO;
                 updateOrder.AppType = (byte)AppType.MiniProgram;
                 updateOrderList.Add(updateOrder);
-                await goodsInfoService.AddGoodsInventoryQuantityAsync(item.GoodsId, (int)item.Quantity);
+                if (item.GoodsId!= "00000000") {
+                    await goodsInfoService.AddGoodsInventoryQuantityAsync(item.GoodsId, (int)item.Quantity);
+                }
+                
 
                 //退还抵用券
                 if (item.IsUseCoupon)

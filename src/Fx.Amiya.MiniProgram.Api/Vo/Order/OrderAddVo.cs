@@ -23,9 +23,29 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Order
         /// </summary>
         public int ExchangeType { get; set; }
         /// <summary>
+        /// 是否是主播美肤卡
+        /// </summary>
+        public bool IsCard { get; set; }
+        /// <summary>
+        /// 用户昵称
+        /// </summary>
+        public string NickName { get; set; }
+        /// <summary>
+        /// 美肤卡手机号
+        /// </summary>
+        public string Phone { get; set; }
+        /// <summary>
         /// 抵用券id
         /// </summary>
         public string VoucherId { get; set; }
+        /// <summary>
+        /// 美肤卡图片
+        /// </summary>
+        public string ThumbPicUrl { get; set; }
+        /// <summary>
+        /// 美肤卡名称
+        /// </summary>
+        public string CardName { get; set; }
 
         public List<OrderItemVo> OrderItemList { get; set; }
 

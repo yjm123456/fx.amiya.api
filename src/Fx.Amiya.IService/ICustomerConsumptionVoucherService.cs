@@ -89,5 +89,11 @@ namespace Fx.Amiya.IService
         /// <param name="customerId">用户id</param>
         /// <returns></returns>
         Task<bool> IsReciveVoucherThisMonthAsync(string customerId);
+        /// <summary>
+        /// 新用户绑定赠送抵用券
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        Task NewCustomerSendVoucherAsync(string customerId);
     }
 }

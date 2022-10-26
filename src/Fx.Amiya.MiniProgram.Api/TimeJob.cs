@@ -70,10 +70,11 @@ namespace Fx.Amiya.MiniProgram.Api
                     updateOrder.StatusCode = OrderStatusCode.TRADE_CLOSED_BY_TAOBAO;
                     updateOrder.AppType = (byte)AppType.MiniProgram;
                     updateOrderList.Add(updateOrder);
-                    await goodsService.AddGoodsInventoryQuantityAsync(item.GoodsId, (int)item.Quantity);
-                    
+                    if (item.GoodsId!= "00000000") {
+                        await goodsService.AddGoodsInventoryQuantityAsync(item.GoodsId, (int)item.Quantity);
+                    }                                      
                 }
-                await orderService.UpdateAsync(updateOrderList);
+              await orderService.UpdateAsync(updateOrderList);
                 //退还抵用券
                 foreach (var item in ordres)
                 {

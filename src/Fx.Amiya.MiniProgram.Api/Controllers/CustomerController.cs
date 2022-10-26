@@ -31,6 +31,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private IGrowthPointsAccountService growthPointsAccountService;
         private ILogger<CustomerController> logger;
         private IMemberCardService cardService;
+        private ICustomerConsumptionVoucherService customerConsumptionVoucherService;
         public CustomerController(
             TokenReader tokenReader,
             IMiniSessionStorage sessionStorage,
@@ -40,7 +41,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
              IMemberRankInfo memberRankInfoService,
              IOrderService orderService,
             IIntegrationAccount integrationAccountService,
-             ILogger<CustomerController> logger, IGrowthPointsAccountService growthPointsAccountService, IMemberCardService cardService)
+             ILogger<CustomerController> logger, IGrowthPointsAccountService growthPointsAccountService, IMemberCardService cardService, ICustomerConsumptionVoucherService customerConsumptionVoucherService)
         {
             this.tokenReader = tokenReader;
             this.sessionStorage = sessionStorage;
@@ -53,6 +54,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             this.logger = logger;
             this.growthPointsAccountService = growthPointsAccountService;
             this.cardService = cardService;
+            this.customerConsumptionVoucherService = customerConsumptionVoucherService;
         }
         /// <summary>
         /// 绑定客户
@@ -96,8 +98,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
                 //初始化成长值账号
                 await growthPointsAccountService.AddAsync(new CreateGrowthPointsAccountDto {CustomerId= fxCustomerId,Balance=0});
+
+                //新用户赠送抵用券
+                await customerConsumptionVoucherService.NewCustomerSendVoucherAsync(fxCustomerId);
                 //发放会员卡
                 await cardService.SendMemberCardAsync(fxCustomerId);
+
                 return ResultData<bool>.Success().AddData("isNewCustomer", false);
             }
             catch (Exception ex)
