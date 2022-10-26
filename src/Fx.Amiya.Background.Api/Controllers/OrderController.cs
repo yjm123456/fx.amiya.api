@@ -141,6 +141,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.GoodsName = addVo.GoodsName;
             addDto.GoodsId = addVo.GoodsId;
             addDto.Phone = addVo.Phone;
+            addDto.IsAppointment = addVo.IsAppointment;
+            addDto.AppointmentCity = addVo.AppointmentCity;
+            addDto.AppointmentDate = addVo.AppointmentDate;
             addDto.AppointmentHospital = addVo.AppointmentHospital;
             addDto.StatusCode = addVo.StatusCode;
             addDto.ActualPayment = addVo.ActualPayment;
@@ -151,7 +154,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.BuyerNick = addVo.BuyerNick;
             addDto.AppType = addVo.AppType;
             addDto.BuyerNick = addVo.BuyerNick;
-            addDto.IsAppointment = addVo.IsAppointment;
             addDto.OrderType = (addVo.OrderType.HasValue) ? addVo.OrderType.Value : (byte)0;
             addDto.Quantity = (addVo.Quantity.HasValue) ? addVo.Quantity : 0;
             addDto.IntegrationQuantity = 0;
@@ -423,6 +425,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.Description = UpdateVo.Remark;
             updateDto.GoodsId = UpdateVo.GoodsId;
             updateDto.Phone = UpdateVo.Phone;
+            updateDto.AppointmentCity = UpdateVo.AppointmentCity;
+            updateDto.AppointmentDate = UpdateVo.AppointmentDate;
             updateDto.AppointmentHospital = UpdateVo.AppointmentHospital;
             updateDto.StatusCode = UpdateVo.StatusCode;
             updateDto.ActualPayment = UpdateVo.ActualPayment;
@@ -558,6 +562,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 GoodsId = d.GoodsId,
                                 Phone = d.Phone,
                                 EncryptPhone = d.EncryptPhone,
+                                AppointmentCity = d.AppointmentCity,
+                                AppointmentDate = d.AppointmentDate,
                                 AppointmentHospital = d.AppointmentHospital,
                                 SendOrderHospital = d.SendOrderHospital,
                                 IsAppointment = d.IsAppointment,
@@ -627,6 +633,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 GoodsId = d.GoodsId,
                                 Phone = d.Phone,
                                 EncryptPhone = d.EncryptPhone,
+                                AppointmentCity = d.AppointmentCity,
+                                AppointmentDate = d.AppointmentDate,
                                 AppointmentHospital = d.AppointmentHospital,
                                 SendOrderHospital = d.SendOrderHospital,
                                 IsAppointment = d.IsAppointment,
@@ -704,6 +712,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                             NickName = d.BuyerNick,
                             GoodsId = d.GoodsId,
                             Phone = d.Phone,
+                            AppointmentCity = d.AppointmentCity,
+                            AppointmentDate = d.AppointmentDate,
                             AppointmentHospital = d.AppointmentHospital,
                             SendOrderHospital = d.SendOrderHospital,
                             ActualPayment = (d.ActualPayment.HasValue) ? d.ActualPayment.Value : 0,
@@ -1077,6 +1087,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             tmallOrderVo.OrderType = order.OrderType;
             tmallOrderVo.Phone = order.Phone;
             tmallOrderVo.EncryptPhone = order.EncryptPhone;
+            tmallOrderVo.AppointmentCity = order.AppointmentCity;
+            tmallOrderVo.AppointmentDate = order.AppointmentDate;
             tmallOrderVo.AppointmentHospital = order.AppointmentHospital;
             tmallOrderVo.IsAppointment = order.IsAppointment;
             tmallOrderVo.Description = order.Description;

@@ -138,6 +138,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             orderInfoResult.OrderId = orderInfo.Id;
             orderInfoResult.StatusCode = orderInfo.StatusCode;
             orderInfoResult.StatusText = orderInfo.StatusText;
+            orderInfoResult.AppointmentCity = orderInfo.AppointmentCity;
+            orderInfoResult.AppointmentDate = orderInfo.AppointmentDate;
             orderInfoResult.CreateDate = orderInfo.CreateDate.Value.ToString("yyyy-MM-dd hh:mm:ss");
             orderInfoResult.ThumbPicUrl = orderInfo.ThumbPicUrl;
             orderInfoResult.GoodsName = orderInfo.GoodsName;
@@ -377,7 +379,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
             var token = tokenReader.GetToken();
             var sessionInfo = sessionStorage.GetSession(token);
-            string customerId = sessionInfo.FxCustomerId;                      
+            string customerId = sessionInfo.FxCustomerId;
             //积分余额
             decimal integrationBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(customerId);
             var customerInfo = await customerService.GetByIdAsync(customerId);
@@ -391,32 +393,34 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             bool IsExistBalancePay = false;
             List<OrderInfoAddDto> amiyaOrderList = new List<OrderInfoAddDto>();
             Dictionary<string, int> inventoryQuantityDict = new Dictionary<string, int>();
-            
+
             if (orderAdd.IsCard)
             {
                 phone = orderAdd.Phone;
-                //美肤卡下单
+                //美肤卡/面诊卡下单
                 foreach (var item in orderAdd.OrderItemList)
-                {                  
+                {
                     OrderInfoAddDto amiyaOrder = new OrderInfoAddDto();
                     IsExistThirdPartPay = true;
                     amiyaOrder.IntegrationQuantity = 0;
                     if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
                     {
                         IsExistBalancePay = true;
-                    }                  
+                    }
                     amiyaOrder.Id = CreateOrderIdHelper.GetNextNumber();
                     amiyaOrder.GoodsId = "00000000";
                     amiyaOrder.GoodsName = orderAdd.CardName;
-                    amiyaOrder.StatusCode = OrderStatusCode.WAIT_BUYER_PAY;                  
+                    amiyaOrder.StatusCode = OrderStatusCode.WAIT_BUYER_PAY;
                     amiyaOrder.Quantity = item.Quantity;
                     amiyaOrder.BuyerNick = orderAdd.NickName;
                     amiyaOrder.CreateDate = date;
                     amiyaOrder.UpdateDate = date;
+                    amiyaOrder.AppointmentDate = item.AppointmentDate;
+                    amiyaOrder.AppointmentCity = item.AppointmentCity;
                     amiyaOrder.ThumbPicUrl = orderAdd.ThumbPicUrl;
                     amiyaOrder.AppType = (byte)AppType.MiniProgram;
                     amiyaOrder.OrderType = (byte)OrderType.VirtualOrder;
-                    amiyaOrder.ActualPayment = 1999m;                   
+                    amiyaOrder.ActualPayment = item.ActualPayment;
                     if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
                     {
                         //余额支付
@@ -433,7 +437,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     amiyaOrderList.Add(amiyaOrder);
                 }
             }
-            else {
+            else
+            {
                 //商品下单
                 foreach (var item in orderAdd.OrderItemList)
                 {
@@ -529,7 +534,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     amiyaOrderList.Add(amiyaOrder);
                 }
             }
-            
+
             if (amiyaOrderList.Sum(e => e.IntegrationQuantity) > integrationBalance)
                 throw new Exception("积分余额不足");
             if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
@@ -659,7 +664,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     #endregion
                 }*/
 
-               
+
 
 
             }
@@ -1080,10 +1085,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 updateOrder.StatusCode = OrderStatusCode.TRADE_CLOSED_BY_TAOBAO;
                 updateOrder.AppType = (byte)AppType.MiniProgram;
                 updateOrderList.Add(updateOrder);
-                if (item.GoodsId!= "00000000") {
+                if (item.GoodsId != "00000000")
+                {
                     await goodsInfoService.AddGoodsInventoryQuantityAsync(item.GoodsId, (int)item.Quantity);
                 }
-                
+
 
                 //退还抵用券
                 if (item.IsUseCoupon)

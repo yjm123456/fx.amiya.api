@@ -38,6 +38,14 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         public string Phone { get; set; }
 
         public string EncryptPhone { get; set; }
+        /// <summary>
+        /// 预约城市
+        /// </summary>
+        public string AppointmentCity { get; set; }
+        /// <summary>
+        /// 预约时间
+        /// </summary>
+        public DateTime? AppointmentDate { get; set; }
 
         /// <summary>
         /// 预约门店

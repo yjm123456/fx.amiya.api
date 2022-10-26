@@ -36,6 +36,14 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         [Required]
         public string Phone { get; set; }
         /// <summary>
+        /// 预约城市
+        /// </summary>
+        public string AppointmentCity { get; set; }
+        /// <summary>
+        /// 预约时间
+        /// </summary>
+        public DateTime? AppointmentDate { get; set; }
+        /// <summary>
         /// 预约门店
         /// </summary>
         public string AppointmentHospital { get; set; }

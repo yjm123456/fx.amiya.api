@@ -10,6 +10,8 @@ namespace Fx.Amiya.DbModels.Model
         public string GoodsName { get; set; }
         public string GoodsId { get; set; }
         public string Phone { get; set; }
+        public string AppointmentCity { get; set; }
+        public DateTime? AppointmentDate { get; set; }
         public string AppointmentHospital { get; set; }
         /// <summary>
         /// 最终消费医院

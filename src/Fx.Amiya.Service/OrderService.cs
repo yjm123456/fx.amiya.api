@@ -198,6 +198,8 @@ namespace Fx.Amiya.Service
                                 BuyerNick = d.BuyerNick,
                                 BelongEmpId = d.BelongEmpId,
                                 ThumbPicUrl = d.ThumbPicUrl,
+                                AppointmentDate = d.AppointmentDate,
+                                AppointmentCity = d.AppointmentCity,
                                 Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                                 EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
                                 AppointmentHospital = d.AppointmentHospital,
@@ -311,6 +313,8 @@ namespace Fx.Amiya.Service
                                 ThumbPicUrl = d.ThumbPicUrl,
                                 Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                                 EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
+                                AppointmentDate = d.AppointmentDate,
+                                AppointmentCity = d.AppointmentCity,
                                 AppointmentHospital = d.AppointmentHospital,
                                 IsAppointment = d.IsAppointment,
                                 StatusCode = d.StatusCode,
@@ -434,6 +438,8 @@ namespace Fx.Amiya.Service
                                 ThumbPicUrl = d.ThumbPicUrl,
                                 Phone = isHidePhone == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                                 //EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
+                                AppointmentCity = d.AppointmentCity,
+                                AppointmentDate = d.AppointmentDate,
                                 AppointmentHospital = d.AppointmentHospital,
                                 IsAppointment = d.IsAppointment,
                                 StatusCode = d.StatusCode,
@@ -827,6 +833,8 @@ namespace Fx.Amiya.Service
                         order.GoodsId = orderItem.GoodsId;
                         order.GoodsName = orderItem.GoodsName;
                         order.Phone = orderItem.Phone;
+                        order.AppointmentDate = orderItem.AppointmentDate;
+                        order.AppointmentCity = orderItem.AppointmentCity;
                         order.AppointmentHospital = orderItem.AppointmentHospital;
                         order.StatusCode = orderItem.StatusCode;
                         if (orderItem.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || orderItem.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS)
@@ -961,6 +969,8 @@ namespace Fx.Amiya.Service
                              ThumbPicUrl = d.ThumbPicUrl,
                              Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                              EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
+                             AppointmentCity = d.AppointmentCity,
+                             AppointmentDate = d.AppointmentDate,
                              AppointmentHospital = d.AppointmentHospital,
                              IsAppointment = d.IsAppointment,
                              StatusCode = d.StatusCode,
@@ -993,6 +1003,8 @@ namespace Fx.Amiya.Service
                              Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                              EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
                              AppointmentHospital = d.AppointmentHospital,
+                             AppointmentCity = d.AppointmentCity,
+                             AppointmentDate = d.AppointmentDate,
                              IsAppointment = d.IsAppointment,
                              StatusCode = d.StatusCode,
                              StatusText = ServiceClass.GetOrderStatusText(d.StatusCode),
@@ -1130,6 +1142,8 @@ namespace Fx.Amiya.Service
                 orderInfo.GoodsName = updateDto.GoodsName;
                 orderInfo.GoodsId = updateDto.GoodsId;
                 orderInfo.Phone = updateDto.Phone;
+                orderInfo.AppointmentCity = updateDto.AppointmentCity;
+                orderInfo.AppointmentDate = updateDto.AppointmentDate;
                 orderInfo.AppointmentHospital = updateDto.AppointmentHospital;
                 orderInfo.StatusCode = updateDto.StatusCode;
                 orderInfo.ActualPayment = updateDto.ActualPayment;
@@ -2088,6 +2102,8 @@ namespace Fx.Amiya.Service
             orderInfo.BuyerNick = order.BuyerNick;
             orderInfo.Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(order.Phone) : order.Phone;
             orderInfo.EncryptPhone = ServiceClass.Encrypt(order.Phone, config.PhoneEncryptKey);
+            orderInfo.AppointmentDate = order.AppointmentDate;
+            orderInfo.AppointmentCity = order.AppointmentCity;
             orderInfo.AppointmentHospital = order.AppointmentHospital;
             orderInfo.IsAppointment = order.IsAppointment;
             orderInfo.StatusCode = order.StatusCode;
@@ -2130,6 +2146,8 @@ namespace Fx.Amiya.Service
             orderInfo.BuyerNick = order.BuyerNick;
             orderInfo.Phone = order.Phone;
             orderInfo.EncryptPhone = ServiceClass.Encrypt(order.Phone, config.PhoneEncryptKey);
+            orderInfo.AppointmentCity = order.AppointmentCity;
+            orderInfo.AppointmentDate = order.AppointmentDate;
             orderInfo.AppointmentHospital = order.AppointmentHospital;
             orderInfo.IsAppointment = order.IsAppointment;
             orderInfo.StatusCode = order.StatusCode;

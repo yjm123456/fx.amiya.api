@@ -14,6 +14,8 @@ namespace Fx.Amiya.Dto.TmallOrder
         public string BuyerNick { get; set; }
         public string Phone { get; set; }
         public string EncryptPhone { get; set; }
+        public string AppointmentCity { get; set; }
+        public DateTime? AppointmentDate { get; set; }
         public string AppointmentHospital { get; set; }
         public int SendOrderHospitalId { get; set; }
         public string SendOrderHospital { get; set; }

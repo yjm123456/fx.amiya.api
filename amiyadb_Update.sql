@@ -1459,7 +1459,14 @@ ADD COLUMN `sort` INT NOT NULL AFTER `great_hospital`;
 
 
 
+------------------------------------------------------------------余建明 2022/10/26 BEGIN--------------------------------------------
 
+ALTER TABLE `amiyadb`.`tbl_order_info` 
+ADD COLUMN `appointment_city` VARCHAR(30) NULL AFTER `phone`,
+ADD COLUMN `appointment_date` DATETIME NULL AFTER `appointment_city`;
+------------------------------------------------------------------余建明 2022/10/26 END--------------------------------------------
+
+ 
 
 
 

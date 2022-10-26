@@ -20,6 +20,14 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.TmallOrder
         /// </summary>
         public string CreateDate { get; set; }
         /// <summary>
+        /// 预约城市
+        /// </summary>
+        public string AppointmentCity { get; set; }
+        /// <summary>
+        /// 预约日期
+        /// </summary>
+        public DateTime? AppointmentDate { get; set; }
+        /// <summary>
         /// 合作医院（支付订单展示）
         /// </summary>
         public string AppointmentHospital { get; set; }

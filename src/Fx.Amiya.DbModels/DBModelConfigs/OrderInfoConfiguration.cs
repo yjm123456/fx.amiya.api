@@ -17,6 +17,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.GoodsName).HasColumnName("goods_name").HasColumnType("varchar(100)").IsRequired();
             builder.Property(t => t.GoodsId).HasColumnName("goods_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(t => t.Phone).HasColumnName("phone").HasColumnType("varchar(20)").IsRequired();
+            builder.Property(t => t.AppointmentCity).HasColumnName("appointment_city").HasColumnType("varchar(30)").IsRequired(false);
+            builder.Property(t => t.AppointmentDate).HasColumnName("appointment_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(t => t.AppointmentHospital).HasColumnName("appointment_hospital").HasColumnType("varchar(100)").IsRequired(false);
             builder.Property(t => t.FinalConsumptionHospital).HasColumnName("final_consumption_hospital").HasColumnType("varchar(100)").IsRequired(false);
             builder.Property(t => t.IsAppointment).HasColumnName("is_appointment").HasColumnType("bit").IsRequired();
