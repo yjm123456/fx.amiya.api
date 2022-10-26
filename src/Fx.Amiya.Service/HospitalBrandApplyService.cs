@@ -163,6 +163,10 @@ namespace Fx.Amiya.Service
                 HospitalBrandApplyDto hospitalBrandApplyDto = new HospitalBrandApplyDto();
                 hospitalBrandApplyDto.Id = hospitalBrandApply.Id;
                 hospitalBrandApplyDto.HospitalName = hospitalBrandApply.HospitalName;
+                hospitalBrandApplyDto.BusinessLicenseName = hospitalBrandApply.BusinessLicenseName;
+                hospitalBrandApplyDto.HospitalLinkMan = hospitalBrandApply.HospitalLinkMan;
+                hospitalBrandApplyDto.HospitalLinkManPhone = hospitalBrandApply.HospitalLinkManPhone;
+
                 hospitalBrandApplyDto.GoodsId = hospitalBrandApply.GoodsId;
                 hospitalBrandApplyDto.GoodsType = hospitalBrandApply.GoodsType;
                 hospitalBrandApplyDto.GoodsUrl = hospitalBrandApply.GoodsUrl;
