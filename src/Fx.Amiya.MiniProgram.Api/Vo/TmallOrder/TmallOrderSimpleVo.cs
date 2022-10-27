@@ -26,7 +26,7 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.TmallOrder
         /// <summary>
         /// 预约日期
         /// </summary>
-        public DateTime? AppointmentDate { get; set; }
+        public string AppointmentDate { get; set; }
         /// <summary>
         /// 合作医院（支付订单展示）
         /// </summary>

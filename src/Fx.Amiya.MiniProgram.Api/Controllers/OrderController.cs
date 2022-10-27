@@ -138,15 +138,15 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             orderInfoResult.OrderId = orderInfo.Id;
             orderInfoResult.StatusCode = orderInfo.StatusCode;
             orderInfoResult.StatusText = orderInfo.StatusText;
-            orderInfoResult.AppointmentCity = orderInfo.AppointmentCity;
-            orderInfoResult.AppointmentDate = orderInfo.AppointmentDate;
+            /*orderInfoResult.AppointmentCity = orderInfo.AppointmentCity;
+            orderInfoResult.AppointmentDate = orderInfo.AppointmentDate.Value.ToString("");*/
             orderInfoResult.CreateDate = orderInfo.CreateDate.Value.ToString("yyyy-MM-dd hh:mm:ss");
             orderInfoResult.ThumbPicUrl = orderInfo.ThumbPicUrl;
             orderInfoResult.GoodsName = orderInfo.GoodsName;
             orderInfoResult.OrderType = (orderInfo.OrderType.HasValue) ? Convert.ToInt16(orderInfo.OrderType.Value) : 0;
             orderInfoResult.appType = orderInfo.AppType;
             orderInfoResult.AppointmentCity = orderInfo.AppointmentCity;
-            orderInfoResult.AppointmentDate = orderInfo.AppointmentDate;
+            orderInfoResult.AppointmentDate = orderInfo.AppointmentDate.Value.ToString("yyyy-MM-dd");
             if (orderInfo.OrderType == 0)
             {
                 if (orderInfo.Quantity.HasValue)
