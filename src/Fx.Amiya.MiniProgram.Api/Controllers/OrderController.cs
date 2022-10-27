@@ -582,8 +582,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 WxPackageInfo packageInfo = new WxPackageInfo();
                 packageInfo.Body = orderId;
                 //回调地址需重新设置(todo;)
-                packageInfo.NotifyUrl = string.Format("http://{0}/amiya/wxmini/Notify/orderpayresult", Request.HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString() + ":" + Request.HttpContext.Connection.LocalPort);
-                //packageInfo.NotifyUrl = string.Format("http://{0}/amiya/wxmini/Notify/orderpayresult", "wswjym.gnway.cc");
+                //packageInfo.NotifyUrl = string.Format("http://{0}/amiya/wxmini/Notify/orderpayresult", Request.HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString() + ":" + Request.HttpContext.Connection.LocalPort);
+                packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");
                 packageInfo.OutTradeNo = tradeId;
                 packageInfo.TotalFee = (int)(totalFee * 100m);
                 if (packageInfo.TotalFee < 1m)
@@ -714,7 +714,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             WxPackageInfo packageInfo = new WxPackageInfo();
             packageInfo.Body = orderId;
             //回调地址需重新设置(todo;)
-            packageInfo.NotifyUrl = string.Format("http://{0}/pay/wx_Pay.aspx", Request.HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString() + ":" + Request.HttpContext.Connection.LocalPort);
+            //packageInfo.NotifyUrl = string.Format("http://{0}/pay/wx_Pay.aspx", Request.HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString() + ":" + Request.HttpContext.Connection.LocalPort);
+            packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");
             packageInfo.OutTradeNo = tradeId;
             packageInfo.TotalFee = (int)(totalFee * 100m);
             if (packageInfo.TotalFee < 1m)
