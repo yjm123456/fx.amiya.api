@@ -23,7 +23,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.IsUncertainDate).HasColumnName("is_uncertain_date").HasColumnType("bit").IsRequired();
             builder.Property(e => e.AppointmentDate).HasColumnName("appointment_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.Remark).HasColumnName("remark").HasColumnType("varchar(500)").IsRequired(false);
-            builder.Property(e => e.HospitalRemark).HasColumnName("hospital_remark").HasColumnType("varchar(200)").IsRequired(false);
+            builder.Property(e => e.HospitalRemark).HasColumnName("hospital_remark").HasColumnType("varchar(100000)").IsRequired(false);
 
             builder.HasOne(e => e.ContentPlatformOrder).WithMany(e => e.ContentPlatformOrderSendList).HasForeignKey(e => e.ContentPlatformOrderId);
             builder.HasOne(e => e.AmiyaEmployee).WithMany(e => e.ContentPlatformOrderSendList).HasForeignKey(e => e.Sender);

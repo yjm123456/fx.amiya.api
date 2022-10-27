@@ -82,6 +82,16 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         [Description("手机号")]
         public string Phone { get; set; }
         /// <summary>
+        /// 预约城市
+        /// </summary>
+        [Description("预约城市")]
+        public string AppointmentCity { get; set; }
+        /// <summary>
+        /// 预约时间
+        /// </summary>
+        [Description("预约时间")]
+        public DateTime? AppointmentDate { get; set; }
+        /// <summary>
         /// 预约门店
         /// </summary>
         [Description("预约门店")]
