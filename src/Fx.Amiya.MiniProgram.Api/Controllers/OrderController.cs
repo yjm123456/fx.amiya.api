@@ -145,6 +145,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             orderInfoResult.GoodsName = orderInfo.GoodsName;
             orderInfoResult.OrderType = (orderInfo.OrderType.HasValue) ? Convert.ToInt16(orderInfo.OrderType.Value) : 0;
             orderInfoResult.appType = orderInfo.AppType;
+            orderInfoResult.AppointmentCity = orderInfo.AppointmentCity;
+            orderInfoResult.AppointmentDate = orderInfo.AppointmentDate;
             if (orderInfo.OrderType == 0)
             {
                 if (orderInfo.Quantity.HasValue)
@@ -846,6 +848,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             string customerId = sessionInfo.FxCustomerId;
 
             var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(tradeId);
+            if (orderTrade.StatusCode != OrderStatusCode.WAIT_BUYER_PAY) throw new Exception("订单状态已更改,无法支付!");
             //余额支付
             foreach (var x in orderTrade.OrderInfoList)
             {

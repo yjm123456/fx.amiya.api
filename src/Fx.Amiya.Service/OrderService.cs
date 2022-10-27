@@ -895,6 +895,8 @@ namespace Fx.Amiya.Service
                         order.IsUseCoupon = orderItem.IsUseCoupon;
                         order.CouponId = orderItem.CouponId;
                         order.DeductMoney = orderItem.DeductMoney;
+                        order.AppointmentCity = orderItem.AppointmentCity;
+                        order.AppointmentDate = orderItem.AppointmentDate;
                         orderInfoList.Add(order);
                     }
                 }

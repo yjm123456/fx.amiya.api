@@ -27,7 +27,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var carouselImage = from d in dalHomepageCarouselImage.GetAll()
+                var carouselImage = from d in dalHomepageCarouselImage.GetAll() orderby d.DisplayIndex ascending
                                     select new HomepageCarouselImageDto
                                     {
                                         Id = d.Id,
@@ -68,6 +68,7 @@ namespace Fx.Amiya.Service
                 }
 
                 carouselImage.CreateDate = DateTime.Now;
+                carouselImage.LinkUrl = addDto.LinkUrl;
 
                 await dalHomepageCarouselImage.AddAsync(carouselImage, true);
             }
