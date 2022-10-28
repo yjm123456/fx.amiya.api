@@ -26,6 +26,7 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Order
         /// 是否是主播美肤卡
         /// </summary>
         public bool IsCard { get; set; }
+        
         /// <summary>
         /// 用户昵称
         /// </summary>

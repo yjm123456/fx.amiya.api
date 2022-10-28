@@ -3783,6 +3783,19 @@ namespace Fx.Amiya.Service
             orderTradePageInfo.List = await orders.OrderByDescending(e => e.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
             return orderTradePageInfo;
         }
+
+        public async Task<bool> IsExistMFCard(string customerId)
+        {
+            var order = from d in dalOrderTrade.GetAll()
+                           .Include(e => e.OrderInfoList)
+                        where d.CustomerId == customerId
+                        select d;
+            var list = (await order.ToListAsync()).SelectMany(e=>e.OrderInfoList);
+            int count= list.Count(e=>e.GoodsId== "00000000"&&e.StatusCode== OrderStatusCode.TRADE_BUYER_PAID&&!string.IsNullOrEmpty(e.AppointmentHospital));
+            if (count > 0) return true;
+            return false;
+                     
+        }
         #endregion
     }
 }

@@ -146,7 +146,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             orderInfoResult.OrderType = (orderInfo.OrderType.HasValue) ? Convert.ToInt16(orderInfo.OrderType.Value) : 0;
             orderInfoResult.appType = orderInfo.AppType;
             orderInfoResult.AppointmentCity = orderInfo.AppointmentCity;
-            orderInfoResult.AppointmentDate = orderInfo.AppointmentDate.Value.ToString("yyyy-MM-dd");
+            if (orderInfo.AppointmentDate.HasValue) {
+                orderInfoResult.AppointmentDate = orderInfo.AppointmentDate.Value.ToString("yyyy-MM-dd");
+            }
+            
             if (orderInfo.OrderType == 0)
             {
                 if (orderInfo.Quantity.HasValue)
@@ -402,6 +405,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 //美肤卡/面诊卡下单
                 foreach (var item in orderAdd.OrderItemList)
                 {
+                    
                     OrderInfoAddDto amiyaOrder = new OrderInfoAddDto();
                     IsExistThirdPartPay = true;
                     amiyaOrder.IntegrationQuantity = 0;
@@ -423,6 +427,18 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     amiyaOrder.AppType = (byte)AppType.MiniProgram;
                     amiyaOrder.OrderType = (byte)OrderType.VirtualOrder;
                     amiyaOrder.ActualPayment = item.ActualPayment;
+                    if (item.IsSkinCare)
+                    {
+                        var orderExist =await orderService.IsExistMFCard(customerId);
+                        if (orderExist) {
+                            throw new Exception("亲,每人仅限购买1张哦～推荐给你的好友吧");
+                        }
+                        if (!item.HospitalId.HasValue) {
+                            throw new Exception("预约医院不能为空");
+                        }
+                        var hospitalInfo = await _hospitalInfoService.GetByIdAsync(item.HospitalId.Value);
+                        amiyaOrder.AppointmentHospital = hospitalInfo.Name;
+                    }                   
                     if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
                     {
                         //余额支付
@@ -579,35 +595,57 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
 
                 //微信支付
-                WxPackageInfo packageInfo = new WxPackageInfo();
-                packageInfo.Body = orderId;
-                //回调地址需重新设置(todo;)
-                //packageInfo.NotifyUrl = string.Format("http://{0}/amiya/wxmini/Notify/orderpayresult", Request.HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString() + ":" + Request.HttpContext.Connection.LocalPort);
-                packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");
-                packageInfo.OutTradeNo = tradeId;
-                packageInfo.TotalFee = (int)(totalFee * 100m);
-                if (packageInfo.TotalFee < 1m)
-                {
-                    packageInfo.TotalFee = 1m;
-                }
-                //支付人
-                packageInfo.OpenId = OpenId;
-                string CheckValue = "";
-                //验证参数
-                if (orderService.CheckVxSetParams(out CheckValue))
-                {
-                    if (!orderService.CheckVxPackage(packageInfo, out CheckValue))
+                if (orderAdd.ExchangeType == 2) {
+                    WxPackageInfo packageInfo = new WxPackageInfo();
+                    packageInfo.Body = orderId;
+                    //回调地址需重新设置(todo;)
+                    //packageInfo.NotifyUrl = string.Format("http://{0}/amiya/wxmini/Notify/orderpayresult", Request.HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString() + ":" + Request.HttpContext.Connection.LocalPort);
+                    packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");
+                    packageInfo.OutTradeNo = tradeId;
+                    packageInfo.TotalFee = (int)(totalFee * 100m);
+                    if (packageInfo.TotalFee < 1m)
                     {
-                        throw new Exception(CheckValue.ToString());
+                        packageInfo.TotalFee = 1m;
                     }
-                    var payRequest = await orderService.BuildPayRequest(packageInfo);
-                    PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
-                    payRequestInfo.appId = payRequest.appId;
-                    payRequestInfo.package = payRequest.package;
-                    payRequestInfo.timeStamp = payRequest.timeStamp;
-                    payRequestInfo.nonceStr = payRequest.nonceStr;
-                    payRequestInfo.paySign = payRequest.paySign;
-                    orderAddResult.PayRequestInfo = payRequestInfo;
+                    //支付人
+                    packageInfo.OpenId = OpenId;
+                    string CheckValue = "";
+                    //验证参数
+                    if (orderService.CheckVxSetParams(out CheckValue))
+                    {
+                        if (!orderService.CheckVxPackage(packageInfo, out CheckValue))
+                        {
+                            throw new Exception(CheckValue.ToString());
+                        }
+                        var payRequest = await orderService.BuildPayRequest(packageInfo);
+                        PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
+                        payRequestInfo.appId = payRequest.appId;
+                        payRequestInfo.package = payRequest.package;
+                        payRequestInfo.timeStamp = payRequest.timeStamp;
+                        payRequestInfo.nonceStr = payRequest.nonceStr;
+                        payRequestInfo.paySign = payRequest.paySign;
+                        orderAddResult.PayRequestInfo = payRequestInfo;
+                    }
+                } else if(orderAdd.ExchangeType == 1) {
+                    #region 支付宝支付
+                    SortedDictionary<string, string> sParaTemp = new SortedDictionary<string, string>();
+                    AliPayConfig Config = new AliPayConfig();
+                    sParaTemp.Add("service", Config.service);
+                    sParaTemp.Add("partner", Config.seller_id);
+                    sParaTemp.Add("seller_id", Config.seller_id);
+                    sParaTemp.Add("_input_charset", Config.input_charset.ToLower());
+                    sParaTemp.Add("payment_type", Config.payment_type);
+                    sParaTemp.Add("notify_url", Config.notify_url);
+                    sParaTemp.Add("return_url", Config.return_url);
+                    sParaTemp.Add("anti_phishing_key", Config.anti_phishing_key);
+                    sParaTemp.Add("exter_invoke_ip", Config.exter_invoke_ip);
+                    sParaTemp.Add("out_trade_no", tradeId);
+                    sParaTemp.Add("subject", orderId);
+                    sParaTemp.Add("total_fee", totalFee.ToString("0.00"));
+                    sParaTemp.Add("body", goodsName);
+                    var res = _aliPayService.BuildRequest(sParaTemp);
+                    orderAddResult.AlipayUrl = res.Result;
+                    #endregion
                 }
 
                 //微信支付

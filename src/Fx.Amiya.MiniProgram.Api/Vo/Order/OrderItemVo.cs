@@ -35,6 +35,10 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Order
         /// 实付款价格
         /// </summary>
         public decimal? ActualPayment { get; set; }
+        /// <summary>
+        /// 是否是美肤卡
+        /// </summary>
+        public bool IsSkinCare { get; set; }
 
         ///// <summary>
         ///// 抵扣积分

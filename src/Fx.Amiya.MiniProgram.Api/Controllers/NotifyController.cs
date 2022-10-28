@@ -131,7 +131,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
                     UpdateOrderDto updateOrder = new UpdateOrderDto();
                     updateOrder.OrderId = item.Id;
-                    updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                    updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
                     if (item.ActualPayment.HasValue)
                     {
                         updateOrder.Actual_payment = item.ActualPayment.Value;
@@ -152,7 +152,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
                 updateOrderTrade.TradeId = input.out_trade_no;
                 updateOrderTrade.AddressId = orderTrade.AddressId;
-                updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
                 await orderService.UpdateOrderTradeAsync(updateOrderTrade);
             }
             return "success";
@@ -382,6 +382,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         }
                         //修改订单状态
                         await orderService.UpdateAsync(updateOrderList);
+
+
+                        UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
+                        updateOrderTrade.TradeId = weiXinPayNotifyVo.out_trade_no;
+                        updateOrderTrade.AddressId = orderTrade.AddressId;
+                        updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                        await orderService.UpdateOrderTradeAsync(updateOrderTrade);
                     }
                 }
                 return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";

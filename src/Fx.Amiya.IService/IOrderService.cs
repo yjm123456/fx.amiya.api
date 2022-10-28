@@ -62,8 +62,12 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<FxPageInfo<BindCustomerServiceOrderDto>> GetBindCustomerServieOrderListAsync(string phone, int? customerServiceId, byte? appType, string statusCode, decimal? minPayment, decimal? maxPayment, int pageNum, int pageSize);
 
-
-
+        /// <summary>
+        /// 用户是否已下单过美肤卡
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        Task<bool> IsExistMFCard(string customerId);
 
         /// <summary>
         /// 添加订单
