@@ -159,7 +159,7 @@ namespace Fx.Amiya.Service
             }
             return new MemberCardHandleDto()
             {
-                MemberCardNum = memberCardNum,
+                MemberCardNum = Guid.NewGuid().ToString().Substring(0,20),
                 Date = date,
                 Valid = true,
                 MemberRankId=(byte)memberCardId
