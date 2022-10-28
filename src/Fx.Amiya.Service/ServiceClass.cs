@@ -35,6 +35,9 @@ namespace Fx.Amiya.Service
                 case "TRADE_BUYER_SIGNED":
                     statusText = "买家已签收";
                     break;
+                case "TRADE_BUYER_PAID":
+                    statusText = "买家已付款";
+                    break;
 
                 case "TRADE_FINISHED":
                     statusText = "交易成功";

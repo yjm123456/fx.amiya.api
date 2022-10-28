@@ -27,6 +27,11 @@ namespace Fx.Amiya.IService
         public static string TRADE_BUYER_SIGNED = "TRADE_BUYER_SIGNED";
 
         /// <summary>
+        /// 买家已付款（小程序美肤卡使用）
+        /// </summary>
+        public static string TRADE_BUYER_PAID = "TRADE_BUYER_PAID";
+
+        /// <summary>
         /// 交易成功
         /// </summary>
         public static string TRADE_FINISHED = "TRADE_FINISHED";

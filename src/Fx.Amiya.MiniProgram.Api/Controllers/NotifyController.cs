@@ -355,7 +355,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         {
                             UpdateOrderDto updateOrder = new UpdateOrderDto();
                             updateOrder.OrderId = item.Id;
-                            updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                            updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
                             if (item.ActualPayment.HasValue)
                             {
                                 updateOrder.Actual_payment = item.ActualPayment.Value;
