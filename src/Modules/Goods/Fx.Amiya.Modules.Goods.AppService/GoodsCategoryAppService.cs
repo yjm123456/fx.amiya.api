@@ -194,6 +194,12 @@ namespace Fx.Amiya.Modules.Goods.AppService
             return showDirectionTypeList;
         }
 
+        public Task<GoodsCategoryDto> GetGoodsCategoryByCode(string code)
+        {
+            var category = _goodsCategoryRepository.GetGoodsCategoryBySimpleCode(code);
+            return null;
+        }
+
         Dictionary<ShowDirectionType, string> showDirectionTypeDict = new Dictionary<ShowDirectionType, string>()
         {
             { ShowDirectionType.Store,"商城"},

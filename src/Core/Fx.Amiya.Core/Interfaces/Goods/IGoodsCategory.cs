@@ -76,5 +76,10 @@ namespace Fx.Amiya.Core.Interfaces.Goods
         /// </summary>
         /// <returns></returns>
         List<ShowDirectionTypeDto> GetshowDirectionTypeList();
+        /// <summary>
+        /// 根据分类简码获取分类信息
+        /// </summary>
+        /// <returns></returns>
+        Task<GoodsCategoryDto> GetGoodsCategoryByCode(string code);
     }
 }

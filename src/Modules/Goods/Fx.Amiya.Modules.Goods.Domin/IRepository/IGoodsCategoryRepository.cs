@@ -11,5 +11,6 @@ namespace Fx.Amiya.Modules.Goods.Domin.IRepository
     {
         Task<GoodsCategory> GetNearGoodsCategory(int Id,int showDirectionType,bool IsUp);
         Task<int> GetMaxOrMinSortByShowDirectionType(int directionType,bool IsMax);
+        Task<GoodsCategory> GetGoodsCategoryBySimpleCode(string code);
     }
 }

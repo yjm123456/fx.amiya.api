@@ -426,7 +426,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     amiyaOrder.ThumbPicUrl = orderAdd.ThumbPicUrl;
                     amiyaOrder.AppType = (byte)AppType.MiniProgram;
                     amiyaOrder.OrderType = (byte)OrderType.VirtualOrder;
-                    amiyaOrder.ActualPayment = item.ActualPayment;
+                    amiyaOrder.ActualPayment = 199m;
                     if (item.IsSkinCare)
                     {
                         var orderExist =await orderService.IsExistMFCard(customerId);
@@ -438,6 +438,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         }
                         var hospitalInfo = await _hospitalInfoService.GetByIdAsync(item.HospitalId.Value);
                         amiyaOrder.AppointmentHospital = hospitalInfo.Name;
+                        amiyaOrder.ActualPayment = 4999m;
                     }                   
                     if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
                     {

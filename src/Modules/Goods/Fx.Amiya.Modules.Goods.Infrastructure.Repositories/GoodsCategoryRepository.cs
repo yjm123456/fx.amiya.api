@@ -172,5 +172,33 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                  .Where(e => e.Id == entity.Id)
                  .ExecuteAffrowsAsync();
         }
+        /// <summary>
+        /// 根据简码获取分类信息
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public async Task<GoodsCategory> GetGoodsCategoryBySimpleCode(string code)
+        {
+            var category= freeSql.Select<GoodsCategoryDbModel>().Where(z=>z.SimpleCode==code).First();
+            if (category == null)
+            {
+                throw new Exception("编码错误");
+            }
+            else {
+                GoodsCategory categoryInfo = new GoodsCategory();
+                categoryInfo.Id = category.Id;
+                categoryInfo.Name = category.Name;
+                categoryInfo.SimpleCode = category.SimpleCode;
+                categoryInfo.Valid = category.Valid;
+                categoryInfo.CreateDate = category.CreateDate;
+                categoryInfo.ShowDirectionType = category.ShowDirectionType;
+                categoryInfo.CreateBy = category.CreateBy;
+                categoryInfo.UpdateDate = category.UpdateDate;
+                categoryInfo.UpdateBy = category.UpdateBy;
+                categoryInfo.Sort = category.Sort;
+                return categoryInfo;
+            }
+
+        }
     }
 }
