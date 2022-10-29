@@ -430,7 +430,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     if (item.IsSkinCare)
                     {
                         var orderExist =await orderService.IsExistMFCard(customerId);
-                        if (orderExist) {
+                        if (orderExist) { 
                             throw new Exception("亲,每人仅限购买1张哦～推荐给你的好友吧");
                         }
                         if (!item.HospitalId.HasValue) {

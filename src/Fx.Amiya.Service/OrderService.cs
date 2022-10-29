@@ -1065,6 +1065,17 @@ namespace Fx.Amiya.Service
                                 BuildSendMailInfo(appType, orderInfo.Id, intergration_quantity, goodsName, orderInfo.Phone);
                             }
                         }
+                        if (orderInfo.StatusCode == OrderStatusCode.TRADE_BUYER_PAID&& item.AppType == (byte)AppType.MiniProgram)
+                        {
+                            orderId += orderInfo.Id + ",";
+                            goodsName += orderInfo.GoodsName + ",";
+                            phone = orderInfo.Phone;
+                            //组织邮件信息
+                            if (emailConfig == true)
+                            {
+                                BuildSendMailInfo(appType, orderInfo.Id, intergration_quantity, goodsName, orderInfo.Phone);
+                            }
+                        }
                         if (orderInfo.OrderType == 0 && item.StatusCode == OrderStatusCode.TRADE_FINISHED)
                         {
                             orderInfo.WriteOffDate = orderInfo.UpdateDate;

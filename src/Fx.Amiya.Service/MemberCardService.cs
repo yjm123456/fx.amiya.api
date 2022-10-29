@@ -135,7 +135,7 @@ namespace Fx.Amiya.Service
         }
         private  MemberCardHandleDto CreateMemberCardAsync(string latestMemberCardNum, string inputMemberCardNum,string memberRankCode,int memberCardId)
         {
-            DateTime date = DateTime.Now;
+            /*DateTime date = DateTime.Now;
 
             string memberCardNum = "";
             if (!string.IsNullOrWhiteSpace(inputMemberCardNum))
@@ -156,11 +156,11 @@ namespace Fx.Amiya.Service
 
                 string year = date.Year.ToString().Substring(date.Year.ToString().Length - 2);
                 memberCardNum = memberRankCode + year + memberCardNum;
-            }
+            }*/
             return new MemberCardHandleDto()
             {
-                MemberCardNum = Guid.NewGuid().ToString().Substring(0,20),
-                Date = date,
+                MemberCardNum = Guid.NewGuid().ToString().Replace("-","").Substring(0,20),
+                Date = DateTime.Now,
                 Valid = true,
                 MemberRankId=(byte)memberCardId
             };
