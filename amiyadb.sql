@@ -1245,6 +1245,7 @@ CREATE TABLE `tbl_growth_points_rule` (
   --测试地址发布
 
 -----------------------------------------------余建明 2022/04/29 BEGIN--------------------------------------------;
+--艾尔建活动报名
 CREATE TABLE `amiyadb`.`tbl_hospital_brand_apply` (
   `id` VARCHAR(50) NOT NULL,
   `hospital_name` VARCHAR(100) NULL,
@@ -1259,6 +1260,17 @@ CREATE TABLE `amiyadb`.`tbl_hospital_brand_apply` (
   `price` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
   PRIMARY KEY (`id`));
 
+
+  --啊美雅课程报名
+  CREATE TABLE `amiyadb`.`tbl_lesson_apply` (
+  `id` VARCHAR(50) NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  `phone` VARCHAR(30) NOT NULL,
+  `position` VARCHAR(45) NULL,
+  `city` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`));
+
+ 
 -----------------------------------------------余建明 2022/04/29 END--------------------------------------------;
 
 
