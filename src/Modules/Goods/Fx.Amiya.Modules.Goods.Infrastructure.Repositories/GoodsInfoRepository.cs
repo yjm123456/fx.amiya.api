@@ -141,7 +141,60 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
         return goods;
     }
 
-    public async Task<int> RemoveAsync(GoodsInfo entity)
+        public async Task<GoodsInfo> GetGoodsByCode(string code)
+        {
+            var goodsInfo = await freeSql.Select<GoodsInfoDbModel>()
+            .Include(e => e.GoodsDetail)
+            .Include(e=>e.GoodsCategory)
+            .IncludeMany(e=>e.GoodsInfoCarouselImageList)
+            .Where(e => e.SimpleCode == code).FirstAsync();
+            if (goodsInfo == null)
+            {
+                return new GoodsInfo();
+            }
+            GoodsInfo goods = new GoodsInfo()
+            {
+                Id = goodsInfo.Id,
+                Name = goodsInfo.Name,
+                SimpleCode = goodsInfo.SimpleCode,
+                Description = goodsInfo.Description,
+                Standard = goodsInfo.Standard,
+                Unit = goodsInfo.Unit,
+                SalePrice = goodsInfo.SalePrice,
+                InventoryQuantity = goodsInfo.InventoryQuantity,
+                Valid = goodsInfo.Valid,
+                ExchangeType = goodsInfo.ExchangeType,
+                IntegrationQuantity = goodsInfo.IntegrationQuantity,
+                ThumbPicUrl = goodsInfo.ThumbPicUrl,
+                IsMaterial = goodsInfo.IsMaterial,
+                GoodsType = goodsInfo.GoodsType,
+                IsLimitBuy = goodsInfo.IsLimitBuy,
+                LimitBuyQuantity = goodsInfo.LimitBuyQuantity,
+                CategoryId = goodsInfo.CategoryId,
+                CategoryName = goodsInfo.GoodsCategory.Name,
+                CreateBy = goodsInfo.CreateBy,
+                CreateDate = goodsInfo.CreateDate,
+                UpdateBy = goodsInfo.UpdateBy,
+                UpdatedDate = goodsInfo.UpdatedDate,
+                Version = goodsInfo.Version,
+                DetailsDescription = goodsInfo.DetailsDescription,
+                MaxShowPrice = goodsInfo.MaxShowPrice,
+                MinShowPrice = goodsInfo.MinShowPrice,
+                ShowSaleCount = goodsInfo.ShowSaleCount,
+                VisitCount = goodsInfo.VisitCount,
+
+                GoodsDetail = goodsInfo.GoodsDetailId == null ? null : new GoodsDetail()
+                {
+                    Id = (int)goodsInfo.GoodsDetailId,
+                    GoodsDetailHtml = goodsInfo.GoodsDetail.GoodsDetailHtml,
+
+                }
+            };
+
+            return goods;
+        }
+
+        public async Task<int> RemoveAsync(GoodsInfo entity)
     {
         return await RemoveAsync(entity.Id);
     }

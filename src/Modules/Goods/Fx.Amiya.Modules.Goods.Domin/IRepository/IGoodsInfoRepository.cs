@@ -9,5 +9,11 @@ namespace Fx.Amiya.Modules.Goods.Domin.IRepository
 {
    public interface IGoodsInfoRepository: IRepositoryBase<GoodsInfo, string>
     {
+        /// <summary>
+        /// 根据简码获取商品信息
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        Task<GoodsInfo> GetGoodsByCode(string code);
     }
 }

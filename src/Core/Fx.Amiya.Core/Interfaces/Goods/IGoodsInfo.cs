@@ -105,5 +105,11 @@ namespace Fx.Amiya.Core.Interfaces.Goods
         /// <returns></returns>
         Task<FxPageInfo<GoodsInfoForListDto>> GetLikeListAsync(bool? valid, int pageNum, int pageSize);
         Task<FxPageInfo<GoodsInfoForListDto>> GetIntegraListAsync(bool? valid, int pageNum, int pageSize);
+        /// <summary>
+        /// 根据简码获取美肤卡信息
+        /// </summary>
+        /// <param name="code">简码</param>
+        /// <returns></returns>
+        Task<GoodsInfoForSingleDto> GetSkinCareByCode(string code);
     }
 }

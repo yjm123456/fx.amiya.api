@@ -50,7 +50,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
             return ResultData<List<GoodsCategoryVo>>.Success().AddData("goodsCategorys", goodsCategorys.Where(z => z.ShowDirectionType == showDirectionType).ToList());
         }
-
+        
 
 
         /// <summary>
@@ -163,7 +163,66 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             return ResultData<GoodsInfoForSingleVo>.Success().AddData("goodsInfo", goods);
         }
 
-
+        /// <summary>
+        /// 根据商品编号获取商品信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("infoBySimpleCode/{code}")]
+        public async Task<ResultData<GoodsInfoForSingleVo>> GetGoodsInfoBySimpleCodeAsync(string code)
+        {
+            var token = _tokenReader.GetToken();
+            var sesssionInfo = _sessionStorage.GetSession(token);
+            string customerId = sesssionInfo.FxCustomerId;
+            var goodsInfo = await goodsInfoService.GetSkinCareByCode(code);
+            GoodsInfoForSingleVo goods = new GoodsInfoForSingleVo()
+            {
+                Id = goodsInfo.Id,
+                Name = goodsInfo.Name,
+                SimpleCode = goodsInfo.SimpleCode,
+                Description = goodsInfo.Description,
+                Standard = goodsInfo.Standard,
+                Unit = goodsInfo.Unit,
+                SalePrice = goodsInfo.SalePrice,
+                InventoryQuantity = goodsInfo.InventoryQuantity,
+                Valid = goodsInfo.Valid,
+                ExchangeType = goodsInfo.ExchangeType,
+                IntegrationQuantity = goodsInfo.IntegrationQuantity,
+                ThumbPicUrl = goodsInfo.ThumbPicUrl,
+                IsMaterial = goodsInfo.IsMaterial,
+                GoodsType = goodsInfo.GoodsType,
+                IsLimitBuy = goodsInfo.IsLimitBuy,
+                LimitBuyQuantity = goodsInfo.LimitBuyQuantity,
+                CategoryId = goodsInfo.CategoryId,
+                GoodsDetailId = goodsInfo.GoodsDetailId,
+                DetailsDescription = goodsInfo.DetailsDescription,
+                MaxShowPrice = goodsInfo.MaxShowPrice,
+                MinShowPrice = goodsInfo.MinShowPrice,
+                ShowSaleCount = goodsInfo.ShowSaleCount,
+                VisitCount = goodsInfo.VisitCount,
+                IsMember = false,
+                MemberRankPrice = goodsInfo.SalePrice.Value,
+                CanUseVoucher = false
+            };
+            //当前用户的会员价格
+            var member = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
+            if (member != null)
+            {
+                var memberPrice = goodsInfo.GoodsMemberRankPrice.Find(e => e.MemberRankId == member.MemberRankId);
+                if (memberPrice != null)
+                {
+                    goods.IsMember = true;
+                    goods.MemberRankPrice = memberPrice.Price;
+                    goods.MemberName = memberPrice.MemberRankName;
+                }
+            }
+            //是否可以使用抵用券
+            if (goodsInfo.GoodsConsumptionVoucher.Any())
+            {
+                goods.CanUseVoucher = true;
+            }
+            return ResultData<GoodsInfoForSingleVo>.Success().AddData("goodsInfo", goods);
+        }
 
         /// <summary>
         /// 根据商品编号获取同商品组的所有商品列表

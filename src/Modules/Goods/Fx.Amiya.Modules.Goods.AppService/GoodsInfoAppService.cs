@@ -517,6 +517,90 @@ namespace Fx.Amiya.Modules.Goods.AppService
             return goodsPageInfo;
         }
 
+        public async Task<GoodsInfoForSingleDto> GetSkinCareByCode(string code)
+        {
+            try
+            {
+                var goodsInfo = await _goodsInfoRepository.GetGoodsByCode(code);
+                if (goodsInfo == null)
+                {
+                    return new GoodsInfoForSingleDto()
+                    {
+                        CategoryName = "",
+                    };
+                }
+                var goodsHospitalPrice = await _goodsHospitalsPrice.GetByGoodsId(goodsInfo.Id);
+                List<GoodsHospitalPriceDto> goodsHospitalPriceList = new List<GoodsHospitalPriceDto>();
+                foreach (var z in goodsHospitalPrice)
+                {
+                    GoodsHospitalPriceDto goodsHospitalPricedto = new GoodsHospitalPriceDto();
+                    goodsHospitalPricedto.GoodsId = goodsInfo.Id;
+                    goodsHospitalPricedto.HospitalId = z.HospitalId;
+                    goodsHospitalPricedto.Price = z.Price;
+                    goodsHospitalPriceList.Add(goodsHospitalPricedto);
+                }
+
+                //会员价格
+                var goodsMemberrankPrice = await goodsMemberRankPriceService.GetMemeberRankPriceByGoodsIdAsync(goodsInfo.Id);
+                //可用抵用券
+                var consumptionVoucher = await goodsConsumptionVoucherService.GetGoodsConsumptionVoucherByGoodsIdAsync(goodsInfo.Id);
+
+                GoodsInfoForSingleDto goods = new GoodsInfoForSingleDto()
+                {
+                    Id = goodsInfo.Id,
+                    Name = goodsInfo.Name,
+                    SimpleCode = goodsInfo.SimpleCode,
+                    Description = goodsInfo.Description,
+                    Standard = goodsInfo.Standard,
+                    Unit = goodsInfo.Unit,
+                    SalePrice = goodsInfo.SalePrice,
+                    InventoryQuantity = goodsInfo.InventoryQuantity,
+                    Valid = goodsInfo.Valid,
+                    ExchangeType = (ExchangeType)goodsInfo.ExchangeType,
+                    ExchangeTypeText = exchangeTypeDict[((ExchangeType)goodsInfo.ExchangeType)],
+                    IntegrationQuantity = goodsInfo.IntegrationQuantity,
+                    ThumbPicUrl = goodsInfo.ThumbPicUrl,
+                    IsMaterial = goodsInfo.IsMaterial,
+                    GoodsType = goodsInfo.GoodsType,
+                    GoodsTypeName = goodsTypeDict[goodsInfo.GoodsType],
+                    IsLimitBuy = goodsInfo.IsLimitBuy,
+                    LimitBuyQuantity = goodsInfo.LimitBuyQuantity,
+                    CategoryId = goodsInfo.CategoryId,
+                    CategoryName = goodsInfo.CategoryName,
+                    CreateBy = goodsInfo.CreateBy,
+                    CreateDate = goodsInfo.CreateDate,
+                    UpdateBy = goodsInfo.UpdateBy,
+                    UpdatedDate = goodsInfo.UpdatedDate,
+                    GoodsDetailId = goodsInfo.GoodsDetail?.Id,
+                    GoodsDetailHtml = goodsInfo.GoodsDetail?.GoodsDetailHtml,
+                    DetailsDescription = goodsInfo.DetailsDescription,
+                    MaxShowPrice = goodsInfo.MaxShowPrice,
+                    MinShowPrice = goodsInfo.MinShowPrice,
+                    ShowSaleCount = goodsInfo.ShowSaleCount,
+                    VisitCount = goodsInfo.VisitCount,
+                    GoodsHospitalPrice = goodsHospitalPriceList,
+                    GoodsMemberRankPrice = goodsMemberrankPrice,
+                    CarouselImageUrls = (from d in goodsInfo.GoodsInfoCarouselImages
+                                         select new GoodsInfoCarouselImageDto
+                                         {
+                                             Id = d.Id,
+                                             PicUrl = d.PicUrl,
+                                             DisplayIndex = d.DisplayIndex
+                                         }).ToList(),
+                    GoodsConsumptionVoucher = consumptionVoucher
+                };
+                return goods;
+            }
+            catch (Exception err)
+            {
+                return new GoodsInfoForSingleDto()
+                {
+                    CategoryName = "",
+                };
+            }
+
+        }
+
         Dictionary<ExchangeType, string> exchangeTypeDict = new Dictionary<ExchangeType, string>()
         {
             { ExchangeType.Integration,"积分支付"},
