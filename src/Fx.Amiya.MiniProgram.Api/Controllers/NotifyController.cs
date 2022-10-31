@@ -255,30 +255,31 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         public async Task<string> PayRechargeNotifyUrl()
         {
             try
-            {
-                unitOfWork.BeginTransaction();
+            {               
                 //获取回调POST过来的xml数据的代码
                 using Stream stream = HttpContext.Request.Body;
                 byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
-                await stream.ReadAsync(buffer, 0, buffer.Length);
+                await stream.ReadAsync(buffer);
                 string xml = System.Text.Encoding.UTF8.GetString(buffer);
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.LoadXml(xml);
                 WeiXinPayNotifyVo weiXinPayNotifyVo = GetWeiXinRequestPostData(xmlDoc);
                 SortedDictionary<string, string> sParam = GetWeiXinRequestPostDic(weiXinPayNotifyVo);
                 SignHelper signHelper = new SignHelper();
-
                 //签名验证
                 string sign = await signHelper.SignPay(sParam, "Amy20202020202020202020202020202");
-                if (sign != weiXinPayNotifyVo.sign) return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
-
+                if (sign != weiXinPayNotifyVo.sign)
+                    return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
+                unitOfWork.BeginTransaction();
                 // 业务逻辑
                 //成功通知微信
                 if (weiXinPayNotifyVo.return_code.ToUpper() == "SUCCESS")
                 {
                     var record = await balanceRechargeRecordService.GetRechargeRecordByIdAsync(weiXinPayNotifyVo.out_trade_no);
+
                     if (record == null) throw new Exception("没有找到该用户的充值信息");
-                    if (record.Status == 1) return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
+                    if (record.Status == 1)
+                        return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
                     UpdateRechargeRecordStatusDto updateRechargeRecord = new UpdateRechargeRecordStatusDto();
                     updateRechargeRecord.Id = record.Id;
                     updateRechargeRecord.OrderId = weiXinPayNotifyVo.transaction_id;
@@ -312,11 +313,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             catch (Exception e)
             {
                 unitOfWork.RollBack();
-                return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>"; //回调失败返回给微信
-                throw e;
+                return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
             }
-
-
         }
         /// <summary>
         /// 微信订单付款回调
