@@ -18,6 +18,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<WxMiniUserInfo> WxMiniUserInfo { get; set; }
         public virtual DbSet<AmiyaWareHouse> AmiyaWareHouse { get; set; }
         public virtual DbSet<ShootingAndClip> ShootingAndClip { get; set; }
+        public virtual DbSet<AmiyaLessonApply> AmiyaLessonApply { get; set; }
         public virtual DbSet<AmiyaInWarehouse> AmiyaInWarehouse { get; set; }
         public virtual DbSet<GreatHospitalDataWrite> GreatHospitalDataWrite { get; set; }
 
@@ -233,6 +234,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new SendOrderInfoConfiguration());
             modelBuilder.ApplyConfiguration(new GiftInfoConfiguration());
             modelBuilder.ApplyConfiguration(new OrderAppInfoConfiguration());
+            modelBuilder.ApplyConfiguration(new AmiyaLessonApplyConfiguration());
             modelBuilder.ApplyConfiguration(new ReceiveGiftConfiguration());
             modelBuilder.ApplyConfiguration(new LeaveMessageConfiguration());
             modelBuilder.ApplyConfiguration(new TrackTypeConfiguration());
