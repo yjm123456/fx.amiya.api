@@ -580,13 +580,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     VisitCount = goodsInfo.VisitCount,
                     GoodsHospitalPrice = goodsHospitalPriceList,
                     GoodsMemberRankPrice = goodsMemberrankPrice,
-                    CarouselImageUrls = (from d in goodsInfo.GoodsInfoCarouselImages
-                                         select new GoodsInfoCarouselImageDto
-                                         {
-                                             Id = d.Id,
-                                             PicUrl = d.PicUrl,
-                                             DisplayIndex = d.DisplayIndex
-                                         }).ToList(),
+                    
                     GoodsConsumptionVoucher = consumptionVoucher
                 };
                 return goods;

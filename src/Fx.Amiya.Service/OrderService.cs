@@ -1065,7 +1065,7 @@ namespace Fx.Amiya.Service
                                 BuildSendMailInfo(appType, orderInfo.Id, intergration_quantity, goodsName, orderInfo.Phone);
                             }
                         }
-                        if (orderInfo.StatusCode == OrderStatusCode.TRADE_BUYER_PAID&& item.AppType == (byte)AppType.MiniProgram)
+                        if (orderInfo.StatusCode == OrderStatusCode.TRADE_BUYER_PAID && item.AppType == (byte)AppType.MiniProgram)
                         {
                             orderId += orderInfo.Id + ",";
                             goodsName += orderInfo.GoodsName + ",";
@@ -3789,6 +3789,7 @@ namespace Fx.Amiya.Service
                                                   AppTypeText = ServiceClass.GetAppTypeText((byte)o.AppType)
                                               }).ToList()
                          };
+
             FxPageInfo<OrderTradeForWxDto> orderTradePageInfo = new FxPageInfo<OrderTradeForWxDto>();
             orderTradePageInfo.TotalCount = await orders.CountAsync();
             orderTradePageInfo.List = await orders.OrderByDescending(e => e.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -3801,11 +3802,11 @@ namespace Fx.Amiya.Service
                            .Include(e => e.OrderInfoList)
                         where d.CustomerId == customerId
                         select d;
-            var list = (await order.ToListAsync()).SelectMany(e=>e.OrderInfoList);
-            int count= list.Count(e=>e.GoodsId== "00000000"&&e.StatusCode== OrderStatusCode.TRADE_BUYER_PAID&&!string.IsNullOrEmpty(e.AppointmentHospital));
+            var list = (await order.ToListAsync()).SelectMany(e => e.OrderInfoList);
+            int count = list.Count(e => e.GoodsId == "00000000" && e.StatusCode == OrderStatusCode.TRADE_BUYER_PAID && !string.IsNullOrEmpty(e.AppointmentHospital));
             if (count > 0) return true;
             return false;
-                     
+
         }
         #endregion
     }
