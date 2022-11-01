@@ -9,7 +9,7 @@ namespace Fx.Amiya.Dto.TmallOrder
     {
         public string TradeId { get; set; }
         public string CustomerId { get; set; }
-        public DateTime CreateDate { get; set; }
+        public DateTime? CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public int? AddressId { get; set; }
         public decimal? TotalAmount { get; set; }

@@ -1595,7 +1595,6 @@ namespace Fx.Amiya.Service
                         //过滤掉定金订单和咨询订单
                         && d.StatusCode != "BARGAIN_MONEY" && d.StatusCode != "SEEK_ADVICE"
                         select new OrderInfo
-
                         {
                             Id = d.Id,
                             ThumbPicUrl = d.ThumbPicUrl,
@@ -1612,62 +1611,60 @@ namespace Fx.Amiya.Service
                             AppType = d.AppType,
                             TradeId = d.TradeId
                         };
-            if (ExchangeType == 0)
-            {
-                var result = from d in order
-                             where d.ExchangeType == ExchangeType
-                             && d.StatusCode != "BARGAIN_MONEY"
-                             && d.StatusCode != "SEEK_ADVICE"
-                             select new OrderInfoSimpleDto
-                             {
-                                 Id = d.Id,
-                                 ThumbPicUrl = d.ThumbPicUrl,
-                                 GoodsName = d.GoodsName,
-                                 ActualPayment = d.ActualPayment,
-                                 AppointmentHospital = d.AppointmentHospital,
-                                 CreateDate = d.CreateDate.Value,
-                                 UpdateDate = d.UpdateDate.Value,
-                                 GoodsId = d.GoodsId,
-                                 IntegrationQuantity = (d.IntegrationQuantity.HasValue) ? d.IntegrationQuantity : 0,
-                                 Quantity = (d.Quantity.HasValue) ? d.Quantity.Value : 0,
-                                 SingleIntegrationQuantity = (d.Quantity.HasValue) ? (d.IntegrationQuantity.Value / d.Quantity.Value) : d.IntegrationQuantity.Value,
-                                 GoodsCategory = _goodsInfoService.GetByIdAsync(d.GoodsId).Result.CategoryName.ToString(),
-                                 appType = d.AppType,
-                                 StatusCodeInfo = d.StatusCode,
-                                 StatusCode = ServiceClass.GetMiniGoodsOrderStatusText(d.StatusCode),
-                                 TradeId = d.TradeId
-                             };
-                orderInfoSimpleResult = await result.ToListAsync();
-            }
-            else
-            {
-                var result = from d in order
-                             where d.ExchangeType != 0
-                             select new OrderInfoSimpleDto
-                             {
-                                 Id = d.Id,
-                                 ThumbPicUrl = d.ThumbPicUrl,
-                                 GoodsName = d.GoodsName,
-                                 ActualPayment = d.ActualPayment,
-                                 AppointmentHospital = d.AppointmentHospital,
-                                 CreateDate = d.CreateDate.Value,
-                                 GoodsId = d.GoodsId,
-                                 IntegrationQuantity = d.IntegrationQuantity,
-                                 Quantity = d.Quantity.Value,
-                                 SinglePrice = (d.Quantity.HasValue) ? (d.ActualPayment.Value / d.Quantity.Value) : d.ActualPayment.Value,
-                                 appType = d.AppType,
-                                 StatusCodeInfo = d.StatusCode,
-                                 StatusCode = ServiceClass.GetMiniOrderStatusText(d.StatusCode),
-                                 TradeId = d.TradeId
-                             };
-                orderInfoSimpleResult = await result.ToListAsync();
-            }
+            var result = from d in order
+                         where d.ExchangeType == 0
+                         && d.StatusCode != "BARGAIN_MONEY"
+                         && d.StatusCode != "SEEK_ADVICE"
+                         select new OrderInfoSimpleDto
+                         {
+                             Id = d.Id,
+                             ThumbPicUrl = d.ThumbPicUrl,
+                             GoodsName = d.GoodsName,
+                             ActualPayment = d.ActualPayment,
+                             AppointmentHospital = d.AppointmentHospital,
+                             CreateDate = d.CreateDate.Value,
+                             UpdateDate = d.UpdateDate.Value,
+                             GoodsId = d.GoodsId,
+                             IntegrationQuantity = (d.IntegrationQuantity.HasValue) ? d.IntegrationQuantity : 0,
+                             Quantity = (d.Quantity.HasValue) ? d.Quantity.Value : 0,
+                             SingleIntegrationQuantity = (d.Quantity.HasValue) ? (d.IntegrationQuantity.Value / d.Quantity.Value) : d.IntegrationQuantity.Value,
+                             GoodsCategory = _goodsInfoService.GetByIdAsync(d.GoodsId).Result.CategoryName.ToString(),
+                             appType = d.AppType,
+                             StatusCodeInfo = d.StatusCode,
+                             StatusCode = ServiceClass.GetMiniGoodsOrderStatusText(d.StatusCode),
+                             TradeId = d.TradeId
+                         };
+            orderInfoSimpleResult.AddRange(await result.ToListAsync());
+            var result2 = from d in order
+                          where d.ExchangeType != 0
+                          select new OrderInfoSimpleDto
+                          {
+                              Id = d.Id,
+                              ThumbPicUrl = d.ThumbPicUrl,
+                              GoodsName = d.GoodsName,
+                              ActualPayment = d.ActualPayment,
+                              AppointmentHospital = d.AppointmentHospital,
+                              CreateDate = d.CreateDate.Value,
+                              GoodsId = d.GoodsId,
+                              IntegrationQuantity = d.IntegrationQuantity,
+                              Quantity = d.Quantity.Value,
+                              SinglePrice = (d.Quantity.HasValue) ? (d.ActualPayment.Value / d.Quantity.Value) : d.ActualPayment.Value,
+                              appType = d.AppType,
+                              StatusCodeInfo = d.StatusCode,
+                              StatusCode = ServiceClass.GetMiniOrderStatusText(d.StatusCode),
+                              TradeId = d.TradeId
+                          };
+            orderInfoSimpleResult.AddRange(await result2.ToListAsync());
+
             var orderAlreadyBuyList = orderInfoSimpleResult.OrderByDescending(e => e.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
             FxPageInfo<OrderInfoSimpleDto> OrderAlreadyBuyInfoList = new FxPageInfo<OrderInfoSimpleDto>();
             OrderAlreadyBuyInfoList.TotalCount = orderInfoSimpleResult.Count;
             OrderAlreadyBuyInfoList.List = orderAlreadyBuyList;
             return OrderAlreadyBuyInfoList;
         }
+
+
+
 
         /// <summary>
         /// 获取总订单数量
@@ -3752,48 +3749,71 @@ namespace Fx.Amiya.Service
 
         public async Task<FxPageInfo<OrderTradeForWxDto>> GetOrderListForAllAmiyaByCustomerId(string customerId, string statusCode, int pageNum, int pageSize)
         {
-            var orders = from d in dalOrderTrade.GetAll()
-                         .Include(e => e.OrderInfoList)
-                         where d.CustomerId == customerId
-                         && (string.IsNullOrWhiteSpace(statusCode) || d.StatusCode == statusCode)
-                         orderby d.CreateDate
-                         select new OrderTradeForWxDto
+            List<OrderInfoSimpleDto> orderInfoSimpleResult = new List<OrderInfoSimpleDto>();
+            var customer = await dalCustomerInfo.GetAll().SingleOrDefaultAsync(e => e.Id == customerId);
+            var order = (from d in dalOrderInfo.GetAll().Include(e => e.OrderTrade)
+                         where d.Phone == customer.Phone
+                         && d.CreateDate >= Convert.ToDateTime("2021-06-01")
+                         //过滤掉定金订单和咨询订单
+                         && d.StatusCode != "BARGAIN_MONEY" && d.StatusCode != "SEEK_ADVICE"
+                         && (d.StatusCode == statusCode||statusCode==null)
+                         select new OrderInfo
                          {
-                             TradeId = d.TradeId,
-                             CustomerId = d.CustomerId,
+                             Id = d.Id,
+                             ThumbPicUrl = d.ThumbPicUrl,
+                             GoodsName = d.GoodsName,
+                             ActualPayment = d.ActualPayment,
+                             ExchangeType = d.ExchangeType,
+                             AppointmentHospital = d.AppointmentHospital,
                              CreateDate = d.CreateDate,
-                             AddressId = d.AddressId,
-                             TotalAmount = d.TotalAmount,
-                             TotalIntegration = d.TotalIntegration,
-                             Remark = d.Remark,
+                             UpdateDate = d.UpdateDate,
+                             GoodsId = d.GoodsId,
+                             IntegrationQuantity = d.IntegrationQuantity,
+                             Quantity = d.Quantity,
                              StatusCode = d.StatusCode,
-                             StatusText = ServiceClass.GetOrderStatusText(d.StatusCode),
-                             OrderInfoList = (from o in d.OrderInfoList
-                                              select new OrderInfoDto
-                                              {
-                                                  Id = o.Id,
-                                                  GoodsName = o.GoodsName,
-                                                  GoodsId = o.GoodsId,
-                                                  ThumbPicUrl = o.ThumbPicUrl,
-                                                  ActualPayment = o.ActualPayment,
-                                                  CreateDate = o.CreateDate,
-                                                  UpdateDate = o.UpdateDate,
-                                                  OrderType = o.OrderType,
-                                                  OrderTypeText = ServiceClass.GetOrderTypeText((byte)o.OrderType),
-                                                  Quantity = o.Quantity,
-                                                  IntegrationQuantity = o.IntegrationQuantity,
-                                                  ExchangeType = o.ExchangeType,
-                                                  ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)o.ExchangeType),
-                                                  TradeId = o.TradeId,
-                                                  AppType = o.AppType,
-                                                  AppTypeText = ServiceClass.GetAppTypeText((byte)o.AppType)
-                                              }).ToList()
-                         };
-
-            FxPageInfo<OrderTradeForWxDto> orderTradePageInfo = new FxPageInfo<OrderTradeForWxDto>();
-            orderTradePageInfo.TotalCount = await orders.CountAsync();
-            orderTradePageInfo.List = await orders.OrderByDescending(e => e.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
-            return orderTradePageInfo;
+                             AppType = d.AppType,
+                             TradeId = d.TradeId,
+                             OrderTrade = d.OrderTrade,
+                             OrderType=d.OrderType
+                         }).ToList();
+            var orders = order.GroupBy(e => e.OrderTrade).Select(g => new OrderTradeForWxDto
+            {
+                TradeId = g.Key == null ? "" : g.Key.TradeId,
+                CustomerId = g.Key == null ? "" : g.Key.CustomerId,
+                CreateDate = g.Key == null ? null : g.Key.CreateDate,
+                AddressId = g.Key == null ? null : g.Key.AddressId,
+                TotalAmount = g.Key == null ? 0.00m : g.Key.TotalAmount,
+                TotalIntegration = g.Key == null ? 0.00m : g.Key.TotalIntegration,
+                Remark = g.Key == null ? "" : g.Key.Remark,
+                StatusCode = g.Key == null ? "" : g.Key.StatusCode,
+                StatusText = g.Key == null ? "" : ServiceClass.GetOrderStatusText(g.Key.StatusCode),
+                OrderInfoList = (from o in g
+                                 select new OrderInfoDto
+                                 {
+                                     Id = o.Id,
+                                     GoodsName = o.GoodsName,
+                                     GoodsId = o.GoodsId,
+                                     ThumbPicUrl = o.ThumbPicUrl,
+                                     ActualPayment = o.ActualPayment,
+                                     CreateDate = o.CreateDate,
+                                     UpdateDate = o.UpdateDate,
+                                     OrderType = o.OrderType,
+                                     OrderTypeText = ServiceClass.GetOrderTypeText((byte)o.OrderType),
+                                     Quantity = o.Quantity,
+                                     IntegrationQuantity = o.IntegrationQuantity,
+                                     ExchangeType = o.ExchangeType,
+                                     ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)o.ExchangeType),
+                                     TradeId = o.TradeId,
+                                     AppType = o.AppType,
+                                     StatusText = ServiceClass.GetOrderStatusText(o.StatusCode),
+                                     AppTypeText = ServiceClass.GetAppTypeText((byte)o.AppType)
+                                 }).ToList()
+            }).ToList();           
+            var orderAlreadyBuyList = orders.OrderByDescending(e => e.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+            FxPageInfo<OrderTradeForWxDto> OrderAlreadyBuyInfoList = new FxPageInfo<OrderTradeForWxDto>();
+            OrderAlreadyBuyInfoList.TotalCount = orderInfoSimpleResult.Count;
+            OrderAlreadyBuyInfoList.List = orderAlreadyBuyList;
+            return OrderAlreadyBuyInfoList;
         }
 
         public async Task<bool> IsExistMFCard(string customerId)

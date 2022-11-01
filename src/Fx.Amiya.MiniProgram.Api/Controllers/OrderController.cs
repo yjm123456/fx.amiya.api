@@ -1013,7 +1013,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                              Remark = d.Remark,
                              StatusCode = d.StatusCode,
                              StatusText = d.StatusText,
-                             OrderInfoList = (from o in d.OrderInfoList
+                             OrderInfoList = (from o in d.OrderInfoList orderby o.CreateDate descending
                                               select new OrderInfoVo
                                               {
                                                   Id = o.Id,
@@ -1032,7 +1032,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                                   TradeId = o.TradeId,
                                                   Standard = goodsInfoService.GetByIdAsync(o.GoodsId).Result.Standard,
                                                   AppType = o.AppType,
-                                                  AppTypeText = o.AppTypeText
+                                                  AppTypeText = o.AppTypeText,
+                                                  StatusCodeText=o.StatusText
                                               }).ToList()
                          };
 
