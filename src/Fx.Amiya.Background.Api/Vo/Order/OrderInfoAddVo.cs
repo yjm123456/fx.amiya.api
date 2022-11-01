@@ -16,6 +16,10 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         /// </summary>
         public string OrderId { get; set; }
         /// <summary>
+        /// 下单时间
+        /// </summary>
+        public DateTime? CreateDate { get; set; }
+        /// <summary>
         /// 商品名称
         /// </summary>
         [Required]

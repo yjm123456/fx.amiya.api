@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace Fx.Amiya.Background.Api.Controllers
 {
     /// <summary>
-    /// 物流公司板块数据接口
+    /// 报名板块数据接口
     /// </summary>
     [Route("[controller]")]
     [ApiController]
