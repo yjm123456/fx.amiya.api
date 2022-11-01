@@ -534,6 +534,20 @@
             <param name="wareHouseInfoId">归属仓库id</param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.AmiyaLessonApplyController">
+            <summary>
+            报名板块数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaLessonApplyController.GetAmiyaLessonApplyInfoListAsync(System.String,System.Int32,System.Int32)">
+            <summary>
+            获取报名列表
+            </summary>
+            <param name="keyword"></param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.AmiyaOutWarehouseController">
             <summary>
             出库管理数据接口
@@ -6615,6 +6629,21 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.AmiyaHospitalDepartment.UpdateAmiyaGoodsDemandVo.Valid">
             <summary>
             是否正常
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.AmiyaLessonApplyInfo.AmiyaLessonApplyInfoVo.Name">
+            <summary>
+            姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.AmiyaLessonApplyInfo.AmiyaLessonApplyInfoVo.Phone">
+            <summary>
+            联系方式
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.AmiyaLessonApplyInfo.AmiyaLessonApplyInfoVo.Position">
+            <summary>
+            职位
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.AmiyaPositionInfo.AddAmiyaPositionInfoVo.Name">
@@ -21212,6 +21241,16 @@
             手机号
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Order.ExportOrderVo.AppointmentCity">
+            <summary>
+            预约城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Order.ExportOrderVo.AppointmentDate">
+            <summary>
+            预约时间
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.Order.ExportOrderVo.AppointmentHospital">
             <summary>
             预约门店
@@ -21357,6 +21396,11 @@
             订单号
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Order.OrderInfoAddVo.CreateDate">
+            <summary>
+            下单时间
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.Order.OrderInfoAddVo.GoodsName">
             <summary>
             商品名称
@@ -21375,6 +21419,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.Order.OrderInfoAddVo.Phone">
             <summary>
             手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Order.OrderInfoAddVo.AppointmentCity">
+            <summary>
+            预约城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Order.OrderInfoAddVo.AppointmentDate">
+            <summary>
+            预约时间
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.Order.OrderInfoAddVo.AppointmentHospital">
@@ -21462,6 +21516,16 @@
             手机号
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Order.OrderInfoUpdateVo.AppointmentCity">
+            <summary>
+            预约城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Order.OrderInfoUpdateVo.AppointmentDate">
+            <summary>
+            预约时间
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.Order.OrderInfoUpdateVo.AppointmentHospital">
             <summary>
             预约门店
@@ -21540,6 +21604,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.Order.OrderInfoVo.Phone">
             <summary>
             手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Order.OrderInfoVo.AppointmentCity">
+            <summary>
+            预约城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Order.OrderInfoVo.AppointmentDate">
+            <summary>
+            预约时间
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.Order.OrderInfoVo.AppointmentHospital">

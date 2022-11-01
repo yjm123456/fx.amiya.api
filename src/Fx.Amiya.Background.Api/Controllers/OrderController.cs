@@ -204,6 +204,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 result.OrderNature = 0;
                 result.Quantity = FirstOrder.Quantity;
                 result.ThumbPicUrl = FirstOrder.ThumbPicUrl;
+                result.CreateDate = FirstOrder.CreateDate;
             }
             else
             {
@@ -273,7 +274,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             amiyaOrderList.Add(addDto);
             OrderTradeAddDto orderTradeAdd = new OrderTradeAddDto();
             orderTradeAdd.CustomerId = "客服-" + employee.Name.ToString();
-            orderTradeAdd.CreateDate = DateTime.Now;
+            orderTradeAdd.CreateDate = addVo.CreateDate.Value;
             orderTradeAdd.AddressId = 0;
             orderTradeAdd.Remark = addVo.Remark;
             orderTradeAdd.OrderInfoAddList = amiyaOrderList;
