@@ -512,6 +512,9 @@ namespace Fx.Amiya.Service
                 case 3:
                     orderTypeText = "余额支付";
                     break;
+                default:
+                    orderTypeText = "未知";
+                    break;
             }
             return orderTypeText;
         }

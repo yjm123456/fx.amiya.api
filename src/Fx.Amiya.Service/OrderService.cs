@@ -3802,7 +3802,7 @@ namespace Fx.Amiya.Service
                                      Quantity = o.Quantity,
                                      IntegrationQuantity = o.IntegrationQuantity,
                                      ExchangeType = o.ExchangeType,
-                                     ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)o.ExchangeType),
+                                     ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)(o.ExchangeType==null ?255:(o.ExchangeType))),
                                      TradeId = o.TradeId,
                                      AppType = o.AppType,
                                      StatusText = ServiceClass.GetOrderStatusText(o.StatusCode),
