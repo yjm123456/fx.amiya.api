@@ -759,7 +759,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByYearAndMonth(int year, int month, bool? isOldCustomer, List<int> LiveAnchorIds)
         {
-           // int maxDays = DateTime.DaysInMonth(year, month);
+            // int maxDays = DateTime.DaysInMonth(year, month);
 
             //筛选结束的月份
             DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
@@ -860,14 +860,37 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
-        /// 根据到院id获取当日上门成交业绩
+        /// 根据到院id获取当月上门成交业绩
         /// </summary>
         /// <param name="recordDate"></param>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
-        Task<List<ContentPlatFormOrderDealInfoDto>> GetSendPerformanceByHospitalIdListAsync(List<int?> hospitalIds, DateTime recordDate)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetMonthSendPerformanceByHospitalIdListAsync(List<int> hospitalIds, DateTime recordDate)
         {
-            throw new NotImplementedException("没有实现");
+            //筛选结束的月份
+            int days = DateTime.DaysInMonth(recordDate.Year, recordDate.Month);
+            DateTime endDate = Convert.ToDateTime(recordDate.Year + "-" + recordDate.Month + "-" + days);
+            //选定的月份
+            DateTime currentDate = recordDate.Date;
+            var result = await dalContentPlatFormOrderDealInfo.GetAll()
+                .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= currentDate && o.ToHospitalDate < endDate)
+                .Where(o => hospitalIds.Count == 0 || hospitalIds.Contains(o.LastDealHospitalId.Value))
+                .ToListAsync();
+            var returnInfo = result.Select(
+                  d =>
+                       new ContentPlatFormOrderDealInfoDto
+                       {
+                           IsToHospital = d.IsToHospital,
+                           IsDeal = d.IsDeal,
+                           IsOldCustomer = d.IsOldCustomer,
+                           ToHospitalType = d.ToHospitalType,
+                           Price = d.Price,
+                           ToHospitalDate = d.ToHospitalDate,
+                           DealDate = d.DealDate,
+                       }
+                ).ToList();
+
+            return returnInfo;
         }
         /// <summary>
         /// 根据到院id与月份获取上门成交业绩

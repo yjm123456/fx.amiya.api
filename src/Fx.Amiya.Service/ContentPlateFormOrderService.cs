@@ -551,12 +551,12 @@ namespace Fx.Amiya.Service
                 {
                     OrderIds.Add(x.Id);
                 }
-                var sendInfo = await _contentPlatformOrderSend.GetSendOrderInfoByOrderId(OrderIds);
-                var IsHasThisHospital = sendInfo.Where(x => x.HospitalId == addDto.HospitalId).ToList();
-                if (IsHasThisHospital.Count != 0)
-                {
-                    throw new Exception("该客户已有订单派单到此医院，请重新选择派单医院！");
-                }
+                //var sendInfo = await _contentPlatformOrderSend.GetSendOrderInfoByOrderId(OrderIds);
+                //var IsHasThisHospital = sendInfo.Where(x => x.HospitalId == addDto.HospitalId).ToList();
+                //if (IsHasThisHospital.Count != 0)
+                //{
+                //    throw new Exception("该客户已有订单派单到此医院，请重新选择派单医院！");
+                //}
                 await _contentPlatformOrderSend.AddAsync(addDto);
                 var contentPlatFormOrder = await this.GetByOrderIdAsync(addDto.OrderId);
                 //修改订单状态

@@ -408,7 +408,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<HospitalOperatingDataVo>>> GetHospitalOperationMonthlyData(int? year, int? month, bool isCity)
         {
             List<HospitalOperatingDataVo> hospitalPerformanceVo = new List<HospitalOperatingDataVo>();
-            var hospitalPerformanceDatas = await hospitalPerformanceService.GetHospitalPerformanceByDateAsync(year, month, isCity);
+            var hospitalPerformanceDatas = await hospitalPerformanceService.GetHospitalPerformanceBymonthAsync(year, month, isCity);
             hospitalPerformanceDatas = hospitalPerformanceDatas.OrderByDescending(x => x.TotalAchievement).Take(10).ToList();
             foreach (var x in hospitalPerformanceDatas)
             {

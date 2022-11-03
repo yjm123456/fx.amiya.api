@@ -99,6 +99,76 @@ namespace Fx.Amiya.Service
             return resultList;
         }
 
+        /// <summary>
+        /// 获取选择月份全国机构运营数据概况
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isCity"></param>
+        /// <returns></returns>
+        public async Task<List<HospitalPerformanceDto>> GetHospitalPerformanceBymonthAsync(int? year, int? month, bool isCity)
+        {
+            List<HospitalPerformanceDto> resultList = new List<HospitalPerformanceDto>();
+            DateTime date = DateTime.Now.Date;
+            if (year.HasValue == true)
+            {
+                date = Convert.ToDateTime(year + "-01-01");
+            }
+            if (month.HasValue == true)
+            {
+                date = Convert.ToDateTime(DateTime.Now.Year + "-" + month.Value + "-01");
+            }
+            var contentPlatFormOrderSendList = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(date);
+            foreach (var x in contentPlatFormOrderSendList)
+            {
+                var isExist = 0;
+                if (isCity == true)
+                {
+                    isExist = resultList.Where(z => z.City == x.City).Count();
+                }
+                else
+                {
+                    isExist = resultList.Where(z => z.HospitalId == x.SendHospitalId).Count();
+                }
+                if (isExist > 0)
+                {
+                    continue;
+                }
+                HospitalPerformanceDto hospitalPerformanceDto = new HospitalPerformanceDto();
+                hospitalPerformanceDto.HospitalId = x.SendHospitalId;
+                hospitalPerformanceDto.HospitalName = x.SendHospital;
+                hospitalPerformanceDto.City = x.City;
+
+                List<int> hospitalIds = new List<int>();
+                if (isCity)
+                {
+                    hospitalIds = contentPlatFormOrderSendList.Where(c => c.City == x.City).Select(c => c.SendHospitalId).Distinct().ToList();
+                }
+                else
+                {
+                    hospitalIds.Add(x.SendHospitalId);
+                }
+                hospitalPerformanceDto.SendNum = contentPlatFormOrderSendList.Where(z => hospitalIds.Contains(z.SendHospitalId)).Count();
+                var contentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetMonthSendPerformanceByHospitalIdListAsync(hospitalIds, date);
+                hospitalPerformanceDto.VisitNum = contentPlatFormOrderDealInfoList.Count();
+                hospitalPerformanceDto.VisitRate = CalculateTargetComplete(hospitalPerformanceDto.VisitNum, hospitalPerformanceDto.SendNum).Value;
+                var dealInfoList = contentPlatFormOrderDealInfoList.Where(x => x.IsDeal == true && x.DealDate.HasValue == true);
+                hospitalPerformanceDto.NewCustomerDealNum = dealInfoList.Where(x => x.IsOldCustomer == false).Count();
+                hospitalPerformanceDto.NewCustomerDealRate = CalculateTargetComplete(hospitalPerformanceDto.NewCustomerDealNum, hospitalPerformanceDto.VisitNum).Value;
+                hospitalPerformanceDto.NewCustomerAchievement = dealInfoList.Where(x => x.IsOldCustomer == false).Sum(x => x.Price);
+                hospitalPerformanceDto.NewCustomerUnitPrice = this.Division(hospitalPerformanceDto.NewCustomerAchievement, hospitalPerformanceDto.NewCustomerDealNum).Value;
+
+                hospitalPerformanceDto.OldCustomerDealNum = dealInfoList.Where(x => x.IsOldCustomer == true).Count();
+                hospitalPerformanceDto.OldCustomerAchievement = dealInfoList.Where(x => x.IsOldCustomer == true).Sum(x => x.Price);
+                hospitalPerformanceDto.OldCustomerUnitPrice = this.Division(hospitalPerformanceDto.OldCustomerAchievement, hospitalPerformanceDto.OldCustomerDealNum).Value;
+                hospitalPerformanceDto.TotalAchievement = dealInfoList.Sum(x => x.Price);
+                hospitalPerformanceDto.NewOrOldCustomerRate = CalculateAccounted(hospitalPerformanceDto.NewCustomerAchievement, hospitalPerformanceDto.OldCustomerAchievement);
+                resultList.Add(hospitalPerformanceDto);
+            }
+
+            return resultList;
+        }
+
 
         /// <summary>
         /// 根据医院id获取医院新客上月与前月业绩
