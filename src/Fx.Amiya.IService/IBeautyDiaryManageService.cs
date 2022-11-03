@@ -20,7 +20,14 @@ namespace Fx.Amiya.IService
         /// <param name="pageSize"></param>
         /// <returns></returns>
         Task<FxPageInfo<BeautyDiaryManageDto>> GetListWithPageAsync(string keyword, int pageNum, int pageSize,bool? isReleased);
-
+        /// <summary>
+        /// 从微信公众号获取日记列表（分页）
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<BeautyDiaryManageSimpleDto>> GetSimpleListFromWechatAsync(string keyword, int pageNum, int pageSize);
 
 
         /// <summary>

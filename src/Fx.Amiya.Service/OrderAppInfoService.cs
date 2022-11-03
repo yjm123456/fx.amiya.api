@@ -131,7 +131,42 @@ namespace Fx.Amiya.Service
             tmallAppInfoDto.RefreshToken = appInfo.RefreshToken;
             return tmallAppInfoDto;
         }
+        /// <summary>
+        /// 获取美丽日记关联的公众号
+        /// </summary>
+        /// <returns></returns>
+        public async Task<OrderAppInfoDto> GetBeautyDiaryAppInfo()
+        {
+            var appInfo = await dalOrderAppInfo.GetAll().SingleOrDefaultAsync(e => e.AppType == (byte)AppType.BeautyDiaryAccount);
+            if (appInfo == null)
+                throw new Exception("美丽日记同步应用证书信息为空");
+            DateTime date = DateTime.Now;
+            if (appInfo.ExpireDate <= date)
+            {
+                string url = $"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={appInfo.AppKey}&secret={appInfo.AppSecret}";
+                var res = await HttpUtil.HTTPJsonGetAsync(url);
+                if (res.Contains("errorcode"))
+                    throw new Exception(res);
+                JObject requestObject = JsonConvert.DeserializeObject(res) as JObject;
+                string token = requestObject["access_token"].ToString();
+                double expires_in = Convert.ToDouble(requestObject["expires_in"].ToString());
+                appInfo.RefreshToken = token;
+                appInfo.ExpireDate = date.AddSeconds(expires_in - 400);
+                appInfo.AuthorizeDate = date;
+                await dalOrderAppInfo.UpdateAsync(appInfo, true);
+            }
 
+            OrderAppInfoDto tmallAppInfoDto = new OrderAppInfoDto();
+            tmallAppInfoDto.Id = appInfo.Id;
+            tmallAppInfoDto.AppKey = appInfo.AppKey;
+            tmallAppInfoDto.AppSecret = appInfo.AppSecret;
+            tmallAppInfoDto.AccessToken = appInfo.AccessToken;
+            tmallAppInfoDto.AuthorizeDate = appInfo.AuthorizeDate;
+            tmallAppInfoDto.AppType = appInfo.AppType;
+            tmallAppInfoDto.ExpireDate = appInfo.ExpireDate;
+            tmallAppInfoDto.RefreshToken = appInfo.RefreshToken;
+            return tmallAppInfoDto;
+        }
 
         public async Task<OrderAppInfoDto> GetTikTokAppInfo()
         {

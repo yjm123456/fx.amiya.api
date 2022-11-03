@@ -51,6 +51,32 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             beautyDiaryPageInfo.PageCount = q.PageCount;
             return ResultData<FxPageInfo<BeautyDiarySimpleVo>>.Success().AddData("beautyDiaryManages", beautyDiaryPageInfo);
         }
+        /// <summary>
+        /// 从公众号获取日记列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("wechatist")]
+        public async Task<ResultData<FxPageInfo<BeautyDiarySimpleVo>>> GetListFormWechatAsync(string keyword, int pageNum, int pageSize)
+        {
+            var q = await _beautyDiaryManageService.GetSimpleListFromWechatAsync(keyword, pageNum, pageSize);
+
+            var beautyDiaryManages = from d in q.List
+                                     select new BeautyDiarySimpleVo
+                                     {
+                                         Id = d.Id,
+                                         CoverTitle = d.CoverTitle,
+                                         Views = d.Views,
+                                         GivingLikes = d.GivingLikes,
+                                         ThumbPictureUrl = d.ThumbPictureUrl
+                                     };
+            FxPageInfo<BeautyDiarySimpleVo> beautyDiaryPageInfo = new FxPageInfo<BeautyDiarySimpleVo>();
+            beautyDiaryPageInfo.TotalCount = q.TotalCount;
+            beautyDiaryPageInfo.List = beautyDiaryManages;
+            beautyDiaryPageInfo.PageSize = pageSize;
+            beautyDiaryPageInfo.CurrentPageIndex = pageNum;
+            beautyDiaryPageInfo.PageCount = q.PageCount;
+            return ResultData<FxPageInfo<BeautyDiarySimpleVo>>.Success().AddData("beautyDiaryManages", beautyDiaryPageInfo);
+        }
 
         /// <summary>
         /// 根据编号获取日记详细信息

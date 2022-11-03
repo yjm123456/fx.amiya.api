@@ -13,6 +13,13 @@ namespace Fx.Amiya.Core.Interfaces.GoodsHospitalPrice
         Task AddAsync(GoodsHospitalPriceAddDto goodsInfoAdd);
         Task DeleteByGoodsId(string goodsId);
         Task<List<GoodsHospitalPriceDto>> GetByGoodsId(string goodsId);
+        /// <summary>
+        /// 根据商品id和医院id获取医院价格
+        /// </summary>
+        /// <param name="goodsId"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<GoodsHospitalPriceDto> GetByGoodsIdAndHospitalId(string goodsId,int hospitalId);
 
     }
 }

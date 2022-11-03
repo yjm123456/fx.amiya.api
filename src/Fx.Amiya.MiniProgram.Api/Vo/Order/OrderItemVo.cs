@@ -39,6 +39,10 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Order
         /// 是否是美肤卡
         /// </summary>
         public bool IsSkinCare { get; set; }
+        /// <summary>
+        /// 是否是面诊卡
+        /// </summary>
+        public bool IsFaceCard { get; set; }
 
         ///// <summary>
         ///// 抵扣积分

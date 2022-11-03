@@ -72,6 +72,24 @@ namespace Fx.Amiya.Modules.GoodsHospitalPrice.AppService
             }
             return resultList;
         }
-
+        /// <summary>
+        /// 根据商品id和医院id获取医院价格
+        /// </summary>
+        /// <param name="goodsId"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        public async Task<GoodsHospitalPriceDto> GetByGoodsIdAndHospitalId(string goodsId, int hospitalId)
+        {
+            List<GoodsHospitalPriceDto> resultList = new List<GoodsHospitalPriceDto>();
+            GoodsHospitalsPrice goodsHospitalsPriceList = new GoodsHospitalsPrice();
+            var goodsHospitalsPriceDbModel = await freeSql.Select<GoodsHospitalsPriceDbModel>().Where(x => x.GoodsId == goodsId && x.HospitalId == hospitalId).FirstAsync();
+            if (goodsHospitalsPriceDbModel == null) return null;
+            GoodsHospitalPriceDto goodsHospitalPriceDto = new GoodsHospitalPriceDto();
+            goodsHospitalPriceDto.GoodsId = goodsHospitalsPriceDbModel.GoodsId;
+            goodsHospitalPriceDto.HospitalId = goodsHospitalsPriceDbModel.HospitalId;
+            goodsHospitalPriceDto.Price = goodsHospitalsPriceDbModel.Price;
+            resultList.Add(goodsHospitalPriceDto);
+            return goodsHospitalPriceDto;
+        }
     }
 }

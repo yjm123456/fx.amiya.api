@@ -11,11 +11,13 @@ using Fx.Infrastructure;
 using Fx.Amiya.DbModels.Model;
 using Fx.Infrastructure.DataAccess;
 using Fx.Common;
+using Fx.Common.Utils;
 
 namespace Fx.Amiya.Service
 {
     public class BeautyDiaryManageService : IBeautyDiaryManageService
     {
+        private readonly IOrderAppInfoService orderAppInfoService;
         private IDalBeautyDiaryManage dalBeautyDiaryManage;
         private IDalBeautyDiaryTagDetail dalBeautyDiaryTagDetail;
         private IUnitOfWork unitOfWork;
@@ -29,7 +31,7 @@ namespace Fx.Amiya.Service
             IDalHospitalPartakeItem dalHospitalQuotedPriceItemInfo,
             IDalOrderInfo dalOrderInfo,
             IDalBeautyDiaryBannerImage dalBeautyDiaryBannerImage,
-            IDalItemInfo dalItemInfo)
+            IDalItemInfo dalItemInfo, IOrderAppInfoService orderAppInfoService)
         {
             this.dalBeautyDiaryManage = dalBeautyDiaryManage;
             this.dalBeautyDiaryTagDetail = dalBeautyDiaryTagDetail;
@@ -38,6 +40,7 @@ namespace Fx.Amiya.Service
             this.dalOrderInfo = dalOrderInfo;
             this.dalBeautyDiaryBannerImage = dalBeautyDiaryBannerImage;
             this.dalItemInfo = dalItemInfo;
+            this.orderAppInfoService = orderAppInfoService;
         }
 
 
@@ -462,6 +465,49 @@ namespace Fx.Amiya.Service
             result.ReleaseState = releaseState;
             await dalBeautyDiaryManage.UpdateAsync(result, true);
         }
+        /// <summary>
+        /// 从微信公众号获取日记列表（分页）
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<BeautyDiaryManageSimpleDto>> GetSimpleListFromWechatAsync(string keyword, int pageNum, int pageSize)
+        {
+            try
+            {
+                /*var beautyDiaryManage = from d in dalBeautyDiaryManage.GetAll()
+                                        where d.ReleaseState && (keyword == null || d.CoverTitle.Contains(keyword))
+                                        select new BeautyDiaryManageSimpleDto
+                                        {
+                                            Id = d.Id,
+                                            CoverTitle = d.CoverTitle,
+                                            ReleaseState = d.ReleaseState,
+                                            CreateDate = d.CreateDate,
+                                            Views = d.Views,
+                                            GivingLikes = d.GivingLikes,
+                                            ThumbPictureUrl = d.ThumbPictureUrl,
+                                        };
+                FxPageInfo<BeautyDiaryManageSimpleDto> beautyDiaryManagePageInfo = new FxPageInfo<BeautyDiaryManageSimpleDto>();
+                beautyDiaryManagePageInfo.TotalCount = await beautyDiaryManage.CountAsync();
+                beautyDiaryManagePageInfo.List = await beautyDiaryManage.OrderByDescending(z => z.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+                return beautyDiaryManagePageInfo;*/
+                var appInfo=await orderAppInfoService.GetBeautyDiaryAppInfo();
+                var requestUrl = $"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={appInfo.AppKey}&secret={appInfo.AppSecret}";
+                var res = await HttpUtil.HTTPJsonGetAsync(requestUrl);
+                return null;
+               /* if (res.Contains("errorcode"))
+                    _logger.LogInformation(res);
+
+                var order = JsonConvert.DeserializeObject<WeiFenXiaoOrderResult>(res);*/
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取美丽日记失败");
+            }
+        }
+
+
 
 
 

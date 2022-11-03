@@ -33,6 +33,11 @@ namespace Fx.Amiya.IService
 
         Task<OrderAppInfoDto> GetWeiFenXiaoAppInfo();
         Task<OrderAppInfoDto> GetTikTokAppInfo();
+        /// <summary>
+        /// 获取美丽日记关联的公众号
+        /// </summary>
+        /// <returns></returns>
+        Task<OrderAppInfoDto> GetBeautyDiaryAppInfo();
 
     }
 }
