@@ -57,14 +57,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
 
-            if (employee.PositionName == "客服" || employee.PositionName == "客服管理员")
-            {
-                var IsExistOrder = _tmallOrderService.IsExistPhoneAsync(addVo.Phone);
-                if (await IsExistOrder == true)
-                {
-                    throw new Exception("该客户手机号已在下单平台产生过订单，请确认后联系客服主管！");
-                }
-            }
+            //if (employee.PositionName == "客服" || employee.PositionName == "客服管理员")
+            //{
+            //    var IsExistOrder = _tmallOrderService.IsExistPhoneAsync(addVo.Phone);
+            //    if (await IsExistOrder == true)
+            //    {
+            //        throw new Exception("该客户手机号已在下单平台产生过订单，请确认后联系客服主管！");
+            //    }
+            //}
 
             //添加订单
             ContentPlateFormOrderAddDto addDto = new ContentPlateFormOrderAddDto();
