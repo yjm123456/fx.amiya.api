@@ -55,27 +55,25 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// 从公众号获取日记列表
         /// </summary>
         /// <returns></returns>
-        [HttpGet("wechatist")]
-        public async Task<ResultData<FxPageInfo<BeautyDiarySimpleVo>>> GetListFormWechatAsync(string keyword, int pageNum, int pageSize)
+        [HttpGet("wechatlist")]
+        public async Task<ResultData<FxPageInfo<WechatBeautyDiarySimpleVo>>> GetListFormWechatAsync(string keyword, int pageNum, int pageSize)
         {
             var q = await _beautyDiaryManageService.GetSimpleListFromWechatAsync(keyword, pageNum, pageSize);
 
             var beautyDiaryManages = from d in q.List
-                                     select new BeautyDiarySimpleVo
-                                     {
-                                         Id = d.Id,
-                                         CoverTitle = d.CoverTitle,
-                                         Views = d.Views,
-                                         GivingLikes = d.GivingLikes,
-                                         ThumbPictureUrl = d.ThumbPictureUrl
+                                     select new WechatBeautyDiarySimpleVo
+                                     {                                       
+                                         CoverTitle = d.title,
+                                         Author=d.author,                                    
+                                         Url=d.url,
                                      };
-            FxPageInfo<BeautyDiarySimpleVo> beautyDiaryPageInfo = new FxPageInfo<BeautyDiarySimpleVo>();
+            FxPageInfo<WechatBeautyDiarySimpleVo> beautyDiaryPageInfo = new FxPageInfo<WechatBeautyDiarySimpleVo>();
             beautyDiaryPageInfo.TotalCount = q.TotalCount;
             beautyDiaryPageInfo.List = beautyDiaryManages;
             beautyDiaryPageInfo.PageSize = pageSize;
             beautyDiaryPageInfo.CurrentPageIndex = pageNum;
             beautyDiaryPageInfo.PageCount = q.PageCount;
-            return ResultData<FxPageInfo<BeautyDiarySimpleVo>>.Success().AddData("beautyDiaryManages", beautyDiaryPageInfo);
+            return ResultData<FxPageInfo<WechatBeautyDiarySimpleVo>>.Success().AddData("beautyDiaryManages", beautyDiaryPageInfo);
         }
 
         /// <summary>

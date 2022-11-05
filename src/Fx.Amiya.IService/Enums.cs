@@ -232,10 +232,6 @@ namespace Fx.Amiya.IService
         /// </summary>
         Douyin,
         /// <summary>
-        /// 美丽日记关联公众号
-        /// </summary>
-        BeautyDiaryAccount,
-        /// <summary>
         /// 其他
         /// </summary>
         Other

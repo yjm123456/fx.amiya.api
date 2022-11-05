@@ -3823,7 +3823,7 @@ namespace Fx.Amiya.Service
                         where d.CustomerId == customerId
                         select d;
             var list = (await order.ToListAsync()).SelectMany(e => e.OrderInfoList);
-            int count = list.Count(e => e.GoodsId == "00000000" && e.StatusCode == OrderStatusCode.TRADE_BUYER_PAID && !string.IsNullOrEmpty(e.AppointmentHospital));
+            int count = list.Count(e => e.GoodsName.Contains("美肤券") && (e.StatusCode == OrderStatusCode.TRADE_BUYER_PAID||e.StatusCode==OrderStatusCode.TRADE_FINISHED) && !string.IsNullOrEmpty(e.AppointmentHospital));
             if (count > 0) return true;
             return false;
 

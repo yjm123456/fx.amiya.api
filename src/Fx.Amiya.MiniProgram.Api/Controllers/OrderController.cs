@@ -407,6 +407,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             foreach (var item in orderAdd.OrderItemList)
             {
                 if (item.Quantity <= 0) throw new Exception("下单数量错误");
+                if (item.IsSkinCare) {
+                    var orderExist = await orderService.IsExistMFCard(customerId);
+                    if (orderExist)
+                    {
+                        throw new Exception("亲,每人仅限购买1张哦～推荐给你的好友吧");
+                    }
+                }
                 var goodsInfo = await goodsInfoService.GetByIdAsync(item.GoodsId);
                 OrderInfoAddDto amiyaOrder = new OrderInfoAddDto();
                 if (goodsInfo.ExchangeType == ExchangeType.ThirdPartyPayment)
@@ -429,8 +436,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 else
                 {
                     //获取虚拟商品和美肤券预约门店名称
-                    if (goodsInfo.ExchangeType != ExchangeType.Integration && !item.IsFaceCard)
+                    if (goodsInfo.ExchangeType != ExchangeType.Integration && !item.IsFaceCard&&!item.IsSkinCare)
                     {
+
                         if (item.HospitalId.Value == 0)
                         {
                             throw new Exception("请选择门店医院");
@@ -490,14 +498,14 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 }
                 else
                 {
-                    if (item.IsFaceCard)
+                    if (item.IsFaceCard||item.IsSkinCare)
                     {
-                        //面诊卡
+                        //面诊卡或美肤券
                         amiyaOrder.ActualPayment = goodsInfo.SalePrice * item.Quantity;
                     }
                     else
                     {
-                        //美肤券和其他虚拟商品
+                        //其他虚拟商品
                         var hospitalPrice = await goodsHospitalsPrice.GetByGoodsIdAndHospitalId(goodsInfo.Id, item.HospitalId.Value);
                         if (hospitalPrice == null)
                         {
