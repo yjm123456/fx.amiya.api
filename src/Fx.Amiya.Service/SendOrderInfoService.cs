@@ -183,7 +183,7 @@ namespace Fx.Amiya.Service
             if (string.IsNullOrWhiteSpace(statusCode))
             {
                 orders = from o in orders
-                         where o.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || o.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || o.StatusCode == OrderStatusCode.SEEK_ADVICE || o.StatusCode == OrderStatusCode.BARGAIN_MONEY
+                         where o.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || o.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || o.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || o.StatusCode == OrderStatusCode.SEEK_ADVICE || o.StatusCode == OrderStatusCode.BARGAIN_MONEY
                          select o;
             }
             else
@@ -946,7 +946,7 @@ namespace Fx.Amiya.Service
             }
             return result;
         }
-        
+
         #region 【数据中心板块】
 
         /// <summary>
@@ -1010,7 +1010,7 @@ namespace Fx.Amiya.Service
                             {
                                 Price = d.ActualPayment.Value,
                                 HospitalName = d.SendOrderInfoList.OrderByDescending(k => k.SendDate).First().HospitalInfo.Name,
-                                OrderNum=d.Quantity.Value
+                                OrderNum = d.Quantity.Value
                             };
             return sendOrder.ToList();
         }
@@ -1020,6 +1020,6 @@ namespace Fx.Amiya.Service
 
         #endregion
 
-        
+
     }
 }

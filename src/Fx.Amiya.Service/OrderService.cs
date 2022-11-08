@@ -2964,9 +2964,12 @@ namespace Fx.Amiya.Service
                 }
                 //验证订单是否派单
                 var sendOrderInfoList = await _sendOrderInfoService.GetSendOrderInfoByOrderId(orderId);
-                if (sendOrderInfoList.Count == 0)
+                if (orderInfo.StatusCode != OrderStatusCode.TRADE_BUYER_PAID)
                 {
-                    throw new Exception("该订单未派单，无法核销！");
+                    if (sendOrderInfoList.Count == 0)
+                    {
+                        throw new Exception("该订单未派单，无法核销！");
+                    }
                 }
                 if (orderInfo.StatusCode == OrderStatusCode.TRADE_FINISHED)
                 {
@@ -3756,7 +3759,7 @@ namespace Fx.Amiya.Service
                          && d.CreateDate >= Convert.ToDateTime("2021-06-01")
                          //过滤掉定金订单和咨询订单
                          && d.StatusCode != "BARGAIN_MONEY" && d.StatusCode != "SEEK_ADVICE"
-                         && (d.StatusCode == statusCode||statusCode==null)
+                         && (d.StatusCode == statusCode || statusCode == null)
                          select new OrderInfo
                          {
                              Id = d.Id,
@@ -3774,7 +3777,7 @@ namespace Fx.Amiya.Service
                              AppType = d.AppType,
                              TradeId = d.TradeId,
                              OrderTrade = d.OrderTrade,
-                             OrderType=d.OrderType
+                             OrderType = d.OrderType
                          }).ToList();
             var orders = order.GroupBy(e => e.OrderTrade).Select(g => new OrderTradeForWxDto
             {
@@ -3802,13 +3805,13 @@ namespace Fx.Amiya.Service
                                      Quantity = o.Quantity,
                                      IntegrationQuantity = o.IntegrationQuantity,
                                      ExchangeType = o.ExchangeType,
-                                     ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)(o.ExchangeType==null ?255:(o.ExchangeType))),
+                                     ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)(o.ExchangeType == null ? 255 : (o.ExchangeType))),
                                      TradeId = o.TradeId,
                                      AppType = o.AppType,
                                      StatusText = ServiceClass.GetOrderStatusText(o.StatusCode),
                                      AppTypeText = ServiceClass.GetAppTypeText((byte)o.AppType)
                                  }).ToList()
-            }).ToList();           
+            }).ToList();
             var orderAlreadyBuyList = orders.OrderByDescending(e => e.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
             FxPageInfo<OrderTradeForWxDto> OrderAlreadyBuyInfoList = new FxPageInfo<OrderTradeForWxDto>();
             OrderAlreadyBuyInfoList.TotalCount = orderInfoSimpleResult.Count;
