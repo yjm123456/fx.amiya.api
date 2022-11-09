@@ -652,4 +652,33 @@ namespace Fx.Amiya.IService
         /// </summary>
         Other = 0,
     }
+    public enum CheckState {
+        /// <summary>
+        /// 待审核
+        /// </summary>
+        CheckPending=0,
+        /// <summary>
+        /// 审核通过
+        /// </summary>
+        CheckSuccess=1,
+        /// <summary>
+        /// 审核失败
+        /// </summary>
+        CheckFail=2
+    }
+    public enum RefundState
+    {
+        /// <summary>
+        /// 待退款
+        /// </summary>
+        RefundPending = 0,
+        /// <summary>
+        /// 退款成功
+        /// </summary>
+        RefundSuccess = 1,
+        /// <summary>
+        /// 退款失败
+        /// </summary>
+        RefundFail = 2
+    }
 }

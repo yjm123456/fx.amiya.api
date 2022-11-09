@@ -38,7 +38,15 @@ namespace Fx.Amiya.Core.Dto.Goods
         /// <summary>
         /// 余额支付
         /// </summary>
-        BalancePay
+        BalancePay,
+        /// <summary>
+        /// 微信支付
+        /// </summary>
+        Wechat,
+        /// <summary>
+        /// 支付包
+        /// </summary>
+        Alipay
     }
 
     /// <summary>

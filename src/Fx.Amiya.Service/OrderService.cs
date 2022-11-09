@@ -2244,7 +2244,18 @@ namespace Fx.Amiya.Service
             order.StatusCode = OrderStatusCode.TRADE_CLOSED;
             await dalOrderInfo.UpdateAsync(order, true);
         }
-
+        /// <summary>
+        /// 更改订单状态
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="orderStatus"></param>
+        /// <returns></returns>
+        public async Task UpdateOrderStatus(string orderId, string orderStatus)
+        {
+            var order = dalOrderInfo.GetAll().Where(e => e.Id == orderId).FirstOrDefault();
+            order.StatusCode = orderStatus;
+            await dalOrderInfo.UpdateAsync(order,true);
+        }
 
         /// <summary>
         /// 获取所有已核销客户注册过小程序的订单
@@ -3831,6 +3842,8 @@ namespace Fx.Amiya.Service
             return false;
 
         }
+
+        
         #endregion
     }
 }

@@ -10,7 +10,11 @@ namespace Fx.Amiya.DbModels.Model
     {
         public string CustomerId { get; set; }
         public string OrderId { get; set; }
-        public string TardeId { get; set; }
+        public string TradeId { get; set; }
+        /// <summary>
+        /// 退款原因
+        /// </summary>
+        public string Remark { get; set; }
         /// <summary>
         /// 审核状态(0,待审核,1审核通过,2审核失败)
         /// </summary>
@@ -22,16 +26,46 @@ namespace Fx.Amiya.DbModels.Model
         /// <summary>
         /// 退款状态
         /// </summary>
-        public string RefundState { get; set; }
+        public byte RefundState { get; set; }
+        /// <summary>
+        /// 退款失败原因
+        /// </summary>
         public string RefundFailReason { get; set; }
-        public byte IsPartial { get; set; }
+        /// <summary>
+        /// 是否是订单部分退款
+        /// </summary>
+        public bool IsPartial { get; set; }
+        /// <summary>
+        /// 支付方式
+        /// </summary>
         public byte ExchangeType { get; set; }
+        /// <summary>
+        /// 付款时间
+        /// </summary>
         public DateTime? PayDate { get; set; }
+        /// <summary>
+        /// 审核时间
+        /// </summary>
         public DateTime? CheckDate { get; set; }
+        /// <summary>
+        /// 退款金额
+        /// </summary>
         public decimal RefundAmount { get; set; }
+        /// <summary>
+        /// 实际支付
+        /// </summary>
         public decimal ActualPayAmount { get; set; }
-        public DateTime RefundDate { get; set; }
-        public DateTime RefundSuccessDate { get; set; }
+        /// <summary>
+        /// 退款发起时间
+        /// </summary>
+        public DateTime? RefundStartDate { get; set; }
+        /// <summary>
+        /// 退款回调时间
+        /// </summary>
+        public DateTime? RefundResultDate { get; set; }
+        /// <summary>
+        /// 退款交易订单号
+        /// </summary>
         public string RefundTradeNo { get; set; }
     }
 }

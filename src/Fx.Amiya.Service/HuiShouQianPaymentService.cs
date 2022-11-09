@@ -57,7 +57,7 @@ namespace Fx.Amiya.Service
         {
             bool result = true;
             errmsg = "";
-            
+            return result;
         }
 
         public bool CheckHSQRequestParam(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo, out string errmsg)
@@ -85,9 +85,11 @@ namespace Fx.Amiya.Service
             }
             if (string.IsNullOrEmpty(huiShouQianPayRequestInfo.RequestDate) || huiShouQianPayRequestInfo.RequestDate.Length > 14)
             {
+                DateTime date = new DateTime();
                 errmsg = "商品说明信息错误";
                 return false;
             }
+            return result;
         }
     }
 }

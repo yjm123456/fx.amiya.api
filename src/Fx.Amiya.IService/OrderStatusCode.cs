@@ -60,5 +60,9 @@ namespace Fx.Amiya.IService
         /// 咨询订单
         /// </summary>
         public static string SEEK_ADVICE = "SEEK_ADVICE";
+        /// <summary>
+        /// 部分退款(购物车使用)
+        /// </summary>
+        public static string PARTIAL_REFUND = "PARTIAL_REFUND";
     }
 }

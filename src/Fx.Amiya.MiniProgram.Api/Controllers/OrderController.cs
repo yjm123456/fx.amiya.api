@@ -18,6 +18,7 @@ using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.ConsumptionVoucher;
 using Fx.Amiya.Dto.OrderAppInfo;
+using Fx.Amiya.Dto.OrderRefund;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -68,6 +69,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private readonly ICustomerConsumptionVoucherService customerConsumptionVoucherService;
         private readonly IGoodsHospitalsPrice goodsHospitalsPrice;
         private readonly IMemberCardHandleService memberCardHandleService;
+        private readonly IOrderRefundService orderRefundService;
         private readonly IUnitOfWork unitOfWork;
         public OrderController(IOrderService orderService,
             IOrderHistoryService orderHistoryService,
@@ -82,7 +84,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             IAliPayService aliPayService,
             Domain.IRepository.IWxMiniUserRepository wxMiniUserRepository,
             IIntegrationAccount integrationAccountService,
-            ICustomerIntegralOrderRefundService customerIntegralOrderRefundService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, ITaskService taskService, IBalanceAccountService balanceAccountService, IBalanceService balanceService, IUnitOfWork unitOfWork, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IGoodsHospitalsPrice goodsHospitalsPrice, IMemberCardHandleService memberCardHandleService)
+            ICustomerIntegralOrderRefundService customerIntegralOrderRefundService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, ITaskService taskService, IBalanceAccountService balanceAccountService, IBalanceService balanceService, IUnitOfWork unitOfWork, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IGoodsHospitalsPrice goodsHospitalsPrice, IMemberCardHandleService memberCardHandleService, IOrderRefundService orderRefundService)
         {
             this.orderHistoryService = orderHistoryService;
             this.orderService = orderService;
@@ -106,6 +108,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             this.customerConsumptionVoucherService = customerConsumptionVoucherService;
             this.goodsHospitalsPrice = goodsHospitalsPrice;
             this.memberCardHandleService = memberCardHandleService;
+            this.orderRefundService = orderRefundService;
         }
 
 
@@ -622,7 +625,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     WxPackageInfo packageInfo = new WxPackageInfo();
                     packageInfo.Body = orderId;
                     //回调地址需重新设置(todo;)                   
-                    packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");
+                    packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");                   
                     packageInfo.OutTradeNo = tradeId;
                     packageInfo.TotalFee = (int)(totalFee * 100m);
                     if (packageInfo.TotalFee < 1m)
@@ -1259,7 +1262,42 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             await orderService.UpdateOrderTradeAsync(updateOrderTrade);
             return ResultData.Success();
         }
-
+        /// <summary>
+        /// 订单退款
+        /// </summary>
+        /// <param name="tradeId"></param>
+        /// <returns></returns>
+        [HttpPost("refund")]
+        public async Task<ResultData> OrderRefundAsync(RefundOrderVo refundOrder) {
+            var token = tokenReader.GetToken();
+            var sessionInfo = sessionStorage.GetSession(token);
+            string customerId = sessionInfo.FxCustomerId;
+            try
+            {
+                unitOfWork.BeginTransaction();
+                CreateRefundOrderDto createRefundOrderDto = new CreateRefundOrderDto();
+                createRefundOrderDto.CustomerId = customerId;
+                createRefundOrderDto.TradeId = refundOrder.TradeId;
+                createRefundOrderDto.OrderId = refundOrder.OrderId;
+                createRefundOrderDto.Remark = refundOrder.Remark;
+                var result = await orderRefundService.CreateRefundOrder(createRefundOrderDto);
+                if (result.Result)
+                {
+                    unitOfWork.Commit();
+                    return ResultData.Success();
+                }
+                else
+                {
+                    unitOfWork.RollBack();
+                    return ResultData.Fail();
+                }
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex;
+            }
+        }
 
     }
 }

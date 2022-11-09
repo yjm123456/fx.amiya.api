@@ -9,5 +9,6 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Order
     {
         public string TradeId { get; set; }
         public string OrderId { get; set; }
+        public string Remark { get; set; }
     }
 }
