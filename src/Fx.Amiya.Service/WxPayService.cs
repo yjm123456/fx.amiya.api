@@ -179,78 +179,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task WechatRefundNotifyAsync()
         {
-            try
-            {
-                //获取回调POST过来的xml数据的代码
-                /*using Stream stream = HttpContext.Request.Body;
-                byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
-                await stream.ReadAsync(buffer, 0, buffer.Length);
-                string xml = System.Text.Encoding.UTF8.GetString(buffer);
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(xml);
-                WeiXinPayNotifyVo weiXinPayNotifyVo = GetWeiXinRequestPostData(xmlDoc);
-                SortedDictionary<string, string> sParam = GetWeiXinRequestPostDic(weiXinPayNotifyVo);
-                SignHelper signHelper = new SignHelper();
-
-                //签名验证
-                string sign = await signHelper.SignPay(sParam, "Amy20202020202020202020202020202");
-                if (sign != weiXinPayNotifyVo.sign) return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
-
-                // 业务逻辑
-                //成功通知微信
-                if (weiXinPayNotifyVo.return_code.ToUpper() == "SUCCESS")
-                {
-                    var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(weiXinPayNotifyVo.out_trade_no);
-                    if (orderTrade.StatusCode == OrderStatusCode.WAIT_BUYER_PAY)
-                    {
-                        List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
-                        foreach (var item in orderTrade.OrderInfoList)
-                        {
-                            UpdateOrderDto updateOrder = new UpdateOrderDto();
-                            updateOrder.OrderId = item.Id;
-                            updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
-                            if (item.ActualPayment.HasValue)
-                            {
-                                updateOrder.Actual_payment = item.ActualPayment.Value;
-
-                                var bind = await _dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == item.Phone);
-                                if (bind != null)
-                                {
-                                    bind.NewConsumptionDate = DateTime.Now;
-                                    bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
-                                    bind.NewContentPlatForm = ServiceClass.GetAppTypeText(item.AppType);
-                                    bind.AllPrice += item.ActualPayment.Value;
-                                    bind.AllOrderCount += item.Quantity;
-                                    await _dalBindCustomerService.UpdateAsync(bind, true);
-                                }
-                            }
-                            if (item.IntegrationQuantity.HasValue)
-                            {
-                                updateOrder.IntergrationQuantity = item.IntegrationQuantity;
-                            }
-                            Random random = new Random();
-                            updateOrder.AppType = item.AppType;
-                            updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
-                            updateOrderList.Add(updateOrder);
-                        }
-                        //修改订单状态
-                        await orderService.UpdateAsync(updateOrderList);
-
-
-                        UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
-                        updateOrderTrade.TradeId = weiXinPayNotifyVo.out_trade_no;
-                        updateOrderTrade.AddressId = orderTrade.AddressId;
-                        updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
-                        await orderService.UpdateOrderTradeAsync(updateOrderTrade);
-                    }
-                }
-                return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
-            }
-            catch (Exception e)
-            {
-                return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>"; //回调失败返回给微信
-                throw e;
-            }*/
+            
         }
 
     }
