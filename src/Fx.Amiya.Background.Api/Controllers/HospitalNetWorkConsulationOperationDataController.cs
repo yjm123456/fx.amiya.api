@@ -6,11 +6,14 @@ using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
+using Jd.Api.Util;
 using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -186,6 +189,110 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 throw ex;
             }
+        }
+
+        /// <summary>
+        /// 机构网咨运营数据分析模板导出
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("exportHospitalNetWorkConsulationOperationData")]
+        [FxInternalAuthorize]
+        public async Task<FileStreamResult> exportHospitalNetWorkConsulationOperationData()
+        {
+            var res = new List<AddHospitalNetWorkConsulationOperationDataVo>();
+            var exportOrderWriteOff = res.ToList();
+            var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
+            var result = File(stream, "application/vnd.ms-excel", $"机构网咨运营数据分析模板.xls");
+            return result;
+        }
+
+        /// <summary>
+        /// 导入机构网咨运营数据分析
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut("hospitalNetWorkConsulationOperationDataInPort")]
+        public async Task<ResultData> HospitalNetWorkConsulationOperationDataInPortAsync(IFormFile file)
+        {
+            try
+            {
+                if (file == null || file.Length <= 0)
+                    throw new Exception("请检查文件是否存在");
+                using (var stream = file.OpenReadStream())
+                {
+                    using var ep = new ExcelPackage(stream);
+                    using var worksheet = ep.Workbook.Worksheets.FirstOrDefault();
+                }
+                using (var stream = file.OpenReadStream())
+                {
+                    //await file.CopyToAsync(stream);//取到文件流
+
+                    using (ExcelPackage package = new ExcelPackage(stream))
+                    {
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets["sheet1"];
+                        //获取表格的列数和行数
+                        int rowCount = worksheet.Dimension.Rows;
+                        for (int x = 2; x <= rowCount; x++)
+                        {
+                            AddHospitalNetWorkConsulationOperationDataDto addDto = new AddHospitalNetWorkConsulationOperationDataDto();
+                            if (!string.IsNullOrEmpty(worksheet.Cells[x, 1].Value.ToString()))
+                            {
+                                addDto.HospitalId = Convert.ToInt32(worksheet.Cells[x, 1].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("医院编号有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 2].Value != null)
+                            {
+                                addDto.IndicatorId = worksheet.Cells[x, 2].Value.ToString();
+                            }
+                            else
+                            {
+                                throw new Exception("归属指标编号有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 3].Value != null)
+                            {
+                                addDto.ConsulationName = worksheet.Cells[x, 3].Value.ToString();
+                            }
+                            else
+                            {
+                                throw new Exception("咨询师名字有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 4].Value != null)
+                            {
+                                addDto.SendOrderNum = Convert.ToInt32(worksheet.Cells[x, 4].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("派单数有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 5].Value != null)
+                            {
+                                addDto.NewCustomerVisitNum = Convert.ToInt32(worksheet.Cells[x, 5].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("新客上门数有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 6].Value != null)
+                            {
+                                addDto.NewCustomerVisitRate = Convert.ToDecimal(worksheet.Cells[x, 6].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("新客上门率有参数列为空，请检查表格数据！");
+                            }
+                            await hospitalOperationDataService.AddAsync(addDto);
+                        }
+                    }
+                }
+                return ResultData.Success();
+            }
+            catch (Exception err)
+            {
+                return null;
+            }
+
         }
     }
 }

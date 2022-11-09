@@ -7,6 +7,7 @@ using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
+using Jd.Api.Util;
 using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -223,6 +224,21 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 throw ex;
             }
+        }
+
+        /// <summary>
+        /// 机构医生运营数据分析模板导出
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("exportHospitaDoctorOperationOperationData")]
+        [FxInternalAuthorize]
+        public async Task<FileStreamResult> exportHospitalDoctorOperationOperationData()
+        {
+            var res = new List<AddHospitalDoctorOperationVo>();
+            var exportOrderWriteOff = res.ToList();
+            var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
+            var result = File(stream, "application/vnd.ms-excel", $"机构医生运营数据分析模板.xls");
+            return result;
         }
     }
 }
