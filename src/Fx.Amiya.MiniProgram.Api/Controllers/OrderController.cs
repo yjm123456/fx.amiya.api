@@ -1280,7 +1280,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 createRefundOrderDto.TradeId = refundOrder.TradeId;
                 createRefundOrderDto.OrderId = refundOrder.OrderId;
                 createRefundOrderDto.Remark = refundOrder.Remark;
-                var result = await orderRefundService.CreateRefundOrder(createRefundOrderDto);
+                var result = await orderRefundService.CreateRefundOrderAsync(createRefundOrderDto);
                 if (result.Result)
                 {
                     unitOfWork.Commit();

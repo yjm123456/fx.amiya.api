@@ -225,8 +225,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 }
                 using (var stream = file.OpenReadStream())
                 {
-                    //await file.CopyToAsync(stream);//取到文件流
-
+                    //await file.CopyToAsync(stream);//取到文件流                    
                     using (ExcelPackage package = new ExcelPackage(stream))
                     {
                         ExcelWorksheet worksheet = package.Workbook.Worksheets["sheet1"];

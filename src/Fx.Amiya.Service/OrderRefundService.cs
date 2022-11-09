@@ -27,7 +27,7 @@ namespace Fx.Amiya.Service
             this.dalOrderInfo = dalOrderInfo;
         }
 
-        public async Task<CreateRefundOrderResult> CreateRefundOrder(CreateRefundOrderDto createRefundOrderDto)
+        public async Task<CreateRefundOrderResult> CreateRefundOrderAsync(CreateRefundOrderDto createRefundOrderDto)
         {
             OrderRefund orderRefund = new OrderRefund();
             var refundOrder = dalOrderRefund.GetAll().Where(e=>e.TradeId==createRefundOrderDto.TradeId&&(createRefundOrderDto.OrderId==null||e.OrderId==createRefundOrderDto.OrderId)).FirstOrDefault();
@@ -87,6 +87,34 @@ namespace Fx.Amiya.Service
 
             return new CreateRefundOrderResult { Result=true,Msg="提交成功"};
             
+        }
+        /// <summary>
+        /// 退款回调后更新退款订单状态
+        /// </summary>
+        /// <param name="refundAfterUpdateDto"></param>
+        /// <returns></returns>
+        public async Task UpdateAfterRefundStateAsync(RefundAfterUpdateDto refundAfterUpdateDto)
+        {
+            var refundOrder = await dalOrderRefund.GetAll().Where(e => e.Id == refundAfterUpdateDto.Id).SingleOrDefaultAsync();
+            refundOrder.RefundState = refundAfterUpdateDto.RefundState;
+            refundOrder.RefundTradeNo =refundAfterUpdateDto.RefundTradeNo;
+            refundOrder.RefundFailReason = refundAfterUpdateDto.RefundFailReason;
+            refundOrder.RefundResultDate = refundAfterUpdateDto.RefundResultDate;
+            refundOrder.UpdateDate = DateTime.Now;
+            await dalOrderRefund.UpdateAsync(refundOrder, true);
+        }
+
+        /// <summary>
+        /// 退款发起更新订单退款状态
+        /// </summary>
+        /// <param name="refundUpdateDto"></param>
+        /// <returns></returns>
+        public async Task UpdateStartRefundStateAsync(RefundStartUpdateDto refundUpdateDto)
+        {
+            var refundOrder =await dalOrderRefund.GetAll().Where(e=>e.Id==refundUpdateDto.Id).SingleOrDefaultAsync();
+            refundOrder.RefundState = refundUpdateDto.RefundState;
+            refundOrder.UpdateDate = DateTime.Now;
+            await dalOrderRefund.UpdateAsync(refundOrder,true);
         }
     }
 }

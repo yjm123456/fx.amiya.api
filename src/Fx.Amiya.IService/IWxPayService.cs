@@ -13,7 +13,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="refundOrderId"></param>
         /// <returns></returns>
-        Task WechatRefundAsync(string refundOrderId);
+        Task<string> WechatRefundAsync(string refundOrderId);
         /// <summary>
         /// 微信退款回调
         /// </summary>

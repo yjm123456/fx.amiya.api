@@ -14,6 +14,17 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<CreateRefundOrderResult> CreateRefundOrder(CreateRefundOrderDto createRefundOrderDto);
+        /// <summary>
+        /// 退款发起后更新退款订单状态
+        /// </summary>
+        /// <returns></returns>
+        Task UpdateStartRefundState(RefundStartUpdateDto refundUpdateDto);
+        /// <summary>
+        /// 退款回调后更新退款订单状态
+        /// </summary>
+        /// <param name="refundAfterUpdateDto"></param>
+        /// <returns></returns>
+        Task UpdateAfterRefundState(RefundAfterUpdateDto refundAfterUpdateDto);
         
     }
 }

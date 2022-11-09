@@ -679,6 +679,10 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 退款失败
         /// </summary>
-        RefundFail = 2
+        RefundFail = 2,
+        /// <summary>
+        /// 退款中
+        /// </summary>
+        Refunding=3
     }
 }

@@ -29,7 +29,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="refundOrderId"></param>
         /// <returns></returns>
-        public async Task WechatRefundAsync(string refundOrderId)
+        public async Task<string> WechatRefundAsync(string refundOrderId)
         {
             var refundOrder = dalOrderRefund.GetAll().Where(e => e.Id == refundOrderId).SingleOrDefault();
             if (refundOrder == null) { throw new Exception("退款编号错误"); }
@@ -45,12 +45,11 @@ namespace Fx.Amiya.Service
             {
                 packageInfo.TotalFee = 1m;
             }*/
-            await this.BuildRefundRequest(packageInfo);
-
+            return await this.BuildRefundRequest(packageInfo);
         }
 
 
-        public async Task BuildRefundRequest(WxRefundPackageInfo packageInfo)
+        private async Task<string> BuildRefundRequest(WxRefundPackageInfo packageInfo)
         {
 
             packageInfo.NonceStr = Guid.NewGuid().ToString("N");
@@ -72,8 +71,9 @@ namespace Fx.Amiya.Service
             SignHelper signHelper = new SignHelper();
             string sign = await signHelper.SignPackage(payDictionary, packageInfo.MchId);
             var result = await this.PostRefundRequest(payDictionary, sign);
+            return result;
         }
-        public async Task<string> PostRefundRequest(PayDictionary dict, string sign)
+        private async Task<string> PostRefundRequest(PayDictionary dict, string sign)
         {
             dict.Add("sign", sign);
             SignHelper signHelper = new SignHelper();
@@ -88,7 +88,7 @@ namespace Fx.Amiya.Service
         /// <param name="url"></param>
         /// <param name="postData"></param>
         /// <returns></returns>
-        internal string PostRefundData(string url, string postData)
+        private string PostRefundData(string url, string postData)
         {
             string text = string.Empty;
             string result = string.Empty;
@@ -98,6 +98,7 @@ namespace Fx.Amiya.Service
                 HttpWebRequest httpWebRequest;
                 if (url.ToLower().StartsWith("https"))
                 {
+                    
                     ServicePointManager.ServerCertificateValidationCallback = ((object s, X509Certificate c, X509Chain ch, SslPolicyErrors e) => true);
                     httpWebRequest = (HttpWebRequest)WebRequest.CreateDefault(requestUri);
                 }
@@ -109,6 +110,7 @@ namespace Fx.Amiya.Service
                 byte[] bytes = uTF.GetBytes(postData);
                 httpWebRequest.Method = "POST";
                 httpWebRequest.KeepAlive = true;
+                //httpWebRequest.ClientCertificates.Add();
                 Stream requestStream = httpWebRequest.GetRequestStream();
                 requestStream.Write(bytes, 0, bytes.Length);
                 requestStream.Close();
