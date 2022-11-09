@@ -196,13 +196,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("exportHospitalNetWorkConsulationOperationData")]
-        [FxTenantAuthorize]
+        //[FxTenantAuthorize]
         public async Task<FileStreamResult> exportHospitalNetWorkConsulationOperationData()
         {
             var res = new List<AddHospitalNetWorkConsulationOperationDataVo>();
             var exportOrderWriteOff = res.ToList();
             var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"机构网咨运营数据分析模板.xls");
+            var result = File(stream, "application/vnd.ms-excel", $"机构网咨运营数据分析模板.xlsx");
             return result;
         }
 
@@ -211,24 +211,21 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPut("hospitalNetWorkConsulationOperationDataInPort")]
-        [FxTenantAuthorize]
+        //[FxTenantAuthorize]
         public async Task<ResultData> HospitalNetWorkConsulationOperationDataInPortAsync(IFormFile file)
         {
             try
             {
                 if (file == null || file.Length <= 0)
                     throw new Exception("请检查文件是否存在");
-                using (var stream = file.OpenReadStream())
+
+                using (var stream = new MemoryStream())
                 {
-                    using var ep = new ExcelPackage(stream);
-                    using var worksheet = ep.Workbook.Worksheets.FirstOrDefault();
-                }
-                using (var stream = file.OpenReadStream())
-                {
-                    //await file.CopyToAsync(stream);//取到文件流
+                    await file.CopyToAsync(stream);//取到文件流
 
                     using (ExcelPackage package = new ExcelPackage(stream))
                     {
+
                         ExcelWorksheet worksheet = package.Workbook.Worksheets["sheet1"];
                         //获取表格的列数和行数
                         int rowCount = worksheet.Dimension.Rows;
@@ -237,7 +234,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                             AddHospitalNetWorkConsulationOperationDataDto addDto = new AddHospitalNetWorkConsulationOperationDataDto();
                             if (!string.IsNullOrEmpty(worksheet.Cells[x, 1].Value.ToString()))
                             {
-                                addDto.HospitalId = Convert.ToInt32(worksheet.Cells[x, 1].Value.ToString());
+                                addDto.IndicatorId = worksheet.Cells[x, 1].Value.ToString();
                             }
                             else
                             {
@@ -245,7 +242,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                             }
                             if (worksheet.Cells[x, 2].Value != null)
                             {
-                                addDto.IndicatorId = worksheet.Cells[x, 2].Value.ToString();
+                                addDto.HospitalId = Convert.ToInt32(worksheet.Cells[x, 2].Value.ToString());
                             }
                             else
                             {
