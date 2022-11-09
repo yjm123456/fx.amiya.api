@@ -196,7 +196,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("exportHospitalNetWorkConsulationOperationData")]
-        [FxInternalAuthorize]
+        [FxTenantAuthorize]
         public async Task<FileStreamResult> exportHospitalNetWorkConsulationOperationData()
         {
             var res = new List<AddHospitalNetWorkConsulationOperationDataVo>();
@@ -211,6 +211,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPut("hospitalNetWorkConsulationOperationDataInPort")]
+        [FxTenantAuthorize]
         public async Task<ResultData> HospitalNetWorkConsulationOperationDataInPortAsync(IFormFile file)
         {
             try

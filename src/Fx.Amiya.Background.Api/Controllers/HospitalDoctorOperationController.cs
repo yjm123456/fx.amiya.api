@@ -231,7 +231,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("exportHospitaDoctorOperationOperationData")]
-        [FxInternalAuthorize]
+        [FxTenantAuthorize]
         public async Task<FileStreamResult> exportHospitalDoctorOperationOperationData()
         {
             var res = new List<AddHospitalDoctorOperationVo>();
