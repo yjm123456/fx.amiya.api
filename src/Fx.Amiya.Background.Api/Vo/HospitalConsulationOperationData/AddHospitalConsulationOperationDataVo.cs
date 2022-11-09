@@ -60,7 +60,7 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalConsulationOperationData
         /// </summary>
 
         [Description("新客业绩")]
-        public int NewCustomerDealPrice { get; set; }
+        public decimal NewCustomerDealPrice { get; set; }
 
         /// <summary>
         /// 新客客单价
@@ -94,7 +94,7 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalConsulationOperationData
         /// </summary>
         [Description("老客业绩")]
 
-        public int OldCustomerDealPrice { get; set; }
+        public decimal OldCustomerDealPrice { get; set; }
 
         /// <summary>
         /// 老客客单价

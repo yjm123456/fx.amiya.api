@@ -11,8 +11,10 @@ using Jd.Api.Util;
 using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -188,15 +190,106 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 机构成交品项运营数据分析模板导出
         /// </summary>
         /// <returns></returns>
-        [HttpGet("exportHospitalConsulationOperationData")]
+        [HttpGet("exportHospitalDealItemOperationData")]
         [FxTenantAuthorize]
-        public async Task<FileStreamResult> exportHospitaConsulationOperationData()
+        public async Task<FileStreamResult> exportHospitaDealItemOperationData()
         {
             var res = new List<AddHospitalDealItemOperationVo>();
             var exportOrderWriteOff = res.ToList();
             var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
             var result = File(stream, "application/vnd.ms-excel", $"机构成交品项运营数据分析模板.xls");
             return result;
+        }
+
+        /// <summary>
+        /// 导入机构成交品项运营数据分析
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut("hospitalDealItemOperationDataInPort")]
+        [FxTenantAuthorize]
+        public async Task<ResultData> HospitalDealItemOperationDataInPortAsync(IFormFile file)
+        {
+            try
+            {
+                if (file == null || file.Length <= 0)
+                    throw new Exception("请检查文件是否存在");
+
+                using (var stream = new MemoryStream())
+                {
+                    await file.CopyToAsync(stream);//取到文件流
+
+                    using (ExcelPackage package = new ExcelPackage(stream))
+                    {
+
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets["sheet1"];
+                        if (worksheet == null)
+                        {
+                            throw new Exception("请另外新建一个excel文件'.xlsx'后将填写好的数据复制到新文件中上传，勿采用当前导出文件进行上传！");
+                        }
+                        //获取表格的列数和行数
+                        int rowCount = worksheet.Dimension.Rows;
+                        for (int x = 2; x <= rowCount; x++)
+                        {
+                            AddHospitalDealItemOperationDto addDto = new AddHospitalDealItemOperationDto();
+                            if (!string.IsNullOrEmpty(worksheet.Cells[x, 1].Value.ToString()))
+                            {
+                                addDto.IndicatorId = worksheet.Cells[x, 1].Value.ToString();
+                            }
+                            else
+                            {
+                                throw new Exception("归属指标编号有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 2].Value != null)
+                            {
+                                addDto.HospitalId = Convert.ToInt32(worksheet.Cells[x, 2].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("医院编号有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 3].Value != null)
+                            {
+                                addDto.DealItemName = worksheet.Cells[x, 3].Value.ToString();
+                            }
+                            else
+                            {
+                                throw new Exception("成交品项名称有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 4].Value != null)
+                            {
+                                addDto.DealCount = Convert.ToInt32(worksheet.Cells[x, 4].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("成交数量有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 5].Value != null)
+                            {
+                                addDto.DealPrice = Convert.ToDecimal(worksheet.Cells[x, 5].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("成交金额有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 6].Value != null)
+                            {
+                                addDto.PerformanceRatio = Convert.ToDecimal(worksheet.Cells[x, 6].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("业绩占比有参数列为空，请检查表格数据！");
+                            }
+                            await hospitalDealItemService.AddAsync(addDto);
+                        }
+                    }
+                }
+                return ResultData.Success();
+            }
+            catch (Exception err)
+            {
+                return null;
+            }
+
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Fx.Amiya.Dto.HospitalConsulationOperationData
         /// 新客业绩
         /// </summary>
 
-        public int NewCustomerDealPrice { get; set; }
+        public decimal NewCustomerDealPrice { get; set; }
 
         /// <summary>
         /// 新客客单价
@@ -82,7 +82,7 @@ namespace Fx.Amiya.Dto.HospitalConsulationOperationData
         /// 老客业绩
         /// </summary>
 
-        public int OldCustomerDealPrice { get; set; }
+        public decimal OldCustomerDealPrice { get; set; }
 
         /// <summary>
         /// 老客客单价
