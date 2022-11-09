@@ -11,8 +11,10 @@ using Jd.Api.Util;
 using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -261,6 +263,187 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             var result = File(stream, "application/vnd.ms-excel", $"机构咨询师运营数据分析模板.xls");
             return result;
+        }
+
+        /// <summary>
+        /// 导入机构成交品项运营数据分析
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut("hospitalConsulationOperationDataInPort")]
+        [FxTenantAuthorize]
+        public async Task<ResultData> HospitalConsulationOperationDataInPortAsync(IFormFile file)
+        {
+            try
+            {
+                if (file == null || file.Length <= 0)
+                    throw new Exception("请检查文件是否存在");
+
+                using (var stream = new MemoryStream())
+                {
+                    await file.CopyToAsync(stream);//取到文件流
+
+                    using (ExcelPackage package = new ExcelPackage(stream))
+                    {
+
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets["sheet1"];
+                        if (worksheet == null)
+                        {
+                            throw new Exception("请另外新建一个excel文件'.xlsx'后将填写好的数据复制到新文件中上传，勿采用当前导出文件进行上传！");
+                        }
+                        //获取表格的列数和行数
+                        int rowCount = worksheet.Dimension.Rows;
+                        for (int x = 2; x <= rowCount; x++)
+                        {
+                            AddHospitalConsulationOperationDataDto addDto = new AddHospitalConsulationOperationDataDto();
+                            if (!string.IsNullOrEmpty(worksheet.Cells[x, 1].Value.ToString()))
+                            {
+                                addDto.IndicatorId = worksheet.Cells[x, 1].Value.ToString();
+                            }
+                            else
+                            {
+                                throw new Exception("归属指标编号有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 2].Value != null)
+                            {
+                                addDto.HospitalId = Convert.ToInt32(worksheet.Cells[x, 2].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("医院编号有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 3].Value != null)
+                            {
+                                addDto.ConsulationName = worksheet.Cells[x, 3].Value.ToString();
+                            }
+                            else
+                            {
+                                throw new Exception("咨询师名字有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 4].Value != null)
+                            {
+                                addDto.SendOrderNum = Convert.ToInt32(worksheet.Cells[x, 4].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("派单数有参数列为空，请检查表格数据！");
+                            }
+
+                            if (worksheet.Cells[x, 5].Value != null)
+                            {
+                                addDto.NewCustomerVisitNum = Convert.ToInt32(worksheet.Cells[x, 5].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("新客上门数有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 6].Value != null)
+                            {
+                                addDto.NewCustomerVisitRate = Convert.ToDecimal(worksheet.Cells[x, 6].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("新客上门率有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 7].Value != null)
+                            {
+                                addDto.NewCustomerDealNum = Convert.ToInt32(worksheet.Cells[x, 7].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("新客成交数有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 8].Value != null)
+                            {
+                                addDto.NewCustomerDealRate = Convert.ToDecimal(worksheet.Cells[x, 8].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("新客成交率有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 9].Value != null)
+                            {
+                                addDto.NewCustomerDealPrice = Convert.ToInt32(worksheet.Cells[x, 9].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("新客业绩有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 10].Value != null)
+                            {
+                                addDto.NewCustomerUnitPrice = Convert.ToDecimal(worksheet.Cells[x, 10].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("新客客单价有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 11].Value != null)
+                            {
+                                addDto.OldCustomerVisitNum = Convert.ToInt32(worksheet.Cells[x, 11].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("老客上门数有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 12].Value != null)
+                            {
+                                addDto.OldCustomerDealNum = Convert.ToInt32(worksheet.Cells[x, 12].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("老客成交数有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 13].Value != null)
+                            {
+                                addDto.OldCustomerDealRate = Convert.ToDecimal(worksheet.Cells[x, 13].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("老客成交率有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 14].Value != null)
+                            {
+                                addDto.OldCustomerDealPrice = Convert.ToInt32(worksheet.Cells[x, 14].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("老客业绩有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 15].Value != null)
+                            {
+                                addDto.OldCustomerUnitPrice = Convert.ToDecimal(worksheet.Cells[x, 15].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("老客客单价有参数列为空，请检查表格数据！");
+                            }
+
+                            if (worksheet.Cells[x, 16].Value != null)
+                            {
+                                addDto.OldCustomerAchievementRate = Convert.ToDecimal(worksheet.Cells[x, 16].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("老客业绩占比有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 17].Value != null)
+                            {
+                                addDto.LasttMonthTotalAchievement = Convert.ToDecimal(worksheet.Cells[x, 17].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("总业绩有参数列为空，请检查表格数据！");
+                            }
+                            await hospitalConsulationOperationDataService.AddAsync(addDto);
+                        }
+                    }
+                }
+                return ResultData.Success();
+            }
+            catch (Exception err)
+            {
+                return null;
+            }
+
         }
     }
 }

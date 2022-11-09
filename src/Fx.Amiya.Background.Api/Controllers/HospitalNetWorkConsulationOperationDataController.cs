@@ -202,7 +202,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             var res = new List<AddHospitalNetWorkConsulationOperationDataVo>();
             var exportOrderWriteOff = res.ToList();
             var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"机构网咨运营数据分析模板.xls");
+            var result = File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"机构网咨运营数据分析模板.xlsx");
+            //application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
             return result;
         }
 
@@ -218,17 +219,19 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 if (file == null || file.Length <= 0)
                     throw new Exception("请检查文件是否存在");
-                using (var stream = file.OpenReadStream())
+
+                using (var stream = new MemoryStream())
                 {
-                    using var ep = new ExcelPackage(stream);
-                    using var worksheet = ep.Workbook.Worksheets.FirstOrDefault();
-                }
-                using (var stream = file.OpenReadStream())
-                {
-                    //await file.CopyToAsync(stream);//取到文件流                    
+                    await file.CopyToAsync(stream);//取到文件流
+
                     using (ExcelPackage package = new ExcelPackage(stream))
                     {
+
                         ExcelWorksheet worksheet = package.Workbook.Worksheets["sheet1"];
+                        if (worksheet == null)
+                        {
+                            throw new Exception("请另外新建一个excel文件'.xlsx'后将填写好的数据复制到新文件中上传，勿采用当前导出文件进行上传！");
+                        }
                         //获取表格的列数和行数
                         int rowCount = worksheet.Dimension.Rows;
                         for (int x = 2; x <= rowCount; x++)
@@ -236,19 +239,19 @@ namespace Fx.Amiya.Background.Api.Controllers
                             AddHospitalNetWorkConsulationOperationDataDto addDto = new AddHospitalNetWorkConsulationOperationDataDto();
                             if (!string.IsNullOrEmpty(worksheet.Cells[x, 1].Value.ToString()))
                             {
-                                addDto.HospitalId = Convert.ToInt32(worksheet.Cells[x, 1].Value.ToString());
-                            }
-                            else
-                            {
-                                throw new Exception("医院编号有参数列为空，请检查表格数据！");
-                            }
-                            if (worksheet.Cells[x, 2].Value != null)
-                            {
-                                addDto.IndicatorId = worksheet.Cells[x, 2].Value.ToString();
+                                addDto.IndicatorId = worksheet.Cells[x, 1].Value.ToString();
                             }
                             else
                             {
                                 throw new Exception("归属指标编号有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 2].Value != null)
+                            {
+                                addDto.HospitalId = Convert.ToInt32(worksheet.Cells[x, 2].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("医院编号有参数列为空，请检查表格数据！");
                             }
                             if (worksheet.Cells[x, 3].Value != null)
                             {

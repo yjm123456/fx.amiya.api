@@ -2604,6 +2604,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalConsulationOperationDataController.HospitalConsulationOperationDataInPortAsync(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            导入机构成交品项运营数据分析
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.HospitalCustomerInfoController">
             <summary>
             医院客户数据接口
@@ -2704,9 +2710,15 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDealItemOperationController.exportHospitaConsulationOperationData">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDealItemOperationController.exportHospitaDealItemOperationData">
             <summary>
             机构成交品项运营数据分析模板导出
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDealItemOperationController.HospitalDealItemOperationDataInPortAsync(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            导入机构成交品项运营数据分析
             </summary>
             <returns></returns>
         </member>
@@ -2760,6 +2772,12 @@
         <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDoctorOperationController.exportHospitalDoctorOperationOperationData">
             <summary>
             机构医生运营数据分析模板导出
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalDoctorOperationController.HospitalDoctorOperationDataInPortAsync(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            导入机构成交品项运营数据分析
             </summary>
             <returns></returns>
         </member>

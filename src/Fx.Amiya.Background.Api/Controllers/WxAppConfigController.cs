@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Fx.Amiya.Background.Api.Vo.WxAppConfig;
 using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IService;
+using Fx.Authorization.Attributes;
 using Fx.Open.Infrastructure.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [FxInternalAuthorize]
     public class WxAppConfigController : ControllerBase
     {
         private IWxAppConfigService wxAppConfigService;
