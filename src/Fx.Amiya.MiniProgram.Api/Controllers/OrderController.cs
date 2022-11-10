@@ -554,7 +554,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 }
                 else
                 {
-                    amiyaOrder.ExchangeType = (byte)goodsInfo.ExchangeType;
+                    if (orderAdd.ExchangeType == 1) {
+                        amiyaOrder.ExchangeType = (byte)ExchangeType.Alipay;
+                    } else if (orderAdd.ExchangeType == 2) {
+                        amiyaOrder.ExchangeType = (byte)ExchangeType.Wechat;
+                    }
                 }
                 if (item.IsFaceCard || item.IsSkinCare)
                 {

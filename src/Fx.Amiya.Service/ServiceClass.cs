@@ -512,6 +512,12 @@ namespace Fx.Amiya.Service
                 case 3:
                     orderTypeText = "余额支付";
                     break;
+                case 4:
+                    orderTypeText = "微信支付";
+                    break;
+                case 5:
+                    orderTypeText = "支付宝支付";
+                    break;
                 default:
                     orderTypeText = "未知";
                     break;

@@ -600,7 +600,9 @@ namespace Fx.Amiya.Modules.Goods.AppService
             { ExchangeType.Integration,"积分支付"},
             { ExchangeType.ThirdPartyPayment,"三方支付"},
             { ExchangeType.OffLinePay,"线下支付"},
-            {ExchangeType.BalancePay,"余额支付"}
+            {ExchangeType.BalancePay,"余额支付"},
+            {ExchangeType.Wechat,"微信支付"},
+            {ExchangeType.Alipay,"支付宝"}
         };
     }
 }
