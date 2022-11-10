@@ -490,7 +490,36 @@ namespace Fx.Amiya.Service
                 FxPageInfo<WechatBeautyDiaryNewsItem> fxPageInfo = new FxPageInfo<WechatBeautyDiaryNewsItem>();
                 fxPageInfo.TotalCount = beautyDiary.total_count;
                 fxPageInfo.List = beautyDiary.item.SelectMany(e=>e.content.news_item).Where(e=>e.title.Contains("变美指南")).Where(e=>!string.IsNullOrEmpty(e.author));
+                //fxPageInfo.List = beautyDiary.item.SelectMany(e => e.content.news_item).Where(e => !string.IsNullOrEmpty(e.author)).ToList();
                 return fxPageInfo;
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception("获取美丽日记失败");
+            }
+        }
+        /// <summary>
+        /// 从微信公众号获取美丽日记并保存
+        /// </summary>
+        /// <returns></returns>
+        public async Task AddDiaryFromWechat(int pageNum, int pageSize)
+        {
+            try
+            {
+                var appInfo = await dockingHospitalCustomerInfo.GetBeautyDiaryTokenInfo(31);
+                var requestUrl = $"https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token={appInfo.AccessToken}";
+                var data = new { type = "news", offset = (pageNum - 1) * pageSize, count = pageSize };
+                var res = await HttpUtil.HttpJsonPostAsync(requestUrl, JsonConvert.SerializeObject(data));
+                if (res.Contains("errorcode"))
+                    throw new Exception("获取美丽日记失败");
+                var beautyDiary = JsonConvert.DeserializeObject<WeChatBeautyDiaryDto>(res);
+                beautyDiary.item.SelectMany(e => e.content.news_item).Where(e => e.title.Contains("变美指南")).Where(e => !string.IsNullOrEmpty(e.author));
+                /*FxPageInfo<WechatBeautyDiaryNewsItem> fxPageInfo = new FxPageInfo<WechatBeautyDiaryNewsItem>();
+                fxPageInfo.TotalCount = beautyDiary.total_count;
+                fxPageInfo.List = */
+                //fxPageInfo.List = beautyDiary.item.SelectMany(e => e.content.news_item).Where(e => !string.IsNullOrEmpty(e.author)).ToList();
+                //return fxPageInfo;
             }
 
             catch (Exception ex)

@@ -53,6 +53,10 @@ namespace Fx.Amiya.Dto.OrderRefund
         /// </summary>
         public int ExchangeType { get; set; }
         /// <summary>
+        /// 退款商品名
+        /// </summary>
+        public string GoodsName { get; set; }
+        /// <summary>
         /// 支付方式文本
         /// </summary>
         public string ExchageTypeText { get; set; }

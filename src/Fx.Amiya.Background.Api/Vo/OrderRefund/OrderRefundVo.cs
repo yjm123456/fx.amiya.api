@@ -74,7 +74,11 @@ namespace Fx.Amiya.Background.Api.Vo.OrderRefund
         /// <summary>
         /// 退款发起时间
         /// </summary>
-        public DateTime? RefundStartDate { get; set; }        
+        public DateTime? RefundStartDate { get; set; }
+        /// <summary>
+        /// 商品名称
+        /// </summary>
+        public string GoodsName { get; set; }
         /// <summary>
         /// 审核人员
         /// </summary>

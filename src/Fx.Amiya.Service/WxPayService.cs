@@ -19,7 +19,7 @@ namespace Fx.Amiya.Service
     public class WxPayService : IWxPayService
     {
         private IDalOrderRefund dalOrderRefund;
-
+        
         public WxPayService(IDalOrderRefund dalOrderRefund)
         {
             this.dalOrderRefund = dalOrderRefund;
@@ -97,9 +97,11 @@ namespace Fx.Amiya.Service
             try
             {
                 Uri requestUri = new Uri(url);
-                HttpWebRequest httpWebRequest;
+                HttpWebRequest httpWebRequest;                
                 if (url.ToLower().StartsWith("https"))
                 {
+                    //string path = "C:\\wechatsecret\\" + "apiclientrefund78345hsdfcert.p12";
+                    //证书文件地址
                     string path = AppDomain.CurrentDomain.BaseDirectory + "apiclientrefund78345hsdfcert.p12";
                     ServicePointManager.ServerCertificateValidationCallback = ((object s, X509Certificate c, X509Chain ch, SslPolicyErrors e) => true);
                     //加载证书
