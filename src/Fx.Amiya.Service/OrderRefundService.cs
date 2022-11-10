@@ -1,8 +1,10 @@
 ﻿using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto.CustomerHospitalConsume;
 using Fx.Amiya.Dto.OrderRefund;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
+using Fx.Common;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,13 +20,31 @@ namespace Fx.Amiya.Service
         private IOrderService orderService;
         private IDalOrderTrade dalOrderTrade;
         private IDalOrderInfo dalOrderInfo;
+        private IDalAmiyaEmployee dalAmiyaEmployee;
 
-        public OrderRefundService(IDalOrderRefund dalOrderRefund, IOrderService orderService, IDalOrderTrade dalOrderTrade, IDalOrderInfo dalOrderInfo)
+        public OrderRefundService(IDalOrderRefund dalOrderRefund, IOrderService orderService, IDalOrderTrade dalOrderTrade, IDalOrderInfo dalOrderInfo, IDalAmiyaEmployee dalAmiyaEmployee)
         {
             this.dalOrderRefund = dalOrderRefund;
             this.orderService = orderService;
             this.dalOrderTrade = dalOrderTrade;
             this.dalOrderInfo = dalOrderInfo;
+            this.dalAmiyaEmployee = dalAmiyaEmployee;
+        }
+        /// <summary>
+        /// 退款订单审核
+        /// </summary>
+        /// <param name="orderRefundCheckDto"></param>
+        /// <returns></returns>
+        public async Task CheckAsync(OrderRefundCheckDto orderRefundCheckDto)
+        {
+            var refundOrder = await dalOrderRefund.GetAll().Where(e=>e.Id==orderRefundCheckDto.Id).SingleOrDefaultAsync();
+            if (refundOrder == null) throw new Exception("退款订单编号错误");
+            refundOrder.UncheckReason = orderRefundCheckDto.UnCheckReason;
+            refundOrder.CheckBy = orderRefundCheckDto.CheckBy;
+            refundOrder.CheckState = orderRefundCheckDto.CheckState;
+            refundOrder.CheckDate = DateTime.Now;
+            refundOrder.UpdateDate = DateTime.Now;
+            await dalOrderRefund.UpdateAsync(refundOrder,true);
         }
 
         public async Task<CreateRefundOrderResult> CreateRefundOrderAsync(CreateRefundOrderDto createRefundOrderDto)
@@ -50,7 +70,8 @@ namespace Fx.Amiya.Service
             }
             if (!string.IsNullOrEmpty(createRefundOrderDto.OrderId))
             {
-                var order = await dalOrderInfo.GetAll().Where(e => e.Id == createRefundOrderDto.OrderId && e.TradeId == createRefundOrderDto.TradeId).SingleOrDefaultAsync();
+                throw new Exception("暂不支持部分退款");
+                /*var order = await dalOrderInfo.GetAll().Where(e => e.Id == createRefundOrderDto.OrderId && e.TradeId == createRefundOrderDto.TradeId).SingleOrDefaultAsync();
                 if (order == null)
                 {
                     throw new Exception("订单编号不存在");
@@ -58,7 +79,7 @@ namespace Fx.Amiya.Service
                 if (!(order.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || order.StatusCode == OrderStatusCode.TRADE_BUYER_SIGNED || order.StatusCode == OrderStatusCode.TRADE_FINISHED || order.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || order.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || order.StatusCode == OrderStatusCode.PARTIAL_REFUND))
                 {
                     throw new Exception("当前订单状态不能退款");
-                }               
+                }   */
             }
             else {
                 orderRefund.CheckState = (byte)CheckState.CheckPending;
@@ -68,14 +89,16 @@ namespace Fx.Amiya.Service
                 orderRefund.PayDate = trade.CreateDate;
                 orderRefund.ExchangeType = (trade.OrderInfoList.FirstOrDefault()?.ExchangeType).Value;
                 trade.StatusCode = OrderStatusCode.REFUNDING;
-                await dalOrderTrade.UpdateAsync(trade,true);                              
+                await dalOrderTrade.UpdateAsync(trade,true);
+                string goodsName = string.Empty;
                 foreach (var item in trade.OrderInfoList)
-                {                    
+                {
+                    goodsName += item.GoodsName;
                     await orderService.UpdateOrderStatus(item.Id, OrderStatusCode.REFUNDING);
-                }                
+                }
+                orderRefund.GoodsName = goodsName;
             }
-
-            orderRefund.Id = Guid.NewGuid().ToString();
+            orderRefund.Id = Guid.NewGuid().ToString().Replace("-",""); ;
             orderRefund.CustomerId = createRefundOrderDto.CustomerId;
             orderRefund.OrderId = createRefundOrderDto.OrderId;
             orderRefund.TradeId = createRefundOrderDto.TradeId;
@@ -84,10 +107,62 @@ namespace Fx.Amiya.Service
             orderRefund.RefundState = (byte)RefundState.RefundPending;
             orderRefund.Valid = true;
             await dalOrderRefund.AddAsync(orderRefund,true);
-
-            return new CreateRefundOrderResult { Result=true,Msg="提交成功"};
-            
+            return new CreateRefundOrderResult { Result=true,Msg="提交成功"};           
         }
+        /// <summary>
+        /// 获取退款订单列表
+        /// </summary>
+        /// <param name="keywords"></param>
+        /// <param name="checkState"></param>
+        /// <param name="refundState"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<OrderRefundDto>> GetListAsync(string keywords, byte? checkState, byte? refundState,int pageNum,int pageSize)
+        {
+            
+            var refundOrder = dalOrderRefund.GetAll().Where(e =>(string.IsNullOrEmpty(keywords)||e.TradeId==keywords)&& (checkState == null || e.CheckState == checkState) && (refundState == null || e.RefundState == refundState)).OrderByDescending(e => e.CreateDate).Select(e => new OrderRefundDto
+            {
+                Id=e.Id,
+                TradeId = e.TradeId,
+                Remark = e.Remark,
+                CheckState = e.CheckState,
+                CheckStateText = ServiceClass.GetOrderRefundCheckTypeText(e.CheckState),
+                UncheckReason = e.UncheckReason,
+                RefundState = e.RefundState,
+                RefundStateText = ServiceClass.GetRefundStateText(e.RefundState),
+                RefundFailReason = e.RefundFailReason,
+                IsPartial = e.IsPartial,
+                ExchangeType = e.ExchangeType,
+                ExchageTypeText = ServiceClass.GetExchangeTypeText((byte)e.ExchangeType),
+                RefundAmount = e.RefundAmount,
+                ActualPayAmount = e.ActualPayAmount,
+                PayDate = e.PayDate,
+                CheckBy = e.CheckBy,
+                CreateDate=e.CreateDate,
+                UpdateDate=e.UpdateDate
+            }); ; ;
+            FxPageInfo<OrderRefundDto> fxPageInfo = new FxPageInfo<OrderRefundDto>();
+            fxPageInfo.TotalCount =await refundOrder.CountAsync();
+            fxPageInfo.List = refundOrder.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+            foreach (var x in fxPageInfo.List)
+            {
+                if (x.CheckBy != 0)
+                {
+                    var employeeInfo =await dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(z => z.Id == x.CheckBy);
+                    if (employeeInfo != null)
+                    {
+                        x.CheckByName = employeeInfo.Name;
+                    }
+                    else
+                    {
+                        x.CheckByName = "";
+                    }
+                }
+            }
+            return fxPageInfo;
+        }
+
         /// <summary>
         /// 退款回调后更新退款订单状态
         /// </summary>
@@ -112,9 +187,46 @@ namespace Fx.Amiya.Service
         public async Task UpdateStartRefundStateAsync(RefundStartUpdateDto refundUpdateDto)
         {
             var refundOrder =await dalOrderRefund.GetAll().Where(e=>e.Id==refundUpdateDto.Id).SingleOrDefaultAsync();
+            refundOrder.RefundStartDate = refundUpdateDto.RefundStartDate;
             refundOrder.RefundState = refundUpdateDto.RefundState;
             refundOrder.UpdateDate = DateTime.Now;
+            refundOrder.RefundFailReason = refundUpdateDto.RefundFailReason;
+            refundOrder.RefundTradeNo = refundUpdateDto.RefundTradeNo;
             await dalOrderRefund.UpdateAsync(refundOrder,true);
+        }
+        /// <summary>
+        /// 获取审核状态列表
+        /// </summary>
+        /// <returns></returns>
+        public List<CheckStateTypeDto> GetCheckStateType()
+        {
+            var checkStateTypes = Enum.GetValues(typeof(CheckState));
+            List<CheckStateTypeDto> orderAppTypeList = new List<CheckStateTypeDto>();
+            foreach (var item in checkStateTypes)
+            {
+                CheckStateTypeDto orderAppType = new CheckStateTypeDto();
+                orderAppType.Id = Convert.ToByte(item);
+                orderAppType.Name = ServiceClass.GetOrderRefundCheckTypeText(Convert.ToByte(item));
+                orderAppTypeList.Add(orderAppType);
+            }
+            return orderAppTypeList;
+        }
+        /// <summary>
+        /// 获取退款状态列表
+        /// </summary>
+        /// <returns></returns>
+        public List<CheckStateTypeDto> GetRefundStateType()
+        {
+            var checkStateTypes = Enum.GetValues(typeof(RefundState));
+            List<CheckStateTypeDto> orderAppTypeList = new List<CheckStateTypeDto>();
+            foreach (var item in checkStateTypes)
+            {
+                CheckStateTypeDto orderAppType = new CheckStateTypeDto();
+                orderAppType.Id = Convert.ToByte(item);
+                orderAppType.Name = ServiceClass.GetRefundStateText(Convert.ToByte(item));
+                orderAppTypeList.Add(orderAppType);
+            }
+            return orderAppTypeList;
         }
     }
 }

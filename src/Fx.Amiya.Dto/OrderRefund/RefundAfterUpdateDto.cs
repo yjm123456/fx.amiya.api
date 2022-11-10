@@ -10,7 +10,7 @@ namespace Fx.Amiya.Dto.OrderRefund
     {
         public string Id { get; set; }
 
-        public byte RefundState { get; set; }
+        public int RefundState { get; set; }
         /// <summary>
         /// 退款回调时间
         /// </summary>

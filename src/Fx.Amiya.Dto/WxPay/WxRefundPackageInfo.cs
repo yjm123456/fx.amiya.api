@@ -64,6 +64,10 @@ namespace Fx.Amiya.Dto.WxPay
 		/// 退款结果通知url
 		/// </summary>
 		public string NotifyUrl { get; set; }
+		/// <summary>
+		/// 密钥
+		/// </summary>
+        public string AppSecret { get; set; }
         public WxRefundPackageInfo()
 		{
 			this.RefundFeeType = "CNY";
@@ -72,6 +76,7 @@ namespace Fx.Amiya.Dto.WxPay
 			this.AppId = "wx695942e4818de445";
 			this.MchId = "1632393371";
 			this.SignType = "MD5";
+			this.AppSecret = "Amy20202020202020202020202020202";
 		}
 	}
 }

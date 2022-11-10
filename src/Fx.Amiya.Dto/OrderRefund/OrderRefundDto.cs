@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.DbModels.Model
+namespace Fx.Amiya.Dto.OrderRefund
 {
-    public class OrderRefund:BaseDbModel
+    public class OrderRefundDto
     {
-        public string CustomerId { get; set; }
-        public string OrderId { get; set; }
-        public string TradeId { get; set; }
         /// <summary>
-        /// 退款商品名称
+        /// 退款订单id
         /// </summary>
-        public string GoodsName { get; set; }
+        public string Id { get; set; }
+        /// <summary>
+        /// 退款交易id
+        /// </summary>
+        public string TradeId { get; set; }
         /// <summary>
         /// 退款原因
         /// </summary>
@@ -24,6 +25,10 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public int CheckState { get; set; }
         /// <summary>
+        /// 审核状态文本
+        /// </summary>
+        public string CheckStateText { get; set; }
+        /// <summary>
         /// 审核失败原因
         /// </summary>
         public string UncheckReason { get; set; }
@@ -31,6 +36,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 退款状态
         /// </summary>
         public int RefundState { get; set; }
+        /// <summary>
+        /// 退款状态文本
+        /// </summary>
+        public string RefundStateText { get; set; }
         /// <summary>
         /// 退款失败原因
         /// </summary>
@@ -43,6 +52,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 支付方式
         /// </summary>
         public int ExchangeType { get; set; }
+        /// <summary>
+        /// 支付方式文本
+        /// </summary>
+        public string ExchageTypeText { get; set; }
         /// <summary>
         /// 付款时间
         /// </summary>
@@ -71,6 +84,15 @@ namespace Fx.Amiya.DbModels.Model
         /// 退款交易订单号
         /// </summary>
         public string RefundTradeNo { get; set; }
+        /// <summary>
+        /// 审核人员
+        /// </summary>
         public int? CheckBy { get; set; }
+        /// <summary>
+        /// 审核人员名称
+        /// </summary>
+        public string CheckByName { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
     }
 }

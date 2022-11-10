@@ -755,6 +755,57 @@ namespace Fx.Amiya.Service
             }
             return CheckTypeText;
         }
+        /// <summary>
+        /// 获取退款订审核情况
+        /// </summary>
+        /// <param name="CheckType"></param>
+        /// <returns></returns>
+        public static string GetOrderRefundCheckTypeText(int CheckType)
+        {
+            string CheckTypeText = "";
+            switch (CheckType)
+            {
+                case 0:
+                    CheckTypeText = "待审核";
+                    break;
+
+                case 1:
+                    CheckTypeText = "审核通过";
+                    break;
+                case 2:
+                    CheckTypeText = "审核未通过";
+                    break;
+            }
+            return CheckTypeText;
+        }
+
+
+        /// <summary>
+        /// 获取退款订单退款情况
+        /// </summary>
+        /// <param name="CheckType"></param>
+        /// <returns></returns>
+        public static string GetRefundStateText(int CheckType)
+        {
+            string CheckTypeText = "";
+            switch (CheckType)
+            {
+                case 0:
+                    CheckTypeText = "待退款";
+                    break;
+
+                case 1:
+                    CheckTypeText = "退款成功";
+                    break;
+                case 2:
+                    CheckTypeText = "退款失败";
+                    break;
+                case 3:
+                    CheckTypeText = "退款中";
+                    break;
+            }
+            return CheckTypeText;
+        }
 
         /// <summary>
         /// 获取提交情况

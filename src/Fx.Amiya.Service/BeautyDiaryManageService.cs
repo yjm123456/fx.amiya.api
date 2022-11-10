@@ -479,7 +479,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var appInfo = await dockingHospitalCustomerInfo.GetBeautyDiaryTokenInfo(124);
+                var appInfo = await dockingHospitalCustomerInfo.GetBeautyDiaryTokenInfo(31);
                 var requestUrl = $"https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token={appInfo.AccessToken}";
                 var data = new { type="news",offset=(pageNum-1)*pageSize,count=pageSize};
                 var res = await HttpUtil.HttpJsonPostAsync(requestUrl,JsonConvert.SerializeObject(data));

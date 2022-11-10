@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fx.Amiya.Dto.OrderRefund;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="refundOrderId"></param>
         /// <returns></returns>
-        Task<string> WechatRefundAsync(string refundOrderId);
+        Task<RefundOrderResult> WechatRefundAsync(string refundOrderId);
         /// <summary>
         /// 微信退款回调
         /// </summary>

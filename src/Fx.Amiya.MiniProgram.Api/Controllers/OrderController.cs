@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Aliyun.Acs.Core;
 using Aop.Api;
@@ -35,6 +36,7 @@ using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 
 namespace Fx.Amiya.MiniProgram.Api.Controllers
@@ -71,6 +73,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private readonly IMemberCardHandleService memberCardHandleService;
         private readonly IOrderRefundService orderRefundService;
         private readonly IUnitOfWork unitOfWork;
+        private static readonly AsyncLock _mutex = new AsyncLock();
         public OrderController(IOrderService orderService,
             IOrderHistoryService orderHistoryService,
             TokenReader tokenReader,
@@ -441,7 +444,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     //获取虚拟商品和美肤券预约门店名称
                     if (goodsInfo.ExchangeType != ExchangeType.Integration && !item.IsFaceCard&&!item.IsSkinCare)
                     {
-
                         if (item.HospitalId.Value == 0)
                         {
                             throw new Exception("请选择门店医院");
@@ -625,7 +627,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     WxPackageInfo packageInfo = new WxPackageInfo();
                     packageInfo.Body = orderId;
                     //回调地址需重新设置(todo;)                   
-                    packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");                   
+                    packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");                     
                     packageInfo.OutTradeNo = tradeId;
                     packageInfo.TotalFee = (int)(totalFee * 100m);
                     if (packageInfo.TotalFee < 1m)
@@ -1274,23 +1276,28 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             string customerId = sessionInfo.FxCustomerId;
             try
             {
-                unitOfWork.BeginTransaction();
-                CreateRefundOrderDto createRefundOrderDto = new CreateRefundOrderDto();
-                createRefundOrderDto.CustomerId = customerId;
-                createRefundOrderDto.TradeId = refundOrder.TradeId;
-                createRefundOrderDto.OrderId = refundOrder.OrderId;
-                createRefundOrderDto.Remark = refundOrder.Remark;
-                var result = await orderRefundService.CreateRefundOrderAsync(createRefundOrderDto);
-                if (result.Result)
-                {
-                    unitOfWork.Commit();
-                    return ResultData.Success();
+                using (await _mutex.LockAsync())
+                {         
+                    unitOfWork.BeginTransaction();
+                    CreateRefundOrderDto createRefundOrderDto = new CreateRefundOrderDto();
+                    createRefundOrderDto.CustomerId = customerId;
+                    createRefundOrderDto.TradeId = refundOrder.TradeId;
+                    createRefundOrderDto.OrderId = refundOrder.OrderId;
+                    createRefundOrderDto.Remark = refundOrder.Remark;
+                    var result = await orderRefundService.CreateRefundOrderAsync(createRefundOrderDto);
+                    if (result.Result)
+                    {
+                        unitOfWork.Commit();
+                        return ResultData.Success();
+                    }
+                    else
+                    {
+                        unitOfWork.RollBack();
+                        return ResultData.Fail();
+                    }
                 }
-                else
-                {
-                    unitOfWork.RollBack();
-                    return ResultData.Fail();
-                }
+
+                    
             }
             catch (Exception ex)
             {

@@ -1,4 +1,6 @@
-﻿using Fx.Amiya.Dto.OrderRefund;
+﻿using Fx.Amiya.Dto.CustomerHospitalConsume;
+using Fx.Amiya.Dto.OrderRefund;
+using Fx.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +27,32 @@ namespace Fx.Amiya.IService
         /// <param name="refundAfterUpdateDto"></param>
         /// <returns></returns>
         Task UpdateAfterRefundStateAsync(RefundAfterUpdateDto refundAfterUpdateDto);
-        
+        /// <summary>
+        /// 获取退款订单列表
+        /// </summary>
+        /// <param name="keywords"></param>
+        /// <param name="checkState"></param>
+        /// <param name="refundState"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<OrderRefundDto>> GetListAsync(string keywords,byte? checkState,byte? refundState,int pageNum,int pageSize);
+        /// <summary>
+        /// 退款订单审核
+        /// </summary>
+        /// <param name="orderRefundCheckDto"></param>
+        /// <returns></returns>
+        Task CheckAsync(OrderRefundCheckDto orderRefundCheckDto);
+        /// <summary>
+        /// 获取审核状态列表
+        /// </summary>
+        /// <returns></returns>
+        List<CheckStateTypeDto> GetCheckStateType();
+        /// <summary>
+        /// 获取退款状态列表
+        /// </summary>
+        /// <returns></returns>
+        List<CheckStateTypeDto> GetRefundStateType();
+
     }
 }

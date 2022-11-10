@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Dto.OrderAppInfo;
+using Fx.Amiya.Dto.OrderRefund;
 using Fx.Amiya.Dto.WxPay;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -29,27 +30,31 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="refundOrderId"></param>
         /// <returns></returns>
-        public async Task<string> WechatRefundAsync(string refundOrderId)
+        public async Task<RefundOrderResult> WechatRefundAsync(string refundOrderId)
         {
-            var refundOrder = dalOrderRefund.GetAll().Where(e => e.Id == refundOrderId).SingleOrDefault();
+            var refundOrder = dalOrderRefund.GetAll().Where(e => e.Id == refundOrderId).SingleOrDefault();           
             if (refundOrder == null) { throw new Exception("退款编号错误"); }
-
+            if (refundOrder.CheckState != (int)CheckState.CheckSuccess) throw new Exception("只有审核通过的订单才能退款");
+            var success = dalOrderRefund.GetAll().Where(e => e.TradeId == refundOrder.TradeId && e.RefundState == (int)RefundState.RefundSuccess).ToList();
+            if (success.Count>0) {
+                throw new Exception("订单已退款,请勿重复请求");
+            }
+            if (refundOrder.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
             WxRefundPackageInfo packageInfo = new WxRefundPackageInfo();
-            packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "http://ymjxui.gnway.cc");
+            packageInfo.NotifyUrl = "https://app.ameiyes.com/amiyamini";
+            //packageInfo.NotifyUrl = "http://ymjxui.gnway.cc";
             packageInfo.OutTradeNo = refundOrder.TradeId;
             packageInfo.OutRefundNo = refundOrder.Id;
             packageInfo.TotalFee = (int)(refundOrder.ActualPayAmount * 100m);
             packageInfo.RefundFee = (int)(refundOrder.RefundAmount * 100m);
             packageInfo.RefundDesc = "商品退款";
-            /*if (packageInfo.TotalFee < 1m)
-            {
-                packageInfo.TotalFee = 1m;
-            }*/
-            return await this.BuildRefundRequest(packageInfo);
+            var result=await this.BuildRefundRequest(packageInfo);
+            result.TardeId = refundOrder.TradeId;
+            return result;
         }
 
 
-        private async Task<string> BuildRefundRequest(WxRefundPackageInfo packageInfo)
+        private async Task<RefundOrderResult> BuildRefundRequest(WxRefundPackageInfo packageInfo)
         {
 
             packageInfo.NonceStr = Guid.NewGuid().ToString("N");
@@ -57,7 +62,6 @@ namespace Fx.Amiya.Service
             payDictionary.Add("appid", packageInfo.AppId);
             payDictionary.Add("mch_id", packageInfo.MchId);
             payDictionary.Add("nonce_str", packageInfo.NonceStr);
-            /*payDictionary.Add("sign", Guid.NewGuid().ToString("N"));*/
             payDictionary.Add("sign_type", packageInfo.SignType);
             payDictionary.Add("transaction_id", packageInfo.TransactionId);
             payDictionary.Add("out_trade_no", packageInfo.OutTradeNo);
@@ -69,11 +73,10 @@ namespace Fx.Amiya.Service
             payDictionary.Add("refund_account", packageInfo.RefundAccount);
             payDictionary.Add("notify_url", packageInfo.NotifyUrl);
             SignHelper signHelper = new SignHelper();
-            string sign = await signHelper.SignPackage(payDictionary, packageInfo.MchId);
-            var result = await this.PostRefundRequest(payDictionary, sign);
-            return result;
+            string sign = await signHelper.SignPackage(payDictionary, packageInfo.AppSecret);
+            return await this.PostRefundRequest(payDictionary, sign);
         }
-        private async Task<string> PostRefundRequest(PayDictionary dict, string sign)
+        private async Task<RefundOrderResult> PostRefundRequest(PayDictionary dict, string sign)
         {
             dict.Add("sign", sign);
             SignHelper signHelper = new SignHelper();
@@ -88,19 +91,21 @@ namespace Fx.Amiya.Service
         /// <param name="url"></param>
         /// <param name="postData"></param>
         /// <returns></returns>
-        private string PostRefundData(string url, string postData)
+        private RefundOrderResult PostRefundData(string url, string postData)
         {
-            string text = string.Empty;
-            string result = string.Empty;
+            string text = string.Empty;           
             try
             {
                 Uri requestUri = new Uri(url);
                 HttpWebRequest httpWebRequest;
                 if (url.ToLower().StartsWith("https"))
                 {
-                    
+                    string path = AppDomain.CurrentDomain.BaseDirectory + "apiclientrefund78345hsdfcert.p12";
                     ServicePointManager.ServerCertificateValidationCallback = ((object s, X509Certificate c, X509Chain ch, SslPolicyErrors e) => true);
+                    //加载证书
+                    X509Certificate2 cer = new X509Certificate2(path, "1632393371");                
                     httpWebRequest = (HttpWebRequest)WebRequest.CreateDefault(requestUri);
+                    httpWebRequest.ClientCertificates.Add(cer);
                 }
                 else
                 {
@@ -109,8 +114,7 @@ namespace Fx.Amiya.Service
                 Encoding uTF = Encoding.UTF8;
                 byte[] bytes = uTF.GetBytes(postData);
                 httpWebRequest.Method = "POST";
-                httpWebRequest.KeepAlive = true;
-                //httpWebRequest.ClientCertificates.Add();
+                httpWebRequest.KeepAlive = true;                
                 Stream requestStream = httpWebRequest.GetRequestStream();
                 requestStream.Write(bytes, 0, bytes.Length);
                 requestStream.Close();
@@ -135,30 +139,54 @@ namespace Fx.Amiya.Service
                         {
                             if (xmlDocument == null)
                             {
-                                result = "false";
-                                return result;
+                                RefundOrderResult refundOrderResult = new RefundOrderResult {
+                                    Result=false,
+                                    Msg="返回数据为空"
+                                };
+                                return refundOrderResult;
                             }
                             XmlNode xmlNode = xmlDocument.SelectSingleNode("xml/return_code");
                             if (xmlNode == null)
                             {
-                                result = "";
-                                return result;
+                                RefundOrderResult refundOrderResult = new RefundOrderResult
+                                {
+                                    Result = false,
+                                    Msg = "请求状态码为空"
+                                };
+                                return refundOrderResult;
                             }
                             if (xmlNode.InnerText == "SUCCESS")
                             {
-                                result = "success";
-                                return result;
+                                XmlNode resultNode = xmlDocument.SelectSingleNode("xml/result_code");
+                                if (resultNode.InnerText == "SUCCESS")
+                                {
+                                    XmlNode refundIdNode = xmlDocument.SelectSingleNode("xml/refund_id");
+                                    RefundOrderResult refundOrderResult = new RefundOrderResult
+                                    {
+                                        Result = true,
+                                        TradeNo= refundIdNode.InnerText
+                                    };
+                                    return refundOrderResult;
+                                }
+                                else {
+                                    XmlNode errDescNode = xmlDocument.SelectSingleNode("xml/err_code_des");
+                                    RefundOrderResult refundOrderResult = new RefundOrderResult
+                                    {
+                                        Result = false,
+                                        Msg = errDescNode.InnerText
+                                    };
+                                    return refundOrderResult;
+                                }                                                               
                             }
                             else
                             {
                                 XmlNode xmlNode3 = xmlDocument.SelectSingleNode("xml/return_msg");
-                                if (xmlNode3 != null)
+                                RefundOrderResult refundOrderResult = new RefundOrderResult
                                 {
-                                    result = xmlNode3.InnerText;
-                                    return result;
-                                }
-                                result = xmlDocument.InnerXml;
-                                return result;
+                                    Result = false,
+                                    Msg = xmlNode3.InnerText
+                                };
+                                return refundOrderResult;
                             }
                         }
                         catch (Exception ex)
@@ -172,7 +200,11 @@ namespace Fx.Amiya.Service
             {
                 text = string.Format("获取信息错误post error：{0}", ex.Message) + text;
             }
-            result = text;
+            RefundOrderResult result = new RefundOrderResult
+            {
+                Result = false,
+                Msg = text
+            };
             return result;
         }
         /// <summary>
