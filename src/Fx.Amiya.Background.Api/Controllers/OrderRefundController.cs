@@ -16,6 +16,9 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
+    /// <summary>
+    /// 订单退款
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [FxInternalAuthorize]
@@ -84,7 +87,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData.Success();
         }
         /// <summary>
-        /// 获取审核情况（下拉框使用）
+        /// 获取审核状态（下拉框使用）
         /// </summary>
         /// <returns></returns>
         [HttpGet("getCheckStateList")]
@@ -100,7 +103,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<List<CheckStateTypeVo>>.Success().AddData("checkStateList", orderNatures.ToList());
         }
         /// <summary>
-        /// 获取审核情况（下拉框使用）
+        /// 获取退款状态（下拉框使用）
         /// </summary>
         /// <returns></returns>
         [HttpGet("getRefundStateList")]
