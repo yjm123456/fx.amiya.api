@@ -22,8 +22,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.DeleteDate).HasColumnName("delete_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.ContentUrl).HasColumnName("content_url").HasColumnType("varchar(500)").IsRequired();
             builder.Property(e => e.PicPath).HasColumnName("pic_path").HasColumnType("varchar(500)").IsRequired();
-            builder.Property(e => e.Title).HasColumnName("title").HasColumnType("varchar(500)").IsRequired();
-            builder.Property(e => e.Author).HasColumnName("author").HasColumnType("varchar(50)").IsRequired();
+            builder.Property(e => e.Title).HasColumnName("title").HasColumnType("varchar(500)").IsRequired();            
         }
     }
 }

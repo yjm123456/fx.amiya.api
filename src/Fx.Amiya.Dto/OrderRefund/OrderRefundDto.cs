@@ -17,6 +17,10 @@ namespace Fx.Amiya.Dto.OrderRefund
         /// </summary>
         public string TradeId { get; set; }
         /// <summary>
+        /// 订单id
+        /// </summary>
+        public string OrderId { get; set; }
+        /// <summary>
         /// 退款原因
         /// </summary>
         public string Remark { get; set; }

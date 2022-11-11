@@ -74,6 +74,12 @@ namespace Fx.Amiya.Service
                 case "BARGAIN_MONEY":
                     statusText = "定金订单";
                     break;
+                case "CHECK_FAIL":
+                    statusText = "审核未通过";
+                    break;
+                case "PARTIAL_REFUND":
+                    statusText = "部分退款";
+                    break;
             }
             return statusText;
         }

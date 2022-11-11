@@ -27,13 +27,14 @@ namespace Fx.Amiya.Service
         private IDalOrderInfo dalOrderInfo;
         private IDalItemInfo dalItemInfo;
         private IDockingHospitalCustomerInfoService dockingHospitalCustomerInfo;
+        private IDalDiaryWechat dalDiaryWechat;
         public BeautyDiaryManageService(IDalBeautyDiaryManage dalBeautyDiaryManage,
             IDalBeautyDiaryTagDetail dalBeautyDiaryTagDetail,
             IUnitOfWork unitOfWork,
             IDalHospitalPartakeItem dalHospitalQuotedPriceItemInfo,
             IDalOrderInfo dalOrderInfo,
             IDalBeautyDiaryBannerImage dalBeautyDiaryBannerImage,
-            IDalItemInfo dalItemInfo, IOrderAppInfoService orderAppInfoService, IDockingHospitalCustomerInfoService dockingHospitalCustomerInfo)
+            IDalItemInfo dalItemInfo, IOrderAppInfoService orderAppInfoService, IDockingHospitalCustomerInfoService dockingHospitalCustomerInfo, IDalDiaryWechat dalDiaryWechat)
         {
             this.dalBeautyDiaryManage = dalBeautyDiaryManage;
             this.dalBeautyDiaryTagDetail = dalBeautyDiaryTagDetail;
@@ -44,6 +45,7 @@ namespace Fx.Amiya.Service
             this.dalItemInfo = dalItemInfo;
             this.orderAppInfoService = orderAppInfoService;
             this.dockingHospitalCustomerInfo = dockingHospitalCustomerInfo;
+            this.dalDiaryWechat = dalDiaryWechat;
         }
 
 
@@ -479,19 +481,30 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var appInfo = await dockingHospitalCustomerInfo.GetBeautyDiaryTokenInfo(31);
+                /*var appInfo = await dockingHospitalCustomerInfo.GetBeautyDiaryTokenInfo(31);
                 var requestUrl = $"https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token={appInfo.AccessToken}";
                 var data = new { type="news",offset=(pageNum-1)*pageSize,count=pageSize};
                 var res = await HttpUtil.HttpJsonPostAsync(requestUrl,JsonConvert.SerializeObject(data));
                 if (res.Contains("errorcode"))
                     throw new Exception("获取美丽日记失败");
-                var beautyDiary = JsonConvert.DeserializeObject<WeChatBeautyDiaryDto>(res);
-                
-                FxPageInfo<WechatBeautyDiaryNewsItem> fxPageInfo = new FxPageInfo<WechatBeautyDiaryNewsItem>();
+                var beautyDiary = JsonConvert.DeserializeObject<WeChatBeautyDiaryDto>(res);               
+                FxPageInfo<WechatBeautyDiaryNewsItemDto> fxPageInfo = new FxPageInfo<WechatBeautyDiaryNewsItemDto>();
                 fxPageInfo.TotalCount = beautyDiary.total_count;
-                fxPageInfo.List = beautyDiary.item.SelectMany(e=>e.content.news_item).Where(e=>e.title.Contains("变美指南")).Where(e=>!string.IsNullOrEmpty(e.author));
+                fxPageInfo.List = beautyDiary.item.SelectMany(e=>e.content.news_item).Where(e=>e.title.Contains("变美指南")).Where(e=>!string.IsNullOrEmpty(e.author)).Select(e=>new WechatBeautyDiaryNewsItemDto { 
+                    Title=e.title,
+                    ContentSourceUrl=e.content_source_url,              
+                    Author=e.author,                  
+                });
+                foreach (var item in fxPageInfo.List)
+                {
+                    var diary = dalDiaryWechat.GetAll().Where(e=>e.ContentUrl==item.ContentSourceUrl).FirstOrDefault();
+                    if (!string.IsNullOrEmpty(diary.PicPath)) {
+                        //item.ContentSourceUrl=
+                    }
+                }*/
                 //fxPageInfo.List = beautyDiary.item.SelectMany(e => e.content.news_item).Where(e => !string.IsNullOrEmpty(e.author)).ToList();
-                return fxPageInfo;
+                //return fxPageInfo;
+                return null;
             }
 
             catch (Exception ex)
@@ -514,6 +527,7 @@ namespace Fx.Amiya.Service
                 if (res.Contains("errorcode"))
                     throw new Exception("获取美丽日记失败");
                 var beautyDiary = JsonConvert.DeserializeObject<WeChatBeautyDiaryDto>(res);
+                
                 beautyDiary.item.SelectMany(e => e.content.news_item).Where(e => e.title.Contains("变美指南")).Where(e => !string.IsNullOrEmpty(e.author));
                 /*FxPageInfo<WechatBeautyDiaryNewsItem> fxPageInfo = new FxPageInfo<WechatBeautyDiaryNewsItem>();
                 fxPageInfo.TotalCount = beautyDiary.total_count;

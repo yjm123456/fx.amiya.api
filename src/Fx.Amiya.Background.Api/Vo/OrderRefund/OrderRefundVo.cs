@@ -12,9 +12,9 @@ namespace Fx.Amiya.Background.Api.Vo.OrderRefund
         /// </summary>
         public string Id { get; set; }
         /// <summary>
-        /// 退款交易id
+        /// 订单id
         /// </summary>
-        public string TradeId { get; set; }
+        public string OrderId { get; set; }
         /// <summary>
         /// 退款原因
         /// </summary>

@@ -48,7 +48,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             fxPageInfo.TotalCount = list.TotalCount;
             fxPageInfo.List = list.List.Select(e=>new OrderRefundVo {  
                 Id=e.Id,
-                TradeId = e.TradeId,
+                OrderId=e.OrderId,
                 GoodsName=e.GoodsName,
                 Remark = e.Remark,
                 CheckState = e.CheckState,

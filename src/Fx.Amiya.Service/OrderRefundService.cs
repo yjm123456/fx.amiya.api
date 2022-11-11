@@ -45,7 +45,12 @@ namespace Fx.Amiya.Service
             refundOrder.CheckDate = DateTime.Now;
             refundOrder.UpdateDate = DateTime.Now;
             await dalOrderRefund.UpdateAsync(refundOrder,true);
+            if (orderRefundCheckDto.CheckState==(int)CheckState.CheckFail) {                
+                await orderService.UpdateStatusByTradeIdAsync(refundOrder.TradeId, OrderStatusCode.CHECK_FAIL);
+
+            }
         }
+
 
         public async Task<CreateRefundOrderResult> CreateRefundOrderAsync(CreateRefundOrderDto createRefundOrderDto)
         {
@@ -62,10 +67,15 @@ namespace Fx.Amiya.Service
             if (!(trade.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || trade.StatusCode == OrderStatusCode.TRADE_BUYER_SIGNED || trade.StatusCode == OrderStatusCode.TRADE_FINISHED || trade.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || trade.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS||trade.StatusCode==OrderStatusCode.PARTIAL_REFUND)) {
                 throw new Exception("当前订单状态不能退款");
             }
+            string orderId = "";
             foreach (var item in trade.OrderInfoList)
             {
-                if (item.AppType!=(byte)AppType.MiniProgram) {
+                if (item.AppType != (byte)AppType.MiniProgram)
+                {
                     throw new Exception("当前订单不属于小程序");
+                }
+                else {
+                    orderId = item.Id;
                 }
             }
             if (!string.IsNullOrEmpty(createRefundOrderDto.OrderId))
@@ -100,7 +110,7 @@ namespace Fx.Amiya.Service
             }
             orderRefund.Id = Guid.NewGuid().ToString().Replace("-",""); ;
             orderRefund.CustomerId = createRefundOrderDto.CustomerId;
-            orderRefund.OrderId = createRefundOrderDto.OrderId;
+            orderRefund.OrderId = orderId;
             orderRefund.TradeId = createRefundOrderDto.TradeId;
             orderRefund.Remark = createRefundOrderDto.Remark;           
             orderRefund.CreateDate = DateTime.Now;
@@ -121,9 +131,10 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<OrderRefundDto>> GetListAsync(string keywords, byte? checkState, byte? refundState,int pageNum,int pageSize)
         {
             
-            var refundOrder = dalOrderRefund.GetAll().Where(e =>(string.IsNullOrEmpty(keywords)||e.TradeId==keywords)&& (checkState == null || e.CheckState == checkState) && (refundState == null || e.RefundState == refundState)).OrderByDescending(e => e.CreateDate).Select(e => new OrderRefundDto
+            var refundOrder = dalOrderRefund.GetAll().Where(e =>(string.IsNullOrEmpty(keywords)||e.OrderId.Contains(keywords))&& (checkState == null || e.CheckState == checkState) && (refundState == null || e.RefundState == refundState)).OrderByDescending(e => e.CreateDate).Select(e => new OrderRefundDto
             {
                 Id=e.Id,
+                OrderId=e.OrderId,
                 TradeId = e.TradeId,
                 Remark = e.Remark,
                 GoodsName=e.GoodsName,
@@ -230,6 +241,40 @@ namespace Fx.Amiya.Service
                 orderAppTypeList.Add(orderAppType);
             }
             return orderAppTypeList;
+        }
+
+        public async Task<OrderRefundDto> GetOrderRefundByOrderId(string orderId)
+        {
+            var refundOrder =await dalOrderRefund.GetAll().Where(e =>  e.OrderId.Contains(orderId)).Select(e => new OrderRefundDto
+            {
+                Id = e.Id,
+                TradeId = e.TradeId,
+                Remark = e.Remark,
+                GoodsName = e.GoodsName,
+                CheckState = e.CheckState,
+                CheckDate = e.CheckDate,
+                CheckStateText = ServiceClass.GetOrderRefundCheckTypeText(e.CheckState),
+                UncheckReason = e.UncheckReason,
+                RefundState = e.RefundState,
+                RefundStateText = ServiceClass.GetRefundStateText(e.RefundState),
+                RefundStartDate = e.RefundStartDate,
+                RefundFailReason = e.RefundFailReason,
+                IsPartial = e.IsPartial,
+                ExchangeType = e.ExchangeType,
+                ExchageTypeText = ServiceClass.GetExchangeTypeText((byte)e.ExchangeType),
+                RefundAmount = e.RefundAmount,
+                ActualPayAmount = e.ActualPayAmount,
+                PayDate = e.PayDate,
+                CheckBy = e.CheckBy,
+                CreateDate = e.CreateDate,
+                UpdateDate = e.UpdateDate
+            }).FirstOrDefaultAsync();
+            if (refundOrder == null) {
+                return new OrderRefundDto();
+            }
+            else {
+                return refundOrder;
+            }
         }
     }
 }

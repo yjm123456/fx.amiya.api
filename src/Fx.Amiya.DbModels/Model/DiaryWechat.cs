@@ -10,7 +10,6 @@ namespace Fx.Amiya.DbModels.Model
     {       
         public string ContentUrl { get; set; }
         public string PicPath { get; set; }
-        public string Title { get; set; }
-        public string Author { get; set; }
+        public string Title { get; set; }        
     }
 }

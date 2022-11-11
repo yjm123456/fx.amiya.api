@@ -64,5 +64,9 @@ namespace Fx.Amiya.IService
         /// 部分退款(购物车使用)
         /// </summary>
         public static string PARTIAL_REFUND = "PARTIAL_REFUND";
+        /// <summary>
+        /// 退款审核未通过
+        /// </summary>
+        public static string CHECK_FAIL = "CHECK_FAIL";
     }
 }

@@ -1182,7 +1182,7 @@ CREATE TABLE `tbl_growth_points_rule` (
 CREATE TABLE IF NOT EXISTS `tbl_order_refund` (
   `id` varchar(50) NOT NULL DEFAULT '',
   `customer_id` varchar(50) NOT NULL DEFAULT '',
-  `order_id` varchar(50) DEFAULT NULL,
+  `order_id` varchar(500) DEFAULT NULL,
   `trade_id` varchar(50) NOT NULL DEFAULT '',
   `goods_name` varchar(100) NOT NULL DEFAULT '',
   `remark` varchar(500) DEFAULT '',

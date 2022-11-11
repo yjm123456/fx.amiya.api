@@ -73,6 +73,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private readonly IMemberCardHandleService memberCardHandleService;
         private readonly IOrderRefundService orderRefundService;
         private readonly IUnitOfWork unitOfWork;
+        
         private static readonly AsyncLock _mutex = new AsyncLock();
         public OrderController(IOrderService orderService,
             IOrderHistoryService orderHistoryService,
@@ -199,6 +200,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         orderInfoResult.SinglePrice = orderInfo.ActualPayment;
                     }
                     orderInfoResult.ActualPayment = orderInfo.ActualPayment;
+                    
+                    
                 }
                 else
                 {
@@ -217,8 +220,17 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     refundOrderInfo.CheckReason = refundOrderInfoResult.CheckReason;
                     refundOrderInfo.RefundReason = refundOrderInfoResult.RefundReasong;
                     orderInfoResult.RefundOrderInfo = refundOrderInfo;
-                    orderInfoResult.IntegrationQuantity = orderInfo.IntegrationQuantity;
+                    orderInfoResult.IntegrationQuantity = orderInfo.IntegrationQuantity;                                       
                 }
+            }
+            if (orderInfo.StatusCode == OrderStatusCode.CHECK_FAIL)
+            {
+                RefundOrderInfo refundOrderInfo = new RefundOrderInfo();
+                var refundOrderInfoResult = await orderRefundService.GetOrderRefundByOrderId(orderId);
+                refundOrderInfo.CheckTypeText = refundOrderInfoResult.CheckStateText;
+                refundOrderInfo.CheckReason = refundOrderInfoResult.UncheckReason;
+                refundOrderInfo.RefundReason = refundOrderInfoResult.Remark;
+                orderInfoResult.RefundOrderInfo = refundOrderInfo;
             }
             orderInfoResult.Quantity = (orderInfo.Quantity.HasValue) ? orderInfo.Quantity.Value : 0;
             orderInfoResult.BuyerNick = orderInfo.BuyerNick;
@@ -631,7 +643,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     WxPackageInfo packageInfo = new WxPackageInfo();
                     packageInfo.Body = orderId;
                     //回调地址需重新设置(todo;)                   
-                    packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");                                        
+                    packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");                                                           
                     packageInfo.OutTradeNo = tradeId;
                     packageInfo.TotalFee = (int)(totalFee * 100m);
                     if (packageInfo.TotalFee < 1m)
@@ -753,25 +765,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
             #endregion
 
-            #region 支付宝支付
-            /*SortedDictionary<string, string> sParaTemp = new SortedDictionary<string, string>();
-            AliPayConfig Config = new AliPayConfig();
-            sParaTemp.Add("service", Config.service);
-            sParaTemp.Add("partner", Config.seller_id);
-            sParaTemp.Add("seller_id", Config.seller_id);
-            sParaTemp.Add("_input_charset", Config.input_charset.ToLower());
-            sParaTemp.Add("payment_type", Config.payment_type);
-            sParaTemp.Add("notify_url", Config.notify_url);
-            sParaTemp.Add("return_url", Config.return_url);
-            sParaTemp.Add("anti_phishing_key", Config.anti_phishing_key);
-            sParaTemp.Add("exter_invoke_ip", Config.exter_invoke_ip);
-            sParaTemp.Add("out_trade_no", tradeId);
-            sParaTemp.Add("subject", orderId);
-            sParaTemp.Add("total_fee", totalFee.ToString("0.00"));
-            sParaTemp.Add("body", goodsName);
-            var res = _aliPayService.BuildRequest(sParaTemp);
-            orderPayResult.AlipayUrl = res.Result;*/
-            #endregion
+            
 
             return ResultData<OrderAddResultVo>.Success().AddData("orderPayGetResult", orderPayResult);
         }
@@ -1309,6 +1303,5 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 throw ex;
             }
         }
-
     }
 }

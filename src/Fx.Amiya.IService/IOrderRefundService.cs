@@ -53,6 +53,12 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         List<CheckStateTypeDto> GetRefundStateType();
+        /// <summary>
+        /// 根据orderId获取退款订单信息
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        Task<OrderRefundDto> GetOrderRefundByOrderId(string orderId);
 
     }
 }

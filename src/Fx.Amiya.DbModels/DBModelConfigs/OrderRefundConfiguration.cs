@@ -17,7 +17,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).HasColumnName("id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(e => e.CustomerId).HasColumnName("customer_id").HasColumnType("varchar(50)").IsRequired();
-            builder.Property(e => e.OrderId).HasColumnName("order_id").HasColumnType("varchar(50)").IsRequired(false);
+            builder.Property(e => e.OrderId).HasColumnName("order_id").HasColumnType("varchar(500)").IsRequired(false);
             builder.Property(e => e.TradeId).HasColumnName("trade_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(e => e.GoodsName).HasColumnName("goods_name").HasColumnType("varchar(100)").IsRequired();
             builder.Property(e => e.Remark).HasColumnName("remark").HasColumnType("varchar(500)").IsRequired();
@@ -33,7 +33,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.ActualPayAmount).HasColumnName("actual_pay_amount").HasColumnType("decimal(10,2)").IsRequired();
             builder.Property(e => e.RefundStartDate).HasColumnName("refund_start_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.RefundResultDate).HasColumnName("refund_result_date").HasColumnType("datetime").IsRequired(false);
-            builder.Property(e => e.RefundTradeNo).HasColumnName("refund_trade_no").HasColumnType("datetime").IsRequired(false);
+            builder.Property(e => e.RefundTradeNo).HasColumnName("refund_trade_no").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();
