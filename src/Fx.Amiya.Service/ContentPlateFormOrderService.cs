@@ -29,7 +29,6 @@ namespace Fx.Amiya.Service
         private IAmiyaGoodsDemandService amiyaGoodsDemandService;
         private IBindCustomerServiceService bindCustomerServiceService;
         private IOrderCheckPictureService _orderCheckPictureService;
-        private ICustomerService customerService;
         private IContentPlatformOrderSendService _contentPlatformOrderSend;
         private IDalAmiyaEmployee _dalAmiyaEmployee;
         private ILiveAnchorService _liveAnchorService;
@@ -47,7 +46,6 @@ namespace Fx.Amiya.Service
         public ContentPlateFormOrderService(
            IDalContentPlatformOrder dalContentPlatformOrder,
            IDalAmiyaEmployee dalAmiyaEmployee,
-           ICustomerService customerService,
             ILiveAnchorService liveAnchorService,
             IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
             IHospitalInfoService hospitalInfoService,
@@ -71,7 +69,6 @@ namespace Fx.Amiya.Service
             _shoppingCartRegistration = shoppingCartRegistration;
             this.bindCustomerServiceService = bindCustomerServiceService;
             _dalBindCustomerService = dalBindCustomerService;
-            this.customerService = customerService;
             _departmentService = departmentService;
             this.amiyaGoodsDemandService = amiyaGoodsDemandService;
             this.employeeBindLiveAnchorService = employeeBindLiveAnchorService;
@@ -194,18 +191,6 @@ namespace Fx.Amiya.Service
                 //小黄车更新录单触达
                 await _shoppingCartRegistration.UpdateCreateOrderAsync(input.Phone);
 
-                //编辑客户基础信息
-                EditCustomerDto editDto = new EditCustomerDto();
-                var config = await GetCallCenterConfig();
-                string encryptPhon = ServiceClass.Encrypt(input.Phone, config.PhoneEncryptKey);
-                editDto.EncryptPhone = encryptPhon;
-                editDto.Name = input.CustomerName;
-                editDto.Sex = input.Sex;
-                editDto.Birthday = input.Birthday;
-                editDto.Occupation = input.Occupation;
-                editDto.WechatNumber = input.WechatNumber;
-                editDto.City = input.City;
-                await customerService.EditAsync(editDto);
 
                 unitOfWork.Commit();
             }
@@ -379,8 +364,6 @@ namespace Fx.Amiya.Service
                             x.Sender = empInfo.Name;
                         }
                     }
-                    var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(x.EncryptPhone);
-                    x.City = customerBaseInfo.City;
                 }
                 return orderPageInfo;
             }
@@ -1085,8 +1068,6 @@ namespace Fx.Amiya.Service
                             x.Sender = empInfo.Name;
                         }
                     }
-                    var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(x.EncryptPhone);
-                    x.City = customerBaseInfo.City;
                 }
                 return result;
             }
@@ -1221,15 +1202,6 @@ namespace Fx.Amiya.Service
             var contentPlatFormInfo = await _contentPlatformService.GetByIdAsync(order.ContentPlateformId);
             result.ContentPlateFormName = contentPlatFormInfo.ContentPlatformName;
 
-            var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
-            string encryptPhone = ServiceClass.Encrypt(result.Phone, config.PhoneEncryptKey);
-            var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(encryptPhone);
-            result.City = customerBaseInfo.City;
-            result.Sex = customerBaseInfo.Sex;
-            result.Birthday = customerBaseInfo.Birthday;
-            result.Age = customerBaseInfo.Age;
-            result.Occupation = customerBaseInfo.Occupation;
-            result.WechatNumber = customerBaseInfo.WechatNumber;
             return result;
         }
 
@@ -1412,19 +1384,6 @@ namespace Fx.Amiya.Service
                 }
                 await _dalContentPlatformOrder.UpdateAsync(order, true);
 
-
-                //编辑客户基础信息
-                EditCustomerDto editDto = new EditCustomerDto();
-                var config = await GetCallCenterConfig();
-                string encryptPhon = ServiceClass.Encrypt(input.Phone, config.PhoneEncryptKey);
-                editDto.EncryptPhone = encryptPhon;
-                editDto.Name = input.CustomerName;
-                editDto.Sex = input.Sex;
-                editDto.Birthday = input.Birthday;
-                editDto.Occupation = input.Occupation;
-                editDto.WechatNumber = input.WechatNumber;
-                editDto.City = input.City;
-                await customerService.EditAsync(editDto);
                 unitOfWork.Commit();
             }
             catch (Exception err)

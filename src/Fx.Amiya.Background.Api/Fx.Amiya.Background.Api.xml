@@ -8859,6 +8859,11 @@
             电话
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.EncryptPhone">
+            <summary>
+            加密电话
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.City">
             <summary>
             城市

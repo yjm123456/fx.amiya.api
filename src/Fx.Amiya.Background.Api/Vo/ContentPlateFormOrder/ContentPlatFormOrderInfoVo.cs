@@ -36,6 +36,12 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         [Description("电话")]
         public string Phone { get; set; }
+
+        /// <summary>
+        /// 加密电话
+        /// </summary>
+        [Description("加密电话")]
+        public string EncryptPhone { get; set; }
         /// <summary>
         /// 城市
         /// </summary>
