@@ -74,6 +74,12 @@ namespace Fx.Amiya.Service
                 case "BARGAIN_MONEY":
                     statusText = "定金订单";
                     break;
+                case "CHECK_FAIL":
+                    statusText = "审核未通过";
+                    break;
+                case "PARTIAL_REFUND":
+                    statusText = "部分退款";
+                    break;
             }
             return statusText;
         }
@@ -512,6 +518,12 @@ namespace Fx.Amiya.Service
                 case 3:
                     orderTypeText = "余额支付";
                     break;
+                case 4:
+                    orderTypeText = "微信支付";
+                    break;
+                case 5:
+                    orderTypeText = "支付宝支付";
+                    break;
                 default:
                     orderTypeText = "未知";
                     break;
@@ -751,6 +763,57 @@ namespace Fx.Amiya.Service
                     break;
                 case 3:
                     CheckTypeText = "审核中";
+                    break;
+            }
+            return CheckTypeText;
+        }
+        /// <summary>
+        /// 获取退款订审核情况
+        /// </summary>
+        /// <param name="CheckType"></param>
+        /// <returns></returns>
+        public static string GetOrderRefundCheckTypeText(int CheckType)
+        {
+            string CheckTypeText = "";
+            switch (CheckType)
+            {
+                case 0:
+                    CheckTypeText = "待审核";
+                    break;
+
+                case 1:
+                    CheckTypeText = "审核通过";
+                    break;
+                case 2:
+                    CheckTypeText = "审核未通过";
+                    break;
+            }
+            return CheckTypeText;
+        }
+
+
+        /// <summary>
+        /// 获取退款订单退款情况
+        /// </summary>
+        /// <param name="CheckType"></param>
+        /// <returns></returns>
+        public static string GetRefundStateText(int CheckType)
+        {
+            string CheckTypeText = "";
+            switch (CheckType)
+            {
+                case 0:
+                    CheckTypeText = "待退款";
+                    break;
+
+                case 1:
+                    CheckTypeText = "退款成功";
+                    break;
+                case 2:
+                    CheckTypeText = "退款失败";
+                    break;
+                case 3:
+                    CheckTypeText = "退款中";
                     break;
             }
             return CheckTypeText;

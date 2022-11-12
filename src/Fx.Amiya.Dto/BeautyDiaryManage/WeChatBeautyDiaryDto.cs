@@ -23,6 +23,7 @@ namespace Fx.Amiya.Dto.BeautyDiaryManage
         public List<WechatBeautyDiaryNewsItem> news_item { get; set; }
 
     }
+
     public class WechatBeautyDiaryNewsItem {
         public string title { get; set; }
         public string thumb_media_id { get; set; }
@@ -32,5 +33,18 @@ namespace Fx.Amiya.Dto.BeautyDiaryManage
         public string content { get; set; }
         public string url { get; set; }
         public string content_source_url { get; set; }
+    }
+
+    public class WechatBeautyDiaryNewsItemDto
+    {
+        public string Title { get; set; }
+        public string ThumbMediaId { get; set; }
+        public string ShowCoverPic { get; set; }
+        public string Author { get; set; }
+        public string Digest { get; set; }
+        public string Content { get; set; }
+        public string Url { get; set; }
+        public string ContentSourceUrl { get; set; }
+        public string PicPath { get; set; }
     }
 }

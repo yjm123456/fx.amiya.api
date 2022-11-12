@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Aliyun.Acs.Core;
 using Aop.Api;
@@ -18,6 +19,7 @@ using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.ConsumptionVoucher;
 using Fx.Amiya.Dto.OrderAppInfo;
+using Fx.Amiya.Dto.OrderRefund;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -34,6 +36,7 @@ using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 
 namespace Fx.Amiya.MiniProgram.Api.Controllers
@@ -68,7 +71,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private readonly ICustomerConsumptionVoucherService customerConsumptionVoucherService;
         private readonly IGoodsHospitalsPrice goodsHospitalsPrice;
         private readonly IMemberCardHandleService memberCardHandleService;
+        private readonly IOrderRefundService orderRefundService;
         private readonly IUnitOfWork unitOfWork;
+        
+        private static readonly AsyncLock _mutex = new AsyncLock();
         public OrderController(IOrderService orderService,
             IOrderHistoryService orderHistoryService,
             TokenReader tokenReader,
@@ -82,7 +88,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             IAliPayService aliPayService,
             Domain.IRepository.IWxMiniUserRepository wxMiniUserRepository,
             IIntegrationAccount integrationAccountService,
-            ICustomerIntegralOrderRefundService customerIntegralOrderRefundService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, ITaskService taskService, IBalanceAccountService balanceAccountService, IBalanceService balanceService, IUnitOfWork unitOfWork, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IGoodsHospitalsPrice goodsHospitalsPrice, IMemberCardHandleService memberCardHandleService)
+            ICustomerIntegralOrderRefundService customerIntegralOrderRefundService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, ITaskService taskService, IBalanceAccountService balanceAccountService, IBalanceService balanceService, IUnitOfWork unitOfWork, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IGoodsHospitalsPrice goodsHospitalsPrice, IMemberCardHandleService memberCardHandleService, IOrderRefundService orderRefundService)
         {
             this.orderHistoryService = orderHistoryService;
             this.orderService = orderService;
@@ -106,6 +112,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             this.customerConsumptionVoucherService = customerConsumptionVoucherService;
             this.goodsHospitalsPrice = goodsHospitalsPrice;
             this.memberCardHandleService = memberCardHandleService;
+            this.orderRefundService = orderRefundService;
         }
 
 
@@ -193,6 +200,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         orderInfoResult.SinglePrice = orderInfo.ActualPayment;
                     }
                     orderInfoResult.ActualPayment = orderInfo.ActualPayment;
+                    
+                    
                 }
                 else
                 {
@@ -211,8 +220,17 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     refundOrderInfo.CheckReason = refundOrderInfoResult.CheckReason;
                     refundOrderInfo.RefundReason = refundOrderInfoResult.RefundReasong;
                     orderInfoResult.RefundOrderInfo = refundOrderInfo;
-                    orderInfoResult.IntegrationQuantity = orderInfo.IntegrationQuantity;
+                    orderInfoResult.IntegrationQuantity = orderInfo.IntegrationQuantity;                                       
                 }
+            }
+            if (orderInfo.StatusCode == OrderStatusCode.CHECK_FAIL)
+            {
+                RefundOrderInfo refundOrderInfo = new RefundOrderInfo();
+                var refundOrderInfoResult = await orderRefundService.GetOrderRefundByOrderId(orderId);
+                refundOrderInfo.CheckTypeText = refundOrderInfoResult.CheckStateText;
+                refundOrderInfo.CheckReason = refundOrderInfoResult.UncheckReason;
+                refundOrderInfo.RefundReason = refundOrderInfoResult.Remark;
+                orderInfoResult.RefundOrderInfo = refundOrderInfo;
             }
             orderInfoResult.Quantity = (orderInfo.Quantity.HasValue) ? orderInfo.Quantity.Value : 0;
             orderInfoResult.BuyerNick = orderInfo.BuyerNick;
@@ -438,7 +456,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     //获取虚拟商品和美肤券预约门店名称
                     if (goodsInfo.ExchangeType != ExchangeType.Integration && !item.IsFaceCard&&!item.IsSkinCare)
                     {
-
                         if (item.HospitalId.Value == 0)
                         {
                             throw new Exception("请选择门店医院");
@@ -549,7 +566,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 }
                 else
                 {
-                    amiyaOrder.ExchangeType = (byte)goodsInfo.ExchangeType;
+                    if (orderAdd.ExchangeType == 1) {
+                        amiyaOrder.ExchangeType = (byte)ExchangeType.Alipay;
+                    } else if (orderAdd.ExchangeType == 2) {
+                        amiyaOrder.ExchangeType = (byte)ExchangeType.Wechat;
+                    }
                 }
                 if (item.IsFaceCard || item.IsSkinCare)
                 {
@@ -622,7 +643,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     WxPackageInfo packageInfo = new WxPackageInfo();
                     packageInfo.Body = orderId;
                     //回调地址需重新设置(todo;)                   
-                    packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");
+                    packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");                                                           
                     packageInfo.OutTradeNo = tradeId;
                     packageInfo.TotalFee = (int)(totalFee * 100m);
                     if (packageInfo.TotalFee < 1m)
@@ -744,25 +765,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
             #endregion
 
-            #region 支付宝支付
-            /*SortedDictionary<string, string> sParaTemp = new SortedDictionary<string, string>();
-            AliPayConfig Config = new AliPayConfig();
-            sParaTemp.Add("service", Config.service);
-            sParaTemp.Add("partner", Config.seller_id);
-            sParaTemp.Add("seller_id", Config.seller_id);
-            sParaTemp.Add("_input_charset", Config.input_charset.ToLower());
-            sParaTemp.Add("payment_type", Config.payment_type);
-            sParaTemp.Add("notify_url", Config.notify_url);
-            sParaTemp.Add("return_url", Config.return_url);
-            sParaTemp.Add("anti_phishing_key", Config.anti_phishing_key);
-            sParaTemp.Add("exter_invoke_ip", Config.exter_invoke_ip);
-            sParaTemp.Add("out_trade_no", tradeId);
-            sParaTemp.Add("subject", orderId);
-            sParaTemp.Add("total_fee", totalFee.ToString("0.00"));
-            sParaTemp.Add("body", goodsName);
-            var res = _aliPayService.BuildRequest(sParaTemp);
-            orderPayResult.AlipayUrl = res.Result;*/
-            #endregion
+            
 
             return ResultData<OrderAddResultVo>.Success().AddData("orderPayGetResult", orderPayResult);
         }
@@ -891,8 +894,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             return ResultData.Success();
         }
 
-
-
+        [HttpPost("refundOrder")]
+        public Task<ResultData> RefundOrder(RefundOrderVo refundOrderVo) {
+            return null;
+        }
 
         /// <summary>
         /// 获取订单列表
@@ -1257,7 +1262,46 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             await orderService.UpdateOrderTradeAsync(updateOrderTrade);
             return ResultData.Success();
         }
+        /// <summary>
+        /// 订单退款
+        /// </summary>
+        /// <param name="tradeId"></param>
+        /// <returns></returns>
+        [HttpPost("refund")]
+        public async Task<ResultData> OrderRefundAsync(RefundOrderVo refundOrder) {
+            var token = tokenReader.GetToken();
+            var sessionInfo = sessionStorage.GetSession(token);
+            string customerId = sessionInfo.FxCustomerId;
+            try
+            {
+                using (await _mutex.LockAsync())
+                {         
+                    unitOfWork.BeginTransaction();
+                    CreateRefundOrderDto createRefundOrderDto = new CreateRefundOrderDto();
+                    createRefundOrderDto.CustomerId = customerId;
+                    createRefundOrderDto.TradeId = refundOrder.TradeId;
+                    createRefundOrderDto.OrderId = refundOrder.OrderId;
+                    createRefundOrderDto.Remark = refundOrder.Remark;
+                    var result = await orderRefundService.CreateRefundOrderAsync(createRefundOrderDto);
+                    if (result.Result)
+                    {
+                        unitOfWork.Commit();
+                        return ResultData.Success();
+                    }
+                    else
+                    {
+                        unitOfWork.RollBack();
+                        return ResultData.Fail();
+                    }
+                }
 
-
+                    
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex;
+            }
+        }
     }
 }

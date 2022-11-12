@@ -465,6 +465,20 @@ namespace Fx.Amiya.IService
         /// <param name="phone"></param>
         /// <returns></returns>
         Task<decimal> GetTradeFinishAmountByPhoneAsync(string phone);
+        /// <summary>
+        /// 更改订单状态
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="order"></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        Task UpdateOrderStatus(string orderId,string orderStatus);
+        /// <summary>
+        /// 根据交易id更新订单状态
+        /// </summary>
+        /// <param name="tradeId"></param>
+        /// <returns></returns>
+        Task UpdateStatusByTradeIdAsync(string tradeId,string statusCode);
 
 
         #region 报表模块

@@ -2244,7 +2244,18 @@ namespace Fx.Amiya.Service
             order.StatusCode = OrderStatusCode.TRADE_CLOSED;
             await dalOrderInfo.UpdateAsync(order, true);
         }
-
+        /// <summary>
+        /// 更改订单状态
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="orderStatus"></param>
+        /// <returns></returns>
+        public async Task UpdateOrderStatus(string orderId, string orderStatus)
+        {
+            var order = dalOrderInfo.GetAll().Where(e => e.Id == orderId).FirstOrDefault();
+            order.StatusCode = orderStatus;
+            await dalOrderInfo.UpdateAsync(order,true);
+        }
 
         /// <summary>
         /// 获取所有已核销客户注册过小程序的订单
@@ -2944,6 +2955,26 @@ namespace Fx.Amiya.Service
             string postData = await signHelper.BuildXmlAsync(dict, false);
             string prepay_id_Url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
             return this.PostData(prepay_id_Url, postData);
+        }
+        /// <summary>
+        /// 根据交易id更改订单状态
+        /// </summary>
+        /// <param name="tradeId"></param>
+        /// <param name="statusCode"></param>
+        /// <returns></returns>
+        public async Task UpdateStatusByTradeIdAsync(string tradeId, string statusCode)
+        {
+            var trade =await dalOrderTrade.GetAll().Where(e => e.TradeId == tradeId).Include(e => e.OrderInfoList).SingleOrDefaultAsync();
+            if (trade==null) {
+                throw new Exception("交易编号错误");
+            }
+            trade.StatusCode = statusCode;
+            await dalOrderTrade.UpdateAsync(trade,true);
+            foreach (var item in trade.OrderInfoList)
+            {
+                item.StatusCode = statusCode;
+                await dalOrderInfo.UpdateAsync(item,true);
+            }
         }
 
         /// <summary>
@@ -3831,6 +3862,10 @@ namespace Fx.Amiya.Service
             return false;
 
         }
+
+        
+
+
         #endregion
     }
 }

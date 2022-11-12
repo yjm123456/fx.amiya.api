@@ -97,8 +97,11 @@ namespace Fx.Amiya.IService
         /// <param name="keyword"></param>
         /// <returns></returns>
         Task<FxPageInfo<BeautyDiaryManageSimpleDto>> GetSimpleListAsync(string keyword, int pageNum, int pageSize);
-
-     
+        /// <summary>
+        /// 从微信公众号获取美丽日记并保存
+        /// </summary>
+        /// <returns></returns>
+        Task AddDiaryFromWechat(int pageNum, int pageSize);
         /// <summary>
         /// 根据标签，名称，城市等筛选获取日记列表（分页）
         /// </summary>
@@ -117,5 +120,7 @@ namespace Fx.Amiya.IService
         ///// <param name="name">日记名称，null：全部</param>
         ///// <returns></returns>
         //Task<List<HospitalNameDto>> GetPartakeItemHospitalNameListAsync(string goodsId,string name);
+
+
     }
 }

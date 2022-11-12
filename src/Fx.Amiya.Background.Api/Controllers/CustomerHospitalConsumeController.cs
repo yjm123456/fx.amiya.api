@@ -274,11 +274,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 List<ImportCustomerHospitalConsumeDto> importList = new List<ImportCustomerHospitalConsumeDto>();
                 using (var stream = new MemoryStream())
                 {
-                    await file.CopyToAsync(stream);//取到文件流
-
+                    await file.CopyToAsync(stream);//取到文件流                    
                     using (ExcelPackage package = new ExcelPackage(stream))
                     {
-
                         ExcelWorksheet worksheet = package.Workbook.Worksheets["sheet1"];
                         //获取表格的列数和行数
                         int rowCount = worksheet.Dimension.Rows;

@@ -15,5 +15,13 @@ namespace jos_sdk_net.Util
             var date = DateTime.Now.AddMonths(1);
             return new DateTime(date.Year,date.Month,1);
         }
+        /// <summary>
+        /// 将[yyyyMMddHHmmss]格式时间字符串转化为时间
+        /// </summary>
+        /// <returns></returns>
+        /*public static DateTime SplitDateTimeString(string datetimeStr) {
+            //if () { }
+            return null;
+        }*/
     }
 }

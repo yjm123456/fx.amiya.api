@@ -1176,10 +1176,38 @@ CREATE TABLE `tbl_growth_points_rule` (
 
 ------------------------------------------------------------------------------------------------------小程序---------------------------------------------------------------------------
 
+-----------------------------------------------王健 2022/11/10 BEGIN--------------------------------------------
 
+--订单退款
+CREATE TABLE IF NOT EXISTS `tbl_order_refund` (
+  `id` varchar(50) NOT NULL DEFAULT '',
+  `customer_id` varchar(50) NOT NULL DEFAULT '',
+  `order_id` varchar(500) DEFAULT NULL,
+  `trade_id` varchar(50) NOT NULL DEFAULT '',
+  `goods_name` varchar(100) NOT NULL DEFAULT '',
+  `remark` varchar(500) DEFAULT '',
+  `check_state` int NOT NULL DEFAULT '0',
+  `uncheck_reason` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `refund_state` int NOT NULL DEFAULT '0',
+  `refund_fail_reason` varchar(500) DEFAULT NULL,
+  `is_partial` bit(1) NOT NULL DEFAULT b'0',
+  `exchange_type` int NOT NULL DEFAULT '0',
+  `pay_date` datetime NOT NULL,
+  `check_date` datetime DEFAULT NULL,
+  `refund_amount` decimal(10,2) NOT NULL,
+  `actual_pay_amount` decimal(10,2) NOT NULL,
+  `refund_start_date` datetime DEFAULT NULL,
+  `refund_result_date` datetime DEFAULT NULL,
+  `refund_trade_no` varchar(50) DEFAULT NULL,
+  `check_by` int DEFAULT '0',
+  `create_date` datetime NOT NULL,
+  `update_date` datetime DEFAULT NULL,
+  `valid` bit(1) NOT NULL DEFAULT b'0',
+  `delete_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-
-
+-----------------------------------------------王健 2022/11/10 END--------------------------------------------
 
 
 
