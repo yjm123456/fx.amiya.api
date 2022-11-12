@@ -5,9 +5,11 @@ using Fx.Amiya.Background.Api.Vo.OrderCheck;
 using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
+using Fx.Amiya.Dto.CustomerInfo;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
+using Fx.Amiya.Service;
 using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
@@ -32,16 +34,22 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class ContentPlateFormOrderController : ControllerBase
     {
         private IContentPlateFormOrderService _orderService;
+        private ICustomerService customerService;
+        private IWxAppConfigService _wxAppConfigService;
         private IOrderService _tmallOrderService;
         private IContentPlatFormCustomerPictureService _contentPlatFormCustomerPictureService;
         private IHttpContextAccessor _httpContextAccessor;
         public ContentPlateFormOrderController(IContentPlateFormOrderService orderService,
             IOrderService tmallOrderService,
+           ICustomerService customerService,
             IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+             IWxAppConfigService wxAppConfigService)
         {
             _orderService = orderService;
             _tmallOrderService = tmallOrderService;
+            this.customerService = customerService;
+            _wxAppConfigService = wxAppConfigService;
             _httpContextAccessor = httpContextAccessor;
             _contentPlatFormCustomerPictureService = contentPlatFormCustomerPictureService;
         }
@@ -80,6 +88,11 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.LiveAnchorWeChatNo = addVo.LiveAnchorWeChatNo;
             addDto.CustomerName = addVo.CustomerName;
             addDto.Phone = addVo.Phone;
+            addDto.City = addVo.City;
+            addDto.Sex = addVo.Sex;
+            addDto.Birthday = addVo.Birthday;
+            addDto.Occupation = addVo.Occupation;
+            addDto.WechatNumber = addVo.WechatNumber;
             addDto.AppointmentDate = addVo.AppointmentDate;
             addDto.AppointmentHospitalId = addVo.AppointmentHospitalId;
             addDto.DepositAmount = addVo.DepositAmount;
@@ -94,6 +107,20 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.CustomerPictures = new List<string>();
             addDto.CustomerPictures = addVo.CustomerPictures;
             await _orderService.AddContentPlateFormOrderAsync(addDto);
+
+
+            //编辑客户基础信息
+            EditCustomerDto editDto = new EditCustomerDto();
+            var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
+            string encryptPhon = ServiceClass.Encrypt(addVo.Phone, config.PhoneEncryptKey);
+            editDto.EncryptPhone = encryptPhon;
+            editDto.Name = addVo.CustomerName;
+            editDto.Sex = addVo.Sex;
+            editDto.Birthday = addVo.Birthday;
+            editDto.Occupation = addVo.Occupation;
+            editDto.WechatNumber = addVo.WechatNumber;
+            editDto.City = addVo.City;
+            await customerService.EditAsync(editDto);
             return ResultData.Success();
         }
 
@@ -127,57 +154,63 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
                 var q = await _orderService.GetOrderListWithPageAsync(liveAnchorId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
-                var order = from d in q.List
-                            select new ContentPlatFormOrderInfoVo
-                            {
-                                Id = d.Id,
-                                OrderTypeText = d.OrderTypeText,
-                                ContentPlatformName = d.ContentPlatformName,
-                                LiveAnchorName = d.LiveAnchorName,
-                                LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
-                                ConsultationType = d.ConsultationTypeText,
-                                BelongMonth = d.BelongMonth,
-                                AddOrderPrice = d.AddOrderPrice,
-                                CreateDate = d.CreateDate,
-                                CustomerName = d.CustomerName,
-                                Phone = d.Phone,
-                                AppointmentDate = d.AppointmentDate == null ? "未预约时间" : d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss"),
-                                AppointmentHospitalName = d.AppointmentHospitalName,
-                                GoodsName = d.GoodsName,
-                                ThumbPictureUrl = d.ThumbPictureUrl,
-                                ConsultingContent = d.ConsultingContent,
-                                OrderStatusText = d.OrderStatusText,
-                                DepositAmount = d.DepositAmount,
-                                IsToHospital = d.IsToHospital,
-                                ToHospitalDate = d.ToHospitalDate,
-                                LastDealHospital = d.LastDealHospital,
-                                DealAmount = d.DealAmount,
-                                DealDate = d.DealDate,
-                                UnDealReason = d.UnDealReason,
-                                LateProjectStage = d.LateProjectStage,
-                                Remark = d.Remark,
-                                DepartmentName = d.DepartmentName,
-                                BelongEmpName = d.BelongEmpName,
-                                UnSendReason = d.UnSendReason,
-                                OrderSourceText = d.OrderSourceText,
-                                AcceptConsulting = d.AcceptConsulting,
-                                CheckStateText = d.CheckStateText,
-                                CheckDate = d.CheckDate,
-                                CheckByName = d.CheckByName,
-                                CheckPrice = d.CheckPrice,
-                                Sender = d.Sender,
-                                SendDate = d.SendDate,
-                                CheckRemark = d.CheckRemark,
-                                SettlePrice = d.SettlePrice,
-                                IsReturnBackPrice = d.IsReturnBackPrice,
-                                ReturnBackDate = d.ReturnBackDate,
-                                ReturnBackPrice = d.ReturnBackPrice,
-                                OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId
-                            };
-                FxPageInfo<ContentPlatFormOrderInfoVo> orderPageInfo = new FxPageInfo<ContentPlatFormOrderInfoVo>();
-                orderPageInfo.TotalCount = q.TotalCount;
-                orderPageInfo.List = order;
-                return ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>.Success().AddData("contentPlatFormOrder", orderPageInfo);
+                List<ContentPlatFormOrderInfoVo> contentPlatFormOrderInfoVoList = new List<ContentPlatFormOrderInfoVo>();
+                var resutList = q.List.ToList();
+                foreach (var x in resutList)
+                {
+                    ContentPlatFormOrderInfoVo resultVo = new ContentPlatFormOrderInfoVo();
+                    resultVo.Id = x.Id;
+                    resultVo.OrderTypeText = x.OrderTypeText;
+                    resultVo.ContentPlatformName = x.ContentPlatformName;
+                    resultVo.LiveAnchorName = x.LiveAnchorName;
+                    resultVo.LiveAnchorWeChatNo = x.LiveAnchorWeChatNo;
+                    resultVo.ConsultationType = x.ConsultationTypeText;
+                    resultVo.BelongMonth = x.BelongMonth;
+                    resultVo.AddOrderPrice = x.AddOrderPrice;
+                    resultVo.CreateDate = x.CreateDate;
+                    resultVo.CustomerName = x.CustomerName;
+                    resultVo.Phone = x.Phone;
+                    var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(x.EncryptPhone);
+                    resultVo.City = customerBaseInfo.City;
+                    resultVo.AppointmentDate = x.AppointmentDate == null ? "未预约时间" : x.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
+                    resultVo.AppointmentHospitalName = x.AppointmentHospitalName;
+                    resultVo.GoodsName = x.GoodsName;
+                    resultVo.ThumbPictureUrl = x.ThumbPictureUrl;
+                    resultVo.ConsultingContent = x.ConsultingContent;
+                    resultVo.OrderStatusText = x.OrderStatusText;
+                    resultVo.DepositAmount = x.DepositAmount;
+                    resultVo.IsToHospital = x.IsToHospital;
+                    resultVo.ToHospitalDate = x.ToHospitalDate;
+                    resultVo.LastDealHospital = x.LastDealHospital;
+                    resultVo.DealAmount = x.DealAmount;
+                    resultVo.DealDate = x.DealDate;
+                    resultVo.UnDealReason = x.UnDealReason;
+                    resultVo.LateProjectStage = x.LateProjectStage;
+                    resultVo.Remark = x.Remark;
+                    resultVo.DepartmentName = x.DepartmentName;
+                    resultVo.BelongEmpName = x.BelongEmpName;
+                    resultVo.UnSendReason = x.UnSendReason;
+                    resultVo.OrderSourceText = x.OrderSourceText;
+                    resultVo.AcceptConsulting = x.AcceptConsulting;
+                    resultVo.CheckStateText = x.CheckStateText;
+                    resultVo.CheckDate = x.CheckDate;
+                    resultVo.CheckByName = x.CheckByName;
+                    resultVo.CheckPrice = x.CheckPrice;
+                    resultVo.Sender = x.Sender;
+                    resultVo.SendDate = x.SendDate;
+
+                    resultVo.CheckRemark = x.CheckRemark;
+                    resultVo.SettlePrice = x.SettlePrice;
+                    resultVo.IsReturnBackPrice = x.IsReturnBackPrice;
+                    resultVo.ReturnBackDate = x.ReturnBackDate;
+                    resultVo.ReturnBackPrice = x.ReturnBackPrice;
+                    resultVo.OtherContentPlatFormOrderId = x.OtherContentPlatFormOrderId;
+                    contentPlatFormOrderInfoVoList.Add(resultVo);
+                }
+                FxPageInfo<ContentPlatFormOrderInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderInfoVo>();
+                pageInfo.TotalCount = q.TotalCount;
+                pageInfo.List = contentPlatFormOrderInfoVoList;
+                return ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>.Success().AddData("contentPlatFormOrder", pageInfo);
             }
             catch (Exception ex)
             {
@@ -285,55 +318,60 @@ namespace Fx.Amiya.Background.Api.Controllers
                     isHidePhone = false;
                 }
                 var q = await _orderService.ExportOrderListWithPageAsync(startDate, endDate, consultationEmpId, appointmentHospital, belongEmpId, liveAnchorId, keyword, hospitalDepartmentId, orderStatus, orderSource, contentPlateFormId, employeeId, isHidePhone);
-                var order = from d in q
-                            select new ContentPlatFormOrderInfoVo
-                            {
-                                Id = d.Id,
-                                OrderTypeText = d.OrderTypeText,
-                                ContentPlatformName = d.ContentPlatformName,
-                                LiveAnchorName = d.LiveAnchorName,
-                                CreateDate = d.CreateDate,
-                                BelongMonth = d.BelongMonth,
-                                AddOrderPrice = d.AddOrderPrice,
-                                CustomerName = d.CustomerName,
-                                Phone = d.Phone,
-                                AppointmentDate = d.AppointmentDate == null ? "未预约时间" : d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss"),
-                                AppointmentHospitalName = d.AppointmentHospitalName,
-                                GoodsName = d.GoodsName,
-                                DepartmentName = d.DepartmentName,
-                                ThumbPictureUrl = d.ThumbPictureUrl,
-                                IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
-                                ConsultingContent = d.ConsultingContent,
-                                IsToHospital = d.IsToHospital,
-                                ToHospitalDate = d.ToHospitalDate,
-                                LastDealHospital = d.LastDealHospital,
-                                OrderStatusText = d.OrderStatusText,
-                                Sender = d.Sender,
-                                SendDate = d.SendDate,
-                                DepositAmount = d.DepositAmount,
-                                DealAmount = d.DealAmount,
-                                UnDealReason = d.UnDealReason,
-                                LateProjectStage = d.LateProjectStage,
-                                Remark = d.Remark,
-                                DealDate = d.DealDate,
-                                OrderSourceText = d.OrderSourceText,
-                                UnSendReason = d.UnSendReason,
-                                AcceptConsulting = d.AcceptConsulting,
-                                CheckStateText = d.CheckStateText,
-                                CheckDate = d.CheckDate,
-                                CheckByName = d.CheckByName,
-                                CheckPrice = d.CheckPrice,
-                                ConsultationType = d.ConsultationTypeText,
-                                CheckRemark = d.CheckRemark,
-                                SettlePrice = d.SettlePrice,
-                                BelongEmpName = d.BelongEmpName,
-                                IsReturnBackPrice = d.IsReturnBackPrice,
-                                ReturnBackDate = d.ReturnBackDate,
-                                ReturnBackPrice = d.ReturnBackPrice,
-                                OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId
-                            };
-                var exportSendOrder = order.ToList();
-                var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
+                var resutList = q.ToList();
+                List<ContentPlatFormOrderInfoVo> contentPlatFormOrderInfoVoList = new List<ContentPlatFormOrderInfoVo>();
+                foreach (var x in resutList)
+                {
+                    ContentPlatFormOrderInfoVo resultVo = new ContentPlatFormOrderInfoVo();
+                    resultVo.Id = x.Id;
+                    resultVo.OrderTypeText = x.OrderTypeText;
+                    resultVo.ContentPlatformName = x.ContentPlatformName;
+                    resultVo.LiveAnchorName = x.LiveAnchorName;
+                    resultVo.LiveAnchorWeChatNo = x.LiveAnchorWeChatNo;
+                    resultVo.ConsultationType = x.ConsultationTypeText;
+                    resultVo.BelongMonth = x.BelongMonth;
+                    resultVo.AddOrderPrice = x.AddOrderPrice;
+                    resultVo.CreateDate = x.CreateDate;
+                    resultVo.CustomerName = x.CustomerName;
+                    resultVo.Phone = x.Phone;
+                    var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(x.EncryptPhone);
+                    resultVo.City = customerBaseInfo.City;
+                    resultVo.AppointmentDate = x.AppointmentDate == null ? "未预约时间" : x.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
+                    resultVo.AppointmentHospitalName = x.AppointmentHospitalName;
+                    resultVo.GoodsName = x.GoodsName;
+                    resultVo.ThumbPictureUrl = x.ThumbPictureUrl;
+                    resultVo.ConsultingContent = x.ConsultingContent;
+                    resultVo.OrderStatusText = x.OrderStatusText;
+                    resultVo.DepositAmount = x.DepositAmount;
+                    resultVo.IsToHospital = x.IsToHospital;
+                    resultVo.ToHospitalDate = x.ToHospitalDate;
+                    resultVo.LastDealHospital = x.LastDealHospital;
+                    resultVo.DealAmount = x.DealAmount;
+                    resultVo.DealDate = x.DealDate;
+                    resultVo.UnDealReason = x.UnDealReason;
+                    resultVo.LateProjectStage = x.LateProjectStage;
+                    resultVo.Remark = x.Remark;
+                    resultVo.DepartmentName = x.DepartmentName;
+                    resultVo.BelongEmpName = x.BelongEmpName;
+                    resultVo.UnSendReason = x.UnSendReason;
+                    resultVo.OrderSourceText = x.OrderSourceText;
+                    resultVo.AcceptConsulting = x.AcceptConsulting;
+                    resultVo.CheckStateText = x.CheckStateText;
+                    resultVo.CheckDate = x.CheckDate;
+                    resultVo.CheckByName = x.CheckByName;
+                    resultVo.CheckPrice = x.CheckPrice;
+                    resultVo.Sender = x.Sender;
+                    resultVo.SendDate = x.SendDate;
+
+                    resultVo.CheckRemark = x.CheckRemark;
+                    resultVo.SettlePrice = x.SettlePrice;
+                    resultVo.IsReturnBackPrice = x.IsReturnBackPrice;
+                    resultVo.ReturnBackDate = x.ReturnBackDate;
+                    resultVo.ReturnBackPrice = x.ReturnBackPrice;
+                    resultVo.OtherContentPlatFormOrderId = x.OtherContentPlatFormOrderId;
+                    contentPlatFormOrderInfoVoList.Add(resultVo);
+                }
+                var stream = ExportExcelHelper.ExportExcel(contentPlatFormOrderInfoVoList);
                 var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "内容平台订单报表.xls");
                 return result;
             }
@@ -447,6 +485,17 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.GoodsId = order.GoodsId;
             orderUpdateInfo.CustomerName = order.CustomerName;
             orderUpdateInfo.Phone = order.Phone;
+
+            var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
+            string encryptPhone = ServiceClass.Encrypt(order.Phone, config.PhoneEncryptKey);
+            var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(encryptPhone);
+            orderUpdateInfo.City = customerBaseInfo.City;
+            orderUpdateInfo.Sex = customerBaseInfo.Sex;
+            orderUpdateInfo.Birthday = customerBaseInfo.Birthday;
+            orderUpdateInfo.Age = customerBaseInfo.Age;
+            orderUpdateInfo.Occupation = customerBaseInfo.Occupation;
+            orderUpdateInfo.WechatNumber = customerBaseInfo.WechatNumber;
+
             orderUpdateInfo.AppointmentDate = order.AppointmentDate;
             orderUpdateInfo.ConsultationEmpId = order.ConsultationEmpId;
             orderUpdateInfo.AppointmentHospitalId = order.AppointmentHospitalId;
@@ -630,7 +679,27 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.AcceptConsulting = updateVo.AcceptConsulting;
             updateDto.UnSendReason = updateVo.UnSendReason;
             updateDto.CustomerPictures = updateVo.CustomerPictures;
+
+            updateDto.City = updateVo.City;
+            updateDto.Sex = updateVo.Sex;
+            updateDto.Birthday = updateVo.Birthday;
+            updateDto.Occupation = updateVo.Occupation;
+            updateDto.WechatNumber = updateVo.WechatNumber;
             await _orderService.UpdateContentPlateFormOrderAsync(updateDto);
+
+
+            //编辑客户基础信息
+            EditCustomerDto editDto = new EditCustomerDto();
+            var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
+            string encryptPhon = ServiceClass.Encrypt(updateVo.Phone, config.PhoneEncryptKey);
+            editDto.EncryptPhone = encryptPhon;
+            editDto.Name = updateVo.CustomerName;
+            editDto.Sex = updateVo.Sex;
+            editDto.Birthday = updateVo.Birthday;
+            editDto.Occupation = updateVo.Occupation;
+            editDto.WechatNumber = updateVo.WechatNumber;
+            editDto.City = updateVo.City;
+            await customerService.EditAsync(editDto);
             return ResultData.Success();
         }
 

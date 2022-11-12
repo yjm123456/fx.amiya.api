@@ -266,7 +266,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
         /// <summary>
-        /// 导入机构成交品项运营数据分析
+        /// 导入机构咨询师运营数据分析
         /// </summary>
         /// <returns></returns>
         [HttpPut("hospitalConsulationOperationDataInPort")]

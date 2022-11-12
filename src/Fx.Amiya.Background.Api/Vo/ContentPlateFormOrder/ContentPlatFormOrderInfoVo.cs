@@ -38,6 +38,17 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         public string Phone { get; set; }
 
         /// <summary>
+        /// 加密电话
+        /// </summary>
+        [Description("加密电话")]
+        public string EncryptPhone { get; set; }
+        /// <summary>
+        /// 城市
+        /// </summary>
+        [Description("城市")]
+        public string City { get; set; }
+
+        /// <summary>
         /// 新/老客业绩
         /// </summary>
         [Description("新/老客业绩")]

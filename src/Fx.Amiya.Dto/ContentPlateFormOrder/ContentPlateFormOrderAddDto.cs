@@ -51,6 +51,29 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// </summary>
         
         public string Phone { get; set; }
+        /// <summary>
+        /// 城市
+        /// </summary>
+        public string City { get; set; }
+        /// <summary>
+        /// 性别
+        /// </summary>
+        public string Sex { get; set; }
+
+        /// <summary>
+        /// 生日
+        /// </summary>
+        public DateTime? Birthday { get; set; }
+
+        /// <summary>
+        /// 职业
+        /// </summary>
+        public string Occupation { get; set; }
+
+        /// <summary>
+        /// 微信号
+        /// </summary>
+        public string WechatNumber { get; set; }
 
         /// <summary>
         /// 预约日期

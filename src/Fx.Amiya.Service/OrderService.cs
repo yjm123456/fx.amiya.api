@@ -3387,7 +3387,7 @@ namespace Fx.Amiya.Service
         public async Task<List<OrderWriteOffDto>> GetCustomerOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? CheckState, bool? ReturnBackPriceState, string customerName, bool isHidePhone)
         {
             var orders = from d in dalOrderInfo.GetAll()
-                         where (d.StatusCode == "TRADE_FINISHED") && d.OrderType == 0
+                         where (d.StatusCode == "TRADE_FINISHED"||d.StatusCode== "TRADE_BUYER_PAID") && d.OrderType == 0
                          select d;
 
             if (startDate != null && endDate != null)

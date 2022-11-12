@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
+using Fx.Amiya.Dto.CustomerInfo;
 using Fx.Amiya.Dto.OrderCheckPicture;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.Performance;
@@ -189,6 +190,7 @@ namespace Fx.Amiya.Service
 
                 //小黄车更新录单触达
                 await _shoppingCartRegistration.UpdateCreateOrderAsync(input.Phone);
+
 
                 unitOfWork.Commit();
             }
@@ -1199,6 +1201,7 @@ namespace Fx.Amiya.Service
             }
             var contentPlatFormInfo = await _contentPlatformService.GetByIdAsync(order.ContentPlateformId);
             result.ContentPlateFormName = contentPlatFormInfo.ContentPlatformName;
+
             return result;
         }
 
@@ -1310,72 +1313,85 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task UpdateContentPlateFormOrderAsync(ContentPlateFormOrderUpdateDto input)
         {
-            //验证手机号是否有归属
-            if (string.IsNullOrEmpty(input.Phone))
+            unitOfWork.BeginTransaction();
+            try
             {
-                throw new Exception("该订单没有手机号，不能绑定客服");
-            }
 
-            var bind = await _dalBindCustomerService.GetAll()
-              .Include(e => e.CustomerServiceAmiyaEmployee)
-              .SingleOrDefaultAsync(e => e.BuyerPhone == input.Phone);
-            if (bind != null)
-            {
-                var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == input.EmployeeId);
-                if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector && input.EmployeeId != bind.CustomerServiceId)
+                //验证手机号是否有归属
+                if (string.IsNullOrEmpty(input.Phone))
                 {
-                    throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应人员进行编辑！");
+                    throw new Exception("该订单没有手机号，不能绑定客服");
                 }
-            }
-            else
-            {
-                //添加绑定客服
-                BindCustomerService bindCustomerService = new BindCustomerService();
-                bindCustomerService.CustomerServiceId = input.EmployeeId;
-                bindCustomerService.BuyerPhone = input.Phone;
-                bindCustomerService.UserId = null;
-                bindCustomerService.CreateBy = input.EmployeeId;
-                bindCustomerService.CreateDate = DateTime.Now;
-                await _dalBindCustomerService.AddAsync(bindCustomerService, true);
-            }
-            var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.Id).SingleOrDefaultAsync();
-            if (order == null)
-            {
-                throw new Exception("未找到该订单的相关信息！");
-            }
-            order.OrderType = input.OrderType;
-            order.ContentPlateformId = input.ContentPlateFormId;
-            order.LiveAnchorWeChatNo = input.LiveAnchorWeChatNo;
-            order.LiveAnchorId = input.LiveAnchorId;
-            order.ConsultationType = input.ConsultationType;
-            order.GoodsId = input.GoodsId;
-            order.CustomerName = input.CustomerName;
-            order.Phone = input.Phone;
-            order.BelongMonth = input.BelongMonth;
-            order.AddOrderPrice = input.AddOrderPrice;
-            order.AppointmentDate = input.AppointmentDate;
-            order.AppointmentHospitalId = input.AppointmentHospitalId;
-            order.HospitalDepartmentId = input.HospitalDepartmentId;
-            order.DepositAmount = input.DepositAmount;
-            order.ConsultationEmpId = input.ConsultationEmpId;
-            order.ConsultingContent = input.ConsultingContent;
-            order.UpdateDate = DateTime.Now;
-            order.Remark = input.Remark;
-            order.LateProjectStage = input.LateProjectStage;
-            order.OrderSource = input.OrderSource;
-            order.AcceptConsulting = input.AcceptConsulting;
-            order.UnSendReason = input.UnSendReason;
 
-            await _contentPlatFormCustomerPictureService.DeleteByContentPlatFormOrderIdAsync(order.Id);
-            foreach (var z in input.CustomerPictures)
-            {
-                AddContentPlatFormCustomerPictureDto addPicture = new AddContentPlatFormCustomerPictureDto();
-                addPicture.ContentPlatFormOrderId = order.Id;
-                addPicture.CustomerPicture = z;
-                addPicture.Description = "顾客照片";
-                await _contentPlatFormCustomerPictureService.AddAsync(addPicture);
+                var bind = await _dalBindCustomerService.GetAll()
+                  .Include(e => e.CustomerServiceAmiyaEmployee)
+                  .SingleOrDefaultAsync(e => e.BuyerPhone == input.Phone);
+                if (bind != null)
+                {
+                    var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == input.EmployeeId);
+                    if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector && input.EmployeeId != bind.CustomerServiceId)
+                    {
+                        throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应人员进行编辑！");
+                    }
+                }
+                else
+                {
+                    //添加绑定客服
+                    BindCustomerService bindCustomerService = new BindCustomerService();
+                    bindCustomerService.CustomerServiceId = input.EmployeeId;
+                    bindCustomerService.BuyerPhone = input.Phone;
+                    bindCustomerService.UserId = null;
+                    bindCustomerService.CreateBy = input.EmployeeId;
+                    bindCustomerService.CreateDate = DateTime.Now;
+                    await _dalBindCustomerService.AddAsync(bindCustomerService, true);
+                }
+                var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.Id).SingleOrDefaultAsync();
+                if (order == null)
+                {
+                    throw new Exception("未找到该订单的相关信息！");
+                }
+                order.OrderType = input.OrderType;
+                order.ContentPlateformId = input.ContentPlateFormId;
+                order.LiveAnchorWeChatNo = input.LiveAnchorWeChatNo;
+                order.LiveAnchorId = input.LiveAnchorId;
+                order.ConsultationType = input.ConsultationType;
+                order.GoodsId = input.GoodsId;
+                order.CustomerName = input.CustomerName;
+                order.Phone = input.Phone;
+                order.BelongMonth = input.BelongMonth;
+                order.AddOrderPrice = input.AddOrderPrice;
+                order.AppointmentDate = input.AppointmentDate;
+                order.AppointmentHospitalId = input.AppointmentHospitalId;
+                order.HospitalDepartmentId = input.HospitalDepartmentId;
+                order.DepositAmount = input.DepositAmount;
+                order.ConsultationEmpId = input.ConsultationEmpId;
+                order.ConsultingContent = input.ConsultingContent;
+                order.UpdateDate = DateTime.Now;
+                order.Remark = input.Remark;
+                order.LateProjectStage = input.LateProjectStage;
+                order.OrderSource = input.OrderSource;
+                order.AcceptConsulting = input.AcceptConsulting;
+                order.UnSendReason = input.UnSendReason;
+
+                await _contentPlatFormCustomerPictureService.DeleteByContentPlatFormOrderIdAsync(order.Id);
+                foreach (var z in input.CustomerPictures)
+                {
+                    AddContentPlatFormCustomerPictureDto addPicture = new AddContentPlatFormCustomerPictureDto();
+                    addPicture.ContentPlatFormOrderId = order.Id;
+                    addPicture.CustomerPicture = z;
+                    addPicture.Description = "顾客照片";
+                    await _contentPlatFormCustomerPictureService.AddAsync(addPicture);
+                }
+                await _dalContentPlatformOrder.UpdateAsync(order, true);
+
+                unitOfWork.Commit();
             }
-            await _dalContentPlatformOrder.UpdateAsync(order, true);
+            catch (Exception err)
+            {
+                unitOfWork.RollBack();
+                throw new Exception("编辑失败！");
+
+            }
         }
 
         /// <summary>
@@ -1595,7 +1611,7 @@ namespace Fx.Amiya.Service
                 {
                     //获取当前登陆账户是否为管理员
                     var positionInfo = await _dalAmiyaEmployee.GetAll().Where(z => z.Id == input.EmpId).FirstOrDefaultAsync();
-                    
+
                 }
                 if (input.IsFinish == true)
                 {

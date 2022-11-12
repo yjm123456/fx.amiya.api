@@ -57,6 +57,37 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// </summary>
 
         public string CustomerName { get; set; }
+
+        /// <summary>
+        /// 手机号
+        /// </summary>
+
+        public string Phone { get; set; }
+
+        /// <summary>
+        /// 性别
+        /// </summary>
+        public string Sex { get; set; }
+        /// <summary>
+        /// 生日
+        /// </summary>
+        public DateTime? Birthday { get; set; }
+        /// <summary>
+        /// 年龄
+        /// </summary>
+        public int? Age { get; set; }
+        /// <summary>
+        /// 职业
+        /// </summary>
+        public string Occupation { get; set; }
+        /// <summary>
+        /// 微信号
+        /// </summary>
+        public string WechatNumber { get; set; }
+        /// <summary>
+        /// 城市
+        /// </summary>
+        public string City { get; set; }
         /// <summary>
         /// 面诊员
         /// </summary>
@@ -74,12 +105,6 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 面诊状态文本
         /// </summary>
         public string ConsultationTypeText { get; set; }
-
-        /// <summary>
-        /// 手机号
-        /// </summary>
-
-        public string Phone { get; set; }
 
         /// <summary>
         /// 预约日期
