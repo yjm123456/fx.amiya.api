@@ -1,5 +1,9 @@
 ﻿using Fx.Amiya.Dto.HuiShouQianPay;
 using Fx.Amiya.IService;
+using Fx.Common.Utils;
+using Jd.Api.Util;
+using jos_sdk_net.Util;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +47,7 @@ namespace Fx.Amiya.Service
                 errmsg = "加密类型错误";
                 return false;
             }
-            if (string.IsNullOrEmpty(huiShouQianCommonInfo.SignContent))
+            if (huiShouQianCommonInfo.SignContent==null)
             {
 
                 errmsg = "业务数据不能为空";
@@ -91,5 +95,124 @@ namespace Fx.Amiya.Service
             }
             return result;
         }
+        /// <summary>
+        /// 创建慧收钱支付订单
+        /// </summary>
+        /// <returns></returns>
+        public async Task<HuiShouQianOrderResult> CreateHuiShouQianOrder(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo)
+        {
+            HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
+            var commonParam= BuildCommonParam(huiShouQianPayRequestInfo);
+            var result= await PostOrderAsync(huiShouQianPackageInfo.OrderUrl, commonParam);
+            return null;
+        }
+        /// <summary>
+        /// 创建公共请求参数
+        /// </summary>
+        /// <returns></returns>
+        private string BuildCommonParam(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo) {           
+            HuiShouQianCommonInfo huiShouQianCommonInfo = new HuiShouQianCommonInfo();                        
+            huiShouQianCommonInfo.SignContent = huiShouQianPayRequestInfo;
+            string signContent = JsonConvert.SerializeObject(huiShouQianPayRequestInfo);
+            var signData = BuildPayParamString(huiShouQianCommonInfo.Method, huiShouQianCommonInfo.Version, huiShouQianCommonInfo.Format, huiShouQianCommonInfo.MerchantNo, huiShouQianCommonInfo.SignType,signContent,""); 
+            var sign = RAS2EncriptUtil.Sign(signData, "");
+            huiShouQianCommonInfo.Sign = sign;
+            return JsonConvert.SerializeObject(huiShouQianCommonInfo);
+        }
+        /// <summary>
+        /// 下单
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="postData"></param>
+        /// <returns></returns>
+        private async Task<HuiShouQianOrderResult> PostOrderAsync(string url, string postData)
+        {
+            var response= await HttpUtil.HttpJsonPostAsync(url,postData);
+            var result = JsonConvert.DeserializeObject<HuiShouQianCommonResponseResult>(response);
+            if (result.success == "true") {
+                string signContent = BuildPayResponseParamString(result,"");
+                bool verifyResult= RAS2EncriptUtil.VerifySignature(signContent, result.sign,"");
+                if (verifyResult) {
+                    var payParam = result.result;
+                    HuiShouQianOrderResult huiShouQianOrderResult = new HuiShouQianOrderResult();
+                    huiShouQianOrderResult.Success = true;
+                    
+                } else {
+                    HuiShouQianOrderResult huiShouQianOrderResult = new HuiShouQianOrderResult();
+                    huiShouQianOrderResult.Success = false;
+                    huiShouQianOrderResult.ErrorCode = result.errorCode;
+                    huiShouQianOrderResult.ErrorMsg = "签名验证失败";
+                    return huiShouQianOrderResult;
+                }
+            } else if (result.success== "false") {
+                HuiShouQianOrderResult huiShouQianOrderResult = new HuiShouQianOrderResult();
+                huiShouQianOrderResult.Success = false;
+                huiShouQianOrderResult.ErrorCode = result.errorCode;
+                huiShouQianOrderResult.ErrorMsg = result.errorMsg;
+                return huiShouQianOrderResult;
+            }
+            return null;
+        }
+        /// <summary>
+        /// 拼接下单请求参数
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="version"></param>
+        /// <param name="format"></param>
+        /// <param name="merchantNo"></param>
+        /// <param name="signType"></param>
+        /// <param name="signContent"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private string BuildPayParamString(string method, string version, string format, string merchantNo, string signType, string signContent, string key)
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append("method=");
+            builder.Append(method);
+            builder.Append("&version=");
+            builder.Append(version);
+            builder.Append("&format=");
+            builder.Append(format);
+            builder.Append("&merchantNo=");
+            builder.Append(merchantNo);
+            builder.Append("&signType=");
+            builder.Append(signType);
+            builder.Append("&signContent=");
+            builder.Append(signContent);
+            builder.Append("&key=");
+            builder.Append(key);
+            return builder.ToString();
+        }
+        /// <summary>
+        /// 拼接下单返回参数
+        /// </summary>
+        /// <param name="huiShouQianCommon"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private string BuildPayResponseParamString(HuiShouQianCommonResponseResult huiShouQianCommon, string key) {
+            StringBuilder builder = new StringBuilder();
+            if (huiShouQianCommon.success=="true")
+            {
+                builder.Append("result=");
+                builder.Append(JsonConvert.SerializeObject(huiShouQianCommon.result));
+                builder.Append("&success=");
+                builder.Append(huiShouQianCommon.success);
+                builder.Append("&key=");
+                builder.Append(key);
+            }
+            else
+            {
+                builder.Append("errorCode=");
+                builder.Append(huiShouQianCommon.errorCode);
+                builder.Append("&errorMsg=");
+                builder.Append(huiShouQianCommon.errorMsg);
+                builder.Append("&success=");
+                builder.Append(huiShouQianCommon.success);
+                builder.Append("&key=");
+                builder.Append(key);
+            }
+            return builder.ToString();
+        }
+
     }
 }

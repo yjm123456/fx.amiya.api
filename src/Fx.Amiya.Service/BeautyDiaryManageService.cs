@@ -477,34 +477,44 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<WechatBeautyDiaryNewsItem>> GetSimpleListFromWechatAsync(string keyword, int pageNum, int pageSize)
+        public async Task<FxPageInfo<WechatBeautyDiaryNewsItemDto>> GetSimpleListFromWechatAsync(string keyword, int pageNum, int pageSize)
         {
             try
             {
-                /*var appInfo = await dockingHospitalCustomerInfo.GetBeautyDiaryTokenInfo(31);
+                var appInfo = await dockingHospitalCustomerInfo.GetBeautyDiaryTokenInfo(31);
                 var requestUrl = $"https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token={appInfo.AccessToken}";
-                var data = new { type="news",offset=(pageNum-1)*pageSize,count=pageSize};
-                var res = await HttpUtil.HttpJsonPostAsync(requestUrl,JsonConvert.SerializeObject(data));
+                var data = new { type = "news", offset = (pageNum - 1) * pageSize, count = pageSize };
+                var res = await HttpUtil.HttpJsonPostAsync(requestUrl, JsonConvert.SerializeObject(data));
                 if (res.Contains("errorcode"))
                     throw new Exception("获取美丽日记失败");
-                var beautyDiary = JsonConvert.DeserializeObject<WeChatBeautyDiaryDto>(res);               
+                var beautyDiary = JsonConvert.DeserializeObject<WeChatBeautyDiaryDto>(res);
                 FxPageInfo<WechatBeautyDiaryNewsItemDto> fxPageInfo = new FxPageInfo<WechatBeautyDiaryNewsItemDto>();
                 fxPageInfo.TotalCount = beautyDiary.total_count;
-                fxPageInfo.List = beautyDiary.item.SelectMany(e=>e.content.news_item).Where(e=>e.title.Contains("变美指南")).Where(e=>!string.IsNullOrEmpty(e.author)).Select(e=>new WechatBeautyDiaryNewsItemDto { 
-                    Title=e.title,
-                    ContentSourceUrl=e.content_source_url,              
-                    Author=e.author,                  
-                });
+                fxPageInfo.List = beautyDiary.item.SelectMany(e => e.content.news_item).Where(e => e.title.Contains("变美指南")).Where(e => !string.IsNullOrEmpty(e.author)).Select(e => new WechatBeautyDiaryNewsItemDto
+                {
+                    Title = e.title,
+                    ContentSourceUrl = e.url,
+                    Author = e.author,
+                }).ToList();
+                
                 foreach (var item in fxPageInfo.List)
                 {
-                    var diary = dalDiaryWechat.GetAll().Where(e=>e.ContentUrl==item.ContentSourceUrl).FirstOrDefault();
-                    if (!string.IsNullOrEmpty(diary.PicPath)) {
-                        //item.ContentSourceUrl=
+                    var diary = dalDiaryWechat.GetAll().Where(e => e.ContentUrl == item.ContentSourceUrl).FirstOrDefault();
+                    if (diary == null) {
+                        DiaryWechat diaryWechat = new DiaryWechat();
+                        diaryWechat.Id = Guid.NewGuid().ToString().Replace("-","");
+                        diaryWechat.ContentUrl = item.ContentSourceUrl;
+                        diaryWechat.Title = item.Title;
+                        diaryWechat.CreateDate = DateTime.Now;
+                        await dalDiaryWechat.AddAsync(diaryWechat,true);
                     }
-                }*/
-                //fxPageInfo.List = beautyDiary.item.SelectMany(e => e.content.news_item).Where(e => !string.IsNullOrEmpty(e.author)).ToList();
-                //return fxPageInfo;
-                return null;
+                    else if(!string.IsNullOrEmpty(diary.PicPath))
+                    {
+                        item.PicPath = diary.PicPath;
+
+                    }
+                }                
+                return fxPageInfo;
             }
 
             catch (Exception ex)
@@ -512,6 +522,9 @@ namespace Fx.Amiya.Service
                 throw new Exception("获取美丽日记失败");
             }
         }
+
+
+
         /// <summary>
         /// 从微信公众号获取美丽日记并保存
         /// </summary>
@@ -539,6 +552,52 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 throw new Exception("获取美丽日记失败");
+            }
+        }
+        /// <summary>
+        /// 添加图文消息封面
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <returns></returns>
+        public async Task UpdateWechatDiaryAsync(UpdateDiaryWechatDto updateDto)
+        {
+            DiaryWechat diaryWechat =await dalDiaryWechat.GetAll().Where(e=>e.Id==updateDto.Id).SingleOrDefaultAsync();
+            if (diaryWechat == null) throw new Exception("编号错误");
+            diaryWechat.PicPath = updateDto.PicPath;
+            diaryWechat.UpdateDate = DateTime.Now;
+            await dalDiaryWechat.UpdateAsync(diaryWechat,true);
+        }
+        /// <summary>
+        /// 获取微信公众号图文消息列表（分页）
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<SimpleDiaryWechatDto>> GetListWithPageForWechatAsync(string keyword, int pageNum, int pageSize)
+        {
+            try
+            {
+                if (pageSize > 100)
+                    throw new Exception("每次查询不能超过100条");
+
+                var beautyDiaryManage = from d in dalDiaryWechat.GetAll()
+                                        where (keyword == null || d.Title.Contains(keyword))    
+                                        orderby d.CreateDate descending
+                                        select new SimpleDiaryWechatDto
+                                        {
+                                            Id = d.Id,
+                                            Title=d.Title,
+                                            PicPath=d.PicPath
+                                        };
+                FxPageInfo<SimpleDiaryWechatDto> beautyDiaryManagePageInfo = new FxPageInfo<SimpleDiaryWechatDto>();
+                beautyDiaryManagePageInfo.TotalCount = await beautyDiaryManage.CountAsync();
+                beautyDiaryManagePageInfo.List = await beautyDiaryManage.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+                return beautyDiaryManagePageInfo;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 

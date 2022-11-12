@@ -63,9 +63,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             var beautyDiaryManages = from d in q.List
                                      select new WechatBeautyDiarySimpleVo
                                      {                                       
-                                         CoverTitle = d.title,
-                                         Author=d.author,                                    
-                                         Url=d.url,
+                                         CoverTitle = d.Title,
+                                         Author=d.Author,                                    
+                                         Url=d.ContentSourceUrl,
+                                         ThumbPictureUrl=d.PicPath
                                      };
             FxPageInfo<WechatBeautyDiarySimpleVo> beautyDiaryPageInfo = new FxPageInfo<WechatBeautyDiarySimpleVo>();
             beautyDiaryPageInfo.TotalCount = q.TotalCount;

@@ -135,7 +135,7 @@ namespace Fx.Amiya.Service
                         }
                         catch (Exception ex)
                         {
-                            text = string.Format("获取信息错误doc.load：{0}", ex.Message) + text;
+                            text = string.Format("获取信息错误：{0}", ex.Message) + text;
                         }
                         try
                         {
@@ -193,14 +193,14 @@ namespace Fx.Amiya.Service
                         }
                         catch (Exception ex)
                         {
-                            text = string.Format("获取信息错误node.load：{0}", ex.Message) + text;
+                            text = string.Format("获取信息错误：{0}", ex.Message) + text;
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                text = string.Format("获取信息错误post error：{0}", ex.Message) + text;
+                text = string.Format("获取信息错误：{0}", ex.Message) + text;
             }
             RefundOrderResult result = new RefundOrderResult
             {

@@ -27,5 +27,10 @@ namespace Fx.Amiya.IService
         /// <param name="errmsg"></param>
         /// <returns></returns>
         bool CheckHSQMemoParam(HuiShouQianMemoInfo huiShouQianMemoInfo,out string errmsg);
+        /// <summary>
+        /// 创建慧收钱支付订单
+        /// </summary>
+        /// <returns></returns>
+        Task<HuiShouQianOrderResult> CreateHuiShouQianOrder(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo);
     }
 }

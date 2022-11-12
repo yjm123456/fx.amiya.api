@@ -6,6 +6,7 @@ using Fx.Amiya.Dto.OrderRefund;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
+using Fx.Infrastructure.DataAccess;
 using Fx.Open.Infrastructure.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,11 +27,13 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private IOrderRefundService orderRefundService;
         private IHttpContextAccessor httpContextAccessor;
+        private IUnitOfWork unitOfWork;
 
-        public OrderRefundController(IOrderRefundService orderRefundService, IHttpContextAccessor httpContextAccessor)
+        public OrderRefundController(IOrderRefundService orderRefundService, IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork)
         {
             this.orderRefundService = orderRefundService;
             this.httpContextAccessor = httpContextAccessor;
+            this.unitOfWork = unitOfWork;
         }
         /// <summary>
         /// 获取退款订单列表
@@ -79,15 +82,25 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpPost("check")]
         public async Task<ResultData> IntegrationPayRefundAsync(OrderRefundCheckVo checkDto)
         {
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int employeeId = Convert.ToInt32(employee.Id);
-            OrderRefundCheckDto orderRefundCheck = new OrderRefundCheckDto();
-            orderRefundCheck.CheckBy = employeeId;
-            orderRefundCheck.Id = checkDto.Id;
-            orderRefundCheck.UnCheckReason = checkDto.UnCheckReason;
-            orderRefundCheck.CheckState = checkDto.CheckState;
-            await orderRefundService.CheckAsync(orderRefundCheck);
-            return ResultData.Success();
+            try
+            {
+                unitOfWork.BeginTransaction();
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                OrderRefundCheckDto orderRefundCheck = new OrderRefundCheckDto();
+                orderRefundCheck.CheckBy = employeeId;
+                orderRefundCheck.Id = checkDto.Id;
+                orderRefundCheck.UnCheckReason = checkDto.UnCheckReason;
+                orderRefundCheck.CheckState = checkDto.CheckState;
+                await orderRefundService.CheckAsync(orderRefundCheck);
+                unitOfWork.Commit();
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex;
+            }
         }
         /// <summary>
         /// 获取审核状态（下拉框使用）

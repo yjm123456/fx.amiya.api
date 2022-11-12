@@ -19,7 +19,7 @@ namespace Fx.Amiya.Dto.HuiShouQianPay
         //加密类型	
         public string SignType { get; set; }
         //业务数据	
-        public string SignContent { get; set; }
+        public HuiShouQianPayRequestInfo SignContent { get; set; }
         //签名数据	
         public string Sign { get; set; }
         public HuiShouQianCommonInfo() {

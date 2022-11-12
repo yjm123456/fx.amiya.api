@@ -61,6 +61,33 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
 
+        /// <summary>
+        /// 获取微信公众号消息列表列表
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="isReleased"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("wechatlist")]
+        public async Task<ResultData<FxPageInfo<WechatDiaryListVo>>> GetWechatListAsync(string keyword,  int pageNum, int pageSize)
+        {
+            var q = await beautyDiaryManageService.GetListWithPageForWechatAsync(keyword, pageNum, pageSize);
+
+            var beautyDiaryManages = from d in q.List
+                                     select new WechatDiaryListVo
+                                     {
+                                         Id = d.Id,
+                                         Title=d.Title,
+                                         PicPath=d.PicPath
+                                     };
+            FxPageInfo<WechatDiaryListVo> beautyDiaryPageInfo = new FxPageInfo<WechatDiaryListVo>();
+            beautyDiaryPageInfo.TotalCount = q.TotalCount;
+            beautyDiaryPageInfo.List = beautyDiaryManages;
+            return ResultData<FxPageInfo<WechatDiaryListVo>>.Success().AddData("beautyDiaryManages", beautyDiaryPageInfo);
+        }
+
+
 
         /// <summary>
         /// 根据编号获取日记详细信息
@@ -165,6 +192,20 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData.Success();
         }
 
+        /// <summary>
+        /// 上传微信公众号消息封面
+        /// </summary>
+        /// <param name="beautyDiaryManageUpdate"></param>
+        /// <returns></returns>
+        [HttpPut("updateWechatDiary")]
+        public async Task<ResultData> UpdateAsync(UpdateWechatDiaryVo beautyDiaryManageUpdate)
+        {
+            UpdateDiaryWechatDto beautyDiaryManage = new UpdateDiaryWechatDto();
+            beautyDiaryManage.Id = beautyDiaryManageUpdate.Id;
+            beautyDiaryManage.PicPath = beautyDiaryManageUpdate.PicPath;
+            await beautyDiaryManageService.UpdateWechatDiaryAsync(beautyDiaryManage);
+            return ResultData.Success();
+        }
 
 
         /// <summary>

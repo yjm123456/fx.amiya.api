@@ -47,7 +47,6 @@ namespace Fx.Amiya.Service
             await dalOrderRefund.UpdateAsync(refundOrder,true);
             if (orderRefundCheckDto.CheckState==(int)CheckState.CheckFail) {                
                 await orderService.UpdateStatusByTradeIdAsync(refundOrder.TradeId, OrderStatusCode.CHECK_FAIL);
-
             }
         }
 
@@ -101,12 +100,13 @@ namespace Fx.Amiya.Service
                 trade.StatusCode = OrderStatusCode.REFUNDING;
                 await dalOrderTrade.UpdateAsync(trade,true);
                 string goodsName = string.Empty;
+                var nameList = new List<string>();
                 foreach (var item in trade.OrderInfoList)
                 {
-                    goodsName += item.GoodsName;
+                    nameList.Add(item.GoodsName);
                     await orderService.UpdateOrderStatus(item.Id, OrderStatusCode.REFUNDING);
                 }
-                orderRefund.GoodsName = goodsName;
+                orderRefund.GoodsName = string.Join(",",nameList);
             }
             orderRefund.Id = Guid.NewGuid().ToString().Replace("-",""); ;
             orderRefund.CustomerId = createRefundOrderDto.CustomerId;

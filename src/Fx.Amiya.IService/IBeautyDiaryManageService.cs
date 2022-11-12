@@ -21,13 +21,21 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<FxPageInfo<BeautyDiaryManageDto>> GetListWithPageAsync(string keyword, int pageNum, int pageSize,bool? isReleased);
         /// <summary>
+        /// 获取微信公众号图文消息列表（分页）
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<SimpleDiaryWechatDto>> GetListWithPageForWechatAsync(string keyword, int pageNum, int pageSize);
+        /// <summary>
         /// 从微信公众号获取日记列表（分页）
         /// </summary>
         /// <param name="keyword"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<WechatBeautyDiaryNewsItem>> GetSimpleListFromWechatAsync(string keyword, int pageNum, int pageSize);
+        Task<FxPageInfo<WechatBeautyDiaryNewsItemDto>> GetSimpleListFromWechatAsync(string keyword, int pageNum, int pageSize);
 
 
         /// <summary>
@@ -102,6 +110,13 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task AddDiaryFromWechat(int pageNum, int pageSize);
+        /// <summary>
+        /// 添加图文消息封面
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <returns></returns>
+        Task UpdateWechatDiaryAsync(UpdateDiaryWechatDto updateDto);
+        
         /// <summary>
         /// 根据标签，名称，城市等筛选获取日记列表（分页）
         /// </summary>
