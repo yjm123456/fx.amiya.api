@@ -2606,7 +2606,7 @@
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalConsulationOperationDataController.HospitalConsulationOperationDataInPortAsync(Microsoft.AspNetCore.Http.IFormFile)">
             <summary>
-            导入机构成交品项运营数据分析
+            导入机构咨询师运营数据分析
             </summary>
             <returns></returns>
         </member>
@@ -7579,6 +7579,31 @@
             手机号
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.City">
+            <summary>
+            城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.Sex">
+            <summary>
+            性别
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.Birthday">
+            <summary>
+            生日
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.Occupation">
+            <summary>
+            职业
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.WechatNumber">
+            <summary>
+            微信号
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.AppointmentDate">
             <summary>
             预约日期
@@ -7854,6 +7879,36 @@
             手机号
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.City">
+            <summary>
+            城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.Sex">
+            <summary>
+            性别
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.Birthday">
+            <summary>
+            生日
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.Age">
+            <summary>
+            年龄
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.Occupation">
+            <summary>
+            职业
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.WechatNumber">
+            <summary>
+            微信号
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.ConsultationEmpId">
             <summary>
             面诊员
@@ -7997,6 +8052,36 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.Phone">
             <summary>
             手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.Sex">
+            <summary>
+            性别
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.Birthday">
+            <summary>
+            生日
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.Age">
+            <summary>
+            年龄
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.Occupation">
+            <summary>
+            职业
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.WechatNumber">
+            <summary>
+            微信号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.City">
+            <summary>
+            城市
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.AddOrderPrice">
@@ -8772,6 +8857,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.Phone">
             <summary>
             电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.City">
+            <summary>
+            城市
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.IsOldCustomer">

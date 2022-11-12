@@ -80,6 +80,11 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.LiveAnchorWeChatNo = addVo.LiveAnchorWeChatNo;
             addDto.CustomerName = addVo.CustomerName;
             addDto.Phone = addVo.Phone;
+            addDto.City = addVo.City;
+            addDto.Sex = addVo.Sex;
+            addDto.Birthday = addVo.Birthday;
+            addDto.Occupation = addVo.Occupation;
+            addDto.WechatNumber = addVo.WechatNumber;
             addDto.AppointmentDate = addVo.AppointmentDate;
             addDto.AppointmentHospitalId = addVo.AppointmentHospitalId;
             addDto.DepositAmount = addVo.DepositAmount;
@@ -138,6 +143,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 ConsultationType = d.ConsultationTypeText,
                                 BelongMonth = d.BelongMonth,
                                 AddOrderPrice = d.AddOrderPrice,
+                                City = d.City,
                                 CreateDate = d.CreateDate,
                                 CustomerName = d.CustomerName,
                                 Phone = d.Phone,
@@ -294,6 +300,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 LiveAnchorName = d.LiveAnchorName,
                                 CreateDate = d.CreateDate,
                                 BelongMonth = d.BelongMonth,
+                                City = d.City,
                                 AddOrderPrice = d.AddOrderPrice,
                                 CustomerName = d.CustomerName,
                                 Phone = d.Phone,
@@ -447,6 +454,12 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.GoodsId = order.GoodsId;
             orderUpdateInfo.CustomerName = order.CustomerName;
             orderUpdateInfo.Phone = order.Phone;
+            orderUpdateInfo.City = order.City;
+            orderUpdateInfo.Sex = order.Sex;
+            orderUpdateInfo.Birthday = order.Birthday;
+            orderUpdateInfo.Age = order.Age;
+            orderUpdateInfo.Occupation = order.Occupation;
+            orderUpdateInfo.WechatNumber = order.WechatNumber;
             orderUpdateInfo.AppointmentDate = order.AppointmentDate;
             orderUpdateInfo.ConsultationEmpId = order.ConsultationEmpId;
             orderUpdateInfo.AppointmentHospitalId = order.AppointmentHospitalId;
@@ -630,6 +643,12 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.AcceptConsulting = updateVo.AcceptConsulting;
             updateDto.UnSendReason = updateVo.UnSendReason;
             updateDto.CustomerPictures = updateVo.CustomerPictures;
+
+            updateDto.City = updateVo.City;
+            updateDto.Sex = updateVo.Sex;
+            updateDto.Birthday = updateVo.Birthday;
+            updateDto.Occupation = updateVo.Occupation;
+            updateDto.WechatNumber = updateVo.WechatNumber;
             await _orderService.UpdateContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
         }

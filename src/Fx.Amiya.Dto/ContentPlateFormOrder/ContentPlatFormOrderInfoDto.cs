@@ -32,6 +32,7 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         public string CustomerName { get; set; }
         public string EncryptPhone { get; set; }
         public string Phone { get; set; }
+        public string City { get; set; }
         public DateTime? AppointmentDate { get; set; }
         public int? AppointmentHospitalId { get; set; }
         public string AppointmentHospitalName { get; set; }
