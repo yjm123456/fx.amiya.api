@@ -1,6 +1,8 @@
 ﻿using Fx.Amiya.Core.Dto.Integration;
 using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.Dto.Balance;
+using Fx.Amiya.Dto.HuiShouQianPay;
+using Fx.Amiya.Dto.HuiShouQianPayNotify;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -13,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -448,5 +451,109 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             sDic.Add("return_code", weiXinPayNotifyVo.return_code);
             return sDic;
         }
+        /// <summary>
+        /// 慧收钱支付回调
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("hsqPayResult")]
+        public async Task<string> HSQPayOrderNotifyUrl() {
+            try
+            {
+                HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
+                using Stream stream = HttpContext.Request.Body;
+                byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
+                await stream.ReadAsync(buffer);
+                string notify = System.Text.Encoding.UTF8.GetString(buffer);
+                var notifyParam = JsonConvert.DeserializeObject<HuiShouQianNotifyCommonParam>(notify);
+                var signContent = BuildPayParamString(notifyParam.method,notifyParam.version,notifyParam.format,notifyParam.merchantNo,notifyParam.signType,JsonConvert.SerializeObject(notifyParam.signContent), huiShouQianPackageInfo.Key);
+                var verify = RAS2EncriptUtil.VerifySignature(signContent,notifyParam.sign, huiShouQianPackageInfo.PubilcKeyPath);
+                if (verify)
+                {
+                    if (notifyParam.signContent.orderStatus.ToUpper() == "SUCCESS")
+                    {
+                        var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(notifyParam.signContent.transNo);
+                        if (orderTrade.StatusCode == OrderStatusCode.WAIT_BUYER_PAY)
+                        {
+                            List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
+                            foreach (var item in orderTrade.OrderInfoList)
+                            {
+                                UpdateOrderDto updateOrder = new UpdateOrderDto();
+                                updateOrder.OrderId = item.Id;
+                                updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                                if (item.ActualPayment.HasValue)
+                                {
+                                    updateOrder.Actual_payment = item.ActualPayment.Value;
+
+                                    var bind = await _dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == item.Phone);
+                                    if (bind != null)
+                                    {
+                                        bind.NewConsumptionDate = DateTime.Now;
+                                        bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
+                                        bind.NewContentPlatForm = ServiceClass.GetAppTypeText(item.AppType);
+                                        bind.AllPrice += item.ActualPayment.Value;
+                                        bind.AllOrderCount += item.Quantity;
+                                        await _dalBindCustomerService.UpdateAsync(bind, true);
+                                    }
+                                }
+                                if (item.IntegrationQuantity.HasValue)
+                                {
+                                    updateOrder.IntergrationQuantity = item.IntegrationQuantity;
+                                }
+                                Random random = new Random();
+                                updateOrder.AppType = item.AppType;
+                                updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
+                                updateOrderList.Add(updateOrder);
+                            }
+                            //修改订单状态
+                            await orderService.UpdateAsync(updateOrderList);
+                            UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
+                            updateOrderTrade.TradeId = notifyParam.signContent.transNo;
+                            updateOrderTrade.AddressId = orderTrade.AddressId;
+                            updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                            await orderService.UpdateOrderTradeAsync(updateOrderTrade);
+                        }
+                    }
+                    return "SUCCESS";
+                }
+                else {
+                    return "";
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        /// <summary>
+        /// 拼接回调请求参数
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="version"></param>
+        /// <param name="format"></param>
+        /// <param name="merchantNo"></param>
+        /// <param name="signType"></param>
+        /// <param name="signContent"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private string BuildPayParamString(string method, string version, string format, string merchantNo, string signType, string signContent, string key)
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append("method=");
+            builder.Append(method);
+            builder.Append("&version=");
+            builder.Append(version);
+            builder.Append("&format=");
+            builder.Append(format);
+            builder.Append("&merchantNo=");
+            builder.Append(merchantNo);
+            builder.Append("&signType=");
+            builder.Append(signType);
+            builder.Append("&signContent=");
+            builder.Append(signContent);
+            builder.Append("&key=");
+            builder.Append(key);
+            return builder.ToString();
+        }       
     }
 }

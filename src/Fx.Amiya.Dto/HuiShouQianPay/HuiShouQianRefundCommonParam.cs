@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Dto.HuiShouQianPay
 {
-    public class HuiShouQianCommonInfo
+    /// <summary>
+    /// 慧收钱退款公共请求参数
+    /// </summary>
+    public class HuiShouQianRefundCommonParam
     {
         //方法名 POLYMERIZE_MAIN_SWEPTN
         public string Method { get; set; }
@@ -19,11 +22,12 @@ namespace Fx.Amiya.Dto.HuiShouQianPay
         //加密类型	
         public string SignType { get; set; }
         //业务数据	
-        public HuiShouQianPayRequestInfo SignContent { get; set; }
+        public HuiShouQianRefundRequestParam SignContent { get; set; }
         //签名数据	
         public string Sign { get; set; }
-        public HuiShouQianCommonInfo() {
-            Method = "POLYMERIZE_MAIN_SWEPTN";
+        public HuiShouQianRefundCommonParam()
+        {
+            Method = "POLYMERIZE_REFUND";
             Version = "1.0";
             Format = "JSON";
             MerchantNo = "";

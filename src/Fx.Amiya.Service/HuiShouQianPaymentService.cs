@@ -103,8 +103,17 @@ namespace Fx.Amiya.Service
         {
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
             var commonParam= BuildCommonParam(huiShouQianPayRequestInfo);
-            var result= await PostOrderAsync(huiShouQianPackageInfo.OrderUrl, commonParam);
-            return null;
+            return await PostOrderAsync(huiShouQianPackageInfo.OrderUrl, commonParam);           
+        }
+        /// <summary>
+        /// 创建慧收钱退款订单
+        /// </summary>
+        /// <returns></returns>
+        public async Task<HuiShouQianOrderResult> CreateHuiShouQianRefundOrde(HuiShouQianRefundRequestParam huiShouQianRefundRequestParam)
+        {
+            HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
+            var commonParam = BuildRefundCommonParam(huiShouQianRefundRequestParam);
+            return await PostOrderAsync(huiShouQianPackageInfo.OrderUrl, commonParam);
         }
         /// <summary>
         /// 创建公共请求参数
@@ -115,6 +124,20 @@ namespace Fx.Amiya.Service
             huiShouQianCommonInfo.SignContent = huiShouQianPayRequestInfo;
             string signContent = JsonConvert.SerializeObject(huiShouQianPayRequestInfo);
             var signData = BuildPayParamString(huiShouQianCommonInfo.Method, huiShouQianCommonInfo.Version, huiShouQianCommonInfo.Format, huiShouQianCommonInfo.MerchantNo, huiShouQianCommonInfo.SignType,signContent,""); 
+            var sign = RAS2EncriptUtil.Sign(signData, "");
+            huiShouQianCommonInfo.Sign = sign;
+            return JsonConvert.SerializeObject(huiShouQianCommonInfo);
+        }
+        /// <summary>
+        /// 创建退款公共请求参数
+        /// </summary>
+        /// <returns></returns>
+        private string BuildRefundCommonParam(HuiShouQianRefundRequestParam huiShouQianRefundRequestParam)
+        {
+            HuiShouQianRefundCommonParam huiShouQianCommonInfo = new HuiShouQianRefundCommonParam();
+            huiShouQianCommonInfo.SignContent = huiShouQianRefundRequestParam;
+            string signContent = JsonConvert.SerializeObject(huiShouQianRefundRequestParam);
+            var signData = BuildPayParamString(huiShouQianCommonInfo.Method, huiShouQianCommonInfo.Version, huiShouQianCommonInfo.Format, huiShouQianCommonInfo.MerchantNo, huiShouQianCommonInfo.SignType, signContent, "");
             var sign = RAS2EncriptUtil.Sign(signData, "");
             huiShouQianCommonInfo.Sign = sign;
             return JsonConvert.SerializeObject(huiShouQianCommonInfo);
@@ -132,11 +155,19 @@ namespace Fx.Amiya.Service
             if (result.success == "true") {
                 string signContent = BuildPayResponseParamString(result,"");
                 bool verifyResult= RAS2EncriptUtil.VerifySignature(signContent, result.sign,"");
-                if (verifyResult) {
-                    var payParam = result.result;
+                if (verifyResult) {                    
                     HuiShouQianOrderResult huiShouQianOrderResult = new HuiShouQianOrderResult();
                     huiShouQianOrderResult.Success = true;
-                    
+                    var payParam = result.result.qrCode;
+                    HuiShouQianPayParam huiShouQianPayParam = new HuiShouQianPayParam();
+                    huiShouQianPayParam.AppId = payParam.appId;
+                    huiShouQianPayParam.TimeStamp = payParam.timeStamp;
+                    huiShouQianPayParam.NonceStr = payParam.nonceStr;
+                    huiShouQianPayParam.Package = payParam.package;
+                    huiShouQianPayParam.SignType = payParam.signType;
+                    huiShouQianPayParam.PaySign = payParam.paySign;
+                    huiShouQianOrderResult.PayParam = huiShouQianPayParam;
+                    return huiShouQianOrderResult;
                 } else {
                     HuiShouQianOrderResult huiShouQianOrderResult = new HuiShouQianOrderResult();
                     huiShouQianOrderResult.Success = false;
@@ -144,14 +175,55 @@ namespace Fx.Amiya.Service
                     huiShouQianOrderResult.ErrorMsg = "签名验证失败";
                     return huiShouQianOrderResult;
                 }
-            } else if (result.success== "false") {
+            } else{
                 HuiShouQianOrderResult huiShouQianOrderResult = new HuiShouQianOrderResult();
                 huiShouQianOrderResult.Success = false;
                 huiShouQianOrderResult.ErrorCode = result.errorCode;
                 huiShouQianOrderResult.ErrorMsg = result.errorMsg;
                 return huiShouQianOrderResult;
+            }            
+        }
+        /// <summary>
+        /// 退款
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="postData"></param>
+        /// <returns></returns>
+        private async Task<HuiShouQianRefundResult> PostRefundOrderAsync(string url, string postData)
+        {
+            var response = await HttpUtil.HttpJsonPostAsync(url, postData);
+            var result = JsonConvert.DeserializeObject<HuiShouQianRefundOrderResultCommonParam>(response);
+            if (result.success == "true")
+            {
+                string signContent = BuildRefundResponseParamString(result, "");
+                bool verifyResult = RAS2EncriptUtil.VerifySignature(signContent, result.sign, "");
+                if (verifyResult)
+                {
+                    HuiShouQianRefundResult huiShouRefundrResult = new HuiShouQianRefundResult();
+                    huiShouRefundrResult.Success = true;
+
+                    var responseParam = result.result;
+                    HuiShouqianRefundResponse huiShouqianRefundResponse = new HuiShouqianRefundResponse();
+                    
+                    return huiShouRefundrResult;
+                }
+                else
+                {
+                    HuiShouQianRefundResult huiShouQianOrderResult = new HuiShouQianRefundResult();
+                    huiShouQianOrderResult.Success = false;
+                    huiShouQianOrderResult.ErrorCode = result.errorCode;
+                    huiShouQianOrderResult.ErrorMsg = "签名验证失败";
+                    return huiShouQianOrderResult;
+                }
             }
-            return null;
+            else
+            {
+                HuiShouQianRefundResult huiShouQianOrderResult = new HuiShouQianRefundResult();
+                huiShouQianOrderResult.Success = false;
+                huiShouQianOrderResult.ErrorCode = result.errorCode;
+                huiShouQianOrderResult.ErrorMsg = result.errorMsg;
+                return huiShouQianOrderResult;
+            }
         }
         /// <summary>
         /// 拼接下单请求参数
@@ -213,6 +285,36 @@ namespace Fx.Amiya.Service
             }
             return builder.ToString();
         }
-
+        /// <summary>
+        /// 拼接下单返回参数
+        /// </summary>
+        /// <param name="huiShouQianCommon"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private string BuildRefundResponseParamString(HuiShouQianRefundOrderResultCommonParam huiShouQianCommon, string key)
+        {
+            StringBuilder builder = new StringBuilder();
+            if (huiShouQianCommon.success == "true")
+            {
+                builder.Append("result=");
+                builder.Append(JsonConvert.SerializeObject(huiShouQianCommon.result));
+                builder.Append("&success=");
+                builder.Append(huiShouQianCommon.success);
+                builder.Append("&key=");
+                builder.Append(key);
+            }
+            else
+            {
+                builder.Append("errorCode=");
+                builder.Append(huiShouQianCommon.errorCode);
+                builder.Append("&errorMsg=");
+                builder.Append(huiShouQianCommon.errorMsg);
+                builder.Append("&success=");
+                builder.Append(huiShouQianCommon.success);
+                builder.Append("&key=");
+                builder.Append(key);
+            }
+            return builder.ToString();
+        }
     }
 }

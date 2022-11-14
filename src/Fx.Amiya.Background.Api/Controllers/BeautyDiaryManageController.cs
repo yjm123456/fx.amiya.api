@@ -62,7 +62,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 获取微信公众号消息列表列表
+        /// 获取微信公众号消息列表
         /// </summary>
         /// <param name="keyword"></param>
         /// <param name="isReleased"></param>

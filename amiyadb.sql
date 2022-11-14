@@ -1151,31 +1151,6 @@ CREATE TABLE `tbl_growth_points_rule` (
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-------------------------------------------------------------------------------------------------------小程序---------------------------------------------------------------------------
-
 -----------------------------------------------王健 2022/11/10 BEGIN--------------------------------------------
 
 --订单退款
@@ -1208,6 +1183,48 @@ CREATE TABLE IF NOT EXISTS `tbl_order_refund` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -----------------------------------------------王健 2022/11/10 END--------------------------------------------
+
+
+-----------------------------------------------王健 2022/11/12 BEGIN--------------------------------------------
+
+--公众号封面
+CREATE TABLE `tbl_diary_wechat` (
+	`content_url` VARCHAR(500) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`id` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`pic_path` VARCHAR(500) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`title` VARCHAR(500) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`valid` BIT(1) NULL DEFAULT NULL,
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`delete_date` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`) USING BTREE
+)COLLATE='utf8mb4_0900_ai_ci'
+ENGINE=InnoDB;
+
+-----------------------------------------------王健 2022/11/12 END--------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------小程序---------------------------------------------------------------------------
+
+
 
 
 

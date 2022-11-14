@@ -481,7 +481,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var appInfo = await dockingHospitalCustomerInfo.GetBeautyDiaryTokenInfo(31);
+                var appInfo = await dockingHospitalCustomerInfo.GetBeautyDiaryTokenInfo(124);
                 var requestUrl = $"https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token={appInfo.AccessToken}";
                 var data = new { type = "news", offset = (pageNum - 1) * pageSize, count = pageSize };
                 var res = await HttpUtil.HttpJsonPostAsync(requestUrl, JsonConvert.SerializeObject(data));
@@ -541,12 +541,7 @@ namespace Fx.Amiya.Service
                     throw new Exception("获取美丽日记失败");
                 var beautyDiary = JsonConvert.DeserializeObject<WeChatBeautyDiaryDto>(res);
                 
-                beautyDiary.item.SelectMany(e => e.content.news_item).Where(e => e.title.Contains("变美指南")).Where(e => !string.IsNullOrEmpty(e.author));
-                /*FxPageInfo<WechatBeautyDiaryNewsItem> fxPageInfo = new FxPageInfo<WechatBeautyDiaryNewsItem>();
-                fxPageInfo.TotalCount = beautyDiary.total_count;
-                fxPageInfo.List = */
-                //fxPageInfo.List = beautyDiary.item.SelectMany(e => e.content.news_item).Where(e => !string.IsNullOrEmpty(e.author)).ToList();
-                //return fxPageInfo;
+                beautyDiary.item.SelectMany(e => e.content.news_item).Where(e => e.title.Contains("变美指南")).Where(e => !string.IsNullOrEmpty(e.author));                
             }
 
             catch (Exception ex)

@@ -21,6 +21,10 @@ namespace Fx.Amiya.Dto.HuiShouQianPay
         /// 下单Url
         /// </summary>
         public string OrderUrl { get;private set; }
+        /// <summary>
+        /// 退款Url
+        /// </summary>
+        public string RefundUrl { get; set; }
         public HuiShouQianPackageInfo() {
             this.PrivateKeyPath = "";
             this.PubilcKeyPath = "";
@@ -29,6 +33,11 @@ namespace Fx.Amiya.Dto.HuiShouQianPay
             this.OrderUrl = "https://test-api.huishouqian.com/api/acquiring";
             //正式url
             //this.OrderUrl = "https://api.huishouqian.com/api/acquiring";
+
+            //测试
+            this.RefundUrl = "https://test-api.huishouqian.com/api/acquiring";
+            //正式
+            //this.RefundUrl = "https://api.huishouqian.com/api/acquiring";
         }
 
     }

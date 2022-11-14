@@ -66,7 +66,8 @@ namespace Fx.Amiya.Service
             if (!(trade.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || trade.StatusCode == OrderStatusCode.TRADE_BUYER_SIGNED || trade.StatusCode == OrderStatusCode.TRADE_FINISHED || trade.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || trade.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS||trade.StatusCode==OrderStatusCode.PARTIAL_REFUND)) {
                 throw new Exception("当前订单状态不能退款");
             }
-            string orderId = "";
+            
+            List<string> ids = new List<string>();
             foreach (var item in trade.OrderInfoList)
             {
                 if (item.AppType != (byte)AppType.MiniProgram)
@@ -74,7 +75,7 @@ namespace Fx.Amiya.Service
                     throw new Exception("当前订单不属于小程序");
                 }
                 else {
-                    orderId = item.Id;
+                    ids.Add(item.Id);
                 }
             }
             if (!string.IsNullOrEmpty(createRefundOrderDto.OrderId))
@@ -110,7 +111,7 @@ namespace Fx.Amiya.Service
             }
             orderRefund.Id = Guid.NewGuid().ToString().Replace("-",""); ;
             orderRefund.CustomerId = createRefundOrderDto.CustomerId;
-            orderRefund.OrderId = orderId;
+            orderRefund.OrderId = string.Join(",",ids);
             orderRefund.TradeId = createRefundOrderDto.TradeId;
             orderRefund.Remark = createRefundOrderDto.Remark;           
             orderRefund.CreateDate = DateTime.Now;
