@@ -1454,7 +1454,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 客户订单应收款统计
+        /// 客户订单应收款统计（交易完成订单）
         /// </summary>
         /// <param name="startDate">开始时间</param>
         /// <param name="endDate">结束时间</param>
@@ -1501,7 +1501,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<List<CustomerOrderReceivableReportVo>>.Success().AddData("customerOrderReceivableReport", res.ToList());
         }
         /// <summary>
-        /// 客户订单应收款统计导出
+        /// 客户订单应收款统计导出（交易完成订单）
         /// </summary>
         /// <param name="startDate">开始时间</param>
         /// <param name="endDate">结束时间</param>
@@ -1521,6 +1521,111 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
 
             var q = await orderService.GetCustomerOrderReceivableAsync(startDate, endDate, CheckState, ReturnBackPriceState, customerName, isHidePhone);
+            var res = from d in q
+                      select new CustomerOrderReceivableReportVo()
+                      {
+                          Id = d.Id,
+                          GoodsName = d.GoodsName,
+                          NickName = d.NickName,
+                          EncryptPhone = d.EncryptPhone,
+                          AppointmentHospital = d.AppointmentHospital,
+                          StatusText = d.StatusText,
+                          ActuralPayment = d.ActualPayment,
+                          AccountReceivable = d.AccountReceivable,
+                          SendOrderPirce = d.SendOrderPrice,
+                          CreateDate = d.CreateDate,
+                          WriteOffDate = d.WriteOffDate,
+                          AppTypeText = d.AppTypeText,
+                          Quantity = d.Quantity,
+                          SendOrderHospital = d.SendOrderHospital,
+                          SendHospitalEmployeeName = d.SendEmployeeName,
+                          FinalConsumptionHospital = d.FinalConsumptionHospital,
+                          BelongEmployeeName = d.BenlongEmpName,
+                          CheckStateText = d.CheckStateText,
+                          CheckPrice = d.CheckPrice,
+                          CheckDate = d.CheckDate,
+                          CheckBy = d.CheckByEmpName,
+                          CheckRemark = d.CheckRemark,
+                          SettlePrice = d.SettlePrice,
+                          IsReturnBackPrice = d.IsReturnBackPrice,
+                          ReturnBackPrice = d.ReturnBackPrice,
+                          ReturnBackDate = d.ReturnBackDate
+                      };
+            var exportOrderWriteOff = res.ToList();
+            var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
+            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "客户订单应收款统计.xls");
+            return result;
+        }
+
+
+        /// <summary>
+        /// 客户订单应收款统计（买家已付款订单）
+        /// </summary>
+        /// <param name="startDate">开始时间</param>
+        /// <param name="endDate">结束时间</param>
+        /// <param name="customerName">客户名称</param>
+        /// <param name="CheckState">审核状态</param>
+        /// <param name="ReturnBackPriceState">是否回款</param>
+        /// <returns></returns>
+        [HttpGet("customerPaidOrderReceivableReport")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<List<CustomerOrderReceivableReportVo>>> GetCustomerPaidOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? CheckState, bool? ReturnBackPriceState, string customerName)
+        {
+
+            var q = await orderService.GetCustomerPaidOrderReceivableAsync(startDate, endDate, CheckState, ReturnBackPriceState, customerName, true);
+            var res = from d in q
+                      select new CustomerOrderReceivableReportVo()
+                      {
+                          Id = d.Id,
+                          GoodsName = d.GoodsName,
+                          NickName = d.NickName,
+                          EncryptPhone = d.EncryptPhone,
+                          AppointmentHospital = d.AppointmentHospital,
+                          StatusText = d.StatusText,
+                          ActuralPayment = d.ActualPayment,
+                          AccountReceivable = d.AccountReceivable,
+                          SendOrderPirce = d.SendOrderPrice,
+                          CreateDate = d.CreateDate,
+                          WriteOffDate = d.WriteOffDate,
+                          AppTypeText = d.AppTypeText,
+                          Quantity = d.Quantity,
+                          SendOrderHospital = d.SendOrderHospital,
+                          SendHospitalEmployeeName = d.SendEmployeeName,
+                          FinalConsumptionHospital = d.FinalConsumptionHospital,
+                          BelongEmployeeName = d.BenlongEmpName,
+                          CheckStateText = d.CheckStateText,
+                          CheckPrice = d.CheckPrice,
+                          CheckDate = d.CheckDate,
+                          CheckBy = d.CheckByEmpName,
+                          CheckRemark = d.CheckRemark,
+                          SettlePrice = d.SettlePrice,
+                          IsReturnBackPrice = d.IsReturnBackPrice,
+                          ReturnBackPrice = d.ReturnBackPrice,
+                          ReturnBackDate = d.ReturnBackDate
+                      };
+            return ResultData<List<CustomerOrderReceivableReportVo>>.Success().AddData("customerOrderReceivableReport", res.ToList());
+        }
+        /// <summary>
+        /// 客户订单应收款统计导出（买家已付款订单）
+        /// </summary>
+        /// <param name="startDate">开始时间</param>
+        /// <param name="endDate">结束时间</param>
+        /// <param name="CheckState">审核状态</param>
+        /// <param name="ReturnBackPriceState">是否回款</param>
+        /// <param name="customerName">客户名称</param>
+        /// <returns></returns>
+        [HttpGet("customerPaidOrderReceivableExport")]
+        [FxInternalAuthorize]
+        public async Task<FileStreamResult> GetCustomerPaidOrderReceivableExportAsync(DateTime? startDate, DateTime? endDate, int? CheckState, bool? ReturnBackPriceState, string customerName)
+        {
+            bool isHidePhone = true;
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            {
+                isHidePhone = false;
+            }
+
+            var q = await orderService.GetCustomerPaidOrderReceivableAsync(startDate, endDate, CheckState, ReturnBackPriceState, customerName, isHidePhone);
             var res = from d in q
                       select new CustomerOrderReceivableReportVo()
                       {

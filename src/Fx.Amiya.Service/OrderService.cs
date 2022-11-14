@@ -2254,7 +2254,7 @@ namespace Fx.Amiya.Service
         {
             var order = dalOrderInfo.GetAll().Where(e => e.Id == orderId).FirstOrDefault();
             order.StatusCode = orderStatus;
-            await dalOrderInfo.UpdateAsync(order,true);
+            await dalOrderInfo.UpdateAsync(order, true);
         }
 
         /// <summary>
@@ -2964,16 +2964,17 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task UpdateStatusByTradeIdAsync(string tradeId, string statusCode)
         {
-            var trade =await dalOrderTrade.GetAll().Where(e => e.TradeId == tradeId).Include(e => e.OrderInfoList).SingleOrDefaultAsync();
-            if (trade==null) {
+            var trade = await dalOrderTrade.GetAll().Where(e => e.TradeId == tradeId).Include(e => e.OrderInfoList).SingleOrDefaultAsync();
+            if (trade == null)
+            {
                 throw new Exception("交易编号错误");
             }
             trade.StatusCode = statusCode;
-            await dalOrderTrade.UpdateAsync(trade,true);
+            await dalOrderTrade.UpdateAsync(trade, true);
             foreach (var item in trade.OrderInfoList)
             {
                 item.StatusCode = statusCode;
-                await dalOrderInfo.UpdateAsync(item,true);
+                await dalOrderInfo.UpdateAsync(item, true);
             }
         }
 
@@ -3016,6 +3017,10 @@ namespace Fx.Amiya.Service
                 }
                 orderInfo.WriteOffDate = DateTime.Now;
                 await dalOrderInfo.UpdateAsync(orderInfo, true);
+
+                //修改订单trade信息
+                await this.UpdateStatusByTradeIdAsync(orderInfo.TradeId, OrderStatusCode.TRADE_FINISHED) ;
+
                 //新增核销信息
                 OrderWriteOffInfoAddDto addOrderWriteOffInfoAddDto = new OrderWriteOffInfoAddDto();
                 addOrderWriteOffInfoAddDto.CreateDate = DateTime.UtcNow;
@@ -3387,7 +3392,8 @@ namespace Fx.Amiya.Service
         public async Task<List<OrderWriteOffDto>> GetCustomerOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? CheckState, bool? ReturnBackPriceState, string customerName, bool isHidePhone)
         {
             var orders = from d in dalOrderInfo.GetAll()
-                         where (d.StatusCode == "TRADE_FINISHED"||d.StatusCode== "TRADE_BUYER_PAID") && d.OrderType == 0
+                         where (d.StatusCode  == OrderStatusCode.TRADE_FINISHED)
+                         && d.OrderType == (byte)OrderType.VirtualOrder
                          select d;
 
             if (startDate != null && endDate != null)
@@ -3396,6 +3402,92 @@ namespace Fx.Amiya.Service
                 DateTime endrqWriteOff = ((DateTime)endDate).Date.AddDays(1);
                 orders = from d in orders
                          where d.WriteOffDate >= startrqWriteOff && d.WriteOffDate < endrqWriteOff
+                         select d;
+            }
+            if (!string.IsNullOrEmpty(customerName))
+            {
+                orders = from d in orders
+                         where d.BuyerNick.Contains(customerName)
+                         select d;
+            }
+            if (CheckState.HasValue)
+            {
+                orders = from d in orders
+                         where d.CheckState == CheckState.Value
+                         select d;
+            }
+            if (ReturnBackPriceState.HasValue)
+            {
+                orders = from d in orders
+                         where d.IsReturnBackPrice == ReturnBackPriceState.Value
+                         select d;
+            }
+            var order = from d in orders
+                        select new OrderWriteOffDto
+                        {
+                            Id = d.Id,
+                            GoodsName = d.GoodsName,
+                            NickName = d.BuyerNick,
+                            EncryptPhone = isHidePhone == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
+                            AppointmentHospital = d.AppointmentHospital,
+                            StatusText = ServiceClass.GetOrderStatusText(d.StatusCode),
+                            ActualPayment = d.ActualPayment,
+                            AccountReceivable = d.AccountReceivable,
+                            CreateDate = d.CreateDate,
+                            WriteOffDate = d.WriteOffDate,
+                            AppTypeText = ServiceClass.GetAppTypeText(d.AppType),
+                            Quantity = d.Quantity,
+                            FinalConsumptionHospital = d.FinalConsumptionHospital,
+                            BelongEmpId = d.BelongEmpId,
+                            CheckStateText = ServiceClass.GetCheckTypeText(d.CheckState.Value),
+                            CheckPrice = d.CheckPrice,
+                            CheckDate = d.CheckDate,
+                            CheckBy = d.CheckBy,
+                            CheckRemark = d.CheckRemark,
+                            SettlePrice = d.SettlePrice,
+                            IsReturnBackPrice = d.IsReturnBackPrice,
+                            ReturnBackPrice = d.ReturnBackPrice,
+                            ReturnBackDate = d.ReturnBackDate
+                        };
+
+            List<OrderWriteOffDto> orderPageInfo = new List<OrderWriteOffDto>();
+            orderPageInfo = await order.ToListAsync();
+            foreach (var x in orderPageInfo)
+            {
+                var sendOrderInfo = await _sendOrderInfoService.GetSendOrderInfoByOrderId(x.Id);
+                if (sendOrderInfo.Count != 0)
+                {
+                    x.SendOrderHospital = sendOrderInfo.First().HospitalName;
+                    x.SendOrderPrice = sendOrderInfo.First().PurchaseSinglePrice * sendOrderInfo.First().PurchaseNum;
+                    x.SendEmployeeName = sendOrderInfo.First().SendName;
+                }
+                if (x.BelongEmpId != 0)
+                {
+                    var customerService = await dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(e => e.Id == x.BelongEmpId);
+                    x.BenlongEmpName = customerService.Name.ToString();
+                }
+                if (x.CheckBy.HasValue && x.CheckBy != 0)
+                {
+                    var checkBy = await dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(e => e.Id == x.CheckBy.Value);
+                    x.CheckByEmpName = checkBy.Name.ToString();
+                }
+            }
+            return orderPageInfo.OrderByDescending(z => z.NickName).ThenByDescending(z => z.WriteOffDate).ToList();
+        }
+
+        public async Task<List<OrderWriteOffDto>> GetCustomerPaidOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? CheckState, bool? ReturnBackPriceState, string customerName, bool isHidePhone)
+        {
+            var orders = from d in dalOrderInfo.GetAll()
+                         where (d.StatusCode == OrderStatusCode.TRADE_BUYER_PAID)
+                         && d.OrderType == (byte)OrderType.VirtualOrder
+                         select d;
+
+            if (startDate != null && endDate != null)
+            {
+                DateTime startrqWriteOff = ((DateTime)startDate);
+                DateTime endrqWriteOff = ((DateTime)endDate).Date.AddDays(1);
+                orders = from d in orders
+                         where d.UpdateDate >= startrqWriteOff && d.UpdateDate < endrqWriteOff
                          select d;
             }
             if (!string.IsNullOrEmpty(customerName))
@@ -3857,13 +3949,13 @@ namespace Fx.Amiya.Service
                         where d.CustomerId == customerId
                         select d;
             var list = (await order.ToListAsync()).SelectMany(e => e.OrderInfoList);
-            int count = list.Count(e => e.GoodsName.Contains("美肤券") && (e.StatusCode == OrderStatusCode.TRADE_BUYER_PAID||e.StatusCode==OrderStatusCode.TRADE_FINISHED));
+            int count = list.Count(e => e.GoodsName.Contains("美肤券") && (e.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || e.StatusCode == OrderStatusCode.TRADE_FINISHED));
             if (count > 0) return true;
             return false;
 
         }
 
-        
+
 
 
         #endregion

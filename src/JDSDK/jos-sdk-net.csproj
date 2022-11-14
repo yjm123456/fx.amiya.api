@@ -120,6 +120,7 @@
     <Compile Include="Util\JObjectConverter.cs" />
     <Compile Include="Util\JValueConverter.cs" />
     <Compile Include="Util\KuaiDi100Utils.cs" />
+    <Compile Include="Util\RAS2EncriptUtil.cs" />
     <Compile Include="Util\RequestValidator.cs" />
     <Compile Include="Util\SendMails.cs" />
     <Compile Include="Util\WebUtils.cs" />
