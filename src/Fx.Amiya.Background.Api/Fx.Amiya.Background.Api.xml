@@ -851,6 +851,16 @@
             <param name="pageSize"></param>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.BeautyDiaryManageController.GetWechatListAsync(System.String,System.Int32,System.Int32)">
+            <summary>
+            获取微信公众号消息列表
+            </summary>
+            <param name="keyword"></param>
+            <param name="isReleased"></param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.BeautyDiaryManageController.GetByIdAsync(System.String)">
             <summary>
             根据编号获取日记详细信息
@@ -868,6 +878,13 @@
         <member name="M:Fx.Amiya.Background.Api.Controllers.BeautyDiaryManageController.UpdateAsync(Fx.Amiya.Background.Api.Vo.BeautyDiaryManage.BeautyDiaryManageUpdateVo)">
             <summary>
             修改日记信息
+            </summary>
+            <param name="beautyDiaryManageUpdate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.BeautyDiaryManageController.UpdateAsync(Fx.Amiya.Background.Api.Vo.BeautyDiaryManage.UpdateWechatDiaryVo)">
+            <summary>
+            上传微信公众号消息封面
             </summary>
             <param name="beautyDiaryManageUpdate"></param>
             <returns></returns>
@@ -4414,6 +4431,41 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.OrderRefundController">
+            <summary>
+            订单退款
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderRefundController.ListWithPage(System.String,System.Nullable{System.Byte},System.Nullable{System.Byte},System.Int32,System.Int32)">
+            <summary>
+            获取退款订单列表
+            </summary>
+            <param name="keywords"></param>
+            <param name="checkState"></param>
+            <param name="refundState"></param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderRefundController.IntegrationPayRefundAsync(Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundCheckVo)">
+            <summary>
+            订单退款审核
+            </summary>
+            <param name="checkDto">输入参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderRefundController.GetCheckStateList">
+            <summary>
+            获取审核状态（下拉框使用）
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderRefundController.GetRefundStateList">
+            <summary>
+            获取退款状态（下拉框使用）
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.OrderReportController">
             <summary>
             报表接口
@@ -4790,7 +4842,7 @@
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetCustomerOrderReceivableAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String)">
             <summary>
-            客户订单应收款统计
+            客户订单应收款统计（交易完成订单）
             </summary>
             <param name="startDate">开始时间</param>
             <param name="endDate">结束时间</param>
@@ -4801,7 +4853,29 @@
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetCustomerOrderReceivableExportAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String)">
             <summary>
-            客户订单应收款统计导出
+            客户订单应收款统计导出（交易完成订单）
+            </summary>
+            <param name="startDate">开始时间</param>
+            <param name="endDate">结束时间</param>
+            <param name="CheckState">审核状态</param>
+            <param name="ReturnBackPriceState">是否回款</param>
+            <param name="customerName">客户名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetCustomerPaidOrderReceivableAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String)">
+            <summary>
+            客户订单应收款统计（买家已付款订单）
+            </summary>
+            <param name="startDate">开始时间</param>
+            <param name="endDate">结束时间</param>
+            <param name="customerName">客户名称</param>
+            <param name="CheckState">审核状态</param>
+            <param name="ReturnBackPriceState">是否回款</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetCustomerPaidOrderReceivableExportAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String)">
+            <summary>
+            客户订单应收款统计导出（买家已付款订单）
             </summary>
             <param name="startDate">开始时间</param>
             <param name="endDate">结束时间</param>
@@ -6148,6 +6222,18 @@
             <param name="userIds">用户编号数组</param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.WechatPayController">
+            <summary>
+            微信退款
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.WechatPayController.WechatRefund(System.String)">
+            <summary>
+            发起退款
+            </summary>
+            <param name="orderId"></param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.WxAppConfigController.GetEmailNoticeControll">
             <summary>
             当前邮箱通知状态
@@ -7202,6 +7288,21 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.BeautyDiaryManage.BeautyDiaryTagNameVo.Name">
             <summary>
             标签名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.BeautyDiaryManage.UpdateWechatDiaryVo.PicPath">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.BeautyDiaryManage.WechatDiaryListVo.Title">
+            <summary>
+            标题
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.BeautyDiaryManage.WechatDiaryListVo.PicPath">
+            <summary>
+            图片地址
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.BeautyDiaryTagInfo.AddBeautyDiaryTagInfoVo.Name">
@@ -18547,6 +18648,116 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderCheck.ReturnBackOrderVo.ReturnBackDate">
             <summary>
             回款时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundCheckVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundCheckVo.UnCheckReason">
+            <summary>
+            审核未通过原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundCheckVo.CheckState">
+            <summary>
+            审核状态id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.Id">
+            <summary>
+            退款订单id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.OrderId">
+            <summary>
+            订单id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.Remark">
+            <summary>
+            退款原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.CheckState">
+            <summary>
+            审核状态(0,待审核,1审核通过,2审核失败)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.CheckStateText">
+            <summary>
+            审核状态文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.UncheckReason">
+            <summary>
+            审核失败原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.RefundState">
+            <summary>
+            退款状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.RefundStateText">
+            <summary>
+            退款状态文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.RefundFailReason">
+            <summary>
+            退款失败原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.IsPartial">
+            <summary>
+            是否是订单部分退款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.ExchangeType">
+            <summary>
+            支付方式
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.ExchageTypeText">
+            <summary>
+            支付方式文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.PayDate">
+            <summary>
+            付款时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.CheckDate">
+            <summary>
+            审核时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.RefundAmount">
+            <summary>
+            退款金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.ActualPayAmount">
+            <summary>
+            实际支付
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.RefundStartDate">
+            <summary>
+            退款发起时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.GoodsName">
+            <summary>
+            商品名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderRefund.OrderRefundVo.CheckByName">
+            <summary>
+            审核人员
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.OrderReport.AppointmentReportVo">
