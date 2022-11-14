@@ -36,6 +36,6 @@ namespace Fx.Amiya.IService
         /// 创建慧收钱退款订单
         /// </summary>
         /// <returns></returns>
-        Task<HuiShouQianOrderResult> CreateHuiShouQianRefundOrde(HuiShouQianRefundRequestParam huiShouQianRefundRequestParam);
+        Task<HuiShouQianRefundResult> CreateHuiShouQianRefundOrde(HuiShouQianRefundRequestParam huiShouQianRefundRequestParam);
     }
 }

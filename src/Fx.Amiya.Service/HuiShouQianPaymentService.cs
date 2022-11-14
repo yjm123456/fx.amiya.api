@@ -109,11 +109,11 @@ namespace Fx.Amiya.Service
         /// 创建慧收钱退款订单
         /// </summary>
         /// <returns></returns>
-        public async Task<HuiShouQianOrderResult> CreateHuiShouQianRefundOrde(HuiShouQianRefundRequestParam huiShouQianRefundRequestParam)
+        public async Task<HuiShouQianRefundResult> CreateHuiShouQianRefundOrde(HuiShouQianRefundRequestParam huiShouQianRefundRequestParam)
         {
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
             var commonParam = BuildRefundCommonParam(huiShouQianRefundRequestParam);
-            return await PostOrderAsync(huiShouQianPackageInfo.OrderUrl, commonParam);
+            return await PostRefundOrderAsync(huiShouQianPackageInfo.OrderUrl, commonParam);
         }
         /// <summary>
         /// 创建公共请求参数
