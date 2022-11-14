@@ -143,7 +143,7 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// 是否回款
         /// </summary>
         [Description("是否回款")]
-        public bool IsReturnBackPrice { get; set; }
+        public string IsReturnBackPrice { get; set; }
         /// <summary>
         /// 回款金额
         /// </summary>
