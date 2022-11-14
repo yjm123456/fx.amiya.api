@@ -1494,7 +1494,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           CheckBy = d.CheckByEmpName,
                           CheckRemark = d.CheckRemark,
                           SettlePrice = d.SettlePrice,
-                          IsReturnBackPrice = d.IsReturnBackPrice,
+                          IsReturnBackPrice = d.IsReturnBackPrice == true ? "已回款" : "未回款",
                           ReturnBackPrice = d.ReturnBackPrice,
                           ReturnBackDate = d.ReturnBackDate
                       };
@@ -1547,13 +1547,13 @@ namespace Fx.Amiya.Background.Api.Controllers
                           CheckBy = d.CheckByEmpName,
                           CheckRemark = d.CheckRemark,
                           SettlePrice = d.SettlePrice,
-                          IsReturnBackPrice = d.IsReturnBackPrice,
+                          IsReturnBackPrice = d.IsReturnBackPrice == true ? "已回款" : "未回款",
                           ReturnBackPrice = d.ReturnBackPrice,
                           ReturnBackDate = d.ReturnBackDate
                       };
             var exportOrderWriteOff = res.ToList();
             var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "客户订单应收款统计.xls");
+            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "客户订单应收款统计（交易完成订单）.xls");
             return result;
         }
 
@@ -1599,7 +1599,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           CheckBy = d.CheckByEmpName,
                           CheckRemark = d.CheckRemark,
                           SettlePrice = d.SettlePrice,
-                          IsReturnBackPrice = d.IsReturnBackPrice,
+                          IsReturnBackPrice = d.IsReturnBackPrice == true ? "已回款" : "未回款",
                           ReturnBackPrice = d.ReturnBackPrice,
                           ReturnBackDate = d.ReturnBackDate
                       };
@@ -1652,13 +1652,13 @@ namespace Fx.Amiya.Background.Api.Controllers
                           CheckBy = d.CheckByEmpName,
                           CheckRemark = d.CheckRemark,
                           SettlePrice = d.SettlePrice,
-                          IsReturnBackPrice = d.IsReturnBackPrice,
+                          IsReturnBackPrice = d.IsReturnBackPrice == true ? "已回款" : "未回款",
                           ReturnBackPrice = d.ReturnBackPrice,
                           ReturnBackDate = d.ReturnBackDate
                       };
             var exportOrderWriteOff = res.ToList();
             var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "客户订单应收款统计.xls");
+            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "客户订单应收款统计（买家已付款订单）.xls");
             return result;
         }
 
@@ -2027,9 +2027,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                           MiniVanBadReviewsCompleteRate = d.MiniVanBadReviewsCompleteRate,
                           LivingTrackingEmployeeName = d.LivingTrackingEmployeeName,
                           NetWorkConsultingEmployeeName = d.NetWorkConsultingEmployeeName,
-                          TikTokUpdateDate=d.TikTokUpdateDate,
-                          LivingUpdateDate=d.LivingUpdateDate,
-                          AfterLivingUpdateDate=d.AfterLivingUpdateDate
+                          TikTokUpdateDate = d.TikTokUpdateDate,
+                          LivingUpdateDate = d.LivingUpdateDate,
+                          AfterLivingUpdateDate = d.AfterLivingUpdateDate
                       };
             return ResultData<List<LiveAnchorOperatingReportVo>>.Success().AddData("liveAnchorOperatingReport", res.ToList());
         }
@@ -2225,7 +2225,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                       select new ShootingAndClipReportVo()
                       {
                           Title = d.Title,
-                          VideoType=d.VideoTypeText,
+                          VideoType = d.VideoTypeText,
                           ShootingEmpName = d.ShootingEmpName,
                           ClipEmpName = d.ClipEmpName,
                           LiveAnchorName = d.LiveAnchorName,
