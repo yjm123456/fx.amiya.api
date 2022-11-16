@@ -330,41 +330,41 @@ namespace Fx.Amiya.Service
                 FxPageInfo<ContentPlatFormOrderInfoDto> orderPageInfo = new FxPageInfo<ContentPlatFormOrderInfoDto>();
                 orderPageInfo.TotalCount = await order.CountAsync();
                 orderPageInfo.List = await order.OrderByDescending(e => e.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
-                foreach (var x in orderPageInfo.List)
-                {
-                    if (x.BelongEmpId != 0)
-                    {
-                        var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.BelongEmpId);
-                        x.BelongEmpName = empInfo.Name.ToString();
-                    }
-                    if (!string.IsNullOrEmpty(x.GoodsDepartmentId))
-                    {
-                        var departmentInfo = await _departmentService.GetByIdAsync(x.GoodsDepartmentId);
-                        x.DepartmentName = departmentInfo.DepartmentName;
-                    }
-                    if (x.CheckBy.HasValue && x.CheckBy != 0)
-                    {
-                        var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.CheckBy);
-                        x.CheckByName = empInfo.Name.ToString();
-                    }
-                    if (x.LastDealHospitalId.HasValue && x.LastDealHospitalId != 0)
-                    {
-                        var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(x.LastDealHospitalId.Value);
-                        x.LastDealHospital = hospitalInfo.Name;
-                    }
+                //foreach (var x in orderPageInfo.List)
+                //{
+                //    if (x.BelongEmpId != 0)
+                //    {
+                //        var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.BelongEmpId);
+                //        x.BelongEmpName = empInfo.Name.ToString();
+                //    }
+                //    if (!string.IsNullOrEmpty(x.GoodsDepartmentId))
+                //    {
+                //        var departmentInfo = await _departmentService.GetByIdAsync(x.GoodsDepartmentId);
+                //        x.DepartmentName = departmentInfo.DepartmentName;
+                //    }
+                //    if (x.CheckBy.HasValue && x.CheckBy != 0)
+                //    {
+                //        var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.CheckBy);
+                //        x.CheckByName = empInfo.Name.ToString();
+                //    }
+                //    if (x.LastDealHospitalId.HasValue && x.LastDealHospitalId != 0)
+                //    {
+                //        var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(x.LastDealHospitalId.Value);
+                //        x.LastDealHospital = hospitalInfo.Name;
+                //    }
 
-                    if (x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
-                    {
-                        var sendOrderInfoList = await _contentPlatformOrderSend.GetSendOrderInfoByOrderId(x.Id);
-                        var sendOrderInfo = sendOrderInfoList.OrderByDescending(z => z.SendDate).FirstOrDefault();
-                        if (sendOrderInfo != null)
-                        {
-                            x.SendDate = sendOrderInfo.SendDate;
-                            var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == sendOrderInfo.Sender);
-                            x.Sender = empInfo.Name;
-                        }
-                    }
-                }
+                //    if (x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
+                //    {
+                //        var sendOrderInfoList = await _contentPlatformOrderSend.GetSendOrderInfoByOrderId(x.Id);
+                //        var sendOrderInfo = sendOrderInfoList.OrderByDescending(z => z.SendDate).FirstOrDefault();
+                //        if (sendOrderInfo != null)
+                //        {
+                //            x.SendDate = sendOrderInfo.SendDate;
+                //            var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == sendOrderInfo.Sender);
+                //            x.Sender = empInfo.Name;
+                //        }
+                //    }
+                //}
                 return orderPageInfo;
             }
             catch (Exception ex)
@@ -946,7 +946,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var orders = from d in _dalContentPlatformOrder.GetAll()
+                var orders = from d in _dalContentPlatformOrder.GetAll().Include(x=>x.ContentPlatformOrderSendList).ThenInclude(x=>x.AmiyaEmployee)
                              where (string.IsNullOrWhiteSpace(keyword) || d.Id.Contains(keyword) || d.ConsultingContent.Contains(keyword)
                             || d.Phone.Contains(keyword))
                             && (orderStatus == null || d.OrderStatus == orderStatus)
@@ -1033,42 +1033,45 @@ namespace Fx.Amiya.Service
                                 IsReturnBackPrice = d.IsReturnBackPrice,
                                 ReturnBackPrice = d.ReturnBackPrice,
                                 ReturnBackDate = d.ReturnBackDate,
+                                SendDate = d.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().SendDate,
+                                Sender = d.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().AmiyaEmployee.Name,
+                                SendHospital = d.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalInfo.Name,
                             };
                 var result = await order.OrderByDescending(e => e.CreateDate).ToListAsync();
-                foreach (var x in result)
-                {
-                    if (x.BelongEmpId != 0)
-                    {
-                        var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.BelongEmpId);
-                        x.BelongEmpName = empInfo.Name.ToString();
-                    }
-                    if (x.CheckBy != 0)
-                    {
-                        var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.CheckBy);
-                        x.CheckByName = empInfo.Name.ToString();
-                    }
-                    if (!string.IsNullOrEmpty(x.GoodsDepartmentId))
-                    {
-                        var departmentInfo = await _departmentService.GetByIdAsync(x.GoodsDepartmentId);
-                        x.DepartmentName = departmentInfo.DepartmentName;
-                    }
-                    if (x.LastDealHospitalId.HasValue)
-                    {
-                        var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(x.LastDealHospitalId.Value);
-                        x.LastDealHospital = hospitalInfo.Name;
-                    }
-                    if (x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
-                    {
-                        var sendOrderInfoList = await _contentPlatformOrderSend.GetSendOrderInfoByOrderId(x.Id);
-                        var sendOrderInfo = sendOrderInfoList.OrderByDescending(z => z.SendDate).FirstOrDefault();
-                        if (sendOrderInfo != null)
-                        {
-                            x.SendDate = sendOrderInfo.SendDate;
-                            var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == sendOrderInfo.Sender);
-                            x.Sender = empInfo.Name;
-                        }
-                    }
-                }
+                //foreach (var x in result)
+                //{
+                //    //    if (x.BelongEmpId != 0)
+                //    //    {
+                //    //        var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.BelongEmpId);
+                //    //        x.BelongEmpName = empInfo.Name.ToString();
+                //    //    }
+                //    //    if (x.CheckBy != 0)
+                //    //    {
+                //    //        var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.CheckBy);
+                //    //        x.CheckByName = empInfo.Name.ToString();
+                //    //    }
+                //    //    if (!string.IsNullOrEmpty(x.GoodsDepartmentId))
+                //    //    {
+                //    //        var departmentInfo = await _departmentService.GetByIdAsync(x.GoodsDepartmentId);
+                //    //        x.DepartmentName = departmentInfo.DepartmentName;
+                //    //    }
+                //    //    if (x.LastDealHospitalId.HasValue)
+                //    //    {
+                //    //        var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(x.LastDealHospitalId.Value);
+                //    //        x.LastDealHospital = hospitalInfo.Name;
+                //    //    }
+                //    if (x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
+                //    {
+                //        var sendOrderInfoList = await _contentPlatformOrderSend.GetSendOrderInfoByOrderId(x.Id);
+                //        var sendOrderInfo = sendOrderInfoList.OrderByDescending(z => z.SendDate).FirstOrDefault();
+                //        if (sendOrderInfo != null)
+                //        {
+                //            x.SendDate = sendOrderInfo.SendDate;
+                //            var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == sendOrderInfo.Sender);
+                //            x.Sender = empInfo.Name;
+                //        }
+                //    }
+                //}
                 return result;
             }
             catch (Exception ex)

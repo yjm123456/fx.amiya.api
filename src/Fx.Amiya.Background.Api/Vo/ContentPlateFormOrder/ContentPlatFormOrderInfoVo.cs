@@ -132,6 +132,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         [Description("订单来源")]
         public string OrderSourceText { get; set; }
         /// <summary>
+        /// 派单医院
+        /// </summary>
+        [Description("派单医院")]
+        public string SendHospital { get; set; }
+        /// <summary>
         /// 派单人
         /// </summary>
         [Description("派单人")]

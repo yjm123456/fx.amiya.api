@@ -35,12 +35,20 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private IContentPlateFormOrderService _orderService;
         private ICustomerService customerService;
+        private IAmiyaEmployeeService amiyaEmployeeService;
         private IWxAppConfigService _wxAppConfigService;
+        private IContentPlatformOrderSendService _contentPlatformOrderSend;
+        private IAmiyaHospitalDepartmentService _departmentService;
         private IOrderService _tmallOrderService;
         private IContentPlatFormCustomerPictureService _contentPlatFormCustomerPictureService;
+        private IHospitalInfoService _hospitalInfoService;
         private IHttpContextAccessor _httpContextAccessor;
         public ContentPlateFormOrderController(IContentPlateFormOrderService orderService,
             IOrderService tmallOrderService,
+            IAmiyaEmployeeService amiyaEmployeeService,
+            IHospitalInfoService hospitalInfoService,
+            IAmiyaHospitalDepartmentService departmentService,
+            IContentPlatformOrderSendService contentPlatformOrderSend,
            ICustomerService customerService,
             IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
             IHttpContextAccessor httpContextAccessor,
@@ -49,7 +57,11 @@ namespace Fx.Amiya.Background.Api.Controllers
             _orderService = orderService;
             _tmallOrderService = tmallOrderService;
             this.customerService = customerService;
+            this.amiyaEmployeeService = amiyaEmployeeService;
+            _departmentService = departmentService;
+            _contentPlatformOrderSend = contentPlatformOrderSend;
             _wxAppConfigService = wxAppConfigService;
+            _hospitalInfoService = hospitalInfoService;
             _httpContextAccessor = httpContextAccessor;
             _contentPlatFormCustomerPictureService = contentPlatFormCustomerPictureService;
         }
@@ -205,6 +217,38 @@ namespace Fx.Amiya.Background.Api.Controllers
                     resultVo.ReturnBackDate = x.ReturnBackDate;
                     resultVo.ReturnBackPrice = x.ReturnBackPrice;
                     resultVo.OtherContentPlatFormOrderId = x.OtherContentPlatFormOrderId;
+
+                    if (x.BelongEmpId != 0)
+                    {
+                        var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
+                        x.BelongEmpName = empInfo.Name.ToString();
+                    }
+                    if (x.CheckBy != 0)
+                    {
+                        var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CheckBy.Value);
+                        x.CheckByName = empInfo.Name.ToString();
+                    }
+                    if (!string.IsNullOrEmpty(x.GoodsDepartmentId))
+                    {
+                        var departmentInfo = await _departmentService.GetByIdAsync(x.GoodsDepartmentId);
+                        x.DepartmentName = departmentInfo.DepartmentName;
+                    }
+                    if (x.LastDealHospitalId.HasValue)
+                    {
+                        var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(x.LastDealHospitalId.Value);
+                        x.LastDealHospital = hospitalInfo.Name;
+                    }
+                    if (x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
+                    {
+                        var sendOrderInfoList = await _contentPlatformOrderSend.GetSendOrderInfoByOrderId(x.Id);
+                        var sendOrderInfo = sendOrderInfoList.OrderByDescending(z => z.SendDate).FirstOrDefault();
+                        if (sendOrderInfo != null)
+                        {
+                            x.SendDate = sendOrderInfo.SendDate;
+                            var empInfo = await amiyaEmployeeService.GetByIdAsync(sendOrderInfo.Sender);
+                            x.Sender = empInfo.Name;
+                        }
+                    }
                     contentPlatFormOrderInfoVoList.Add(resultVo);
                 }
                 FxPageInfo<ContentPlatFormOrderInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderInfoVo>();
@@ -318,60 +362,143 @@ namespace Fx.Amiya.Background.Api.Controllers
                     isHidePhone = false;
                 }
                 var q = await _orderService.ExportOrderListWithPageAsync(startDate, endDate, consultationEmpId, appointmentHospital, belongEmpId, liveAnchorId, keyword, hospitalDepartmentId, orderStatus, orderSource, contentPlateFormId, employeeId, isHidePhone);
-                var resutList = q.ToList();
-                List<ContentPlatFormOrderInfoVo> contentPlatFormOrderInfoVoList = new List<ContentPlatFormOrderInfoVo>();
-                foreach (var x in resutList)
-                {
-                    ContentPlatFormOrderInfoVo resultVo = new ContentPlatFormOrderInfoVo();
-                    resultVo.Id = x.Id;
-                    resultVo.OrderTypeText = x.OrderTypeText;
-                    resultVo.ContentPlatformName = x.ContentPlatformName;
-                    resultVo.LiveAnchorName = x.LiveAnchorName;
-                    resultVo.LiveAnchorWeChatNo = x.LiveAnchorWeChatNo;
-                    resultVo.ConsultationType = x.ConsultationTypeText;
-                    resultVo.BelongMonth = x.BelongMonth;
-                    resultVo.AddOrderPrice = x.AddOrderPrice;
-                    resultVo.CreateDate = x.CreateDate;
-                    resultVo.CustomerName = x.CustomerName;
-                    resultVo.Phone = x.Phone;
-                    var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(x.EncryptPhone);
-                    resultVo.City = customerBaseInfo.City;
-                    resultVo.AppointmentDate = x.AppointmentDate == null ? "未预约时间" : x.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
-                    resultVo.AppointmentHospitalName = x.AppointmentHospitalName;
-                    resultVo.GoodsName = x.GoodsName;
-                    resultVo.ThumbPictureUrl = x.ThumbPictureUrl;
-                    resultVo.ConsultingContent = x.ConsultingContent;
-                    resultVo.OrderStatusText = x.OrderStatusText;
-                    resultVo.DepositAmount = x.DepositAmount;
-                    resultVo.IsToHospital = x.IsToHospital;
-                    resultVo.ToHospitalDate = x.ToHospitalDate;
-                    resultVo.LastDealHospital = x.LastDealHospital;
-                    resultVo.DealAmount = x.DealAmount;
-                    resultVo.DealDate = x.DealDate;
-                    resultVo.UnDealReason = x.UnDealReason;
-                    resultVo.LateProjectStage = x.LateProjectStage;
-                    resultVo.Remark = x.Remark;
-                    resultVo.DepartmentName = x.DepartmentName;
-                    resultVo.BelongEmpName = x.BelongEmpName;
-                    resultVo.UnSendReason = x.UnSendReason;
-                    resultVo.OrderSourceText = x.OrderSourceText;
-                    resultVo.AcceptConsulting = x.AcceptConsulting;
-                    resultVo.CheckStateText = x.CheckStateText;
-                    resultVo.CheckDate = x.CheckDate;
-                    resultVo.CheckByName = x.CheckByName;
-                    resultVo.CheckPrice = x.CheckPrice;
-                    resultVo.Sender = x.Sender;
-                    resultVo.SendDate = x.SendDate;
+                //var resutList = q.ToList();
+                //List<ContentPlatFormOrderInfoVo> contentPlatFormOrderInfoVoList = new List<ContentPlatFormOrderInfoVo>();
+                //foreach (var x in resutList)
+                //{
+                //    ContentPlatFormOrderInfoVo resultVo = new ContentPlatFormOrderInfoVo();
+                //    resultVo.Id = x.Id;
+                //    resultVo.OrderTypeText = x.OrderTypeText;
+                //    resultVo.ContentPlatformName = x.ContentPlatformName;
+                //    resultVo.LiveAnchorName = x.LiveAnchorName;
+                //    resultVo.LiveAnchorWeChatNo = x.LiveAnchorWeChatNo;
+                //    resultVo.ConsultationType = x.ConsultationTypeText;
+                //    resultVo.BelongMonth = x.BelongMonth;
+                //    resultVo.AddOrderPrice = x.AddOrderPrice;
+                //    resultVo.CreateDate = x.CreateDate;
+                //    resultVo.CustomerName = x.CustomerName;
+                //    resultVo.Phone = x.Phone;
+                //    //var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(x.EncryptPhone);
+                //    //resultVo.City = customerBaseInfo.City;
+                //    resultVo.AppointmentDate = x.AppointmentDate == null ? "未预约时间" : x.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
+                //    resultVo.AppointmentHospitalName = x.AppointmentHospitalName;
+                //    resultVo.GoodsName = x.GoodsName;
+                //    resultVo.ThumbPictureUrl = x.ThumbPictureUrl;
+                //    resultVo.ConsultingContent = x.ConsultingContent;
+                //    resultVo.OrderStatusText = x.OrderStatusText;
+                //    resultVo.DepositAmount = x.DepositAmount;
+                //    resultVo.IsToHospital = x.IsToHospital;
+                //    resultVo.ToHospitalDate = x.ToHospitalDate;
+                //    resultVo.LastDealHospital = x.LastDealHospital;
+                //    resultVo.DealAmount = x.DealAmount;
+                //    resultVo.DealDate = x.DealDate;
+                //    resultVo.UnDealReason = x.UnDealReason;
+                //    resultVo.LateProjectStage = x.LateProjectStage;
+                //    resultVo.Remark = x.Remark;
+                //    resultVo.DepartmentName = x.DepartmentName;
+                //    resultVo.BelongEmpName = x.BelongEmpName;
+                //    resultVo.UnSendReason = x.UnSendReason;
+                //    resultVo.OrderSourceText = x.OrderSourceText;
+                //    resultVo.AcceptConsulting = x.AcceptConsulting;
+                //    resultVo.CheckStateText = x.CheckStateText;
+                //    resultVo.CheckDate = x.CheckDate;
+                //    resultVo.CheckByName = x.CheckByName;
+                //    resultVo.CheckPrice = x.CheckPrice;
+                //    resultVo.Sender = x.Sender;
+                //    resultVo.SendDate = x.SendDate;
 
-                    resultVo.CheckRemark = x.CheckRemark;
-                    resultVo.SettlePrice = x.SettlePrice;
-                    resultVo.IsReturnBackPrice = x.IsReturnBackPrice;
-                    resultVo.ReturnBackDate = x.ReturnBackDate;
-                    resultVo.ReturnBackPrice = x.ReturnBackPrice;
-                    resultVo.OtherContentPlatFormOrderId = x.OtherContentPlatFormOrderId;
-                    contentPlatFormOrderInfoVoList.Add(resultVo);
-                }
-                var stream = ExportExcelHelper.ExportExcel(contentPlatFormOrderInfoVoList);
+                //    resultVo.CheckRemark = x.CheckRemark;
+                //    resultVo.SettlePrice = x.SettlePrice;
+                //    resultVo.IsReturnBackPrice = x.IsReturnBackPrice;
+                //    resultVo.ReturnBackDate = x.ReturnBackDate;
+                //    resultVo.ReturnBackPrice = x.ReturnBackPrice;
+                //    resultVo.OtherContentPlatFormOrderId = x.OtherContentPlatFormOrderId;
+
+                //    //if (x.BelongEmpId != 0)
+                //    //{
+                //    //    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
+                //    //    x.BelongEmpName = empInfo.Name.ToString();
+                //    //}
+                //    //if (x.CheckBy != 0)
+                //    //{
+                //    //    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CheckBy.Value);
+                //    //    x.CheckByName = empInfo.Name.ToString();
+                //    //}
+                //    //if (!string.IsNullOrEmpty(x.GoodsDepartmentId))
+                //    //{
+                //    //    var departmentInfo = await _departmentService.GetByIdAsync(x.GoodsDepartmentId);
+                //    //    x.DepartmentName = departmentInfo.DepartmentName;
+                //    //}
+                //    //if (x.LastDealHospitalId.HasValue)
+                //    //{
+                //    //    var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(x.LastDealHospitalId.Value);
+                //    //    x.LastDealHospital = hospitalInfo.Name;
+                //    //}
+                //    //if (x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
+                //    //{
+                //    //    var sendOrderInfoList = await _contentPlatformOrderSend.GetSendOrderInfoByOrderId(x.Id);
+                //    //    var sendOrderInfo = sendOrderInfoList.OrderByDescending(z => z.SendDate).FirstOrDefault();
+                //    //    if (sendOrderInfo != null)
+                //    //    {
+                //    //        x.SendDate = sendOrderInfo.SendDate;
+                //    //        var empInfo = await amiyaEmployeeService.GetByIdAsync(sendOrderInfo.Sender);
+                //    //        x.Sender = empInfo.Name;
+                //    //    }
+                //    //}
+                //    contentPlatFormOrderInfoVoList.Add(resultVo);
+                //}
+                var order = from d in q
+                            select new ContentPlatFormOrderInfoVo
+                            {
+                                Id = d.Id,
+                                OrderTypeText = d.OrderTypeText,
+                                ContentPlatformName = d.ContentPlatformName,
+                                LiveAnchorName = d.LiveAnchorName,
+                                CreateDate = d.CreateDate,
+                                BelongMonth = d.BelongMonth,
+                                City = d.City,
+                                AddOrderPrice = d.AddOrderPrice,
+                                CustomerName = d.CustomerName,
+                                Phone = d.Phone,
+                                AppointmentDate = d.AppointmentDate == null ? "未预约时间" : d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss"),
+                                AppointmentHospitalName = d.AppointmentHospitalName,
+                                GoodsName = d.GoodsName,
+                                DepartmentName = d.DepartmentName,
+                                ThumbPictureUrl = d.ThumbPictureUrl,
+                                IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
+                                ConsultingContent = d.ConsultingContent,
+                                IsToHospital = d.IsToHospital,
+                                ToHospitalDate = d.ToHospitalDate,
+                                LastDealHospital = d.LastDealHospital,
+                                OrderStatusText = d.OrderStatusText,
+                                Sender = d.Sender,
+                                SendDate = d.SendDate,
+                                DepositAmount = d.DepositAmount,
+                                DealAmount = d.DealAmount,
+                                UnDealReason = d.UnDealReason,
+                                LateProjectStage = d.LateProjectStage,
+                                Remark = d.Remark,
+                                DealDate = d.DealDate,
+                                OrderSourceText = d.OrderSourceText,
+                                UnSendReason = d.UnSendReason,
+                                AcceptConsulting = d.AcceptConsulting,
+                                CheckStateText = d.CheckStateText,
+                                CheckDate = d.CheckDate,
+                                CheckByName = d.CheckByName,
+                                CheckPrice = d.CheckPrice,
+                                ConsultationType = d.ConsultationTypeText,
+                                CheckRemark = d.CheckRemark,
+                                SettlePrice = d.SettlePrice,
+                                BelongEmpName = d.BelongEmpName,
+                                IsReturnBackPrice = d.IsReturnBackPrice,
+                                ReturnBackDate = d.ReturnBackDate,
+                                ReturnBackPrice = d.ReturnBackPrice,
+                                OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
+                                SendHospital=d.SendHospital
+                            };
+                var exportSendOrder = order.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
+                //var stream = ExportExcelHelper.ExportExcel(contentPlatFormOrderInfoVoList);
                 var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "内容平台订单报表.xls");
                 return result;
             }
