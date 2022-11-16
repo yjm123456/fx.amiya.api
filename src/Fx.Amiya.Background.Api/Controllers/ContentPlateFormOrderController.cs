@@ -218,37 +218,37 @@ namespace Fx.Amiya.Background.Api.Controllers
                     resultVo.ReturnBackPrice = x.ReturnBackPrice;
                     resultVo.OtherContentPlatFormOrderId = x.OtherContentPlatFormOrderId;
 
-                    if (x.BelongEmpId != 0)
-                    {
-                        var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
-                        x.BelongEmpName = empInfo.Name.ToString();
-                    }
-                    if (x.CheckBy != 0)
-                    {
-                        var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CheckBy.Value);
-                        x.CheckByName = empInfo.Name.ToString();
-                    }
-                    if (!string.IsNullOrEmpty(x.GoodsDepartmentId))
-                    {
-                        var departmentInfo = await _departmentService.GetByIdAsync(x.GoodsDepartmentId);
-                        x.DepartmentName = departmentInfo.DepartmentName;
-                    }
-                    if (x.LastDealHospitalId.HasValue)
-                    {
-                        var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(x.LastDealHospitalId.Value);
-                        x.LastDealHospital = hospitalInfo.Name;
-                    }
-                    if (x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
-                    {
-                        var sendOrderInfoList = await _contentPlatformOrderSend.GetSendOrderInfoByOrderId(x.Id);
-                        var sendOrderInfo = sendOrderInfoList.OrderByDescending(z => z.SendDate).FirstOrDefault();
-                        if (sendOrderInfo != null)
-                        {
-                            x.SendDate = sendOrderInfo.SendDate;
-                            var empInfo = await amiyaEmployeeService.GetByIdAsync(sendOrderInfo.Sender);
-                            x.Sender = empInfo.Name;
-                        }
-                    }
+                    //    if (x.BelongEmpId != 0)
+                    //    {
+                    //        var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
+                    //        x.BelongEmpName = empInfo.Name.ToString();
+                    //    }
+                    //    if (x.CheckBy != 0)
+                    //    {
+                    //        var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CheckBy.Value);
+                    //        x.CheckByName = empInfo.Name.ToString();
+                    //    }
+                    //    if (!string.IsNullOrEmpty(x.GoodsDepartmentId))
+                    //    {
+                    //        var departmentInfo = await _departmentService.GetByIdAsync(x.GoodsDepartmentId);
+                    //        x.DepartmentName = departmentInfo.DepartmentName;
+                    //    }
+                    //    if (x.LastDealHospitalId.HasValue)
+                    //    {
+                    //        var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(x.LastDealHospitalId.Value);
+                    //        x.LastDealHospital = hospitalInfo.Name;
+                    //    }
+                    //    if (x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
+                    //    {
+                    //        var sendOrderInfoList = await _contentPlatformOrderSend.GetSendOrderInfoByOrderId(x.Id);
+                    //        var sendOrderInfo = sendOrderInfoList.OrderByDescending(z => z.SendDate).FirstOrDefault();
+                    //        if (sendOrderInfo != null)
+                    //        {
+                    //            x.SendDate = sendOrderInfo.SendDate;
+                    //            var empInfo = await amiyaEmployeeService.GetByIdAsync(sendOrderInfo.Sender);
+                    //            x.Sender = empInfo.Name;
+                    //        }
+                    //    }
                     contentPlatFormOrderInfoVoList.Add(resultVo);
                 }
                 FxPageInfo<ContentPlatFormOrderInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderInfoVo>();
@@ -494,7 +494,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 ReturnBackDate = d.ReturnBackDate,
                                 ReturnBackPrice = d.ReturnBackPrice,
                                 OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
-                                SendHospital=d.SendHospital
+                                SendHospital = d.SendHospital
                             };
                 var exportSendOrder = order.ToList();
                 var stream = ExportExcelHelper.ExportExcel(exportSendOrder);

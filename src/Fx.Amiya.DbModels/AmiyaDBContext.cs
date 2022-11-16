@@ -21,6 +21,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<AmiyaLessonApply> AmiyaLessonApply { get; set; }
         public virtual DbSet<AmiyaInWarehouse> AmiyaInWarehouse { get; set; }
         public virtual DbSet<GreatHospitalDataWrite> GreatHospitalDataWrite { get; set; }
+        public virtual DbSet<CustomerTagInfo> CustomerTagInfo { get; set; }
 
         public virtual DbSet<HospitalNetWorkConsulationOperationData> HospitalNetWorkConsulationOperationData { get; set; }
         public virtual DbSet<HospitalConsulationOperationData> HospitalConsulationOperationData { get; set; }
@@ -152,6 +153,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new CustomerInfoConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaEmployeeConfiguration());
             modelBuilder.ApplyConfiguration(new ConsumptionLevelConfiguration());
+            modelBuilder.ApplyConfiguration(new CustomerTagInfoConfiguration());
             modelBuilder.ApplyConfiguration(new ContentPlatFormCustomerPictureConfiguration());
             modelBuilder.ApplyConfiguration(new DockingHospitalCustomerInfoConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalFeedBackConfiguration());
@@ -248,7 +250,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new OrderInitializerConfiguration());
             modelBuilder.ApplyConfiguration(new LiveTypeConfiguration());
             modelBuilder.ApplyConfiguration(new RequirementTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new AmiyaDepartmentConfiguration()); 
+            modelBuilder.ApplyConfiguration(new AmiyaDepartmentConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalDoctorOperationDataConfiguration());
             modelBuilder.ApplyConfiguration(new LiveRequirementInfoConfiguration());
             modelBuilder.ApplyConfiguration(new AddressConfiguration());
