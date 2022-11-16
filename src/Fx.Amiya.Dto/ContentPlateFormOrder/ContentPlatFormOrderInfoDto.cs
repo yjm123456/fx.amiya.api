@@ -69,6 +69,7 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
 
         public decimal? CheckPrice { get; set; }
         public DateTime? CheckDate { get; set; }
+        public string SendHospital { get; set; }
         public string Sender { get; set; }
         public DateTime? SendDate { get; set; }
         public decimal? SettlePrice { get; set; }

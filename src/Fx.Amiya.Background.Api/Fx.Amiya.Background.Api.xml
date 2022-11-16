@@ -9050,6 +9050,11 @@
             订单来源
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.SendHospital">
+            <summary>
+            派单医院
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.Sender">
             <summary>
             派单人
