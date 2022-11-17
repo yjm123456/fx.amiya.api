@@ -26,6 +26,12 @@ namespace Fx.Amiya.IService
         /// <param name="hospitalId"></param>
         /// <returns></returns>
         Task<DockingHospitalCustomerInfoDto> GetBeautyDiaryTokenInfo(int hospitalId);
+        /// <summary>
+        /// 获取小程序accesstoken
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<DockingHospitalCustomerInfoDto> GetMiniProgramAccessTokenInfo(int hospitalId);
 
         /// <summary>
         /// 根据条件获取医院客户信息

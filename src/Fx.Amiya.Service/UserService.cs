@@ -28,6 +28,7 @@ namespace Fx.Amiya.Service
         private IDalConfig dalConfig;
         private IDalCustomerInfo dalCustomerInfo;
         private IDalUserInfoUpdateRecord dalUserInfoUpdateRecord;
+        private IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService;
         public UserService(IDalUserInfo dalUserInfo,
             IWxMiniUserRepository wxMiniUserRepository,
             IUserRepository userRepository,
@@ -35,7 +36,7 @@ namespace Fx.Amiya.Service
             IWxMpUserRepository wxMpUserRepository,
             IDalConfig dalConfig,
             IDalCustomerInfo dalCustomerInfo,
-            IDalUserInfoUpdateRecord dalUserInfoUpdateRecord)
+            IDalUserInfoUpdateRecord dalUserInfoUpdateRecord, IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService)
         {
             this.dalUserInfo = dalUserInfo;
             this.wxMiniUserRepository = wxMiniUserRepository;
@@ -45,6 +46,7 @@ namespace Fx.Amiya.Service
             this.dalConfig = dalConfig;
             this.dalCustomerInfo = dalCustomerInfo;
             this.dalUserInfoUpdateRecord = dalUserInfoUpdateRecord;
+            this.dockingHospitalCustomerInfoService = dockingHospitalCustomerInfoService;
         }
         public async Task<WxMiniUserDto> AddUnauthorizedWxMiniUserAsync(UnauthorizedWxMiniUserAddDto miniUserAddDto)
         {
@@ -363,8 +365,20 @@ namespace Fx.Amiya.Service
 
             return user;
         }
-
-        
+        /// <summary>
+        /// 根据userid获取分享二维码
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<string> GetUserQrCode(string userId)
+        {
+            var appInfo =await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(2);
+            var requestUrl = $"https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token={appInfo.AccessToken}";
+            var data = new { scene = userId, page = "pages/index/index"};
+            var res = await HttpUtil.HttpJsonPostForStreamAsync(requestUrl, JsonConvert.SerializeObject(data));
+            string result = Convert.ToBase64String(res);                        
+            return result;
+        }
 
         Dictionary<byte, string> sexDict = new Dictionary<byte, string>()
         {

@@ -198,5 +198,47 @@ namespace Fx.Amiya.Service
 
             return returnResult;
         }
+        /// <summary>
+        /// 获取小程序accesstoken
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        public async Task<DockingHospitalCustomerInfoDto> GetMiniProgramAccessTokenInfo(int hospitalId)
+        {
+            var appInfo = await dalDockingHospitalCustomerInfo.GetAll().FirstOrDefaultAsync(e => e.HospitalId == hospitalId);
+            if (appInfo == null)
+                throw new Exception("美丽日记应用证书信息为空");
+            DateTime date = DateTime.Now;
+            if (appInfo.ExpireDate.Value <= date)
+            {
+                string url = $"{appInfo.BaseUrl}{appInfo.TokenUrl}?grant_type=client_credential&appid={appInfo.AppKey}&secret={appInfo.AppSecret}";
+                var res = await HttpUtil.HTTPJsonGetAsync(url);
+                if (res.Contains("errorcode"))
+                    throw new Exception(res);
+                JObject requestObject = JsonConvert.DeserializeObject(res) as JObject;
+                string token = requestObject["access_token"].ToString();
+                double expires_in = Convert.ToDouble(requestObject["expires_in"].ToString());
+                appInfo.AccessToken = token;
+                appInfo.ExpireDate = date.AddSeconds(expires_in - 400);
+                appInfo.AuthorizeDate = date;
+                await dalDockingHospitalCustomerInfo.UpdateAsync(appInfo, true);
+            }
+
+            DockingHospitalCustomerInfoDto dockingHospitalCustomerInfo = new DockingHospitalCustomerInfoDto();
+            dockingHospitalCustomerInfo.Id = appInfo.Id;
+            dockingHospitalCustomerInfo.AppKey = appInfo.AppKey;
+            dockingHospitalCustomerInfo.AppSecret = appInfo.AppSecret;
+            dockingHospitalCustomerInfo.AccessToken = appInfo.AccessToken;
+            dockingHospitalCustomerInfo.AuthorizeDate = appInfo.AuthorizeDate;
+            dockingHospitalCustomerInfo.ExpireDate = appInfo.ExpireDate;
+            dockingHospitalCustomerInfo.RefreshToken = appInfo.RefreshToken;
+            dockingHospitalCustomerInfo.HospitalId = appInfo.HospitalId;
+            dockingHospitalCustomerInfo.BaseUrl = appInfo.BaseUrl;
+            dockingHospitalCustomerInfo.TokenUrl = appInfo.TokenUrl;
+            dockingHospitalCustomerInfo.GetCustomerOrderUrl = appInfo.GetCustomerOrderUrl;
+            dockingHospitalCustomerInfo.GetCustomerUrl = appInfo.GetCustomerUrl;
+            dockingHospitalCustomerInfo.GetOrderUrl = appInfo.GetOrderUrl;
+            return dockingHospitalCustomerInfo;
+        }
     }
 }

@@ -73,5 +73,11 @@ namespace Fx.Amiya.IService
         /// <param name="userId"></param>
         /// <returns></returns>
          Task<UserInfoDto> GetUserInfoByUserIdAsync(string userId);
+        /// <summary>
+        /// 根据userid获取分享二维码
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<string> GetUserQrCode(string userId); 
     }
 }

@@ -57,7 +57,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             {
                 appIds.Add(item.WxAppId);
             }
-            return ResultData<List<string>>.Success().AddData("appIds",appIds);
+            return ResultData<List<string>>.Success().AddData("appIds", appIds);
         }
 
 
@@ -70,7 +70,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         }
 
 
-       
+
 
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <returns></returns>
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<ResultData<string>> Login([FromBody]LoginVo loginVo)
+        public async Task<ResultData<string>> Login([FromBody] LoginVo loginVo)
         {
             try
             {
@@ -89,14 +89,14 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     return ResultData<string>.Fail("无效APPID！");
 
                 var sessionInfo = await WxMiniBaseApi.GetCode2SessionAsync(loginVo.Code, appInfo.WxAppId, appInfo.WxAppSecret);
-          
+
                 if (sessionInfo.ErrCode == 0)
                 {
                     //if (string.IsNullOrEmpty(sessionInfo.UnionId))
                     //{
                     //    return ResultData<string>.Fail(-2, "unionid获取不到！");
                     //}
-                  
+
                     //添加用户，如果已经存在，则不会添加
                     var wxMiniUserInfo = await userService.AddUnauthorizedWxMiniUserAsync(new UnauthorizedWxMiniUserAddDto()
                     {
@@ -105,7 +105,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         OpenId = sessionInfo.OpenId,
                         Scene = loginVo.Scene,
                         UnionId = sessionInfo.UnionId
-                    });                 
+                    });
                     string token = Guid.NewGuid().ToString().Replace("-", "");
 
                     sessionStorage.SetSession(token, new FxWxMiniUserSession()
@@ -118,7 +118,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         AppId = loginVo.AppId,
                         ExpireTime = DateTime.Now.AddDays(SessionLiveDays)
                     });
-                   
+
                     return ResultData<string>.Success().AddData("token", token);
                 }
                 else
@@ -152,7 +152,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         //            return ResultData<string>.Fail("无效APPID！");
 
         //        var sessionInfo = await WxMiniBaseApi.GetCode2SessionAsync(loginVo.Code, appInfo.WxAppId, appInfo.WxAppSecret);
-             
+
         //        if (sessionInfo.ErrCode == 0)
         //        {
 
@@ -174,10 +174,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         //                Province = authMiniUserObj.province,
         //                UnionId = authMiniUserObj.unionId
         //            };
-        
+
         //            //添加用户，如果已经存在，则不会添加
         //            var wxMiniUserInfo = await userService.AddAuthorizedWxMiniUserAsync(authMiniUserAddDto);
-         
+
 
         //            string token = Guid.NewGuid().ToString().Replace("-", "");
         //            sessionStorage.SetSession(token, new FxWxMiniUserSession()
@@ -242,12 +242,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             var sessionInfo = sessionStorage.GetSession(tokenReader.GetToken());
             if (sessionInfo != null) {
                 await userService.UpdateUserInfo(
-                    new UserInfoEditDto { 
-                        Id=sessionInfo.FxUserId,
-                        Gender=editInfoVo.Gender,
-                        City=editInfoVo.City,
-                        Province=editInfoVo.Province,
-                        NickName=editInfoVo.NickName
+                    new UserInfoEditDto {
+                        Id = sessionInfo.FxUserId,
+                        Gender = editInfoVo.Gender,
+                        City = editInfoVo.City,
+                        Province = editInfoVo.Province,
+                        NickName = editInfoVo.NickName
                     }
                     );
                 return ResultData.Success();
@@ -303,7 +303,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpGet("decryptPhoneNumber")]
-        public async Task<ResultData<string>> DecryptWxPhoneNumber([FromQuery]DecryptWxPhoneNumberVo param)
+        public async Task<ResultData<string>> DecryptWxPhoneNumber([FromQuery] DecryptWxPhoneNumberVo param)
         {
             try
             {
@@ -353,6 +353,15 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             user.Sex = userInfo.Sex;
             user.IsAuthorizationUserInfo = userInfo.IsAuthorizationUserInfo;
             return ResultData<UserInfoVo>.Success().AddData("userInfo", user);
+        }
+        [HttpGet("getBusinessCardCode")]
+        public async Task<ResultData<string>> GetBusinessCardCode() {
+            string token = tokenReader.GetToken();
+            var sessionInfo = sessionStorage.GetSession(token);
+            var userInfo = await userService.GetUserInfoByUserIdAsync(sessionInfo.FxUserId);
+            var userId = userInfo.Id;
+            var baseString = await userService.GetUserQrCode(userId);
+            return ResultData<string>.Success().AddData("qrCode", baseString);
         }
 
     }
