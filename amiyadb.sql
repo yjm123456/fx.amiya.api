@@ -1199,6 +1199,16 @@ ENGINE=InnoDB;
 
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
+-----------------------------------------------余建明 2022/11/16 BEGIN--------------------------------------------
+CREATE TABLE `amiyadb`.`tbl_customer_tag_info` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `tag_name` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`));
+-----------------------------------------------余建明 2022/11/16 END--------------------------------------------
 
 
 

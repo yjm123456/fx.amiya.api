@@ -490,7 +490,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<SendContentPlatformOrderDto>> GetSendOrderReportList(int? liveAnchorId, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? hospitalId, int employeeId, int belongEmpId, int? orderStatus, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string contentPlatFormId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, DateTime? startDate, DateTime? endDate, bool isHidePhone)
         {
-            var orders = _dalContentPlatformOrderSend.GetAll()
+            var orders = _dalContentPlatformOrderSend.GetAll().Include(x=>x.HospitalInfo)
                        .Where(e => employeeId == -1 || e.Sender == employeeId)
                        .Where(e => belongEmpId == -1 || e.ContentPlatformOrder.BelongEmpId == belongEmpId)
                        .Where(e => !liveAnchorId.HasValue || e.ContentPlatformOrder.LiveAnchorId == liveAnchorId.Value)
@@ -547,15 +547,16 @@ namespace Fx.Amiya.Service
                                             ToHospitalDate = d.ContentPlatformOrder.ToHospitalDate,
                                             SendOrderRemark = d.Remark,
                                             OtherContentPlatFormOrderId = d.ContentPlatformOrder.OtherContentPlatFormOrderId,
+                                            SendHospital=d.HospitalInfo.Name
 
                                         };
 
             List<SendContentPlatformOrderDto> pageInfo = new List<SendContentPlatformOrderDto>();
             pageInfo = await contentPlatformOrders.ToListAsync();
-            foreach (var x in pageInfo)
-            {
-                x.SendHospital = _hospitalInfoService.GetByIdAsync(x.SendHospitalId).Result.Name;
-            }
+            //foreach (var x in pageInfo)
+            //{
+            //    x.SendHospital = _hospitalInfoService.GetByIdAsync(x.SendHospitalId).Result.Name;
+            //}
             return pageInfo;
         }
 
