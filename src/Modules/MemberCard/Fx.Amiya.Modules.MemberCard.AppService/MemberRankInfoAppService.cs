@@ -166,5 +166,29 @@ namespace Fx.Amiya.Modules.MemberCard.AppService
             };
             return memberRank;
         }
+        public async Task<MemberRankInfoDto> GetMinReferralsGeneratePercentMemberRankInfoAsync()
+        {
+            var memberRankInfo = await freeSql.Select<MemberRankInfoDbModel>()
+                .Where(e => e.Valid == true)
+                .OrderBy(e => e.ReferralsIntegrationPercent)
+                .FirstAsync();
+
+            MemberRankInfoDto memberRank = new MemberRankInfoDto()
+            {
+                ID = memberRankInfo.ID,
+                Name = memberRankInfo.Name,
+                MinAmount = memberRankInfo.MinAmount,
+                MaxAmount = memberRankInfo.MaxAmount,
+                Sconto = memberRankInfo.Sconto,
+                GenerateIntegrationPercent = memberRankInfo.GenerateIntegrationPercent,
+                ReferralsIntegrationPercent = memberRankInfo.ReferralsIntegrationPercent,
+                Valid = memberRankInfo.Valid,
+                Description = memberRankInfo.Description,
+                Default = memberRankInfo.Default,
+                ImageUrl = memberRankInfo.ImageUrl,
+                RankCode = memberRankInfo.RankCode,
+            };
+            return memberRank;
+        }
     }
 }

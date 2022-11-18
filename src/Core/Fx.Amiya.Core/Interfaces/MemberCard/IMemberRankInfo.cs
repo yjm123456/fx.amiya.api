@@ -53,6 +53,11 @@ namespace Fx.Amiya.Core.Interfaces.MemberCard
         /// </summary>
         /// <returns></returns>
         Task<MemberRankInfoDto> GetMinGeneratePercentMemberRankInfoAsync();
+        /// <summary>
+        /// 获取最小介绍人产生积分比例的会员级别
+        /// </summary>
+        /// <returns></returns>
+        Task<MemberRankInfoDto> GetMinReferralsGeneratePercentMemberRankInfoAsync();
 
 
     }

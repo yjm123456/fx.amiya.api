@@ -40,6 +40,8 @@ namespace Fx.Amiya.IService
 
         Task<CustomerInfoDto> GetByUserIdAsync(string userId);
 
+        Task<CustomerDto> GetCustomerByUserIdAsync(string userId);
+
         /// <summary>
         /// 根据电话号查询客户信息
         /// </summary>

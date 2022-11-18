@@ -9,6 +9,7 @@ using Fx.Amiya.IService;
 using Fx.Amiya.MiniProgram.Api.Filters;
 using Fx.Amiya.MiniProgram.Api.Vo.Login;
 using Fx.Amiya.MiniProgram.Api.Vo.UserInfo;
+using Fx.Common;
 using Fx.Open.Infrastructure.Web;
 using Fx.Weixin.MP.AdvanceApi.MiniApi;
 using Fx.Weixin.MP.Dto.Mini;
@@ -354,15 +355,52 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             user.IsAuthorizationUserInfo = userInfo.IsAuthorizationUserInfo;
             return ResultData<UserInfoVo>.Success().AddData("userInfo", user);
         }
+        /// <summary>
+        /// 获取小程序码
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("getBusinessCardCode")]
         public async Task<ResultData<string>> GetBusinessCardCode() {
             string token = tokenReader.GetToken();
             var sessionInfo = sessionStorage.GetSession(token);
             var userInfo = await userService.GetUserInfoByUserIdAsync(sessionInfo.FxUserId);
             var userId = userInfo.Id;
-            var baseString = await userService.GetUserQrCode(userId);
+            var avatarUrl = userInfo.Avatar;
+            var baseString = await userService.GetUserQrCode(userId,avatarUrl);
             return ResultData<string>.Success().AddData("qrCode", baseString);
         }
-
+        /// <summary>
+        /// 添加上级
+        /// </summary>
+        /// <param name="superiorId"></param>
+        /// <returns></returns>
+        [HttpPut("setSuperior/{superiorId}")]
+        public async Task<ResultData<string>> SetSuperior(string superiorId) {
+            string token = tokenReader.GetToken();
+            var sessionInfo = sessionStorage.GetSession(token);           
+            var result= await userService.AddSuperiorAsync(sessionInfo.FxUserId,superiorId);
+            return ResultData<string>.Success();
+        }
+        /// <summary>
+        /// 获取下级用户
+        /// </summary>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("subordinateList")]
+        public async Task<ResultData<FxPageInfo<SubordinateUserVo>>> GetSubordinateList(int pageNum,int pageSize) {
+            FxPageInfo<SubordinateUserVo> fxPageInfo = new FxPageInfo<SubordinateUserVo>();
+            string token = tokenReader.GetToken();
+            var sessionInfo = sessionStorage.GetSession(token);
+            var list = await userService.GetSubordinateUserListAsync(sessionInfo.FxUserId,pageNum,pageSize);
+            fxPageInfo.TotalCount = list.TotalCount;
+            fxPageInfo.List = list.List.Select(e=>new SubordinateUserVo {
+                NickName = e.NickName,
+                AvatarUrl = e.AvatarUrl,
+                CreateDate = e.CreateDate,
+                CustomerId = e.CustomerId
+            });
+            return ResultData<FxPageInfo<SubordinateUserVo>>.Success().AddData("subordinate", fxPageInfo);
+        }
     }
 }

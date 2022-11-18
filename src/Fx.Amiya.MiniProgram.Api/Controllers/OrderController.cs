@@ -72,6 +72,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private readonly IGoodsHospitalsPrice goodsHospitalsPrice;
         private readonly IMemberCardHandleService memberCardHandleService;
         private readonly IOrderRefundService orderRefundService;
+        private readonly IUserService userService;
         private readonly IUnitOfWork unitOfWork;
         
         private static readonly AsyncLock _mutex = new AsyncLock();
@@ -113,6 +114,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             this.goodsHospitalsPrice = goodsHospitalsPrice;
             this.memberCardHandleService = memberCardHandleService;
             this.orderRefundService = orderRefundService;
+            this.userService = userService;
         }
 
 
@@ -1017,6 +1019,33 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
 
         /// <summary>
+        /// 获取下级订单列表
+        /// </summary>
+        /// <param name="statusCode">状态码：WAIT_BUYER_PAY=待付款，WAIT_SELLER_SEND_GOODS=待发货，WAIT_BUYER_CONFIRM_GOODS=待收货</param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("subordinatelist")]
+        public async Task<ResultData<FxPageInfo<SubordinateOrderVo>>> GetSubordinateListByCustomerId(string customerId , int pageNum, int pageSize)
+        {            
+            var q = await orderService.GetSubordinateOrder(customerId,pageNum, pageSize);
+            var orders = from d in q.List
+                         select new SubordinateOrderVo
+                         {
+                             GoodsName=d.GoodsName,
+                             GoodsImgUrl=d.GoodsImgUrl,
+                             OrderDate=d.OrderDate,
+                             Price=d.Price,
+                             StatusCodeText=d.StatusCodeText
+                         };
+            FxPageInfo<SubordinateOrderVo> orderTradePageInfo = new FxPageInfo<SubordinateOrderVo>();
+            orderTradePageInfo.TotalCount = q.TotalCount;
+            orderTradePageInfo.List = orders;
+            return ResultData<FxPageInfo<SubordinateOrderVo>>.Success().AddData("orders", orderTradePageInfo);
+        }
+
+
+        /// <summary>
         /// 根据交易编号获取订单交易详情
         /// </summary>
         /// <param name="tradeId"></param>
@@ -1132,6 +1161,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             var sessionInfo = sessionStorage.GetSession(token);
             string customerId = sessionInfo.FxCustomerId;
             var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(tradeId);
+            var userInfo =await userService.GetUserInfoByUserIdAsync(sessionInfo.FxUserId);
             List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
             foreach (var item in orderTrade.OrderInfoList)
             {
@@ -1143,7 +1173,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
             await orderService.UpdateAsync(updateOrderList);
 
-            #region 积分奖励
+            #region 本人积分奖励
             decimal integrationPercent = 0m;
             var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(customerId);
             if (memberCard != null)
@@ -1159,6 +1189,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             {
                 if (item.ExchangeType != 0 && item.ExchangeType != null)
                 {
+                    var exist= await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAndCustomerIdAsync(item.Id,customerId);
+                    if (exist) throw new Exception("该订单已赠送过积分");
                     ConsumptionIntegrationDto consumptionIntegrationDto = new ConsumptionIntegrationDto
                     {
                         Quantity = Math.Floor(integrationPercent * (decimal)item.ActualPayment),
@@ -1172,6 +1204,43 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     await integrationAccountService.AddByConsumptionAsync(consumptionIntegrationDto);
                 }
 
+            }
+            #endregion
+            #region 上级奖励积分
+            if (!string.IsNullOrEmpty(userInfo.SuperiorId)) {
+                var superiorUserInfo = await customerService.GetCustomerByUserIdAsync(userInfo.SuperiorId);
+                
+                decimal superiorIntegrationPercent = 0m;
+                var superiorMemberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(superiorUserInfo.Id);
+                if (superiorMemberCard != null)
+                {
+                    superiorIntegrationPercent = superiorMemberCard.ReferralsIntegrationPercent;
+                }
+                else
+                {
+                    var memberRank = await memberRankInfoService.GetMinReferralsGeneratePercentMemberRankInfoAsync();
+                    superiorIntegrationPercent = memberRank.ReferralsIntegrationPercent;
+                }
+                foreach (var item in orderTrade.OrderInfoList)
+                {
+                    if (item.ExchangeType != 0 && item.ExchangeType != null)
+                    {
+                        var exist=await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAndCustomerIdAsync(item.Id, superiorUserInfo.Id);
+                        if (exist) throw new Exception("该订单已赠送过积分");
+                        ConsumptionIntegrationDto consumptionIntegrationDto = new ConsumptionIntegrationDto
+                        {
+                            Quantity = Math.Floor(superiorIntegrationPercent * (decimal)item.ActualPayment),
+                            Percent = superiorIntegrationPercent,
+                            AmountOfConsumption = item.ActualPayment.Value,
+                            Date = DateTime.Now,
+                            CustomerId = superiorUserInfo.Id,
+                            ExpiredDate = DateTime.Now.AddMonths(12),
+                            OrderId = item.Id
+                        };
+                        await integrationAccountService.AddByConsumptionAsync(consumptionIntegrationDto);
+                    }
+
+                }
             }
             #endregion
 

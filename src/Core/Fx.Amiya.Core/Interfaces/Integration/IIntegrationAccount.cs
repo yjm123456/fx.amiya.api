@@ -68,7 +68,12 @@ namespace Fx.Amiya.Core.Interfaces.Integration
         /// <returns></returns>
         Task<bool> GetIsIntegrationGenerateRecordByOrderIdAsync(string orderId);
 
-
+        /// <summary>
+        /// 根据订单号和customerId获取是否有积分充值记录
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        Task<bool> GetIsIntegrationGenerateRecordByOrderIdAndCustomerIdAsync(string orderId,string customerId);
 
 
         /// <summary>

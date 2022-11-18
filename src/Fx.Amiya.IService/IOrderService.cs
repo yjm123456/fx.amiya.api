@@ -479,6 +479,12 @@ namespace Fx.Amiya.IService
         /// <param name="tradeId"></param>
         /// <returns></returns>
         Task UpdateStatusByTradeIdAsync(string tradeId,string statusCode);
+        /// <summary>
+        /// 获取下级订单
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<SubordinateOrderDto>> GetSubordinateOrder(string customerId,int pageNum,int pageSize);
 
 
         #region 报表模块

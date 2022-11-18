@@ -31,5 +31,9 @@ namespace Fx.Amiya.Dto.UserInfo
         /// 是否需要授权用户信息
         /// </summary>
         public bool IsAuthorizationUserInfo { get; set; }
+        /// <summary>
+        /// 上级id
+        /// </summary>
+        public string SuperiorId { get; set; }
     }
 }

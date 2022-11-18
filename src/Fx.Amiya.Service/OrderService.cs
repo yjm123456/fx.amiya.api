@@ -3149,6 +3149,55 @@ namespace Fx.Amiya.Service
             result.ExpressNo = num;
             return result;
         }
+        /// <summary>
+        /// 获取下级订单
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<SubordinateOrderDto>> GetSubordinateOrder(string customerId,int pageNum,int pageSize)
+        {
+            List<SubordinateOrderDto> orderInfoSimpleResult = new List<SubordinateOrderDto>();
+            var customer = await dalCustomerInfo.GetAll().SingleOrDefaultAsync(e => e.Id == customerId);
+            var order = from d in dalOrderInfo.GetAll()
+                        where d.Phone == customer.Phone
+                        && d.CreateDate >= Convert.ToDateTime("2021-06-01")
+                        //过滤掉定金订单和咨询订单
+                        && d.StatusCode != "BARGAIN_MONEY" && d.StatusCode != "SEEK_ADVICE"
+                        select new OrderInfo
+                        {
+                            Id = d.Id,
+                            ThumbPicUrl = d.ThumbPicUrl,
+                            GoodsName = d.GoodsName,
+                            ActualPayment = d.ActualPayment,
+                            ExchangeType = d.ExchangeType,
+                            AppointmentHospital = d.AppointmentHospital,
+                            CreateDate = d.CreateDate,
+                            UpdateDate = d.UpdateDate,
+                            GoodsId = d.GoodsId,
+                            IntegrationQuantity = d.IntegrationQuantity,
+                            Quantity = d.Quantity,
+                            StatusCode = d.StatusCode,
+                            AppType = d.AppType,
+                            TradeId = d.TradeId
+                        };          
+            var result2 = from d in order
+                          where d.ExchangeType != 0
+                          select new SubordinateOrderDto
+                          {                             
+                              GoodsImgUrl = d.ThumbPicUrl,
+                              GoodsName = d.GoodsName,
+                              Price = d.ActualPayment.Value,                              
+                              OrderDate = d.CreateDate.Value,                              
+                              StatusCodeText = ServiceClass.GetOrderStatusText(d.StatusCode),                            
+                          };
+            orderInfoSimpleResult.AddRange(await result2.ToListAsync());
+
+            var orderAlreadyBuyList = orderInfoSimpleResult.OrderByDescending(e => e.OrderDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+            FxPageInfo<SubordinateOrderDto> OrderAlreadyBuyInfoList = new FxPageInfo<SubordinateOrderDto>();
+            OrderAlreadyBuyInfoList.TotalCount = orderInfoSimpleResult.Count;
+            OrderAlreadyBuyInfoList.List = orderAlreadyBuyList;
+            return OrderAlreadyBuyInfoList;
+        }
 
 
         #region 报表相关
@@ -3954,6 +4003,8 @@ namespace Fx.Amiya.Service
             return false;
 
         }
+
+        
 
 
 

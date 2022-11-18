@@ -89,8 +89,9 @@ namespace Fx.Amiya.Modules.MemberCard.AppService
                 Valid = memberCard.Valid,
                 Description = memberCard.MemberRankInfo.Description,
                 ImageUrl = memberCard.MemberRankInfo.ImageUrl,
-                GenerateIntegrationPercent=memberCard.MemberRankInfo.GenerateIntegrationPercent
-                
+                GenerateIntegrationPercent=memberCard.MemberRankInfo.GenerateIntegrationPercent,
+                ReferralsIntegrationPercent=memberCard.MemberRankInfo.ReferralsIntegrationPercent
+
             };
             return memberCardHandle;
         }

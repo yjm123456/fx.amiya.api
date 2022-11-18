@@ -22,6 +22,7 @@ namespace Fx.Amiya.DbModels.Model
 
         public string WxBindPhone { get; set; }
 
+        public string SuperiorId { get; set; }
         public List<WxMiniUserInfo> WxMiniUserInfoList { get; set; }
         public List<WxMpUserInfo> WxMpUserInfoList { get; set; }
         public CustomerInfo CustomerInfo { get; set; }

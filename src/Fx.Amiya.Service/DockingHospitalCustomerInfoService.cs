@@ -207,7 +207,7 @@ namespace Fx.Amiya.Service
         {
             var appInfo = await dalDockingHospitalCustomerInfo.GetAll().FirstOrDefaultAsync(e => e.HospitalId == hospitalId);
             if (appInfo == null)
-                throw new Exception("美丽日记应用证书信息为空");
+                throw new Exception("小程序应用证书信息为空");
             DateTime date = DateTime.Now;
             if (appInfo.ExpireDate.Value <= date)
             {

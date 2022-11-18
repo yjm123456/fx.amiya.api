@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Dto.UserInfo;
+using Fx.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -78,6 +79,27 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<string> GetUserQrCode(string userId); 
+        Task<string> GetUserQrCode(string userId, string avatar);
+        /// <summary>
+        /// 添加用户上级
+        /// </summary>
+        /// <param name="userId">用户id</param>
+        /// <param name="superiorId">上级id</param>
+        /// <returns></returns>
+        Task<bool> AddSuperiorAsync(string userId,string superiorId);
+        /// <summary>
+        /// 判断一个用户是否是下级用户
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<bool> IsSubordinate(string userId,string subordinateUserId);
+        /// <summary>
+        /// 分页获取下级用户信息
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<SubordinateUserDto>> GetSubordinateUserListAsync(string userId,int pageNum,int pageSize);
     }
 }

@@ -266,5 +266,13 @@ namespace Fx.Amiya.Modules.Integration.AppService
             var record= await freeSql.Select<IntegrationGenerateRecordDbModel>().Where(e=>e.CustomerId==customerId&&e.Quantity==amount&&e.Percents==percent).FirstAsync();
             return record == null ? false : true;
         }
+
+        public async Task<bool> GetIsIntegrationGenerateRecordByOrderIdAndCustomerIdAsync(string orderId, string customerId)
+        {
+            var integrationGenerateRecord = await freeSql.Select<IntegrationGenerateRecordDbModel>().Where(e => e.OrderId == orderId&&e.CustomerId==customerId).FirstAsync();
+            if (integrationGenerateRecord == null)
+                return false;
+            return true;
+        }
     }
 }

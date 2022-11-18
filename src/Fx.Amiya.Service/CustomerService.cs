@@ -923,5 +923,15 @@ namespace Fx.Amiya.Service
             var config = await GetCallCenterConfig();
             return ServiceClass.Decrypto(encryptPhone, config.PhoneEncryptKey);
         }
+
+        public async Task<CustomerDto> GetCustomerByUserIdAsync(string userId)
+        {
+            var customer=await dalCustomerInfo.GetAll().Where(e => e.UserId == userId).Select(e=>new CustomerDto { 
+                Id=e.Id,
+                Phone=e.Phone
+            }).FirstOrDefaultAsync();
+            return customer;
+            
+        }
     }
 }

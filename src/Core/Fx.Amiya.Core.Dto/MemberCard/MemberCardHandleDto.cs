@@ -34,6 +34,10 @@ namespace Fx.Amiya.Core.Dto.MemberCard
         /// </summary>
         public decimal GenerateIntegrationPercent { get; set; }
         /// <summary>
+        /// 介绍人积分产生比例
+        /// </summary>
+        public decimal ReferralsIntegrationPercent { get; set; }
+        /// <summary>
         /// 经手人
         /// </summary>
         public int? HandleBy { get; set; }
