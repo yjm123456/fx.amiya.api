@@ -1465,9 +1465,15 @@ ADD COLUMN `appointment_date` DATETIME NULL AFTER `appointment_city`;
 
 
 
+------------------------------------------------------------------王健 2022/11/18 BEGIN--------------------------------------------
+
+
+ALTER TABLE `tbl_user_info`
+	ADD COLUMN `superior_id` VARCHAR(50) NULL DEFAULT NULL AFTER `wx_bind_phone`;
 
 
 
+------------------------------------------------------------------王健 2022/11/18 END--------------------------------------------
  
 
 
