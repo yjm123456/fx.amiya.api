@@ -2016,6 +2016,54 @@
             <param name="input"></param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController">
+            <summary>
+            客户标签板块数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.#ctor(Fx.Amiya.IService.ICustomerTagInfoService,Fx.Amiya.IService.IOrderService)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="customerTagInfoService"></param>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.GetListWithPageAsync(System.String,System.Int32,System.Int32)">
+            <summary>
+            获取客户标签信息列表（分页）
+            </summary>
+            <param name="keyword"></param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.AddAsync(Fx.Amiya.Background.Api.Vo.CustomerTagInfo.AddCustomerTagInfoVo)">
+            <summary>
+            添加客户标签信息
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.GetByIdAsync(System.String)">
+            <summary>
+            根据客户标签编号获取客户标签信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.UpdateAsync(Fx.Amiya.Background.Api.Vo.CustomerTagInfo.UpdateCustomerTagInfoVo)">
+            <summary>
+            修改客户标签信息
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.DeleteAsync(System.String)">
+            <summary>
+            删除客户标签信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.GiftController.GetListWithPageAsync(System.String,System.Int32,System.Int32)">
             <summary>
             获取礼品列表（分页）
@@ -10868,6 +10916,31 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.CustomerIntegralOrderRefund.CustomerIntegralOrderRefundsVo.CheckReason">
             <summary>
             审核原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerTagInfo.AddCustomerTagInfoVo.TagName">
+            <summary>
+            标签名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerTagInfo.CustomerTagInfoVo.TagName">
+            <summary>
+            标签名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerTagInfo.UpdateCustomerTagInfoVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerTagInfo.UpdateCustomerTagInfoVo.TagName">
+            <summary>
+            标签名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerTagInfo.UpdateCustomerTagInfoVo.Valid">
+            <summary>
+            是否有效
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.Doctor.AddDoctorVo.Name">

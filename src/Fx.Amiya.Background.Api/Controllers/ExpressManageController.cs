@@ -1,6 +1,6 @@
 ﻿using Fx.Amiya.Background.Api.Vo;
-using Fx.Amiya.Background.Api.Vo.ExpressInfo;
-using Fx.Amiya.Dto.ExpressManage;
+using Fx.Amiya.Background.Api.Vo.CustomerTagInfo;
+using Fx.Amiya.Dto.CustomerTagInfo;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -16,106 +16,103 @@ using System.Threading.Tasks;
 namespace Fx.Amiya.Background.Api.Controllers
 {
     /// <summary>
-    /// 物流公司板块数据接口
+    /// 客户标签板块数据接口
     /// </summary>
     [Route("[controller]")]
     [ApiController]
     [FxInternalAuthorize]
-    public class ExpressManageController : ControllerBase
+    public class CustomerTagInfoController : ControllerBase
     {
-        private IExpressManageService expressService;
+        private ICustomerTagInfoService customerTagInfoService;
         private IOrderService _orderService;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="expressService"></param>
-        public ExpressManageController(IExpressManageService expressService, IOrderService orderService)
+        /// <param name="customerTagInfoService"></param>
+        public CustomerTagInfoController(ICustomerTagInfoService customerTagInfoService, IOrderService orderService)
         {
-            this.expressService = expressService;
+            this.customerTagInfoService = customerTagInfoService;
             _orderService = orderService;
         }
 
 
         /// <summary>
-        /// 获取物流公司信息列表（分页）
+        /// 获取客户标签信息列表（分页）
         /// </summary>
         /// <param name="keyword"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<ExpressVo>>> GetListWithPageAsync(string keyword, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<CustomerTagInfoVo>>> GetListWithPageAsync(string keyword, int pageNum, int pageSize)
         {
             try
             {
-                var q = await expressService.GetListWithPageAsync(keyword, pageNum, pageSize);
+                var q = await customerTagInfoService.GetListWithPageAsync(keyword, pageNum, pageSize);
 
-                var express = from d in q.List
-                              select new ExpressVo
+                var customerTagInfo = from d in q.List
+                              select new CustomerTagInfoVo
                               {
                                   Id = d.Id,
-                                  ExpressCode = d.ExpressCode,
-                                  ExpressName = d.ExpressName,
+                                  TagName = d.TagName,
+                                  CreateDate = d.CreateDate,
                                   Valid = d.Valid
                               };
 
-                FxPageInfo<ExpressVo> expressPageInfo = new FxPageInfo<ExpressVo>();
-                expressPageInfo.TotalCount = q.TotalCount;
-                expressPageInfo.List = express;
+                FxPageInfo<CustomerTagInfoVo> customerTagInfoPageInfo = new FxPageInfo<CustomerTagInfoVo>();
+                customerTagInfoPageInfo.TotalCount = q.TotalCount;
+                customerTagInfoPageInfo.List = customerTagInfo;
 
-                return ResultData<FxPageInfo<ExpressVo>>.Success().AddData("expressInfo", expressPageInfo);
+                return ResultData<FxPageInfo<CustomerTagInfoVo>>.Success().AddData("customerTagInfoInfo", customerTagInfoPageInfo);
             }
             catch (Exception ex)
             {
-                return ResultData<FxPageInfo<ExpressVo>>.Fail(ex.Message);
+                return ResultData<FxPageInfo<CustomerTagInfoVo>>.Fail(ex.Message);
             }
         }
 
 
+        ///// <summary>
+        ///// 获取客户标签id和名称（下拉框使用）
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpGet("getCustomerTagInfoList")]
+        //public async Task<ResultData<List<CustomerTagInfoIdAndNameVo>>> getCustomerTagInfoList()
+        //{
+        //    try
+        //    {
+        //        var q = await customerTagInfoService.GetIdAndNames();
+
+        //        var customerTagInfo = from d in q
+        //                      select new CustomerTagInfoIdAndNameVo
+        //                      {
+        //                          Id = d.Id,
+        //                          CustomerTagInfoName = d.CustomerTagInfoName
+        //                      };
+
+        //        return ResultData<List<CustomerTagInfoIdAndNameVo>>.Success().AddData("CustomerTagInfoList", customerTagInfo.ToList());
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return ResultData<List<CustomerTagInfoIdAndNameVo>>.Fail().AddData("CustomerTagInfoList", new List<CustomerTagInfoIdAndNameVo>());
+        //    }
+        //}
+
+
         /// <summary>
-        /// 获取物流公司id和名称（下拉框使用）
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("getExpressList")]
-        public async Task<ResultData<List<ExpressIdAndNameVo>>> getExpressList()
-        {
-            try
-            {
-                var q = await expressService.GetIdAndNames();
-
-                var express = from d in q
-                              select new ExpressIdAndNameVo
-                              {
-                                  Id = d.Id,
-                                  ExpressName = d.ExpressName
-                              };
-
-                return ResultData<List<ExpressIdAndNameVo>>.Success().AddData("ExpressList", express.ToList());
-            }
-            catch (Exception ex)
-            {
-                return ResultData<List<ExpressIdAndNameVo>>.Fail().AddData("ExpressList", new List<ExpressIdAndNameVo>());
-            }
-        }
-
-
-        /// <summary>
-        /// 添加物流公司信息
+        /// 添加客户标签信息
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ResultData> AddAsync(AddExpressVo addVo)
+        public async Task<ResultData> AddAsync(AddCustomerTagInfoVo addVo)
         {
             try
             {
-                AddExpressDto addDto = new AddExpressDto();
-                addDto.ExpressCode = addVo.ExpressCode;
-                addDto.ExpressName = addVo.ExpressName;
-                addDto.Valid = addVo.Valid;
-
-                await expressService.AddAsync(addDto);
+                AddCustomerTagInfoDto addDto = new AddCustomerTagInfoDto();
+                addDto.TagName = addVo.TagName;
+                await customerTagInfoService.AddAsync(addDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -127,47 +124,45 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 根据物流公司编号获取物流公司信息
+        /// 根据客户标签编号获取客户标签信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("byId/{id}")]
-        public async Task<ResultData<ExpressVo>> GetByIdAsync(string id)
+        public async Task<ResultData<CustomerTagInfoVo>> GetByIdAsync(string id)
         {
             try
             {
-                var express = await expressService.GetByIdAsync(id);
-                ExpressVo expressVo = new ExpressVo();
-                expressVo.Id = express.Id;
-                expressVo.ExpressCode = express.ExpressCode;
-                expressVo.ExpressName = express.ExpressName;
-                expressVo.Valid = express.Valid;
+                var customerTagInfo = await customerTagInfoService.GetByIdAsync(id);
+                CustomerTagInfoVo customerTagInfoVo = new CustomerTagInfoVo();
+                customerTagInfoVo.Id = customerTagInfo.Id;
+                customerTagInfoVo.TagName = customerTagInfo.TagName;
+                customerTagInfoVo.Valid = customerTagInfo.Valid;
 
-                return ResultData<ExpressVo>.Success().AddData("expressInfo", expressVo);
+                return ResultData<CustomerTagInfoVo>.Success().AddData("customerTagInfoInfo", customerTagInfoVo);
             }
             catch (Exception ex)
             {
-                return ResultData<ExpressVo>.Fail(ex.Message);
+                return ResultData<CustomerTagInfoVo>.Fail(ex.Message);
             }
         }
 
 
         /// <summary>
-        /// 修改物流公司信息
+        /// 修改客户标签信息
         /// </summary>
         /// <param name="updateVo"></param>
         /// <returns></returns>
         [HttpPut]
-        public async Task<ResultData> UpdateAsync(UpdateExpressVo updateVo)
+        public async Task<ResultData> UpdateAsync(UpdateCustomerTagInfoVo updateVo)
         {
             try
             {
-                UpdateExpressDto updateDto = new UpdateExpressDto();
+                UpdateCustomerTagInfoDto updateDto = new UpdateCustomerTagInfoDto();
                 updateDto.Id = updateVo.Id;
-                updateDto.ExpressName = updateVo.ExpressName;
-                updateDto.ExpressCode = updateVo.ExpressCode;
+                updateDto.TagName = updateVo.TagName;
                 updateDto.Valid = updateVo.Valid;
-                await expressService.UpdateAsync(updateDto);
+                await customerTagInfoService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -178,7 +173,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 删除物流公司信息
+        /// 删除客户标签信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -187,7 +182,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                await expressService.DeleteAsync(id);
+                await customerTagInfoService.DeleteAsync(id);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -197,27 +192,5 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
-        /// <summary>
-        /// 根据条件获取快递信息
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        [HttpGet("giftExpressInfo")]
-        public async Task<ResultData<KuaiDi100ExpressInfoVo>> GetGiftExpressInfoAsync([FromQuery] GetExpressInfoVo input)
-        {
-            var orderExpressInfoDto = await _orderService.GetExpressInfo(input.ReceiverPhone, input.CourierNumber, input.ExpressId);
-            KuaiDi100ExpressInfoVo orderExpressInfoVo = new KuaiDi100ExpressInfoVo();
-            var orderExpressInfoDetails = from d in orderExpressInfoDto.data
-                                          select new KuaiDi100ExpressDetailsVo
-                                          {
-                                              time = d.time,
-                                              content = d.context
-                                          };
-            orderExpressInfoVo.ExpressNo = orderExpressInfoDto.ExpressNo;
-            orderExpressInfoVo.ExpressName = orderExpressInfoDto.ExpressName;
-            orderExpressInfoVo.state = KuaiDi100Utils.GetExpressState(orderExpressInfoDto.state);
-            orderExpressInfoVo.ExpressDetailList = orderExpressInfoDetails.ToList();
-            return ResultData<KuaiDi100ExpressInfoVo>.Success().AddData("orderExpressInfoVo", orderExpressInfoVo);
-        }
     }
 }
