@@ -94,8 +94,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 orderRefundCheck.Id = checkDto.Id;
                 orderRefundCheck.UnCheckReason = checkDto.UnCheckReason;
                 orderRefundCheck.CheckState = checkDto.CheckState;
-                await orderRefundService.CheckAsync(orderRefundCheck);
-                bindCustomerServiceService.UpdateConsumePriceAsync();
+                await orderRefundService.CheckAsync(orderRefundCheck);               
                 unitOfWork.Commit();
                 return ResultData.Success();
             }

@@ -608,11 +608,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     UpdateBelongEmpInfoOrderDto updateOrderBelongEmpIdDto = new UpdateBelongEmpInfoOrderDto();
                     updateOrderBelongEmpIdDto.OrderId = orderIdList;
                     updateOrderBelongEmpIdDto.BelongEmpId = addBindCustomerServiceDto.CustomerServiceId;
-                    await _orderService.UpdateOrderBelongEmpIdAsync(updateOrderBelongEmpIdDto);
+                    //修改订单归属客服
+                    await orderService.UpdateOrderBelongEmpIdAsync(updateOrderBelongEmpIdDto);
                     addBindCustomerServiceDto.OrderIdList = orderIdList;
-                    
-
-
+                    //添加客服绑定关系
+                    await _bindCustomerService.AddAsync(addBindCustomerServiceDto, 1);
                 }
                 amiyaOrder.BelongEmpId = bindCustomerId;
                 amiyaOrderList.Add(amiyaOrder);

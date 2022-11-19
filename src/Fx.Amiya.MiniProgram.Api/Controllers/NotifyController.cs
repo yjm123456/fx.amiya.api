@@ -138,6 +138,16 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     if (item.ActualPayment.HasValue)
                     {
                         updateOrder.Actual_payment = item.ActualPayment.Value;
+                        var bind = await _dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == item.Phone);
+                        if (bind != null)
+                        {
+                            bind.NewConsumptionDate = DateTime.Now;
+                            bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
+                            bind.NewContentPlatForm = ServiceClass.GetAppTypeText(item.AppType);
+                            bind.AllPrice += item.ActualPayment.Value;
+                            bind.AllOrderCount += item.Quantity;
+                            await _dalBindCustomerService.UpdateAsync(bind, true);
+                        }
                     }
                     if (item.IntegrationQuantity.HasValue)
                     {
