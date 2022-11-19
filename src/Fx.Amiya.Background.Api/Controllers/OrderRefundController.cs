@@ -28,12 +28,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IOrderRefundService orderRefundService;
         private IHttpContextAccessor httpContextAccessor;
         private IUnitOfWork unitOfWork;
+        private IBindCustomerServiceService bindCustomerServiceService;
 
-        public OrderRefundController(IOrderRefundService orderRefundService, IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork)
+        public OrderRefundController(IOrderRefundService orderRefundService, IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork, IBindCustomerServiceService bindCustomerServiceService)
         {
             this.orderRefundService = orderRefundService;
             this.httpContextAccessor = httpContextAccessor;
             this.unitOfWork = unitOfWork;
+            this.bindCustomerServiceService = bindCustomerServiceService;
         }
         /// <summary>
         /// 获取退款订单列表
@@ -93,6 +95,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 orderRefundCheck.UnCheckReason = checkDto.UnCheckReason;
                 orderRefundCheck.CheckState = checkDto.CheckState;
                 await orderRefundService.CheckAsync(orderRefundCheck);
+                bindCustomerServiceService.UpdateConsumePriceAsync();
                 unitOfWork.Commit();
                 return ResultData.Success();
             }

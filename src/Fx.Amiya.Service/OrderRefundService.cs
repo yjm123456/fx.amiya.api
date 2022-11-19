@@ -21,14 +21,17 @@ namespace Fx.Amiya.Service
         private IDalOrderTrade dalOrderTrade;
         private IDalOrderInfo dalOrderInfo;
         private IDalAmiyaEmployee dalAmiyaEmployee;
+        private IBindCustomerServiceService bindCustomerServiceService;
 
-        public OrderRefundService(IDalOrderRefund dalOrderRefund, IOrderService orderService, IDalOrderTrade dalOrderTrade, IDalOrderInfo dalOrderInfo, IDalAmiyaEmployee dalAmiyaEmployee)
+
+        public OrderRefundService(IDalOrderRefund dalOrderRefund, IOrderService orderService, IDalOrderTrade dalOrderTrade, IDalOrderInfo dalOrderInfo, IDalAmiyaEmployee dalAmiyaEmployee, IBindCustomerServiceService bindCustomerServiceService)
         {
             this.dalOrderRefund = dalOrderRefund;
             this.orderService = orderService;
             this.dalOrderTrade = dalOrderTrade;
             this.dalOrderInfo = dalOrderInfo;
             this.dalAmiyaEmployee = dalAmiyaEmployee;
+            this.bindCustomerServiceService = bindCustomerServiceService;
         }
         /// <summary>
         /// 退款订单审核
@@ -38,15 +41,22 @@ namespace Fx.Amiya.Service
         public async Task CheckAsync(OrderRefundCheckDto orderRefundCheckDto)
         {
             var refundOrder = await dalOrderRefund.GetAll().Where(e=>e.Id==orderRefundCheckDto.Id).SingleOrDefaultAsync();
+            var order =(await orderService.GetOrderListByTradeIdAsync(refundOrder.TradeId)).FirstOrDefault();
+
+            
             if (refundOrder == null) throw new Exception("退款订单编号错误");
             refundOrder.UncheckReason = orderRefundCheckDto.UnCheckReason;
             refundOrder.CheckBy = orderRefundCheckDto.CheckBy;
             refundOrder.CheckState = orderRefundCheckDto.CheckState;
             refundOrder.CheckDate = DateTime.Now;
             refundOrder.UpdateDate = DateTime.Now;
+            
             await dalOrderRefund.UpdateAsync(refundOrder,true);
             if (orderRefundCheckDto.CheckState==(int)CheckState.CheckFail) {                
                 await orderService.UpdateStatusByTradeIdAsync(refundOrder.TradeId, OrderStatusCode.CHECK_FAIL);
+            }
+            if (orderRefundCheckDto.CheckState==(int)CheckState.CheckSuccess) {
+                await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, -refundOrder.RefundAmount,(int)AppType.MiniProgram,-1);
             }
         }
 

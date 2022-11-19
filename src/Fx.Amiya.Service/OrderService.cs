@@ -3200,6 +3200,16 @@ namespace Fx.Amiya.Service
             OrderAlreadyBuyInfoList.List = orderAlreadyBuyList;
             return OrderAlreadyBuyInfoList;
         }
+        /// <summary>
+        /// 根据phone获取订单id列表
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        public async Task<List<string>> GetOrderIdListByPhone(string phone)
+        {
+            return await dalOrderInfo.GetAll().Where(e => e.Phone == phone).Select(e => e.Id).ToListAsync();
+        }
+
 
 
         #region 报表相关
@@ -4006,6 +4016,7 @@ namespace Fx.Amiya.Service
 
         }
 
+        
 
 
 

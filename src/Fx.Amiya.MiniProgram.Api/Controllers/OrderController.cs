@@ -17,6 +17,7 @@ using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.Core.Interfaces.MemberCard;
 using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.BindCustomerService;
 using Fx.Amiya.Dto.ConsumptionVoucher;
 using Fx.Amiya.Dto.OrderAppInfo;
 using Fx.Amiya.Dto.OrderRefund;
@@ -74,6 +75,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private readonly IOrderRefundService orderRefundService;
         private readonly IUserService userService;
         private readonly IUnitOfWork unitOfWork;
+        
         
         private static readonly AsyncLock _mutex = new AsyncLock();
         public OrderController(IOrderService orderService,
@@ -598,6 +600,19 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 {
                     amiyaOrder.AppointmentCity = item.AppointmentCity;
                     amiyaOrder.AppointmentDate = item.AppointmentDate;
+                }
+                if (bindCustomerId==0) {
+                    AddBindCustomerServiceDto addBindCustomerServiceDto = new AddBindCustomerServiceDto();
+                    addBindCustomerServiceDto.CustomerServiceId = 37;
+                    var orderIdList =await orderService.GetOrderIdListByPhone(amiyaOrder.Phone);
+                    UpdateBelongEmpInfoOrderDto updateOrderBelongEmpIdDto = new UpdateBelongEmpInfoOrderDto();
+                    updateOrderBelongEmpIdDto.OrderId = orderIdList;
+                    updateOrderBelongEmpIdDto.BelongEmpId = addBindCustomerServiceDto.CustomerServiceId;
+                    await _orderService.UpdateOrderBelongEmpIdAsync(updateOrderBelongEmpIdDto);
+                    addBindCustomerServiceDto.OrderIdList = orderIdList;
+                    
+
+
                 }
                 amiyaOrder.BelongEmpId = bindCustomerId;
                 amiyaOrderList.Add(amiyaOrder);

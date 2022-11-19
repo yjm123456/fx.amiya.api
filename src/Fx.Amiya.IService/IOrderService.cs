@@ -485,6 +485,12 @@ namespace Fx.Amiya.IService
         /// <param name="customerId"></param>
         /// <returns></returns>
         Task<FxPageInfo<SubordinateOrderDto>> GetSubordinateOrder(string customerId,int pageNum,int pageSize);
+        /// <summary>
+        /// 根据phone获取订单id列表
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        Task<List<string>> GetOrderIdListByPhone(string phone);
 
 
         #region 报表模块
