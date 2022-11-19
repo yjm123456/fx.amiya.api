@@ -1213,8 +1213,26 @@ CREATE TABLE `amiyadb`.`tbl_customer_tag_info` (
 
 
 
+-----------------------------------------------王健 2022/11/19 BEGIN--------------------------------------------
 
+CREATE TABLE `tbl_indicator_order_data` (
+	`id` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`all_sendorder_count` INT(10) NULL DEFAULT '0',
+	`local_sendorder_count` INT(10) NULL DEFAULT '0',
+	`other_place_sendorder_count` INT(10) NULL DEFAULT '0',
+	`invalid_sendorder_count` INT(10) NULL DEFAULT '0',
+	`epidemic_count` INT(10) NULL DEFAULT '0',
+	`other_question` VARCHAR(500) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT(1) NULL DEFAULT NULL,
+	`delete_date` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`) USING BTREE
+)
+COLLATE='utf8mb4_0900_ai_ci'
+ENGINE=InnoDB;
 
+-----------------------------------------------王健 2022/11/19 END--------------------------------------------
 
 
 
