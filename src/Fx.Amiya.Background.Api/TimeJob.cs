@@ -160,7 +160,7 @@ namespace Fx.Amiya.Background.Api
                         var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(order.Phone);
                         if (findInfo != 0)
                         {
-                            await _bindCustomerService.UpdateConsumePriceAsync(order.Phone, order.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
+                            await _bindCustomerService.UpdateConsumePriceAsync(order.Phone, order.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder, 1);
                         }
                     }
                 }

@@ -204,11 +204,11 @@ namespace Fx.Amiya.Service
                                 var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(orderInfo.Phone);
                                 if (findInfo != 0)
                                 {
-                                    await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
+                                    await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder, 1);
                                 }
                             }
 
-                            
+
                         }
                         else
                         {
@@ -331,7 +331,7 @@ namespace Fx.Amiya.Service
                     order.WriteOffCode = "";
                     order.AlreadyWriteOffAmount = 0;
                     order.TikTokUserInfoId = item.TikTokUserId;
-                    orderInfoList.Add(order);                                   
+                    orderInfoList.Add(order);
                 }
                 else
                 {
@@ -379,7 +379,7 @@ namespace Fx.Amiya.Service
                     order.TikTokUserInfoId = addTikTokUserDto.Id;
                     orderInfoList.Add(order);
                 }
-                
+
             }
             await dalTikTokOrderInfo.AddCollectionAsync(orderInfoList, true);
             //发送短信通知
@@ -387,7 +387,7 @@ namespace Fx.Amiya.Service
         }
 
 
-        
+
         /// <summary>
         /// 根据订单编号获取订单信息
         /// </summary>
@@ -444,7 +444,7 @@ namespace Fx.Amiya.Service
             return orderInfo;
         }
 
-        public async Task<FxPageInfo<TikTokOrderDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, string keyword,  int pageNum, int pageSize)
+        public async Task<FxPageInfo<TikTokOrderDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, string keyword, int pageNum, int pageSize)
         {
             try
             {
@@ -477,8 +477,8 @@ namespace Fx.Amiya.Service
                                 StatusText = ServiceClass.GetTikTokOrderStatusText(d.StatusCode),
                                 ActualPayment = d.ActualPayment,
                                 CreateDate = d.CreateDate,
-                                UpdateDate=d.UpdateDate,
-                                FinishDate=d.FinishDate,
+                                UpdateDate = d.UpdateDate,
+                                FinishDate = d.FinishDate,
                                 AppType = d.AppType,
                                 AppTypeText = ServiceClass.GetAppTypeText(d.AppType),
                                 OrderType = d.OrderType,
@@ -528,7 +528,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task UpdateOrderAsync(TikTokOrderInfoUpdateDto tikTokOrderInfoUpdateDto)
         {
-            var tikTokOrder = await dalTikTokOrderInfo.GetAll().SingleOrDefaultAsync(e=>e.Id==tikTokOrderInfoUpdateDto.Id);
+            var tikTokOrder = await dalTikTokOrderInfo.GetAll().SingleOrDefaultAsync(e => e.Id == tikTokOrderInfoUpdateDto.Id);
             if (tikTokOrder == null)
             {
                 throw new Exception("订单编号错误");
@@ -574,18 +574,19 @@ namespace Fx.Amiya.Service
                     var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(tikTokOrder.Phone);
                     if (findInfo != 0)
                     {
-                        await _bindCustomerService.UpdateConsumePriceAsync(tikTokOrder.Phone, tikTokOrder.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
+                        await _bindCustomerService.UpdateConsumePriceAsync(tikTokOrder.Phone,0, (int)OrderFrom.ThirdPartyOrder,0);
                     }
                 }
             }
-            else {
+            else
+            {
                 tikTokOrder.Phone = tikTokOrderInfoUpdateDto.Phone;
                 tikTokOrder.BuyerNick = tikTokOrderInfoUpdateDto.NickName;
                 await dalTikTokOrderInfo.UpdateAsync(tikTokOrder, true);
             }
-            
-            
-            
+
+
+
         }
         /// <summary>
         /// 校对订单状态
@@ -596,10 +597,11 @@ namespace Fx.Amiya.Service
         /// <param name="accountReceivable"></param>
         /// <param name="updateDate"></param>
         /// <returns></returns>
-        public async Task UpdateOrderStatusAsync(string id, string statusCode, decimal? actualPayment, decimal? accountReceivable, DateTime? updateDate,DateTime? finishDate)
+        public async Task UpdateOrderStatusAsync(string id, string statusCode, decimal? actualPayment, decimal? accountReceivable, DateTime? updateDate, DateTime? finishDate)
         {
-            var order = dalTikTokOrderInfo.GetAll().FirstOrDefault(o=>o.Id==id);
-            if (order==null) {
+            var order = dalTikTokOrderInfo.GetAll().FirstOrDefault(o => o.Id == id);
+            if (order == null)
+            {
                 throw new Exception("未找到该订单,请核对后订单号后重试");
             }
             order.StatusCode = statusCode;
@@ -607,7 +609,7 @@ namespace Fx.Amiya.Service
             order.AccountReceivable = accountReceivable;
             order.UpdateDate = updateDate;
             order.FinishDate = finishDate;
-            await dalTikTokOrderInfo.UpdateAsync(order,true);
+            await dalTikTokOrderInfo.UpdateAsync(order, true);
         }
 
         /// <summary>
@@ -672,7 +674,7 @@ namespace Fx.Amiya.Service
                 }
             }
         }
-        
+
 
         /// <summary>
         /// 发送邮箱方法

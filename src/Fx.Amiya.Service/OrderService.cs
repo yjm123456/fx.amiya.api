@@ -1243,9 +1243,11 @@ namespace Fx.Amiya.Service
                         if (consumptionIntegration.Quantity > 0)
                             consumptionIntegrationList.Add(consumptionIntegration);
                         var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(orderInfo.Phone);
+
                         if (findInfo != 0)
                         {
-                            await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
+                            var dealPriceDetails = ActuralPayment - orderInfo.ActualPayment;
+                            await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder, 0);
                         }
                     }
                 }
@@ -1352,7 +1354,7 @@ namespace Fx.Amiya.Service
                 orderInfo.UpdateDate = DateTime.Now;
                 await dalOrderInfo.UpdateAsync(orderInfo, true);
 
-                await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
+                await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, 0, (int)OrderFrom.ThirdPartyOrder, 0);
             }
             catch (Exception e)
             {
@@ -3019,7 +3021,7 @@ namespace Fx.Amiya.Service
                 await dalOrderInfo.UpdateAsync(orderInfo, true);
 
                 //修改订单trade信息
-                await this.UpdateStatusByTradeIdAsync(orderInfo.TradeId, OrderStatusCode.TRADE_FINISHED) ;
+                await this.UpdateStatusByTradeIdAsync(orderInfo.TradeId, OrderStatusCode.TRADE_FINISHED);
 
                 //新增核销信息
                 OrderWriteOffInfoAddDto addOrderWriteOffInfoAddDto = new OrderWriteOffInfoAddDto();
@@ -3038,7 +3040,7 @@ namespace Fx.Amiya.Service
                 var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(orderInfo.Phone);
                 if (findInfo != 0)
                 {
-                    await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder);
+                    await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, 0, (int)OrderFrom.ThirdPartyOrder, 0);
                 }
                 unitOfWork.Commit();
             }
@@ -3154,7 +3156,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<SubordinateOrderDto>> GetSubordinateOrder(string customerId,int pageNum,int pageSize)
+        public async Task<FxPageInfo<SubordinateOrderDto>> GetSubordinateOrder(string customerId, int pageNum, int pageSize)
         {
             List<SubordinateOrderDto> orderInfoSimpleResult = new List<SubordinateOrderDto>();
             var customer = await dalCustomerInfo.GetAll().SingleOrDefaultAsync(e => e.Id == customerId);
@@ -3179,16 +3181,16 @@ namespace Fx.Amiya.Service
                             StatusCode = d.StatusCode,
                             AppType = d.AppType,
                             TradeId = d.TradeId
-                        };          
+                        };
             var result2 = from d in order
                           where d.ExchangeType != 0
                           select new SubordinateOrderDto
-                          {                             
+                          {
                               GoodsImgUrl = d.ThumbPicUrl,
                               GoodsName = d.GoodsName,
-                              Price = d.ActualPayment.Value,                              
-                              OrderDate = d.CreateDate.Value,                              
-                              StatusCodeText = ServiceClass.GetOrderStatusText(d.StatusCode),                            
+                              Price = d.ActualPayment.Value,
+                              OrderDate = d.CreateDate.Value,
+                              StatusCodeText = ServiceClass.GetOrderStatusText(d.StatusCode),
                           };
             orderInfoSimpleResult.AddRange(await result2.ToListAsync());
 
@@ -3441,7 +3443,7 @@ namespace Fx.Amiya.Service
         public async Task<List<OrderWriteOffDto>> GetCustomerOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? CheckState, bool? ReturnBackPriceState, string customerName, bool isHidePhone)
         {
             var orders = from d in dalOrderInfo.GetAll()
-                         where (d.StatusCode  == OrderStatusCode.TRADE_FINISHED)
+                         where (d.StatusCode == OrderStatusCode.TRADE_FINISHED)
                          && d.OrderType == (byte)OrderType.VirtualOrder
                          select d;
 
@@ -4004,7 +4006,7 @@ namespace Fx.Amiya.Service
 
         }
 
-        
+
 
 
 

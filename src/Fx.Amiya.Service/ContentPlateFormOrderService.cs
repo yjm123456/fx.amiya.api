@@ -946,7 +946,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var orders = from d in _dalContentPlatformOrder.GetAll().Include(x=>x.ContentPlatformOrderSendList).ThenInclude(x=>x.AmiyaEmployee)
+                var orders = from d in _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList).ThenInclude(x => x.AmiyaEmployee)
                              where (string.IsNullOrWhiteSpace(keyword) || d.Id.Contains(keyword) || d.ConsultingContent.Contains(keyword)
                             || d.Phone.Contains(keyword))
                             && (orderStatus == null || d.OrderStatus == orderStatus)
@@ -1619,7 +1619,7 @@ namespace Fx.Amiya.Service
                 if (input.IsFinish == true)
                 {
                     var price = order.DepositAmount.HasValue ? order.DepositAmount.Value : 0.00M;
-                    await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + input.DealAmount.Value, (int)OrderFrom.ContentPlatFormOrder);
+                    await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + input.DealAmount.Value, (int)OrderFrom.ContentPlatFormOrder, 0);
                     order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.OrderComplete);
                     order.DealAmount += input.DealAmount;
                     order.LateProjectStage = input.LastProjectStage;
@@ -1729,8 +1729,9 @@ namespace Fx.Amiya.Service
                 }
                 if (input.IsFinish == true)
                 {
+                    var dealPriceDetails = input.DealAmount.Value - orderDealInfo.Price;
                     var price = order.DepositAmount.HasValue ? order.DepositAmount.Value : 0.00M;
-                    await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + input.DealAmount.Value, (int)OrderFrom.ContentPlatFormOrder);
+                    await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + dealPriceDetails, (int)OrderFrom.ContentPlatFormOrder, 0);
                     order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.OrderComplete);
                     order.DealAmount += input.DealAmount;
                     order.LateProjectStage = input.LastProjectStage;
