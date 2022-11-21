@@ -1728,6 +1728,13 @@
             <param name="encryptPhone"></param>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerController.GetBaseAndBindCustomerInfoByPhoneAsync(System.String)">
+            <summary>
+            根据加密电话查询客户资料
+            </summary>
+            <param name="encryptPhone">加密电话</param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerController.GetListOfHospitalAsync(System.String,System.Int32,System.Int32)">
             <summary>
             获取医院客户列表
@@ -1913,6 +1920,54 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController">
+            <summary>
+            客户标签板块数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.#ctor(Fx.Amiya.IService.ICustomerTagInfoService,Fx.Amiya.IService.IOrderService)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="customerTagInfoService"></param>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.GetListWithPageAsync(System.String,System.Int32,System.Int32)">
+            <summary>
+            获取客户标签信息列表（分页）
+            </summary>
+            <param name="keyword"></param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.AddAsync(Fx.Amiya.Background.Api.Vo.CustomerTagInfo.AddCustomerTagInfoVo)">
+            <summary>
+            添加客户标签信息
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.GetByIdAsync(System.String)">
+            <summary>
+            根据客户标签编号获取客户标签信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.UpdateAsync(Fx.Amiya.Background.Api.Vo.CustomerTagInfo.UpdateCustomerTagInfoVo)">
+            <summary>
+            修改客户标签信息
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.DeleteAsync(System.String)">
+            <summary>
+            删除客户标签信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.DoctorController">
             <summary>
             医生 API
@@ -2014,54 +2069,6 @@
             根据条件获取快递信息
             </summary>
             <param name="input"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController">
-            <summary>
-            客户标签板块数据接口
-            </summary>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.#ctor(Fx.Amiya.IService.ICustomerTagInfoService,Fx.Amiya.IService.IOrderService)">
-            <summary>
-            构造函数
-            </summary>
-            <param name="customerTagInfoService"></param>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.GetListWithPageAsync(System.String,System.Int32,System.Int32)">
-            <summary>
-            获取客户标签信息列表（分页）
-            </summary>
-            <param name="keyword"></param>
-            <param name="pageNum"></param>
-            <param name="pageSize"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.AddAsync(Fx.Amiya.Background.Api.Vo.CustomerTagInfo.AddCustomerTagInfoVo)">
-            <summary>
-            添加客户标签信息
-            </summary>
-            <param name="addVo"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.GetByIdAsync(System.String)">
-            <summary>
-            根据客户标签编号获取客户标签信息
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.UpdateAsync(Fx.Amiya.Background.Api.Vo.CustomerTagInfo.UpdateCustomerTagInfoVo)">
-            <summary>
-            修改客户标签信息
-            </summary>
-            <param name="updateVo"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerTagInfoController.DeleteAsync(System.String)">
-            <summary>
-            删除客户标签信息
-            </summary>
-            <param name="id"></param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.GiftController.GetListWithPageAsync(System.String,System.Int32,System.Int32)">
@@ -10566,6 +10573,171 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.BindTrackCustomerInfoVo.LatestTrackTime">
             <summary>
             最近回访时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.BindCustomerServiceId">
+            <summary>
+            绑定客服列表编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Avatar">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Name">
+            <summary>
+            客户昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.MemberCardNo">
+            <summary>
+            会员卡号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.MemberRankName">
+            <summary>
+            会员卡名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.CreateDate">
+            <summary>
+            建档时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.AllPrice">
+            <summary>
+            累计消费
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.RealName">
+            <summary>
+            真实姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Sex">
+            <summary>
+            性别
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Phone">
+            <summary>
+            联系电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Birthday">
+            <summary>
+            生日
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Age">
+            <summary>
+            年龄
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Occupation">
+            <summary>
+            职业
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.FirstProjectDemand">
+            <summary>
+            首次项目需求
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.NewConsumptionContentPlatform">
+            <summary>
+            最新消费平台
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.PersonalWechat">
+            <summary>
+            是否为微信来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.BusinessWeChat">
+            <summary>
+            是否为企业微信来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.WechatMiniProgram">
+            <summary>
+            是否为小程序来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.OfficialAccounts">
+            <summary>
+            是否为公众号来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.BelongCustomerService">
+            <summary>
+            归属客服
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.NewContentPlatForm">
+            <summary>
+            最新消费渠道
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.OtherPhone">
+            <summary>
+            辅助号码（多个号码用逗号分隔开）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.DetailAddress">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.IsSendNote">
+            <summary>
+            是否发短信（回访）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.IsCall">
+            <summary>
+            是否打电话（回访）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.IsSendWeChat">
+            <summary>
+            是否发微信（回访）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.UnTrackReason">
+            <summary>
+            不回访原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.ConsumptionLevel">
+            <summary>
+            消费等级
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.CustomerState">
+            <summary>
+            客户状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.CustomerRequirement">
+            <summary>
+            客户需求
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.WechatNumber">
+            <summary>
+            微信昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.City">
+            <summary>
+            城市
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseInfoVo.EncryptPhone">

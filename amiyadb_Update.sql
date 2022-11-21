@@ -1475,6 +1475,25 @@ ALTER TABLE `tbl_user_info`
 
 ------------------------------------------------------------------王健 2022/11/18 END--------------------------------------------
  
+ 
+------------------------------------------------------------------余建明 2022/11/21 BEGIN--------------------------------------------
+
+ ALTER TABLE `amiyadb`.`tbl_customer_base_info` 
+ADD COLUMN `real_name` VARCHAR(45) NULL AFTER `name`,
+ADD COLUMN `personal_wechat` BIT(1) NOT NULL AFTER `occupation`,
+ADD COLUMN `business_wechat` BIT(1) NOT NULL AFTER `personal_wechat`,
+ADD COLUMN `wechat_miniprogram` BIT(1) NOT NULL AFTER `business_wechat`,
+ADD COLUMN `official_accounts` BIT(1) NOT NULL AFTER `wechat_miniprogram`,
+ADD COLUMN `other_phone` VARCHAR(500) NULL AFTER `official_accounts`,
+ADD COLUMN `detail_address` VARCHAR(500) NULL AFTER `other_phone`,
+ADD COLUMN `is_send_note` BIT(1) NOT NULL AFTER `detail_address`,
+ADD COLUMN `is_call` BIT(1) NOT NULL AFTER `is_send_note`,
+ADD COLUMN `is_send_wechat` BIT(1) NOT NULL AFTER `is_call`,
+ADD COLUMN `un_track_reason` VARCHAR(500) NULL AFTER `is_send_wechat`,
+ADD COLUMN `customer_state` INT NOT NULL DEFAULT 0 AFTER `un_track_reason`,
+ADD COLUMN `customer_requirement` VARCHAR(100) NULL AFTER `customer_state`;
+------------------------------------------------------------------余建明 2022/11/21 END--------------------------------------------
+
 
 
 ------------------------------------------------------------------王健 2022/11/21 BEGIN--------------------------------------------

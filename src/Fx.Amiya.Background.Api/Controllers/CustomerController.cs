@@ -24,13 +24,16 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private ICustomerService customerService;
         private IHttpContextAccessor httpContextAccessor;
+        private ICustomerBaseInfoService customerBaseInfoService;
         private IMemberCard memberCardService;
         private IIntegrationAccount integrationAccountService;
         public CustomerController(ICustomerService customerService, IHttpContextAccessor httpContextAccessor,
+            ICustomerBaseInfoService customerBaseInfoService,
             IMemberCard memberCardService, IIntegrationAccount integrationAccountService)
         {
             this.customerService = customerService;
             this.httpContextAccessor = httpContextAccessor;
+            this.customerBaseInfoService = customerBaseInfoService;
             this.memberCardService = memberCardService;
             this.integrationAccountService = integrationAccountService;
         }
@@ -475,6 +478,53 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<CustomerSimpleInfoVo>.Success().AddData("customer", customerSimpleInfoVo);
         }
 
+
+        /// <summary>
+        /// 根据加密电话查询客户资料
+        /// </summary>
+        /// <param name="encryptPhone">加密电话</param>
+        /// <returns></returns>
+        [HttpGet("getBaseAndBindCustomerInfoByEncryptPhone")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<CustomerBaseDetailInfoVo>> GetBaseAndBindCustomerInfoByPhoneAsync(string encryptPhone)
+        {
+            var customer = await customerBaseInfoService.GetByEncryptPhoneAsync(encryptPhone);
+            CustomerBaseDetailInfoVo customerSimpleInfoVo = new CustomerBaseDetailInfoVo();
+            customerSimpleInfoVo.Id = customer.Id;
+            customerSimpleInfoVo.BindCustomerServiceId = customer.BindCustomerServiceId;
+            customerSimpleInfoVo.Avatar = customer.Avatar;
+            customerSimpleInfoVo.Name = customer.Name;
+            customerSimpleInfoVo.MemberCardNo = customer.MemberCardNo;
+            customerSimpleInfoVo.MemberRankName = customer.MemberRankName;
+            customerSimpleInfoVo.CreateDate = customer.CreateDate;
+            customerSimpleInfoVo.AllPrice = customer.AllPrice;
+            customerSimpleInfoVo.RealName = customer.RealName;
+            customerSimpleInfoVo.Sex = customer.Sex;
+            customerSimpleInfoVo.Phone = customer.Phone;
+            customerSimpleInfoVo.Birthday = customer.Birthday;
+            customerSimpleInfoVo.Age = customer.Age;
+            customerSimpleInfoVo.Occupation = customer.Occupation;
+            customerSimpleInfoVo.FirstProjectDemand = customer.FirstProjectDemand;
+            customerSimpleInfoVo.NewConsumptionContentPlatform = customer.NewConsumptionContentPlatform;
+            customerSimpleInfoVo.PersonalWechat = customer.PersonalWechat;
+            customerSimpleInfoVo.BusinessWeChat = customer.BusinessWeChat;
+            customerSimpleInfoVo.WechatMiniProgram = customer.WechatMiniProgram;
+            customerSimpleInfoVo.OfficialAccounts = customer.OfficialAccounts;
+            customerSimpleInfoVo.BelongCustomerService = customer.BelongCustomerService;
+            customerSimpleInfoVo.NewContentPlatForm = customer.NewContentPlatForm;
+            customerSimpleInfoVo.OtherPhone = customer.OtherPhone;
+            customerSimpleInfoVo.DetailAddress = customer.DetailAddress;
+            customerSimpleInfoVo.IsSendNote = customer.IsSendNote;
+            customerSimpleInfoVo.IsCall = customer.IsCall;
+            customerSimpleInfoVo.IsSendWeChat = customer.IsSendWeChat;
+            customerSimpleInfoVo.UnTrackReason = customer.UnTrackReason;
+            customerSimpleInfoVo.ConsumptionLevel = customer.ConsumptionLevel;
+            customerSimpleInfoVo.CustomerState = customer.CustomerState;
+            customerSimpleInfoVo.CustomerRequirement = customer.CustomerRequirement;
+            customerSimpleInfoVo.WechatNumber = customer.WechatNumber;
+            customerSimpleInfoVo.City = customer.City;
+            return ResultData<CustomerBaseDetailInfoVo>.Success().AddData("customer", customerSimpleInfoVo);
+        }
 
 
 
