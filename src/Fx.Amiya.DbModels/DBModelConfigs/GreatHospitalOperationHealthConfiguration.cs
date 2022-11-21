@@ -30,7 +30,12 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.LastNewCustomerUnitPrice).HasColumnName("last_new_customer_unit_price").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.ThisNewCustomerUnitPrice).HasColumnName("this_new_customer_unit_price").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.NewCustomerUnitPriceChainRatio).HasColumnName("new_customer_unit_price_chain_ratio").HasColumnType("decimal(12,2)").IsRequired();
-
+            builder.Property(t => t.LastOldCustomerRepurchaseRate).HasColumnName("last_old_customer_repurchase_rate").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.ThisOldCustomerRepurchaseRate).HasColumnName("this_old_customer_repurchase_rate").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.OldCustomerRepurchaseChainRatio).HasColumnName("old_customer_repurchase_chain_ratio").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.LastOldCustomerUnitPrice).HasColumnName("last_old_customer_unit_price").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.ThisOldCustomerUnitPrice).HasColumnName("this_old_customer_unit_price").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.OldCustomerUnitPriceChainRatio).HasColumnName("old_customer_unit_price_chain_ratio").HasColumnType("decimal(12,2)").IsRequired();
 
             builder.HasOne(t => t.HospitalInfo).WithMany(t => t.GreatHospitalOperationHealthList).HasForeignKey(t => t.HospitalId);
             builder.HasOne(t => t.HospitalOperationalIndicator).WithMany(t => t.GreatHospitalOperationHealthList).HasForeignKey(t => t.IndicatorId);

@@ -45,9 +45,15 @@ namespace Fx.Amiya.Service
                                                        LastNewCustomerDealRate = d.LastNewCustomerDealRate,
                                                        ThisNewCustomerDealRate = d.ThisNewCustomerDealRate,
                                                        NewCustomerDealChainRatio = d.NewCustomerDealChainRatio,
-                                                       LastNewCustomerUnitPrice = d.LastNewCustomerUnitPrice,
-                                                       ThisNewCustomerUnitPrice = d.ThisNewCustomerUnitPrice,
+                                                       LastNewCustomerUnitPrice = d.LastNewCustomerUnitPrice/1000m,
+                                                       ThisNewCustomerUnitPrice = d.ThisNewCustomerUnitPrice/1000m,
                                                        NewCustomerUnitPriceChainRatio = d.NewCustomerUnitPriceChainRatio,
+                                                       LastOldCustomerRepurchaseRate=d.LastOldCustomerRepurchaseRate,
+                                                       ThisOldCustomerRepurchaseRate=d.ThisOldCustomerRepurchaseRate,
+                                                       OldCustomerRepurchaseChainRatio=d.OldCustomerRepurchaseChainRatio,
+                                                       LastOldCustomerUnitPrice=d.LastOldCustomerUnitPrice/1000m,
+                                                       ThisOldCustomerUnitPrice=d.ThisOldCustomerUnitPrice/1000m,
+                                                       OldCustomerUnitPriceChainRatio=d.OldCustomerUnitPriceChainRatio
                                                    };
 
                 List<GreatHospitalOperationHealthDto> greatHospitalOperationHealthList = new List<GreatHospitalOperationHealthDto>();
@@ -81,6 +87,12 @@ namespace Fx.Amiya.Service
                 greatHospitalOperationHealth.LastNewCustomerUnitPrice = addDto.LastNewCustomerUnitPrice;
                 greatHospitalOperationHealth.ThisNewCustomerUnitPrice = addDto.ThisNewCustomerUnitPrice;
                 greatHospitalOperationHealth.NewCustomerUnitPriceChainRatio = addDto.NewCustomerUnitPriceChainRatio;
+                greatHospitalOperationHealth.LastOldCustomerRepurchaseRate = addDto.LastOldCustomerRepurchaseRate;
+                greatHospitalOperationHealth.ThisOldCustomerRepurchaseRate = addDto.ThisOldCustomerRepurchaseRate;
+                greatHospitalOperationHealth.OldCustomerRepurchaseChainRatio = addDto.OldCustomerRepurchaseChainRatio;
+                greatHospitalOperationHealth.LastOldCustomerUnitPrice = addDto.LastOldCustomerUnitPrice;
+                greatHospitalOperationHealth.ThisOldCustomerUnitPrice = addDto.ThisOldCustomerUnitPrice;
+                greatHospitalOperationHealth.OldCustomerUnitPriceChainRatio = addDto.OldCustomerUnitPriceChainRatio;
                 await dalGreatHospitalOperationHealth.AddAsync(greatHospitalOperationHealth, true);
             }
             catch (Exception ex)
@@ -115,6 +127,12 @@ namespace Fx.Amiya.Service
                 greatHospitalOperationHealthDto.LastNewCustomerUnitPrice = greatHospitalOperationHealth.LastNewCustomerUnitPrice;
                 greatHospitalOperationHealthDto.ThisNewCustomerUnitPrice = greatHospitalOperationHealth.ThisNewCustomerUnitPrice;
                 greatHospitalOperationHealthDto.NewCustomerUnitPriceChainRatio = greatHospitalOperationHealth.NewCustomerUnitPriceChainRatio;
+                greatHospitalOperationHealthDto.LastOldCustomerRepurchaseRate = greatHospitalOperationHealth.LastOldCustomerRepurchaseRate;
+                greatHospitalOperationHealthDto.ThisOldCustomerRepurchaseRate = greatHospitalOperationHealth.ThisOldCustomerRepurchaseRate;
+                greatHospitalOperationHealthDto.OldCustomerRepurchaseChainRatio = greatHospitalOperationHealth.OldCustomerRepurchaseChainRatio;
+                greatHospitalOperationHealthDto.LastOldCustomerUnitPrice = greatHospitalOperationHealth.LastOldCustomerUnitPrice;
+                greatHospitalOperationHealthDto.ThisOldCustomerUnitPrice = greatHospitalOperationHealth.ThisOldCustomerUnitPrice;
+                greatHospitalOperationHealthDto.OldCustomerUnitPriceChainRatio = greatHospitalOperationHealth.OldCustomerUnitPriceChainRatio;
                 return greatHospitalOperationHealthDto;
             }
             catch (Exception ex)
@@ -143,6 +161,12 @@ namespace Fx.Amiya.Service
                 greatHospitalOperationHealth.LastNewCustomerUnitPrice = updateDto.LastNewCustomerUnitPrice;
                 greatHospitalOperationHealth.ThisNewCustomerUnitPrice = updateDto.ThisNewCustomerUnitPrice;
                 greatHospitalOperationHealth.NewCustomerUnitPriceChainRatio = updateDto.NewCustomerUnitPriceChainRatio;
+                greatHospitalOperationHealth.LastOldCustomerRepurchaseRate = updateDto.LastOldCustomerRepurchaseRate;
+                greatHospitalOperationHealth.ThisOldCustomerRepurchaseRate = updateDto.ThisOldCustomerRepurchaseRate;
+                greatHospitalOperationHealth.OldCustomerRepurchaseChainRatio = updateDto.OldCustomerRepurchaseChainRatio;
+                greatHospitalOperationHealth.LastOldCustomerUnitPrice = updateDto.LastOldCustomerUnitPrice;
+                greatHospitalOperationHealth.ThisOldCustomerUnitPrice = updateDto.ThisOldCustomerUnitPrice;
+                greatHospitalOperationHealth.OldCustomerUnitPriceChainRatio = updateDto.OldCustomerUnitPriceChainRatio;
                 greatHospitalOperationHealth.UpdateDate = DateTime.Now;
 
                 await dalGreatHospitalOperationHealth.UpdateAsync(greatHospitalOperationHealth, true);

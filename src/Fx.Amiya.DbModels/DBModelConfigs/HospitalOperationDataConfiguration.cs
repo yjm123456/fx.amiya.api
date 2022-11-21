@@ -25,6 +25,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.BeforeMonthData).HasColumnName("before_month_data").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.ChainRatio).HasColumnName("chain_ratio").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.GreatHospital).HasColumnName("great_hospital").HasColumnType("varchar(100)").IsRequired(false);
+            builder.Property(t => t.IndicatorCalculation).HasColumnName("indicator_calculation").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.Sort).HasColumnName("sort").HasColumnType("int").IsRequired();
 
 

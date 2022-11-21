@@ -42,6 +42,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 排序
         /// </summary>
         public int Sort { get; set; }
+        /// <summary>
+        /// 健康指标推算
+        /// </summary>
+        public decimal IndicatorCalculation { get; set; }
 
         public HospitalInfo HospitalInfo { get; set; }
 

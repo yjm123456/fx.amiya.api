@@ -68,6 +68,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                        LastNewCustomerUnitPrice = d.LastNewCustomerUnitPrice,
                                                        ThisNewCustomerUnitPrice = d.ThisNewCustomerUnitPrice,
                                                        NewCustomerUnitPriceChainRatio = d.NewCustomerUnitPriceChainRatio,
+                                                       LastOldCustomerRepurchaseRate = d.LastOldCustomerRepurchaseRate,
+                                                       ThisOldCustomerRepurchaseRate = d.ThisOldCustomerRepurchaseRate,
+                                                       OldCustomerRepurchaseChainRatio = d.OldCustomerRepurchaseChainRatio,
+                                                       LastOldCustomerUnitPrice = d.LastOldCustomerUnitPrice,
+                                                       ThisOldCustomerUnitPrice = d.ThisOldCustomerUnitPrice,
+                                                       OldCustomerUnitPriceChainRatio = d.OldCustomerUnitPriceChainRatio
                                                    };
 
                 List<GreatHospitalOperationHealthVo> greatHospitalOperationHealthResult = new List<GreatHospitalOperationHealthVo>();
@@ -103,7 +109,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.LastNewCustomerUnitPrice = addVo.LastNewCustomerUnitPrice;
                 addDto.ThisNewCustomerUnitPrice = addVo.ThisNewCustomerUnitPrice;
                 addDto.NewCustomerUnitPriceChainRatio = addVo.NewCustomerUnitPriceChainRatio;
-
+                addDto.LastOldCustomerRepurchaseRate = addVo.LastOldCustomerRepurchaseRate;
+                addDto.ThisOldCustomerRepurchaseRate = addVo.ThisOldCustomerRepurchaseRate;
+                addDto.OldCustomerRepurchaseChainRatio = addVo.OldCustomerRepurchaseChainRatio;
+                addDto.LastOldCustomerUnitPrice = addVo.LastOldCustomerUnitPrice;
+                addDto.ThisOldCustomerUnitPrice = addVo.ThisOldCustomerUnitPrice;
+                addDto.OldCustomerUnitPriceChainRatio = addVo.OldCustomerUnitPriceChainRatio;
                 await greatHospitalOperationHealthService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -144,6 +155,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 greatHospitalOperationHealthVo.LastNewCustomerUnitPrice = greatHospitalOperationHealth.LastNewCustomerUnitPrice;
                 greatHospitalOperationHealthVo.ThisNewCustomerUnitPrice = greatHospitalOperationHealth.ThisNewCustomerUnitPrice;
                 greatHospitalOperationHealthVo.NewCustomerUnitPriceChainRatio = greatHospitalOperationHealth.NewCustomerUnitPriceChainRatio;
+                greatHospitalOperationHealthVo.LastOldCustomerRepurchaseRate = greatHospitalOperationHealth.LastOldCustomerRepurchaseRate;
+                greatHospitalOperationHealthVo.ThisOldCustomerRepurchaseRate = greatHospitalOperationHealth.ThisOldCustomerRepurchaseRate;
+                greatHospitalOperationHealthVo.OldCustomerRepurchaseChainRatio = greatHospitalOperationHealth.OldCustomerRepurchaseChainRatio;
+                greatHospitalOperationHealthVo.LastOldCustomerUnitPrice = greatHospitalOperationHealth.LastOldCustomerUnitPrice;
+                greatHospitalOperationHealthVo.ThisOldCustomerUnitPrice = greatHospitalOperationHealth.ThisOldCustomerUnitPrice;
+                greatHospitalOperationHealthVo.OldCustomerUnitPriceChainRatio = greatHospitalOperationHealth.OldCustomerUnitPriceChainRatio;
 
                 return ResultData<GreatHospitalOperationHealthVo>.Success().AddData("greatHospitalOperationHealthInfo", greatHospitalOperationHealthVo);
             }
@@ -178,6 +195,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.LastNewCustomerUnitPrice = updateVo.LastNewCustomerUnitPrice;
                 updateDto.ThisNewCustomerUnitPrice = updateVo.ThisNewCustomerUnitPrice;
                 updateDto.NewCustomerUnitPriceChainRatio = updateVo.NewCustomerUnitPriceChainRatio;
+                updateDto.LastOldCustomerRepurchaseRate = updateVo.LastOldCustomerRepurchaseRate;
+                updateDto.ThisOldCustomerRepurchaseRate = updateVo.ThisOldCustomerRepurchaseRate;
+                updateDto.OldCustomerRepurchaseChainRatio = updateVo.OldCustomerRepurchaseChainRatio;
+                updateDto.LastOldCustomerUnitPrice = updateVo.LastOldCustomerUnitPrice;
+                updateDto.ThisOldCustomerUnitPrice = updateVo.ThisOldCustomerUnitPrice;
+                updateDto.OldCustomerUnitPriceChainRatio = updateVo.OldCustomerUnitPriceChainRatio;
                 await greatHospitalOperationHealthService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

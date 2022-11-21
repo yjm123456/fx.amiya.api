@@ -20,18 +20,24 @@ namespace Fx.Amiya.Service
         private IHospitalOperationIndicatorService hospitalOperationIndicatorService;
         private IIndicatorSendHospitalService indicatorSendHospitalService;
         private IGreatHospitalDataWriteService greatHospitalDataWriteService;
+        private IContentPlatformOrderSendService contentPlatformOrderSendService;
+        private IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
+        private IHospitalPerformanceService hospitalPerformanceService;
         private IUnitOfWork unitOfWork;
         public HospitalOperationDataService(IDalHospitalOperationData dalHospitalOperationData,
             IHospitalOperationIndicatorService hospitalOperationIndicatorService,
             IIndicatorSendHospitalService indicatorSendHospitalService,
             IGreatHospitalDataWriteService greatHospitalDataWriteService,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork, IContentPlatformOrderSendService contentPlatformOrderSendService, IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService, IHospitalPerformanceService hospitalPerformanceService)
         {
             this.dalHospitalOperationData = dalHospitalOperationData;
             this.hospitalOperationIndicatorService = hospitalOperationIndicatorService;
             this.indicatorSendHospitalService = indicatorSendHospitalService;
             this.unitOfWork = unitOfWork;
             this.greatHospitalDataWriteService = greatHospitalDataWriteService;
+            this.contentPlatformOrderSendService = contentPlatformOrderSendService;
+            this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
+            this.hospitalPerformanceService = hospitalPerformanceService;
         }
 
 
@@ -54,6 +60,7 @@ namespace Fx.Amiya.Service
                                                 LastMonthData = d.LastMonthData,
                                                 BeforeMonthData = d.BeforeMonthData,
                                                 ChainRatio = d.ChainRatio,
+                                                IndicatorCalculation=d.IndicatorCalculation,
                                                 Sort = d.Sort,
                                             };
 
@@ -96,6 +103,7 @@ namespace Fx.Amiya.Service
                     hospitalOperationData.ChainRatio = x.ChainRatio;
                     hospitalOperationData.Sort = x.Sort;
                     hospitalOperationData.GreatHospital = hospitalOperationInfo.ExcellentHospital;
+                    hospitalOperationData.IndicatorCalculation = x.IndicatorCalculation;
                     await dalHospitalOperationData.AddAsync(hospitalOperationData, true);
                 }
 
@@ -132,6 +140,7 @@ namespace Fx.Amiya.Service
                 hospitalOperationDataDto.ChainRatio = hospitalOperationData.ChainRatio;
                 hospitalOperationDataDto.Sort = hospitalOperationData.Sort;
                 hospitalOperationDataDto.GreatHospital = hospitalOperationData.GreatHospital;
+                hospitalOperationDataDto.IndicatorCalculation = hospitalOperationData.IndicatorCalculation;
                 return hospitalOperationDataDto;
             }
             catch (Exception ex)
@@ -155,6 +164,7 @@ namespace Fx.Amiya.Service
                 hospitalOperationData.LastMonthData = updateDto.LastMonthData;
                 hospitalOperationData.BeforeMonthData = updateDto.BeforeMonthData;
                 hospitalOperationData.ChainRatio = updateDto.ChainRatio;
+                hospitalOperationData.IndicatorCalculation = updateDto.IndicatorCalculation;
                 hospitalOperationData.UpdateDate = DateTime.Now;
 
                 await dalHospitalOperationData.UpdateAsync(hospitalOperationData, true);
@@ -211,6 +221,18 @@ namespace Fx.Amiya.Service
 
                 throw ex;
             }
+        }
+        /// <summary>
+        /// 获取医院运营数据列表
+        /// </summary>
+        /// <param name="indicatorsId"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        public async Task<HospitalOperationTotalDataDto> GetHospitalOperationDataList(string indicatorsId, int hospitalId)
+        {
+            var hospitalOperationInfo = await hospitalOperationIndicatorService.GetByIdAsync(indicatorsId);
+            var date = hospitalOperationInfo.StartDate;
+            return await hospitalPerformanceService.GetHospitalOperationMonthData(hospitalId,date);                       
         }
     }
 }

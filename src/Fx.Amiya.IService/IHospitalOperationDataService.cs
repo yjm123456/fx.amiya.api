@@ -56,5 +56,12 @@ namespace Fx.Amiya.IService
         /// <param name="id"></param>
         /// <returns></returns>
         Task DeleteDataAsync(string id);
+        /// <summary>
+        /// 获取医院运营数据列表
+        /// </summary>
+        /// <param name="indicatorsId"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<HospitalOperationTotalDataDto> GetHospitalOperationDataList(string indicatorsId,int hospitalId);
     }
 }

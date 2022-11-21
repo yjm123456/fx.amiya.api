@@ -2,6 +2,7 @@
 using Fx.Amiya.Dto.GrowthPoints;
 using Fx.Amiya.Dto.MemberCard;
 using Fx.Amiya.IService;
+using jos_sdk_net.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -135,10 +136,10 @@ namespace Fx.Amiya.Service
         }
         private  MemberCardHandleDto CreateMemberCardAsync(string latestMemberCardNum, string inputMemberCardNum,string memberRankCode,int memberCardId)
         {
-            
+
             return new MemberCardHandleDto()
             {
-                MemberCardNum = Guid.NewGuid().ToString().Replace("-","").Substring(0,20),
+                MemberCardNum = CreateOrderIdHelper.GetNextNumber().Substring(7,9),
                 Date = DateTime.Now,
                 Valid = true,
                 MemberRankId=(byte)memberCardId

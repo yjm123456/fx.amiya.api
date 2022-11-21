@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
+using Fx.Amiya.Dto.HospitalOperationData;
 using Fx.Amiya.Dto.HospitalPerformance;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.ShoppingCartRegistration;
@@ -34,7 +35,13 @@ namespace Fx.Amiya.IService
         /// <param name="hospitalId"></param>
         /// <returns></returns>
         Task<HospitalNewCustomerAchievementDto> GetHospitalOperationDailyData(int hospitalId);
-
+        /// <summary>
+        /// 根据医院id和时间获取前月和上月数据
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <param name="date">时间</param>
+        /// <returns></returns>
+        Task<HospitalOperationTotalDataDto> GetHospitalOperationMonthData(int hospitalId, DateTime date);
 
 
         #region【 其他相关业务接口（折线图，明细等）】

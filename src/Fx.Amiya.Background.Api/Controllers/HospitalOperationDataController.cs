@@ -60,6 +60,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 LastMonthData = d.LastMonthData,
                                                 BeforeMonthData = d.BeforeMonthData,
                                                 ChainRatio = d.ChainRatio,
+                                                IndicatorCalculation=d.IndicatorCalculation,
                                                 Sort = d.Sort,
                                                 GreatHospital = d.GreatHospital,
                                             };
@@ -76,6 +77,57 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
         /// <summary>
+        /// 获取机构运营数据列表
+        /// </summary>
+        /// <param name="indicatorsId">归属指标id</param>
+        /// <param name="hospitalId">医院id</param>
+        /// <returns></returns>
+        [HttpGet("data")]
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData<HospitalOperationDataListVo>> GetDataListAsync(string indicatorsId, int hospitalId)
+        {
+            try
+            {
+                HospitalOperationDataListVo hospitalOperationDataListVo = new HospitalOperationDataListVo();
+                var data= await hospitalOperationDataService.GetHospitalOperationDataList(indicatorsId,hospitalId);
+                hospitalOperationDataListVo.LastMonthSendOrderCount = data.LastMonthSendOrderCount;
+                hospitalOperationDataListVo.LastMonthNewCustomerToHospitalCount = data.LastMonthNewCustomerToHospitalCount;
+                hospitalOperationDataListVo.LastMonthNewCustomerToHospitalRate = data.LastMonthNewCustomerToHospitalRate;
+                hospitalOperationDataListVo.LastMonthNewCustomerDealCount = data.LastMonthNewCustomerDealCount;
+                hospitalOperationDataListVo.LastMonthNewCustomerDealRate = data.LastMonthNewCustomerDealRate;
+                hospitalOperationDataListVo.LastMonthNewCustomerPerformance = data.LastMonthNewCustomerPerformance;
+                hospitalOperationDataListVo.LastMonthNewCustomerUnitPrice = data.LastMonthNewCustomerUnitPrice;
+                hospitalOperationDataListVo.LastMonthOldCustomerToHospitalCount = data.LastMonthOldCustomerToHospitalCount;
+                hospitalOperationDataListVo.LastMonthOldCustomerDealCount = data.LastMonthOldCustomerDealCount;
+                hospitalOperationDataListVo.LastMonthOldCustomerDealRate = data.LastMonthOldCustomerDealRate;
+                hospitalOperationDataListVo.LastMonthOldCustomerPerformance = data.LastMonthOldCustomerPerformance;
+                hospitalOperationDataListVo.LastMonthOldCustomerUnitPrice = data.LastMonthOldCustomerUnitPrice;
+                hospitalOperationDataListVo.LastMonthTotalPerformance = data.LastMonthTotalPerformance;
+                hospitalOperationDataListVo.LastMonthOldCustomerPerformanceRatio = data.LastMonthOldCustomerPerformanceRatio;
+                hospitalOperationDataListVo.ThisMonthSendOrderCount = data.ThisMonthSendOrderCount;
+                hospitalOperationDataListVo.ThisMonthNewCustomerToHospitalCount = data.ThisMonthNewCustomerToHospitalCount;
+                hospitalOperationDataListVo.ThisMonthNewCustomerToHospitalRate = data.ThisMonthNewCustomerToHospitalRate;
+                hospitalOperationDataListVo.ThisMonthNewCustomerDealCount = data.ThisMonthNewCustomerDealCount;
+                hospitalOperationDataListVo.ThisMonthNewCustomerDealRate = data.ThisMonthNewCustomerDealRate;
+                hospitalOperationDataListVo.ThisMonthNewCustomerPerformance = data.ThisMonthNewCustomerPerformance;
+                hospitalOperationDataListVo.ThisMonthNewCustomerUnitPrice = data.ThisMonthNewCustomerUnitPrice;
+                hospitalOperationDataListVo.ThisMonthOldCustomerToHospitalCount = data.ThisMonthOldCustomerToHospitalCount;
+                hospitalOperationDataListVo.ThisMonthOldCustomerDealCount = data.ThisMonthOldCustomerDealCount;
+                hospitalOperationDataListVo.ThisMonthOldCustomerDealRate = data.ThisMonthOldCustomerDealRate;
+                hospitalOperationDataListVo.ThisMonthOldCustomerPerformance = data.ThisMonthOldCustomerPerformance;
+                hospitalOperationDataListVo.ThisMonthOldCustomerUnitPrice = data.ThisMonthOldCustomerUnitPrice;
+                hospitalOperationDataListVo.ThisMonthTotalPerformance = data.ThisMonthTotalPerformance;
+                hospitalOperationDataListVo.ThisMonthOldCustomerPerformanceRatio = data.ThisMonthOldCustomerPerformanceRatio;
+                return ResultData<HospitalOperationDataListVo>.Success().AddData("data", hospitalOperationDataListVo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<HospitalOperationDataListVo>.Fail(ex.Message);
+            }
+        }
+
+
+        /// <summary>
         /// 添加机构运营数据分析信息
         /// </summary>
         /// <param name="addVo"></param>
@@ -89,7 +141,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 List<AddHospitalOperationDataDto> AddHospitalOperationDataDtoList = new List<AddHospitalOperationDataDto>();
                 foreach (var x in addVo)
                 {
-
                     AddHospitalOperationDataDto addDto = new AddHospitalOperationDataDto();
                     addDto.HospitalId = x.HospitalId;
                     addDto.IndicatorsId = x.IndicatorsId;
@@ -98,6 +149,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.BeforeMonthData = x.BeforeMonthData;
                     addDto.ChainRatio = x.ChainRatio;
                     addDto.Sort = x.Sort;
+                    addDto.IndicatorCalculation = x.IndicatorCalculation;
                     AddHospitalOperationDataDtoList.Add(addDto);
                 }
 
@@ -138,7 +190,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 hospitalOperationDataVo.ChainRatio = hospitalOperationData.ChainRatio;
                 hospitalOperationDataVo.Sort = hospitalOperationData.Sort;
                 hospitalOperationDataVo.GreatHospital = hospitalOperationData.GreatHospital;
-
+                hospitalOperationDataVo.IndicatorCalculation = hospitalOperationData.IndicatorCalculation;
                 return ResultData<HospitalOperationDataVo>.Success().AddData("hospitalOperationDataInfo", hospitalOperationDataVo);
             }
             catch (Exception ex)
@@ -167,6 +219,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.LastMonthData = updateVo.LastMonthData;
                 updateDto.BeforeMonthData = updateVo.BeforeMonthData;
                 updateDto.ChainRatio = updateVo.ChainRatio;
+                updateDto.IndicatorCalculation = updateVo.IndicatorCalculation;
                 await hospitalOperationDataService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

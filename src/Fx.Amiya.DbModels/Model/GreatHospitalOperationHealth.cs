@@ -56,6 +56,31 @@ namespace Fx.Amiya.DbModels.Model
         /// 新客客单价环比
         /// </summary>
         public decimal NewCustomerUnitPriceChainRatio { get; set; }
+        /// <summary>
+        /// 前月老客复购率
+        /// </summary>
+        public decimal LastOldCustomerRepurchaseRate { get; set; }
+        /// <summary>
+        /// 上月老客复购率
+        /// </summary>
+        public decimal ThisOldCustomerRepurchaseRate { get; set; }
+        /// <summary>
+        /// 老客复购率环比
+        /// </summary>
+        public decimal OldCustomerRepurchaseChainRatio { get; set; }
+
+        /// <summary>
+        /// 前月老客客单价
+        /// </summary>
+        public decimal LastOldCustomerUnitPrice { get; set; }
+        /// <summary>
+        /// 上月老客客单价
+        /// </summary>
+        public decimal ThisOldCustomerUnitPrice { get; set; }
+        /// <summary>
+        /// 老客客单价环比
+        /// </summary>
+        public decimal OldCustomerUnitPriceChainRatio { get; set; }
 
         public HospitalInfo HospitalInfo { get; set; }
 

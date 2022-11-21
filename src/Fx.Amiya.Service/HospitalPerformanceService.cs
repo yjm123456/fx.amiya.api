@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.HospitalPerformance;
+﻿using Fx.Amiya.Dto.HospitalOperationData;
+using Fx.Amiya.Dto.HospitalPerformance;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.IService;
 using jos_sdk_net.Util;
@@ -171,7 +172,7 @@ namespace Fx.Amiya.Service
 
 
         /// <summary>
-        /// 根据医院id获取医院新客上月与前月业绩
+        /// 根据医院id获取医院新客前月与前月业绩
         /// </summary>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
@@ -202,18 +203,18 @@ namespace Fx.Amiya.Service
             //var month = DateTime.Now.Month;
             var lastMonth = DateTime.Now.AddMonths(-1);
             var beforeMonth = DateTime.Now.AddMonths(-2);
-            //上月派单数据
+            //前月派单数据
             var lastContentPlatFormOrderSendList = await contentPlatformOrderSendService.GetSendDataByHospitalIdAndMonthAsync(hospitalId, lastMonth.Year, lastMonth.Month);
             var lastsendNum = lastContentPlatFormOrderSendList.Where(z => z.SendHospitalId == hospitalId).Count();
-            //上月上门与成交数据
+            //前月上门与成交数据
             var lastContentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetSendPerformanceByHospitalIdAndMonthAsync(hospitalId, lastMonth.Year, lastMonth.Month);
-            //上月新客上门率
+            //前月新客上门率
             var lastVisitNum = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false).Count();
             result.ThisNewCustomerVisitRate = CalculateTargetComplete(lastVisitNum, lastsendNum).Value;
-            //上月新客成交率
+            //前月新客成交率
             var lastDealNum = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false && x.IsDeal == true);
             result.ThisNewCustomerDealRate = CalculateTargetComplete(lastDealNum.Count(), lastContentPlatFormOrderDealInfoList.Count()).Value;
-            //上月新客客单价
+            //前月新客客单价
             var lastCustomerTotalPrice = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false && x.IsDeal == true).Sum(x => x.Price);
             result.ThisNewCustomerUnitPrice = Division(lastCustomerTotalPrice, lastDealNum.Count()).Value;
 
@@ -239,6 +240,102 @@ namespace Fx.Amiya.Service
             result.NewCustomerDealChainRatio = CalculateChainratio(result.ThisNewCustomerDealRate, result.LastNewCustomerDealRate).Value;
             //新客客单价环比
             result.NewCustomerUnitPriceChainRatio = CalculateChainratio(result.ThisNewCustomerUnitPrice, result.LastNewCustomerUnitPrice).Value;
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// 根据医院id和时间获取前月和前月数据
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <param name="date">时间</param>
+        /// <returns></returns>
+        public async Task<HospitalOperationTotalDataDto> GetHospitalOperationMonthData(int hospitalId,DateTime date)
+        {
+            HospitalOperationTotalDataDto result = new HospitalOperationTotalDataDto();           
+            var lastMonth = date.AddMonths(-1);
+            var beforeMonth = date.AddMonths(-2);            
+            var lastContentPlatFormOrderSendList = await contentPlatformOrderSendService.GetSendDataByHospitalIdAndMonthAsync(hospitalId, lastMonth.Year, lastMonth.Month);
+            var lastsendNum = lastContentPlatFormOrderSendList.Where(z => z.SendHospitalId == hospitalId).Count();
+            //前月派单数据
+            result.ThisMonthSendOrderCount = lastsendNum;
+            //前月上门与成交数据
+            var lastContentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetSendPerformanceByHospitalIdAndMonthAsync(hospitalId, lastMonth.Year, lastMonth.Month);         
+            var lastVisitNum = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false).Count();
+            //前月新客上门数
+            result.ThisMonthNewCustomerToHospitalCount = lastVisitNum;
+            //前月新客上门率
+            result.ThisMonthNewCustomerToHospitalRate = CalculateTargetComplete(lastVisitNum, lastsendNum).Value;           
+            var lastDealNum = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false && x.IsDeal == true);
+            //前月新客成交人数
+            result.ThisMonthNewCustomerDealCount = lastDealNum.Count();
+            //前月新客成交率
+            result.ThisMonthNewCustomerDealRate = CalculateTargetComplete(lastDealNum.Count(), lastContentPlatFormOrderDealInfoList.Where(e=>e.IsOldCustomer==false).Count()).Value;           
+            var lastCustomerTotalPrice = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false && x.IsDeal == true).Sum(x => x.Price);
+            //前月新客业绩
+            result.ThisMonthNewCustomerPerformance = lastCustomerTotalPrice;
+            //前月新客客单价
+            result.ThisMonthNewCustomerUnitPrice = Division(lastCustomerTotalPrice, lastDealNum.Count()).Value;
+            //前月老客上门人数
+            var lastOldCustomerVisitNum = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true).Count();
+            result.ThisMonthOldCustomerToHospitalCount = lastOldCustomerVisitNum;
+            //前月老客成交人数
+            var lastOldCustomerDealNum = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true && x.IsDeal == true);
+            result.ThisMonthOldCustomerDealCount = lastOldCustomerDealNum.Count();
+            //前月老客成交率
+            result.ThisMonthOldCustomerDealRate = CalculateTargetComplete(lastOldCustomerDealNum.Count(), lastContentPlatFormOrderDealInfoList.Where(e=>e.IsOldCustomer==true).Count()).Value;
+            //前月老客业绩
+            var lastOldCustomerTotalPrice = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true && x.IsDeal == true).Sum(x => x.Price);
+            result.ThisMonthOldCustomerPerformance = lastOldCustomerTotalPrice;
+            //前月老客客单价
+            result.ThisMonthOldCustomerUnitPrice = Division(lastOldCustomerTotalPrice, lastOldCustomerDealNum.Count()).Value;
+            //前月总业绩
+            result.ThisMonthTotalPerformance= lastContentPlatFormOrderDealInfoList.Where(x =>  x.IsDeal == true).Sum(x => x.Price);
+            //前月老客业绩占比
+            result.ThisMonthOldCustomerPerformanceRatio = CalculateTargetComplete(lastOldCustomerTotalPrice, result.ThisMonthTotalPerformance).Value;
+
+
+            //前月派单数据
+            var beforeContentPlatFormOrderSendList = await contentPlatformOrderSendService.GetSendDataByHospitalIdAndMonthAsync(hospitalId, beforeMonth.Year, beforeMonth.Month);
+            var beforesendNum = beforeContentPlatFormOrderSendList.Where(z => z.SendHospitalId == hospitalId).Count();
+            //前月派单数据
+            result.LastMonthSendOrderCount = beforesendNum;
+            //前月上门与成交数据
+            var beforeContentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetSendPerformanceByHospitalIdAndMonthAsync(hospitalId, beforeMonth.Year, beforeMonth.Month);
+            var beforeVisitNum = beforeContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false).Count();
+            //前月新客上门数
+            result.LastMonthNewCustomerToHospitalCount = beforeVisitNum;
+            //前月新客上门率
+            result.LastMonthNewCustomerToHospitalRate = CalculateTargetComplete(beforeVisitNum, beforesendNum).Value;
+            var beforeDealNum = beforeContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false && x.IsDeal == true);
+            //前月新客成交人数
+            result.LastMonthNewCustomerDealCount = beforeDealNum.Count();
+            //前月新客成交率
+            result.LastMonthNewCustomerDealRate = CalculateTargetComplete(beforeDealNum.Count(), beforeContentPlatFormOrderDealInfoList.Where(e => e.IsOldCustomer == false).Count()).Value;
+            var beforeCustomerTotalPrice = beforeContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false && x.IsDeal == true).Sum(x => x.Price);
+            //前月新客业绩
+            result.LastMonthNewCustomerPerformance = beforeCustomerTotalPrice;
+            //前月新客客单价
+            result.LastMonthNewCustomerUnitPrice = Division(beforeCustomerTotalPrice, beforeDealNum.Count()).Value;
+            //前月老客上门人数
+            var beforeOldCustomerVisitNum = beforeContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true).Count();
+            result.LastMonthOldCustomerToHospitalCount = beforeOldCustomerVisitNum;
+            //前月老客成交人数
+            var beforeOldCustomerDealNum = beforeContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true && x.IsDeal == true);
+            result.LastMonthOldCustomerDealCount = beforeOldCustomerDealNum.Count();
+            //前月老客成交率
+            result.LastMonthOldCustomerDealRate = CalculateTargetComplete(beforeOldCustomerDealNum.Count(), beforeContentPlatFormOrderDealInfoList.Where(e => e.IsOldCustomer == true).Count()).Value;
+            //前月老客业绩
+            var beforeOldCustomerTotalPrice = beforeContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true && x.IsDeal == true).Sum(x => x.Price);
+            result.LastMonthOldCustomerPerformance = beforeOldCustomerTotalPrice;
+            //前月老客客单价
+            result.LastMonthOldCustomerUnitPrice = Division(beforeOldCustomerTotalPrice, beforeOldCustomerDealNum.Count()).Value;
+            //前月总业绩
+            result.LastMonthTotalPerformance = beforeContentPlatFormOrderDealInfoList.Where(x => x.IsDeal == true).Sum(x => x.Price);
+            //前月老客业绩占比
+            result.LastMonthOldCustomerPerformanceRatio = CalculateTargetComplete(beforeOldCustomerTotalPrice, result.LastMonthTotalPerformance).Value ; 
+
 
             return result;
         }

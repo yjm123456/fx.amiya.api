@@ -1477,10 +1477,25 @@ ALTER TABLE `tbl_user_info`
  
 
 
+------------------------------------------------------------------王健 2022/11/21 BEGIN--------------------------------------------
+
+--优秀机构
+ALTER TABLE `tbl_great_hospital_operation_health`
+	ADD COLUMN `last_old_customer_repurchase_rate` DECIMAL(12,2) NOT NULL AFTER `new_customer_unit_price_chain_ratio`,
+	ADD COLUMN `this_old_customer_repurchase_rate` DECIMAL(12,2) NOT NULL AFTER `last_old_customer_repurchase_rate`,
+	ADD COLUMN `old_customer_repurchase_chain_ratio` DECIMAL(12,2) NOT NULL AFTER `this_old_customer_repurchase_rate`,
+	ADD COLUMN `last_old_customer_unit_price` DECIMAL(12,2) NOT NULL AFTER `old_customer_repurchase_chain_ratio`,
+	ADD COLUMN `this_old_customer_unit_price` DECIMAL(12,2) NOT NULL AFTER `last_old_customer_unit_price`,
+	ADD COLUMN `old_customer_unit_price_chain_ratio` DECIMAL(12,2) NOT NULL AFTER `this_old_customer_unit_price`;
 
 
 
+--机构运营数据
+ALTER TABLE `tbl_hospital_operation_data`
+	ADD COLUMN `indicator_calculation` DECIMAL(12,2) NOT NULL AFTER `sort`;
 
+
+------------------------------------------------------------------王健 2022/11/21 END--------------------------------------------
 
 
 
