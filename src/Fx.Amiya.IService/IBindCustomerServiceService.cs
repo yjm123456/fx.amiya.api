@@ -16,6 +16,12 @@ namespace Fx.Amiya.IService
         /// <param name="employeeId"></param>
         /// <returns></returns>
         Task AddAsync(AddBindCustomerServiceDto addDto, int employeeId);
+        /// <summary>
+        /// 根据手机号获取绑定客户详情
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        Task<BindCustomerServiceDto> GetEmployeeDetailsByPhone(string phone);
 
         /// <summary>
         /// 根据手机号获取归属客服

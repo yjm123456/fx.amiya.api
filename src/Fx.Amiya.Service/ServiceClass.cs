@@ -973,6 +973,20 @@ namespace Fx.Amiya.Service
             return phone.Substring(0, 3) + "****" + phone.Substring(phone.Length - 4);
         }
 
+        public static int GetAge(DateTime? birthdayInfo)
+        {
+            int age = 0;
+            if (birthdayInfo != null)
+            {
+                DateTime date = DateTime.Now;
+                DateTime birthday = (DateTime)birthdayInfo;
+                age = date.Year - birthday.Year;
+                if (date.Month < birthday.Month || (date.Month == birthday.Month && date.Day < birthday.Day))
+                    age--;
+            }
+            return age;
+        }
+
         /// <summary>
         /// 根据会员卡编号获取会员卡所需成长值范围
         /// </summary>
