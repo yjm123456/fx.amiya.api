@@ -20,7 +20,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    
+
     public class CustomerController : ControllerBase
     {
         private ICustomerService customerService;
@@ -54,14 +54,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<CustomerInfoVo>>> GetWxCustomerListAsync(string keyword, DateTime? startDate, DateTime? endDate,int? BirthMonth,
-            int? employeeId, int? memberRankId, bool isUnTrack, DateTime? unTrackStartDate, DateTime? unTrackEndDate, 
-            int amountType,decimal? minAmount,decimal? maxAmount,int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<CustomerInfoVo>>> GetWxCustomerListAsync(string keyword, DateTime? startDate, DateTime? endDate, int? BirthMonth,
+            int? employeeId, int? memberRankId, bool isUnTrack, DateTime? unTrackStartDate, DateTime? unTrackEndDate,
+            int amountType, decimal? minAmount, decimal? maxAmount, int pageNum, int pageSize)
         {
             if (employeeId == null)
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-                 employeeId = Convert.ToInt32(employee.Id);
+                employeeId = Convert.ToInt32(employee.Id);
             }
 
             CustomerSearchParamDto customerSearchParamDto = new CustomerSearchParamDto();
@@ -69,7 +69,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             customerSearchParamDto.StartDate = startDate;
             customerSearchParamDto.BirthMonth = BirthMonth;
             customerSearchParamDto.EndDate = endDate;
-            customerSearchParamDto.EmployeeId =(int) employeeId;
+            customerSearchParamDto.EmployeeId = (int)employeeId;
             customerSearchParamDto.MemberRankId = memberRankId;
             customerSearchParamDto.IsUnTrack = isUnTrack;
             customerSearchParamDto.UnTrackStartDate = unTrackStartDate;
@@ -89,14 +89,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 memberCardList = await memberCardService.GetMemberCardHandelListByMemberRankAsync(null);
                 foreach (var item in memberCardList)
                 {
-                        customerIds.Add(item.CustomerId);
+                    customerIds.Add(item.CustomerId);
                 }
                 customerSearchParamDto.MemberCustomerIds = customerIds;
                 customerPage = await customerService.GetWxCustomerListAsync(customerSearchParamDto);
             }
 
 
-           else if (memberRankId == null) //全部
+            else if (memberRankId == null) //全部
             {
                 customerSearchParamDto.MemberCustomerIds = customerIds;
                 customerPage = await customerService.GetWxCustomerListAsync(customerSearchParamDto);
@@ -123,7 +123,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
 
-          
+
             var customers = from d in customerPage.List
                             join m in memberCardList on d.Id equals m.CustomerId into md
                             from m in md.DefaultIfEmpty()
@@ -174,7 +174,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             if (employeeId == null)
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-                 employeeId = Convert.ToInt32(employee.Id);
+                employeeId = Convert.ToInt32(employee.Id);
             }
 
             CustomerSearchParamDto customerSearchParamDto = new CustomerSearchParamDto();
@@ -188,7 +188,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             customerSearchParamDto.AmountType = amountType;
             customerSearchParamDto.MinAmount = minAmount;
             customerSearchParamDto.MaxAmount = maxAmount;
-            customerSearchParamDto.CustomerType = type; 
+            customerSearchParamDto.CustomerType = type;
             customerSearchParamDto.PageNum = pageNum;
             customerSearchParamDto.PageSize = pageSize;
 
@@ -234,7 +234,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("bindCustomerConsumptionServerList")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<CustomerConsumptionInfoVo>>> GetBindCustomerConsumptionServiceListAsync(string keyword, DateTime? startDate, DateTime? endDate,int? employeeId,string CconsumptionLevelId,int channel, string orderId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<CustomerConsumptionInfoVo>>> GetBindCustomerConsumptionServiceListAsync(string keyword, DateTime? startDate, DateTime? endDate, int? employeeId, string CconsumptionLevelId, int channel, string orderId, int pageNum, int pageSize)
         {
             //if (startDate.HasValue && endDate.HasValue)
             //{
@@ -306,7 +306,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("CustomerTrackServerList")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<BindTrackCustomerInfoVo>>> GetCustomerTrackServiceListAsync(string keyword, DateTime? startDate, DateTime? endDate, int isUnTrack,int? employeeId, int type, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<BindTrackCustomerInfoVo>>> GetCustomerTrackServiceListAsync(string keyword, DateTime? startDate, DateTime? endDate, int isUnTrack, int? employeeId, int type, int pageNum, int pageSize)
         {
             //if(startDate.HasValue&&endDate.HasValue)
             //{
@@ -512,7 +512,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             customerSimpleInfoVo.WechatMiniProgram = customer.WechatMiniProgram;
             customerSimpleInfoVo.OfficialAccounts = customer.OfficialAccounts;
             customerSimpleInfoVo.BelongCustomerService = customer.BelongCustomerService;
-            customerSimpleInfoVo.NewContentPlatForm = customer.NewContentPlatForm;
+            customerSimpleInfoVo.NewContentPlatForm = customer.NewContentPlatform;
             customerSimpleInfoVo.OtherPhone = customer.OtherPhone;
             customerSimpleInfoVo.DetailAddress = customer.DetailAddress;
             customerSimpleInfoVo.IsSendNote = customer.IsSendNote;
@@ -598,7 +598,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData> EditByIdAsync(UpdateCustomerBaseInfoVo editVo)
         {
             UpdateCustomerBaseInfoDto editDto = new UpdateCustomerBaseInfoDto();
-
+            editDto.Id = editVo.Id;
             editDto.PersonalWechat = editVo.PersonalWechat;
             editDto.BusinessWeChat = editVo.BusinessWeChat;
             editDto.WechatMiniProgram = editVo.WechatMiniProgram;

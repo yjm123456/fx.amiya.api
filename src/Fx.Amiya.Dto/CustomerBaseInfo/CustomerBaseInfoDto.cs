@@ -102,10 +102,6 @@ namespace Fx.Amiya.Dto.CustomerBaseInfo
         /// </summary>
         public string BelongCustomerService { get; set; }
 
-        /// <summary>
-        /// 最新消费渠道
-        /// </summary>
-        public string NewContentPlatForm { get; set; }
 
         /// <summary>
         /// 辅助号码（多个号码用逗号分隔开）
