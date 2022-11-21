@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Dto.CustomerBaseInfo
+namespace Fx.Amiya.Background.Api.Vo.CustomerInfo
 {
-    public class UpdateCustomerBaseInfoDto
+    public class UpdateCustomerBaseInfoVo
     {
         /// <summary>
         /// 编号
@@ -16,7 +15,6 @@ namespace Fx.Amiya.Dto.CustomerBaseInfo
         /// <summary>
         /// 是否为微信来源
         /// </summary>
-
         public bool PersonalWechat { get; set; }
         /// <summary>
         /// 是否为企业微信来源
@@ -79,6 +77,7 @@ namespace Fx.Amiya.Dto.CustomerBaseInfo
         /// 不回访原因
         /// </summary>
         public string UnTrackReason { get; set; }
+
         /// <summary>
         /// 备注
         /// </summary>

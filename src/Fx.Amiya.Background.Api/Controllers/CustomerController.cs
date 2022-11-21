@@ -6,6 +6,7 @@ using Fx.Amiya.Background.Api.Vo.CustomerInfo;
 using Fx.Amiya.Core.Dto.MemberCard;
 using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.Core.Interfaces.MemberCard;
+using Fx.Amiya.Dto.CustomerBaseInfo;
 using Fx.Amiya.Dto.CustomerInfo;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
@@ -523,8 +524,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             customerSimpleInfoVo.CustomerRequirement = customer.CustomerRequirement;
             customerSimpleInfoVo.WechatNumber = customer.WechatNumber;
             customerSimpleInfoVo.City = customer.City;
+            customerSimpleInfoVo.Remark = customer.Remark;
             return ResultData<CustomerBaseDetailInfoVo>.Success().AddData("customer", customerSimpleInfoVo);
         }
+
 
 
 
@@ -565,13 +568,13 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 编辑客户基础信息
+        /// 根据电话号码编辑客户基础信息
         /// </summary>
         /// <param name="editVo"></param>
         /// <returns></returns>
         [HttpPut("baseInfo")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData> EditAsync(EditCustomerBaseInfoVo editVo)
+        public async Task<ResultData> EditByPhoneAsync(EditCustomerBaseInfoVo editVo)
         {
             EditCustomerDto editDto = new EditCustomerDto();
             editDto.EncryptPhone = editVo.EncryptPhone;
@@ -585,6 +588,37 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData.Success();
         }
 
+        /// <summary>
+        /// 根据Id编辑客户基础信息
+        /// </summary>
+        /// <param name="editVo"></param>
+        /// <returns></returns>
+        [HttpPut("updateById")]
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData> EditByIdAsync(UpdateCustomerBaseInfoVo editVo)
+        {
+            UpdateCustomerBaseInfoDto editDto = new UpdateCustomerBaseInfoDto();
+
+            editDto.PersonalWechat = editVo.PersonalWechat;
+            editDto.BusinessWeChat = editVo.BusinessWeChat;
+            editDto.WechatMiniProgram = editVo.WechatMiniProgram;
+            editDto.OfficialAccounts = editVo.OfficialAccounts;
+            editDto.RealName = editVo.RealName;
+            editDto.WechatNumber = editVo.WechatNumber;
+            editDto.Sex = editVo.Sex;
+            editDto.Birthday = editVo.Birthday;
+            editDto.City = editVo.City;
+            editDto.Occupation = editVo.Occupation;
+            editDto.OtherPhone = editVo.OtherPhone;
+            editDto.DetailAddress = editVo.DetailAddress;
+            editDto.IsSendNote = editVo.IsSendNote;
+            editDto.IsCall = editVo.IsCall;
+            editDto.IsSendWeChat = editVo.IsSendWeChat;
+            editDto.UnTrackReason = editVo.UnTrackReason;
+            editDto.Remark = editVo.Remark;
+            await customerBaseInfoService.UpdateAsync(editDto);
+            return ResultData.Success();
+        }
 
 
         /// <summary>

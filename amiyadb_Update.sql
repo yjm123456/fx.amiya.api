@@ -1491,7 +1491,9 @@ ADD COLUMN `is_call` BIT(1) NOT NULL AFTER `is_send_note`,
 ADD COLUMN `is_send_wechat` BIT(1) NOT NULL AFTER `is_call`,
 ADD COLUMN `un_track_reason` VARCHAR(500) NULL AFTER `is_send_wechat`,
 ADD COLUMN `customer_state` INT NOT NULL DEFAULT 0 AFTER `un_track_reason`,
-ADD COLUMN `customer_requirement` VARCHAR(100) NULL AFTER `customer_state`;
+ADD COLUMN `customer_requirement` VARCHAR(100) NULL AFTER `customer_state`,
+ADD COLUMN `remark` VARCHAR(5000) NULL AFTER `customer_requirement`;
+
 ------------------------------------------------------------------余建明 2022/11/21 END--------------------------------------------
 
 

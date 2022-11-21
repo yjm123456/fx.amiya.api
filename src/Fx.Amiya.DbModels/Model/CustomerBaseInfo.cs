@@ -28,5 +28,7 @@ namespace Fx.Amiya.DbModels.Model
         public string CustomerRequirement { get; set; }
         public string WechatNumber { get; set; }
         public string City { get; set; }
+
+        public string Remark { get; set; }
     }
 }

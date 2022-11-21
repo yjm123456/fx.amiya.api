@@ -1743,9 +1743,16 @@
             <param name="pageSize"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerController.EditAsync(Fx.Amiya.Background.Api.Vo.CustomerInfo.EditCustomerBaseInfoVo)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerController.EditByPhoneAsync(Fx.Amiya.Background.Api.Vo.CustomerInfo.EditCustomerBaseInfoVo)">
             <summary>
-            编辑客户基础信息
+            根据电话号码编辑客户基础信息
+            </summary>
+            <param name="editVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerController.EditByIdAsync(Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo)">
+            <summary>
+            根据Id编辑客户基础信息
             </summary>
             <param name="editVo"></param>
             <returns></returns>
@@ -3257,6 +3264,14 @@
             获取机构运营数据分析信息列表
             </summary>
             <param name="keyword">关键词</param>
+            <param name="indicatorsId">归属指标id</param>
+            <param name="hospitalId">医院id</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.HospitalOperationDataController.GetDataListAsync(System.String,System.Int32)">
+            <summary>
+            获取机构运营数据列表
+            </summary>
             <param name="indicatorsId">归属指标id</param>
             <param name="hospitalId">医院id</param>
             <returns></returns>
@@ -10740,6 +10755,11 @@
             城市
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.CustomerBaseInfoVo.EncryptPhone">
             <summary>
             加密电话号
@@ -11013,6 +11033,96 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.EditCustomerBaseInfoVo.City">
             <summary>
             城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.PersonalWechat">
+            <summary>
+            是否为微信来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.BusinessWeChat">
+            <summary>
+            是否为企业微信来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.WechatMiniProgram">
+            <summary>
+            是否为小程序来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.OfficialAccounts">
+            <summary>
+            是否为公众号来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.RealName">
+            <summary>
+            真实姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.WechatNumber">
+            <summary>
+            微信昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.Sex">
+            <summary>
+            性别
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.Birthday">
+            <summary>
+            生日
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.City">
+            <summary>
+            城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.Occupation">
+            <summary>
+            职业
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.OtherPhone">
+            <summary>
+            辅助号码（多个号码用逗号分隔开）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.DetailAddress">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.IsSendNote">
+            <summary>
+            是否发短信（回访）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.IsCall">
+            <summary>
+            是否打电话（回访）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.IsSendWeChat">
+            <summary>
+            是否发微信（回访）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.UnTrackReason">
+            <summary>
+            不回访原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.Remark">
+            <summary>
+            备注
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.CustomerIntegralOrderRefund.CustomerIntegralOrderRefundCheckVo">
@@ -12435,6 +12545,36 @@
             新客客单价环比
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.LastOldCustomerRepurchaseRate">
+            <summary>
+            前月老客复购率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.ThisOldCustomerRepurchaseRate">
+            <summary>
+            上月老客复购率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.OldCustomerRepurchaseChainRatio">
+            <summary>
+            老客复购率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.LastOldCustomerUnitPrice">
+            <summary>
+            前月老客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.ThisOldCustomerUnitPrice">
+            <summary>
+            上月老客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.AddGreatHospitalOperationHealthVo.OldCustomerUnitPriceChainRatio">
+            <summary>
+            老客客单价环比
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo">
             <summary>
             优秀机构运营健康指标
@@ -12505,6 +12645,36 @@
             新客客单价环比
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.LastOldCustomerRepurchaseRate">
+            <summary>
+            前月老客复购率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.ThisOldCustomerRepurchaseRate">
+            <summary>
+            上月老客复购率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.OldCustomerRepurchaseChainRatio">
+            <summary>
+            老客复购率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.LastOldCustomerUnitPrice">
+            <summary>
+            前月老客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.ThisOldCustomerUnitPrice">
+            <summary>
+            上月老客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.GreatHospitalOperationHealthVo.OldCustomerUnitPriceChainRatio">
+            <summary>
+            老客客单价环比
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo">
             <summary>
             修改优秀机构运营健康指标
@@ -12568,6 +12738,36 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.NewCustomerUnitPriceChainRatio">
             <summary>
             新客客单价环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.LastOldCustomerRepurchaseRate">
+            <summary>
+            前月老客复购率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.ThisOldCustomerRepurchaseRate">
+            <summary>
+            上月老客复购率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.OldCustomerRepurchaseChainRatio">
+            <summary>
+            老客复购率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.LastOldCustomerUnitPrice">
+            <summary>
+            前月老客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.ThisOldCustomerUnitPrice">
+            <summary>
+            上月老客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GreatHospitalOperationHealth.UpdateGreatHospitalOperationHealthVo.OldCustomerUnitPriceChainRatio">
+            <summary>
+            老客客单价环比
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalAppointmentQuantity.AddHospitalAppointmentQuantityVo.HospitalId">
@@ -14625,6 +14825,156 @@
             排序
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.AddHospitalOperationDataVo.IndicatorCalculation">
+            <summary>
+            按健康指标推算
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo">
+            <summary>
+            机构运营数据
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.LastMonthSendOrderCount">
+            <summary>
+            前月派单数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.LastMonthNewCustomerToHospitalCount">
+            <summary>
+            前月新客上门数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.LastMonthNewCustomerToHospitalRate">
+            <summary>
+            前月新客上门率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.LastMonthNewCustomerDealCount">
+            <summary>
+            前月新客成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.LastMonthNewCustomerDealRate">
+            <summary>
+            前月新客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.LastMonthNewCustomerPerformance">
+            <summary>
+            前月新客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.LastMonthNewCustomerUnitPrice">
+            <summary>
+            前月新客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.LastMonthOldCustomerToHospitalCount">
+            <summary>
+            前月老客上门人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.LastMonthOldCustomerDealCount">
+            <summary>
+            前月老客成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.LastMonthOldCustomerDealRate">
+            <summary>
+            前月老客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.LastMonthOldCustomerPerformance">
+            <summary>
+            前月老客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.LastMonthOldCustomerUnitPrice">
+            <summary>
+            前月老客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.LastMonthTotalPerformance">
+            <summary>
+            前月总业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.LastMonthOldCustomerPerformanceRatio">
+            <summary>
+            前月老客业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.ThisMonthSendOrderCount">
+            <summary>
+            上月派单数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.ThisMonthNewCustomerToHospitalCount">
+            <summary>
+            上月新客上门人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.ThisMonthNewCustomerToHospitalRate">
+            <summary>
+            上月新客上门率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.ThisMonthNewCustomerDealCount">
+            <summary>
+            上月新客成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.ThisMonthNewCustomerDealRate">
+            <summary>
+            上月新客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.ThisMonthNewCustomerPerformance">
+            <summary>
+            上月新客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.ThisMonthNewCustomerUnitPrice">
+            <summary>
+            上月新客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.ThisMonthOldCustomerToHospitalCount">
+            <summary>
+            上月老客上门人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.ThisMonthOldCustomerDealCount">
+            <summary>
+            上月老客成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.ThisMonthOldCustomerDealRate">
+            <summary>
+            上月老客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.ThisMonthOldCustomerPerformance">
+            <summary>
+            上月老客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.ThisMonthOldCustomerUnitPrice">
+            <summary>
+            上月老客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.ThisMonthTotalPerformance">
+            <summary>
+            上月总业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataListVo.ThisMonthOldCustomerPerformanceRatio">
+            <summary>
+            上月老客业绩占比
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataVo">
             <summary>
             机构运营数据分析
@@ -14670,6 +15020,11 @@
             排序
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.HospitalOperationDataVo.IndicatorCalculation">
+            <summary>
+            健康指标推算
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.HospitalOperationData.UpdateHospitalOperationDataVo">
             <summary>
             机构运营数据分析编辑
@@ -14708,6 +15063,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.UpdateHospitalOperationDataVo.ChainRatio">
             <summary>
             环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalOperationData.UpdateHospitalOperationDataVo.IndicatorCalculation">
+            <summary>
+            健康指标推算
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.HospitalOperationIndicatorSubmit.HospitalOperationIndicatorCollectVo">

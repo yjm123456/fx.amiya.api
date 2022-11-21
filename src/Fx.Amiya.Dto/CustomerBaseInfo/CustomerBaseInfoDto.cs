@@ -147,5 +147,9 @@ namespace Fx.Amiya.Dto.CustomerBaseInfo
         /// 城市
         /// </summary>
         public string City { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remark { get; set; }
     }
 }

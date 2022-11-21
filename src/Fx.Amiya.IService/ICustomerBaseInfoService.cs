@@ -11,6 +11,6 @@ namespace Fx.Amiya.IService
     public interface ICustomerBaseInfoService
     {
         Task<CustomerBaseInfoDto> GetByEncryptPhoneAsync(string encryptPhone);
-
+        Task UpdateAsync(UpdateCustomerBaseInfoDto updateDto);
     }
 }

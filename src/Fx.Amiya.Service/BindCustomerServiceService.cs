@@ -101,11 +101,38 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<BindCustomerServiceDto> GetEmployeeDetailsByPhone(string phone)
+        public async Task<BindCustomerServiceDto> GetEmployeeDetailsByPhoneAsync(string phone)
         {
             try
             {
                 var bindCustomerServiceInfo = await dalBindCustomerService.GetAll().Include(x => x.CustomerServiceAmiyaEmployee).FirstOrDefaultAsync(e => e.BuyerPhone == phone);
+                BindCustomerServiceDto result = new BindCustomerServiceDto();
+                result.Id = bindCustomerServiceInfo.Id;
+                result.CustomerServiceId = bindCustomerServiceInfo.CustomerServiceId;
+                result.CustomerServiceName = bindCustomerServiceInfo.CustomerServiceAmiyaEmployee.Name;
+                result.BuyerPhone = bindCustomerServiceInfo.BuyerPhone;
+                result.UserId = bindCustomerServiceInfo.UserId;
+                result.CreateBy = bindCustomerServiceInfo.CreateBy;
+                result.CreateDate = bindCustomerServiceInfo.CreateDate;
+                result.FirstProjectDemand = bindCustomerServiceInfo.FirstProjectDemand;
+                result.FirstConsumptionDate = bindCustomerServiceInfo.FirstConsumptionDate;
+                result.NewConsumptionDate = bindCustomerServiceInfo.NewConsumptionDate;
+                result.NewConsumptionContentPlatform = bindCustomerServiceInfo.NewConsumptionContentPlatform;
+                result.NewContentPlatForm = bindCustomerServiceInfo.NewContentPlatForm;
+                result.AllPrice = bindCustomerServiceInfo.AllPrice;
+                result.AllOrderCount = bindCustomerServiceInfo.AllOrderCount;
+                return result;
+            }
+            catch (Exception err)
+            { return new BindCustomerServiceDto(); }
+
+        }
+
+        public async Task<BindCustomerServiceDto> GetByIdAsync(int id)
+        {
+            try
+            {
+                var bindCustomerServiceInfo = await dalBindCustomerService.GetAll().Include(x => x.CustomerServiceAmiyaEmployee).FirstOrDefaultAsync(e => e.Id == id);
                 BindCustomerServiceDto result = new BindCustomerServiceDto();
                 result.Id = bindCustomerServiceInfo.Id;
                 result.CustomerServiceId = bindCustomerServiceInfo.CustomerServiceId;

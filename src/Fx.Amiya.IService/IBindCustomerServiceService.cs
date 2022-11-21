@@ -21,7 +21,8 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="phone"></param>
         /// <returns></returns>
-        Task<BindCustomerServiceDto> GetEmployeeDetailsByPhone(string phone);
+        Task<BindCustomerServiceDto> GetEmployeeDetailsByPhoneAsync(string phone);
+        Task<BindCustomerServiceDto> GetByIdAsync(int id);
 
         /// <summary>
         /// 根据手机号获取归属客服
