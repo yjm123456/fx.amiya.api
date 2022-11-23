@@ -188,6 +188,9 @@ namespace Fx.Amiya.Service
                                     Result = false,
                                     Msg = xmlNode3.InnerText
                                 };
+                                if (refundOrderResult.Msg== "订单不存在") {
+                                    refundOrderResult.Msg = "该订单非微信支付订单";
+                                }
                                 return refundOrderResult;
                             }
                         }

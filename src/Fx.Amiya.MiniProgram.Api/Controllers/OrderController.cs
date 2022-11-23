@@ -603,7 +603,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 }
                 if (bindCustomerId==0) {
                     AddBindCustomerServiceDto addBindCustomerServiceDto = new AddBindCustomerServiceDto();
-                    addBindCustomerServiceDto.CustomerServiceId = 37;
+                    addBindCustomerServiceDto.CustomerServiceId = 188;
                     var orderIdList =await orderService.GetOrderIdListByPhone(amiyaOrder.Phone);
                     UpdateBelongEmpInfoOrderDto updateOrderBelongEmpIdDto = new UpdateBelongEmpInfoOrderDto();
                     updateOrderBelongEmpIdDto.OrderId = orderIdList;

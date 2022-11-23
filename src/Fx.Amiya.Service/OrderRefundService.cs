@@ -73,7 +73,10 @@ namespace Fx.Amiya.Service
             if (trade==null) {
                 throw new Exception("交易编号不存在");
             }
-            if (!(trade.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || trade.StatusCode == OrderStatusCode.TRADE_BUYER_SIGNED || trade.StatusCode == OrderStatusCode.TRADE_FINISHED || trade.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || trade.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS||trade.StatusCode==OrderStatusCode.PARTIAL_REFUND)) {
+            if (trade.StatusCode == OrderStatusCode.TRADE_FINISHED) {
+                throw new Exception("已核销订单不能退款");
+            }
+            if (!(trade.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || trade.StatusCode == OrderStatusCode.TRADE_BUYER_SIGNED || trade.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || trade.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS||trade.StatusCode==OrderStatusCode.PARTIAL_REFUND)) {
                 throw new Exception("当前订单状态不能退款");
             }
             

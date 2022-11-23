@@ -203,20 +203,27 @@ namespace Fx.Amiya.Service
             //var month = DateTime.Now.Month;
             var lastMonth = DateTime.Now.AddMonths(-1);
             var beforeMonth = DateTime.Now.AddMonths(-2);
-            //前月派单数据
+            //前
+            //上月派单数据
             var lastContentPlatFormOrderSendList = await contentPlatformOrderSendService.GetSendDataByHospitalIdAndMonthAsync(hospitalId, lastMonth.Year, lastMonth.Month);
             var lastsendNum = lastContentPlatFormOrderSendList.Where(z => z.SendHospitalId == hospitalId).Count();
-            //前月上门与成交数据
+            //上月上门与成交数据
             var lastContentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetSendPerformanceByHospitalIdAndMonthAsync(hospitalId, lastMonth.Year, lastMonth.Month);
-            //前月新客上门率
+            //上月新客上门率
             var lastVisitNum = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false).Count();
             result.ThisNewCustomerVisitRate = CalculateTargetComplete(lastVisitNum, lastsendNum).Value;
-            //前月新客成交率
+            //上月新客成交率
             var lastDealNum = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false && x.IsDeal == true);
             result.ThisNewCustomerDealRate = CalculateTargetComplete(lastDealNum.Count(), lastContentPlatFormOrderDealInfoList.Count()).Value;
-            //前月新客客单价
+            //上月新客客单价
             var lastCustomerTotalPrice = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false && x.IsDeal == true).Sum(x => x.Price);
             result.ThisNewCustomerUnitPrice = Division(lastCustomerTotalPrice, lastDealNum.Count()).Value;
+            //上月老客复购率
+            var lastOldCustomerVisitNum = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true).Count();
+            result.ThisOldCustomerRepurchaseRate = Division(lastOldCustomerVisitNum, lastContentPlatFormOrderDealInfoList.Count()).Value;
+            //上月老客客单价
+            var lastOldCustomerTotalPrice = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true && x.IsDeal == true).Sum(x => x.Price);
+            result.ThisOldCustomerUnitPrice = Division(lastOldCustomerTotalPrice, lastDealNum.Count()).Value;
 
             //前月派单数据
             var beforeContentPlatFormOrderSendList = await contentPlatformOrderSendService.GetSendDataByHospitalIdAndMonthAsync(hospitalId, beforeMonth.Year, beforeMonth.Month);
@@ -232,7 +239,12 @@ namespace Fx.Amiya.Service
             //前月新客客单价
             var beforeCustomerTotalPrice = beforeContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false && x.IsDeal == true).Sum(x => x.Price);
             result.ThisNewCustomerUnitPrice = Division(beforeCustomerTotalPrice, beforeDealNum.Count()).Value;
-
+            //前月老客复购率
+            var beforeOldCustomerVisitNum = beforeContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true).Count();
+            result.LastOldCustomerRepurchaseRate = Division(beforeOldCustomerVisitNum, beforeContentPlatFormOrderDealInfoList.Count()).Value;
+            //前月老客客单价
+            var beforeOldCustomerTotalPrice = beforeContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true && x.IsDeal == true).Sum(x => x.Price);
+            result.LastOldCustomerUnitPrice = Division(beforeOldCustomerTotalPrice, beforeDealNum.Count()).Value;
 
             //新客上门率环比
             result.NewCustomerVisitChainRatio = CalculateChainratio(result.ThisNewCustomerVisitRate, result.LastNewCustomerVisitRate).Value;
@@ -240,6 +252,10 @@ namespace Fx.Amiya.Service
             result.NewCustomerDealChainRatio = CalculateChainratio(result.ThisNewCustomerDealRate, result.LastNewCustomerDealRate).Value;
             //新客客单价环比
             result.NewCustomerUnitPriceChainRatio = CalculateChainratio(result.ThisNewCustomerUnitPrice, result.LastNewCustomerUnitPrice).Value;
+            //老客复购率环比
+            result.OldCustomerRepurchaseChainRatio = CalculateChainratio(result.ThisOldCustomerRepurchaseRate,result.LastOldCustomerRepurchaseRate).Value;
+            //老客客单价环比
+            result.OldCustomerUnitPriceChainRatio = CalculateChainratio(result.ThisOldCustomerUnitPrice,result.LastOldCustomerUnitPrice).Value;
 
             return result;
         }

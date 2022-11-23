@@ -679,6 +679,12 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.LastNewCustomerUnitPrice = hospitalNewCustomerAchievementInfo.LastNewCustomerUnitPrice;
             result.ThisNewCustomerUnitPrice = hospitalNewCustomerAchievementInfo.ThisNewCustomerUnitPrice;
             result.NewCustomerUnitPriceChainRatio = hospitalNewCustomerAchievementInfo.NewCustomerUnitPriceChainRatio;
+            result.LastOldCustomerRepurchaseRate = hospitalNewCustomerAchievementInfo.LastOldCustomerRepurchaseRate;
+            result.ThisOldCustomerRepurchaseRate = hospitalNewCustomerAchievementInfo.ThisOldCustomerRepurchaseRate;
+            result.OldCustomerRepurchaseChainRatio = hospitalNewCustomerAchievementInfo.OldCustomerRepurchaseChainRatio;
+            result.LastOldCustomerUnitPrice = hospitalNewCustomerAchievementInfo.LastOldCustomerUnitPrice;
+            result.ThisOldCustomerUnitPrice = hospitalNewCustomerAchievementInfo.ThisOldCustomerUnitPrice;
+            result.OldCustomerUnitPriceChainRatio = hospitalNewCustomerAchievementInfo.OldCustomerUnitPriceChainRatio;
 
             return ResultData<HospitalNewCustomerAchievementVo>.Success().AddData("hospitalNewCustomerAchievement", result);
         }
