@@ -7,6 +7,8 @@ namespace Fx.Amiya.Dto.TmallOrder
    public class OrderInfoDto
     {
         public string Id { get; set; }
+
+        public string UserId { get; set; }
         public string GoodsName { get; set; }
         public string GoodsId { get; set; }
         public string GoodsCategory{ get; set; }

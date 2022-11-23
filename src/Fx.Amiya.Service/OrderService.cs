@@ -2158,6 +2158,8 @@ namespace Fx.Amiya.Service
             orderInfo.BuyerNick = order.BuyerNick;
             orderInfo.Phone = order.Phone;
             orderInfo.EncryptPhone = ServiceClass.Encrypt(order.Phone, config.PhoneEncryptKey);
+            var bindCustomerServiceInfo = await _bindCustomerService.GetEmployeeDetailsByPhoneAsync(order.Phone);
+            orderInfo.UserId = bindCustomerServiceInfo.UserId;
             orderInfo.AppointmentCity = order.AppointmentCity;
             orderInfo.AppointmentDate = order.AppointmentDate;
             orderInfo.AppointmentHospital = order.AppointmentHospital;

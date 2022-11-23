@@ -602,6 +602,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var order = await _orderService.GetByOrderIdAsync(id);
             ContentPlateFormOrderVo orderUpdateInfo = new ContentPlateFormOrderVo();
             orderUpdateInfo.Id = order.Id;
+            orderUpdateInfo.UserId = order.UserId;
             orderUpdateInfo.OrderType = order.OrderType;
             orderUpdateInfo.ContentPlateFormId = order.ContentPlateFormId;
             orderUpdateInfo.ConsultationType = order.ConsultationType;
@@ -612,7 +613,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.GoodsId = order.GoodsId;
             orderUpdateInfo.CustomerName = order.CustomerName;
             orderUpdateInfo.Phone = order.Phone;
-
+            orderUpdateInfo.EncryptPhone = order.EncryptPhone;
             var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
             string encryptPhone = ServiceClass.Encrypt(order.Phone, config.PhoneEncryptKey);
             var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(encryptPhone);

@@ -1080,6 +1080,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var order = await orderService.GetByIdInCRMAsync(id);
             OrderInfoVo tmallOrderVo = new OrderInfoVo();
             tmallOrderVo.Id = order.Id;
+            tmallOrderVo.UserId= order.UserId;
             tmallOrderVo.GoodsName = order.GoodsName;
             tmallOrderVo.NickName = order.BuyerNick;
             tmallOrderVo.GoodsId = order.GoodsId;

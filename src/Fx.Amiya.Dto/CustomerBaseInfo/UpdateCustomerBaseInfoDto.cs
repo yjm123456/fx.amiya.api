@@ -18,6 +18,11 @@ namespace Fx.Amiya.Dto.CustomerBaseInfo
         /// </summary>
 
         public bool PersonalWechat { get; set; }
+
+        /// <summary>
+        /// 手机号
+        /// </summary>
+        public string Phone { get; set; }
         /// <summary>
         /// 是否为企业微信来源
         /// </summary>

@@ -13,6 +13,11 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerInfo
         public int Id { get; set; }
 
         /// <summary>
+        /// 手机号
+        /// </summary>
+        public string Phone { get; set; }
+
+        /// <summary>
         /// 是否为微信来源
         /// </summary>
         public bool PersonalWechat { get; set; }

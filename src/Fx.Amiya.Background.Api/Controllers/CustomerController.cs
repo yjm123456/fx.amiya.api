@@ -600,6 +600,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             UpdateCustomerBaseInfoDto editDto = new UpdateCustomerBaseInfoDto();
             editDto.Id = editVo.Id;
             editDto.PersonalWechat = editVo.PersonalWechat;
+            editDto.Phone = editVo.Phone;
             editDto.BusinessWeChat = editVo.BusinessWeChat;
             editDto.WechatMiniProgram = editVo.WechatMiniProgram;
             editDto.OfficialAccounts = editVo.OfficialAccounts;

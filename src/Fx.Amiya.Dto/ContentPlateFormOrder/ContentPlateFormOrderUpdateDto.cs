@@ -15,6 +15,7 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// </summary>
         
         public int OrderType { get; set; }
+        public string UserId { get; set; }
         /// <summary>
         /// 订单类型
         /// </summary>
@@ -63,6 +64,8 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// </summary>
 
         public string Phone { get; set; }
+
+        public string EncryptPhone { get; set; }
 
         /// <summary>
         /// 性别
