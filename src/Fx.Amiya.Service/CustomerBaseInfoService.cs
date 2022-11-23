@@ -86,9 +86,9 @@ namespace Fx.Amiya.Service
                 var bindCustomerService = await bindCustomerServiceService.GetEmployeeDetailsByPhoneAsync(phone);
                 customerBaseInfoServiceDto.BelongCustomerService = bindCustomerService.CustomerServiceName;
                 customerBaseInfoServiceDto.FirstProjectDemand = bindCustomerService.FirstProjectDemand;
-                customerBaseInfoServiceDto.NewConsumptionContentPlatform = bindCustomerService.NewConsumptionContentPlatform;
+                customerBaseInfoServiceDto.NewContentPlatform = bindCustomerService.NewContentPlatForm;
                 customerBaseInfoServiceDto.BindCustomerServiceId = bindCustomerService.Id;
-
+                
                 customerBaseInfoServiceDto.CreateDate = bindCustomerService.CreateDate;
                 customerBaseInfoServiceDto.AllPrice = bindCustomerService.AllPrice;
                 customerBaseInfoServiceDto.Age = ServiceClass.GetAge(customerBaseInfoService.Birthday);
@@ -97,6 +97,7 @@ namespace Fx.Amiya.Service
                 customerBaseInfoServiceDto.Birthday = customerBaseInfoService.Birthday;
                 customerBaseInfoServiceDto.City = customerBaseInfoService.City;
                 customerBaseInfoServiceDto.Occupation = customerBaseInfoService.Occupation;
+                customerBaseInfoServiceDto.Phone = customerBaseInfoService.Phone;
                 customerBaseInfoServiceDto.OtherPhone = customerBaseInfoService.OtherPhone;
                 customerBaseInfoServiceDto.DetailAddress = customerBaseInfoService.DetailAddress;
                 customerBaseInfoServiceDto.IsCall = customerBaseInfoService.IsCall;
@@ -107,6 +108,7 @@ namespace Fx.Amiya.Service
                 customerBaseInfoServiceDto.CustomerRequirement = customerBaseInfoService.CustomerRequirement;
                 customerBaseInfoServiceDto.WechatNumber = customerBaseInfoService.WechatNumber;
                 customerBaseInfoServiceDto.Remark = customerBaseInfoService.Remark;
+                customerBaseInfoServiceDto.NewConsumptionContentPlatform = bindCustomerService.NewConsumptionContentPlatform;
                 var consumptionLevelInfo = await consumptionLevelService.GetListWithPageAsync(null, 1, 9999);
                 foreach (var consumptionInfo in consumptionLevelInfo.List)
                 {

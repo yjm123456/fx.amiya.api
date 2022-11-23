@@ -44,6 +44,10 @@ namespace Fx.Amiya.Dto.CustomerBaseInfo
         /// </summary>
         public decimal? AllPrice { get; set; }
         /// <summary>
+        /// 最新消费平台
+        /// </summary>
+        public int? NewConsumptionContentPlatform { get; set; }
+        /// <summary>
         /// 真实姓名
         /// </summary>
         public string RealName { get; set; }
@@ -73,9 +77,9 @@ namespace Fx.Amiya.Dto.CustomerBaseInfo
         public string FirstProjectDemand { get; set; }
 
         /// <summary>
-        /// 最新消费平台
+        /// 最新消费渠道
         /// </summary>
-        public int? NewConsumptionContentPlatform { get; set; }
+        public string NewContentPlatform { get; set; }
         /// <summary>
         /// 是否为微信来源
         /// </summary>
@@ -98,10 +102,6 @@ namespace Fx.Amiya.Dto.CustomerBaseInfo
         /// </summary>
         public string BelongCustomerService { get; set; }
 
-        /// <summary>
-        /// 最新消费渠道
-        /// </summary>
-        public string NewContentPlatForm { get; set; }
 
         /// <summary>
         /// 辅助号码（多个号码用逗号分隔开）
