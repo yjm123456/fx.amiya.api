@@ -17,9 +17,13 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         
         public string Id { get; set; }
         /// <summary>
+        /// 用户id
+        /// </summary>
+        public string UserId { get; set; }
+        /// <summary>
         /// 订单类型(1：咨询:2：定金)
         /// </summary>
-        
+
         public int OrderType { get; set; }
         /// <summary>
         /// 订单类型
@@ -77,6 +81,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         
         public string Phone { get; set; }
+        /// <summary>
+        /// 加密手机号
+        /// </summary>
+        public string EncryptPhone { get; set; }
 
         /// <summary>
         /// 性别

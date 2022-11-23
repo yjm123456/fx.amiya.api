@@ -11,6 +11,7 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         /// 订单号
         /// </summary>
         public string Id { get; set; }
+        public string UserId { get; set; }
 
         /// <summary>
         /// 商品名称

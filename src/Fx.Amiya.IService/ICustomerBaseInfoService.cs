@@ -12,5 +12,6 @@ namespace Fx.Amiya.IService
     {
         Task<CustomerBaseInfoDto> GetByEncryptPhoneAsync(string encryptPhone);
         Task UpdateAsync(UpdateCustomerBaseInfoDto updateDto);
+        Task UpdateState(int state, string phone);
     }
 }

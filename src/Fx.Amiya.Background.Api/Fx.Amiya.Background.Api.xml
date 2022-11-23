@@ -8165,6 +8165,11 @@
             编号
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.UserId">
+            <summary>
+            用户id
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.OrderType">
             <summary>
             订单类型(1：咨询:2：定金)
@@ -8223,6 +8228,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.Phone">
             <summary>
             手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.EncryptPhone">
+            <summary>
+            加密手机号
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.Sex">
@@ -11038,6 +11048,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.Id">
             <summary>
             编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.Phone">
+            <summary>
+            手机号
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo.PersonalWechat">

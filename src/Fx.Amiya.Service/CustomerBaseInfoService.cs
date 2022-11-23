@@ -56,14 +56,34 @@ namespace Fx.Amiya.Service
                 var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
                 string phone = ServiceClass.Decrypto(encryptPhone, config.PhoneEncryptKey);
                 var customerBaseInfoService = await dalCustomerBaseInfo.GetAll().FirstOrDefaultAsync(e => e.Phone == phone);
-                if (customerBaseInfoService == null)
+                CustomerBaseInfoDto customerBaseInfoServiceDto = new CustomerBaseInfoDto();
+                customerBaseInfoServiceDto.Phone = phone;
+                if (customerBaseInfoService != null)
                 {
-                    return new CustomerBaseInfoDto();
+                    customerBaseInfoServiceDto.Id = customerBaseInfoService.Id;
+                    customerBaseInfoServiceDto.Name = customerBaseInfoService.Name;
+                    customerBaseInfoServiceDto.PersonalWechat = customerBaseInfoService.PersonalWechat;
+                    customerBaseInfoServiceDto.BusinessWeChat = customerBaseInfoService.BusinessWeChat;
+                    customerBaseInfoServiceDto.WechatMiniProgram = customerBaseInfoService.WechatMiniProgram;
+                    customerBaseInfoServiceDto.OfficialAccounts = customerBaseInfoService.OfficialAccounts;
+                    customerBaseInfoServiceDto.Age = ServiceClass.GetAge(customerBaseInfoService.Birthday);
+                    customerBaseInfoServiceDto.RealName = customerBaseInfoService.RealName;
+                    customerBaseInfoServiceDto.Sex = customerBaseInfoService.Sex;
+                    customerBaseInfoServiceDto.Birthday = customerBaseInfoService.Birthday;
+                    customerBaseInfoServiceDto.City = customerBaseInfoService.City;
+                    customerBaseInfoServiceDto.Occupation = customerBaseInfoService.Occupation;
+                    customerBaseInfoServiceDto.OtherPhone = customerBaseInfoService.OtherPhone;
+                    customerBaseInfoServiceDto.DetailAddress = customerBaseInfoService.DetailAddress;
+                    customerBaseInfoServiceDto.IsCall = customerBaseInfoService.IsCall;
+                    customerBaseInfoServiceDto.IsSendNote = customerBaseInfoService.IsSendNote;
+                    customerBaseInfoServiceDto.IsSendWeChat = customerBaseInfoService.IsSendWeChat;
+                    customerBaseInfoServiceDto.UnTrackReason = customerBaseInfoService.UnTrackReason;
+                    customerBaseInfoServiceDto.CustomerState = customerBaseInfoService.CustomerState;
+                    customerBaseInfoServiceDto.CustomerRequirement = customerBaseInfoService.CustomerRequirement;
+                    customerBaseInfoServiceDto.WechatNumber = customerBaseInfoService.WechatNumber;
+                    customerBaseInfoServiceDto.Remark = customerBaseInfoService.Remark;
                 }
 
-                CustomerBaseInfoDto customerBaseInfoServiceDto = new CustomerBaseInfoDto();
-                customerBaseInfoServiceDto.Id = customerBaseInfoService.Id;
-                customerBaseInfoServiceDto.Name = customerBaseInfoService.Name;
                 var customerInfo = await dalCustomerInfo.GetAll().Where(x => x.Phone == phone).FirstOrDefaultAsync();
                 if (customerInfo != null)
                 {
@@ -79,36 +99,19 @@ namespace Fx.Amiya.Service
                         customerBaseInfoServiceDto.Avatar = userInfo.Avatar;
                     }
                 }
-                customerBaseInfoServiceDto.PersonalWechat = customerBaseInfoService.PersonalWechat;
-                customerBaseInfoServiceDto.BusinessWeChat = customerBaseInfoService.BusinessWeChat;
-                customerBaseInfoServiceDto.WechatMiniProgram = customerBaseInfoService.WechatMiniProgram;
-                customerBaseInfoServiceDto.OfficialAccounts = customerBaseInfoService.OfficialAccounts;
                 var bindCustomerService = await bindCustomerServiceService.GetEmployeeDetailsByPhoneAsync(phone);
-                customerBaseInfoServiceDto.BelongCustomerService = bindCustomerService.CustomerServiceName;
-                customerBaseInfoServiceDto.FirstProjectDemand = bindCustomerService.FirstProjectDemand;
-                customerBaseInfoServiceDto.NewContentPlatform = bindCustomerService.NewContentPlatForm;
-                customerBaseInfoServiceDto.BindCustomerServiceId = bindCustomerService.Id;
-                
-                customerBaseInfoServiceDto.CreateDate = bindCustomerService.CreateDate;
-                customerBaseInfoServiceDto.AllPrice = bindCustomerService.AllPrice;
-                customerBaseInfoServiceDto.Age = ServiceClass.GetAge(customerBaseInfoService.Birthday);
-                customerBaseInfoServiceDto.RealName = customerBaseInfoService.RealName;
-                customerBaseInfoServiceDto.Sex = customerBaseInfoService.Sex;
-                customerBaseInfoServiceDto.Birthday = customerBaseInfoService.Birthday;
-                customerBaseInfoServiceDto.City = customerBaseInfoService.City;
-                customerBaseInfoServiceDto.Occupation = customerBaseInfoService.Occupation;
-                customerBaseInfoServiceDto.Phone = customerBaseInfoService.Phone;
-                customerBaseInfoServiceDto.OtherPhone = customerBaseInfoService.OtherPhone;
-                customerBaseInfoServiceDto.DetailAddress = customerBaseInfoService.DetailAddress;
-                customerBaseInfoServiceDto.IsCall = customerBaseInfoService.IsCall;
-                customerBaseInfoServiceDto.IsSendNote = customerBaseInfoService.IsSendNote;
-                customerBaseInfoServiceDto.IsSendWeChat = customerBaseInfoService.IsSendWeChat;
-                customerBaseInfoServiceDto.UnTrackReason = customerBaseInfoService.UnTrackReason;
-                customerBaseInfoServiceDto.CustomerState = customerBaseInfoService.CustomerState;
-                customerBaseInfoServiceDto.CustomerRequirement = customerBaseInfoService.CustomerRequirement;
-                customerBaseInfoServiceDto.WechatNumber = customerBaseInfoService.WechatNumber;
-                customerBaseInfoServiceDto.Remark = customerBaseInfoService.Remark;
-                customerBaseInfoServiceDto.NewConsumptionContentPlatform = bindCustomerService.NewConsumptionContentPlatform;
+                if (bindCustomerService != null)
+                {
+                    customerBaseInfoServiceDto.BelongCustomerService = bindCustomerService.CustomerServiceName;
+                    customerBaseInfoServiceDto.FirstProjectDemand = bindCustomerService.FirstProjectDemand;
+                    customerBaseInfoServiceDto.NewContentPlatform = bindCustomerService.NewContentPlatForm;
+                    customerBaseInfoServiceDto.BindCustomerServiceId = bindCustomerService.Id;
+
+                    customerBaseInfoServiceDto.CreateDate = bindCustomerService.CreateDate;
+                    customerBaseInfoServiceDto.AllPrice = bindCustomerService.AllPrice;
+                    customerBaseInfoServiceDto.NewConsumptionContentPlatform = bindCustomerService.NewConsumptionContentPlatform;
+
+                }
                 var consumptionLevelInfo = await consumptionLevelService.GetListWithPageAsync(null, 1, 9999);
                 foreach (var consumptionInfo in consumptionLevelInfo.List)
                 {
@@ -134,26 +137,52 @@ namespace Fx.Amiya.Service
             {
                 var customerBaseInfoService = await dalCustomerBaseInfo.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
                 if (customerBaseInfoService == null)
-                    throw new Exception("客户基础信息编号错误！");
-                customerBaseInfoService.PersonalWechat = updateDto.PersonalWechat;
-                customerBaseInfoService.BusinessWeChat = updateDto.BusinessWeChat;
-                customerBaseInfoService.WechatMiniProgram = updateDto.WechatMiniProgram;
-                customerBaseInfoService.OfficialAccounts = updateDto.OfficialAccounts;
-                customerBaseInfoService.RealName = updateDto.RealName;
-                customerBaseInfoService.WechatNumber = updateDto.WechatNumber;
-                customerBaseInfoService.Sex = updateDto.Sex;
-                customerBaseInfoService.Birthday = updateDto.Birthday;
-                customerBaseInfoService.City = updateDto.City;
-                customerBaseInfoService.Occupation = updateDto.Occupation;
-                customerBaseInfoService.OtherPhone = updateDto.OtherPhone;
-                customerBaseInfoService.DetailAddress = updateDto.DetailAddress;
-                customerBaseInfoService.IsSendNote = updateDto.IsSendNote;
-                customerBaseInfoService.IsCall = updateDto.IsCall;
-                customerBaseInfoService.IsSendWeChat = updateDto.IsSendWeChat;
-                customerBaseInfoService.UnTrackReason = updateDto.UnTrackReason;
-                customerBaseInfoService.Remark = updateDto.Remark;
-                await dalCustomerBaseInfo.UpdateAsync(customerBaseInfoService, true);
+                {
+                    CustomerBaseInfo baseInfo = new CustomerBaseInfo();
 
+                    baseInfo.Phone = updateDto.Phone;
+                    baseInfo.PersonalWechat = updateDto.PersonalWechat;
+                    baseInfo.BusinessWeChat = updateDto.BusinessWeChat;
+                    baseInfo.WechatMiniProgram = updateDto.WechatMiniProgram;
+                    baseInfo.OfficialAccounts = updateDto.OfficialAccounts;
+                    baseInfo.RealName = updateDto.RealName;
+                    baseInfo.WechatNumber = updateDto.WechatNumber;
+                    baseInfo.Sex = updateDto.Sex;
+                    baseInfo.Birthday = updateDto.Birthday;
+                    baseInfo.City = updateDto.City;
+                    baseInfo.Occupation = updateDto.Occupation;
+                    baseInfo.OtherPhone = updateDto.OtherPhone;
+                    baseInfo.DetailAddress = updateDto.DetailAddress;
+                    baseInfo.IsSendNote = updateDto.IsSendNote;
+                    baseInfo.IsCall = updateDto.IsCall;
+                    baseInfo.IsSendWeChat = updateDto.IsSendWeChat;
+                    baseInfo.UnTrackReason = updateDto.UnTrackReason;
+                    baseInfo.Remark = updateDto.Remark;
+                    await dalCustomerBaseInfo.AddAsync(baseInfo, true);
+
+                }
+                else
+                {
+
+                    customerBaseInfoService.PersonalWechat = updateDto.PersonalWechat;
+                    customerBaseInfoService.BusinessWeChat = updateDto.BusinessWeChat;
+                    customerBaseInfoService.WechatMiniProgram = updateDto.WechatMiniProgram;
+                    customerBaseInfoService.OfficialAccounts = updateDto.OfficialAccounts;
+                    customerBaseInfoService.RealName = updateDto.RealName;
+                    customerBaseInfoService.WechatNumber = updateDto.WechatNumber;
+                    customerBaseInfoService.Sex = updateDto.Sex;
+                    customerBaseInfoService.Birthday = updateDto.Birthday;
+                    customerBaseInfoService.City = updateDto.City;
+                    customerBaseInfoService.Occupation = updateDto.Occupation;
+                    customerBaseInfoService.OtherPhone = updateDto.OtherPhone;
+                    customerBaseInfoService.DetailAddress = updateDto.DetailAddress;
+                    customerBaseInfoService.IsSendNote = updateDto.IsSendNote;
+                    customerBaseInfoService.IsCall = updateDto.IsCall;
+                    customerBaseInfoService.IsSendWeChat = updateDto.IsSendWeChat;
+                    customerBaseInfoService.UnTrackReason = updateDto.UnTrackReason;
+                    customerBaseInfoService.Remark = updateDto.Remark;
+                    await dalCustomerBaseInfo.UpdateAsync(customerBaseInfoService, true);
+                }
 
             }
             catch (Exception ex)
@@ -163,5 +192,11 @@ namespace Fx.Amiya.Service
         }
 
 
+        public async Task UpdateState(int state, string phone)
+        {
+            var customerBaseInfoService = await dalCustomerBaseInfo.GetAll().SingleOrDefaultAsync(e => e.Phone == phone);
+            customerBaseInfoService.CustomerState = state;
+            await dalCustomerBaseInfo.UpdateAsync(customerBaseInfoService, true);
+        }
     }
 }

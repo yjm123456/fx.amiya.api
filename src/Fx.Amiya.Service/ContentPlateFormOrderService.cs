@@ -30,6 +30,7 @@ namespace Fx.Amiya.Service
         private IBindCustomerServiceService bindCustomerServiceService;
         private IOrderCheckPictureService _orderCheckPictureService;
         private IContentPlatformOrderSendService _contentPlatformOrderSend;
+        private ICustomerBaseInfoService customerBaseInfoService;
         private IDalAmiyaEmployee _dalAmiyaEmployee;
         private ILiveAnchorService _liveAnchorService;
         private IShoppingCartRegistrationService _shoppingCartRegistration;
@@ -46,6 +47,7 @@ namespace Fx.Amiya.Service
         public ContentPlateFormOrderService(
            IDalContentPlatformOrder dalContentPlatformOrder,
            IDalAmiyaEmployee dalAmiyaEmployee,
+           ICustomerBaseInfoService customerBaseInfoService,
             ILiveAnchorService liveAnchorService,
             IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
             IHospitalInfoService hospitalInfoService,
@@ -69,6 +71,7 @@ namespace Fx.Amiya.Service
             _shoppingCartRegistration = shoppingCartRegistration;
             this.bindCustomerServiceService = bindCustomerServiceService;
             _dalBindCustomerService = dalBindCustomerService;
+            this.customerBaseInfoService = customerBaseInfoService;
             _departmentService = departmentService;
             this.amiyaGoodsDemandService = amiyaGoodsDemandService;
             this.employeeBindLiveAnchorService = employeeBindLiveAnchorService;
@@ -1087,6 +1090,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<ContentPlateFormOrderUpdateDto> GetByOrderIdAsync(string orderId)
         {
+            var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
             var order = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList).Where(x => x.Id == orderId).FirstOrDefaultAsync();
             if (order == null)
             {
@@ -1106,6 +1110,9 @@ namespace Fx.Amiya.Service
             result.HospitalDepartmentId = order.HospitalDepartmentId;
             result.CustomerName = order.CustomerName;
             result.Phone = order.Phone;
+            result.EncryptPhone = ServiceClass.Encrypt(order.Phone, config.PhoneEncryptKey);
+            var bindCustomerServiceInfo = await bindCustomerServiceService.GetEmployeeDetailsByPhoneAsync(order.Phone);
+            result.UserId = bindCustomerServiceInfo.UserId;
             result.CreateDate = order.CreateDate;
             result.LiveAnchorWeChatNo = order.LiveAnchorWeChatNo;
             result.IsOldCustomer = order.IsOldCustomer;
@@ -1620,6 +1627,7 @@ namespace Fx.Amiya.Service
                 {
                     var price = order.DepositAmount.HasValue ? order.DepositAmount.Value : 0.00M;
                     await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + input.DealAmount.Value, (int)OrderFrom.ContentPlatFormOrder, 0);
+                    await customerBaseInfoService.UpdateState(1, order.Phone);
                     order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.OrderComplete);
                     order.DealAmount += input.DealAmount;
                     order.LateProjectStage = input.LastProjectStage;
