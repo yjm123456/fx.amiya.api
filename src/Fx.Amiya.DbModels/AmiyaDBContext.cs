@@ -146,6 +146,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<HospitalImprovePlanRemark> HospitalImprovePlanRemark { get; set; }
         public virtual DbSet<OrderRefund> OrderRefund { get; set; }
         public virtual DbSet<DiaryWechat> DiaryWechats { get; set; }
+        public virtual DbSet<IndicatorOrderData> IndicatorOrderDatas { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -290,6 +291,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new HospitalDealItemConfiguration());
             modelBuilder.ApplyConfiguration(new OrderRefundConfiguration());
             modelBuilder.ApplyConfiguration(new DiaryWechatConfiguration());
+            modelBuilder.ApplyConfiguration(new IndicatorOrderDataConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }
