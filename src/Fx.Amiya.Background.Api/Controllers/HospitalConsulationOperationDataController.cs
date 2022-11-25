@@ -68,17 +68,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 NewCustomerVisitRate = d.NewCustomerVisitRate,
                                                 NewCustomerDealNum = d.NewCustomerDealNum,
                                                 NewCustomerDealRate = d.NewCustomerDealRate,
-                                                NewCustomerDealPrice = d.NewCustomerDealPrice/1000m,
-                                                NewCustomerUnitPrice = d.NewCustomerUnitPrice/1000m,
+                                                NewCustomerDealPrice = d.NewCustomerDealPrice,
+                                                NewCustomerUnitPrice = d.NewCustomerUnitPrice,
 
                                                 OldCustomerVisitNum = d.OldCustomerVisitNum,
                                                 OldCustomerDealNum = d.OldCustomerDealNum,
                                                 OldCustomerDealRate = d.OldCustomerDealRate,
-                                                OldCustomerDealPrice = d.OldCustomerDealPrice/1000m,
-                                                OldCustomerUnitPrice = d.OldCustomerUnitPrice/1000m,
+                                                OldCustomerDealPrice = d.OldCustomerDealPrice,
+                                                OldCustomerUnitPrice = d.OldCustomerUnitPrice,
 
                                                 OldCustomerAchievementRate = d.OldCustomerAchievementRate,
-                                                LasttMonthTotalAchievement = d.LasttMonthTotalAchievement/1000m,
+                                                LasttMonthTotalAchievement = d.LasttMonthTotalAchievement,
                                                 SectionOffice=d.SectionOffice
                                             };
 

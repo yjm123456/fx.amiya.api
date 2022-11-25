@@ -60,9 +60,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                     IndicatorId = e.IndicatorId,
                     DealItemName = e.DealItemName,
                     DealCount = e.DealCount,
-                    DealPrice = e.DealPrice/1000m,
+                    DealPrice = e.DealPrice,
                     PerformanceRatio = e.PerformanceRatio,
-                    DealUnitPrice=e.DealUnitPrice/1000m
+                    DealUnitPrice=e.DealUnitPrice
                 }).ToList();
 
 

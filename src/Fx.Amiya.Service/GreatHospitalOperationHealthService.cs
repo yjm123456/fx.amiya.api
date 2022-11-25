@@ -45,14 +45,14 @@ namespace Fx.Amiya.Service
                                                        LastNewCustomerDealRate = d.LastNewCustomerDealRate,
                                                        ThisNewCustomerDealRate = d.ThisNewCustomerDealRate,
                                                        NewCustomerDealChainRatio = d.NewCustomerDealChainRatio,
-                                                       LastNewCustomerUnitPrice = d.LastNewCustomerUnitPrice/1000m,
-                                                       ThisNewCustomerUnitPrice = d.ThisNewCustomerUnitPrice/1000m,
+                                                       LastNewCustomerUnitPrice = d.LastNewCustomerUnitPrice,
+                                                       ThisNewCustomerUnitPrice = d.ThisNewCustomerUnitPrice,
                                                        NewCustomerUnitPriceChainRatio = d.NewCustomerUnitPriceChainRatio,
                                                        LastOldCustomerRepurchaseRate=d.LastOldCustomerRepurchaseRate,
                                                        ThisOldCustomerRepurchaseRate=d.ThisOldCustomerRepurchaseRate,
                                                        OldCustomerRepurchaseChainRatio=d.OldCustomerRepurchaseChainRatio,
-                                                       LastOldCustomerUnitPrice=d.LastOldCustomerUnitPrice/1000m,
-                                                       ThisOldCustomerUnitPrice=d.ThisOldCustomerUnitPrice/1000m,
+                                                       LastOldCustomerUnitPrice=d.LastOldCustomerUnitPrice,
+                                                       ThisOldCustomerUnitPrice=d.ThisOldCustomerUnitPrice,
                                                        OldCustomerUnitPriceChainRatio=d.OldCustomerUnitPriceChainRatio
                                                    };
 
