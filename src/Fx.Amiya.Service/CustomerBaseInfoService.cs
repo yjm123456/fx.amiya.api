@@ -195,6 +195,10 @@ namespace Fx.Amiya.Service
         public async Task UpdateState(int state, string phone)
         {
             var customerBaseInfoService = await dalCustomerBaseInfo.GetAll().SingleOrDefaultAsync(e => e.Phone == phone);
+            if (customerBaseInfoService == null)
+            {
+                throw new Exception("客户信息未完善，请在“订单详情-顾客信息”中完善客户基本资料后点击“确定”后重试！");
+            }
             customerBaseInfoService.CustomerState = state;
             await dalCustomerBaseInfo.UpdateAsync(customerBaseInfoService, true);
         }

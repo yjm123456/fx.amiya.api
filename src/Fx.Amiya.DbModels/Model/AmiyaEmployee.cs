@@ -53,5 +53,12 @@ namespace Fx.Amiya.DbModels.Model
 
         public List<ShootingAndClip> ShootingInfo { get; set; }
         public List<ShootingAndClip> ClipInfo { get; set; }
+
+        public List<BeforeLivingTikTokDailyTarget> beforeLivingTikTokDailyTragets { get; set; }
+        public List<BeforeLivingXiaoHongShuDailyTarget> beforeLivingXiaoHongShuDailyTragets { get; set; }
+        public List<BeforeLivingZhiHuDailyTarget> beforeLivingZhiHuDailyTraget { get; set; }
+        public List<BeforeLivingVideoDailyTarget> beforeLivingVideoDailyTarget { get; set; }
+        public List<BeforeLivingSinaWeiBoDailyTarget> beforeLivingSinaWeiBoDailyTarget { get; set; }
+        public List<LivingDailyTarget> livingDailyTarget { get; set; }
     }
 }

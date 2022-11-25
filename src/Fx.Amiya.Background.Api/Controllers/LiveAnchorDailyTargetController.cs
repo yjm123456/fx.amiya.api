@@ -59,13 +59,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<LiveAnchorDailyTargetVo>>> GetListWithPageAsync(DateTime startDate, DateTime endDate, int? operationEmpId, int? netWorkConEmpId, int? liveAnchorId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<LiveAnchorDailyTargetVo>>> GetListWithPageAsync(DateTime startDate, DateTime endDate,  int? liveAnchorId, int pageNum, int pageSize)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await _liveAnchorDailyTargetService.GetListWithPageAsync(startDate, endDate, operationEmpId, netWorkConEmpId, liveAnchorId, pageNum, pageSize, employeeId);
+                var q = await _liveAnchorDailyTargetService.GetListWithPageAsync(startDate, endDate,  liveAnchorId, pageNum, pageSize, employeeId);
 
                 var liveAnchorDailyTarget = from d in q.List
                                             select new LiveAnchorDailyTargetVo
@@ -237,86 +237,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var selectResult = await _liveAnchorDailyTargetService.GetLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
                 if (selectResult != null)
                 {
-                    #region 【编辑流程】
-                    //UpdateLiveAnchorDailyTargetDto updateDto = new UpdateLiveAnchorDailyTargetDto();
-                    //updateDto.Id = selectResult.Id;
-                    //updateDto.LiveanchorMonthlyTargetId = selectResult.LiveanchorMonthlyTargetId;
-                    //updateDto.OperationEmployeeId = selectResult.OperationEmployeeId;
-                    //updateDto.LivingTrackingEmployeeId = selectResult.LivingTrackingEmployeeId;
-                    //updateDto.NetWorkConsultingEmployeeId = selectResult.NetWorkConsultingEmployeeId;
-                    //updateDto.TodaySendNum = selectResult.TodaySendNum;
-                    //updateDto.LivingRoomFlowInvestmentNum = selectResult.LivingRoomFlowInvestmentNum;
-                    //updateDto.FlowInvestmentNum = selectResult.FlowInvestmentNum;
-                    //updateDto.CluesNum = selectResult.CluesNum;
-                    //updateDto.AddFansNum = selectResult.AddFansNum;
-                    //updateDto.AddWechatNum = selectResult.AddWechatNum;
-                    //updateDto.Consultation = selectResult.Consultation;
-                    //updateDto.ConsultationCardConsumed = selectResult.ConsultationCardConsumed;
-                    //updateDto.Consultation2 = selectResult.Consultation2;
-                    //updateDto.ConsultationCardConsumed2 = selectResult.ConsultationCardConsumed2;
-                    //updateDto.ActivateHistoricalConsultation = selectResult.ActivateHistoricalConsultation;
-                    //updateDto.SendOrderNum = selectResult.SendOrderNum;
-                    //updateDto.NewVisitNum = selectResult.NewVisitNum;
-                    //updateDto.SubsequentVisitNum = selectResult.SubsequentVisitNum;
-                    //updateDto.OldCustomerVisitNum = selectResult.OldCustomerVisitNum;
-                    //updateDto.VisitNum = selectResult.VisitNum;
-                    //updateDto.NewDealNum = selectResult.NewDealNum;
-                    //updateDto.SubsequentDealNum = selectResult.SubsequentDealNum;
-                    //updateDto.OldCustomerDealNum = selectResult.OldCustomerDealNum;
-                    //updateDto.DealNum = selectResult.DealNum;
-                    //updateDto.CargoSettlementCommission = selectResult.CargoSettlementCommission;
-                    //updateDto.NewPerformanceNum = selectResult.NewPerformanceNum;
-                    //updateDto.SubsequentPerformanceNum = selectResult.SubsequentPerformanceNum;
-                    //updateDto.OldCustomerPerformanceNum = selectResult.OldCustomerPerformanceNum;
-                    //updateDto.NewCustomerPerformanceCountNum = selectResult.NewCustomerPerformanceCountNum;
-                    //updateDto.PerformanceNum = selectResult.PerformanceNum;
-                    //updateDto.MinivanRefund = selectResult.MinivanRefund;
-                    //updateDto.MiniVanBadReviews = selectResult.MiniVanBadReviews;
-                    //updateDto.RecordDate = selectResult.RecordDate;
-                    //if (addVo.OperationEmployeeId != 0)
-                    //{
-                    //    updateDto.TodaySendNum = addVo.TodaySendNum;
-                    //    updateDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
-                    //    updateDto.CluesNum = addVo.CluesNum;
-                    //    updateDto.AddFansNum = addVo.AddFansNum;
-                    //    updateDto.OperationEmployeeId = addVo.OperationEmployeeId;
-                    //}
-                    //if (addVo.LivingTrackingEmployeeId != 0)
-                    //{
-                    //    updateDto.LivingRoomFlowInvestmentNum = addVo.LivingRoomFlowInvestmentNum;
-                    //    updateDto.Consultation = addVo.Consultation;
-                    //    updateDto.Consultation2 = addVo.Consultation2;
-                    //    updateDto.CargoSettlementCommission = addVo.CargoSettlementCommission;
-                    //    updateDto.LivingTrackingEmployeeId = addVo.LivingTrackingEmployeeId;
-                    //}
-                    //if (addVo.NetWorkConsultingEmployeeId != 0)
-                    //{
-                    //    updateDto.AddWechatNum = addVo.AddWechatNum;
-                    //    updateDto.ConsultationCardConsumed = addVo.ConsultationCardConsumed;
-                    //    updateDto.ConsultationCardConsumed2 = addVo.ConsultationCardConsumed2;
-                    //    updateDto.ActivateHistoricalConsultation = addVo.ActivateHistoricalConsultation;
-                    //    updateDto.SendOrderNum = addVo.SendOrderNum.HasValue ? addVo.SendOrderNum.Value : 0;
-                    //    updateDto.NewVisitNum = addVo.NewVisitNum.HasValue ? addVo.NewVisitNum.Value : 0;
-                    //    updateDto.SubsequentVisitNum = addVo.SubsequentVisitNum.HasValue ? addVo.SubsequentVisitNum.Value : 0;
-                    //    updateDto.OldCustomerVisitNum = addVo.OldCustomerVisitNum.HasValue ? addVo.OldCustomerVisitNum.Value : 0;
-                    //    updateDto.VisitNum = addVo.VisitNum.HasValue ? addVo.VisitNum.Value : 0;
-                    //    updateDto.NewDealNum = addVo.NewDealNum.HasValue ? addVo.NewDealNum.Value : 0;
-                    //    updateDto.SubsequentDealNum = addVo.SubsequentDealNum.HasValue ? addVo.SubsequentDealNum.Value : 0;
-                    //    updateDto.OldCustomerDealNum = addVo.OldCustomerDealNum.HasValue ? addVo.OldCustomerDealNum.Value : 0;
-                    //    updateDto.DealNum = addVo.DealNum.HasValue ? addVo.DealNum.Value : 0;
-                    //    updateDto.NewPerformanceNum = addVo.NewPerformanceNum.HasValue ? addVo.NewPerformanceNum.Value : 0;
-                    //    updateDto.SubsequentPerformanceNum = addVo.SubsequentPerformanceNum.HasValue ? addVo.SubsequentPerformanceNum.Value : 0;
-                    //    updateDto.NewCustomerPerformanceCountNum = addVo.NewCustomerPerformanceCountNum.HasValue ? addVo.NewCustomerPerformanceCountNum.Value : 0;
-                    //    updateDto.OldCustomerPerformanceNum = addVo.OldCustomerPerformanceNum.HasValue ? addVo.OldCustomerPerformanceNum.Value : 0;
-                    //    updateDto.PerformanceNum = addVo.PerformanceNum.HasValue ? addVo.PerformanceNum.Value : 0;
-                    //    updateDto.MinivanRefund = addVo.MinivanRefund;
-                    //    updateDto.MiniVanBadReviews = addVo.MiniVanBadReviews;
-                    //    updateDto.NetWorkConsultingEmployeeId = addVo.NetWorkConsultingEmployeeId.Value;
-                    //}
-                    //await _liveAnchorDailyTargetService.UpdateAsync(updateDto);
-
-                    #endregion
-
                     throw new Exception("当前填报日期的主播日运营数据已创建，请根据筛选条件查询到对应数据编辑！");
                 }
                 else
@@ -328,8 +248,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.TikTokSendNum = addVo.TikTokSendNum;
                     addDto.TodaySendNum = addVo.TodaySendNum;
                     addDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
-                    //addDto.CluesNum = addVo.CluesNum;
-                    //addDto.AddFansNum = addVo.AddFansNum;
                     addDto.RecordDate = addVo.RecordDate;
                     await _liveAnchorDailyTargetService.BeforeLivingTikTokAddAsync(addDto);
                 }
@@ -361,8 +279,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.TikTokFlowInvestmentNum = updateVo.TikTokFlowInvestmentNum;
                 updateDto.TodaySendNum = updateVo.TodaySendNum;
                 updateDto.FlowInvestmentNum = updateVo.FlowInvestmentNum;
-                //updateDto.CluesNum = updateVo.CluesNum;
-                //updateDto.AddFansNum = updateVo.AddFansNum;
                 updateDto.RecordDate = updateVo.RecordDate;
                 await _liveAnchorDailyTargetService.BeforeLivingTikTokUpdateAsync(updateDto);
                 return ResultData.Success();
@@ -541,8 +457,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.XiaoHongShuFlowInvestmentNum = addVo.XiaoHongShuFlowInvestmentNum;
                     addDto.TodaySendNum = addVo.TodaySendNum;
                     addDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
-                    //addDto.CluesNum = addVo.CluesNum;
-                    //addDto.AddFansNum = addVo.AddFansNum;
                     addDto.RecordDate = addVo.RecordDate;
                     await _liveAnchorDailyTargetService.BeforeLivingXiaoHongShuAddAsync(addDto);
                 }

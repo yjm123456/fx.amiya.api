@@ -1237,6 +1237,189 @@ ENGINE=InnoDB;
 
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
+-----------------------------------------------余建明 2022/11/16 BEGIN--------------------------------------------
+---直播前抖音日运营数据
+    CREATE TABLE `amiyadb`.`tbl_beforeliving_tiktok_daily_target` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `live_anchor_monthly_target_id` VARCHAR(50) NOT NULL,
+  `operation_empId` INT UNSIGNED NOT NULL,
+  `flow_investment_num` INT NOT NULL,
+  `send_num` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_tiktok_empInfo_idx` (`operation_empId` ASC) VISIBLE,
+  INDEX `fk_tiktok_monthly_target_idx` (`live_anchor_monthly_target_id` ASC) VISIBLE,
+  CONSTRAINT `fk_tiktok_empInfo`
+    FOREIGN KEY (`operation_empId`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tiktok_monthly_target`
+    FOREIGN KEY (`live_anchor_monthly_target_id`)
+    REFERENCES `amiyadb`.`tbl_liveanchor_monthly_target` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+  ---直播前小红书日运营数据
+  CREATE TABLE `amiyadb`.`tbl_beforeliving_xiaohongshu_daily_target` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `live_anchor_monthly_target_id` VARCHAR(50) NOT NULL,
+  `operation_empId` INT UNSIGNED NOT NULL,
+  `flow_investment_num` DECIMAL(12,2) NOT NULL,
+  `send_num` INT NOT NULL,
+  `record_date` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_xiaohongshu_empInfo_idx` (`operation_empId` ASC) VISIBLE,
+  INDEX `fk_xiaohongshu_monthly_target_idx` (`live_anchor_monthly_target_id` ASC) VISIBLE,
+  CONSTRAINT `fk_xiaohongshu_empInfo`
+    FOREIGN KEY (`operation_empId`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_xiaohongshu_monthly_target`
+    FOREIGN KEY (`live_anchor_monthly_target_id`)
+    REFERENCES `amiyadb`.`tbl_liveanchor_monthly_target` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+    
+  ---直播前知乎日运营数据
+    CREATE TABLE `amiyadb`.`tbl_beforeliving_zhihu_daily_target` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `live_anchor_monthly_target_id` VARCHAR(50) NOT NULL,
+  `operation_empId` INT UNSIGNED NOT NULL,
+  `flow_investment_num` DECIMAL(12,2) NOT NULL,
+  `send_num` INT NOT NULL,
+  `record_date` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_zhihu_empInfo_idx` (`operation_empId` ASC) VISIBLE,
+  INDEX `fk_zhihu_monthly_target_idx` (`live_anchor_monthly_target_id` ASC) VISIBLE,
+  CONSTRAINT `fk_zhihu_empInfo`
+    FOREIGN KEY (`operation_empId`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_zhihu_monthly_target`
+    FOREIGN KEY (`live_anchor_monthly_target_id`)
+    REFERENCES `amiyadb`.`tbl_liveanchor_monthly_target` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+    
+  ---直播前微博日运营数据
+    CREATE TABLE `amiyadb`.`tbl_beforeliving_sina_weibo_daily_target` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `live_anchor_monthly_target_id` VARCHAR(50) NOT NULL,
+  `operation_empId` INT UNSIGNED NOT NULL,
+  `flow_investment_num` INT NOT NULL,
+  `send_num` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_sina_weibo_empInfo_idx` (`operation_empId` ASC) VISIBLE,
+  INDEX `fk_sina_weibo_monthly_target_idx` (`live_anchor_monthly_target_id` ASC) VISIBLE,
+  CONSTRAINT `fk_sina_weibo_empInfo`
+    FOREIGN KEY (`operation_empId`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_sina_weibo_monthly_target`
+    FOREIGN KEY (`live_anchor_monthly_target_id`)
+    REFERENCES `amiyadb`.`tbl_liveanchor_monthly_target` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+    
+  ---直播前视频号日运营数据
+    CREATE TABLE `amiyadb`.`tbl_beforeliving_video_daily_target` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `live_anchor_monthly_target_id` VARCHAR(50) NOT NULL,
+  `operation_empId` INT UNSIGNED NOT NULL,
+  `flow_investment_num` INT NOT NULL,
+  `send_num` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_video_empInfo_idx` (`operation_empId` ASC) VISIBLE,
+  INDEX `fk_video_monthly_target_idx` (`live_anchor_monthly_target_id` ASC) VISIBLE,
+  CONSTRAINT `fk_video_empInfo`
+    FOREIGN KEY (`operation_empId`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_video_monthly_target`
+    FOREIGN KEY (`live_anchor_monthly_target_id`)
+    REFERENCES `amiyadb`.`tbl_liveanchor_monthly_target` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+     ---直播中
+    CREATE TABLE `amiyadb`.`tbl_living_daily_target` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `live_anchor_monthly_target_id` VARCHAR(50) NOT NULL,
+  `operation_empId` INT UNSIGNED NOT NULL,
+  `living_room_flow_investment_num` DECIMAL(12,2) NOT NULL,
+  `consultation` INT NOT NULL,
+  `consultation2` INT NOT NULL,
+  `cargo_settlement_commission` DECIMAL(12,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_living_daily_target_empInfo_idx` (`operation_empId` ASC) VISIBLE,
+  INDEX `fk_living_daily_target_monthly_target_idx` (`live_anchor_monthly_target_id` ASC) VISIBLE,
+  CONSTRAINT `fk_living_daily_target_empInfo`
+    FOREIGN KEY (`operation_empId`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_living_daily_target_monthly_target`
+    FOREIGN KEY (`live_anchor_monthly_target_id`)
+    REFERENCES `amiyadb`.`tbl_liveanchor_monthly_target` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+-----------------------------------------------余建明 2022/11/16 END--------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

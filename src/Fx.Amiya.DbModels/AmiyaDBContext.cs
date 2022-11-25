@@ -22,7 +22,6 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<AmiyaInWarehouse> AmiyaInWarehouse { get; set; }
         public virtual DbSet<GreatHospitalDataWrite> GreatHospitalDataWrite { get; set; }
         public virtual DbSet<CustomerTagInfo> CustomerTagInfo { get; set; }
-
         public virtual DbSet<HospitalNetWorkConsulationOperationData> HospitalNetWorkConsulationOperationData { get; set; }
         public virtual DbSet<HospitalConsulationOperationData> HospitalConsulationOperationData { get; set; }
         public virtual DbSet<AmiyaOutWarehouse> AmiyaOutWarehouse { get; set; }
@@ -32,6 +31,12 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<DockingHospitalCustomerInfo> DockingHospitalCustomerInfo { get; set; }
         public virtual DbSet<GreatHospitalOperationHealth> GreatHospitalOperationHealth { get; set; }
         public virtual DbSet<HospitalOperationData> HospitalOperationData { get; set; }
+        public virtual DbSet<BeforeLivingTikTokDailyTarget> BeforeLivingTikTokDailyTraget { get; set; }
+        public virtual DbSet<BeforeLivingXiaoHongShuDailyTarget> BeforeLivingXiaoHongShuDailyTraget { get; set; }
+        public virtual DbSet<BeforeLivingZhiHuDailyTarget> BeforeLivingZhiHuDailyTraget { get; set; }
+        public virtual DbSet<BeforeLivingVideoDailyTarget> BeforeLivingVideoDailyTraget { get; set; }
+        public virtual DbSet<BeforeLivingSinaWeiBoDailyTarget> BeforeLivingSinaWeiBoDailyTraget { get; set; }
+        public virtual DbSet<LivingDailyTarget> LivingDailyTarget { get; set; }
         public virtual DbSet<WxMpUserInfo> WxMpUserInfo { get; set; }
         public virtual DbSet<HospitalFeedBack> HospitalFeedBack { get; set; }
         public virtual DbSet<InventoryList> InventoryList { get; set; }
@@ -221,6 +226,12 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new OrderInfoConfiguration());
             modelBuilder.ApplyConfiguration(new CooperativeHospitalCityConfiguration());
             modelBuilder.ApplyConfiguration(new ContentplatformConfiguration());
+            modelBuilder.ApplyConfiguration(new BeforeLivingTikTokDailyTragetConfiguration());
+            modelBuilder.ApplyConfiguration(new BeforeLivingXiaoHongShuDailyTragetConfiguration());
+            modelBuilder.ApplyConfiguration(new BeforeLivingZhiHuDailyTargetConfiguration());
+            modelBuilder.ApplyConfiguration(new BeforeLivingVideoDailyTargetConfiguration());
+            modelBuilder.ApplyConfiguration(new BeforeLivingSinaWeiBoDailyTargetConfiguration());
+            modelBuilder.ApplyConfiguration(new LivingDailyTargetConfiguration());
             modelBuilder.ApplyConfiguration(new ProvinceConfiguration());
             modelBuilder.ApplyConfiguration(new PermissionInfoConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaPositionPermissionConfiguration());

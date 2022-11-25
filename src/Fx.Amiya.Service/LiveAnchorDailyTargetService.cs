@@ -18,24 +18,39 @@ namespace Fx.Amiya.Service
     public class LiveAnchorDailyTargetService : ILiveAnchorDailyTargetService
     {
         private IDalLiveAnchorDailyTarget dalLiveAnchorDailyTarget;
-        private ILiveAnchorService _liveanchorService;
         private ILiveAnchorMonthlyTargetService _liveAnchorMonthlyTargetService;
+        private IDalBeforeLivingTikTokDailyTarget _beforeLivingTikTokDailyTraget;
+        private IDalBeforeLivingXiaoHongShuDailyTarget _beforeLivingXiaoHongShuDailyTraget;
+        private IDalBeforeLivingZhiHuDailyTarget _beforeLivingZhiHuDailyTraget;
+        private IDalBeforeLivingVideoDailyTarget _beforeLivingVideoDailyTraget;
+        private IDalBeforeLivingSinaWeiBoDailyTarget _beforeLivingSinaWeiBoDailyTraget;
+        private IDalLivingDailyTarget _livingDailyTarget;
         private IUnitOfWork unitOfWork;
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private IEmployeeBindLiveAnchorService employeeBindLiveAnchorService;
 
         public LiveAnchorDailyTargetService(IDalLiveAnchorDailyTarget dalLiveAnchorDailyTarget,
-            ILiveAnchorService liveAnchorService,
             IUnitOfWork unitOfWork,
             IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
+            IDalBeforeLivingTikTokDailyTarget beforeLivingTikTokDailyTraget,
+            IDalBeforeLivingXiaoHongShuDailyTarget beforeLivingXiaoHongShuDailyTraget,
+            IDalBeforeLivingZhiHuDailyTarget beforeLivingZhiHuDailyTraget,
+            IDalBeforeLivingVideoDailyTarget beforeLivingVideoDailyTraget,
+            IDalBeforeLivingSinaWeiBoDailyTarget beforeLivingSinaWeiBoDailyTraget,
+            IDalLivingDailyTarget livingDailyTarget,
             ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService,
             IAmiyaEmployeeService amiyaEmployeeService)
         {
             this.unitOfWork = unitOfWork;
             this.dalLiveAnchorDailyTarget = dalLiveAnchorDailyTarget;
-            _liveanchorService = liveAnchorService;
             _liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
             _amiyaEmployeeService = amiyaEmployeeService;
+            _beforeLivingTikTokDailyTraget = beforeLivingTikTokDailyTraget;
+            _beforeLivingXiaoHongShuDailyTraget = beforeLivingXiaoHongShuDailyTraget;
+            _beforeLivingSinaWeiBoDailyTraget = beforeLivingSinaWeiBoDailyTraget;
+            _beforeLivingVideoDailyTraget = beforeLivingVideoDailyTraget;
+            _beforeLivingZhiHuDailyTraget = beforeLivingZhiHuDailyTraget;
+            _livingDailyTarget = livingDailyTarget;
             this.employeeBindLiveAnchorService = employeeBindLiveAnchorService;
         }
 
@@ -50,7 +65,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<LiveAnchorDailyTargetDto>> GetListWithPageAsync(DateTime startDate, DateTime endDate, int? operationEmpId, int? netWorkConEmpId, int? liveAnchorId, int pageNum, int pageSize, int employeeId)
+        public async Task<FxPageInfo<LiveAnchorDailyTargetDto>> GetListWithPageAsync(DateTime startDate, DateTime endDate, int? liveAnchorId, int pageNum, int pageSize, int employeeId)
         {
             try
             {
@@ -72,147 +87,224 @@ namespace Fx.Amiya.Service
                     }
                 }
                 endDate = endDate.AddDays(1);
+                #region 【数据获取】
+                var tikTokDailyInfo = from d in _beforeLivingTikTokDailyTraget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                                      where d.RecordDate >= startDate && d.RecordDate < endDate
+                                      && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                      && d.Valid
+                                      select new BeforeLivingTikTokDailyTargetDto
+                                      {
+                                          Id = d.Id,
+                                          LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
+                                          LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                          CreateDate = d.CreateDate,
+                                          UpdateDate = d.UpdateDate,
+                                          RecordDate = d.RecordDate,
+                                          OperationEmpId = d.OperationEmpId,
+                                          OperationEmpName = d.AmiyaEmployee.Name,
+                                          FlowInvestmentNum = d.FlowInvestmentNum,
+                                          SendNum = d.SendNum,
+                                      };
+                var tikTokDailyInfoList = await tikTokDailyInfo.ToListAsync();
 
-                var result = from d in dalLiveAnchorDailyTarget.GetAll().Include(e => e.LiveAnchorMonthlyTarget).ThenInclude(k => k.LiveAnchor)
-                             where d.RecordDate >= startDate && d.RecordDate < endDate
-                             && (operationEmpId.HasValue == false || d.TikTokOperationEmployeeId == operationEmpId)
-                             && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
-                             && (netWorkConEmpId.HasValue == false || d.NetWorkConsultingEmployeeId == netWorkConEmpId)
-                             select new LiveAnchorDailyTargetDto
-                             {
-                                 Id = d.Id,
-                                 LiveanchorMonthlyTargetId = d.LiveanchorMonthlyTargetId,
-                                 LiveAnchorId = d.LiveAnchorMonthlyTarget.LiveAnchorId,
-                                 LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
-                                 CreateDate = d.CreateDate,
-                                 RecordDate = d.RecordDate,
-                                 LivingTrackingEmployeeId = d.LivingTrackingEmployeeId,
-                                 NetWorkConsultingEmployeeId = d.NetWorkConsultingEmployeeId,
+                var xiaohongshuDailyInfo = from d in _beforeLivingXiaoHongShuDailyTraget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                                           where d.RecordDate >= startDate && d.RecordDate < endDate
+                                           && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                           && d.Valid
+                                           select new BeforeLivingXiaoHongShuDailyTargetDto
+                                           {
+                                               Id = d.Id,
+                                               LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
+                                               LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                               CreateDate = d.CreateDate,
+                                               UpdateDate = d.UpdateDate,
+                                               RecordDate = d.RecordDate,
+                                               OperationEmpId = d.OperationEmpId,
+                                               OperationEmpName = d.AmiyaEmployee.Name,
+                                               FlowInvestmentNum = d.FlowInvestmentNum,
+                                               SendNum = d.SendNum,
+                                           };
+                var xiaohongshuDailyInfoList = await xiaohongshuDailyInfo.ToListAsync();
 
-                                 TikTokOperationEmployeeId = d.TikTokOperationEmployeeId,
-                                 TikTokSendNum = d.TikTokSendNum,
-                                 TikTokFlowInvestmentNum = d.TikTokFlowInvestmentNum,
+                var videoDailyInfo = from d in _beforeLivingVideoDailyTraget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                                           where d.RecordDate >= startDate && d.RecordDate < endDate
+                                           && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                           && d.Valid
+                                           select new BeforeLivingVideoDailyTargetDto
+                                           {
+                                               Id = d.Id,
+                                               LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
+                                               LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                               CreateDate = d.CreateDate,
+                                               UpdateDate = d.UpdateDate,
+                                               RecordDate = d.RecordDate,
+                                               OperationEmpId = d.OperationEmpId,
+                                               OperationEmpName = d.AmiyaEmployee.Name,
+                                               FlowInvestmentNum = d.FlowInvestmentNum,
+                                               SendNum = d.SendNum,
+                                           };
+                var videoDailyInfoList = await videoDailyInfo.ToListAsync();
 
-                                 SinaWeiBoOperationEmployeeId = d.SinaWeiBoOperationEmployeeId,
-                                 SinaWeiBoSendNum = d.SinaWeiBoSendNum,
-                                 SinaWeiBoFlowInvestmentNum = d.SinaWeiBoFlowInvestmentNum,
+                var zhihuDailyInfo = from d in _beforeLivingZhiHuDailyTraget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                                     where d.RecordDate >= startDate && d.RecordDate < endDate
+                                     && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                     && d.Valid
+                                     select new BeforeLivingZhiHuDailyTargetDto
+                                     {
+                                         Id = d.Id,
+                                         LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
+                                         LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                         CreateDate = d.CreateDate,
+                                         UpdateDate = d.UpdateDate,
+                                         RecordDate = d.RecordDate,
+                                         OperationEmpId = d.OperationEmpId,
+                                         OperationEmpName = d.AmiyaEmployee.Name,
+                                         FlowInvestmentNum = d.FlowInvestmentNum,
+                                         SendNum = d.SendNum,
+                                     };
+                var zhihuDailyInfoList = await zhihuDailyInfo.ToListAsync();
 
-                                 XiaoHongShuOperationEmployeeId = d.XiaoHongShuOperationEmployeeId,
-                                 XiaoHongShuSendNum = d.XiaoHongShuSendNum,
-                                 XiaoHongShuFlowInvestmentNum = d.XiaoHongShuFlowInvestmentNum,
+                var sinaWeiBoDailyInfo = from d in _beforeLivingSinaWeiBoDailyTraget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                                     where d.RecordDate >= startDate && d.RecordDate < endDate
+                                     && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                     && d.Valid
+                                     select new BeforeLivingSinaWeiBoDailyTargetDto
+                                     {
+                                         Id = d.Id,
+                                         LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
+                                         LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                         CreateDate = d.CreateDate,
+                                         UpdateDate = d.UpdateDate,
+                                         RecordDate = d.RecordDate,
+                                         OperationEmpId = d.OperationEmpId,
+                                         OperationEmpName = d.AmiyaEmployee.Name,
+                                         FlowInvestmentNum = d.FlowInvestmentNum,
+                                         SendNum = d.SendNum,
+                                     };
+                var sinaWeiBoDailyInfoList = await sinaWeiBoDailyInfo.ToListAsync();
 
-                                 ZhihuOperationEmployeeId = d.ZhihuOperationEmployeeId,
-                                 ZhihuSendNum = d.ZhihuSendNum,
-                                 ZhihuFlowInvestmentNum = d.ZhihuFlowInvestmentNum,
+                var livingDailyInfo = from d in _livingDailyTarget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                                         where d.RecordDate >= startDate && d.RecordDate < endDate
+                                         && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                         && d.Valid
+                                         select new LivingDailyTargetDto
+                                         {
+                                             Id = d.Id,
+                                             LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
+                                             LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                             CreateDate = d.CreateDate,
+                                             UpdateDate = d.UpdateDate,
+                                             RecordDate = d.RecordDate,
+                                             OperationEmpId = d.OperationEmpId,
+                                             OperationEmpName = d.AmiyaEmployee.Name,
+                                             LivingRoomFlowInvestmentNum = d.LivingRoomFlowInvestmentNum,
+                                             CargoSettlementCommission = d.CargoSettlementCommission,
+                                             Consultation = d.Consultation,
+                                             Consultation2 = d.Consultation2,
+                                         };
+                var livingDailyInfoList = await livingDailyInfo.ToListAsync();
 
-                                 VideoOperationEmployeeId = d.VideoOperationEmployeeId,
-                                 VideoSendNum = d.VideoSendNum,
-                                 VideoFlowInvestmentNum = d.VideoFlowInvestmentNum,
-
-                                 TodaySendNum = d.TodaySendNum,
-                                 FlowInvestmentNum = d.FlowInvestmentNum,
-                                 LivingRoomFlowInvestmentNum = d.LivingRoomFlowInvestmentNum,
-                                 CluesNum = d.CluesNum,
-                                 AddFansNum = d.AddFansNum,
-                                 AddWechatNum = d.AddWechatNum,
-                                 Consultation = d.Consultation,
-                                 ConsultationCardConsumed = d.ConsultationCardConsumed,
-                                 Consultation2 = d.Consultation2,
-                                 ConsultationCardConsumed2 = d.ConsultationCardConsumed2,
-                                 ActivateHistoricalConsultation = d.ActivateHistoricalConsultation,
-                                 SendOrderNum = d.SendOrderNum,
-                                 NewVisitNum = d.NewVisitNum,
-                                 SubsequentVisitNum = d.SubsequentVisitNum,
-                                 OldCustomerVisitNum = d.OldCustomerVisitNum,
-                                 VisitNum = d.VisitNum,
-                                 NewDealNum = d.NewDealNum,
-                                 SubsequentDealNum = d.SubsequentDealNum,
-                                 OldCustomerDealNum = d.OldCustomerDealNum,
-                                 DealNum = d.DealNum,
-                                 CargoSettlementCommission = d.CargoSettlementCommission,
-                                 NewPerformanceNum = d.NewPerformanceNum,
-                                 SubsequentPerformanceNum = d.SubsequentPerformanceNum,
-                                 NewCustomerPerformanceCountNum = d.NewCustomerPerformanceCountNum,
-                                 OldCustomerPerformanceNum = d.OldCustomerPerformanceNum,
-                                 MinivanRefund = d.MinivanRefund,
-                                 MiniVanBadReviews = d.MiniVanBadReviews,
-                                 PerformanceNum = d.PerformanceNum,
-                                 TikTokUpdateDate=d.TikTokUpdateDate,
-                                 LivingUpdateDate=d.LivingUpdateDate,
-                                 AfterLivingUpdateDate=d.AfterLivingUpdateDate
-                             };
+                #endregion
 
                 FxPageInfo<LiveAnchorDailyTargetDto> liveAnchorDailyTargetPageInfo = new FxPageInfo<LiveAnchorDailyTargetDto>();
-                liveAnchorDailyTargetPageInfo.TotalCount = await result.CountAsync();
-                var diaryTargetInfo = await result.OrderByDescending(x => x.CreateDate).ToListAsync();
+                liveAnchorDailyTargetPageInfo.TotalCount = await tikTokDailyInfo.CountAsync();
+                var diaryTargetInfo = await tikTokDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
                 List<LiveAnchorDailyTargetDto> resultList = new List<LiveAnchorDailyTargetDto>();
-                resultList = diaryTargetInfo.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
-                foreach (var x in resultList)
+                //筛选组合数据
+                foreach (var x in diaryTargetInfo)
                 {
-                   
-                    if (x.LivingTrackingEmployeeId != 0)
+                    //抖音
+                    LiveAnchorDailyTargetDto liveAnchorDailyTargetDto = new LiveAnchorDailyTargetDto();
+                    liveAnchorDailyTargetDto.RecordDate = x.RecordDate;
+                    liveAnchorDailyTargetDto.LiveAnchor = x.LiveAnchor;
+                    liveAnchorDailyTargetDto.TikTokOperationEmployeeName = x.OperationEmpName;
+                    liveAnchorDailyTargetDto.TikTokSendNum = x.SendNum;
+                    liveAnchorDailyTargetDto.TikTokFlowInvestmentNum = x.FlowInvestmentNum;
+                    liveAnchorDailyTargetDto.TikTokUpdateDate = x.UpdateDate;
+
+                    ///小红书
+                    var xiaohongshuThisDayDataInfo = xiaohongshuDailyInfoList.Where(k => k.RecordDate == x.RecordDate && k.LiveAnchorMonthlyTargetId == x.LiveAnchorMonthlyTargetId).FirstOrDefault();
+                    if (xiaohongshuThisDayDataInfo == null)
                     {
-                        var ivingTrackingEmployee = await _amiyaEmployeeService.GetByIdAsync(x.LivingTrackingEmployeeId);
-                        if (ivingTrackingEmployee.Id != 0)
-                        {
-                            x.LivingTrackingEmployeeName = ivingTrackingEmployee.Name;
-                        }
+                        liveAnchorDailyTargetDto.XiaoHongShuOperationEmployeeName = "未填写";
+                        liveAnchorDailyTargetDto.XiaoHongShuSendNum = 0;
+                        liveAnchorDailyTargetDto.XiaoHongShuFlowInvestmentNum =0;
                     }
-                    if (x.NetWorkConsultingEmployeeId != 0)
+                    else
                     {
-                        var netWorkConsultingEmployee = await _amiyaEmployeeService.GetByIdAsync(x.NetWorkConsultingEmployeeId);
-                        if (netWorkConsultingEmployee.Id != 0)
-                        {
-                            x.NetWorkConsultingEmployeeName = netWorkConsultingEmployee.Name;
-                        }
+                        liveAnchorDailyTargetDto.XiaoHongShuOperationEmployeeName = xiaohongshuThisDayDataInfo.OperationEmpName;
+                        liveAnchorDailyTargetDto.XiaoHongShuSendNum = xiaohongshuThisDayDataInfo.SendNum;
+                        liveAnchorDailyTargetDto.XiaoHongShuFlowInvestmentNum = xiaohongshuThisDayDataInfo.FlowInvestmentNum;
+                    }
+                    ///视频号
+                    var videoThisDayDataInfo = videoDailyInfoList.Where(k => k.RecordDate == x.RecordDate && k.LiveAnchorMonthlyTargetId == x.LiveAnchorMonthlyTargetId).FirstOrDefault();
+                    if (videoThisDayDataInfo == null)
+                    {
+                        liveAnchorDailyTargetDto.VideoOperationEmployeeName = "未填写";
+                        liveAnchorDailyTargetDto.VideoSendNum = 0;
+                        liveAnchorDailyTargetDto.VideoFlowInvestmentNum = 0;
+                    }
+                    else
+                    {
+                        liveAnchorDailyTargetDto.VideoOperationEmployeeName = videoThisDayDataInfo.OperationEmpName;
+                        liveAnchorDailyTargetDto.VideoSendNum = videoThisDayDataInfo.SendNum;
+                        liveAnchorDailyTargetDto.VideoFlowInvestmentNum = videoThisDayDataInfo.FlowInvestmentNum;
                     }
 
-                    if (x.TikTokOperationEmployeeId != 0)
+                    ///微博
+                    var sinaWeiBoThisDayDataInfo = sinaWeiBoDailyInfoList.Where(k => k.RecordDate == x.RecordDate && k.LiveAnchorMonthlyTargetId == x.LiveAnchorMonthlyTargetId).FirstOrDefault();
+                    if (sinaWeiBoThisDayDataInfo == null)
                     {
-                        var operationEmployee = await _amiyaEmployeeService.GetByIdAsync(x.TikTokOperationEmployeeId);
-                        if (operationEmployee.Id != 0)
-                        {
-                            x.TikTokOperationEmployeeName = operationEmployee.Name;
-                        }
+                        liveAnchorDailyTargetDto.SinaWeiBoOperationEmployeeName = "未填写";
+                        liveAnchorDailyTargetDto.SinaWeiBoSendNum = 0;
+                        liveAnchorDailyTargetDto.SinaWeiBoFlowInvestmentNum = 0;
+                    }
+                    else
+                    {
+                        liveAnchorDailyTargetDto.SinaWeiBoOperationEmployeeName = sinaWeiBoThisDayDataInfo.OperationEmpName;
+                        liveAnchorDailyTargetDto.SinaWeiBoSendNum = sinaWeiBoThisDayDataInfo.SendNum;
+                        liveAnchorDailyTargetDto.SinaWeiBoFlowInvestmentNum = sinaWeiBoThisDayDataInfo.FlowInvestmentNum;
                     }
 
-                    if (x.VideoOperationEmployeeId != 0)
+                    ///知乎
+                    var zhihuThisDayDataInfo = zhihuDailyInfoList.Where(k => k.RecordDate == x.RecordDate && k.LiveAnchorMonthlyTargetId == x.LiveAnchorMonthlyTargetId).FirstOrDefault();
+                    if (zhihuThisDayDataInfo == null)
                     {
-                        var operationEmployee = await _amiyaEmployeeService.GetByIdAsync(x.VideoOperationEmployeeId);
-                        if (operationEmployee.Id != 0)
-                        {
-                            x.VideoOperationEmployeeName = operationEmployee.Name;
-                        }
+                        liveAnchorDailyTargetDto.ZhihuOperationEmployeeName = "未填写";
+                        liveAnchorDailyTargetDto.ZhihuSendNum = 0;
+                        liveAnchorDailyTargetDto.ZhihuFlowInvestmentNum = 0;
+                    }
+                    else
+                    {
+                        liveAnchorDailyTargetDto.ZhihuOperationEmployeeName = zhihuThisDayDataInfo.OperationEmpName;
+                        liveAnchorDailyTargetDto.ZhihuSendNum = zhihuThisDayDataInfo.SendNum;
+                        liveAnchorDailyTargetDto.ZhihuFlowInvestmentNum = zhihuThisDayDataInfo.FlowInvestmentNum;
                     }
 
-                    if (x.ZhihuOperationEmployeeId != 0)
+                    ///直播中
+                    var livingThisDayDataInfo = livingDailyInfoList.Where(k => k.RecordDate == x.RecordDate && k.LiveAnchorMonthlyTargetId == x.LiveAnchorMonthlyTargetId).FirstOrDefault();
+                    if (livingThisDayDataInfo == null)
                     {
-                        var operationEmployee = await _amiyaEmployeeService.GetByIdAsync(x.ZhihuOperationEmployeeId);
-                        if (operationEmployee.Id != 0)
-                        {
-                            x.ZhihuOperationEmployeeName = operationEmployee.Name;
-                        }
+                        liveAnchorDailyTargetDto.LivingTrackingEmployeeName = "未填写";
+                        liveAnchorDailyTargetDto.LivingRoomFlowInvestmentNum = 0.00M;
+                        liveAnchorDailyTargetDto.CargoSettlementCommission = 0.00M;
+                        liveAnchorDailyTargetDto.Consultation = 0;
+                        liveAnchorDailyTargetDto.Consultation = 0;
+                    }
+                    else
+                    {
+                        liveAnchorDailyTargetDto.LivingTrackingEmployeeName = livingThisDayDataInfo.OperationEmpName;
+                        liveAnchorDailyTargetDto.LivingRoomFlowInvestmentNum = livingThisDayDataInfo.LivingRoomFlowInvestmentNum;
+                        liveAnchorDailyTargetDto.CargoSettlementCommission = livingThisDayDataInfo.CargoSettlementCommission;
+                        liveAnchorDailyTargetDto.Consultation = livingThisDayDataInfo.Consultation;
+                        liveAnchorDailyTargetDto.Consultation = livingThisDayDataInfo.Consultation;
                     }
 
-                    if (x.XiaoHongShuOperationEmployeeId != 0)
-                    {
-                        var operationEmployee = await _amiyaEmployeeService.GetByIdAsync(x.XiaoHongShuOperationEmployeeId);
-                        if (operationEmployee.Id != 0)
-                        {
-                            x.XiaoHongShuOperationEmployeeName = operationEmployee.Name;
-                        }
-                    }
-
-
-                    if (x.SinaWeiBoOperationEmployeeId != 0)
-                    {
-                        var operationEmployee = await _amiyaEmployeeService.GetByIdAsync(x.SinaWeiBoOperationEmployeeId);
-                        if (operationEmployee.Id != 0)
-                        {
-                            x.SinaWeiBoOperationEmployeeName = operationEmployee.Name;
-                        }
-                    }
+                    resultList.Add(liveAnchorDailyTargetDto);
                 }
+
+                resultList = resultList.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+
                 liveAnchorDailyTargetPageInfo.List = resultList;
                 return liveAnchorDailyTargetPageInfo;
             }
@@ -220,6 +312,7 @@ namespace Fx.Amiya.Service
             {
                 throw ex;
             }
+
         }
 
         public async Task<LiveAnchorDailyTargetDto> GetLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate)
@@ -565,20 +658,17 @@ namespace Fx.Amiya.Service
             try
             {
 
-                LiveAnchorDailyTarget liveAnchorDailyTarget = new LiveAnchorDailyTarget();
+                BeforeLivingTikTokDailyTarget liveAnchorDailyTarget = new BeforeLivingTikTokDailyTarget();
                 liveAnchorDailyTarget.Id = Guid.NewGuid().ToString();
-                liveAnchorDailyTarget.LiveanchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
-                liveAnchorDailyTarget.TikTokOperationEmployeeId = addDto.TikTokOperationEmployeeId;
-                liveAnchorDailyTarget.TikTokFlowInvestmentNum = addDto.TikTokFlowInvestmentNum;
-                liveAnchorDailyTarget.TikTokSendNum = addDto.TikTokSendNum;
-                liveAnchorDailyTarget.TodaySendNum = addDto.TodaySendNum;
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = addDto.TikTokOperationEmployeeId;
+                liveAnchorDailyTarget.FlowInvestmentNum = addDto.TikTokFlowInvestmentNum;
+                liveAnchorDailyTarget.SendNum = addDto.TikTokSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = addDto.FlowInvestmentNum;
-                //liveAnchorDailyTarget.AddFansNum = addDto.AddFansNum;
-                //liveAnchorDailyTarget.CluesNum = addDto.CluesNum;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
+                liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
-                liveAnchorDailyTarget.TikTokUpdateDate = DateTime.Now;
-                await dalLiveAnchorDailyTarget.AddAsync(liveAnchorDailyTarget, true);
+                await _beforeLivingTikTokDailyTraget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
                 editLiveAnchorMonthlyTarget.Id = addDto.LiveanchorMonthlyTargetId;
@@ -607,7 +697,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var liveAnchorDailyTarget = await dalLiveAnchorDailyTarget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                var liveAnchorDailyTarget = await _beforeLivingTikTokDailyTraget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
                 if (updateDto.Id != liveAnchorDailyTarget.Id)
                 {
                     unitOfWork.RollBack();
@@ -620,27 +710,21 @@ namespace Fx.Amiya.Service
                 }
                 //先扣除原有的
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
-                editLiveAnchorMonthlyTarget.Id = liveAnchorDailyTarget.LiveanchorMonthlyTargetId;
-                editLiveAnchorMonthlyTarget.CumulativeTikTokRelease = -liveAnchorDailyTarget.TikTokSendNum;
-                editLiveAnchorMonthlyTarget.CumulativeTikTokFlowinvestment = -liveAnchorDailyTarget.TikTokFlowInvestmentNum;
-                editLiveAnchorMonthlyTarget.CumulativeRelease = -liveAnchorDailyTarget.TodaySendNum;
+                editLiveAnchorMonthlyTarget.Id = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
+                editLiveAnchorMonthlyTarget.CumulativeTikTokRelease = -liveAnchorDailyTarget.SendNum;
+                editLiveAnchorMonthlyTarget.CumulativeTikTokFlowinvestment = -liveAnchorDailyTarget.FlowInvestmentNum;
+                editLiveAnchorMonthlyTarget.CumulativeRelease = -liveAnchorDailyTarget.SendNum;
                 editLiveAnchorMonthlyTarget.CumulativeFlowInvestment = -liveAnchorDailyTarget.FlowInvestmentNum;
-                //editLiveAnchorMonthlyTarget.CumulativeCluesNum = -liveAnchorDailyTarget.CluesNum;
-                //editLiveAnchorMonthlyTarget.CumulativeAddFansNum = -liveAnchorDailyTarget.AddFansNum;
                 await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
 
-                liveAnchorDailyTarget.LiveanchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
-                liveAnchorDailyTarget.TikTokOperationEmployeeId = updateDto.TikTokOperationEmployeeId;
-                liveAnchorDailyTarget.TikTokFlowInvestmentNum = updateDto.TikTokFlowInvestmentNum;
-                liveAnchorDailyTarget.TikTokSendNum = updateDto.TikTokSendNum;
-                liveAnchorDailyTarget.TodaySendNum = updateDto.TodaySendNum;
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = updateDto.TikTokOperationEmployeeId;
+                liveAnchorDailyTarget.FlowInvestmentNum = updateDto.TikTokFlowInvestmentNum;
+                liveAnchorDailyTarget.SendNum = updateDto.TikTokSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = updateDto.FlowInvestmentNum;
-                //liveAnchorDailyTarget.AddFansNum = updateDto.AddFansNum;
-                //liveAnchorDailyTarget.CluesNum = updateDto.CluesNum;
-               
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
-                liveAnchorDailyTarget.TikTokUpdateDate = DateTime.Now;
-                await dalLiveAnchorDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
+                liveAnchorDailyTarget.UpdateDate = DateTime.Now;
+                await _beforeLivingTikTokDailyTraget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
                 lasteditLiveAnchorMonthlyTarget.Id = updateDto.LiveanchorMonthlyTargetId;
@@ -648,8 +732,6 @@ namespace Fx.Amiya.Service
                 lasteditLiveAnchorMonthlyTarget.CumulativeTikTokFlowinvestment = updateDto.TikTokFlowInvestmentNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeRelease = updateDto.TodaySendNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeFlowInvestment = updateDto.FlowInvestmentNum;
-                //editLiveAnchorMonthlyTarget.CumulativeCluesNum = updateDto.CluesNum;
-                //editLiveAnchorMonthlyTarget.CumulativeAddFansNum = updateDto.AddFansNum;
                 await _liveAnchorMonthlyTargetService.EditAsync(lasteditLiveAnchorMonthlyTarget);
                 unitOfWork.Commit();
             }
@@ -673,19 +755,17 @@ namespace Fx.Amiya.Service
             try
             {
 
-                LiveAnchorDailyTarget liveAnchorDailyTarget = new LiveAnchorDailyTarget();
+                BeforeLivingZhiHuDailyTarget liveAnchorDailyTarget = new BeforeLivingZhiHuDailyTarget();
                 liveAnchorDailyTarget.Id = Guid.NewGuid().ToString();
-                liveAnchorDailyTarget.LiveanchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
-                liveAnchorDailyTarget.ZhihuOperationEmployeeId = addDto.ZhihuOperationEmployeeId;
-                liveAnchorDailyTarget.ZhihuFlowInvestmentNum = addDto.ZhihuFlowInvestmentNum;
-                liveAnchorDailyTarget.ZhihuSendNum = addDto.ZhihuSendNum;
-                liveAnchorDailyTarget.TodaySendNum = addDto.TodaySendNum;
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = addDto.ZhihuOperationEmployeeId;
+                liveAnchorDailyTarget.FlowInvestmentNum = addDto.ZhihuFlowInvestmentNum;
+                liveAnchorDailyTarget.SendNum = addDto.ZhihuSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = addDto.FlowInvestmentNum;
-                //liveAnchorDailyTarget.AddFansNum = addDto.AddFansNum;
-                //liveAnchorDailyTarget.CluesNum = addDto.CluesNum;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
+                liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
-                await dalLiveAnchorDailyTarget.AddAsync(liveAnchorDailyTarget, true);
+                await _beforeLivingZhiHuDailyTraget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
                 editLiveAnchorMonthlyTarget.Id = addDto.LiveanchorMonthlyTargetId;
@@ -714,7 +794,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var liveAnchorDailyTarget = await dalLiveAnchorDailyTarget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                var liveAnchorDailyTarget = await _beforeLivingZhiHuDailyTraget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
                 if (updateDto.Id != liveAnchorDailyTarget.Id)
                 {
                     unitOfWork.RollBack();
@@ -727,25 +807,23 @@ namespace Fx.Amiya.Service
                 }
                 //先扣除原有的
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
-                editLiveAnchorMonthlyTarget.Id = liveAnchorDailyTarget.LiveanchorMonthlyTargetId;
-                editLiveAnchorMonthlyTarget.CumulativeZhihuRelease = -liveAnchorDailyTarget.ZhihuSendNum;
-                editLiveAnchorMonthlyTarget.CumulativeZhihuFlowinvestment = -liveAnchorDailyTarget.ZhihuFlowInvestmentNum;
-                editLiveAnchorMonthlyTarget.CumulativeRelease = -liveAnchorDailyTarget.TodaySendNum;
+                editLiveAnchorMonthlyTarget.Id = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
+                editLiveAnchorMonthlyTarget.CumulativeZhihuRelease = -liveAnchorDailyTarget.SendNum;
+                editLiveAnchorMonthlyTarget.CumulativeZhihuFlowinvestment = -liveAnchorDailyTarget.FlowInvestmentNum;
+                editLiveAnchorMonthlyTarget.CumulativeRelease = -liveAnchorDailyTarget.SendNum;
                 editLiveAnchorMonthlyTarget.CumulativeFlowInvestment = -liveAnchorDailyTarget.FlowInvestmentNum;
                 //editLiveAnchorMonthlyTarget.CumulativeCluesNum = -liveAnchorDailyTarget.CluesNum;
                 //editLiveAnchorMonthlyTarget.CumulativeAddFansNum = -liveAnchorDailyTarget.AddFansNum;
                 await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
 
-                liveAnchorDailyTarget.LiveanchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
-                liveAnchorDailyTarget.ZhihuOperationEmployeeId = updateDto.ZhihuOperationEmployeeId;
-                liveAnchorDailyTarget.ZhihuFlowInvestmentNum = updateDto.ZhihuFlowInvestmentNum;
-                liveAnchorDailyTarget.ZhihuSendNum = updateDto.ZhihuSendNum;
-                liveAnchorDailyTarget.TodaySendNum = updateDto.TodaySendNum;
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = updateDto.ZhihuOperationEmployeeId;
+                liveAnchorDailyTarget.FlowInvestmentNum = updateDto.ZhihuFlowInvestmentNum;
+                liveAnchorDailyTarget.SendNum = updateDto.ZhihuSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = updateDto.FlowInvestmentNum;
-                //liveAnchorDailyTarget.AddFansNum = updateDto.AddFansNum;
-                //liveAnchorDailyTarget.CluesNum = updateDto.CluesNum;
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
-                await dalLiveAnchorDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
+                liveAnchorDailyTarget.UpdateDate = DateTime.Now;
+                await _beforeLivingZhiHuDailyTraget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
                 lasteditLiveAnchorMonthlyTarget.Id = updateDto.LiveanchorMonthlyTargetId;
@@ -778,19 +856,17 @@ namespace Fx.Amiya.Service
             try
             {
 
-                LiveAnchorDailyTarget liveAnchorDailyTarget = new LiveAnchorDailyTarget();
+                BeforeLivingXiaoHongShuDailyTarget liveAnchorDailyTarget = new BeforeLivingXiaoHongShuDailyTarget();
                 liveAnchorDailyTarget.Id = Guid.NewGuid().ToString();
-                liveAnchorDailyTarget.LiveanchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
-                liveAnchorDailyTarget.XiaoHongShuOperationEmployeeId = addDto.XiaoHongShuOperationEmployeeId;
-                liveAnchorDailyTarget.XiaoHongShuFlowInvestmentNum = addDto.XiaoHongShuFlowInvestmentNum;
-                liveAnchorDailyTarget.XiaoHongShuSendNum = addDto.XiaoHongShuSendNum;
-                liveAnchorDailyTarget.TodaySendNum = addDto.TodaySendNum;
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = addDto.XiaoHongShuOperationEmployeeId;
+                liveAnchorDailyTarget.FlowInvestmentNum = addDto.XiaoHongShuFlowInvestmentNum;
+                liveAnchorDailyTarget.SendNum = addDto.XiaoHongShuSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = addDto.FlowInvestmentNum;
-                //liveAnchorDailyTarget.AddFansNum = addDto.AddFansNum;
-                //liveAnchorDailyTarget.CluesNum = addDto.CluesNum;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
+                liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
-                await dalLiveAnchorDailyTarget.AddAsync(liveAnchorDailyTarget, true);
+                await _beforeLivingXiaoHongShuDailyTraget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
                 editLiveAnchorMonthlyTarget.Id = addDto.LiveanchorMonthlyTargetId;
@@ -819,7 +895,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var liveAnchorDailyTarget = await dalLiveAnchorDailyTarget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                var liveAnchorDailyTarget = await _beforeLivingXiaoHongShuDailyTraget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
                 if (updateDto.Id != liveAnchorDailyTarget.Id)
                 {
                     unitOfWork.RollBack();
@@ -832,25 +908,22 @@ namespace Fx.Amiya.Service
                 }
                 //先扣除原有的
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
-                editLiveAnchorMonthlyTarget.Id = liveAnchorDailyTarget.LiveanchorMonthlyTargetId;
-                editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuRelease = -liveAnchorDailyTarget.XiaoHongShuSendNum;
-                editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuFlowinvestment = -liveAnchorDailyTarget.XiaoHongShuFlowInvestmentNum;
-                editLiveAnchorMonthlyTarget.CumulativeRelease = -liveAnchorDailyTarget.TodaySendNum;
+                editLiveAnchorMonthlyTarget.Id = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
+                editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuRelease = -liveAnchorDailyTarget.SendNum;
+                editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuFlowinvestment = -liveAnchorDailyTarget.FlowInvestmentNum;
+                editLiveAnchorMonthlyTarget.CumulativeRelease = -liveAnchorDailyTarget.SendNum;
                 editLiveAnchorMonthlyTarget.CumulativeFlowInvestment = -liveAnchorDailyTarget.FlowInvestmentNum;
-                //editLiveAnchorMonthlyTarget.CumulativeCluesNum = -liveAnchorDailyTarget.CluesNum;
-                //editLiveAnchorMonthlyTarget.CumulativeAddFansNum = -liveAnchorDailyTarget.AddFansNum;
                 await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
 
-                liveAnchorDailyTarget.LiveanchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
-                liveAnchorDailyTarget.XiaoHongShuOperationEmployeeId = updateDto.XiaoHongShuOperationEmployeeId;
-                liveAnchorDailyTarget.XiaoHongShuFlowInvestmentNum = updateDto.XiaoHongShuFlowInvestmentNum;
-                liveAnchorDailyTarget.XiaoHongShuSendNum = updateDto.XiaoHongShuSendNum;
-                liveAnchorDailyTarget.TodaySendNum = updateDto.TodaySendNum;
+
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = updateDto.XiaoHongShuOperationEmployeeId;
+                liveAnchorDailyTarget.FlowInvestmentNum = updateDto.XiaoHongShuFlowInvestmentNum;
+                liveAnchorDailyTarget.SendNum = updateDto.XiaoHongShuSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = updateDto.FlowInvestmentNum;
-                //liveAnchorDailyTarget.AddFansNum = updateDto.AddFansNum;
-                //liveAnchorDailyTarget.CluesNum = updateDto.CluesNum;
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
-                await dalLiveAnchorDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
+                liveAnchorDailyTarget.UpdateDate = DateTime.Now;
+                await _beforeLivingXiaoHongShuDailyTraget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
                 lasteditLiveAnchorMonthlyTarget.Id = updateDto.LiveanchorMonthlyTargetId;
@@ -858,8 +931,6 @@ namespace Fx.Amiya.Service
                 lasteditLiveAnchorMonthlyTarget.CumulativeXiaoHongShuFlowinvestment = updateDto.XiaoHongShuFlowInvestmentNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeRelease = updateDto.TodaySendNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeFlowInvestment = updateDto.FlowInvestmentNum;
-                //editLiveAnchorMonthlyTarget.CumulativeCluesNum = updateDto.CluesNum;
-                //editLiveAnchorMonthlyTarget.CumulativeAddFansNum = updateDto.AddFansNum;
                 await _liveAnchorMonthlyTargetService.EditAsync(lasteditLiveAnchorMonthlyTarget);
                 unitOfWork.Commit();
             }
@@ -883,19 +954,17 @@ namespace Fx.Amiya.Service
             try
             {
 
-                LiveAnchorDailyTarget liveAnchorDailyTarget = new LiveAnchorDailyTarget();
+                BeforeLivingSinaWeiBoDailyTarget liveAnchorDailyTarget = new BeforeLivingSinaWeiBoDailyTarget();
                 liveAnchorDailyTarget.Id = Guid.NewGuid().ToString();
-                liveAnchorDailyTarget.LiveanchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
-                liveAnchorDailyTarget.SinaWeiBoOperationEmployeeId = addDto.SinaWeiBoOperationEmployeeId;
-                liveAnchorDailyTarget.SinaWeiBoFlowInvestmentNum = addDto.SinaWeiBoFlowInvestmentNum;
-                liveAnchorDailyTarget.SinaWeiBoSendNum = addDto.SinaWeiBoSendNum;
-                liveAnchorDailyTarget.TodaySendNum = addDto.TodaySendNum;
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = addDto.SinaWeiBoOperationEmployeeId;
+                liveAnchorDailyTarget.FlowInvestmentNum = addDto.SinaWeiBoFlowInvestmentNum;
+                liveAnchorDailyTarget.SendNum = addDto.SinaWeiBoSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = addDto.FlowInvestmentNum;
-                //liveAnchorDailyTarget.AddFansNum = addDto.AddFansNum;
-                //liveAnchorDailyTarget.CluesNum = addDto.CluesNum;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
+                liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
-                await dalLiveAnchorDailyTarget.AddAsync(liveAnchorDailyTarget, true);
+                await _beforeLivingSinaWeiBoDailyTraget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
                 editLiveAnchorMonthlyTarget.Id = addDto.LiveanchorMonthlyTargetId;
@@ -924,7 +993,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var liveAnchorDailyTarget = await dalLiveAnchorDailyTarget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                var liveAnchorDailyTarget = await _beforeLivingTikTokDailyTraget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
                 if (updateDto.Id != liveAnchorDailyTarget.Id)
                 {
                     unitOfWork.RollBack();
@@ -937,25 +1006,23 @@ namespace Fx.Amiya.Service
                 }
                 //先扣除原有的
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
-                editLiveAnchorMonthlyTarget.Id = liveAnchorDailyTarget.LiveanchorMonthlyTargetId;
-                editLiveAnchorMonthlyTarget.CumulativeSinaWeiBoRelease = -liveAnchorDailyTarget.SinaWeiBoSendNum;
-                editLiveAnchorMonthlyTarget.CumulativeSinaWeiBoFlowinvestment = -liveAnchorDailyTarget.SinaWeiBoFlowInvestmentNum;
-                editLiveAnchorMonthlyTarget.CumulativeRelease = -liveAnchorDailyTarget.TodaySendNum;
+                editLiveAnchorMonthlyTarget.Id = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
+                editLiveAnchorMonthlyTarget.CumulativeSinaWeiBoRelease = -liveAnchorDailyTarget.SendNum;
+                editLiveAnchorMonthlyTarget.CumulativeSinaWeiBoFlowinvestment = -liveAnchorDailyTarget.FlowInvestmentNum;
+                editLiveAnchorMonthlyTarget.CumulativeRelease = -liveAnchorDailyTarget.SendNum;
                 editLiveAnchorMonthlyTarget.CumulativeFlowInvestment = -liveAnchorDailyTarget.FlowInvestmentNum;
                 //editLiveAnchorMonthlyTarget.CumulativeCluesNum = -liveAnchorDailyTarget.CluesNum;
                 //editLiveAnchorMonthlyTarget.CumulativeAddFansNum = -liveAnchorDailyTarget.AddFansNum;
                 await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
 
-                liveAnchorDailyTarget.LiveanchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
-                liveAnchorDailyTarget.SinaWeiBoOperationEmployeeId = updateDto.SinaWeiBoOperationEmployeeId;
-                liveAnchorDailyTarget.SinaWeiBoFlowInvestmentNum = updateDto.SinaWeiBoFlowInvestmentNum;
-                liveAnchorDailyTarget.SinaWeiBoSendNum = updateDto.SinaWeiBoSendNum;
-                liveAnchorDailyTarget.TodaySendNum = updateDto.TodaySendNum;
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = updateDto.SinaWeiBoOperationEmployeeId;
+                liveAnchorDailyTarget.FlowInvestmentNum = updateDto.SinaWeiBoFlowInvestmentNum;
+                liveAnchorDailyTarget.SendNum = updateDto.SinaWeiBoSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = updateDto.FlowInvestmentNum;
-                //liveAnchorDailyTarget.AddFansNum = updateDto.AddFansNum;
-                //liveAnchorDailyTarget.CluesNum = updateDto.CluesNum;
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
-                await dalLiveAnchorDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
+                liveAnchorDailyTarget.UpdateDate = DateTime.Now;
+                await _beforeLivingTikTokDailyTraget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
                 lasteditLiveAnchorMonthlyTarget.Id = updateDto.LiveanchorMonthlyTargetId;
@@ -988,19 +1055,18 @@ namespace Fx.Amiya.Service
             try
             {
 
-                LiveAnchorDailyTarget liveAnchorDailyTarget = new LiveAnchorDailyTarget();
+
+                BeforeLivingVideoDailyTarget liveAnchorDailyTarget = new BeforeLivingVideoDailyTarget();
                 liveAnchorDailyTarget.Id = Guid.NewGuid().ToString();
-                liveAnchorDailyTarget.LiveanchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
-                liveAnchorDailyTarget.VideoOperationEmployeeId = addDto.VideoOperationEmployeeId;
-                liveAnchorDailyTarget.VideoFlowInvestmentNum = addDto.VideoFlowInvestmentNum;
-                liveAnchorDailyTarget.VideoSendNum = addDto.VideoSendNum;
-                liveAnchorDailyTarget.TodaySendNum = addDto.TodaySendNum;
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = addDto.VideoOperationEmployeeId;
+                liveAnchorDailyTarget.FlowInvestmentNum = addDto.VideoFlowInvestmentNum;
+                liveAnchorDailyTarget.SendNum = addDto.VideoSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = addDto.FlowInvestmentNum;
-                //liveAnchorDailyTarget.AddFansNum = addDto.AddFansNum;
-                //liveAnchorDailyTarget.CluesNum = addDto.CluesNum;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
+                liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
-                await dalLiveAnchorDailyTarget.AddAsync(liveAnchorDailyTarget, true);
+                await _beforeLivingVideoDailyTraget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
                 editLiveAnchorMonthlyTarget.Id = addDto.LiveanchorMonthlyTargetId;
@@ -1029,7 +1095,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var liveAnchorDailyTarget = await dalLiveAnchorDailyTarget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                var liveAnchorDailyTarget = await _beforeLivingVideoDailyTraget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
                 if (updateDto.Id != liveAnchorDailyTarget.Id)
                 {
                     unitOfWork.RollBack();
@@ -1042,25 +1108,23 @@ namespace Fx.Amiya.Service
                 }
                 //先扣除原有的
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
-                editLiveAnchorMonthlyTarget.Id = liveAnchorDailyTarget.LiveanchorMonthlyTargetId;
-                editLiveAnchorMonthlyTarget.CumulativeVideoRelease = -liveAnchorDailyTarget.VideoSendNum;
-                editLiveAnchorMonthlyTarget.CumulativeVideoFlowinvestment = -liveAnchorDailyTarget.VideoFlowInvestmentNum;
-                editLiveAnchorMonthlyTarget.CumulativeRelease = -liveAnchorDailyTarget.TodaySendNum;
+                editLiveAnchorMonthlyTarget.Id = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
+                editLiveAnchorMonthlyTarget.CumulativeVideoRelease = -liveAnchorDailyTarget.SendNum;
+                editLiveAnchorMonthlyTarget.CumulativeVideoFlowinvestment = -liveAnchorDailyTarget.FlowInvestmentNum;
+                editLiveAnchorMonthlyTarget.CumulativeRelease = -liveAnchorDailyTarget.SendNum;
                 editLiveAnchorMonthlyTarget.CumulativeFlowInvestment = -liveAnchorDailyTarget.FlowInvestmentNum;
                 //editLiveAnchorMonthlyTarget.CumulativeCluesNum = -liveAnchorDailyTarget.CluesNum;
                 //editLiveAnchorMonthlyTarget.CumulativeAddFansNum = -liveAnchorDailyTarget.AddFansNum;
                 await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
 
-                liveAnchorDailyTarget.LiveanchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
-                liveAnchorDailyTarget.VideoOperationEmployeeId = updateDto.VideoOperationEmployeeId;
-                liveAnchorDailyTarget.VideoFlowInvestmentNum = updateDto.VideoFlowInvestmentNum;
-                liveAnchorDailyTarget.VideoSendNum = updateDto.VideoSendNum;
-                liveAnchorDailyTarget.TodaySendNum = updateDto.TodaySendNum;
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = updateDto.VideoOperationEmployeeId;
+                liveAnchorDailyTarget.FlowInvestmentNum = updateDto.VideoFlowInvestmentNum;
+                liveAnchorDailyTarget.SendNum = updateDto.VideoSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = updateDto.FlowInvestmentNum;
-                //liveAnchorDailyTarget.AddFansNum = updateDto.AddFansNum;
-                //liveAnchorDailyTarget.CluesNum = updateDto.CluesNum;
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
-                await dalLiveAnchorDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
+                liveAnchorDailyTarget.UpdateDate = DateTime.Now;
+                await _beforeLivingVideoDailyTraget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
                 lasteditLiveAnchorMonthlyTarget.Id = updateDto.LiveanchorMonthlyTargetId;
@@ -1082,6 +1146,7 @@ namespace Fx.Amiya.Service
         #endregion
 
         #endregion
+
         #region 【直播中】
         public async Task LivingAddAsync(LivingAddLiveAnchorDailyTargetDto addDto)
         {
@@ -1089,18 +1154,18 @@ namespace Fx.Amiya.Service
             try
             {
 
-                LiveAnchorDailyTarget liveAnchorDailyTarget = new LiveAnchorDailyTarget();
+                LivingDailyTarget liveAnchorDailyTarget = new LivingDailyTarget();
                 liveAnchorDailyTarget.Id = Guid.NewGuid().ToString();
-                liveAnchorDailyTarget.LiveanchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
-                liveAnchorDailyTarget.LivingTrackingEmployeeId = addDto.LivingTrackingEmployeeId;
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = addDto.LivingTrackingEmployeeId;
                 liveAnchorDailyTarget.LivingRoomFlowInvestmentNum = addDto.LivingRoomFlowInvestmentNum;
                 liveAnchorDailyTarget.Consultation = addDto.Consultation;
                 liveAnchorDailyTarget.Consultation2 = addDto.Consultation2;
                 liveAnchorDailyTarget.CargoSettlementCommission = addDto.CargoSettlementCommission;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
+                liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
-                liveAnchorDailyTarget.LivingUpdateDate = DateTime.Now;
-                await dalLiveAnchorDailyTarget.AddAsync(liveAnchorDailyTarget, true);
+                await _livingDailyTarget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
                 editLiveAnchorMonthlyTarget.Id = addDto.LiveanchorMonthlyTargetId;
@@ -1123,7 +1188,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var liveAnchorDailyTarget = await dalLiveAnchorDailyTarget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                var liveAnchorDailyTarget = await _livingDailyTarget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
                 if (updateDto.Id != liveAnchorDailyTarget.Id)
                 {
                     unitOfWork.RollBack();
@@ -1136,22 +1201,22 @@ namespace Fx.Amiya.Service
                 }
                 //先扣除原有的
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
-                editLiveAnchorMonthlyTarget.Id = liveAnchorDailyTarget.LiveanchorMonthlyTargetId;
+                editLiveAnchorMonthlyTarget.Id = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
                 editLiveAnchorMonthlyTarget.LivingRoomCumulativeFlowInvestment = -liveAnchorDailyTarget.LivingRoomFlowInvestmentNum;
                 editLiveAnchorMonthlyTarget.CumulativeConsultation = -liveAnchorDailyTarget.Consultation;
                 editLiveAnchorMonthlyTarget.CumulativeConsultation2 = -liveAnchorDailyTarget.Consultation2;
                 editLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = -liveAnchorDailyTarget.CargoSettlementCommission;
                 await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
 
-                liveAnchorDailyTarget.LiveanchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
-                liveAnchorDailyTarget.LivingTrackingEmployeeId = updateDto.LivingTrackingEmployeeId;
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = updateDto.LivingTrackingEmployeeId;
                 liveAnchorDailyTarget.LivingRoomFlowInvestmentNum = updateDto.LivingRoomFlowInvestmentNum;
                 liveAnchorDailyTarget.Consultation = updateDto.Consultation;
                 liveAnchorDailyTarget.Consultation2 = updateDto.Consultation2;
                 liveAnchorDailyTarget.CargoSettlementCommission = updateDto.CargoSettlementCommission;
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
-                liveAnchorDailyTarget.LivingUpdateDate = DateTime.Now;
-                await dalLiveAnchorDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
+                liveAnchorDailyTarget.UpdateDate = DateTime.Now;
+                await _livingDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 //添加修改后的
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
@@ -1360,7 +1425,7 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuRelease = -liveAnchorDailyTarget.XiaoHongShuSendNum;
                 editLiveAnchorMonthlyTarget.CumulativeVideoRelease = -liveAnchorDailyTarget.VideoSendNum;
 
-                
+
                 editLiveAnchorMonthlyTarget.CumulativeZhihuFlowinvestment = -liveAnchorDailyTarget.ZhihuFlowInvestmentNum;
                 editLiveAnchorMonthlyTarget.CumulativeSinaWeiBoFlowinvestment = -liveAnchorDailyTarget.SinaWeiBoFlowInvestmentNum;
                 editLiveAnchorMonthlyTarget.CumulativeTikTokFlowinvestment = -liveAnchorDailyTarget.TikTokFlowInvestmentNum;

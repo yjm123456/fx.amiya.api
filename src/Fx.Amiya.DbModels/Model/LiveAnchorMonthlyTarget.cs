@@ -569,5 +569,12 @@ namespace Fx.Amiya.DbModels.Model
         public LiveAnchor LiveAnchor { get; set; }
 
         public List<LiveAnchorDailyTarget> LiveAnchorDailyTargets { get; set; }
+
+        public List<BeforeLivingTikTokDailyTarget> beforeLivingTikTokDailyTragets { get; set; }
+        public List<BeforeLivingXiaoHongShuDailyTarget> beforeLivingXiaoHongShuDailyTraget { get; set; }
+        public List<BeforeLivingZhiHuDailyTarget> beforeLivingZhiHuDailyTraget { get; set; }
+        public List<BeforeLivingVideoDailyTarget> beforeLivingVideoDailyTarget { get; set; }
+        public List<BeforeLivingSinaWeiBoDailyTarget> beforeLivingSinaWeiBoDailyTarget { get; set; }
+        public List<LivingDailyTarget> livingDailyTarget { get; set; }
     }
 }
