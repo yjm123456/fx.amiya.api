@@ -44,7 +44,7 @@ namespace Fx.Amiya.IService
         Task AfterLivingUpdateAsync(AfterLivingUpdateLiveAnchorDailyTargetDto updateDto);
 
         Task<LiveAnchorDailyTargetDto> GetLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate);
-        Task<LiveAnchorDailyTargetDto> GetByIdAsync(string id);
+        Task<LiveAnchorDailyTargetDto> GetByIdAndTypeAsync(string id, int type);
         Task<LiveAnchorDailyTargetDto> GetByMonthTargetAsync(string monthTargetId);
         Task UpdateAsync(UpdateLiveAnchorDailyTargetDto updateDto);
         Task DeleteAsync(string id);

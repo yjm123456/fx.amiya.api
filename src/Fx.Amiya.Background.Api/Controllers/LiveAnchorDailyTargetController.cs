@@ -148,14 +148,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 根据id获取主播日运营目标情况
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">编号</param>
+        /// <param name="type">直播前类型（1：抖音；2：知乎；3：微博；4：小红书；5：视频号；6：直播中；7：直播后）</param>
         /// <returns></returns>
-        [HttpGet("byId/{id}")]
-        public async Task<ResultData<LiveAnchorDailyTargetByIdVo>> GetByIdAsync(string id)
+        [HttpGet("getByIdAndType")]
+        public async Task<ResultData<LiveAnchorDailyTargetByIdVo>> GetByIdAndTypeAsync(string id,int type)
         {
             try
             {
-                var liveAnchorDailyTarget = await _liveAnchorDailyTargetService.GetByIdAsync(id);
+                var liveAnchorDailyTarget = await _liveAnchorDailyTargetService.GetByIdAndTypeAsync(id, type);
                 LiveAnchorDailyTargetByIdVo liveAnchorDailyTargetVo = new LiveAnchorDailyTargetByIdVo();
                 liveAnchorDailyTargetVo.Id = liveAnchorDailyTarget.Id;
                 liveAnchorDailyTargetVo.LiveAnchorId = liveAnchorDailyTarget.LiveAnchorId;
