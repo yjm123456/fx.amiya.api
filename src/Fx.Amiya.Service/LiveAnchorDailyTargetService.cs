@@ -666,6 +666,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.SendNum = addDto.TikTokSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = addDto.FlowInvestmentNum;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
+                liveAnchorDailyTarget.Valid = true;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
                 await _beforeLivingTikTokDailyTraget.AddAsync(liveAnchorDailyTarget, true);
@@ -764,6 +765,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.FlowInvestmentNum = addDto.FlowInvestmentNum;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
+                liveAnchorDailyTarget.Valid = true;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
                 await _beforeLivingZhiHuDailyTraget.AddAsync(liveAnchorDailyTarget, true);
 
@@ -864,6 +866,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.SendNum = addDto.XiaoHongShuSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = addDto.FlowInvestmentNum;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
+                liveAnchorDailyTarget.Valid = true;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
                 await _beforeLivingXiaoHongShuDailyTraget.AddAsync(liveAnchorDailyTarget, true);
@@ -962,6 +965,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.SendNum = addDto.SinaWeiBoSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = addDto.FlowInvestmentNum;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
+                liveAnchorDailyTarget.Valid = true;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
                 await _beforeLivingSinaWeiBoDailyTraget.AddAsync(liveAnchorDailyTarget, true);
@@ -1064,6 +1068,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.SendNum = addDto.VideoSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = addDto.FlowInvestmentNum;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
+                liveAnchorDailyTarget.Valid = true;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
                 await _beforeLivingVideoDailyTraget.AddAsync(liveAnchorDailyTarget, true);
@@ -1163,6 +1168,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.Consultation2 = addDto.Consultation2;
                 liveAnchorDailyTarget.CargoSettlementCommission = addDto.CargoSettlementCommission;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
+                liveAnchorDailyTarget.Valid = true;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
                 await _livingDailyTarget.AddAsync(liveAnchorDailyTarget, true);
