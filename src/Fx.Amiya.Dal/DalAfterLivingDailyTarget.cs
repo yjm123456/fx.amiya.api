@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Dal
 {
-    public class DalLiveAnchorDailyTarget : DalEFCore<AfterLiveAnchorDailyTarget>, IDalLiveAnchorDailyTarget
+    public class DalAfterLivingDailyTarget : DalEFCore<AfterLivingDailyTarget>, IDalAfterLivingDailyTarget
     {
-        public DalLiveAnchorDailyTarget(AmiyaDbContext dbContext) : base(dbContext)
+        public DalAfterLivingDailyTarget(AmiyaDbContext dbContext) : base(dbContext)
         {
         }
     }

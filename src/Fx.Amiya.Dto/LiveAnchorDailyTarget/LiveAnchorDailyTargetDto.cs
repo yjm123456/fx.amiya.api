@@ -282,7 +282,7 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// <summary>
         /// 抖音数据更新时间
         /// </summary>
-        public DateTime? TikTokUpdateDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
         /// <summary>
         /// 直播中数据更新时间
         /// </summary>

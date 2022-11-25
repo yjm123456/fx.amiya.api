@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.DbModels.Model
 {
-    public class LiveAnchorDailyTarget
+    public class AfterLiveAnchorDailyTarget
     {
         /// <summary>
         /// 编号

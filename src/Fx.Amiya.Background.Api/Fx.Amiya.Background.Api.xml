@@ -3784,8 +3784,40 @@
             </summary>
             <param name="startDate">开始时间</param>
             <param name="endDate">结束时间</param>
-            <param name="operationEmpId">运营人员id</param>
-            <param name="netWorkConEmpId">网咨人员id</param>
+            <param name="liveAnchorId">主播ip账户id</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.GetBeforeListWithPageAsync(System.DateTime,System.DateTime,System.Int32,System.Nullable{System.Int32},System.Int32,System.Int32)">
+            <summary>
+            获取直播前主播日运营目标情况
+            </summary>
+            <param name="startDate">开始时间</param>
+            <param name="endDate">结束时间</param>
+            <param name="type">直播前类型</param>
+            <param name="liveAnchorId">主播ip账户id</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.GetLivingListWithPageAsync(System.DateTime,System.DateTime,System.Nullable{System.Int32},System.Int32,System.Int32)">
+            <summary>
+            获取直播中主播日运营目标情况
+            </summary>
+            <param name="startDate">开始时间</param>
+            <param name="endDate">结束时间</param>
+            <param name="liveAnchorId">主播ip账户id</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.LiveAnchorDailyTargetController.GetAfterLivingListWithPageAsync(System.DateTime,System.DateTime,System.Nullable{System.Int32},System.Int32,System.Int32)">
+            <summary>
+            获取直播后主播日运营目标情况
+            </summary>
+            <param name="startDate">开始时间</param>
+            <param name="endDate">结束时间</param>
             <param name="liveAnchorId">主播ip账户id</param>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
@@ -17200,6 +17232,186 @@
             填报日期
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.LiveAnchorMonthlyTargetId">
+            <summary>
+            主播月目标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.LiveAnchor">
+            <summary>
+            主播
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.OperationEmpId">
+            <summary>
+            网咨人员id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.OperationEmpName">
+            <summary>
+            网咨人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.AddWechatNum">
+            <summary>
+            今日加V量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.ConsultationCardConsumed">
+            <summary>
+            今日99消耗卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.ConsultationCardConsumed2">
+            <summary>
+            今日199消耗卡数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.ActivateHistoricalConsultation">
+            <summary>
+            今日激活历史面诊数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.SendOrderNum">
+            <summary>
+            今日派单量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.NewVisitNum">
+            <summary>
+            今日新诊上门人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.SubsequentVisitNum">
+            <summary>
+            今日复诊上门人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.OldCustomerVisitNum">
+            <summary>
+            今日老客上门人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.VisitNum">
+            <summary>
+            今日上门人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.NewDealNum">
+            <summary>
+            今日新客成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.SubsequentDealNum">
+            <summary>
+            今日复诊成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.OldCustomerDealNum">
+            <summary>
+            今日老客成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.DealNum">
+            <summary>
+            今日成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.NewPerformanceNum">
+            <summary>
+            今日新诊业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.SubsequentPerformanceNum">
+            <summary>
+            今日复诊业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.NewCustomerPerformanceCountNum">
+            <summary>
+            今日总新客业绩(新诊业绩+复诊业绩)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.OldCustomerPerformanceNum">
+            <summary>
+            今日老客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.PerformanceNum">
+            <summary>
+            今日业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.MinivanRefund">
+            <summary>
+            今日小黄车退单量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.MiniVanBadReviews">
+            <summary>
+            今日小黄车差评量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.AfterLivingDailyTargetVo.RecordDate">
+            <summary>
+            填报时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingDailyTargetVo.LiveAnchorMonthlyTargetId">
+            <summary>
+            主播月目标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingDailyTargetVo.LiveAnchor">
+            <summary>
+            主播
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingDailyTargetVo.OperationEmpId">
+            <summary>
+            运营人员id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingDailyTargetVo.OperationEmpName">
+            <summary>
+            运营人员名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingDailyTargetVo.FlowInvestmentNum">
+            <summary>
+            今日投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingDailyTargetVo.SendNum">
+            <summary>
+            今日发布量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingDailyTargetVo.RecordDate">
+            <summary>
+            填报日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingDailyTargetVo.AddWechatNum">
+            <summary>
+            今日加V量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingDailyTargetVo.SendOrderNum">
+            <summary>
+            派单量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingDailyTargetVo.DealNum">
+            <summary>
+            成交人数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.BeforeLivingDailyTargetVo.PerformanceNum">
+            <summary>
+            今日业绩
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetByIdVo.Id">
             <summary>
             编号
@@ -17705,7 +17917,7 @@
             今日小黄车差评量
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.TikTokUpdateDate">
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.UpdateDate">
             <summary>
             抖音数据更新时间
             </summary>
@@ -17718,6 +17930,51 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LiveAnchorDailyTargetVo.AfterLivingUpdateDate">
             <summary>
             直播后数据更新时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingDailyTargetVo.LiveAnchorMonthlyTargetId">
+            <summary>
+            主播月目标id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingDailyTargetVo.LiveAnchor">
+            <summary>
+            主播
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingDailyTargetVo.OperationEmpId">
+            <summary>
+            直播间人员id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingDailyTargetVo.OperationEmpName">
+            <summary>
+            直播间人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingDailyTargetVo.LivingRoomFlowInvestmentNum">
+            <summary>
+            直播间投流费用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingDailyTargetVo.Consultation">
+            <summary>
+            照片面诊卡下单数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingDailyTargetVo.Consultation2">
+            <summary>
+            视频面诊卡下单数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingDailyTargetVo.CargoSettlementCommission">
+            <summary>
+            带货结算佣金
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.LivingDailyTargetVo.RecordDate">
+            <summary>
+            填报时间
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget.UpdateLiveAnchorDailyTargetVo.Id">

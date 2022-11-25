@@ -1399,6 +1399,50 @@ ENGINE=InnoDB;
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
+    --直播后
+    CREATE TABLE `amiyadb`.`tbl_after_living_daily_target` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `live_anchor_monthly_target_id` VARCHAR(50) NOT NULL,
+  `operation_empId` INT UNSIGNED NOT NULL,
+  `record_date` DATETIME NULL,
+  `consultation_card_consumed` INT NOT NULL,
+  `consultation_card_consumed2` INT NOT NULL,
+  `activate_historical_consultation` INT NOT NULL,
+  `add_wechat_num` INT NOT NULL,
+  `send_order_num` INT NOT NULL,
+  `new_visit_num` INT NOT NULL,
+  `subsequent_visitNum` INT NOT NULL,
+  `old_customer_visit_num` INT NOT NULL,
+  `visit_num` INT NOT NULL,
+  `new_deal_num` INT NOT NULL,
+  `subsequent_deal_num` INT NOT NULL,
+  `old_customer_deal_num` INT NOT NULL,
+  `deal_num` INT NOT NULL,
+  `new_performance_num` DECIMAL(12,2) NOT NULL,
+  `subsequent_performance_num` DECIMAL(12,2) NOT NULL,
+  `new_customer_performance_count_num` DECIMAL(12,2) NOT NULL,
+  `old_customer_performance_num` DECIMAL(12,2) NOT NULL,
+  `performance_num` DECIMAL(12,2) NOT NULL,
+  `mini_van_refund` INT NOT NULL,
+  `mini_van_bad_reviews` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_after_living_empInfo_idx` (`operation_empId` ASC) VISIBLE,
+  INDEX `fk_after_living_monthly_target_idx` (`live_anchor_monthly_target_id` ASC) VISIBLE,
+  CONSTRAINT `fk_after_living_empInfo`
+    FOREIGN KEY (`operation_empId`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_after_living_monthly_target`
+    FOREIGN KEY (`live_anchor_monthly_target_id`)
+    REFERENCES `amiyadb`.`tbl_liveanchor_monthly_target` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
 -----------------------------------------------余建明 2022/11/16 END--------------------------------------------
 
 

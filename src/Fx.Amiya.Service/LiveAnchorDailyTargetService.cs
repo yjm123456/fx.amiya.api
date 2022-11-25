@@ -23,6 +23,7 @@ namespace Fx.Amiya.Service
         private IDalBeforeLivingXiaoHongShuDailyTarget _beforeLivingXiaoHongShuDailyTraget;
         private IDalBeforeLivingZhiHuDailyTarget _beforeLivingZhiHuDailyTraget;
         private IDalBeforeLivingVideoDailyTarget _beforeLivingVideoDailyTraget;
+        private IDalAfterLivingDailyTarget _afterLivingDailyTarget;
         private IDalBeforeLivingSinaWeiBoDailyTarget _beforeLivingSinaWeiBoDailyTraget;
         private IDalLivingDailyTarget _livingDailyTarget;
         private IUnitOfWork unitOfWork;
@@ -38,6 +39,7 @@ namespace Fx.Amiya.Service
             IDalBeforeLivingVideoDailyTarget beforeLivingVideoDailyTraget,
             IDalBeforeLivingSinaWeiBoDailyTarget beforeLivingSinaWeiBoDailyTraget,
             IDalLivingDailyTarget livingDailyTarget,
+            IDalAfterLivingDailyTarget afterLivingDailyTarget,
             ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService,
             IAmiyaEmployeeService amiyaEmployeeService)
         {
@@ -48,6 +50,7 @@ namespace Fx.Amiya.Service
             _beforeLivingTikTokDailyTraget = beforeLivingTikTokDailyTraget;
             _beforeLivingXiaoHongShuDailyTraget = beforeLivingXiaoHongShuDailyTraget;
             _beforeLivingSinaWeiBoDailyTraget = beforeLivingSinaWeiBoDailyTraget;
+            _afterLivingDailyTarget = afterLivingDailyTarget;
             _beforeLivingVideoDailyTraget = beforeLivingVideoDailyTraget;
             _beforeLivingZhiHuDailyTraget = beforeLivingZhiHuDailyTraget;
             _livingDailyTarget = livingDailyTarget;
@@ -92,7 +95,7 @@ namespace Fx.Amiya.Service
                                       where d.RecordDate >= startDate && d.RecordDate < endDate
                                       && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
                                       && d.Valid
-                                      select new BeforeLivingTikTokDailyTargetDto
+                                      select new BeforeLivingDailyTargetDto
                                       {
                                           Id = d.Id,
                                           LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
@@ -111,7 +114,7 @@ namespace Fx.Amiya.Service
                                            where d.RecordDate >= startDate && d.RecordDate < endDate
                                            && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
                                            && d.Valid
-                                           select new BeforeLivingXiaoHongShuDailyTargetDto
+                                           select new BeforeLivingDailyTargetDto
                                            {
                                                Id = d.Id,
                                                LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
@@ -130,7 +133,7 @@ namespace Fx.Amiya.Service
                                      where d.RecordDate >= startDate && d.RecordDate < endDate
                                      && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
                                      && d.Valid
-                                     select new BeforeLivingVideoDailyTargetDto
+                                     select new BeforeLivingDailyTargetDto
                                      {
                                          Id = d.Id,
                                          LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
@@ -149,7 +152,7 @@ namespace Fx.Amiya.Service
                                      where d.RecordDate >= startDate && d.RecordDate < endDate
                                      && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
                                      && d.Valid
-                                     select new BeforeLivingZhiHuDailyTargetDto
+                                     select new BeforeLivingDailyTargetDto
                                      {
                                          Id = d.Id,
                                          LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
@@ -168,7 +171,7 @@ namespace Fx.Amiya.Service
                                          where d.RecordDate >= startDate && d.RecordDate < endDate
                                          && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
                                          && d.Valid
-                                         select new BeforeLivingSinaWeiBoDailyTargetDto
+                                         select new BeforeLivingDailyTargetDto
                                          {
                                              Id = d.Id,
                                              LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
@@ -202,7 +205,46 @@ namespace Fx.Amiya.Service
                                           Consultation = d.Consultation,
                                           Consultation2 = d.Consultation2,
                                       };
+
                 var livingDailyInfoList = await livingDailyInfo.ToListAsync();
+
+                var afterLivingDailyInfo = from d in _afterLivingDailyTarget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                                      where d.RecordDate >= startDate && d.RecordDate < endDate
+                                      && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                      && d.Valid
+                                      select new AfterLivingDailyTargetDto
+                                      {
+                                          Id = d.Id,
+                                          LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
+                                          LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                          CreateDate = d.CreateDate,
+                                          UpdateDate = d.UpdateDate,
+                                          RecordDate = d.RecordDate,
+                                          OperationEmpId = d.OperationEmpId,
+                                          OperationEmpName = d.AmiyaEmployee.Name,
+                                          AddWechatNum = d.AddWechatNum,
+                                          ConsultationCardConsumed = d.ConsultationCardConsumed,
+                                          ConsultationCardConsumed2 = d.ConsultationCardConsumed2,
+                                          ActivateHistoricalConsultation = d.ActivateHistoricalConsultation,
+                                          SendOrderNum = d.SendOrderNum,
+                                          NewVisitNum = d.NewVisitNum,
+                                          SubsequentVisitNum = d.SubsequentVisitNum,
+                                          OldCustomerVisitNum = d.OldCustomerVisitNum,
+                                          VisitNum = d.VisitNum,
+                                          NewDealNum = d.NewDealNum,
+                                          SubsequentDealNum = d.SubsequentDealNum,
+                                          OldCustomerDealNum = d.OldCustomerDealNum,
+                                          DealNum = d.DealNum,
+                                          NewPerformanceNum = d.NewPerformanceNum,
+                                          SubsequentPerformanceNum = d.SubsequentPerformanceNum,
+                                          NewCustomerPerformanceCountNum = d.NewCustomerPerformanceCountNum,
+                                          OldCustomerPerformanceNum = d.OldCustomerPerformanceNum,
+                                          PerformanceNum = d.PerformanceNum,
+                                          MinivanRefund = d.MinivanRefund,
+                                          MiniVanBadReviews = d.MiniVanBadReviews,
+                                      };
+
+                var afterLivingDailyInfoList = await afterLivingDailyInfo.ToListAsync();
 
                 #endregion
 
@@ -220,7 +262,7 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.TikTokOperationEmployeeName = x.OperationEmpName;
                     liveAnchorDailyTargetDto.TikTokSendNum = x.SendNum;
                     liveAnchorDailyTargetDto.TikTokFlowInvestmentNum = x.FlowInvestmentNum;
-                    liveAnchorDailyTargetDto.TikTokUpdateDate = x.UpdateDate;
+                    liveAnchorDailyTargetDto.UpdateDate = x.UpdateDate;
 
                     ///小红书
                     var xiaohongshuThisDayDataInfo = xiaohongshuDailyInfoList.Where(k => k.RecordDate == x.RecordDate && k.LiveAnchorMonthlyTargetId == x.LiveAnchorMonthlyTargetId).FirstOrDefault();
@@ -300,6 +342,60 @@ namespace Fx.Amiya.Service
                         liveAnchorDailyTargetDto.Consultation = livingThisDayDataInfo.Consultation;
                     }
 
+                    ///直播后
+                    var afterLivingThisDayDataInfo = afterLivingDailyInfoList.Where(k => k.RecordDate == x.RecordDate && k.LiveAnchorMonthlyTargetId == x.LiveAnchorMonthlyTargetId).FirstOrDefault();
+                    if (afterLivingThisDayDataInfo == null)
+                    {
+                        liveAnchorDailyTargetDto.NetWorkConsultingEmployeeName = "未填写";
+                        liveAnchorDailyTargetDto.AddWechatNum = 0;
+                        liveAnchorDailyTargetDto.ConsultationCardConsumed = 0;
+                        liveAnchorDailyTargetDto.ConsultationCardConsumed2 = 0;
+                        liveAnchorDailyTargetDto.ActivateHistoricalConsultation = 0;
+                        liveAnchorDailyTargetDto.SendOrderNum = 0;
+                        liveAnchorDailyTargetDto.NewVisitNum = 0;
+                        liveAnchorDailyTargetDto.SubsequentVisitNum = 0;
+                        liveAnchorDailyTargetDto.OldCustomerVisitNum = 0;
+                        liveAnchorDailyTargetDto.VisitNum = 0;
+                        liveAnchorDailyTargetDto.NewDealNum = 0;
+                        liveAnchorDailyTargetDto.SubsequentDealNum = 0;
+                        liveAnchorDailyTargetDto.OldCustomerDealNum = 0;
+                        liveAnchorDailyTargetDto.DealNum = 0;
+                        liveAnchorDailyTargetDto.NewPerformanceNum = 0;
+                        liveAnchorDailyTargetDto.SubsequentPerformanceNum = 0;
+                        liveAnchorDailyTargetDto.NewCustomerPerformanceCountNum = 0;
+                        liveAnchorDailyTargetDto.OldCustomerPerformanceNum = 0;
+                        liveAnchorDailyTargetDto.PerformanceNum = 0;
+                        liveAnchorDailyTargetDto.MinivanRefund = 0;
+                        liveAnchorDailyTargetDto.MiniVanBadReviews = 0;
+                    }
+                    else
+                    {
+                        liveAnchorDailyTargetDto.NetWorkConsultingEmployeeName = afterLivingThisDayDataInfo.OperationEmpName;
+                        liveAnchorDailyTargetDto.AddWechatNum = afterLivingThisDayDataInfo.AddWechatNum;
+                        liveAnchorDailyTargetDto.ConsultationCardConsumed = afterLivingThisDayDataInfo.ConsultationCardConsumed;
+                        liveAnchorDailyTargetDto.ConsultationCardConsumed2 = afterLivingThisDayDataInfo.ConsultationCardConsumed2;
+                        liveAnchorDailyTargetDto.ActivateHistoricalConsultation = afterLivingThisDayDataInfo.ActivateHistoricalConsultation;
+                        liveAnchorDailyTargetDto.SendOrderNum = afterLivingThisDayDataInfo.SendOrderNum;
+                        liveAnchorDailyTargetDto.NewVisitNum = afterLivingThisDayDataInfo.NewVisitNum;
+                        liveAnchorDailyTargetDto.SubsequentVisitNum = afterLivingThisDayDataInfo.SubsequentVisitNum;
+                        liveAnchorDailyTargetDto.OldCustomerVisitNum = afterLivingThisDayDataInfo.OldCustomerVisitNum;
+                        liveAnchorDailyTargetDto.VisitNum = afterLivingThisDayDataInfo.VisitNum;
+                        liveAnchorDailyTargetDto.NewDealNum = afterLivingThisDayDataInfo.NewDealNum;
+                        liveAnchorDailyTargetDto.SubsequentDealNum = afterLivingThisDayDataInfo.SubsequentDealNum;
+                        liveAnchorDailyTargetDto.OldCustomerDealNum = afterLivingThisDayDataInfo.OldCustomerDealNum;
+                        liveAnchorDailyTargetDto.DealNum = afterLivingThisDayDataInfo.DealNum;
+                        liveAnchorDailyTargetDto.NewPerformanceNum = afterLivingThisDayDataInfo.NewPerformanceNum;
+                        liveAnchorDailyTargetDto.SubsequentPerformanceNum = afterLivingThisDayDataInfo.SubsequentPerformanceNum;
+                        liveAnchorDailyTargetDto.NewCustomerPerformanceCountNum = afterLivingThisDayDataInfo.NewCustomerPerformanceCountNum;
+                        liveAnchorDailyTargetDto.OldCustomerPerformanceNum = afterLivingThisDayDataInfo.OldCustomerPerformanceNum;
+                        liveAnchorDailyTargetDto.PerformanceNum = afterLivingThisDayDataInfo.PerformanceNum;
+                        liveAnchorDailyTargetDto.MinivanRefund = afterLivingThisDayDataInfo.MinivanRefund;
+                        liveAnchorDailyTargetDto.MiniVanBadReviews = afterLivingThisDayDataInfo.MiniVanBadReviews;
+
+
+                    }
+
+
                     resultList.Add(liveAnchorDailyTargetDto);
                 }
 
@@ -314,6 +410,318 @@ namespace Fx.Amiya.Service
             }
 
         }
+
+
+
+        /// <summary>
+        /// 获取直播前主播日运营报表数据
+        /// </summary>
+        /// <param name="day">日期</param>
+        /// <param name="operationEmpId">运营人员id</param>
+        /// <param name="netWorkConEmpId">网咨人员id</param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<BeforeLivingDailyTargetDto>> GetBeforeListWithPageAsync(DateTime startDate, DateTime endDate, int type, int? liveAnchorId, int pageNum, int pageSize, int employeeId)
+        {
+            try
+            {
+                List<int> liveAnchorIds = new List<int>();
+                if (liveAnchorId.HasValue)
+                {
+                    liveAnchorIds.Add(liveAnchorId.Value);
+                }
+                else
+                {
+                    var empInfo = await _amiyaEmployeeService.GetByIdAsync(employeeId);
+                    if (empInfo.PositionId == 19)
+                    {
+                        var bindLiveAnchorInfo = await employeeBindLiveAnchorService.GetByEmpIdAsync(employeeId);
+                        foreach (var x in bindLiveAnchorInfo)
+                        {
+                            liveAnchorIds.Add(x.LiveAnchorId);
+                        }
+                    }
+                }
+                endDate = endDate.AddDays(1);
+                List<BeforeLivingDailyTargetDto> BeforeLivingDailyTargetDtoList = new List<BeforeLivingDailyTargetDto>();
+                #region 【数据获取】
+                if (type == 1)
+                {
+                    var tikTokDailyInfo = from d in _beforeLivingTikTokDailyTraget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                                          where d.RecordDate >= startDate && d.RecordDate < endDate
+                                          && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                          && d.Valid
+                                          select new BeforeLivingDailyTargetDto
+                                          {
+                                              Id = d.Id,
+                                              LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
+                                              LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                              CreateDate = d.CreateDate,
+                                              UpdateDate = d.UpdateDate,
+                                              RecordDate = d.RecordDate,
+                                              OperationEmpId = d.OperationEmpId,
+                                              OperationEmpName = d.AmiyaEmployee.Name,
+                                              FlowInvestmentNum = d.FlowInvestmentNum,
+                                              SendNum = d.SendNum,
+                                          };
+                    BeforeLivingDailyTargetDtoList = await tikTokDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
+                }
+                if (type == 2)
+                {
+                    var zhihuDailyInfo = from d in _beforeLivingZhiHuDailyTraget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                                         where d.RecordDate >= startDate && d.RecordDate < endDate
+                                         && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                         && d.Valid
+                                         select new BeforeLivingDailyTargetDto
+                                         {
+                                             Id = d.Id,
+                                             LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
+                                             LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                             CreateDate = d.CreateDate,
+                                             UpdateDate = d.UpdateDate,
+                                             RecordDate = d.RecordDate,
+                                             OperationEmpId = d.OperationEmpId,
+                                             OperationEmpName = d.AmiyaEmployee.Name,
+                                             FlowInvestmentNum = d.FlowInvestmentNum,
+                                             SendNum = d.SendNum,
+                                         };
+                    BeforeLivingDailyTargetDtoList = await zhihuDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
+                }
+
+                if (type == 3)
+                {
+                    var sinaWeiBoDailyInfo = from d in _beforeLivingSinaWeiBoDailyTraget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                                             where d.RecordDate >= startDate && d.RecordDate < endDate
+                                             && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                             && d.Valid
+                                             select new BeforeLivingDailyTargetDto
+                                             {
+                                                 Id = d.Id,
+                                                 LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
+                                                 LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                                 CreateDate = d.CreateDate,
+                                                 UpdateDate = d.UpdateDate,
+                                                 RecordDate = d.RecordDate,
+                                                 OperationEmpId = d.OperationEmpId,
+                                                 OperationEmpName = d.AmiyaEmployee.Name,
+                                                 FlowInvestmentNum = d.FlowInvestmentNum,
+                                                 SendNum = d.SendNum,
+                                             };
+                    BeforeLivingDailyTargetDtoList = await sinaWeiBoDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
+                }
+
+
+                if (type == 4)
+                {
+                    var xiaohongshuDailyInfo = from d in _beforeLivingXiaoHongShuDailyTraget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                                               where d.RecordDate >= startDate && d.RecordDate < endDate
+                                               && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                               && d.Valid
+                                               select new BeforeLivingDailyTargetDto
+                                               {
+                                                   Id = d.Id,
+                                                   LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
+                                                   LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                                   CreateDate = d.CreateDate,
+                                                   UpdateDate = d.UpdateDate,
+                                                   RecordDate = d.RecordDate,
+                                                   OperationEmpId = d.OperationEmpId,
+                                                   OperationEmpName = d.AmiyaEmployee.Name,
+                                                   FlowInvestmentNum = d.FlowInvestmentNum,
+                                                   SendNum = d.SendNum,
+                                               };
+                    BeforeLivingDailyTargetDtoList = await xiaohongshuDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
+                }
+                if (type == 5)
+                {
+
+                    var videoDailyInfo = from d in _beforeLivingVideoDailyTraget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                                         where d.RecordDate >= startDate && d.RecordDate < endDate
+                                         && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                         && d.Valid
+                                         select new BeforeLivingDailyTargetDto
+                                         {
+                                             Id = d.Id,
+                                             LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
+                                             LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                             CreateDate = d.CreateDate,
+                                             UpdateDate = d.UpdateDate,
+                                             RecordDate = d.RecordDate,
+                                             OperationEmpId = d.OperationEmpId,
+                                             OperationEmpName = d.AmiyaEmployee.Name,
+                                             FlowInvestmentNum = d.FlowInvestmentNum,
+                                             SendNum = d.SendNum,
+                                         };
+                    BeforeLivingDailyTargetDtoList = await videoDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
+                }
+                #endregion
+
+                FxPageInfo<BeforeLivingDailyTargetDto> liveAnchorDailyTargetPageInfo = new FxPageInfo<BeforeLivingDailyTargetDto>();
+                liveAnchorDailyTargetPageInfo.TotalCount = BeforeLivingDailyTargetDtoList.Count();
+                liveAnchorDailyTargetPageInfo.List = BeforeLivingDailyTargetDtoList.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+                return liveAnchorDailyTargetPageInfo;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+        /// <summary>
+        /// 获取直播中主播日运营报表数据
+        /// </summary>
+        /// <param name="day">日期</param>
+        /// <param name="operationEmpId">运营人员id</param>
+        /// <param name="netWorkConEmpId">网咨人员id</param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<LivingDailyTargetDto>> GetLivingListWithPageAsync(DateTime startDate, DateTime endDate, int? liveAnchorId, int pageNum, int pageSize, int employeeId)
+        {
+            try
+            {
+                List<int> liveAnchorIds = new List<int>();
+                if (liveAnchorId.HasValue)
+                {
+                    liveAnchorIds.Add(liveAnchorId.Value);
+                }
+                else
+                {
+                    var empInfo = await _amiyaEmployeeService.GetByIdAsync(employeeId);
+                    if (empInfo.PositionId == 19)
+                    {
+                        var bindLiveAnchorInfo = await employeeBindLiveAnchorService.GetByEmpIdAsync(employeeId);
+                        foreach (var x in bindLiveAnchorInfo)
+                        {
+                            liveAnchorIds.Add(x.LiveAnchorId);
+                        }
+                    }
+                }
+                endDate = endDate.AddDays(1);
+                #region 【数据获取】
+                var tikTokDailyInfo = from d in _livingDailyTarget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                                      where d.RecordDate >= startDate && d.RecordDate < endDate
+                                      && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                      && d.Valid
+                                      select new LivingDailyTargetDto
+                                      {
+                                          Id = d.Id,
+                                          LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
+                                          LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                          CreateDate = d.CreateDate,
+                                          UpdateDate = d.UpdateDate,
+                                          RecordDate = d.RecordDate,
+                                          OperationEmpId = d.OperationEmpId,
+                                          OperationEmpName = d.AmiyaEmployee.Name,
+                                          LivingRoomFlowInvestmentNum = d.LivingRoomFlowInvestmentNum,
+                                          Consultation = d.Consultation,
+                                          Consultation2 = d.Consultation2,
+                                          CargoSettlementCommission = d.CargoSettlementCommission,
+                                      };
+                var result = await tikTokDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
+
+                #endregion
+
+                FxPageInfo<LivingDailyTargetDto> liveAnchorDailyTargetPageInfo = new FxPageInfo<LivingDailyTargetDto>();
+                liveAnchorDailyTargetPageInfo.TotalCount = result.Count();
+                liveAnchorDailyTargetPageInfo.List = result.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+                return liveAnchorDailyTargetPageInfo;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+
+        /// <summary>
+        /// 获取直播后主播日运营报表数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="liveAnchorId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<AfterLivingDailyTargetDto>> GetAfterLivingListWithPageAsync(DateTime startDate, DateTime endDate, int? liveAnchorId, int pageNum, int pageSize, int employeeId)
+        {
+            try
+            {
+                List<int> liveAnchorIds = new List<int>();
+                if (liveAnchorId.HasValue)
+                {
+                    liveAnchorIds.Add(liveAnchorId.Value);
+                }
+                else
+                {
+                    var empInfo = await _amiyaEmployeeService.GetByIdAsync(employeeId);
+                    if (empInfo.PositionId == 19)
+                    {
+                        var bindLiveAnchorInfo = await employeeBindLiveAnchorService.GetByEmpIdAsync(employeeId);
+                        foreach (var x in bindLiveAnchorInfo)
+                        {
+                            liveAnchorIds.Add(x.LiveAnchorId);
+                        }
+                    }
+                }
+                endDate = endDate.AddDays(1);
+                #region 【数据获取】
+                var tikTokDailyInfo = from d in _afterLivingDailyTarget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                                      where d.RecordDate >= startDate && d.RecordDate < endDate
+                                      && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                      && d.Valid
+                                      select new AfterLivingDailyTargetDto
+                                      {
+                                          Id = d.Id,
+                                          LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
+                                          LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                          CreateDate = d.CreateDate,
+                                          UpdateDate = d.UpdateDate,
+                                          RecordDate = d.RecordDate,
+                                          OperationEmpId = d.OperationEmpId,
+                                          OperationEmpName = d.AmiyaEmployee.Name,
+                                          AddWechatNum = d.AddWechatNum,
+                                          ConsultationCardConsumed = d.ConsultationCardConsumed,
+                                          ConsultationCardConsumed2 = d.ConsultationCardConsumed2,
+                                          ActivateHistoricalConsultation = d.ActivateHistoricalConsultation,
+                                          SendOrderNum = d.SendOrderNum,
+                                          NewVisitNum = d.NewVisitNum,
+                                          SubsequentVisitNum = d.SubsequentVisitNum,
+                                          OldCustomerVisitNum = d.OldCustomerVisitNum,
+                                          VisitNum = d.VisitNum,
+                                          NewDealNum = d.NewDealNum,
+                                          SubsequentDealNum = d.SubsequentDealNum,
+                                          OldCustomerDealNum = d.OldCustomerDealNum,
+                                          DealNum = d.DealNum,
+                                          NewPerformanceNum = d.NewPerformanceNum,
+                                          SubsequentPerformanceNum = d.SubsequentPerformanceNum,
+                                          NewCustomerPerformanceCountNum = d.NewCustomerPerformanceCountNum,
+                                          OldCustomerPerformanceNum = d.OldCustomerPerformanceNum,
+                                          PerformanceNum = d.PerformanceNum,
+                                          MinivanRefund = d.MinivanRefund,
+                                          MiniVanBadReviews = d.MiniVanBadReviews,
+                                      };
+                var result = await tikTokDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
+
+                #endregion
+
+                FxPageInfo<AfterLivingDailyTargetDto> liveAnchorDailyTargetPageInfo = new FxPageInfo<AfterLivingDailyTargetDto>();
+                liveAnchorDailyTargetPageInfo.TotalCount = result.Count();
+                liveAnchorDailyTargetPageInfo.List = result.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+                return liveAnchorDailyTargetPageInfo;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+
 
         public async Task<LiveAnchorDailyTargetDto> GetLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate)
         {
@@ -338,7 +746,7 @@ namespace Fx.Amiya.Service
                     var liveAnchorDailyTarget = await _beforeLivingTikTokDailyTraget.GetAll().Include(x => x.LiveAnchorMonthlyTarget).SingleOrDefaultAsync(e => e.Id == id);
                     if (liveAnchorDailyTarget == null)
                     {
-                        throw new Exception("主播日运营目标情况编号错误！");
+                        throw new Exception("直播前抖音日运营目标情况编号错误！");
                     }
                     liveAnchorDailyTargetDto.Id = liveAnchorDailyTarget.Id;
                     liveAnchorDailyTargetDto.LiveanchorMonthlyTargetId = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
@@ -354,7 +762,7 @@ namespace Fx.Amiya.Service
                     var liveAnchorDailyTarget = await _beforeLivingZhiHuDailyTraget.GetAll().Include(x => x.LiveAnchorMonthlyTarget).SingleOrDefaultAsync(e => e.Id == id);
                     if (liveAnchorDailyTarget == null)
                     {
-                        throw new Exception("主播日运营目标情况编号错误！");
+                        throw new Exception("直播前知乎日运营目标情况编号错误！");
                     }
                     liveAnchorDailyTargetDto.Id = liveAnchorDailyTarget.Id;
                     liveAnchorDailyTargetDto.LiveanchorMonthlyTargetId = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
@@ -371,7 +779,7 @@ namespace Fx.Amiya.Service
                     var liveAnchorDailyTarget = await _beforeLivingSinaWeiBoDailyTraget.GetAll().Include(x => x.LiveAnchorMonthlyTarget).SingleOrDefaultAsync(e => e.Id == id);
                     if (liveAnchorDailyTarget == null)
                     {
-                        throw new Exception("主播日运营目标情况编号错误！");
+                        throw new Exception("直播前微博日运营目标情况编号错误！");
                     }
                     liveAnchorDailyTargetDto.Id = liveAnchorDailyTarget.Id;
                     liveAnchorDailyTargetDto.LiveanchorMonthlyTargetId = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
@@ -388,7 +796,7 @@ namespace Fx.Amiya.Service
                     var liveAnchorDailyTarget = await _beforeLivingXiaoHongShuDailyTraget.GetAll().Include(x => x.LiveAnchorMonthlyTarget).SingleOrDefaultAsync(e => e.Id == id);
                     if (liveAnchorDailyTarget == null)
                     {
-                        throw new Exception("主播日运营目标情况编号错误！");
+                        throw new Exception("直播前小红书日运营目标情况编号错误！");
                     }
                     liveAnchorDailyTargetDto.Id = liveAnchorDailyTarget.Id;
                     liveAnchorDailyTargetDto.LiveanchorMonthlyTargetId = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
@@ -405,7 +813,7 @@ namespace Fx.Amiya.Service
                     var liveAnchorDailyTarget = await _beforeLivingVideoDailyTraget.GetAll().Include(x => x.LiveAnchorMonthlyTarget).SingleOrDefaultAsync(e => e.Id == id);
                     if (liveAnchorDailyTarget == null)
                     {
-                        throw new Exception("主播日运营目标情况编号错误！");
+                        throw new Exception("直播前视频号日运营目标情况编号错误！");
                     }
                     liveAnchorDailyTargetDto.Id = liveAnchorDailyTarget.Id;
                     liveAnchorDailyTargetDto.LiveanchorMonthlyTargetId = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
@@ -423,7 +831,7 @@ namespace Fx.Amiya.Service
                     var liveAnchorDailyTarget = await _livingDailyTarget.GetAll().Include(x => x.LiveAnchorMonthlyTarget).SingleOrDefaultAsync(e => e.Id == id);
                     if (liveAnchorDailyTarget == null)
                     {
-                        throw new Exception("主播日运营目标情况编号错误！");
+                        throw new Exception("直播中日运营目标情况编号错误！");
                     }
                     liveAnchorDailyTargetDto.Id = liveAnchorDailyTarget.Id;
                     liveAnchorDailyTargetDto.LiveanchorMonthlyTargetId = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
@@ -436,32 +844,42 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.RecordDate = liveAnchorDailyTarget.RecordDate;
                 }
 
-                //liveAnchorDailyTargetDto.NetWorkConsultingEmployeeId = liveAnchorDailyTarget.NetWorkConsultingEmployeeId;
+                if (type == 7)
+                {
 
-                //liveAnchorDailyTargetDto.TodaySendNum = liveAnchorDailyTarget.TodaySendNum;
-                //liveAnchorDailyTargetDto.CluesNum = liveAnchorDailyTarget.CluesNum;
-                //liveAnchorDailyTargetDto.AddFansNum = liveAnchorDailyTarget.AddFansNum;
-                //liveAnchorDailyTargetDto.AddWechatNum = liveAnchorDailyTarget.AddWechatNum;
-                //liveAnchorDailyTargetDto.ActivateHistoricalConsultation = liveAnchorDailyTarget.ActivateHistoricalConsultation;
-                //liveAnchorDailyTargetDto.ConsultationCardConsumed = liveAnchorDailyTarget.ConsultationCardConsumed;
-                //liveAnchorDailyTargetDto.ConsultationCardConsumed2 = liveAnchorDailyTarget.ConsultationCardConsumed2;
-                //liveAnchorDailyTargetDto.SendOrderNum = liveAnchorDailyTarget.SendOrderNum;
-                //liveAnchorDailyTargetDto.NewVisitNum = liveAnchorDailyTarget.NewVisitNum;
-                //liveAnchorDailyTargetDto.SubsequentVisitNum = liveAnchorDailyTarget.SubsequentVisitNum;
-                //liveAnchorDailyTargetDto.OldCustomerVisitNum = liveAnchorDailyTarget.OldCustomerVisitNum;
-                //liveAnchorDailyTargetDto.VisitNum = liveAnchorDailyTarget.VisitNum;
-                //liveAnchorDailyTargetDto.NewDealNum = liveAnchorDailyTarget.NewDealNum;
-                //liveAnchorDailyTargetDto.SubsequentDealNum = liveAnchorDailyTarget.SubsequentDealNum;
-                //liveAnchorDailyTargetDto.OldCustomerDealNum = liveAnchorDailyTarget.OldCustomerDealNum;
-                //liveAnchorDailyTargetDto.DealNum = liveAnchorDailyTarget.DealNum;
-                //liveAnchorDailyTargetDto.NewPerformanceNum = liveAnchorDailyTarget.NewPerformanceNum;
-                //liveAnchorDailyTargetDto.SubsequentPerformanceNum = liveAnchorDailyTarget.SubsequentPerformanceNum;
-                //liveAnchorDailyTargetDto.OldCustomerPerformanceNum = liveAnchorDailyTarget.OldCustomerPerformanceNum;
-                //liveAnchorDailyTargetDto.NewCustomerPerformanceCountNum = liveAnchorDailyTarget.NewCustomerPerformanceCountNum;
-                //liveAnchorDailyTargetDto.PerformanceNum = liveAnchorDailyTarget.PerformanceNum;
-                //liveAnchorDailyTargetDto.CreateDate = liveAnchorDailyTarget.CreateDate;
-                //liveAnchorDailyTargetDto.MinivanRefund = liveAnchorDailyTarget.MinivanRefund;
-                //liveAnchorDailyTargetDto.MiniVanBadReviews = liveAnchorDailyTarget.MiniVanBadReviews;
+                    var liveAnchorDailyTarget = await _afterLivingDailyTarget.GetAll().Include(x => x.LiveAnchorMonthlyTarget).SingleOrDefaultAsync(e => e.Id == id);
+                    if (liveAnchorDailyTarget == null)
+                    {
+                        throw new Exception("直播后日运营目标情况编号错误！");
+                    }
+
+                    liveAnchorDailyTargetDto.Id = liveAnchorDailyTarget.Id;
+                    liveAnchorDailyTargetDto.LiveanchorMonthlyTargetId = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
+                    liveAnchorDailyTargetDto.LiveAnchorId = liveAnchorDailyTarget.LiveAnchorMonthlyTarget.LiveAnchorId;
+                    liveAnchorDailyTargetDto.NetWorkConsultingEmployeeId = liveAnchorDailyTarget.OperationEmpId;
+                    liveAnchorDailyTargetDto.RecordDate = liveAnchorDailyTarget.RecordDate;
+                    liveAnchorDailyTargetDto.AddWechatNum = liveAnchorDailyTarget.AddWechatNum;
+                    liveAnchorDailyTargetDto.ActivateHistoricalConsultation = liveAnchorDailyTarget.ActivateHistoricalConsultation;
+                    liveAnchorDailyTargetDto.ConsultationCardConsumed = liveAnchorDailyTarget.ConsultationCardConsumed;
+                    liveAnchorDailyTargetDto.ConsultationCardConsumed2 = liveAnchorDailyTarget.ConsultationCardConsumed2;
+                    liveAnchorDailyTargetDto.SendOrderNum = liveAnchorDailyTarget.SendOrderNum;
+                    liveAnchorDailyTargetDto.NewVisitNum = liveAnchorDailyTarget.NewVisitNum;
+                    liveAnchorDailyTargetDto.SubsequentVisitNum = liveAnchorDailyTarget.SubsequentVisitNum;
+                    liveAnchorDailyTargetDto.OldCustomerVisitNum = liveAnchorDailyTarget.OldCustomerVisitNum;
+                    liveAnchorDailyTargetDto.VisitNum = liveAnchorDailyTarget.VisitNum;
+                    liveAnchorDailyTargetDto.NewDealNum = liveAnchorDailyTarget.NewDealNum;
+                    liveAnchorDailyTargetDto.SubsequentDealNum = liveAnchorDailyTarget.SubsequentDealNum;
+                    liveAnchorDailyTargetDto.OldCustomerDealNum = liveAnchorDailyTarget.OldCustomerDealNum;
+                    liveAnchorDailyTargetDto.DealNum = liveAnchorDailyTarget.DealNum;
+                    liveAnchorDailyTargetDto.NewPerformanceNum = liveAnchorDailyTarget.NewPerformanceNum;
+                    liveAnchorDailyTargetDto.SubsequentPerformanceNum = liveAnchorDailyTarget.SubsequentPerformanceNum;
+                    liveAnchorDailyTargetDto.OldCustomerPerformanceNum = liveAnchorDailyTarget.OldCustomerPerformanceNum;
+                    liveAnchorDailyTargetDto.NewCustomerPerformanceCountNum = liveAnchorDailyTarget.NewCustomerPerformanceCountNum;
+                    liveAnchorDailyTargetDto.PerformanceNum = liveAnchorDailyTarget.PerformanceNum;
+                    liveAnchorDailyTargetDto.MinivanRefund = liveAnchorDailyTarget.MinivanRefund;
+                    liveAnchorDailyTargetDto.MiniVanBadReviews = liveAnchorDailyTarget.MiniVanBadReviews;
+                }
+
                 return liveAnchorDailyTargetDto;
             }
             catch (Exception ex)
@@ -497,7 +915,7 @@ namespace Fx.Amiya.Service
             try
             {
 
-                LiveAnchorDailyTarget liveAnchorDailyTarget = new LiveAnchorDailyTarget();
+                AfterLiveAnchorDailyTarget liveAnchorDailyTarget = new AfterLiveAnchorDailyTarget();
                 liveAnchorDailyTarget.Id = Guid.NewGuid().ToString();
                 liveAnchorDailyTarget.LiveanchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
                 liveAnchorDailyTarget.LivingTrackingEmployeeId = addDto.LivingTrackingEmployeeId;
@@ -1316,10 +1734,10 @@ namespace Fx.Amiya.Service
             try
             {
 
-                LiveAnchorDailyTarget liveAnchorDailyTarget = new LiveAnchorDailyTarget();
+                AfterLivingDailyTarget liveAnchorDailyTarget = new AfterLivingDailyTarget();
                 liveAnchorDailyTarget.Id = Guid.NewGuid().ToString();
-                liveAnchorDailyTarget.LiveanchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
-                liveAnchorDailyTarget.NetWorkConsultingEmployeeId = addDto.NetWorkConsultingEmployeeId;
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = addDto.NetWorkConsultingEmployeeId;
 
                 liveAnchorDailyTarget.ConsultationCardConsumed = addDto.ConsultationCardConsumed;
                 liveAnchorDailyTarget.ConsultationCardConsumed2 = addDto.ConsultationCardConsumed2;
@@ -1343,8 +1761,8 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.MiniVanBadReviews = addDto.MiniVanBadReviews;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
-                liveAnchorDailyTarget.AfterLivingUpdateDate = DateTime.Now;
-                await dalLiveAnchorDailyTarget.AddAsync(liveAnchorDailyTarget, true);
+                liveAnchorDailyTarget.UpdateDate = DateTime.Now;
+                await _afterLivingDailyTarget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
                 editLiveAnchorMonthlyTarget.Id = addDto.LiveanchorMonthlyTargetId;
@@ -1382,7 +1800,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var liveAnchorDailyTarget = await dalLiveAnchorDailyTarget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                var liveAnchorDailyTarget = await _afterLivingDailyTarget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
                 if (updateDto.Id != liveAnchorDailyTarget.Id)
                 {
                     unitOfWork.RollBack();
@@ -1395,7 +1813,7 @@ namespace Fx.Amiya.Service
                 }
                 //先扣除原有的
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTargetDel = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
-                editLiveAnchorMonthlyTargetDel.Id = liveAnchorDailyTarget.LiveanchorMonthlyTargetId;
+                editLiveAnchorMonthlyTargetDel.Id = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
                 editLiveAnchorMonthlyTargetDel.CumulativeConsultationCardConsumed = -liveAnchorDailyTarget.ConsultationCardConsumed;
                 editLiveAnchorMonthlyTargetDel.CumulativeConsultationCardConsumed2 = -liveAnchorDailyTarget.ConsultationCardConsumed2;
                 editLiveAnchorMonthlyTargetDel.CumulativeActivateHistoricalConsultation = -liveAnchorDailyTarget.ActivateHistoricalConsultation;
@@ -1417,8 +1835,8 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTargetDel.CumulativeMiniVanBadReviews = -liveAnchorDailyTarget.MiniVanBadReviews;
                 await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTargetDel);
 
-                liveAnchorDailyTarget.LiveanchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
-                liveAnchorDailyTarget.NetWorkConsultingEmployeeId = updateDto.NetWorkConsultingEmployeeId;
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = updateDto.NetWorkConsultingEmployeeId;
                 liveAnchorDailyTarget.ConsultationCardConsumed = updateDto.ConsultationCardConsumed;
                 liveAnchorDailyTarget.ConsultationCardConsumed2 = updateDto.ConsultationCardConsumed2;
                 liveAnchorDailyTarget.ActivateHistoricalConsultation = updateDto.ActivateHistoricalConsultation;
@@ -1440,8 +1858,8 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.MinivanRefund = updateDto.MinivanRefund;
                 liveAnchorDailyTarget.MiniVanBadReviews = updateDto.MiniVanBadReviews;
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
-                liveAnchorDailyTarget.AfterLivingUpdateDate = updateDto.AfterLivingUpdateDate;
-                await dalLiveAnchorDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
+                liveAnchorDailyTarget.UpdateDate = updateDto.AfterLivingUpdateDate;
+                await _afterLivingDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 //添加修改后的
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto editLiveAnchorMonthlyTargetAdd = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();

@@ -37,6 +37,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<BeforeLivingVideoDailyTarget> BeforeLivingVideoDailyTraget { get; set; }
         public virtual DbSet<BeforeLivingSinaWeiBoDailyTarget> BeforeLivingSinaWeiBoDailyTraget { get; set; }
         public virtual DbSet<LivingDailyTarget> LivingDailyTarget { get; set; }
+        public virtual DbSet<AfterLivingDailyTarget> AfterLivingDailyTarget { get; set; }
         public virtual DbSet<WxMpUserInfo> WxMpUserInfo { get; set; }
         public virtual DbSet<HospitalFeedBack> HospitalFeedBack { get; set; }
         public virtual DbSet<InventoryList> InventoryList { get; set; }
@@ -65,7 +66,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<ValidateCode> ValidateCode { get; set; }
         public virtual DbSet<RecommendHospitalInfo> RecommendHospitalInfo { get; set; }
         public virtual DbSet<LiveAnchorMonthlyTarget> LiveAnchorMonthlyTarget { get; set; }
-        public virtual DbSet<LiveAnchorDailyTarget> LiveAnchorDailyTarget { get; set; }
+        public virtual DbSet<AfterLiveAnchorDailyTarget> LiveAnchorDailyTarget { get; set; }
         public virtual DbSet<ModuleCategory> ModuleCategory { get; set; }
         public virtual DbSet<HospitalDoctorOperationData> HospitalDoctorOperationData { get; set; }
         public virtual DbSet<BeautyDiaryTagInfo> BeautyDiaryTagInfo { get; set; }
@@ -232,6 +233,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new BeforeLivingVideoDailyTargetConfiguration());
             modelBuilder.ApplyConfiguration(new BeforeLivingSinaWeiBoDailyTargetConfiguration());
             modelBuilder.ApplyConfiguration(new LivingDailyTargetConfiguration());
+            modelBuilder.ApplyConfiguration(new AfterLivingDailyTargetConfiguration());
             modelBuilder.ApplyConfiguration(new ProvinceConfiguration());
             modelBuilder.ApplyConfiguration(new PermissionInfoConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaPositionPermissionConfiguration());

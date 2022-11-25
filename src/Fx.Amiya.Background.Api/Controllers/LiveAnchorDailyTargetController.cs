@@ -52,20 +52,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="startDate">开始时间</param>
         /// <param name="endDate">结束时间</param>
-        /// <param name="operationEmpId">运营人员id</param>
-        /// <param name="netWorkConEmpId">网咨人员id</param>
         /// <param name="liveAnchorId">主播ip账户id</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<LiveAnchorDailyTargetVo>>> GetListWithPageAsync(DateTime startDate, DateTime endDate,  int? liveAnchorId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<LiveAnchorDailyTargetVo>>> GetListWithPageAsync(DateTime startDate, DateTime endDate, int? liveAnchorId, int pageNum, int pageSize)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await _liveAnchorDailyTargetService.GetListWithPageAsync(startDate, endDate,  liveAnchorId, pageNum, pageSize, employeeId);
+                var q = await _liveAnchorDailyTargetService.GetListWithPageAsync(startDate, endDate, liveAnchorId, pageNum, pageSize, employeeId);
 
                 var liveAnchorDailyTarget = from d in q.List
                                             select new LiveAnchorDailyTargetVo
@@ -125,21 +123,184 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 MiniVanBadReviews = d.MiniVanBadReviews,
                                                 NetWorkConsultingEmployeeName = d.NetWorkConsultingEmployeeName,
                                                 LivingTrackingEmployeeName = d.LivingTrackingEmployeeName,
-                                                TikTokUpdateDate=d.TikTokUpdateDate,
-                                                LivingUpdateDate=d.LivingUpdateDate,
-                                                AfterLivingUpdateDate=d.AfterLivingUpdateDate
-                                                
+                                                UpdateDate = d.UpdateDate,
+                                                LivingUpdateDate = d.LivingUpdateDate,
+                                                AfterLivingUpdateDate = d.AfterLivingUpdateDate
+
                                             };
 
                 FxPageInfo<LiveAnchorDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<LiveAnchorDailyTargetVo>();
                 liveAnchorDailyTargetPageInfo.TotalCount = q.TotalCount;
                 liveAnchorDailyTargetPageInfo.List = liveAnchorDailyTarget;
-                
+
                 return ResultData<FxPageInfo<LiveAnchorDailyTargetVo>>.Success().AddData("liveAnchorDailyTargetInfo", liveAnchorDailyTargetPageInfo);
             }
             catch (Exception ex)
             {
                 return ResultData<FxPageInfo<LiveAnchorDailyTargetVo>>.Fail(ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// 获取直播前主播日运营目标情况
+        /// </summary>
+        /// <param name="startDate">开始时间</param>
+        /// <param name="endDate">结束时间</param>
+        /// <param name="type">直播前类型</param>
+        /// <param name="liveAnchorId">主播ip账户id</param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("beforeListWithPage")]
+        public async Task<ResultData<FxPageInfo<BeforeLivingDailyTargetVo>>> GetBeforeListWithPageAsync(DateTime startDate, DateTime endDate, int type, int? liveAnchorId, int pageNum, int pageSize)
+        {
+            try
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                var q = await _liveAnchorDailyTargetService.GetBeforeListWithPageAsync(startDate, endDate, type, liveAnchorId, pageNum, pageSize, employeeId);
+
+                var liveAnchorDailyTarget = from d in q.List
+                                            select new BeforeLivingDailyTargetVo
+                                            {
+                                                Id = d.Id,
+                                                LiveAnchor = d.LiveAnchor,
+                                                CreateDate = d.CreateDate,
+                                                RecordDate = d.RecordDate,
+                                                UpdateDate = d.UpdateDate,
+                                                OperationEmpName=d.OperationEmpName,
+                                                SendNum = d.SendNum,
+                                                FlowInvestmentNum = d.FlowInvestmentNum,
+                                                //AddWechatNum = d.AddWechatNum,
+                                                //SendOrderNum = d.SendOrderNum,
+                                                //DealNum = d.DealNum,
+                                                //PerformanceNum = d.PerformanceNum,
+
+                                            };
+
+                FxPageInfo<BeforeLivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<BeforeLivingDailyTargetVo>();
+                liveAnchorDailyTargetPageInfo.TotalCount = q.TotalCount;
+                liveAnchorDailyTargetPageInfo.List = liveAnchorDailyTarget;
+
+                return ResultData<FxPageInfo<BeforeLivingDailyTargetVo>>.Success().AddData("liveAnchorDailyTargetInfo", liveAnchorDailyTargetPageInfo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<FxPageInfo<BeforeLivingDailyTargetVo>>.Fail(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 获取直播中主播日运营目标情况
+        /// </summary>
+        /// <param name="startDate">开始时间</param>
+        /// <param name="endDate">结束时间</param>
+        /// <param name="liveAnchorId">主播ip账户id</param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("livingListWithPage")]
+        public async Task<ResultData<FxPageInfo<LivingDailyTargetVo>>> GetLivingListWithPageAsync(DateTime startDate, DateTime endDate,int? liveAnchorId, int pageNum, int pageSize)
+        {
+            try
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                var q = await _liveAnchorDailyTargetService.GetLivingListWithPageAsync(startDate, endDate,  liveAnchorId, pageNum, pageSize, employeeId);
+
+                var liveAnchorDailyTarget = from d in q.List
+                                            select new LivingDailyTargetVo
+                                            {
+
+                                                Id = d.Id,
+                                                LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
+                                                LiveAnchor = d.LiveAnchor,
+                                                CreateDate = d.CreateDate,
+                                                UpdateDate = d.UpdateDate,
+                                                RecordDate = d.RecordDate,
+                                                OperationEmpId = d.OperationEmpId,
+                                                OperationEmpName = d.OperationEmpName,
+                                                LivingRoomFlowInvestmentNum = d.LivingRoomFlowInvestmentNum,
+                                                Consultation = d.Consultation,
+                                                Consultation2 = d.Consultation2,
+                                                CargoSettlementCommission = d.CargoSettlementCommission,
+
+                                            };
+
+                FxPageInfo<LivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<LivingDailyTargetVo>();
+                liveAnchorDailyTargetPageInfo.TotalCount = q.TotalCount;
+                liveAnchorDailyTargetPageInfo.List = liveAnchorDailyTarget;
+
+                return ResultData<FxPageInfo<LivingDailyTargetVo>>.Success().AddData("liveAnchorDailyTargetInfo", liveAnchorDailyTargetPageInfo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<FxPageInfo<LivingDailyTargetVo>>.Fail(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 获取直播后主播日运营目标情况
+        /// </summary>
+        /// <param name="startDate">开始时间</param>
+        /// <param name="endDate">结束时间</param>
+        /// <param name="liveAnchorId">主播ip账户id</param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("afterLivingListWithPage")]
+        public async Task<ResultData<FxPageInfo<AfterLivingDailyTargetVo>>> GetAfterLivingListWithPageAsync(DateTime startDate, DateTime endDate, int? liveAnchorId, int pageNum, int pageSize)
+        {
+            try
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                var q = await _liveAnchorDailyTargetService.GetAfterLivingListWithPageAsync(startDate, endDate, liveAnchorId, pageNum, pageSize, employeeId);
+
+                var liveAnchorDailyTarget = from d in q.List
+                                            select new AfterLivingDailyTargetVo
+                                            {
+
+                                                Id = d.Id,
+                                                LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
+                                                LiveAnchor = d.LiveAnchor,
+                                                CreateDate = d.CreateDate,
+                                                UpdateDate = d.UpdateDate,
+                                                RecordDate = d.RecordDate,
+                                                OperationEmpId = d.OperationEmpId,
+                                                OperationEmpName = d.OperationEmpName,
+                                                AddWechatNum = d.AddWechatNum,
+                                                ConsultationCardConsumed = d.ConsultationCardConsumed,
+                                                ConsultationCardConsumed2 = d.ConsultationCardConsumed2,
+                                                ActivateHistoricalConsultation = d.ActivateHistoricalConsultation,
+                                                SendOrderNum = d.SendOrderNum,
+                                                NewVisitNum = d.NewVisitNum,
+                                                SubsequentVisitNum = d.SubsequentVisitNum,
+                                                OldCustomerVisitNum = d.OldCustomerVisitNum,
+                                                VisitNum = d.VisitNum,
+                                                NewDealNum = d.NewDealNum,
+                                                SubsequentDealNum = d.SubsequentDealNum,
+                                                OldCustomerDealNum = d.OldCustomerDealNum,
+                                                DealNum = d.DealNum,
+                                                NewPerformanceNum = d.NewPerformanceNum,
+                                                SubsequentPerformanceNum = d.SubsequentPerformanceNum,
+                                                NewCustomerPerformanceCountNum = d.NewCustomerPerformanceCountNum,
+                                                OldCustomerPerformanceNum = d.OldCustomerPerformanceNum,
+                                                PerformanceNum = d.PerformanceNum,
+                                                MinivanRefund = d.MinivanRefund,
+                                                MiniVanBadReviews = d.MiniVanBadReviews,
+                                            };
+
+                FxPageInfo<AfterLivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<AfterLivingDailyTargetVo>();
+                liveAnchorDailyTargetPageInfo.TotalCount = q.TotalCount;
+                liveAnchorDailyTargetPageInfo.List = liveAnchorDailyTarget;
+
+                return ResultData<FxPageInfo<AfterLivingDailyTargetVo>>.Success().AddData("liveAnchorDailyTargetInfo", liveAnchorDailyTargetPageInfo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<FxPageInfo<AfterLivingDailyTargetVo>>.Fail(ex.Message);
             }
         }
 
@@ -152,7 +313,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="type">直播前类型（1：抖音；2：知乎；3：微博；4：小红书；5：视频号；6：直播中；7：直播后）</param>
         /// <returns></returns>
         [HttpGet("getByIdAndType")]
-        public async Task<ResultData<LiveAnchorDailyTargetByIdVo>> GetByIdAndTypeAsync(string id,int type)
+        public async Task<ResultData<LiveAnchorDailyTargetByIdVo>> GetByIdAndTypeAsync(string id, int type)
         {
             try
             {
@@ -641,7 +802,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
         #endregion
-
 
         #region 【直播后】  
 

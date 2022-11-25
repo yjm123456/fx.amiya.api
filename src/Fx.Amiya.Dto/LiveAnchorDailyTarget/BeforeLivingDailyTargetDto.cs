@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
 {
-    public class BeforeLivingTikTokDailyTargetDto:BaseDto
+    public class BeforeLivingDailyTargetDto : BaseDto
     {
         public string LiveAnchorMonthlyTargetId { get; set; }
 

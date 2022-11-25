@@ -11,7 +11,11 @@ namespace Fx.Amiya.IService
 {
     public interface ILiveAnchorDailyTargetService
     {
-        Task<FxPageInfo<LiveAnchorDailyTargetDto>> GetListWithPageAsync(DateTime startDate, DateTime endDate, int? liveAnchorId, int pageNum, int pageSize,int employeeId);
+        Task<FxPageInfo<LiveAnchorDailyTargetDto>> GetListWithPageAsync(DateTime startDate, DateTime endDate, int? liveAnchorId, int pageNum, int pageSize, int employeeId);
+        Task<FxPageInfo<BeforeLivingDailyTargetDto>> GetBeforeListWithPageAsync(DateTime startDate, DateTime endDate, int type, int? liveAnchorId, int pageNum, int pageSize, int employeeId);
+        Task<FxPageInfo<LivingDailyTargetDto>> GetLivingListWithPageAsync(DateTime startDate, DateTime endDate, int? liveAnchorId, int pageNum, int pageSize, int employeeId);
+
+        Task<FxPageInfo<AfterLivingDailyTargetDto>> GetAfterLivingListWithPageAsync(DateTime startDate, DateTime endDate, int? liveAnchorId, int pageNum, int pageSize, int employeeId);
         Task AddAsync(AddLiveAnchorDailyTargetDto addDto);
 
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.IDal
 {
-    public interface IDalLiveAnchorDailyTarget : IDAL<AfterLiveAnchorDailyTarget>
+    public interface IDalAfterLivingDailyTarget : IDAL<AfterLivingDailyTarget>
     {
     }
 }
