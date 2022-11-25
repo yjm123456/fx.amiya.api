@@ -20,7 +20,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.ConsultationCardConsumed2).HasColumnName("consultation_card_consumed2").HasColumnType("int").IsRequired();
             builder.Property(t => t.ActivateHistoricalConsultation).HasColumnName("activate_historical_consultation").HasColumnType("int").IsRequired();
             builder.Property(t => t.SendOrderNum).HasColumnName("send_order_num").HasColumnType("int").IsRequired();
-            builder.Property(t => t.NewVisitNum).HasColumnName("new_visit_nun").HasColumnType("int").IsRequired();
+            builder.Property(t => t.NewVisitNum).HasColumnName("new_visit_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.VisitNum).HasColumnName("visit_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.SubsequentVisitNum).HasColumnName("subsequent_visit_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.OldCustomerVisitNum).HasColumnName("old_customer_visit_num").HasColumnType("int").IsRequired();

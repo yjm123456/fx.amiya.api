@@ -1415,7 +1415,7 @@ ENGINE=InnoDB;
   `add_wechat_num` INT NOT NULL,
   `send_order_num` INT NOT NULL,
   `new_visit_num` INT NOT NULL,
-  `subsequent_visitNum` INT NOT NULL,
+  `subsequent_visit_num` INT NOT NULL,
   `old_customer_visit_num` INT NOT NULL,
   `visit_num` INT NOT NULL,
   `new_deal_num` INT NOT NULL,
