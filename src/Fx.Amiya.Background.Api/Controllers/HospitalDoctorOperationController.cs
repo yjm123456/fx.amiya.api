@@ -65,17 +65,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       NewCustomerAcceptNum = d.NewCustomerAcceptNum,
                                                       NewCustomerDealNum = d.NewCustomerDealNum,
                                                       NewCustomerDealRate = d.NewCustomerDealRate,
-                                                      NewCustomerAchievement = d.NewCustomerAchievement/1000m,
-                                                      NewCustomerUnitPrice = d.NewCustomerUnitPrice/1000m,
+                                                      NewCustomerAchievement = d.NewCustomerAchievement,
+                                                      NewCustomerUnitPrice = d.NewCustomerUnitPrice,
                                                       NewCustomerAchievementRate = d.NewCustomerAchievementRate,
                                                       OldCustomerAcceptNum = d.OldCustomerAcceptNum,
                                                       OldCustomerDealNum = d.OldCustomerDealNum,
                                                       OldCustomerDealRate = d.OldCustomerDealRate,
-                                                      OldCustomerAchievement = d.OldCustomerAchievement/1000m,
-                                                      OldCustomerUnitPrice = d.OldCustomerUnitPrice/1000m,
+                                                      OldCustomerAchievement = d.OldCustomerAchievement,
+                                                      OldCustomerUnitPrice = d.OldCustomerUnitPrice,
                                                       OldCustomerAchievementRate = d.OldCustomerAchievementRate,
                                                       SectionOffice=d.SectionOffice,
-                                                      TotalPerformance=d.TotalPerformance/1000m
+                                                      TotalPerformance=d.TotalPerformance
                                                   };
 
                 List<HospitalDoctorOperationVo> hospitalDoctorOperationDataPageInfo = new List<HospitalDoctorOperationVo>();

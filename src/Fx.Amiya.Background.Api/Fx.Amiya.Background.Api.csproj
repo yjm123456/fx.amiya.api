@@ -13,8 +13,8 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>E:\新建文件夹\fx.amiya.api\src\Fx.Amiya.Background.Api\Fx.Amiya.Background.Api.xml</DocumentationFile>
-    <OutputPath>E:\新建文件夹\输出路径\</OutputPath>
+    <DocumentationFile></DocumentationFile>
+    <OutputPath>C:\新建文件夹\</OutputPath>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
 
