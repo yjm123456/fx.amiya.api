@@ -44,7 +44,7 @@ namespace Fx.Amiya.Service
                     improvePlanAndRemark.CreateDate = DateTime.Now;
                     improvePlanAndRemark.Valid = true;
                     await dalImprovePlanAndRemark.AddAsync(improvePlanAndRemark, true);
-                    await indicatorSendHospitalService.UpdateRemarkStatusAsync(addDto.IndicatorId, addDto.HospitalId);
+                    await indicatorSendHospitalService.UpdateSubmitStateAsync(addDto.IndicatorId, addDto.HospitalId);
                 }
                 else
                 {
@@ -77,6 +77,10 @@ namespace Fx.Amiya.Service
         public async Task<Dictionary<string, List<ImprovePlanAndRemarkDto>>> GetImproveAndRemark(string indicatorsId, int hospitalId)
         {
             Dictionary<string, List<ImprovePlanAndRemarkDto>> dic = new Dictionary<string, List<ImprovePlanAndRemarkDto>>();
+            dic.Add("运营优点", new List<ImprovePlanAndRemarkDto>());
+            dic.Add("运营不足", new List<ImprovePlanAndRemarkDto>());
+            dic.Add("提升计划", new List<ImprovePlanAndRemarkDto>());
+            dic.Add("运营需求", new List<ImprovePlanAndRemarkDto>());
             var remark = dalImprovePlanAndRemark.GetAll().Where(e => e.IndicatorId == indicatorsId && e.HospitalId == hospitalId && e.Valid == true).ToList().GroupBy(e => e.Type);
             foreach (var item in remark) {
                 var list= item.Select(e=> new ImprovePlanAndRemarkDto
@@ -87,24 +91,12 @@ namespace Fx.Amiya.Service
                     Sort = e.Sort,
                     Content = e.Content,                  
                 }).OrderBy(e => e.Sort).ToList();
-                dic.Add(item.Key, list);
+                dic[item.Key] = list;
+                /*dic.Add(item.Key, list);*/
             }
-            /*var remark2 = remark.Select(e =>
-            {
-                var itemList = e.Select(e => new ImprovePlanAndRemarkDto
-                {                   
-                    IndicatorId = e.IndicatorId,
-                    HospitalId = e.HospitalId,
-                    Type = e.Type,
-                    Sort = e.Sort,
-                    Content=e.Content,
-                    Remark=e.Remark
-                }).OrderBy(e => e.Sort).ToList();
-                dic.Add(e.Key, itemList);
-                return itemList;
-            });*/
+            
 
-            if (remark == null) return new Dictionary<string, List<ImprovePlanAndRemarkDto>>();
+            /*if (remark == null) return new Dictionary<string, List<ImprovePlanAndRemarkDto>>();*/
             return dic;
         }
 

@@ -28,7 +28,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
         /// <summary>
-        /// 添加机构运营分析与提升计划及批注
+        /// 添加机构运营分析与提升计划
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
@@ -93,7 +93,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                List<object> list1 = new List<object>();               
+                List<object> list1 = new List<object>();                    
                 var plan = await improvePlanAndRemarkService.GetImproveAndRemark(indicatorId, hospitalId);
                 foreach (var item in plan)
                 {
@@ -105,6 +105,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                         Sort = e.Sort,
                         Content=e.Content,
                     }).ToList();
+                    
                     list1.Add(new  { Type=item.Key,Data=list});
                 }
                 return ResultData<List<object>>.Success().AddData("improvePlan", list1);

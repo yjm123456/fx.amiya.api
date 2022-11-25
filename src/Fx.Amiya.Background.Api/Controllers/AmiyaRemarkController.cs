@@ -96,8 +96,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                List<object> list1 = new List<object>();
-                Dictionary<string, List<AmeiyaRemarkVo>> dic = new Dictionary<string, List<AmeiyaRemarkVo>>();
+                List<object> list1 = new List<object>();                          
                 var plan = await amiyaRemarkService.GetImproveAndRemark(indicatorId, hospitalId);
                 foreach (var item in plan)
                 {

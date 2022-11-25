@@ -1399,11 +1399,46 @@ ENGINE=InnoDB;
 
 
 
+-------------------------------------------王健 2022/11/25 BEGIN------------------------------------------------------
+
+---提升计划
+CREATE TABLE `tbl_improve_plan` (
+	`id` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`hospital_id` INT(10) NOT NULL DEFAULT '0',
+	`indicator_id` VARCHAR(50) NOT NULL DEFAULT '0' COLLATE 'utf8mb4_0900_ai_ci',
+	`type` VARCHAR(200) NOT NULL DEFAULT '0' COLLATE 'utf8mb4_0900_ai_ci',
+	`content` VARCHAR(1000) NULL DEFAULT '' COLLATE 'utf8mb4_0900_ai_ci',
+	`sort` INT(10) NOT NULL,
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`delete_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT(1) NOT NULL,
+	PRIMARY KEY (`id`) USING BTREE
+)
+COLLATE='utf8mb4_0900_ai_ci'
+ENGINE=InnoDB;
+
+
+---啊美雅
+CREATE TABLE `tbl_amiya_remark` (
+	`id` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`hospital_id` INT(10) NOT NULL DEFAULT '0',
+	`indicator_id` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`type` VARCHAR(200) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`content` VARCHAR(1000) NULL DEFAULT '' COLLATE 'utf8mb4_0900_ai_ci',
+	`sort` INT(10) NOT NULL DEFAULT '0',
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT(1) NOT NULL DEFAULT 'b\'0\'',
+	`delete_date` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`) USING BTREE
+)
+COLLATE='utf8mb4_0900_ai_ci'
+ENGINE=InnoDB;
 
 
 
-
-
+-------------------------------------------王健 2022/11/25 END------------------------------------------------------
 
 
 

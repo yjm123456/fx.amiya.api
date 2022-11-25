@@ -2,6 +2,7 @@
 using Fx.Amiya.Dto.AmiyaRemark;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
+using Fx.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,37 +15,52 @@ namespace Fx.Amiya.Service
     public class AmiyaRemarkService : IAmiyaRemarkService
     {
         private readonly IDalAmiyaRemark dalAmiyaRemark;
+        private readonly IIndicatorSendHospitalService indicatorSendHospitalService;
+        private readonly IUnitOfWork unitOfWork;
 
-        public AmiyaRemarkService(IDalAmiyaRemark dalAmiyaRemark)
+        public AmiyaRemarkService(IDalAmiyaRemark dalAmiyaRemark, IIndicatorSendHospitalService indicatorSendHospitalService, IUnitOfWork unitOfWork)
         {
             this.dalAmiyaRemark = dalAmiyaRemark;
+            this.indicatorSendHospitalService = indicatorSendHospitalService;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task AddAsync(AddAmeiyRemarkDto addDto)
         {
-            var improveRemark = await dalAmiyaRemark.GetAll().Where(e => e.IndicatorId == addDto.IndicatorId && e.HospitalId == addDto.HospitalId && e.Sort == addDto.Sort && e.Type == addDto.Type).SingleOrDefaultAsync();
-            if (improveRemark == null)
+            try
             {
-                AmiyaRemark improvePlanAndRemark = new AmiyaRemark();
-                improvePlanAndRemark.Id = Guid.NewGuid().ToString();
-                improvePlanAndRemark.IndicatorId = addDto.IndicatorId;
-                improvePlanAndRemark.HospitalId = addDto.HospitalId;
-                improvePlanAndRemark.Type = addDto.Type;
-                improvePlanAndRemark.Content = addDto.Content;
-                improvePlanAndRemark.Sort = addDto.Sort;
-                improvePlanAndRemark.CreateDate = DateTime.Now;
-                improvePlanAndRemark.Valid = true;
-                await dalAmiyaRemark.AddAsync(improvePlanAndRemark, true);
+                unitOfWork.BeginTransaction();
+                var improveRemark = await dalAmiyaRemark.GetAll().Where(e => e.IndicatorId == addDto.IndicatorId && e.HospitalId == addDto.HospitalId && e.Sort == addDto.Sort && e.Type == addDto.Type).SingleOrDefaultAsync();
+                if (improveRemark == null)
+                {
+                    AmiyaRemark improvePlanAndRemark = new AmiyaRemark();
+                    improvePlanAndRemark.Id = Guid.NewGuid().ToString();
+                    improvePlanAndRemark.IndicatorId = addDto.IndicatorId;
+                    improvePlanAndRemark.HospitalId = addDto.HospitalId;
+                    improvePlanAndRemark.Type = addDto.Type;
+                    improvePlanAndRemark.Content = addDto.Content;
+                    improvePlanAndRemark.Sort = addDto.Sort;
+                    improvePlanAndRemark.CreateDate = DateTime.Now;
+                    improvePlanAndRemark.Valid = true;
+                    await dalAmiyaRemark.AddAsync(improvePlanAndRemark, true);
+                    await indicatorSendHospitalService.UpdateRemarkStatusAsync(addDto.IndicatorId,addDto.HospitalId);
+                }
+                else
+                {
+                    improveRemark.IndicatorId = addDto.IndicatorId;
+                    improveRemark.HospitalId = addDto.HospitalId;
+                    improveRemark.Type = addDto.Type;
+                    improveRemark.Content = addDto.Content;
+                    improveRemark.Sort = addDto.Sort;
+                    improveRemark.UpdateDate = DateTime.Now;
+                    await dalAmiyaRemark.UpdateAsync(improveRemark, true);                  
+                }
+                unitOfWork.Commit();
             }
-            else
+            catch (Exception ex)
             {
-                improveRemark.IndicatorId = addDto.IndicatorId;
-                improveRemark.HospitalId = addDto.HospitalId;
-                improveRemark.Type = addDto.Type;
-                improveRemark.Content = addDto.Content;
-                improveRemark.Sort = addDto.Sort;
-                improveRemark.UpdateDate = DateTime.Now;
-                await dalAmiyaRemark.UpdateAsync(improveRemark, true);
+                unitOfWork.RollBack();
+                throw ex;
             }
         }
 
@@ -60,6 +76,10 @@ namespace Fx.Amiya.Service
         public async Task<Dictionary<string, List<AmeiyRemarkDto>>> GetImproveAndRemark(string indicatorsId, int hospitalId)
         {
             Dictionary<string, List<AmeiyRemarkDto>> dic = new Dictionary<string, List<AmeiyRemarkDto>>();
+            dic.Add("运营优点", new List<AmeiyRemarkDto>());
+            dic.Add("运营不足", new List<AmeiyRemarkDto>());
+            dic.Add("提升计划", new List<AmeiyRemarkDto>());
+            dic.Add("运营需求", new List<AmeiyRemarkDto>());
             var remark = dalAmiyaRemark.GetAll().Where(e => e.IndicatorId == indicatorsId && e.HospitalId == hospitalId && e.Valid == true).ToList().GroupBy(e => e.Type);
             foreach (var item in remark)
             {
@@ -71,10 +91,11 @@ namespace Fx.Amiya.Service
                     Sort = e.Sort,
                     Content = e.Content,
                 }).OrderBy(e => e.Sort).ToList();
-                dic.Add(item.Key, list);
+                dic[item.Key] = list;
+                /*dic.Add(item.Key, list);*/
             }
 
-            if (remark == null) return new Dictionary<string, List<AmeiyRemarkDto>>();
+            
             return dic;
         }
 

@@ -1527,8 +1527,44 @@ ALTER TABLE `tbl_hospital_operation_data`
 
 
 
+---------------------------------------------王健 2022/11/24 BEGIN-----------------------------------------------------------------------------
 
 
+ALTER TABLE `tbl_indicator_order_data`
+	CHANGE COLUMN `all_sendorder_count` `all_sendorder_count` INT(10) NOT NULL DEFAULT '0' AFTER `id`,
+	CHANGE COLUMN `local_sendorder_count` `local_sendorder_count` INT(10) NOT NULL DEFAULT '0' AFTER `all_sendorder_count`,
+	CHANGE COLUMN `other_place_sendorder_count` `other_place_sendorder_count` INT(10) NOT NULL DEFAULT '0' AFTER `local_sendorder_count`,
+	CHANGE COLUMN `invalid_sendorder_count` `invalid_sendorder_count` INT(10) NOT NULL DEFAULT '0' AFTER `other_place_sendorder_count`,
+	CHANGE COLUMN `epidemic_count` `epidemic_count` INT(10) NOT NULL DEFAULT '0' AFTER `invalid_sendorder_count`,
+	CHANGE COLUMN `other_question` `other_question` VARCHAR(500) NULL COLLATE 'utf8mb4_0900_ai_ci' AFTER `epidemic_count`;
+
+
+ALTER TABLE `tbl_indicator_order_data`
+	ADD COLUMN `hospital_id` INT NOT NULL DEFAULT 0 AFTER `create_date`,
+	ADD COLUMN `indicator_id` VARCHAR(50) NOT NULL DEFAULT '0' AFTER `hospital_id`;
+
+--添加科室
+ALTER TABLE `tbl_hospital_consulation_operation_data`
+	ADD COLUMN `section_office` VARCHAR(200) NOT NULL DEFAULT '' AFTER `last_month_total_achievement`;
+
+---添加科室,总业绩
+ALTER TABLE `tbl_hospital_doctor_operation_data`
+	ADD COLUMN `section_office` VARCHAR(200) NOT NULL DEFAULT '' AFTER `old_customer_achievement_rate`,
+	ADD COLUMN `total_performance` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `section_office`;
+
+
+---执行单价
+ALTER TABLE `tbl_hospital_deal_item`
+	ADD COLUMN `deal_unit_price` DECIMAL(10,2) NULL DEFAULT NULL AFTER `performance_ratio`;
+
+
+
+
+
+
+
+
+---------------------------------------------王健 2022/11/24 END-----------------------------------------------------------------------------
 
 
 
