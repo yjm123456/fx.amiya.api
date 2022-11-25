@@ -48,6 +48,7 @@ namespace Fx.Amiya.Service
                                                        DealCount = d.DealCount,
                                                        DealPrice = d.DealPrice,
                                                        PerformanceRatio = d.PerformanceRatio,
+                                                       DealUnitPrice=d.DealUnitPrice
                                                    };
 
                 List<HospitalDealItemOperationDto> hospitalDealItemOperationList = new List<HospitalDealItemOperationDto>();
@@ -77,6 +78,7 @@ namespace Fx.Amiya.Service
                 hospitalDealItemOperation.DealCount = addDto.DealCount;
                 hospitalDealItemOperation.DealPrice = addDto.DealPrice;
                 hospitalDealItemOperation.PerformanceRatio = addDto.PerformanceRatio;
+                hospitalDealItemOperation.DealUnitPrice = addDto.DealUnitPrice;
                 await dalHospitalDealItem.AddAsync(hospitalDealItemOperation, true);
                 await indicatorSendHospitalService.UpdateSubmitStateAsync(addDto.IndicatorId, addDto.HospitalId);
                 unitOfWork.Commit();
@@ -108,6 +110,7 @@ namespace Fx.Amiya.Service
                 hospitalDealItemOperationDto.DealCount = hospitalDealItemOperation.DealCount;
                 hospitalDealItemOperationDto.DealPrice = hospitalDealItemOperation.DealPrice;
                 hospitalDealItemOperationDto.PerformanceRatio = hospitalDealItemOperation.PerformanceRatio;
+                hospitalDealItemOperationDto.DealUnitPrice = hospitalDealItemOperation.DealUnitPrice;
                 return hospitalDealItemOperationDto;
             }
             catch (Exception ex)
@@ -132,6 +135,7 @@ namespace Fx.Amiya.Service
                 hospitalDealItemOperation.DealCount = updateDto.DealCount;
                 hospitalDealItemOperation.DealPrice = updateDto.DealPrice;
                 hospitalDealItemOperation.PerformanceRatio = updateDto.PerformanceRatio;
+                hospitalDealItemOperation.DealUnitPrice = updateDto.DealUnitPrice;
                 await dalHospitalDealItem.UpdateAsync(hospitalDealItemOperation, true);
             }
             catch (Exception ex)

@@ -118,6 +118,24 @@ namespace Fx.Amiya.Background.Api.Controllers
                 hospitalOperationDataListVo.ThisMonthOldCustomerUnitPrice = data.ThisMonthOldCustomerUnitPrice;
                 hospitalOperationDataListVo.ThisMonthTotalPerformance = data.ThisMonthTotalPerformance;
                 hospitalOperationDataListVo.ThisMonthOldCustomerPerformanceRatio = data.ThisMonthOldCustomerPerformanceRatio;
+
+                hospitalOperationDataListVo.SendOrderCountChainRatio = data.SendOrderCountChainRatio;
+                hospitalOperationDataListVo.NewCustomerToHospitalCountChainRatio = data.NewCustomerToHospitalCountChainRatio;
+                hospitalOperationDataListVo.NewCustomerToHospitalRateChainRatio = data.NewCustomerToHospitalRateChainRatio;
+                hospitalOperationDataListVo.NewCustomerDealCountChainRatio = data.NewCustomerDealCountChainRatio;
+                hospitalOperationDataListVo.NewCustomerDealRateChainRatio = data.NewCustomerDealRateChainRatio;
+                hospitalOperationDataListVo.NewCustomerPerformanceChainRatio = data.NewCustomerPerformanceChainRatio;
+                hospitalOperationDataListVo.NewCustomerUnitPriceChainRatio = data.NewCustomerUnitPriceChainRatio;
+                hospitalOperationDataListVo.OldCustomerToHospitalCountChainRatio = data.OldCustomerToHospitalCountChainRatio;
+                hospitalOperationDataListVo.OldCustomerDealCountChainRatio = data.OldCustomerDealCountChainRatio;
+                hospitalOperationDataListVo.OldCustomerDealRateChainRatio = data.OldCustomerDealRateChainRatio;
+                hospitalOperationDataListVo.OldCustomerPerformanceChainRatio = data.OldCustomerPerformanceChainRatio;
+                hospitalOperationDataListVo.OldCustomerUnitPriceChainRatio = data.OldCustomerUnitPriceChainRatio;
+                hospitalOperationDataListVo.TotalPerformanceChainRatio = data.TotalPerformanceChainRatio;
+                hospitalOperationDataListVo.OldCustomerPerformanceRatioChainRatio = data.OldCustomerPerformanceRatioChainRatio;
+
+
+
                 return ResultData<HospitalOperationDataListVo>.Success().AddData("data", hospitalOperationDataListVo);
             }
             catch (Exception ex)

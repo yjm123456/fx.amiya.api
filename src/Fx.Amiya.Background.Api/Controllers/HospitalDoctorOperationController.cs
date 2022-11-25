@@ -65,15 +65,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       NewCustomerAcceptNum = d.NewCustomerAcceptNum,
                                                       NewCustomerDealNum = d.NewCustomerDealNum,
                                                       NewCustomerDealRate = d.NewCustomerDealRate,
-                                                      NewCustomerAchievement = d.NewCustomerAchievement,
-                                                      NewCustomerUnitPrice = d.NewCustomerUnitPrice,
+                                                      NewCustomerAchievement = d.NewCustomerAchievement/1000m,
+                                                      NewCustomerUnitPrice = d.NewCustomerUnitPrice/1000m,
                                                       NewCustomerAchievementRate = d.NewCustomerAchievementRate,
                                                       OldCustomerAcceptNum = d.OldCustomerAcceptNum,
                                                       OldCustomerDealNum = d.OldCustomerDealNum,
                                                       OldCustomerDealRate = d.OldCustomerDealRate,
-                                                      OldCustomerAchievement = d.OldCustomerAchievement,
-                                                      OldCustomerUnitPrice = d.OldCustomerUnitPrice,
+                                                      OldCustomerAchievement = d.OldCustomerAchievement/1000m,
+                                                      OldCustomerUnitPrice = d.OldCustomerUnitPrice/1000m,
                                                       OldCustomerAchievementRate = d.OldCustomerAchievementRate,
+                                                      SectionOffice=d.SectionOffice,
+                                                      TotalPerformance=d.TotalPerformance/1000m
                                                   };
 
                 List<HospitalDoctorOperationVo> hospitalDoctorOperationDataPageInfo = new List<HospitalDoctorOperationVo>();
@@ -102,6 +104,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.HospitalId = addVo.HospitalId;
                 addDto.IndicatorId = addVo.IndicatorId;
                 addDto.DoctorName = addVo.DoctorName;
+                addDto.SectionOffice = addVo.SectionOffice;
                 addDto.NewCustomerAcceptNum = addVo.NewCustomerAcceptNum;
                 addDto.NewCustomerDealNum = addVo.NewCustomerDealNum;
                 addDto.NewCustomerDealRate = addVo.NewCustomerDealRate;
@@ -114,7 +117,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.OldCustomerAchievement = addVo.OldCustomerAchievement;
                 addDto.OldCustomerUnitPrice = addVo.OldCustomerUnitPrice;
                 addDto.OldCustomerAchievementRate = addVo.OldCustomerAchievementRate;
-
+                addDto.TotalPerformance = addVo.TotalPerformance;
                 await hospitalDoctorOperationDataService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -159,7 +162,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 hospitalDoctorOperationDataVo.OldCustomerAchievement = hospitalDoctorOperationData.OldCustomerAchievement;
                 hospitalDoctorOperationDataVo.OldCustomerUnitPrice = hospitalDoctorOperationData.OldCustomerUnitPrice;
                 hospitalDoctorOperationDataVo.OldCustomerAchievementRate = hospitalDoctorOperationData.OldCustomerAchievementRate;
-
+                hospitalDoctorOperationDataVo.SectionOffice = hospitalDoctorOperationData.SectionOffice;
+                hospitalDoctorOperationDataVo.TotalPerformance = hospitalDoctorOperationData.TotalPerformance;
                 return ResultData<HospitalDoctorOperationVo>.Success().AddData("hospitalDoctorOperationInfo", hospitalDoctorOperationDataVo);
             }
             catch (Exception ex)
@@ -198,6 +202,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.OldCustomerAchievement = updateVo.OldCustomerAchievement;
                 updateDto.OldCustomerUnitPrice = updateVo.OldCustomerUnitPrice;
                 updateDto.OldCustomerAchievementRate = updateVo.OldCustomerAchievementRate;
+                updateDto.SectionOffice = updateVo.SectionOffice;
+                updateDto.TotalPerformance = updateVo.TotalPerformance;
                 await hospitalDoctorOperationDataService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -240,7 +246,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var res = new List<AddHospitalDoctorOperationVo>();
             var exportOrderWriteOff = res.ToList();
             var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"机构医生运营数据分析模板.xls");
+            var result = File(stream, "application/vnd.ms-excel", $"机构科室分析模板.xls");
             return result;
         }
 
@@ -293,107 +299,123 @@ namespace Fx.Amiya.Background.Api.Controllers
                             }
                             if (worksheet.Cells[x, 3].Value != null)
                             {
-                                addDto.DoctorName = worksheet.Cells[x, 3].Value.ToString();
+                                addDto.SectionOffice = Convert.ToString(worksheet.Cells[x, 3].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("科室有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 4].Value != null)
+                            {
+                                addDto.DoctorName = worksheet.Cells[x, 4].Value.ToString();
                             }
                             else
                             {
                                 throw new Exception("医生名称有参数列为空，请检查表格数据！");
                             }
-                            if (worksheet.Cells[x, 4].Value != null)
+                            if (worksheet.Cells[x, 5].Value != null)
                             {
-                                addDto.NewCustomerAcceptNum = Convert.ToInt32(worksheet.Cells[x, 4].Value.ToString());
+                                addDto.NewCustomerAcceptNum = Convert.ToInt32(worksheet.Cells[x, 5].Value.ToString());
                             }
                             else
                             {
                                 throw new Exception("新客接诊人数有参数列为空，请检查表格数据！");
                             }
-                            if (worksheet.Cells[x, 5].Value != null)
+                            if (worksheet.Cells[x, 6].Value != null)
                             {
-                                addDto.NewCustomerDealNum = Convert.ToInt32(worksheet.Cells[x, 5].Value.ToString());
+                                addDto.NewCustomerDealNum = Convert.ToInt32(worksheet.Cells[x, 6].Value.ToString());
                             }
                             else
                             {
                                 throw new Exception("新客成交人数有参数列为空，请检查表格数据！");
                             }
-                            if (worksheet.Cells[x, 6].Value != null)
+                            if (worksheet.Cells[x, 7].Value != null)
                             {
-                                addDto.NewCustomerDealRate = Convert.ToDecimal(worksheet.Cells[x, 6].Value.ToString());
+                                addDto.NewCustomerDealRate = Convert.ToDecimal(worksheet.Cells[x, 7].Value.ToString());
                             }
                             else
                             {
                                 throw new Exception("新客成交率有参数列为空，请检查表格数据！");
                             }
-                            if (worksheet.Cells[x, 7].Value != null)
+                            if (worksheet.Cells[x, 8].Value != null)
                             {
-                                addDto.NewCustomerAchievement = Convert.ToDecimal(worksheet.Cells[x, 7].Value.ToString());
+                                addDto.NewCustomerAchievement = Convert.ToDecimal(worksheet.Cells[x, 8].Value.ToString());
                             }
                             else
                             {
                                 throw new Exception("新客业绩有参数列为空，请检查表格数据！");
                             }
-                            if (worksheet.Cells[x, 8].Value != null)
+                            if (worksheet.Cells[x, 9].Value != null)
                             {
-                                addDto.NewCustomerUnitPrice = Convert.ToDecimal(worksheet.Cells[x, 8].Value.ToString());
+                                addDto.NewCustomerUnitPrice = Convert.ToDecimal(worksheet.Cells[x, 9].Value.ToString());
                             }
                             else
                             {
                                 throw new Exception("新客客单价有参数列为空，请检查表格数据！");
                             }
-                            if (worksheet.Cells[x, 9].Value != null)
+                            if (worksheet.Cells[x, 10].Value != null)
                             {
-                                addDto.NewCustomerAchievementRate = Convert.ToDecimal(worksheet.Cells[x, 9].Value.ToString());
+                                addDto.NewCustomerAchievementRate = Convert.ToDecimal(worksheet.Cells[x, 10].Value.ToString());
                             }
                             else
                             {
                                 throw new Exception("新客业绩占比有参数列为空，请检查表格数据！");
                             }
-                            if (worksheet.Cells[x, 10].Value != null)
+                            if (worksheet.Cells[x, 11].Value != null)
                             {
-                                addDto.OldCustomerAcceptNum = Convert.ToInt32(worksheet.Cells[x, 10].Value.ToString());
+                                addDto.OldCustomerAcceptNum = Convert.ToInt32(worksheet.Cells[x, 11].Value.ToString());
                             }
                             else
                             {
                                 throw new Exception("老客接诊人数有参数列为空，请检查表格数据！");
                             }
-                            if (worksheet.Cells[x, 11].Value != null)
+                            if (worksheet.Cells[x, 12].Value != null)
                             {
-                                addDto.OldCustomerDealNum = Convert.ToInt32(worksheet.Cells[x, 11].Value.ToString());
+                                addDto.OldCustomerDealNum = Convert.ToInt32(worksheet.Cells[x, 12].Value.ToString());
                             }
                             else
                             {
                                 throw new Exception("老客成交人数有参数列为空，请检查表格数据！");
                             }
-                            if (worksheet.Cells[x, 12].Value != null)
+                            if (worksheet.Cells[x, 13].Value != null)
                             {
-                                addDto.OldCustomerDealRate = Convert.ToDecimal(worksheet.Cells[x, 12].Value.ToString());
+                                addDto.OldCustomerDealRate = Convert.ToDecimal(worksheet.Cells[x, 13].Value.ToString());
                             }
                             else
                             {
                                 throw new Exception("老客成交率有参数列为空，请检查表格数据！");
                             }
-                            if (worksheet.Cells[x, 13].Value != null)
+                            if (worksheet.Cells[x, 14].Value != null)
                             {
-                                addDto.OldCustomerAchievement = Convert.ToDecimal(worksheet.Cells[x, 13].Value.ToString());
+                                addDto.OldCustomerAchievement = Convert.ToDecimal(worksheet.Cells[x, 14].Value.ToString());
                             }
                             else
                             {
                                 throw new Exception("老客业绩有参数列为空，请检查表格数据！");
                             }
-                            if (worksheet.Cells[x, 14].Value != null)
+                            if (worksheet.Cells[x, 15].Value != null)
                             {
-                                addDto.OldCustomerUnitPrice = Convert.ToDecimal(worksheet.Cells[x, 14].Value.ToString());
+                                addDto.OldCustomerUnitPrice = Convert.ToDecimal(worksheet.Cells[x, 15].Value.ToString());
                             }
                             else
                             {
                                 throw new Exception("老客客单价有参数列为空，请检查表格数据！");
                             }
-                            if (worksheet.Cells[x, 15].Value != null)
+                            if (worksheet.Cells[x, 16].Value != null)
                             {
-                                addDto.OldCustomerAchievementRate = Convert.ToDecimal(worksheet.Cells[x, 15].Value.ToString());
+                                addDto.OldCustomerAchievementRate = Convert.ToDecimal(worksheet.Cells[x, 16].Value.ToString());
                             }
                             else
                             {
                                 throw new Exception("老客业绩占比有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 17].Value != null)
+                            {
+                                addDto.TotalPerformance = Convert.ToDecimal(worksheet.Cells[x, 17].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("总业绩有参数列为空，请检查表格数据！");
                             }
                             await hospitalDoctorOperationDataService.AddAsync(addDto);
                         }

@@ -26,7 +26,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.DealCount).HasColumnName("deal_count").HasColumnType("int").IsRequired(false);
             builder.Property(t => t.DealPrice).HasColumnName("deal_price").HasColumnType("decimal(10,2)").IsRequired(false);
             builder.Property(t => t.PerformanceRatio).HasColumnName("performance_ratio").HasColumnType("decimal(10,2)").IsRequired(false);
-
+            builder.Property(t => t.DealUnitPrice).HasColumnName("deal_unit_price").HasColumnType("decimal(10,2)").IsRequired(false);
 
             builder.HasOne(t => t.HospitalInfo).WithMany(t => t.HospitalDealItemList).HasForeignKey(e=>e.HospitalId);
             builder.HasOne(t => t.HospitalOperationalIndicator).WithMany(t => t.HospitalDealItemList).HasForeignKey(e => e.IndicatorId);

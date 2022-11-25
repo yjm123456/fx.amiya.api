@@ -32,5 +32,9 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation
         /// 业绩占比
         /// </summary>
         public decimal? PerformanceRatio { get; set; }
+        /// <summary>
+        /// 执行单价
+        /// </summary>
+        public decimal? DealUnitPrice { get; set; }
     }
 }

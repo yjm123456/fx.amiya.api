@@ -19,6 +19,11 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation
         [Description("医院编号")]
         public int HospitalId { get; set; }
         /// <summary>
+        /// 科室
+        /// </summary>
+        [Description("科室")]
+        public string SectionOffice { get; set; }
+        /// <summary>
         /// 医生名称
         /// </summary>
         [Description("医生名称")]
@@ -83,5 +88,11 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation
         /// </summary>
         [Description("老客业绩占比")]
         public decimal OldCustomerAchievementRate { get; set; }
+
+        /// <summary>
+        /// 总业绩
+        /// </summary>
+        [Description("总业绩")]
+        public decimal TotalPerformance { get; set; }
     }
 }

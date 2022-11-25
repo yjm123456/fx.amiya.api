@@ -232,7 +232,7 @@ namespace Fx.Amiya.Service
         {
             var hospitalOperationInfo = await hospitalOperationIndicatorService.GetByIdAsync(indicatorsId);
             var date = hospitalOperationInfo.StartDate;
-            return await hospitalPerformanceService.GetHospitalOperationMonthData(hospitalId,date);                       
+            return await hospitalPerformanceService.GetHospitalOperationMonthData(hospitalId, date);                      
         }
     }
 }

@@ -202,7 +202,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var res = new List<AddHospitalNetWorkConsulationOperationDataVo>();
             var exportOrderWriteOff = res.ToList();
             var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"机构网咨运营数据分析模板.xlsx");
+            var result = File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"机构线上咨询师运营数据分析模板.xlsx");
             //application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
             return result;
         }

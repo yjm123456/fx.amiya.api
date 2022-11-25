@@ -26,6 +26,12 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalConsulationOperationData
         public string ConsulationName { get; set; }
 
         /// <summary>
+        /// 所属科室
+        /// </summary>
+        [Description("科室归属")]
+        public string SectionOffice { get; set; }
+
+        /// <summary>
         /// 派单数
         /// </summary>
         [Description("派单数")]
@@ -101,18 +107,18 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalConsulationOperationData
         /// </summary>
         [Description("老客客单价")]
         public decimal OldCustomerUnitPrice { get; set; }
-
+      
+        /// <summary>
+        /// 总业绩
+        /// </summary>
+        [Description("总业绩")]
+        public decimal LasttMonthTotalAchievement { get; set; }
         /// <summary>
         /// 老客业绩占比
         /// </summary>
         [Description("老客业绩占比")]
         public decimal OldCustomerAchievementRate { get; set; }
 
-        /// <summary>
-        /// 总业绩
-        /// </summary>
-        [Description("总业绩")]
-        public decimal LasttMonthTotalAchievement { get; set; }
 
     }
 }

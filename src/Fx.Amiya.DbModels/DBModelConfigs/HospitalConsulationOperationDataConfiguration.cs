@@ -36,7 +36,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
 
             builder.Property(t => t.OldCustomerAchievementRate).HasColumnName("old_customer_achievement_rate").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.LasttMonthTotalAchievement).HasColumnName("last_month_total_achievement").HasColumnType("decimal(12,2)").IsRequired();
-
+            builder.Property(t=>t.SectionOffice).HasColumnName("section_office").HasColumnType("varchar(200)").IsRequired();
 
             builder.HasOne(t => t.HospitalInfo).WithMany(t => t.HospitalConsulationOperationDataList).HasForeignKey(t => t.HospitalId);
             builder.HasOne(t => t.HospitalOperationalIndicator).WithMany(t => t.HospitalConsulationOperationDataList).HasForeignKey(t => t.IndicatorId);

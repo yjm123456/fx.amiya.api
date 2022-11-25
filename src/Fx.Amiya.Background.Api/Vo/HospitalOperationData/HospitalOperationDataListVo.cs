@@ -125,5 +125,63 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalOperationData
         /// 上月老客业绩占比
         /// </summary>
         public decimal ThisMonthOldCustomerPerformanceRatio { get; set; }
+
+
+        /// <summary>
+        /// 派单数环比
+        /// </summary>
+        public decimal SendOrderCountChainRatio { get; set; }
+        /// <summary>
+        /// 新客上门人数环比
+        /// </summary>
+        public decimal NewCustomerToHospitalCountChainRatio { get; set; }
+        /// <summary>
+        /// 新客上门率环比
+        /// </summary>
+        public decimal NewCustomerToHospitalRateChainRatio { get; set; }
+        /// <summary>
+        /// 新客成交人数环比
+        /// </summary>
+        public decimal NewCustomerDealCountChainRatio { get; set; }
+        /// <summary>
+        /// 新客成交率环比
+        /// </summary>
+        public decimal NewCustomerDealRateChainRatio { get; set; }
+        /// <summary>
+        /// 新客业绩环比
+        /// </summary>
+        public decimal NewCustomerPerformanceChainRatio { get; set; }
+        /// <summary>
+        /// 新客客单价环比
+        /// </summary>
+        public decimal NewCustomerUnitPriceChainRatio { get; set; }
+        /// <summary>
+        /// 老客上门人数环比
+        /// </summary>
+        public decimal OldCustomerToHospitalCountChainRatio { get; set; }
+        /// <summary>
+        /// 老客成交人数环比
+        /// </summary>
+        public decimal OldCustomerDealCountChainRatio { get; set; }
+        /// <summary>
+        /// 老客成交率环比
+        /// </summary>
+        public decimal OldCustomerDealRateChainRatio { get; set; }
+        /// <summary>
+        /// 老客业绩环比
+        /// </summary>
+        public decimal OldCustomerPerformanceChainRatio { get; set; }
+        /// <summary>
+        /// 老客客单价环比
+        /// </summary>
+        public decimal OldCustomerUnitPriceChainRatio { get; set; }
+        /// <summary>
+        /// 总业绩环比
+        /// </summary>
+        public decimal TotalPerformanceChainRatio { get; set; }
+        /// <summary>
+        /// 老客业绩占比环比
+        /// </summary>
+        public decimal OldCustomerPerformanceRatioChainRatio { get; set; }
     }
 }

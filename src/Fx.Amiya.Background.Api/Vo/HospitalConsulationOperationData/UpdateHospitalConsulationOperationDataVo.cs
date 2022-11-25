@@ -27,6 +27,11 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalConsulationOperationData
         public string ConsulationName { get; set; }
 
         /// <summary>
+        /// 科室归属
+        /// </summary>
+        public string SectionOffice { get; set; }
+
+        /// <summary>
         /// 派单数
         /// </summary>
         public int SendOrderNum { get; set; }
@@ -101,6 +106,6 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalConsulationOperationData
         /// 总业绩
         /// </summary>
         public decimal LasttMonthTotalAchievement { get; set; }
-
+        
     }
 }

@@ -27,6 +27,10 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalDealGoodsOperation
         /// </summary>
         public string DealItemName { get; set; }
         /// <summary>
+        /// 执行单价
+        /// </summary>
+        public decimal? DealUnitPrice { get; set; }
+        /// <summary>
         /// 成交数量
         /// </summary>
         public int? DealCount { get; set; }

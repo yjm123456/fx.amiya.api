@@ -96,6 +96,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 总业绩
         /// </summary>
         public decimal LasttMonthTotalAchievement { get; set; }
+        /// <summary>
+        /// 归属科室
+        /// </summary>
+        public string SectionOffice { get; set; }
 
         public HospitalInfo HospitalInfo { get; set; }
 

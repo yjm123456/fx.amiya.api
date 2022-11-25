@@ -30,7 +30,9 @@ namespace Fx.Amiya.Dto.IndicatorOrderData
         /// 疫情影响
         /// </summary>
         public int EpidemicCount { get; set; }
-        //其他问题
+        /// <summary>
+        /// 其他问题
+        /// </summary>
         public string OtherQuestion { get; set; }
     }
 }

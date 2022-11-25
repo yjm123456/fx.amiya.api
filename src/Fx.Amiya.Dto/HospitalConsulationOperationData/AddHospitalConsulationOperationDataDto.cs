@@ -22,6 +22,10 @@ namespace Fx.Amiya.Dto.HospitalConsulationOperationData
         /// 咨询师名字
         /// </summary>
         public string ConsulationName { get; set; }
+        /// <summary>
+        /// 科室归属
+        /// </summary>
+        public string SectionOffice { get; set; }
 
         /// <summary>
         /// 派单数
@@ -98,5 +102,6 @@ namespace Fx.Amiya.Dto.HospitalConsulationOperationData
         /// 总业绩
         /// </summary>
         public decimal LasttMonthTotalAchievement { get; set; }
+
     }
 }

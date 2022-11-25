@@ -17,6 +17,11 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalImprovePlan
         /// </summary>
         public int HospitalId { get; set; }
         /// <summary>
+        /// 类型
+        /// </summary>
+        public string Type { get; set; }
+        public int Sort { get; set; }
+        /// <summary>
         /// 机构提升措施与计划
         /// </summary>
         public string HospitalImprovePlan { get; set; }

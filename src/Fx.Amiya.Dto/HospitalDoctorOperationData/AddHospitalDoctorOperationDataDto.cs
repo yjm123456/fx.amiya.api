@@ -18,6 +18,10 @@ namespace Fx.Amiya.Dto.HospitalDoctorOperationData
         /// </summary>
         public int HospitalId { get; set; }
         /// <summary>
+        /// 科室
+        /// </summary>
+        public string SectionOffice { get; set; }
+        /// <summary>
         /// 医生名称
         /// </summary>
         public string DoctorName { get; set; }
@@ -69,5 +73,10 @@ namespace Fx.Amiya.Dto.HospitalDoctorOperationData
         /// 老客业绩占比
         /// </summary>
         public decimal OldCustomerAchievementRate { get; set; }
+        /// <summary>
+        /// 总业绩
+        /// </summary>
+        public decimal TotalPerformance { get; set; }
+
     }
 }

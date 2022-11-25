@@ -60,8 +60,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                     IndicatorId = e.IndicatorId,
                     DealItemName = e.DealItemName,
                     DealCount = e.DealCount,
-                    DealPrice = e.DealPrice,
+                    DealPrice = e.DealPrice/1000m,
                     PerformanceRatio = e.PerformanceRatio,
+                    DealUnitPrice=e.DealUnitPrice/1000m
                 }).ToList();
 
 
@@ -93,6 +94,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     DealCount = addVo.DealCount,
                     DealPrice = addVo.DealPrice,
                     PerformanceRatio = addVo.PerformanceRatio,
+                    DealUnitPrice=addVo.DealUnitPrice
                 };
                 await hospitalDealItemService.AddAsync(addDto);
 
@@ -128,6 +130,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 hospitalOperationDataVo.DealCount = item.DealCount;
                 hospitalOperationDataVo.DealPrice = item.DealPrice;
                 hospitalOperationDataVo.PerformanceRatio = item.PerformanceRatio;
+                hospitalOperationDataVo.DealUnitPrice = item.DealUnitPrice;
                 return ResultData<HospitalDealItemOperationVo>.Success().AddData("hospitalDealItemOperationInfo", hospitalOperationDataVo);
             }
             catch (Exception ex)
@@ -156,6 +159,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.DealCount = updateVo.DealCount.HasValue? updateVo.DealCount.Value:0;
                 updateDto.DealPrice = updateVo.DealPrice.HasValue ? updateVo.DealPrice.Value : 0;
                 updateDto.PerformanceRatio = updateVo.PerformanceRatio.HasValue ? updateVo.PerformanceRatio.Value : 0;
+                updateDto.DealUnitPrice = updateVo.DealUnitPrice.HasValue ? updateVo.DealUnitPrice : 0;
                 await hospitalDealItemService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -253,7 +257,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                             }
                             else
                             {
-                                throw new Exception("成交品项名称有参数列为空，请检查表格数据！");
+                                throw new Exception("执行品项名称有参数列为空，请检查表格数据！");
                             }
                             if (worksheet.Cells[x, 4].Value != null)
                             {
@@ -261,23 +265,31 @@ namespace Fx.Amiya.Background.Api.Controllers
                             }
                             else
                             {
-                                throw new Exception("成交数量有参数列为空，请检查表格数据！");
+                                throw new Exception("执行数量有参数列为空，请检查表格数据！");
                             }
                             if (worksheet.Cells[x, 5].Value != null)
                             {
-                                addDto.DealPrice = Convert.ToDecimal(worksheet.Cells[x, 5].Value.ToString());
+                                addDto.DealUnitPrice = Convert.ToDecimal(worksheet.Cells[x, 5].Value.ToString());
                             }
                             else
                             {
-                                throw new Exception("成交金额有参数列为空，请检查表格数据！");
+                                throw new Exception("执行单价有参数列为空，请检查表格数据！");
                             }
                             if (worksheet.Cells[x, 6].Value != null)
                             {
-                                addDto.PerformanceRatio = Convert.ToDecimal(worksheet.Cells[x, 6].Value.ToString());
+                                addDto.DealPrice = Convert.ToDecimal(worksheet.Cells[x, 6].Value.ToString());
                             }
                             else
                             {
-                                throw new Exception("业绩占比有参数列为空，请检查表格数据！");
+                                throw new Exception("执行金额有参数列为空，请检查表格数据！");
+                            }
+                            if (worksheet.Cells[x, 7].Value != null)
+                            {
+                                addDto.PerformanceRatio = Convert.ToDecimal(worksheet.Cells[x, 7].Value.ToString());
+                            }
+                            else
+                            {
+                                throw new Exception("执行占比有参数列为空，请检查表格数据！");
                             }
                             await hospitalDealItemService.AddAsync(addDto);
                         }

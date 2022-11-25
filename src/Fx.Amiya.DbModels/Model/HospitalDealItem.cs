@@ -26,6 +26,10 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public int? DealCount { get; set; }
         /// <summary>
+        /// 执行单价
+        /// </summary>
+        public decimal? DealUnitPrice { get; set; }
+        /// <summary>
         /// 成交金额
         /// </summary>
         public decimal? DealPrice { get; set; }

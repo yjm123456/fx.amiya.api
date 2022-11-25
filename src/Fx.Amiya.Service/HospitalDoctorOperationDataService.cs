@@ -57,6 +57,8 @@ namespace Fx.Amiya.Service
                                                       OldCustomerAchievement = d.OldCustomerAchievement,
                                                       OldCustomerUnitPrice = d.OldCustomerUnitPrice,
                                                       OldCustomerAchievementRate = d.OldCustomerAchievementRate,
+                                                      SectionOffice=d.SectionOffice,
+                                                      TotalPerformance=d.TotalPerformance
                                                   };
 
                 List<HospitalDoctorOperationDataDto> hospitalDoctorOperationDataList = new List<HospitalDoctorOperationDataDto>();
@@ -83,6 +85,7 @@ namespace Fx.Amiya.Service
                 hospitalDoctorOperationData.HospitalId = addDto.HospitalId;
                 hospitalDoctorOperationData.IndicatorId = addDto.IndicatorId;
                 hospitalDoctorOperationData.DoctorName = addDto.DoctorName;
+                hospitalDoctorOperationData.SectionOffice = addDto.SectionOffice;
                 hospitalDoctorOperationData.NewCustomerAcceptNum = addDto.NewCustomerAcceptNum;
                 hospitalDoctorOperationData.NewCustomerDealNum = addDto.NewCustomerDealNum;
                 hospitalDoctorOperationData.NewCustomerDealRate = addDto.NewCustomerDealRate;
@@ -95,6 +98,7 @@ namespace Fx.Amiya.Service
                 hospitalDoctorOperationData.OldCustomerAchievement = addDto.OldCustomerAchievement;
                 hospitalDoctorOperationData.OldCustomerUnitPrice = addDto.OldCustomerUnitPrice;
                 hospitalDoctorOperationData.OldCustomerAchievementRate = addDto.OldCustomerAchievementRate;
+                hospitalDoctorOperationData.TotalPerformance = addDto.TotalPerformance;
                 await dalHospitalDoctorOperationData.AddAsync(hospitalDoctorOperationData, true);
                 await indicatorSendHospitalService.UpdateSubmitStateAsync(addDto.IndicatorId, addDto.HospitalId);
                 unitOfWork.Commit();
@@ -136,6 +140,8 @@ namespace Fx.Amiya.Service
                 hospitalDoctorOperationDataDto.OldCustomerAchievement = hospitalDoctorOperationData.OldCustomerAchievement;
                 hospitalDoctorOperationDataDto.OldCustomerUnitPrice = hospitalDoctorOperationData.OldCustomerUnitPrice;
                 hospitalDoctorOperationDataDto.OldCustomerAchievementRate = hospitalDoctorOperationData.OldCustomerAchievementRate;
+                hospitalDoctorOperationDataDto.SectionOffice = hospitalDoctorOperationData.SectionOffice;
+                hospitalDoctorOperationDataDto.TotalPerformance = hospitalDoctorOperationData.TotalPerformance;
                 return hospitalDoctorOperationDataDto;
             }
             catch (Exception ex)
@@ -169,6 +175,8 @@ namespace Fx.Amiya.Service
                 hospitalDoctorOperationData.OldCustomerUnitPrice = updateDto.OldCustomerUnitPrice;
                 hospitalDoctorOperationData.OldCustomerAchievementRate = updateDto.OldCustomerAchievementRate;
                 hospitalDoctorOperationData.UpdateDate = DateTime.Now;
+                hospitalDoctorOperationData.SectionOffice = updateDto.SectionOffice;
+                hospitalDoctorOperationData.TotalPerformance = updateDto.TotalPerformance;
 
                 await dalHospitalDoctorOperationData.UpdateAsync(hospitalDoctorOperationData, true);
             }

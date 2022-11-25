@@ -350,8 +350,22 @@ namespace Fx.Amiya.Service
             //前月总业绩
             result.LastMonthTotalPerformance = beforeContentPlatFormOrderDealInfoList.Where(x => x.IsDeal == true).Sum(x => x.Price);
             //前月老客业绩占比
-            result.LastMonthOldCustomerPerformanceRatio = CalculateTargetComplete(beforeOldCustomerTotalPrice, result.LastMonthTotalPerformance).Value ; 
+            result.LastMonthOldCustomerPerformanceRatio = CalculateTargetComplete(beforeOldCustomerTotalPrice, result.LastMonthTotalPerformance).Value ;
 
+            result.SendOrderCountChainRatio = CalculateChainratio(result.ThisMonthSendOrderCount,result.LastMonthSendOrderCount).Value;
+            result.NewCustomerToHospitalCountChainRatio = CalculateChainratio(result.ThisMonthNewCustomerToHospitalCount, result.LastMonthNewCustomerToHospitalCount).Value;
+            result.NewCustomerToHospitalRateChainRatio = CalculateChainratio(result.ThisMonthNewCustomerToHospitalRate, result.LastMonthNewCustomerToHospitalRate).Value;
+            result.NewCustomerDealCountChainRatio = CalculateChainratio(result.ThisMonthNewCustomerDealCount, result.LastMonthNewCustomerDealCount).Value;
+            result.NewCustomerDealRateChainRatio = CalculateChainratio(result.ThisMonthNewCustomerDealRate, result.LastMonthNewCustomerDealRate).Value;
+            result.NewCustomerPerformanceChainRatio = CalculateChainratio(result.ThisMonthNewCustomerPerformance, result.LastMonthNewCustomerPerformance).Value;
+            result.NewCustomerUnitPriceChainRatio = CalculateChainratio(result.ThisMonthNewCustomerUnitPrice, result.LastMonthNewCustomerUnitPrice).Value;
+            result.OldCustomerToHospitalCountChainRatio = CalculateChainratio(result.ThisMonthOldCustomerToHospitalCount, result.LastMonthOldCustomerToHospitalCount).Value;
+            result.OldCustomerDealCountChainRatio = CalculateChainratio(result.ThisMonthOldCustomerDealCount, result.LastMonthOldCustomerDealCount).Value;
+            result.OldCustomerDealRateChainRatio = CalculateChainratio(result.ThisMonthOldCustomerDealRate, result.LastMonthOldCustomerDealRate).Value;
+            result.OldCustomerPerformanceChainRatio = CalculateChainratio(result.ThisMonthOldCustomerPerformance, result.LastMonthOldCustomerPerformance).Value;
+            result.OldCustomerUnitPriceChainRatio = CalculateChainratio(result.ThisMonthOldCustomerUnitPrice, result.LastMonthOldCustomerUnitPrice).Value;
+            result.TotalPerformanceChainRatio = CalculateChainratio(result.ThisMonthTotalPerformance, result.LastMonthTotalPerformance).Value;
+            result.OldCustomerPerformanceRatioChainRatio = CalculateChainratio(result.ThisMonthOldCustomerPerformanceRatio, result.LastMonthOldCustomerPerformanceRatio).Value;
 
             return result;
         }

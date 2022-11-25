@@ -61,6 +61,7 @@ namespace Fx.Amiya.Service
 
                                                            OldCustomerAchievementRate = d.OldCustomerAchievementRate,
                                                            LasttMonthTotalAchievement = d.LasttMonthTotalAchievement,
+                                                           SectionOffice=d.SectionOffice
                                                        };
 
                 List<HospitalConsulationOperationDataDto> hospitalConsulationOperationDataList = new List<HospitalConsulationOperationDataDto>();
@@ -103,6 +104,7 @@ namespace Fx.Amiya.Service
 
                 hospitalConsulationOperationData.OldCustomerAchievementRate = addDto.OldCustomerAchievementRate;
                 hospitalConsulationOperationData.LasttMonthTotalAchievement = addDto.LasttMonthTotalAchievement;
+                hospitalConsulationOperationData.SectionOffice = addDto.SectionOffice;
                 await dalHospitalConsulationOperationData.AddAsync(hospitalConsulationOperationData, true);
 
 
@@ -151,6 +153,7 @@ namespace Fx.Amiya.Service
 
                 hospitalConsulationOperationDataDto.OldCustomerAchievementRate = hospitalConsulationOperationData.OldCustomerAchievementRate;
                 hospitalConsulationOperationDataDto.LasttMonthTotalAchievement = hospitalConsulationOperationData.LasttMonthTotalAchievement;
+                hospitalConsulationOperationDataDto.SectionOffice= hospitalConsulationOperationData.SectionOffice;
                 return hospitalConsulationOperationDataDto;
             }
             catch (Exception ex)
@@ -189,6 +192,7 @@ namespace Fx.Amiya.Service
 
                 hospitalConsulationOperationData.OldCustomerAchievementRate = updateDto.OldCustomerAchievementRate;
                 hospitalConsulationOperationData.LasttMonthTotalAchievement = updateDto.LasttMonthTotalAchievement;
+                hospitalConsulationOperationData.SectionOffice = updateDto.SectionOffice;
                 hospitalConsulationOperationData.UpdateDate = DateTime.Now;
 
                 await dalHospitalConsulationOperationData.UpdateAsync(hospitalConsulationOperationData, true);

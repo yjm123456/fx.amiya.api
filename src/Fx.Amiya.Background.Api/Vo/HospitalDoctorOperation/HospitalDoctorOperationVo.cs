@@ -67,6 +67,14 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalDoctorOperation
         /// 老客业绩占比
         /// </summary>
         public decimal OldCustomerAchievementRate { get; set; }
+        /// <summary>
+        /// 科室
+        /// </summary>
+        public string SectionOffice { get; set; }
+        /// <summary>
+        /// 总业绩
+        /// </summary>
+        public decimal TotalPerformance { get; set; }
 
     }
 }

@@ -16,36 +16,45 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalImprovePlan
         /// </summary>
         public int HospitalId { get; set; }
         /// <summary>
-        /// 机构提升措施与计划
+        /// 类型
+        /// </summary>
+        public string Type { get; set; }
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int Sort { get; set; }
+        /// <summary>
+        /// 机构运营优点
         /// </summary>
         public string HospitalImprovePlan { get; set; }
         /// <summary>
-        /// 啊美雅对机构提升措施与计划批注
+        /// 啊美雅运营优点批注
         /// </summary>
         public string AmiyaImprovePlanRemark { get; set; }
         /// <summary>
-        /// 机构分享成功案例
+        /// 机构运营不足
         /// </summary>
         public string HospitalShareSuccessCase { get; set; }
         /// <summary>
-        /// 啊美雅对机构分享成功案例批注
+        /// 啊美雅对机构运营不足批注
         /// </summary>
         public string AmiyaShareSuccessCase { get; set; }
         /// <summary>
-        /// 机构对啊美雅的提升建议
+        /// 机构提升计划
         /// </summary>
         public string ImproveSuggestionToAmiya { get; set; }
         /// <summary>
-        /// 啊美雅批注机构提升建议
+        /// 啊美雅机构提升计划批注
         /// </summary>
         public string AmiyaImproveSuggestionRemark { get; set; }
         /// <summary>
-        /// 机构对啊美雅的提升需求
+        /// 机构运营需求
         /// </summary>
         public string ImproveDemandToAmiya { get; set; }
         /// <summary>
-        /// 啊美雅批注机构提升需求
+        /// 啊美雅对机构运营需求批注
         /// </summary>
         public string AmiyaImproveDemandRemark { get; set; }
     }
+    
 }

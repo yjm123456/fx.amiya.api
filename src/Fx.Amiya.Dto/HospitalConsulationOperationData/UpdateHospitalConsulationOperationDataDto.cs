@@ -102,5 +102,9 @@ namespace Fx.Amiya.Dto.HospitalConsulationOperationData
         /// 总业绩
         /// </summary>
         public decimal LasttMonthTotalAchievement { get; set; }
+        /// <summary>
+        /// 科室归属
+        /// </summary>
+        public string SectionOffice { get; set; }
     }
 }
