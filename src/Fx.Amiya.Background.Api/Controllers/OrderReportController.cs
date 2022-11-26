@@ -1891,7 +1891,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                       {
                           RecordDate = d.RecordDate,
                           LiveAnchor = d.LiveAnchor,
-                          CreateDate = d.CreateDate,
 
                           TikTokOperationEmployeeName = d.TikTokOperationEmployeeName,
                           TikTokSendNum = d.TikTokSendNum,
@@ -2050,7 +2049,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                       {
                           RecordDate = d.RecordDate,
                           LiveAnchor = d.LiveAnchor,
-                          CreateDate = d.CreateDate,
 
 
                           TikTokOperationEmployeeName = d.TikTokOperationEmployeeName,

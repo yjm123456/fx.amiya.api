@@ -796,11 +796,6 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("直播后运营数据更新时间")]
         public DateTime? AfterLivingUpdateDate { get; set; }
-        /// <summary>
-        /// 创建日期
-        /// </summary>
-        [Description("创建日期")]
-        public DateTime CreateDate { get; set; }
         
         
     }

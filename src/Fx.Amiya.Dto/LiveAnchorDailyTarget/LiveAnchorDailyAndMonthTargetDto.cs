@@ -12,15 +12,6 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
     public class LiveAnchorDailyAndMonthTargetDto
     {
 
-        /// <summary>
-        /// 编号
-        /// </summary>
-        public string Id { get; set; }
-
-        /// <summary>
-        /// 主播月目标关联id
-        /// </summary>
-        public string LiveanchorMonthlyTargetId { get; set; }
 
         /// <summary>
         /// 主播
@@ -28,22 +19,9 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         public string LiveAnchor { get; set; }
 
         /// <summary>
-        /// 创建日期
-        /// </summary>
-        public DateTime CreateDate { get; set; }
-
-        /// <summary>
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
-        /// <summary>
-        /// 直播中人员id
-        /// </summary>
-        public int LivingTrackingEmployeeId { get; set; }
-        /// <summary>
-        /// 网咨人员Id
-        /// </summary>
-        public int NetWorkConsultingEmployeeId { get; set; }
 
         /// <summary>
         /// 直播中人员名称
@@ -54,13 +32,6 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 网咨人员名称
         /// </summary>
         public string NetWorkConsultingEmployeeName { get; set; }
-
-
-
-        /// <summary>
-        /// 知乎运营人员Id
-        /// </summary>
-        public int ZhihuOperationEmployeeId { get; set; }
         /// <summary>
         /// 知乎运营人员名称
         /// </summary>
@@ -106,10 +77,6 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
 
 
 
-        /// <summary>
-        /// 微博运营人员Id
-        /// </summary>
-        public int SinaWeiBoOperationEmployeeId { get; set; }
         /// <summary>
         /// 微博运营人员名称
         /// </summary>

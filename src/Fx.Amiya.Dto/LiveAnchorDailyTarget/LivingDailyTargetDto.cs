@@ -17,10 +17,69 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         public string OperationEmpName { get; set; }
 
         public decimal LivingRoomFlowInvestmentNum { get; set; }
+        /// <summary>
+        /// 直播间投流费用目标
+        /// </summary>
+        public decimal LivingRoomFlowInvestmentTarget { get; set; }
+
+        /// <summary>
+        /// 月累计直播间投流费用
+        /// </summary>
+        public decimal LivingRoomCumulativeFlowInvestment { get; set; }
+        /// <summary>
+        /// 直播间投流费用完成率
+        /// </summary>
+        public string LivingRoomFlowInvestmentCompleteRate { get; set; }
 
         public int Consultation { get; set; }
+
+        /// <summary>
+        /// 99面诊卡目标
+        /// </summary>
+        public int ConsultationTarget { get; set; }
+
+        /// <summary>
+        /// 累计99面诊卡
+        /// </summary>
+        public int CumulativeConsultation { get; set; }
+
+        /// <summary>
+        /// 99面诊卡完成率
+        /// </summary>
+        public string ConsultationCompleteRate { get; set; }
         public int Consultation2 { get; set; }
+
+        /// <summary>
+        /// 199面诊卡目标
+        /// </summary>
+        public int ConsultationTarget2 { get; set; }
+
+        /// <summary>
+        /// 累计199面诊卡
+        /// </summary>
+        public int CumulativeConsultation2 { get; set; }
+
+        /// <summary>
+        /// 199面诊卡完成率
+        /// </summary>
+        public string ConsultationCompleteRate2 { get; set; }
         public decimal CargoSettlementCommission { get; set; }
+
+
+        /// <summary>
+        /// 带货结算佣金目标
+        /// </summary>
+        public decimal CargoSettlementCommissionTarget { get; set; }
+
+        /// <summary>
+        /// 月累计带货结算佣金金额
+        /// </summary>
+        public decimal CumulativeCargoSettlementCommission { get; set; }
+
+        /// <summary>
+        /// 带货结算佣金完成率
+        /// </summary>
+        public string CargoSettlementCommissionCompleteRate { get; set; }
 
         public DateTime RecordDate { get; set; }
     }
