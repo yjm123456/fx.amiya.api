@@ -1459,15 +1459,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="startDate">开始时间</param>
         /// <param name="endDate">结束时间</param>
         /// <param name="customerName">客户名称</param>
+        /// <param name="appType">下单平台</param>
         /// <param name="CheckState">审核状态</param>
         /// <param name="ReturnBackPriceState">是否回款</param>
         /// <returns></returns>
         [HttpGet("customerOrderReceivableReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<CustomerOrderReceivableReportVo>>> GetCustomerOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? CheckState, bool? ReturnBackPriceState, string customerName)
+        public async Task<ResultData<List<CustomerOrderReceivableReportVo>>> GetCustomerOrderReceivableAsync(DateTime? startDate, DateTime? endDate,int? appType, int? CheckState, bool? ReturnBackPriceState, string customerName)
         {
 
-            var q = await orderService.GetCustomerOrderReceivableAsync(startDate, endDate, CheckState, ReturnBackPriceState, customerName, true);
+            var q = await orderService.GetCustomerOrderReceivableAsync(startDate, endDate, appType, CheckState, ReturnBackPriceState, customerName, true);
             var res = from d in q
                       select new CustomerOrderReceivableReportVo()
                       {
@@ -1506,12 +1507,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="startDate">开始时间</param>
         /// <param name="endDate">结束时间</param>
         /// <param name="CheckState">审核状态</param>
+        /// <param name="appType">下单平台</param>
         /// <param name="ReturnBackPriceState">是否回款</param>
         /// <param name="customerName">客户名称</param>
         /// <returns></returns>
         [HttpGet("customerOrderReceivableExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> GetCustomerOrderReceivableExportAsync(DateTime? startDate, DateTime? endDate, int? CheckState, bool? ReturnBackPriceState, string customerName)
+        public async Task<FileStreamResult> GetCustomerOrderReceivableExportAsync(DateTime? startDate, DateTime? endDate, int? appType, int? CheckState, bool? ReturnBackPriceState, string customerName)
         {
             bool isHidePhone = true;
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
@@ -1520,7 +1522,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 isHidePhone = false;
             }
 
-            var q = await orderService.GetCustomerOrderReceivableAsync(startDate, endDate, CheckState, ReturnBackPriceState, customerName, isHidePhone);
+            var q = await orderService.GetCustomerOrderReceivableAsync(startDate, endDate, appType, CheckState, ReturnBackPriceState, customerName, isHidePhone);
             var res = from d in q
                       select new CustomerOrderReceivableReportVo()
                       {
@@ -1942,11 +1944,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                           CumulativeVideoFlowinvestment = d.CumulativeVideoFlowinvestment,
                           VideoFlowinvestmentCompleteRate = d.VideoFlowinvestmentCompleteRate,
 
-                          TodaySendNum = d.TodaySendNum,
+                          TodaySendNum = d.TikTokSendNum + d.ZhihuSendNum + d.XiaoHongShuSendNum + d.SinaWeiBoSendNum + d.VideoSendNum,
                           ReleaseTarget = d.ReleaseTarget,
                           CumulativeRelease = d.CumulativeRelease,
                           ReleaseCompleteRate = d.ReleaseCompleteRate,
-                          FlowInvestmentNum = d.FlowInvestmentNum,
+                          FlowInvestmentNum = d.TikTokFlowInvestmentNum + d.ZhihuFlowInvestmentNum + d.XiaoHongShuFlowInvestmentNum + d.SinaWeiBoFlowInvestmentNum + d.VideoFlowInvestmentNum,
                           FlowInvestmentTarget = d.FlowInvestmentTarget,
                           CumulativeFlowInvestment = d.CumulativeFlowInvestment,
                           FlowInvestmentCompleteRate = d.FlowInvestmentCompleteRate,
@@ -2101,11 +2103,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                           CumulativeVideoFlowinvestment = d.CumulativeVideoFlowinvestment,
                           VideoFlowinvestmentCompleteRate = d.VideoFlowinvestmentCompleteRate,
 
-                          TodaySendNum = d.TodaySendNum,
+                          TodaySendNum = d.TikTokSendNum + d.ZhihuSendNum + d.XiaoHongShuSendNum + d.SinaWeiBoSendNum + d.VideoSendNum,
                           ReleaseTarget = d.ReleaseTarget,
                           CumulativeRelease = d.CumulativeRelease,
                           ReleaseCompleteRate = d.ReleaseCompleteRate,
-                          FlowInvestmentNum = d.FlowInvestmentNum,
+                          FlowInvestmentNum = d.TikTokFlowInvestmentNum + d.ZhihuFlowInvestmentNum + d.XiaoHongShuFlowInvestmentNum + d.SinaWeiBoFlowInvestmentNum + d.VideoFlowInvestmentNum,
                           FlowInvestmentTarget = d.FlowInvestmentTarget,
                           LivingRoomFlowInvestmentNum = d.LivingRoomFlowInvestmentNum,
                           LivingRoomFlowInvestmentTarget = d.LivingRoomFlowInvestmentTarget,

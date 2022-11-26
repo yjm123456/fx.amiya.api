@@ -18,37 +18,94 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
 
         public decimal FlowInvestmentNum { get; set; }
         /// <summary>
-        /// 知乎投流费用目标
+        /// 投流费用目标
         /// </summary>
         public decimal FlowinvestmentTarget { get; set; }
         /// <summary>
-        /// 累计知乎投流费用
+        /// 累计投流费用
         /// </summary>
 
         public decimal CumulativeFlowinvestment { get; set; }
         /// <summary>
-        /// 知乎投流费用完成率
+        /// 投流费用完成率
         /// </summary>
         public string FlowinvestmentCompleteRate { get; set; }
+
+
+        /// <summary>
+        /// 运营渠道投流费用
+        /// </summary>
+        public decimal OperationFlowInvestmentNum { get; set; }
+        /// <summary>
+        /// 运营渠道投流费用目标
+        /// </summary>
+        public decimal OperationFlowinvestmentTarget { get; set; }
+        /// <summary>
+        /// 累计运营渠道投流费用
+        /// </summary>
+
+        public decimal CumulativeOperationFlowinvestment { get; set; }
+        /// <summary>
+        /// 运营渠道投流费用完成率
+        /// </summary>
+        public string OperationFlowinvestmentCompleteRate { get; set; }
 
         public int SendNum { get; set; }
 
 
         /// <summary>
-        /// 月知乎发布目标
+        /// 月发布目标
         /// </summary>
         public int ReleaseTarget { get; set; }
 
         /// <summary>
-        /// 月累计知乎发布条数
+        /// 月累计发布条数
         /// </summary>
         public int CumulativeRelease { get; set; }
 
         /// <summary>
-        /// 知乎发布目标完成率
+        /// 发布目标完成率
         /// </summary>
         public string ReleaseCompleteRate { get; set; }
 
+        /// <summary>
+        /// 今日总发布
+        /// </summary>
+        public int TodayAllSendNum { get; set; }
+        /// <summary>
+        /// 月总发布目标
+        /// </summary>
+        public int MonthlyAllSendTarget { get; set; }
+        /// <summary>
+        /// 累计总发布数
+        /// </summary>
+        public int CumulativeMonthlyAllSendNum { get; set; }
+        /// <summary>
+        /// 总发布完成率
+        /// </summary>
+        public string MonthlyAllSendNumCompleteRate { get; set; }
+
+        /// <summary>
+        /// 今日加V量
+        /// </summary>
+        public int AddWechatNum { get; set; }
+
+        /// <summary>
+        /// 派单量
+        /// </summary>
+        public int SendOrderNum { get; set; }
+
+        /// <summary>
+        /// 成交人数
+        /// </summary>
+        public int DealNum { get; set; }
+        /// <summary>
+        /// 今日业绩
+        /// </summary>
+
+        public decimal PerformanceNum { get; set; }
+
         public DateTime RecordDate { get; set; }
+
     }
 }

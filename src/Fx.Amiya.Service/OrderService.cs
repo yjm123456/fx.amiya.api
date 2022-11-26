@@ -3452,7 +3452,7 @@ namespace Fx.Amiya.Service
             return orderPageInfo;
         }
 
-        public async Task<List<OrderWriteOffDto>> GetCustomerOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? CheckState, bool? ReturnBackPriceState, string customerName, bool isHidePhone)
+        public async Task<List<OrderWriteOffDto>> GetCustomerOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? appType, int? CheckState, bool? ReturnBackPriceState, string customerName, bool isHidePhone)
         {
             var orders = from d in dalOrderInfo.GetAll()
                          where (d.StatusCode == OrderStatusCode.TRADE_FINISHED)
@@ -3483,6 +3483,12 @@ namespace Fx.Amiya.Service
             {
                 orders = from d in orders
                          where d.IsReturnBackPrice == ReturnBackPriceState.Value
+                         select d;
+            }
+            if (appType.HasValue)
+            {
+                orders = from d in orders
+                         where d.AppType == appType.Value
                          select d;
             }
             var order = from d in orders

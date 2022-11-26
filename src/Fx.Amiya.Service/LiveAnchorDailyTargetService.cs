@@ -559,6 +559,17 @@ namespace Fx.Amiya.Service
                 FxPageInfo<BeforeLivingDailyTargetDto> liveAnchorDailyTargetPageInfo = new FxPageInfo<BeforeLivingDailyTargetDto>();
                 liveAnchorDailyTargetPageInfo.TotalCount = BeforeLivingDailyTargetDtoList.Count();
                 liveAnchorDailyTargetPageInfo.List = BeforeLivingDailyTargetDtoList.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+                foreach (var x in liveAnchorDailyTargetPageInfo.List)
+                {
+                    var afterLivingInfo = await _afterLivingDailyTarget.GetAll().Where(z => z.Valid && z.RecordDate == x.RecordDate && z.LiveAnchorMonthlyTargetId == x.LiveAnchorMonthlyTargetId).FirstOrDefaultAsync();
+                    if (afterLivingInfo != null)
+                    {
+                        x.AddWechatNum = afterLivingInfo.AddWechatNum;
+                        x.SendOrderNum = afterLivingInfo.SendOrderNum;
+                        x.DealNum = afterLivingInfo.DealNum;
+                        x.PerformanceNum = afterLivingInfo.PerformanceNum;
+                    }
+                }
                 return liveAnchorDailyTargetPageInfo;
             }
             catch (Exception ex)
@@ -1477,7 +1488,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var liveAnchorDailyTarget = await _beforeLivingXiaoHongShuDailyTraget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                var liveAnchorDailyTarget = await _beforeLivingSinaWeiBoDailyTraget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
                 if (updateDto.Id != liveAnchorDailyTarget.Id)
                 {
                     unitOfWork.RollBack();
@@ -1506,7 +1517,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.FlowInvestmentNum = updateDto.FlowInvestmentNum;
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
-                await _beforeLivingXiaoHongShuDailyTraget.UpdateAsync(liveAnchorDailyTarget, true);
+                await _beforeLivingSinaWeiBoDailyTraget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyTargetRateAndNumDto();
                 lasteditLiveAnchorMonthlyTarget.Id = updateDto.LiveanchorMonthlyTargetId;
@@ -1988,10 +1999,18 @@ namespace Fx.Amiya.Service
                                           CumulativeFlowinvestment = d.LiveAnchorMonthlyTarget.CumulativeZhihuFlowinvestment,
                                           FlowinvestmentCompleteRate = d.LiveAnchorMonthlyTarget.ZhihuFlowinvestmentCompleteRate.ToString() + "%",
 
+                                          OperationFlowinvestmentTarget = d.LiveAnchorMonthlyTarget.FlowInvestmentTarget,
+                                          CumulativeOperationFlowinvestment = d.LiveAnchorMonthlyTarget.CumulativeFlowInvestment,
+                                          OperationFlowinvestmentCompleteRate = d.LiveAnchorMonthlyTarget.FlowInvestmentCompleteRate.ToString() + "%",
+
                                           SendNum = d.SendNum,
                                           ReleaseTarget = d.LiveAnchorMonthlyTarget.ZhihuReleaseTarget,
                                           CumulativeRelease = d.LiveAnchorMonthlyTarget.CumulativeZhihuRelease,
                                           ReleaseCompleteRate = d.LiveAnchorMonthlyTarget.ZhihuReleaseCompleteRate.ToString() + "%",
+
+                                          MonthlyAllSendTarget = d.LiveAnchorMonthlyTarget.ReleaseTarget,
+                                          CumulativeMonthlyAllSendNum = d.LiveAnchorMonthlyTarget.CumulativeRelease,
+                                          MonthlyAllSendNumCompleteRate = d.LiveAnchorMonthlyTarget.ReleaseCompleteRate.ToString() + "%",
                                       };
                 var tikTokDailyInfoList = await tikTokDailyInfo.ToListAsync();
 
@@ -2218,14 +2237,21 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.RecordDate = x.RecordDate;
                     liveAnchorDailyTargetDto.LiveAnchor = x.LiveAnchor;
                     liveAnchorDailyTargetDto.TikTokOperationEmployeeName = x.OperationEmpName;
-                    liveAnchorDailyTargetDto.SinaWeiBoSendNum = x.SendNum;
-                    liveAnchorDailyTargetDto.SinaWeiBoReleaseTarget = x.ReleaseTarget;
-                    liveAnchorDailyTargetDto.SinaWeiBoCumulativeRelease = x.CumulativeRelease;
-                    liveAnchorDailyTargetDto.SinaWeiBoReleaseCompleteRate = x.ReleaseCompleteRate;
-                    liveAnchorDailyTargetDto.SinaWeiBoFlowInvestmentNum = x.FlowInvestmentNum;
-                    liveAnchorDailyTargetDto.SinaWeiBoFlowinvestmentTarget = x.FlowinvestmentTarget;
-                    liveAnchorDailyTargetDto.CumulativeSinaWeiBoFlowinvestment = x.CumulativeFlowinvestment;
-                    liveAnchorDailyTargetDto.SinaWeiBoFlowinvestmentCompleteRate = x.FlowinvestmentCompleteRate;
+                    liveAnchorDailyTargetDto.TikTokSendNum = x.SendNum;
+                    liveAnchorDailyTargetDto.TikTokReleaseTarget = x.ReleaseTarget;
+                    liveAnchorDailyTargetDto.TikTokCumulativeRelease = x.CumulativeRelease;
+                    liveAnchorDailyTargetDto.TikTokReleaseCompleteRate = x.ReleaseCompleteRate;
+                    liveAnchorDailyTargetDto.ReleaseTarget = x.MonthlyAllSendTarget;
+                    liveAnchorDailyTargetDto.CumulativeRelease = x.CumulativeMonthlyAllSendNum;
+                    liveAnchorDailyTargetDto.ReleaseCompleteRate = x.MonthlyAllSendNumCompleteRate;
+
+                    liveAnchorDailyTargetDto.TikTokFlowInvestmentNum = x.FlowInvestmentNum;
+                    liveAnchorDailyTargetDto.TikTokFlowinvestmentTarget = x.FlowinvestmentTarget;
+                    liveAnchorDailyTargetDto.CumulativeTikTokFlowinvestment = x.CumulativeFlowinvestment;
+                    liveAnchorDailyTargetDto.TikTokFlowinvestmentCompleteRate = x.FlowinvestmentCompleteRate;
+                    liveAnchorDailyTargetDto.FlowInvestmentTarget = x.OperationFlowinvestmentTarget;
+                    liveAnchorDailyTargetDto.CumulativeFlowInvestment = x.CumulativeOperationFlowinvestment;
+                    liveAnchorDailyTargetDto.FlowInvestmentCompleteRate = x.OperationFlowinvestmentCompleteRate;
                     liveAnchorDailyTargetDto.TikTokUpdateDate = x.UpdateDate;
 
                     ///小红书
@@ -2343,7 +2369,7 @@ namespace Fx.Amiya.Service
                         liveAnchorDailyTargetDto.LivingRoomFlowInvestmentNum = 0.00M;
                         liveAnchorDailyTargetDto.LivingRoomFlowInvestmentTarget = 0.00M;
                         liveAnchorDailyTargetDto.LivingRoomCumulativeFlowInvestment = 0.00M;
-                        liveAnchorDailyTargetDto.LivingRoomFlowInvestmentCompleteRate ="0%";
+                        liveAnchorDailyTargetDto.LivingRoomFlowInvestmentCompleteRate = "0%";
                         liveAnchorDailyTargetDto.CargoSettlementCommission = 0.00M;
                         liveAnchorDailyTargetDto.CargoSettlementCommissionTarget = 0.00M;
                         liveAnchorDailyTargetDto.CumulativeCargoSettlementCommission = 0.00M;
@@ -2361,13 +2387,13 @@ namespace Fx.Amiya.Service
                     {
                         liveAnchorDailyTargetDto.LivingTrackingEmployeeName = livingThisDayDataInfo.OperationEmpName;
                         liveAnchorDailyTargetDto.LivingRoomFlowInvestmentNum = livingThisDayDataInfo.LivingRoomFlowInvestmentNum;
-                        liveAnchorDailyTargetDto.LivingRoomFlowInvestmentTarget = livingThisDayDataInfo.LivingRoomFlowInvestmentTarget ;
-                        liveAnchorDailyTargetDto.LivingRoomCumulativeFlowInvestment =livingThisDayDataInfo.LivingRoomCumulativeFlowInvestment;
+                        liveAnchorDailyTargetDto.LivingRoomFlowInvestmentTarget = livingThisDayDataInfo.LivingRoomFlowInvestmentTarget;
+                        liveAnchorDailyTargetDto.LivingRoomCumulativeFlowInvestment = livingThisDayDataInfo.LivingRoomCumulativeFlowInvestment;
                         liveAnchorDailyTargetDto.LivingRoomFlowInvestmentCompleteRate = livingThisDayDataInfo.LivingRoomFlowInvestmentCompleteRate;
                         liveAnchorDailyTargetDto.CargoSettlementCommission = livingThisDayDataInfo.CargoSettlementCommission;
                         liveAnchorDailyTargetDto.CargoSettlementCommissionTarget = livingThisDayDataInfo.CargoSettlementCommissionTarget;
-                        liveAnchorDailyTargetDto.CumulativeCargoSettlementCommission =livingThisDayDataInfo.CumulativeCargoSettlementCommission;
-                        liveAnchorDailyTargetDto.CargoSettlementCommissionCompleteRate =  livingThisDayDataInfo.CargoSettlementCommissionCompleteRate;
+                        liveAnchorDailyTargetDto.CumulativeCargoSettlementCommission = livingThisDayDataInfo.CumulativeCargoSettlementCommission;
+                        liveAnchorDailyTargetDto.CargoSettlementCommissionCompleteRate = livingThisDayDataInfo.CargoSettlementCommissionCompleteRate;
                         liveAnchorDailyTargetDto.Consultation = livingThisDayDataInfo.Consultation;
                         liveAnchorDailyTargetDto.ConsultationTarget = livingThisDayDataInfo.ConsultationTarget;
                         liveAnchorDailyTargetDto.CumulativeConsultation = livingThisDayDataInfo.CumulativeConsultation;

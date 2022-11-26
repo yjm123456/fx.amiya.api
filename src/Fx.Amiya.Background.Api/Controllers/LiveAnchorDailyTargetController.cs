@@ -172,10 +172,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 OperationEmpName=d.OperationEmpName,
                                                 SendNum = d.SendNum,
                                                 FlowInvestmentNum = d.FlowInvestmentNum,
-                                                //AddWechatNum = d.AddWechatNum,
-                                                //SendOrderNum = d.SendOrderNum,
-                                                //DealNum = d.DealNum,
-                                                //PerformanceNum = d.PerformanceNum,
+                                                AddWechatNum = d.AddWechatNum,
+                                                SendOrderNum = d.SendOrderNum,
+                                                DealNum = d.DealNum,
+                                                PerformanceNum = d.PerformanceNum,
 
                                             };
 
