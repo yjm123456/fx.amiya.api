@@ -56,7 +56,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var q = await hospitalConsulationOperationDataService.GetListAsync(keyword, indicatorsId, hospitalId);
 
-                var hospitalOperationData = from d in q
+                var hospitalOperationData = from d in q orderby d.SectionOffice
                                             select new HospitalConsulationOperationDataVo
                                             {
                                                 Id = d.Id,
@@ -322,7 +322,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                             }
                             if (worksheet.Cells[x, 4].Value != null)
                             {
-                                addDto.SendOrderNum = Convert.ToInt32(worksheet.Cells[x, 4].Value.ToString());
+                                addDto.SectionOffice = Convert.ToString(worksheet.Cells[x, 4].Value.ToString());
                             }
                             else
                             {
@@ -449,7 +449,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             catch (Exception err)
             {
-                return null;
+                throw err;
             }
 
         }

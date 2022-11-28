@@ -676,14 +676,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.LastNewCustomerDealRate = hospitalNewCustomerAchievementInfo.LastNewCustomerDealRate;
             result.ThisNewCustomerDealRate = hospitalNewCustomerAchievementInfo.ThisNewCustomerDealRate;
             result.NewCustomerDealChainRatio = hospitalNewCustomerAchievementInfo.NewCustomerDealChainRatio;
-            result.LastNewCustomerUnitPrice = hospitalNewCustomerAchievementInfo.LastNewCustomerUnitPrice;
-            result.ThisNewCustomerUnitPrice = hospitalNewCustomerAchievementInfo.ThisNewCustomerUnitPrice;
+            result.LastNewCustomerUnitPrice = hospitalNewCustomerAchievementInfo.LastNewCustomerUnitPrice/1000m;
+            result.ThisNewCustomerUnitPrice = hospitalNewCustomerAchievementInfo.ThisNewCustomerUnitPrice/1000m;
             result.NewCustomerUnitPriceChainRatio = hospitalNewCustomerAchievementInfo.NewCustomerUnitPriceChainRatio;
             result.LastOldCustomerRepurchaseRate = hospitalNewCustomerAchievementInfo.LastOldCustomerRepurchaseRate;
             result.ThisOldCustomerRepurchaseRate = hospitalNewCustomerAchievementInfo.ThisOldCustomerRepurchaseRate;
             result.OldCustomerRepurchaseChainRatio = hospitalNewCustomerAchievementInfo.OldCustomerRepurchaseChainRatio;
-            result.LastOldCustomerUnitPrice = hospitalNewCustomerAchievementInfo.LastOldCustomerUnitPrice;
-            result.ThisOldCustomerUnitPrice = hospitalNewCustomerAchievementInfo.ThisOldCustomerUnitPrice;
+            result.LastOldCustomerUnitPrice = hospitalNewCustomerAchievementInfo.LastOldCustomerUnitPrice/1000m;
+            result.ThisOldCustomerUnitPrice = hospitalNewCustomerAchievementInfo.ThisOldCustomerUnitPrice/1000m;
             result.OldCustomerUnitPriceChainRatio = hospitalNewCustomerAchievementInfo.OldCustomerUnitPriceChainRatio;
 
             return ResultData<HospitalNewCustomerAchievementVo>.Success().AddData("hospitalNewCustomerAchievement", result);

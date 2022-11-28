@@ -55,7 +55,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var q = await hospitalDoctorOperationDataService.GetListAsync(keyword, indicatorsId, hospitalId);
 
-                var hospitalDoctorOperationData = from d in q
+                var hospitalDoctorOperationData = from d in q orderby d.SectionOffice
                                                   select new HospitalDoctorOperationVo
                                                   {
                                                       Id = d.Id,
@@ -246,7 +246,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var res = new List<AddHospitalDoctorOperationVo>();
             var exportOrderWriteOff = res.ToList();
             var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"机构科室分析模板.xls");
+            var result = File(stream, "application/vnd.ms-excel", $"机构科室数据分析模板.xls");
             return result;
         }
 

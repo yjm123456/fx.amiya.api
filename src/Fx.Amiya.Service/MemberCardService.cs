@@ -38,7 +38,7 @@ namespace Fx.Amiya.Service
                 account= await growthPointsAccountService.AddAsync(createGrowthPointsAccountDto);               
             }
             
-            var card = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerid);
+            var card = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerid);           
             if (card == null)
             {
                 var memberCardList = await memberCardRankInfoService.GetMemberRankInfoListAsync();
@@ -51,23 +51,38 @@ namespace Fx.Amiya.Service
                 }
             }
             else {
-                if (card.MemberRankCode == MemberRankCode.OrdinaryMember) {
-                    if (await IsMEIYAWhiteCardMemberAsync(account.Balance))
+                var currentMemberRankCode = Convert.ToInt32(card.MemberRankCode);
+                var memberCardList = await memberCardRankInfoService.GetMemberRankInfoListAsync();
+                memberCardList = memberCardList.OrderBy(m => Convert.ToInt32(m.RankCode)).ToList();
+                //添加用户当前的会员等级
+                List<int> rnakList = new List<int>();
+                foreach (var memberCard in memberCardList)
+                {
+                    if (account.Balance >= memberCard.MinAmount)
                     {
-                        await SendCardAsync(MemberRankCode.MEIYAWhiteCardMember, customerid);
-                    }
-                    if (await IsBlackCardMemberAsync(account.Balance))
-                    {
-                        await SendCardAsync(MemberRankCode.BlackCardMember, customerid);
-                    }
-                }
-                if (card.MemberRankCode == MemberRankCode.MEIYAWhiteCardMember) {
-                    if (await IsBlackCardMemberAsync(account.Balance))
-                    {
-                        await SendCardAsync(MemberRankCode.BlackCardMember, customerid);
+                        rnakList.Add(Convert.ToInt32(memberCard.RankCode));
+                        //await SendCardAsync(memberCard.RankCode, customerid);
                     }
                 }
-                if (card.MemberRankCode == MemberRankCode.BlackCardMember) return;
+                var maxLevel = rnakList.Max();
+                //如果用户当前等级适配等级相同直接返回
+                if (maxLevel== currentMemberRankCode) {
+                    return;
+                }
+                
+                if (maxLevel > currentMemberRankCode)
+                {
+                    //如果当前等级小于适配的最大等级用户升级
+                    var addMemberList = rnakList.Where(e => e > currentMemberRankCode).ToList();
+                    foreach (var item in addMemberList)
+                    {
+                        await SendCardAsync(item.ToString(), customerid);
+                    }
+                }
+                else {
+                    //如果用户当前等级大于适配的最大等级用户降级
+                    await SendCardAsync(maxLevel.ToString(), customerid);
+                }
             }          
         }
 
@@ -80,7 +95,7 @@ namespace Fx.Amiya.Service
             var membercard = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
             if (membercard != null)
             {
-                if (membercard.MemberRankCode == memberRankCode)
+                if (Convert.ToInt32(membercard.MemberRankCode) == Convert.ToInt32(memberRankCode))
                 {
                     return;
                 }

@@ -201,7 +201,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var res = new List<AddHospitalDealItemOperationVo>();
             var exportOrderWriteOff = res.ToList();
             var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"机构成交品项运营数据分析模板.xls");
+            var result = File(stream, "application/vnd.ms-excel", $"机构执行品项运营数据分析模板.xls");
             return result;
         }
 

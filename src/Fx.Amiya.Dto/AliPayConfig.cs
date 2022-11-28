@@ -24,8 +24,9 @@ namespace Fx.Amiya.Dto
         public  string key = "9hyegjtuaak0mbrhrmpw68wu5n4to0mu";
 
         // 服务器异步通知页面路径，需http://格式的完整路径，不能加?id=123这类自定义参数,必须外网可以正常访问
-         //public  string notify_url = "https://app.hsltm.com/fxgatetest/amiyamini/amiya/wxmini/Notify/aliPayNotifyUrl"; //测试地址
+        //public  string notify_url = "https://app.hsltm.com/fxgatetest/amiyamini/amiya/wxmini/Notify/aliPayNotifyUrl"; //测试地址
         public string notify_url = "https://app.ameiyes.com/amiyamini/amiya/wxmini/Notify/aliPayNotifyUrl";  //正式地址
+        //public string notify_url = "http://ymjxui.gnway.cc/amiya/wxmini/Notify/aliPayNotifyUrl";  //本地地址
 
         // 页面跳转同步通知页面路径，需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
         //public string return_url = "https://app.hsltm.com/fxgatetest/amiyamini/amiya/wxmini/Order/getAlreadyBuyOrderList?ExchangeType=1&pageNum=1&pageSize=10";  //测试地址

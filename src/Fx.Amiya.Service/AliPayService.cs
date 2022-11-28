@@ -1,5 +1,7 @@
 ﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.OrderRefund;
 using Fx.Amiya.IService;
+using Fx.Common.Utils;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -332,6 +334,30 @@ namespace Fx.Amiya.Service
             {
                 return false;
             }
+        }
+        /// <summary>
+        /// 支付宝订单退款
+        /// </summary>
+        /// <param name="tradeId">交易id</param>
+        /// <returns></returns>
+        public async Task<AlipayRefundResult> OrderRefund(string tradeId)
+        {
+            SortedDictionary<string, string> sParaTemp = new SortedDictionary<string, string>();
+            AliPayConfig Config = new AliPayConfig();
+            sParaTemp.Add("service", "refund_fastpay_by_platform_pwd");
+            sParaTemp.Add("partner", Config.seller_id);
+            sParaTemp.Add("_input_charset", "UTF-8");
+            sParaTemp.Add("seller_email", "yinwujun1319@163.com");
+            sParaTemp.Add("refund_date", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            sParaTemp.Add("batch_no", $"{ DateTime.Now.Date.ToString("yyyyMMdd")}00083");
+            sParaTemp.Add("batch_num", "1");
+            sParaTemp.Add("detail_data", $"{tradeId}^4999.00^协商退款");
+
+            var refundUrl= await BuildRequest(sParaTemp);
+            var result= HttpUtil.HTTPJsonPost(refundUrl,"");
+
+
+            return new AlipayRefundResult();
         }
     }
 }

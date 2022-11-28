@@ -152,14 +152,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 greatHospitalOperationHealthVo.LastNewCustomerDealRate = greatHospitalOperationHealth.LastNewCustomerDealRate;
                 greatHospitalOperationHealthVo.ThisNewCustomerDealRate = greatHospitalOperationHealth.ThisNewCustomerDealRate;
                 greatHospitalOperationHealthVo.NewCustomerDealChainRatio = greatHospitalOperationHealth.NewCustomerDealChainRatio;
-                greatHospitalOperationHealthVo.LastNewCustomerUnitPrice = greatHospitalOperationHealth.LastNewCustomerUnitPrice;
-                greatHospitalOperationHealthVo.ThisNewCustomerUnitPrice = greatHospitalOperationHealth.ThisNewCustomerUnitPrice;
+                greatHospitalOperationHealthVo.LastNewCustomerUnitPrice = greatHospitalOperationHealth.LastNewCustomerUnitPrice/1000m;
+                greatHospitalOperationHealthVo.ThisNewCustomerUnitPrice = greatHospitalOperationHealth.ThisNewCustomerUnitPrice/1000m;
                 greatHospitalOperationHealthVo.NewCustomerUnitPriceChainRatio = greatHospitalOperationHealth.NewCustomerUnitPriceChainRatio;
                 greatHospitalOperationHealthVo.LastOldCustomerRepurchaseRate = greatHospitalOperationHealth.LastOldCustomerRepurchaseRate;
                 greatHospitalOperationHealthVo.ThisOldCustomerRepurchaseRate = greatHospitalOperationHealth.ThisOldCustomerRepurchaseRate;
                 greatHospitalOperationHealthVo.OldCustomerRepurchaseChainRatio = greatHospitalOperationHealth.OldCustomerRepurchaseChainRatio;
-                greatHospitalOperationHealthVo.LastOldCustomerUnitPrice = greatHospitalOperationHealth.LastOldCustomerUnitPrice;
-                greatHospitalOperationHealthVo.ThisOldCustomerUnitPrice = greatHospitalOperationHealth.ThisOldCustomerUnitPrice;
+                greatHospitalOperationHealthVo.LastOldCustomerUnitPrice = greatHospitalOperationHealth.LastOldCustomerUnitPrice/1000m;
+                greatHospitalOperationHealthVo.ThisOldCustomerUnitPrice = greatHospitalOperationHealth.ThisOldCustomerUnitPrice/1000m;
                 greatHospitalOperationHealthVo.OldCustomerUnitPriceChainRatio = greatHospitalOperationHealth.OldCustomerUnitPriceChainRatio;
 
                 return ResultData<GreatHospitalOperationHealthVo>.Success().AddData("greatHospitalOperationHealthInfo", greatHospitalOperationHealthVo);
