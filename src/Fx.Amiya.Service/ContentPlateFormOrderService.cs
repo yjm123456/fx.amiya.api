@@ -340,11 +340,11 @@ namespace Fx.Amiya.Service
                         var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.BelongEmpId);
                         x.BelongEmpName = empInfo.Name.ToString();
                     }
-                    //if (!string.IsNullOrEmpty(x.GoodsDepartmentId))
-                    //{
-                    //    var departmentInfo = await _departmentService.GetByIdAsync(x.GoodsDepartmentId);
-                    //    x.DepartmentName = departmentInfo.DepartmentName;
-                    //}
+                    if (!string.IsNullOrEmpty(x.GoodsDepartmentId))
+                    {
+                        var departmentInfo = await _departmentService.GetByIdAsync(x.GoodsDepartmentId);
+                        x.DepartmentName = departmentInfo.DepartmentName;
+                    }
                     //if (x.CheckBy.HasValue && x.CheckBy != 0)
                     //{
                     //    var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.CheckBy);
@@ -1041,40 +1041,40 @@ namespace Fx.Amiya.Service
                                 SendHospital = d.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalInfo.Name,
                             };
                 var result = await order.OrderByDescending(e => e.CreateDate).ToListAsync();
-                //foreach (var x in result)
-                //{
-                //    //    if (x.BelongEmpId != 0)
-                //    //    {
-                //    //        var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.BelongEmpId);
-                //    //        x.BelongEmpName = empInfo.Name.ToString();
-                //    //    }
-                //    //    if (x.CheckBy != 0)
-                //    //    {
-                //    //        var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.CheckBy);
-                //    //        x.CheckByName = empInfo.Name.ToString();
-                //    //    }
-                //    //    if (!string.IsNullOrEmpty(x.GoodsDepartmentId))
-                //    //    {
-                //    //        var departmentInfo = await _departmentService.GetByIdAsync(x.GoodsDepartmentId);
-                //    //        x.DepartmentName = departmentInfo.DepartmentName;
-                //    //    }
-                //    //    if (x.LastDealHospitalId.HasValue)
-                //    //    {
-                //    //        var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(x.LastDealHospitalId.Value);
-                //    //        x.LastDealHospital = hospitalInfo.Name;
-                //    //    }
-                //    if (x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
-                //    {
-                //        var sendOrderInfoList = await _contentPlatformOrderSend.GetSendOrderInfoByOrderId(x.Id);
-                //        var sendOrderInfo = sendOrderInfoList.OrderByDescending(z => z.SendDate).FirstOrDefault();
-                //        if (sendOrderInfo != null)
-                //        {
-                //            x.SendDate = sendOrderInfo.SendDate;
-                //            var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == sendOrderInfo.Sender);
-                //            x.Sender = empInfo.Name;
-                //        }
-                //    }
-                //}
+                foreach (var x in result)
+                {
+                    if (x.BelongEmpId != 0)
+                    {
+                        var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.BelongEmpId);
+                        x.BelongEmpName = empInfo.Name.ToString();
+                    }
+                    //if (x.CheckBy != 0)
+                    //{
+                    //    var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.CheckBy);
+                    //    x.CheckByName = empInfo.Name.ToString();
+                    //}
+                    if (!string.IsNullOrEmpty(x.GoodsDepartmentId))
+                    {
+                        var departmentInfo = await _departmentService.GetByIdAsync(x.GoodsDepartmentId);
+                        x.DepartmentName = departmentInfo.DepartmentName;
+                    }
+                    if (x.LastDealHospitalId.HasValue)
+                    {
+                        var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(x.LastDealHospitalId.Value);
+                        x.LastDealHospital = hospitalInfo.Name;
+                    }
+                    //if (x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
+                    //{
+                    //    var sendOrderInfoList = await _contentPlatformOrderSend.GetSendOrderInfoByOrderId(x.Id);
+                    //    var sendOrderInfo = sendOrderInfoList.OrderByDescending(z => z.SendDate).FirstOrDefault();
+                    //    if (sendOrderInfo != null)
+                    //    {
+                    //        x.SendDate = sendOrderInfo.SendDate;
+                    //        var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == sendOrderInfo.Sender);
+                    //        x.Sender = empInfo.Name;
+                    //    }
+                    //}
+                }
                 return result;
             }
             catch (Exception ex)

@@ -22,6 +22,12 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         [Description("预约时间")]
         public string AppointmentDate { get; set; }
         /// <summary>
+        /// 归属客服
+        /// </summary>
+        [Description("归属客服")]
+
+        public string BelongEmpName { get; set; }
+        /// <summary>
         /// 客户昵称
         /// </summary>
         [Description("客户昵称")]
@@ -52,6 +58,13 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         [Description("预约医院")]
         public string AppointmentHospitalName { get; set; }
+
+        /// <summary>
+        /// 科室
+        /// </summary>
+
+        [Description("科室")]
+        public string DepartmentName { get; set; }
         /// <summary>
         /// 项目
         /// </summary>
@@ -125,6 +138,12 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         [Description("派单时间")]
         public DateTime? SendDate { get; set; }
+
+        /// <summary>
+        /// 成交医院
+        /// </summary>
+        [Description("成交医院")]
+        public string LastDealHospital { get; set; }
         /// <summary>
         /// 面诊状态
         /// </summary>
@@ -151,11 +170,6 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         [Description("最近到院时间")]
         public DateTime? ToHospitalDate { get; set; }
-        /// <summary>
-        /// 最终成交医院
-        /// </summary>
-        [Description("最终成交医院")]
-        public string LastDealHospital { get; set; }
         /// <summary>
         /// 成交金额
         /// </summary>
@@ -188,5 +202,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         [Description("备注")]
         public string Remark { get; set; }
+        /// <summary>
+        /// 加密电话
+        /// </summary>
+
+        [Description("加密电话")]
+        public string EncryptPhone { get; set; }
     }
 }

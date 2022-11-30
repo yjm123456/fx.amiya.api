@@ -2151,6 +2151,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           SendOrderTarget = d.SendOrderTarget,
                           CumulativeSendOrder = d.CumulativeSendOrder,
                           SendOrderCompleteRate = d.SendOrderCompleteRate,
+                          NewCustomerPerformanceCountNum = d.NewCustomerPerformanceCountNum,
                           NewVisitNum = d.NewVisitNum,
                           SubsequentVisitNum = d.SubsequentVisitNum,
                           OldCustomerVisitNum = d.OldCustomerVisitNum,

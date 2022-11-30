@@ -184,6 +184,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     resultVo.Phone = x.Phone;
                     var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(x.EncryptPhone);
                     resultVo.City = customerBaseInfo.City;
+                    resultVo.DepartmentName=
                     resultVo.AppointmentDate = x.AppointmentDate == null ? "未预约时间" : x.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
                     resultVo.AppointmentHospitalName = x.AppointmentHospitalName;
                     resultVo.GoodsName = x.GoodsName;
@@ -362,6 +363,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                     isHidePhone = false;
                 }
                 var q = await _orderService.ExportOrderListWithPageAsync(startDate, endDate, consultationEmpId, appointmentHospital, belongEmpId, liveAnchorId, keyword, hospitalDepartmentId, orderStatus, orderSource, contentPlateFormId, employeeId, isHidePhone);
+
+                #region 【注释代码】
                 //var resutList = q.ToList();
                 //List<ContentPlatFormOrderInfoVo> contentPlatFormOrderInfoVoList = new List<ContentPlatFormOrderInfoVo>();
                 //foreach (var x in resutList)
@@ -447,6 +450,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 //    //}
                 //    contentPlatFormOrderInfoVoList.Add(resultVo);
                 //}
+                #endregion
+
                 var order = from d in q
                             select new ExportContentPlatFormOrderInfoVo
                             {
@@ -460,10 +465,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 AddOrderPrice = d.AddOrderPrice,
                                 CustomerName = d.CustomerName,
                                 Phone = d.Phone,
+                                EncryptPhone=d.EncryptPhone,
                                 AppointmentDate = d.AppointmentDate == null ? "未预约时间" : d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss"),
                                 AppointmentHospitalName = d.AppointmentHospitalName,
                                 GoodsName = d.GoodsName,
-                                //DepartmentName = d.DepartmentName,
+                                DepartmentName = d.DepartmentName,
                                 //ThumbPictureUrl = d.ThumbPictureUrl,
                                 IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
                                 ConsultingContent = d.ConsultingContent,
@@ -473,6 +479,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 OrderStatusText = d.OrderStatusText,
                                 Sender = d.Sender,
                                 SendDate = d.SendDate,
+                                
                                 DepositAmount = d.DepositAmount,
                                 DealAmount = d.DealAmount,
                                 UnDealReason = d.UnDealReason,
@@ -489,7 +496,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 ConsultationType = d.ConsultationTypeText,
                                 //CheckRemark = d.CheckRemark,
                                 //SettlePrice = d.SettlePrice,
-                                //BelongEmpName = d.BelongEmpName,
+                                BelongEmpName = d.BelongEmpName,
                                 //IsReturnBackPrice = d.IsReturnBackPrice,
                                 //ReturnBackDate = d.ReturnBackDate,
                                 //ReturnBackPrice = d.ReturnBackPrice,
@@ -497,6 +504,34 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 SendHospital = d.SendHospital
                             };
                 var exportSendOrder = order.ToList();
+                foreach (var x in exportSendOrder)
+                {
+                   
+                    var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(x.EncryptPhone);
+                    x.City = customerBaseInfo.City;
+
+
+                    //if (x.BelongEmpId != 0)
+                    //{
+                    //    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
+                    //    x.BelongEmpName = empInfo.Name.ToString();
+                    //}
+                    //if (x.CheckBy != 0)
+                    //{
+                    //    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CheckBy.Value);
+                    //    x.CheckByName = empInfo.Name.ToString();
+                    //}
+                    //if (!string.IsNullOrEmpty(x.GoodsDepartmentId))
+                    //{
+                    //    var departmentInfo = await _departmentService.GetByIdAsync(x.GoodsDepartmentId);
+                    //    x.DepartmentName = departmentInfo.DepartmentName;
+                    //}
+                    //if (x.LastDealHospitalId.HasValue)
+                    //{
+                    //    var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(x.LastDealHospitalId.Value);
+                    //    x.LastDealHospital = hospitalInfo.Name;
+                    //}
+                }
                 var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
                 //var stream = ExportExcelHelper.ExportExcel(contentPlatFormOrderInfoVoList);
                 var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "内容平台订单报表.xls");
