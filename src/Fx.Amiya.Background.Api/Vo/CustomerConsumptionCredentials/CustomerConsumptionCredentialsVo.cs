@@ -48,7 +48,7 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials
         /// <summary>
         /// 审核人id
         /// </summary>
-        public int CheckBy { get; set; }
+        public int? CheckBy { get; set; }
         /// <summary>
         /// 审核人
         /// </summary>

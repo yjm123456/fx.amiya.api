@@ -1665,6 +1665,33 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.CustomerConsumptionCredentialsController">
+            <summary>
+            客户消费凭证板块数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerConsumptionCredentialsController.#ctor(Fx.Amiya.IService.ICustomerConsumptionCredentialsService,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="customerConsumptionCredentialsService"></param>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerConsumptionCredentialsController.GetListWithPageAsync(System.String,System.Boolean,System.Nullable{System.Int32},System.Int32,System.Int32)">
+            <summary>
+            获取客户消费凭证信息列表（分页）
+            </summary>
+            <param name="keyword"></param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerConsumptionCredentialsController.UpdateAsync(Fx.Amiya.Background.Api.Vo.CheckBaseInfo.CheckInfoVo)">
+            <summary>
+            审核客户消费凭证信息
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerController.GetWxCustomerListAsync(System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Boolean,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Int32,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)">
             <summary>
             获取微信客户列表
@@ -5017,24 +5044,26 @@
             <param name="orderStatus">订单状态</param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetCustomerOrderReceivableAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetCustomerOrderReceivableAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String)">
             <summary>
             客户订单应收款统计（交易完成订单）
             </summary>
             <param name="startDate">开始时间</param>
             <param name="endDate">结束时间</param>
             <param name="customerName">客户名称</param>
+            <param name="appType">下单平台</param>
             <param name="CheckState">审核状态</param>
             <param name="ReturnBackPriceState">是否回款</param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetCustomerOrderReceivableExportAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderReportController.GetCustomerOrderReceivableExportAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String)">
             <summary>
             客户订单应收款统计导出（交易完成订单）
             </summary>
             <param name="startDate">开始时间</param>
             <param name="endDate">结束时间</param>
             <param name="CheckState">审核状态</param>
+            <param name="appType">下单平台</param>
             <param name="ReturnBackPriceState">是否回款</param>
             <param name="customerName">客户名称</param>
             <returns></returns>
@@ -9432,6 +9461,196 @@
             回款时间
             </summary>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo">
+            <summary>
+            内容平台订单列表导出
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.Id">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.AppointmentDate">
+            <summary>
+            预约时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.BelongEmpName">
+            <summary>
+            归属客服
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.CustomerName">
+            <summary>
+            客户昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.Phone">
+            <summary>
+            电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.City">
+            <summary>
+            城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.IsOldCustomer">
+            <summary>
+            新/老客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.AddOrderPrice">
+            <summary>
+            下单金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.AppointmentHospitalName">
+            <summary>
+            预约医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.DepartmentName">
+            <summary>
+            科室
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.GoodsName">
+            <summary>
+            项目
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.ConsultingContent">
+            <summary>
+            咨询内容
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.CreateDate">
+            <summary>
+            下单时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.ContentPlatformName">
+            <summary>
+            下单平台
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.LiveAnchorName">
+            <summary>
+            主播ip账号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.LiveAnchorWeChatNo">
+            <summary>
+            主播微信号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.OrderTypeText">
+            <summary>
+            订单类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.BelongMonth">
+            <summary>
+            归属月份
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.OrderStatusText">
+            <summary>
+            订单状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.OtherContentPlatFormOrderId">
+            <summary>
+            三方订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.OrderSourceText">
+            <summary>
+            订单来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.SendHospital">
+            <summary>
+            派单医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.Sender">
+            <summary>
+            派单人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.SendDate">
+            <summary>
+            派单时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.LastDealHospital">
+            <summary>
+            成交医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.ConsultationType">
+            <summary>
+            面诊状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.AcceptConsulting">
+            <summary>
+            院方接诊人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.DepositAmount">
+            <summary>
+            定金金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.IsToHospital">
+            <summary>
+            是否到院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.ToHospitalDate">
+            <summary>
+            最近到院时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.DealAmount">
+            <summary>
+            成交金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.DealDate">
+            <summary>
+            成交时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.UnDealReason">
+            <summary>
+            未成交原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.LateProjectStage">
+            <summary>
+            后期项目铺垫
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.UnSendReason">
+            <summary>
+            未派单原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.EncryptPhone">
+            <summary>
+            加密电话
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.OrderProsperityVo.hospitalPicture">
             <summary>
             医院图片
@@ -10155,6 +10374,71 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.CooperativeHospitalCity.UpdateCooperativeHospitalCityVo.Valid">
             <summary>
             是否有效
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials.CustomerConsumptionCredentialsVo.CustomerId">
+            <summary>
+            客户id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials.CustomerConsumptionCredentialsVo.CustomerName">
+            <summary>
+            客户姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials.CustomerConsumptionCredentialsVo.ToHospitalPhone">
+            <summary>
+            留院电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials.CustomerConsumptionCredentialsVo.LiveAnchorBaseId">
+            <summary>
+            归属主播id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials.CustomerConsumptionCredentialsVo.LiveAnchor">
+            <summary>
+            归属主播
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials.CustomerConsumptionCredentialsVo.ConsumeDate">
+            <summary>
+            消费时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials.CustomerConsumptionCredentialsVo.PayVoucherPicture1">
+            <summary>
+            消费凭证截图1
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials.CustomerConsumptionCredentialsVo.PayVoucherPicture2">
+            <summary>
+            消费凭证截图2
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials.CustomerConsumptionCredentialsVo.CheckState">
+            <summary>
+            审核状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials.CustomerConsumptionCredentialsVo.CheckBy">
+            <summary>
+            审核人id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials.CustomerConsumptionCredentialsVo.CheckByEmpname">
+            <summary>
+            审核人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials.CustomerConsumptionCredentialsVo.CheckDate">
+            <summary>
+            审核日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials.CustomerConsumptionCredentialsVo.CheckRemark">
+            <summary>
+            审核备注
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.CustomerHospitalConsume.AddCustomerHospitalConsumeVo.EncryptPhone">
@@ -21990,11 +22274,6 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.AfterLivingUpdateDate">
             <summary>
             直播后运营数据更新时间
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.LiveAnchorOperatingReportVo.CreateDate">
-            <summary>
-            创建日期
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.OrderReport.OrderCenterDetailsVo">

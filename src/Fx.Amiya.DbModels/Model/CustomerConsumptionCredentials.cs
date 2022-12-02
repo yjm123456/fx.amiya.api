@@ -21,7 +21,7 @@ namespace Fx.Amiya.DbModels.Model
         public string PayVoucherPicture2 { get; set; }
 
         public int CheckState { get; set; }
-        public int CheckBy { get; set; }
+        public int? CheckBy { get; set; }
         public string CheckRemark { get; set; }
 
         public DateTime? CheckDate { get; set; }
