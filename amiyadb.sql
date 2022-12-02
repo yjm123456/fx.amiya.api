@@ -1235,8 +1235,6 @@ ENGINE=InnoDB;
 
 
 
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
-
 -----------------------------------------------余建明 2022/11/16 BEGIN--------------------------------------------
 ---直播前抖音日运营数据
     CREATE TABLE `amiyadb`.`tbl_beforeliving_tiktok_daily_target` (
@@ -1490,8 +1488,43 @@ ENGINE=InnoDB;
 
 
 
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
+
+-------------------------------------------余建明 2022/12/02 BEGIN------------------------------------------------------
+
+CREATE TABLE `amiyadb`.`tbl_customer_consumption_credentials` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `customer_id` VARCHAR(50) NOT NULL,
+  `customer_name` VARCHAR(45) NOT NULL,
+  `to_hospital_phone` VARCHAR(20) NOT NULL,
+  `live_anchor_base_id` VARCHAR(50) NULL,
+  `consume_date` DATETIME NOT NULL,
+  `pay_voucher_picture1` VARCHAR(500) NULL,
+  `pay_voucher_picture2` VARCHAR(500) NULL,
+  `check_state` INT NOT NULL DEFAULT 0 ,
+  `check_by` INT UNSIGNED NULL,
+  `check_date` DATETIME NULL,
+  `check_remark` VARCHAR(500) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_customer_consumption_voucher_liveanchorInfo_idx` (`live_anchor_base_id` ASC) VISIBLE,
+  INDEX `fk_customer_consumption_voucher_check_empinfo_idx` (`check_by` ASC) VISIBLE,
+  CONSTRAINT `fk_customer_consumption_voucher_liveanchorInfo`
+    FOREIGN KEY (`live_anchor_base_id`)
+    REFERENCES `amiyadb`.`tbl_live_anchor_base_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_customer_consumption_voucher_check_empinfo`
+    FOREIGN KEY (`check_by`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+-----------------------------------------------余建明 2022/12/02 END--------------------------------------------
 
 
 

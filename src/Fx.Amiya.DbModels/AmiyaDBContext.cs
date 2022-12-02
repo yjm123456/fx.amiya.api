@@ -40,6 +40,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<AfterLivingDailyTarget> AfterLivingDailyTarget { get; set; }
         public virtual DbSet<WxMpUserInfo> WxMpUserInfo { get; set; }
         public virtual DbSet<HospitalFeedBack> HospitalFeedBack { get; set; }
+        public virtual DbSet<CustomerConsumptionCredentials> CustomerConsumptionCredentials { get; set; }
         public virtual DbSet<InventoryList> InventoryList { get; set; }
         public virtual DbSet<CustomerIntegralOrderRefund> CustomerIntegralOrderRefund { get; set; }
         public virtual DbSet<MpUserSubscribeDetail> MpUserSubscribeDetail { get; set; }
@@ -250,7 +251,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new BeautyDiaryManageConfiguration());
             modelBuilder.ApplyConfiguration(new BeautyDiaryTagDetailConfiguration());
             modelBuilder.ApplyConfiguration(new NoticeConfigConfiguration());
-
+            modelBuilder.ApplyConfiguration(new CustomerConsumptionCredentialsConfiguration());
             modelBuilder.ApplyConfiguration(new SendOrderInfoConfiguration());
             modelBuilder.ApplyConfiguration(new GiftInfoConfiguration());
             modelBuilder.ApplyConfiguration(new OrderAppInfoConfiguration());
