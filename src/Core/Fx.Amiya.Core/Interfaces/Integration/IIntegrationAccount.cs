@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Core.Dto.Integration;
+using Fx.Amiya.Dto.CustomerIntergration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace Fx.Amiya.Core.Interfaces.Integration
 
 
         /// <summary>
-        /// 添加消费奖励积分
+        /// 添加消费奖励积分(只有添加流程)
         /// </summary>
         /// <returns></returns>
         Task AddByConsumptionAsync(ConsumptionIntegrationDto consumptionIntegration);
@@ -105,6 +106,13 @@ namespace Fx.Amiya.Core.Interfaces.Integration
         /// <param name="customerIds"></param>
         /// <returns></returns>
        Task<List<IntegrationAccountDto>> GetIntegrationAccountListByCustomerIdsAsync(List<string> customerIds);
+
+        /// <summary>
+        /// 客户消费奖励积分（详细逻辑）
+        /// </summary>
+        /// <param name="addCustomerIntergration"></param>
+        /// <returns></returns>
+        Task AddInterGrationAsync(AddCustomerIntergrationDto addCustomerIntergration);
 
 
         /// <summary>

@@ -1,5 +1,8 @@
 ﻿using Fx.Amiya.Core.Dto.Integration;
 using Fx.Amiya.Core.Interfaces.Integration;
+using Fx.Amiya.Core.Interfaces.MemberCard;
+using Fx.Amiya.Dto.CustomerIntergration;
+using Fx.Amiya.IService;
 using Fx.Amiya.Modules.Integration.DbModel;
 using Fx.Amiya.Modules.Integration.Domin;
 using Fx.Amiya.Modules.Integration.Domin.IRepository;
@@ -18,14 +21,23 @@ namespace Fx.Amiya.Modules.Integration.AppService
     {
         private IFreeSql<IntegrationFlag> freeSql;
         private IUnitOfWork unitOfWork;
+        private IMemberCard memberCardService;
+        private ICustomerService customerService;
+        private IMemberRankInfo memberRankInfoService;
         private IIntegrationAccountRepository _integrationAccountRepository;
         public IntegrationAccountAppService(IIntegrationAccountRepository integrationAccountRepository,
+            IMemberCard memberCardService,
+            ICustomerService customerService,
+             IMemberRankInfo memberRankInfoService,
             IUnitOfWork unitOfWork,
             IFreeSql<IntegrationFlag> freeSql)
         {
             _integrationAccountRepository = integrationAccountRepository;
             this.freeSql = freeSql;
             this.unitOfWork = unitOfWork;
+            this.memberRankInfoService = memberRankInfoService;
+            this.memberCardService = memberCardService;
+            this.customerService = customerService;
         }
 
         public Task AddIntegrationGenerateRecordAsync(IntegrationGenerateRecordAddDto item)
@@ -94,8 +106,8 @@ namespace Fx.Amiya.Modules.Integration.AppService
                 Date = consumptionIntegration.Date,
                 ExpiredDate = consumptionIntegration.ExpiredDate,
                 Quantity = consumptionIntegration.Quantity,
-                HandleBy=consumptionIntegration.HandleBy,
-                OrderId=consumptionIntegration.OrderId
+                HandleBy = consumptionIntegration.HandleBy,
+                OrderId = consumptionIntegration.OrderId
             });
 
             await _integrationAccountRepository.SaveIntegrationAccountAsync(integrationAccount);
@@ -198,6 +210,45 @@ namespace Fx.Amiya.Modules.Integration.AppService
             return integrationAccounts.ToList();
         }
 
+        /// <summary>
+        /// 客户消费奖励积分
+        /// </summary>
+        /// <param name="addCustomerIntergration"></param>
+        /// <returns></returns>
+        public async Task AddInterGrationAsync(AddCustomerIntergrationDto addCustomerIntergration)
+        {
+            var customerId = await customerService.GetCustomerIdByPhoneAsync(addCustomerIntergration.Phone);
+            if (string.IsNullOrWhiteSpace(customerId))
+            {
+                throw new Exception("该客户未注册小程序，无法赠送积分！");
+            }
+            decimal integrationPercent = 0m;
+            var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(customerId);
+            if (memberCard != null)
+            {
+                integrationPercent = memberCard.GenerateIntegrationPercent;
+            }
+            else
+            {
+                var memberRank = await memberRankInfoService.GetMinGeneratePercentMemberRankInfoAsync();
+                integrationPercent = memberRank.GenerateIntegrationPercent;
+            }
+            if (!string.IsNullOrWhiteSpace(addCustomerIntergration.OrderId))
+            {
+                var exist = await this.GetIsIntegrationGenerateRecordByOrderIdAndCustomerIdAsync(addCustomerIntergration.OrderId, customerId);
+                if (exist) throw new Exception("该订单已赠送过积分");
+            }
+            ConsumptionIntegrationDto consumptionIntegrationDto = new ConsumptionIntegrationDto
+            {
+                Quantity = Math.Floor(integrationPercent * (decimal)addCustomerIntergration.ActualPayment),
+                Percent = integrationPercent,
+                AmountOfConsumption = addCustomerIntergration.ActualPayment.Value,
+                Date = DateTime.Now,
+                CustomerId = customerId,
+                OrderId = addCustomerIntergration.OrderId
+            };
+            await this.AddByConsumptionAsync(consumptionIntegrationDto);
+        }
 
         /// <summary>
         /// 积分过期
@@ -243,14 +294,14 @@ namespace Fx.Amiya.Modules.Integration.AppService
             await UseAsync(useIntegration, IntegrationUseType.Consumption);
         }
 
-        private async Task UseAsync(UseIntegrationDto useIntegration,IntegrationUseType integrationUseType)
+        private async Task UseAsync(UseIntegrationDto useIntegration, IntegrationUseType integrationUseType)
         {
             var integrationAccount = await _integrationAccountRepository.GetIntegrationAccountAsync(useIntegration.CustomerId);
             integrationAccount.ReduceIntegration(new UseIntegration((byte)integrationUseType)
-            { 
-                Date= useIntegration.Date,
-                OrderId= useIntegration.OrderId,
-                Quantity= useIntegration.UseQuantity,
+            {
+                Date = useIntegration.Date,
+                OrderId = useIntegration.OrderId,
+                Quantity = useIntegration.UseQuantity,
             });
             await _integrationAccountRepository.SaveIntegrationAccountAsync(integrationAccount);
         }
@@ -263,13 +314,13 @@ namespace Fx.Amiya.Modules.Integration.AppService
         /// <returns></returns>
         public async Task<bool> ExistRechargeRewardAsync(string customerId, decimal amount, decimal percent)
         {
-            var record= await freeSql.Select<IntegrationGenerateRecordDbModel>().Where(e=>e.CustomerId==customerId&&e.Quantity==amount&&e.Percents==percent).FirstAsync();
+            var record = await freeSql.Select<IntegrationGenerateRecordDbModel>().Where(e => e.CustomerId == customerId && e.Quantity == amount && e.Percents == percent).FirstAsync();
             return record == null ? false : true;
         }
 
         public async Task<bool> GetIsIntegrationGenerateRecordByOrderIdAndCustomerIdAsync(string orderId, string customerId)
         {
-            var integrationGenerateRecord = await freeSql.Select<IntegrationGenerateRecordDbModel>().Where(e => e.OrderId == orderId&&e.CustomerId==customerId).FirstAsync();
+            var integrationGenerateRecord = await freeSql.Select<IntegrationGenerateRecordDbModel>().Where(e => e.OrderId == orderId && e.CustomerId == customerId).FirstAsync();
             if (integrationGenerateRecord == null)
                 return false;
             return true;

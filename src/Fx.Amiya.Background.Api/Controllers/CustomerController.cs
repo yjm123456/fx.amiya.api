@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Fx.Amiya.Background.Api.Vo.CustomerInfo;
+using Fx.Amiya.Background.Api.Vo.CustomerIntergration;
 using Fx.Amiya.Core.Dto.MemberCard;
 using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.Core.Interfaces.MemberCard;
 using Fx.Amiya.Dto.CustomerBaseInfo;
 using Fx.Amiya.Dto.CustomerInfo;
+using Fx.Amiya.Dto.CustomerIntergration;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -416,9 +418,6 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
 
-
-
-
         /// <summary>
         /// 根据电话号查询客户信息
         /// </summary>
@@ -585,6 +584,23 @@ namespace Fx.Amiya.Background.Api.Controllers
             editDto.WechatNumber = editVo.WechatNumber;
             editDto.City = editVo.City;
             await customerService.EditAsync(editDto);
+            return ResultData.Success();
+        }
+
+        /// <summary>
+        /// 客户赠送积分
+        /// </summary>
+        /// <param name="editVo"></param>
+        /// <returns></returns>
+        [HttpPut("addCustomerIntergration")]
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData> AddCustomerIntergrationAsync(AddCustomerIntergrationVo editVo)
+        {
+            AddCustomerIntergrationDto editDto = new AddCustomerIntergrationDto();
+            editDto.Phone = editVo.Phone;
+            editDto.OrderId = editVo.OrderId;
+            editDto.ActualPayment = editVo.ActualPayment;
+            await integrationAccountService.AddInterGrationAsync(editDto);
             return ResultData.Success();
         }
 

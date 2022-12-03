@@ -1804,6 +1804,13 @@
             <param name="editVo"></param>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerController.AddCustomerIntergrationAsync(Fx.Amiya.Background.Api.Vo.CustomerIntergration.AddCustomerIntergrationVo)">
+            <summary>
+            客户赠送积分
+            </summary>
+            <param name="editVo"></param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerController.EditByIdAsync(Fx.Amiya.Background.Api.Vo.CustomerInfo.UpdateCustomerBaseInfoVo)">
             <summary>
             根据Id编辑客户基础信息
@@ -11679,6 +11686,26 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.CustomerIntegralOrderRefund.CustomerIntegralOrderRefundsVo.CheckReason">
             <summary>
             审核原因
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.CustomerIntergration.AddCustomerIntergrationVo">
+            <summary>
+            客户消费赠送积分
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerIntergration.AddCustomerIntergrationVo.Phone">
+            <summary>
+            客户手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerIntergration.AddCustomerIntergrationVo.OrderId">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerIntergration.AddCustomerIntergrationVo.ActualPayment">
+            <summary>
+            消费金额
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.CustomerTagInfo.AddCustomerTagInfoVo.TagName">
