@@ -13,9 +13,9 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerIntergration
     public class AddCustomerIntergrationVo
     {
         /// <summary>
-        /// 客户手机号
+        /// 客户手机号(加密)
         /// </summary>
-        public string Phone { get; set; }
+        public string EncryptPhone { get; set; }
         /// <summary>
         /// 订单号
         /// </summary>

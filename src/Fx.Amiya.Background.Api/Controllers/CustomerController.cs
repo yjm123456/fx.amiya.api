@@ -11,6 +11,7 @@ using Fx.Amiya.Dto.CustomerBaseInfo;
 using Fx.Amiya.Dto.CustomerInfo;
 using Fx.Amiya.Dto.CustomerIntergration;
 using Fx.Amiya.IService;
+using Fx.Amiya.Service;
 using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Infrastructure;
@@ -30,13 +31,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         private ICustomerBaseInfoService customerBaseInfoService;
         private IMemberCard memberCardService;
         private IIntegrationAccount integrationAccountService;
+        private IWxAppConfigService wxAppConfigService;
         public CustomerController(ICustomerService customerService, IHttpContextAccessor httpContextAccessor,
             ICustomerBaseInfoService customerBaseInfoService,
+            IWxAppConfigService wxAppConfigService,
             IMemberCard memberCardService, IIntegrationAccount integrationAccountService)
         {
             this.customerService = customerService;
             this.httpContextAccessor = httpContextAccessor;
             this.customerBaseInfoService = customerBaseInfoService;
+            this.wxAppConfigService = wxAppConfigService;
             this.memberCardService = memberCardService;
             this.integrationAccountService = integrationAccountService;
         }
@@ -596,8 +600,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> AddCustomerIntergrationAsync(AddCustomerIntergrationVo editVo)
         {
+            var config = await wxAppConfigService.GetCallCenterConfig();
+            string decryptPhone = ServiceClass.Decrypto(editVo.EncryptPhone, config.PhoneEncryptKey);
             AddCustomerIntergrationDto editDto = new AddCustomerIntergrationDto();
-            editDto.Phone = editVo.Phone;
+            editDto.Phone = decryptPhone;
             editDto.OrderId = editVo.OrderId;
             editDto.ActualPayment = editVo.ActualPayment;
             await integrationAccountService.AddInterGrationAsync(editDto);
