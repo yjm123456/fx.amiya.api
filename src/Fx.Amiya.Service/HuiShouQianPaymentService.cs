@@ -4,8 +4,6 @@ using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common.Utils;
 using Fx.Open.Infrastructure.Web.Utils;
-using Jd.Api.Util;
-using jos_sdk_net.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
