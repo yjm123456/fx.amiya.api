@@ -11693,9 +11693,9 @@
             客户消费赠送积分
             </summary>
         </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerIntergration.AddCustomerIntergrationVo.Phone">
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerIntergration.AddCustomerIntergrationVo.EncryptPhone">
             <summary>
-            客户手机号
+            客户手机号(加密)
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.CustomerIntergration.AddCustomerIntergrationVo.OrderId">
