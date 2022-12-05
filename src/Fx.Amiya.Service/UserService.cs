@@ -142,6 +142,9 @@ namespace Fx.Amiya.Service
                     userInfo.City = userInfoEditDto.City;
                     userInfo.Gender = userInfoEditDto.Gender;
                     userInfo.NickName = userInfoEditDto.NickName;
+                    if (!string.IsNullOrEmpty(userInfoEditDto.Avatar)) {
+                        userInfo.Avatar = userInfoEditDto.Avatar;
+                    }
                     await dalUserInfo.UpdateAsync(userInfo, true);
                     return true;
                 }

@@ -37,7 +37,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        [HttpGet("List")]
+        [HttpGet("list")]
         public async Task<ResultData<FxPageInfo<CustomerConsumptionCredentialsVo>>> GetGoodsInfoListAsync( int pageNum, int pageSize)
         {
             string token = _tokenReader.GetToken();
@@ -58,6 +58,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                                      PayVoucherPicture1 = d.PayVoucherPicture1,
                                                      PayVoucherPicture2 = d.PayVoucherPicture2,
                                                      CheckState = d.CheckState,
+                                                     CheckStateText=d.CheckStateText,
                                                      CheckBy = d.CheckBy,
                                                      CheckByEmpname = d.CheckByEmpname,
                                                      CheckDate = d.CheckDate,
@@ -121,7 +122,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 string customerId = sessionInfo.FxCustomerId;
 
                 AddCustomerConsumptionCredentialsDto addDto = new AddCustomerConsumptionCredentialsDto();
-                addDto.CustomerId = addVo.CustomerId;
+                addDto.CustomerId = customerId;
                 addDto.CustomerName = addVo.CustomerName;
                 addDto.ToHospitalPhone = addVo.ToHospitalPhone;
                 addDto.LiveAnchorBaseId = addVo.LiveAnchorBaseId;
@@ -151,9 +152,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             {
                 string token = _tokenReader.GetToken();
                 var sessionInfo = _sessionStorage.GetSession(token);
+                string customerId = sessionInfo.FxCustomerId;
                 UpdateCustomerConsumptionCredentialsDto updateDto = new UpdateCustomerConsumptionCredentialsDto();
                 updateDto.Id = updateVo.Id;
-                updateDto.CustomerId = updateVo.CustomerId;
+                updateDto.CustomerId = customerId;
                 updateDto.CustomerName = updateVo.CustomerName;
                 updateDto.ToHospitalPhone = updateVo.ToHospitalPhone;
                 updateDto.LiveAnchorBaseId = updateVo.LiveAnchorBaseId;

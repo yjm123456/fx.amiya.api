@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.OrderAppInfo;
+﻿using Fx.Amiya.Core.Dto.Goods;
+using Fx.Amiya.Dto.OrderAppInfo;
 using Fx.Amiya.Dto.OrderRefund;
 using Fx.Amiya.Dto.WxPay;
 using Fx.Amiya.IDal;
@@ -19,10 +20,11 @@ namespace Fx.Amiya.Service
     public class WxPayService : IWxPayService
     {
         private IDalOrderRefund dalOrderRefund;
-        
-        public WxPayService(IDalOrderRefund dalOrderRefund)
+        private readonly IHuiShouQianPaymentService huiShouQianPaymentService;
+        public WxPayService(IDalOrderRefund dalOrderRefund, IHuiShouQianPaymentService huiShouQianPaymentService)
         {
             this.dalOrderRefund = dalOrderRefund;
+            this.huiShouQianPaymentService = huiShouQianPaymentService;
         }
 
         /// <summary>
@@ -32,7 +34,13 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<RefundOrderResult> WechatRefundAsync(string refundOrderId)
         {
-            var refundOrder = dalOrderRefund.GetAll().Where(e => e.Id == refundOrderId).SingleOrDefault();           
+            var refundOrder = dalOrderRefund.GetAll().Where(e => e.Id == refundOrderId).SingleOrDefault();
+
+            //慧收钱退款
+            if (refundOrder.ExchangeType== (int)ExchangeType.HuiShouQian) {
+              return  await huiShouQianPaymentService.CreateHuiShouQianRefundOrde(refundOrderId);
+            }
+
             if (refundOrder == null) { throw new Exception("退款编号错误"); }
             if (refundOrder.CheckState != (int)CheckState.CheckSuccess) throw new Exception("只有审核通过的订单才能退款");
             var success = dalOrderRefund.GetAll().Where(e => e.TradeId == refundOrder.TradeId && e.RefundState == (int)RefundState.RefundSuccess).ToList();

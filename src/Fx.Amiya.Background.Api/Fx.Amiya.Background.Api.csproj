@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>E:\新建文件夹\fx.amiya.api\src\Fx.Amiya.Background.Api\Fx.Amiya.Background.Api.xml</DocumentationFile>
+    <DocumentationFile>C:\新建文件夹\fx.amiya.api\src\Fx.Amiya.Background.Api\Fx.Amiya.Background.Api.xml</DocumentationFile>
     <OutputPath>C:\新建文件夹\</OutputPath>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
@@ -55,9 +55,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Fx.Amiya.Background.Api.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="hsqzsamy4571_pri.pfx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="hsqzsamy4571_pub.cer">

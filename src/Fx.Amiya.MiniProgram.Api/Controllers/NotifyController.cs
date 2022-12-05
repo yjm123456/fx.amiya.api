@@ -490,17 +490,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         sign = arr[1];
                     }
                 }
-
-                var notifyParam = JsonConvert.DeserializeObject<HuiShouQianNotifyParam>(signContent);
-                
-                var signContent1 = BuildPayParamString("CALLBACK", "1.0.0","JSON", "864001883569", "RSA2",signContent, huiShouQianPackageInfo.Key);
-                signContent1 = signContent1.Replace("\\\"","\"");
-                signContent1 = signContent1.Replace("\"{", "{");
-                signContent1 = signContent1.Replace("}\"", "}");
-                //var verify = RAS2EncriptUtil.VerifySignature(sign, signContent1, huiShouQianPackageInfo.PubilcKeyPath);
-                if (true)
+                var notifyParam = JsonConvert.DeserializeObject<HuiShouQianNotifyParam>(signContent);              
+                var signContent1 = BuildPayParamString("CALLBACK", "1.0.0","JSON", "864001883569", "RSA2",signContent, huiShouQianPackageInfo.Key);               
+                RSAHelper rsa = new RSAHelper(RSAType.RSA2,Encoding.UTF8,huiShouQianPackageInfo.PrivateKey,huiShouQianPackageInfo.PublicKey);
+                var verify= rsa.Verify(signContent1,sign);
+                if (verify)
                 {
-                    if (notifyParam.extend == "RECHARGE")
+                    if (notifyParam.extend == "RECHARGE"&& notifyParam.orderStatus.ToUpper() == "SUCCESS")
                     {
                         //储值
                         try
@@ -548,8 +544,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                             unitOfWork.RollBack();
                             return "fail";
                         }
-
-
                     }
                     else {
                         if (notifyParam.orderStatus.ToUpper() == "SUCCESS")
@@ -642,5 +636,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             builder.Append(key);
             return builder.ToString();
         }       
+
     }
 }

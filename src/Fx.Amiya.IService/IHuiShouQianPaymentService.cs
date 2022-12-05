@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Dto.HuiShouQianPay;
+using Fx.Amiya.Dto.OrderRefund;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,6 @@ namespace Fx.Amiya.IService
         /// 创建慧收钱退款订单
         /// </summary>
         /// <returns></returns>
-        Task<HuiShouQianRefundResult> CreateHuiShouQianRefundOrde(string id);
+        Task<RefundOrderResult> CreateHuiShouQianRefundOrde(string id);
     }
 }

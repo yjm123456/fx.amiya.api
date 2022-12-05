@@ -602,7 +602,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
             { ExchangeType.OffLinePay,"线下支付"},
             {ExchangeType.BalancePay,"余额支付"},
             {ExchangeType.Wechat,"微信支付"},
-            {ExchangeType.Alipay,"支付宝"}
+            {ExchangeType.Alipay,"支付宝"},
+            { ExchangeType.HuiShouQian,"慧收钱"}
         };
     }
 }

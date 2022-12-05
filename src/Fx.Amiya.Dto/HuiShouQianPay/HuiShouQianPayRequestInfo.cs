@@ -31,8 +31,8 @@ namespace Fx.Amiya.Dto.HuiShouQianPay
         public HuiShouQianMemoInfo Memo { get; set; }
         public HuiShouQianPayRequestInfo()
         {                
-            this.ReturnUrl = string.Format("{0}/amiya/wxmini/Notify/hsqPayResult", "http://ymjxui.gnway.cc");
-            this.PageUrl ="" ;
+            this.ReturnUrl = string.Format("{0}/amiya/wxmini/Notify/hsqPayResult", "https://app.ameiyes.com/amiyamini");
+            this.PageUrl ="";
         }
     }
 }

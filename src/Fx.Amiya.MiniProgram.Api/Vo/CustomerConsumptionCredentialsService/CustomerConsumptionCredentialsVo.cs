@@ -59,6 +59,10 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.CustomerConsumptionCredentialsService
 
         public DateTime? CheckDate { get; set; }
         /// <summary>
+        /// 审核状态文本
+        /// </summary>
+        public string CheckStateText { get; set; }
+        /// <summary>
         /// 审核备注
         /// </summary>
         public string CheckRemark { get; set; }

@@ -22,6 +22,7 @@ namespace Fx.Amiya.Dto.CustomerConsumptionCredentials
         public string PayVoucherPicture2 { get; set; }
 
         public int CheckState { get; set; }
+        public string CheckStateText { get; set; }
         public int? CheckBy { get; set; }
         public string CheckByEmpname { get; set; }
 

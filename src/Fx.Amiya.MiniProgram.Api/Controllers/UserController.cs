@@ -248,7 +248,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         Gender = editInfoVo.Gender,
                         City = editInfoVo.City,
                         Province = editInfoVo.Province,
-                        NickName = editInfoVo.NickName
+                        NickName = editInfoVo.NickName,
+                        Avatar=editInfoVo.UserAvatar,
                     }
                     );
                 return ResultData.Success();

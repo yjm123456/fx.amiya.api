@@ -723,8 +723,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     huiShouQianPayRequestInfo.OrderAmt = (totalFee * 100m).ToString().Split(".")[0];
                     huiShouQianPayRequestInfo.GoodsInfo = goodsName;
                     huiShouQianPayRequestInfo.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
-                    huiShouQianPayRequestInfo.Extend = "Goods";
-                    //huiShouQianPayRequestInfo.ReturnUrl = "";
+                    huiShouQianPayRequestInfo.Extend = "Goods";                   
                     var result= await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId);
                     if (result.Success == false) throw new Exception("下单失败,请重新下单");
                     PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();

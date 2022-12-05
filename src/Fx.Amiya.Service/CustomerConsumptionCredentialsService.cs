@@ -31,7 +31,7 @@ namespace Fx.Amiya.Service
             var CustomerConsumptionCredentialsBaseInfos = from d in dalCustomerConsumptionCredentials.GetAll()
                                                           where (string.IsNullOrWhiteSpace(keyWord) || d.CustomerName.Contains(keyWord) || d.ToHospitalPhone.Contains(keyWord))
                                                           && (d.Valid == valid)
-                                                          && (checkState.HasValue || d.CheckState == checkState)
+                                                          && (!checkState.HasValue || d.CheckState == checkState)
                                                           select new CustomerConsumptionCredentialsDto
                                                           {
                                                               Id = d.Id,
@@ -77,6 +77,7 @@ namespace Fx.Amiya.Service
                                                               PayVoucherPicture1 = d.PayVoucherPicture1,
                                                               PayVoucherPicture2 = d.PayVoucherPicture2,
                                                               CheckState = d.CheckState,
+                                                              CheckStateText = ServiceClass.GetCheckTypeText(d.CheckState),
                                                               CheckBy = d.CheckBy,
                                                               CheckByEmpname = d.AmiyaEmployee.Name,
                                                               CheckDate = d.CheckDate,
@@ -104,6 +105,7 @@ namespace Fx.Amiya.Service
                 CustomerConsumptionCredentials CustomerConsumptionCredentials = new CustomerConsumptionCredentials();
                 CustomerConsumptionCredentials.Id = Guid.NewGuid().ToString();
                 CustomerConsumptionCredentials.CustomerId = addDto.CustomerId;
+                CustomerConsumptionCredentials.CheckState = 0;
                 CustomerConsumptionCredentials.CustomerName = addDto.CustomerName;
                 CustomerConsumptionCredentials.ToHospitalPhone = addDto.ToHospitalPhone;
                 CustomerConsumptionCredentials.LiveAnchorBaseId = addDto.LiveAnchorBaseId;
@@ -176,12 +178,13 @@ namespace Fx.Amiya.Service
         {
             var resultCount = from d in dalCustomerConsumptionCredentials.GetAll().Where(x => x.Valid == true) select d;
             var result = resultCount.FirstOrDefault(e => e.Id == updateDto.Id);
-            if (result != null)
-                throw new Exception("已存在该顾客消费凭证");
+            if (result == null)
+                throw new Exception("消费凭证编号错误");
             result.Id = updateDto.Id;
             result.CheckBy = updateDto.CheckBy;
             result.CheckState = updateDto.CheckState;
             result.CheckRemark = updateDto.CheckRemark;
+            result.CheckDate = DateTime.Now;
             result.UpdateDate = DateTime.Now;
             await dalCustomerConsumptionCredentials.UpdateAsync(result, true);
         }
