@@ -31,11 +31,11 @@ namespace Fx.Amiya.IService
         /// 创建慧收钱支付订单
         /// </summary>
         /// <returns></returns>
-        Task<HuiShouQianOrderResult> CreateHuiShouQianOrder(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo);
+        Task<HuiShouQianOrderResult> CreateHuiShouQianOrder(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo,string openId);
         /// <summary>
         /// 创建慧收钱退款订单
         /// </summary>
         /// <returns></returns>
-        Task<HuiShouQianRefundResult> CreateHuiShouQianRefundOrde(HuiShouQianRefundRequestParam huiShouQianRefundRequestParam);
+        Task<HuiShouQianRefundResult> CreateHuiShouQianRefundOrde(string id);
     }
 }

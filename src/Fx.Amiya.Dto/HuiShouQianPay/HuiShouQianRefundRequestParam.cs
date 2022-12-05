@@ -47,5 +47,9 @@ namespace Fx.Amiya.Dto.HuiShouQianPay
         /// 附加字段	
         /// </summary>
         public string Extend { get; set; }
+        public HuiShouQianRefundRequestParam() {
+            RefundType = "1";
+            ReturnUrl = "";
+        }
     }
 }

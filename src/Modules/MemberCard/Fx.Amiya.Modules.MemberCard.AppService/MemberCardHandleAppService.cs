@@ -48,7 +48,7 @@ namespace Fx.Amiya.Modules.MemberCard.AppService
 
             var latestMemberCard = await freeSql.Select<MemberCardHandleDbModel>()
                 .Where(e => e.MemberRankId == memberRank.ID)
-                .OrderByDescending(e => e.MemberCardNum).FirstAsync();
+                .OrderByDescending(e => Convert.ToInt32(e.MemberCardNum)).FirstAsync();
 
          
             var memberCard = memberRank.CreateMemberCardSendToCustomer(item.CustomerID, latestMemberCard?.MemberCardNum, item.MemberCardNum, item.HandleBy);

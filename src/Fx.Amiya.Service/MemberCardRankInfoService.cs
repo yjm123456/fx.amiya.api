@@ -34,6 +34,7 @@ namespace Fx.Amiya.Service
         public async Task<List<MemberCardRankInfoDto>> GetMemberRankInfoListAsync()
         {
             return dalMemberCardRankInfo.GetAll().Select(e => new MemberCardRankInfoDto {
+                Name=e.Name,
                 MinAmount=e.MinAmount,
                 MaxAmount=e.MaxAmount,
                 RankCode=e.RankCode

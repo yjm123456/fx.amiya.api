@@ -30,7 +30,7 @@ namespace Fx.Amiya.Dto.HuiShouQianPay
             Method = "POLYMERIZE_REFUND";
             Version = "1.0";
             Format = "JSON";
-            MerchantNo = "";
+            MerchantNo = "864001883569";
             SignType = "RSA2";
         }
     }

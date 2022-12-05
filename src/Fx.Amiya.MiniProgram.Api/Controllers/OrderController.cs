@@ -19,6 +19,7 @@ using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.BindCustomerService;
 using Fx.Amiya.Dto.ConsumptionVoucher;
+using Fx.Amiya.Dto.HuiShouQianPay;
 using Fx.Amiya.Dto.OrderAppInfo;
 using Fx.Amiya.Dto.OrderRefund;
 using Fx.Amiya.Dto.TmallOrder;
@@ -74,6 +75,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private readonly IMemberCardHandleService memberCardHandleService;
         private readonly IOrderRefundService orderRefundService;
         private readonly IUserService userService;
+        private readonly IHuiShouQianPaymentService huiShouQianPaymentService;
         private readonly IUnitOfWork unitOfWork;
         
         
@@ -91,7 +93,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             IAliPayService aliPayService,
             Domain.IRepository.IWxMiniUserRepository wxMiniUserRepository,
             IIntegrationAccount integrationAccountService,
-            ICustomerIntegralOrderRefundService customerIntegralOrderRefundService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, ITaskService taskService, IBalanceAccountService balanceAccountService, IBalanceService balanceService, IUnitOfWork unitOfWork, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IGoodsHospitalsPrice goodsHospitalsPrice, IMemberCardHandleService memberCardHandleService, IOrderRefundService orderRefundService)
+            ICustomerIntegralOrderRefundService customerIntegralOrderRefundService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, ITaskService taskService, IBalanceAccountService balanceAccountService, IBalanceService balanceService, IUnitOfWork unitOfWork, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IGoodsHospitalsPrice goodsHospitalsPrice, IMemberCardHandleService memberCardHandleService, IOrderRefundService orderRefundService, IHuiShouQianPaymentService huiShouQianPaymentService)
         {
             this.orderHistoryService = orderHistoryService;
             this.orderService = orderService;
@@ -117,6 +119,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             this.memberCardHandleService = memberCardHandleService;
             this.orderRefundService = orderRefundService;
             this.userService = userService;
+            this.huiShouQianPaymentService = huiShouQianPaymentService;
         }
 
 
@@ -415,7 +418,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             //积分余额
             decimal integrationBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(customerId);
             var customerInfo = await customerService.GetByIdAsync(customerId);
-            string phone = await customerService.GetPhoneByCustomerIdAsync(customerId);
+             string phone = await customerService.GetPhoneByCustomerIdAsync(customerId);
             var miniUserInfo = await _wxMiniUserRepository.GetByUserIdAsync(customerInfo.UserId);
             string OpenId = miniUserInfo.OpenId;
             DateTime date = DateTime.Now;
@@ -510,6 +513,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         {
                             amiyaOrder.ActualPayment = memberPrice.Price * item.Quantity;
                         }
+                        else {
+                            amiyaOrder.ActualPayment = goodsInfo.SalePrice * item.Quantity;
+                        }
                     }
                     else
                     {
@@ -574,6 +580,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         amiyaOrder.ExchangeType = (byte)ExchangeType.Alipay;
                     } else if (orderAdd.ExchangeType == 2) {
                         amiyaOrder.ExchangeType = (byte)ExchangeType.Wechat;
+                    } else if (orderAdd.ExchangeType == 4) {
+                        amiyaOrder.ExchangeType = (byte)ExchangeType.HuiShouQian;
                     }
                 }
                 if (item.IsFaceCard || item.IsSkinCare)
@@ -660,7 +668,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     WxPackageInfo packageInfo = new WxPackageInfo();
                     packageInfo.Body = orderId;
                     //回调地址需重新设置(todo;)                   
-                    packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");                                                           
+                    packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");
                     packageInfo.OutTradeNo = tradeId;
                     packageInfo.TotalFee = (int)(totalFee * 100m);
                     if (packageInfo.TotalFee < 1m)
@@ -708,6 +716,24 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     var res = _aliPayService.BuildRequest(sParaTemp);
                     orderAddResult.AlipayUrl = res.Result;
                     #endregion
+                } else if (orderAdd.ExchangeType==4) {
+                    HuiShouQianPayRequestInfo huiShouQianPayRequestInfo = new HuiShouQianPayRequestInfo();
+                    huiShouQianPayRequestInfo.TransNo = tradeId;
+                    huiShouQianPayRequestInfo.PayType = "WECHAT_APPLET";
+                    huiShouQianPayRequestInfo.OrderAmt = (totalFee * 100m).ToString().Split(".")[0];
+                    huiShouQianPayRequestInfo.GoodsInfo = goodsName;
+                    huiShouQianPayRequestInfo.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    huiShouQianPayRequestInfo.Extend = "Goods";
+                    //huiShouQianPayRequestInfo.ReturnUrl = "";
+                    var result= await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId);
+                    if (result.Success == false) throw new Exception("下单失败,请重新下单");
+                    PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
+                    payRequestInfo.appId = result.PayParam.AppId;
+                    payRequestInfo.package = result.PayParam.Package;
+                    payRequestInfo.timeStamp = result.PayParam.TimeStamp;
+                    payRequestInfo.nonceStr = result.PayParam.NonceStr;
+                    payRequestInfo.paySign = result.PayParam.PaySign;
+                    orderAddResult.PayRequestInfo = payRequestInfo;
                 }
             }
 

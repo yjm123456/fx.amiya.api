@@ -9,7 +9,7 @@ namespace Fx.Amiya.Dto.HuiShouQianPay
     public class HuiShouQianPayRequestInfo
     {
         //商户在支付平台创建生成的门店编号
-        public string SubMerchantNo { get;private set; }
+        /*public string SubMerchantNo { get; private set; }*/
         //商户系统内部订单号，唯一不重复
         public string TransNo { get; set; }
         //ALI_APPLET：支付宝
@@ -29,8 +29,10 @@ namespace Fx.Amiya.Dto.HuiShouQianPay
         public string Extend { get; set; }
         //扩展信息 json格式
         public HuiShouQianMemoInfo Memo { get; set; }
-        public HuiShouQianPayRequestInfo() {
-            this.SubMerchantNo = "";
+        public HuiShouQianPayRequestInfo()
+        {                
+            this.ReturnUrl = string.Format("{0}/amiya/wxmini/Notify/hsqPayResult", "http://ymjxui.gnway.cc");
+            this.PageUrl ="" ;
         }
     }
 }

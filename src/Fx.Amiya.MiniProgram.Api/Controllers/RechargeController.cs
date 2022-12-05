@@ -2,6 +2,7 @@
 using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.Balance;
+using Fx.Amiya.Dto.HuiShouQianPay;
 using Fx.Amiya.Dto.OrderAppInfo;
 using Fx.Amiya.IService;
 using Fx.Amiya.MiniProgram.Api.Filters;
@@ -41,8 +42,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private readonly IOrderService orderService;
         private readonly IRechargeRewardRuleService rechargeRewardRuleService;
         private IIntegrationAccount integrationAccount;
+        private readonly IHuiShouQianPaymentService huiShouQianPaymentService;
         private IUnitOfWork unitOfWork;
-        public RechargeController(IBalanceAccountService balanceAccountService, IBalanceRechargeService balanceRechargeRecordService, TokenReader tokenReader, IMiniSessionStorage sessionStorage, IAliPayService aliPayService, IBalanceUseRecordService balanceUseRecordService, IRechargeAmountService rechargeAmountService, Domain.IRepository.IWxMiniUserRepository wxMiniUserRepository, ICustomerService customerService, IOrderService orderService, IRechargeRewardRuleService rechargeRewardRuleService, IIntegrationAccount integrationAccount, IUnitOfWork unitOfWork)
+        public RechargeController(IBalanceAccountService balanceAccountService, IBalanceRechargeService balanceRechargeRecordService, TokenReader tokenReader, IMiniSessionStorage sessionStorage, IAliPayService aliPayService, IBalanceUseRecordService balanceUseRecordService, IRechargeAmountService rechargeAmountService, Domain.IRepository.IWxMiniUserRepository wxMiniUserRepository, ICustomerService customerService, IOrderService orderService, IRechargeRewardRuleService rechargeRewardRuleService, IIntegrationAccount integrationAccount, IUnitOfWork unitOfWork, IHuiShouQianPaymentService huiShouQianPaymentService)
         {
             this.balanceAccountService = balanceAccountService;
             this.balanceRechargeRecordService = balanceRechargeRecordService;
@@ -57,6 +59,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             this.rechargeRewardRuleService = rechargeRewardRuleService;
             this.integrationAccount = integrationAccount;
             this.unitOfWork = unitOfWork;
+            this.huiShouQianPaymentService = huiShouQianPaymentService;
         }
         /// <summary>
         /// 获取用户余额
@@ -160,10 +163,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             recordDto.RechargeDate = DateTime.Now;
             recordDto.Status = (int)RechargeStatus.PendingPayment;
             string tradeId = await balanceRechargeRecordService.AddRechargeRecordAsync(recordDto);
-            if (orderAdd.ExchangeCode == "WECHAT")
+            if (orderAdd.ExchangeCode == "HSQ")
             {
                 //throw new Exception("暂不支持微信支付");
-                #region 微信支付
+                /*#region 微信支付
                 WxPackageInfo packageInfo = new WxPackageInfo();
                 packageInfo.Body = tradeId;
                 //回调地址需重新设置(todo;)
@@ -195,7 +198,24 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     rechargeResultVo.PayRequestInfo = payRequestInfo;
                 }
 
-                #endregion
+                #endregion*/
+                HuiShouQianPayRequestInfo huiShouQianPayRequestInfo = new HuiShouQianPayRequestInfo();
+                huiShouQianPayRequestInfo.TransNo = tradeId;
+                huiShouQianPayRequestInfo.PayType = "WECHAT_APPLET";
+                huiShouQianPayRequestInfo.OrderAmt = (amount.Amount * 100m).ToString().Split(".")[0];
+                huiShouQianPayRequestInfo.GoodsInfo = "充值";
+                huiShouQianPayRequestInfo.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
+                huiShouQianPayRequestInfo.Extend = "RECHARGE";
+                //huiShouQianPayRequestInfo.ReturnUrl = "";
+                var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId);
+                if (result.Success == false) throw new Exception("下单失败,请重新下单");
+                PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
+                payRequestInfo.appId = result.PayParam.AppId;
+                payRequestInfo.package = result.PayParam.Package;
+                payRequestInfo.timeStamp = result.PayParam.TimeStamp;
+                payRequestInfo.nonceStr = result.PayParam.NonceStr;
+                payRequestInfo.paySign = result.PayParam.PaySign;
+                rechargeResultVo.PayRequestInfo = payRequestInfo;
             }
 
             if (orderAdd.ExchangeCode == "ALIPAY")

@@ -10,6 +10,7 @@ using Fx.Amiya.MiniProgram.Api.Vo.Notify;
 using Fx.Amiya.Modules.Integration.Domin;
 using Fx.Amiya.Service;
 using Fx.Infrastructure.DataAccess;
+using Fx.Open.Infrastructure.Web.Utils;
 using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -474,65 +476,140 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
                 await stream.ReadAsync(buffer);
                 string notify = System.Text.Encoding.UTF8.GetString(buffer);
-                var notifyParam = JsonConvert.DeserializeObject<HuiShouQianNotifyCommonParam>(notify);
-                var signContent = BuildPayParamString(notifyParam.method,notifyParam.version,notifyParam.format,notifyParam.merchantNo,notifyParam.signType,JsonConvert.SerializeObject(notifyParam.signContent), huiShouQianPackageInfo.Key);
-                var verify = RAS2EncriptUtil.VerifySignature(signContent,notifyParam.sign, huiShouQianPackageInfo.PubilcKeyPath);
-                if (verify)
+                notify= HttpUtility.UrlDecode(notify);
+                var list = notify.Split("&");
+                string signContent = "";
+                string sign = "";
+                foreach (var item in list)
                 {
-                    if (notifyParam.signContent.orderStatus.ToUpper() == "SUCCESS")
-                    {
-                        var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(notifyParam.signContent.transNo);
-                        if (orderTrade.StatusCode == OrderStatusCode.WAIT_BUYER_PAY)
-                        {
-                            List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
-                            foreach (var item in orderTrade.OrderInfoList)
-                            {
-                                UpdateOrderDto updateOrder = new UpdateOrderDto();
-                                updateOrder.OrderId = item.Id;
-                                updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
-                                if (item.ActualPayment.HasValue)
-                                {
-                                    updateOrder.Actual_payment = item.ActualPayment.Value;
+                    var arr = item.Split("=");
+                    if (arr[0]== "signContent") {
+                        signContent = arr[1];
+                    }
+                    if (arr[0]== "sign") {
+                        sign = arr[1];
+                    }
+                }
 
-                                    var bind = await _dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == item.Phone);
-                                    if (bind != null)
-                                    {
-                                        bind.NewConsumptionDate = DateTime.Now;
-                                        bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
-                                        bind.NewContentPlatForm = ServiceClass.GetAppTypeText(item.AppType);
-                                        bind.AllPrice += item.ActualPayment.Value;
-                                        bind.AllOrderCount += item.Quantity;
-                                        await _dalBindCustomerService.UpdateAsync(bind, true);
-                                    }
-                                }
-                                if (item.IntegrationQuantity.HasValue)
-                                {
-                                    updateOrder.IntergrationQuantity = item.IntegrationQuantity;
-                                }
-                                Random random = new Random();
-                                updateOrder.AppType = item.AppType;
-                                updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
-                                updateOrderList.Add(updateOrder);
+                var notifyParam = JsonConvert.DeserializeObject<HuiShouQianNotifyParam>(signContent);
+                
+                var signContent1 = BuildPayParamString("CALLBACK", "1.0.0","JSON", "864001883569", "RSA2",signContent, huiShouQianPackageInfo.Key);
+                signContent1 = signContent1.Replace("\\\"","\"");
+                signContent1 = signContent1.Replace("\"{", "{");
+                signContent1 = signContent1.Replace("}\"", "}");
+                //var verify = RAS2EncriptUtil.VerifySignature(sign, signContent1, huiShouQianPackageInfo.PubilcKeyPath);
+                if (true)
+                {
+                    if (notifyParam.extend == "RECHARGE")
+                    {
+                        //储值
+                        try
+                        {
+                            unitOfWork.BeginTransaction();
+                            var rechargeRecord = await balanceRechargeRecordService.GetRechargeRecordByIdAsync(notifyParam.transNo);
+                            //如果订单记录状态为success直接返回success
+                            if (rechargeRecord.Status == (int)RechargeStatus.Success)
+                            {
+                                return "SUCCESS";
                             }
-                            //修改订单状态
-                            await orderService.UpdateAsync(updateOrderList);
-                            UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
-                            updateOrderTrade.TradeId = notifyParam.signContent.transNo;
-                            updateOrderTrade.AddressId = orderTrade.AddressId;
-                            updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
-                            await orderService.UpdateOrderTradeAsync(updateOrderTrade);
+                            UpdateRechargeRecordStatusDto update = new UpdateRechargeRecordStatusDto
+                            {
+                                Id = rechargeRecord.Id,
+                                Status = (int)RechargeStatus.Success,
+                                OrderId = notifyParam.tradeNo,
+                                CompleteDate = DateTime.Now
+                            };
+                            //更新记录状态
+                            await balanceRechargeRecordService.UpdateRechargeRecordStatusAsync(update);
+                            //更新余额
+                            await balanceAccountService.UpdateAccountBalanceAsync(rechargeRecord.CustomerId);
+
+                            #region 储值奖励积分
+
+                            var totalRecharge = await balanceRechargeRecordService.GetAllRechargeAmountAsync(rechargeRecord.CustomerId);
+
+                            var rechargeRewardRuleList = await rechargeRewardRuleService.GetRewardListAsync();
+
+                            foreach (var rule in rechargeRewardRuleList)
+                            {
+                                if (totalRecharge >= rule.MinAmount)
+                                {
+                                    var integrationRecord = await CreateIntegrationRecordAsync(rechargeRecord.CustomerId, rule.GiveIntegration, 1);
+                                    if (integrationRecord != null) await integrationAccount.AddByConsumptionAsync(integrationRecord);
+                                }
+                            }
+
+                            #endregion
+
+                            unitOfWork.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            unitOfWork.RollBack();
+                            return "fail";
+                        }
+
+
+                    }
+                    else {
+                        if (notifyParam.orderStatus.ToUpper() == "SUCCESS")
+                        {
+                            var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(notifyParam.transNo);
+                            if (orderTrade.StatusCode == OrderStatusCode.WAIT_BUYER_PAY)
+                            {
+                                List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
+                                foreach (var item in orderTrade.OrderInfoList)
+                                {
+                                    UpdateOrderDto updateOrder = new UpdateOrderDto();
+                                    updateOrder.OrderId = item.Id;
+                                    updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                                    if (item.ActualPayment.HasValue)
+                                    {
+                                        updateOrder.Actual_payment = item.ActualPayment.Value;
+
+                                        var bind = await _dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == item.Phone);
+                                        if (bind != null)
+                                        {
+                                            bind.NewConsumptionDate = DateTime.Now;
+                                            bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
+                                            bind.NewContentPlatForm = ServiceClass.GetAppTypeText(item.AppType);
+                                            bind.AllPrice += item.ActualPayment.Value;
+                                            bind.AllOrderCount += item.Quantity;
+                                            await _dalBindCustomerService.UpdateAsync(bind, true);
+                                        }
+                                    }
+                                    if (item.IntegrationQuantity.HasValue)
+                                    {
+                                        updateOrder.IntergrationQuantity = item.IntegrationQuantity;
+                                    }
+                                    Random random = new Random();
+                                    updateOrder.AppType = item.AppType;
+                                    updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
+                                    updateOrderList.Add(updateOrder);
+                                }
+                                //修改订单状态
+                                await orderService.UpdateAsync(updateOrderList);
+                                UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
+                                updateOrderTrade.TradeId = notifyParam.transNo;
+                                updateOrderTrade.AddressId = orderTrade.AddressId;
+                                updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                                await orderService.UpdateOrderTradeAsync(updateOrderTrade);
+                            }
                         }
                     }
+                    
                     return "SUCCESS";
                 }
-                else {
-                    return "";
+                else
+                {
+                    return "Fail";
                 }
+                
             }
             catch (Exception ex)
             {
-
-                throw ex;
+                return "Fail";
+                
             }
         }
         /// <summary>

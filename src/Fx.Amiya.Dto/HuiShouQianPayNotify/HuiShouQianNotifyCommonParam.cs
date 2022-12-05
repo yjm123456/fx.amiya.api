@@ -34,7 +34,6 @@ namespace Fx.Amiya.Dto.HuiShouQianPayNotify
         public string fundChannel { get; set; }
         public string fundBankCode { get; set; }
         public string extend { get; set; }
-        public int MyProperty { get; set; }
     }
     public class HuiShouQianNotifyMemoParam
     {

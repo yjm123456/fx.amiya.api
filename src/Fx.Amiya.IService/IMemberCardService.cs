@@ -26,6 +26,6 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="growthPoints"></param>
         /// <returns></returns>
-        Task<MemberCardUpgradeDto> GetUpgradeInfoAsync(decimal growthPoints);
+        Task<MemberCardUpgradeDto> GetUpgradeInfoAsync(decimal growthPoints,string customerId);
     }
 }

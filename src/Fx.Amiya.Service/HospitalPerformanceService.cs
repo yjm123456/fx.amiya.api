@@ -219,7 +219,7 @@ namespace Fx.Amiya.Service
             result.ThisNewCustomerUnitPrice = Division(lastCustomerTotalPrice, lastDealNum.Count()).Value;
             //上月老客复购率
             var lastOldCustomerVisitNum = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true).Count();
-            result.ThisOldCustomerRepurchaseRate = Division(lastOldCustomerVisitNum, lastContentPlatFormOrderDealInfoList.Count()).Value;
+            result.ThisOldCustomerRepurchaseRate = CalculateTargetComplete(lastOldCustomerVisitNum, lastContentPlatFormOrderDealInfoList.Count()).Value;
             //上月老客客单价
             var lastOldCustomerTotalPrice = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true && x.IsDeal == true).Sum(x => x.Price);
             var lastOldDealNum = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true && x.IsDeal == true);
@@ -241,7 +241,7 @@ namespace Fx.Amiya.Service
             result.LastNewCustomerUnitPrice = Division(beforeCustomerTotalPrice, beforeDealNum.Count()).Value;
             //前月老客复购率
             var beforeOldCustomerVisitNum = beforeContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true).Count();
-            result.LastOldCustomerRepurchaseRate = Division(beforeOldCustomerVisitNum, beforeContentPlatFormOrderDealInfoList.Count()).Value;
+            result.LastOldCustomerRepurchaseRate = CalculateTargetComplete(beforeOldCustomerVisitNum, beforeContentPlatFormOrderDealInfoList.Count()).Value;
             //前月老客客单价
             var beforeOldCustomerTotalPrice = beforeContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true && x.IsDeal == true).Sum(x => x.Price);
             var beforeOldDealNum = beforeContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true && x.IsDeal == true);

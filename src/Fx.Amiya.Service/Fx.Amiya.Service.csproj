@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\方旋基础类库\web基础类库\方旋Web基础类库\Fx.Open.Infrastructure.Web\Fx.Open.Infrastructure.Web.csproj" />
     <ProjectReference Include="..\..\..\方旋基础类库\业务基础类库\方旋业务基础类库\Fx.Infrastructure\Fx.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\方旋基础类库\方旋微信SDK\src\Fx.Weixin.MP\Fx.Weixin.MP.csproj" />
     <ProjectReference Include="..\..\..\方旋短信平台\src\Fx.Sms.Core\Fx.Sms.Core.csproj" />

@@ -46,7 +46,11 @@ namespace Fx.Amiya.Core.Dto.Goods
         /// <summary>
         /// 支付包
         /// </summary>
-        Alipay
+        Alipay,
+        /// <summary>
+        /// 慧收钱
+        /// </summary>
+        HuiShouQian
     }
 
     /// <summary>

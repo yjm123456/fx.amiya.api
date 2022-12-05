@@ -115,7 +115,8 @@ namespace Fx.Amiya.Service
                         HandleBy = membercard.HandleBy
                     };
                     await memberCardSendRecordService.AddAsync(updateRecord);
-                    //如果是白金会员,发放白金会员抵用券
+                    //暂时不赠送抵用券
+                    /*//如果是白金会员,发放白金会员抵用券
                     if (memberRankCode == MemberRankCode.MEIYAWhiteCardMember)
                     {
                         await customerConsumptionVoucherService.MEIYAWhiteCardMemberSendVoucherAsync(customerId,0);
@@ -124,7 +125,7 @@ namespace Fx.Amiya.Service
                     if (memberRankCode == MemberRankCode.BlackCardMember)
                     {
                         await customerConsumptionVoucherService.BlackCardMemberSendVoucherAsync(customerId,0);
-                    }
+                    }*/
                 }
             }
             else {
@@ -151,10 +152,23 @@ namespace Fx.Amiya.Service
         }
         private  MemberCardHandleDto CreateMemberCardAsync(string latestMemberCardNum, string inputMemberCardNum,string memberRankCode,int memberCardId)
         {
-
+            string memberCardNum = "";
+            DateTime date = DateTime.Now;
+            if (string.IsNullOrEmpty(latestMemberCardNum))
+            {
+                memberCardNum = "01030";
+            }
+            else {
+                memberCardNum = latestMemberCardNum.Substring(memberRankCode.Length + 2);
+            }
+            memberCardNum = (Convert.ToInt32(memberCardNum) + 1).ToString().PadLeft(memberCardNum.Length, '0');
+            string year = date.Year.ToString().Substring(date.Year.ToString().Length - 2);
+            memberCardNum = memberRankCode + year + memberCardNum;
+            /*string year = date.Year.ToString().Substring(date.Year.ToString().Length - 2);
+            memberCardNum = RankCode + year + memberCardNum;*/
             return new MemberCardHandleDto()
             {
-                MemberCardNum = CreateOrderIdHelper.GetNextNumber().Substring(7,9),
+                MemberCardNum = memberCardNum,
                 Date = DateTime.Now,
                 Valid = true,
                 MemberRankId=(byte)memberCardId
@@ -196,10 +210,26 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="growthPoints"></param>
         /// <returns></returns>
-        public async Task<MemberCardUpgradeDto> GetUpgradeInfoAsync(decimal growthPoints)
+        public async Task<MemberCardUpgradeDto> GetUpgradeInfoAsync(decimal growthPoints,string customerId)
         {
             if (growthPoints<0)throw new Exception("成长值不能小于0") ;
-            MemberCardUpgradeDto upgrade = new MemberCardUpgradeDto();
+            var memberCardList = await memberCardRankInfoService.GetMemberRankInfoListAsync();
+            memberCardList = memberCardList.OrderBy(m => Convert.ToInt32(m.RankCode)).ToList();
+            var card = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
+            var nextLeave= memberCardList.Where(e => Convert.ToInt32(e.RankCode) > Convert.ToInt32(card.MemberRankCode)).FirstOrDefault();
+            if (nextLeave != null)
+            {
+                MemberCardUpgradeDto upgradeDto = new MemberCardUpgradeDto();
+                upgradeDto.NextLeaveText = nextLeave.Name;
+                decimal upgardePoints = nextLeave.MinAmount - growthPoints;
+                upgradeDto.UpgardeNeedGrowthPoints = upgardePoints < 0 ? 0 : upgardePoints;
+                return upgradeDto;
+            }
+            else {
+                return new MemberCardUpgradeDto();
+            }
+
+            /*MemberCardUpgradeDto upgrade = new MemberCardUpgradeDto();
             var ordinaryMemberAmount = await memberCardRankInfoService.GetMemberRankInfoByRankCodeAsync(MemberRankCode.OrdinaryMember);
             var ordinaryMemberMinAmount = ordinaryMemberAmount.MinAmount;
             var ordinaryMemberMaxAmount = ordinaryMemberAmount.MaxAmount;
@@ -218,8 +248,7 @@ namespace Fx.Amiya.Service
                 return upgrade;
             }
             upgrade.NextLeaveText = "";
-            upgrade.UpgardeNeedGrowthPoints = 0;
-            return upgrade;
+            upgrade.UpgardeNeedGrowthPoints = 0;*/           
         }
     }
 }

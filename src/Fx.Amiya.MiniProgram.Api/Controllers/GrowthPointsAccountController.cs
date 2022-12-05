@@ -53,7 +53,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 };
                 await growthPointsAccountService.AddAsync(createGrowth);
             }
-            var upgrade = await memberCardService.GetUpgradeInfoAsync(balance.Balance);
+            var upgrade = await memberCardService.GetUpgradeInfoAsync(balance.Balance,customerId);
             pointsVo.Balance = balance.Balance;
             pointsVo.UpgradeGrowthPoints = upgrade.UpgardeNeedGrowthPoints;
             pointsVo.NextLeaveText = upgrade.NextLeaveText;

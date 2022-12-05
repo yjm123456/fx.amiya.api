@@ -524,6 +524,9 @@ namespace Fx.Amiya.Service
                 case 5:
                     orderTypeText = "支付宝支付";
                     break;
+                case 6:
+                    orderTypeText = "慧收钱支付";
+                    break;
                 default:
                     orderTypeText = "未知";
                     break;
@@ -1067,6 +1070,9 @@ namespace Fx.Amiya.Service
                 case 3:
                     typeText = "储值赠送";
                     break;
+                case 4:
+                    typeText = "微信支付";
+                    break;
                 default:
                     typeText = "其他";
                     break;
@@ -1088,6 +1094,9 @@ namespace Fx.Amiya.Service
                     break;
                 case "WECHAT":
                     type = 1;
+                    break;
+                case "HSQ":
+                    type = 4;
                     break;
                 default:
                     type = -1;

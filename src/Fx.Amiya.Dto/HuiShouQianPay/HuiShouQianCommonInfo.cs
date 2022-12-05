@@ -19,14 +19,14 @@ namespace Fx.Amiya.Dto.HuiShouQianPay
         //加密类型	
         public string SignType { get; set; }
         //业务数据	
-        public HuiShouQianPayRequestInfo SignContent { get; set; }
+        public string SignContent { get; set; }
         //签名数据	
         public string Sign { get; set; }
         public HuiShouQianCommonInfo() {
             Method = "POLYMERIZE_MAIN_SWEPTN";
             Version = "1.0";
             Format = "JSON";
-            MerchantNo = "";
+            MerchantNo = "864001883569";
             SignType = "RSA2";
         }
     }

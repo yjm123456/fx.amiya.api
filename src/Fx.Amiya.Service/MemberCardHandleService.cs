@@ -51,7 +51,7 @@ namespace Fx.Amiya.Service
 
         public async Task<string> GetMemberCardHandleLastNumAsync(int cardid)
         {
-            return dalMemberCardHandle.GetAll().Where(m => m.MemberRankId == cardid).OrderByDescending(m => m.MemberCardNum).Select(m=>m.MemberCardNum).FirstOrDefault();
+            return dalMemberCardHandle.GetAll().Where(m => m.MemberRankId == cardid).OrderByDescending(m => Convert.ToInt32(m.MemberCardNum)).Select(m=>m.MemberCardNum).FirstOrDefault();
         }
 
         public async Task UpdateAsync(MemberCardHandleDto handleDto)

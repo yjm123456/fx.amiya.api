@@ -44,10 +44,7 @@ namespace Fx.Amiya.Dto.HuiShouQianPay
         /// 交易状态	
         /// </summary>
         public string orderStatus { get; set; }
-        /// <summary>
-        /// 完成时间	
-        /// </summary>
-        public string finishedDate { get; set; }
+        
         /// <summary>
         /// 错误码	
         /// </summary>
@@ -56,6 +53,8 @@ namespace Fx.Amiya.Dto.HuiShouQianPay
         /// 错误信息	
         /// </summary>
         public string respMsg { get; set; }
+        public string extend { get; set; }
+        public string payType { get; set; }
         /// <summary>
         /// 返回唤醒支付的参数
         /// </summary>
