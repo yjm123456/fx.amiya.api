@@ -52,8 +52,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                                      CustomerId = d.CustomerId,
                                                      CustomerName = d.CustomerName,
                                                      ToHospitalPhone = d.ToHospitalPhone,
-                                                     LiveAnchorBaseId = d.LiveAnchorBaseId,
-                                                     LiveAnchor = d.LiveAnchor,
                                                      ConsumeDate = d.ConsumeDate,
                                                      PayVoucherPicture1 = d.PayVoucherPicture1,
                                                      PayVoucherPicture2 = d.PayVoucherPicture2,
@@ -93,7 +91,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 cCustomerConsumptionCredentialsVo.CustomerId = cCustomerConsumptionCredentials.CustomerId;
                 cCustomerConsumptionCredentialsVo.CustomerName = cCustomerConsumptionCredentials.CustomerName;
                 cCustomerConsumptionCredentialsVo.ToHospitalPhone = cCustomerConsumptionCredentials.ToHospitalPhone;
-                cCustomerConsumptionCredentialsVo.LiveAnchorBaseId = cCustomerConsumptionCredentials.LiveAnchorBaseId;
                 cCustomerConsumptionCredentialsVo.ConsumeDate = cCustomerConsumptionCredentials.ConsumeDate;
                 cCustomerConsumptionCredentialsVo.PayVoucherPicture1 = cCustomerConsumptionCredentials.PayVoucherPicture1;
                 cCustomerConsumptionCredentialsVo.PayVoucherPicture2 = cCustomerConsumptionCredentials.PayVoucherPicture2;
@@ -125,10 +122,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 addDto.CustomerId = customerId;
                 addDto.CustomerName = addVo.CustomerName;
                 addDto.ToHospitalPhone = addVo.ToHospitalPhone;
-                addDto.LiveAnchorBaseId = addVo.LiveAnchorBaseId;
                 addDto.ConsumeDate = addVo.ConsumeDate;
                 addDto.PayVoucherPicture1 = addVo.PayVoucherPicture1;
                 addDto.PayVoucherPicture2 = addVo.PayVoucherPicture2;
+                addDto.PayVoucherPicture3 = addVo.PayVoucherPicture3;
+                addDto.PayVoucherPicture4 = addVo.PayVoucherPicture4;
+                addDto.PayVoucherPicture5 = addVo.PayVoucherPicture5;
                 await customerConsumptionCredentialsService.AddAsync(addDto);
                 return ResultData<int>.Success();
 
@@ -158,10 +157,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 updateDto.CustomerId = customerId;
                 updateDto.CustomerName = updateVo.CustomerName;
                 updateDto.ToHospitalPhone = updateVo.ToHospitalPhone;
-                updateDto.LiveAnchorBaseId = updateVo.LiveAnchorBaseId;
                 updateDto.ConsumeDate = updateVo.ConsumeDate;
                 updateDto.PayVoucherPicture1 = updateVo.PayVoucherPicture1;
                 updateDto.PayVoucherPicture2 = updateVo.PayVoucherPicture2;
+                updateDto.PayVoucherPicture3 = updateVo.PayVoucherPicture3;
+                updateDto.PayVoucherPicture4 = updateVo.PayVoucherPicture4;
+                updateDto.PayVoucherPicture5 = updateVo.PayVoucherPicture5;
                 await customerConsumptionCredentialsService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

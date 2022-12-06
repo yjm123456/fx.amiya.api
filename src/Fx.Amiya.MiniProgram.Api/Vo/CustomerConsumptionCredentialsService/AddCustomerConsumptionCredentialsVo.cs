@@ -20,14 +20,6 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.CustomerConsumptionCredentialsService
         /// </summary>
         public string ToHospitalPhone { get; set; }
         /// <summary>
-        /// 归属主播id
-        /// </summary>
-        public string LiveAnchorBaseId { get; set; }
-        /// <summary>
-        /// 归属主播
-        /// </summary>
-        public string LiveAnchor { get; set; }
-        /// <summary>
         /// 消费时间
         /// </summary>
 
@@ -41,6 +33,9 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.CustomerConsumptionCredentialsService
         /// 消费凭证截图2
         /// </summary>
         public string PayVoucherPicture2 { get; set; }
+        public string PayVoucherPicture3 { get; set; }
+        public string PayVoucherPicture4 { get; set; }
+        public string PayVoucherPicture5 { get; set; }
         /// <summary>
         /// 审核状态
         /// </summary>

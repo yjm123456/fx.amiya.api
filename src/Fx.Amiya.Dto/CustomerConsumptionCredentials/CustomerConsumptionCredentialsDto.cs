@@ -13,13 +13,15 @@ namespace Fx.Amiya.Dto.CustomerConsumptionCredentials
 
         public string ToHospitalPhone { get; set; }
 
-        public string LiveAnchorBaseId { get; set; }
         public string LiveAnchor { get; set; }
 
         public DateTime ConsumeDate { get; set; }
 
         public string PayVoucherPicture1 { get; set; }
         public string PayVoucherPicture2 { get; set; }
+        public string PayVoucherPicture3 { get; set; }
+        public string PayVoucherPicture4 { get; set; }
+        public string PayVoucherPicture5 { get; set; }
 
         public int CheckState { get; set; }
         public string CheckStateText { get; set; }

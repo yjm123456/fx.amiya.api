@@ -20,14 +20,6 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.CustomerConsumptionCredentialsService
         /// </summary>
         public string ToHospitalPhone { get; set; }
         /// <summary>
-        /// 归属主播id
-        /// </summary>
-        public string LiveAnchorBaseId { get; set; }
-        /// <summary>
-        /// 归属主播
-        /// </summary>
-        public string LiveAnchor { get; set; }
-        /// <summary>
         /// 消费时间
         /// </summary>
 

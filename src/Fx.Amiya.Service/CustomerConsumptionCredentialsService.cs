@@ -17,8 +17,11 @@ namespace Fx.Amiya.Service
     public class CustomerConsumptionCredentialsService : ICustomerConsumptionCredentialsService
     {
         private IDalCustomerConsumptionCredentials dalCustomerConsumptionCredentials;
-        public CustomerConsumptionCredentialsService(IDalCustomerConsumptionCredentials dalCustomerConsumptionCredentials)
+        private IContentPlateFormOrderService contentPlateFormOrderService;
+        public CustomerConsumptionCredentialsService(IDalCustomerConsumptionCredentials dalCustomerConsumptionCredentials,
+            IContentPlateFormOrderService contentPlateFormOrderService)
         {
+            this.contentPlateFormOrderService = contentPlateFormOrderService;
             this.dalCustomerConsumptionCredentials = dalCustomerConsumptionCredentials;
         }
 
@@ -38,11 +41,12 @@ namespace Fx.Amiya.Service
                                                               CustomerId=d.CustomerId,
                                                               CustomerName = d.CustomerName,
                                                               ToHospitalPhone = d.ToHospitalPhone,
-                                                              LiveAnchorBaseId = d.LiveAnchorBaseId,
-                                                              LiveAnchor = d.LiveAnchorBaseInfo.LiveAnchorName,
                                                               ConsumeDate = d.ConsumeDate,
                                                               PayVoucherPicture1 = d.PayVoucherPicture1,
                                                               PayVoucherPicture2 = d.PayVoucherPicture2,
+                                                              PayVoucherPicture3 = d.PayVoucherPicture3,
+                                                              PayVoucherPicture4 = d.PayVoucherPicture4,
+                                                              PayVoucherPicture5 = d.PayVoucherPicture5,
                                                               CheckState = d.CheckState,
                                                               CheckBy = d.CheckBy,
                                                               CheckByEmpname = d.AmiyaEmployee.Name,
@@ -56,6 +60,16 @@ namespace Fx.Amiya.Service
             FxPageInfo<CustomerConsumptionCredentialsDto> CustomerConsumptionCredentialsBaseInfoPageInfo = new FxPageInfo<CustomerConsumptionCredentialsDto>();
             CustomerConsumptionCredentialsBaseInfoPageInfo.TotalCount = await CustomerConsumptionCredentialsBaseInfos.CountAsync();
             CustomerConsumptionCredentialsBaseInfoPageInfo.List = await CustomerConsumptionCredentialsBaseInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+            foreach (var x in CustomerConsumptionCredentialsBaseInfoPageInfo.List)
+            {
+                var contentPlatFormOrderList = await contentPlateFormOrderService.GetOrderListByPhoneAsync(x.ToHospitalPhone);
+                var contentPlatFormOrder = contentPlatFormOrderList.FirstOrDefault();
+                if (contentPlatFormOrder != null)
+                {
+                    x.LiveAnchor = contentPlatFormOrder.LiveAnchorName;
+                }
+            }
+
             return CustomerConsumptionCredentialsBaseInfoPageInfo;
         }
 
@@ -71,11 +85,12 @@ namespace Fx.Amiya.Service
                                                               CustomerId = d.CustomerId,
                                                               CustomerName = d.CustomerName,
                                                               ToHospitalPhone = d.ToHospitalPhone,
-                                                              LiveAnchorBaseId = d.LiveAnchorBaseId,
-                                                              LiveAnchor = d.LiveAnchorBaseInfo.LiveAnchorName,
                                                               ConsumeDate = d.ConsumeDate,
                                                               PayVoucherPicture1 = d.PayVoucherPicture1,
                                                               PayVoucherPicture2 = d.PayVoucherPicture2,
+                                                              PayVoucherPicture3 = d.PayVoucherPicture3,
+                                                              PayVoucherPicture4 = d.PayVoucherPicture4,
+                                                              PayVoucherPicture5 = d.PayVoucherPicture5,
                                                               CheckState = d.CheckState,
                                                               CheckStateText = ServiceClass.GetCheckTypeText(d.CheckState),
                                                               CheckBy = d.CheckBy,
@@ -108,10 +123,12 @@ namespace Fx.Amiya.Service
                 CustomerConsumptionCredentials.CheckState = 0;
                 CustomerConsumptionCredentials.CustomerName = addDto.CustomerName;
                 CustomerConsumptionCredentials.ToHospitalPhone = addDto.ToHospitalPhone;
-                CustomerConsumptionCredentials.LiveAnchorBaseId = addDto.LiveAnchorBaseId;
                 CustomerConsumptionCredentials.ConsumeDate = addDto.ConsumeDate;
                 CustomerConsumptionCredentials.PayVoucherPicture1 = addDto.PayVoucherPicture1;
                 CustomerConsumptionCredentials.PayVoucherPicture2 = addDto.PayVoucherPicture2;
+                CustomerConsumptionCredentials.PayVoucherPicture3 = addDto.PayVoucherPicture3;
+                CustomerConsumptionCredentials.PayVoucherPicture4 = addDto.PayVoucherPicture4;
+                CustomerConsumptionCredentials.PayVoucherPicture5 = addDto.PayVoucherPicture5;
                 CustomerConsumptionCredentials.Valid = true;
                 CustomerConsumptionCredentials.CreateDate = DateTime.Now;
                 await dalCustomerConsumptionCredentials.AddAsync(CustomerConsumptionCredentials, true);
@@ -139,10 +156,12 @@ namespace Fx.Amiya.Service
             CustomerConsumptionCredentialsBaseInfoDto.CustomerId = x.CustomerId;
             CustomerConsumptionCredentialsBaseInfoDto.CustomerName = x.CustomerName;
             CustomerConsumptionCredentialsBaseInfoDto.ToHospitalPhone = x.ToHospitalPhone;
-            CustomerConsumptionCredentialsBaseInfoDto.LiveAnchorBaseId = x.LiveAnchorBaseId;
             CustomerConsumptionCredentialsBaseInfoDto.ConsumeDate = x.ConsumeDate;
             CustomerConsumptionCredentialsBaseInfoDto.PayVoucherPicture1 = x.PayVoucherPicture1;
             CustomerConsumptionCredentialsBaseInfoDto.PayVoucherPicture2 = x.PayVoucherPicture2;
+            CustomerConsumptionCredentialsBaseInfoDto.PayVoucherPicture3 = x.PayVoucherPicture3;
+            CustomerConsumptionCredentialsBaseInfoDto.PayVoucherPicture4 = x.PayVoucherPicture4;
+            CustomerConsumptionCredentialsBaseInfoDto.PayVoucherPicture5 = x.PayVoucherPicture5;
             CustomerConsumptionCredentialsBaseInfoDto.Valid = x.Valid;
             return CustomerConsumptionCredentialsBaseInfoDto;
         }
@@ -161,10 +180,12 @@ namespace Fx.Amiya.Service
             result.CustomerId = updateDto.CustomerId;
             result.CustomerName = updateDto.CustomerName;
             result.ToHospitalPhone = updateDto.ToHospitalPhone;
-            result.LiveAnchorBaseId = updateDto.LiveAnchorBaseId;
             result.ConsumeDate = updateDto.ConsumeDate;
             result.PayVoucherPicture1 = updateDto.PayVoucherPicture1;
             result.PayVoucherPicture2 = updateDto.PayVoucherPicture2;
+            result.PayVoucherPicture3 = updateDto.PayVoucherPicture3;
+            result.PayVoucherPicture4 = updateDto.PayVoucherPicture4;
+            result.PayVoucherPicture5 = updateDto.PayVoucherPicture5;
             result.UpdateDate = DateTime.Now;
             await dalCustomerConsumptionCredentials.UpdateAsync(result, true);
         }

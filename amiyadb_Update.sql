@@ -1579,6 +1579,20 @@ DROP FOREIGN KEY `fk_integrationGenerateRecord_orderId_orderInfo_id`;
 ALTER TABLE `amiyadb`.`tbl_integration_generate_record` 
 DROP INDEX `fk_integrationGenerateRecord_orderId_orderInfo_id` ;
 ;
+--取消成交凭证板块关联主播，新增成交凭证图片
+ALTER TABLE `amiyadb`.`tbl_customer_consumption_credentials` 
+DROP FOREIGN KEY `fk_customer_consumption_voucher_liveanchorInfo`;
+ALTER TABLE `amiyadb`.`tbl_customer_consumption_credentials` 
+ADD COLUMN `pay_voucher_picture3` VARCHAR(500) NULL AFTER `pay_voucher_picture2`,
+ADD COLUMN `pay_voucher_picture4` VARCHAR(500) NULL AFTER `pay_voucher_picture3`,
+ADD COLUMN `pay_voucher_picture5` VARCHAR(500) NULL AFTER `pay_voucher_picture4`,
+DROP INDEX `fk_customer_consumption_voucher_liveanchorInfo_idx` ;
+
+
+ALTER TABLE `amiyadb`.`tbl_customer_consumption_credentials` 
+DROP COLUMN `live_anchor_base_id`;
+
+
 
 ---------------------------------------------余建明 2022/12/03 END-----------------------------------------------------------------------------
 

@@ -12,13 +12,13 @@ namespace Fx.Amiya.DbModels.Model
         public string CustomerName { get; set; }
 
         public string ToHospitalPhone { get; set; }
-
-        public string LiveAnchorBaseId { get; set; }
-
         public DateTime ConsumeDate { get; set; }
 
         public string PayVoucherPicture1 { get; set; }
         public string PayVoucherPicture2 { get; set; }
+        public string PayVoucherPicture3 { get; set; }
+        public string PayVoucherPicture4 { get; set; }
+        public string PayVoucherPicture5 { get; set; }
 
         public int CheckState { get; set; }
         public int? CheckBy { get; set; }
@@ -26,7 +26,6 @@ namespace Fx.Amiya.DbModels.Model
 
         public DateTime? CheckDate { get; set; }
 
-        public LiveAnchorBaseInfo LiveAnchorBaseInfo { get; set; }
 
         public AmiyaEmployee AmiyaEmployee { get; set; }
     }
