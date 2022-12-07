@@ -1143,6 +1143,23 @@ namespace Fx.Amiya.Service
 
         #region[抖音]
         /// <summary>
+        /// 查询是否存在
+        /// </summary>
+        /// <param name="monthlyTargetId"></param>
+        /// <param name="recordDate"></param>
+        /// <returns></returns>
+        public async Task<LiveAnchorDailyTargetDto> GetBeforeLivingTikTokLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate)
+        {
+            var liveAnchorDiaryInfo = from d in _beforeLivingTikTokDailyTraget.GetAll()
+                                      where (d.RecordDate == recordDate) && (d.LiveAnchorMonthlyTargetId == monthlyTargetId)
+                                      select new LiveAnchorDailyTargetDto
+                                      {
+                                          Id = d.Id,
+                                      };
+            var selectResult = await liveAnchorDiaryInfo.FirstOrDefaultAsync();
+            return selectResult;
+        }
+        /// <summary>
         /// 抖音添加数据
         /// </summary>
         /// <param name="addDto"></param>
@@ -1238,6 +1255,23 @@ namespace Fx.Amiya.Service
         #endregion
 
         #region[知乎]
+        /// <summary>
+        /// 查询是否存在
+        /// </summary>
+        /// <param name="monthlyTargetId"></param>
+        /// <param name="recordDate"></param>
+        /// <returns></returns>
+        public async Task<LiveAnchorDailyTargetDto> GetBeforeLivingZhihuLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate)
+        {
+            var liveAnchorDiaryInfo = from d in _beforeLivingZhiHuDailyTraget.GetAll()
+                                      where (d.RecordDate == recordDate) && (d.LiveAnchorMonthlyTargetId == monthlyTargetId)
+                                      select new LiveAnchorDailyTargetDto
+                                      {
+                                          Id = d.Id,
+                                      };
+            var selectResult = await liveAnchorDiaryInfo.FirstOrDefaultAsync();
+            return selectResult;
+        }
         /// <summary>
         /// 知乎添加数据
         /// </summary>
@@ -1339,6 +1373,23 @@ namespace Fx.Amiya.Service
 
         #region[小红书]
         /// <summary>
+        /// 查询是否存在
+        /// </summary>
+        /// <param name="monthlyTargetId"></param>
+        /// <param name="recordDate"></param>
+        /// <returns></returns>
+        public async Task<LiveAnchorDailyTargetDto> GetBeforeLivingXiaoHongShuLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate)
+        {
+            var liveAnchorDiaryInfo = from d in _beforeLivingXiaoHongShuDailyTraget.GetAll()
+                                      where (d.RecordDate == recordDate) && (d.LiveAnchorMonthlyTargetId == monthlyTargetId)
+                                      select new LiveAnchorDailyTargetDto
+                                      {
+                                          Id = d.Id,
+                                      };
+            var selectResult = await liveAnchorDiaryInfo.FirstOrDefaultAsync();
+            return selectResult;
+        }
+        /// <summary>
         /// 小红书添加数据
         /// </summary>
         /// <param name="addDto"></param>
@@ -1437,6 +1488,23 @@ namespace Fx.Amiya.Service
         #endregion
 
         #region[微博]
+        /// <summary>
+        /// 查询是否存在
+        /// </summary>
+        /// <param name="monthlyTargetId"></param>
+        /// <param name="recordDate"></param>
+        /// <returns></returns>
+        public async Task<LiveAnchorDailyTargetDto> GetBeforeLivingSinaWeiBoLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate)
+        {
+            var liveAnchorDiaryInfo = from d in _beforeLivingSinaWeiBoDailyTraget.GetAll()
+                                      where (d.RecordDate == recordDate) && (d.LiveAnchorMonthlyTargetId == monthlyTargetId)
+                                      select new LiveAnchorDailyTargetDto
+                                      {
+                                          Id = d.Id,
+                                      };
+            var selectResult = await liveAnchorDiaryInfo.FirstOrDefaultAsync();
+            return selectResult;
+        }
         /// <summary>
         /// 微博添加数据
         /// </summary>
@@ -1539,6 +1607,23 @@ namespace Fx.Amiya.Service
         #endregion
 
         #region[视频号]
+        /// <summary>
+        /// 查询是否存在
+        /// </summary>
+        /// <param name="monthlyTargetId"></param>
+        /// <param name="recordDate"></param>
+        /// <returns></returns>
+        public async Task<LiveAnchorDailyTargetDto> GetBeforeLivingVideoLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate)
+        {
+            var liveAnchorDiaryInfo = from d in _beforeLivingVideoDailyTraget.GetAll()
+                                      where (d.RecordDate == recordDate) && (d.LiveAnchorMonthlyTargetId == monthlyTargetId)
+                                      select new LiveAnchorDailyTargetDto
+                                      {
+                                          Id = d.Id,
+                                      };
+            var selectResult = await liveAnchorDiaryInfo.FirstOrDefaultAsync();
+            return selectResult;
+        }
         /// <summary>
         /// 视频号添加数据
         /// </summary>
@@ -1644,6 +1729,23 @@ namespace Fx.Amiya.Service
         #endregion
 
         #region 【直播中】
+        /// <summary>
+        /// 查询是否存在
+        /// </summary>
+        /// <param name="monthlyTargetId"></param>
+        /// <param name="recordDate"></param>
+        /// <returns></returns>
+        public async Task<LiveAnchorDailyTargetDto> GetLivingLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate)
+        {
+            var liveAnchorDiaryInfo = from d in _livingDailyTarget.GetAll()
+                                      where (d.RecordDate == recordDate) && (d.LiveAnchorMonthlyTargetId == monthlyTargetId)
+                                      select new LiveAnchorDailyTargetDto
+                                      {
+                                          Id = d.Id,
+                                      };
+            var selectResult = await liveAnchorDiaryInfo.FirstOrDefaultAsync();
+            return selectResult;
+        }
         public async Task LivingAddAsync(LivingAddLiveAnchorDailyTargetDto addDto)
         {
             unitOfWork.BeginTransaction();
@@ -1734,6 +1836,23 @@ namespace Fx.Amiya.Service
         #endregion
 
         #region 【直播后】
+        /// <summary>
+        /// 查询是否存在
+        /// </summary>
+        /// <param name="monthlyTargetId"></param>
+        /// <param name="recordDate"></param>
+        /// <returns></returns>
+        public async Task<LiveAnchorDailyTargetDto> GetAfterLivingLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate)
+        {
+            var liveAnchorDiaryInfo = from d in _afterLivingDailyTarget.GetAll()
+                                      where (d.RecordDate == recordDate) && (d.LiveAnchorMonthlyTargetId == monthlyTargetId)
+                                      select new LiveAnchorDailyTargetDto
+                                      {
+                                          Id = d.Id,
+                                      };
+            var selectResult = await liveAnchorDiaryInfo.FirstOrDefaultAsync();
+            return selectResult;
+        }
         public async Task AfterLivingAddAsync(AfterLivingAddLiveAnchorDailyTargetDto addDto)
         {
             unitOfWork.BeginTransaction();

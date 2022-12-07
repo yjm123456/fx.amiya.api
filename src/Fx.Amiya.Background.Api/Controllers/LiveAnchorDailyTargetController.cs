@@ -396,7 +396,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var selectResult = await _liveAnchorDailyTargetService.GetLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
+                var selectResult = await _liveAnchorDailyTargetService.GetBeforeLivingTikTokLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
                 if (selectResult != null)
                 {
                     throw new Exception("当前填报日期的主播日运营数据已创建，请根据筛选条件查询到对应数据编辑！");
@@ -463,7 +463,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var selectResult = await _liveAnchorDailyTargetService.GetLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
+                var selectResult = await _liveAnchorDailyTargetService.GetBeforeLivingZhihuLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
                 if (selectResult != null)
                 {
                     throw new Exception("当前填报日期的主播日运营数据已创建，请根据筛选条件查询到对应数据编辑！");
@@ -534,7 +534,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var selectResult = await _liveAnchorDailyTargetService.GetLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
+                var selectResult = await _liveAnchorDailyTargetService.GetBeforeLivingSinaWeiBoLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
                 if (selectResult != null)
                 {
                     throw new Exception("当前填报日期的主播日运营数据已创建，请根据筛选条件查询到对应数据编辑！");
@@ -605,7 +605,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var selectResult = await _liveAnchorDailyTargetService.GetLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
+                var selectResult = await _liveAnchorDailyTargetService.GetBeforeLivingXiaoHongShuLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
                 if (selectResult != null)
                 {
                     throw new Exception("当前填报日期的主播日运营数据已创建，请根据筛选条件查询到对应数据编辑！");
@@ -674,7 +674,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var selectResult = await _liveAnchorDailyTargetService.GetLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
+                var selectResult = await _liveAnchorDailyTargetService.GetBeforeLivingVideoLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
                 if (selectResult != null)
                 {
                     throw new Exception("当前填报日期的主播日运营数据已创建，请根据筛选条件查询到对应数据编辑！");
@@ -747,7 +747,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var selectResult = await _liveAnchorDailyTargetService.GetLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
+                var selectResult = await _liveAnchorDailyTargetService.GetLivingLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
                 if (selectResult != null)
                 {
                     throw new Exception("当前填报日期的主播日运营数据已创建，请根据筛选条件查询到对应数据编辑！");
@@ -861,7 +861,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var selectResult = await _liveAnchorDailyTargetService.GetLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
+                var selectResult = await _liveAnchorDailyTargetService.GetAfterLivingLiveAnchorInfoByMonthlyTargetIdAndDate(addVo.LiveanchorMonthlyTargetId, addVo.RecordDate);
                 if (selectResult != null)
                 {
 

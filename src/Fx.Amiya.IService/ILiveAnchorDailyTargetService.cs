@@ -20,31 +20,37 @@ namespace Fx.Amiya.IService
 
 
         #region[抖音]
+        Task<LiveAnchorDailyTargetDto> GetBeforeLivingTikTokLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate);
         Task BeforeLivingTikTokAddAsync(BeforeLivingTikTokAddLiveAnchorDailyTargetDto addDto);
         Task BeforeLivingTikTokUpdateAsync(BeforeLivingTikTokUpdateLiveAnchorDailyTargetDto updateDto);
         #endregion
         #region[知乎]
+        Task<LiveAnchorDailyTargetDto> GetBeforeLivingZhihuLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate);
         Task BeforeLivingZhihuAddAsync(BeforeLivingZhihuAddLiveAnchorDailyTargetDto addDto);
         Task BeforeLivingZhihuUpdateAsync(BeforeLivingZhihuUpdateLiveAnchorDailyTargetDto updateDto);
         #endregion
         #region[小红书]
+        Task<LiveAnchorDailyTargetDto> GetBeforeLivingXiaoHongShuLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate);
         Task BeforeLivingXiaoHongShuAddAsync(BeforeLivingXiaoHongShuAddLiveAnchorDailyTargetDto addDto);
         Task BeforeLivingXiaoHongShuUpdateAsync(BeforeLivingXiaoHongShuUpdateLiveAnchorDailyTargetDto updateDto);
         #endregion
         #region[微博]
+        Task<LiveAnchorDailyTargetDto> GetBeforeLivingSinaWeiBoLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate);
         Task BeforeLivingSinaWeiBoAddAsync(BeforeLivingSinaWeiBoAddLiveAnchorDailyTargetDto addDto);
         Task BeforeLivingSinaWeiBoUpdateAsync(BeforeLivingSinaWeiBoUpdateLiveAnchorDailyTargetDto updateDto);
         #endregion
         #region[视频号]
+        Task<LiveAnchorDailyTargetDto> GetBeforeLivingVideoLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate);
         Task BeforeLivingVideoAddAsync(BeforeLivingVideoAddLiveAnchorDailyTargetDto addDto);
         Task BeforeLivingVideoUpdateAsync(BeforeLivingVideoUpdateLiveAnchorDailyTargetDto updateDto);
         #endregion
 
+        Task<LiveAnchorDailyTargetDto> GetLivingLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate);
         Task LivingAddAsync(LivingAddLiveAnchorDailyTargetDto addDto);
         Task LivingUpdateAsync(LivingUpdateLiveAnchorDailyTargetDto updateDto);
 
+        Task<LiveAnchorDailyTargetDto> GetAfterLivingLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate);
         Task AfterLivingAddAsync(AfterLivingAddLiveAnchorDailyTargetDto addDto);
-
         Task AfterLivingUpdateAsync(AfterLivingUpdateLiveAnchorDailyTargetDto updateDto);
 
         Task<LiveAnchorDailyTargetDto> GetLiveAnchorInfoByMonthlyTargetIdAndDate(string monthlyTargetId, DateTime recordDate);
