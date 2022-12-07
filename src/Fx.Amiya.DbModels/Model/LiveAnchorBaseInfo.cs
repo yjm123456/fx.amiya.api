@@ -20,7 +20,6 @@ namespace Fx.Amiya.DbModels.Model
         public int? IsMain { get; set; }
         public DateTime? DueTime { get; set; }
         public bool Valid { get; set; }
-        public List<CustomerConsumptionCredentials> CustomerConsumptionCredentialsList { get; set; }
 
     }
 }

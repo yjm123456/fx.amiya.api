@@ -94,6 +94,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 cCustomerConsumptionCredentialsVo.ConsumeDate = cCustomerConsumptionCredentials.ConsumeDate;
                 cCustomerConsumptionCredentialsVo.PayVoucherPicture1 = cCustomerConsumptionCredentials.PayVoucherPicture1;
                 cCustomerConsumptionCredentialsVo.PayVoucherPicture2 = cCustomerConsumptionCredentials.PayVoucherPicture2;
+                cCustomerConsumptionCredentialsVo.PayVoucherPicture3 = cCustomerConsumptionCredentials.PayVoucherPicture3;
+                cCustomerConsumptionCredentialsVo.PayVoucherPicture4 = cCustomerConsumptionCredentials.PayVoucherPicture4;
+                cCustomerConsumptionCredentialsVo.PayVoucherPicture5 = cCustomerConsumptionCredentials.PayVoucherPicture5;
                 cCustomerConsumptionCredentialsVo.Valid = cCustomerConsumptionCredentials.Valid;
                 return ResultData<CustomerConsumptionCredentialsVo>.Success().AddData("cCustomerConsumptionCredentialsInfo", cCustomerConsumptionCredentialsVo);
             }
