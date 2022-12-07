@@ -1073,7 +1073,7 @@ namespace Fx.Amiya.Service
                             //组织邮件信息
                             if (emailConfig == true)
                             {
-                                //BuildSendMailInfo(appType, orderInfo.Id, intergration_quantity, goodsName, orderInfo.Phone);
+                                BuildSendMailInfo(appType, orderInfo.Id, intergration_quantity, goodsName, orderInfo.Phone);
                             }
                         }
                         if (orderInfo.OrderType == 0 && item.StatusCode == OrderStatusCode.TRADE_FINISHED)

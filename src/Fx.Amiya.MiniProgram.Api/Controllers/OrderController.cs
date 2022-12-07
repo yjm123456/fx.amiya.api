@@ -721,7 +721,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     huiShouQianPayRequestInfo.TransNo = tradeId;
                     huiShouQianPayRequestInfo.PayType = "WECHAT_APPLET";
                     huiShouQianPayRequestInfo.OrderAmt = (totalFee * 100m).ToString().Split(".")[0];
-                    huiShouQianPayRequestInfo.GoodsInfo = goodsName;
+                    huiShouQianPayRequestInfo.GoodsInfo = "商品付款";
                     huiShouQianPayRequestInfo.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
                     huiShouQianPayRequestInfo.Extend = "Goods";                   
                     var result= await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId);

@@ -79,6 +79,7 @@ namespace Fx.Amiya.Service
             var CustomerConsumptionCredentialsBaseInfos = from d in dalCustomerConsumptionCredentials.GetAll()
                                                           where (d.CustomerId == customerId)
                                                           && (d.Valid == true)
+                                                          orderby d.CreateDate descending
                                                           select new CustomerConsumptionCredentialsDto
                                                           {
                                                               Id = d.Id,

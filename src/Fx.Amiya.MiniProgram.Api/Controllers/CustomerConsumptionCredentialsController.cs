@@ -133,7 +133,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 addDto.PayVoucherPicture5 = addVo.PayVoucherPicture5;
                 await customerConsumptionCredentialsService.AddAsync(addDto);
                 return ResultData<int>.Success();
-
             }
             catch (Exception ex)
             {
