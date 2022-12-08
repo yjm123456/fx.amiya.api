@@ -210,13 +210,14 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderSendInfoDto>> GetListByHospitalIdAsync(int hospitalId, string keyword, DateTime? startDate, DateTime? endDate, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderSendInfoDto>> GetListByHospitalIdAsync(int hospitalId, string keyword, int? OrderStatus, DateTime? startDate, DateTime? endDate, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int pageNum, int pageSize)
         {
             var q = from d in _dalContentPlatformOrderSend.GetAll()
                     where (d.HospitalId == hospitalId)
                      && (string.IsNullOrEmpty(keyword) || d.ContentPlatformOrder.Id.Contains(keyword) || d.ContentPlatformOrder.Phone.Contains(keyword) || d.ContentPlatformOrder.CustomerName.Contains(keyword))
                      && (!IsToHospital.HasValue || d.ContentPlatformOrder.IsToHospital == IsToHospital)
                      && (!toHospitalType.HasValue || d.ContentPlatformOrder.ToHospitalType == toHospitalType.Value)
+                       && (!OrderStatus.HasValue || d.ContentPlatformOrder.OrderStatus == OrderStatus.Value)
                     select d;
 
             if (startDate != null && endDate != null)
@@ -249,6 +250,7 @@ namespace Fx.Amiya.Service
                                 CustomerName = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.CustomerName : "****",
                                 HospitalName = d.ContentPlatformOrder.HospitalInfo.Name,
                                 SendDate = d.SendDate,
+                                SendBy = d.AmiyaEmployee.Name,
                                 AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确定时间",
                                 IsUncertainDate = d.IsUncertainDate,
                                 OrderStatus = d.ContentPlatformOrder.OrderStatus != 0 ? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.ContentPlatformOrder.OrderStatus) : "",

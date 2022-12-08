@@ -110,6 +110,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// 派单时间
         /// </summary>
         public DateTime SendDate { get; set; }
+        /// <summary>
+        /// 派单人员
+        /// </summary>
+        public string SendBy { get; set; }
 
         /// <summary>
         /// 订单备注

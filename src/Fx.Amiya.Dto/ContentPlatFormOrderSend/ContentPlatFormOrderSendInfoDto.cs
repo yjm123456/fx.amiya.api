@@ -107,6 +107,10 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// </summary>
         public DateTime SendDate { get; set; }
         /// <summary>
+        /// 派单人员
+        /// </summary>
+        public string SendBy { get; set; }
+        /// <summary>
         /// 订单备注
         /// </summary>
         public string OrderRemark { get; set; }
