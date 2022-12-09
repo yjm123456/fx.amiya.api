@@ -52,6 +52,10 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 订单状态
         /// </summary>
         public string OrderStatus { get; set; }
+        /// <summary>
+        /// 订单状态int类型
+        /// </summary>
+        public int OrderStatusIntType { get; set; }
 
         /// <summary>
         /// 成交截图
@@ -141,5 +145,15 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 是否陪诊
         /// </summary>
         public bool IsAcompanying { get; set; }
+
+        /// <summary>
+        /// 城市
+        /// </summary>
+        public string City { get; set; }
+
+        /// <summary>
+        /// 微信号
+        /// </summary>
+        public string WeChatNo { get; set; }
     }
 }

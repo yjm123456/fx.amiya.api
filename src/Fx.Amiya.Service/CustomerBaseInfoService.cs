@@ -130,6 +130,85 @@ namespace Fx.Amiya.Service
             }
         }
 
+        public async Task<CustomerBaseInfoDto> GetByPhoneAsync(string phone)
+        {
+            try
+            {
+                var customerBaseInfoService = await dalCustomerBaseInfo.GetAll().FirstOrDefaultAsync(e => e.Phone == phone);
+                CustomerBaseInfoDto customerBaseInfoServiceDto = new CustomerBaseInfoDto();
+                customerBaseInfoServiceDto.Phone = phone;
+                if (customerBaseInfoService != null)
+                {
+                    customerBaseInfoServiceDto.Id = customerBaseInfoService.Id;
+                    customerBaseInfoServiceDto.Name = customerBaseInfoService.Name;
+                    customerBaseInfoServiceDto.PersonalWechat = customerBaseInfoService.PersonalWechat;
+                    customerBaseInfoServiceDto.BusinessWeChat = customerBaseInfoService.BusinessWeChat;
+                    customerBaseInfoServiceDto.WechatMiniProgram = customerBaseInfoService.WechatMiniProgram;
+                    customerBaseInfoServiceDto.OfficialAccounts = customerBaseInfoService.OfficialAccounts;
+                    customerBaseInfoServiceDto.Age = ServiceClass.GetAge(customerBaseInfoService.Birthday);
+                    customerBaseInfoServiceDto.RealName = customerBaseInfoService.RealName;
+                    customerBaseInfoServiceDto.Sex = customerBaseInfoService.Sex;
+                    customerBaseInfoServiceDto.Birthday = customerBaseInfoService.Birthday;
+                    customerBaseInfoServiceDto.City = customerBaseInfoService.City;
+                    customerBaseInfoServiceDto.Occupation = customerBaseInfoService.Occupation;
+                    customerBaseInfoServiceDto.OtherPhone = customerBaseInfoService.OtherPhone;
+                    customerBaseInfoServiceDto.DetailAddress = customerBaseInfoService.DetailAddress;
+                    customerBaseInfoServiceDto.IsCall = customerBaseInfoService.IsCall;
+                    customerBaseInfoServiceDto.IsSendNote = customerBaseInfoService.IsSendNote;
+                    customerBaseInfoServiceDto.IsSendWeChat = customerBaseInfoService.IsSendWeChat;
+                    customerBaseInfoServiceDto.UnTrackReason = customerBaseInfoService.UnTrackReason;
+                    customerBaseInfoServiceDto.CustomerState = customerBaseInfoService.CustomerState;
+                    customerBaseInfoServiceDto.CustomerRequirement = customerBaseInfoService.CustomerRequirement;
+                    customerBaseInfoServiceDto.WechatNumber = customerBaseInfoService.WechatNumber;
+                    customerBaseInfoServiceDto.Remark = customerBaseInfoService.Remark;
+                }
+
+                var customerInfo = await dalCustomerInfo.GetAll().Where(x => x.Phone == phone).FirstOrDefaultAsync();
+                if (customerInfo != null)
+                {
+                    var memberCardHandle = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerInfo.Id);
+                    if (memberCardHandle != null)
+                    {
+                        customerBaseInfoServiceDto.MemberCardNo = memberCardHandle.MemberCardNum;
+                        customerBaseInfoServiceDto.MemberRankName = memberCardHandle.MemberRankName;
+                    }
+                    var userInfo = await userService.GetUserInfoByUserIdAsync(customerInfo.UserId);
+                    if (userInfo != null)
+                    {
+                        customerBaseInfoServiceDto.Avatar = userInfo.Avatar;
+                    }
+                }
+                var bindCustomerService = await bindCustomerServiceService.GetEmployeeDetailsByPhoneAsync(phone);
+                if (bindCustomerService.Id != 0)
+                {
+                    customerBaseInfoServiceDto.BelongCustomerService = bindCustomerService.CustomerServiceName;
+                    customerBaseInfoServiceDto.FirstProjectDemand = bindCustomerService.FirstProjectDemand;
+                    customerBaseInfoServiceDto.NewContentPlatform = bindCustomerService.NewContentPlatForm;
+                    customerBaseInfoServiceDto.BindCustomerServiceId = bindCustomerService.Id;
+
+                    customerBaseInfoServiceDto.CreateDate = bindCustomerService.CreateDate;
+                    customerBaseInfoServiceDto.AllPrice = bindCustomerService.AllPrice;
+                    customerBaseInfoServiceDto.NewConsumptionContentPlatform = bindCustomerService.NewConsumptionContentPlatform;
+
+                }
+                var consumptionLevelInfo = await consumptionLevelService.GetListWithPageAsync(null, 1, 9999);
+                foreach (var consumptionInfo in consumptionLevelInfo.List)
+                {
+                    if (bindCustomerService.AllPrice >= consumptionInfo.MinPrice && bindCustomerService.AllPrice <= consumptionInfo.MaxPrice)
+                    {
+
+                        customerBaseInfoServiceDto.ConsumptionLevel = consumptionInfo.Name;
+                    }
+                }
+                return customerBaseInfoServiceDto;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
 
         public async Task UpdateAsync(UpdateCustomerBaseInfoDto updateDto)
         {

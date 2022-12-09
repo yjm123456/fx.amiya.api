@@ -107,6 +107,10 @@ namespace Fx.Amiya.Service
             {
                 var bindCustomerServiceInfo = await dalBindCustomerService.GetAll().Include(x => x.CustomerServiceAmiyaEmployee).FirstOrDefaultAsync(e => e.BuyerPhone == phone);
                 BindCustomerServiceDto result = new BindCustomerServiceDto();
+                if (bindCustomerServiceInfo == null)
+                {
+                    return result;
+                }
                 result.Id = bindCustomerServiceInfo.Id;
                 result.CustomerServiceId = bindCustomerServiceInfo.CustomerServiceId;
                 result.CustomerServiceName = bindCustomerServiceInfo.CustomerServiceAmiyaEmployee.Name;

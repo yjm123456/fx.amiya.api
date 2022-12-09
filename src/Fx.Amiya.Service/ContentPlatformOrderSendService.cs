@@ -22,6 +22,7 @@ namespace Fx.Amiya.Service
     {
         private IDalContentPlatformOrderSend _dalContentPlatformOrderSend;
         private IDalBindCustomerService _dalBindCustomerService;
+        private ICustomerBaseInfoService customerBaseInfoService;
         private IHospitalInfoService _hospitalInfoService;
         private IDalConfig _dalConfig;
         private IAmiyaEmployeeService _amiyaEmployeeService;
@@ -31,6 +32,7 @@ namespace Fx.Amiya.Service
         public ContentPlatformOrderSendService(IDalContentPlatformOrderSend dalContentPlatformOrderSend,
             IHospitalInfoService hospitalInfoService,
             IDalBindCustomerService dalBindCustomerService,
+            ICustomerBaseInfoService customerBaseInfoService,
             IAmiyaEmployeeService amiyaEmployeeService,
             IDalConfig dalConfig,
             IWxAppConfigService wxAppConfigService,
@@ -39,6 +41,7 @@ namespace Fx.Amiya.Service
             _dalContentPlatformOrderSend = dalContentPlatformOrderSend;
             _dalConfig = dalConfig;
             _dalBindCustomerService = dalBindCustomerService;
+            this.customerBaseInfoService = customerBaseInfoService;
             _wxAppConfigService = wxAppConfigService;
             _dalHospitalCheckPhoneRecord = dalHospitalCheckPhoneRecord;
             _hospitalInfoService = hospitalInfoService;
@@ -212,7 +215,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<FxPageInfo<ContentPlatFormOrderSendInfoDto>> GetListByHospitalIdAsync(int hospitalId, string keyword, int? OrderStatus, DateTime? startDate, DateTime? endDate, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int pageNum, int pageSize)
         {
-            var q = from d in _dalContentPlatformOrderSend.GetAll()
+            var q = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder)
                     where (d.HospitalId == hospitalId)
                      && (string.IsNullOrEmpty(keyword) || d.ContentPlatformOrder.Id.Contains(keyword) || d.ContentPlatformOrder.Phone.Contains(keyword) || d.ContentPlatformOrder.CustomerName.Contains(keyword))
                      && (!IsToHospital.HasValue || d.ContentPlatformOrder.IsToHospital == IsToHospital)
@@ -246,6 +249,7 @@ namespace Fx.Amiya.Service
                             {
                                 Id = d.Id,
                                 OrderId = d.ContentPlatformOrderId,
+                                OrderStatusIntType = d.ContentPlatformOrder.OrderStatus,
                                 IsAcompanying = d.ContentPlatformOrder.IsAcompanying,
                                 CustomerName = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.CustomerName : "****",
                                 HospitalName = d.ContentPlatformOrder.HospitalInfo.Name,
@@ -283,6 +287,12 @@ namespace Fx.Amiya.Service
             FxPageInfo<ContentPlatFormOrderSendInfoDto> sendOrderPageInfo = new FxPageInfo<ContentPlatFormOrderSendInfoDto>();
             sendOrderPageInfo.TotalCount = await sendOrder.CountAsync();
             sendOrderPageInfo.List = await sendOrder.OrderByDescending(e => e.SendDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+            foreach (var x in sendOrderPageInfo.List)
+            {
+                var baseInfo = await customerBaseInfoService.GetByPhoneAsync(x.Phone);
+                x.City = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? baseInfo.City : "****";
+                x.WeChatNo = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? baseInfo.WechatNumber : "****";
+            }
             return sendOrderPageInfo;
         }
 

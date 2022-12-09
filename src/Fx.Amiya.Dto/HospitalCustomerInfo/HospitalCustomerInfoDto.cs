@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Dto.HospitalCustomerInfo
 {
+    /// <summary>
+    /// 三方医院返回客户信息
+    /// </summary>
     public class HospitalCustomerInfoDto
     {
         /// <summary>

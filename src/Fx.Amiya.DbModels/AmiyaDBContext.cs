@@ -15,6 +15,7 @@ namespace Fx.Amiya.DbModels
         }
         public virtual DbSet<UserInfo> UserInfo { get; set; }
         public virtual DbSet<CustomerInfo> CustomerInfo { get; set; }
+        public virtual DbSet<HospitalCustomerInfo> HospitalCustomerInfo { get; set; }
         public virtual DbSet<WxMiniUserInfo> WxMiniUserInfo { get; set; }
         public virtual DbSet<AmiyaWareHouse> AmiyaWareHouse { get; set; }
         public virtual DbSet<ShootingAndClip> ShootingAndClip { get; set; }
@@ -97,6 +98,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<HospitalPartakeItem> HospitalQuotedPriceItemInfo { get; set; }
         public virtual DbSet<HospitalCheckPhoneRecord> HospitalCheckPhoneRecord { get; set; }
         public virtual DbSet<BindCustomerService> BindCustomerService { get; set; }
+        public virtual DbSet<HospitalBindCustomerService> HospitalBindCustomerService { get; set; }
         public virtual DbSet<SendOrderInfo> SendOrderInfo { get; set; }
         public virtual DbSet<GiftInfo> GiftInfo { get; set; }
         public virtual DbSet<OrderAppInfo> TaobaoAppInfo { get; set; }
@@ -161,6 +163,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
             modelBuilder.ApplyConfiguration(new UserInfoConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerInfoConfiguration());
+            modelBuilder.ApplyConfiguration(new HospitalCustomerInfoConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaEmployeeConfiguration());
             modelBuilder.ApplyConfiguration(new ConsumptionLevelConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerTagInfoConfiguration());
@@ -245,6 +248,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new HospitalPartakeItemConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalCheckPhoneRecordConfiguration());
             modelBuilder.ApplyConfiguration(new BindCustomerServiceConfiguration());
+            modelBuilder.ApplyConfiguration(new HospitalBindCustomerServiceConfiguration());
             modelBuilder.ApplyConfiguration(new BeautyDiaryTagInfoConfiguration());
 
             modelBuilder.ApplyConfiguration(new BeautyDiaryBannerImageConfiguration());

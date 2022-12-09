@@ -972,7 +972,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxTenantAuthorize]
         public async Task<ResultData> RepeateOrderAsync(string orderId)
         {
-            await _orderService.HospitalConfirmOrderAsync(orderId);
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+            int hospitalId = employee.HospitalId;
+            await _orderService.HospitalConfirmOrderAsync(orderId, hospitalId);
             return ResultData.Success();
         }
         /// <summary>

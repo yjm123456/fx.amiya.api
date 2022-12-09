@@ -2,6 +2,8 @@
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.CustomerInfo;
+using Fx.Amiya.Dto.HospitalBindCustomerService;
+using Fx.Amiya.Dto.HospitalCustomerInfo;
 using Fx.Amiya.Dto.OrderCheckPicture;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.Performance;
@@ -26,8 +28,10 @@ namespace Fx.Amiya.Service
 
         private IDalContentPlatformOrder _dalContentPlatformOrder;
         private IDalBindCustomerService _dalBindCustomerService;
+        private IHospitalBindCustomerService hospitalBindCustomerService;
         private IAmiyaGoodsDemandService amiyaGoodsDemandService;
         private IBindCustomerServiceService bindCustomerServiceService;
+        private IHospitalCustomerInfoService hospitalCustomerInfoService;
         private IOrderCheckPictureService _orderCheckPictureService;
         private IContentPlatformOrderSendService _contentPlatformOrderSend;
         private ICustomerBaseInfoService customerBaseInfoService;
@@ -50,7 +54,9 @@ namespace Fx.Amiya.Service
            ICustomerBaseInfoService customerBaseInfoService,
             ILiveAnchorService liveAnchorService,
             IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
+            IHospitalCustomerInfoService hospitalCustomerInfoService,
             IHospitalInfoService hospitalInfoService,
+            IHospitalBindCustomerService hospitalBindCustomerService,
             IShoppingCartRegistrationService shoppingCartRegistration,
             IBindCustomerServiceService bindCustomerServiceService,
             IContentPlatformService contentPlatformService,
@@ -68,7 +74,9 @@ namespace Fx.Amiya.Service
         {
             _dalContentPlatformOrder = dalContentPlatformOrder;
             this.unitOfWork = unitOfWork;
+            this.hospitalBindCustomerService = hospitalBindCustomerService;
             _shoppingCartRegistration = shoppingCartRegistration;
+            this.hospitalCustomerInfoService = hospitalCustomerInfoService;
             this.bindCustomerServiceService = bindCustomerServiceService;
             _dalBindCustomerService = dalBindCustomerService;
             this.customerBaseInfoService = customerBaseInfoService;
@@ -570,6 +578,30 @@ namespace Fx.Amiya.Service
 
                 //小黄车更新派单触达
                 await _shoppingCartRegistration.UpdateSendOrderAsync(orderInfo.Phone);
+
+
+                //获取医院客户列表
+                var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(addDto.HospitalId, orderInfo.Phone);
+                //操作医院客户表
+                if (!string.IsNullOrEmpty(customer.Id))
+                {
+                    UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
+                    updateSendHospitalCustomerInfoDto.Id = customer.Id;
+                    updateSendHospitalCustomerInfoDto.NewGoodsDemand = orderInfo.GoodsName;
+                    updateSendHospitalCustomerInfoDto.SendAmount += 1;
+                    await hospitalCustomerInfoService.InsertSendAmountAsync(updateSendHospitalCustomerInfoDto);
+                }
+                else
+                {
+                    AddSendHospitalCustomerInfoDto addSendHospitalCustomerInfoDto = new AddSendHospitalCustomerInfoDto();
+                    addSendHospitalCustomerInfoDto.NewGoodsDemand = orderInfo.GoodsName;
+                    addSendHospitalCustomerInfoDto.SendAmount = 1;
+                    addSendHospitalCustomerInfoDto.CustomerPhone = orderInfo.Phone;
+                    addSendHospitalCustomerInfoDto.hospitalId = addDto.HospitalId;
+                    addSendHospitalCustomerInfoDto.DealAmount = 0;
+                    await hospitalCustomerInfoService.AddAsync(addSendHospitalCustomerInfoDto);
+
+                }
                 unitOfWork.Commit();
             }
             catch (Exception ex)
@@ -626,11 +658,12 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task HospitalConfirmOrderAsync(string orderId)
+        public async Task HospitalConfirmOrderAsync(string orderId, int hospitalId)
         {
+            unitOfWork.BeginTransaction();
             try
             {
-                var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == orderId).FirstOrDefaultAsync();
+                var order = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate)).Where(x => x.Id == orderId).FirstOrDefaultAsync();
                 if (order == null)
                 {
                     throw new Exception("未找到该订单的相关信息！");
@@ -638,9 +671,27 @@ namespace Fx.Amiya.Service
                 order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.ConfirmOrder);
                 order.UpdateDate = DateTime.Now;
                 await _dalContentPlatformOrder.UpdateAsync(order, true);
+                AddHospitalBindCustomerServiceDto addHospitalBindCustomerServiceDto = new AddHospitalBindCustomerServiceDto();
+                addHospitalBindCustomerServiceDto.HospitalEmployeeId = hospitalId;
+                var goodsInfo = await amiyaGoodsDemandService.GetByIdAsync(order.GoodsId);
+                addHospitalBindCustomerServiceDto.FirstProjectDemand = "(" + goodsInfo.HospitalDepartmentName + ")" + goodsInfo.ProjectNname;
+                addHospitalBindCustomerServiceDto.CustomerPhone = order.Phone;
+                var contentPlatForm = await _contentPlatformService.GetByIdAsync(order.ContentPlateformId);
+                addHospitalBindCustomerServiceDto.NewContentPlatformName = contentPlatForm.ContentPlatformName;
+                await hospitalBindCustomerService.AddAsync(addHospitalBindCustomerServiceDto);
+
+
+                //获取医院客户列表
+                var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(order.ContentPlatformOrderSendList.FirstOrDefault().HospitalId, order.Phone);
+                UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
+                updateSendHospitalCustomerInfoDto.Id = customer.Id;
+                await hospitalCustomerInfoService.UpdateConfirmOrderDateAsync(updateSendHospitalCustomerInfoDto);
+                unitOfWork.Commit();
+
             }
             catch (Exception ex)
             {
+                unitOfWork.RollBack();
                 throw ex;
             }
         }
@@ -1604,7 +1655,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.Id).SingleOrDefaultAsync();
+                var order = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate)).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 var isoldCustomer = false;
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
                 var dealCount = orderDealInfoList.Where(x => x.IsDeal == true).Count();
@@ -1696,7 +1747,16 @@ namespace Fx.Amiya.Service
                 orderDealDto.InvitationDocuments = input.InvitationDocuments;
                 await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
 
-
+                //获取医院客户列表
+                var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(order.ContentPlatformOrderSendList.FirstOrDefault().HospitalId, order.Phone);
+                //操作医院客户表
+                if (!string.IsNullOrEmpty(customer.Id))
+                {
+                    UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
+                    updateSendHospitalCustomerInfoDto.Id = customer.Id;
+                    updateSendHospitalCustomerInfoDto.DealAmount += 1;
+                    await hospitalCustomerInfoService.InsertDealAmountAsync(updateSendHospitalCustomerInfoDto);
+                }
                 unitOfWork.Commit();
             }
             catch (Exception err)

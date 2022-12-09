@@ -98,6 +98,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 HospitalName = d.HospitalName,
                                 SendDate = d.SendDate,
                                 SendBy = d.SendBy,
+                                City = d.City,
+                                WeChatNo = d.WeChatNo,
                                 IsUncertainDate = d.IsUncertainDate,
                                 AppointmentDate = d.AppointmentDate,
                                 DepositAmount = d.DepositAmount,
@@ -120,6 +122,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 UnDealPictureUrl = d.UnDealPictureUrl,
                                 OrderSourceText = d.OrderSourceText,
                                 LiveAnchor = d.LiveAnchor,
+                                ToHospitalTypeText = d.ToHospitalTypeText,
                                 CheckState = d.CheckState,
                             };
 

@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using Fx.Infrastructure.Utils;
 using Fx.Common;
 using Fx.Amiya.Dto.OrderReport;
+using Fx.Amiya.Dto.HospitalCustomerInfo;
 
 namespace Fx.Amiya.Service
 {
@@ -23,6 +24,7 @@ namespace Fx.Amiya.Service
         private IDalSendOrderInfo dalSendOrderInfo;
         private IDalBindCustomerService dalBindCustomerService;
         private IDalOrderInfo dalOrderInfo;
+        private IHospitalCustomerInfoService hospitalCustomerInfoService;
         private IDalItemInfo dalItemInfo;
         private IDalHospitalSurplusAppointment dalHospitalSurplusAppointment;
         private IDalHospitalPartakeItem dalHospitalPartakeItem;
@@ -37,6 +39,7 @@ namespace Fx.Amiya.Service
             IDalBindCustomerService dalBindCustomerService,
             IDalOrderInfo dalOrderInfo,
             IDalItemInfo dalItemInfo,
+            IHospitalCustomerInfoService hospitalCustomerInfoService,
             IDalHospitalSurplusAppointment dalHospitalSurplusAppointment,
             IDalHospitalPartakeItem dalHospitalPartakeItem,
             IUnitOfWork unitOfWork,
@@ -56,6 +59,7 @@ namespace Fx.Amiya.Service
             _AmiyaEmployee = AmiyaEmployee;
             this.dalConfig = dalConfig;
             this.dalSendOrderUpdateRecord = dalSendOrderUpdateRecord;
+            this.hospitalCustomerInfoService = hospitalCustomerInfoService;
             this.dalHospitalCheckPhoneRecord = dalHospitalCheckPhoneRecord;
             this.dalSendOrderMessageBoard = dalSendOrderMessageBoard;
             _dalHospitalInfo = dalHospitalInfo;
@@ -269,6 +273,33 @@ namespace Fx.Amiya.Service
                     sendOrderMessageBoard.AmiyaEmployeeId = employeeId;
                     sendOrderMessageBoard.Content = addDto.Content;
                     await dalSendOrderMessageBoard.AddAsync(sendOrderMessageBoard, true);
+                }
+
+                //获取医院客户列表
+                var q = from d in dalSendOrderInfo.GetAll()
+                        where (d.OrderId == addDto.OrderId)
+                        select d;
+                var order = await q.FirstOrDefaultAsync();
+                var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(addDto.HospitalId, order.OrderInfo.Phone);
+                //操作医院客户表
+                if (!string.IsNullOrEmpty(customer.Id))
+                {
+                    UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
+                    updateSendHospitalCustomerInfoDto.Id = customer.Id;
+                    updateSendHospitalCustomerInfoDto.NewGoodsDemand = order.OrderInfo.GoodsName;
+                    updateSendHospitalCustomerInfoDto.SendAmount += 1;
+                    await hospitalCustomerInfoService.InsertSendAmountAsync(updateSendHospitalCustomerInfoDto);
+                }
+                else
+                {
+                    AddSendHospitalCustomerInfoDto addSendHospitalCustomerInfoDto = new AddSendHospitalCustomerInfoDto();
+                    addSendHospitalCustomerInfoDto.NewGoodsDemand = order.OrderInfo.GoodsName;
+                    addSendHospitalCustomerInfoDto.SendAmount = 1;
+                    addSendHospitalCustomerInfoDto.CustomerPhone = order.OrderInfo.Phone;
+                    addSendHospitalCustomerInfoDto.hospitalId = addDto.HospitalId;
+                    addSendHospitalCustomerInfoDto.DealAmount = 0;
+                    await hospitalCustomerInfoService.AddAsync(addSendHospitalCustomerInfoDto);
+
                 }
                 unitOfWork.Commit();
             }

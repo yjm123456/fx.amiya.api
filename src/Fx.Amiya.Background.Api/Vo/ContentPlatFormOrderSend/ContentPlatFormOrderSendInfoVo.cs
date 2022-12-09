@@ -29,6 +29,15 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// 客户昵称
         /// </summary>
         public string CustomerName { get; set; }
+
+        /// <summary>
+        /// 城市
+        /// </summary>
+        public string City { get; set; }
+        /// <summary>
+        /// 微信昵称
+        /// </summary>
+        public string WeChatNo { get; set; }
         /// <summary>
         /// 预约时间
         /// </summary>

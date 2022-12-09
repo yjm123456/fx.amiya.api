@@ -1524,7 +1524,54 @@ CREATE TABLE `amiyadb`.`tbl_customer_consumption_credentials` (
 
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
+-------------------------------------------余建明 2022/12/09 BEGIN------------------------------------------------------
 
+--接单存储数据
+
+CREATE TABLE `amiyadb`.`tbl_hospital_bind_customer_service` (
+  `id` VARCHAR(50) NOT NULL,
+  `hospital_emp_id` INT UNSIGNED NOT NULL,
+  `customer_phone` VARCHAR(30) NOT NULL,
+  `user_id` VARCHAR(50) NULL,
+  `create_by` INT UNSIGNED NOT NULL,
+  `first_project_demand` VARCHAR(200) NULL,
+  `first_consumption_date` DATETIME NULL,
+  `new_consumption_date` DATETIME NULL,
+  `new_consumption_content_platform` INT NULL,
+  `new_content_platform` VARCHAR(45) NULL,
+  `all_price` DECIMAL(12,2) NULL,
+  `all_order_count` INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  INDEX `fk_hospitalbindcustomerservice_hospitalemp_idx` (`hospital_emp_id` ASC) VISIBLE,
+  INDEX `fk_hospitalbindcustomerservice_create_by_idx` (`create_by` ASC) VISIBLE,
+  CONSTRAINT `fk_hospitalbindcustomerservice_hospitalemp`
+    FOREIGN KEY (`hospital_emp_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_hospitalbindcustomerservice_create_by`
+    FOREIGN KEY (`create_by`)
+    REFERENCES `amiyadb`.`tbl_hospital_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+    --机构客户列表
+    CREATE TABLE `amiyadb`.`tbl_hospital_customer_info` (
+  `id` VARCHAR(50) NOT NULL,
+  `customer_phone` VARCHAR(20) NOT NULL,
+  `hospital_id` INT NOT NULL,
+  `new_gooods_demand` VARCHAR(300) NULL,
+  `send_amount` INT NOT NULL DEFAULT 0,
+  `deal_amount` INT NOT NULL DEFAULT 0,
+  `confirm_order_date` DATETIME NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NOT NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  PRIMARY KEY (`id`));
+
+-----------------------------------------------余建明 2022/12/09 END--------------------------------------------
 
 
 

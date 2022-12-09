@@ -22,5 +22,7 @@ namespace Fx.Amiya.DbModels.Model
 
         public List<HospitalCheckPhoneRecord> HospitalCheckPhoneRecordList { get; set; }
         public List<SendOrderMessageBoard> SendOrderMessageBoardList { get; set; }
+        public List<HospitalBindCustomerService> HospitalBindCustomerServiceList { get; set; }
+        public List<HospitalBindCustomerService> CreateByHospitalBindCustomerServiceList { get; set; }
     }
 }

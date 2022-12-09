@@ -152,7 +152,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="orderId"></param>
         /// <returns></returns>
-        Task HospitalConfirmOrderAsync(string orderId);
+        Task HospitalConfirmOrderAsync(string orderId, int hospitalId);
         /// <summary>
         ///  医院重单退回
         /// </summary>
