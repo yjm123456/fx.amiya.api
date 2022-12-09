@@ -1313,7 +1313,54 @@ namespace Fx.Amiya.Service
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// 根据到院id和时间获取指定月份成交量
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        public async Task<int> GetMonthSendPerformanceByHospitalIdAsync(int hospitalId, int year, int month)
+        {
+            DateTime startDate = Convert.ToDateTime(year + "-" + month + "-01");
+            DateTime endDate = startDate.AddMonths(1);
+            var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)
+                .Where(o => o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= startDate && o.ToHospitalDate < endDate)
+                .Where(o => o.LastDealHospitalId.Value == hospitalId)
+                .ToListAsync();
+            return result.Count();
+        }
+        /// <summary>
+        /// 获取指定年份成交量
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        public async Task<int> GetYearSendPerformanceByHospitalIdAsync(int hospitalId, int year)
+        {
+            DateTime startDate = Convert.ToDateTime(year + "-01-01");
+            DateTime endDate = startDate.AddYears(1);
+            var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)
+                .Where(o => o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= startDate && o.ToHospitalDate < endDate)
+                .Where(o => o.LastDealHospitalId.Value == hospitalId)
+                .ToListAsync();
+            return result.Count();
+        }
+        /// <summary>
+        /// 获取总成交量
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        public async Task<int> GetSendPerformanceByHospitalIdAsync(int hospitalId)
+        {
+            var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)              
+                .Where(o => o.LastDealHospitalId.Value == hospitalId)
+                .ToListAsync();
+            return result.Count();
+        }
 
 
 

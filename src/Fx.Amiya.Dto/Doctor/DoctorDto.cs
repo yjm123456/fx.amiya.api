@@ -18,6 +18,7 @@ namespace Fx.Amiya.Dto.Doctor
         public string HosptalName { get; set; }
         public int IsMain { get; set; }
         public string ProjectPicture { get; set; }
+        public int IsLeaveOffice { get; set; }
     }
 }
 

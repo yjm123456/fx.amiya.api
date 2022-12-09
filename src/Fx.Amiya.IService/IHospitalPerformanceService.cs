@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
+using Fx.Amiya.Dto.HospitalIndexData;
 using Fx.Amiya.Dto.HospitalOperationData;
 using Fx.Amiya.Dto.HospitalPerformance;
 using Fx.Amiya.Dto.Performance;
@@ -42,7 +43,18 @@ namespace Fx.Amiya.IService
         /// <param name="date">时间</param>
         /// <returns></returns>
         Task<HospitalOperationTotalDataDto> GetHospitalOperationMonthData(int hospitalId, DateTime date);
-
+        /// <summary>
+        /// 机构端获取首页机构数据
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<HospitalDataDto> GetHospitalDataAsync(int hospitalId);
+        /// <summary>
+        /// 机构端获取首页数据比率
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<HospitalDataRatioDto> GetHospitalDataRatioAsync(int hospitalId);
 
         #region【 其他相关业务接口（折线图，明细等）】
         /// <summary>

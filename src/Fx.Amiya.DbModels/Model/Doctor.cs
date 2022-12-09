@@ -18,6 +18,10 @@ namespace Fx.Amiya.DbModels.Model
         public int IsMain { get; set; }
 
         public string DepartmentId { get; set; }
+        /// <summary>
+        /// 是否离职
+        /// </summary>
+        public int IsLeaveOffice { get; set; }
 
         public HospitalInfo HospitalInfo { get; set; }
     }

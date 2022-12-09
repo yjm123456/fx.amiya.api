@@ -58,6 +58,10 @@ namespace Fx.Amiya.Background.Api.Vo.Doctor
         /// 主推项目案例图
         /// </summary>
         public string ProjectPicture { get; set; }
+        /// <summary>
+        /// 是否离职（0：离职，1：在职）
+        /// </summary>
+        public int IsLeaveOffice { get; set; }
 
     }
 }

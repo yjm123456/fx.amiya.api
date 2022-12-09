@@ -25,13 +25,15 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<DoctorDto>> GetListWithPageAsync(int? hospitalId, string keyword, int pageNum, int pageSize)
+        public async Task<FxPageInfo<DoctorDto>> GetListWithPageAsync(int? hospitalId, string keyword,int? isLeaveOffice,int? isMain, int pageNum, int pageSize)
         {
             try
             {
                 var doctor = from d in dalDoctor.GetAll()
-                             where (keyword == null || d.Name.Contains(keyword) || d.HospitalInfo.Name.Contains(keyword))
+                             where (keyword == null || d.Name.Contains(keyword) || d.HospitalInfo.Name.Contains(keyword) || d.Position.Contains(keyword))
                              && (!hospitalId.HasValue || d.HospitalId == hospitalId.Value)
+                             && (!isLeaveOffice.HasValue || d.IsLeaveOffice==isLeaveOffice)
+                             && (!isMain.HasValue || d.IsMain==isMain.Value)                          
                              select new DoctorDto
                              {
                                  Id = d.Id,
@@ -44,7 +46,8 @@ namespace Fx.Amiya.Service
                                  HospitalId = d.HospitalId,
                                  HosptalName = d.HospitalInfo.Name,
                                  IsMain = d.IsMain,
-                                 ProjectPicture = d.ProjectPicture
+                                 ProjectPicture = d.ProjectPicture,
+                                 IsLeaveOffice=d.IsLeaveOffice
                              };
 
                 FxPageInfo<DoctorDto> doctorPageInfo = new FxPageInfo<DoctorDto>();
@@ -124,6 +127,7 @@ namespace Fx.Amiya.Service
                 doctor.IsMain = addDto.IsMain;
                 doctor.DepartmentId = addDto.DepartmentId;
                 doctor.ProjectPicture = addDto.ProjectPicture;
+                doctor.IsLeaveOffice = 1;
                 await dalDoctor.AddAsync(doctor, true);
             }
             catch (Exception ex)
@@ -154,6 +158,7 @@ namespace Fx.Amiya.Service
                 doctorDto.DepartmentId = doctor.DepartmentId;
                 doctorDto.IsMain = doctor.IsMain;
                 doctorDto.ProjectPicture = doctor.ProjectPicture;
+                doctorDto.IsLeaveOffice = doctor.IsLeaveOffice;
                 return doctorDto;
             }
             catch (Exception ex)
@@ -182,7 +187,7 @@ namespace Fx.Amiya.Service
                 doctor.DepartmentId = updateDto.DepartmentId;
                 doctor.IsMain = updateDto.IsMain;
                 doctor.ProjectPicture = updateDto.ProjectPicture;
-
+                doctor.IsLeaveOffice = updateDto.IsLeaveOffice;
                 await dalDoctor.UpdateAsync(doctor, true);
             }
             catch (Exception ex)
@@ -205,6 +210,28 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
+                throw ex;
+            }
+        }
+        /// <summary>
+        /// 更新医生在职状态
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <returns></returns>
+        public async Task UpdateStatusAsync(UpdateDoctorSatusDto updateDto)
+        {
+            try
+            {
+                var doctor = await dalDoctor.GetAll().Include(e => e.HospitalInfo).SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                if (doctor == null)
+                    throw new Exception("医生编号错误");
+
+                doctor.IsLeaveOffice = updateDto.IsLeaveOffice;
+
+                await dalDoctor.UpdateAsync(doctor, true);
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
         }

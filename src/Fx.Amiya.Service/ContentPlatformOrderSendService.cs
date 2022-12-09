@@ -492,7 +492,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<SendContentPlatformOrderDto>> GetSendOrderReportList(int? liveAnchorId, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? hospitalId, int employeeId, int belongEmpId, int? orderStatus, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string contentPlatFormId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, DateTime? startDate, DateTime? endDate, bool isHidePhone)
         {
-            var orders = _dalContentPlatformOrderSend.GetAll().Include(x=>x.HospitalInfo)
+            var orders = _dalContentPlatformOrderSend.GetAll().Include(x => x.HospitalInfo)
                        .Where(e => employeeId == -1 || e.Sender == employeeId)
                        .Where(e => belongEmpId == -1 || e.ContentPlatformOrder.BelongEmpId == belongEmpId)
                        .Where(e => !liveAnchorId.HasValue || e.ContentPlatformOrder.LiveAnchorId == liveAnchorId.Value)
@@ -549,7 +549,7 @@ namespace Fx.Amiya.Service
                                             ToHospitalDate = d.ContentPlatformOrder.ToHospitalDate,
                                             SendOrderRemark = d.Remark,
                                             OtherContentPlatFormOrderId = d.ContentPlatformOrder.OtherContentPlatFormOrderId,
-                                            SendHospital=d.HospitalInfo.Name
+                                            SendHospital = d.HospitalInfo.Name
 
                                         };
 
@@ -679,12 +679,6 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<SendContentPlatformOrderDto>> GetSendDataByHospitalIdAndMonthAsync(int hospitalId, int year, int month)
         {
-            //筛选结束的月份
-            //DateTime dtNow = DateTime.Now;
-            //int days = DateTime.DaysInMonth(dtNow.Year, month);
-            //DateTime endDate = Convert.ToDateTime(DateTime.Now.Year + "-" + month + "-" + days);
-            //选定的月份
-            //DateTime currentDate = Convert.ToDateTime(DateTime.Now.Year + "-" + month + "-01");
             DateTime startDate = Convert.ToDateTime(year + "-" + month + "-01");
             DateTime endDate = startDate.AddMonths(1);
             var orders = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.HospitalInfo).ThenInclude(x => x.CooperativeHospitalCity)
@@ -698,6 +692,30 @@ namespace Fx.Amiya.Service
                              SendDate = d.SendDate,
                          };
             var result = orders.ToList();
+            return result;
+        }
+        /// <summary>
+        /// 根据医院id与年份获取派单业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <returns></returns>
+        public async Task<int> GetSendDataByHospitalIdAndYearAsync(int hospitalId, int year)
+        {
+            DateTime startDate = Convert.ToDateTime(year + "-01-01");
+            DateTime endDate = startDate.AddYears(1);
+            var orders = _dalContentPlatformOrderSend.GetAll().Where(d=>d.SendDate >= startDate && d.SendDate < endDate && d.HospitalId == hospitalId);
+            var result = orders.Count();
+            return result;
+        }
+        /// <summary>
+        /// 根据医院id与月份获取派单业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <returns></returns>
+        public async Task<int> GetSendDataByHospitalIdAsync(int hospitalId)
+        {               
+            var orders =_dalContentPlatformOrderSend.GetAll().Where(d=>d.HospitalId == hospitalId);
+            var result = orders.Count();
             return result;
         }
 
@@ -752,6 +770,33 @@ namespace Fx.Amiya.Service
                                       Performance = g.Count()
                                   };
             return await performanceList.Skip(0).Take(10).ToListAsync();
+        }
+
+        public async Task<FxPageInfo<HospitalCurrentDayNotRepeatedSendOrderDto>> GetTodayNotRepeatSendOrderByHospitalIdAsync(int hospitalId, int orderStatus, DateTime startDate, DateTime enDate, int pageNum, int pageSize)
+        {
+            FxPageInfo<HospitalCurrentDayNotRepeatedSendOrderDto> fxPageInfo = new FxPageInfo<HospitalCurrentDayNotRepeatedSendOrderDto>();
+            var sendOrderList = _dalContentPlatformOrderSend.GetAll().Where(e => e.HospitalId == hospitalId
+            && e.ContentPlatformOrder.OrderStatus == orderStatus
+            && e.SendDate >= startDate
+            && e.SendDate < enDate).OrderByDescending(e=>e.SendDate);           
+            var config = await GetCallCenterConfig();
+            var sendOrder = from d in sendOrderList
+                            join p in _dalHospitalCheckPhoneRecord.GetAll().Where(e => e.HospitalId == hospitalId && e.OrderPlatformType == (byte)CheckPhoneRecordOrderType.ContentPlatformOrder)
+                            on d.ContentPlatformOrderId equals p.OrderId into pd
+                            from p in pd.DefaultIfEmpty()
+                            select new HospitalCurrentDayNotRepeatedSendOrderDto
+                            {
+                                Id = d.Id,
+                                OrderId = d.ContentPlatformOrderId,
+                                OrderStatus = d.ContentPlatformOrder.OrderStatus,
+                                OrderStatusText = ServiceClass.GetContentPlateFormOrderStatusText((byte)d.ContentPlatformOrder.OrderStatus),                              
+                                Item = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.AmiyaGoodsDemand.ProjectNname : "****",
+                                UserInfo = d.ContentPlatformOrder.CustomerName + " - " + (d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? (p != null ? d.ContentPlatformOrder.Phone : config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone) : d.ContentPlatformOrder.Phone) : ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone)),
+                                LastFollowContent = "****"
+                            };
+             fxPageInfo.TotalCount = await sendOrder.CountAsync();
+            fxPageInfo.List = sendOrder.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+            return fxPageInfo;
         }
 
 

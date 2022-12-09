@@ -17,7 +17,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<DoctorDto>> GetListWithPageAsync(int? hospitalId, string keyword, int pageNum, int pageSize);
+        Task<FxPageInfo<DoctorDto>> GetListWithPageAsync(int? hospitalId, string keyword,int? isLeaveOffice,int? isMain, int pageNum, int pageSize);
 
         /// <summary>
         /// 根据医院和科室获取医生
@@ -48,6 +48,12 @@ namespace Fx.Amiya.IService
         /// <param name="updateDto"></param>
         /// <returns></returns>
         Task UpdateAsync(UpdateDoctorDto updateDto);
+        /// <summary>
+        /// 更新医生在职状态
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <returns></returns>
+        Task UpdateStatusAsync(UpdateDoctorSatusDto updateDto);
 
         /// <summary>
         /// 删除医生信息

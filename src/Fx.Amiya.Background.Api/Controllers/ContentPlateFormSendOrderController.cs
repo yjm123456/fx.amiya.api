@@ -184,10 +184,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             var q = await _sendOrderInfoService.GetCountByHospitalIdAsync(hospitalId);
             return ResultData<int>.Success().AddData("NotRepeatedSendOrder", q);
         }
-
-
-
-
         /// <summary>
         /// 医院填写备注
         /// </summary>

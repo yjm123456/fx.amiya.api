@@ -25,5 +25,9 @@ namespace Fx.Amiya.Dto.Doctor
         /// 主推项目案例图
         /// </summary>
         public string ProjectPicture { get; set; }
+        /// <summary>
+        /// 是否离职
+        /// </summary>
+        public int IsLeaveOffice { get; set; }
     }
 }

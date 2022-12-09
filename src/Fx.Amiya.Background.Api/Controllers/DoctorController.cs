@@ -33,17 +33,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 获取医生信息列表（分页）
         /// </summary>
+        /// <param name="hospitalId"></param>
         /// <param name="keyword"></param>
+        /// <param name="isLeaveOffice">是否在职(0离职,1在职)</param>
+        /// <param name="isMain">是否主推</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<DoctorVo>>> GetListWithPageAsync(int?hospitalId,string keyword, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<DoctorVo>>> GetListWithPageAsync(int?hospitalId,string keyword,int? isLeaveOffice,int? isMain, int pageNum, int pageSize)
         {
             try
             {
-                var q = await doctorService.GetListWithPageAsync(hospitalId,keyword, pageNum, pageSize);
-
+                var q = await doctorService.GetListWithPageAsync(hospitalId,keyword, isLeaveOffice, isMain, pageNum, pageSize);
                 var doctor = from d in q.List
                              select new DoctorVo
                              {
@@ -57,7 +59,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                  HosptalName = d.HosptalName,
                                  IsMain=d.IsMain,
                                  Description=d.Description,
-                                 ProjectPicture=d.ProjectPicture
+                                 ProjectPicture=d.ProjectPicture,
+                                 IsLeaveOffice=d.IsLeaveOffice
                              };
 
                 FxPageInfo<DoctorVo> doctorPageInfo = new FxPageInfo<DoctorVo>();
@@ -127,7 +130,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 doctorVo.DepartmentId = doctor.DepartmentId;
                 doctorVo.IsMain = doctor.IsMain;
                 doctorVo.ProjectPicture = doctor.ProjectPicture;
-
+                doctorVo.IsLeaveOffice = doctor.IsLeaveOffice;
                 return ResultData<DoctorVo>.Success().AddData("doctorInfo", doctorVo);
             }
             catch (Exception ex)
@@ -159,6 +162,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.DepartmentId = updateVo.DepartmentId;
                 updateDto.IsMain = updateVo.IsMain;
                 updateDto.ProjectPicture = updateVo.ProjectPicture;
+                updateDto.IsLeaveOffice = updateVo.IsLeaveOffice;
                 await doctorService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -168,6 +172,27 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// 修改医生是否在职
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut("updateDoctorStatus")]
+        public async Task<ResultData> UpdateStatusAsync(UpdateDoctorStatusVo updateVo)
+        {
+            try
+            {
+                UpdateDoctorSatusDto updateDto = new UpdateDoctorSatusDto();
+                updateDto.Id = updateVo.Id;
+                updateDto.IsLeaveOffice = updateVo.IsLeaveOffice;
+                await doctorService.UpdateStatusAsync(updateDto);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
 
         /// <summary>
         /// 删除医生信息

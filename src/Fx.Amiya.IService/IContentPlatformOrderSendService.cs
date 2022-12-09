@@ -81,6 +81,17 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<TodayHospitalOrderNumDto>> GetTodayHospitalOrderNumAsync();
+        /// <summary>
+        /// 医院获取接单信息
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <param name="orderStatus"></param>
+        /// <param name="startDate"></param>
+        /// <param name="enDate"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<HospitalCurrentDayNotRepeatedSendOrderDto>> GetTodayNotRepeatSendOrderByHospitalIdAsync(int hospitalId,int orderStatus,DateTime startDate,DateTime enDate,int pageNum,int pageSize);
 
 
         /// <summary>
@@ -155,6 +166,19 @@ namespace Fx.Amiya.IService
         /// <param name="month"></param>
         /// <returns></returns>
         Task<List<SendContentPlatformOrderDto>> GetSendDataByHospitalIdAndMonthAsync(int hospitalId, int year, int month);
+        /// <summary>
+        /// 根据医院id与年份获取派单业绩
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        Task<int> GetSendDataByHospitalIdAndYearAsync(int hospitalId, int year);
+        /// <summary>
+        /// 获取医院总派单量
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<int> GetSendDataByHospitalIdAsync(int hospitalId);
         /// <summary>
         /// 全国前10城市运营数据
         /// </summary>
