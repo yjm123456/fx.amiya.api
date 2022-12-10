@@ -296,6 +296,88 @@ namespace Fx.Amiya.Service
             return sendOrderPageInfo;
         }
 
+        public async Task<FxPageInfo<ContentPlatFormOrderSendInfoDto>> GetFollowingListByHospitalIdAsync(int hospitalId, string keyword, DateTime? startDate, DateTime? endDate, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int pageNum, int pageSize)
+        {
+            var q = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder)
+                    where (d.HospitalId == hospitalId)
+                     && (string.IsNullOrEmpty(keyword) || d.ContentPlatformOrder.Id.Contains(keyword) || d.ContentPlatformOrder.Phone.Contains(keyword) || d.ContentPlatformOrder.CustomerName.Contains(keyword))
+                     && (!IsToHospital.HasValue || d.ContentPlatformOrder.IsToHospital == IsToHospital)
+                     && (!toHospitalType.HasValue || d.ContentPlatformOrder.ToHospitalType == toHospitalType.Value)
+                       && (d.ContentPlatformOrder.OrderStatus ==Convert.ToInt32(ContentPlateFormOrderStatus.ConfirmOrder) ||d.ContentPlatformOrder.OrderStatus==Convert.ToInt32(ContentPlateFormOrderStatus.WithoutCompleteOrder))
+                    select d;
+
+            if (startDate != null && endDate != null)
+            {
+                DateTime startrq = ((DateTime)startDate);
+                DateTime endrq = ((DateTime)endDate).AddDays(1);
+
+                q = from d in q
+                    where (d.SendDate >= startrq.Date && d.SendDate < endrq.Date)
+                    select d;
+            }
+            if (toHospitalStartDate != null && toHospitalEndDate != null)
+            {
+                DateTime startrq = ((DateTime)toHospitalStartDate).Date;
+                DateTime endrq = ((DateTime)toHospitalEndDate).Date.AddDays(1);
+                q = from d in q
+                    where (d.ContentPlatformOrder.ToHospitalDate >= startrq && d.ContentPlatformOrder.ToHospitalDate < endrq)
+                    select d;
+            }
+            var config = await GetCallCenterConfig();
+            var sendOrder = from d in q
+                            join p in _dalHospitalCheckPhoneRecord.GetAll().Where(e => e.HospitalId == hospitalId && e.OrderPlatformType == (byte)CheckPhoneRecordOrderType.ContentPlatformOrder)
+                            on d.ContentPlatformOrderId equals p.OrderId into pd
+                            from p in pd.DefaultIfEmpty()
+                            select new ContentPlatFormOrderSendInfoDto
+                            {
+                                Id = d.Id,
+                                OrderId = d.ContentPlatformOrderId,
+                                OrderStatusIntType = d.ContentPlatformOrder.OrderStatus,
+                                IsAcompanying = d.ContentPlatformOrder.IsAcompanying,
+                                CustomerName = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.CustomerName : "****",
+                                HospitalName = d.ContentPlatformOrder.HospitalInfo.Name,
+                                SendDate = d.SendDate,
+                                SendBy = d.AmiyaEmployee.Name,
+                                AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确定时间",
+                                IsUncertainDate = d.IsUncertainDate,
+                                OrderStatus = d.ContentPlatformOrder.OrderStatus != 0 ? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.ContentPlatformOrder.OrderStatus) : "",
+                                GoodsName = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.AmiyaGoodsDemand.ProjectNname : "****",
+                                ThumbPicUrl = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.AmiyaGoodsDemand.ThumbPictureUrl : "****",
+                                Phone = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? (p != null ? d.ContentPlatformOrder.Phone : config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone) : d.ContentPlatformOrder.Phone) : ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone),
+                                EncryptPhone = ServiceClass.Encrypt(d.ContentPlatformOrder.Phone, config.PhoneEncryptKey),
+                                LiveAnchor = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.LiveAnchor.Name : "****",
+                                DealPictureUrl = string.IsNullOrEmpty(d.ContentPlatformOrder.DealPictureUrl) ? "" : d.ContentPlatformOrder.DealPictureUrl,
+                                RepeateOrderPictureUrl = string.IsNullOrEmpty(d.ContentPlatformOrder.RepeatOrderPictureUrl) ? "" : d.ContentPlatformOrder.RepeatOrderPictureUrl,
+                                LateProjectStage = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? (string.IsNullOrEmpty(d.ContentPlatformOrder.LateProjectStage) ? "" : d.ContentPlatformOrder.LateProjectStage) : "****",
+                                ConsultingContent = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.ConsultingContent : "****",
+                                UnDealReason = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? (string.IsNullOrEmpty(d.ContentPlatformOrder.UnDealReason) ? "" : d.ContentPlatformOrder.UnDealReason) : "****",
+                                DealAmount = d.ContentPlatformOrder.DealAmount.HasValue ? d.ContentPlatformOrder.DealAmount : 0.00M,
+                                DepositAmount = d.ContentPlatformOrder.DepositAmount.HasValue ? d.ContentPlatformOrder.DepositAmount : 0.00M,
+                                IsHospitalCheckPhone = p != null ? true : false,
+                                OrderRemark = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? (string.IsNullOrEmpty(d.ContentPlatformOrder.Remark) ? "" : d.ContentPlatformOrder.Remark) : "****",
+                                SendOrderRemark = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.Remark : "****",
+                                HospitalRemark = d.HospitalRemark,
+                                UnDealPictureUrl = d.ContentPlatformOrder.UnDealPictureUrl,
+                                OrderSourceText = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? ServiceClass.GerContentPlatFormOrderSourceText(d.ContentPlatformOrder.OrderSource.Value) : "****",
+
+                                CheckState = d.ContentPlatformOrder.CheckState,
+                                DealDate = d.ContentPlatformOrder.DealDate,
+                                IsToHospital = d.ContentPlatformOrder.IsToHospital,
+                                ToHospitalDate = d.ContentPlatformOrder.ToHospitalDate,
+                                ToHospitalType = d.ContentPlatformOrder.ToHospitalType,
+                                ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ContentPlatformOrder.ToHospitalType)
+                            };
+            FxPageInfo<ContentPlatFormOrderSendInfoDto> sendOrderPageInfo = new FxPageInfo<ContentPlatFormOrderSendInfoDto>();
+            sendOrderPageInfo.TotalCount = await sendOrder.CountAsync();
+            sendOrderPageInfo.List = await sendOrder.OrderByDescending(e => e.SendDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+            foreach (var x in sendOrderPageInfo.List)
+            {
+                var baseInfo = await customerBaseInfoService.GetByPhoneAsync(x.Phone);
+                x.City = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? baseInfo.City : "****";
+                x.WeChatNo = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? baseInfo.WechatNumber : "****";
+            }
+            return sendOrderPageInfo;
+        }
 
 
         /// <summary>

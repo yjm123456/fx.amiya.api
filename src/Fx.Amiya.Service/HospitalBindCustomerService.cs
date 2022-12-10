@@ -104,6 +104,7 @@ namespace Fx.Amiya.Service
                 {
 
                     HospitalBindCustomerService bindCustomerService = new HospitalBindCustomerService();
+                    bindCustomerService.Id = Guid.NewGuid().ToString();
                     bindCustomerService.HospitalEmployeeId = addDto.HospitalEmployeeId;
                     bindCustomerService.CustomerPhone = addDto.CustomerPhone;
                     bindCustomerService.UserId = null;
@@ -153,7 +154,7 @@ namespace Fx.Amiya.Service
 
         }
 
-        public async Task<HospitalBindCustomerServiceDto> GetByIdAsync(int id)
+        public async Task<HospitalBindCustomerServiceDto> GetByIdAsync(string id)
         {
             try
             {

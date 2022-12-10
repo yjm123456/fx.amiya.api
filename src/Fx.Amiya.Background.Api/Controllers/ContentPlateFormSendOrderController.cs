@@ -1,8 +1,10 @@
 ﻿using Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder;
 using Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend;
+using Fx.Amiya.Background.Api.Vo.HospitalCustomer;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.IService;
+using Fx.Amiya.Service;
 using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
@@ -27,16 +29,19 @@ namespace Fx.Amiya.Background.Api.Controllers
 
         private IHttpContextAccessor _httpContextAccessor;
         private IContentPlatformOrderSendService _sendOrderInfoService;
-        private IHospitalInfoService hospitalInfoService;
+        private IWxAppConfigService _wxAppConfigService;
         private IContentPlatFormOrderDealInfoService orderDealInfoService;
+        private IHospitalCustomerInfoService hospitalCustomerInfoService;
         public ContentPlateFormSendOrderController(IContentPlatformOrderSendService sendOrderInfoService,
             IContentPlatFormOrderDealInfoService orderDealInfoService,
-            IHospitalInfoService hospitalInfoService,
-            IHttpContextAccessor httpContextAccessor)
+            IHospitalCustomerInfoService hospitalCustomerInfoService,
+            IHttpContextAccessor httpContextAccessor,
+             IWxAppConfigService wxAppConfigService)
         {
             this._sendOrderInfoService = sendOrderInfoService;
-            this.hospitalInfoService = hospitalInfoService;
             this.orderDealInfoService = orderDealInfoService;
+            _wxAppConfigService = wxAppConfigService;
+            this.hospitalCustomerInfoService = hospitalCustomerInfoService;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -130,6 +135,119 @@ namespace Fx.Amiya.Background.Api.Controllers
             sendOrderPageInfo.TotalCount = q.TotalCount;
             sendOrderPageInfo.List = sendOrder;
             return ResultData<FxPageInfo<ContentPlatFormOrderSendInfoVo>>.Success().AddData("sendOrderInfo", sendOrderPageInfo);
+        }
+
+
+        /// <summary>
+        /// 医院获取跟进中/到院派单信息
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="IsToHospital">是否到院，为空查询全部</param>
+        /// <param name="toHospitalStartDate">到院时间起</param>
+        /// <param name="toHospitalEndDate">到院时间止</param>           
+        /// <param name="toHospitalType">到院类型</param>        
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("followingListOfHospital")]
+        [FxTenantAuthorize]
+        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderSendInfoVo>>> GetFollowingListByHospitalIdAsync(string keyword,  DateTime? startDate, DateTime? endDate, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int pageNum, int pageSize)
+        {
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+            int hospitalId = employee.HospitalId;
+            var q = await _sendOrderInfoService.GetFollowingListByHospitalIdAsync(hospitalId, keyword,  startDate, endDate, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, pageNum, pageSize);
+            var sendOrder = from d in q.List
+                            select new ContentPlatFormOrderSendInfoVo
+                            {
+                                Id = d.Id,
+                                OrderId = d.OrderId,
+                                CustomerName = d.CustomerName,
+                                HospitalName = d.HospitalName,
+                                SendDate = d.SendDate,
+                                SendBy = d.SendBy,
+                                City = d.City,
+                                WeChatNo = d.WeChatNo,
+                                IsUncertainDate = d.IsUncertainDate,
+                                AppointmentDate = d.AppointmentDate,
+                                DepositAmount = d.DepositAmount,
+                                DealAmount = d.DealAmount,
+                                LateProjectStage = d.LateProjectStage,
+                                GoodsName = d.GoodsName,
+                                ThumbPicUrl = d.ThumbPicUrl,
+                                OrderStatus = d.OrderStatus,
+                                Phone = d.Phone,
+                                EncryptPhone = d.EncryptPhone,
+                                DealPictureUrl = d.DealPictureUrl,
+                                RepeateOrderPictureUrl = d.RepeateOrderPictureUrl,
+                                UnDealReason = d.UnDealReason,
+                                IsHospitalCheckPhone = d.IsHospitalCheckPhone,
+                                ConsultingContent = d.ConsultingContent,
+                                OrderRemark = d.OrderRemark,
+                                SendOrderRemark = d.SendOrderRemark,
+                                IsAcompanying = d.IsAcompanying,
+                                HospitalRemark = d.HospitalRemark,
+                                UnDealPictureUrl = d.UnDealPictureUrl,
+                                OrderSourceText = d.OrderSourceText,
+                                LiveAnchor = d.LiveAnchor,
+                                ToHospitalTypeText = d.ToHospitalTypeText,
+                                CheckState = d.CheckState,
+                            };
+
+            FxPageInfo<ContentPlatFormOrderSendInfoVo> sendOrderPageInfo = new FxPageInfo<ContentPlatFormOrderSendInfoVo>();
+            sendOrderPageInfo.TotalCount = q.TotalCount;
+            sendOrderPageInfo.List = sendOrder;
+            return ResultData<FxPageInfo<ContentPlatFormOrderSendInfoVo>>.Success().AddData("sendOrderInfo", sendOrderPageInfo);
+        }
+
+
+        /// <summary>
+        /// 获取“待查重/重单”顾客
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="orderStatus">订单状态（待查重：1；重单：5）</param>
+        /// <param name="toHospitalStartDate">到院时间起</param>
+        /// <param name="toHospitalEndDate">到院时间止</param>           
+        /// <param name="toHospitalType">到院类型</param>        
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("waitingConfirmCustomerHospital")]
+        [FxTenantAuthorize]
+        public async Task<ResultData<FxPageInfo<HospitalCustomerVo>>> WaitingConfirmCustomerHospitalAsync(string keyword, DateTime? startDate,int orderStatus, DateTime? endDate, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int pageNum, int pageSize)
+        {
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+            int hospitalId = employee.HospitalId;
+            var q = await _sendOrderInfoService.GetListByHospitalIdAsync(hospitalId, keyword, orderStatus, startDate, endDate, false, toHospitalStartDate, toHospitalEndDate, toHospitalType, pageNum, pageSize);
+            var sendOrder = from d in q.List
+                            select new HospitalCustomerVo
+                            {
+                                OrderId = d.OrderId,
+                                CustomerPhone = d.Phone,
+                                EncryptCustomerPhone = d.EncryptPhone,
+                            };
+
+            FxPageInfo<HospitalCustomerVo> sendOrderPageInfo = new FxPageInfo<HospitalCustomerVo>();
+            sendOrderPageInfo.TotalCount = q.TotalCount;
+            sendOrderPageInfo.List = sendOrder;
+            foreach (var x in sendOrderPageInfo.List)
+            {
+                var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
+                string phone =  ServiceClass.Decrypto(x.EncryptCustomerPhone, config.PhoneEncryptKey);
+                var hospitalCustomerInfo = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(hospitalId, phone);
+                x.CustomerName = hospitalCustomerInfo.CustomerName;
+                x.City = hospitalCustomerInfo.City;
+                x.GoodsDemand = hospitalCustomerInfo.NewGoodsDemand;
+                x.FirstSendDate = hospitalCustomerInfo.CreateDate;
+                x.NewSendDate = hospitalCustomerInfo.UpdateDate;
+                x.ConfirmOrderDate = hospitalCustomerInfo.ConfirmOrderDate;
+                x.SendOrderNum = hospitalCustomerInfo.SendAmount;
+                x.DealNum = hospitalCustomerInfo.DealAmount;
+            }
+            return ResultData<FxPageInfo<HospitalCustomerVo>>.Success().AddData("sendOrderInfo", sendOrderPageInfo);
         }
 
         /// <summary>

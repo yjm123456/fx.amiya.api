@@ -1526,13 +1526,14 @@ CREATE TABLE `amiyadb`.`tbl_customer_consumption_credentials` (
 
 -------------------------------------------余建明 2022/12/09 BEGIN------------------------------------------------------
 
---接单存储数据
+--接单存储数据（机构客服绑定客户）
 
 CREATE TABLE `amiyadb`.`tbl_hospital_bind_customer_service` (
   `id` VARCHAR(50) NOT NULL,
   `hospital_emp_id` INT UNSIGNED NOT NULL,
   `customer_phone` VARCHAR(30) NOT NULL,
   `user_id` VARCHAR(50) NULL,
+  `create_date` DATETIME NOT NULL,
   `create_by` INT UNSIGNED NOT NULL,
   `first_project_demand` VARCHAR(200) NULL,
   `first_consumption_date` DATETIME NULL,

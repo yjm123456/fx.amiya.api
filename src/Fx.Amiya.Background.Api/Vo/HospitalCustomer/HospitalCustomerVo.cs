@@ -7,7 +7,10 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalCustomer
 {
     public class HospitalCustomerVo
     {
-
+        /// <summary>
+        /// 当前订单号
+        /// </summary>
+        public string OrderId { get; set; }
         /// <summary>
         /// 客户昵称
         /// </summary>
@@ -20,6 +23,10 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalCustomer
         /// 联系电话
         /// </summary>
         public string CustomerPhone { get; set; }
+        /// <summary>
+        /// 联系电话(加密)
+        /// </summary>
+        public string EncryptCustomerPhone { get; set; }
         /// <summary>
         /// 所在地区
         /// </summary>

@@ -93,8 +93,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
-                int hospitalId = employee.HospitalId;
-                var q = await _hospitalCustomerService.GetByHospitalEmployeeIdListWithPageAsync(keyword, hospitalId, pageNum, pageSize);
+                int hospitalEmployeeId = Convert.ToInt32(employee.Id);
+                var q = await _hospitalCustomerService.GetByHospitalEmployeeIdListWithPageAsync(keyword, hospitalEmployeeId, pageNum, pageSize);
 
                 var hospitalCustomer = from d in q.List
                                        select new HospitalCustomerVo

@@ -6,7 +6,7 @@ namespace Fx.Amiya.DbModels.Model
 {
    public class HospitalBindCustomerService
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public int HospitalEmployeeId { get; set; }
         public string CustomerPhone { get; set; }
         public string UserId { get; set; } 

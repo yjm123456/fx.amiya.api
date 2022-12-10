@@ -658,12 +658,12 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task HospitalConfirmOrderAsync(string orderId, int hospitalId)
+        public async Task HospitalConfirmOrderAsync(string orderId, int hospitalempId)
         {
             unitOfWork.BeginTransaction();
             try
             {
-                var order = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate)).Where(x => x.Id == orderId).FirstOrDefaultAsync();
+                var order = await _dalContentPlatformOrder.GetAll().Include(x=>x.ContentPlatformOrderSendList).Where(x => x.Id == orderId).FirstOrDefaultAsync();
                 if (order == null)
                 {
                     throw new Exception("未找到该订单的相关信息！");
@@ -672,7 +672,7 @@ namespace Fx.Amiya.Service
                 order.UpdateDate = DateTime.Now;
                 await _dalContentPlatformOrder.UpdateAsync(order, true);
                 AddHospitalBindCustomerServiceDto addHospitalBindCustomerServiceDto = new AddHospitalBindCustomerServiceDto();
-                addHospitalBindCustomerServiceDto.HospitalEmployeeId = hospitalId;
+                addHospitalBindCustomerServiceDto.HospitalEmployeeId = hospitalempId;
                 var goodsInfo = await amiyaGoodsDemandService.GetByIdAsync(order.GoodsId);
                 addHospitalBindCustomerServiceDto.FirstProjectDemand = "(" + goodsInfo.HospitalDepartmentName + ")" + goodsInfo.ProjectNname;
                 addHospitalBindCustomerServiceDto.CustomerPhone = order.Phone;
@@ -681,7 +681,7 @@ namespace Fx.Amiya.Service
                 await hospitalBindCustomerService.AddAsync(addHospitalBindCustomerServiceDto);
 
 
-                //获取医院客户列表
+                //获取医院客户列表并更新查重时间
                 var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(order.ContentPlatformOrderSendList.FirstOrDefault().HospitalId, order.Phone);
                 UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
                 updateSendHospitalCustomerInfoDto.Id = customer.Id;
@@ -1655,13 +1655,35 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var order = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate)).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
+                var order = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 var isoldCustomer = false;
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
-                var dealCount = orderDealInfoList.Where(x => x.IsDeal == true).Count();
-                if (dealCount > 0)
+                var dealCount = orderDealInfoList.OrderByDescending(x => x.DealDate).Where(x => x.IsDeal == true).FirstOrDefault();
+                if (dealCount != null)
                 //if (order.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
                 {
+                    if (dealCount.DealDate > input.DealDate)
+                    {
+                        UpdateContentPlatFormOrderDealInfoDto updateContentPlatFormOrderDealInfoDto = new UpdateContentPlatFormOrderDealInfoDto();
+                        updateContentPlatFormOrderDealInfoDto.Id = dealCount.Id;
+                        updateContentPlatFormOrderDealInfoDto.ContentPlatFormOrderId = dealCount.ContentPlatFormOrderId;
+                        updateContentPlatFormOrderDealInfoDto.IsToHospital = dealCount.IsToHospital;
+                        updateContentPlatFormOrderDealInfoDto.ToHospitalType = dealCount.ToHospitalType;
+                        updateContentPlatFormOrderDealInfoDto.ToHospitalDate = dealCount.ToHospitalDate;
+                        updateContentPlatFormOrderDealInfoDto.LastDealHospitalId = dealCount.LastDealHospitalId;
+                        updateContentPlatFormOrderDealInfoDto.IsDeal = dealCount.IsDeal;
+                        updateContentPlatFormOrderDealInfoDto.DealPicture = dealCount.DealPicture;
+                        updateContentPlatFormOrderDealInfoDto.Remark = dealCount.Remark;
+                        updateContentPlatFormOrderDealInfoDto.Price = dealCount.Price;
+                        updateContentPlatFormOrderDealInfoDto.DealDate = dealCount.DealDate;
+                        updateContentPlatFormOrderDealInfoDto.OtherAppOrderId = dealCount.OtherAppOrderId;
+                        updateContentPlatFormOrderDealInfoDto.IsAcompanying = dealCount.IsAcompanying;
+                        updateContentPlatFormOrderDealInfoDto.IsOldCustomer = true;
+                        updateContentPlatFormOrderDealInfoDto.CommissionRatio = dealCount.CommissionRatio;
+                        await _contentPlatFormOrderDalService.UpdateAsync(updateContentPlatFormOrderDealInfoDto);
+
+                        isoldCustomer = false;
+                    }
                     isoldCustomer = true;
                 }
                 if (order == null)
@@ -1748,7 +1770,7 @@ namespace Fx.Amiya.Service
                 await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
 
                 //获取医院客户列表
-                var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(order.ContentPlatformOrderSendList.FirstOrDefault().HospitalId, order.Phone);
+                var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(order.ContentPlatformOrderSendList.OrderByDescending(x=>x.SendDate).FirstOrDefault().HospitalId, order.Phone);
                 //操作医院客户表
                 if (!string.IsNullOrEmpty(customer.Id))
                 {

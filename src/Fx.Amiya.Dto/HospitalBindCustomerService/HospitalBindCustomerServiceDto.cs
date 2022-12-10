@@ -6,7 +6,7 @@ namespace Fx.Amiya.Dto.HospitalBindCustomerService
 {
    public class HospitalBindCustomerServiceDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public int HospitalEmployeeId { get; set; }
         public string HospitaEmployeeName { get; set; }
         public string CustomerPhone { get; set; }

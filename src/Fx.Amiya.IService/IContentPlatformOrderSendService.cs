@@ -69,6 +69,22 @@ namespace Fx.Amiya.IService
         Task<FxPageInfo<ContentPlatFormOrderSendInfoDto>> GetListByHospitalIdAsync(int hospitalId, string keyword, int? OrderStatus, DateTime? startDate, DateTime? endDate, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int pageNum, int pageSize);
 
         /// <summary>
+        /// 获取跟进中/已到院订单
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <param name="keyword"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="IsToHospital"></param>
+        /// <param name="toHospitalStartDate"></param>
+        /// <param name="toHospitalEndDate"></param>
+        /// <param name="toHospitalType"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<ContentPlatFormOrderSendInfoDto>> GetFollowingListByHospitalIdAsync(int hospitalId, string keyword, DateTime? startDate, DateTime? endDate, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int pageNum, int pageSize);
+
+        /// <summary>
         /// 根据医院id获取未处理订单条数
         /// </summary>
         /// <param name="hospitalId"></param>

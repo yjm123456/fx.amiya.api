@@ -33,7 +33,7 @@ namespace Fx.Amiya.IService
         /// <param name="phone"></param>
         /// <returns></returns>
         Task<HospitalBindCustomerServiceDto> GetEmployeeDetailsByPhoneAsync(string phone);
-        Task<HospitalBindCustomerServiceDto> GetByIdAsync(int id);
+        Task<HospitalBindCustomerServiceDto> GetByIdAsync(string id);
 
         /// <summary>
         /// 根据手机号获取归属客服
