@@ -141,11 +141,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportOfContentPlatFormHospital")]
         [FxTenantAuthorize]
-        public async Task<FileStreamResult> ExportListByHospitalIdAsync(string keyword, DateTime? startDate, DateTime? endDate)
+        public async Task<FileStreamResult> ExportListByHospitalIdAsync(string keyword, int? orderStatus, DateTime? startDate, DateTime? endDate)
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalId = employee.HospitalId;
-            var q = await _sendOrderInfoService.GetContentPlatFormHospitalOrderReportAsync(startDate, endDate, hospitalId, false);
+            var q = await _sendOrderInfoService.GetContentPlatFormHospitalOrderReportAsync(startDate, endDate, orderStatus, hospitalId, false);
             var sendOrder = from d in q
                             select new ExportContentPlatFormSendOrderInfoVo
                             {

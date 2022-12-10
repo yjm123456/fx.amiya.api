@@ -582,7 +582,7 @@ namespace Fx.Amiya.Service
         /// <param name="hospitalId">医院id</param>
         /// <param name="hospitalName">医院名称</param>
         /// <returns></returns>
-        public async Task<List<SendContentPlatFormOrderReportDto>> GetContentPlatFormHospitalOrderReportAsync(DateTime? startDate, DateTime? endDate, int hospitalId, bool isHidePhone)
+        public async Task<List<SendContentPlatFormOrderReportDto>> GetContentPlatFormHospitalOrderReportAsync(DateTime? startDate, DateTime? endDate, int? orderStatus, int hospitalId, bool isHidePhone)
         {
 
             var q = from d in _dalContentPlatformOrderSend.GetAll()
@@ -596,6 +596,7 @@ namespace Fx.Amiya.Service
 
                 q = from d in q
                     where (d.SendDate >= startrq && d.SendDate < endrq)
+                    &&(!orderStatus.HasValue||d.ContentPlatformOrder.OrderStatus==orderStatus.Value)
                     select d;
             }
 

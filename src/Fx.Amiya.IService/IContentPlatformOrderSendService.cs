@@ -133,7 +133,7 @@ namespace Fx.Amiya.IService
         /// <param name="hospitalName"></param>
         /// <param name="isHidePhone"></param>
         /// <returns></returns>
-        Task<List<SendContentPlatFormOrderReportDto>> GetContentPlatFormHospitalOrderReportAsync(DateTime? startDate, DateTime? endDate, int hospitalId, bool isHidePhone);
+        Task<List<SendContentPlatFormOrderReportDto>> GetContentPlatFormHospitalOrderReportAsync(DateTime? startDate, DateTime? endDate, int? orderStatus, int hospitalId, bool isHidePhone);
 
         #endregion
 
