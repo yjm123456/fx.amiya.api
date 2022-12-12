@@ -204,22 +204,22 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                AddCustomerConsumptionVoucherDto ten = new AddCustomerConsumptionVoucherDto
+                //50元优惠券
+                AddCustomerConsumptionVoucherDto fifty = new AddCustomerConsumptionVoucherDto
                 {
                     CustomerId = customerId,
-                    ConsumptionVoucherCode = ConsumptionVoucherCode.TenDeductVoucher,
-                    ExpireDate = DateTimeUtil.GetNextMonthFirstDay(),
+                    ConsumptionVoucherCode = ConsumptionVoucherCode.FiftyDeductVoucher,
+                    ExpireDate = DateTime.Now.AddDays(30),
                     Source = 3
                 };
-                AddCustomerConsumptionVoucherDto twenty = new AddCustomerConsumptionVoucherDto
+                /*AddCustomerConsumptionVoucherDto twenty = new AddCustomerConsumptionVoucherDto
                 {
                     CustomerId = customerId,
                     ConsumptionVoucherCode = ConsumptionVoucherCode.TwentyDeductVoucher,
                     ExpireDate = DateTimeUtil.GetNextMonthFirstDay(),
                     Source = 3
-                };
-                await AddAsyn(ten);
-                await AddAsyn(twenty);
+                };*/
+                await AddAsyn(fifty);
             }
             catch (Exception ex)
             {
