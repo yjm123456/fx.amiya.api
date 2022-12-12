@@ -117,6 +117,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 EncryptPhone = d.EncryptPhone,
                                 DealPictureUrl = d.DealPictureUrl,
                                 RepeateOrderPictureUrl = d.RepeateOrderPictureUrl,
+                                IsToHospital=d.IsToHospital,
                                 UnDealReason = d.UnDealReason,
                                 IsHospitalCheckPhone = d.IsHospitalCheckPhone,
                                 ConsultingContent = d.ConsultingContent,
@@ -190,6 +191,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 HospitalRemark = d.HospitalRemark,
                                 UnDealPictureUrl = d.UnDealPictureUrl,
                                 OrderSourceText = d.OrderSourceText,
+                                IsToHospital=d.IsToHospital,
                                 LiveAnchor = d.LiveAnchor,
                                 ToHospitalTypeText = d.ToHospitalTypeText,
                                 CheckState = d.CheckState,
@@ -314,9 +316,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxTenantAuthorize]
         public async Task<ResultData> RemarkOrderAsync(ContentPlatFormOrderRemarkVo input)
         {
+
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+            int hospitalEmployeeId =Convert.ToInt32(employee.Id);
             ContentPlatFormOrderRemarkDto updateDto = new ContentPlatFormOrderRemarkDto();
             updateDto.HospitalRemark = input.HospitalRemark;
             updateDto.SendOrderId = input.SendOrderId;
+            updateDto.UpdateBy = hospitalEmployeeId;
             await _sendOrderInfoService.UpdateOrderHospitalRemarkAsync(updateDto);
             return ResultData.Success();
         }

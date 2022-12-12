@@ -990,6 +990,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.Id = updateVo.Id;
             updateDto.OrderId = updateVo.OrderId;
             updateDto.RepeatePictureUrl = updateVo.RepeatePictureUrl;
+            updateDto.ToHospitalDate = updateVo.ToHospitalDate;
             await _orderService.RepeateContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
         }

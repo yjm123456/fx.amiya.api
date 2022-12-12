@@ -5,6 +5,7 @@ using Fx.Amiya.Dto.CustomerInfo;
 using Fx.Amiya.Dto.HospitalBindCustomerService;
 using Fx.Amiya.Dto.HospitalCustomerInfo;
 using Fx.Amiya.Dto.OrderCheckPicture;
+using Fx.Amiya.Dto.OrderRemark;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.TmallOrder;
@@ -27,6 +28,7 @@ namespace Fx.Amiya.Service
     {
 
         private IDalContentPlatformOrder _dalContentPlatformOrder;
+        private IOrderRemarkService orderRemarkService;
         private IDalBindCustomerService _dalBindCustomerService;
         private IHospitalBindCustomerService hospitalBindCustomerService;
         private IAmiyaGoodsDemandService amiyaGoodsDemandService;
@@ -53,6 +55,7 @@ namespace Fx.Amiya.Service
            IDalAmiyaEmployee dalAmiyaEmployee,
            ICustomerBaseInfoService customerBaseInfoService,
             ILiveAnchorService liveAnchorService,
+            IOrderRemarkService orderRemarkService,
             IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
             IHospitalCustomerInfoService hospitalCustomerInfoService,
             IHospitalInfoService hospitalInfoService,
@@ -80,6 +83,7 @@ namespace Fx.Amiya.Service
             this.bindCustomerServiceService = bindCustomerServiceService;
             _dalBindCustomerService = dalBindCustomerService;
             this.customerBaseInfoService = customerBaseInfoService;
+            this.orderRemarkService = orderRemarkService;
             _departmentService = departmentService;
             this.amiyaGoodsDemandService = amiyaGoodsDemandService;
             this.employeeBindLiveAnchorService = employeeBindLiveAnchorService;
@@ -202,6 +206,17 @@ namespace Fx.Amiya.Service
                 //小黄车更新录单触达
                 await _shoppingCartRegistration.UpdateCreateOrderAsync(input.Phone);
 
+                //订单备注新增数据
+                if (!string.IsNullOrEmpty(order.Remark))
+                {
+
+                    AddOrderRemarkDto addOrderRemarkDto = new AddOrderRemarkDto();
+                    addOrderRemarkDto.OrderId = order.Id;
+                    addOrderRemarkDto.Remark = order.Remark;
+                    addOrderRemarkDto.CreateBy = order.BelongEmpId.Value;
+                    addOrderRemarkDto.BelongAuthorize = (int)AuthorizeStatusEnum.InternalAuthorize;
+                    await orderRemarkService.AddAsync(addOrderRemarkDto);
+                }
 
                 unitOfWork.Commit();
             }
@@ -1445,6 +1460,17 @@ namespace Fx.Amiya.Service
                 }
                 await _dalContentPlatformOrder.UpdateAsync(order, true);
 
+                //订单备注新增数据
+                if (!string.IsNullOrEmpty(order.Remark))
+                {
+
+                    AddOrderRemarkDto addOrderRemarkDto = new AddOrderRemarkDto();
+                    addOrderRemarkDto.OrderId = order.Id;
+                    addOrderRemarkDto.Remark = order.Remark;
+                    addOrderRemarkDto.CreateBy = order.BelongEmpId.Value;
+                    addOrderRemarkDto.BelongAuthorize = (int)AuthorizeStatusEnum.InternalAuthorize;
+                    await orderRemarkService.AddAsync(addOrderRemarkDto);
+                }
                 unitOfWork.Commit();
             }
             catch (Exception err)
@@ -1911,8 +1937,9 @@ namespace Fx.Amiya.Service
             }
             order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.RepeatOrder);
             order.ToHospitalDate = input.ToHospitalDate;
-            order.IsToHospital = input.IsToHospital;
+            order.IsToHospital = true;
             order.UpdateDate = DateTime.Now;
+            order.ToHospitalDate = input.ToHospitalDate;
             order.RepeatOrderPictureUrl = input.RepeatePictureUrl;
             await _dalContentPlatformOrder.UpdateAsync(order, true);
         }

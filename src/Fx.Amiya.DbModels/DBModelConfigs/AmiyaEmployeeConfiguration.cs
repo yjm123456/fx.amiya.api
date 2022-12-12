@@ -14,6 +14,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.ToTable("tbl_amiya_employee");
             builder.HasKey(t => t.Id);
             builder.Property(t => t.Id).HasColumnName("id").HasColumnType("int").IsRequired();
+            builder.Property(t => t.Avatar).HasColumnName("avatar").HasColumnType("varchar(500)").IsRequired(false);
             builder.Property(t => t.Name).HasColumnName("name").HasColumnType("varchar(150)").IsRequired();
             builder.Property(t => t.UserName).HasColumnName("user_name").HasColumnType("varchar(50)").IsRequired();
             builder.Property(t => t.Password).HasColumnName("password").HasColumnType("varchar(50)").IsRequired();

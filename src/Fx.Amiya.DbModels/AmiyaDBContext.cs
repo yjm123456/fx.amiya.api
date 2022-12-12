@@ -127,6 +127,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<HospitalEnvironmentPicture> HospitalEnvironmentPicture { get; set; }
         public virtual DbSet<SendGoodsRecord> SendGoodsRecord { get; set; }
         public virtual DbSet<SendOrderMessageBoard> SendOrderMessageBoard { get; set; }
+        public virtual DbSet<OrderRemark> OrderRemark { get; set; }
         public virtual DbSet<ContentPlatformOrder> ContentPlatformOrder { get; set; }
         public virtual DbSet<ContentPlatformOrderSend> ContentPlatformOrderSend { get; set; }
         public virtual DbSet<TikTokOrderInfo> TikTokOrderInfo { get; set; }
@@ -282,6 +283,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new OrderTradeConfiguration());
             modelBuilder.ApplyConfiguration(new SendGoodsRecordConfiguration());
             modelBuilder.ApplyConfiguration(new SendOrderMessageBoardConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderRemarkConfiguration());
             modelBuilder.ApplyConfiguration(new OrderWriteOffInfoConfiguration());
             modelBuilder.ApplyConfiguration(new ContentPlatformOrderConfiguration());
             modelBuilder.ApplyConfiguration(new ContentPlatformOrderSendConfiguration());

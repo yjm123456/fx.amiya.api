@@ -4,6 +4,18 @@ using System.Text;
 
 namespace Fx.Amiya.IService
 {
+    public enum AuthorizeStatusEnum
+    {
+        /// <summary>
+        /// 管理端
+        /// </summary>
+        InternalAuthorize=0,
+        /// <summary>
+        /// 医院端
+        /// </summary>
+        TenantAuhtorize=1,
+
+    }
 
 
     /// <summary>

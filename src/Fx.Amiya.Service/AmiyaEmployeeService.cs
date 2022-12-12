@@ -123,6 +123,7 @@ namespace Fx.Amiya.Service
                 {
                     Id = employee.Id,
                     Name = employee.Name,
+                    Avatar = employee.Avatar,
                     UserName = employee.UserName,
                     Password = employee.Password,
                     Valid = employee.Valid,

@@ -1574,7 +1574,21 @@ CREATE TABLE `amiyadb`.`tbl_hospital_bind_customer_service` (
 
 -----------------------------------------------余建明 2022/12/09 END--------------------------------------------
 
-
+-------------------------------------------余建明 2022/12/12 BEGIN------------------------------------------------------
+---订单备注表
+CREATE TABLE `amiyadb`.`tbl_order_remark` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `order_id` VARCHAR(50) NOT NULL ,
+  `belong_authorize` INT NOT NULL,
+  `create_by` INT NOT NULL,
+  `remark` VARCHAR(5000) NULL,
+  PRIMARY KEY (`id`));
+  
+-----------------------------------------------余建明 2022/12/12 END--------------------------------------------
 
 
 

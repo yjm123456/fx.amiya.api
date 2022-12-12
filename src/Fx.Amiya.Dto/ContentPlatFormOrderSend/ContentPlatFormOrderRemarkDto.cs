@@ -10,5 +10,6 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
     {
         public int SendOrderId { get; set; }
         public string HospitalRemark { get; set; }
+        public int UpdateBy { get; set; }
     }
 }
