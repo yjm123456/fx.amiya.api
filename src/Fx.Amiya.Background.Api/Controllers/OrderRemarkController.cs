@@ -48,8 +48,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
-                int hospitalId = employee.HospitalId;
                 var q = await _orderRemarkService.GetListWithPageAsync(orderId, pageNum, pageSize);
 
                 var orderRemark = from d in q.List
@@ -58,11 +56,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   Id = d.Id,
                                   BelongAuthorize = d.BelongAuthorize,
                                   OrderId = d.OrderId,
+                                  Remark=d.Remark,
                                   CreateBy = d.CreateBy,
                                   CreateDate = d.CreateDate,
                                   UpdateDate = d.UpdateDate,
                                   Valid = d.Valid,
-                                  DeleteDate = d.DeleteDate
+                                  DeleteDate = d.DeleteDate,
+                                  Avatar=d.Avatar,
+                                  EmployeeName=d.EmployeeName,
                               };
 
                 FxPageInfo<OrderRemarkVo> orderRemarkPage = new FxPageInfo<OrderRemarkVo>();
@@ -97,7 +98,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.OrderId = addVo.OrderId; 
                 addDto.Remark = addVo.Remark;
                 addDto.CreateBy = employeeId;
-                addDto.BelongAuthorize = (int)AuthorizeStatusEnum.TenantAuhtorize;
+                addDto.BelongAuthorize = (int)AuthorizeStatusEnum.InternalAuthorize;
                 await _orderRemarkService.AddAsync(addDto);
                 return ResultData.Success();
             }

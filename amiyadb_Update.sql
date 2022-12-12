@@ -1621,6 +1621,8 @@ ADD COLUMN `avatar` VARCHAR(500) NULL AFTER `id`;
 ALTER TABLE `amiyadb`.`tbl_hospital_employee` 
 ADD COLUMN `avatar` VARCHAR(500) NULL AFTER `id`;
 
+-- 啊美雅员工配置头像
+update tbl_amiya_employee set avatar='https://ameiya.oss-cn-hangzhou.aliyuncs.com/cc3187fce8ab436ea3646dad9835e348.png'
 
 -----------------------------------------------余建明 2022/12/12 END--------------------------------------------
 

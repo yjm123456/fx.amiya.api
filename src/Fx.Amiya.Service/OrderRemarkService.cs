@@ -53,6 +53,7 @@ namespace Fx.Amiya.Service
                                                CreateDate = d.CreateDate,
                                                UpdateDate = d.UpdateDate,
                                                Valid = d.Valid,
+                                               Remark=d.Remark,
                                                DeleteDate = d.DeleteDate
                                            };
 

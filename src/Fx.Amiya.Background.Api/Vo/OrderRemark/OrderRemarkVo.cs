@@ -26,5 +26,14 @@ namespace Fx.Amiya.Background.Api.Vo.OrderRemark
         /// 备注信息
         /// </summary>
         public string Remark { get; set; }
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string Avatar { get; set; }
+
+        /// <summary>
+        /// 名字
+        /// </summary>
+        public string EmployeeName { get; set; }
     }
 }
