@@ -58,7 +58,7 @@ namespace Fx.Amiya.Service
 
                 FxPageInfo<OrderRemarkDto> orderRemarkPageInfo = new FxPageInfo<OrderRemarkDto>();
                 orderRemarkPageInfo.TotalCount = await orderRemark.CountAsync();
-                orderRemarkPageInfo.List = await orderRemark.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+                orderRemarkPageInfo.List = await orderRemark.OrderByDescending(x => x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
 
                 foreach (var x in orderRemarkPageInfo.List)
                 {

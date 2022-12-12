@@ -17,6 +17,6 @@ namespace Fx.Amiya.Modules.Integration.Domin
         /// 产生的类型
         /// 是消费，还是单独赠送等
         /// </summary>
-        public GenerateType GenerateType { get; protected set; }
+        public GenerateType GenerateType { get; set; }
     }
 }

@@ -62,7 +62,7 @@ namespace Fx.Amiya.Service
             hospitalDataDto.ThisMonthDealCount = thisContentPlatFormOrderDealInfoCount;
             hospitalDataDto.DealCountChainRatio = CalculateChainratio(thisContentPlatFormOrderDealInfoCount, lastSameTermContentPlatFormOrderDealInfoCount.Count()).Value;
             //全年派单量
-            hospitalDataDto.YearDealCount =await contentPlatformOrderSendService.GetSendDataByHospitalIdAndYearAsync(hospitalId,thisMonth.Year);
+            hospitalDataDto.YearSendOrderCount =await contentPlatformOrderSendService.GetSendDataByHospitalIdAndYearAsync(hospitalId,thisMonth.Year);
             //总派单量
             hospitalDataDto.TotalSendOrderCount=await contentPlatformOrderSendService.GetSendDataByHospitalIdAsync(hospitalId);
             //全年成交量
@@ -70,9 +70,9 @@ namespace Fx.Amiya.Service
             //总成交量
             hospitalDataDto.TotalDealCount=await contentPlatFormOrderDealInfoService.GetSendPerformanceByHospitalIdAsync(hospitalId);
             //本月派单成交率
-            hospitalDataDto.ThisMonthSendOrderDealRatio = CalculateTargetComplete(thisContentPlatFormOrderSendList.Count(), thisContentPlatFormOrderDealInfoCount).Value;
+            hospitalDataDto.ThisMonthSendOrderDealRatio = CalculateTargetComplete(thisContentPlatFormOrderDealInfoCount, thisContentPlatFormOrderSendList.Count()).Value;
             //全年派单成交率
-            hospitalDataDto.YearSendOrderDealRatio = CalculateTargetComplete(hospitalDataDto.YearDealCount, hospitalDataDto.YearDealCount).Value;
+            hospitalDataDto.YearSendOrderDealRatio = CalculateTargetComplete(hospitalDataDto.YearDealCount, hospitalDataDto.YearSendOrderCount).Value;
             return hospitalDataDto;
 
         }

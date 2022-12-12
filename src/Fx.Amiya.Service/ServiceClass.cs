@@ -709,6 +709,9 @@ namespace Fx.Amiya.Service
                 case 5:
                     BuyAgainTypeText = "退还礼品积分";
                     break;
+                case 6:
+                    BuyAgainTypeText = "新用户赠送";
+                    break;
             }
             return BuyAgainTypeText;
         }

@@ -4,11 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Fx.Amiya.Common;
+using Fx.Amiya.Core.Dto.Integration;
+using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.Dto.UserInfo;
 using Fx.Amiya.IService;
 using Fx.Amiya.MiniProgram.Api.Filters;
 using Fx.Amiya.MiniProgram.Api.Vo.Login;
 using Fx.Amiya.MiniProgram.Api.Vo.UserInfo;
+using Fx.Amiya.Modules.Integration.Domin;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
 using Fx.Weixin.MP.AdvanceApi.MiniApi;
@@ -34,12 +37,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private IConfiguration configuration;
         private FxAppGlobal _fxAppGlobal;
         private ILogger<UserController> logger;
+        private IIntegrationAccount integrationAccount;
         public UserController(IUserService userService,
             IMiniSessionStorage sessionStorage,
             TokenReader tokenReader,
             IConfiguration configuration,
             FxAppGlobal fxAppGlobal,
-            ILogger<UserController> logger)
+            ILogger<UserController> logger, IIntegrationAccount integrationAccount)
         {
             this.userService = userService;
             this.sessionStorage = sessionStorage;
@@ -47,6 +51,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             this.configuration = configuration;
             _fxAppGlobal = fxAppGlobal;
             this.logger = logger;
+            this.integrationAccount = integrationAccount;
         }
 
         [HttpGet("appIds")]
@@ -241,6 +246,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         [HttpPut("userEditInfo")]
         public async Task<ResultData> UseEditInfo(UserEditInfoVo editInfoVo) {
             var sessionInfo = sessionStorage.GetSession(tokenReader.GetToken());
+            string customerId = sessionInfo.FxCustomerId;
             if (sessionInfo != null) {
                 await userService.UpdateUserInfo(
                     new UserInfoEditDto {
@@ -252,12 +258,40 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         Avatar=editInfoVo.UserAvatar,
                     }
                     );
+                //新用户领取200积分
+                var integrationRecord = await CreateIntegrationRecordAsync(customerId, 200);
+                if (integrationRecord != null) await integrationAccount.AddByConsumptionAsync(integrationRecord);
                 return ResultData.Success();
             } else {
                 return ResultData.Fail();
             }
         }
-
+        /// <summary>
+        /// 创建积分奖励记录
+        /// </summary>
+        /// <param name="customerId">用户id</param>
+        /// <param name="awardAmount">奖励积分金额</param>
+        /// <param name="percent">奖励比率</param>
+        /// <returns></returns>
+        private async Task<ConsumptionIntegrationDto> CreateIntegrationRecordAsync(string customerId, decimal awardAmount)
+        {
+            var exist = await integrationAccount.ExistNewCustomerRewardAsync(customerId, awardAmount, (int)GenerateType.NewCustomer);
+            if (exist)
+            {
+                return null;
+            }
+            ConsumptionIntegrationDto consumptionIntegrationDto = new ConsumptionIntegrationDto
+            {
+                Quantity = awardAmount,
+                Percent = 1,
+                AmountOfConsumption = awardAmount,
+                Date = DateTime.Now,
+                CustomerId = customerId,
+                ExpiredDate = DateTime.Now.AddMonths(12),
+                Type= (int)GenerateType.NewCustomer
+            };
+            return consumptionIntegrationDto;
+        }
 
         /// <summary>
         /// 访问

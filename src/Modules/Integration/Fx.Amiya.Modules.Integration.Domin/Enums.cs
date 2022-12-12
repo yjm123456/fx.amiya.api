@@ -37,6 +37,10 @@ namespace Fx.Amiya.Modules.Integration.Domin
         /// 退还礼品=5
         /// </summary>
         ReturnGift,
+        /// <summary>
+        /// 新用户赠送
+        /// </summary>
+        NewCustomer,
 
     }
 

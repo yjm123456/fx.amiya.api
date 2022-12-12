@@ -77,7 +77,8 @@ namespace Fx.Amiya.Modules.Integration.AppService
                 OrderId = consumptionIntegration.OrderId,
                 Percent = consumptionIntegration.Percent,
                 ProviderId = consumptionIntegration.ProviderId,
-                Quantity = consumptionIntegration.Quantity
+                Quantity = consumptionIntegration.Quantity, 
+                GenerateType= (GenerateType)consumptionIntegration.Type
             });
 
             await _integrationAccountRepository.SaveIntegrationAccountAsync(integrationAccount);
@@ -324,6 +325,12 @@ namespace Fx.Amiya.Modules.Integration.AppService
             if (integrationGenerateRecord == null)
                 return false;
             return true;
+        }
+
+        public async Task<bool> ExistNewCustomerRewardAsync(string customerId, decimal amount, int type)
+        {
+            var record = await freeSql.Select<IntegrationGenerateRecordDbModel>().Where(e => e.CustomerId == customerId && e.Quantity == amount && e.Type == type).FirstAsync();
+            return record == null ? false : true;
         }
     }
 }

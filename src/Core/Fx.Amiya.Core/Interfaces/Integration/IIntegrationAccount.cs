@@ -136,5 +136,13 @@ namespace Fx.Amiya.Core.Interfaces.Integration
         /// <param name="percent">奖励比例</param>
         /// <returns></returns>
         Task<bool> ExistRechargeRewardAsync(string customerId,decimal amount,decimal percent);
+        /// <summary>
+        /// 判断是否已领取新用户赠送积分
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="amount"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        Task<bool> ExistNewCustomerRewardAsync(string customerId, decimal amount,int type);
     }
 }

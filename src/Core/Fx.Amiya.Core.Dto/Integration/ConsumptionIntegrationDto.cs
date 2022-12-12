@@ -19,6 +19,7 @@ namespace Fx.Amiya.Core.Dto.Integration
         public DateTime? ExpiredDate { get; set; }
 
         public int HandleBy { get; set; }
+        public int Type { get; set; } = 0;
 
     }
 }
