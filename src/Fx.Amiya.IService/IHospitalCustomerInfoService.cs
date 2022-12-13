@@ -18,7 +18,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<SendHospitalCustomerInfoDto>> GetListWithPageAsync(string keyword, int hospitalId, int pageNum, int pageSize);
+        Task<FxPageInfo<SendHospitalCustomerInfoDto>> GetListWithPageAsync(string keyword, int hospitalId, int employeeId, int pageNum, int pageSize);
 
         /// <summary>
         /// 获取“我来跟进”的顾客

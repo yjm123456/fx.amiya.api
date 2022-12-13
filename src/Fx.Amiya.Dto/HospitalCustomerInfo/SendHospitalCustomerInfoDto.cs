@@ -14,6 +14,11 @@ namespace Fx.Amiya.Dto.HospitalCustomerInfo
         public string CustomerPhone { get; set; }
 
         /// <summary>
+        /// 加密手机号
+        /// </summary>
+        public string EncryptPhone { get; set; }
+
+        /// <summary>
         /// 是否为我来跟进
         /// </summary>
         public bool IsMyFollow { get; set; }

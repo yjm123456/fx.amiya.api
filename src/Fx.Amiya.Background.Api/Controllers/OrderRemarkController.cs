@@ -42,7 +42,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        [HttpGet("allCustomerListWithPage")]
+        [HttpGet("getByOrderListWithPage")]
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData<FxPageInfo<OrderRemarkVo>>> GetListWithPageAsync(string orderId, int pageNum, int pageSize)
         {

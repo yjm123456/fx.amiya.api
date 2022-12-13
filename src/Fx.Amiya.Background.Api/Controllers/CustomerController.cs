@@ -489,7 +489,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="encryptPhone">加密电话</param>
         /// <returns></returns>
         [HttpGet("getBaseAndBindCustomerInfoByEncryptPhone")]
-        [FxInternalAuthorize]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<CustomerBaseDetailInfoVo>> GetBaseAndBindCustomerInfoByPhoneAsync(string encryptPhone)
         {
             var customer = await customerBaseInfoService.GetByEncryptPhoneAsync(encryptPhone);

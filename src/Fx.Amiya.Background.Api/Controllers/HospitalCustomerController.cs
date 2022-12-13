@@ -49,22 +49,24 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
                 int hospitalId = employee.HospitalId;
-                var q = await _hospitalCustomerService.GetListWithPageAsync(keyword, hospitalId,pageNum, pageSize);
+                int hospitalEmpId = Convert.ToInt32(employee.Id);
+                var q = await _hospitalCustomerService.GetListWithPageAsync(keyword, hospitalId, hospitalEmpId, pageNum, pageSize);
 
                 var hospitalCustomer = from d in q.List
-                              select new HospitalCustomerVo
-                              {
-                                  CustomerName=d.CustomerName,
-                                  CustomerPhone=d.CustomerPhone,
-                                  IsMyFollow=d.IsMyFollow,
-                                  City=d.City,
-                                  GoodsDemand=d.NewGoodsDemand,
-                                  FirstSendDate=d.CreateDate,
-                                  ConfirmOrderDate=d.ConfirmOrderDate,
-                                  NewSendDate=d.UpdateDate,
-                                  SendOrderNum=d.SendAmount,
-                                  DealNum=d.DealAmount
-                              };
+                                       select new HospitalCustomerVo
+                                       {
+                                           CustomerName = d.CustomerName,
+                                           CustomerPhone = d.CustomerPhone,
+                                           EncryptCustomerPhone = d.EncryptPhone,
+                                           IsMyFollow = d.IsMyFollow,
+                                           City = d.City,
+                                           GoodsDemand = d.NewGoodsDemand,
+                                           FirstSendDate = d.CreateDate,
+                                           ConfirmOrderDate = d.ConfirmOrderDate,
+                                           NewSendDate = d.UpdateDate,
+                                           SendOrderNum = d.SendAmount,
+                                           DealNum = d.DealAmount
+                                       };
 
                 FxPageInfo<HospitalCustomerVo> hospitalCustomerPageInfo = new FxPageInfo<HospitalCustomerVo>();
                 hospitalCustomerPageInfo.TotalCount = q.TotalCount;
@@ -101,6 +103,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                        {
                                            CustomerName = d.CustomerName,
                                            CustomerPhone = d.CustomerPhone,
+                                           EncryptCustomerPhone=d.EncryptPhone,
                                            IsMyFollow = d.IsMyFollow,
                                            City = d.City,
                                            GoodsDemand = d.NewGoodsDemand,

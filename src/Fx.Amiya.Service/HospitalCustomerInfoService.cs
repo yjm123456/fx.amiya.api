@@ -17,15 +17,18 @@ namespace Fx.Amiya.Service
         private IDalHospitalCustomerInfo dalHospitalCustomerInfo;
         private ICustomerBaseInfoService customerBaseInfoService;
         private IHospitalBindCustomerService hospitalBindCustomerService;
+        private IWxAppConfigService wxAppConfigService;
 
 
         public HospitalCustomerInfoService(IDalHospitalCustomerInfo dalHospitalCustomerInfo,
             ICustomerBaseInfoService customerBaseInfoService,
+            IWxAppConfigService wxAppConfigService,
             IHospitalBindCustomerService hospitalBindCustomerService)
         {
             this.dalHospitalCustomerInfo = dalHospitalCustomerInfo;
             this.customerBaseInfoService = customerBaseInfoService;
             this.hospitalBindCustomerService = hospitalBindCustomerService;
+            this.wxAppConfigService = wxAppConfigService;
         }
 
 
@@ -37,7 +40,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<SendHospitalCustomerInfoDto>> GetListWithPageAsync(string keyword, int hospitalId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<SendHospitalCustomerInfoDto>> GetListWithPageAsync(string keyword, int hospitalId,int employeeId, int pageNum, int pageSize)
         {
             try
             {
@@ -66,16 +69,19 @@ namespace Fx.Amiya.Service
 
                 foreach (var x in hospitalCustomerInfoPageInfo.List)
                 {
+
                     var baseInfo = await customerBaseInfoService.GetByPhoneAsync(x.CustomerPhone);
                     x.CustomerName = baseInfo.Name;
                     x.City = baseInfo.City;
                     var bindHospitalEmpId = await hospitalBindCustomerService.GetEmployeeIdByPhone(x.CustomerPhone);
-                    if (hospitalId == bindHospitalEmpId)
+                    if (employeeId == bindHospitalEmpId)
                     {
                         x.IsMyFollow = true;
                     }
                     else { x.IsMyFollow = false; }
-
+                    var config = await wxAppConfigService.GetCallCenterConfig();
+                    string encryptPhone = ServiceClass.Encrypt(x.CustomerPhone, config.PhoneEncryptKey);
+                    x.EncryptPhone = encryptPhone;
                 }
                 return hospitalCustomerInfoPageInfo;
             }
@@ -114,6 +120,9 @@ namespace Fx.Amiya.Service
                     x.SendAmount = hospitalCustomerInfo.SendAmount;
                     x.DealAmount = hospitalCustomerInfo.DealAmount;
                     x.IsMyFollow = true;
+                    var config = await wxAppConfigService.GetCallCenterConfig();
+                    string encryptPhone = ServiceClass.Encrypt(x.CustomerPhone, config.PhoneEncryptKey);
+                    x.EncryptPhone = encryptPhone;
                 }
                 return hospitalBindCustomerInfoList;
             }
