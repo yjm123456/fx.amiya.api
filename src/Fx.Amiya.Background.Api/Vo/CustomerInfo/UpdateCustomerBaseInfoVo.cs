@@ -11,6 +11,10 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerInfo
         /// 编号
         /// </summary>
         public int Id { get; set; }
+        /// <summary>
+        /// 客户昵称
+        /// </summary>
+        public string Name { get; set; }
 
         /// <summary>
         /// 手机号

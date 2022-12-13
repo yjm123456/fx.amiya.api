@@ -1941,6 +1941,12 @@ namespace Fx.Amiya.Service
             order.UpdateDate = DateTime.Now;
             order.ToHospitalDate = input.ToHospitalDate;
             order.RepeatOrderPictureUrl = input.RepeatePictureUrl;
+
+            //获取医院客户列表并更新查重时间
+            var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(order.ContentPlatformOrderSendList.FirstOrDefault().HospitalId, order.Phone);
+            UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
+            updateSendHospitalCustomerInfoDto.Id = customer.Id;
+            await hospitalCustomerInfoService.UpdateConfirmOrderDateAsync(updateSendHospitalCustomerInfoDto);
             await _dalContentPlatformOrder.UpdateAsync(order, true);
         }
 

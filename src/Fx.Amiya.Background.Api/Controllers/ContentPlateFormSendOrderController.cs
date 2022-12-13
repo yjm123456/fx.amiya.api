@@ -210,7 +210,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="keyword"></param>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
-        /// <param name="orderStatus">订单状态（待查重：1；重单：5）</param>
+        /// <param name="orderStatus">订单状态（待查重：2；重单：5）</param>
         /// <param name="toHospitalStartDate">到院时间起</param>
         /// <param name="toHospitalEndDate">到院时间止</param>           
         /// <param name="toHospitalType">到院类型</param>        
@@ -223,7 +223,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalId = employee.HospitalId;
-            var q = await _sendOrderInfoService.GetListByHospitalIdAsync(hospitalId, keyword, orderStatus, startDate, endDate, false, toHospitalStartDate, toHospitalEndDate, toHospitalType, pageNum, pageSize);
+            var q = await _sendOrderInfoService.GetListByHospitalIdAsync(hospitalId, keyword, orderStatus, startDate, endDate, null, toHospitalStartDate, toHospitalEndDate, toHospitalType, pageNum, pageSize);
             var sendOrder = from d in q.List
                             select new HospitalCustomerVo
                             {
@@ -234,7 +234,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             FxPageInfo<HospitalCustomerVo> sendOrderPageInfo = new FxPageInfo<HospitalCustomerVo>();
             sendOrderPageInfo.TotalCount = q.TotalCount;
-            sendOrderPageInfo.List = sendOrder;
+            sendOrderPageInfo.List = sendOrder.ToList();
             foreach (var x in sendOrderPageInfo.List)
             {
                 var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();

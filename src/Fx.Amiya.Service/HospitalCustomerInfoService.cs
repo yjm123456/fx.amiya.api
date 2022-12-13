@@ -201,12 +201,17 @@ namespace Fx.Amiya.Service
                 }
 
                 SendHospitalCustomerInfoDto hospitalCustomerInfoDto = new SendHospitalCustomerInfoDto();
+
+                var baseInfo = await customerBaseInfoService.GetByPhoneAsync(hospitalCustomerInfo.CustomerPhone);
                 hospitalCustomerInfoDto.Id = hospitalCustomerInfo.Id;
+                hospitalCustomerInfoDto.CustomerName = baseInfo.Name;
+                hospitalCustomerInfoDto.City = baseInfo.City;
                 hospitalCustomerInfoDto.CustomerPhone = hospitalCustomerInfo.CustomerPhone;
                 hospitalCustomerInfoDto.hospitalId = hospitalCustomerInfo.hospitalId;
                 hospitalCustomerInfoDto.NewGoodsDemand = hospitalCustomerInfo.NewGoodsDemand;
                 hospitalCustomerInfoDto.SendAmount = hospitalCustomerInfo.SendAmount;
                 hospitalCustomerInfoDto.DealAmount = hospitalCustomerInfo.DealAmount;
+                hospitalCustomerInfoDto.ConfirmOrderDate = hospitalCustomerInfo.ConfirmOrderDate;
                 hospitalCustomerInfoDto.CreateDate = hospitalCustomerInfo.CreateDate;
                 hospitalCustomerInfoDto.UpdateDate = hospitalCustomerInfo.UpdateDate;
                 hospitalCustomerInfoDto.Valid = hospitalCustomerInfo.Valid;

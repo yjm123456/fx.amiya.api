@@ -222,6 +222,7 @@ namespace Fx.Amiya.Service
                     baseInfo.Phone = updateDto.Phone;
                     baseInfo.PersonalWechat = updateDto.PersonalWechat;
                     baseInfo.BusinessWeChat = updateDto.BusinessWeChat;
+                    baseInfo.Name = updateDto.Name;
                     baseInfo.WechatMiniProgram = updateDto.WechatMiniProgram;
                     baseInfo.OfficialAccounts = updateDto.OfficialAccounts;
                     baseInfo.RealName = updateDto.RealName;
@@ -247,6 +248,7 @@ namespace Fx.Amiya.Service
                     customerBaseInfoService.BusinessWeChat = updateDto.BusinessWeChat;
                     customerBaseInfoService.WechatMiniProgram = updateDto.WechatMiniProgram;
                     customerBaseInfoService.OfficialAccounts = updateDto.OfficialAccounts;
+                    customerBaseInfoService.Name = updateDto.Name;
                     customerBaseInfoService.RealName = updateDto.RealName;
                     customerBaseInfoService.WechatNumber = updateDto.WechatNumber;
                     customerBaseInfoService.Sex = updateDto.Sex;
