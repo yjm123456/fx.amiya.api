@@ -78,7 +78,10 @@ namespace Fx.Amiya.Service
                     {
                         x.IsMyFollow = true;
                     }
-                    else { x.IsMyFollow = false; }
+                    else {
+                        x.IsMyFollow = false;
+                        x.CustomerPhone = ServiceClass.GetIncompletePhone(x.CustomerPhone);
+                    }
                     var config = await wxAppConfigService.GetCallCenterConfig();
                     string encryptPhone = ServiceClass.Encrypt(x.CustomerPhone, config.PhoneEncryptKey);
                     x.EncryptPhone = encryptPhone;
