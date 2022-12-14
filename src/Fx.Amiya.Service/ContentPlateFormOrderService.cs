@@ -1943,7 +1943,8 @@ namespace Fx.Amiya.Service
             order.RepeatOrderPictureUrl = input.RepeatePictureUrl;
 
             //获取医院客户列表并更新查重时间
-            var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(order.ContentPlatformOrderSendList.FirstOrDefault().HospitalId, order.Phone);
+            var sendInfo = await _contentPlatformOrderSend.GetByIdAsync(input.Id);
+            var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(sendInfo.HospitalId, order.Phone);
             UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
             updateSendHospitalCustomerInfoDto.Id = customer.Id;
             await hospitalCustomerInfoService.UpdateConfirmOrderDateAsync(updateSendHospitalCustomerInfoDto);

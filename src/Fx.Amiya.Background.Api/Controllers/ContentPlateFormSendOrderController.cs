@@ -115,6 +115,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 OrderStatus = d.OrderStatus,
                                 Phone = d.Phone,
                                 EncryptPhone = d.EncryptPhone,
+                                FirstlyRemark=d.FirstlyRemark,
                                 DealPictureUrl = d.DealPictureUrl,
                                 RepeateOrderPictureUrl = d.RepeateOrderPictureUrl,
                                 IsToHospital=d.IsToHospital,

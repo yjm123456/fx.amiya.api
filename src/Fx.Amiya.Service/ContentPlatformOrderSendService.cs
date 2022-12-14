@@ -76,6 +76,41 @@ namespace Fx.Amiya.Service
                          };
             return orders.ToList();
         }
+
+        /// <summary>
+        /// 根据id获取派单参数
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+
+        public async Task<ContentPlatformOrderSendOrderInfoDto> GetByIdAsync(int id)
+        {
+            try
+            {
+                var orderSend = await _dalContentPlatformOrderSend.GetAll().SingleOrDefaultAsync(e => e.Id == id);
+                if (orderSend == null)
+                {
+                    return new ContentPlatformOrderSendOrderInfoDto();
+                }
+
+                ContentPlatformOrderSendOrderInfoDto SendOrderDto = new ContentPlatformOrderSendOrderInfoDto();
+                SendOrderDto.Id = orderSend.Id;
+                SendOrderDto.ContentPlatFormOrderId = orderSend.ContentPlatformOrderId;
+                SendOrderDto.HospitalId = orderSend.HospitalId;
+                SendOrderDto.Sender = orderSend.Sender;
+                SendOrderDto.SendDate = orderSend.SendDate;
+                SendOrderDto.IsUnCertainDate = orderSend.IsUncertainDate;
+                SendOrderDto.AppointmentDate = orderSend.AppointmentDate;
+                SendOrderDto.Remark = orderSend.Remark;
+
+                return SendOrderDto;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
         /// <summary>
         /// 根据订单号集合获取简易的派单信息
         /// </summary>
@@ -296,6 +331,12 @@ namespace Fx.Amiya.Service
                 var baseInfo = await customerBaseInfoService.GetByPhoneAsync(x.Phone);
                 x.City = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? baseInfo.City : "****";
                 x.WeChatNo = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? baseInfo.WechatNumber : "****";
+                var orderRemark = await orderRemarkService.GetListWithPageAsync(x.OrderId, 1, 1);
+                var remarkInfo = orderRemark.List.FirstOrDefault();
+                if (remarkInfo != null)
+                {
+                    x.FirstlyRemark = remarkInfo.CreateDate.ToString() + " " + remarkInfo.Remark.ToString();
+                }
             }
             return sendOrderPageInfo;
         }

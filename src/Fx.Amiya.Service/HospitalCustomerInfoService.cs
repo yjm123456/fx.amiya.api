@@ -65,7 +65,7 @@ namespace Fx.Amiya.Service
 
                 FxPageInfo<SendHospitalCustomerInfoDto> hospitalCustomerInfoPageInfo = new FxPageInfo<SendHospitalCustomerInfoDto>();
                 hospitalCustomerInfoPageInfo.TotalCount = await hospitalCustomerInfo.CountAsync();
-                hospitalCustomerInfoPageInfo.List = await hospitalCustomerInfo.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+                hospitalCustomerInfoPageInfo.List = await hospitalCustomerInfo.OrderByDescending(x=>x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
 
                 foreach (var x in hospitalCustomerInfoPageInfo.List)
                 {

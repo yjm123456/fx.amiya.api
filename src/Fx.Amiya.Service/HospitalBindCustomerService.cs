@@ -48,7 +48,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var hospitalCustomerInfo = from d in dalHospitalBindCustomerService.GetAll()
+                var hospitalCustomerInfo = from d in dalHospitalBindCustomerService.GetAll().OrderByDescending(x=>x.CreateDate)
                                            where (keyword == null || d.CustomerPhone.Contains(keyword))
                                            && (d.HospitalEmployeeId == hospitalEmployeeId)
                                            select new SendHospitalCustomerInfoDto

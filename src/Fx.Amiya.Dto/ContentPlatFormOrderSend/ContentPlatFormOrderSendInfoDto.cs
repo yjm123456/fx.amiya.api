@@ -155,5 +155,10 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 微信号
         /// </summary>
         public string WeChatNo { get; set; }
+
+        /// <summary>
+        /// 最新消息
+        /// </summary>
+        public string FirstlyRemark { get; set; }
     }
 }

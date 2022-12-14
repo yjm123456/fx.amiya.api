@@ -162,5 +162,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// 是否陪诊
         /// </summary>
         public bool IsAcompanying { get; set; }
+        /// <summary>
+        /// 最新消息
+        /// </summary>
+        public string FirstlyRemark { get; set; }
     }
 }
