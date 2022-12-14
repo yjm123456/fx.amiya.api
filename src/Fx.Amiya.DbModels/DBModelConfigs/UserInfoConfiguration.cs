@@ -21,6 +21,10 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.Country).HasColumnName("country").HasColumnType("varchar(255)").IsRequired(false);
             builder.Property(t => t.Province).HasColumnName("province").HasColumnType("varchar(255)").IsRequired(false);
             builder.Property(t => t.City).HasColumnName("city").HasColumnType("varchar(255)").IsRequired(false);
+            builder.Property(t => t.Area).HasColumnName("area").HasColumnType("varchar(255)").IsRequired(false);
+            builder.Property(t => t.BirthDay).HasColumnName("birthday").HasColumnType("datetime").IsRequired(false);
+            builder.Property(t => t.Name).HasColumnName("name").HasColumnType("varchar(50)").IsRequired(false);
+            builder.Property(t => t.PersonalSignature).HasColumnName("personal_signature").HasColumnType("varchar(255)").IsRequired(false);
             builder.Property(t => t.NickName).HasColumnName("nick_name").HasColumnType("varchar(255)").IsRequired(false);
             builder.Property(t => t.Gender).HasColumnName("gender").HasColumnType("tinyint").IsRequired();
             builder.Property(t => t.Avatar).HasColumnName("avatar").HasColumnType("varchar(500)").IsRequired(false);

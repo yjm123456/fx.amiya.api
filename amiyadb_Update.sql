@@ -1627,6 +1627,16 @@ update tbl_amiya_employee set avatar='https://ameiya.oss-cn-hangzhou.aliyuncs.co
 -----------------------------------------------余建明 2022/12/12 END--------------------------------------------
 
 
+---------------------------------------------王健 2022/12/13 BEGIN-----------------------------------------------------------------------------
+
+ALTER TABLE `tbl_user_info`
+	ADD COLUMN `area` VARCHAR(255) NULL DEFAULT NULL AFTER `superior_id`,
+	ADD COLUMN `birthday` DATETIME NULL DEFAULT NULL AFTER `area`,
+	ADD COLUMN `name` VARCHAR(50) NULL DEFAULT NULL AFTER `birthday`,
+	ADD COLUMN `personal_signature` VARCHAR(255) NULL DEFAULT NULL AFTER `name`;
+
+	---------------------------------------------王健 2022/12/13 END-----------------------------------------------------------------------------
+
 
 
 

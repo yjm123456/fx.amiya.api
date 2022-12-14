@@ -1325,7 +1325,7 @@ namespace Fx.Amiya.Service
             DateTime startDate = Convert.ToDateTime(year + "-" + month + "-01");
             DateTime endDate = startDate.AddMonths(1);
             var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)
-                .Where(o => o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= startDate && o.ToHospitalDate < endDate)
+                .Where(o => o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= startDate && o.ToHospitalDate < endDate &&o.IsDeal==true)
                 .Where(o => o.LastDealHospitalId.Value == hospitalId)
                 .ToListAsync();
             return result.Count();

@@ -142,6 +142,10 @@ namespace Fx.Amiya.Service
                     userInfo.City = userInfoEditDto.City;
                     userInfo.Gender = userInfoEditDto.Gender;
                     userInfo.NickName = userInfoEditDto.NickName;
+                    userInfo.Name = userInfoEditDto.Name;
+                    userInfo.Area = userInfoEditDto.Area;
+                    userInfo.BirthDay = userInfoEditDto.BirthDay;
+                    userInfo.PersonalSignature = userInfoEditDto.PersonalSignature;
                     if (!string.IsNullOrEmpty(userInfoEditDto.Avatar)) {
                         userInfo.Avatar = userInfoEditDto.Avatar;
                     }
@@ -355,7 +359,10 @@ namespace Fx.Amiya.Service
             user.Gender = userInfo.Gender;
             user.Sex = sexDict[userInfo.Gender];
             user.SuperiorId = userInfo.SuperiorId;
-
+            user.PersonalSignature = userInfo.PersonalSignature;
+            user.Name = userInfo.Name;
+            user.Area = userInfo.Area;
+            user.BirthDay = userInfo.BirthDay;
             var userInfoUpdateRecord = await dalUserInfoUpdateRecord.GetAll().SingleOrDefaultAsync(e => e.UserId == userId);
             if (userInfoUpdateRecord == null)
             {

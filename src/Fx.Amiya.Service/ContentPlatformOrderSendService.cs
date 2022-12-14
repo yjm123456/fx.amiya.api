@@ -335,7 +335,22 @@ namespace Fx.Amiya.Service
                 var remarkInfo = orderRemark.List.FirstOrDefault();
                 if (remarkInfo != null)
                 {
-                    x.FirstlyRemark = remarkInfo.CreateDate.ToString() + " " + remarkInfo.Remark.ToString();
+                    string date = "";
+                    var createDate = remarkInfo.CreateDate.Date;
+                    if (createDate == DateTime.Now.Date)
+                    {
+                        date = $"今天{remarkInfo.CreateDate.Hour}:{remarkInfo.CreateDate.Minute}:{remarkInfo.CreateDate.Second}";
+                    }
+                    else if (createDate == DateTime.Now.AddDays(-1).Date)
+                    {
+                        date = $"昨天{remarkInfo.CreateDate.Hour}:{remarkInfo.CreateDate.Minute}:{remarkInfo.CreateDate.Second}";
+                    }
+                    else
+                    {
+                        date = $"{remarkInfo.CreateDate.Month}月-{remarkInfo.CreateDate.Day}号 {remarkInfo.CreateDate.Hour}:{remarkInfo.CreateDate.Minute}:{remarkInfo.CreateDate.Second}";
+                    }
+                    x.FirstlyRemark = date + " " + remarkInfo.Remark.ToString();
+
                 }
             }
             return sendOrderPageInfo;

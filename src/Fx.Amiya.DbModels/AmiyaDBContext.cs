@@ -159,6 +159,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<IndicatorOrderData> IndicatorOrderDatas { get; set; }
         public virtual DbSet<ImprovePlanAndRemark> ImprovePlanAndRemarks { get; set; }
         public virtual DbSet<AmiyaRemark> AmiyaRemarks { get; set; }
+        public virtual DbSet<MessageRecieve> MessageRecieves { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -316,6 +317,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new IndicatorOrderDataConfiguration());
             modelBuilder.ApplyConfiguration(new ImprovePlanAndRemarkConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaRemarkConfiguration());
+            modelBuilder.ApplyConfiguration(new MessageRecieveConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

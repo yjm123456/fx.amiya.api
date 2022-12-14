@@ -1590,10 +1590,29 @@ CREATE TABLE `amiyadb`.`tbl_order_remark` (
   
 -----------------------------------------------余建明 2022/12/12 END--------------------------------------------
 
+-----------------------------------------------王健 2022/12/13 BEGIN--------------------------------------------
+
+CREATE TABLE `tbl_message_recieve` (
+	`id` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`hospital_id` INT(10) NOT NULL DEFAULT '0',
+	`hospital_employee_id` INT(10) NULL DEFAULT '0',
+	`is_bind_wechat` BIT(1) NOT NULL,
+	`is_bind_official_accounts` BIT(1) NOT NULL,
+	`is_receive` BIT(1) NOT NULL,
+	`start_time` VARCHAR(50) NOT NULL DEFAULT '' COLLATE 'utf8mb4_0900_ai_ci',
+	`end_time` VARCHAR(50) NOT NULL DEFAULT '' COLLATE 'utf8mb4_0900_ai_ci',
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT(1) NOT NULL,
+	`delete_date` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`) USING BTREE
+)
+COLLATE='utf8mb4_0900_ai_ci'
+ENGINE=InnoDB;
 
 
 
-
+-----------------------------------------------王健 2022/12/13 END--------------------------------------------
 
 
 

@@ -14,9 +14,25 @@ namespace Fx.Amiya.DbModels.Model
         public string Country { get; set; }
         public string Province { get; set; }
         public string City { get; set; }
+        /// <summary>
+        /// 区
+        /// </summary>
+        public string Area { get; set; }
         public string NickName { get; set; }
         public byte Gender { get; set; }
         public string Avatar { get; set; }
+        /// <summary>
+        /// 生日
+        /// </summary>
+        public DateTime? BirthDay { get; set; }
+        /// <summary>
+        /// 真实姓名
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// 个性签名
+        /// </summary>
+        public string PersonalSignature { get; set; }
         public string Language { get; set; }
         public string UnionId { get; set; }
 

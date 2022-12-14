@@ -48,6 +48,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Id = e.Id,
                 OrderStatus = e.OrderStatus,
                 OrderStatusText = e.OrderStatusText,
+                ProcessStatus="未处理",
                 Item = e.Item,
                 UserInfo = e.UserInfo,
                 LastFollowContent = e.LastFollowContent

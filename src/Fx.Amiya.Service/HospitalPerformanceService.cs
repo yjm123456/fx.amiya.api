@@ -115,11 +115,14 @@ namespace Fx.Amiya.Service
             var lastDealNum = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false && x.IsDeal == true);
             //上月同期新客成交人数
             var lastSameTermDealNum= lastDealNum.Where(e=>e.DealDate>=lastMonthStartDate&&e.DealDate<=lastMonthEndDate);
+            //上月同期新客
+            var lastNewCustomerNum = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false&& x.DealDate >= lastMonthStartDate && x.DealDate <= lastMonthEndDate);
             //本月新客成交人数
             var thisDealNum = thisContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false && x.IsDeal == true);
+            var thisNewCustomer= thisContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == false);
             //本月新客成交率
-            hospitalDataRatioDto.NewCustomerDealRatio = CalculateTargetComplete(thisDealNum.Count(), thisContentPlatFormOrderDealInfoList.Count()).Value;
-            var lastNewCustomerDealratio = CalculateTargetComplete(lastSameTermDealNum.Count(), lastSameTermContentPlatFormOrderSendList.Count()).Value;
+            hospitalDataRatioDto.NewCustomerDealRatio = CalculateTargetComplete(thisDealNum.Count(), thisNewCustomer.Count()).Value;
+            var lastNewCustomerDealratio = CalculateTargetComplete(lastSameTermDealNum.Count(), lastNewCustomerNum.Count()).Value;
             //新客成交率环比
             hospitalDataRatioDto.NewCustomerDealRatioChainRatio = CalculateChainratio(hospitalDataRatioDto.NewCustomerDealRatio, lastNewCustomerDealratio).Value;
 
@@ -127,11 +130,17 @@ namespace Fx.Amiya.Service
             var lastOldCustomerDealNum = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true && x.IsDeal == true);
             //上月同期老客成交人数
             var lastSameTermOldCustomerDealNum = lastOldCustomerDealNum.Where(e=>e.DealDate>=lastMonthStartDate&&e.DealDate<=lastMonthEndDate);
+            //上月老客上门数
+            var lastOldCustomerNum = lastContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true);
+            //上月同期老客上门人数
+            var lastOldSameTermCustomerNum = lastContentPlatFormOrderDealInfoList.Where(e => e.DealDate >= lastMonthStartDate && e.DealDate <= lastMonthEndDate);
             //本月老客成交人数
             var thisOldCustomerDealNum = thisContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true && x.IsDeal == true);
+            //本月老客上门数
+            var thisOldCustomerNum = thisContentPlatFormOrderDealInfoList.Where(x => x.IsOldCustomer == true);
             //本月老客成交率
-            hospitalDataRatioDto.OldCustomerDealRatio = CalculateTargetComplete(thisOldCustomerDealNum.Count(), thisContentPlatFormOrderDealInfoList.Count()).Value;
-            var lastOldCustomerDealratio = CalculateTargetComplete(lastSameTermOldCustomerDealNum.Count(), lastSameTermContentPlatFormOrderDealInfoList.Count()).Value;
+            hospitalDataRatioDto.OldCustomerDealRatio = CalculateTargetComplete(thisOldCustomerDealNum.Count(), thisOldCustomerNum.Count()).Value;
+            var lastOldCustomerDealratio = CalculateTargetComplete(lastSameTermOldCustomerDealNum.Count(), lastOldSameTermCustomerNum.Count()).Value;
             //老客成交率环比
             hospitalDataRatioDto.OldCustomerDealRatioChainRatio = CalculateChainratio(hospitalDataRatioDto.OldCustomerDealRatio, lastOldCustomerDealratio).Value;
 
