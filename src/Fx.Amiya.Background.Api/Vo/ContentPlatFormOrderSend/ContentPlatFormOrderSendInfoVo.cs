@@ -54,6 +54,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         public bool IsUncertainDate { get; set; }
 
         /// <summary>
+        /// 科室
+        /// </summary>
+        public string DepartmentName { get; set; }
+
+        /// <summary>
         /// 商品名称
         /// </summary>
         public string GoodsName { get; set; }

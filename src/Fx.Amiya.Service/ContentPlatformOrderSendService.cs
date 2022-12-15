@@ -25,6 +25,7 @@ namespace Fx.Amiya.Service
         private IDalBindCustomerService _dalBindCustomerService;
         private ICustomerBaseInfoService customerBaseInfoService;
         private IHospitalInfoService _hospitalInfoService;
+        //private AmiyaHospitalDepartmentService amiyaDepartmentService;
         private IDalConfig _dalConfig;
         private IOrderRemarkService orderRemarkService;
         private IAmiyaEmployeeService _amiyaEmployeeService;
@@ -34,6 +35,7 @@ namespace Fx.Amiya.Service
         public ContentPlatformOrderSendService(IDalContentPlatformOrderSend dalContentPlatformOrderSend,
             IHospitalInfoService hospitalInfoService,
             IDalBindCustomerService dalBindCustomerService,
+            //AmiyaHospitalDepartmentService departmentService,
             IOrderRemarkService orderRemarkService,
             ICustomerBaseInfoService customerBaseInfoService,
             IAmiyaEmployeeService amiyaEmployeeService,
@@ -45,6 +47,7 @@ namespace Fx.Amiya.Service
             _dalConfig = dalConfig;
             _dalBindCustomerService = dalBindCustomerService;
             this.customerBaseInfoService = customerBaseInfoService;
+            //this.amiyaDepartmentService = departmentService;
             _wxAppConfigService = wxAppConfigService;
             _dalHospitalCheckPhoneRecord = dalHospitalCheckPhoneRecord;
             _hospitalInfoService = hospitalInfoService;
@@ -297,6 +300,7 @@ namespace Fx.Amiya.Service
                                 AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确定时间",
                                 IsUncertainDate = d.IsUncertainDate,
                                 OrderStatus = d.ContentPlatformOrder.OrderStatus != 0 ? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.ContentPlatformOrder.OrderStatus) : "",
+                                DepartmentId = d.ContentPlatformOrder.AmiyaGoodsDemand.HospitalDepartmentId,
                                 GoodsName = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.AmiyaGoodsDemand.ProjectNname : "****",
                                 ThumbPicUrl = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.AmiyaGoodsDemand.ThumbPictureUrl : "****",
                                 Phone = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? (p != null ? d.ContentPlatformOrder.Phone : config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone) : d.ContentPlatformOrder.Phone) : ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone),
@@ -331,6 +335,9 @@ namespace Fx.Amiya.Service
                 var baseInfo = await customerBaseInfoService.GetByPhoneAsync(x.Phone);
                 x.City = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? baseInfo.City : "****";
                 x.WeChatNo = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? baseInfo.WechatNumber : "****";
+
+                //var departmentInfo = await amiyaDepartmentService.GetByIdAsync(x.DepartmentId);
+                x.DepartmentName= x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? "" : "****";
                 var orderRemark = await orderRemarkService.GetListWithPageAsync(x.OrderId, 1, 1);
                 var remarkInfo = orderRemark.List.FirstOrDefault();
                 if (remarkInfo != null)
@@ -399,6 +406,7 @@ namespace Fx.Amiya.Service
                                 HospitalName = d.ContentPlatformOrder.HospitalInfo.Name,
                                 SendDate = d.SendDate,
                                 SendBy = d.AmiyaEmployee.Name,
+                                DepartmentId = d.ContentPlatformOrder.HospitalDepartmentId,
                                 AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确定时间",
                                 IsUncertainDate = d.IsUncertainDate,
                                 OrderStatus = d.ContentPlatformOrder.OrderStatus != 0 ? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.ContentPlatformOrder.OrderStatus) : "",
@@ -436,6 +444,10 @@ namespace Fx.Amiya.Service
                 var baseInfo = await customerBaseInfoService.GetByPhoneAsync(x.Phone);
                 x.City = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? baseInfo.City : "****";
                 x.WeChatNo = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? baseInfo.WechatNumber : "****";
+
+              //  var departmentInfo = await amiyaDepartmentService.GetByIdAsync(x.DepartmentId);
+                x.DepartmentName = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? "": "****";
+
                 var orderRemark = await orderRemarkService.GetListWithPageAsync(x.OrderId, 1, 1);
                 var remarkInfo = orderRemark.List.FirstOrDefault();
                 if (remarkInfo != null)

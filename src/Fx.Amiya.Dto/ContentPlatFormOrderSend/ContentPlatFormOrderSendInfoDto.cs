@@ -39,6 +39,14 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 是否未确认时间
         /// </summary>
         public bool IsUncertainDate { get; set; }
+        /// <summary>
+        /// 科室id
+        /// </summary>
+        public string DepartmentId { get; set; }
+        /// <summary>
+        /// 科室
+        /// </summary>
+        public string DepartmentName { get; set; }
 
         /// <summary>
         /// 商品名称
