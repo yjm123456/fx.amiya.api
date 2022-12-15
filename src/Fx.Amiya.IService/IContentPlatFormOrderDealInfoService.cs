@@ -21,6 +21,14 @@ namespace Fx.Amiya.IService
 
         Task UpdateAsync(UpdateContentPlatFormOrderDealInfoDto updateDto);
 
+        /// <summary>
+        /// 更新新/老客数据
+        /// </summary>
+        /// <param name="orderDealId"></param>
+        /// <param name="isOldCustomer"></param>
+        /// <returns></returns>
+        Task UpdateIsOldCustomerAsync(string orderDealId, bool isOldCustomer);
+
         Task DeleteAsync(string id);
         Task<List<ContentPlatFormOrderDealInfoDto>> GetByOrderIdAsync(string orderId);
         Task CheckAsync(UpdateContentPlatFormOrderDealInfoDto updateDto);

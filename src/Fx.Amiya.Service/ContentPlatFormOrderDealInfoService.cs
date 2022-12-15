@@ -592,6 +592,23 @@ namespace Fx.Amiya.Service
             }
         }
 
+        public async Task UpdateIsOldCustomerAsync(string orderDealId,bool isOldCustomer)
+        {
+            try
+            {
+                var ContentPlatFOrmOrderDealInfo = await dalContentPlatFormOrderDealInfo.GetAll().SingleOrDefaultAsync(e => e.Id == orderDealId);
+                if (ContentPlatFOrmOrderDealInfo == null)
+                    throw new Exception("未找到该成交信息！");
+                ContentPlatFOrmOrderDealInfo.IsOldCustomer = isOldCustomer;
+                await dalContentPlatFormOrderDealInfo.UpdateAsync(ContentPlatFOrmOrderDealInfo, true);
+                await _contentPlatFormCustomerPictureService.DeleteByContentPlatFormOrderDealIdAsync(ContentPlatFOrmOrderDealInfo.Id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         /// <summary>
         /// 审核成交情况

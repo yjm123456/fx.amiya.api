@@ -170,6 +170,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 SendDate = d.SendDate,
                                 SendBy = d.SendBy,
                                 City = d.City,
+                                FirstlyRemark=d.FirstlyRemark,
                                 WeChatNo = d.WeChatNo,
                                 IsUncertainDate = d.IsUncertainDate,
                                 AppointmentDate = d.AppointmentDate,

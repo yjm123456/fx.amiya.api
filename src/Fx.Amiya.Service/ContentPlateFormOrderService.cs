@@ -678,7 +678,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var order = await _dalContentPlatformOrder.GetAll().Include(x=>x.ContentPlatformOrderSendList).Where(x => x.Id == orderId).FirstOrDefaultAsync();
+                var order = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList).Where(x => x.Id == orderId).FirstOrDefaultAsync();
                 if (order == null)
                 {
                     throw new Exception("未找到该订单的相关信息！");
@@ -1684,7 +1684,7 @@ namespace Fx.Amiya.Service
                 var order = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 var isoldCustomer = false;
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
-                var dealCount = orderDealInfoList.OrderByDescending(x => x.DealDate).Where(x => x.IsDeal == true).FirstOrDefault();
+                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true).FirstOrDefault();
                 if (dealCount != null)
                 //if (order.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
                 {
@@ -1692,25 +1692,12 @@ namespace Fx.Amiya.Service
                     {
                         UpdateContentPlatFormOrderDealInfoDto updateContentPlatFormOrderDealInfoDto = new UpdateContentPlatFormOrderDealInfoDto();
                         updateContentPlatFormOrderDealInfoDto.Id = dealCount.Id;
-                        updateContentPlatFormOrderDealInfoDto.ContentPlatFormOrderId = dealCount.ContentPlatFormOrderId;
-                        updateContentPlatFormOrderDealInfoDto.IsToHospital = dealCount.IsToHospital;
-                        updateContentPlatFormOrderDealInfoDto.ToHospitalType = dealCount.ToHospitalType;
-                        updateContentPlatFormOrderDealInfoDto.ToHospitalDate = dealCount.ToHospitalDate;
-                        updateContentPlatFormOrderDealInfoDto.LastDealHospitalId = dealCount.LastDealHospitalId;
-                        updateContentPlatFormOrderDealInfoDto.IsDeal = dealCount.IsDeal;
-                        updateContentPlatFormOrderDealInfoDto.DealPicture = dealCount.DealPicture;
-                        updateContentPlatFormOrderDealInfoDto.Remark = dealCount.Remark;
-                        updateContentPlatFormOrderDealInfoDto.Price = dealCount.Price;
-                        updateContentPlatFormOrderDealInfoDto.DealDate = dealCount.DealDate;
-                        updateContentPlatFormOrderDealInfoDto.OtherAppOrderId = dealCount.OtherAppOrderId;
-                        updateContentPlatFormOrderDealInfoDto.IsAcompanying = dealCount.IsAcompanying;
-                        updateContentPlatFormOrderDealInfoDto.IsOldCustomer = true;
-                        updateContentPlatFormOrderDealInfoDto.CommissionRatio = dealCount.CommissionRatio;
-                        await _contentPlatFormOrderDalService.UpdateAsync(updateContentPlatFormOrderDealInfoDto);
-
-                        isoldCustomer = false;
+                        await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, true);
                     }
-                    isoldCustomer = true;
+                    else
+                    {
+                        isoldCustomer = true;
+                    }
                 }
                 if (order == null)
                 {
@@ -1796,7 +1783,7 @@ namespace Fx.Amiya.Service
                 await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
 
                 //获取医院客户列表
-                var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(order.ContentPlatformOrderSendList.OrderByDescending(x=>x.SendDate).FirstOrDefault().HospitalId, order.Phone);
+                var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(order.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalId, order.Phone);
                 //操作医院客户表
                 if (!string.IsNullOrEmpty(customer.Id))
                 {
@@ -1831,10 +1818,20 @@ namespace Fx.Amiya.Service
                     throw new Exception("该订单已审核，无法编辑！");
                 }
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
-                var dealCount = orderDealInfoList.Where(x => x.IsOldCustomer == true).Count();
-                if (dealCount > 0)
+                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true).FirstOrDefault();
+                if (dealCount != null)
                 {
-                    isoldCustomer = true;
+                    if (dealCount.DealDate > input.DealDate)
+                    {
+                        UpdateContentPlatFormOrderDealInfoDto updateContentPlatFormOrderDealInfoDto = new UpdateContentPlatFormOrderDealInfoDto();
+                        updateContentPlatFormOrderDealInfoDto.Id = dealCount.Id;
+                        await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, true);
+
+                    }
+                    else
+                    {
+                        isoldCustomer = true;
+                    }
                 }
                 var orderDealInfo = await _contentPlatFormOrderDalService.GetByIdAsync(input.DealId);
                 order.DealAmount -= orderDealInfo.Price;

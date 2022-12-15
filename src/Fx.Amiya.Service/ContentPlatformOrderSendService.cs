@@ -335,19 +335,20 @@ namespace Fx.Amiya.Service
                 var remarkInfo = orderRemark.List.FirstOrDefault();
                 if (remarkInfo != null)
                 {
+
                     string date = "";
                     var createDate = remarkInfo.CreateDate.Date;
                     if (createDate == DateTime.Now.Date)
                     {
-                        date = $"今天{remarkInfo.CreateDate.Hour}:{remarkInfo.CreateDate.Minute}:{remarkInfo.CreateDate.Second}";
+                        date = $"今天" + remarkInfo.CreateDate.ToString("hh:mm:ss");
                     }
                     else if (createDate == DateTime.Now.AddDays(-1).Date)
                     {
-                        date = $"昨天{remarkInfo.CreateDate.Hour}:{remarkInfo.CreateDate.Minute}:{remarkInfo.CreateDate.Second}";
+                        date = $"昨天" + remarkInfo.CreateDate.ToString("hh:mm:ss");
                     }
                     else
                     {
-                        date = $"{remarkInfo.CreateDate.Month}月-{remarkInfo.CreateDate.Day}号 {remarkInfo.CreateDate.Hour}:{remarkInfo.CreateDate.Minute}:{remarkInfo.CreateDate.Second}";
+                        date = $"{remarkInfo.CreateDate.Year}/{remarkInfo.CreateDate.Month}/{remarkInfo.CreateDate.Day} " + remarkInfo.CreateDate.ToString("hh:mm:ss");
                     }
                     x.FirstlyRemark = date + " " + remarkInfo.Remark.ToString();
 
@@ -435,6 +436,27 @@ namespace Fx.Amiya.Service
                 var baseInfo = await customerBaseInfoService.GetByPhoneAsync(x.Phone);
                 x.City = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? baseInfo.City : "****";
                 x.WeChatNo = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? baseInfo.WechatNumber : "****";
+                var orderRemark = await orderRemarkService.GetListWithPageAsync(x.OrderId, 1, 1);
+                var remarkInfo = orderRemark.List.FirstOrDefault();
+                if (remarkInfo != null)
+                {
+                    string date = "";
+                    var createDate = remarkInfo.CreateDate.Date;
+                    if (createDate == DateTime.Now.Date)
+                    {
+                        date = $"今天"+remarkInfo.CreateDate.ToString("hh:mm:ss");
+                    }
+                    else if (createDate == DateTime.Now.AddDays(-1).Date)
+                    {
+                        date = $"昨天" + remarkInfo.CreateDate.ToString("hh:mm:ss");
+                    }
+                    else
+                    {
+                        date = $"{remarkInfo.CreateDate.Year}/{remarkInfo.CreateDate.Month}/{remarkInfo.CreateDate.Day} " + remarkInfo.CreateDate.ToString("hh:mm:ss");
+                    }
+                    x.FirstlyRemark = date + " " + remarkInfo.Remark.ToString();
+
+                }
             }
             return sendOrderPageInfo;
         }
