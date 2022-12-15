@@ -164,11 +164,11 @@ namespace Fx.Amiya.Service
             //本月老客人数
             var thisOldCustomerCount = thisContentPlatFormOrderDealInfoList.Where(e => e.IsOldCustomer == true).Count();
             //本月老客占比
-            hospitalDataRatioDto.OldCustomerDealRatio = CalculateTargetComplete(thisOldCustomerCount, thisContentPlatFormOrderDealInfoList.Count()).Value;
+            hospitalDataRatioDto.OldCustomerRatio = CalculateTargetComplete(thisOldCustomerCount, thisContentPlatFormOrderDealInfoList.Count()).Value;
             //上月老客占比
             var lastOldCustomerDealRatio = CalculateTargetComplete(lastSameTermOldCustomerCount, lastSameTermContentPlatFormOrderDealInfoList.Count()).Value;
             //老客占比环比
-            hospitalDataRatioDto.OldCustomerRatioChainRatio = CalculateChainratio(hospitalDataRatioDto.OldCustomerDealRatio, lastOldCustomerDealRatio).Value;
+            hospitalDataRatioDto.OldCustomerRatioChainRatio = CalculateChainratio(hospitalDataRatioDto.OldCustomerRatio, lastOldCustomerDealRatio).Value;
             return hospitalDataRatioDto;
         }
 

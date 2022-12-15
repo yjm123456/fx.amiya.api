@@ -143,7 +143,7 @@ namespace Fx.Amiya.Service
                 };
                 await memberCardSendRecordService.AddAsync(record);
                 //普通会员发放抵用券
-                await customerConsumptionVoucherService.OrdinaryMemberSendVoucherAsync(customerId,0);
+                //await customerConsumptionVoucherService.OrdinaryMemberSendVoucherAsync(customerId,0);
             }
             
 
