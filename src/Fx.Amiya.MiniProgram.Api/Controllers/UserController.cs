@@ -317,6 +317,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         {
             var sessionInfo = sessionStorage.GetSession(tokenReader.GetToken());
             string customerId = sessionInfo.FxCustomerId;
+            var userInfo = await userService.GetUserInfoByUserIdAsync(sessionInfo.FxUserId);
             var customer = dalCustomerInfo.GetAll().Where(e => e.Id == customerId).FirstOrDefault();
             if (customer != null)
             {
@@ -324,12 +325,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 if (baseInfo != null)
                 {
                     BirthDayCardVo updateCustomerBaseInfoDto = new BirthDayCardVo();
-                    updateCustomerBaseInfoDto.Id = baseInfo.Id;
-                    updateCustomerBaseInfoDto.Phone = baseInfo.Phone;
-                    updateCustomerBaseInfoDto.Name = baseInfo.RealName;
-                    updateCustomerBaseInfoDto.BirthDay = baseInfo.Birthday;
-                    updateCustomerBaseInfoDto.DetailAddress = baseInfo.DetailAddress;
-                    updateCustomerBaseInfoDto.City = baseInfo.City;
+                    updateCustomerBaseInfoDto.Id = userInfo.Id;
+                    updateCustomerBaseInfoDto.Phone = userInfo.Phone;
+                    updateCustomerBaseInfoDto.Name = userInfo.Name;
+                    updateCustomerBaseInfoDto.BirthDay = userInfo.BirthDay;
+                    updateCustomerBaseInfoDto.DetailAddress = "";
+                    updateCustomerBaseInfoDto.City = userInfo.City;
+                    updateCustomerBaseInfoDto.Area = userInfo.Area;
                     return ResultData<BirthDayCardVo>.Success().AddData("birthDay", updateCustomerBaseInfoDto);
                 }
                 else
