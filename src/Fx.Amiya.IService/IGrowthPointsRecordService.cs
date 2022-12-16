@@ -33,6 +33,6 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="orderid"></param>
         /// <returns></returns>
-        Task<GrowthPointsRecordListInfoDto> GetGrowthPointsRecordByOrderId(string orderid);
+        Task<GrowthPointsRecordListInfoDto> GetGrowthPointsRecordByOrderId(string customerId,string orderid);
     }
 }

@@ -24,7 +24,7 @@ namespace Fx.Amiya.Service
 
         public async Task AddAsync(AddGrowthPointsRecordDto record)
         {
-            var res =await GetGrowthPointsRecordByOrderId(record.OrderId);
+            var res =await GetGrowthPointsRecordByOrderId(record.CustomerId,record.OrderId);
             if (res==null) {
                 GrowthPointsRecord growthPointsRecord = new GrowthPointsRecord {
                     Id = CreateOrderIdHelper.GetNextNumber(),
@@ -43,9 +43,9 @@ namespace Fx.Amiya.Service
          
         }
 
-        public async Task<GrowthPointsRecordListInfoDto> GetGrowthPointsRecordByOrderId(string orderid)
+        public async Task<GrowthPointsRecordListInfoDto> GetGrowthPointsRecordByOrderId(string customerId,string orderid)
         {
-            return await _dalGrowthPointsRecord.GetAll().Where(g => g.OrderId == orderid).Select(g => new GrowthPointsRecordListInfoDto
+            return await _dalGrowthPointsRecord.GetAll().Where(g => g.OrderId == orderid&&g.CustomerId== customerId).Select(g => new GrowthPointsRecordListInfoDto
             {
                 Quantity = g.Quantity,
                 IsExpire = g.IsExpire,

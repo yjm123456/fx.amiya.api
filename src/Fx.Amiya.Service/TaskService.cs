@@ -36,7 +36,7 @@ namespace Fx.Amiya.Service
         public async Task CompleteShopOrderTaskAsync(string customerid, decimal actualpay,string orderid)
         {
             if (actualpay < 1) return;
-            var res = await growthPointsRecordService.GetGrowthPointsRecordByOrderId(orderid);
+            var res = await growthPointsRecordService.GetGrowthPointsRecordByOrderId(customerid, orderid);
             if (res != null)
             {
                 return;
@@ -91,7 +91,7 @@ namespace Fx.Amiya.Service
         public async Task CompleteSignTaskAsync(string customerid)
         {
             var orderid = DateTime.Now.ToString("yyyyMMdd");
-            var res = await growthPointsRecordService.GetGrowthPointsRecordByOrderId(orderid);
+            var res = await growthPointsRecordService.GetGrowthPointsRecordByOrderId(customerid, orderid);
             if (res != null)
             {
                 throw new Exception("今日已签到,请勿重复签到");
