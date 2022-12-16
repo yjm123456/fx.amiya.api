@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Core.Dto.Goods;
 using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.ConsumptionVoucher;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -33,8 +34,8 @@ namespace Fx.Amiya.Service
         {
             var consumerVoucher = dalConsumptionVoucher.GetAll().Where(e => e.ConsumptionVoucherCode == addConsumptionVoucher.ConsumptionVoucherCode).SingleOrDefault();
             if (consumerVoucher != null) throw new Exception("抵用券编码重复,请重新设置抵用券编码");
-            if (addConsumptionVoucher.Type != 0 && addConsumptionVoucher.DeductMoney > 0) throw new Exception("只有现金抵用券才能设置抵扣金额!");
-            if (addConsumptionVoucher.Type == 0 && addConsumptionVoucher.DeductMoney <= 0) throw new Exception("现金抵用券抵扣金额不能小于0!");
+            if (addConsumptionVoucher.Type == 1 && addConsumptionVoucher.DeductMoney > 0) throw new Exception("虚拟商品抵用券无法设置抵扣量!");
+            if (addConsumptionVoucher.Type != 1 && addConsumptionVoucher.DeductMoney <= 0) throw new Exception("现金/积分抵用券抵扣量不能小于0!");
             ConsumptionVoucher consumptionVoucher = new ConsumptionVoucher
             {
                 Id = CreateOrderIdHelper.GetNextNumber(),
@@ -96,16 +97,17 @@ namespace Fx.Amiya.Service
         /// 获取抵用券类型列表
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ConsumptionVoucherTypeDto>> GetConsumptionVoucherTypeListAsync()
+        public async Task<List<BaseKeyValueDto>> GetConsumptionVoucherTypeListAsync()
         {
             var consumptionVoucherTypes = Enum.GetValues(typeof(ConsumptionVoucherType));
-            List<ConsumptionVoucherTypeDto> consumptionVoucherTypeList = new List<ConsumptionVoucherTypeDto>();
+
+            List<BaseKeyValueDto> consumptionVoucherTypeList = new List<BaseKeyValueDto>();
             foreach (var item in consumptionVoucherTypes)
             {
-                ConsumptionVoucherTypeDto consumptioVoucherTypeDto = new ConsumptionVoucherTypeDto();
-                consumptioVoucherTypeDto.Type = Convert.ToInt32(item);
-                consumptioVoucherTypeDto.TypeText = consumptionVoucherTypeDict[(ConsumptionVoucherType)item];
-                consumptionVoucherTypeList.Add(consumptioVoucherTypeDto);
+                BaseKeyValueDto baseKeyValueDto = new BaseKeyValueDto();
+                baseKeyValueDto.Key = item.ToString();
+                baseKeyValueDto.Value = ServiceClass.GetConsumptionVoucherType(Convert.ToInt32(item));
+                consumptionVoucherTypeList.Add(baseKeyValueDto);
             }
             return consumptionVoucherTypeList;
         }
@@ -173,22 +175,16 @@ namespace Fx.Amiya.Service
                 voucher.IsValid = updateDto.IsValid;
                 voucher.ConsumptionVoucherCode = updateDto.ConsumptionVoucherCode;
                 voucher.UpdateDate = updateDto.UpdateTime;
-                if (voucher.Type != 0 && voucher.DeductMoney > 0) throw new Exception("只有现金抵用券才能设置抵扣金额!");
-                if (voucher.Type == 0 && voucher.DeductMoney <= 0) throw new Exception("现金抵用券抵扣金额不能小于0!");
+                if (voucher.Type == 1 && voucher.DeductMoney > 0) throw new Exception("虚拟商品抵用券无法设置抵用量!");
+                if (voucher.Type != 1 && voucher.DeductMoney <= 0) throw new Exception("现金/积分抵用券抵扣量不能小于0!");
                 var existVoucher = dalConsumptionVoucher.GetAll().Where(e => e.Id != updateDto.Id && e.ConsumptionVoucherCode == updateDto.ConsumptionVoucherCode).SingleOrDefault();
                 if (existVoucher != null) throw new Exception("抵用券编码重复,请重新填写抵用券编码!");
-                dalConsumptionVoucher.Update(voucher,true);
+                dalConsumptionVoucher.Update(voucher, true);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
         }
-
-        Dictionary<ConsumptionVoucherType, string> consumptionVoucherTypeDict = new Dictionary<ConsumptionVoucherType, string>()
-        {
-            {ConsumptionVoucherType.Material,"现金抵用券"},
-            { ConsumptionVoucherType.Virtual,"虚拟商品抵用券"}
-        };
     }
 }

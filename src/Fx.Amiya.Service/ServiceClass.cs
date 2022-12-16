@@ -879,6 +879,30 @@ namespace Fx.Amiya.Service
             return channelTypeText;
         }
 
+        /// <summary>
+        /// 获取盘库状态
+        /// </summary>
+        /// <param name="orderFrom"></param>
+        /// <returns></returns>
+        public static string GetConsumptionVoucherType(int consumptionVoucherType)
+        {
+            string consumptionVoucherTypeText = "";
+            switch (consumptionVoucherType)
+            {
+                case 0:
+                    consumptionVoucherTypeText = "现金抵用券";
+                    break;
+
+                case 1:
+                    consumptionVoucherTypeText = "虚拟商品抵用券";
+                    break;
+
+                case 2:
+                    consumptionVoucherTypeText = "积分抵用券";
+                    break;
+            }
+            return consumptionVoucherTypeText;
+        }
 
         /// <summary>
         /// 获取盘库状态

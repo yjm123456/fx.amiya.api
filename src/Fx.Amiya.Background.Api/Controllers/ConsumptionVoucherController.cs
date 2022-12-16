@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Background.Api.Vo.ConsumptionVoucher;
+﻿using Fx.Amiya.Background.Api.Vo;
+using Fx.Amiya.Background.Api.Vo.ConsumptionVoucher;
 using Fx.Amiya.Dto.ConsumptionVoucher;
 using Fx.Amiya.IService;
 using Fx.Common;
@@ -70,14 +71,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("consumptionVoucherTypeList")]
-        public async Task<ResultData<List<ConsumptionVoucherTypeListVo>>> GetConsumptionVoucherTypeListAsync()
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetConsumptionVoucherTypeListAsync()
         {
-            var list = (await consumptionVoucherService.GetConsumptionVoucherTypeListAsync()).Select(c => new ConsumptionVoucherTypeListVo
+            var list = (await consumptionVoucherService.GetConsumptionVoucherTypeListAsync()).Select(c => new BaseIdAndNameVo
             {
-                Type = c.Type,
-                TypeText = c.TypeText
+                Id = c.Key,
+                Name = c.Value
             }).ToList();
-            return ResultData<List<ConsumptionVoucherTypeListVo>>.Success().AddData("consumptionVoucherTypeList", list);
+            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("consumptionVoucherTypeList", list);
         }
         /// <summary>
         /// 获取抵用券列表
@@ -89,7 +90,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<FxPageInfo<ConsumptionVoucherInfoListVo>>> GetConsumptionVoucherInfoList(int pageNum, int pageSize)
         {
             FxPageInfo<ConsumptionVoucherInfoListVo> fxPageInfo = new FxPageInfo<ConsumptionVoucherInfoListVo>();
-            var voucherList = (await consumptionVoucherService.GetConsumptionListAsync(pageNum,pageSize));
+            var voucherList = (await consumptionVoucherService.GetConsumptionListAsync(pageNum, pageSize));
             fxPageInfo.TotalCount = voucherList.TotalCount;
             fxPageInfo.List = voucherList.List.Select(c => new ConsumptionVoucherInfoListVo
             {
@@ -124,7 +125,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             consumptionVoucherInfoVo.Type = voucher.Type;
             consumptionVoucherInfoVo.IsValid = voucher.IsValid;
             consumptionVoucherInfoVo.ConsumptionVoucherCode = voucher.ConsumptionVoucherCode;
-            return ResultData<ConsumptionVoucherInfoVo>.Success().AddData("consumptionVoucherInfo",consumptionVoucherInfoVo);
+            return ResultData<ConsumptionVoucherInfoVo>.Success().AddData("consumptionVoucherInfo", consumptionVoucherInfoVo);
         }
         /// <summary>
         /// 修改抵用券信息
@@ -132,18 +133,20 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="updateConsumption"></param>
         /// <returns></returns>
         [HttpPut]
-        public async Task<ResultData> UpdateConsumptionVoucherInfoAsync(UpdateConsumptionVoucherInfoVo updateConsumption) {
-            UpdateConsumptionVoucherDto updateConsumptionVoucherDto = new UpdateConsumptionVoucherDto {
-                Id=updateConsumption.Id,
-                Name=updateConsumption.Name,
-                DeductMoney=updateConsumption.DeductMoney,
-                IsSpecifyProduct=updateConsumption.IsSpecifyProduct,
-                IsAccumulate=updateConsumption.IsAccumulate,
-                IsShare=updateConsumption.IsShare,
-                Type=updateConsumption.Type,
-                IsValid=updateConsumption.IsValid,
-                UpdateTime=DateTime.Now,
-                ConsumptionVoucherCode=updateConsumption.ConsumptionVoucherCode
+        public async Task<ResultData> UpdateConsumptionVoucherInfoAsync(UpdateConsumptionVoucherInfoVo updateConsumption)
+        {
+            UpdateConsumptionVoucherDto updateConsumptionVoucherDto = new UpdateConsumptionVoucherDto
+            {
+                Id = updateConsumption.Id,
+                Name = updateConsumption.Name,
+                DeductMoney = updateConsumption.DeductMoney,
+                IsSpecifyProduct = updateConsumption.IsSpecifyProduct,
+                IsAccumulate = updateConsumption.IsAccumulate,
+                IsShare = updateConsumption.IsShare,
+                Type = updateConsumption.Type,
+                IsValid = updateConsumption.IsValid,
+                UpdateTime = DateTime.Now,
+                ConsumptionVoucherCode = updateConsumption.ConsumptionVoucherCode
             };
             await consumptionVoucherService.UpdateConsumptionVoucherAsync(updateConsumptionVoucherDto);
             return ResultData.Success();

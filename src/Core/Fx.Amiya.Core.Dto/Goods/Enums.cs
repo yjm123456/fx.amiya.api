@@ -79,6 +79,10 @@ namespace Fx.Amiya.Core.Dto.Goods
         /// <summary>
         /// 虚拟商品抵用券(如面诊卡抵用券)
         /// </summary>
-        Virtual
+        Virtual,
+        /// <summary>
+        /// 积分
+        /// </summary>
+        Intergration,
     }
 }
