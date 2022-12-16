@@ -389,7 +389,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<string> GetUserQrCode(string userId,string avatar)
         {
-            var appInfo =await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(2);
+            var appInfo =await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(192);
             var requestUrl = $"https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token={appInfo.AccessToken}";
             var data = new { scene = userId, page = "pages/index/index", width =640, env_version= "release" };
             var res = await HttpUtil.HttpJsonPostForOriginStreamAsync(requestUrl, JsonConvert.SerializeObject(data));
