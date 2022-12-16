@@ -880,7 +880,7 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
-        /// 获取盘库状态
+        /// 获取抵用券类型
         /// </summary>
         /// <param name="orderFrom"></param>
         /// <returns></returns>

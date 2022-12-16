@@ -105,7 +105,7 @@ namespace Fx.Amiya.Service
             foreach (var item in consumptionVoucherTypes)
             {
                 BaseKeyValueDto baseKeyValueDto = new BaseKeyValueDto();
-                baseKeyValueDto.Key = item.ToString();
+                baseKeyValueDto.Key = Convert.ToInt32(item).ToString();
                 baseKeyValueDto.Value = ServiceClass.GetConsumptionVoucherType(Convert.ToInt32(item));
                 consumptionVoucherTypeList.Add(baseKeyValueDto);
             }
