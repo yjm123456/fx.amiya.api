@@ -129,7 +129,7 @@ namespace Fx.Amiya.Service
                 Type = c.Type,
                 IsValid = c.IsValid,
                 ConsumptionVoucherCode = c.ConsumptionVoucherCode,
-                TypeText = consumptionVoucherTypeDict[(ConsumptionVoucherType)c.Type]
+                TypeText =ServiceClass.GetConsumptionVoucherType(c.Type)
             });
             fxPageInfo.TotalCount = consumptionVoucherList.Count();
             fxPageInfo.List = consumptionVoucherList.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
