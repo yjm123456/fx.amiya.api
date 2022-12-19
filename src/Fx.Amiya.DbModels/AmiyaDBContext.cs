@@ -61,6 +61,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<HospitalEmployee> HospitalEmployee { get; set; }
         public virtual DbSet<GoodsShopCar> GoodsShopCar { get; set; }
         public virtual DbSet<GoodsHospitalPrice> GoodsHospitalPrices { get; set; }
+        public virtual DbSet<GoodsStandardsPrice> GoodsStandardsPrice { get; set; }
         public virtual DbSet<HospitalPositionInfo> HospitalPositionInfo { get; set; }
         public virtual DbSet<ItemInfo> ItemInfo { get; set; }
         public virtual DbSet<HomepageCarouselImage> HomepageCarouselImage { get; set; }
@@ -206,6 +207,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new HospitalTagDetailConfiguration());
             modelBuilder.ApplyConfiguration(new GoodsShopCarConfiguration());
             modelBuilder.ApplyConfiguration(new GoodsHospitalPriceConfiguration());
+            modelBuilder.ApplyConfiguration(new GoodsStandardsPriceConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalAppointmentNumerConfiguration());
             modelBuilder.ApplyConfiguration(new TmallGoodsSkuConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalBrandApplyConfiguration());

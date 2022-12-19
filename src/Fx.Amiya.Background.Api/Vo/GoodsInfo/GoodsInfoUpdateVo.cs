@@ -114,6 +114,11 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         public int? LimitBuyQuantity { get; set; }
 
         /// <summary>
+        /// 规格价格
+        /// </summary>
+        public List<GoodsStandardsPriceAddVo> UpdateGoodsStandardsPrice { get; set; }
+
+        /// <summary>
         /// 门店医院价格
         /// </summary>
         public List<GoodsHospitalPriceAddVo> UpdateGoodsHospitalPrice { get; set; }

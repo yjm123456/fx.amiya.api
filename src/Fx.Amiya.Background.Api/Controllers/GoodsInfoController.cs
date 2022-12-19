@@ -6,6 +6,7 @@ using Fx.Amiya.Core.Dto.GoodsHospitalPrice;
 using Fx.Amiya.Core.Infrastructure;
 using Fx.Amiya.Core.Interfaces.Goods;
 using Fx.Amiya.Dto.GoodsConsumptionVoucher;
+using Fx.Amiya.Dto.GoodsStandardsPrice;
 using Fx.Amiya.Dto.MemberRankPrice;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
@@ -274,6 +275,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             goodsInfo.MinShowPrice = goodsInfoUpdate.MinShowPrice;
             goodsInfo.VisitCount = goodsInfoUpdate.VisitCount;
             goodsInfo.ShowSaleCount = goodsInfoUpdate.ShowSaleCount;
+            //规格价格
+            goodsInfo.GoodsStandardsPrice = (from d in goodsInfoUpdate.UpdateGoodsStandardsPrice
+                                             select new GoodsStandardsPriceAddDto
+                                             {
+                                                 Standards = d.Standards,
+                                                 Price = d.Price
+                                             }).ToList();
+            //医院价格
             goodsInfo.GoodsHospitalsPrice = (from d in goodsInfoUpdate.UpdateGoodsHospitalPrice
                                               select new GoodsHospitalPriceAddDto
                                               {

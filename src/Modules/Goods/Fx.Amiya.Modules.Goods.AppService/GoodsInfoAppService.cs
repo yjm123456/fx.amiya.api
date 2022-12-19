@@ -3,6 +3,7 @@ using Fx.Amiya.Core.Dto.GoodsHospitalPrice;
 using Fx.Amiya.Core.Infrastructure;
 using Fx.Amiya.Core.Interfaces.Goods;
 using Fx.Amiya.Core.Interfaces.GoodsHospitalPrice;
+using Fx.Amiya.Dto.GoodsStandardsPrice;
 using Fx.Amiya.Dto.MemberRankPrice;
 using Fx.Amiya.IService;
 using Fx.Amiya.Modules.Goods.DbModel;
@@ -22,15 +23,19 @@ namespace Fx.Amiya.Modules.Goods.AppService
     {
         private IFreeSql<GoodsFlag> freeSql;
         private IGoodsInfoRepository _goodsInfoRepository;
+        private IGoodsStandardsPriceService goodsStandardsPriceService;
         private IGoodsHospitalsPrice _goodsHospitalsPrice;
         private readonly IGoodsMemberRankPriceService goodsMemberRankPriceService;
         private readonly IGoodsConsumptionVoucherService goodsConsumptionVoucherService;
         public GoodsInfoAppService(IFreeSql<GoodsFlag> freeSql,
             IGoodsInfoRepository goodsInfoRepository,
-            IGoodsHospitalsPrice goodsHospitalsPrice, IGoodsMemberRankPriceService goodsMemberRankPriceService, IGoodsConsumptionVoucherService goodsConsumptionVoucherService)
+            IGoodsHospitalsPrice goodsHospitalsPrice, IGoodsMemberRankPriceService goodsMemberRankPriceService,
+            IGoodsStandardsPriceService goodsStandardsPriceService,
+            IGoodsConsumptionVoucherService goodsConsumptionVoucherService)
         {
             this.freeSql = freeSql;
             _goodsInfoRepository = goodsInfoRepository;
+            this.goodsStandardsPriceService = goodsStandardsPriceService;
             _goodsHospitalsPrice = goodsHospitalsPrice;
             this.goodsMemberRankPriceService = goodsMemberRankPriceService;
             this.goodsConsumptionVoucherService = goodsConsumptionVoucherService;
@@ -349,6 +354,18 @@ namespace Fx.Amiya.Modules.Goods.AppService
                                                      DisplayIndex = d.DisplayIndex,
                                                      GoodsInfoId = d.GoodsInfoId
                                                  }).ToList();
+            //移除规格价格
+            await goodsStandardsPriceService.DeleteByGoodsId(goodsInfoUpdate.Id);
+            //新增门店医院价格
+            foreach (var x in goodsInfoUpdate.GoodsStandardsPrice)
+            {
+                GoodsStandardsPriceAddDto goodsHospitalPrice = new GoodsStandardsPriceAddDto();
+                goodsHospitalPrice.GoodsId = goodsInfo.Id;
+                goodsHospitalPrice.Standards = x.Standards;
+                goodsHospitalPrice.Price = x.Price;
+                await goodsStandardsPriceService.AddAsync(goodsHospitalPrice);
+            }
+
             //移除门店医院价格
             await _goodsHospitalsPrice.DeleteByGoodsId(goodsInfoUpdate.Id);
             //新增门店医院价格

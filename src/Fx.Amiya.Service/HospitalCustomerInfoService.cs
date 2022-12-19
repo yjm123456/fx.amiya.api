@@ -40,7 +40,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<SendHospitalCustomerInfoDto>> GetListWithPageAsync(string keyword, int hospitalId,int employeeId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<SendHospitalCustomerInfoDto>> GetListWithPageAsync(string keyword, int hospitalId, int employeeId, int pageNum, int pageSize)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace Fx.Amiya.Service
 
                 FxPageInfo<SendHospitalCustomerInfoDto> hospitalCustomerInfoPageInfo = new FxPageInfo<SendHospitalCustomerInfoDto>();
                 hospitalCustomerInfoPageInfo.TotalCount = await hospitalCustomerInfo.CountAsync();
-                hospitalCustomerInfoPageInfo.List = await hospitalCustomerInfo.OrderByDescending(x=>x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+                hospitalCustomerInfoPageInfo.List = await hospitalCustomerInfo.OrderByDescending(x => x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
 
                 foreach (var x in hospitalCustomerInfoPageInfo.List)
                 {
@@ -78,7 +78,8 @@ namespace Fx.Amiya.Service
                     {
                         x.IsMyFollow = true;
                     }
-                    else {
+                    else
+                    {
                         x.IsMyFollow = false;
                         x.CustomerPhone = ServiceClass.GetIncompletePhone(x.CustomerPhone);
                     }
@@ -145,7 +146,7 @@ namespace Fx.Amiya.Service
                 hospitalCustomerInfo.hospitalId = addDto.hospitalId;
                 hospitalCustomerInfo.NewGoodsDemand = addDto.NewGoodsDemand;
                 hospitalCustomerInfo.SendAmount = addDto.SendAmount;
-                hospitalCustomerInfo.DealAmount = addDto.DealAmount;
+                hospitalCustomerInfo.DealAmount = 0;
                 hospitalCustomerInfo.CreateDate = DateTime.Now;
                 hospitalCustomerInfo.UpdateDate = DateTime.Now;
                 hospitalCustomerInfo.Valid = true;
@@ -264,6 +265,7 @@ namespace Fx.Amiya.Service
                     throw new Exception("医院客户编号错误！");
 
                 hospitalCustomerInfo.NewGoodsDemand = updateDto.NewGoodsDemand;
+                hospitalCustomerInfo.hospitalId = updateDto.hospitalId;
                 hospitalCustomerInfo.SendAmount = updateDto.SendAmount;
                 hospitalCustomerInfo.UpdateDate = DateTime.Now;
                 await dalHospitalCustomerInfo.UpdateAsync(hospitalCustomerInfo, true);

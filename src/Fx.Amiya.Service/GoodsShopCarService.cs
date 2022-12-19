@@ -17,10 +17,14 @@ namespace Fx.Amiya.Service
     {
         private IDalGoodsShopCar dalGoodsShopCarService;
         private IDalGoodsHospitalPrice dalGoodsHospitalPrice;
-        public GoodsShopCarService(IDalGoodsShopCar dalGoodsShopCarService, IDalGoodsHospitalPrice dalGoodsHospitalPrice)
+        private IDalGoodsStandardsPrice dalGoodsStandardsPrice;
+        public GoodsShopCarService(IDalGoodsShopCar dalGoodsShopCarService,
+            IDalGoodsStandardsPrice dalGoodsStandardsPrice,
+            IDalGoodsHospitalPrice dalGoodsHospitalPrice)
         {
             this.dalGoodsShopCarService = dalGoodsShopCarService;
             this.dalGoodsHospitalPrice = dalGoodsHospitalPrice;
+            this.dalGoodsStandardsPrice = dalGoodsStandardsPrice;
         }
 
 
@@ -30,11 +34,12 @@ namespace Fx.Amiya.Service
             try
             {
 
-                var goodsShopCarService = from d in dalGoodsShopCarService.GetAll().Include(e=>e.GoodsInfo).ThenInclude(e=>e.GoodsMemberRankPrice)
+                var goodsShopCarService = from d in dalGoodsShopCarService.GetAll().Include(e => e.GoodsInfo).ThenInclude(e => e.GoodsMemberRankPrice)
                                           where (keyword == null || d.GoodsInfo.Name.Contains(keyword))
                                                && (d.CustomerId == customerId)
                                                && (d.Status == 1)
-                                               && (d.Num > 0) orderby d.CreateDate descending
+                                               && (d.Num > 0)
+                                          orderby d.CreateDate descending
                                           select new GoodsShopCarDto
                                           {
                                               Id = d.Id,
@@ -54,11 +59,12 @@ namespace Fx.Amiya.Service
                                               Hospital = d.HospitalId.HasValue ? d.HospitalInfo.Name : "",
                                               CityId = d.CityId,
                                               City = d.CityId.HasValue ? d.City.Name : "",
-                                              IsMaterial=d.GoodsInfo.IsMaterial,
-                                              HospitalSalePrice =  d.GoodsInfo.IsMaterial ?0:dalGoodsHospitalPrice.GetAll().Where(e=>e.GoodsId==d.GoodsId && e.HospitalId==d.HospitalId).FirstOrDefault().Price*d.Num,
-                                              GoodsMemberRankPriceList=d.GoodsInfo.GoodsMemberRankPrice.Select(e=>new GoodsMemberRankPriceDto {
-                                                MemberRankId=e.MemberRankId,
-                                                Price=e.Price
+                                              IsMaterial = d.GoodsInfo.IsMaterial,
+                                              HospitalSalePrice = d.GoodsInfo.IsMaterial ? 0 : dalGoodsHospitalPrice.GetAll().Where(e => e.GoodsId == d.GoodsId && e.HospitalId == d.HospitalId).FirstOrDefault().Price * d.Num,
+                                              GoodsMemberRankPriceList = d.GoodsInfo.GoodsMemberRankPrice.Select(e => new GoodsMemberRankPriceDto
+                                              {
+                                                  MemberRankId = e.MemberRankId,
+                                                  Price = e.Price
                                               }).ToList()
                                           };
                 FxPageInfo<GoodsShopCarDto> goodsShopCarServicePageInfo = new FxPageInfo<GoodsShopCarDto>();
@@ -77,7 +83,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var isExistGoodsShopCar = await this.GetByGoodsIdAndCustomerIdAsync(addDto.GoodsId, addDto.CustomerId,addDto.HospitalId,addDto.CityId);
+                var isExistGoodsShopCar = await this.GetByGoodsIdAndCustomerIdAsync(addDto.GoodsId, addDto.CustomerId, addDto.HospitalId, addDto.CityId);
                 if (!string.IsNullOrEmpty(isExistGoodsShopCar.Id))
                 {
                     if (isExistGoodsShopCar.Status == 0)
@@ -90,7 +96,8 @@ namespace Fx.Amiya.Service
                         goodsShopCarService.Num = addDto.Num;
                         await dalGoodsShopCarService.UpdateAsync(goodsShopCarService, true);
                     }
-                    else {
+                    else
+                    {
                         UpdateGoodsShopCarDto updateDto = new UpdateGoodsShopCarDto();
                         updateDto.Id = isExistGoodsShopCar.Id;
                         updateDto.CustomerId = addDto.CustomerId;
@@ -100,21 +107,21 @@ namespace Fx.Amiya.Service
                         updateDto.Num = isExistGoodsShopCar.Num + addDto.Num;
                         await this.UpdateAsync(updateDto);
                     }
-                    
+
                 }
                 else
-                {                
-                        GoodsShopCar goodsShopCar = new GoodsShopCar();
-                        goodsShopCar.Id = Guid.NewGuid().ToString();
-                        goodsShopCar.CustomerId = addDto.CustomerId;
-                        goodsShopCar.GoodsId = addDto.GoodsId;
-                        goodsShopCar.CityId = addDto.CityId;
-                        goodsShopCar.HospitalId = addDto.HospitalId;
-                        goodsShopCar.Num = addDto.Num;
-                        goodsShopCar.Status = 1;
-                        goodsShopCar.CreateDate = DateTime.Now;
-                        goodsShopCar.UpdateDate = DateTime.Now;
-                        await dalGoodsShopCarService.AddAsync(goodsShopCar, true);                                       
+                {
+                    GoodsShopCar goodsShopCar = new GoodsShopCar();
+                    goodsShopCar.Id = Guid.NewGuid().ToString();
+                    goodsShopCar.CustomerId = addDto.CustomerId;
+                    goodsShopCar.GoodsId = addDto.GoodsId;
+                    goodsShopCar.CityId = addDto.CityId;
+                    goodsShopCar.HospitalId = addDto.HospitalId;
+                    goodsShopCar.Num = addDto.Num;
+                    goodsShopCar.Status = 1;
+                    goodsShopCar.CreateDate = DateTime.Now;
+                    goodsShopCar.UpdateDate = DateTime.Now;
+                    await dalGoodsShopCarService.AddAsync(goodsShopCar, true);
                 }
 
             }
@@ -159,11 +166,11 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task<GoodsShopCarDto> GetByGoodsIdAndCustomerIdAsync(string goodsId, string customerId,int? HospitalId,int? CityId)
+        public async Task<GoodsShopCarDto> GetByGoodsIdAndCustomerIdAsync(string goodsId, string customerId, int? HospitalId, int? CityId)
         {
             try
             {
-                var goodsShopCarService = await dalGoodsShopCarService.GetAll().FirstOrDefaultAsync(e => e.GoodsId == goodsId && e.CustomerId == customerId && (HospitalId==null || e.HospitalId==HospitalId) && (CityId==null || e.CityId==CityId));
+                var goodsShopCarService = await dalGoodsShopCarService.GetAll().FirstOrDefaultAsync(e => e.GoodsId == goodsId && e.CustomerId == customerId && (HospitalId == null || e.HospitalId == HospitalId) && (CityId == null || e.CityId == CityId));
                 if (goodsShopCarService == null)
                 {
                     return new GoodsShopCarDto();
@@ -197,7 +204,7 @@ namespace Fx.Amiya.Service
                     throw new Exception("购物车编号错误！");
                 goodsShopCarService.CustomerId = updateDto.CustomerId;
                 goodsShopCarService.GoodsId = updateDto.GoodsId;
-                goodsShopCarService.Num =  updateDto.Num;
+                goodsShopCarService.Num = updateDto.Num;
                 goodsShopCarService.UpdateDate = DateTime.Now;
                 goodsShopCarService.CityId = updateDto.CityId;
                 goodsShopCarService.HospitalId = updateDto.HospitalId;

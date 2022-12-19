@@ -603,6 +603,7 @@ namespace Fx.Amiya.Service
                     UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
                     updateSendHospitalCustomerInfoDto.Id = customer.Id;
                     updateSendHospitalCustomerInfoDto.NewGoodsDemand = orderInfo.GoodsName;
+                    updateSendHospitalCustomerInfoDto.hospitalId = addDto.HospitalId;
                     updateSendHospitalCustomerInfoDto.SendAmount += 1;
                     await hospitalCustomerInfoService.InsertSendAmountAsync(updateSendHospitalCustomerInfoDto);
                 }
@@ -644,6 +645,29 @@ namespace Fx.Amiya.Service
                 var send = await _contentPlatformOrderSend.GetSimpleByIdAsync(updateDto.Id);
                 var contentPlatFormOrder = await this.GetByOrderIdAsync(updateDto.OrderId);
                 await this.UpdateStateAndRepeateOrderPicAsync(updateDto.OrderId, send.SendBy, contentPlatFormOrder.BelongEmpId, employeeId);
+
+                var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(updateDto.HospitalId, contentPlatFormOrder.Phone);
+                //操作医院客户表
+                if (!string.IsNullOrEmpty(customer.Id))
+                {
+                    UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
+                    updateSendHospitalCustomerInfoDto.Id = customer.Id;
+                    updateSendHospitalCustomerInfoDto.NewGoodsDemand = contentPlatFormOrder.GoodsName;
+                    updateSendHospitalCustomerInfoDto.hospitalId = updateDto.HospitalId;
+                    updateSendHospitalCustomerInfoDto.SendAmount += 1;
+                    await hospitalCustomerInfoService.InsertSendAmountAsync(updateSendHospitalCustomerInfoDto);
+                }
+                else
+                {
+                    AddSendHospitalCustomerInfoDto addSendHospitalCustomerInfoDto = new AddSendHospitalCustomerInfoDto();
+                    addSendHospitalCustomerInfoDto.NewGoodsDemand = contentPlatFormOrder.GoodsName;
+                    addSendHospitalCustomerInfoDto.SendAmount = 1;
+                    addSendHospitalCustomerInfoDto.CustomerPhone = contentPlatFormOrder.Phone;
+                    addSendHospitalCustomerInfoDto.hospitalId = updateDto.HospitalId;
+                    addSendHospitalCustomerInfoDto.DealAmount = 0;
+                    await hospitalCustomerInfoService.AddAsync(addSendHospitalCustomerInfoDto);
+
+                }
                 unitOfWork.Commit();
             }
             catch (Exception ex)
