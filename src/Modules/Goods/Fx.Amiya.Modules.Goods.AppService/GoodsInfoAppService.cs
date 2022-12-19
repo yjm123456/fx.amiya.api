@@ -11,6 +11,7 @@ using Fx.Amiya.Modules.Goods.Domin;
 using Fx.Amiya.Modules.Goods.Domin.IRepository;
 using Fx.Amiya.Modules.Goods.Infrastructure.Repositories;
 using Fx.Common;
+using Fx.Infrastructure.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,16 +26,19 @@ namespace Fx.Amiya.Modules.Goods.AppService
         private IGoodsInfoRepository _goodsInfoRepository;
         private IGoodsStandardsPriceService goodsStandardsPriceService;
         private IGoodsHospitalsPrice _goodsHospitalsPrice;
+        private IUnitOfWork unitOfWork;
         private readonly IGoodsMemberRankPriceService goodsMemberRankPriceService;
         private readonly IGoodsConsumptionVoucherService goodsConsumptionVoucherService;
         public GoodsInfoAppService(IFreeSql<GoodsFlag> freeSql,
             IGoodsInfoRepository goodsInfoRepository,
+            IUnitOfWork unitOfWork,
             IGoodsHospitalsPrice goodsHospitalsPrice, IGoodsMemberRankPriceService goodsMemberRankPriceService,
             IGoodsStandardsPriceService goodsStandardsPriceService,
             IGoodsConsumptionVoucherService goodsConsumptionVoucherService)
         {
             this.freeSql = freeSql;
             _goodsInfoRepository = goodsInfoRepository;
+            this.unitOfWork = unitOfWork;
             this.goodsStandardsPriceService = goodsStandardsPriceService;
             _goodsHospitalsPrice = goodsHospitalsPrice;
             this.goodsMemberRankPriceService = goodsMemberRankPriceService;
@@ -42,79 +46,91 @@ namespace Fx.Amiya.Modules.Goods.AppService
         }
         public async Task AddAsync(GoodsInfoAddDto goodsInfoAdd)
         {
-            DateTime date = DateTime.Now;
-            GoodsInfo goodsInfo = new GoodsInfo();
-            goodsInfo.Id = Guid.NewGuid().ToString("N");
-            goodsInfo.Name = goodsInfoAdd.Name;
-            goodsInfo.ThumbPicUrl = goodsInfoAdd.ThumbPicUrl;
-            goodsInfo.SimpleCode = goodsInfoAdd.SimpleCode;
-            goodsInfo.Description = goodsInfoAdd.Description;
-            goodsInfo.Standard = goodsInfoAdd.Standard;
-            goodsInfo.Unit = goodsInfoAdd.Unit;
-            goodsInfo.SalePrice = goodsInfoAdd.SalePrice;
-            goodsInfo.Valid = true;
-            goodsInfo.InventoryQuantity = goodsInfoAdd.InventoryQuantity;
-            goodsInfo.ExchangeType = (byte)goodsInfoAdd.ExchangeType;
-            goodsInfo.IntegrationQuantity = goodsInfoAdd.IntegrationQuantity;
-            goodsInfo.IsMaterial = goodsInfoAdd.IsMaterial;
-            goodsInfo.GoodsType = goodsInfoAdd.GoodsType;
-            goodsInfo.IsLimitBuy = goodsInfoAdd.IsLimitBuy;
-            goodsInfo.LimitBuyQuantity = goodsInfoAdd.LimitBuyQuantity;
-            goodsInfo.CreateDate = date;
-            goodsInfo.CreateBy = goodsInfoAdd.CreateBy;
-            goodsInfo.Version = 0;
-            goodsInfo.CategoryId = goodsInfoAdd.CategoryId;
-            goodsInfo.DetailsDescription = goodsInfoAdd.DetailsDescription;
-            goodsInfo.MaxShowPrice = goodsInfoAdd.MaxShowPrice;
-            goodsInfo.MinShowPrice = goodsInfoAdd.MinShowPrice;
-            goodsInfo.VisitCount = goodsInfoAdd.VisitCount;
-            goodsInfo.ShowSaleCount = goodsInfoAdd.ShowSaleCount;
-            goodsInfo.SaleCount = 0;
-            goodsInfo.GoodsDetail = new GoodsDetail()
+            unitOfWork.BeginTransaction();
+            try
             {
-                GoodsDetailHtml = goodsInfoAdd.GoodsDetailHtml,
-                CreateBy = goodsInfoAdd.CreateBy,
-                CreateDate = date
-            };
 
-            goodsInfo.GoodsInfoCarouselImages = (from d in goodsInfoAdd.CarouselImageUrls
-                                                 select new GoodsInfoCarouselImage
-                                                 {
-                                                     GoodsInfoId = goodsInfo.Id,
-                                                     CreateDate = date,
-                                                     PicUrl = d.PicUrl,
-                                                     DisplayIndex = d.DisplayIndex
-                                                 }).ToList();
+                DateTime date = DateTime.Now;
+                GoodsInfo goodsInfo = new GoodsInfo();
+                goodsInfo.Id = Guid.NewGuid().ToString("N");
+                goodsInfo.Name = goodsInfoAdd.Name;
+                goodsInfo.ThumbPicUrl = goodsInfoAdd.ThumbPicUrl;
+                goodsInfo.SimpleCode = goodsInfoAdd.SimpleCode;
+                goodsInfo.Description = goodsInfoAdd.Description;
+                goodsInfo.Standard = goodsInfoAdd.Standard;
+                goodsInfo.Unit = goodsInfoAdd.Unit;
+                goodsInfo.SalePrice = goodsInfoAdd.SalePrice;
+                goodsInfo.Valid = true;
+                goodsInfo.InventoryQuantity = goodsInfoAdd.InventoryQuantity;
+                goodsInfo.ExchangeType = (byte)goodsInfoAdd.ExchangeType;
+                goodsInfo.IntegrationQuantity = goodsInfoAdd.IntegrationQuantity;
+                goodsInfo.IsMaterial = goodsInfoAdd.IsMaterial;
+                goodsInfo.GoodsType = goodsInfoAdd.GoodsType;
+                goodsInfo.IsLimitBuy = goodsInfoAdd.IsLimitBuy;
+                goodsInfo.LimitBuyQuantity = goodsInfoAdd.LimitBuyQuantity;
+                goodsInfo.CreateDate = date;
+                goodsInfo.CreateBy = goodsInfoAdd.CreateBy;
+                goodsInfo.Version = 0;
+                goodsInfo.CategoryId = goodsInfoAdd.CategoryId;
+                goodsInfo.DetailsDescription = goodsInfoAdd.DetailsDescription;
+                goodsInfo.MaxShowPrice = goodsInfoAdd.MaxShowPrice;
+                goodsInfo.MinShowPrice = goodsInfoAdd.MinShowPrice;
+                goodsInfo.VisitCount = goodsInfoAdd.VisitCount;
+                goodsInfo.ShowSaleCount = goodsInfoAdd.ShowSaleCount;
+                goodsInfo.SaleCount = 0;
+                goodsInfo.GoodsDetail = new GoodsDetail()
+                {
+                    GoodsDetailHtml = goodsInfoAdd.GoodsDetailHtml,
+                    CreateBy = goodsInfoAdd.CreateBy,
+                    CreateDate = date
+                };
 
-            foreach (var x in goodsInfoAdd.GoodsHospitalsAPrice)
-            {
-                GoodsHospitalPriceAddDto goodsHospitalPrice = new GoodsHospitalPriceAddDto();
-                goodsHospitalPrice.GoodsId = goodsInfo.Id;
-                goodsHospitalPrice.HospitalId = x.HospitalId;
-                goodsHospitalPrice.Price = x.Price;
-                await _goodsHospitalsPrice.AddAsync(goodsHospitalPrice);
+                goodsInfo.GoodsInfoCarouselImages = (from d in goodsInfoAdd.CarouselImageUrls
+                                                     select new GoodsInfoCarouselImage
+                                                     {
+                                                         GoodsInfoId = goodsInfo.Id,
+                                                         CreateDate = date,
+                                                         PicUrl = d.PicUrl,
+                                                         DisplayIndex = d.DisplayIndex
+                                                     }).ToList();
+
+                foreach (var x in goodsInfoAdd.GoodsHospitalsAPrice)
+                {
+                    GoodsHospitalPriceAddDto goodsHospitalPrice = new GoodsHospitalPriceAddDto();
+                    goodsHospitalPrice.GoodsId = goodsInfo.Id;
+                    goodsHospitalPrice.HospitalId = x.HospitalId;
+                    goodsHospitalPrice.Price = x.Price;
+                    await _goodsHospitalsPrice.AddAsync(goodsHospitalPrice);
+                }
+
+                foreach (var x in goodsInfoAdd.GoodsStandardsPrice)
+                {
+                    GoodsStandardsPriceAddDto goodsStandardsPrice = new GoodsStandardsPriceAddDto();
+                    goodsStandardsPrice.GoodsId = goodsInfo.Id;
+                    goodsStandardsPrice.Standards = x.Standards;
+                    goodsStandardsPrice.Price = x.Price;
+                    await goodsStandardsPriceService.AddAsync(goodsStandardsPrice);
+                }
+                await _goodsInfoRepository.AddAsync(goodsInfo);
+                //添加会员价格
+                foreach (var item in goodsInfoAdd.GoodsMemberRankPrice)
+                {
+                    item.GoodsId = goodsInfo.Id;
+                    await goodsMemberRankPriceService.AddAsync(item);
+                }
+                //添加抵用券
+                foreach (var voucher in goodsInfoAdd.GoodsConsumptionVouchers)
+                {
+                    voucher.GoodsId = goodsInfo.Id;
+                    await goodsConsumptionVoucherService.AddAsync(voucher);
+
+                }
+                unitOfWork.Commit();
             }
-
-            foreach (var x in goodsInfoAdd.GoodsStandardsPrice)
+            catch (Exception er)
             {
-                GoodsStandardsPriceAddDto goodsStandardsPrice = new GoodsStandardsPriceAddDto();
-                goodsStandardsPrice.GoodsId = goodsInfo.Id;
-                goodsStandardsPrice.Standards = x.Standards;
-                goodsStandardsPrice.Price = x.Price;
-                await goodsStandardsPriceService.AddAsync(goodsStandardsPrice);
-            }
-            await _goodsInfoRepository.AddAsync(goodsInfo);
-            //添加会员价格
-            foreach (var item in goodsInfoAdd.GoodsMemberRankPrice)
-            {
-                item.GoodsId = goodsInfo.Id;
-                await goodsMemberRankPriceService.AddAsync(item);
-            }
-            //添加抵用券
-            foreach (var voucher in goodsInfoAdd.GoodsConsumptionVouchers) {
-                voucher.GoodsId = goodsInfo.Id;
-                await goodsConsumptionVoucherService.AddAsync(voucher);
-
+                unitOfWork.RollBack();
+                throw new Exception(er.Message.ToString());
             }
         }
 

@@ -13,9 +13,17 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
     {
         public void Configure(EntityTypeBuilder<GoodsStandardsPrice> builder)
         {
+        //    builder.ToTable("tbl_goods_standards_price");
+        //    //builder.HasKey(t => t.GoodsId);
+        //    builder.Property(t => t.GoodsId).HasColumnName("goods_id").HasColumnType("VARCHAR(50)").IsRequired();
+        //    builder.Property(t => t.Standards).HasColumnName("standards").HasColumnType("varchar(500)").IsRequired();
+        //    builder.Property(t => t.Price).HasColumnName("price").HasColumnType("decimal(10,2)").IsRequired();
+
+
             builder.ToTable("tbl_goods_standards_price");
-            builder.HasKey(t => t.GoodsId);
-            builder.Property(t => t.GoodsId).HasColumnName("goods_id").HasColumnType("VARCHAR(50)").IsRequired();
+            builder.HasKey(t => t.Id);
+            builder.Property(t => t.Id).HasColumnName("id").HasColumnType("varchar(50)").IsRequired();
+            builder.Property(t => t.GoodsId).HasColumnName("goods_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(t => t.Standards).HasColumnName("standards").HasColumnType("varchar(500)").IsRequired();
             builder.Property(t => t.Price).HasColumnName("price").HasColumnType("decimal(10,2)").IsRequired();
         }

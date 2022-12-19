@@ -1638,9 +1638,17 @@ ALTER TABLE `tbl_user_info`
 ----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 -----------------------------------------------余建明 2022/12/19 BEGIN--------------------------------------------
+
+--商品规格板块数据库整改
 ALTER TABLE `amiyadb`.`tbl_goods_standards_price` 
 CHANGE COLUMN `id` `goods_id` VARCHAR(50) NOT NULL ,
 DROP PRIMARY KEY;
+
+ALTER TABLE `amiyadb`.`tbl_goods_standards_price` 
+ADD COLUMN `id` VARCHAR(50) NOT NULL FIRST,
+ADD PRIMARY KEY (`id`);
+;
+
 ;
 -----------------------------------------------余建明 2022/12/19 END--------------------------------------------
 

@@ -29,6 +29,7 @@ namespace Fx.Amiya.Service
         public async Task AddAsync(GoodsStandardsPriceAddDto goodsInfoAdd)
         {
             GoodsStandardsPrice goodsStandardssPrice = new GoodsStandardsPrice();
+            goodsStandardssPrice.Id = Guid.NewGuid().ToString();
             goodsStandardssPrice.GoodsId = goodsInfoAdd.GoodsId;
             goodsStandardssPrice.Standards = goodsInfoAdd.Standards;
             goodsStandardssPrice.Price = goodsInfoAdd.Price;
