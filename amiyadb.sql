@@ -1620,7 +1620,7 @@ ENGINE=InnoDB;
 CREATE TABLE `amiyadb`.`tbl_goods_standards_price` (
   `id` VARCHAR(50) NOT NULL,
   `standards` VARCHAR(500) NOT NULL,
-  `price` VARCHAR(45) NULL,
+  `price` DECIMAL(10,2) NULL,
   PRIMARY KEY (`id`));
 -----------------------------------------------余建明 2022/12/19 END--------------------------------------------
 
