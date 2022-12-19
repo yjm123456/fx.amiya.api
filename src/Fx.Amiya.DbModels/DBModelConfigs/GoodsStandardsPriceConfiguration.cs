@@ -16,7 +16,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.ToTable("tbl_goods_standards_price");
             builder.HasKey(t => t.GoodsId);
             builder.Property(t => t.GoodsId).HasColumnName("goods_id").HasColumnType("VARCHAR(50)").IsRequired();
-            builder.Property(t => t.HospitalId).HasColumnName("standards").HasColumnType("varchar(500)").IsRequired();
+            builder.Property(t => t.Standards).HasColumnName("standards").HasColumnType("varchar(500)").IsRequired();
             builder.Property(t => t.Price).HasColumnName("price").HasColumnType("decimal(10,2)").IsRequired();
         }
     }
