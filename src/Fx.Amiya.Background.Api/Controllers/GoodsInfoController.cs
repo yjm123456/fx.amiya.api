@@ -49,9 +49,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
-        public async Task<ResultData<FxPageInfo<GoodsInfoForListVo>>> GetListAsync(string keyword,int? exchangeType, int? categoryId, bool? valid, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<GoodsInfoForListVo>>> GetListAsync(string keyword, int? exchangeType, int? categoryId, bool? valid, int pageNum, int pageSize)
         {
-            var q = await goodsInfoService.GetListAsync(keyword,exchangeType, categoryId, valid, pageNum, pageSize);
+            var q = await goodsInfoService.GetListAsync(keyword, exchangeType, categoryId, valid, pageNum, pageSize);
 
             var goodsInfos = from d in q.List
                              select new GoodsInfoForListVo
@@ -115,11 +115,21 @@ namespace Fx.Amiya.Background.Api.Controllers
                 {
                     continue;
                 }
-                else {
+                else
+                {
                     goodsHospitalPriceVo.HospitalName = hospitalResult.Name.ToString();
                     goodsHospitalPriceVo.Price = x.Price;
                     goodsHospitalPriceVoList.Add(goodsHospitalPriceVo);
                 }
+            }
+            List<GoodsStandardsPriceAddVo> goodsStandardsPriceVoList = new List<GoodsStandardsPriceAddVo>();
+            foreach (var x in goodsInfo.GoodsStandardsPrice)
+            {
+                GoodsStandardsPriceAddVo goodsStandardsPriceVo = new GoodsStandardsPriceAddVo();
+                goodsStandardsPriceVo.Standards = x.Standards;
+                goodsStandardsPriceVo.Price = x.Price;
+                goodsStandardsPriceVoList.Add(goodsStandardsPriceVo);
+
             }
             GoodsInfoForSingleVo goods = new GoodsInfoForSingleVo()
             {
@@ -155,15 +165,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                 ShowSaleCount = goodsInfo.ShowSaleCount,
                 VisitCount = goodsInfo.VisitCount,
                 GoodsHospitalPrice = goodsHospitalPriceVoList,
-                GoodsMemberRankPrices= goodsInfo.GoodsMemberRankPrice.Select(e => new GoodsMemberRankPriceVo
+                GoodsStandardPrice=goodsStandardsPriceVoList,
+                GoodsMemberRankPrices = goodsInfo.GoodsMemberRankPrice.Select(e => new GoodsMemberRankPriceVo
                 {
                     MemberRankId = e.MemberRankId,
                     MemberCardName = e.MemberRankName,
                     Price = e.Price
                 }).ToList(),
-                GoodsConsumptionVoucher=goodsInfo.GoodsConsumptionVoucher.Select(e=>new GoodsConsumptionVoucherVo {
-                    ConsumptionVoucherId=e.ConsumptionVoucherId,
-                    ConsumptionName=e.ConsumptionVoucherName
+                GoodsConsumptionVoucher = goodsInfo.GoodsConsumptionVoucher.Select(e => new GoodsConsumptionVoucherVo
+                {
+                    ConsumptionVoucherId = e.ConsumptionVoucherId,
+                    ConsumptionName = e.ConsumptionVoucherName
                 }).ToList(),
                 CarouselImageUrls = (from d in goodsInfo.CarouselImageUrls
                                      select new GoodsInfoCarouselImageVo
@@ -198,8 +210,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             goodsInfo.Unit = goodsInfoAdd.Unit;
             goodsInfo.SalePrice = goodsInfoAdd.SalePrice;
             goodsInfo.InventoryQuantity = goodsInfoAdd.InventoryQuantity;
-            goodsInfo.ExchangeType = goodsInfoAdd. ExchangeType;
-            goodsInfo.IntegrationQuantity = goodsInfoAdd.IntegrationQuantity; 
+            goodsInfo.ExchangeType = goodsInfoAdd.ExchangeType;
+            goodsInfo.IntegrationQuantity = goodsInfoAdd.IntegrationQuantity;
             goodsInfo.IsMaterial = goodsInfoAdd.IsMaterial;
             goodsInfo.GoodsType = (byte)GoodsType.General;
             goodsInfo.IsLimitBuy = goodsInfoAdd.IsLimitBuy;
@@ -218,6 +230,13 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                   HospitalId = d.HospitalId,
                                                   Price = d.Price
                                               }).ToList();
+
+            goodsInfo.GoodsStandardsPrice = (from d in goodsInfoAdd.GoodsStandardsPrice
+                                             select new GoodsStandardsPriceAddDto
+                                             {
+                                                 Standards = d.Standards,
+                                                 Price = d.Price
+                                             }).ToList();
             goodsInfo.CarouselImageUrls = (from d in goodsInfoAdd.CarouselImageUrls
                                            select new GoodsInfoCarouselImageAddDto
                                            {
@@ -225,14 +244,16 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                DisplayIndex = d.DisplayIndex
                                            }).ToList();
             //添加会员价格
-            goodsInfo.GoodsMemberRankPrice = goodsInfoAdd.AddGoodsMemberRankPrice.Select(e => new GoodsMemberRankPriceAddDto {
-                MemberRankId=e.MemberRankId,
-                Price=e.Price
+            goodsInfo.GoodsMemberRankPrice = goodsInfoAdd.AddGoodsMemberRankPrice.Select(e => new GoodsMemberRankPriceAddDto
+            {
+                MemberRankId = e.MemberRankId,
+                Price = e.Price
 
             }).ToList();
             //添加抵用券
-            goodsInfo.GoodsConsumptionVouchers = goodsInfoAdd.AddGoodsConsumptionVoucher.Select(e => new GoodsConsumptionVoucherAddDto {
-                ConsumptionVoucherId=e.ConsumptionVoucherId
+            goodsInfo.GoodsConsumptionVouchers = goodsInfoAdd.AddGoodsConsumptionVoucher.Select(e => new GoodsConsumptionVoucherAddDto
+            {
+                ConsumptionVoucherId = e.ConsumptionVoucherId
             }).ToList();
             await goodsInfoService.AddAsync(goodsInfo);
             return ResultData.Success();
@@ -242,7 +263,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 修改商品信息
         /// </summary>
-        /// <param name=""></param>
+        /// <param name="goodsInfoUpdate"></param>
         /// <returns></returns>
         [HttpPut]
         public async Task<ResultData> UpdateAsync(GoodsInfoUpdateVo goodsInfoUpdate)
@@ -284,11 +305,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                                              }).ToList();
             //医院价格
             goodsInfo.GoodsHospitalsPrice = (from d in goodsInfoUpdate.UpdateGoodsHospitalPrice
-                                              select new GoodsHospitalPriceAddDto
-                                              {
-                                                  HospitalId = d.HospitalId,
-                                                  Price = d.Price
-                                              }).ToList();
+                                             select new GoodsHospitalPriceAddDto
+                                             {
+                                                 HospitalId = d.HospitalId,
+                                                 Price = d.Price
+                                             }).ToList();
             goodsInfo.CarouselImageUrls = (from d in goodsInfoUpdate.CarouselImageUrls
                                            select new GoodsInfoCarouselImageUpdateDto
                                            {
@@ -297,15 +318,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                DisplayIndex = d.DisplayIndex
                                            }).ToList();
             //会员价
-            goodsInfo.GoodsMemberRankPrice = goodsInfoUpdate.UpdateGoodsMemberRankPrice.Select(e => new GoodsMemberRankPriceAddDto {
-                MemberRankId=e.MemberRankId,
-                Price=e.Price,
-                GoodsId=goodsInfoUpdate.Id
+            goodsInfo.GoodsMemberRankPrice = goodsInfoUpdate.UpdateGoodsMemberRankPrice.Select(e => new GoodsMemberRankPriceAddDto
+            {
+                MemberRankId = e.MemberRankId,
+                Price = e.Price,
+                GoodsId = goodsInfoUpdate.Id
             }).ToList();
             //抵用券
-            goodsInfo.GoodsConsumptionVoucher = goodsInfoUpdate.UpdateGoodsConsumptionVoucher.Select(e => new GoodsConsumptionVoucherAddDto { 
-                ConsumptionVoucherId=e.ConsumptionVoucherId,
-                GoodsId=goodsInfoUpdate.Id
+            goodsInfo.GoodsConsumptionVoucher = goodsInfoUpdate.UpdateGoodsConsumptionVoucher.Select(e => new GoodsConsumptionVoucherAddDto
+            {
+                ConsumptionVoucherId = e.ConsumptionVoucherId,
+                GoodsId = goodsInfoUpdate.Id
             }).ToList();
             await goodsInfoService.UpdateAsync(goodsInfo);
             return ResultData.Success();
@@ -345,13 +368,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 获取交易类型列表
         /// </summary>
         /// <returns></returns>
-       [HttpGet("exchangeTypeList")]
+        [HttpGet("exchangeTypeList")]
         public ResultData<List<ExchangeTypeVo>> GetExchangeTypeList()
         {
             var exchangeTypes = from d in goodsInfoService.GetExchangeTypeList()
                                 select new ExchangeTypeVo
-                                { 
-                                    ExchangeType=d.ExchangeType,
+                                {
+                                    ExchangeType = d.ExchangeType,
                                     ExchangeTypeText = d.ExchangeTypeText
                                 };
             return ResultData<List<ExchangeTypeVo>>.Success().AddData("exchangeTypes", exchangeTypes.ToList());

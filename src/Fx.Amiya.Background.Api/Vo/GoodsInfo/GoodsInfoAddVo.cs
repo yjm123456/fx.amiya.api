@@ -122,6 +122,10 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         /// 门店医院价格
         /// </summary>
         public List<GoodsHospitalPriceAddVo> AddGoodsHospitalPrice { get; set; }
+        /// <summary>
+        /// 规格价格
+        /// </summary>
+        public List<GoodsStandardsPriceAddVo> GoodsStandardsPrice { get; set; }
 
         /// <summary>
         /// 商品html内容

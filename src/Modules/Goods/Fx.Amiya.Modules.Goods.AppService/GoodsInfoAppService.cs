@@ -93,7 +93,16 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 goodsHospitalPrice.HospitalId = x.HospitalId;
                 goodsHospitalPrice.Price = x.Price;
                 await _goodsHospitalsPrice.AddAsync(goodsHospitalPrice);
-            }            
+            }
+
+            foreach (var x in goodsInfoAdd.GoodsStandardsPrice)
+            {
+                GoodsStandardsPriceAddDto goodsStandardsPrice = new GoodsStandardsPriceAddDto();
+                goodsStandardsPrice.GoodsId = goodsInfo.Id;
+                goodsStandardsPrice.Standards = x.Standards;
+                goodsStandardsPrice.Price = x.Price;
+                await goodsStandardsPriceService.AddAsync(goodsStandardsPrice);
+            }
             await _goodsInfoRepository.AddAsync(goodsInfo);
             //添加会员价格
             foreach (var item in goodsInfoAdd.GoodsMemberRankPrice)
@@ -147,6 +156,17 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     goodsHospitalPricedto.Price = z.Price;
                     goodsHospitalPriceList.Add(goodsHospitalPricedto);
                 }
+                var goodsStandardsPrice = await goodsStandardsPriceService.GetByGoodsId(id);
+                List<GoodsStandardsPriceDto> goodsStandardsPriceList = new List<GoodsStandardsPriceDto>();
+                foreach (var z in goodsStandardsPrice)
+                {
+                    GoodsStandardsPriceDto goodsStandardsPricedto = new GoodsStandardsPriceDto();
+                    goodsStandardsPricedto.GoodsId = id;
+                    goodsStandardsPricedto.Standards = z.Standards;
+                    goodsStandardsPricedto.Price = z.Price;
+                    goodsStandardsPriceList.Add(goodsStandardsPricedto);
+                }
+
 
                 //会员价格
                 var goodsMemberrankPrice =await goodsMemberRankPriceService.GetMemeberRankPriceByGoodsIdAsync(id);
@@ -187,7 +207,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     ShowSaleCount = goodsInfo.ShowSaleCount,
                     VisitCount = goodsInfo.VisitCount,
                     GoodsHospitalPrice = goodsHospitalPriceList,
-                    GoodsMemberRankPrice=goodsMemberrankPrice,
+                    GoodsStandardsPrice = goodsStandardsPrice,
+                    GoodsMemberRankPrice =goodsMemberrankPrice,
                     CarouselImageUrls = (from d in goodsInfo.GoodsInfoCarouselImages
                                          select new GoodsInfoCarouselImageDto
                                          {
