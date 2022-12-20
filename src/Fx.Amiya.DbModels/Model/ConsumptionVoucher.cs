@@ -51,5 +51,17 @@ namespace Fx.Amiya.DbModels.Model
         /// 抵用券编码
         /// </summary>
         public string ConsumptionVoucherCode { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remark { get; set; }
+        /// <summary>
+        /// 是否限制最小使用金额
+        /// </summary>
+        public bool IsNeedMinFee { get; set; }
+        /// <summary>
+        /// 最小金额限制
+        /// </summary>
+        public decimal? MinPrice { get; set; }
     }
 }

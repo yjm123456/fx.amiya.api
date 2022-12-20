@@ -29,7 +29,7 @@ namespace Fx.Amiya.Dto.ConsumptionVoucher
         /// </summary>
         public string ShareBy { get; set; }
         /// <summary>
-        /// 来源 0会员赠送,1分享,2每月领取
+        /// 来源 0会员赠送,1分享,2每月领取,3新用户赠送,4手动发放
         /// </summary>
         public int Source { get; set; }
 

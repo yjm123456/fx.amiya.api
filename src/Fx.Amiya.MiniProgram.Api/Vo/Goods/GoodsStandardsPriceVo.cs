@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Dto.GoodsStandardsPrice
+namespace Fx.Amiya.MiniProgram.Api.Vo.Goods
 {
-    public class GoodsStandardsPriceDto
+    public class GoodsStandardsPriceVo
     {
         public string Id { get; set; }
         public string GoodsId { get; set; }

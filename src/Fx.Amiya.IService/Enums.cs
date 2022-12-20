@@ -42,6 +42,42 @@ namespace Fx.Amiya.IService
         /// </summary>
         SendToHospital = 4
     }
+    /// <summary>
+    /// 预约叫车抵扣类型
+    /// </summary>
+    public enum AppointmentCarExchangeType {
+        //积分抵扣
+        PointDeduction=0,
+        //优惠券抵扣
+        VoucherDeduction=1
+    }
+    /// <summary>
+    /// 预约车型
+    /// </summary>
+    public enum AppointmentCarType {
+        //经济型
+        EconomyType=0,
+        //舒适型
+        ConfirmtableType=1,
+        //商务型
+        BusinessType=2,
+        //豪华型
+        LuxuriousType=3
+    }
+    /// <summary>
+    /// 预约叫车状态
+    /// </summary>
+    public enum AppointmentCarStatus
+    {
+        //已提交
+         Commit= 0,
+        //已处理
+        Process = 1,
+        //已取消
+        Cancle=2,
+        //已完成
+        Completed = 3
+    }
 
     public enum CheckType
     {

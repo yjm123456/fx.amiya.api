@@ -143,5 +143,9 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Goods
         /// 是否可使用抵用券
         /// </summary>
         public bool CanUseVoucher { get; set; }
+        /// <summary>
+        /// 关联规格价格
+        /// </summary>
+        public List<GoodsStandardsPriceVo> GoodsStandardsPrice { get; set; }
     }
 }

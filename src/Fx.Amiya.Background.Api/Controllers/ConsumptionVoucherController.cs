@@ -21,10 +21,14 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class ConsumptionVoucherController : ControllerBase
     {
         private readonly IConsumptionVoucherService consumptionVoucherService;
+        private readonly  ICustomerService customerService;
+        private readonly ICustomerConsumptionVoucherService customerConsumptionVoucherService;
 
-        public ConsumptionVoucherController(IConsumptionVoucherService consumptionVoucherService)
+        public ConsumptionVoucherController(IConsumptionVoucherService consumptionVoucherService, ICustomerService customerService, ICustomerConsumptionVoucherService customerConsumptionVoucherService)
         {
             this.consumptionVoucherService = consumptionVoucherService;
+            this.customerService = customerService;
+            this.customerConsumptionVoucherService = customerConsumptionVoucherService;
         }
 
         /// <summary>
@@ -43,6 +47,21 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<List<ConsumptionVoucherVo>>.Success().AddData("consumptionVoucherNames", consumptionVoucherInfos.ToList());
         }
         /// <summary>
+        /// 获取抵用券编码名称列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("codeList")]
+        public async Task<ResultData<List<ConsumptionVoucherCodeVo>>> GetMemberRankCodeNameListAsync()
+        {
+            var consumptionVoucherInfos = from d in await consumptionVoucherService.GetConsumptionVoucherkCodeNameListAsync()
+                                          select new ConsumptionVoucherCodeVo
+                                          {
+                                              VoucherCode = d.VoucherCode,
+                                              Name = d.Name,
+                                          };
+            return ResultData<List<ConsumptionVoucherCodeVo>>.Success().AddData("consumptionVoucherCodeNames", consumptionVoucherInfos.ToList());
+        }
+        /// <summary>
         /// 添加抵用券
         /// </summary>
         /// <param name="add"></param>
@@ -57,11 +76,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 IsSpecifyProduct = add.IsSpecifyProduct,
                 IsAccumulate = add.IsAccumulate,
                 IsShare = add.IsShare,
-                EffectiveTime = 0,
+                EffectiveTime = add.EffectiveTime,
                 Type = add.Type,
                 IsValid = add.IsValid,
                 CreateDate = DateTime.Now,
-                ConsumptionVoucherCode = add.ConsumptionVoucherCode
+                ConsumptionVoucherCode = add.ConsumptionVoucherCode,
+                Remark=add.Remark,
+                IsNeedMinPrice=add.IsNeedMinPrice,
+                MinPrice=add.MinPrice
             };
             await consumptionVoucherService.AddAsync(addConsumptionVoucherDto);
             return ResultData.Success();
@@ -102,7 +124,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 IsShare = c.IsShare,
                 TypeText = c.TypeText,
                 IsValid = c.IsValid,
-                ConsumptionVoucherCode = c.ConsumptionVoucherCode
+                ConsumptionVoucherCode = c.ConsumptionVoucherCode,
+                Remark=c.Remark,
+                IsNeedMinPrice=c.IsNeedMinPrice,
+                MinPrice=c.MinPrice,
+                EffectiveTime=c.EffectiveTime
             });
             return ResultData<FxPageInfo<ConsumptionVoucherInfoListVo>>.Success().AddData("consumptionVoucherInfoList", fxPageInfo);
         }
@@ -125,6 +151,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             consumptionVoucherInfoVo.Type = voucher.Type;
             consumptionVoucherInfoVo.IsValid = voucher.IsValid;
             consumptionVoucherInfoVo.ConsumptionVoucherCode = voucher.ConsumptionVoucherCode;
+            consumptionVoucherInfoVo.Remark = voucher.Remark;
+            consumptionVoucherInfoVo.IsNeedMinPrice = voucher.IsNeedMinPrice;
+            consumptionVoucherInfoVo.MinPrice = voucher.MinPrice;
+            consumptionVoucherInfoVo.EffectiveTime = voucher.EffectiveTime;
             return ResultData<ConsumptionVoucherInfoVo>.Success().AddData("consumptionVoucherInfo", consumptionVoucherInfoVo);
         }
         /// <summary>
@@ -146,12 +176,33 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Type = updateConsumption.Type,
                 IsValid = updateConsumption.IsValid,
                 UpdateTime = DateTime.Now,
-                ConsumptionVoucherCode = updateConsumption.ConsumptionVoucherCode
+                ConsumptionVoucherCode = updateConsumption.ConsumptionVoucherCode,
+                Remark = updateConsumption.Remark,
+                IsNeedMinPrice = updateConsumption.IsNeedMinPrice,
+                MinPrice = updateConsumption.MinPrice,
+                EffectiveTime= updateConsumption.EffectiveTime
             };
             await consumptionVoucherService.UpdateConsumptionVoucherAsync(updateConsumptionVoucherDto);
             return ResultData.Success();
         }
-
-
+        /// <summary>
+        /// 手动发放优惠券
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        [HttpPost("sendVoucher")]
+        public async Task SendVoucher(SendVoucherVo send) {
+            var voucher =await consumptionVoucherService.GetConsumptionVoucherByCodeAsync(send.VoucherCode);
+            if (voucher == null) throw new Exception("抵用券编码错误");
+            var effictime = voucher.EffectiveTime;
+            AddConsumptionVoucherDto addConsumptionVoucherDto = new AddConsumptionVoucherDto();
+            AddCustomerConsumptionVoucherDto addDto = new AddCustomerConsumptionVoucherDto();
+            addDto.CustomerId = send.CustomerId;
+            addDto.ConsumptionVoucherCode = send.VoucherCode;
+            addDto.Source = 4;
+            addDto.ExpireDate = DateTime.Now.AddDays(effictime.Value);
+            await customerConsumptionVoucherService.AddAsyn(addDto);
+        }
     }
 }

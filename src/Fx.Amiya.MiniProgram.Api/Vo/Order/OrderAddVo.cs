@@ -47,7 +47,7 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Order
         /// 美肤卡名称
         /// </summary>
         public string CardName { get; set; }
-
+        
         public List<OrderItemVo> OrderItemList { get; set; }
 
 

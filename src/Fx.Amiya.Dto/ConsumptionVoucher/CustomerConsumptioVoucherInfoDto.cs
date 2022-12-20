@@ -58,5 +58,7 @@ namespace Fx.Amiya.Dto.ConsumptionVoucher
         /// </summary>
         public int Type { get; set; }
         public string WriteOfCode { get; set; }
+        public bool IsNeedMinPrice { get; set; }
+        public decimal? MinPrice { get; set; }
     }
 }

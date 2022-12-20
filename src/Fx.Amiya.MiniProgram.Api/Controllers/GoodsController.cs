@@ -142,7 +142,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                      }).ToList(),
                 IsMember = false,
                 MemberRankPrice = goodsInfo.SalePrice.Value,
-                CanUseVoucher = false
+                CanUseVoucher = false,
+                GoodsStandardsPrice=(from d in goodsInfo.GoodsStandardsPrice select new GoodsStandardsPriceVo {
+                    Id=d.Id,
+                    GoodsId=d.GoodsId,
+                    Standards=d.Standards,
+                    Price=d.Price
+                }).ToList()
             };
             //当前用户的会员价格
             var member = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);

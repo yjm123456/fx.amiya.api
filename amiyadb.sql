@@ -1625,6 +1625,33 @@ CREATE TABLE `amiyadb`.`tbl_goods_standards_price` (
 -----------------------------------------------余建明 2022/12/19 END--------------------------------------------
 
 
+-----------------------------------------------王健 2022/12/20 BEGIN--------------------------------------------
+
+
+------预约叫车
+CREATE TABLE `tbl_appointment_car` (
+	`id` VARCHAR(50) NOT NULL,
+	`customer_id` VARCHAR(50) NOT NULL,
+	`name` VARCHAR(100) NOT NULL,
+	`phone` VARCHAR(50) NOT NULL,
+	`appointment_date` DATETIME NOT NULL,
+	`address` VARCHAR(500) NOT NULL,
+	`hospital` VARCHAR(500) NOT NULL,
+	`car_type` INT NOT NULL,
+	`exchange_type` INT NOT NULL,
+	`status` INT NOT NULL,
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT NOT NULL,
+	`delete_date` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+)
+COLLATE='utf8mb4_0900_ai_ci'
+;
+
+-----------------------------------------------王健 2022/12/20 END--------------------------------------------
+
+
 
 
 

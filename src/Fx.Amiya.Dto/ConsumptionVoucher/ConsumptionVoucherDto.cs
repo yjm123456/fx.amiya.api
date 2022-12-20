@@ -52,5 +52,17 @@ namespace Fx.Amiya.Dto.ConsumptionVoucher
         /// 抵用券类型名称
         /// </summary>
         public string TypeText { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remark { get; set; }
+        /// <summary>
+        /// 是否有最小支付金额限制
+        /// </summary>
+        public bool IsNeedMinPrice { get; set; }
+        /// <summary>
+        /// 最小限制金额
+        /// </summary>
+        public decimal? MinPrice { get; set; }
     }
 }

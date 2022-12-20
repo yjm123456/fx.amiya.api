@@ -177,6 +177,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 foreach (var z in goodsStandardsPrice)
                 {
                     GoodsStandardsPriceDto goodsStandardsPricedto = new GoodsStandardsPriceDto();
+                    //规格id
+                    goodsStandardsPricedto.Id = z.Id;
                     goodsStandardsPricedto.GoodsId = id;
                     goodsStandardsPricedto.Standards = z.Standards;
                     goodsStandardsPricedto.Price = z.Price;

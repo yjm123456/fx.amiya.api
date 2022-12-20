@@ -900,8 +900,39 @@ namespace Fx.Amiya.Service
                 case 2:
                     consumptionVoucherTypeText = "积分抵用券";
                     break;
+                case 3:
+                    consumptionVoucherTypeText = "预约叫车抵用券";
+                    break;
             }
             return consumptionVoucherTypeText;
+        }     
+
+            /// <summary>
+        /// 获取抵用券类型
+        /// </summary>
+        /// <param name="orderFrom"></param>
+        /// <returns></returns>
+        public static string GetAppointCArStatusType(int consumptionVoucherType)
+        {
+            string appointCArStatusType = "";
+            switch (consumptionVoucherType)
+            {
+                case 0:
+                    appointCArStatusType = "已提交";
+                    break;
+
+                case 1:
+                    appointCArStatusType = "已处理";
+                    break;
+
+                case 2:
+                    appointCArStatusType = "已取消";
+                    break;
+                case 3:
+                    appointCArStatusType = "已完成";
+                    break;
+            }
+            return appointCArStatusType;
         }
 
         /// <summary>
@@ -927,6 +958,75 @@ namespace Fx.Amiya.Service
                     break;
             }
             return inventoryStateText;
+        }
+        /// <summary>
+        /// 预约车型
+        /// </summary>
+        /// <param name="carType"></param>
+        /// <returns></returns>
+        public static string GetAppointmentCarTypeText(int carType) {
+            string carTypeText = "";
+            switch (carType) {
+                case 0:
+                    carTypeText = "经济型";
+                    break;
+                case 1:
+                    carTypeText = "舒适型";
+                    break;
+                case 2:
+                    carTypeText = "商务型";
+                    break;
+                case 3:
+                    carTypeText = "豪华型";
+                    break;
+            }
+            return carTypeText;
+        }
+
+        /// <summary>
+        /// 预约叫车状态
+        /// </summary>
+        /// <param name="carType"></param>
+        /// <returns></returns>
+        public static string GetAppointmentCarStatusText(int status)
+        {
+            string carStatusText = "";
+            switch (status)
+            {
+                case 0:
+                    carStatusText = "已提交";
+                    break;
+                case 1:
+                    carStatusText = "处理中";
+                    break;
+                case 2:
+                    carStatusText = "已取消";
+                    break;
+                case 3:
+                    carStatusText = "已完成";
+                    break;
+            }
+            return carStatusText;
+        }
+
+
+        /// <summary>
+        /// 获取预约叫车抵扣方式
+        /// </summary>
+        /// <param name="exchageType"></param>
+        /// <returns></returns>
+        public static string GetAppointmentCarExchageType(int exchageType) {
+            string exchangeTypeText = "";
+            switch (exchageType)
+            {
+                case 0:
+                    exchangeTypeText = "积分";
+                    break;
+                case 1:
+                    exchangeTypeText = "优惠券";
+                    break;         
+            }
+            return exchangeTypeText;
         }
 
 

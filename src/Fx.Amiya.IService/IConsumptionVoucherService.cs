@@ -29,6 +29,11 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<ConsumptionVoucherDto>> GetConsumptionVoucherkNameListAsync();
         /// <summary>
+        /// 获取抵用券编码列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<ConsumptionVoucherCodeNameList>> GetConsumptionVoucherkCodeNameListAsync();
+        /// <summary>
         /// 获取抵用券类型列表
         /// </summary>
         /// <returns></returns>

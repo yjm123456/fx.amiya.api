@@ -84,5 +84,10 @@ namespace Fx.Amiya.Core.Dto.Goods
         /// 积分
         /// </summary>
         Intergration,
+        /// <summary>
+        /// 预约叫车
+        /// </summary>
+        AppointmentCar
     }
+    
 }

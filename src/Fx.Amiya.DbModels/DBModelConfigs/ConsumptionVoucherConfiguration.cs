@@ -23,6 +23,9 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(c => c.IsShare).HasColumnName("is_share").HasColumnType("bit").IsRequired();
             builder.Property(c => c.EffectiveTime).HasColumnName("effective_time").HasColumnType("int").HasDefaultValue(0).IsRequired();
             builder.Property(c=>c.Type).HasColumnName("type").HasColumnType("int").HasDefaultValue(0).IsRequired();
+            builder.Property(c => c.Remark).HasColumnName("remark").HasColumnType("varchar(500)").IsRequired(false);
+            builder.Property(c => c.IsNeedMinFee).HasColumnName("is_need_min_fee").HasColumnType("bit").IsRequired();
+            builder.Property(c => c.MinPrice).HasColumnName("min_price").HasColumnType("decimal(10,2)").IsRequired(false);
             builder.Property(c => c.ExpireDate).HasColumnName("expire_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(c => c.IsValid).HasColumnName("is_valid").HasColumnType("bit").IsRequired();
             builder.Property(c => c.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();

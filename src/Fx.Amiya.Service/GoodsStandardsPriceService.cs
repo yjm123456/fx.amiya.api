@@ -63,6 +63,7 @@ namespace Fx.Amiya.Service
                                            where (d.GoodsId == goodsId)
                                            select new GoodsStandardsPriceDto
                                            {
+                                               Id=d.Id,
                                                GoodsId = d.GoodsId,
                                                Standards = d.Standards,
                                                Price = d.Price

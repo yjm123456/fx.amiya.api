@@ -76,6 +76,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private readonly IOrderRefundService orderRefundService;
         private readonly IUserService userService;
         private readonly IHuiShouQianPaymentService huiShouQianPaymentService;
+        private readonly IGoodsStandardsPriceService goodsStandardsPriceService;
         private readonly IUnitOfWork unitOfWork;
         
         
@@ -93,7 +94,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             IAliPayService aliPayService,
             Domain.IRepository.IWxMiniUserRepository wxMiniUserRepository,
             IIntegrationAccount integrationAccountService,
-            ICustomerIntegralOrderRefundService customerIntegralOrderRefundService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, ITaskService taskService, IBalanceAccountService balanceAccountService, IBalanceService balanceService, IUnitOfWork unitOfWork, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IGoodsHospitalsPrice goodsHospitalsPrice, IMemberCardHandleService memberCardHandleService, IOrderRefundService orderRefundService, IHuiShouQianPaymentService huiShouQianPaymentService)
+            ICustomerIntegralOrderRefundService customerIntegralOrderRefundService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, ITaskService taskService, IBalanceAccountService balanceAccountService, IBalanceService balanceService, IUnitOfWork unitOfWork, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IGoodsHospitalsPrice goodsHospitalsPrice, IMemberCardHandleService memberCardHandleService, IOrderRefundService orderRefundService, IHuiShouQianPaymentService huiShouQianPaymentService, IGoodsStandardsPriceService goodsStandardsPriceService)
         {
             this.orderHistoryService = orderHistoryService;
             this.orderService = orderService;
@@ -120,6 +121,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             this.orderRefundService = orderRefundService;
             this.userService = userService;
             this.huiShouQianPaymentService = huiShouQianPaymentService;
+            this.goodsStandardsPriceService = goodsStandardsPriceService;
         }
 
 
@@ -519,7 +521,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     }
                     else
                     {
-                        amiyaOrder.ActualPayment = goodsInfo.SalePrice * item.Quantity;
+                        //计算规格
+                        var standard= await goodsStandardsPriceService.GetByGoodsId(item.GoodsId);
+                        var find = standard.Find(e=>e.Id==item.SelectStandard);
+                        if (find == null) throw new Exception("规格错误");
+                        amiyaOrder.ActualPayment = find.Price * item.Quantity;
+                        //amiyaOrder.ActualPayment = goodsInfo.SalePrice * item.Quantity;
                     }
 
                 }
@@ -662,8 +669,19 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 if (totalFee < 0) throw new Exception("支付金额异常");
                 orderId = orderId.Trim(',');
                 goodsName = goodsName.Trim(',');
-                //微信支付
-                if (orderAdd.ExchangeType == 2)
+
+                if (!string.IsNullOrEmpty(orderAdd.VoucherId))
+                {
+                    var voucher = await customerConsumptionVoucherService.GetVoucherByCustomerIdAndVoucherIdAsync(customerId, orderAdd.VoucherId);
+                    if (voucher.IsNeedMinPrice) {
+                        if (totalFee<voucher.MinPrice) {
+                            throw new Exception("支付金额不满足抵用券使用条件");
+                        }
+                    }
+                }
+
+                    //微信支付
+                    if (orderAdd.ExchangeType == 2)
                 {
                     WxPackageInfo packageInfo = new WxPackageInfo();
                     packageInfo.Body = orderId;

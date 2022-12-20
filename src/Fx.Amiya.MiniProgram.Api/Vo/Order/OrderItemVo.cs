@@ -43,6 +43,10 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Order
         /// 是否是面诊卡
         /// </summary>
         public bool IsFaceCard { get; set; }
+        /// <summary>
+        /// 规格id
+        /// </summary>
+        public string SelectStandard { get; set; }
 
         ///// <summary>
         ///// 抵扣积分

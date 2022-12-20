@@ -161,6 +161,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<ImprovePlanAndRemark> ImprovePlanAndRemarks { get; set; }
         public virtual DbSet<AmiyaRemark> AmiyaRemarks { get; set; }
         public virtual DbSet<MessageRecieve> MessageRecieves { get; set; }
+        public virtual DbSet<AppointmentCar> AppointmentCars { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -320,6 +321,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new ImprovePlanAndRemarkConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaRemarkConfiguration());
             modelBuilder.ApplyConfiguration(new MessageRecieveConfiguration());
+            modelBuilder.ApplyConfiguration(new AppointmentCarConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

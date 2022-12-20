@@ -50,7 +50,7 @@ namespace Fx.Amiya.Service
                 Id = CreateOrderIdHelper.GetNextNumber(),
                 CustomerId = addCustomerConsumption.CustomerId,
                 ConsumptionVoucherId = voucher.Id,
-                ExpireDate=addCustomerConsumption.ExpireDate,
+                ExpireDate=DateTime.Now.AddDays((double)voucher.EffectiveTime),
                 IsUsed = false,  
                 IsExpire = false,
                 CreateDate = DateTime.Now,
@@ -122,7 +122,7 @@ namespace Fx.Amiya.Service
             var list = from ccv in dalCustomerConsumptionVoucher.GetAll()
                        join cv in dalConsumptionVoucher.GetAll() on ccv.ConsumptionVoucherId equals cv.Id
                        join gv in dalGoodsConsumptionVoucher.GetAll() on cv.Id equals gv.ConsumptionVoucherId
-                       where ccv.CustomerId == customerId && (isUsed == null || ccv.IsUsed == isUsed) && cv.Type==0 &&ccv.IsExpire==false&&ccv.ExpireDate>DateTime.Now&&ccv.ConsumptionVoucherId==gv.ConsumptionVoucherId&&gv.GoodsId==goodsId orderby cv.DeductMoney descending
+                       where ccv.CustomerId == customerId && (isUsed == null || ccv.IsUsed == isUsed) && cv.Type==0 &&ccv.IsExpire==false&&ccv.ExpireDate>DateTime.Now&&ccv.ConsumptionVoucherId==gv.ConsumptionVoucherId&&(gv.GoodsId == goodsId||cv.IsSpecifyProduct==false) orderby cv.DeductMoney descending
                        select new CustomerConsumptioVoucherInfoDto
                        {
                            Id = ccv.Id,
@@ -412,6 +412,8 @@ namespace Fx.Amiya.Service
                         DeductMoney = cv.DeductMoney,
                         IsSpecifyProduct = cv.IsSpecifyProduct,
                         IsUsed = ccv.IsUsed,
+                        IsNeedMinPrice=cv.IsNeedMinFee,
+                        MinPrice=cv.MinPrice
                     }).SingleOrDefaultAsync();
         }
         /// <summary>

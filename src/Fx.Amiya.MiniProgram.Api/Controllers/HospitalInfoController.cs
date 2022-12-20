@@ -267,5 +267,25 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 return ResultData<List<TagNameVo>>.Fail(ex.Message);
             }
         }
+        [HttpGet("hospitalNameList")]
+        
+        public async Task<ResultData<List<HospitalNameVo>>> GetHospitalNameListAsync(string name)
+        {
+            try
+            {
+                var hospital = from d in await hospitalInfoService.GetHospitalNameListAsync(true, name)
+                               select new HospitalNameVo
+                               {
+                                   Id = d.Id,
+                                   Name = d.Name
+                               };
+
+                return ResultData<List<HospitalNameVo>>.Success().AddData("hospitalInfo", hospital.ToList());
+            }
+            catch (Exception ex)
+            {
+                return ResultData<List<HospitalNameVo>>.Fail(ex.Message);
+            }
+        }
     }
 }

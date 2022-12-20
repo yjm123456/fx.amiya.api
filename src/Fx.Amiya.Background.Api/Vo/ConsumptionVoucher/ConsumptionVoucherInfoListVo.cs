@@ -37,5 +37,21 @@ namespace Fx.Amiya.Background.Api.Vo.ConsumptionVoucher
         /// 抵用券编码
         /// </summary>
         public string ConsumptionVoucherCode { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remark { get; set; }
+        /// <summary>
+        /// 是否有最小支付金额限制
+        /// </summary>
+        public bool IsNeedMinPrice { get; set; }
+        /// <summary>
+        /// 最小限制金额
+        /// </summary>
+        public decimal? MinPrice { get; set; }
+        /// <summary>
+        /// 有效期时长
+        /// </summary>
+        public long? EffectiveTime { get; set; }
     }
 }

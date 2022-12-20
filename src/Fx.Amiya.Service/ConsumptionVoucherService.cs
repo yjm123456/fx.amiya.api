@@ -36,6 +36,11 @@ namespace Fx.Amiya.Service
             if (consumerVoucher != null) throw new Exception("抵用券编码重复,请重新设置抵用券编码");
             if (addConsumptionVoucher.Type == 1 && addConsumptionVoucher.DeductMoney > 0) throw new Exception("虚拟商品抵用券无法设置抵扣量!");
             if (addConsumptionVoucher.Type != 1 && addConsumptionVoucher.DeductMoney <= 0) throw new Exception("现金/积分抵用券抵扣量不能小于0!");
+            if (addConsumptionVoucher.Type!=1 && addConsumptionVoucher.IsNeedMinPrice) {
+                if (!addConsumptionVoucher.MinPrice.HasValue|| addConsumptionVoucher.MinPrice.Value<=0) {
+                    throw new Exception("最小限制金额不能为空或小于0");
+                }
+            }
             ConsumptionVoucher consumptionVoucher = new ConsumptionVoucher
             {
                 Id = CreateOrderIdHelper.GetNextNumber(),
@@ -49,7 +54,10 @@ namespace Fx.Amiya.Service
                 ExpireDate = addConsumptionVoucher.ExpireDate,
                 IsValid = addConsumptionVoucher.IsValid,
                 CreateDate = addConsumptionVoucher.CreateDate,
-                ConsumptionVoucherCode = addConsumptionVoucher.ConsumptionVoucherCode
+                ConsumptionVoucherCode = addConsumptionVoucher.ConsumptionVoucherCode,
+                Remark = addConsumptionVoucher.Remark,
+                IsNeedMinFee = addConsumptionVoucher.IsNeedMinPrice,
+                MinPrice= addConsumptionVoucher.MinPrice
             };
             await dalConsumptionVoucher.AddAsync(consumptionVoucher, true);
         }
@@ -73,7 +81,8 @@ namespace Fx.Amiya.Service
                     CreateDate = e.CreateDate,
                     UpdateDate = e.UpdateDate,
                     ConsumptionVoucherCode = e.ConsumptionVoucherCode,
-                    Type = e.Type
+                    Type = e.Type,
+                    EffectiveTime=e.EffectiveTime
                 }).SingleOrDefault();
             }
             catch (Exception ex)
@@ -129,7 +138,11 @@ namespace Fx.Amiya.Service
                 Type = c.Type,
                 IsValid = c.IsValid,
                 ConsumptionVoucherCode = c.ConsumptionVoucherCode,
-                TypeText =ServiceClass.GetConsumptionVoucherType(c.Type)
+                TypeText =ServiceClass.GetConsumptionVoucherType(c.Type),
+                Remark=c.Remark,
+                IsNeedMinPrice=c.IsNeedMinFee,
+                MinPrice=c.MinPrice,
+                EffectiveTime = c.EffectiveTime
             });
             fxPageInfo.TotalCount = consumptionVoucherList.Count();
             fxPageInfo.List = consumptionVoucherList.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
@@ -152,6 +165,10 @@ namespace Fx.Amiya.Service
                 Type = e.Type,
                 IsValid = e.IsValid,
                 ConsumptionVoucherCode = e.ConsumptionVoucherCode,
+                Remark=e.Remark,
+                IsNeedMinPrice=e.IsNeedMinFee,
+                MinPrice=e.MinPrice,
+                EffectiveTime=e.EffectiveTime
             }).SingleOrDefault();
             return voucher;
         }
@@ -175,6 +192,7 @@ namespace Fx.Amiya.Service
                 voucher.IsValid = updateDto.IsValid;
                 voucher.ConsumptionVoucherCode = updateDto.ConsumptionVoucherCode;
                 voucher.UpdateDate = updateDto.UpdateTime;
+                voucher.EffectiveTime = (int)updateDto.EffectiveTime.Value;
                 if (voucher.Type == 1 && voucher.DeductMoney > 0) throw new Exception("虚拟商品抵用券无法设置抵用量!");
                 if (voucher.Type != 1 && voucher.DeductMoney <= 0) throw new Exception("现金/积分抵用券抵扣量不能小于0!");
                 var existVoucher = dalConsumptionVoucher.GetAll().Where(e => e.Id != updateDto.Id && e.ConsumptionVoucherCode == updateDto.ConsumptionVoucherCode).SingleOrDefault();
@@ -185,6 +203,18 @@ namespace Fx.Amiya.Service
             {
                 throw ex;
             }
+        }
+        /// <summary>
+        /// 获取抵用券编码列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ConsumptionVoucherCodeNameList>> GetConsumptionVoucherkCodeNameListAsync()
+        {
+            return dalConsumptionVoucher.GetAll().Where(e => e.IsValid == true).Select(v => new ConsumptionVoucherCodeNameList
+            {
+                VoucherCode=v.ConsumptionVoucherCode,
+                Name = v.Name
+            }).ToList();
         }
     }
 }

@@ -52,7 +52,7 @@ namespace Fx.Amiya.Service
         {           
             var consumptionVoucherList= from c in dalGoodsConsumptionVoucher.GetAll()
             join v in dalConsumptionVoucher.GetAll() on c.ConsumptionVoucherId equals v.Id
-            where c.GoodsId == goodsId
+            where (c.GoodsId == goodsId || v.IsSpecifyProduct == false)
             select new GoodsConsumptionVoucherDto
             {
                 ConsumptionVoucherId=c.ConsumptionVoucherId,
