@@ -1292,5 +1292,34 @@ namespace Fx.Amiya.Service
             }
             return channelTypeText;
         }
+
+        /// <summary>
+        /// 财务对账单状态
+        /// </summary>
+        /// <param name="reconciliationDocumentsState"></param>
+        /// <returns></returns>
+        public static string ReconciliationDocumentsStateText(int reconciliationDocumentsState)
+        {
+            string typeText = "";
+            switch (reconciliationDocumentsState)
+            {
+                case 0:
+                    typeText = "已提交";
+                    break;
+
+                case 1:
+                    typeText = "待确认";
+                    break;
+
+                case 2:
+                    typeText = "问题账单";
+                    break;
+
+                case 3:
+                    typeText = "对账完成";
+                    break;
+            }
+            return typeText;
+        }
     }
 }

@@ -31,6 +31,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<AmiyaWareHouseNameManage> AmiyaWareHouseNameManage { get; set; }
         public virtual DbSet<DockingHospitalCustomerInfo> DockingHospitalCustomerInfo { get; set; }
         public virtual DbSet<GreatHospitalOperationHealth> GreatHospitalOperationHealth { get; set; }
+        public virtual DbSet<ReconciliationDocuments> ReconciliationDocuments { get; set; }
         public virtual DbSet<HospitalOperationData> HospitalOperationData { get; set; }
         public virtual DbSet<BeforeLivingTikTokDailyTarget> BeforeLivingTikTokDailyTraget { get; set; }
         public virtual DbSet<BeforeLivingXiaoHongShuDailyTarget> BeforeLivingXiaoHongShuDailyTraget { get; set; }
@@ -269,6 +270,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new LeaveMessageConfiguration());
             modelBuilder.ApplyConfiguration(new TrackTypeConfiguration());
             modelBuilder.ApplyConfiguration(new TrackToolConfiguration());
+            modelBuilder.ApplyConfiguration(new ReconciliationDocumentsConfiguration());
             modelBuilder.ApplyConfiguration(new TrackThemeConfiguration());
             modelBuilder.ApplyConfiguration(new TrackRecordConfiguration());
             modelBuilder.ApplyConfiguration(new WaitTrackCustomerConfiguration());

@@ -1622,6 +1622,40 @@ CREATE TABLE `amiyadb`.`tbl_goods_standards_price` (
   `standards` VARCHAR(500) NOT NULL,
   `price` DECIMAL(10,2) NULL,
   PRIMARY KEY (`id`));
+
+  --财务对账单
+  CREATE TABLE `amiyadb`.`tbl_reconciliation_documents` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `hospital_id` INT UNSIGNED NOT NULL,
+  `customer_name` VARCHAR(100) NULL,
+  `customer_phone` VARCHAR(45) NULL,
+  `deal_date` DATETIME NULL ,
+  `deal_goods` VARCHAR(300) NULL,
+  `total_deal_price` DECIMAL(12,2) NULL,
+  `return_back_price_percent` DECIMAL(4,2) NULL,
+  `system_update_price_percent` DECIMAL(4,2) NULL,
+  `question_reason` VARCHAR(1000) NULL,
+  `remark` VARCHAR(1000) NULL,
+  `reconciliation_state` INT NOT NULL DEFAULT 0,
+  `create_by` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_reconciliation_documents_hospitalinfo_idx` (`hospital_id` ASC) VISIBLE,
+  INDEX `fk_reconciliation_documents_hospitalempinfo_idx` (`create_by` ASC) VISIBLE,
+  CONSTRAINT `fk_reconciliation_documents_hospitalinfo`
+    FOREIGN KEY (`hospital_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_reconciliation_documents_hospitalempinfo`
+    FOREIGN KEY (`create_by`)
+    REFERENCES `amiyadb`.`tbl_hospital_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
 -----------------------------------------------余建明 2022/12/19 END--------------------------------------------
 
 

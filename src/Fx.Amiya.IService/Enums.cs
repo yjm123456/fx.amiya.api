@@ -9,11 +9,11 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 管理端
         /// </summary>
-        InternalAuthorize=0,
+        InternalAuthorize = 0,
         /// <summary>
         /// 医院端
         /// </summary>
-        TenantAuhtorize=1,
+        TenantAuhtorize = 1,
 
     }
 
@@ -45,24 +45,26 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 预约叫车抵扣类型
     /// </summary>
-    public enum AppointmentCarExchangeType {
+    public enum AppointmentCarExchangeType
+    {
         //积分抵扣
-        PointDeduction=0,
+        PointDeduction = 0,
         //优惠券抵扣
-        VoucherDeduction=1
+        VoucherDeduction = 1
     }
     /// <summary>
     /// 预约车型
     /// </summary>
-    public enum AppointmentCarType {
+    public enum AppointmentCarType
+    {
         //经济型
-        EconomyType=0,
+        EconomyType = 0,
         //舒适型
-        ConfirmtableType=1,
+        ConfirmtableType = 1,
         //商务型
-        BusinessType=2,
+        BusinessType = 2,
         //豪华型
-        LuxuriousType=3
+        LuxuriousType = 3
     }
     /// <summary>
     /// 预约叫车状态
@@ -70,11 +72,11 @@ namespace Fx.Amiya.IService
     public enum AppointmentCarStatus
     {
         //已提交
-         Commit= 0,
+        Commit = 0,
         //已处理
         Process = 1,
         //已取消
-        Cancle=2,
+        Cancle = 2,
         //已完成
         Completed = 3
     }
@@ -700,19 +702,20 @@ namespace Fx.Amiya.IService
         /// </summary>
         Other = 0,
     }
-    public enum CheckState {
+    public enum CheckState
+    {
         /// <summary>
         /// 待审核
         /// </summary>
-        CheckPending=0,
+        CheckPending = 0,
         /// <summary>
         /// 审核通过
         /// </summary>
-        CheckSuccess=1,
+        CheckSuccess = 1,
         /// <summary>
         /// 审核失败
         /// </summary>
-        CheckFail=2
+        CheckFail = 2
     }
     public enum RefundState
     {
@@ -731,6 +734,31 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 退款中
         /// </summary>
-        Refunding=3
+        Refunding = 3
     }
+
+
+    /// <summary>
+    /// 财务对账单状态
+    /// </summary>
+    public enum ReconciliationDocumentsStateEnum
+    {
+        /// <summary>
+        /// 已提交
+        /// </summary>
+        Submited = 0,
+        /// <summary>
+        /// 待确认
+        /// </summary>
+        WaitingConfirmed = 1,
+        /// <summary>
+        /// 问题账单
+        /// </summary>
+        QuestionDocument = 2,
+        /// <summary>
+        /// 对账完成
+        /// </summary>
+        Successful = 3
+    }
+
 }
