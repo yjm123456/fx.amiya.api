@@ -25,7 +25,10 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.AppointmentCar
         /// 预约车型
         /// </summary>
         public int CarType { get; set; }
-        
+        /// <summary>
+        /// 使用的抵用券id
+        /// </summary>
+        public string VoucherId { get; set; }
         /// <summary>
         /// 抵扣类型
         /// </summary>

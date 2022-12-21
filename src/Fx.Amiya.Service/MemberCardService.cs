@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto.ConsumptionVoucher;
 using Fx.Amiya.Dto.GrowthPoints;
 using Fx.Amiya.Dto.MemberCard;
 using Fx.Amiya.IService;
@@ -115,17 +116,16 @@ namespace Fx.Amiya.Service
                         HandleBy = membercard.HandleBy
                     };
                     await memberCardSendRecordService.AddAsync(updateRecord);
-                    //暂时不赠送抵用券
-                    /*//如果是白金会员,发放白金会员抵用券
-                    if (memberRankCode == MemberRankCode.MEIYAWhiteCardMember)
+
+                    //发放指定的抵用券规则为,优惠券编码为会员编码rankcode加字符串"voucher"
+                    AddCustomerConsumptionVoucherDto memberVoucher = new AddCustomerConsumptionVoucherDto
                     {
-                        await customerConsumptionVoucherService.MEIYAWhiteCardMemberSendVoucherAsync(customerId,0);
-                    }
-                    //如果是黑金会员,发放黑金会员抵用券
-                    if (memberRankCode == MemberRankCode.BlackCardMember)
-                    {
-                        await customerConsumptionVoucherService.BlackCardMemberSendVoucherAsync(customerId,0);
-                    }*/
+                        CustomerId = customerId,
+                        ConsumptionVoucherCode = memberRankCode+"vouchwe",
+                        ExpireDate = DateTimeUtil.GetNextMonthFirstDay(),
+                        Source = 0
+                    };
+                    await customerConsumptionVoucherService.AddAsyn(memberVoucher);
                 }
             }
             else {

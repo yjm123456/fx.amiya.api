@@ -1653,8 +1653,16 @@ ADD PRIMARY KEY (`id`);
 -----------------------------------------------余建明 2022/12/19 END--------------------------------------------
 
 
+-----------------------------------------------王健 2022/12/20 BEGIN--------------------------------------------
 
+----抵用券添加备注,满减限制
 
+ALTER TABLE `tbl_consumption_voucher`
+	ADD COLUMN `remark` VARCHAR(500) NULL DEFAULT NULL AFTER `update_time`,
+	ADD COLUMN `is_need_min_fee` BIT NOT NULL AFTER `remark`,
+	ADD COLUMN `min_price` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `is_need_min_fee`;
+
+-----------------------------------------------王健 2022/12/20 END--------------------------------------------
 
 
 

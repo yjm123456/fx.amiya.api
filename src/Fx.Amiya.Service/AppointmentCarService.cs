@@ -42,7 +42,7 @@ namespace Fx.Amiya.Service
             //判断优惠券
 
             AppointmentCar appointmentCar = new AppointmentCar();
-            appointmentCar.Id = Guid.NewGuid().ToString().Replace("-","");
+            appointmentCar.Id = add.Id;
             appointmentCar.Name = add.Name;
             appointmentCar.Phone = add.Phone;
             appointmentCar.AppointmentDate = add.AppointmentDate;
@@ -71,6 +71,7 @@ namespace Fx.Amiya.Service
                 AppointmentDate=e.AppointmentDate,
                 Address=e.Address,
                 Hospital=e.Hospital,
+                Status=e.Status,
             }).SingleOrDefault();
             return record;
 
@@ -149,17 +150,18 @@ namespace Fx.Amiya.Service
             await dalAppointmentCar.UpdateAsync(record, true);
         }
 
-        public async Task<FxPageInfo<WxAppointmentCarInfoDto>> WxGetListByPageAsync(string customerId, int pageNum, int pageSize, int status)
+        public async Task<FxPageInfo<WxAppointmentCarInfoDto>> WxGetListByPageAsync(string customerId, int pageNum, int pageSize, int? status)
         {
-            var record = dalAppointmentCar.GetAll().Where(e => e.CustomerId == customerId && e.Valid == true && e.Status == status).Select(e => new WxAppointmentCarInfoDto
+            var record = dalAppointmentCar.GetAll().Where(e => e.CustomerId == customerId && e.Valid == true && (!status.HasValue|| e.Status == status)).Select(e => new WxAppointmentCarInfoDto
             {
+                Id=e.Id,
                 AppointmentDate = e.AppointmentDate,
                 Address = e.Address,
                 Hospital = e.Hospital,
                 CarType = e.CarType,
                 CarTypeText = ServiceClass.GetAppointmentCarTypeText(e.CarType),
                 Status = e.Status,
-                StatusText = ServiceClass.GetAppointmentCarTypeText(e.Status),
+                StatusText = ServiceClass.GetAppointmentCarStatusText(e.Status),
                 ExchageType=e.ExchangeType,
                 ExchageTypeText=ServiceClass.GetAppointmentCarExchageType(e.ExchangeType)
             }); ; ;

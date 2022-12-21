@@ -7,6 +7,7 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.AppointmentCar
 {
     public class AppointmentCarVo
     {
+        public string Id { get; set; }
         /// <summary>
         /// 预约时间
         /// </summary>

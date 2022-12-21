@@ -34,6 +34,14 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<CustomerConsumptioVoucherInfoDto>> GetAllCustomerConsumptionVoucherListAsync(string customerId, bool? isUsed,string goodsId);
         /// <summary>
+        /// 获取当前可用的预约叫车抵用券
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="isUsed">是否使用</param>
+        /// <param name="goodsId">商品id</param>
+        /// <returns></returns>
+        Task<List<CustomerConsumptioVoucherInfoDto>> GetAllCustomerConsumptionCarVoucherListAsync(string customerId);
+        /// <summary>
         /// 普通会员发放抵用券
         /// </summary>
         /// <param name="customerId"></param>
@@ -95,5 +103,19 @@ namespace Fx.Amiya.IService
         /// <param name="customerId"></param>
         /// <returns></returns>
         Task NewCustomerSendVoucherAsync(string customerId);
+        /// <summary>
+        /// 判断最近7天有没有领取过会员赠送券,没有则发放,有则不发放
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        Task IsReciveVoucherThisMonthThisWeekAsync(string customerId);
+        /// <summary>
+        /// 获取有效的叫车抵用券
+        /// </summary>
+        /// <param name="customerid"></param>
+        /// <param name="voucherid"></param>
+        /// <returns></returns>
+        Task<CustomerConsumptioVoucherInfoDto> GetCarVoucherByCustomerIdAndVoucherIdAsync(string customerid, string voucherid);
+        Task<CustomerConsumptioVoucherInfoDto> GetCarTypeVoucherByCustomerIdAndVoucherIdAsync(string customerid, string carType);
     }
 }

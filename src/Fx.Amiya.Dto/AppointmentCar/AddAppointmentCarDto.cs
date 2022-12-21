@@ -8,6 +8,7 @@ namespace Fx.Amiya.Dto.AppointmentCar
 {
     public class AddAppointmentCarDto
     {
+        public string Id { get; set; }
         public string CustomerId { get; set; }
         /// <summary>
         /// 姓名

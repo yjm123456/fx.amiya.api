@@ -193,6 +193,8 @@ namespace Fx.Amiya.Service
                 voucher.ConsumptionVoucherCode = updateDto.ConsumptionVoucherCode;
                 voucher.UpdateDate = updateDto.UpdateTime;
                 voucher.EffectiveTime = (int)updateDto.EffectiveTime.Value;
+                voucher.IsNeedMinFee = updateDto.IsNeedMinPrice;
+                voucher.MinPrice = updateDto.MinPrice;
                 if (voucher.Type == 1 && voucher.DeductMoney > 0) throw new Exception("虚拟商品抵用券无法设置抵用量!");
                 if (voucher.Type != 1 && voucher.DeductMoney <= 0) throw new Exception("现金/积分抵用券抵扣量不能小于0!");
                 var existVoucher = dalConsumptionVoucher.GetAll().Where(e => e.Id != updateDto.Id && e.ConsumptionVoucherCode == updateDto.ConsumptionVoucherCode).SingleOrDefault();

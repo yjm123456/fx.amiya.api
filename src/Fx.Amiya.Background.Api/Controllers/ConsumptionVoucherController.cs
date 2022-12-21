@@ -192,7 +192,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="code"></param>
         /// <returns></returns>
         [HttpPost("sendVoucher")]
-        public async Task SendVoucher(SendVoucherVo send) {
+        public async Task<ResultData> SendVoucher(SendVoucherVo send) {
             var voucher =await consumptionVoucherService.GetConsumptionVoucherByCodeAsync(send.VoucherCode);
             if (voucher == null) throw new Exception("抵用券编码错误");
             var effictime = voucher.EffectiveTime;
@@ -203,6 +203,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.Source = 4;
             addDto.ExpireDate = DateTime.Now.AddDays(effictime.Value);
             await customerConsumptionVoucherService.AddAsyn(addDto);
+            return ResultData.Success();
         }
     }
 }

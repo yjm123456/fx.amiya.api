@@ -54,11 +54,15 @@ namespace Fx.Amiya.Dto.ConsumptionVoucher
         /// </summary>
         public int Source { get; set; }
         /// <summary>
-        /// 抵用券类型 0:商品抵用券,1:面诊卡抵用券
+        /// 抵用券类型 0:商品抵用券,1:面诊卡抵用券,2积分抵用券,3打车抵用券
         /// </summary>
         public int Type { get; set; }
         public string WriteOfCode { get; set; }
         public bool IsNeedMinPrice { get; set; }
         public decimal? MinPrice { get; set; }
+        /// <summary>
+        /// 抵用券编码
+        /// </summary>
+        public string VoucherCode { get; set; }
     }
 }

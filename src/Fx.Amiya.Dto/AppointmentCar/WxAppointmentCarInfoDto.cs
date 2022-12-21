@@ -8,7 +8,8 @@ namespace Fx.Amiya.Dto.AppointmentCar
 {
     public class WxAppointmentCarInfoDto
     {
-        
+        public string Id { get; set; }
+
         /// <summary>
         /// 预约时间
         /// </summary>

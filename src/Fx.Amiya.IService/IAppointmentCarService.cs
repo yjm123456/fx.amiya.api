@@ -27,7 +27,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<WxAppointmentCarInfoDto>> WxGetListByPageAsync(string customerId,int pageNum,int pageSize,int status);
+        Task<FxPageInfo<WxAppointmentCarInfoDto>> WxGetListByPageAsync(string customerId,int pageNum,int pageSize,int? status);
         /// <summary>
         /// 后台获取预约叫车列表
         /// </summary>

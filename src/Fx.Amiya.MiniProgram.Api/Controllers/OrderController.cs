@@ -449,7 +449,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 }
                 if (goodsInfo.ExchangeType == ExchangeType.Integration)
                 {
-                    amiyaOrder.IntegrationQuantity = goodsInfo.IntegrationQuantity * item.Quantity;
+                    var standard = await goodsStandardsPriceService.GetByGoodsId(item.GoodsId);
+                    var find = standard.Find(e => e.Id == item.SelectStandard);
+                    if (find == null) throw new Exception("规格错误");
+                    amiyaOrder.IntegrationQuantity = find.Price * item.Quantity;
+                    //amiyaOrder.IntegrationQuantity = goodsInfo.IntegrationQuantity * item.Quantity;
                 }
                 if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
                 {
@@ -502,32 +506,36 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 amiyaOrder.OrderType = goodsInfo.IsMaterial == true ? (byte)OrderType.MaterialOrder : (byte)OrderType.VirtualOrder;
 
                 //从数据库查询商品价格
-                if (goodsInfo.IsMaterial)
+                if (goodsInfo.IsMaterial )
                 {
-                    //实体商品
+                    if (goodsInfo.ExchangeType != ExchangeType.Integration) {
+                        //实体商品
 
-                    //判断是否包含会员价
-                    if (goodsInfo.GoodsMemberRankPrice.Count > 0)
-                    {
-                        var member = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
-                        var memberPrice = goodsInfo.GoodsMemberRankPrice.Find(p => p.MemberRankId == member.MemberRankId);
-                        if (memberPrice != null)
+                        //判断是否包含会员价
+                        if (goodsInfo.GoodsMemberRankPrice.Count > 0)
                         {
-                            amiyaOrder.ActualPayment = memberPrice.Price * item.Quantity;
+                            var member = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
+                            var memberPrice = goodsInfo.GoodsMemberRankPrice.Find(p => p.MemberRankId == member.MemberRankId);
+                            if (memberPrice != null)
+                            {
+                                amiyaOrder.ActualPayment = memberPrice.Price * item.Quantity;
+                            }
+                            else
+                            {
+                                amiyaOrder.ActualPayment = goodsInfo.SalePrice * item.Quantity;
+                            }
                         }
-                        else {
-                            amiyaOrder.ActualPayment = goodsInfo.SalePrice * item.Quantity;
+                        else
+                        {
+                            //计算规格
+                            var standard = await goodsStandardsPriceService.GetByGoodsId(item.GoodsId);
+                            var find = standard.Find(e => e.Id == item.SelectStandard);
+                            if (find == null) throw new Exception("规格错误");
+                            amiyaOrder.ActualPayment = find.Price * item.Quantity;
+                            //amiyaOrder.ActualPayment = goodsInfo.SalePrice * item.Quantity;
                         }
                     }
-                    else
-                    {
-                        //计算规格
-                        var standard= await goodsStandardsPriceService.GetByGoodsId(item.GoodsId);
-                        var find = standard.Find(e=>e.Id==item.SelectStandard);
-                        if (find == null) throw new Exception("规格错误");
-                        amiyaOrder.ActualPayment = find.Price * item.Quantity;
-                        //amiyaOrder.ActualPayment = goodsInfo.SalePrice * item.Quantity;
-                    }
+                    
 
                 }
                 else
