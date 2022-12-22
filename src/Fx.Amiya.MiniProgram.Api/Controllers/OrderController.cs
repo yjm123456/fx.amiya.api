@@ -420,7 +420,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             //积分余额
             decimal integrationBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(customerId);
             var customerInfo = await customerService.GetByIdAsync(customerId);
-             string phone = await customerService.GetPhoneByCustomerIdAsync(customerId);
+            string phone = await customerService.GetPhoneByCustomerIdAsync(customerId);
             var miniUserInfo = await _wxMiniUserRepository.GetByUserIdAsync(customerInfo.UserId);
             string OpenId = miniUserInfo.OpenId;
             DateTime date = DateTime.Now;
@@ -434,7 +434,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             foreach (var item in orderAdd.OrderItemList)
             {
                 if (item.Quantity <= 0) throw new Exception("下单数量错误");
-                if (item.IsSkinCare) {
+                if (item.IsSkinCare)
+                {
                     var orderExist = await orderService.IsExistMFCard(customerId);
                     if (orderExist)
                     {
@@ -447,12 +448,14 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 {
                     IsExistThirdPartPay = true;
                 }
+                //积分商品计算所选规格价
                 if (goodsInfo.ExchangeType == ExchangeType.Integration)
                 {
                     var standard = await goodsStandardsPriceService.GetByGoodsId(item.GoodsId);
                     var find = standard.Find(e => e.Id == item.SelectStandard);
                     if (find == null) throw new Exception("规格错误");
                     amiyaOrder.IntegrationQuantity = find.Price * item.Quantity;
+                    amiyaOrder.ExchangeType = (int)ExchangeType.Integration;
                     //amiyaOrder.IntegrationQuantity = goodsInfo.IntegrationQuantity * item.Quantity;
                 }
                 if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
@@ -467,7 +470,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 else
                 {
                     //获取虚拟商品和美肤券预约门店名称
-                    if (goodsInfo.ExchangeType != ExchangeType.Integration && !item.IsFaceCard&&!item.IsSkinCare)
+                    if (goodsInfo.ExchangeType != ExchangeType.Integration && !item.IsFaceCard && !item.IsSkinCare)
                     {
                         if (item.HospitalId.Value == 0)
                         {
@@ -506,41 +509,42 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 amiyaOrder.OrderType = goodsInfo.IsMaterial == true ? (byte)OrderType.MaterialOrder : (byte)OrderType.VirtualOrder;
 
                 //从数据库查询商品价格
-                if (goodsInfo.IsMaterial )
+                if (goodsInfo.IsMaterial)
                 {
-                    if (goodsInfo.ExchangeType != ExchangeType.Integration) {
-                        //实体商品
-
-                        //判断是否包含会员价
-                        if (goodsInfo.GoodsMemberRankPrice.Count > 0)
+                    //判断是否包含会员价
+                    if (goodsInfo.GoodsMemberRankPrice.Count > 0)
+                    {
+                        var member = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
+                        var memberPrice = goodsInfo.GoodsMemberRankPrice.Find(p => p.MemberRankId == member.MemberRankId);
+                        if (memberPrice != null)
                         {
-                            var member = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
-                            var memberPrice = goodsInfo.GoodsMemberRankPrice.Find(p => p.MemberRankId == member.MemberRankId);
-                            if (memberPrice != null)
-                            {
-                                amiyaOrder.ActualPayment = memberPrice.Price * item.Quantity;
-                            }
-                            else
-                            {
-                                amiyaOrder.ActualPayment = goodsInfo.SalePrice * item.Quantity;
-                            }
+                            amiyaOrder.ActualPayment = memberPrice.Price * item.Quantity;
                         }
                         else
                         {
-                            //计算规格
                             var standard = await goodsStandardsPriceService.GetByGoodsId(item.GoodsId);
                             var find = standard.Find(e => e.Id == item.SelectStandard);
                             if (find == null) throw new Exception("规格错误");
                             amiyaOrder.ActualPayment = find.Price * item.Quantity;
-                            //amiyaOrder.ActualPayment = goodsInfo.SalePrice * item.Quantity;
+                            amiyaOrder.Standard = find.Standards;
                         }
                     }
-                    
+                    else
+                    {
+                        //计算规格
+                        var standard = await goodsStandardsPriceService.GetByGoodsId(item.GoodsId);
+                        var find = standard.Find(e => e.Id == item.SelectStandard);
+                        if (find == null) throw new Exception("规格错误");
+                        amiyaOrder.ActualPayment = find.Price * item.Quantity;
+                        amiyaOrder.Standard = find.Standards;
+                        //amiyaOrder.ActualPayment = goodsInfo.SalePrice * item.Quantity;
+                    }
+
 
                 }
                 else
                 {
-                    if (item.IsFaceCard||item.IsSkinCare)
+                    if (item.IsFaceCard || item.IsSkinCare)
                     {
                         //面诊卡或美肤券
                         amiyaOrder.ActualPayment = goodsInfo.SalePrice * item.Quantity;
@@ -558,7 +562,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                             amiyaOrder.ActualPayment = hospitalPrice.Price * item.Quantity;
                         }
                     }
-                }               
+                }
                 if (IsExistThirdPartPay)
                 {
                     if (!string.IsNullOrEmpty(orderAdd.VoucherId))
@@ -591,11 +595,16 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 }
                 else
                 {
-                    if (orderAdd.ExchangeType == 1) {
+                    if (orderAdd.ExchangeType == 1)
+                    {
                         amiyaOrder.ExchangeType = (byte)ExchangeType.Alipay;
-                    } else if (orderAdd.ExchangeType == 2) {
+                    }
+                    else if (orderAdd.ExchangeType == 2)
+                    {
                         amiyaOrder.ExchangeType = (byte)ExchangeType.Wechat;
-                    } else if (orderAdd.ExchangeType == 4) {
+                    }
+                    else if (orderAdd.ExchangeType == 4)
+                    {
                         amiyaOrder.ExchangeType = (byte)ExchangeType.HuiShouQian;
                     }
                 }
@@ -624,10 +633,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     amiyaOrder.AppointmentCity = item.AppointmentCity;
                     amiyaOrder.AppointmentDate = item.AppointmentDate;
                 }
-                if (bindCustomerId==0) {
+                if (bindCustomerId == 0)
+                {
                     AddBindCustomerServiceDto addBindCustomerServiceDto = new AddBindCustomerServiceDto();
                     addBindCustomerServiceDto.CustomerServiceId = 188;
-                    var orderIdList =await orderService.GetOrderIdListByPhone(amiyaOrder.Phone);
+                    var orderIdList = await orderService.GetOrderIdListByPhone(amiyaOrder.Phone);
                     UpdateBelongEmpInfoOrderDto updateOrderBelongEmpIdDto = new UpdateBelongEmpInfoOrderDto();
                     updateOrderBelongEmpIdDto.OrderId = orderIdList;
                     updateOrderBelongEmpIdDto.BelongEmpId = addBindCustomerServiceDto.CustomerServiceId;
@@ -681,15 +691,17 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 if (!string.IsNullOrEmpty(orderAdd.VoucherId))
                 {
                     var voucher = await customerConsumptionVoucherService.GetVoucherByCustomerIdAndVoucherIdAsync(customerId, orderAdd.VoucherId);
-                    if (voucher.IsNeedMinPrice) {
-                        if (totalFee<voucher.MinPrice) {
+                    if (voucher.IsNeedMinPrice)
+                    {
+                        if (totalFee < voucher.MinPrice)
+                        {
                             throw new Exception("支付金额不满足抵用券使用条件");
                         }
                     }
                 }
 
-                    //微信支付
-                    if (orderAdd.ExchangeType == 2)
+                //微信支付
+                if (orderAdd.ExchangeType == 2)
                 {
                     WxPackageInfo packageInfo = new WxPackageInfo();
                     packageInfo.Body = orderId;
@@ -742,15 +754,17 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     var res = _aliPayService.BuildRequest(sParaTemp);
                     orderAddResult.AlipayUrl = res.Result;
                     #endregion
-                } else if (orderAdd.ExchangeType==4) {
+                }
+                else if (orderAdd.ExchangeType == 4)
+                {
                     HuiShouQianPayRequestInfo huiShouQianPayRequestInfo = new HuiShouQianPayRequestInfo();
                     huiShouQianPayRequestInfo.TransNo = tradeId;
                     huiShouQianPayRequestInfo.PayType = "WECHAT_APPLET";
                     huiShouQianPayRequestInfo.OrderAmt = (totalFee * 100m).ToString().Split(".")[0];
                     huiShouQianPayRequestInfo.GoodsInfo = "商品付款";
                     huiShouQianPayRequestInfo.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
-                    huiShouQianPayRequestInfo.Extend = "Goods";                   
-                    var result= await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId);
+                    huiShouQianPayRequestInfo.Extend = "Goods";
+                    var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId);
                     if (result.Success == false) throw new Exception("下单失败,请重新下单");
                     PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
                     payRequestInfo.appId = result.PayParam.AppId;

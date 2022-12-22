@@ -121,7 +121,7 @@ namespace Fx.Amiya.Service
                     AddCustomerConsumptionVoucherDto memberVoucher = new AddCustomerConsumptionVoucherDto
                     {
                         CustomerId = customerId,
-                        ConsumptionVoucherCode = memberRankCode+"vouchwe",
+                        ConsumptionVoucherCode = memberRankCode+"voucher",
                         ExpireDate = DateTimeUtil.GetNextMonthFirstDay(),
                         Source = 0
                     };

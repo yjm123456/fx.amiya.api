@@ -104,6 +104,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     {
                         throw new Exception("车型错误");
                     }
+                    var date = DateTime.Now;
+                    var NextDay = date.AddDays(1).Date;
+                    if (add.AppointmentDate< NextDay) {
+                        throw new Exception("预约时间不能早于明天");
+                    }
                     decimal integrationBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(customerId);
                     if (TotalIntegration > integrationBalance)
                         throw new Exception("积分余额不足");
@@ -184,7 +189,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
             catch (Exception ex) {
                 unitOfWork.RollBack();
-                throw new Exception("预约叫车失败");
+                throw ex;
             }
             
            
