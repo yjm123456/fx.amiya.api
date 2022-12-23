@@ -71,14 +71,12 @@ namespace Fx.Amiya.IService
     /// </summary>
     public enum AppointmentCarStatus
     {
-        //已提交
+        //提交处理
         Commit = 0,
-        //已处理
-        Process = 1,
-        //已取消
-        Cancle = 2,
-        //已完成
-        Completed = 3
+        //取消预约
+        Cancle = 1,
+        //预约成功
+        Completed = 2
     }
 
     public enum CheckType
@@ -652,6 +650,18 @@ namespace Fx.Amiya.IService
         //失败(已付款,但账号余额异常修改余额失败或订单状态改变导致修改状态失败)
         Fail = 3
     }
+    /// <summary>
+    /// 预约状态
+    /// </summary>
+    public enum AppointmentStatusType { 
+        //预约处理
+        Process=0,
+        //预约取消
+        Cancel=1,
+        //预约成功
+        Success=2
+    }
+
 
 
     public enum ShoppingCartConsultationType

@@ -78,7 +78,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 IsShare = add.IsShare,
                 EffectiveTime = add.EffectiveTime,
                 Type = add.Type,
-                IsValid = add.IsValid,
+                IsValid = true,
                 CreateDate = DateTime.Now,
                 ConsumptionVoucherCode = add.ConsumptionVoucherCode,
                 Remark=add.Remark,

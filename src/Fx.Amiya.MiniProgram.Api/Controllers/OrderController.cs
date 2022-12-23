@@ -537,7 +537,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         if (find == null) throw new Exception("规格错误");
                         amiyaOrder.ActualPayment = find.Price * item.Quantity;
                         amiyaOrder.Standard = find.Standards;
-                        //amiyaOrder.ActualPayment = goodsInfo.SalePrice * item.Quantity;
                     }
 
 
@@ -572,8 +571,18 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         if (voucher.IsUsed) throw new Exception("该抵用券已被使用");
                         amiyaOrder.IsUseCoupon = true;
                         amiyaOrder.CouponId = voucher.Id;
-                        amiyaOrder.DeductMoney = voucher.DeductMoney;
-                        amiyaOrder.ActualPayment = amiyaOrder.ActualPayment - voucher.DeductMoney;
+                        if (voucher.Type == (int)ConsumptionVoucherType.Discount)
+                        {
+                            var payCount = amiyaOrder.ActualPayment;
+                            
+                            amiyaOrder.ActualPayment = Math.Ceiling((amiyaOrder.ActualPayment.Value) * (voucher.DeductMoney));
+                            amiyaOrder.DeductMoney = payCount.Value - amiyaOrder.ActualPayment.Value;
+                        }
+                        else {
+                            amiyaOrder.DeductMoney = voucher.DeductMoney;
+                            amiyaOrder.ActualPayment = amiyaOrder.ActualPayment - voucher.DeductMoney;
+                        }
+                        
                         //抵用券抵扣后付款小于0,赋值为0.01
                         if (amiyaOrder.ActualPayment <= 0)
                         {

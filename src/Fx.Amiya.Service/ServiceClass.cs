@@ -903,10 +903,35 @@ namespace Fx.Amiya.Service
                 case 3:
                     consumptionVoucherTypeText = "预约叫车抵用券";
                     break;
+                case 4:
+                    consumptionVoucherTypeText = "折扣抵用券";
+                    break;
             }
             return consumptionVoucherTypeText;
-        }     
-
+        }
+        /// <summary>
+        /// 获取预约状态
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public static string GetAppointmentStatusTypeText(int status) {
+            var statusText = "";
+            switch (status) {
+                case 0:
+                    statusText = "预约处理";
+                    break;
+                case 1:
+                    statusText = "预约取消";
+                    break;
+                case 2:
+                    statusText = "预约成功";
+                    break;
+                default:
+                    statusText = "未知";
+                    break;                       
+            }
+            return statusText;
+        }
             /// <summary>
         /// 获取抵用券类型
         /// </summary>
@@ -994,16 +1019,16 @@ namespace Fx.Amiya.Service
             switch (status)
             {
                 case 0:
-                    carStatusText = "已提交";
+                    carStatusText = "提交处理";
                     break;
                 case 1:
-                    carStatusText = "处理中";
+                    carStatusText = "取消预约";
                     break;
                 case 2:
-                    carStatusText = "已取消";
+                    carStatusText = "预约成功";
                     break;
-                case 3:
-                    carStatusText = "已完成";
+                default:
+                    carStatusText = "未知";
                     break;
             }
             return carStatusText;

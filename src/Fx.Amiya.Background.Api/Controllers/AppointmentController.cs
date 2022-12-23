@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.Appointment;
 using Fx.Amiya.Dto.Appointment;
 using Fx.Amiya.Dto.WxAppConfig;
@@ -236,6 +237,34 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 return ResultData.Fail(ex.Message);
             }
+        }
+        /// <summary>
+        /// 修改预约状态
+        /// </summary>
+        /// <param name="update"></param>
+        /// <returns></returns>
+        [HttpPut("updateStatus")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> UpdateStatusAsync(UpdateAppointStatusVo update) {
+            UpdateAppointmentStatus updateAppointmentStatus = new UpdateAppointmentStatus();
+            updateAppointmentStatus.Id = update.Id;
+            updateAppointmentStatus.Status = update.Status;
+            await appointmentService.UpdateAppointmentStatusAsync(updateAppointmentStatus);
+            return ResultData.Success();
+        }
+        /// <summary>
+        /// 获取预约状态列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("statusList")]
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetStatusList() {
+            var list = await appointmentService.GetAppointmentStatusListAsync();
+            var result= list.Select(e=>new BaseIdAndNameVo { 
+                Id=e.Key,
+                Name=e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("statusList",result);
+
         }
     }
 }

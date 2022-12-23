@@ -128,7 +128,7 @@ namespace Fx.Amiya.Service
             var list = from ccv in dalCustomerConsumptionVoucher.GetAll()
                        join cv in dalConsumptionVoucher.GetAll() on ccv.ConsumptionVoucherId equals cv.Id
                        join gv in dalGoodsConsumptionVoucher.GetAll() on cv.Id equals gv.ConsumptionVoucherId
-                       where ccv.CustomerId == customerId && (isUsed == null || ccv.IsUsed == isUsed) && cv.Type == 0 && ccv.IsExpire == false && ccv.ExpireDate > DateTime.Now && ccv.ConsumptionVoucherId == gv.ConsumptionVoucherId && (gv.GoodsId == goodsId || cv.IsSpecifyProduct == false)
+                       where ccv.CustomerId == customerId && (isUsed == null || ccv.IsUsed == isUsed) && (cv.Type == 0||cv.Type==4) && ccv.IsExpire == false && ccv.ExpireDate > DateTime.Now && ccv.ConsumptionVoucherId == gv.ConsumptionVoucherId && (gv.GoodsId == goodsId || cv.IsSpecifyProduct == false)
                        orderby cv.DeductMoney descending
                        select new CustomerConsumptioVoucherInfoDto
                        {
@@ -416,7 +416,7 @@ namespace Fx.Amiya.Service
         {
             return await (from ccv in dalCustomerConsumptionVoucher.GetAll()
                           join cv in dalConsumptionVoucher.GetAll() on ccv.ConsumptionVoucherId equals cv.Id
-                          where ccv.CustomerId == customerid && cv.Type == 0 && ccv.Id == voucherid
+                          where ccv.CustomerId == customerid && (cv.Type==0 || cv.Type==4) && ccv.Id == voucherid
                           select new CustomerConsumptioVoucherInfoDto
                           {
                               Id = ccv.Id,
@@ -424,7 +424,8 @@ namespace Fx.Amiya.Service
                               IsSpecifyProduct = cv.IsSpecifyProduct,
                               IsUsed = ccv.IsUsed,
                               IsNeedMinPrice = cv.IsNeedMinFee,
-                              MinPrice = cv.MinPrice
+                              MinPrice = cv.MinPrice,
+                              Type=cv.Type
                           }).SingleOrDefaultAsync();
         }
         /// <summary>

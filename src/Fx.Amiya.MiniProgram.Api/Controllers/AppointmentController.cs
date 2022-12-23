@@ -153,7 +153,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// </summary>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
-        ///<param name = "status" > 0 = 全部，1=待完成，2=已完成，3=已取消</param>
+        ///<param name = "status" > 1:计划中 2:已取消</param>
         /// <param name="itemName">项目名称</param>
         /// <returns></returns>
         [HttpGet("list")]
@@ -329,6 +329,20 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             {
                 return ResultData.Fail(ex.Message);
             }
+        }
+        /// <summary>
+        /// 获取最近一次预约的医院名称
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getMostRecentlyAppointment")]
+        public async Task<ResultData<AppointmentSimpleInfoVo>> GetMostRecentlyAppointment() {
+            var token = tokenReader.GetToken();
+            var sesssionInfo = sessionStorage.GetSession(token);
+            string customerId = sesssionInfo.FxCustomerId;
+            var info= await appointmentService.GetMostRecentlyAppointmentAsync(customerId);
+            AppointmentSimpleInfoVo appointmentSimpleInfoVo = new AppointmentSimpleInfoVo();
+            appointmentSimpleInfoVo.HospitalName = info.HospitalName;
+            return ResultData<AppointmentSimpleInfoVo>.Success().AddData("name", appointmentSimpleInfoVo);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.Appointment;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.Appointment;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Common;
 using Fx.Infrastructure;
@@ -130,7 +131,17 @@ namespace Fx.Amiya.IService
         /// <param name="encryptPhone"></param>
         /// <returns></returns>
         Task<FxPageInfo<AppointmentInfoDto>> GetListByEncryptPhoneAsync(string encryptPhone, int pageNum, int pageSize);
-
+        /// <summary>
+        /// 获取预约状态列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<BaseKeyValueDto>> GetAppointmentStatusListAsync();
+        /// <summary>
+        /// 获取最近一次的预约医院
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        Task<AppointmentSimpleInfoDto> GetMostRecentlyAppointmentAsync(string customerId);
         #region 报表模块
 
         /// <summary>
@@ -148,6 +159,11 @@ namespace Fx.Amiya.IService
         /// <param name="endDate"></param>
         /// <returns></returns>
         Task<List<AppointmentReportDto>> GetHospitalAppointmentReportAsync(DateTime? startDate, DateTime? endDate, string hosiptalName, bool isHidePhone);
+        /// <summary>
+        /// 修改预约状态
+        /// </summary>
+        /// <returns></returns>
+        Task UpdateAppointmentStatusAsync(UpdateAppointmentStatus update);
 
         #endregion
     }

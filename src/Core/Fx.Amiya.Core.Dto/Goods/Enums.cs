@@ -87,7 +87,11 @@ namespace Fx.Amiya.Core.Dto.Goods
         /// <summary>
         /// 预约叫车
         /// </summary>
-        AppointmentCar
+        AppointmentCar,
+        /// <summary>
+        /// 折扣抵用券
+        /// </summary>
+        Discount
     }
     
 }

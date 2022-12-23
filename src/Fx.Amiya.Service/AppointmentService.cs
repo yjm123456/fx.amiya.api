@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.Appointment;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.WxAppConfig;
@@ -70,13 +71,12 @@ namespace Fx.Amiya.Service
 
                 if (startDate == null || endDate == null)
                 {
-                    appointment = from d in dalAppointmentInfo.GetAll()
+                    appointment = from d in dalAppointmentInfo.GetAll() where d.Status!=(byte)AppointmentStatusType.Cancel
                                   select d;
                     if (hospitalId.HasValue)
                     {
                         appointment = from d in appointment
-                                      where d.HospitalId == hospitalId
-                                      && d.Status != (byte)AppointmentStatus.WaitAccomplish
+                                      where d.HospitalId == hospitalId                                     
                                       select d;
                     }
                     if (employeeId.HasValue)
@@ -96,13 +96,13 @@ namespace Fx.Amiya.Service
                     DateTime endrq = ((DateTime)endDate).Date.AddDays(1);
 
                     appointment = from d in dalAppointmentInfo.GetAll()
-                                  where d.AppointmentDate.Date >= startrq && d.AppointmentDate.Date < endrq
+                                  where d.AppointmentDate.Date >= startrq && d.AppointmentDate.Date < endrq && d.Status != (byte)AppointmentStatusType.Cancel
                                   select d;
                     if (hospitalId.HasValue)
                     {
                         appointment = from d in appointment
                                       where d.HospitalId == hospitalId
-                                      && d.Status != (byte)AppointmentStatus.WaitAccomplish
+                                     
                                       select d;
                     }
                     if (employeeId.HasValue)
@@ -178,17 +178,17 @@ namespace Fx.Amiya.Service
                 string text = "";
                 switch (status)
                 {
-                    case 1:
-                        text = "待完成";
+                    case 0:
+                        text = "预约处理";
                         break;
-                    case 2:
-                        text = "已完成";
+                    case 1:
+                        text = "预约取消";
                         break;
                     case 3:
-                        text = "已取消";
+                        text = "预约成功";
                         break;
-                    case 4:
-                        text = "已派单至医院";
+                    default:
+                        text = "未知";
                         break;
                 }
                 return text;
@@ -381,8 +381,8 @@ namespace Fx.Amiya.Service
             try
             {
                 unitOfWork.BeginTransaction();
-                if (addDto.AppointmentDate.Date < DateTime.Now.Date)
-                    throw new Exception("预约日期不能选择今天之前");
+                if (addDto.AppointmentDate.Date < DateTime.Now.AddDays(1).Date)
+                    throw new Exception("预约日期不能早于明天");
                 //修改剩余可预数量
                 //await UpdateSurplusQuantityAsync(addDto.HospitalId,addDto.ItemInfoName, addDto.AppointmentDate, addDto.Time);
 
@@ -399,7 +399,7 @@ namespace Fx.Amiya.Service
                 appointmentInfo.CustomerId = customerId;
                 appointmentInfo.Phone = addDto.Phone;
                 appointmentInfo.Remark = addDto.Remark;
-                appointmentInfo.Status = (byte)AppointmentStatus.WaitAccomplish;
+                appointmentInfo.Status = (byte)AppointmentStatusType.Process;
                 appointmentInfo.HospitalId = addDto.HospitalId;
                 appointmentInfo.ItemInfoName = addDto.ItemInfoName;
 
@@ -421,8 +421,8 @@ namespace Fx.Amiya.Service
                     if (empInfo != null)
                     {
                         var email = empInfo.Email;
-                        if (email != "0")
-                            sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "阿美雅", "3023330386@qq.com", email, "客户下单提示", sub);
+                        /*if (email != "0")
+                            sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "阿美雅", "3023330386@qq.com", email, "客户下单提示", sub);*/
                     }
                 }
                 else
@@ -450,7 +450,7 @@ namespace Fx.Amiya.Service
         /// <summary>
         ///获取预约列表（小程序）
         /// </summary>
-        /// <param name="status"> 0=全部，1=待完成，2=已完成，3=已取消</param>
+        /// <param name="status"> 1:计划中,2:已取消</param>
         /// <returns></returns>
         public async Task<FxPageInfo<WxAppointmentInfoDto>> GetListOfWxAsync(int pageNum, int pageSize, int status, string itemName, string customerId)
         {
@@ -465,22 +465,16 @@ namespace Fx.Amiya.Service
                 if (status == 1)
                 {
                     appointmentInfos = from d in appointmentInfos
-                                       where d.Status == (byte)AppointmentStatus.WaitAccomplish
-                                       || d.Status == (byte)AppointmentStatus.SendToHospital
+                                       where d.Status == (byte)AppointmentStatusType.Process
                                        select d;
                 }
                 if (status == 2)
                 {
                     appointmentInfos = from d in appointmentInfos
-                                       where d.Status == (byte)AppointmentStatus.Finish
+                                       where d.Status == (byte)AppointmentStatusType.Cancel
                                        select d;
                 }
-                if (status == 3)
-                {
-                    appointmentInfos = from d in appointmentInfos
-                                       where d.Status == (byte)AppointmentStatus.Cancel
-                                       select d;
-                }
+                
 
                 var q = from d in appointmentInfos.OrderBy(x => x.AppointmentDate)
                         select new WxAppointmentInfoDto
@@ -587,10 +581,10 @@ namespace Fx.Amiya.Service
                 if (appointment == null)
                     throw new Exception("预约编号错误");
 
-                if (appointment.Status == (byte)AppointmentStatus.Finish)
+                if (appointment.Status == (byte)AppointmentStatusType.Success)
                     throw new Exception("预约已完成，不可取消");
 
-                appointment.Status = (byte)AppointmentStatus.Cancel;
+                appointment.Status = (byte)AppointmentStatusType.Cancel;
                 await dalAppointmentInfo.UpdateAsync(appointment, false);
 
 
@@ -609,7 +603,24 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
+        /// <summary>
+        /// 获取预约状态列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<BaseKeyValueDto>> GetAppointmentStatusListAsync()
+        {
+            var consumptionVoucherTypes = Enum.GetValues(typeof(AppointmentStatusType));
 
+            List<BaseKeyValueDto> consumptionVoucherTypeList = new List<BaseKeyValueDto>();
+            foreach (var item in consumptionVoucherTypes)
+            {
+                BaseKeyValueDto baseKeyValueDto = new BaseKeyValueDto();
+                baseKeyValueDto.Key = Convert.ToInt32(item).ToString();
+                baseKeyValueDto.Value = ServiceClass.GetAppointmentStatusTypeText(Convert.ToInt32(item));
+                consumptionVoucherTypeList.Add(baseKeyValueDto);
+            }
+            return consumptionVoucherTypeList;
+        }
         /// <summary>
         /// 派单至对应医院
         /// </summary>
@@ -780,6 +791,29 @@ namespace Fx.Amiya.Service
 
             await unitOfWork.SaveChangesAsync();
         }
+        /// <summary>
+        /// 修改预约状态
+        /// </summary>
+        /// <param name="update"></param>
+        /// <returns></returns>
+        public async Task UpdateAppointmentStatusAsync(UpdateAppointmentStatus update)
+        {
+            var appointment = dalAppointmentInfo.GetAll().Where(e => e.Id == update.Id).FirstOrDefault();
+            if (appointment == null) throw new Exception("预约编号错误");
+            appointment.Status = (byte)update.Status;
+            await dalAppointmentInfo.UpdateAsync(appointment,true);
+        }
+        /// <summary>
+        /// 获取最近一次的预约医院
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        public async Task<AppointmentSimpleInfoDto> GetMostRecentlyAppointmentAsync(string customerId) {
+            return await dalAppointmentInfo.GetAll().Where(e => e.CustomerId == customerId).Include(e => e.HospitalInfo).OrderByDescending(e=>e.CreateDate).Select(e => new AppointmentSimpleInfoDto
+            {
+                HospitalName=e.HospitalInfo.Name
+            }).FirstOrDefaultAsync();
+        }
 
         #region 报表相关
 
@@ -880,6 +914,8 @@ namespace Fx.Amiya.Service
             }
 
         }
+
+        
         #endregion
     }
 }
