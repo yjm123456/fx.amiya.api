@@ -17,5 +17,7 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.UserInfo
         public DateTime Date { get; set; }
         public string PersonalSignature { get; set; }
         public string UserAvatar { get; set; }
+        public string Phone { get; set; }
+        public string DetailAddress { get; set; }
     }
 }

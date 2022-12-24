@@ -101,5 +101,17 @@ namespace Fx.Amiya.IService
         /// <param name="pageSize"></param>
         /// <returns></returns>
         Task<FxPageInfo<SubordinateUserDto>> GetSubordinateUserListAsync(string userId,int pageNum,int pageSize);
+        /// <summary>
+        /// 修改生日卡片信息
+        /// </summary>
+        /// <param name="update"></param>
+        /// <returns></returns>
+        Task UpdateBirthDayCardInfo(UpdateBirthDayCardDto update);
+        /// <summary>
+        /// 是否完成个人信息完善
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<bool> IsCompleteUserInfo(string userId);
     }
 }

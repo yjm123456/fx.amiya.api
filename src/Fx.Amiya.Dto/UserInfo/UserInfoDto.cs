@@ -30,6 +30,7 @@ namespace Fx.Amiya.Dto.UserInfo
         public string Name { get; set; }
         public DateTime? BirthDay { get; set; }
         public string PersonalSignature { get; set; }
+        public string DetailAddress { get; set; }
 
         /// <summary>
         /// 是否需要授权用户信息

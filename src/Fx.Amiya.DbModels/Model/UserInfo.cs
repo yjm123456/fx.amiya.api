@@ -37,6 +37,7 @@ namespace Fx.Amiya.DbModels.Model
         public string UnionId { get; set; }
 
         public string WxBindPhone { get; set; }
+        public string DetailAddress { get; set; }
 
         public string SuperiorId { get; set; }
         public List<WxMiniUserInfo> WxMiniUserInfoList { get; set; }

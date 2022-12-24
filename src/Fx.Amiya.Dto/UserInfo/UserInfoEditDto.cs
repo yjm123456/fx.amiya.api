@@ -18,5 +18,7 @@ namespace Fx.Amiya.Dto.UserInfo
         public DateTime BirthDay { get; set; }
         public string Name { get; set; }
         public string PersonalSignature { get; set; }
+        public string Phone { get; set; }
+        public string DetailAdress { get; set; }
     }
 }

@@ -146,6 +146,8 @@ namespace Fx.Amiya.Service
                     userInfo.Area = userInfoEditDto.Area;
                     userInfo.BirthDay = userInfoEditDto.BirthDay;
                     userInfo.PersonalSignature = userInfoEditDto.PersonalSignature;
+                    userInfo.WxBindPhone = userInfoEditDto.Phone;
+                    userInfo.DetailAddress = userInfoEditDto.DetailAdress;
                     if (!string.IsNullOrEmpty(userInfoEditDto.Avatar)) {
                         userInfo.Avatar = userInfoEditDto.Avatar;
                     }
@@ -363,6 +365,7 @@ namespace Fx.Amiya.Service
             user.Name = userInfo.Name;
             user.Area = userInfo.Area;
             user.BirthDay = userInfo.BirthDay;
+            user.DetailAddress = userInfo.DetailAddress;
             var userInfoUpdateRecord = await dalUserInfoUpdateRecord.GetAll().SingleOrDefaultAsync(e => e.UserId == userId);
             if (userInfoUpdateRecord == null)
             {
@@ -607,6 +610,39 @@ namespace Fx.Amiya.Service
             var user= await dalUserInfo.GetAll().Where(e=>e.SuperiorId==userId&&e.Id==subordinateUserId).FirstOrDefaultAsync();
             if (user == null) return false;
             return true;
+        }
+        /// <summary>
+        /// 修改生日卡片信息
+        /// </summary>
+        /// <param name="update"></param>
+        /// <returns></returns>
+        public async Task UpdateBirthDayCardInfo(UpdateBirthDayCardDto update)
+        {
+            var user = await dalUserInfo.GetAll().Where(e => e.Id == update.Id).SingleOrDefaultAsync();
+            if (user == null) throw new Exception("用户编号错误");
+            user.BirthDay = update.BirthDay;
+            user.Name = update.Name;
+            user.WxBindPhone = update.Phone;
+            user.City = update.City;
+            user.Area = update.Area;
+            user.DetailAddress = update.DetailAddress;
+            await dalUserInfo.UpdateAsync(user,true);
+        }
+        /// <summary>
+        /// 是否完成个人信息完善
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<bool> IsCompleteUserInfo(string userId)
+        {
+            var user= dalUserInfo.GetAll().Where(e => e.Id == userId && (string.IsNullOrEmpty(e.Province) || string.IsNullOrEmpty(e.City) || string.IsNullOrEmpty(e.Area) || string.IsNullOrEmpty(e.WxBindPhone) || e.BirthDay == null || string.IsNullOrEmpty(e.Name) || string.IsNullOrEmpty(e.DetailAddress))).FirstOrDefault();
+            if (user == null)
+            {
+                return true;
+            }
+            else {
+                return false;
+            }
         }
 
         Dictionary<byte, string> sexDict = new Dictionary<byte, string>()

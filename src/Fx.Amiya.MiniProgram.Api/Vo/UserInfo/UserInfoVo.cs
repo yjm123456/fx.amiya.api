@@ -29,6 +29,7 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.UserInfo
         public DateTime? BirthDay { get; set; }
         public string Area { get; set; }
         public string PersonalSignature { get; set; }
+        public string DetailAddress { get; set; }
         /// <summary>
         /// 是否需要授权用户信息
         /// </summary>

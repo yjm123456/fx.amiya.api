@@ -421,8 +421,8 @@ namespace Fx.Amiya.Service
                     if (empInfo != null)
                     {
                         var email = empInfo.Email;
-                        /*if (email != "0")
-                            sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "阿美雅", "3023330386@qq.com", email, "客户下单提示", sub);*/
+                        if (email != "0")
+                            sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "阿美雅", "3023330386@qq.com", email, "客户下单提示", sub);
                     }
                 }
                 else

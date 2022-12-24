@@ -1671,6 +1671,24 @@ ALTER TABLE `tbl_consumption_voucher`
 
 
 
+-----------------------------------------------王健 2022/12/24 BEGIN--------------------------------------------
+
+--用户信息添加详细地址
+
+ALTER TABLE `tbl_user_info`
+	ADD COLUMN `detail_address` VARCHAR(500) NULL DEFAULT '' AFTER `personal_signature`;
+
+
+
+-----------------------------------------------王健 2022/12/24 END--------------------------------------------
+
+
+
+
+
+
+
+
 
 
 

@@ -31,6 +31,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.Language).HasColumnName("language").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(t => t.UnionId).HasColumnName("unionid").HasColumnType("varchar(50)").IsRequired();
             builder.Property(t => t.WxBindPhone).HasColumnName("wx_bind_phone").HasColumnType("varchar(20)").IsRequired(false);
+            builder.Property(t => t.DetailAddress).HasColumnName("detail_address").HasColumnType("varchar(500)").IsRequired(false);
             builder.Property(t=>t.SuperiorId).HasColumnName("superior_id").HasColumnType("varchar(50)").IsRequired(false);
         }
     }

@@ -15,6 +15,7 @@ using Fx.Amiya.MiniProgram.Api.Vo.Login;
 using Fx.Amiya.MiniProgram.Api.Vo.UserInfo;
 using Fx.Amiya.Modules.Integration.Domin;
 using Fx.Common;
+using Fx.Infrastructure.DataAccess;
 using Fx.Open.Infrastructure.Web;
 using Fx.Weixin.MP.AdvanceApi.MiniApi;
 using Fx.Weixin.MP.Dto.Mini;
@@ -42,12 +43,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private IIntegrationAccount integrationAccount;
         private ICustomerBaseInfoService customerBaseInfoService;
         private IDalCustomerInfo dalCustomerInfo;
+        private IUnitOfWork unitOfWork;
         public UserController(IUserService userService,
             IMiniSessionStorage sessionStorage,
             TokenReader tokenReader,
             IConfiguration configuration,
             FxAppGlobal fxAppGlobal,
-            ILogger<UserController> logger, IIntegrationAccount integrationAccount, ICustomerBaseInfoService customerBaseInfoService, IDalCustomerInfo dalCustomerInfo)
+            ILogger<UserController> logger, IIntegrationAccount integrationAccount, ICustomerBaseInfoService customerBaseInfoService, IDalCustomerInfo dalCustomerInfo, IUnitOfWork unitOfWork)
         {
             this.userService = userService;
             this.sessionStorage = sessionStorage;
@@ -58,6 +60,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             this.integrationAccount = integrationAccount;
             this.customerBaseInfoService = customerBaseInfoService;
             this.dalCustomerInfo = dalCustomerInfo;
+            this.unitOfWork = unitOfWork;
         }
 
         [HttpGet("appIds")]
@@ -252,38 +255,42 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         [HttpPut("userEditInfo")]
         public async Task<ResultData> UseEditInfo(UserEditInfoVo editInfoVo)
         {
-            var sessionInfo = sessionStorage.GetSession(tokenReader.GetToken());
-            string customerId = sessionInfo.FxCustomerId;
-            if (sessionInfo != null)
+            try
             {
-                await userService.UpdateUserInfo(
-                    new UserInfoEditDto
-                    {
-                        Id = sessionInfo.FxUserId,
-                        Gender = (byte)(editInfoVo.Gender - 1),
-                        City = editInfoVo.City,
-                        Province = editInfoVo.Province,
-                        NickName = editInfoVo.NickName,
-                        Avatar = editInfoVo.UserAvatar,
-                        Area = editInfoVo.Area,
-                        BirthDay = editInfoVo.Date,
-                        Name = editInfoVo.Name,
-                        PersonalSignature = editInfoVo.PersonalSignature
-                    }
-                    );
-                //新用户领取200积分
-                var integrationRecord = await CreateIntegrationRecordAsync(customerId, 200);
-                if (integrationRecord != null) await integrationAccount.AddByConsumptionAsync(integrationRecord);
-                var customer = dalCustomerInfo.GetAll().Where(e => e.Id == customerId).FirstOrDefault();
-                if (customer != null)
+                unitOfWork.BeginTransaction();
+                var sessionInfo = sessionStorage.GetSession(tokenReader.GetToken());
+                string customerId = sessionInfo.FxCustomerId;
+                var userInfo = await userService.GetUserInfoByUserIdAsync(sessionInfo.FxUserId);
+                if (sessionInfo != null)
                 {
-                    var baseInfo = await customerBaseInfoService.GetByPhoneAsync(customer.Phone);
+                    await userService.UpdateUserInfo(
+                        new UserInfoEditDto
+                        {
+                            Id = sessionInfo.FxUserId,
+                            Gender = (byte)(editInfoVo.Gender - 1),
+                            City = editInfoVo.City,
+                            Province = editInfoVo.Province,
+                            NickName = editInfoVo.NickName,
+                            Avatar = editInfoVo.UserAvatar,
+                            Area = editInfoVo.Area,
+                            BirthDay = editInfoVo.Date,
+                            Name = editInfoVo.Name,
+                            PersonalSignature = editInfoVo.PersonalSignature,
+                            DetailAdress = editInfoVo.DetailAddress,
+                            Phone = editInfoVo.Phone
+                        }
+                        );
+                    //新用户领取200积分
+                    var integrationRecord = await CreateIntegrationRecordAsync(customerId, 200);
+                    if (integrationRecord != null) await integrationAccount.AddByConsumptionAsync(integrationRecord);
+                    var customer = dalCustomerInfo.GetAll().Where(e => e.Id == customerId).FirstOrDefault();
+                    var baseInfo = await customerBaseInfoService.GetByPhoneAsync(userInfo.Phone);
                     if (baseInfo != null)
                     {
                         UpdateCustomerBaseInfoDto updateCustomerBaseInfoDto = new UpdateCustomerBaseInfoDto();
                         updateCustomerBaseInfoDto.Id = baseInfo.Id;
                         updateCustomerBaseInfoDto.PersonalWechat = baseInfo.PersonalWechat;
-                        updateCustomerBaseInfoDto.Phone = baseInfo.Phone;
+                        updateCustomerBaseInfoDto.Phone = editInfoVo.Phone;
                         updateCustomerBaseInfoDto.BusinessWeChat = baseInfo.BusinessWeChat;
                         updateCustomerBaseInfoDto.WechatMiniProgram = baseInfo.WechatMiniProgram;
                         updateCustomerBaseInfoDto.OfficialAccounts = baseInfo.OfficialAccounts;
@@ -293,7 +300,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         updateCustomerBaseInfoDto.Birthday = editInfoVo.Date;
                         updateCustomerBaseInfoDto.Occupation = baseInfo.Occupation;
                         updateCustomerBaseInfoDto.OtherPhone = baseInfo.OtherPhone;
-                        updateCustomerBaseInfoDto.DetailAddress = baseInfo.DetailAddress;
+                        updateCustomerBaseInfoDto.DetailAddress = editInfoVo.DetailAddress;
                         updateCustomerBaseInfoDto.IsSendNote = baseInfo.IsSendNote;
                         updateCustomerBaseInfoDto.IsCall = baseInfo.IsCall;
                         updateCustomerBaseInfoDto.IsSendWeChat = baseInfo.IsSendWeChat;
@@ -302,14 +309,18 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         updateCustomerBaseInfoDto.City = editInfoVo.City;
                         await customerBaseInfoService.UpdateAsync(updateCustomerBaseInfoDto);
                     }
-
+                    unitOfWork.Commit();
+                    return ResultData.Success();
                 }
-
-                return ResultData.Success();
+                else
+                {
+                    return ResultData.Fail();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return ResultData.Fail();
+                unitOfWork.RollBack();
+                throw ex;
             }
         }
         [HttpGet("birthDayCard")]
@@ -319,30 +330,91 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             string customerId = sessionInfo.FxCustomerId;
             var userInfo = await userService.GetUserInfoByUserIdAsync(sessionInfo.FxUserId);
             var customer = dalCustomerInfo.GetAll().Where(e => e.Id == customerId).FirstOrDefault();
-            if (customer != null)
+
+            var baseInfo = await customerBaseInfoService.GetByPhoneAsync(userInfo.Phone);
+            if (baseInfo != null)
             {
-                var baseInfo = await customerBaseInfoService.GetByPhoneAsync(customer.Phone);
-                if (baseInfo != null)
-                {
-                    BirthDayCardVo updateCustomerBaseInfoDto = new BirthDayCardVo();
-                    updateCustomerBaseInfoDto.Id = userInfo.Id;
-                    updateCustomerBaseInfoDto.Phone = userInfo.Phone;
-                    updateCustomerBaseInfoDto.Name = userInfo.Name;
-                    updateCustomerBaseInfoDto.BirthDay = userInfo.BirthDay;
-                    updateCustomerBaseInfoDto.DetailAddress = "";
-                    updateCustomerBaseInfoDto.City = userInfo.City;
-                    updateCustomerBaseInfoDto.Area = userInfo.Area;
-                    return ResultData<BirthDayCardVo>.Success().AddData("birthDay", updateCustomerBaseInfoDto);
-                }
-                else
-                {
-                    return ResultData<BirthDayCardVo>.Success().AddData("birthDay", new BirthDayCardVo());
-                }
+                BirthDayCardVo updateCustomerBaseInfoDto = new BirthDayCardVo();
+                updateCustomerBaseInfoDto.Id = userInfo.Id;
+                updateCustomerBaseInfoDto.Phone = userInfo.Phone;
+                updateCustomerBaseInfoDto.Name = userInfo.Name;
+                updateCustomerBaseInfoDto.BirthDay = userInfo.BirthDay;
+                updateCustomerBaseInfoDto.DetailAddress = userInfo.DetailAddress;
+                updateCustomerBaseInfoDto.City = userInfo.City;
+                updateCustomerBaseInfoDto.Area = userInfo.Area;
+                updateCustomerBaseInfoDto.Province = userInfo.Province;
+                return ResultData<BirthDayCardVo>.Success().AddData("birthDay", updateCustomerBaseInfoDto);
             }
             else
             {
                 return ResultData<BirthDayCardVo>.Success().AddData("birthDay", new BirthDayCardVo());
             }
+
+        }
+        [HttpPost("updateBirthDayCard")]
+        public async Task<ResultData> UpdateBirthDayCardInfo(UpdateBirthDayCardVo update)
+        {
+            try
+            {
+                unitOfWork.BeginTransaction();
+                var sessionInfo = sessionStorage.GetSession(tokenReader.GetToken());
+                string customerId = sessionInfo.FxCustomerId;
+                var userInfo = await userService.GetUserInfoByUserIdAsync(sessionInfo.FxUserId);
+                UpdateBirthDayCardDto updateBirthDayCardDto = new UpdateBirthDayCardDto();
+                updateBirthDayCardDto.Id = sessionInfo.FxUserId;
+                updateBirthDayCardDto.BirthDay = update.BirthDay;
+                updateBirthDayCardDto.Name = update.Name;
+                updateBirthDayCardDto.Phone = update.Phone;
+                updateBirthDayCardDto.Province = update.Province;
+                updateBirthDayCardDto.City = update.City;
+                updateBirthDayCardDto.Area = update.Area;
+                updateBirthDayCardDto.DetailAddress = update.DetailAddress;
+                await userService.UpdateBirthDayCardInfo(updateBirthDayCardDto);
+                var customer = dalCustomerInfo.GetAll().Where(e => e.Id == customerId).FirstOrDefault();
+                var baseInfo = await customerBaseInfoService.GetByPhoneAsync(userInfo.Phone);
+                if (baseInfo != null)
+                {
+                    UpdateCustomerBaseInfoDto updateCustomerBaseInfoDto = new UpdateCustomerBaseInfoDto();
+                    updateCustomerBaseInfoDto.Id = baseInfo.Id;
+                    updateCustomerBaseInfoDto.PersonalWechat = baseInfo.PersonalWechat;
+                    updateCustomerBaseInfoDto.Phone = baseInfo.Phone;
+                    updateCustomerBaseInfoDto.BusinessWeChat = baseInfo.BusinessWeChat;
+                    updateCustomerBaseInfoDto.WechatMiniProgram = baseInfo.WechatMiniProgram;
+                    updateCustomerBaseInfoDto.OfficialAccounts = baseInfo.OfficialAccounts;
+                    updateCustomerBaseInfoDto.RealName = update.Name;
+                    updateCustomerBaseInfoDto.WechatNumber = baseInfo.WechatNumber;
+                    updateCustomerBaseInfoDto.Sex = baseInfo.Sex;
+                    updateCustomerBaseInfoDto.Birthday = update.BirthDay;
+                    updateCustomerBaseInfoDto.Occupation = baseInfo.Occupation;
+                    updateCustomerBaseInfoDto.OtherPhone = baseInfo.OtherPhone;
+                    updateCustomerBaseInfoDto.DetailAddress = update.DetailAddress;
+                    updateCustomerBaseInfoDto.IsSendNote = baseInfo.IsSendNote;
+                    updateCustomerBaseInfoDto.IsCall = baseInfo.IsCall;
+                    updateCustomerBaseInfoDto.IsSendWeChat = baseInfo.IsSendWeChat;
+                    updateCustomerBaseInfoDto.UnTrackReason = baseInfo.UnTrackReason;
+                    updateCustomerBaseInfoDto.Remark = baseInfo.Remark;
+                    updateCustomerBaseInfoDto.City = update.City;
+                    await customerBaseInfoService.UpdateAsync(updateCustomerBaseInfoDto);
+                }
+                unitOfWork.Commit();
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex;
+            }
+        }
+        /// <summary>
+        /// 个人信息是否完善
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("isComplete")]
+        public async Task<ResultData<bool>> IsCompleteUserInfo() {
+            var sessionInfo = sessionStorage.GetSession(tokenReader.GetToken());
+            string customerId = sessionInfo.FxCustomerId;
+            var result= await userService.IsCompleteUserInfo(sessionInfo.FxUserId);
+            return ResultData<bool>.Success().AddData("isComplete",result);
         }
 
         /// <summary>
@@ -469,6 +541,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             user.PersonalSignature = userInfo.PersonalSignature;
             user.Area = userInfo.Area;
             user.BirthDay = userInfo.BirthDay;
+            user.DetailAddress = userInfo.DetailAddress;
             user.IsAuthorizationUserInfo = userInfo.IsAuthorizationUserInfo;
             return ResultData<UserInfoVo>.Success().AddData("userInfo", user);
         }
