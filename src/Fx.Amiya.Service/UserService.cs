@@ -626,6 +626,7 @@ namespace Fx.Amiya.Service
             user.City = update.City;
             user.Area = update.Area;
             user.DetailAddress = update.DetailAddress;
+            user.Province = update.Province;
             await dalUserInfo.UpdateAsync(user,true);
         }
         /// <summary>
