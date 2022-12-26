@@ -32,7 +32,7 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         /// </summary>
         public decimal? TotalDealPrice { get; set; }
         /// <summary>
-        /// 返款比例（%）
+        /// 信息服务费比例（%）
         /// </summary>
         public decimal? ReturnBackPricePercent { get; set; }
         /// <summary>

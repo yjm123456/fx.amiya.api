@@ -34,9 +34,9 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         [Description("总成交金额（含材料费）")]
         public decimal? TotalDealPrice { get; set; }
         /// <summary>
-        /// 返款比例（%）
+        /// 信息服务费比例（%）
         /// </summary>
-        [Description("返款比例（%）")]
+        [Description("信息服务费比例（%）")]
         public decimal? ReturnBackPricePercent { get; set; }
         /// <summary>
         /// 系统维护费比例（%）
