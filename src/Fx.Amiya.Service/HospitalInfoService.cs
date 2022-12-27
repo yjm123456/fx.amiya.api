@@ -286,6 +286,7 @@ namespace Fx.Amiya.Service
                 hospitalInfo.DueTime = addDto.DueTime;
                 hospitalInfo.ContractUrl = addDto.ContractUrl;
                 hospitalInfo.BusinessHours = addDto.BusinessHours;
+                hospitalInfo.BelongCompany = addDto.BelongCompany;
                 await dalHospitalInfo.AddAsync(hospitalInfo, true);
 
                 List<HospitalTagDetail> hospitalTagDetailList = new List<HospitalTagDetail>();
@@ -329,6 +330,7 @@ namespace Fx.Amiya.Service
                                        Address = d.Address,
                                        Longitude = d.Longitude,
                                        Latitude = d.Latitude,
+                                       BelongCompany=d.BelongCompany,
                                        Phone = d.Phone,
                                        Valid = d.Valid,
                                        CityId = d.CityId,
@@ -492,6 +494,7 @@ namespace Fx.Amiya.Service
                 hospital.ContractUrl = updateDto.ContractUrl;
                 hospital.CityId = updateDto.CityId;
                 hospital.BusinessHours = updateDto.BusinessHours;
+                hospital.BelongCompany = updateDto.BelongCompany;
                 await dalHospitalInfo.UpdateAsync(hospital, true);
 
                 var tagDetail = await dalHospitalTagDetail.GetAll().Where(e => e.HospitalId == updateDto.Id).ToListAsync();

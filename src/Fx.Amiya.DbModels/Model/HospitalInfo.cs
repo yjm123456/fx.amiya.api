@@ -76,6 +76,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 提交状态（0-未提交；1-已提交）
         /// </summary>
         public int SubmitState { get; set; }
+        /// <summary>
+        /// 所属公司
+        /// </summary>
+        public string BelongCompany { get; set; }
 
         public AmiyaEmployee CreateByAmiyaEmployee { get; set; }
         public AmiyaEmployee UpdateByAmiyaEmployee { get; set; }

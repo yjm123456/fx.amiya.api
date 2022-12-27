@@ -45,5 +45,9 @@ namespace Fx.Amiya.Dto.HospitalInfo
         /// 合同信息
         /// </summary>
         public string ContractUrl { get; set; }
+        /// <summary>
+        /// 归属公司
+        /// </summary>
+        public string BelongCompany { get; set; }
     }
 }

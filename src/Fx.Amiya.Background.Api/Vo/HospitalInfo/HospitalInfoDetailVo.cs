@@ -40,7 +40,10 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalInfo
         /// 合同地址
         /// </summary>
         public string ContractUrl { get; set; }
-
+        /// <summary>
+        /// 归属医院
+        /// </summary>
+        public string BelongCompany { get; set; }
 
         public List<int> ScaleTagList { get; set; }
         public List<int> FacilityTagList { get; set; }

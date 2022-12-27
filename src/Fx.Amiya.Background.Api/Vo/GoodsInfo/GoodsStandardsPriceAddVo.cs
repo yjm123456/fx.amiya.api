@@ -18,5 +18,9 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         /// 价格
         /// </summary>
         public decimal Price { get; set; }
+        /// <summary>
+        /// 规格图片
+        /// </summary>
+        public string StandardsImg { get; set; }
     }
 }

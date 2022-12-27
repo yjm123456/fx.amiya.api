@@ -1686,10 +1686,28 @@ COLLATE='utf8mb4_0900_ai_ci'
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
+-----------------------------------------------王健 2022/12/27 BEGIN--------------------------------------------
+
+----公司信息
+CREATE TABLE `tbl_company_base_info` (
+	`id` VARCHAR(50) NOT NULL DEFAULT '',
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT NOT NULL,
+	`delete_date` DATETIME NULL DEFAULT NULL,
+	`name` VARCHAR(200) NOT NULL,
+	`register_date` DATETIME NULL DEFAULT NULL,
+	`register_address` VARCHAR(500) NULL DEFAULT NULL,
+	`company_code` VARCHAR(100) NULL DEFAULT NULL,
+	`corporation` VARCHAR(50) NULL DEFAULT NULL,
+	`business_scope` VARCHAR(500) NULL DEFAULT NULL,
+	`contact_email` VARCHAR(50) NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+)
+COLLATE='utf8mb4_0900_ai_ci';
 
 
-
-
+-----------------------------------------------王健 2022/12/27 END--------------------------------------------
 
 
 

@@ -361,6 +361,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.DueTime = addVo.DueTime;
                 addDto.CityId = addVo.CityId;
                 addDto.BusinessHours = addVo.BusinessHours;
+                addDto.BelongCompany = addVo.BelongCompany;
                 await hospitalInfoService.AddAsync(addDto, employeeId);
                 return ResultData.Success();
             }
@@ -397,6 +398,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 hospitalInfoVo.CityId = hospital.CityId;
                 hospitalInfoVo.City = hospital.City;
                 hospitalInfoVo.BusinessHours = hospital.BusinessHours;
+                hospitalInfoVo.BelongCompany = hospital.BelongCompany;
                 List<int> scaleTagList = new List<int>();
                 foreach (var item in hospital.ScaleTagList)
                 {
@@ -449,6 +451,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.TagIds = updateVo.TagIds;
                 updateDto.CityId = updateVo.CityId;
                 updateDto.BusinessHours = updateVo.BusinessHours;
+                updateDto.BelongCompany = updateVo.BelongCompany;
                 await hospitalInfoService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }

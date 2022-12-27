@@ -33,6 +33,7 @@ namespace Fx.Amiya.Service
             goodsStandardssPrice.GoodsId = goodsInfoAdd.GoodsId;
             goodsStandardssPrice.Standards = goodsInfoAdd.Standards;
             goodsStandardssPrice.Price = goodsInfoAdd.Price;
+            goodsStandardssPrice.StandardsImg = goodsInfoAdd.StandardsImg;
             await dalGoodsStandardsPrice.AddAsync(goodsStandardssPrice, true);
         }
 
@@ -66,7 +67,8 @@ namespace Fx.Amiya.Service
                                                Id=d.Id,
                                                GoodsId = d.GoodsId,
                                                Standards = d.Standards,
-                                               Price = d.Price
+                                               Price = d.Price,
+                                               StandardsImg=d.StandardsImg
                                            };
 
                 List<GoodsStandardsPriceDto> resultList = new List<GoodsStandardsPriceDto>();

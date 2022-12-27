@@ -109,6 +109,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     goodsStandardsPrice.GoodsId = goodsInfo.Id;
                     goodsStandardsPrice.Standards = x.Standards;
                     goodsStandardsPrice.Price = x.Price;
+                    goodsStandardsPrice.StandardsImg = x.StandardsImg;
                     await goodsStandardsPriceService.AddAsync(goodsStandardsPrice);
                 }
                 await _goodsInfoRepository.AddAsync(goodsInfo);
@@ -182,6 +183,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     goodsStandardsPricedto.GoodsId = id;
                     goodsStandardsPricedto.Standards = z.Standards;
                     goodsStandardsPricedto.Price = z.Price;
+                    goodsStandardsPricedto.StandardsImg = z.StandardsImg;
                     goodsStandardsPriceList.Add(goodsStandardsPricedto);
                 }
 
@@ -402,6 +404,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 goodsHospitalPrice.GoodsId = goodsInfo.Id;
                 goodsHospitalPrice.Standards = x.Standards;
                 goodsHospitalPrice.Price = x.Price;
+                goodsHospitalPrice.StandardsImg = x.StandardsImg;
                 await goodsStandardsPriceService.AddAsync(goodsHospitalPrice);
             }
 

@@ -1688,7 +1688,18 @@ ALTER TABLE `tbl_user_info`
 
 
 
+-----------------------------王健 2022/12/26 BEGIN -----------------------------
 
+
+-------商品规格添加图片
+
+
+ALTER TABLE `tbl_goods_standards_price`
+	ADD COLUMN `standards_img` VARCHAR(500) NULL DEFAULT '' AFTER `price`;
+
+
+
+-----------------------------王健 2022/12/26 END -----------------------------
 
 
 

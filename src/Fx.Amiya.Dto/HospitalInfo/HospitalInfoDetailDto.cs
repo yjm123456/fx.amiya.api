@@ -104,6 +104,10 @@ namespace Fx.Amiya.Dto.HospitalInfo
         /// 提交状态文本
         /// </summary>
         public string SubmitStateText { get; set; }
+        /// <summary>
+        /// 归属公司
+        /// </summary>
+        public string BelongCompany { get; set; }
 
         public List<HospitalTagNameDto> ScaleTagList { get; set; }
         public List<HospitalTagNameDto> FacilityTagList { get; set; }

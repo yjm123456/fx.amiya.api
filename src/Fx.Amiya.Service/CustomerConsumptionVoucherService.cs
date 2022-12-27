@@ -127,7 +127,7 @@ namespace Fx.Amiya.Service
             FxPageInfo<CustomerConsumptioVoucherInfoDto> fxPageInfo = new FxPageInfo<CustomerConsumptioVoucherInfoDto>();
             var list = from ccv in dalCustomerConsumptionVoucher.GetAll()
                        join cv in dalConsumptionVoucher.GetAll() on ccv.ConsumptionVoucherId equals cv.Id
-                       join gv in dalGoodsConsumptionVoucher.GetAll() on cv.Id equals gv.ConsumptionVoucherId
+                       join gv in dalGoodsConsumptionVoucher.GetAll() on cv.Id equals gv.ConsumptionVoucherId 
                        where ccv.CustomerId == customerId && (isUsed == null || ccv.IsUsed == isUsed) && (cv.Type == 0||cv.Type==4) && ccv.IsExpire == false && ccv.ExpireDate > DateTime.Now && ccv.ConsumptionVoucherId == gv.ConsumptionVoucherId && (gv.GoodsId == goodsId || cv.IsSpecifyProduct == false)
                        orderby cv.DeductMoney descending
                        select new CustomerConsumptioVoucherInfoDto
@@ -472,28 +472,35 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns></returns>
-        public async Task IsReciveVoucherThisMonthThisWeekAsync(string customerId)
+        public async Task<MemberRecieveConsumptionVoucherDto> IsReciveVoucherThisMonthThisWeekAsync(string customerId)
         {
             var startDate = DateTime.Now.AddDays(-7);
             var member = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
-            if (member == null) return;
+            if (member == null) return null;
             //最近7天的所有优惠券
             var list = await dalCustomerConsumptionVoucher.GetAll().Where(e => e.CreateDate >= startDate && e.Source == 0 && e.CustomerId == customerId).ToListAsync();
             if (list.Any())
             {
-                return;
+                return null;
             }
             else
             {
+                var voucherCode = member.MemberRankCode + "voucher";
+                var voucher = dalConsumptionVoucher.GetAll().Where(e=>e.ConsumptionVoucherCode==voucherCode).SingleOrDefault();
+                return new MemberRecieveConsumptionVoucherDto
+                {
+                    DeductMoney = voucher.DeductMoney * 10,
+                    VoucherName=voucher.Name
+                };
                 //未领取添加新的优惠券
-                AddCustomerConsumptionVoucherDto voucher = new AddCustomerConsumptionVoucherDto
+                /*AddCustomerConsumptionVoucherDto voucher = new AddCustomerConsumptionVoucherDto
                 {
                     CustomerId = customerId,
                     ConsumptionVoucherCode = member.MemberRankCode + "voucher",
                     ExpireDate = DateTimeUtil.GetNextMonthFirstDay(),
                     Source = 0
                 };
-                await AddAsyn(voucher);
+                await AddAsyn(voucher);*/
             }
 
         }
@@ -564,6 +571,29 @@ namespace Fx.Amiya.Service
                              VoucherCode = cv.ConsumptionVoucherCode,
        
                          }).FirstOrDefaultAsync();
+        }
+
+        public async Task MemberRecieveCardWeekAsync(string customerId)
+        {
+            var startDate = DateTime.Now.AddDays(-7);
+            var member = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
+            if (member == null) return;
+            //最近7天的所有优惠券
+            var list = await dalCustomerConsumptionVoucher.GetAll().Where(e => e.CreateDate >= startDate && e.Source == 0 && e.CustomerId == customerId).ToListAsync();
+            if (list.Any())
+            {
+                throw new Exception("本周已领取过会员抵用券,请勿重复领取");
+            }
+            else {
+                AddCustomerConsumptionVoucherDto voucher = new AddCustomerConsumptionVoucherDto
+                {
+                    CustomerId = customerId,
+                    ConsumptionVoucherCode = member.MemberRankCode + "voucher",
+                    ExpireDate = DateTimeUtil.GetNextMonthFirstDay(),
+                    Source = 0
+                };
+                await AddAsyn(voucher);
+            }
         }
     }
 }

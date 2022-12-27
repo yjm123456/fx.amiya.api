@@ -40,6 +40,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.CheckBy).HasColumnName("check_by").HasColumnType("int").IsRequired(false);
             builder.Property(t => t.SubmitState).HasColumnName("submit_state").HasColumnType("int").IsRequired();
             builder.Property(t => t.CheckDate).HasColumnName("check_date").HasColumnType("datetime").IsRequired(false);
+            builder.Property(t => t.BelongCompany).HasColumnName("belong_company").HasColumnType("varchar(200)").IsRequired(false);
 
             builder.HasOne(t => t.CreateByAmiyaEmployee).WithMany(t => t.CreateByHospitalInfoList).HasForeignKey(t=>t.CreateBy);
             builder.HasOne(t => t.UpdateByAmiyaEmployee).WithMany(t => t.UpdateByHospitalInfoList).HasForeignKey(t=>t.UpdateBy);

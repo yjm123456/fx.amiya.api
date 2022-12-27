@@ -147,6 +147,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     Id=d.Id,
                     GoodsId=d.GoodsId,
                     Standards=d.Standards,
+                    StandardsImg=d.StandardsImg,
                     Price=d.Price
                 }).ToList()
             };

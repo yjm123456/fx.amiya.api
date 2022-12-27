@@ -11,5 +11,6 @@ namespace Fx.Amiya.Dto.GoodsStandardsPrice
         public string GoodsId { get; set; }
         public string Standards { get; set; }
         public decimal Price { get; set; }
+        public string StandardsImg { get; set; }
     }
 }

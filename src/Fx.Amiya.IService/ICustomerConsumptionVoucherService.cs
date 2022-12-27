@@ -108,7 +108,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns></returns>
-        Task IsReciveVoucherThisMonthThisWeekAsync(string customerId);
+        Task<MemberRecieveConsumptionVoucherDto> IsReciveVoucherThisMonthThisWeekAsync(string customerId);
         /// <summary>
         /// 获取有效的叫车抵用券
         /// </summary>
@@ -117,5 +117,10 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<CustomerConsumptioVoucherInfoDto> GetCarVoucherByCustomerIdAndVoucherIdAsync(string customerid, string voucherid);
         Task<CustomerConsumptioVoucherInfoDto> GetCarTypeVoucherByCustomerIdAndVoucherIdAsync(string customerid, string carType);
+        /// <summary>
+        /// 用户每周领取抵用券
+        /// </summary>
+        /// <returns></returns>
+        Task MemberRecieveCardWeekAsync(string customerId);
     }
 }
