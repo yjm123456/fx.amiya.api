@@ -1217,13 +1217,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             if (!startDate.HasValue && !endDate.HasValue)
             { throw new Exception("请选择时间进行查询"); }
-            if (startDate.HasValue && endDate.HasValue)
-            {
-                if ((endDate.Value - startDate.Value).TotalDays > 31)
-                {
-                    throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
-                }
-            }
+            //if (startDate.HasValue && endDate.HasValue)
+            //{
+            //    if ((endDate.Value - startDate.Value).TotalDays > 31)
+            //    {
+            //        throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
+            //    }
+            //}
             if (employeeId == 0)
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
@@ -1246,6 +1246,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           IsAcompanying = d.IsAcompanying == true ? "是" : "否",
                           /*CommissionRatio = d.CommissionRatio,*/
                           Phone = d.Phone,
+                          BelongEmpName = d.BelongEmpName,
                           OrderStatusText = d.OrderStatusText,
                           IsToHospital = d.IsToHospital == true ? "是" : "否",
                           ToHospitalTypeText = d.ToHospitalTypeText,
@@ -1288,13 +1289,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             bool isHidePhone = true;
             if (!startDate.HasValue && !endDate.HasValue)
             { throw new Exception("请选择时间进行查询"); }
-            if (startDate.HasValue && endDate.HasValue)
-            {
-                if ((endDate.Value - startDate.Value).TotalDays > 31)
-                {
-                    throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
-                }
-            }
+            //if (startDate.HasValue && endDate.HasValue)
+            //{
+            //    if ((endDate.Value - startDate.Value).TotalDays > 31)
+            //    {
+            //        throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
+            //    }
+            //}
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
             {
@@ -1327,6 +1328,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           ToHospitalDate = d.ToHospitalDate,
                           DepositAmount = d.DepositAmount,
                           DealAmount = d.DealAmount,
+                          BelongEmpName=d.BelongEmpName,
                           SendHospital = d.SendHospital,
                           SendOrderRemark = d.SendOrderRemark,
                           OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,

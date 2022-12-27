@@ -43,6 +43,15 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         /// 系统维护费比例（%）
         /// </summary>
         public decimal? SystemUpdatePricePercent { get; set; }
+
+        /// <summary>
+        /// 系统维护费金额
+        /// </summary>
+        public decimal? SystemUpdatePrice { get; set; }
+        /// <summary>
+        /// 服务费合计
+        /// </summary>
+        public decimal? ReturnBackTotalPrice { get; set; }
         /// <summary>
         /// 问题原因
         /// </summary>

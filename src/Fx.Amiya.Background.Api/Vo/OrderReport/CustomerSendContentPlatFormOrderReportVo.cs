@@ -18,6 +18,11 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("派单人员")]
         public string SenderName { get; set; }
         /// <summary>
+        /// 归属客服
+        /// </summary>
+        [Description("归属客服")]
+        public string BelongEmpName { get; set; }
+        /// <summary>
         /// 面诊状态
         /// </summary>
         [Description("面诊状态")]

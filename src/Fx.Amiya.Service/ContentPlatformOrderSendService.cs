@@ -337,7 +337,7 @@ namespace Fx.Amiya.Service
                 x.WeChatNo = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? baseInfo.WechatNumber : "****";
 
                 //var departmentInfo = await amiyaDepartmentService.GetByIdAsync(x.DepartmentId);
-                x.DepartmentName= x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? "" : "****";
+                x.DepartmentName = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? "" : "****";
                 var orderRemark = await orderRemarkService.GetListWithPageAsync(x.OrderId, 1, 1);
                 var remarkInfo = orderRemark.List.FirstOrDefault();
                 if (remarkInfo != null)
@@ -445,8 +445,8 @@ namespace Fx.Amiya.Service
                 x.City = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? baseInfo.City : "****";
                 x.WeChatNo = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? baseInfo.WechatNumber : "****";
 
-              //  var departmentInfo = await amiyaDepartmentService.GetByIdAsync(x.DepartmentId);
-                x.DepartmentName = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? "": "****";
+                //  var departmentInfo = await amiyaDepartmentService.GetByIdAsync(x.DepartmentId);
+                x.DepartmentName = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? "" : "****";
 
                 var orderRemark = await orderRemarkService.GetListWithPageAsync(x.OrderId, 1, 1);
                 var remarkInfo = orderRemark.List.FirstOrDefault();
@@ -456,7 +456,7 @@ namespace Fx.Amiya.Service
                     var createDate = remarkInfo.CreateDate.Date;
                     if (createDate == DateTime.Now.Date)
                     {
-                        date = $"今天"+remarkInfo.CreateDate.ToString("hh:mm:ss");
+                        date = $"今天" + remarkInfo.CreateDate.ToString("hh:mm:ss");
                     }
                     else if (createDate == DateTime.Now.AddDays(-1).Date)
                     {
@@ -748,16 +748,19 @@ namespace Fx.Amiya.Service
                                             ToHospitalDate = d.ContentPlatformOrder.ToHospitalDate,
                                             SendOrderRemark = d.Remark,
                                             OtherContentPlatFormOrderId = d.ContentPlatformOrder.OtherContentPlatFormOrderId,
-                                            SendHospital = d.HospitalInfo.Name
-
+                                            SendHospital = d.HospitalInfo.Name,
+                                            BelongEmpId = d.ContentPlatformOrder.BelongEmpId.HasValue ? d.ContentPlatformOrder.BelongEmpId.Value : 0,
                                         };
 
             List<SendContentPlatformOrderDto> pageInfo = new List<SendContentPlatformOrderDto>();
             pageInfo = await contentPlatformOrders.ToListAsync();
-            //foreach (var x in pageInfo)
-            //{
-            //    x.SendHospital = _hospitalInfoService.GetByIdAsync(x.SendHospitalId).Result.Name;
-            //}
+            foreach (var x in pageInfo)
+            {
+                if (x.BelongEmpId != 0)
+                {
+                    x.BelongEmpName = _amiyaEmployeeService.GetByIdAsync(x.BelongEmpId).Result.Name;
+                }
+            }
             return pageInfo;
         }
 

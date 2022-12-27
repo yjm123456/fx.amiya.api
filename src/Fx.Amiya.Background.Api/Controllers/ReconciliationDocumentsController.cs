@@ -82,10 +82,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                   ReconciliationStateText = d.ReconciliationStateText,
                                                   CreateBy = d.CreateBy,
                                                   CreateByName = d.CreateByName,
-                                                  CreateDate=d.CreateDate,
-                                                  UpdateDate=d.UpdateDate,
-                                                  DeleteDate=d.DeleteDate,
-                                                  Valid=d.Valid,
+                                                  CreateDate = d.CreateDate,
+                                                  UpdateDate = d.UpdateDate,
+                                                  DeleteDate = d.DeleteDate,
+                                                  Valid = d.Valid,
+                                                  SystemUpdatePrice = d.TotalDealPrice * d.SystemUpdatePricePercent / 100,
+                                                  ReturnBackTotalPrice = (d.SystemUpdatePricePercent + d.ReturnBackPricePercent) * d.TotalDealPrice / 100
                                               };
 
                 List<ReconciliationDocumentsVo> reconciliationDocumentsResult = new List<ReconciliationDocumentsVo>();
@@ -235,15 +237,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 删除财务对账单信息（机构端）
         /// </summary>
-        /// <param name="idList"></param>
+        /// <param name="deleteVo"></param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [FxTenantAuthorize]
-        public async Task<ResultData> DeleteAsync(List<string> idList)
+        public async Task<ResultData> DeleteAsync(DeleteReconciliationDocumentsVo deleteVo)
         {
             try
             {
-                await reconciliationDocumentsService.DeleteAsync(idList);
+                await reconciliationDocumentsService.DeleteAsync(deleteVo.IdList);
                 return ResultData.Success();
             }
             catch (Exception ex)
