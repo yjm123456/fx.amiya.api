@@ -48,7 +48,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 获取财务对账单信息列表(管理端与机构端公用)
         /// </summary>
         /// <param name="returnBackPricePercent">返款比例</param>
-        /// <param name="reconciliationState">对账单状态（0：已提交，1:待确认,2:问题账单,3:对账完成）</param>
+        /// <param name="reconciliationState">对账单状态（0：已提交，1:待确认,2:问题账单,3:对账完成，4：回款完成）</param>
+        /// <param name="startDate">创建时间（开始）</param>
+        /// <param name="endDate">创建时间（结束）</param>
         /// <param name="startDealDate">成交时间（开始）</param>
         /// <param name="endDealDate">成交时间（结束）</param>
         /// <param name="keyword">关键词（客户姓名，手机号）</param>
@@ -57,11 +59,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<FxPageInfo<ReconciliationDocumentsVo>>> GetListAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime startDealDate, DateTime endDealDate, string keyword, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ReconciliationDocumentsVo>>> GetListAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int pageNum, int pageSize)
         {
             try
             {
-                var q = await reconciliationDocumentsService.GetListWithPageAsync(returnBackPricePercent, reconciliationState, startDealDate, endDealDate, keyword, pageNum, pageSize);
+                var q = await reconciliationDocumentsService.GetListWithPageAsync(returnBackPricePercent, reconciliationState, startDate, endDate, startDealDate, endDealDate, keyword, pageNum, pageSize);
 
                 var reconciliationDocuments = from d in q.List
                                               select new ReconciliationDocumentsVo
@@ -234,7 +236,28 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData.Fail(ex.Message);
             }
         }
-
+        /// <summary>
+        /// 对账单批量回款
+        /// </summary>
+        /// <param name="reconciliationDocumentsReturnBackPriceVo"></param>
+        /// <returns></returns>
+        [HttpPut("reconciliationReturnBackPriceList")]
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData> ReconciliationReturnBackPriceListAsync(ReconciliationDocumentsReturnBackPriceVo reconciliationDocumentsReturnBackPriceVo)
+        {
+            try
+            {
+                ReconciliationDocumentsReturnBackPriceDto reconciliationDocumentsReturnBackPriceDto = new ReconciliationDocumentsReturnBackPriceDto();
+                reconciliationDocumentsReturnBackPriceDto.ReconciliationDocumentsIdList = reconciliationDocumentsReturnBackPriceVo.ReconciliationDocumentsIdList;
+                reconciliationDocumentsReturnBackPriceDto.ReturnBackDate = reconciliationDocumentsReturnBackPriceVo.ReturnBackDate;
+                await reconciliationDocumentsService.TagReconciliationStateAsync(reconciliationDocumentsReturnBackPriceDto);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
 
 
         /// <summary>
@@ -331,7 +354,16 @@ namespace Fx.Amiya.Background.Api.Controllers
                         }
                         if (worksheet.Cells[x, 4].Value != null)
                         {
-                            addDto.DealDate = Convert.ToDateTime(worksheet.Cells[x, 4].Value.ToString());
+                            int tempValue;
+                            if (int.TryParse(worksheet.Cells[x, 4].Value.ToString(), out tempValue))
+                            {
+                                var dealDate = DateTime.FromOADate(double.Parse(worksheet.Cells[x, 4].Value.ToString()));
+                                addDto.DealDate = dealDate;
+                            }
+                            else
+                            {
+                                addDto.DealDate = Convert.ToDateTime(worksheet.Cells[x, 4].Value.ToString());
+                            }
                         }
                         else
                         {
@@ -361,7 +393,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                         {
                             throw new Exception("系统维护费比例有参数列为空，请检查表格数据！");
                         }
-                        if (!string.IsNullOrEmpty(worksheet.Cells[x, 8].Value.ToString()))
+                        if (worksheet.Cells[x, 8].Value != null)
                         {
                             addDto.Remark = worksheet.Cells[x, 8].Value.ToString();
                         }

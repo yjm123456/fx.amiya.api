@@ -768,7 +768,11 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 对账完成
         /// </summary>
-        Successful = 3
+        Successful = 3,
+        /// <summary>
+        /// 回款完成
+        /// </summary>
+        ReturnBackPriceSuccessful=4,
     }
 
 }

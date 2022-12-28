@@ -1343,6 +1343,9 @@ namespace Fx.Amiya.Service
                 case 3:
                     typeText = "对账完成";
                     break;
+                case 4:
+                    typeText = "回款完成";
+                    break;
             }
             return typeText;
         }

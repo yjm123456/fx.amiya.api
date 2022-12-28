@@ -45,6 +45,10 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 审核图片
         /// </summary>
         public List<string> CheckPicture { get; set; }
+        /// <summary>
+        /// 对账单id
+        /// </summary>
+        public string ReconciliationDocumentsId { get; set; }
 
     }
 }

@@ -23,7 +23,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<ReconciliationDocumentsDto>> GetListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime startDealDate, DateTime endDealDate, string keyword, int pageNum, int pageSize);
+        Task<FxPageInfo<ReconciliationDocumentsDto>> GetListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int pageNum, int pageSize);
 
         /// <summary>
         /// 根据活动编号获取医院参与的项目
@@ -54,6 +54,13 @@ namespace Fx.Amiya.IService
         /// <param name="questionReason">当标记为问题账单时必填</param>
         /// <returns></returns>
         Task TagReconciliationStateAsync(List<string> idList, int reconciliationState, string questionReason);
+
+        /// <summary>
+        /// 对账单批量回款
+        /// </summary>
+        /// <param name="reconciliationDocumentsReturnBackPriceDto"></param>
+        /// <returns></returns>
+        Task TagReconciliationStateAsync(ReconciliationDocumentsReturnBackPriceDto reconciliationDocumentsReturnBackPriceDto);
 
         /// <summary>
         /// 删除

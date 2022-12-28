@@ -895,6 +895,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.employeeId = employeeId;
             updateDto.CheckRemark = updateVo.CheckRemark;
             updateDto.CheckPicture = updateVo.CheckPicture;
+            updateDto.ReconciliationDocumentsId = updateVo.ReconciliationDocumentsId;
             await _orderService.CheckContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
         }

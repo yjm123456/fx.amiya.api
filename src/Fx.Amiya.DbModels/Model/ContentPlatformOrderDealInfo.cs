@@ -107,6 +107,8 @@ namespace Fx.Amiya.DbModels.Model
         public decimal? ReturnBackPrice { get; set; }
         public DateTime? ReturnBackDate { get; set; }
 
+        public  string ReconciliationDocumentsId { get; set; }
+
         public ContentPlatformOrder ContentPlatFormOrder { get; set; }
     }
 }

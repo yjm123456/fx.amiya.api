@@ -182,6 +182,13 @@ namespace Fx.Amiya.IService
         Task ReturnBackOrderAsync(ReturnBackOrderDto input);
 
         /// <summary>
+        /// 订单只计算回款
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task ReturnBackOrderOnlyAsync(ReturnBackOrderDto input);
+
+        /// <summary>
         /// 派单后修改订单状态并删除重单截图（针对重单再派单）
         /// </summary>
         /// <param name="orderId"></param>

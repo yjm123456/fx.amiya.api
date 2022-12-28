@@ -1556,6 +1556,7 @@ namespace Fx.Amiya.Service
                 dealInfoCheck.CheckRemark = input.CheckRemark;
                 dealInfoCheck.CheckState = input.CheckState;
                 dealInfoCheck.SettlePrice = input.SettlePrice;
+                dealInfoCheck.ReconciliationDocumentsId = input.ReconciliationDocumentsId;
                 await _contentPlatFormOrderDalService.CheckAsync(dealInfoCheck);
                 unitOfWork.Commit();
             }
@@ -1601,6 +1602,34 @@ namespace Fx.Amiya.Service
                 dealInfoCheck.ReturnBackDate = input.ReturnBackDate;
                 dealInfoCheck.ReturnBackPrice = input.ReturnBackPrice;
                 await _contentPlatFormOrderDalService.SettleAsync(dealInfoCheck);
+
+                unitOfWork.Commit();
+            }
+            catch (Exception err)
+            {
+                unitOfWork.RollBack();
+            }
+        }
+
+        /// <summary>
+        /// 订单只计算回款
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task ReturnBackOrderOnlyAsync(ReturnBackOrderDto input)
+        {
+            unitOfWork.BeginTransaction();
+            try
+            {
+                var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.OrderId).SingleOrDefaultAsync();
+                if (order == null)
+                {
+                    throw new Exception("未找到该订单的相关信息！");
+                }
+                order.IsReturnBackPrice = true;
+                order.ReturnBackPrice += input.ReturnBackPrice;
+                order.ReturnBackDate = input.ReturnBackDate;
+                await _dalContentPlatformOrder.UpdateAsync(order, true);
 
                 unitOfWork.Commit();
             }

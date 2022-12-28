@@ -2,6 +2,7 @@
 using Fx.Amiya.Dto.GoodsDemand;
 using Fx.Amiya.Dto.HospitalInfo;
 using Fx.Amiya.Dto.ReconciliationDocuments;
+using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
@@ -20,31 +21,48 @@ namespace Fx.Amiya.Service
     public class ReconciliationDocumentsService : IReconciliationDocumentsService
     {
         private IDalReconciliationDocuments dalReconciliationDocuments;
-        private ITmallGoodsSkuService _tmallGoodsSkuService;
+        private IContentPlateFormOrderService contentPlateFormOrderService;
         private readonly IUnitOfWork _unitOfWork;
+        private IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
 
         public ReconciliationDocumentsService(IDalReconciliationDocuments dalReconciliationDocuments,
-            ITmallGoodsSkuService tmallGoodsSkuService,
+            IContentPlateFormOrderService contentPlateFormOrderService,
+            IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
             IUnitOfWork unitOfWork)
         {
             this.dalReconciliationDocuments = dalReconciliationDocuments;
-            _tmallGoodsSkuService = tmallGoodsSkuService;
             _unitOfWork = unitOfWork;
+            this.contentPlateFormOrderService = contentPlateFormOrderService;
+            this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
         }
 
 
 
-        public async Task<FxPageInfo<ReconciliationDocumentsDto>> GetListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime startDealDate, DateTime endDealDate, string keyword, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ReconciliationDocumentsDto>> GetListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int pageNum, int pageSize)
         {
             try
             {
-                DateTime startrq = ((DateTime)startDealDate);
-                DateTime endrq = ((DateTime)endDealDate).AddDays(1);
+                DateTime startrq = new DateTime();
+                DateTime endrq = new DateTime();
+                DateTime startDealrq = new DateTime();
+                DateTime endDealrq = new DateTime();
+                if (startDate != null && endDate != null)
+                {
+                    startrq = ((DateTime)startDate);
+                    endrq = ((DateTime)endDate).AddDays(1);
+
+                }
+                if (startDealDate != null && endDealDate != null)
+                {
+                    startDealrq = ((DateTime)startDealDate);
+                    endDealrq = ((DateTime)endDealDate).AddDays(1);
+                }
                 var reconciliationDocuments = from d in dalReconciliationDocuments.GetAll().Include(x => x.HospitalEmployee).Include(x => x.HospitalInfo)
                                               where (string.IsNullOrWhiteSpace(keyword) || d.CustomerName.Contains(keyword) || d.CustomerPhone.Contains(keyword))
-                                             && (d.DealDate >= startrq && d.DealDate <= endrq)
+                                             && (!startDealDate.HasValue && !endDealDate.HasValue || d.DealDate >= startDealrq && d.DealDate <= endDealrq)
                                              && (!returnBackPricePercent.HasValue || d.ReturnBackPricePercent == returnBackPricePercent.Value)
                                              && (!reconciliationState.HasValue || d.ReconciliationState == reconciliationState.Value)
+                                             && (!startDate.HasValue && !endDate.HasValue || d.CreateDate >= startrq.Date && d.CreateDate < endrq.Date)
                                              && d.Valid
                                               select new ReconciliationDocumentsDto
                                               {
@@ -72,7 +90,7 @@ namespace Fx.Amiya.Service
 
                 FxPageInfo<ReconciliationDocumentsDto> reconciliationDocumentsPageInfo = new FxPageInfo<ReconciliationDocumentsDto>();
                 reconciliationDocumentsPageInfo.TotalCount = await reconciliationDocuments.CountAsync();
-                reconciliationDocumentsPageInfo.List = await reconciliationDocuments.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+                reconciliationDocumentsPageInfo.List = await reconciliationDocuments.OrderByDescending(x => x.DealDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
 
                 return reconciliationDocumentsPageInfo;
             }
@@ -207,6 +225,47 @@ namespace Fx.Amiya.Service
                     }
                     reconciliationDocuments.UpdateDate = DateTime.Now;
                     await dalReconciliationDocuments.UpdateAsync(reconciliationDocuments, true);
+                }
+                _unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                _unitOfWork.RollBack();
+                throw ex;
+            }
+        }
+
+
+        /// <summary>
+        /// 回款完成
+        /// </summary>
+        /// <param name="reconciliationDocumentsReturnBackPriceDto"></param>
+        /// <returns></returns>
+        public async Task TagReconciliationStateAsync(ReconciliationDocumentsReturnBackPriceDto reconciliationDocumentsReturnBackPriceDto)
+        {
+            _unitOfWork.BeginTransaction();
+            try
+            {
+
+                var reconciliationDocuments = await dalReconciliationDocuments.GetAll().Where(e => reconciliationDocumentsReturnBackPriceDto.ReconciliationDocumentsIdList.Contains(e.Id)).ToListAsync();
+                if (reconciliationDocuments.Count > 0)
+                {
+                    foreach (var x in reconciliationDocuments)
+                    {
+
+                        x.ReconciliationState = (int)ReconciliationDocumentsStateEnum.ReturnBackPriceSuccessful;
+                        x.UpdateDate = DateTime.Now;
+                        await dalReconciliationDocuments.UpdateAsync(x, true);
+                    }
+                }
+                var orderInfo = await contentPlatFormOrderDealInfoService.SettleListAsync(reconciliationDocumentsReturnBackPriceDto);
+                foreach (var x in orderInfo)
+                {
+                    ReturnBackOrderDto returnBackOrderDto = new ReturnBackOrderDto();
+                    returnBackOrderDto.OrderId = x.OrderId;
+                    returnBackOrderDto.ReturnBackDate = reconciliationDocumentsReturnBackPriceDto.ReturnBackDate;
+                    returnBackOrderDto.ReturnBackPrice = x.ReturnBackPrice;
+                    await contentPlateFormOrderService.ReturnBackOrderOnlyAsync(returnBackOrderDto);
                 }
                 _unitOfWork.Commit();
             }

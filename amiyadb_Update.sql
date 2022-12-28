@@ -1714,6 +1714,13 @@ ALTER TABLE `tbl_hospital_info`
 
 -----------------------------王健 2022/12/28 END -----------------------------
 
+-----------------------------------------------余建明 2022/12/28 BEGIN--------------------------------------------
+--成交情况加入对账单id
+ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
+ADD COLUMN `reconciliation_documents_id` VARCHAR(50) NULL AFTER `return_back_date`;
+-----------------------------------------------余建明 2022/12/28 END--------------------------------------------
+
+
 
 
 

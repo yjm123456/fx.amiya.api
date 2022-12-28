@@ -2,9 +2,11 @@
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.Performance;
+using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
+using Fx.Infrastructure.DataAccess;
 using jos_sdk_net.Util;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -25,11 +27,13 @@ namespace Fx.Amiya.Service
         private IDalAmiyaEmployee _dalAmiyaEmployee;
         private ILiveAnchorMonthlyTargetService _liveAnchorMonthlyTargetService;
         private IDalHospitalInfo _dalHospitalInfo;
+        private IUnitOfWork unitOfWork;
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
             IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
             IDalBindCustomerService dalBindCustomerService,
             IDalAmiyaEmployee dalAmiyaEmployee,
+            IUnitOfWork unitOfWork,
             IHospitalInfoService hospitalInfoService, ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService, IDalHospitalInfo dalHospitalInfo)
         {
             this.dalContentPlatFormOrderDealInfo = dalContentPlatFormOrderDealInfo;
@@ -38,6 +42,7 @@ namespace Fx.Amiya.Service
             _contentPlatFormCustomerPictureService = contentPlatFormCustomerPictureService;
             _dalBindCustomerService = dalBindCustomerService;
             _dalAmiyaEmployee = dalAmiyaEmployee;
+            this.unitOfWork = unitOfWork;
             _liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
             _dalHospitalInfo = dalHospitalInfo;
         }
@@ -183,6 +188,7 @@ namespace Fx.Amiya.Service
                                                        ReturnBackDate = d.ReturnBackDate,
                                                        ReturnBackPrice = d.ReturnBackPrice,
                                                        CreateBy = d.CreateBy,
+                                                       ReconciliationDocumentsId = d.ReconciliationDocumentsId,
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -337,6 +343,7 @@ namespace Fx.Amiya.Service
                                                        ReturnBackDate = d.ReturnBackDate,
                                                        ReturnBackPrice = d.ReturnBackPrice,
                                                        CreateBy = d.ContentPlatFormOrder.BelongEmpId.HasValue ? d.ContentPlatFormOrder.BelongEmpId.Value : -1,
+                                                       ReconciliationDocumentsId = d.ReconciliationDocumentsId,
                                                    };
 
                 List<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new List<ContentPlatFormOrderDealInfoDto>();
@@ -418,6 +425,7 @@ namespace Fx.Amiya.Service
                                                        ReturnBackDate = d.ReturnBackDate,
                                                        ReturnBackPrice = d.ReturnBackPrice,
                                                        CreateBy = d.CreateBy,
+                                                       ReconciliationDocumentsId = d.ReconciliationDocumentsId,
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -533,6 +541,7 @@ namespace Fx.Amiya.Service
                 contentPlatFOrmOrderDealInfoDto.ReturnBackDate = ContentPlatFOrmOrderDealInfo.ReturnBackDate;
                 contentPlatFOrmOrderDealInfoDto.ReturnBackPrice = ContentPlatFOrmOrderDealInfo.ReturnBackPrice;
                 contentPlatFOrmOrderDealInfoDto.CreateBy = ContentPlatFOrmOrderDealInfo.CreateBy;
+                contentPlatFOrmOrderDealInfoDto.ReconciliationDocumentsId = ContentPlatFOrmOrderDealInfo.ReconciliationDocumentsId;
                 var InvitationDocuments = await _contentPlatFormCustomerPictureService.GetListWithPageAsync(null, ContentPlatFOrmOrderDealInfo.Id, "邀约凭证", 1, 5);
                 contentPlatFOrmOrderDealInfoDto.InvitationDocuments = new List<string>();
                 foreach (var x in InvitationDocuments.List)
@@ -592,7 +601,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task UpdateIsOldCustomerAsync(string orderDealId,bool isOldCustomer)
+        public async Task UpdateIsOldCustomerAsync(string orderDealId, bool isOldCustomer)
         {
             try
             {
@@ -631,6 +640,7 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.CheckRemark = updateDto.CheckRemark;
                 ContentPlatFOrmOrderDealInfo.CheckState = updateDto.CheckState;
                 ContentPlatFOrmOrderDealInfo.SettlePrice = updateDto.SettlePrice;
+                ContentPlatFOrmOrderDealInfo.ReconciliationDocumentsId = updateDto.ReconciliationDocumentsId;
                 await dalContentPlatFormOrderDealInfo.UpdateAsync(ContentPlatFOrmOrderDealInfo, true);
 
             }
@@ -660,6 +670,41 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.ReturnBackPrice = updateDto.ReturnBackPrice;
                 await dalContentPlatFormOrderDealInfo.UpdateAsync(ContentPlatFOrmOrderDealInfo, true);
 
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 根据对账单id批量回款
+        /// </summary>
+        /// <param name="reconciliationDocumentsList"></param>
+        /// <returns></returns>
+        public async Task<List<OrderReturnBackPriceDto>> SettleListAsync(ReconciliationDocumentsReturnBackPriceDto reconciliationDocumentsList)
+        {
+            try
+            {
+
+                var ContentPlatFOrmOrderDealInfo = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => reconciliationDocumentsList.ReconciliationDocumentsIdList.Contains(e.ReconciliationDocumentsId)).ToListAsync();
+                List<OrderReturnBackPriceDto> OrderIdList = new List<OrderReturnBackPriceDto>();
+                if (ContentPlatFOrmOrderDealInfo != null)
+                {
+
+                    foreach (var x in ContentPlatFOrmOrderDealInfo)
+                    {
+                        OrderReturnBackPriceDto orderReturnBackPriceDto = new OrderReturnBackPriceDto();
+                        x.IsReturnBackPrice = true;
+                        x.ReturnBackDate = reconciliationDocumentsList.ReturnBackDate;
+                        x.ReturnBackPrice = x.SettlePrice;
+                        await dalContentPlatFormOrderDealInfo.UpdateAsync(x, true);
+                        orderReturnBackPriceDto.OrderId = x.ContentPlatFormOrderId;
+                        orderReturnBackPriceDto.ReturnBackPrice = x.SettlePrice.Value;
+                        OrderIdList.Add(orderReturnBackPriceDto);
+                    }
+                }
+                return OrderIdList;
             }
             catch (Exception ex)
             {
@@ -725,6 +770,7 @@ namespace Fx.Amiya.Service
                     contentPlatFOrmOrderDealInfoDto.ReturnBackDate = ContentPlatFOrmOrderDealInfo.ReturnBackDate;
                     contentPlatFOrmOrderDealInfoDto.ReturnBackPrice = ContentPlatFOrmOrderDealInfo.ReturnBackPrice;
                     contentPlatFOrmOrderDealInfoDto.CreateBy = ContentPlatFOrmOrderDealInfo.CreateBy;
+                    contentPlatFOrmOrderDealInfoDto.ReconciliationDocumentsId = ContentPlatFOrmOrderDealInfo.ReconciliationDocumentsId;
                     returnList.Add(contentPlatFOrmOrderDealInfoDto);
                 }
                 return returnList;
@@ -1342,7 +1388,7 @@ namespace Fx.Amiya.Service
             DateTime startDate = Convert.ToDateTime(year + "-" + month + "-01");
             DateTime endDate = startDate.AddMonths(1);
             var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)
-                .Where(o => o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= startDate && o.ToHospitalDate < endDate &&o.IsDeal==true)
+                .Where(o => o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= startDate && o.ToHospitalDate < endDate && o.IsDeal == true)
                 .Where(o => o.LastDealHospitalId.Value == hospitalId)
                 .ToListAsync();
             return result.Count();
@@ -1373,7 +1419,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<int> GetSendPerformanceByHospitalIdAsync(int hospitalId)
         {
-            var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)              
+            var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)
                 .Where(o => o.LastDealHospitalId.Value == hospitalId)
                 .ToListAsync();
             return result.Count();

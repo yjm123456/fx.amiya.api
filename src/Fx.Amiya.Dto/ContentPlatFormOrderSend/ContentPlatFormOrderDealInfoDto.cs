@@ -210,5 +210,10 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 邀约凭证
         /// </summary>
         public List<string> InvitationDocuments { get; set; }
+
+        /// <summary>
+        /// 对账单id
+        /// </summary>
+        public string ReconciliationDocumentsId { get; set; }
     }
 }
