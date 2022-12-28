@@ -57,7 +57,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<List<ReconciliationDocumentsVo>>> GetListAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime startDealDate, DateTime endDealDate, string keyword, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ReconciliationDocumentsVo>>> GetListAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime startDealDate, DateTime endDealDate, string keyword, int pageNum, int pageSize)
         {
             try
             {
@@ -90,13 +90,16 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                   ReturnBackTotalPrice = (d.SystemUpdatePricePercent + d.ReturnBackPricePercent) * d.TotalDealPrice / 100
                                               };
 
-                List<ReconciliationDocumentsVo> reconciliationDocumentsResult = new List<ReconciliationDocumentsVo>();
-                reconciliationDocumentsResult = reconciliationDocuments.ToList();
-                return ResultData<List<ReconciliationDocumentsVo>>.Success().AddData("reconciliationDocumentsInfo", reconciliationDocumentsResult);
+                FxPageInfo<ReconciliationDocumentsVo> reconciliationDocumentsResult = new FxPageInfo<ReconciliationDocumentsVo>();
+                reconciliationDocumentsResult.List = reconciliationDocuments.ToList();
+                reconciliationDocumentsResult.TotalCount = q.TotalCount;
+                reconciliationDocumentsResult.PageSize = pageSize;
+                reconciliationDocumentsResult.CurrentPageIndex = pageNum;
+                return ResultData<FxPageInfo<ReconciliationDocumentsVo>>.Success().AddData("reconciliationDocumentsInfo", reconciliationDocumentsResult);
             }
             catch (Exception ex)
             {
-                return ResultData<List<ReconciliationDocumentsVo>>.Fail(ex.Message);
+                return ResultData<FxPageInfo<ReconciliationDocumentsVo>>.Fail(ex.Message);
             }
         }
 
