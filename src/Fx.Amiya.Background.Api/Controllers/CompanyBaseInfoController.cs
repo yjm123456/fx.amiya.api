@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.CompanyBaseInfo;
 using Fx.Amiya.Dto.CompanyBaseInfo;
+using Fx.Amiya.IService;
 using Fx.Amiya.Service;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -22,9 +23,9 @@ namespace Fx.Amiya.Background.Api.Controllers
     [FxInternalAuthorize]
     public class CompanyBaseInfoController : ControllerBase
     {
-        private readonly CompanyBaseInfoService companyBaseInfoService;
+        private readonly ICompanyBaseInfoService companyBaseInfoService;
 
-        public CompanyBaseInfoController(CompanyBaseInfoService companyBaseInfoService)
+        public CompanyBaseInfoController(ICompanyBaseInfoService companyBaseInfoService)
         {
             this.companyBaseInfoService = companyBaseInfoService;
         }

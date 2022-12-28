@@ -67,7 +67,7 @@ namespace Fx.Amiya.Service
             });
             FxPageInfo<CompanyBaseInfoDto> fxPageInfo = new FxPageInfo<CompanyBaseInfoDto>();
             fxPageInfo.TotalCount = companyList.Count();
-            fxPageInfo.List = companyList.Skip((pageNum - 1) * pageSize).Take(pageNum).ToList();
+            fxPageInfo.List = companyList.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
             return fxPageInfo;
         }
 

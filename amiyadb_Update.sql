@@ -1703,7 +1703,16 @@ ALTER TABLE `tbl_goods_standards_price`
 
 
 
+-----------------------------王健 2022/12/28 BEGIN -----------------------------
 
+
+--医院添加归属公司
+
+ALTER TABLE `tbl_hospital_info`
+	ADD COLUMN `belong_company` VARCHAR(200) NULL DEFAULT NULL AFTER `submit_state`;
+
+
+-----------------------------王健 2022/12/28 END -----------------------------
 
 
 
