@@ -224,6 +224,58 @@ namespace Fx.Amiya.Service
             }
         }
 
+        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetContentPlatFormOrderDealInfoByReconciliationDocumentsIdAsync(string reconciliationDocumentsId, int pageNum, int pageSize)
+        {
+            try
+            {
+                var dealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().OrderByDescending(x => x.CreateDate) select d;
+
+                var ContentPlatFOrmOrderDealInfo = from d in dealInfo
+                                                   where (string.IsNullOrEmpty(reconciliationDocumentsId) || d.ReconciliationDocumentsId == reconciliationDocumentsId)
+                                                   select new ContentPlatFormOrderDealInfoDto
+                                                   {
+                                                       Id = d.Id,
+                                                       ContentPlatFormOrderId = d.ContentPlatFormOrderId,
+                                                       Phone = ServiceClass.GetIncompletePhone(d.ContentPlatFormOrder.Phone),
+                                                       IsDeal = d.IsDeal,
+                                                       ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
+                                                       Price = d.Price,
+                                                       DealDate = d.DealDate,
+                                                       CheckStateText = ServiceClass.GetCheckTypeText(d.CheckState.Value),
+                                                       CheckPrice = d.CheckPrice,
+                                                       CheckDate = d.CheckDate,
+                                                       CheckBy = d.CheckBy,
+                                                       SettlePrice = d.SettlePrice,
+                                                       CheckRemark = d.CheckRemark,
+                                                       IsReturnBackPrice = d.IsReturnBackPrice,
+                                                       ReturnBackDate = d.ReturnBackDate,
+                                                       ReturnBackPrice = d.ReturnBackPrice,
+                                                   };
+
+                FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
+                ContentPlatFOrmOrderDealInfoPageInfo.TotalCount = await ContentPlatFOrmOrderDealInfo.CountAsync();
+                ContentPlatFOrmOrderDealInfoPageInfo.List = await ContentPlatFOrmOrderDealInfo.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+                foreach (var z in ContentPlatFOrmOrderDealInfoPageInfo.List)
+                {
+                    if (z.LastDealHospitalId.HasValue)
+                    {
+                        var dealHospital = await _hospitalInfoService.GetBaseByIdAsync(z.LastDealHospitalId.Value);
+                        z.LastDealHospital = dealHospital.Name;
+                    }
+                    if (z.CheckBy.HasValue)
+                    {
+                        var empInfo = await _amiyaEmployeeService.GetByIdAsync(z.CheckBy.Value);
+                        z.CheckByEmpName = empInfo.Name;
+                    }
+                }
+                return ContentPlatFOrmOrderDealInfoPageInfo;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, bool hidePhone)
         {
             try

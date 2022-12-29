@@ -40,6 +40,10 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         /// </summary>
         public decimal? ReturnBackPricePercent { get; set; }
         /// <summary>
+        /// 信息服务费金额
+        /// </summary>
+        public decimal? ReturnBackPrice { get; set; }
+        /// <summary>
         /// 系统维护费比例（%）
         /// </summary>
         public decimal? SystemUpdatePricePercent { get; set; }

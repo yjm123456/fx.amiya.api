@@ -1618,24 +1618,29 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task ReturnBackOrderOnlyAsync(ReturnBackOrderDto input)
         {
-            unitOfWork.BeginTransaction();
             try
             {
                 var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.OrderId).SingleOrDefaultAsync();
                 if (order == null)
                 {
-                    throw new Exception("未找到该订单的相关信息！");
+                    throw new Exception("未找到该订单的相关信息，回款失败！");
                 }
                 order.IsReturnBackPrice = true;
-                order.ReturnBackPrice += input.ReturnBackPrice;
+                if (order.ReturnBackPrice == null)
+                {
+                    order.ReturnBackPrice = input.ReturnBackPrice;
+                }else
+                {
+
+                    order.ReturnBackPrice += input.ReturnBackPrice;
+                }
                 order.ReturnBackDate = input.ReturnBackDate;
                 await _dalContentPlatformOrder.UpdateAsync(order, true);
 
-                unitOfWork.Commit();
             }
             catch (Exception err)
             {
-                unitOfWork.RollBack();
+                throw err;
             }
         }
 

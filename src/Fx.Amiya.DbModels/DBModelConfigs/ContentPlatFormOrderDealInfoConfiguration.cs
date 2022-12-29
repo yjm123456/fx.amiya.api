@@ -39,7 +39,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.IsReturnBackPrice).HasColumnName("is_return_back_price").HasColumnType("bit").IsRequired();
             builder.Property(e => e.ReturnBackPrice).HasColumnName("return_back_price").HasColumnType("DECIMAL(12,2)").IsRequired(false);
             builder.Property(e => e.ReturnBackDate).HasColumnName("return_back_date").HasColumnType("DATETIME").IsRequired(false);
-            builder.Property(t => t.ReconciliationDocumentsId).HasColumnName("reconciliation_documents_id").HasColumnType("varchar(50)").IsRequired();
+            builder.Property(t => t.ReconciliationDocumentsId).HasColumnName("reconciliation_documents_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.HasOne(t => t.ContentPlatFormOrder).WithMany(t => t.ContentPlatformOrderDealInfoList).HasForeignKey(t => t.ContentPlatFormOrderId);
         }
     }
