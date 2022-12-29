@@ -38,7 +38,7 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<ReconciliationDocumentsDto>> GetListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ReconciliationDocumentsDto>> GetListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword,int hospitalId, int pageNum, int pageSize)
         {
             try
             {
@@ -62,6 +62,7 @@ namespace Fx.Amiya.Service
                                              && (!startDealDate.HasValue && !endDealDate.HasValue || d.DealDate >= startDealrq && d.DealDate <= endDealrq)
                                              && (!returnBackPricePercent.HasValue || d.ReturnBackPricePercent == returnBackPricePercent.Value)
                                              && (!reconciliationState.HasValue || d.ReconciliationState == reconciliationState.Value)
+                                             && (d.HospitalId == hospitalId)
                                              && (!startDate.HasValue && !endDate.HasValue || d.CreateDate >= startrq.Date && d.CreateDate < endrq.Date)
                                              && d.Valid
                                               select new ReconciliationDocumentsDto

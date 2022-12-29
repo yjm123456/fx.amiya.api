@@ -54,16 +54,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="startDealDate">成交时间（开始）</param>
         /// <param name="endDealDate">成交时间（结束）</param>
         /// <param name="keyword">关键词（客户姓名，手机号）</param>
+        /// <param name="hospitalId">医院id</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<FxPageInfo<ReconciliationDocumentsVo>>> GetListAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ReconciliationDocumentsVo>>> GetListAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int hospitalId, int pageNum, int pageSize)
         {
             try
             {
-                var q = await reconciliationDocumentsService.GetListWithPageAsync(returnBackPricePercent, reconciliationState, startDate, endDate, startDealDate, endDealDate, keyword, pageNum, pageSize);
+                var q = await reconciliationDocumentsService.GetListWithPageAsync(returnBackPricePercent, reconciliationState, startDate, endDate, startDealDate, endDealDate, keyword,hospitalId, pageNum, pageSize);
 
                 var reconciliationDocuments = from d in q.List
                                               select new ReconciliationDocumentsVo
@@ -88,7 +89,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                   UpdateDate = d.UpdateDate,
                                                   DeleteDate = d.DeleteDate,
                                                   Valid = d.Valid,
-                                                  ReturnBackPrice = d.TotalDealPrice * d.ReturnBackPricePercent / 100,
                                                   SystemUpdatePrice = d.TotalDealPrice * d.SystemUpdatePricePercent / 100,
                                                   ReturnBackTotalPrice = (d.SystemUpdatePricePercent + d.ReturnBackPricePercent) * d.TotalDealPrice / 100
                                               };
