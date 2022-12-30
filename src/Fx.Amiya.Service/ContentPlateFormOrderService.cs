@@ -1591,7 +1591,14 @@ namespace Fx.Amiya.Service
                 {
                     order.IsReturnBackPrice = false;
                 }
-                order.ReturnBackPrice += input.ReturnBackPrice;
+                if (order.ReturnBackPrice == null)
+                {
+                    order.ReturnBackPrice = input.ReturnBackPrice;
+                }
+                else
+                {
+                    order.ReturnBackPrice += input.ReturnBackPrice;
+                }
                 order.ReturnBackDate = input.ReturnBackDate;
                 await _dalContentPlatformOrder.UpdateAsync(order, true);
 

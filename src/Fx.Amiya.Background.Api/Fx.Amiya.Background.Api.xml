@@ -5843,7 +5843,7 @@
             </summary>
             <param name="reconciliationDocumentsService"></param>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.ReconciliationDocumentsController.GetListAsync(System.Nullable{System.Decimal},System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ReconciliationDocumentsController.GetListAsync(System.Nullable{System.Decimal},System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.Int32,System.Int32,System.Int32)">
             <summary>
             获取财务对账单信息列表(管理端与机构端公用)
             </summary>
@@ -5854,6 +5854,7 @@
             <param name="startDealDate">成交时间（开始）</param>
             <param name="endDealDate">成交时间（结束）</param>
             <param name="keyword">关键词（客户姓名，手机号）</param>
+            <param name="hospitalId">医院id</param>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
             <returns></returns>
@@ -9836,6 +9837,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.InvitationDocuments">
             <summary>
             邀约凭证图片
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.ReconciliationDocumentsId">
+            <summary>
+            对账单id
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoSimpleVo">

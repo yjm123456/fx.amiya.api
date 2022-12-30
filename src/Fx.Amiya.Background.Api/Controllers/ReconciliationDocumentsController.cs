@@ -64,7 +64,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var q = await reconciliationDocumentsService.GetListWithPageAsync(returnBackPricePercent, reconciliationState, startDate, endDate, startDealDate, endDealDate, keyword,hospitalId, pageNum, pageSize);
+                var q = await reconciliationDocumentsService.GetListWithPageAsync(returnBackPricePercent, reconciliationState, startDate, endDate, startDealDate, endDealDate, keyword, hospitalId, pageNum, pageSize);
 
                 var reconciliationDocuments = from d in q.List
                                               select new ReconciliationDocumentsVo
@@ -89,6 +89,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                   UpdateDate = d.UpdateDate,
                                                   DeleteDate = d.DeleteDate,
                                                   Valid = d.Valid,
+                                                  ReturnBackPrice = d.TotalDealPrice * d.ReturnBackPricePercent / 100,
                                                   SystemUpdatePrice = d.TotalDealPrice * d.SystemUpdatePricePercent / 100,
                                                   ReturnBackTotalPrice = (d.SystemUpdatePricePercent + d.ReturnBackPricePercent) * d.TotalDealPrice / 100
                                               };
