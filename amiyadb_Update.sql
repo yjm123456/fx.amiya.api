@@ -1722,6 +1722,18 @@ ADD COLUMN `reconciliation_documents_id` VARCHAR(50) NULL AFTER `return_back_dat
 
 
 
+-----------------------------王健 2022/12/29 BEGIN -----------------------------
+
+--购物车添加规格
+
+ALTER TABLE `tbl_goods_shopcar`
+	ADD COLUMN `select_standards` VARCHAR(50) NULL DEFAULT NULL AFTER `hosiptal_id`;
+
+
+-----------------------------王健 2022/12/29 END -----------------------------
+
+
+
 
 
 

@@ -90,6 +90,14 @@ namespace Fx.Amiya.Dto.GoodsShopCar
         /// </summary>
         public decimal? HospitalSalePrice { get; set; }
         /// <summary>
+        /// 选中的规格
+        /// </summary>
+        public string SelectStandards { get; set; }
+        /// <summary>
+        /// 规格是否有效
+        /// </summary>
+        public bool StandardsIsValid { get; set; }
+        /// <summary>
         /// 会员价格列表
         /// </summary>
         public List<GoodsMemberRankPriceDto> GoodsMemberRankPriceList { get; set; }

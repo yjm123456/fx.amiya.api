@@ -46,6 +46,7 @@ namespace Fx.Amiya.Dto.HospitalInfo
         /// </summary>
         public string HasUsedTime { get; set; }
         public string ContractUrl { get; set; }
+        public string BelongCompany { get; set; }
 
     }
 }

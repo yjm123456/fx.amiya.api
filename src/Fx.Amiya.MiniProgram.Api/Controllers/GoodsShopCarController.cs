@@ -45,7 +45,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
             var member = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
             var q = await goodsShopCarService.GetListWithPageAsync(keyword, customerId, pageNum, pageSize);
-            var goodsShopCarInfos = from d in q.List
+            var goodsShopCarInfos = from d in q.List 
                                     select new GoodsShopCarVo
                                     {
                                         Id = d.Id,
@@ -60,6 +60,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                         Num = d.Num,
                                         City=d.City,
                                         CityId=d.CityId,
+                                        SelectStandards=d.SelectStandards,
                                         Hospital=d.Hospital,
                                         HospitalId=d.HospitalId,
                                         Status = d.Status,
@@ -96,7 +97,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 addDto.Num = addVo.Num;
                 addDto.CityId = addVo.CityId;
                 addDto.HospitalId = addVo.HospitalId;
-
+                addDto.SelectStandard = addVo.SelectStandard;
                 await goodsShopCarService.AddAsync(addDto);
                 return ResultData.Success();
 
@@ -128,7 +129,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 updateDto.Num = updateVo.Num;
                 updateDto.CityId = updateVo.CityId;
                 updateDto.HospitalId = updateVo.HospitalId;
-
+                updateDto.SelectStandard = updateVo.SelectStandards;
                 await goodsShopCarService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

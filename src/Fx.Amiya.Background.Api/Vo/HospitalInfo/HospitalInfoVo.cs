@@ -53,6 +53,10 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalInfo
         /// 可用日期
         /// </summary>
         public string HasUsedTime { get; set; }
+        /// <summary>
+        /// 归属医院
+        /// </summary>
+        public string BelongCompany { get; set; }
 
 
     }

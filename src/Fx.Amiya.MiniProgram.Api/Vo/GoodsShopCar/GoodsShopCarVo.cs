@@ -95,5 +95,9 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar
         /// 会员价格
         /// </summary>
         public decimal MemberPrice { get; set; }
+        /// <summary>
+        /// 选中的规格
+        /// </summary>
+        public string SelectStandards { get; set; }
     }
 }

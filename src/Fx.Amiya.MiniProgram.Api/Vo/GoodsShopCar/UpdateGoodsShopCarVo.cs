@@ -29,5 +29,9 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar
         /// 医院id
         /// </summary>
         public int? HospitalId { get; set; }
+        /// <summary>
+        /// 选择规格
+        /// </summary>
+        public string SelectStandards { get; set; }
     }
 }

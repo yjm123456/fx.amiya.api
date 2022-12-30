@@ -74,7 +74,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                    City = d.City,
                                    DueTime = d.DueTime,
                                    ContractUrl = d.ContractUrl,
-                                   HasUsedTime = d.HasUsedTime
+                                   HasUsedTime = d.HasUsedTime,
+                                   BelongCompany=d.BelongCompany
                                };
 
 

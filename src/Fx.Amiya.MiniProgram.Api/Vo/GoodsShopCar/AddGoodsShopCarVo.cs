@@ -25,5 +25,9 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar
         /// 医院id
         /// </summary>
         public int? HospitalId { get; set; }
+        /// <summary>
+        /// 选择的规格
+        /// </summary>
+        public string SelectStandard { get; set; }
     }
 }

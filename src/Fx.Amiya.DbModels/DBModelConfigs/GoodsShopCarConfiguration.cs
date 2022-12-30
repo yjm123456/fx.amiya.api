@@ -21,6 +21,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(t => t.CityId).HasColumnName("city_id").HasColumnType("int").IsRequired(false);
             builder.Property(t => t.HospitalId).HasColumnName("hosiptal_id").HasColumnType("int").IsRequired(false);
+            builder.Property(t => t.SelectStandards).HasColumnName("select_standards").HasColumnType("varchar(50)").IsRequired(false);
 
             builder.HasOne(e => e.GoodsInfo).WithMany(e => e.GoodsShopCars).HasForeignKey(e => e.GoodsId);
             builder.HasOne(e => e.CustomerInfo).WithMany(e => e.GoodsShopCar).HasForeignKey(e => e.CustomerId);

@@ -468,13 +468,13 @@ namespace Fx.Amiya.Service
             return list.Any() ? true : false;
         }
         /// <summary>
-        /// 判断最近7天有没有领取过会员赠送券,没有则发放,有则不发放
+        /// 判断最近30天有没有领取过会员赠送券,没有则发放,有则不发放
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns></returns>
         public async Task<MemberRecieveConsumptionVoucherDto> IsReciveVoucherThisMonthThisWeekAsync(string customerId)
         {
-            var startDate = DateTime.Now.AddDays(-7);
+            var startDate = DateTime.Now.AddDays(-30);
             var member = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
             if (member == null) return null;
             //最近7天的所有优惠券

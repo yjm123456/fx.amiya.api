@@ -52,5 +52,6 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Order
         ///// 抵扣积分
         ///// </summary>
         //public decimal? IntegrationQuantity { get; set; }
+        public string VoucherId { get; set; }
     }
 }

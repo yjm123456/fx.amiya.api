@@ -24,7 +24,7 @@ namespace Fx.Amiya.DbModels.Model
 
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
-
+        public string SelectStandards { get; set; }
         public GoodsInfo GoodsInfo { get; set; }
 
         public CustomerInfo CustomerInfo { get; set; }

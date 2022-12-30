@@ -456,7 +456,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     if (find == null) throw new Exception("规格错误");
                     amiyaOrder.IntegrationQuantity = find.Price * item.Quantity;
                     amiyaOrder.ExchangeType = (int)ExchangeType.Integration;
-                    //amiyaOrder.IntegrationQuantity = goodsInfo.IntegrationQuantity * item.Quantity;
+                    
                 }
                 if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
                 {
@@ -564,9 +564,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 }
                 if (IsExistThirdPartPay)
                 {
-                    if (!string.IsNullOrEmpty(orderAdd.VoucherId))
+                    if (!string.IsNullOrEmpty(item.VoucherId))
                     {
-                        var voucher = await customerConsumptionVoucherService.GetVoucherByCustomerIdAndVoucherIdAsync(customerId, orderAdd.VoucherId);
+                        var voucher = await customerConsumptionVoucherService.GetVoucherByCustomerIdAndVoucherIdAsync(customerId, item.VoucherId);
                         if (voucher == null) throw new Exception("没有此抵用券信息");
                         if (voucher.IsUsed) throw new Exception("该抵用券已被使用");
                         amiyaOrder.IsUseCoupon = true;

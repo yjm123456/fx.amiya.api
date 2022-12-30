@@ -79,7 +79,8 @@ namespace Fx.Amiya.Service
                                    CityId = d.CityId,
                                    City = d.CooperativeHospitalCity.Name,
                                    DueTime = d.DueTime,
-                                   ContractUrl = d.ContractUrl
+                                   ContractUrl = d.ContractUrl,
+                                   BelongCompany=d.BelongCompany
                                };
                 FxPageInfo<HospitalInfoDto> hospitalPageInfo = new FxPageInfo<HospitalInfoDto>();
                 hospitalPageInfo.TotalCount = await hospital.CountAsync();

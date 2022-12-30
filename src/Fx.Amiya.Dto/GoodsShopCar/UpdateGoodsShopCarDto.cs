@@ -38,5 +38,10 @@ namespace Fx.Amiya.Dto.GoodsShopCar
         ///// 购物车状态
         ///// </summary>
         //public int Status { get; set; }
+        
+        /// <summary>
+        /// 选择的规格
+        /// </summary>
+        public string SelectStandard { get; set; }
     }
 }

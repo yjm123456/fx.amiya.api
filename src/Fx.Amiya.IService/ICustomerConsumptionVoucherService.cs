@@ -104,7 +104,7 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task NewCustomerSendVoucherAsync(string customerId);
         /// <summary>
-        /// 判断最近7天有没有领取过会员赠送券,没有则发放,有则不发放
+        /// 判断最近30天有没有领取过会员赠送券,没有则发放,有则不发放
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns></returns>

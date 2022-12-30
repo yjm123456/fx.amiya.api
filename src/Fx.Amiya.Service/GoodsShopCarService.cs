@@ -34,7 +34,7 @@ namespace Fx.Amiya.Service
             try
             {
 
-                var goodsShopCarService = from d in dalGoodsShopCarService.GetAll().Include(e => e.GoodsInfo).ThenInclude(e => e.GoodsMemberRankPrice)
+                var goodsShopCarService = from d in dalGoodsShopCarService.GetAll().Where(e => !string.IsNullOrEmpty(e.SelectStandards)).Include(e => e.GoodsInfo).ThenInclude(e => e.GoodsMemberRankPrice)
                                           where (keyword == null || d.GoodsInfo.Name.Contains(keyword))
                                                && (d.CustomerId == customerId)
                                                && (d.Status == 1)
@@ -47,11 +47,13 @@ namespace Fx.Amiya.Service
                                               GoodsId = d.GoodsId,
                                               GoodsName = d.GoodsInfo.Name,
                                               Unit = d.GoodsInfo.Unit,
-                                              Price = d.GoodsInfo.SalePrice * d.Num,
-                                              InterGrationAccount = d.GoodsInfo.IntegrationQuantity,
+                                              Price = dalGoodsStandardsPrice.GetAll().Where(e => e.Id == d.SelectStandards).SingleOrDefault().Price * d.Num,
+                                              InterGrationAccount = dalGoodsStandardsPrice.GetAll().Where(e => e.Id == d.SelectStandards).SingleOrDefault().Price,
                                               ExchangeType = d.GoodsInfo.ExchangeType,
+                                              SelectStandards = d.SelectStandards,
+                                              StandardsIsValid = dalGoodsStandardsPrice.GetAll().Where(e => e.Id == d.SelectStandards).SingleOrDefault() == null ? false : true,
                                               Num = d.Num,
-                                              Status = d.Status,
+                                              Status = d.Status,                                            
                                               GoodsPictureUrl = d.GoodsInfo.ThumbPicUrl,
                                               UpdateDate = d.UpdateDate,
                                               CreateDate = d.CreateDate,
@@ -69,7 +71,7 @@ namespace Fx.Amiya.Service
                                           };
                 FxPageInfo<GoodsShopCarDto> goodsShopCarServicePageInfo = new FxPageInfo<GoodsShopCarDto>();
                 goodsShopCarServicePageInfo.TotalCount = await goodsShopCarService.CountAsync();
-                goodsShopCarServicePageInfo.List = await goodsShopCarService.OrderByDescending(x => x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+                goodsShopCarServicePageInfo.List = await goodsShopCarService.OrderByDescending(x => x.CreateDate).Where(e=>e.StandardsIsValid==true).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
                 return goodsShopCarServicePageInfo;
             }
             catch (Exception ex)
@@ -94,6 +96,7 @@ namespace Fx.Amiya.Service
 
                         goodsShopCarService.Status = 1;
                         goodsShopCarService.Num = addDto.Num;
+                        goodsShopCarService.SelectStandards = addDto.SelectStandard;
                         await dalGoodsShopCarService.UpdateAsync(goodsShopCarService, true);
                     }
                     else
@@ -105,6 +108,7 @@ namespace Fx.Amiya.Service
                         updateDto.CityId = addDto.CityId;
                         updateDto.HospitalId = addDto.HospitalId;
                         updateDto.Num = isExistGoodsShopCar.Num + addDto.Num;
+                        updateDto.SelectStandard = addDto.SelectStandard;
                         await this.UpdateAsync(updateDto);
                     }
 
@@ -121,6 +125,7 @@ namespace Fx.Amiya.Service
                     goodsShopCar.Status = 1;
                     goodsShopCar.CreateDate = DateTime.Now;
                     goodsShopCar.UpdateDate = DateTime.Now;
+                    goodsShopCar.SelectStandards = addDto.SelectStandard;
                     await dalGoodsShopCarService.AddAsync(goodsShopCar, true);
                 }
 
@@ -186,6 +191,7 @@ namespace Fx.Amiya.Service
                 goodsShopCarServiceDto.CreateDate = goodsShopCarService.CreateDate;
                 goodsShopCarServiceDto.CityId = goodsShopCarService.CityId;
                 goodsShopCarServiceDto.HospitalId = goodsShopCarService.HospitalId;
+                goodsShopCarServiceDto.SelectStandards = goodsShopCarService.SelectStandards;
                 return goodsShopCarServiceDto;
             }
             catch (Exception ex)
@@ -208,6 +214,7 @@ namespace Fx.Amiya.Service
                 goodsShopCarService.UpdateDate = DateTime.Now;
                 goodsShopCarService.CityId = updateDto.CityId;
                 goodsShopCarService.HospitalId = updateDto.HospitalId;
+                goodsShopCarService.SelectStandards = updateDto.SelectStandard;
                 await dalGoodsShopCarService.UpdateAsync(goodsShopCarService, true);
 
 
