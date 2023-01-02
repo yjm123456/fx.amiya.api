@@ -25,12 +25,22 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         [Required]
         public int CheckState { get; set; }
         /// <summary>
-        /// 审核金额
+        /// 对账金额
         /// </summary>
 
         public decimal CheckPrice { get; set; }
+
         /// <summary>
-        /// 结算金额
+        /// 信息服务费
+        /// </summary>
+        public decimal InformationPrice { get; set; }
+        /// <summary>
+        /// 系统使用费
+        /// </summary>
+        public decimal SystemUpdatePrice { get; set; }
+
+        /// <summary>
+        /// 服务费合计
         /// </summary>
 
         public decimal SettlePrice { get; set; }

@@ -98,6 +98,14 @@ namespace Fx.Amiya.DbModels.Model
         public decimal? CheckPrice { get; set; }
         public DateTime? CheckDate { get; set; }
 
+        /// <summary>
+        /// 信息服务费
+        /// </summary>
+        public decimal? InformationPrice { get; set; }
+        /// <summary>
+        /// 系统使用费
+        /// </summary>
+        public decimal? SystemUpdatePrice { get; set; }
         public decimal? SettlePrice { get; set; }
         public int? CheckBy { get; set; }
         public string CheckRemark { get; set; }

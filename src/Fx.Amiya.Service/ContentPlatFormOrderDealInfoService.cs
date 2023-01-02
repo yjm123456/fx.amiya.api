@@ -182,6 +182,8 @@ namespace Fx.Amiya.Service
                                                        CheckPrice = d.CheckPrice,
                                                        CheckDate = d.CheckDate,
                                                        CheckBy = d.CheckBy,
+                                                       InformationPrice=d.InformationPrice,
+                                                       SystemUpdatePrice=d.SystemUpdatePrice,
                                                        SettlePrice = d.SettlePrice,
                                                        CheckRemark = d.CheckRemark,
                                                        IsReturnBackPrice = d.IsReturnBackPrice,
@@ -245,6 +247,8 @@ namespace Fx.Amiya.Service
                                                        CheckPrice = d.CheckPrice,
                                                        CheckDate = d.CheckDate,
                                                        CheckBy = d.CheckBy,
+                                                       InformationPrice=d.InformationPrice,
+                                                       SystemUpdatePrice=d.SystemUpdatePrice,
                                                        SettlePrice = d.SettlePrice,
                                                        CheckRemark = d.CheckRemark,
                                                        IsReturnBackPrice = d.IsReturnBackPrice,
@@ -389,6 +393,8 @@ namespace Fx.Amiya.Service
                                                        CheckPrice = d.CheckPrice,
                                                        CheckDate = d.CheckDate,
                                                        CheckBy = d.CheckBy,
+                                                       InformationPrice=d.InformationPrice,
+                                                       SystemUpdatePrice=d.SystemUpdatePrice,
                                                        SettlePrice = d.SettlePrice,
                                                        CheckRemark = d.CheckRemark,
                                                        IsReturnBackPrice = d.IsReturnBackPrice,
@@ -471,6 +477,8 @@ namespace Fx.Amiya.Service
                                                        CheckPrice = d.CheckPrice,
                                                        CheckDate = d.CheckDate,
                                                        CheckBy = d.CheckBy,
+                                                       InformationPrice=d.InformationPrice,
+                                                       SystemUpdatePrice=d.SystemUpdatePrice,
                                                        SettlePrice = d.SettlePrice,
                                                        CheckRemark = d.CheckRemark,
                                                        IsReturnBackPrice = d.IsReturnBackPrice,
@@ -692,6 +700,8 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.CheckRemark = updateDto.CheckRemark;
                 ContentPlatFOrmOrderDealInfo.CheckState = updateDto.CheckState;
                 ContentPlatFOrmOrderDealInfo.SettlePrice = updateDto.SettlePrice;
+                ContentPlatFOrmOrderDealInfo.InformationPrice = updateDto.InformationPrice;
+                ContentPlatFOrmOrderDealInfo.SystemUpdatePrice = updateDto.SystemUpdatePrice;
                 ContentPlatFOrmOrderDealInfo.ReconciliationDocumentsId = updateDto.ReconciliationDocumentsId;
                 await dalContentPlatFormOrderDealInfo.UpdateAsync(ContentPlatFOrmOrderDealInfo, true);
 

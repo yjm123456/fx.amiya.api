@@ -344,7 +344,8 @@ namespace Fx.Amiya.Service
                                 SettlePrice = d.SettlePrice,
                                 IsReturnBackPrice = d.IsReturnBackPrice,
                                 ReturnBackPrice = d.ReturnBackPrice,
-                                ReturnBackDate = d.ReturnBackDate
+                                ReturnBackDate = d.ReturnBackDate,
+                                ReconciliationDocumentsId=d.ReconciliationDocumentsId,
                             };
 
 
@@ -1383,6 +1384,7 @@ namespace Fx.Amiya.Service
                 order.SettlePrice = input.SettlePrice;
                 order.CheckRemark = input.CheckRemark;
                 order.CheckDate = DateTime.Now;
+                order.ReconciliationDocumentsId = input.ReconciliationDocumentsId;
                 await dalOrderInfo.UpdateAsync(order, true);
 
                 foreach (var x in input.CheckPicture)
@@ -1428,6 +1430,35 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
+            }
+        }
+
+        /// <summary>
+        /// 根据对账单id批量回款
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task ReturnBackOrderByReconciliationDocumentsIdsAsync(ReturnBackOrderDto input)
+        {
+            try
+            {
+                var order = await dalOrderInfo.GetAll().Where(x => input.ReconciliationDocumentsIdList.Contains(x.ReconciliationDocumentsId)).ToListAsync();
+                foreach (var x in order)
+                {
+
+                    if ( x.CheckState != (int)CheckType.CheckedSuccess)
+                    {
+                        x.IsReturnBackPrice = true;
+                        x.ReturnBackPrice = x.SettlePrice;
+                        x.ReturnBackDate = input.ReturnBackDate;
+                        await dalOrderInfo.UpdateAsync(x, true);
+                    }
+                }
+
+            }
+            catch (Exception err)
+            {
+                throw new Exception("操作失败！");
             }
         }
 

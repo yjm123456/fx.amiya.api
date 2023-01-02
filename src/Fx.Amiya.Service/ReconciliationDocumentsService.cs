@@ -24,14 +24,20 @@ namespace Fx.Amiya.Service
         private IContentPlateFormOrderService contentPlateFormOrderService;
         private readonly IUnitOfWork _unitOfWork;
         private IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
+        private IOrderService orderService;
+        private ICustomerHospitalConsumeService customerHospitalConsumeService;
 
         public ReconciliationDocumentsService(IDalReconciliationDocuments dalReconciliationDocuments,
             IContentPlateFormOrderService contentPlateFormOrderService,
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
+            IOrderService orderService,
+            ICustomerHospitalConsumeService customerHospitalConsumeService,
             IUnitOfWork unitOfWork)
         {
             this.dalReconciliationDocuments = dalReconciliationDocuments;
             _unitOfWork = unitOfWork;
+            this.orderService = orderService;
+            this.customerHospitalConsumeService = customerHospitalConsumeService;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
             this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
         }
@@ -259,6 +265,15 @@ namespace Fx.Amiya.Service
                         await dalReconciliationDocuments.UpdateAsync(x, true);
                     }
                 }
+                #region 下单平台订单回款
+                ReturnBackOrderDto tmallOrderReturnBackOrderDto = new ReturnBackOrderDto();
+                tmallOrderReturnBackOrderDto.ReconciliationDocumentsIdList = reconciliationDocumentsReturnBackPriceDto.ReconciliationDocumentsIdList;
+                tmallOrderReturnBackOrderDto.ReturnBackDate = reconciliationDocumentsReturnBackPriceDto.ReturnBackDate;
+                await orderService.ReturnBackOrderByReconciliationDocumentsIdsAsync(tmallOrderReturnBackOrderDto);
+                #endregion
+
+                #region 内容平台订单回款
+
                 var orderInfo = await contentPlatFormOrderDealInfoService.SettleListAsync(reconciliationDocumentsReturnBackPriceDto);
                 foreach (var x in orderInfo)
                 {
@@ -268,6 +283,15 @@ namespace Fx.Amiya.Service
                     returnBackOrderDto.ReturnBackPrice = x.ReturnBackPrice;
                     await contentPlateFormOrderService.ReturnBackOrderOnlyAsync(returnBackOrderDto);
                 }
+                #endregion
+
+                #region 升单回款
+
+                ReturnBackOrderDto customerHospitalConsumeReturnBackOrderDto = new ReturnBackOrderDto();
+                customerHospitalConsumeReturnBackOrderDto.ReturnBackDate = reconciliationDocumentsReturnBackPriceDto.ReturnBackDate;
+                customerHospitalConsumeReturnBackOrderDto.ReconciliationDocumentsIdList = reconciliationDocumentsReturnBackPriceDto.ReconciliationDocumentsIdList;
+                await customerHospitalConsumeService.ReturnBackOrderByReconciliationDocumentsIdsAsync(customerHospitalConsumeReturnBackOrderDto);
+                #endregion
                 _unitOfWork.Commit();
             }
             catch (Exception ex)

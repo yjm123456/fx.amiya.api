@@ -206,6 +206,11 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         /// </summary>
         public DateTime? ReturnBackDate { get; set; }
 
+        /// <summary>
+        /// 对账单id
+        /// </summary>
+        public string ReconciliationDocumentsId { get; set; }
+
 
         #endregion
 

@@ -894,6 +894,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.SettlePrice = updateVo.SettlePrice;
             updateDto.employeeId = employeeId;
             updateDto.CheckRemark = updateVo.CheckRemark;
+            updateDto.SystemUpdatePrice = updateVo.SystemUpdatePrice;
+            updateDto.InformationPrice = updateVo.InformationPrice;
             updateDto.CheckPicture = updateVo.CheckPicture;
             updateDto.ReconciliationDocumentsId = updateVo.ReconciliationDocumentsId;
             await _orderService.CheckContentPlateFormOrderAsync(updateDto);

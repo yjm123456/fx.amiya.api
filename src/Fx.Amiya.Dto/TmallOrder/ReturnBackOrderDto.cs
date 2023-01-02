@@ -26,5 +26,10 @@ namespace Fx.Amiya.Dto.TmallOrder
         /// 回款时间
         /// </summary>
         public DateTime ReturnBackDate { get; set; }
+
+        /// <summary>
+        /// 对账单id集合
+        /// </summary>
+        public List<string> ReconciliationDocumentsIdList { get; set; }
     }
 }

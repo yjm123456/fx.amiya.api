@@ -139,6 +139,15 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 审核日期
         /// </summary>
         public DateTime? CheckDate { get; set; }
+
+        /// <summary>
+        /// 信息服务费
+        /// </summary>
+        public decimal? InformationPrice { get; set; }
+        /// <summary>
+        /// 系统使用费
+        /// </summary>
+        public decimal? SystemUpdatePrice { get; set; }
         /// <summary>
         /// 结算金额
         /// </summary>

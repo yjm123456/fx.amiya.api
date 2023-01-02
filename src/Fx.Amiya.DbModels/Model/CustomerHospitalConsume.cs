@@ -118,6 +118,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 审核信息
         /// </summary>
         public string CheckRemark { get; set; }
+        /// <summary>
+        /// 对账单id
+        /// </summary>
+        public string ReconciliationDocumentsId { get; set; }
 
         /// <summary>
         /// 备注

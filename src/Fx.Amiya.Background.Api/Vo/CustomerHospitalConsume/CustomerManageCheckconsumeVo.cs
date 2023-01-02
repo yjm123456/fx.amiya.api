@@ -36,5 +36,9 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerHospitalConsume
         /// 审核图片
         /// </summary>
         public List<string> CheckPicture { get; set; }
+        /// <summary>
+        /// 对账单id
+        /// </summary>
+        public string ReconciliationDocumentsId { get; set; }
     }
 }

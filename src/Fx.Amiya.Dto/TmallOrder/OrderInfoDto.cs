@@ -118,6 +118,11 @@ namespace Fx.Amiya.Dto.TmallOrder
         public decimal? ReturnBackPrice { get; set; }
         public DateTime? ReturnBackDate { get; set; }
 
+        /// <summary>
+        /// 对账单id
+        /// </summary>
+        public string ReconciliationDocumentsId { get; set; }
+
 
         #endregion
 

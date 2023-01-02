@@ -100,6 +100,10 @@ namespace Fx.Amiya.DbModels.Model
         public DateTime? ReturnBackDate { get; set; }
 
 
+        /// <summary>
+        /// 对账单id
+        /// </summary>
+        public string ReconciliationDocumentsId { get; set; }
         #endregion
 
         public List<SendOrderInfo> SendOrderInfoList { get; set; }

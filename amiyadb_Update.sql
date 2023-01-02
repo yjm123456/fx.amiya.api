@@ -1734,7 +1734,22 @@ ALTER TABLE `tbl_goods_shopcar`
 ----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
+-----------------------------余建明 2023/01/02 BEGIN -----------------------------
+--内容平台成交情况新增信息服务费等数据
+ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
+ADD COLUMN `information_price` DECIMAL(12,2) NULL AFTER `check_price`,
+ADD COLUMN `system_update_price` DECIMAL(12,2) NULL AFTER `information_price`;
 
+--下单平台订单列表新增对账单id
+ALTER TABLE `amiyadb`.`tbl_order_info` 
+ADD COLUMN `reconciliation_documents_id` VARCHAR(50) NULL AFTER `deduct_money`;
+
+
+--客户升单列表新增对账单id
+ALTER TABLE `amiyadb`.`tbl_customer_hospital_consume` 
+ADD COLUMN `reconciliation_documents_id` VARCHAR(50) NULL AFTER `is_confirm_order`;
+
+-----------------------------余建明 2023/01/02 BEGIN -----------------------------
 
 
 

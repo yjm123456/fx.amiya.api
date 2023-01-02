@@ -125,6 +125,10 @@ namespace Fx.Amiya.Dto.CustomerHospitalConsume
         /// 审核结算金额
         /// </summary>
         public decimal? CheckSettlePrice { get; set; }
+        /// <summary>
+        /// 对账单id
+        /// </summary>
+        public string ReconciliationDocumentsId { get; set; }
 
         /// <summary>
         /// 审核日期

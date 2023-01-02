@@ -224,6 +224,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             checkDto.CheckEmpId = empId;
             checkDto.CheckRemark = updateVo.CheckRemark;
             checkDto.CheckPicture = updateVo.CheckPicture;
+            checkDto.ReconciliationDocumentsId = updateVo.ReconciliationDocumentsId;
             await customerHospitalConsumeService.CustomerManageCheckAsync(checkDto);
             return ResultData.Success();
         }
@@ -621,7 +622,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                Remark=d.Remark,
                                CheckRemark=d.CheckRemark,
                                LiveAnchorName=d.LiveAnchorName,
-                               OtherContentPlatFormOrderId=d.OtherContentPlatFormOrderId
+                               OtherContentPlatFormOrderId=d.OtherContentPlatFormOrderId,
+                               ReconciliationDocumentsId=d.ReconciliationDocumentsId,
                            };
             FxPageInfo<CustomerHospitalConsumeVo> pageInfo = new FxPageInfo<CustomerHospitalConsumeVo>();
             pageInfo.TotalCount = q.TotalCount;

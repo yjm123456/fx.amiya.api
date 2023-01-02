@@ -172,6 +172,13 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="input"></param>
         Task ReturnBackOrderAsync(ReturnBackOrderDto input);
+
+        /// <summary>
+        /// 根据对账单id批量回款
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task ReturnBackOrderByReconciliationDocumentsIdsAsync(ReturnBackOrderDto input);
         /// <summary>
         /// 修改交易信息
         /// </summary>

@@ -8766,12 +8766,22 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderCheckVo.CheckPrice">
             <summary>
-            审核金额
+            对账金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderCheckVo.InformationPrice">
+            <summary>
+            信息服务费
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderCheckVo.SystemUpdatePrice">
+            <summary>
+            系统使用费
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderCheckVo.SettlePrice">
             <summary>
-            结算金额
+            服务费合计
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderCheckVo.CheckRemark">
@@ -9787,6 +9797,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CheckDate">
             <summary>
             审核日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.InformationPrice">
+            <summary>
+            信息服务费
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.SystemUpdatePrice">
+            <summary>
+            系统使用费
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.SettlePrice">
@@ -11394,6 +11414,11 @@
             审核结算金额
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerHospitalConsume.CustomerHospitalConsumeVo.ReconciliationDocumentsId">
+            <summary>
+            对账单id
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.CustomerHospitalConsume.CustomerHospitalConsumeVo.CheckDate">
             <summary>
             结算日期
@@ -11567,6 +11592,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.CustomerHospitalConsume.CustomerManageCheckconsumeVo.CheckPicture">
             <summary>
             审核图片
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.CustomerHospitalConsume.CustomerManageCheckconsumeVo.ReconciliationDocumentsId">
+            <summary>
+            对账单id
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.CustomerHospitalConsume.CustomerManageUpdateconsumeVo.Id">
@@ -15917,6 +15947,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalInfo.HospitalInfoVo.HasUsedTime">
             <summary>
             可用日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalInfo.HospitalInfoVo.BelongCompany">
+            <summary>
+            归属医院
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalInfo.HospitalNameVo.Id">
@@ -21754,6 +21789,16 @@
             审核日期
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.InformationPrice">
+            <summary>
+            信息服务费
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.SystemUpdatePrice">
+            <summary>
+            系统使用费
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.ContentPlatFormOrderDealInfoReportVo.SettlePrice">
             <summary>
             结算金额
@@ -24877,6 +24922,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.Order.OrderInfoVo.ReturnBackDate">
             <summary>
             回款时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Order.OrderInfoVo.ReconciliationDocumentsId">
+            <summary>
+            对账单id
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.Order.OrderNatureTypeVo">

@@ -24,6 +24,12 @@ namespace Fx.Amiya.IService
         Task CustomerManageCheckAsync(CustomerManageCheckconsumeDto updateDto);
 
         Task ReturnBackOrderAsync(ReturnBackOrderDto input);
+        /// <summary>
+        /// 根据对账单id批量回款
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task ReturnBackOrderByReconciliationDocumentsIdsAsync(ReturnBackOrderDto input);
         Task CustomerManageDeleteAsync(int Id, int enployeeId);
 
         /// <summary>

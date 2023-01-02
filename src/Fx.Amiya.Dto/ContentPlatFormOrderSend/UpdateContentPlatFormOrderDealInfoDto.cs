@@ -93,10 +93,19 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
 
         public decimal? CheckPrice { get; set; }
         /// <summary>
+        /// 信息服务费
+        /// </summary>
+        public decimal InformationPrice { get; set; }
+        /// <summary>
+        /// 系统使用费
+        /// </summary>
+        public decimal SystemUpdatePrice { get; set; }
+        /// <summary>
         /// 结算金额
         /// </summary>
 
         public decimal? SettlePrice { get; set; }
+
         /// <summary>
         /// 审核人
         /// </summary>

@@ -278,6 +278,7 @@ namespace Fx.Amiya.Service
                 result.CheckBy = updateDto.CheckEmpId;
                 result.CheckDate = DateTime.Now;
                 result.CheckRemark = updateDto.CheckRemark;
+                result.ReconciliationDocumentsId = updateDto.ReconciliationDocumentsId;
                 await dalCustomerHospitalConsume.UpdateAsync(result, true);
 
                 foreach (var x in updateDto.CheckPicture)
@@ -303,7 +304,6 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task ReturnBackOrderAsync(ReturnBackOrderDto input)
         {
-            unitOfWork.BeginTransaction();
             try
             {
                 var order = await dalCustomerHospitalConsume.GetAll().Where(x => x.ConsumeId == input.OrderId).FirstOrDefaultAsync();
@@ -324,11 +324,38 @@ namespace Fx.Amiya.Service
                 order.ReturnBackDate = input.ReturnBackDate;
                 await dalCustomerHospitalConsume.UpdateAsync(order, true);
 
-                unitOfWork.Commit();
             }
             catch (Exception err)
             {
-                unitOfWork.RollBack();
+                throw new Exception("操作失败！");
+            }
+        }
+
+        /// <summary>
+        /// 根据对账单id批量回款
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task ReturnBackOrderByReconciliationDocumentsIdsAsync(ReturnBackOrderDto input)
+        {
+            try
+            {
+                var order = await dalCustomerHospitalConsume.GetAll().Where(x =>input.ReconciliationDocumentsIdList.Contains(x.ReconciliationDocumentsId)).ToListAsync();
+                foreach (var x in order)
+                {
+
+                    if (x.IsConfirmOrder == true&& x.CheckState != (int)CheckType.CheckedSuccess)
+                    {
+                        x.IsReturnBackPrice = true;
+                        x.ReturnBackPrice = x.ReturnBackPrice;
+                        x.ReturnBackDate = input.ReturnBackDate;
+                        await dalCustomerHospitalConsume.UpdateAsync(x, true);
+                    }
+                }
+
+            }
+            catch (Exception err)
+            {
                 throw new Exception("操作失败！");
             }
         }
@@ -613,6 +640,7 @@ namespace Fx.Amiya.Service
                                                Remark = d.Remark,
                                                CheckRemark = d.CheckRemark,
                                                OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
+                                               ReconciliationDocumentsId=d.ReconciliationDocumentsId,
                                            };
 
             var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);

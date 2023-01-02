@@ -1555,6 +1555,8 @@ namespace Fx.Amiya.Service
                 dealInfoCheck.CheckPrice = input.CheckPrice;
                 dealInfoCheck.CheckRemark = input.CheckRemark;
                 dealInfoCheck.CheckState = input.CheckState;
+                dealInfoCheck.InformationPrice = input.InformationPrice;
+                dealInfoCheck.SystemUpdatePrice = input.SystemUpdatePrice;
                 dealInfoCheck.SettlePrice = input.SettlePrice;
                 dealInfoCheck.ReconciliationDocumentsId = input.ReconciliationDocumentsId;
                 await _contentPlatFormOrderDalService.CheckAsync(dealInfoCheck);

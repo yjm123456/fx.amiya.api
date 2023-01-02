@@ -486,6 +486,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.employeeId = employeeId;
             updateDto.CheckRemark = updateVo.CheckRemark;
             updateDto.CheckPicture = updateVo.CheckPicture;
+            updateDto.ReconciliationDocumentsId = updateVo.ReconciliationDocumentsId;
             await orderService.CheckOrderAsync(updateDto);
             return ResultData.Success();
         }
@@ -666,7 +667,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 SettlePrice = d.SettlePrice,
                                 IsReturnBackPrice = d.IsReturnBackPrice,
                                 ReturnBackPrice = d.ReturnBackPrice,
-                                ReturnBackDate = d.ReturnBackDate
+                                ReturnBackDate = d.ReturnBackDate,
+                                ReconciliationDocumentsId=d.ReconciliationDocumentsId,
 
                             };
                 FxPageInfo<OrderInfoVo> orderPageInfo = new FxPageInfo<OrderInfoVo>();

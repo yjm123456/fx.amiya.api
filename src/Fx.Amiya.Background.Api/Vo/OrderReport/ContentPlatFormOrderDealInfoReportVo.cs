@@ -164,6 +164,17 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("审核日期")]
         public DateTime? CheckDate { get; set; }
+
+        /// <summary>
+        /// 信息服务费
+        /// </summary>
+        [Description("信息服务费")]
+        public decimal? InformationPrice { get; set; }
+        /// <summary>
+        /// 系统使用费
+        /// </summary>
+        [Description("系统使用费")]
+        public decimal? SystemUpdatePrice { get; set; }
         /// <summary>
         /// 结算金额
         /// </summary>
