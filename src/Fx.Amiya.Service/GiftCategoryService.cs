@@ -59,7 +59,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<BaseIdAndNameDto>> GetCategoryNameList()
         {
-            var categoryList = dalGiftCategory.GetAll().Select(e => new BaseIdAndNameDto { Id = e.Id, Name = e.Name }).ToList();
+            var categoryList = dalGiftCategory.GetAll().Where(e=>e.Valid==true).Select(e => new BaseIdAndNameDto { Id = e.Id, Name = e.Name }).ToList();
             return categoryList;
         }
 

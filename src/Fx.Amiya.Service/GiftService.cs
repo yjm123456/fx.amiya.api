@@ -70,7 +70,7 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<GiftInfoDto>> GetListWithPageAsync(string name, int pageNum, int pageSize, string categoryId)
         {
             var giftInfo = from d in dalGiftInfo.GetAll()
-                           where name == null || d.Name.Contains(name) &&(string.IsNullOrEmpty(categoryId)||d.CategoryId==categoryId)
+                           where (name == null || d.Name.Contains(name)) &&(string.IsNullOrEmpty(categoryId)||d.CategoryId==categoryId)
                            select new GiftInfoDto
                            {
                                Id = d.Id,
@@ -542,13 +542,13 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ReceiveGiftWrapperOfWxDto>> GetReceiveGiftListByCustomerIdAsync(string customerId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ReceiveGiftWrapperOfWxDto>> GetReceiveGiftListByCustomerIdAsync(string customerId, int pageNum, int pageSize,string categoryId)
         {
 
 
             var receiveGift = from d in dalReceiveGift.GetAll()
                               .Include(e => e.GiftInfo)
-                              where d.CustomerId == customerId
+                              where d.CustomerId == customerId && d.GiftInfo.CategoryId==categoryId
                               select new ReceiveGiftDto
                               {
                                   Id = d.Id,

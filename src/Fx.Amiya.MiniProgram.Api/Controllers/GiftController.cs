@@ -157,9 +157,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                                    ThumbPicUrl = t.ThumbPicUrl
                                                }).ToList()
                               };
-
-
-
             FxPageInfo<ReceiveGiftOfWxVo> receiveGiftPageInfo = new FxPageInfo<ReceiveGiftOfWxVo>();
             receiveGiftPageInfo.TotalCount = q.TotalCount;
             receiveGiftPageInfo.List = receiveGift;

@@ -141,7 +141,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<ReceiveGiftWrapperOfWxDto>> GetReceiveGiftListByCustomerIdAsync(string customerId, int pageNum, int pageSize);
+        Task<FxPageInfo<ReceiveGiftWrapperOfWxDto>> GetReceiveGiftListByCustomerIdAsync(string customerId, int pageNum, int pageSize,string categoryId);
         /// <summary>
         /// 根据礼品类别获取礼品名称列表
         /// </summary>
