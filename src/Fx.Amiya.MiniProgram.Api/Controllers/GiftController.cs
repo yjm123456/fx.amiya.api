@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Fx.Amiya.Dto.Gift;
 using Fx.Amiya.IService;
 using Fx.Amiya.MiniProgram.Api.Filters;
+using Fx.Amiya.MiniProgram.Api.Vo;
 using Fx.Amiya.MiniProgram.Api.Vo.Gift;
 using Fx.Amiya.MiniProgram.Api.Vo.Order;
 using Fx.Common;
@@ -24,16 +25,18 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private IMiniSessionStorage sessionStorage;
         private TokenReader tokenReader;
         private IOrderService _orderService;
+        private IGiftCategoryService giftCategoryService;
 
         public GiftController(IGiftService giftService,
             TokenReader tokenReader,
             IMiniSessionStorage sessionStorage,
-            IOrderService orderService)
+            IOrderService orderService, IGiftCategoryService giftCategoryService)
         {
             this.giftService = giftService;
             this.tokenReader = tokenReader;
             this.sessionStorage = sessionStorage;
             _orderService = orderService;
+            this.giftCategoryService = giftCategoryService;
         }
 
 
@@ -81,7 +84,21 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         }
 
 
-
+        /// <summary>
+        /// 获取礼品分类名称列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("nameList")]
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetCategoryNameList()
+        {
+            var list = await giftCategoryService.GetCategoryNameList();
+            var nameList = list.Select(e => new BaseIdAndNameVo
+            {
+                Id = e.Id,
+                Name = e.Name
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("nameList", nameList);
+        }
 
 
         /// <summary>
@@ -117,13 +134,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <returns></returns>
         [HttpGet("receiveGift")]
         [FxAmiyaApiUserTypeAuthorization(UserType.Customer)]
-        public async Task<ResultData<FxPageInfo<ReceiveGiftOfWxVo>>> GetReceiveGiftListByCustomerIdAsync(int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ReceiveGiftOfWxVo>>> GetReceiveGiftListByCustomerIdAsync(int pageNum, int pageSize,string categoryId)
         {
             var token = tokenReader.GetToken();
             var sesssionInfo = sessionStorage.GetSession(token);
             string customerId = sesssionInfo.FxCustomerId;
 
-            var q = await giftService.GetReceiveGiftListByCustomerIdAsync(customerId, pageNum, pageSize);
+            var q = await giftService.GetReceiveGiftListByCustomerIdAsync(customerId, pageNum, pageSize,categoryId);
             var receiveGift = from d in q.List
                               select new ReceiveGiftOfWxVo
                               {

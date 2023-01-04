@@ -73,8 +73,8 @@ namespace Fx.Amiya.Service
                 SimpleCode = e.SimpleCode,
                 CreateDate = e.CreateDate,
                 UpdateDate = e.UpdateDate,
-                CreateBy = (dalAmiyaEmployee.GetAll().Where(d => d.Id == e.CreateBy)).SingleOrDefault().Name,
-                UpdateBy = e.UpdateBy.HasValue ? (dalAmiyaEmployee.GetAll().Where(d => d.Id == e.CreateBy)).SingleOrDefault().Name : "",
+                CreateBy = e.CreateBy,
+                UpdateBy = e.UpdateBy,
                 Valid = e.Valid
             });
             fxPageInfo.TotalCount = category.Count();
@@ -85,11 +85,11 @@ namespace Fx.Amiya.Service
         public async Task UpdateAsync(UpdateGiftCategoryDto update)
         {
             var category = await dalGiftCategory.GetAll().Where(e => e.Id == update.Id).SingleOrDefaultAsync();
-            category.Name = category.Name;
-            category.SimpleCode = category.SimpleCode;
-            category.UpdateBy = category.UpdateBy;
-            category.UpdateDate = category.UpdateDate;
-            category.Valid = category.Valid;
+            category.Name = update.Name;
+            category.SimpleCode = update.SimpleCode;
+            category.UpdateBy = update.UpdateBy;
+            category.UpdateDate = DateTime.Now;
+            category.Valid = update.Valid;
             await dalGiftCategory.UpdateAsync(category, true);
         }
     }

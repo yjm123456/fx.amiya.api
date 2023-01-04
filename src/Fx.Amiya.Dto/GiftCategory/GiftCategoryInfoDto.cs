@@ -11,8 +11,8 @@ namespace Fx.Amiya.Dto.GiftCategory
         
         public string Name { get; set; }
         public string SimpleCode { get; set; }
-        public string CreateBy { get; set; }
-        public string UpdateBy { get; set; }
+        public int CreateBy { get; set; }
+        public int? UpdateBy { get; set; }
 
     }
 }
