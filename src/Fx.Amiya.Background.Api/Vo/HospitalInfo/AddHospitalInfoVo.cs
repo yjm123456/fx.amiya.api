@@ -73,5 +73,9 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalInfo
         /// 归属公司
         /// </summary>
         public string BelongCompany { get; set; }
+        /// <summary>
+        /// 是否在小程序展示
+        /// </summary>
+        public bool IsShareInMiniProgram { get; set; }
     }
 }

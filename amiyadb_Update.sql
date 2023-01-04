@@ -1745,11 +1745,16 @@ ALTER TABLE `amiyadb`.`tbl_order_info`
 ADD COLUMN `reconciliation_documents_id` VARCHAR(50) NULL AFTER `deduct_money`;
 
 
---客户升单列表新增对账单id
+--客户升单列表新增对账单id 
 ALTER TABLE `amiyadb`.`tbl_customer_hospital_consume` 
 ADD COLUMN `reconciliation_documents_id` VARCHAR(50) NULL AFTER `is_confirm_order`;
 
------------------------------余建明 2023/01/02 BEGIN -----------------------------
+--医院板块新增是否在小程序展示列
+ALTER TABLE `amiyadb`.`tbl_hospital_info` 
+ADD COLUMN `is_share_in_miniprogram` BIT(1) NOT NULL AFTER `submit_state`;
+
+
+-----------------------------余建明 2023/01/04 BEGIN -----------------------------
 
 
 

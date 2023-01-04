@@ -81,6 +81,11 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public string BelongCompany { get; set; }
 
+        /// <summary>
+        /// 是否在小程序展示
+        /// </summary>
+        public bool IsShareInMiniProgram { get; set; }
+
         public AmiyaEmployee CreateByAmiyaEmployee { get; set; }
         public AmiyaEmployee UpdateByAmiyaEmployee { get; set; }
         public CooperativeHospitalCity CooperativeHospitalCity { get; set; }

@@ -80,7 +80,8 @@ namespace Fx.Amiya.Service
                                    City = d.CooperativeHospitalCity.Name,
                                    DueTime = d.DueTime,
                                    ContractUrl = d.ContractUrl,
-                                   BelongCompany=d.BelongCompany
+                                   BelongCompany=d.BelongCompany,
+                                   IsShareInMiniProgram=d.IsShareInMiniProgram,
                                };
                 FxPageInfo<HospitalInfoDto> hospitalPageInfo = new FxPageInfo<HospitalInfoDto>();
                 hospitalPageInfo.TotalCount = await hospital.CountAsync();
@@ -288,6 +289,7 @@ namespace Fx.Amiya.Service
                 hospitalInfo.ContractUrl = addDto.ContractUrl;
                 hospitalInfo.BusinessHours = addDto.BusinessHours;
                 hospitalInfo.BelongCompany = addDto.BelongCompany;
+                hospitalInfo.IsShareInMiniProgram = addDto.IsShareInMiniProgram;
                 await dalHospitalInfo.AddAsync(hospitalInfo, true);
 
                 List<HospitalTagDetail> hospitalTagDetailList = new List<HospitalTagDetail>();
@@ -351,6 +353,7 @@ namespace Fx.Amiya.Service
                                        CheckRemark = d.CheckRemark,
                                        SubmitStateText = ServiceClass.GetSubmitTypeText(d.SubmitState),
                                        SubmitState = d.SubmitState,
+                                       IsShareInMiniProgram=d.IsShareInMiniProgram,
                                        HospitalCreateDate = d.HospitalCreateTime,
                                        ScaleTagList = (from t in d.HospitalTagDetailList
                                                        where t.TagInfo.Valid && t.TagInfo.Type == 0
@@ -495,6 +498,7 @@ namespace Fx.Amiya.Service
                 hospital.ContractUrl = updateDto.ContractUrl;
                 hospital.CityId = updateDto.CityId;
                 hospital.BusinessHours = updateDto.BusinessHours;
+                hospital.IsShareInMiniProgram = updateDto.IsShareInMiniProgram;
                 hospital.BelongCompany = updateDto.BelongCompany;
                 await dalHospitalInfo.UpdateAsync(hospital, true);
 

@@ -47,6 +47,10 @@ namespace Fx.Amiya.Dto.HospitalInfo
         public string HasUsedTime { get; set; }
         public string ContractUrl { get; set; }
         public string BelongCompany { get; set; }
+        /// <summary>
+        /// 是否在小程序展示
+        /// </summary>
+        public bool IsShareInMiniProgram { get; set; }
 
     }
 }

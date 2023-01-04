@@ -23,7 +23,6 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private IAmiyaWareHouseNameManageService _amiyaWareHouseNameManageService;
         private IHttpContextAccessor httpContextAccessor;
-
         /// <summary>
         /// 构造函数
         /// </summary>

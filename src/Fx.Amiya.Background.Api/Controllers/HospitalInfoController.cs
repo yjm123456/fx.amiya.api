@@ -75,7 +75,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                    DueTime = d.DueTime,
                                    ContractUrl = d.ContractUrl,
                                    HasUsedTime = d.HasUsedTime,
-                                   BelongCompany=d.BelongCompany
+                                   BelongCompany=d.BelongCompany,
+                                   IsShareInMiniProgram=d.IsShareInMiniProgram,
                                };
 
 
@@ -363,6 +364,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.CityId = addVo.CityId;
                 addDto.BusinessHours = addVo.BusinessHours;
                 addDto.BelongCompany = addVo.BelongCompany;
+                addDto.IsShareInMiniProgram = addVo.IsShareInMiniProgram;
                 await hospitalInfoService.AddAsync(addDto, employeeId);
                 return ResultData.Success();
             }
@@ -400,6 +402,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 hospitalInfoVo.City = hospital.City;
                 hospitalInfoVo.BusinessHours = hospital.BusinessHours;
                 hospitalInfoVo.BelongCompany = hospital.BelongCompany;
+                hospitalInfoVo.IsShareInMiniProgram = hospital.IsShareInMiniProgram;
                 List<int> scaleTagList = new List<int>();
                 foreach (var item in hospital.ScaleTagList)
                 {
@@ -453,6 +456,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.CityId = updateVo.CityId;
                 updateDto.BusinessHours = updateVo.BusinessHours;
                 updateDto.BelongCompany = updateVo.BelongCompany;
+                updateDto.IsShareInMiniProgram = updateDto.IsShareInMiniProgram;
                 await hospitalInfoService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }
