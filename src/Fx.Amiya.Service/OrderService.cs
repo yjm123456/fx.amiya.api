@@ -379,6 +379,99 @@ namespace Fx.Amiya.Service
             }
         }
 
+
+        /// <summary>
+        /// 根据对账单id获取已成交订单列表
+        /// </summary>
+        /// <param name="reconciliationDocumentsId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<OrderInfoDto>> GetOrderByReconciliationDocumentsIdLlistWithPageAsync(string reconciliationDocumentsId, int pageNum, int pageSize)
+        {
+            try
+            {
+                var orders = from d in dalOrderInfo.GetAll()
+                             where (d.ReconciliationDocumentsId == reconciliationDocumentsId)
+                             select d;
+
+                var config = await _wxAppConfigService.GetCallCenterConfig();
+                var order = from d in orders
+                            select new OrderInfoDto
+                            {
+                                Id = d.Id,
+                                GoodsId = d.GoodsId,
+                                GoodsName = d.GoodsName,
+                                BuyerNick = d.BuyerNick,
+                                ThumbPicUrl = d.ThumbPicUrl,
+                                Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
+                                EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
+                                AppointmentDate = d.AppointmentDate,
+                                AppointmentCity = d.AppointmentCity,
+                                AppointmentHospital = d.AppointmentHospital,
+                                IsAppointment = d.IsAppointment,
+                                StatusCode = d.StatusCode,
+                                StatusText = ServiceClass.GetOrderStatusText(d.StatusCode),
+                                ActualPayment = d.ActualPayment,
+                                CreateDate = d.CreateDate,
+                                WriteOffDate = d.WriteOffDate,
+                                AppType = d.AppType,
+                                AppTypeText = ServiceClass.GetAppTypeText(d.AppType),
+                                OrderType = d.OrderType,
+                                OrderTypeText = d.OrderType != null ? ServiceClass.GetOrderTypeText((byte)d.OrderType) : "",
+                                OrderNature = d.OrderNature,
+                                OrderNatureText = d.OrderNature != null ? ServiceClass.GetOrderNatureText((byte)d.OrderNature) : "",
+                                Quantity = d.Quantity,
+                                IntegrationQuantity = d.IntegrationQuantity,
+                                ExchangeType = d.ExchangeType,
+                                ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)d.ExchangeType),
+                                TradeId = d.TradeId,
+                                FinalConsumptionHospital = d.FinalConsumptionHospital,
+                                LiveAnchorId = d.LiveAnchorId,
+                                CheckState = ServiceClass.GetCheckTypeText(d.CheckState.Value),
+                                CheckPrice = d.CheckPrice,
+                                CheckDate = d.CheckDate,
+                                CheckBy = d.CheckBy,
+                                CheckRemark = d.CheckRemark,
+                                SendOrderHospital = d.SendOrderInfoList == null ? "" : d.SendOrderInfoList.OrderByDescending(k => k.SendDate).First().HospitalInfo.Name,
+                                SettlePrice = d.SettlePrice,
+                                IsReturnBackPrice = d.IsReturnBackPrice,
+                                ReturnBackPrice = d.ReturnBackPrice,
+                                ReturnBackDate = d.ReturnBackDate,
+                                ReconciliationDocumentsId = d.ReconciliationDocumentsId,
+                            };
+
+
+                FxPageInfo<OrderInfoDto> orderPageInfo = new FxPageInfo<OrderInfoDto>();
+                orderPageInfo.TotalCount = await order.CountAsync();
+                orderPageInfo.List = await order.OrderByDescending(e => e.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+                foreach (var x in orderPageInfo.List)
+                {
+                    if (x.LiveAnchorId != 0)
+                    {
+                        var liveanchor = await liveAnchorService.GetByIdAsync(x.LiveAnchorId);
+                        x.LiveAnchorName = liveanchor.Name;
+                        if (!string.IsNullOrEmpty(liveanchor.ContentPlateFormId))
+                        {
+                            x.ContentPlatFormId = liveanchor.ContentPlateFormId;
+                            var contentplatFormInfo = await contentPlatFormService.GetByIdAsync(liveanchor.ContentPlateFormId);
+                            x.LiveAnchorPlatForm = contentplatFormInfo.ContentPlatformName;
+                        }
+                    }
+                    if (x.CheckBy.HasValue && x.CheckBy != 0)
+                    {
+                        var checkBy = await dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(e => e.Id == x.CheckBy.Value);
+                        x.CheckByEmpName = checkBy.Name.ToString();
+                    }
+                }
+                return orderPageInfo;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         /// <summary>
         /// 导出订单列表
         /// </summary>

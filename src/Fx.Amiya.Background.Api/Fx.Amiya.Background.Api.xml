@@ -95,6 +95,17 @@
             <param name="pageSize"></param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.Background.Api.Controllers.AddressController">
+            <summary>
+            收货地址
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.AddressController.GetListByCustomerIdAsync(System.String)">
+            <summary>
+            获取收货地址列表
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.AmiyaAchievementController">
             <summary>
             啊美雅业绩接口
@@ -2096,6 +2107,15 @@
             <param name="pageSize"></param>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerHospitalConsumeController.GetByReconciliationDocumentsIdListAsync(System.String,System.Int32,System.Int32)">
+            <summary>
+            根据对账单编号获取升单信息
+            </summary>
+            <param name="reconciliationDocumentsId"></param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerHospitalConsumeController.GetListByPhoneAsync(System.String,System.Int32,System.Int32)">
             <summary>
             根据客户手机号获取升单信息
@@ -2314,13 +2334,61 @@
             <param name="input"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.GiftController.GetListWithPageAsync(System.String,System.Int32,System.Int32)">
+        <member name="T:Fx.Amiya.Background.Api.Controllers.GiftCategoryController">
+            <summary>
+            礼品分类
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GiftCategoryController.AddAsync(Fx.Amiya.Background.Api.Vo.GIftCategory.AddGiftCategoryVo)">
+            <summary>
+            添加礼品分类
+            </summary>
+            <param name="add"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GiftCategoryController.GetListWithPageAsync(System.Int32,System.Int32)">
+            <summary>
+            分页获取分类
+            </summary>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GiftCategoryController.UpdateAsync(Fx.Amiya.Background.Api.Vo.GIftCategory.UpdateGiftCategoryVo)">
+            <summary>
+            修改分类信息
+            </summary>
+            <param name="update"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GiftCategoryController.GetById(System.String)">
+            <summary>
+            根据id获取类别信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GiftCategoryController.DeleteAsync(System.String)">
+            <summary>
+            删除
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GiftCategoryController.GetCategoryNameList">
+            <summary>
+            获取礼品分类名称列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GiftController.GetListWithPageAsync(System.String,System.Int32,System.Int32,System.String)">
             <summary>
             获取礼品列表（分页）
             </summary>
             <param name="name"></param>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
+            <param name="categoryId">类别id</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.GiftController.AddAsync(Fx.Amiya.Background.Api.Vo.Gift.AddGiftInfoVo)">
@@ -2351,7 +2419,7 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.GiftController.GetReceiveGiftListAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Boolean},System.String,System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GiftController.GetReceiveGiftListAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Boolean},System.String,System.String,System.Int32,System.Int32)">
             <summary>
             获取领取礼品列表（分页）
             </summary>
@@ -2363,7 +2431,7 @@
             <param name="pageSize"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.GiftController.ExportReceiveGiftListAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Boolean},System.String)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GiftController.ExportReceiveGiftListAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Boolean},System.String,System.String)">
             <summary>
             导出领取礼品列表
             </summary>
@@ -2393,6 +2461,27 @@
             修改收货地址
             </summary>
             <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GiftController.GetGiftNameListByCategory(System.String)">
+            <summary>
+            根据礼品类别获取礼品名称列表
+            </summary>
+            <param name="categoryId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GiftController.SendGiftAsync(Fx.Amiya.Background.Api.Vo.GIftCategory.SendGiftVo)">
+            <summary>
+            手动发放礼品
+            </summary>
+            <param name="categoryId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.GiftController.SendGiftBaseInfoAsync(System.String)">
+            <summary>
+            根据加密手机号获取发放礼品的初始数据
+            </summary>
+            <param name="encryptPhone">加密手机号</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.GoodsCategoryController.GetListAsync(System.String,System.String)">
@@ -4560,6 +4649,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.MemberRankInfoController.GetMemberRankCodeListAsync">
+            <summary>
+            获取会员卡编码名称列表
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.MemberRankInfoController.GetValidMemberRankInfosAsync">
             <summary>
             获取有效的会员等级列表
@@ -4710,6 +4805,15 @@
             <param name="ReturnBackPriceState">回款状态,为空查询所有</param>
             <param name="appType">渠道</param>
             <param name="orderNature">订单性质</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.OrderController.GetOrderByReconciliationDocumentsIdLlistWithPageAsync(System.String,System.Int32,System.Int32)">
+            <summary>
+            根据对账单id获取已成交订单列表
+            </summary>
+            <param name="reconciliationDocumentsId"></param>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
             <returns></returns>
@@ -6983,6 +7087,26 @@
             直播价
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Address.AddressVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Address.AddressVo.Address">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Address.AddressVo.ReceiveName">
+            <summary>
+            收货人姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Address.AddressVo.ReceivePhone">
+            <summary>
+            收货人电话
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.AmiyaEmployee.AddAmiyaEmployeeVo.Email">
             <summary>
             邮箱
@@ -8313,6 +8437,16 @@
             最小限制金额
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.AddConsumptionVoucherVo.IsMemberVoucher">
+            <summary>
+            是否是会员领取抵用券
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.AddConsumptionVoucherVo.MemberRankCode">
+            <summary>
+            对应的会员等级(当抵用券是会员领取抵用券时必填,不是则不填)
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoListVo.Name">
             <summary>
             抵用券名称
@@ -8366,6 +8500,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoListVo.EffectiveTime">
             <summary>
             有效期时长
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoListVo.IsMemberVoucher">
+            <summary>
+            是否是会员领取抵用券
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoListVo.MemberRankCode">
+            <summary>
+            对应的会员等级(当抵用券是会员领取抵用券时必填,不是则不填)
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoVo">
@@ -8431,6 +8575,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoVo.EffectiveTime">
             <summary>
             有效期时长
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoVo.IsMemberVoucher">
+            <summary>
+            是否是会员领取抵用券
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherInfoVo.MemberRankCode">
+            <summary>
+            对应的会员等级(当抵用券是会员领取抵用券时必填,不是则不填)
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.ConsumptionVoucherTypeListVo">
@@ -8541,6 +8695,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.UpdateConsumptionVoucherInfoVo.EffectiveTime">
             <summary>
             有效时长(天数)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.UpdateConsumptionVoucherInfoVo.IsMemberVoucher">
+            <summary>
+            是否是会员领取抵用券
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ConsumptionVoucher.UpdateConsumptionVoucherInfoVo.MemberRankCode">
+            <summary>
+            对应的会员等级(当抵用券是会员领取抵用券时必填,不是则不填)
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.BindCustomerServiceContentPlatformOrderVo.OrderTypeText">
@@ -12833,6 +12997,111 @@
             是否启用
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.AddGiftCategoryVo.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.AddGiftCategoryVo.SimpleCode">
+            <summary>
+            简码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.GiftCategoryInfoVo.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.GiftCategoryInfoVo.SimpleCode">
+            <summary>
+            简码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.GiftCategoryInfoVo.CreateBy">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.GiftCategoryInfoVo.UpdateBy">
+            <summary>
+            修改人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.GiftCategoryInfoVo.UpdateDate">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.GiftCategoryInfoVo.CreateDate">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.GiftCategoryInfoVo.Valid">
+            <summary>
+            是否有效
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.SendGiftVo.OrderId">
+            <summary>
+            订单id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.SendGiftVo.GiftId">
+            <summary>
+            礼品id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.SendGiftVo.AddressId">
+            <summary>
+            收货地址id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.SendGiftVo.ReceivePhone">
+            <summary>
+            收件人号码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.SendGiftVo.ReceiveName">
+            <summary>
+            收件人姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.SendGiftVo.Address">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.SimpleGiftCategoryInfoVo.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.SimpleGiftCategoryInfoVo.SimpleCode">
+            <summary>
+            简码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.SimpleGiftCategoryInfoVo.Valid">
+            <summary>
+            是否有效
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.UpdateGiftCategoryVo.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.UpdateGiftCategoryVo.SimpleCode">
+            <summary>
+            简码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.GIftCategory.UpdateGiftCategoryVo.Valid">
+            <summary>
+            是否有效
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.Gift.AddGiftInfoVo.Name">
             <summary>
             礼品名称
@@ -12848,6 +13117,11 @@
             库存
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Gift.AddGiftInfoVo.CategoryId">
+            <summary>
+            礼品类别id
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.Gift.ExportReveiveGiftVo">
             <summary>
             导出已领取礼品列表数据
@@ -12856,6 +13130,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.Gift.ExportReveiveGiftVo.GiftName">
             <summary>
             礼品名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Gift.ExportReveiveGiftVo.CategoryName">
+            <summary>
+            礼品类别
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.Gift.ExportReveiveGiftVo.Phone">
@@ -12913,6 +13192,16 @@
             发货时间
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Gift.GiftInfoVo.CategoryId">
+            <summary>
+            类别id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Gift.GiftInfoVo.CategoryName">
+            <summary>
+            类别名称
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.Gift.ReceiveGiftSimpleVo.Id">
             <summary>
             领取礼品编号
@@ -12963,6 +13252,11 @@
             绑定订单号
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Gift.ReceiveGiftSimpleVo.CategoryName">
+            <summary>
+            类别名称
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.Gift.ReceiveGiftVo.Date">
             <summary>
             领取时间
@@ -12983,6 +13277,26 @@
             淘宝昵称
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Gift.ReceiveGiftVo.CategoryName">
+            <summary>
+            礼品类别
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Gift.SendGiftBaseInfoVo.ReceiveName">
+            <summary>
+            收货人姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Gift.SendGiftBaseInfoVo.ReceivePhone">
+            <summary>
+            收货人手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Gift.SendGiftBaseInfoVo.Address">
+            <summary>
+            收货地址
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.Gift.SendGoodsVo">
             <summary>
             礼品发货
@@ -13001,6 +13315,11 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.Gift.SendGoodsVo.ExpressId">
             <summary>
             物流公司编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Gift.UpdateGiftInfoVo.CategoryId">
+            <summary>
+            类别id
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.GoodsCategory.GoodsCategoryAddVo.ShowDirectionType">
@@ -21186,6 +21505,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.MemberCard.IssueMemberCardAddVo.MemberCardNum">
             <summary>
             会员卡号，可空，用作发实体黑卡
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.MemberRankInfo.MemberRankCodeVo.MemberRankCode">
+            <summary>
+            会员编码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.MemberRankInfo.MemberRankCodeVo.MemberRankCodeName">
+            <summary>
+            会员编码名称
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.MemberRankInfo.MemberRankInfoAddVo.Name">

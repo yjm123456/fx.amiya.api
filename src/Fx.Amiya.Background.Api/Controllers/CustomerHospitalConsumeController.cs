@@ -631,6 +631,78 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<FxPageInfo<CustomerHospitalConsumeVo>>.Success().AddData("customerHospitalConsumes", pageInfo);
         }
 
+
+        /// <summary>
+        /// 根据对账单编号获取升单信息
+        /// </summary>
+        /// <param name="reconciliationDocumentsId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("getByReconciliationDocumentsIdList")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<FxPageInfo<CustomerHospitalConsumeVo>>> GetByReconciliationDocumentsIdListAsync(string reconciliationDocumentsId, int pageNum, int pageSize)
+        {
+            int? employeeId = null;
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            employeeId = Convert.ToInt32(employee.Id);
+            var q = await customerHospitalConsumeService.GetByReconciliationDocumentsIdListAsync(reconciliationDocumentsId, pageNum, pageSize);
+            var consumes = from d in q.List
+                           select new CustomerHospitalConsumeVo
+                           {
+                               Id = d.Id,
+                               HospitalId = d.HospitalId,
+                               HospitalName = d.HospitalName,
+                               Phone = d.Phone,
+                               EncryptPhone = d.EncryptPhone,
+                               Channel = d.ChannelType,
+                               Name = d.Name,
+                               ConsumeId = d.ConsumeId,
+                               Age = d.Age,
+                               IsConfirmOrder = d.IsConfirmOrder,
+                               Sex = d.Sex,
+                               IsReturnBackPrice = d.IsReturnBackPrice,
+                               ReturnBackDate = d.ReturnBackDate,
+                               ReturnBackPrice = d.ReturnBackPrice,
+                               ItemName = d.ItemName,
+                               Price = d.Price,
+                               CreateDate = d.CreateDate,
+                               ConsumeType = d.ConsumeType,
+                               ConsumeTypeText = d.ConsumeTypeText,
+                               EmployeeName = d.EmpolyeeName,
+                               NickName = d.NickName,
+                               IsAddedOrder = d.IsAddedOrder == true ? "是" : "否",
+                               OrderId = d.OrderId,
+                               WriteOffDate = d.WriteOffDate,
+                               IsCconsultationCard = d.IsCconsultationCard == true ? "是" : "否",
+                               BuyAgainType = d.BuyAgainType,
+                               BuyAgainTypeText = d.BuyAgainTypeText,
+                               IsSelfLiving = d.IsSelfLiving == true ? "是" : "否",
+                               BuyAgainTime = d.BuyAgainTime,
+                               HasBuyagainEvidence = d.HasBuyagainEvidence == true ? "是" : "否",
+                               BuyagainEvidencePic = d.BuyagainEvidencePic,
+                               IsCheckToHospital = d.IsCheckToHospital == true ? "是" : "否",
+                               CheckToHospitalPic = d.CheckToHospitalPic,
+                               PersonTime = d.PersonTime,
+                               IsReceiveAdditionalPurchase = d.IsReceiveAdditionalPurchase == true ? "是" : "否",
+                               CheckBuyAgainPrice = d.CheckBuyAgainPrice,
+                               CheckSettlePrice = d.CheckSettlePrice,
+                               CheckDate = d.CheckDate,
+                               CheckByEmpName = d.CheckByEmpName,
+                               CheckState = d.CheckState,
+                               Remark = d.Remark,
+                               CheckRemark = d.CheckRemark,
+                               LiveAnchorName = d.LiveAnchorName,
+                               OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
+                               ReconciliationDocumentsId = d.ReconciliationDocumentsId,
+                           };
+            FxPageInfo<CustomerHospitalConsumeVo> pageInfo = new FxPageInfo<CustomerHospitalConsumeVo>();
+            pageInfo.TotalCount = q.TotalCount;
+            pageInfo.List = consumes;
+            return ResultData<FxPageInfo<CustomerHospitalConsumeVo>>.Success().AddData("customerHospitalConsumes", pageInfo);
+        }
+
+
         /// <summary>
         /// 根据客户手机号获取升单信息
         /// </summary>

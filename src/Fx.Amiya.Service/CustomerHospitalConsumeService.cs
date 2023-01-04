@@ -3,21 +3,18 @@ using Fx.Amiya.Dto.CustomerHospitalConsume;
 using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
-using Fx.Infrastructure.Utils;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
-using Fx.Infrastructure;
 using Fx.Common;
 using Fx.Infrastructure.DataAccess;
 using Fx.Amiya.Dto.OrderCheckPicture;
 using Fx.Amiya.Dto.TmallOrder;
-using jos_sdk_net.Util;
 using Fx.Amiya.Dto.OrderReport;
+using jos_sdk_net.Util;
 
 namespace Fx.Amiya.Service
 {
@@ -649,6 +646,103 @@ namespace Fx.Amiya.Service
                                            where d.AddedBy == employeeId
                                            select d;
             }
+            FxPageInfo<CustomerHospitalConsumeDto> pageInfo = new FxPageInfo<CustomerHospitalConsumeDto>();
+            pageInfo.TotalCount = await customerHospitalConsumes.CountAsync();
+            pageInfo.List = await customerHospitalConsumes.OrderByDescending(z => z.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+            foreach (var x in pageInfo.List)
+            {
+                var employeeInfo = dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(z => z.Id == x.AddedBy);
+                if (employeeInfo.Result != null)
+                {
+                    x.EmpolyeeName = employeeInfo.Result.Name;
+                }
+                else
+                {
+                    x.EmpolyeeName = "医院添加";
+                }
+                var checkEmpInfo = dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(z => z.Id == x.CheckBy);
+                if (checkEmpInfo.Result != null)
+                {
+                    x.CheckByEmpName = checkEmpInfo.Result.Name;
+                }
+                else
+                {
+                    x.CheckByEmpName = "";
+                }
+                if (x.LiveAnchorId != 0)
+                {
+                    var liveanchor = await liveAnchorService.GetByIdAsync(x.LiveAnchorId);
+                    x.LiveAnchorName = liveanchor.Name;
+
+                }
+            }
+            return pageInfo;
+        }
+
+        /// <summary>
+        /// 根据对账单编号获取升单信息
+        /// </summary>
+        /// <param name="reconciliationDocumentsId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<CustomerHospitalConsumeDto>> GetByReconciliationDocumentsIdListAsync(string reconciliationDocumentsId, int pageNum, int pageSize)
+        {
+
+            var config = await GetCallCenterConfig();
+            var customerHospitalConsumes = from d in dalCustomerHospitalConsume.GetAll()
+                                           where (d.ReconciliationDocumentsId == reconciliationDocumentsId)
+                                           join cb in dalCustomerBaseInfo.GetAll() on d.Phone equals cb.Phone into dcb
+                                           from cb in dcb.DefaultIfEmpty()
+                                           select new CustomerHospitalConsumeDto
+                                           {
+                                               Id = d.Id,
+                                               HospitalId = d.HospitalId,
+                                               HospitalName = d.HospitalInfo.Name,
+                                               EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
+                                               Phone = config.EnablePhoneEncrypt == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
+                                               Name = cb.Name,
+                                               Channel = d.Channel,
+                                               ChannelType = ServiceClass.GerConsumeChannelText(d.Channel.Value),
+                                               // Age = cb.Age,
+                                               IsReturnBackPrice = d.IsReturnBackPrice,
+                                               IsConfirmOrder = d.IsConfirmOrder,
+                                               ReturnBackPrice = d.ReturnBackPrice,
+                                               ReturnBackDate = d.ReturnBackDate,
+                                               LiveAnchorId = d.LiveAnchorId,
+                                               ConsumeId = d.ConsumeId,
+                                               Sex = cb.Sex,
+                                               ItemName = d.ItemName,
+                                               Price = d.Price,
+                                               CreateDate = d.CreateDate,
+                                               ConsumeType = d.ConsumeType,
+                                               AddedBy = d.AddedBy,
+                                               ConsumeTypeText = ServiceClass.GerConsumeTypeText(d.ConsumeType),
+                                               NickName = d.NickName,
+                                               IsAddedOrder = d.IsAddedOrder,
+                                               OrderId = d.OrderId,
+                                               WriteOffDate = d.WriteOffDate.Value,
+                                               IsCconsultationCard = d.IsCconsultationCard,
+                                               BuyAgainType = d.BuyAgainType,
+                                               BuyAgainTypeText = ServiceClass.GetBuyAgainTypeText(d.BuyAgainType),
+                                               IsSelfLiving = d.IsSelfLiving,
+                                               BuyAgainTime = d.BuyAgainTime.Value,
+                                               HasBuyagainEvidence = d.HasBuyagainEvidence,
+                                               BuyagainEvidencePic = d.BuyagainEvidencePic,
+                                               IsCheckToHospital = d.IsCheckToHospital,
+                                               CheckToHospitalPic = d.CheckToHospitalPic,
+                                               PersonTime = d.PersonTime,
+                                               IsReceiveAdditionalPurchase = d.IsReceiveAdditionalPurchase,
+                                               CheckBuyAgainPrice = d.CheckBuyAgainPrice,
+                                               CheckSettlePrice = d.CheckSettlePrice,
+                                               CheckDate = d.CheckDate,
+                                               CheckBy = d.CheckBy,
+                                               CheckState = ServiceClass.GetCheckTypeText(d.CheckState),
+                                               Remark = d.Remark,
+                                               CheckRemark = d.CheckRemark,
+                                               OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
+                                               ReconciliationDocumentsId = d.ReconciliationDocumentsId,
+                                           };
             FxPageInfo<CustomerHospitalConsumeDto> pageInfo = new FxPageInfo<CustomerHospitalConsumeDto>();
             pageInfo.TotalCount = await customerHospitalConsumes.CountAsync();
             pageInfo.List = await customerHospitalConsumes.OrderByDescending(z => z.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();

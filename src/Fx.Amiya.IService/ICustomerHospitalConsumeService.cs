@@ -63,6 +63,16 @@ namespace Fx.Amiya.IService
         Task<FxPageInfo<CustomerHospitalConsumeDto>> GetListAsync(int? hospitalId, int? channel, int? liveAnchorId, int? buyAgainType, int? employeeId, bool? isConfirmOrder, string keyword, int? consumeType, DateTime startDate,DateTime endDate, int checkState, int? addedBy, int pageNum, int pageSize);
 
         /// <summary>
+        /// 根据对账单编号获取升单信息
+        /// </summary>
+        /// <param name="reconciliationDocumentsId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<CustomerHospitalConsumeDto>> GetByReconciliationDocumentsIdListAsync(string reconciliationDocumentsId, int pageNum, int pageSize);
+
+
+        /// <summary>
         /// 根据手机号获取客户消费追踪列表
         /// </summary>
         /// <param name="phone"></param>

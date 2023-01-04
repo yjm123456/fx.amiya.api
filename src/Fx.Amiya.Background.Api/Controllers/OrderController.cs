@@ -682,6 +682,78 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// 根据对账单id获取已成交订单列表
+        /// </summary>
+        /// <param name="reconciliationDocumentsId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("getOrderByReconciliationDocumentsIdLlistWithPage")]
+        public async Task<ResultData<FxPageInfo<OrderInfoVo>>> GetOrderByReconciliationDocumentsIdLlistWithPageAsync(string reconciliationDocumentsId, int pageNum, int pageSize)
+        {
+            try
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                var q = await orderService.GetOrderByReconciliationDocumentsIdLlistWithPageAsync(reconciliationDocumentsId, pageNum, pageSize);
+                var order = from d in q.List
+                            select new OrderInfoVo
+                            {
+                                Id = d.Id,
+                                ThumbPicUrl = d.ThumbPicUrl,
+                                GoodsName = d.GoodsName,
+                                NickName = d.BuyerNick,
+                                GoodsId = d.GoodsId,
+                                Phone = d.Phone,
+                                EncryptPhone = d.EncryptPhone,
+                                AppointmentCity = d.AppointmentCity,
+                                AppointmentDate = d.AppointmentDate,
+                                AppointmentHospital = d.AppointmentHospital,
+                                SendOrderHospital = d.SendOrderHospital,
+                                IsAppointment = d.IsAppointment,
+                                StatusCode = d.StatusCode,
+                                StatusText = d.StatusText,
+                                ActualPayment = d.ActualPayment,
+                                CreateDate = d.CreateDate,
+                                WriteOffDate = d.WriteOffDate,
+                                AppType = d.AppType,
+                                AppTypeText = d.AppTypeText,
+                                OrderType = d.OrderType,
+                                OrderTypeText = d.OrderTypeText,
+                                OrderNature = d.OrderNature,
+                                OrderNatureText = d.OrderNatureText,
+                                Quantity = d.Quantity,
+                                IntegrationQuantity = d.IntegrationQuantity,
+                                ExchangeType = d.ExchangeType,
+                                ExchangeTypeText = d.ExchangeTypeText,
+                                TradeId = d.TradeId,
+                                FinalConsumptionHospital = d.FinalConsumptionHospital,
+                                LiveAnchor = d.LiveAnchorName,
+                                LiveAnchorPlatForm = d.LiveAnchorPlatForm,
+                                CheckState = d.CheckState,
+                                CheckPrice = d.CheckPrice,
+                                CheckDate = d.CheckDate,
+                                CheckByEmpName = d.CheckByEmpName,
+                                CheckRemark = d.CheckRemark,
+                                SettlePrice = d.SettlePrice,
+                                IsReturnBackPrice = d.IsReturnBackPrice,
+                                ReturnBackPrice = d.ReturnBackPrice,
+                                ReturnBackDate = d.ReturnBackDate,
+                                ReconciliationDocumentsId = d.ReconciliationDocumentsId,
+
+                            };
+                FxPageInfo<OrderInfoVo> orderPageInfo = new FxPageInfo<OrderInfoVo>();
+                orderPageInfo.TotalCount = q.TotalCount;
+                orderPageInfo.List = order;
+                return ResultData<FxPageInfo<OrderInfoVo>>.Success().AddData("order", orderPageInfo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<FxPageInfo<OrderInfoVo>>.Fail(ex.Message);
+            }
+        }
+
 
         /// <summary>
         /// 导出订单列表
