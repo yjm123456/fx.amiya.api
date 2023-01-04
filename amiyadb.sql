@@ -1714,6 +1714,31 @@ COLLATE='utf8mb4_0900_ai_ci';
 
 
 
+-----------------------------------------------王健 2023/1/3 BEGIN--------------------------------------------
+
+--礼品类别
+
+CREATE TABLE `tbl_gift_category` (
+	`id` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_unicode_ci',
+	`name` VARCHAR(100) NOT NULL COLLATE 'utf8mb4_unicode_ci',
+	`simple_code` VARCHAR(100) NOT NULL COLLATE 'utf8mb4_unicode_ci',
+	`create_by` INT(10) NOT NULL,
+	`update_by` INT(10) NULL DEFAULT NULL,
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT(1) NOT NULL,
+	`delete_date` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`) USING BTREE
+)
+COLLATE='utf8mb4_unicode_ci'
+ENGINE=InnoDB;
+
+
+-----------------------------------------------王健 2023/1/3 END--------------------------------------------
+
+
+
+
 
 
 

@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.Gift;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.Gift;
 using Fx.Common;
 using Fx.Infrastructure;
 using System;
@@ -16,8 +17,9 @@ namespace Fx.Amiya.IService
         /// <param name="name"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
+        /// <param name="categoryId">类别id</param>
         /// <returns></returns>
-        Task<FxPageInfo<GiftInfoDto>> GetListWithPageAsync(string name, int pageNum, int pageSize);
+        Task<FxPageInfo<GiftInfoDto>> GetListWithPageAsync(string name, int pageNum, int pageSize, string categoryId);
 
 
         /// <summary>
@@ -65,7 +67,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<ReceiveGiftDto>> GetReceiveGiftListAsync(DateTime? startDaste, DateTime? endDate, int employeeId,bool? isSendGoods, string keyword, int pageNum, int pageSize);
+        Task<FxPageInfo<ReceiveGiftDto>> GetReceiveGiftListAsync(DateTime? startDaste, DateTime? endDate, int employeeId,bool? isSendGoods, string keyword, int pageNum, int pageSize,string categoryId);
         /// <summary>
         /// 导出领取礼品列表
         /// </summary>
@@ -75,7 +77,7 @@ namespace Fx.Amiya.IService
         /// <param name="employeeId"></param>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<ReceiveGiftDto>> ExportReceiveGiftListAsync(DateTime? startDaste, DateTime? endDate, bool? isSendGoods, int employeeId, string keyword);
+        Task<List<ReceiveGiftDto>> ExportReceiveGiftListAsync(DateTime? startDaste, DateTime? endDate, bool? isSendGoods, int employeeId, string keyword,string categoryId);
 
         /// <summary>
         /// 根据手机号加密文本获取领取礼品列表
@@ -140,5 +142,18 @@ namespace Fx.Amiya.IService
         /// <param name="pageSize"></param>
         /// <returns></returns>
         Task<FxPageInfo<ReceiveGiftWrapperOfWxDto>> GetReceiveGiftListByCustomerIdAsync(string customerId, int pageNum, int pageSize);
+        /// <summary>
+        /// 根据礼品类别获取礼品名称列表
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        Task<List<BaseIdAndNameDto>> GetGiftNameListByCategoryId(string categoryId);
+        /// <summary>
+        /// 手动发放礼品
+        /// </summary>
+        /// <param name="addDto"></param>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        Task SendReceiveGiftAsync(SendReceiveGiftDto addDto, string customerId);
     }
 }

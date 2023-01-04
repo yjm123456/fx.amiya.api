@@ -12,5 +12,9 @@ namespace Fx.Amiya.Background.Api.Vo.Gift
         public string ThumbPicUrl { get; set; }
         public int Quantity { get; set; }
         public bool Valid { get; set; }
+        /// <summary>
+        /// 类别id
+        /// </summary>
+        public string CategoryId { get; set; }
     }
 }

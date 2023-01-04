@@ -164,6 +164,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<MessageRecieve> MessageRecieves { get; set; }
         public virtual DbSet<AppointmentCar> AppointmentCars { get; set; }
         public virtual DbSet<CompanyBaseInfo> CompanyBaseInfos { get; set; }
+        public virtual DbSet<GiftCategory> GiftCategories { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -326,6 +327,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new MessageRecieveConfiguration());
             modelBuilder.ApplyConfiguration(new AppointmentCarConfiguration());
             modelBuilder.ApplyConfiguration(new CompanyBaseInfoConfiguration());
+            modelBuilder.ApplyConfiguration(new GiftCategoryConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

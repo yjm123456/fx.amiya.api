@@ -63,5 +63,13 @@ namespace Fx.Amiya.DbModels.Model
         /// 最小金额限制
         /// </summary>
         public decimal? MinPrice { get; set; }
+        /// <summary>
+        /// 是否是会员领取抵用券
+        /// </summary>
+        public bool IsMemberVoucher { get; set; }
+        /// <summary>
+        /// 会员领取抵用券对应的会员编码
+        /// </summary>
+        public string MemberRankCode { get; set; }
     }
 }

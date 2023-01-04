@@ -190,5 +190,17 @@ namespace Fx.Amiya.Modules.MemberCard.AppService
             };
             return memberRank;
         }
+
+        public async Task<List<MemberRankCodeDto>> GetMemberRankCodeListAsync()
+        {
+            var memberRankInfos = from d in await freeSql.Select<MemberRankInfoDbModel>().ToListAsync()
+                                  select new MemberRankCodeDto
+                                  {
+                                      MemberRankCode = d.RankCode,
+                                      MemberRankCodeName = d.Name,
+                                  };
+
+            return memberRankInfos.ToList();
+        }
     }
 }

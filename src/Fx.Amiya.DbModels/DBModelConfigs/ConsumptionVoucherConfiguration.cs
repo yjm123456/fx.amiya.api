@@ -31,6 +31,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(c => c.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.Property(c=>c.UpdateDate).HasColumnName("update_time").HasColumnType("datetime").IsRequired(false);
             builder.Property(c => c.ConsumptionVoucherCode).HasColumnName("consumption_voucher_code").HasColumnType("varchar(100)").IsRequired();
+            builder.Property(c => c.IsMemberVoucher).HasColumnName("is_member_voucher").HasColumnType("bit").IsRequired();
+            builder.Property(c => c.MemberRankCode).HasColumnName("member_rank_code").HasColumnType("varchar(50)").IsRequired(false);
             builder.Ignore(c=>c.Valid);
             builder.Ignore(c=>c.DeleteDate);
     }

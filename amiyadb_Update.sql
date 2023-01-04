@@ -1753,6 +1753,27 @@ ADD COLUMN `reconciliation_documents_id` VARCHAR(50) NULL AFTER `is_confirm_orde
 
 
 
+-----------------------------王健 2023/01/03 BEGIN -----------------------------
+
+
+----抵用券添加对应的会员信息
+
+ALTER TABLE `tbl_consumption_voucher`
+	ADD COLUMN `is_member_voucher` BIT NOT NULL DEFAULT 0 AFTER `min_price`,
+	ADD COLUMN `member_rank_code` VARCHAR(50) NULL DEFAULT '' AFTER `is_member_voucher`;
+
+----礼品加入分类
+
+ALTER TABLE `tbl_gift_info`
+	ADD COLUMN `category_id` VARCHAR(50) NULL DEFAULT NULL AFTER `version`;
+
+
+
+
+-----------------------------王健 2023/01/03 END -----------------------------
+
+
+
 
 
 

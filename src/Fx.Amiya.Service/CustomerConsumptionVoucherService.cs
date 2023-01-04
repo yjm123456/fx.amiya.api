@@ -128,7 +128,7 @@ namespace Fx.Amiya.Service
             var list = from ccv in dalCustomerConsumptionVoucher.GetAll()
                        join cv in dalConsumptionVoucher.GetAll() on ccv.ConsumptionVoucherId equals cv.Id
                        join gv in dalGoodsConsumptionVoucher.GetAll() on cv.Id equals gv.ConsumptionVoucherId 
-                       where ccv.CustomerId == customerId && (isUsed == null || ccv.IsUsed == isUsed) && (cv.Type == 0||cv.Type==4) && ccv.IsExpire == false && ccv.ExpireDate > DateTime.Now && ccv.ConsumptionVoucherId == gv.ConsumptionVoucherId && (gv.GoodsId == goodsId || cv.IsSpecifyProduct == false)
+                       where ccv.CustomerId == customerId && (isUsed == null || ccv.IsUsed == isUsed) && (cv.Type == 0||cv.Type==4) && ccv.IsExpire == false && ccv.ExpireDate > DateTime.Now && ccv.ConsumptionVoucherId == gv.ConsumptionVoucherId && gv.GoodsId == goodsId 
                        orderby cv.DeductMoney descending
                        select new CustomerConsumptioVoucherInfoDto
                        {
@@ -468,11 +468,11 @@ namespace Fx.Amiya.Service
             return list.Any() ? true : false;
         }
         /// <summary>
-        /// 判断最近30天有没有领取过会员赠送券,没有则发放,有则不发放
+        /// 判断最近30天有没有领取过会员赠送券,没有则返回可领取的抵用券列表,有则返回null
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns></returns>
-        public async Task<MemberRecieveConsumptionVoucherDto> IsReciveVoucherThisMonthThisWeekAsync(string customerId)
+        public async Task<List<MemberRecieveConsumptionVoucherDto>> IsReciveVoucherThisMonthThisWeekAsync(string customerId)
         {
             var startDate = DateTime.Now.AddDays(-30);
             var member = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
@@ -485,13 +485,20 @@ namespace Fx.Amiya.Service
             }
             else
             {
-                var voucherCode = member.MemberRankCode + "voucher";
+                 var voucher = dalConsumptionVoucher.GetAll().Where(e => e.MemberRankCode == member.MemberRankCode&&e.IsMemberVoucher==true).Select(e=>new MemberRecieveConsumptionVoucherDto { 
+                    DeductMoney=e.Type==0? e.DeductMoney:e.DeductMoney*10,
+                    VoucherName=e.Name,
+                     VoucherType=e.Type,
+                     VoucherCode=e.ConsumptionVoucherCode
+                 }).ToList();
+                return voucher;
+                /*var voucherCode = member.MemberRankCode + "voucher";
                 var voucher = dalConsumptionVoucher.GetAll().Where(e=>e.ConsumptionVoucherCode==voucherCode).SingleOrDefault();
                 return new MemberRecieveConsumptionVoucherDto
                 {
                     DeductMoney = voucher.DeductMoney * 10,
                     VoucherName=voucher.Name
-                };
+                };*/
                 //未领取添加新的优惠券
                 /*AddCustomerConsumptionVoucherDto voucher = new AddCustomerConsumptionVoucherDto
                 {
@@ -573,27 +580,59 @@ namespace Fx.Amiya.Service
                          }).FirstOrDefaultAsync();
         }
 
-        public async Task MemberRecieveCardWeekAsync(string customerId)
+        public async Task MemberRecieveCardWeekAsync(string customerId,string voucherCode)
         {
-            var startDate = DateTime.Now.AddDays(-7);
+            var startDate = DateTime.Now.AddDays(-30);
             var member = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
             if (member == null) return;
             //最近7天的所有优惠券
             var list = await dalCustomerConsumptionVoucher.GetAll().Where(e => e.CreateDate >= startDate && e.Source == 0 && e.CustomerId == customerId).ToListAsync();
             if (list.Any())
             {
-                throw new Exception("本周已领取过会员抵用券,请勿重复领取");
+                throw new Exception("本月已领取过会员抵用券,请勿重复领取");
             }
             else {
+                var voucherInfo = consumptionVoucherService.GetConsumptionVoucherByCodeAsync(voucherCode);
+                if (voucherInfo == null) throw new Exception("抵用券编码错误");
                 AddCustomerConsumptionVoucherDto voucher = new AddCustomerConsumptionVoucherDto
                 {
                     CustomerId = customerId,
-                    ConsumptionVoucherCode = member.MemberRankCode + "voucher",
+                    ConsumptionVoucherCode = voucherCode,
                     ExpireDate = DateTimeUtil.GetNextMonthFirstDay(),
                     Source = 0
                 };
                 await AddAsyn(voucher);
             }
+        }
+        /// <summary>
+        /// 获取用户可用于全局商品的抵用券
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="isUsed"></param>
+        /// <param name="goodsId"></param>
+        /// <returns></returns>
+        public async Task<List<CustomerConsumptioVoucherInfoDto>> GetOverAllCustomerConsumptionVoucherListAsync(string customerId, bool? isUsed, string goodsId)
+        {
+            
+            var voucher = from ccv in dalCustomerConsumptionVoucher.GetAll() where ccv.CustomerId==customerId
+                       join cv in dalConsumptionVoucher.GetAll() on ccv.ConsumptionVoucherId equals cv.Id                      
+                       where  cv.IsSpecifyProduct==false && (isUsed == null || ccv.IsUsed == isUsed) && (cv.Type == 0 || cv.Type == 4) && ccv.IsExpire == false && ccv.ExpireDate > DateTime.Now 
+                       orderby cv.DeductMoney descending
+                       select new CustomerConsumptioVoucherInfoDto
+                       {
+                           Id = ccv.Id,                           
+                           ConsumptionVoucherName = cv.Name,
+                           DeductMoney = cv.DeductMoney,
+                           IsShare = cv.IsShare,
+                           IsSpecifyProduct = cv.IsSpecifyProduct,
+                           ConsumptionVoucherId = ccv.ConsumptionVoucherId,
+                           IsUsed = ccv.IsUsed,
+                           CreateDate = ccv.CreateDate,
+                           Source = ccv.Source,
+                           Type = cv.Type,
+                           WriteOfCode = ccv.WriteOfCode
+                       };
+            return await voucher.ToListAsync();
         }
     }
 }

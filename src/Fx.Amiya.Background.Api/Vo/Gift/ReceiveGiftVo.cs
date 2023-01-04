@@ -46,5 +46,9 @@ namespace Fx.Amiya.Background.Api.Vo.Gift
         /// 淘宝昵称
         /// </summary>
         public string TbBuyerNick { get; set; }
+        /// <summary>
+        /// 礼品类别
+        /// </summary>
+        public string CategoryName { get; set; }
     }
 }

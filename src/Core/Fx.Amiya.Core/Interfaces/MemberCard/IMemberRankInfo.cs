@@ -42,6 +42,12 @@ namespace Fx.Amiya.Core.Interfaces.MemberCard
         Task<List<MemberRankNameDto>> GetMemberRankNameListAsync();
 
         /// <summary>
+        /// 获取会员等级名称列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<MemberRankCodeDto>> GetMemberRankCodeListAsync();
+
+        /// <summary>
         /// 获取有效的会员等级列表
         /// </summary>
         /// <returns></returns>

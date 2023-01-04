@@ -112,6 +112,58 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         }
 
         /// <summary>
+        /// 获取当前用户拥有的可供全局商品使用的抵用券
+        /// </summary>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="isUsed"></param>
+        /// <param name="goodsId">商品id</param>
+        /// <returns></returns>
+        [HttpGet("overAllList")]
+        public async Task<ResultData<List<CustomerConsumptionVoucherInfoVo>>> GetCustomerOverAllConsumptionVoucherList(bool? isUsed, string goodsId)
+        {
+            string token = _tokenReader.GetToken();
+            var sessionInfo = _sessionStorage.GetSession(token);
+            string customerId = sessionInfo.FxCustomerId;
+            var voucher = await customerConsumptionVoucherService.GetOverAllCustomerConsumptionVoucherListAsync(customerId, isUsed, goodsId);
+            if (voucher.Count()==0)
+            {
+                return ResultData<List<CustomerConsumptionVoucherInfoVo>>.Success().AddData("customerOverAllConsumptionVoucher", null);
+            }
+            else
+            {              
+                var result = voucher.Select(e => new CustomerConsumptionVoucherInfoVo {
+                    Id=e.Id,
+                    ConsumptionVoucherName=e.ConsumptionVoucherName,
+                    DeductMoney=e.DeductMoney,
+                    Source=e.Source,
+                    Type=e.Type
+                }).ToList();
+                return ResultData<List<CustomerConsumptionVoucherInfoVo>>.Success().AddData("customerOverAllConsumptionVoucher", result);
+            }
+
+            /*var voucherList = list.Select(s => new CustomerConsumptionVoucherInfoVo
+            {
+                Id = s.Id,
+                CustomerId = customerId,
+                ConsumptionVoucherName = s.ConsumptionVoucherName,
+                DeductMoney = s.DeductMoney,
+                IsShare = s.IsShare,
+                IsSpecifyProduct = s.IsSpecifyProduct,
+                ConsumptionVoucherId = s.ConsumptionVoucherId,
+                IsUsed = s.IsUsed,
+                ExpireDate = s.ExpireDate,
+                IsExpire = s.IsExpire,
+                CreateDate = s.CreateDate,
+                UseDate = s.UseDate,
+                Source = s.Source,
+                Type = s.Type,
+                WirteOfCode = s.WriteOfCode
+            }).ToList();*/
+
+        }
+
+        /// <summary>
         /// 获取当前所有可用的叫车抵用券
         /// </summary>
         /// <param name="pageNum"></param>
@@ -210,13 +262,28 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("isReciveConsumptionVoucherThisWeek")]
-        public async Task<ResultData<MemberReciveVoucherVo>> IsReciveConsumptionVoucherThisWeek()
+        public async Task<ResultData<List<MemberReciveVoucherVo>>> IsReciveConsumptionVoucherThisWeek()
         {
             string token = _tokenReader.GetToken();
             var sessionInfo = _sessionStorage.GetSession(token);
             string customerId = sessionInfo.FxCustomerId;
             var recieve = await customerConsumptionVoucherService.IsReciveVoucherThisMonthThisWeekAsync(customerId);
-            MemberReciveVoucherVo memberReciveVoucherVo = new MemberReciveVoucherVo();
+            List<MemberReciveVoucherVo> resultList = null;
+            if (recieve == null)
+            {
+                resultList = new List<MemberReciveVoucherVo>();
+            }
+            else
+            {
+                resultList = recieve.Select(e => new MemberReciveVoucherVo
+                {
+                    VoucherName = e.VoucherName,
+                    DeductMoney = e.DeductMoney,
+                    VoucherType = e.VoucherType,
+                    VoucherCode = e.VoucherCode
+                }).ToList();
+            }
+            /*MemberReciveVoucherVo memberReciveVoucherVo = new MemberReciveVoucherVo();
             if (recieve == null) {
                 
                 memberReciveVoucherVo.CanReceive = false;
@@ -226,25 +293,26 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 memberReciveVoucherVo.CanReceive = true;
                 memberReciveVoucherVo.DeductMoney = recieve.DeductMoney;
                 memberReciveVoucherVo.VoucherName = recieve.VoucherName;
-            }
-            return ResultData<MemberReciveVoucherVo>.Success().AddData("voucher", memberReciveVoucherVo);
+            }*/
+            return ResultData<List<MemberReciveVoucherVo>>.Success().AddData("voucher", resultList);
 
         }
         /// <summary>
         /// 每周领取抵用券
         /// </summary>
         /// <returns></returns>
-        [HttpPost("reciveConsumptionVoucherWeek")]
-        public async Task<ResultData> ReciveConsumptionVoucherWeek()
+        [HttpPost("reciveConsumptionVoucherWeek/{code}")]
+        public async Task<ResultData> ReciveConsumptionVoucherWeek(string code)
         {
-            using (await _mutex.LockAsync()) {
+            using (await _mutex.LockAsync())
+            {
                 string token = _tokenReader.GetToken();
                 var sessionInfo = _sessionStorage.GetSession(token);
                 string customerId = sessionInfo.FxCustomerId;
-                await customerConsumptionVoucherService.MemberRecieveCardWeekAsync(customerId);
+                await customerConsumptionVoucherService.MemberRecieveCardWeekAsync(customerId, code);
                 return ResultData.Success();
             }
-                
+
         }
     }
 }

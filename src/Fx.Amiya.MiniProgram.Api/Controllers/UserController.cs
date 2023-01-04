@@ -284,13 +284,14 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     var integrationRecord = await CreateIntegrationRecordAsync(customerId, 200);
                     if (integrationRecord != null) await integrationAccount.AddByConsumptionAsync(integrationRecord);
                     var customer = dalCustomerInfo.GetAll().Where(e => e.Id == customerId).FirstOrDefault();
-                    var baseInfo = await customerBaseInfoService.GetByPhoneAsync(userInfo.Phone);
+                    //使用customer绑定的手机号而非userinfo里的微信绑定手机号
+                    var baseInfo = await customerBaseInfoService.GetByPhoneAsync(customer.Phone);
                     if (baseInfo != null)
                     {
                         UpdateCustomerBaseInfoDto updateCustomerBaseInfoDto = new UpdateCustomerBaseInfoDto();
                         updateCustomerBaseInfoDto.Id = baseInfo.Id;
                         updateCustomerBaseInfoDto.PersonalWechat = baseInfo.PersonalWechat;
-                        updateCustomerBaseInfoDto.Phone = editInfoVo.Phone;
+                        updateCustomerBaseInfoDto.Phone = baseInfo.Phone;
                         updateCustomerBaseInfoDto.BusinessWeChat = baseInfo.BusinessWeChat;
                         updateCustomerBaseInfoDto.WechatMiniProgram = baseInfo.WechatMiniProgram;
                         updateCustomerBaseInfoDto.OfficialAccounts = baseInfo.OfficialAccounts;
@@ -299,7 +300,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         updateCustomerBaseInfoDto.Sex = (byte)(editInfoVo.Gender - 1) == 1 ? "男" : "女";
                         updateCustomerBaseInfoDto.Birthday = editInfoVo.Date;
                         updateCustomerBaseInfoDto.Occupation = baseInfo.Occupation;
-                        updateCustomerBaseInfoDto.OtherPhone = baseInfo.OtherPhone;
+                        updateCustomerBaseInfoDto.OtherPhone = editInfoVo.Phone;
                         updateCustomerBaseInfoDto.DetailAddress = editInfoVo.DetailAddress;
                         updateCustomerBaseInfoDto.IsSendNote = baseInfo.IsSendNote;
                         updateCustomerBaseInfoDto.IsCall = baseInfo.IsCall;
@@ -331,12 +332,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             var userInfo = await userService.GetUserInfoByUserIdAsync(sessionInfo.FxUserId);
             var customer = dalCustomerInfo.GetAll().Where(e => e.Id == customerId).FirstOrDefault();
 
-            var baseInfo = await customerBaseInfoService.GetByPhoneAsync(userInfo.Phone);
+            var baseInfo = await customerBaseInfoService.GetByPhoneAsync(customer.Phone);
             if (baseInfo != null)
             {
                 BirthDayCardVo updateCustomerBaseInfoDto = new BirthDayCardVo();
                 updateCustomerBaseInfoDto.Id = userInfo.Id;
-                updateCustomerBaseInfoDto.Phone = userInfo.Phone;
+                updateCustomerBaseInfoDto.Phone = customer.Phone;
                 updateCustomerBaseInfoDto.Name = userInfo.Name;
                 updateCustomerBaseInfoDto.BirthDay = userInfo.BirthDay;
                 updateCustomerBaseInfoDto.DetailAddress = userInfo.DetailAddress;
@@ -371,7 +372,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 updateBirthDayCardDto.DetailAddress = update.DetailAddress;
                 await userService.UpdateBirthDayCardInfo(updateBirthDayCardDto);
                 var customer = dalCustomerInfo.GetAll().Where(e => e.Id == customerId).FirstOrDefault();
-                var baseInfo = await customerBaseInfoService.GetByPhoneAsync(userInfo.Phone);
+                var baseInfo = await customerBaseInfoService.GetByPhoneAsync(customer.Phone);
                 if (baseInfo != null)
                 {
                     UpdateCustomerBaseInfoDto updateCustomerBaseInfoDto = new UpdateCustomerBaseInfoDto();
@@ -386,7 +387,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     updateCustomerBaseInfoDto.Sex = baseInfo.Sex;
                     updateCustomerBaseInfoDto.Birthday = update.BirthDay;
                     updateCustomerBaseInfoDto.Occupation = baseInfo.Occupation;
-                    updateCustomerBaseInfoDto.OtherPhone = baseInfo.OtherPhone;
+                    updateCustomerBaseInfoDto.OtherPhone = update.Phone;
                     updateCustomerBaseInfoDto.DetailAddress = update.DetailAddress;
                     updateCustomerBaseInfoDto.IsSendNote = baseInfo.IsSendNote;
                     updateCustomerBaseInfoDto.IsCall = baseInfo.IsCall;
@@ -568,10 +569,21 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         [HttpPut("setSuperior/{superiorId}")]
         public async Task<ResultData<string>> SetSuperior(string superiorId)
         {
-            string token = tokenReader.GetToken();
-            var sessionInfo = sessionStorage.GetSession(token);
-            var result = await userService.AddSuperiorAsync(sessionInfo.FxUserId, superiorId);
-            return ResultData<string>.Success();
+            try
+            {
+                unitOfWork.BeginTransaction();
+                string token = tokenReader.GetToken();
+                var sessionInfo = sessionStorage.GetSession(token);
+                var customerId = sessionInfo.FxCustomerId;
+                var result = await userService.AddSuperiorAsync(sessionInfo.FxUserId, superiorId, customerId);
+                unitOfWork.Commit();
+                return ResultData<string>.Success();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex;
+            }
         }
         /// <summary>
         /// 获取下级用户

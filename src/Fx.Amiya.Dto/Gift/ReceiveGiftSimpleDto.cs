@@ -17,5 +17,6 @@ namespace Fx.Amiya.Dto.Gift
         public DateTime? SendGoodsDate { get; set; }
 
         public string OrderId { get; set; }
+        public string CategoryName { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace Fx.Amiya.DbModels.Model
         public int? UpdateBy { get; set; }
         public DateTime? UpdateDate { get; set; }
         public int Version { get; set; }
-
+        public string CategoryId { get; set; }
         public AmiyaEmployee CreateByAmiyaEmplooyee { get; set; }
         public AmiyaEmployee UpdateByAmiyaEmplooyee { get; set; }
 

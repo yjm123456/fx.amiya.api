@@ -1,6 +1,8 @@
-﻿using Fx.Amiya.Domain;
+﻿using Fx.Amiya.Core.Dto.Goods;
+using Fx.Amiya.Domain;
 using Fx.Amiya.Domain.IRepository;
 using Fx.Amiya.Domain.UserDomain;
+using Fx.Amiya.Dto.ConsumptionVoucher;
 using Fx.Amiya.Dto.UserInfo;
 using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
@@ -35,6 +37,8 @@ namespace Fx.Amiya.Service
         private IDalCustomerInfo dalCustomerInfo;
         private IDalUserInfoUpdateRecord dalUserInfoUpdateRecord;
         private IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService;
+        private ICustomerConsumptionVoucherService customerConsumptionVoucherService;
+
         public UserService(IDalUserInfo dalUserInfo,
             IWxMiniUserRepository wxMiniUserRepository,
             IUserRepository userRepository,
@@ -42,7 +46,7 @@ namespace Fx.Amiya.Service
             IWxMpUserRepository wxMpUserRepository,
             IDalConfig dalConfig,
             IDalCustomerInfo dalCustomerInfo,
-            IDalUserInfoUpdateRecord dalUserInfoUpdateRecord, IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService)
+            IDalUserInfoUpdateRecord dalUserInfoUpdateRecord, IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService, ICustomerConsumptionVoucherService customerConsumptionVoucherService)
         {
             this.dalUserInfo = dalUserInfo;
             this.wxMiniUserRepository = wxMiniUserRepository;
@@ -53,6 +57,7 @@ namespace Fx.Amiya.Service
             this.dalCustomerInfo = dalCustomerInfo;
             this.dalUserInfoUpdateRecord = dalUserInfoUpdateRecord;
             this.dockingHospitalCustomerInfoService = dockingHospitalCustomerInfoService;
+            this.customerConsumptionVoucherService = customerConsumptionVoucherService;
         }
         public async Task<WxMiniUserDto> AddUnauthorizedWxMiniUserAsync(UnauthorizedWxMiniUserAddDto miniUserAddDto)
         {
@@ -570,8 +575,9 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="userId">用户id</param>
         /// <param name="superiorId">上级id</param>
+        /// <param name="customerId">customerId</param>
         /// <returns></returns>
-        public async Task<bool> AddSuperiorAsync(string userId, string superiorId)
+        public async Task<bool> AddSuperiorAsync(string userId, string superiorId,string customerId)
         {
             if (userId.Equals(superiorId, StringComparison.OrdinalIgnoreCase)) return false;
             var userInfo =await dalUserInfo.GetAll().Where(e=>e.Id==userId).SingleOrDefaultAsync();
@@ -583,6 +589,12 @@ namespace Fx.Amiya.Service
             if (superiorId == null) throw new Exception("用户不存在");
             userInfo.SuperiorId = superiorId;
             await dalUserInfo.UpdateAsync(userInfo,true);
+            //上级赠送抵用券
+            AddCustomerConsumptionVoucherDto addCustomerConsumptionVoucherDto = new AddCustomerConsumptionVoucherDto();
+            addCustomerConsumptionVoucherDto.ConsumptionVoucherCode = "superior";
+            addCustomerConsumptionVoucherDto.CustomerId = customerId;
+            addCustomerConsumptionVoucherDto.Source = 5;
+            await customerConsumptionVoucherService.AddAsyn(addCustomerConsumptionVoucherDto);
             return true;
         }
 

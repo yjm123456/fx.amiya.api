@@ -428,6 +428,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             bool IsExistThirdPartPay = false;
             //是否存在余额支付订单
             bool IsExistBalancePay = false;
+            //是否使用专用商品抵用券
+            bool IsUseSpecifyVoucher = false;
             List<OrderInfoAddDto> amiyaOrderList = new List<OrderInfoAddDto>();
             Dictionary<string, int> inventoryQuantityDict = new Dictionary<string, int>();
             //商品下单
@@ -566,6 +568,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 {
                     if (!string.IsNullOrEmpty(item.VoucherId))
                     {
+                        //如果使用了专用商品抵用券
+                        IsUseSpecifyVoucher = true;
                         var voucher = await customerConsumptionVoucherService.GetVoucherByCustomerIdAndVoucherIdAsync(customerId, item.VoucherId);
                         if (voucher == null) throw new Exception("没有此抵用券信息");
                         if (voucher.IsUsed) throw new Exception("该抵用券已被使用");
@@ -696,15 +700,21 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 if (totalFee < 0) throw new Exception("支付金额异常");
                 orderId = orderId.Trim(',');
                 goodsName = goodsName.Trim(',');
-
+                //如果全局抵用券不为空
                 if (!string.IsNullOrEmpty(orderAdd.VoucherId))
                 {
+                    if (IsUseSpecifyVoucher) throw new Exception("抵用券不能叠加使用");
                     var voucher = await customerConsumptionVoucherService.GetVoucherByCustomerIdAndVoucherIdAsync(customerId, orderAdd.VoucherId);
                     if (voucher.IsNeedMinPrice)
                     {
                         if (totalFee < voucher.MinPrice)
                         {
                             throw new Exception("支付金额不满足抵用券使用条件");
+                        }
+                        if (voucher.Type == 0) {
+                            totalFee = totalFee - voucher.DeductMoney;
+                        } else if (voucher.Type==4) {
+                            totalFee = Math.Ceiling(totalFee*voucher.DeductMoney);
                         }
                     }
                 }

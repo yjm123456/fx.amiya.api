@@ -30,5 +30,6 @@ namespace Fx.Amiya.Dto.Gift
         public string GoodsName { get; set; }
         public decimal? ActualPayment { get; set; }
         public string TbBuyerNick { get; set; }
+        public string CategoryName { get; set; }
     }
 }

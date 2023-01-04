@@ -83,7 +83,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 ConsumptionVoucherCode = add.ConsumptionVoucherCode,
                 Remark=add.Remark,
                 IsNeedMinPrice=add.IsNeedMinPrice,
-                MinPrice=add.MinPrice
+                MinPrice=add.MinPrice,
+                IsMemberVoucher=add.IsMemberVoucher,
+                MemberRankCode=add.MemberRankCode
             };
             await consumptionVoucherService.AddAsync(addConsumptionVoucherDto);
             return ResultData.Success();
@@ -128,7 +130,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Remark=c.Remark,
                 IsNeedMinPrice=c.IsNeedMinPrice,
                 MinPrice=c.MinPrice,
-                EffectiveTime=c.EffectiveTime
+                EffectiveTime=c.EffectiveTime,
+                IsMemberVoucher=c.IsMemberVoucher,
+                MemberRankCode=c.MemberRankCode
             });
             return ResultData<FxPageInfo<ConsumptionVoucherInfoListVo>>.Success().AddData("consumptionVoucherInfoList", fxPageInfo);
         }
@@ -155,6 +159,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             consumptionVoucherInfoVo.IsNeedMinPrice = voucher.IsNeedMinPrice;
             consumptionVoucherInfoVo.MinPrice = voucher.MinPrice;
             consumptionVoucherInfoVo.EffectiveTime = voucher.EffectiveTime;
+            consumptionVoucherInfoVo.IsMemberVoucher = voucher.IsMemberVoucher;
+            consumptionVoucherInfoVo.MemberRankCode = voucher.MemberRankCode;
             return ResultData<ConsumptionVoucherInfoVo>.Success().AddData("consumptionVoucherInfo", consumptionVoucherInfoVo);
         }
         /// <summary>
@@ -180,7 +186,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Remark = updateConsumption.Remark,
                 IsNeedMinPrice = updateConsumption.IsNeedMinPrice,
                 MinPrice = updateConsumption.MinPrice,
-                EffectiveTime= updateConsumption.EffectiveTime
+                EffectiveTime= updateConsumption.EffectiveTime,
+                IsMemberVoucher=updateConsumption.IsMemberVoucher,
+                MemberRankCode=updateConsumption.MemberRankCode
             };
             await consumptionVoucherService.UpdateConsumptionVoucherAsync(updateConsumptionVoucherDto);
             return ResultData.Success();

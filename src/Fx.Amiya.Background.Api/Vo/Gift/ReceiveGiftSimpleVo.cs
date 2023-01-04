@@ -56,5 +56,9 @@ namespace Fx.Amiya.Background.Api.Vo.Gift
         /// 绑定订单号
         /// </summary>
         public string OrderId { get; set; }
+        /// <summary>
+        /// 类别名称
+        /// </summary>
+        public string CategoryName { get; set; }
     }
 }

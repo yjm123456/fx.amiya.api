@@ -64,5 +64,13 @@ namespace Fx.Amiya.Dto.ConsumptionVoucher
         /// 最小限制金额
         /// </summary>
         public decimal? MinPrice { get; set; }
+        /// <summary>
+        /// 是否是会员领取抵用券
+        /// </summary>
+        public bool IsMemberVoucher { get; set; }
+        /// <summary>
+        /// 对应的会员等级(当抵用券是会员领取抵用券时必填,不是则不填)
+        /// </summary>
+        public string MemberRankCode { get; set; }
     }
 }

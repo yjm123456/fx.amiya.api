@@ -24,5 +24,9 @@ namespace Fx.Amiya.Background.Api.Vo.Gift
         /// 库存
         /// </summary>
         public int Quantity { get; set; }
+        /// <summary>
+        /// 礼品类别id
+        /// </summary>
+        public string CategoryId { get; set; }
     }
 }

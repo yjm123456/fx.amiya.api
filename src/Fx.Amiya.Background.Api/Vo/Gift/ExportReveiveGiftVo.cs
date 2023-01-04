@@ -17,6 +17,11 @@ namespace Fx.Amiya.Background.Api.Vo.Gift
         [Description("礼品名称")]
         public string GiftName { get; set; }
         /// <summary>
+        /// 礼品类别
+        /// </summary>
+        [Description("礼品类别")]
+        public string CategoryName { get; set; }
+        /// <summary>
         /// 领取人电话
         /// </summary>
         [Description("领取人电话")]

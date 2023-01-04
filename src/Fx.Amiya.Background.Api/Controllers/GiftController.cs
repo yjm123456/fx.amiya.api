@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.Gift;
+using Fx.Amiya.Background.Api.Vo.GIftCategory;
 using Fx.Amiya.Dto.Gift;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
@@ -23,11 +25,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IGiftService giftService;
         private IExpressManageService _expressManageService;
         private IHttpContextAccessor httpContextAccessor;
-        public GiftController(IGiftService giftService, IHttpContextAccessor httpContextAccessor, IExpressManageService expressManageService)
+        private ICustomerBaseInfoService customerBaseInfoService;
+        public GiftController(IGiftService giftService, IHttpContextAccessor httpContextAccessor, IExpressManageService expressManageService, ICustomerBaseInfoService customerBaseInfoService)
         {
             this.giftService = giftService;
             this.httpContextAccessor = httpContextAccessor;
             _expressManageService = expressManageService;
+            this.customerBaseInfoService = customerBaseInfoService;
         }
         /// <summary>
         /// 获取礼品列表（分页）
@@ -35,11 +39,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="name"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
+        /// <param name="categoryId">类别id</param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<GiftInfoVo>>> GetListWithPageAsync(string name, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<GiftInfoVo>>> GetListWithPageAsync(string name, int pageNum, int pageSize, string categoryId)
         {
-            var q = await giftService.GetListWithPageAsync(name, pageNum, pageSize);
+            var q = await giftService.GetListWithPageAsync(name, pageNum, pageSize, categoryId);
             var giftInfo = from d in q.List
                            select new GiftInfoVo
                            {
@@ -53,7 +58,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                CreateDate = d.CreateDate,
                                UpdateBy = d.UpdateBy,
                                UpdateName = d.UpdateName,
-                               UpdateDate = d.UpdateDate
+                               UpdateDate = d.UpdateDate,
+                               CategoryId = d.CategoryId,
+                               CategoryName = d.CategoryName
                            };
 
             FxPageInfo<GiftInfoVo> giftPageInfo = new FxPageInfo<GiftInfoVo>();
@@ -73,13 +80,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData> AddAsync(AddGiftInfoVo addVo)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int employeeId =Convert.ToInt32( employee.Id);
+            int employeeId = Convert.ToInt32(employee.Id);
 
             AddGiftInfoDto addDto = new AddGiftInfoDto();
             addDto.Name = addVo.Name;
             addDto.ThumbPicUrl = addVo.ThumbPicUrl;
             addDto.Quantity = addVo.Quantity;
-
+            addDto.CategoryId = addVo.CategoryId;
             await giftService.AddAsync(addDto, employeeId);
             return ResultData.Success();
         }
@@ -107,7 +114,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             giftInfoVo.UpdateBy = gift.UpdateBy;
             giftInfoVo.UpdateName = gift.UpdateName;
             giftInfoVo.UpdateDate = gift.UpdateDate;
-
+            giftInfoVo.CategoryId = gift.CategoryId;
+            giftInfoVo.CategoryName = gift.CategoryName;
             return ResultData<GiftInfoVo>.Success().AddData("giftInfo", giftInfoVo);
         }
 
@@ -129,6 +137,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.ThumbPicUrl = updateVo.ThumbPicUrl;
             updateDto.Quantity = updateVo.Quantity;
             updateDto.Valid = updateVo.Valid;
+            updateDto.CategoryId = updateVo.CategoryId;
             await giftService.UpdateAsync(updateDto, employeeId);
             return ResultData.Success();
         }
@@ -160,9 +169,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("receiveGiftList")]
-        public async Task<ResultData<FxPageInfo<ReceiveGiftVo>>> GetReceiveGiftListAsync(DateTime? startDate, DateTime? endDate, bool? isSendGoods, string keyword, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ReceiveGiftVo>>> GetReceiveGiftListAsync(DateTime? startDate, DateTime? endDate, bool? isSendGoods, string keyword,string categoryId, int pageNum, int pageSize)
         {
-            if(!startDate.HasValue)
+            if (!startDate.HasValue)
             {
                 throw new Exception("请选择开始时间进行查询!");
             }
@@ -172,7 +181,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var q = await giftService.GetReceiveGiftListAsync(startDate,endDate,employeeId, isSendGoods, keyword, pageNum, pageSize);
+            var q = await giftService.GetReceiveGiftListAsync(startDate, endDate, employeeId, isSendGoods, keyword, pageNum, pageSize,categoryId);
             var receiveGift = from d in q.List
                               select new ReceiveGiftVo
                               {
@@ -187,8 +196,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   ReceivePhone = d.ReceivePhone,
                                   Date = d.Date,
                                   CourierNumber = d.CourierNumber,
-                                  ExpressId=d.ExpressId,
-                                  ExpressName = (!string.IsNullOrEmpty(d.ExpressId))? _expressManageService .GetByIdAsync(d.ExpressId).Result.ExpressName: "",
+                                  ExpressId = d.ExpressId,
+                                  ExpressName = (!string.IsNullOrEmpty(d.ExpressId)) ? _expressManageService.GetByIdAsync(d.ExpressId).Result.ExpressName : "",
                                   Quantity = d.Quantity,
                                   IsSendGoods = d.IsSendGoods,
                                   SendGoodsBy = d.SendGoodsBy,
@@ -198,7 +207,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   GoodsThumbPicUrl = d.GoodsThumbPicUrl,
                                   GoodsName = d.GoodsName,
                                   ActualPayment = d.ActualPayment,
-                                  TbBuyerNick=d.TbBuyerNick
+                                  TbBuyerNick = d.TbBuyerNick,
+                                  CategoryName = d.CategoryName
                               };
 
 
@@ -218,7 +228,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="keyword">礼品名称、电话号</param>
         /// <returns></returns>
         [HttpGet("exportReceiveGiftList")]
-        public async Task<FileStreamResult> ExportReceiveGiftListAsync(DateTime? startDate, DateTime? endDate, bool? isSendGoods, string keyword)
+        public async Task<FileStreamResult> ExportReceiveGiftListAsync(DateTime? startDate, DateTime? endDate, bool? isSendGoods, string keyword,string categoryId)
         {
             if (!startDate.HasValue)
             {
@@ -230,7 +240,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var q = await giftService.ExportReceiveGiftListAsync(startDate, endDate, isSendGoods,employeeId , keyword);
+            var q = await giftService.ExportReceiveGiftListAsync(startDate, endDate, isSendGoods, employeeId, keyword,categoryId);
             var receiveGift = from d in q
                               select new ExportReveiveGiftVo
                               {
@@ -246,6 +256,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   SendGoodsDate = d.SendGoodsDate,
                                   OrderId = d.OrderId,
                                   ActualPayment = d.ActualPayment,
+                                  CategoryName = d.CategoryName
                               };
 
             var exportOrder = receiveGift.ToList();
@@ -280,7 +291,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   IsSendGoods = d.IsSendGoods,
                                   CourierNumber = d.CourierNumber,
                                   SendGoodsDate = d.SendGoodsDate,
-                                  OrderId = d.OrderId
+                                  OrderId = d.OrderId,
+                                  CategoryName = d.CategoryName
                               };
             FxPageInfo<ReceiveGiftSimpleVo> receiveGiftPageInfo = new FxPageInfo<ReceiveGiftSimpleVo>();
             receiveGiftPageInfo.TotalCount = q.TotalCount;
@@ -322,6 +334,67 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.Address = updateVo.Address;
             await giftService.UpdateAddressAsync(updateDto);
             return ResultData.Success();
+        }
+        /// <summary>
+        /// 根据礼品类别获取礼品名称列表
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        [HttpGet("giftNameList")]
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetGiftNameListByCategory(string categoryId)
+        {
+            var list = await giftService.GetGiftNameListByCategoryId(categoryId);
+            var giftList = list.Select(e => new BaseIdAndNameVo
+            {
+                Id = e.Id,
+                Name = e.Name
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("giftNameList", giftList);
+        }
+        /// <summary>
+        /// 手动发放礼品
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        [HttpPost("SendGift")]
+        public async Task<ResultData> SendGiftAsync(SendGiftVo sendGift)
+        {            
+            SendReceiveGiftDto addDto = new SendReceiveGiftDto();
+            if (sendGift.AddressId == null)
+            {
+                addDto.CustomerId = sendGift.CustomerId;
+                addDto.GiftId = sendGift.GiftId;
+                addDto.Address = sendGift.Address;
+                addDto.ReceiveName = sendGift.ReceiveName;
+                addDto.ReceivePhone = sendGift.ReceivePhone;
+                addDto.OrderId = sendGift.OrderId;
+            }
+            else {
+                addDto.AddressId = sendGift.AddressId;
+                addDto.CustomerId = sendGift.CustomerId;
+                addDto.GiftId = sendGift.GiftId;
+                addDto.Address = sendGift.Address;
+                addDto.ReceiveName = sendGift.ReceiveName;
+                addDto.ReceivePhone = sendGift.ReceivePhone;
+                addDto.OrderId = sendGift.OrderId;
+            }
+            await giftService.SendReceiveGiftAsync(addDto, sendGift.CustomerId);
+            return ResultData.Success();
+        }
+        /// <summary>
+        /// 根据加密手机号获取发放礼品的初始数据
+        /// </summary>
+        /// <param name="encryptPhone">加密手机号</param>
+        /// <returns></returns>
+        [HttpPost("SendGiftBaseInfo")]
+        public async Task<ResultData<SendGiftBaseInfoVo>> SendGiftBaseInfoAsync(string encryptPhone)
+        {
+            var customerBaseInfo = await customerBaseInfoService.GetByEncryptPhoneAsync(encryptPhone);
+            SendGiftBaseInfoVo addDto = new SendGiftBaseInfoVo();
+            addDto.ReceivePhone = customerBaseInfo.OtherPhone;
+            addDto.ReceiveName = customerBaseInfo.RealName;
+            addDto.Address = customerBaseInfo.DetailAddress;
+            return ResultData<SendGiftBaseInfoVo>.Success().AddData("baseInfo", addDto);
         }
     }
 }

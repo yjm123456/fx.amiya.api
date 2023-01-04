@@ -86,7 +86,7 @@ namespace Fx.Amiya.IService
         /// <param name="userId">用户id</param>
         /// <param name="superiorId">上级id</param>
         /// <returns></returns>
-        Task<bool> AddSuperiorAsync(string userId,string superiorId);
+        Task<bool> AddSuperiorAsync(string userId,string superiorId,string customerId);
         /// <summary>
         /// 判断一个用户是否是下级用户
         /// </summary>

@@ -57,7 +57,9 @@ namespace Fx.Amiya.Service
                 ConsumptionVoucherCode = addConsumptionVoucher.ConsumptionVoucherCode,
                 Remark = addConsumptionVoucher.Remark,
                 IsNeedMinFee = addConsumptionVoucher.IsNeedMinPrice,
-                MinPrice= addConsumptionVoucher.MinPrice
+                MinPrice= addConsumptionVoucher.MinPrice,
+                MemberRankCode=addConsumptionVoucher.MemberRankCode,
+                IsMemberVoucher=addConsumptionVoucher.IsMemberVoucher
             };
             await dalConsumptionVoucher.AddAsync(consumptionVoucher, true);
         }
@@ -142,7 +144,9 @@ namespace Fx.Amiya.Service
                 Remark=c.Remark,
                 IsNeedMinPrice=c.IsNeedMinFee,
                 MinPrice=c.MinPrice,
-                EffectiveTime = c.EffectiveTime
+                EffectiveTime = c.EffectiveTime,
+                IsMemberVoucher=c.IsMemberVoucher,
+                MemberRankCode=c.MemberRankCode
             });
             fxPageInfo.TotalCount = consumptionVoucherList.Count();
             fxPageInfo.List = consumptionVoucherList.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
@@ -168,7 +172,9 @@ namespace Fx.Amiya.Service
                 Remark=e.Remark,
                 IsNeedMinPrice=e.IsNeedMinFee,
                 MinPrice=e.MinPrice,
-                EffectiveTime=e.EffectiveTime
+                EffectiveTime=e.EffectiveTime,
+                IsMemberVoucher=e.IsMemberVoucher,
+                MemberRankCode=e.MemberRankCode
             }).SingleOrDefault();
             return voucher;
         }
@@ -195,6 +201,8 @@ namespace Fx.Amiya.Service
                 voucher.EffectiveTime = (int)updateDto.EffectiveTime.Value;
                 voucher.IsNeedMinFee = updateDto.IsNeedMinPrice;
                 voucher.MinPrice = updateDto.MinPrice;
+                voucher.IsMemberVoucher = updateDto.IsMemberVoucher;
+                voucher.MemberRankCode = updateDto.MemberRankCode;
                 voucher.Remark = updateDto.Remark;
                 if (voucher.Type == 1 && voucher.DeductMoney > 0) throw new Exception("虚拟商品抵用券无法设置抵用量!");
                 if (voucher.Type != 1 && voucher.DeductMoney <= 0) throw new Exception("现金/积分抵用券抵扣量不能小于0!");

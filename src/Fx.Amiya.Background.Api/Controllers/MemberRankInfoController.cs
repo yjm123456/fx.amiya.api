@@ -151,6 +151,22 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<List<MemberRankNameVo>>.Success().AddData("memberRankNames", memberRankInfos.ToList());
         }
 
+        /// <summary>
+        /// 获取会员卡编码名称列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("codeList")]
+        public async Task<ResultData<List<MemberRankCodeVo>>> GetMemberRankCodeListAsync()
+        {
+            var memberRankInfos = from d in await memberRankInfoService.GetMemberRankCodeListAsync()
+                                  select new MemberRankCodeVo
+                                  {
+                                       MemberRankCode=d.MemberRankCode,
+                                       MemberRankCodeName=d.MemberRankCodeName
+                                  };
+            return ResultData<List<MemberRankCodeVo>>.Success().AddData("memberRankNames", memberRankInfos.ToList());
+        }
+
 
 
         /// <summary>

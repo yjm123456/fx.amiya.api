@@ -18,5 +18,13 @@ namespace Fx.Amiya.Background.Api.Vo.Gift
         public int? UpdateBy { get; set; }
         public string UpdateName { get; set; }
         public DateTime? UpdateDate { get; set; }
+        /// <summary>
+        /// 类别id
+        /// </summary>
+        public string CategoryId { get; set; }
+        /// <summary>
+        /// 类别名称
+        /// </summary>
+        public string CategoryName { get; set; }
     }
 }
