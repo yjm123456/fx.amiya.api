@@ -184,7 +184,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     resultVo.Phone = x.Phone;
                     var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(x.EncryptPhone);
                     resultVo.City = customerBaseInfo.City;
-                    resultVo.DepartmentName=
+                    resultVo.DepartmentName =
                     resultVo.AppointmentDate = x.AppointmentDate == null ? "未预约时间" : x.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
                     resultVo.AppointmentHospitalName = x.AppointmentHospitalName;
                     resultVo.GoodsName = x.GoodsName;
@@ -465,7 +465,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 AddOrderPrice = d.AddOrderPrice,
                                 CustomerName = d.CustomerName,
                                 Phone = d.Phone,
-                                EncryptPhone=d.EncryptPhone,
+                                EncryptPhone = d.EncryptPhone,
                                 AppointmentDate = d.AppointmentDate == null ? "未预约时间" : d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss"),
                                 AppointmentHospitalName = d.AppointmentHospitalName,
                                 GoodsName = d.GoodsName,
@@ -479,7 +479,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 OrderStatusText = d.OrderStatusText,
                                 Sender = d.Sender,
                                 SendDate = d.SendDate,
-                                
+                                LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 DepositAmount = d.DepositAmount,
                                 DealAmount = d.DealAmount,
                                 UnDealReason = d.UnDealReason,
@@ -506,7 +506,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var exportSendOrder = order.ToList();
                 foreach (var x in exportSendOrder)
                 {
-                   
+
                     var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(x.EncryptPhone);
                     x.City = customerBaseInfo.City;
 

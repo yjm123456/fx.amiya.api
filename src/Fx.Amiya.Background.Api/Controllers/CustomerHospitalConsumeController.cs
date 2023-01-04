@@ -315,12 +315,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 addDto.NickName = "未知客户昵称";
                             }
                             addDto.PersonTime = Convert.ToInt16(worksheet.Cells[x, 5].Value.ToString());
-                            if (worksheet.Cells[x, 6].Value!=null)
+                            if (worksheet.Cells[x, 6].Value != null)
                             {
                                 addDto.IsAddedOrder = true;
                                 addDto.OrderId = worksheet.Cells[x, 6].Value.ToString();
                             }
-                            if(worksheet.Cells[x, 7].Value!=null)
+                            if (worksheet.Cells[x, 7].Value != null)
                             {
                                 string writeDate = worksheet.Cells[x, 7].Value.ToString();
                                 string WriteOffDate = writeDate.Substring(0, 4);
@@ -335,7 +335,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 addDto.IsSelfLiving = worksheet.Cells[x, 8].Value.ToString() == "是" ? true : false;
                             }
                             string buyAgainTime = worksheet.Cells[x, 9].Value.ToString();
-                            if(!string.IsNullOrEmpty(buyAgainTime))
+                            if (!string.IsNullOrEmpty(buyAgainTime))
                             {
                                 string buyAgainDate = buyAgainTime.Substring(0, 4);
                                 buyAgainDate += "-";
@@ -365,7 +365,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                             {
                                 addDto.Remark = worksheet.Cells[x, 14].Value.ToString();
                             }
-                            else {
+                            else
+                            {
                                 addDto.Remark = "";
                             }
                             switch (worksheet.Cells[x, 15].Value.ToString())
@@ -426,7 +427,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             customerManageUpdateConsume.Channel = result.Channel;
             customerManageUpdateConsume.LiveAnchorId = result.LiveAnchorId;
             customerManageUpdateConsume.CheckDate = result.CheckDate;
-            customerManageUpdateConsume.CheckByEmpName = result.CheckByEmpName ;
+            customerManageUpdateConsume.CheckByEmpName = result.CheckByEmpName;
             customerManageUpdateConsume.CheckState = result.CheckState;
             customerManageUpdateConsume.IsReturnBackPrice = result.IsReturnBackPrice;
             customerManageUpdateConsume.ReturnBackDate = result.ReturnBackDate;
@@ -523,7 +524,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                CheckToHospitalPic = d.CheckToHospitalPic,
                                PersonTime = d.PersonTime,
                                IsReceiveAdditionalPurchase = d.IsReceiveAdditionalPurchase == true ? "是" : "否",
-                               Remark=d.Remark
+                               Remark = d.Remark
                            };
 
             FxPageInfo<CustomerHospitalConsumeVo> pageInfo = new FxPageInfo<CustomerHospitalConsumeVo>();
@@ -569,13 +570,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<CustomerHospitalConsumeVo>>> GetListAsync(int? hospitalId,int? channel,int?liveAnchorId,bool? isConfirmOrder, int? buyAgainType, string keyword, int? consumeType, DateTime startDate,
-              DateTime endDate, int checkState, int? addedBy, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<CustomerHospitalConsumeVo>>> GetListAsync(int? hospitalId, int? channel, int? liveAnchorId, bool? isConfirmOrder, int? buyAgainType, string keyword, int? consumeType, DateTime startDate, DateTime endDate, int checkState, int? addedBy, int pageNum, int pageSize)
         {
             int? employeeId = null;
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             employeeId = Convert.ToInt32(employee.Id);
-            var q = await customerHospitalConsumeService.GetListAsync(hospitalId,channel,liveAnchorId, buyAgainType, employeeId,isConfirmOrder, keyword, consumeType, startDate, endDate, checkState, addedBy, pageNum, pageSize);
+            var q = await customerHospitalConsumeService.GetListAsync(hospitalId, channel, liveAnchorId, buyAgainType, employeeId, isConfirmOrder, keyword, consumeType, startDate, endDate, checkState, addedBy, pageNum, pageSize);
             var consumes = from d in q.List
                            select new CustomerHospitalConsumeVo
                            {
@@ -619,11 +619,78 @@ namespace Fx.Amiya.Background.Api.Controllers
                                CheckDate = d.CheckDate,
                                CheckByEmpName = d.CheckByEmpName,
                                CheckState = d.CheckState,
-                               Remark=d.Remark,
-                               CheckRemark=d.CheckRemark,
-                               LiveAnchorName=d.LiveAnchorName,
-                               OtherContentPlatFormOrderId=d.OtherContentPlatFormOrderId,
-                               ReconciliationDocumentsId=d.ReconciliationDocumentsId,
+                               Remark = d.Remark,
+                               CheckRemark = d.CheckRemark,
+                               LiveAnchorName = d.LiveAnchorName,
+                               OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
+                               ReconciliationDocumentsId = d.ReconciliationDocumentsId,
+                           };
+            FxPageInfo<CustomerHospitalConsumeVo> pageInfo = new FxPageInfo<CustomerHospitalConsumeVo>();
+            pageInfo.TotalCount = q.TotalCount;
+            pageInfo.List = consumes;
+            return ResultData<FxPageInfo<CustomerHospitalConsumeVo>>.Success().AddData("customerHospitalConsumes", pageInfo);
+        }
+
+        /// <summary>
+        /// 根据客户手机号获取升单信息
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("listByCustomerPhone")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<FxPageInfo<CustomerHospitalConsumeVo>>> GetListByPhoneAsync(string phone, int pageNum, int pageSize)
+        {
+            var q = await customerHospitalConsumeService.GetListByPhoneAsync(phone, pageNum, pageSize);
+            var consumes = from d in q.List
+                           select new CustomerHospitalConsumeVo
+                           {
+                               Id = d.Id,
+                               HospitalId = d.HospitalId,
+                               HospitalName = d.HospitalName,
+                               Phone = d.Phone,
+                               EncryptPhone = d.EncryptPhone,
+                               Channel = d.ChannelType,
+                               Name = d.Name,
+                               ConsumeId = d.ConsumeId,
+                               Age = d.Age,
+                               IsConfirmOrder = d.IsConfirmOrder,
+                               Sex = d.Sex,
+                               IsReturnBackPrice = d.IsReturnBackPrice,
+                               ReturnBackDate = d.ReturnBackDate,
+                               ReturnBackPrice = d.ReturnBackPrice,
+                               ItemName = d.ItemName,
+                               Price = d.Price,
+                               CreateDate = d.CreateDate,
+                               ConsumeType = d.ConsumeType,
+                               ConsumeTypeText = d.ConsumeTypeText,
+                               EmployeeName = d.EmpolyeeName,
+                               NickName = d.NickName,
+                               IsAddedOrder = d.IsAddedOrder == true ? "是" : "否",
+                               OrderId = d.OrderId,
+                               WriteOffDate = d.WriteOffDate,
+                               IsCconsultationCard = d.IsCconsultationCard == true ? "是" : "否",
+                               BuyAgainType = d.BuyAgainType,
+                               BuyAgainTypeText = d.BuyAgainTypeText,
+                               IsSelfLiving = d.IsSelfLiving == true ? "是" : "否",
+                               BuyAgainTime = d.BuyAgainTime,
+                               HasBuyagainEvidence = d.HasBuyagainEvidence == true ? "是" : "否",
+                               BuyagainEvidencePic = d.BuyagainEvidencePic,
+                               IsCheckToHospital = d.IsCheckToHospital == true ? "是" : "否",
+                               CheckToHospitalPic = d.CheckToHospitalPic,
+                               PersonTime = d.PersonTime,
+                               IsReceiveAdditionalPurchase = d.IsReceiveAdditionalPurchase == true ? "是" : "否",
+                               CheckBuyAgainPrice = d.CheckBuyAgainPrice,
+                               CheckSettlePrice = d.CheckSettlePrice,
+                               CheckDate = d.CheckDate,
+                               CheckByEmpName = d.CheckByEmpName,
+                               CheckState = d.CheckState,
+                               Remark = d.Remark,
+                               CheckRemark = d.CheckRemark,
+                               LiveAnchorName = d.LiveAnchorName,
+                               OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
+                               ReconciliationDocumentsId = d.ReconciliationDocumentsId,
                            };
             FxPageInfo<CustomerHospitalConsumeVo> pageInfo = new FxPageInfo<CustomerHospitalConsumeVo>();
             pageInfo.TotalCount = q.TotalCount;

@@ -276,7 +276,7 @@ namespace Fx.Amiya.Service
                 }
 
                 //获取医院客户列表
-                var q = from d in dalSendOrderInfo.GetAll()
+                var q = from d in dalSendOrderInfo.GetAll().Include(x=>x.OrderInfo)
                         where (d.OrderId == addDto.OrderId)
                         select d;
                 var order = await q.FirstOrDefaultAsync();

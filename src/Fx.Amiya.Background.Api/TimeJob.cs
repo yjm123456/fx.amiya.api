@@ -62,7 +62,7 @@ namespace Fx.Amiya.Background.Api
         /// Begin:开始时间，Interval：隔多长时间执行一次（单位毫秒），SkipWhileExecuting：是否等待上个任务执行完再开始执行
         /// </summary>
         /// <returns></returns>
-        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 50, SkipWhileExecuting = true)]
+        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 5, SkipWhileExecuting = true)]
         public async Task Run()
         {
             try

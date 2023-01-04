@@ -60,8 +60,16 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<CustomerHospitalConsumeDto>> GetListAsync(int? hospitalId, int? channel, int? liveAnchorId, int? buyAgainType, int? employeeId, bool? isConfirmOrder, string keyword, int? consumeType, DateTime startDate,
-            DateTime endDate, int checkState, int? addedBy, int pageNum, int pageSize);
+        Task<FxPageInfo<CustomerHospitalConsumeDto>> GetListAsync(int? hospitalId, int? channel, int? liveAnchorId, int? buyAgainType, int? employeeId, bool? isConfirmOrder, string keyword, int? consumeType, DateTime startDate,DateTime endDate, int checkState, int? addedBy, int pageNum, int pageSize);
+
+        /// <summary>
+        /// 根据手机号获取客户消费追踪列表
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<CustomerHospitalConsumeDto>> GetListByPhoneAsync(string phone, int pageNum, int pageSize);
 
         #region 报表相关
         Task<List<CustomerHospitalConsumeDto>> GetCustomerHospitalConsuleReportAsync(int? channel, DateTime? checkDateStart, DateTime? checkDateEnd, int? hospitalId, string customerName, DateTime startDate, DateTime endDate, bool IsHidePhone, int? CheckState);

@@ -1092,6 +1092,7 @@ namespace Fx.Amiya.Service
                                 EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
                                 AppointmentDate = d.AppointmentDate,
                                 AppointmentHospitalId = d.AppointmentHospitalId,
+                                LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 IsOldCustomer = d.IsOldCustomer,
                                 AppointmentHospitalName = d.HospitalInfo.Name,
                                 IsToHospital = d.IsToHospital,
@@ -1638,7 +1639,8 @@ namespace Fx.Amiya.Service
                 if (order.ReturnBackPrice == null)
                 {
                     order.ReturnBackPrice = input.ReturnBackPrice;
-                }else
+                }
+                else
                 {
 
                     order.ReturnBackPrice += input.ReturnBackPrice;

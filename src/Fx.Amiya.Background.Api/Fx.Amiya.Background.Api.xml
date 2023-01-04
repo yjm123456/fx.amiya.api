@@ -2096,6 +2096,15 @@
             <param name="pageSize"></param>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.CustomerHospitalConsumeController.GetListByPhoneAsync(System.String,System.Int32,System.Int32)">
+            <summary>
+            根据客户手机号获取升单信息
+            </summary>
+            <param name="phone"></param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.CustomerIntegralOrderRefundController">
             <summary>
             小程序积分退款板块数据接口
