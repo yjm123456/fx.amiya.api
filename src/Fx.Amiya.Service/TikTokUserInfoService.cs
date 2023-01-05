@@ -56,12 +56,12 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<TikTokUserDto> DecryptUserInfoAsync(string userinfoid, string orderid)
+        public async Task<TikTokUserDto> DecryptUserInfoAsync(string userinfoid, string orderid, string belongLiveAnchorId)
         {
             var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
             var host = "https://openapi-fxg.jinritemai.com";
 
-            var tikTokAppInfo = await orderAppInfoService.GetTikTokAppInfo();
+            var tikTokAppInfo = await orderAppInfoService.GetTikTokAppInfo(belongLiveAnchorId);
 
             var tikTokUserInfo = dalTikTokUserInfo.GetAll().SingleOrDefault(e => e.Id == userinfoid);
             //调用解密接口对加密数据解密
@@ -98,7 +98,8 @@ namespace Fx.Amiya.Service
                     }
 
                 }
-                if (string.IsNullOrEmpty(tikTokUserDto.Phone)) {
+                if (string.IsNullOrEmpty(tikTokUserDto.Phone))
+                {
                     return null;
                 }
                 //解密后将解密信息更新到tiktokuserinfo表中
@@ -116,18 +117,18 @@ namespace Fx.Amiya.Service
                 if (customBaseInfo == null)
                 {
                     await dalCustomerBaseInfo.AddAsync(customerBaseInfo, true);
-                }              
+                }
             }
             return tikTokUserDto;
         }
 
 
-        public async Task<TikTokUserDto> DecryptUserInfoByOrderIdAsync(string orderid, string cipherName, string cipherPhone)
+        public async Task<TikTokUserDto> DecryptUserInfoByOrderIdAsync(string orderid, string cipherName, string cipherPhone, string belongLiveAnchorId)
         {
             var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
             var host = "https://openapi-fxg.jinritemai.com";
 
-            var tikTokAppInfo = await orderAppInfoService.GetTikTokAppInfo();
+            var tikTokAppInfo = await orderAppInfoService.GetTikTokAppInfo(belongLiveAnchorId);
             //调用解密接口对加密数据解密
             var decryptParam = new Dictionary<string, List<object>> {
                 {"cipher_infos",new List<object>{ new { auth_id=orderid, cipher_text=cipherName },new { auth_id = orderid, cipher_text =cipherPhone } } }
@@ -161,7 +162,8 @@ namespace Fx.Amiya.Service
                 }
                 tikTokUserDto.CipherName = cipherName;
                 tikTokUserDto.CipherPhone = cipherPhone;
-                if (string.IsNullOrEmpty(tikTokUserDto.Phone)) {
+                if (string.IsNullOrEmpty(tikTokUserDto.Phone))
+                {
                     return null;
                 }
                 return tikTokUserDto;

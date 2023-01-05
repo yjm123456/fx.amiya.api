@@ -79,5 +79,9 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// 创建时间
         /// </summary>
         public DateTime? CreateDate { get; set; }
+        /// <summary>
+        /// 归属主播ID
+        /// </summary>
+        public string BelongLiveAnchorId { get; set; }
     }
 }

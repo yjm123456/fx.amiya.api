@@ -139,6 +139,10 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerHospitalConsume
         /// </summary>
         public string Remark { get; set; }
         /// <summary>
+        /// 审核升单金额
+        /// </summary>
+        public decimal? CheckBuyAgainPrice { get; set; }
+        /// <summary>
         /// 审核结算金额
         /// </summary>
         public decimal? CheckSettlePrice { get; set; }

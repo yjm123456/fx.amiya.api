@@ -54,12 +54,12 @@ namespace Fx.Amiya.SyncOrder.TikTok
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        public async Task<List<TikTokOrder>> TranslateTradesSoldChangedOrders(DateTime startDate, DateTime endDate)
+        public async Task<List<TikTokOrder>> TranslateTradesSoldChangedOrders(DateTime startDate, DateTime endDate, string belongLiveAnchorId)
         {
             int pageNum = 0;
-            var tikTokAppInfo = await _tikTokAppInfoReader.GetTikTokAppInfo();      
+            var tikTokAppInfo = await _tikTokAppInfoReader.GetTikTokAppInfo(belongLiveAnchorId);
             List<TikTokOrder> amiyaOrderList = new List<TikTokOrder>();
-            amiyaOrderList = await RequestTikTokOrderAsync(startDate, endDate, tikTokAppInfo,  pageNum, amiyaOrderList);
+            amiyaOrderList = await RequestTikTokOrderAsync(startDate, endDate, tikTokAppInfo, pageNum, amiyaOrderList);
             return amiyaOrderList;
         }
 
@@ -73,15 +73,16 @@ namespace Fx.Amiya.SyncOrder.TikTok
         /// <param name="pageNum"></param>
         /// <param name="amiyaOrderList"></param>
         /// <returns></returns>
-        private async Task<List<TikTokOrder>> RequestTikTokOrderAsync(DateTime startDate, DateTime endDate, TikTokAppInfo tikTokAppInfo,  int pageNum, List<TikTokOrder> amiyaOrderList)
+        private async Task<List<TikTokOrder>> RequestTikTokOrderAsync(DateTime startDate, DateTime endDate, TikTokAppInfo tikTokAppInfo, int pageNum, List<TikTokOrder> amiyaOrderList)
         {
-            try {
+            try
+            {
                 int pageSize = 100;
                 var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
 
                 var host = "https://openapi-fxg.jinritemai.com";
                 var start = DateTimeOffset.Now.ToUnixTimeSeconds() - 2400;
-                var end = DateTimeOffset.Now.ToUnixTimeSeconds()-1200;
+                var end = DateTimeOffset.Now.ToUnixTimeSeconds() - 1200;
                 //请求参数
                 var param = new Dictionary<string, object> {
                 { "page",pageNum},
@@ -115,8 +116,8 @@ namespace Fx.Amiya.SyncOrder.TikTok
                             tikTokOrder.ThumbPicUrl = goodsItem.product_pic;
                             tikTokOrder.AppointmentHospital = "";
                             tikTokOrder.StatusCode = GetStatusCodeOfDouYin(goodsItem.order_status, goodsItem.after_sale_info);
-                            tikTokOrder.OrderType = goodsItem.order_type; 
-                            tikTokOrder.ActualPayment = goodsItem.pay_amount/100;
+                            tikTokOrder.OrderType = goodsItem.order_type;
+                            tikTokOrder.ActualPayment = goodsItem.pay_amount / 100;
                             tikTokOrder.CreateDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(goodsItem.create_time.ToString()) ? 0 : goodsItem.create_time).AddHours(8);
                             tikTokOrder.UpdateDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(goodsItem.update_time.ToString()) ? 0 : goodsItem.update_time).AddHours(8);
                             tikTokOrder.WriteOffDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(goodsItem.confirm_receipt_time.ToString()) ? 0 : goodsItem.confirm_receipt_time).AddHours(8);
@@ -125,15 +126,17 @@ namespace Fx.Amiya.SyncOrder.TikTok
                             {
                                 tikTokOrder.FinishDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(goodsItem.finish_time.ToString()) ? 0 : goodsItem.finish_time).AddHours(8);
                             }
-                            else {
+                            else
+                            {
                                 tikTokOrder.FinishDate = null;
                             }
                             tikTokOrder.AppType = (byte)AppType.Douyin;
+                            tikTokOrder.BelongLiveAnchorId = tikTokAppInfo.BelongLiveAnchorId;
                             tikTokOrder.IsAppointment = false;
- 
-                            currentChildList.Add(tikTokOrder);                            
+
+                            currentChildList.Add(tikTokOrder);
                         }
-                        currentChildList.ForEach(o=> { o.CipherPhone = orderItem.encrypt_post_tel;o.CipherName = orderItem.encrypt_post_receiver; });
+                        currentChildList.ForEach(o => { o.CipherPhone = orderItem.encrypt_post_tel; o.CipherName = orderItem.encrypt_post_receiver; });
                         amiyaOrderList.AddRange(currentChildList);
                     }
                 }
@@ -145,8 +148,10 @@ namespace Fx.Amiya.SyncOrder.TikTok
                     await RequestTikTokOrderAsync(startDate, endDate, tikTokAppInfo, pageNum + 1, amiyaOrderList);
                 }
                 return amiyaOrderList;
-                
-            } catch (Exception ex) {
+
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
         }
@@ -225,15 +230,18 @@ namespace Fx.Amiya.SyncOrder.TikTok
             string code = "";
             // refund_status 退款状态: 0 - 无需退款 1 - 待退款 2 - 退款中 3 - 退款成功 4 - 退款失败
             //售后状态只要不是初始化状态,就视订单为退款\售后状态
-            if (afterSaleInfo.after_sale_status>0) {
+            if (afterSaleInfo.after_sale_status > 0)
+            {
 
-                if (afterSaleInfo.refund_status>0) {
-                    switch (afterSaleInfo.refund_status) {
+                if (afterSaleInfo.refund_status > 0)
+                {
+                    switch (afterSaleInfo.refund_status)
+                    {
                         //待退款
                         case 1L:
                             code = "PENDING_REFUND";
                             break;
-                       //退款中
+                        //退款中
                         case 2L:
                             code = "REFUNDING";
                             break;
@@ -250,7 +258,7 @@ namespace Fx.Amiya.SyncOrder.TikTok
                             break;
                     }
                     return code;
-                  
+
                 }
             }
             switch (statusCode)
@@ -304,11 +312,11 @@ namespace Fx.Amiya.SyncOrder.TikTok
             return start.AddSeconds(timestamp);
         }
 
-        public async Task<List<TikTokOrder>> TranslateTradesSoldOrdersByOrderId(string orderId)
+        public async Task<List<TikTokOrder>> TranslateTradesSoldOrdersByOrderId(string orderId, string belongLiveAnchorId)
         {
             try
             {
-                var tikTokAppInfo =await _tikTokAppInfoReader.GetTikTokAppInfo();
+                var tikTokAppInfo = await _tikTokAppInfoReader.GetTikTokAppInfo(belongLiveAnchorId);
                 var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
                 var host = "https://openapi-fxg.jinritemai.com";
                 //请求参数
@@ -325,11 +333,13 @@ namespace Fx.Amiya.SyncOrder.TikTok
 
                 var order = JsonConvert.DeserializeObject<dynamic>(res); ;
 
-                if (order.err_no > 0) {
+                if (order.err_no > 0)
+                {
                     return null;
                 }
                 List<TikTokOrder> tiktokOrderInfoList = new List<TikTokOrder>();
-                foreach (var item in order.data.shop_order_detail.sku_order_list) {
+                foreach (var item in order.data.shop_order_detail.sku_order_list)
+                {
                     TikTokOrder tikTokOrder = new TikTokOrder();
                     tikTokOrder.Id = item.order_id;
                     tikTokOrder.GoodsId = item.product_id.ToString();
@@ -340,12 +350,13 @@ namespace Fx.Amiya.SyncOrder.TikTok
                     TikTokAfterSaleInfo tikTokAfterSaleInfo = new TikTokAfterSaleInfo();
                     tikTokAfterSaleInfo.after_sale_status = item.after_sale_info.after_sale_status;
                     tikTokAfterSaleInfo.after_sale_type = item.after_sale_info.after_sale_type;
-                    tikTokAfterSaleInfo.refund_status = item.after_sale_info.refund_status;                   
+                    tikTokAfterSaleInfo.refund_status = item.after_sale_info.refund_status;
                     tikTokOrder.OrderType = item.order_type;
                     long status = item.order_status;
                     tikTokOrder.StatusCode = GetStatusCodeOfDouYin(status, tikTokAfterSaleInfo);
                     tikTokOrder.ActualPayment = item.pay_amount / 100;
                     tikTokOrder.AccountReceivable = item.pay_amount / 100;
+                    tikTokOrder.BelongLiveAnchorId = belongLiveAnchorId;
                     long createTime = item.create_time;
                     long updateTime = item.update_time;
                     long finishTime = item.finish_time;
@@ -356,14 +367,15 @@ namespace Fx.Amiya.SyncOrder.TikTok
                     {
                         tikTokOrder.FinishDate = UnixTimestampToDateTime(DateTime.Now, string.IsNullOrEmpty(finishTime.ToString()) ? 0 : finishTime).AddHours(8);
                     }
-                    else { 
-                        tikTokOrder.FinishDate=null;
-                    }                   
+                    else
+                    {
+                        tikTokOrder.FinishDate = null;
+                    }
                     tikTokOrder.AppType = (byte)AppType.Douyin;
                     tikTokOrder.IsAppointment = false;
                     tikTokOrder.CipherName = item.encrypt_post_receiver;
                     tikTokOrder.CipherPhone = item.encrypt_post_tel;
-                    var userInfo =await  _tikTokUserInfoService.DecryptUserInfoByOrderIdAsync(tikTokOrder.Id,tikTokOrder.CipherName,tikTokOrder.CipherPhone);
+                    var userInfo = await _tikTokUserInfoService.DecryptUserInfoByOrderIdAsync(tikTokOrder.Id, tikTokOrder.CipherName, tikTokOrder.CipherPhone, belongLiveAnchorId);
                     //解密成功
                     if (userInfo != null)
                     {
@@ -372,7 +384,7 @@ namespace Fx.Amiya.SyncOrder.TikTok
                     }
                     tiktokOrderInfoList.Add(tikTokOrder);
                 }
-                return tiktokOrderInfoList;   
+                return tiktokOrderInfoList;
             }
             catch (Exception ex)
             {

@@ -92,10 +92,11 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// 创建时间
         /// </summary>
         public DateTime? CreateDate { get; set; }
+
         /// <summary>
-        /// 订单完成时间
+        /// 订单归属主播
         /// </summary>
-        //public DateTime? FinishDate { get; set; }
+        public string BelongLiveAnchorId { get; set; }
     }
 }
 

@@ -7,6 +7,7 @@ namespace Fx.Amiya.DbModels.Model
     public class OrderAppInfo
     {
         public int Id { get; set; }
+        public string ShopId { get; set; }
         public string AppKey { get; set; }
         public string AppSecret { get; set; }
         public string AccessToken { get; set; }
@@ -14,5 +15,8 @@ namespace Fx.Amiya.DbModels.Model
         public byte AppType { get; set; }
         public DateTime ExpireDate { get; set; }
         public string RefreshToken { get; set; }
+
+        public string BelongLiveAnchor { get; set; }
+
     }
 }

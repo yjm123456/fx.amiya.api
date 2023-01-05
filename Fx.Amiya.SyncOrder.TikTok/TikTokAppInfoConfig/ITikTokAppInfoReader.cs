@@ -8,6 +8,6 @@ namespace Fx.Amiya.SyncOrder.TikTok.TikTokAppInfoConfig
 {
     public interface ITikTokAppInfoReader
     {
-        Task<TikTokAppInfo> GetTikTokAppInfo();
+        Task<TikTokAppInfo> GetTikTokAppInfo(string belongLiveAnchor);
     }
 }

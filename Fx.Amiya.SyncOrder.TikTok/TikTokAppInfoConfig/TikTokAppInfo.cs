@@ -9,6 +9,7 @@ namespace Fx.Amiya.SyncOrder.TikTok.TikTokAppInfoConfig
     public class TikTokAppInfo
     {
         public int Id { get; set; }
+        public string ShopId { get; set; }
         public string AppKey { get; set; }
         public string AppSecret { get; set; }
         public string AccessToken { get; set; }
@@ -16,5 +17,6 @@ namespace Fx.Amiya.SyncOrder.TikTok.TikTokAppInfoConfig
         public byte AppType { get; set; }
         public DateTime ExpireDate { get; set; }
         public string RefreshToken { get; set; }
+        public string BelongLiveAnchorId { get; set; }
     }
 }

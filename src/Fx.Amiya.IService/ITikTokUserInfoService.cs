@@ -16,12 +16,12 @@ namespace Fx.Amiya.IService
         /// <param name="cipherphone"></param>
         /// <returns></returns>
         TikTokUserDto getTikTokUserInfoByCipherPhone(string cipherphone);
-        Task<TikTokUserDto> DecryptUserInfoAsync(string userinfoid, string userid);
+        Task<TikTokUserDto> DecryptUserInfoAsync(string userinfoid, string userid, string belongLiveAnchorId);
         /// <summary>
         /// 根据订单id解密用户信息
         /// </summary>
         /// <param name="orderid"></param>
         /// <returns></returns>
-        Task<TikTokUserDto> DecryptUserInfoByOrderIdAsync(string orderid,string ciperName,string cipherPhone);
+        Task<TikTokUserDto> DecryptUserInfoByOrderIdAsync(string orderid,string ciperName,string cipherPhone,string belongLiveAnchorId);
     }
 }

@@ -456,7 +456,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.CityId = updateVo.CityId;
                 updateDto.BusinessHours = updateVo.BusinessHours;
                 updateDto.BelongCompany = updateVo.BelongCompany;
-                updateDto.IsShareInMiniProgram = updateDto.IsShareInMiniProgram;
+                updateDto.IsShareInMiniProgram = updateVo.IsShareInMiniProgram;
                 await hospitalInfoService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }

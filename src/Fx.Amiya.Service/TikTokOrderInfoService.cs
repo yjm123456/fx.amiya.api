@@ -168,6 +168,7 @@ namespace Fx.Amiya.Service
                             orderInfo.AppointmentHospital = orderItem.AppointmentHospital;
                             orderInfo.ThumbPicUrl = orderItem.ThumbPicUrl;
                             orderInfo.FinishDate = orderItem.FinishDate;
+                            orderInfo.BelongLiveAnchorId = orderItem.BelongLiveAnchorId;
                             await dalTikTokOrderInfo.UpdateAsync(orderInfo, true);
                             //计算积分,如果订单信息包含手机号则计算积分,否则暂时不计算
                             if (orderInfo.StatusCode == "TRADE_FINISHED" && orderInfo.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(orderInfo.Phone))
@@ -255,6 +256,7 @@ namespace Fx.Amiya.Service
                         order.Quantity = orderItem.Quantity;
                         order.IntegrationQuantity = orderItem.IntegrationQuantity;
                         order.ExchangeType = orderItem.ExchangeType;
+                        order.BelongLiveAnchorId = orderItem.BelongLiveAnchorId;
                         order.WriteOffCode = "";
                         order.AlreadyWriteOffAmount = 0;
                         order.BelongEmpId = orderItem.BelongEmpId;
@@ -329,6 +331,7 @@ namespace Fx.Amiya.Service
                     order.IntegrationQuantity = item.IntegrationQuantity;
                     order.ExchangeType = item.ExchangeType;
                     order.WriteOffCode = "";
+                    order.BelongLiveAnchorId = item.BelongLiveAnchorId;
                     order.AlreadyWriteOffAmount = 0;
                     order.TikTokUserInfoId = item.TikTokUserId;
                     orderInfoList.Add(order);
@@ -359,6 +362,7 @@ namespace Fx.Amiya.Service
                     order.CheckState = (int)CheckType.NotChecked;
                     order.AppType = item.AppType;
                     order.IsAppointment = item.IsAppointment;
+                    order.BelongLiveAnchorId = item.BelongLiveAnchorId;
                     order.OrderType = item.OrderType;
                     order.OrderNature = item.OrderNature.HasValue ? item.OrderNature.Value : (byte)0;
                     order.Description = item.Description;

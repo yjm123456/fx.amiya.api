@@ -266,23 +266,23 @@ namespace Fx.Amiya.Service
                     }
                 }
                 #region 下单平台订单回款
-                ReturnBackOrderDto tmallOrderReturnBackOrderDto = new ReturnBackOrderDto();
-                tmallOrderReturnBackOrderDto.ReconciliationDocumentsIdList = reconciliationDocumentsReturnBackPriceDto.ReconciliationDocumentsIdList;
-                tmallOrderReturnBackOrderDto.ReturnBackDate = reconciliationDocumentsReturnBackPriceDto.ReturnBackDate;
-                await orderService.ReturnBackOrderByReconciliationDocumentsIdsAsync(tmallOrderReturnBackOrderDto);
+                //ReturnBackOrderDto tmallOrderReturnBackOrderDto = new ReturnBackOrderDto();
+                //tmallOrderReturnBackOrderDto.ReconciliationDocumentsIdList = reconciliationDocumentsReturnBackPriceDto.ReconciliationDocumentsIdList;
+                //tmallOrderReturnBackOrderDto.ReturnBackDate = reconciliationDocumentsReturnBackPriceDto.ReturnBackDate;
+                //await orderService.ReturnBackOrderByReconciliationDocumentsIdsAsync(tmallOrderReturnBackOrderDto);
                 #endregion
 
                 #region 内容平台订单回款
 
-                var orderInfo = await contentPlatFormOrderDealInfoService.SettleListAsync(reconciliationDocumentsReturnBackPriceDto);
-                foreach (var x in orderInfo)
-                {
-                    ReturnBackOrderDto returnBackOrderDto = new ReturnBackOrderDto();
-                    returnBackOrderDto.OrderId = x.OrderId;
-                    returnBackOrderDto.ReturnBackDate = reconciliationDocumentsReturnBackPriceDto.ReturnBackDate;
-                    returnBackOrderDto.ReturnBackPrice = x.ReturnBackPrice;
-                    await contentPlateFormOrderService.ReturnBackOrderOnlyAsync(returnBackOrderDto);
-                }
+                //var orderInfo = await contentPlatFormOrderDealInfoService.SettleListAsync(reconciliationDocumentsReturnBackPriceDto);
+                //foreach (var x in orderInfo)
+                //{
+                //    ReturnBackOrderDto returnBackOrderDto = new ReturnBackOrderDto();
+                //    returnBackOrderDto.OrderId = x.OrderId;
+                //    returnBackOrderDto.ReturnBackDate = reconciliationDocumentsReturnBackPriceDto.ReturnBackDate;
+                //    returnBackOrderDto.ReturnBackPrice = x.ReturnBackPrice;
+                //    await contentPlateFormOrderService.ReturnBackOrderOnlyAsync(returnBackOrderDto);
+                //}
                 #endregion
 
                 #region 升单回款

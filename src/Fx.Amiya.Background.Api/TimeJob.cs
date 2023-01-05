@@ -85,8 +85,11 @@ namespace Fx.Amiya.Background.Api
                 if (_fxAppGlobal.AppConfig.SyncOrderConfig.DouYin == true)
                 {
                     ////获取抖音发生改变的订单，开始时间和结束时间不能超过一天
-                    var douYinOrderResult = await _syncTikTokOrder.TranslateTradesSoldChangedOrders(date.AddMinutes(-15), date);
+                    var douYinOrderResult = await _syncTikTokOrder.TranslateTradesSoldChangedOrders(date.AddMinutes(-15), date, "af69dcf5-f749-41ea-8b50-fe685facdd8b");
                     tikTokOrderList.AddRange(douYinOrderResult);
+
+                    var douYinOrderResult2 = await _syncTikTokOrder.TranslateTradesSoldChangedOrders(date.AddMinutes(-15), date, "f0a77257-c905-4719-95c4-ad2c4f33855c");
+                    tikTokOrderList.AddRange(douYinOrderResult2);
                 }
                 List<OrderInfoAddDto> amiyaOrderList = new List<OrderInfoAddDto>();
                 List<TikTokOrderAddDto> tikTokOrderAddList = new List<TikTokOrderAddDto>();
@@ -178,6 +181,7 @@ namespace Fx.Amiya.Background.Api
                     tikTokOrder.UpdateDate = order.UpdateDate;
                     tikTokOrder.WriteOffDate = order.WriteOffDate;
                     tikTokOrder.FinishDate = order.FinishDate;
+                    tikTokOrder.BelongLiveAnchorId = order.BelongLiveAnchorId;
                     tikTokOrder.ThumbPicUrl = order.ThumbPicUrl;
                     tikTokOrder.AppType = order.AppType;
                     tikTokOrder.AccountReceivable = order.ActualPayment;

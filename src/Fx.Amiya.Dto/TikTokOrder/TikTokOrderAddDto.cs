@@ -79,5 +79,9 @@ namespace Fx.Amiya.Dto.TikTokOrder
         /// 订单完成时间
         /// </summary>
         public DateTime? FinishDate { get; set; }
+        /// <summary>
+        /// 归属主播ID
+        /// </summary>
+        public string BelongLiveAnchorId { get; set; }
     }
 }

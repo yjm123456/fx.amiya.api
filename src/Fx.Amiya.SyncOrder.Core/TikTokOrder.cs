@@ -53,5 +53,10 @@ namespace Fx.Amiya.SyncOrder.Core
         /// </summary>
         public DateTime? FinishDate { get; set; }
 
+        /// <summary>
+        /// 归属主播id
+        /// </summary>
+        public string BelongLiveAnchorId { get; set; }
+
     }
 }

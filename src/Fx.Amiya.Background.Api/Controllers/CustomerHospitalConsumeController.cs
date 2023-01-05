@@ -428,6 +428,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             customerManageUpdateConsume.LiveAnchorId = result.LiveAnchorId;
             customerManageUpdateConsume.CheckDate = result.CheckDate;
             customerManageUpdateConsume.CheckByEmpName = result.CheckByEmpName;
+            customerManageUpdateConsume.CheckBuyAgainPrice = result.CheckBuyAgainPrice;
             customerManageUpdateConsume.CheckState = result.CheckState;
             customerManageUpdateConsume.IsReturnBackPrice = result.IsReturnBackPrice;
             customerManageUpdateConsume.ReturnBackDate = result.ReturnBackDate;

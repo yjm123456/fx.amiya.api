@@ -1753,8 +1753,18 @@ ADD COLUMN `reconciliation_documents_id` VARCHAR(50) NULL AFTER `is_confirm_orde
 ALTER TABLE `amiyadb`.`tbl_hospital_info` 
 ADD COLUMN `is_share_in_miniprogram` BIT(1) NOT NULL AFTER `submit_state`;
 
+--订单拉配置更新
+ALTER TABLE `amiyadb`.`tbl_order_app_info` 
+ADD COLUMN `shop_id` VARCHAR(45) NULL AFTER `id`,
+ADD COLUMN `belong_liveanchor` VARCHAR(50)  NULL AFTER `refresh_token`;
 
------------------------------余建明 2023/01/04 BEGIN -----------------------------
+--抖店订单列表新增归属主播id
+ALTER TABLE `amiyadb`.`tbl_tiktok_order_info` 
+ADD COLUMN `belong_live_anchor_id` VARCHAR(50) NULL AFTER `finish_date`;
+
+
+
+-----------------------------余建明 2023/01/05 BEGIN -----------------------------
 
 
 

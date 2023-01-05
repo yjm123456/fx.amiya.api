@@ -1539,7 +1539,7 @@ namespace Fx.Amiya.Service
                 foreach (var x in order)
                 {
 
-                    if ( x.CheckState != (int)CheckType.CheckedSuccess)
+                    if ( x.CheckState == (int)CheckType.CheckedSuccess)
                     {
                         x.IsReturnBackPrice = true;
                         x.ReturnBackPrice = x.SettlePrice;

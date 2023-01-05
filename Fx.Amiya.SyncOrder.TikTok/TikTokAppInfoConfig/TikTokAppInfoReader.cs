@@ -20,11 +20,12 @@ namespace Fx.Amiya.SyncOrder.TikTok.TikTokAppInfoConfig
         }
 
 
-        public async Task<TikTokAppInfo> GetTikTokAppInfo()
+        public async Task<TikTokAppInfo> GetTikTokAppInfo(string belongLiveAnchor)
         {
-            var tikTokAppInfoDto = await orderAppInfoService.GetTikTokAppInfo();
+            var tikTokAppInfoDto = await orderAppInfoService.GetTikTokAppInfo(belongLiveAnchor);
             TikTokAppInfo tikTokAppInfo = new TikTokAppInfo();
             tikTokAppInfo.Id = tikTokAppInfoDto.Id;
+            tikTokAppInfo.ShopId = tikTokAppInfo.ShopId;
             tikTokAppInfo.AppKey = tikTokAppInfoDto.AppKey;
             tikTokAppInfo.AppSecret = tikTokAppInfoDto.AppSecret;
             tikTokAppInfo.AccessToken = tikTokAppInfoDto.AccessToken;
@@ -32,6 +33,7 @@ namespace Fx.Amiya.SyncOrder.TikTok.TikTokAppInfoConfig
             tikTokAppInfo.AppType = tikTokAppInfoDto.AppType;
             tikTokAppInfo.ExpireDate = tikTokAppInfoDto.ExpireDate;
             tikTokAppInfo.RefreshToken = tikTokAppInfoDto.RefreshToken;
+            tikTokAppInfo.BelongLiveAnchorId = tikTokAppInfoDto.BelongLiveAnchorId;
             return tikTokAppInfo;
         }
     }

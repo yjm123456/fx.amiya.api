@@ -134,8 +134,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 LiveAnchor = d.LiveAnchorName,
                                 LiveAnchorPlatForm = d.LiveAnchorPlatForm,
                                 UpdateDate = d.UpdateDate,
-                                FinishDate=d.FinishDate
-                                
+                                FinishDate = d.FinishDate
+
                             };
                 FxPageInfo<TikTokOrderInfoVo> orderPageInfo = new FxPageInfo<TikTokOrderInfoVo>();
                 orderPageInfo.TotalCount = q.TotalCount;
@@ -151,9 +151,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 用户信息解密
         /// </summary>
         /// <param name="orderid">订单id</param>
+        /// <param name="belongLiveAnchorId">归属主播id</param>
         /// <returns></returns>
         [HttpGet("decryptUserInfo")]
-        public async Task<ResultData> DecryptUserInfo(string orderid)
+        public async Task<ResultData> DecryptUserInfo(string orderid, string belongLiveAnchorId)
         {
             var info = dalTikTokOrderInfo.GetAll().Where(e => e.Id == orderid).Include(e => e.TikTokUserInfo).SingleOrDefault();
             if (!string.IsNullOrEmpty(info.Phone))
@@ -164,7 +165,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 return ResultData.Fail("订单已无法解密");
             }
-            var decryptRes = await tikTokUserInfo.DecryptUserInfoAsync(info.TikTokUserInfo.Id, orderid);
+            var decryptRes = await tikTokUserInfo.DecryptUserInfoAsync(info.TikTokUserInfo.Id, orderid, belongLiveAnchorId);
             if (decryptRes == null)
             {
                 return ResultData.Fail("订单可解密时间已过,无法解密");
@@ -204,6 +205,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.ThumbPicUrl = addVo.ThumbPicUrl;
             addDto.BuyerNick = addVo.NickName;
             addDto.AppType = (byte)AppType.Douyin;
+            addDto.BelongLiveAnchorId = addVo.BelongLiveAnchorId;
             addDto.IsAppointment = addVo.IsAppointment;
             addDto.OrderType = (addVo.OrderType.HasValue) ? addVo.OrderType.Value : 2;
             addDto.Quantity = (addVo.Quantity.HasValue) ? addVo.Quantity : 0;
@@ -229,7 +231,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<TikTokInfoVo>> RepairOrder(TikTokRepairOrderVo input)
         {
             TikTokInfoVo result = new TikTokInfoVo();
-            var amiyaOrder = await syncTikTokOrder.TranslateTradesSoldOrdersByOrderId(input.OrderId);
+            var amiyaOrder = await syncTikTokOrder.TranslateTradesSoldOrdersByOrderId(input.OrderId, input.belongLiveAnchorId);
             var FirstOrder = amiyaOrder.FirstOrDefault();
             if (FirstOrder == null)
             {
@@ -302,6 +304,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.IntegrationQuantity = 0;
                 addDto.ExchangeType = addVo.ExchangeType;
                 addDto.CipherName = addVo.CipherName;
+                addDto.BelongLiveAnchorId = addVo.BelongLiveAnchorId;
                 addDto.CipherPhone = addVo.CipherPhone;
                 //addDto.FinishDate = addVo.FinishDate;
                 amiyaOrderList.Add(addDto);
@@ -340,6 +343,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.ThumbPicUrl = addVo.ThumbPicUrl;
                 addDto.BuyerNick = addVo.NickName;
                 addDto.AppType = (byte)AppType.Douyin;
+                addDto.BelongLiveAnchorId = addVo.BelongLiveAnchorId;
                 addDto.BuyerNick = addVo.NickName;
                 addDto.IsAppointment = addVo.IsAppointment;
                 addDto.BelongEmpId = employeeId;
@@ -1207,6 +1211,6 @@ namespace Fx.Amiya.Background.Api.Controllers
 
     }
 
-    }
+}
 
 

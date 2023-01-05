@@ -341,10 +341,10 @@ namespace Fx.Amiya.Service
                 foreach (var x in order)
                 {
 
-                    if (x.IsConfirmOrder == true && x.CheckState != (int)CheckType.CheckedSuccess)
+                    if (x.IsConfirmOrder == true && x.CheckState == (int)CheckType.CheckedSuccess)
                     {
                         x.IsReturnBackPrice = true;
-                        x.ReturnBackPrice = x.ReturnBackPrice;
+                        x.ReturnBackPrice = x.CheckSettlePrice;
                         x.ReturnBackDate = input.ReturnBackDate;
                         await dalCustomerHospitalConsume.UpdateAsync(x, true);
                     }
@@ -391,6 +391,7 @@ namespace Fx.Amiya.Service
             result.OrderId = selectResult.OrderId;
             result.IsReturnBackPrice = selectResult.IsReturnBackPrice;
             result.ReturnBackDate = selectResult.ReturnBackDate;
+            result.CheckBuyAgainPrice = selectResult.CheckBuyAgainPrice;
             result.CreateDate = selectResult.CreateDate;
             result.ReturnBackPrice = selectResult.ReturnBackPrice;
             result.WriteOffDate = selectResult.WriteOffDate;

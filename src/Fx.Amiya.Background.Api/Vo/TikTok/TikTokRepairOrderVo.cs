@@ -11,5 +11,9 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// 订单id
         /// </summary>
         public string OrderId { get; set; }
+        /// <summary>
+        /// 归属主播账号
+        /// </summary>
+        public string belongLiveAnchorId { get; set; }
     }
 }
