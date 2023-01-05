@@ -53,18 +53,20 @@ namespace Fx.Amiya.Service
         private IGoodsInfo _goodsInfoService;
         private IDalContentPlatformOrder _dalContentPlatFormOrder;
         private IHospitalInfoService _hospitalInfoService;
+        private readonly ILiveAnchorBaseInfoService liveAnchorBaseInfoService;
         private IDalSendGoodsRecord dalSendGoodsRecord;
         private IOrderWriteOffInfoService _orderWriteOffInfoService;
         private IExpressManageService _expressManageService;
         private ITikTokUserInfoService tikTokUserInfoService;
         private IBindCustomerServiceService _bindCustomerService;
 
-        public TikTokOrderInfoService(IDalTikTokOrderInfo dalTikTokOrderInfo, IFxSmsBasedTemplateSender smsSender, IDalBindCustomerService dalBindCustomerService, ISendOrderInfoService sendOrderInfoService, IDalAmiyaEmployee dalAmiyaEmployee, IDalOrderInfo dalOrderInfo, IWxAppConfigService wxAppConfigService, ILiveAnchorService liveAnchorService, IContentPlatformService contentPlatFormService, IUnitOfWork unitOfWork, IDalOrderTrade dalOrderTrade, IAmiyaGoodsDemandService amiyaGoodsDemandService, ICustomerService customerService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, IIntegrationAccount integrationAccountService, IBindCustomerServiceService bindCustomerServiceService, IOrderCheckPictureService orderCheckPictureService, IDalCustomerInfo dalCustomerInfo, IDalReceiveGift dalReceiveGift, IGoodsInfo goodsInfoService, IDalContentPlatformOrder dalContentPlatFormOrder, IHospitalInfoService hospitalInfoService, IDalSendGoodsRecord dalSendGoodsRecord, IOrderWriteOffInfoService orderWriteOffInfoService, IExpressManageService expressManageService, ITikTokUserInfoService tikTokUserInfoService, IBindCustomerServiceService bindCustomerService)
+        public TikTokOrderInfoService(IDalTikTokOrderInfo dalTikTokOrderInfo, IFxSmsBasedTemplateSender smsSender, IDalBindCustomerService dalBindCustomerService, ISendOrderInfoService sendOrderInfoService, IDalAmiyaEmployee dalAmiyaEmployee, IDalOrderInfo dalOrderInfo, IWxAppConfigService wxAppConfigService, ILiveAnchorService liveAnchorService, IContentPlatformService contentPlatFormService, IUnitOfWork unitOfWork, IDalOrderTrade dalOrderTrade, IAmiyaGoodsDemandService amiyaGoodsDemandService, ICustomerService customerService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, IIntegrationAccount integrationAccountService, IBindCustomerServiceService bindCustomerServiceService, IOrderCheckPictureService orderCheckPictureService, IDalCustomerInfo dalCustomerInfo, IDalReceiveGift dalReceiveGift, IGoodsInfo goodsInfoService, IDalContentPlatformOrder dalContentPlatFormOrder, IHospitalInfoService hospitalInfoService, IDalSendGoodsRecord dalSendGoodsRecord, IOrderWriteOffInfoService orderWriteOffInfoService, IExpressManageService expressManageService, ITikTokUserInfoService tikTokUserInfoService, ILiveAnchorBaseInfoService liveAnchorBaseInfoService, IBindCustomerServiceService bindCustomerService)
         {
             this.dalTikTokOrderInfo = dalTikTokOrderInfo;
             _smsSender = smsSender;
             this.dalBindCustomerService = dalBindCustomerService;
             _sendOrderInfoService = sendOrderInfoService;
+            this.liveAnchorBaseInfoService = liveAnchorBaseInfoService;
             this.dalAmiyaEmployee = dalAmiyaEmployee;
             _wxAppConfigService = wxAppConfigService;
             this.liveAnchorService = liveAnchorService;
@@ -448,13 +450,14 @@ namespace Fx.Amiya.Service
             return orderInfo;
         }
 
-        public async Task<FxPageInfo<TikTokOrderDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, string keyword, int pageNum, int pageSize)
+        public async Task<FxPageInfo<TikTokOrderDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, string keyword, string belongLiveAnchorId, int pageNum, int pageSize)
         {
             try
             {
                 var orders = from d in dalTikTokOrderInfo.GetAll()
                              where (string.IsNullOrWhiteSpace(keyword) || d.Id.Contains(keyword) || d.GoodsName.Contains(keyword)
                              || d.Phone == keyword || d.AppointmentHospital.Contains(keyword))
+                             && (string.IsNullOrWhiteSpace(belongLiveAnchorId) || d.BelongLiveAnchorId == belongLiveAnchorId)
                              select d;
 
                 if (startDate != null && endDate != null)
@@ -484,6 +487,7 @@ namespace Fx.Amiya.Service
                                 UpdateDate = d.UpdateDate,
                                 FinishDate = d.FinishDate,
                                 AppType = d.AppType,
+                                BelongLiveAnchorId = d.BelongLiveAnchorId,
                                 AppTypeText = ServiceClass.GetAppTypeText(d.AppType),
                                 OrderType = d.OrderType,
                                 Description = d.Description,
@@ -500,21 +504,28 @@ namespace Fx.Amiya.Service
                 orderPageInfo.List = await order.OrderByDescending(e => e.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
                 foreach (var x in orderPageInfo.List)
                 {
-                    if (x.LiveAnchorId != 0)
+                    //if (x.LiveAnchorId != 0)
+                    //{
+                    //    var liveanchor = await liveAnchorService.GetByIdAsync(x.LiveAnchorId);
+                    //    x.LiveAnchorName = liveanchor.Name;
+                    //    if (!string.IsNullOrEmpty(liveanchor.ContentPlateFormId))
+                    //    {
+                    //        x.ContentPlatFormId = liveanchor.ContentPlateFormId;
+                    //        var contentplatFormInfo = await contentPlatFormService.GetByIdAsync(liveanchor.ContentPlateFormId);
+                    //        x.LiveAnchorPlatForm = contentplatFormInfo.ContentPlatformName;
+                    //    }
+                    //}
+
+                    //if (x.BelongEmpId != 0)
+                    //{
+                    //    var customerService = await dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.BelongEmpId);
+                    //    x.BelongEmpName = customerService.Name;
+                    //}
+
+                    if (!string.IsNullOrEmpty(x.BelongLiveAnchorId))
                     {
-                        var liveanchor = await liveAnchorService.GetByIdAsync(x.LiveAnchorId);
-                        x.LiveAnchorName = liveanchor.Name;
-                        if (!string.IsNullOrEmpty(liveanchor.ContentPlateFormId))
-                        {
-                            x.ContentPlatFormId = liveanchor.ContentPlateFormId;
-                            var contentplatFormInfo = await contentPlatFormService.GetByIdAsync(liveanchor.ContentPlateFormId);
-                            x.LiveAnchorPlatForm = contentplatFormInfo.ContentPlatformName;
-                        }
-                    }
-                    if (x.BelongEmpId != 0)
-                    {
-                        var customerService = await dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.BelongEmpId);
-                        x.BelongEmpName = customerService.Name;
+                        var liveAnchorInfoService = await liveAnchorBaseInfoService.GetByIdAsync(x.BelongLiveAnchorId);
+                        x.BelongLiveAnchorName = liveAnchorInfoService.LiveAnchorName;
                     }
                 }
                 return orderPageInfo;
@@ -578,7 +589,7 @@ namespace Fx.Amiya.Service
                     var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(tikTokOrder.Phone);
                     if (findInfo != 0)
                     {
-                        await _bindCustomerService.UpdateConsumePriceAsync(tikTokOrder.Phone,0, (int)OrderFrom.ThirdPartyOrder,0);
+                        await _bindCustomerService.UpdateConsumePriceAsync(tikTokOrder.Phone, 0, (int)OrderFrom.ThirdPartyOrder, 0);
                     }
                 }
             }

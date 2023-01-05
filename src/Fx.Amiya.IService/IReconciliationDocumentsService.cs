@@ -23,8 +23,24 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<ReconciliationDocumentsDto>> GetListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int hospitalId, int pageNum, int pageSize);
+        Task<FxPageInfo<ReconciliationDocumentsDto>> GetListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId, int pageNum, int pageSize);
 
+        /// <summary>
+        /// 导出数据
+        /// </summary>
+        /// <param name="returnBackPricePercent"></param>
+        /// <param name="reconciliationState"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="startDealDate"></param>
+        /// <param name="endDealDate"></param>
+        /// <param name="keyword"></param>
+        /// <param name="hospitalId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+
+        Task<List<ReconciliationDocumentsDto>> ExportListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId);
         /// <summary>
         /// 根据活动编号获取医院参与的项目
         /// </summary>

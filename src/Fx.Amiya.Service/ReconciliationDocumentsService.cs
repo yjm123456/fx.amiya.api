@@ -44,7 +44,7 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<ReconciliationDocumentsDto>> GetListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword,int hospitalId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ReconciliationDocumentsDto>> GetListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId, int pageNum, int pageSize)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace Fx.Amiya.Service
                                              && (!startDealDate.HasValue && !endDealDate.HasValue || d.DealDate >= startDealrq && d.DealDate <= endDealrq)
                                              && (!returnBackPricePercent.HasValue || d.ReturnBackPricePercent == returnBackPricePercent.Value)
                                              && (!reconciliationState.HasValue || d.ReconciliationState == reconciliationState.Value)
-                                             && (d.HospitalId == hospitalId)
+                                             && (!hospitalId.HasValue || d.HospitalId == hospitalId)
                                              && (!startDate.HasValue && !endDate.HasValue || d.CreateDate >= startrq.Date && d.CreateDate < endrq.Date)
                                              && d.Valid
                                               select new ReconciliationDocumentsDto
@@ -107,6 +107,68 @@ namespace Fx.Amiya.Service
             }
         }
 
+
+        public async Task<List<ReconciliationDocumentsDto>> ExportListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId)
+        {
+            try
+            {
+                DateTime startrq = new DateTime();
+                DateTime endrq = new DateTime();
+                DateTime startDealrq = new DateTime();
+                DateTime endDealrq = new DateTime();
+                if (startDate != null && endDate != null)
+                {
+                    startrq = ((DateTime)startDate);
+                    endrq = ((DateTime)endDate).AddDays(1);
+
+                }
+                if (startDealDate != null && endDealDate != null)
+                {
+                    startDealrq = ((DateTime)startDealDate);
+                    endDealrq = ((DateTime)endDealDate).AddDays(1);
+                }
+                var reconciliationDocuments = from d in dalReconciliationDocuments.GetAll().Include(x => x.HospitalEmployee).Include(x => x.HospitalInfo)
+                                              where (string.IsNullOrWhiteSpace(keyword) || d.CustomerName.Contains(keyword) || d.CustomerPhone.Contains(keyword))
+                                             && (!startDealDate.HasValue && !endDealDate.HasValue || d.DealDate >= startDealrq && d.DealDate <= endDealrq)
+                                             && (!returnBackPricePercent.HasValue || d.ReturnBackPricePercent == returnBackPricePercent.Value)
+                                             && (!reconciliationState.HasValue || d.ReconciliationState == reconciliationState.Value)
+                                             && (!hospitalId.HasValue || d.HospitalId == hospitalId)
+                                             && (!startDate.HasValue && !endDate.HasValue || d.CreateDate >= startrq.Date && d.CreateDate < endrq.Date)
+                                             && d.Valid
+                                              select new ReconciliationDocumentsDto
+                                              {
+                                                  Id = d.Id,
+                                                  HospitalId = d.HospitalId,
+                                                  HospitalName = d.HospitalInfo.Name,
+                                                  CustomerName = d.CustomerName,
+                                                  CustomerPhone = d.CustomerPhone,
+                                                  DealGoods = d.DealGoods,
+                                                  DealDate = d.DealDate,
+                                                  TotalDealPrice = d.TotalDealPrice,
+                                                  ReturnBackPricePercent = d.ReturnBackPricePercent,
+                                                  SystemUpdatePricePercent = d.SystemUpdatePricePercent,
+                                                  QuestionReason = d.QuestionReason,
+                                                  Remark = d.Remark,
+                                                  ReconciliationState = d.ReconciliationState,
+                                                  ReconciliationStateText = ServiceClass.ReconciliationDocumentsStateText(d.ReconciliationState),
+                                                  CreateBy = d.CreateBy,
+                                                  CreateByName = d.HospitalEmployee.Name,
+                                                  CreateDate = d.CreateDate,
+                                                  UpdateDate = d.UpdateDate,
+                                                  DeleteDate = d.DeleteDate,
+                                                  Valid = d.Valid,
+                                              };
+
+                List<ReconciliationDocumentsDto> reconciliationDocumentsPageInfo = new List<ReconciliationDocumentsDto>();
+                reconciliationDocumentsPageInfo = await reconciliationDocuments.OrderByDescending(x => x.DealDate).ToListAsync();
+
+                return reconciliationDocumentsPageInfo;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public async Task AddAsync(List<AddReconciliationDocumentsDto> addDtoList)
         {

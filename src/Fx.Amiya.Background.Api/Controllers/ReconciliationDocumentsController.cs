@@ -54,13 +54,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="startDealDate">成交时间（开始）</param>
         /// <param name="endDealDate">成交时间（结束）</param>
         /// <param name="keyword">关键词（客户姓名，手机号）</param>
-        /// <param name="hospitalId">医院id</param>
+        /// <param name="hospitalId">医院id（空值查询所有医院）</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<FxPageInfo<ReconciliationDocumentsVo>>> GetListAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int hospitalId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ReconciliationDocumentsVo>>> GetListAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId, int pageNum, int pageSize)
         {
             try
             {
@@ -105,6 +105,69 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 return ResultData<FxPageInfo<ReconciliationDocumentsVo>>.Fail(ex.Message);
             }
+        }
+
+        /// <summary>
+        /// 财务对账单模板导出（管理端）
+        /// </summary>
+        /// <param name="returnBackPricePercent">返款比例</param>
+        /// <param name="reconciliationState">对账单状态（0：已提交，1:待确认,2:问题账单,3:对账完成，4：回款完成）</param>
+        /// <param name="startDate">创建时间（开始）</param>
+        /// <param name="endDate">创建时间（结束）</param>
+        /// <param name="startDealDate">成交时间（开始）</param>
+        /// <param name="endDealDate">成交时间（结束）</param>
+        /// <param name="keyword">关键词（客户姓名，手机号）</param>
+        /// <param name="hospitalId">医院id（空值查询所有医院）</param>
+        /// <returns></returns>
+        [HttpGet("internalExportReconciliationDocuments")]
+        [FxInternalAuthorize]
+        public async Task<FileStreamResult> InternalxportReconciliationDocuments(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId)
+        {
+            if (!startDate.HasValue && !endDate.HasValue)
+            { throw new Exception("请选择时间进行查询"); }
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                if ((endDate.Value - startDate.Value).TotalDays > 31)
+                {
+                    throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
+                }
+            }
+            var res = new List<ReconciliationDocumentsVo>();
+            var q = await reconciliationDocumentsService.ExportListWithPageAsync(returnBackPricePercent, reconciliationState, startDate, endDate, startDealDate, endDealDate, keyword, hospitalId);
+
+            var reconciliationDocuments = from d in q
+                                          select new ReconciliationDocumentsVo
+                                          {
+                                              Id = d.Id,
+                                              HospitalId = d.HospitalId,
+                                              HospitalName = d.HospitalName,
+                                              CustomerName = d.CustomerName,
+                                              CustomerPhone = d.CustomerPhone,
+                                              DealGoods = d.DealGoods,
+                                              DealDate = d.DealDate,
+                                              TotalDealPrice = d.TotalDealPrice,
+                                              ReturnBackPricePercent = d.ReturnBackPricePercent,
+                                              SystemUpdatePricePercent = d.SystemUpdatePricePercent,
+                                              QuestionReason = d.QuestionReason,
+                                              Remark = d.Remark,
+                                              ReconciliationState = d.ReconciliationState,
+                                              ReconciliationStateText = d.ReconciliationStateText,
+                                              CreateBy = d.CreateBy,
+                                              CreateByName = d.CreateByName,
+                                              CreateDate = d.CreateDate,
+                                              UpdateDate = d.UpdateDate,
+                                              DeleteDate = d.DeleteDate,
+                                              Valid = d.Valid,
+                                              ReturnBackPrice = d.TotalDealPrice * d.ReturnBackPricePercent / 100,
+                                              SystemUpdatePrice = d.TotalDealPrice * d.SystemUpdatePricePercent / 100,
+                                              ReturnBackTotalPrice = (d.SystemUpdatePricePercent + d.ReturnBackPricePercent) * d.TotalDealPrice / 100
+                                          };
+
+            res = reconciliationDocuments.ToList();
+            var stream = ExportExcelHelper.ExportExcel(res);
+            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "财务对账单.xls");
+            //application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+            return result;
         }
 
         /// <summary>

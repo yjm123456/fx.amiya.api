@@ -95,17 +95,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="startDate">创建开始时间</param>
         /// <param name="endDate">创建结束时间</param>
         /// <param name="keyword"></param>
+        /// <param name="belongLiveAnchorId">归属基础主播id</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("tikTokOrderLlistWithPage")]
-        public async Task<ResultData<FxPageInfo<TikTokOrderInfoVo>>> GetTikTokOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, string keyword, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<TikTokOrderInfoVo>>> GetTikTokOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, string keyword, string belongLiveAnchorId, int pageNum, int pageSize)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await tikTokOrderInfoService.GetOrderListWithPageAsync(startDate, endDate, keyword, pageNum, pageSize);
+                var q = await tikTokOrderInfoService.GetOrderListWithPageAsync(startDate, endDate, keyword,belongLiveAnchorId, pageNum, pageSize);
                 var order = from d in q.List
                             select new TikTokOrderInfoVo
                             {
@@ -134,8 +135,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 LiveAnchor = d.LiveAnchorName,
                                 LiveAnchorPlatForm = d.LiveAnchorPlatForm,
                                 UpdateDate = d.UpdateDate,
-                                FinishDate = d.FinishDate
-
+                                FinishDate = d.FinishDate,
+                                BelongLiveAnchorName=d.BelongLiveAnchorName
                             };
                 FxPageInfo<TikTokOrderInfoVo> orderPageInfo = new FxPageInfo<TikTokOrderInfoVo>();
                 orderPageInfo.TotalCount = q.TotalCount;

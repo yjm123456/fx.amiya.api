@@ -127,6 +127,10 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// 订单完成时间
         /// </summary>
         public DateTime? FinishDate { get; set; }
+        /// <summary>
+        /// 归属主播
+        /// </summary>
+        public string BelongLiveAnchorName { get; set; }
 
         #region  财务审核板块
         /// <summary>
