@@ -67,15 +67,16 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("infoList")]
-        public async Task<ResultData<FxPageInfo<GiftInfoSimpleVo>>> GetSimpleListOfWxAsync(string name, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<GiftInfoSimpleVo>>> GetSimpleListOfWxAsync(string name, int pageNum, int pageSize,string categoryId)
         {
-            var q = await giftService.GetSimpleListOfWxAsync(name, pageNum, pageSize);
+            var q = await giftService.GetSimpleListOfWxAsync(name, pageNum, pageSize,categoryId);
             var gift = from d in q.List
                        select new GiftInfoSimpleVo
                        {
                            Id = d.Id,
                            ThumbPicUrl = d.ThumbPicUrl,
-                           Name = d.Name
+                           Name = d.Name,
+                           CategoryId=d.CategoryId
                        };
             FxPageInfo<GiftInfoSimpleVo> giftPageInfo = new FxPageInfo<GiftInfoSimpleVo>();
             giftPageInfo.TotalCount = q.TotalCount;
@@ -110,14 +111,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         [FxAmiyaApiUserTypeAuthorization(UserType.Customer)]
         public async Task<ResultData> AddReceiveGiftAsync(AddReceiveGiftVo addVo)
         {
-
             var token = tokenReader.GetToken();
             var sesssionInfo = sessionStorage.GetSession(token);
             string customerId = sesssionInfo.FxCustomerId;
             AddReceiveGiftDto addDto = new AddReceiveGiftDto();
             addDto.OrderId = addVo.OrderId;
             addDto.GiftId = addVo.GiftId;
-            addDto.AddressId = addVo.AddressId;
+            addDto.AddressId = addVo.AddressId;            
             await giftService.AddReceiveGiftAsync(addDto, customerId);
             return ResultData.Success();
         }

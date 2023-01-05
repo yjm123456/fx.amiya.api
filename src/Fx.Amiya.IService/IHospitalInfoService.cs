@@ -38,6 +38,11 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<HospitalNameDto>> GetHospitalNameListAsync(bool? valid,string name);
+        /// <summary>
+        /// 小程序获取医院名称列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<HospitalNameDto>> GetWxHospitalNameListAsync(bool? valid, string name,bool? isShowInMiniProgram);
 
         /// <summary>
         /// 审核医院资料

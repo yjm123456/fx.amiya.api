@@ -1640,6 +1640,7 @@ namespace Fx.Amiya.Service
                         && d.StatusCode == OrderStatusCode.TRADE_FINISHED
                         && d.ReceiveGift.OrderId != d.Id
                         && d.ActualPayment > 1
+                        && d.AppType!=(byte)AppType.MiniProgram
                         select new OrderInfoSimpleDto
                         {
                             Id = d.Id,

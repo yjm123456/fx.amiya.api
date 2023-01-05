@@ -181,17 +181,18 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<GiftInfoSimpleDto>> GetSimpleListOfWxAsync(string name, int pageNum, int pageSize)
+        public async Task<FxPageInfo<GiftInfoSimpleDto>> GetSimpleListOfWxAsync(string name, int pageNum, int pageSize, string categoryId)
         {
             var gift = from d in dalGiftInfo.GetAll()
-                       where (string.IsNullOrWhiteSpace(name) || d.Name.Contains(name))
+                       where (string.IsNullOrWhiteSpace(name) || d.Name.Contains(name))&&(string.IsNullOrEmpty(categoryId) ||d.CategoryId==categoryId)
                        && d.Valid
                        && d.Quantity > 0
                        select new GiftInfoSimpleDto
                        {
                            Id = d.Id,
                            Name = d.Name,
-                           ThumbPicUrl = d.ThumbPicUrl
+                           ThumbPicUrl = d.ThumbPicUrl,
+                           CategoryId=d.CategoryId
                        };
 
             FxPageInfo<GiftInfoSimpleDto> giftPageInfo = new FxPageInfo<GiftInfoSimpleDto>();

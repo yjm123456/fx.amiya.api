@@ -926,6 +926,25 @@ namespace Fx.Amiya.Service
             return await hospital.ToListAsync();
         }
 
+        public async Task<List<HospitalNameDto>> GetWxHospitalNameListAsync(bool? valid, string name, bool? isShowInMiniProgram)
+        {
+            try
+            {
+                var hospital = from d in dalHospitalInfo.GetAll()
+                               where (valid == null || d.Valid == valid) &&(isShowInMiniProgram==null || d.IsShareInMiniProgram==isShowInMiniProgram)
+                               && (string.IsNullOrWhiteSpace(name) || d.Name.Contains(name))
+                               select new HospitalNameDto
+                               {
+                                   Id = d.Id,
+                                   Name = d.Name
+                               };
 
+                return await hospital.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

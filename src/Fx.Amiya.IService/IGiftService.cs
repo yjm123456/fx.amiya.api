@@ -108,7 +108,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<GiftInfoSimpleDto>> GetSimpleListOfWxAsync(string name, int pageNum, int pageSize);
+        Task<FxPageInfo<GiftInfoSimpleDto>> GetSimpleListOfWxAsync(string name, int pageNum, int pageSize,string categoryId);
 
         /// <summary>
         /// 获取可领取礼品数量

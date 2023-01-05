@@ -18,5 +18,6 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Gift
 
      
         public int Quantity { get; set; }
+        public string CategoryId { get; set; }
     }
 }

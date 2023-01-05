@@ -273,7 +273,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         {
             try
             {
-                var hospital = from d in await hospitalInfoService.GetHospitalNameListAsync(true, name)
+                var hospital = from d in await hospitalInfoService.GetWxHospitalNameListAsync(true, name,true)
                                select new HospitalNameVo
                                {
                                    Id = d.Id,
