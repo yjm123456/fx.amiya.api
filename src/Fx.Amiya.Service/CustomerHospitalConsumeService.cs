@@ -15,6 +15,7 @@ using Fx.Amiya.Dto.OrderCheckPicture;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.Dto.OrderReport;
 using jos_sdk_net.Util;
+using Fx.Amiya.Dto.ReconciliationDocuments;
 
 namespace Fx.Amiya.Service
 {
@@ -89,7 +90,7 @@ namespace Fx.Amiya.Service
                 await dalCustomerHospitalConsume.AddAsync(customerHospitalConsume, true);
                 var bind = await _dalBindCustomerService.GetAll()
                   .Include(e => e.CustomerServiceAmiyaEmployee)
-                  .FirstOrDefaultAsync(e => e.BuyerPhone == addDto.Phone);
+                  .FirstOrDefaultAsync(e => e.BuyerPhone == phone);
                 bind.NewConsumptionDate = DateTime.Now;
                 bind.NewConsumptionContentPlatform = (int)OrderFrom.BuyAgainOrder;
                 bind.NewContentPlatForm = ServiceClass.GerConsumeChannelText(addDto.Channel);
@@ -1104,6 +1105,40 @@ namespace Fx.Amiya.Service
                          select d;
             var orderList = orders.ToList();
             return orderList.GroupBy(x => x.ReturnBackDate.Value.Date).Select(x => new OrderPriceConditionDto { Date = x.Key.ToString("yyyy-MM-dd"), OrderPrice = x.Sum(z => z.ReturnBackPrice.Value) }).ToList();
+        }
+        #endregion
+
+
+        #region 【对账板块】
+        /// <summary>
+        /// 获取时间段内未对账机构列表
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        public async Task<List<UnCheckHospitalOrderDto>> GetUnCheckHospitalOrderAsync(DateTime? startDate, DateTime? endDate, int? hospitalId)
+        {
+            DateTime startrq = new DateTime();
+            DateTime endrq = new DateTime();
+            if (startDate.HasValue)
+            {
+                startrq = ((DateTime)startDate);
+            }
+            if (endDate.HasValue)
+            {
+                endrq = ((DateTime)endDate).Date.AddDays(1);
+            }
+            var orders = from d in dalCustomerHospitalConsume.GetAll()
+                         where (!startDate.HasValue || d.CreateDate >= startrq)
+                         && (!endDate.HasValue || d.CreateDate <= endrq)
+                         && (d.CheckState == (int)CheckType.NotChecked)
+                         && (!hospitalId.HasValue || d.HospitalId == hospitalId)
+                         && (d.IsConfirmOrder == true)
+                         && (!hospitalId.HasValue || d.HospitalId == hospitalId)
+                         select d;
+            var orderList = await orders.ToListAsync();
+            return orderList.GroupBy(x => x.HospitalId).Select(x => new UnCheckHospitalOrderDto { HospitalId = x.Key, TotalUnCheckPrice = x.Sum(z => z.Price), TotalUnCheckOrderCount = x.Count() }).ToList();
         }
         #endregion
 

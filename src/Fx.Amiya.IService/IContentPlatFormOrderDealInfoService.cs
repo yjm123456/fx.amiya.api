@@ -224,6 +224,7 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<ContentPlateformOrderDealInfoHospitalPerformanceDto>> GetTopTenNewCustomerDealPerformance();
         #endregion
+
         #region 城市top10运营占比
         /// <summary>
         /// 获取总业绩业绩前10的城市业绩数据
@@ -256,6 +257,10 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<ContentPlateformOrderDealInfoCityPerformanceDto>> GetTopTenCityNewCustomerDealPerformance();
+        #endregion
+
+        #region 【对账单板块】
+        Task<List<UnCheckHospitalOrderDto>> GetUnCheckHospitalOrderAsync(DateTime? startDate, DateTime? endDate, int? hospitalId);
         #endregion
     }
 }

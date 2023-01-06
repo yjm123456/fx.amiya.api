@@ -40,6 +40,7 @@ using Fx.Amiya.Core.Dto.Integration;
 using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.OrderCheckPicture;
+using Fx.Amiya.Dto.ReconciliationDocuments;
 
 namespace Fx.Amiya.Service
 {
@@ -314,6 +315,7 @@ namespace Fx.Amiya.Service
                                 Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                                 EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
                                 AppointmentDate = d.AppointmentDate,
+                                BelongEmpId = d.BelongEmpId,
                                 AppointmentCity = d.AppointmentCity,
                                 AppointmentHospital = d.AppointmentHospital,
                                 IsAppointment = d.IsAppointment,
@@ -345,7 +347,7 @@ namespace Fx.Amiya.Service
                                 IsReturnBackPrice = d.IsReturnBackPrice,
                                 ReturnBackPrice = d.ReturnBackPrice,
                                 ReturnBackDate = d.ReturnBackDate,
-                                ReconciliationDocumentsId=d.ReconciliationDocumentsId,
+                                ReconciliationDocumentsId = d.ReconciliationDocumentsId,
                             };
 
 
@@ -364,6 +366,11 @@ namespace Fx.Amiya.Service
                             var contentplatFormInfo = await contentPlatFormService.GetByIdAsync(liveanchor.ContentPlateFormId);
                             x.LiveAnchorPlatForm = contentplatFormInfo.ContentPlatformName;
                         }
+                    }
+                    if (x.BelongEmpId != 0)
+                    {
+                        var amiyaemployeeInfo = await dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(e => e.Id == x.BelongEmpId);
+                        x.BelongEmpName = amiyaemployeeInfo.Name.ToString();
                     }
                     if (x.CheckBy.HasValue && x.CheckBy != 0)
                     {
@@ -432,6 +439,7 @@ namespace Fx.Amiya.Service
                                 CheckPrice = d.CheckPrice,
                                 CheckDate = d.CheckDate,
                                 CheckBy = d.CheckBy,
+                                BelongEmpId = d.BelongEmpId,
                                 CheckRemark = d.CheckRemark,
                                 SendOrderHospital = d.SendOrderInfoList == null ? "" : d.SendOrderInfoList.OrderByDescending(k => k.SendDate).First().HospitalInfo.Name,
                                 SettlePrice = d.SettlePrice,
@@ -457,6 +465,11 @@ namespace Fx.Amiya.Service
                             var contentplatFormInfo = await contentPlatFormService.GetByIdAsync(liveanchor.ContentPlateFormId);
                             x.LiveAnchorPlatForm = contentplatFormInfo.ContentPlatformName;
                         }
+                    }
+                    if (x.BelongEmpId != 0)
+                    {
+                        var belongEmpInfo = await dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(e => e.Id == x.BelongEmpId);
+                        x.BelongEmpName = belongEmpInfo.Name.ToString();
                     }
                     if (x.CheckBy.HasValue && x.CheckBy != 0)
                     {
@@ -1539,7 +1552,7 @@ namespace Fx.Amiya.Service
                 foreach (var x in order)
                 {
 
-                    if ( x.CheckState == (int)CheckType.CheckedSuccess)
+                    if (x.CheckState == (int)CheckType.CheckedSuccess)
                     {
                         x.IsReturnBackPrice = true;
                         x.ReturnBackPrice = x.SettlePrice;
@@ -1640,7 +1653,7 @@ namespace Fx.Amiya.Service
                         && d.StatusCode == OrderStatusCode.TRADE_FINISHED
                         && d.ReceiveGift.OrderId != d.Id
                         && d.ActualPayment > 1
-                        && d.AppType!=(byte)AppType.MiniProgram
+                        && d.AppType != (byte)AppType.MiniProgram
                         select new OrderInfoSimpleDto
                         {
                             Id = d.Id,
@@ -2577,7 +2590,7 @@ namespace Fx.Amiya.Service
             var orderTrades = from d in dalOrderTrade.GetAll()
                               where d.OrderInfoList.Count(e => e.AppType == (byte)AppType.MiniProgram && e.OrderType == (byte)OrderType.MaterialOrder) > 0
                               && (string.IsNullOrWhiteSpace(keyword) || d.CustomerInfo.Phone == keyword)
-                              && (d.CreateDate >= startDate && d.CreateDate <= endDate)
+                              && (d.CreateDate >= startDate && d.CreateDate <= endDate.AddDays(1))
                               select d;
 
             if (isSendGoods == null)
@@ -4149,12 +4162,45 @@ namespace Fx.Amiya.Service
 
         }
 
-        
 
 
 
 
 
+
+        #endregion
+
+        #region 【对账板块】
+        /// <summary>
+        /// 获取时间段内未对账机构列表
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        public async Task<List<UnCheckHospitalOrderDto>> GetUnCheckHospitalOrderAsync(DateTime? startDate, DateTime? endDate, int? hospitalId)
+        {
+            DateTime startrq = new DateTime();
+            DateTime endrq = new DateTime();
+            if (startDate.HasValue)
+            {
+                startrq = ((DateTime)startDate);
+            }
+            if (endDate.HasValue)
+            {
+                endrq = ((DateTime)endDate).Date.AddDays(1);
+            }
+            var orders = from d in dalOrderInfo.GetAll().Include(x => x.SendOrderInfoList)
+                         where (!startDate.HasValue || d.CreateDate >= startrq)
+                         && (d.SendOrderInfoList.Count > 0)
+                         &&(!hospitalId.HasValue||d.SendOrderInfoList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalId==hospitalId)
+                         && (!endDate.HasValue || d.CreateDate <= endrq)
+                         && (d.CheckState == (int)CheckType.NotChecked)
+                         && (d.StatusCode == OrderStatusCode.TRADE_FINISHED)
+                         select d;
+            var orderList = await orders.ToListAsync();
+            return orderList.GroupBy(x => x.SendOrderInfoList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalId).Select(x => new UnCheckHospitalOrderDto { HospitalId = x.Key, TotalUnCheckPrice = x.Sum(z => z.ActualPayment.Value), TotalUnCheckOrderCount = x.Count() }).ToList();
+        }
         #endregion
     }
 }

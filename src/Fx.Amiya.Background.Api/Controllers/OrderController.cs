@@ -647,6 +647,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 WriteOffDate = d.WriteOffDate,
                                 AppType = d.AppType,
                                 AppTypeText = d.AppTypeText,
+                                BelongEmpName = d.BelongEmpName,
                                 OrderType = d.OrderType,
                                 OrderTypeText = d.OrderTypeText,
                                 OrderNature = d.OrderNature,
@@ -668,7 +669,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 IsReturnBackPrice = d.IsReturnBackPrice,
                                 ReturnBackPrice = d.ReturnBackPrice,
                                 ReturnBackDate = d.ReturnBackDate,
-                                ReconciliationDocumentsId=d.ReconciliationDocumentsId,
+                                ReconciliationDocumentsId = d.ReconciliationDocumentsId,
 
                             };
                 FxPageInfo<OrderInfoVo> orderPageInfo = new FxPageInfo<OrderInfoVo>();
@@ -730,6 +731,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 TradeId = d.TradeId,
                                 FinalConsumptionHospital = d.FinalConsumptionHospital,
                                 LiveAnchor = d.LiveAnchorName,
+                                BelongEmpName = d.BelongEmpName,
                                 LiveAnchorPlatForm = d.LiveAnchorPlatForm,
                                 CheckState = d.CheckState,
                                 CheckPrice = d.CheckPrice,
@@ -1154,7 +1156,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var order = await orderService.GetByIdInCRMAsync(id);
             OrderInfoVo tmallOrderVo = new OrderInfoVo();
             tmallOrderVo.Id = order.Id;
-            tmallOrderVo.UserId= order.UserId;
+            tmallOrderVo.UserId = order.UserId;
             tmallOrderVo.GoodsName = order.GoodsName;
             tmallOrderVo.NickName = order.BuyerNick;
             tmallOrderVo.GoodsId = order.GoodsId;
@@ -1316,6 +1318,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   Quantities = d.Quantities,
                                   BindOrderIds = d.OrderIds,
                                   Goods = d.GoodsName,
+                                  StatusCode = d.StatusCode,
+                                  TotalAmount = d.TotalAmount.HasValue ? d.TotalAmount.Value : 0M,
                                   ReceivePhone = d.ReceivePhone,
                                   SendGoodsName = d.SendGoodsName,
                                   SendGoodsDate = d.SendGoodsDate,
@@ -1356,6 +1360,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                             BindOrderIds = d.OrderIds,
                             Goods = d.GoodsName,
                             IntergrationAccounts = d.IntergrationAccounts,
+                            TotalAmount = d.TotalAmount.HasValue ? d.TotalAmount.Value : 0M,
                             Quantities = d.Quantities,
                             ReceiveName = d.ReceiveName,
                             ReceivePhone = d.ReceivePhone,

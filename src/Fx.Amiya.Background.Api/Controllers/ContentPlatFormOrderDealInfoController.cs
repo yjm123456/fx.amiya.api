@@ -68,12 +68,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("contentPlatFormOrderDealInfo")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderDealInfoVo>>> GetDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate,int? consultationType,decimal?minAddOrderPrice,decimal?maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderDealInfoVo>>> GetDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int pageNum, int pageSize)
         {
 
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderListWithPageAsync(startDate, endDate, sendStartDate, sendEndDate, consultationType, minAddOrderPrice,maxAddOrderPrice, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, pageNum, pageSize);
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderListWithPageAsync(startDate, endDate, sendStartDate, sendEndDate, consultationType, minAddOrderPrice, maxAddOrderPrice, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, pageNum, pageSize);
 
             var contentPlatformOrders = from d in result.List
                                         select new ContentPlatFormOrderDealInfoVo
@@ -81,20 +81,20 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             Id = d.Id,
                                             ContentPlatFormOrderId = d.ContentPlatFormOrderId,
                                             CreateDate = d.CreateDate,
-                                            Phone=d.Phone,
+                                            Phone = d.Phone,
                                             IsDeal = d.IsDeal,
                                             IsOldCustomer = d.IsOldCustomer,
-                                            AddOrderPrice=d.AddOrderPrice,
+                                            AddOrderPrice = d.AddOrderPrice,
                                             IsAcompanying = d.IsAcompanying,
                                             CommissionRatio = d.CommissionRatio,
                                             IsToHospital = d.IsToHospital,
                                             ToHospitalType = d.ToHospitalType,
-                                            ToHospitalTypeText =d.ToHospitalTypeText,
-                                            ConsultationTypeText=d.ConsultationTypeText,
+                                            ToHospitalTypeText = d.ToHospitalTypeText,
+                                            ConsultationTypeText = d.ConsultationTypeText,
                                             SendDate = d.SendDate,
                                             TohospitalDate = d.ToHospitalDate,
                                             LastDealHospitalId = d.LastDealHospitalId,
-                                            DealHospital=d.LastDealHospital,
+                                            DealHospital = d.LastDealHospital,
                                             DealPicture = d.DealPicture,
                                             Remark = d.Remark,
                                             Price = d.Price,
@@ -105,17 +105,18 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             CheckPrice = d.CheckPrice,
                                             CheckDate = d.CheckDate,
                                             CheckBy = d.CheckBy,
-                                            CheckByEmpName=d.CheckByEmpName,
-                                            InformationPrice=d.InformationPrice,
-                                            SystemUpdatePrice=d.SystemUpdatePrice,
+                                            CheckByEmpName = d.CheckByEmpName,
+                                            InformationPrice = d.InformationPrice,
+                                            SystemUpdatePrice = d.SystemUpdatePrice,
                                             SettlePrice = d.SettlePrice,
                                             CheckRemark = d.CheckRemark,
                                             IsReturnBackPrice = d.IsReturnBackPrice,
                                             ReturnBackDate = d.ReturnBackDate,
                                             ReturnBackPrice = d.ReturnBackPrice,
                                             CreateBy = d.CreateBy,
-                                            CreateByEmpName=d.CreateByEmpName,
-                                            ReconciliationDocumentsId=d. ReconciliationDocumentsId,
+                                            CreateByEmpName = d.CreateByEmpName,
+                                            BelongLiveAnchor = d.BelongLiveAnchor,
+                                            ReconciliationDocumentsId = d.ReconciliationDocumentsId,
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;
@@ -151,9 +152,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             CheckPrice = d.CheckPrice,
                                             CheckDate = d.CheckDate,
                                             CheckBy = d.CheckBy,
-                                            InformationPrice=d.InformationPrice,
-                                            SystemUpdatePrice=d.SystemUpdatePrice,
+                                            InformationPrice = d.InformationPrice,
+                                            SystemUpdatePrice = d.SystemUpdatePrice,
                                             SettlePrice = d.SettlePrice,
+                                            BelongLiveAnchor = d.BelongLiveAnchor,
+                                            CreateByEmpName = d.CreateByEmpName,
                                             CheckRemark = d.CheckRemark,
                                             IsReturnBackPrice = d.IsReturnBackPrice,
                                             ReturnBackDate = d.ReturnBackDate,

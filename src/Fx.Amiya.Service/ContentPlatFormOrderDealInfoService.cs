@@ -182,14 +182,15 @@ namespace Fx.Amiya.Service
                                                        CheckPrice = d.CheckPrice,
                                                        CheckDate = d.CheckDate,
                                                        CheckBy = d.CheckBy,
-                                                       InformationPrice=d.InformationPrice,
-                                                       SystemUpdatePrice=d.SystemUpdatePrice,
+                                                       InformationPrice = d.InformationPrice,
+                                                       SystemUpdatePrice = d.SystemUpdatePrice,
                                                        SettlePrice = d.SettlePrice,
                                                        CheckRemark = d.CheckRemark,
                                                        IsReturnBackPrice = d.IsReturnBackPrice,
                                                        ReturnBackDate = d.ReturnBackDate,
                                                        ReturnBackPrice = d.ReturnBackPrice,
                                                        CreateBy = d.CreateBy,
+                                                       BelongLiveAnchor = d.ContentPlatFormOrder.LiveAnchor.Name,
                                                        ReconciliationDocumentsId = d.ReconciliationDocumentsId,
                                                    };
 
@@ -210,7 +211,7 @@ namespace Fx.Amiya.Service
                     }
                     if (z.CreateBy == 0)
                     {
-                        z.CreateByEmpName = "其他";
+                        z.CreateByEmpName = "医院创建";
                     }
                     else
                     {
@@ -247,13 +248,16 @@ namespace Fx.Amiya.Service
                                                        CheckPrice = d.CheckPrice,
                                                        CheckDate = d.CheckDate,
                                                        CheckBy = d.CheckBy,
-                                                       InformationPrice=d.InformationPrice,
-                                                       SystemUpdatePrice=d.SystemUpdatePrice,
+                                                       InformationPrice = d.InformationPrice,
+                                                       SystemUpdatePrice = d.SystemUpdatePrice,
                                                        SettlePrice = d.SettlePrice,
                                                        CheckRemark = d.CheckRemark,
                                                        IsReturnBackPrice = d.IsReturnBackPrice,
                                                        ReturnBackDate = d.ReturnBackDate,
+                                                       CreateBy = d.CreateBy,
                                                        ReturnBackPrice = d.ReturnBackPrice,
+                                                       LiveAnchorName = d.ContentPlatFormOrder.LiveAnchor.Name,
+
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -270,6 +274,15 @@ namespace Fx.Amiya.Service
                     {
                         var empInfo = await _amiyaEmployeeService.GetByIdAsync(z.CheckBy.Value);
                         z.CheckByEmpName = empInfo.Name;
+                    }
+                    if (z.CreateBy == 0)
+                    {
+                        z.CreateByEmpName = "医院创建";
+                    }
+                    else
+                    {
+                        var empInfo = await _amiyaEmployeeService.GetByIdAsync(z.CreateBy);
+                        z.CreateByEmpName = empInfo.Name;
                     }
                 }
                 return ContentPlatFOrmOrderDealInfoPageInfo;
@@ -393,8 +406,8 @@ namespace Fx.Amiya.Service
                                                        CheckPrice = d.CheckPrice,
                                                        CheckDate = d.CheckDate,
                                                        CheckBy = d.CheckBy,
-                                                       InformationPrice=d.InformationPrice,
-                                                       SystemUpdatePrice=d.SystemUpdatePrice,
+                                                       InformationPrice = d.InformationPrice,
+                                                       SystemUpdatePrice = d.SystemUpdatePrice,
                                                        SettlePrice = d.SettlePrice,
                                                        CheckRemark = d.CheckRemark,
                                                        IsReturnBackPrice = d.IsReturnBackPrice,
@@ -477,8 +490,8 @@ namespace Fx.Amiya.Service
                                                        CheckPrice = d.CheckPrice,
                                                        CheckDate = d.CheckDate,
                                                        CheckBy = d.CheckBy,
-                                                       InformationPrice=d.InformationPrice,
-                                                       SystemUpdatePrice=d.SystemUpdatePrice,
+                                                       InformationPrice = d.InformationPrice,
+                                                       SystemUpdatePrice = d.SystemUpdatePrice,
                                                        SettlePrice = d.SettlePrice,
                                                        CheckRemark = d.CheckRemark,
                                                        IsReturnBackPrice = d.IsReturnBackPrice,
@@ -1489,6 +1502,41 @@ namespace Fx.Amiya.Service
 
 
 
+        #endregion
+
+        #region 【对账板块】
+        /// <summary>
+        /// 获取时间段内未对账机构列表
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        public async Task<List<UnCheckHospitalOrderDto>> GetUnCheckHospitalOrderAsync(DateTime? startDate, DateTime? endDate, int? hospitalId)
+        {
+            DateTime startrq = new DateTime();
+            DateTime endrq = new DateTime();
+            if (startDate.HasValue)
+            {
+                startrq = ((DateTime)startDate);
+            }
+            if (endDate.HasValue)
+            {
+                endrq = ((DateTime)endDate).Date.AddDays(1);
+            }
+            var orders = from d in dalContentPlatFormOrderDealInfo.GetAll()
+                         where (!startDate.HasValue || d.CreateDate >= startrq)
+                         && (!endDate.HasValue || d.CreateDate <= endrq)
+                         && (d.CheckState == (int)CheckType.NotChecked)
+                         && (d.IsDeal == true)
+                         && (!hospitalId.HasValue || d.LastDealHospitalId == hospitalId)
+                         && (d.LastDealHospitalId.HasValue == true)
+                         && (d.Price > 0)
+                         && (!hospitalId.HasValue || d.LastDealHospitalId.Value == hospitalId)
+                         select d;
+            var orderList =await orders.ToListAsync();
+            return orderList.GroupBy(x => x.LastDealHospitalId.Value).Select(x => new UnCheckHospitalOrderDto { HospitalId = x.Key, TotalUnCheckPrice = x.Sum(z => z.Price), TotalUnCheckOrderCount = x.Count() }).ToList();
+        }
         #endregion
     }
 }

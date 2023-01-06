@@ -191,6 +191,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public string CreateByEmpName { get; set; }
         /// <summary>
+        /// 归属主播
+        /// </summary>
+        public string BelongLiveAnchor { get; set; }
+        /// <summary>
         /// 邀约凭证图片
         /// </summary>
         public List<string> InvitationDocuments { get; set; }

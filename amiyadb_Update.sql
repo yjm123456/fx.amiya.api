@@ -1762,9 +1762,10 @@ ADD COLUMN `belong_liveanchor` VARCHAR(50)  NULL AFTER `refresh_token`;
 ALTER TABLE `amiyadb`.`tbl_tiktok_order_info` 
 ADD COLUMN `belong_live_anchor_id` VARCHAR(50) NULL AFTER `finish_date`;
 
+INSERT INTO `amiyadb`.`tbl_miniprogram_auto_send_message` (`id`, `message`) VALUES ('1001', '当前没有客服在线，请给我们留言，我们会第一时间给你回复！');
 
 
------------------------------余建明 2023/01/05 BEGIN -----------------------------
+-----------------------------余建明 2023/01/06 BEGIN -----------------------------
 
 
 

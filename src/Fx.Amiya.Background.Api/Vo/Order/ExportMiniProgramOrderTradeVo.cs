@@ -71,6 +71,11 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         [Description("实付总积分")]
         public decimal IntergrationAccounts { get; set; }
         /// <summary>
+        /// 实付款
+        /// </summary>
+        [Description("实付款")]
+        public decimal TotalAmount { get; set; }
+        /// <summary>
         /// 快递单号
         /// </summary>
         [Description("快递单号")]

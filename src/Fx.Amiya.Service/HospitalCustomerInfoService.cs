@@ -70,6 +70,10 @@ namespace Fx.Amiya.Service
                 foreach (var x in hospitalCustomerInfoPageInfo.List)
                 {
 
+                    var config = await wxAppConfigService.GetCallCenterConfig();
+                    string encryptPhone = ServiceClass.Encrypt(x.CustomerPhone, config.PhoneEncryptKey);
+                    x.EncryptPhone = encryptPhone;
+
                     var baseInfo = await customerBaseInfoService.GetByPhoneAsync(x.CustomerPhone);
                     x.CustomerName = baseInfo.Name;
                     x.City = baseInfo.City;
@@ -83,9 +87,6 @@ namespace Fx.Amiya.Service
                         x.IsMyFollow = false;
                         x.CustomerPhone = ServiceClass.GetIncompletePhone(x.CustomerPhone);
                     }
-                    var config = await wxAppConfigService.GetCallCenterConfig();
-                    string encryptPhone = ServiceClass.Encrypt(x.CustomerPhone, config.PhoneEncryptKey);
-                    x.EncryptPhone = encryptPhone;
                 }
                 return hospitalCustomerInfoPageInfo;
             }

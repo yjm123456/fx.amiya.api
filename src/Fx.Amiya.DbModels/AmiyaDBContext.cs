@@ -84,6 +84,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<ContentPlatFormCustomerPicture> ContentPlatFormCustomerPicture { get; set; }
         public virtual DbSet<HospitalPositionModulePermission> HospitalPositionModulePermission { get; set; }
         public virtual DbSet<Config> Config { get; set; }
+        public virtual DbSet<MiniProgramAutoSendMessage> MiniProgramAutoSendMessage { get; set; }
         public virtual DbSet<WxAppInfo> WxAppInfo { get; set; }
         public virtual DbSet<WxEventResponseSetting> WxEventResponseSetting { get; set; }
         public virtual DbSet<OrderInfo> OrderInfo { get; set; }
@@ -232,6 +233,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new HospitalOperationDataConfiguration());
             modelBuilder.ApplyConfiguration(new ContentPlatFormOrderDealInfoConfiguration());
             modelBuilder.ApplyConfiguration(new ConfigConfiguration());
+            modelBuilder.ApplyConfiguration(new MiniProgramAutoSendMessageConfiguration());
             modelBuilder.ApplyConfiguration(new WxAppInfoConfiguration());
             modelBuilder.ApplyConfiguration(new WxMpUserInfoConfiguration());
             modelBuilder.ApplyConfiguration(new MpUserSubscribeDetailConfiguration());
@@ -258,7 +260,6 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new BindCustomerServiceConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalBindCustomerServiceConfiguration());
             modelBuilder.ApplyConfiguration(new BeautyDiaryTagInfoConfiguration());
-
             modelBuilder.ApplyConfiguration(new BeautyDiaryBannerImageConfiguration());
             modelBuilder.ApplyConfiguration(new BeautyDiaryManageConfiguration());
             modelBuilder.ApplyConfiguration(new BeautyDiaryTagDetailConfiguration());

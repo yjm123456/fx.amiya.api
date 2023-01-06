@@ -224,5 +224,11 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 对账单id
         /// </summary>
         public string ReconciliationDocumentsId { get; set; }
+
+
+        /// <summary>
+        /// 归属主播
+        /// </summary>
+        public string BelongLiveAnchor { get; set; }
     }
 }

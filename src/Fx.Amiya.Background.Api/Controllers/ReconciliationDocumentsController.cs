@@ -29,18 +29,123 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private IReconciliationDocumentsService reconciliationDocumentsService;
         private IHttpContextAccessor _httpContextAccessor;
-
+        private readonly IOrderService orderService;
+        private readonly IHospitalInfoService hospitalInfoService;
+        private readonly IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
+        private readonly ICustomerHospitalConsumeService customerHospitalConsumeService;
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="reconciliationDocumentsService"></param>
         public ReconciliationDocumentsController(
             IHttpContextAccessor httpContextAccessor,
-             IReconciliationDocumentsService reconciliationDocumentsService
+             IReconciliationDocumentsService reconciliationDocumentsService,
+             IOrderService orderService,
+             IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
+            ICustomerHospitalConsumeService customerHospitalConsumeService,
+            IHospitalInfoService hospitalInfoService
             )
         {
             this.reconciliationDocumentsService = reconciliationDocumentsService;
             _httpContextAccessor = httpContextAccessor;
+            this.hospitalInfoService = hospitalInfoService;
+            this.orderService = orderService;
+            this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
+            this.customerHospitalConsumeService = customerHospitalConsumeService;
+        }
+
+
+        /// <summary>
+        /// 获取未对账机构列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("listByUnCheckHospitalOrder")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<FxPageInfo<UnCheckHospitalOrdersVo>>> ListByUnCheckHospitalOrderAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int pageNum, int pageSize)
+        {
+            try
+            {
+
+                var tmallOrder = await orderService.GetUnCheckHospitalOrderAsync(startDate, endDate, hospitalId);
+                var contentPlatFormOrderDealInfo = await contentPlatFormOrderDealInfoService.GetUnCheckHospitalOrderAsync(startDate, endDate, hospitalId);
+                var customerHospitalConsumeInfo = await customerHospitalConsumeService.GetUnCheckHospitalOrderAsync(startDate, endDate, hospitalId);
+                List<UnCheckHospitalOrdersVo> unCheckHospitalOrdersVos = new List<UnCheckHospitalOrdersVo>();
+                foreach (var x in tmallOrder)
+                {
+                    UnCheckHospitalOrdersVo tmallUnCheckHospitalOrdersVo = new UnCheckHospitalOrdersVo();
+                    tmallUnCheckHospitalOrdersVo.HospitalId = x.HospitalId;
+                    var hospitalInfo = await hospitalInfoService.GetBaseByIdAsync(x.HospitalId);
+                    tmallUnCheckHospitalOrdersVo.HospitalName = hospitalInfo.Name;
+                    tmallUnCheckHospitalOrdersVo.TotalUnCheckPrice = x.TotalUnCheckPrice;
+                    tmallUnCheckHospitalOrdersVo.TotalUnCheckOrderCount = x.TotalUnCheckOrderCount;
+                    tmallUnCheckHospitalOrdersVo.TmallUnCheckOrderCount = x.TotalUnCheckOrderCount;
+                    tmallUnCheckHospitalOrdersVo.TmallUnCheckPrice = x.TotalUnCheckPrice;
+                    unCheckHospitalOrdersVos.Add(tmallUnCheckHospitalOrdersVo);
+                }
+
+                foreach (var y in contentPlatFormOrderDealInfo)
+                {
+
+                    UnCheckHospitalOrdersVo contentPlatFormOrderUnCheckHospitalOrdersVo = new UnCheckHospitalOrdersVo();
+                    var isExistCount = unCheckHospitalOrdersVos.Where(k => k.HospitalId == y.HospitalId).FirstOrDefault();
+                    if (isExistCount != null)
+                    {
+                        isExistCount.TotalUnCheckPrice += y.TotalUnCheckPrice;
+                        isExistCount.TotalUnCheckOrderCount += y.TotalUnCheckOrderCount;
+                        isExistCount.ContentPlatFormUnCheckOrderCount = y.TotalUnCheckOrderCount;
+                        isExistCount.ContentPlatFormUnCheckPrice = y.TotalUnCheckPrice;
+                    }
+                    else
+                    {
+
+                        contentPlatFormOrderUnCheckHospitalOrdersVo.HospitalId = y.HospitalId;
+                        var hospitalInfo = await hospitalInfoService.GetBaseByIdAsync(y.HospitalId);
+                        contentPlatFormOrderUnCheckHospitalOrdersVo.HospitalName = hospitalInfo.Name;
+                        contentPlatFormOrderUnCheckHospitalOrdersVo.TotalUnCheckPrice = y.TotalUnCheckPrice;
+                        contentPlatFormOrderUnCheckHospitalOrdersVo.TotalUnCheckOrderCount = y.TotalUnCheckOrderCount;
+                        contentPlatFormOrderUnCheckHospitalOrdersVo.ContentPlatFormUnCheckOrderCount = y.TotalUnCheckOrderCount;
+                        contentPlatFormOrderUnCheckHospitalOrdersVo.ContentPlatFormUnCheckPrice = y.TotalUnCheckPrice;
+                        unCheckHospitalOrdersVos.Add(contentPlatFormOrderUnCheckHospitalOrdersVo);
+                    }
+                }
+
+                foreach (var z in customerHospitalConsumeInfo)
+                {
+
+                    UnCheckHospitalOrdersVo customerHospitalConsumeUnCheckHospitalOrdersVo = new UnCheckHospitalOrdersVo();
+                    var isExistCount = unCheckHospitalOrdersVos.Where(k => k.HospitalId == z.HospitalId).FirstOrDefault();
+                    if (isExistCount != null)
+                    {
+                        isExistCount.TotalUnCheckPrice += z.TotalUnCheckPrice;
+                        isExistCount.TotalUnCheckOrderCount += z.TotalUnCheckOrderCount;
+                        isExistCount.HospitalCustomerConsumeUnCheckOrderCount = z.TotalUnCheckOrderCount;
+                        isExistCount.HospitalCustomerConsumeUnCheckPrice = z.TotalUnCheckPrice;
+                    }
+                    else
+                    {
+
+                        customerHospitalConsumeUnCheckHospitalOrdersVo.HospitalId = z.HospitalId;
+                        var hospitalInfo = await hospitalInfoService.GetBaseByIdAsync(z.HospitalId);
+                        customerHospitalConsumeUnCheckHospitalOrdersVo.HospitalName = hospitalInfo.Name;
+                        customerHospitalConsumeUnCheckHospitalOrdersVo.TotalUnCheckPrice = z.TotalUnCheckPrice;
+                        customerHospitalConsumeUnCheckHospitalOrdersVo.TotalUnCheckOrderCount = z.TotalUnCheckOrderCount;
+                        customerHospitalConsumeUnCheckHospitalOrdersVo.HospitalCustomerConsumeUnCheckOrderCount = z.TotalUnCheckOrderCount;
+                        customerHospitalConsumeUnCheckHospitalOrdersVo.HospitalCustomerConsumeUnCheckPrice = z.TotalUnCheckPrice;
+                        unCheckHospitalOrdersVos.Add(customerHospitalConsumeUnCheckHospitalOrdersVo);
+                    }
+                }
+
+                FxPageInfo<UnCheckHospitalOrdersVo> reconciliationDocumentsResult = new FxPageInfo<UnCheckHospitalOrdersVo>();
+                reconciliationDocumentsResult.List = unCheckHospitalOrdersVos.OrderByDescending(x => x.TotalUnCheckPrice).Skip((pageNum - 1) * pageSize).Take(pageSize);
+                reconciliationDocumentsResult.TotalCount = unCheckHospitalOrdersVos.Count;
+                reconciliationDocumentsResult.PageSize = pageSize;
+                reconciliationDocumentsResult.CurrentPageIndex = pageNum;
+                return ResultData<FxPageInfo<UnCheckHospitalOrdersVo>>.Success().AddData("reconciliationDocumentsInfo", reconciliationDocumentsResult);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<FxPageInfo<UnCheckHospitalOrdersVo>>.Fail(ex.Message);
+            }
         }
 
 
@@ -132,14 +237,13 @@ namespace Fx.Amiya.Background.Api.Controllers
                     throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
                 }
             }
-            var res = new List<ReconciliationDocumentsVo>();
+            var res = new List<ExportReconciliationDocumentsVo>();
             var q = await reconciliationDocumentsService.ExportListWithPageAsync(returnBackPricePercent, reconciliationState, startDate, endDate, startDealDate, endDealDate, keyword, hospitalId);
 
             var reconciliationDocuments = from d in q
-                                          select new ReconciliationDocumentsVo
+                                          select new ExportReconciliationDocumentsVo
                                           {
                                               Id = d.Id,
-                                              HospitalId = d.HospitalId,
                                               HospitalName = d.HospitalName,
                                               CustomerName = d.CustomerName,
                                               CustomerPhone = d.CustomerPhone,
@@ -150,14 +254,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                               SystemUpdatePricePercent = d.SystemUpdatePricePercent,
                                               QuestionReason = d.QuestionReason,
                                               Remark = d.Remark,
-                                              ReconciliationState = d.ReconciliationState,
                                               ReconciliationStateText = d.ReconciliationStateText,
-                                              CreateBy = d.CreateBy,
                                               CreateByName = d.CreateByName,
                                               CreateDate = d.CreateDate,
-                                              UpdateDate = d.UpdateDate,
-                                              DeleteDate = d.DeleteDate,
-                                              Valid = d.Valid,
                                               ReturnBackPrice = d.TotalDealPrice * d.ReturnBackPricePercent / 100,
                                               SystemUpdatePrice = d.TotalDealPrice * d.SystemUpdatePricePercent / 100,
                                               ReturnBackTotalPrice = (d.SystemUpdatePricePercent + d.ReturnBackPricePercent) * d.TotalDealPrice / 100

@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Dto.CustomerHospitalConsume;
 using Fx.Amiya.Dto.OrderReport;
+using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Common;
 using Fx.Infrastructure;
@@ -95,6 +96,10 @@ namespace Fx.Amiya.IService
         Task<List<OrderPriceConditionDto>> GetReturnBackPriceDataAsync(DateTime startDate, DateTime endDate);
         #endregion
 
+
+        #region 【对账单板块】
+        Task<List<UnCheckHospitalOrderDto>> GetUnCheckHospitalOrderAsync(DateTime? startDate, DateTime? endDate, int? hospitalId);
+        #endregion
         List<CheckStateTypeDto> GetCheckStateType();
     }
 }
