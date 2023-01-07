@@ -231,7 +231,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var dealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().OrderByDescending(x => x.CreateDate) select d;
+                var dealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Include(x=>x.ContentPlatFormOrder).ThenInclude(x=>x.LiveAnchor).OrderByDescending(x => x.CreateDate) select d;
 
                 var ContentPlatFOrmOrderDealInfo = from d in dealInfo
                                                    where (string.IsNullOrEmpty(reconciliationDocumentsId) || d.ReconciliationDocumentsId == reconciliationDocumentsId)

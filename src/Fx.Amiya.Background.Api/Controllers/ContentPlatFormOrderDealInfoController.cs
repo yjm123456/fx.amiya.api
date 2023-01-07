@@ -155,7 +155,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             InformationPrice = d.InformationPrice,
                                             SystemUpdatePrice = d.SystemUpdatePrice,
                                             SettlePrice = d.SettlePrice,
-                                            BelongLiveAnchor = d.BelongLiveAnchor,
+                                            BelongLiveAnchor = d.LiveAnchorName,
                                             CreateByEmpName = d.CreateByEmpName,
                                             CheckRemark = d.CheckRemark,
                                             IsReturnBackPrice = d.IsReturnBackPrice,
