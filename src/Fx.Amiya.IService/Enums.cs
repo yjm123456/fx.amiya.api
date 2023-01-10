@@ -404,7 +404,7 @@ namespace Fx.Amiya.IService
         OrderComplete = 4,
 
         /// <summary>
-        /// 医院重单=5
+        /// 医院重单-不可深度=5
         /// </summary>
         RepeatOrder = 5,
 
@@ -412,6 +412,10 @@ namespace Fx.Amiya.IService
         /// 未成交=6
         /// </summary>
         WithoutCompleteOrder = 6,
+        /// <summary>
+        /// 医院重单-可深度
+        /// </summary>
+        RepeatOrderProfundity=7
     }
     #endregion
 
@@ -773,6 +777,19 @@ namespace Fx.Amiya.IService
         /// 回款完成
         /// </summary>
         ReturnBackPriceSuccessful=4,
+    }
+    /// <summary>
+    /// 标签分类
+    /// </summary>
+    public enum TagCategory { 
+        /// <summary>
+        /// 用户标签
+        /// </summary>
+        UserTag=0,
+        /// <summary>
+        /// 商品标签
+        /// </summary>
+        GoodsTag=1
     }
 
 }

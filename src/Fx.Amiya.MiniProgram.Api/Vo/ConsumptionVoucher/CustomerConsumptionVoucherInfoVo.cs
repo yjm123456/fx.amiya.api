@@ -57,5 +57,9 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.ConsumptionVoucher
         /// </summary>
         public int Type { get; set; }
         public string WirteOfCode { get; set; }
+        /// <summary>
+        /// 抵用券备注
+        /// </summary>
+        public string Remark { get; set; }
     }
 }

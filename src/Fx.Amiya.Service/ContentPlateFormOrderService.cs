@@ -192,6 +192,7 @@ namespace Fx.Amiya.Service
                 order.CheckState = 0;
                 order.SettlePrice = 0.00M;
                 order.BelongEmpId = input.EmployeeId;
+                order.IsRepeatProfundityOrder = false;
                 await _dalContentPlatformOrder.AddAsync(order, true);
 
                 foreach (var z in input.CustomerPictures)
@@ -1302,7 +1303,7 @@ namespace Fx.Amiya.Service
             }
             var contentPlatFormInfo = await _contentPlatformService.GetByIdAsync(order.ContentPlateformId);
             result.ContentPlateFormName = contentPlatFormInfo.ContentPlatformName;
-
+            result.IsRepeatProfundityOrder = order.IsRepeatProfundityOrder;
             return result;
         }
 
@@ -1994,27 +1995,60 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task RepeateContentPlateFormOrderAsync(ContentPlateFormOrderRepeateDto input)
+        public async Task RepeateContentPlateFormOrderAsync(ContentPlateFormOrderRepeateDto input,int hospitalEmployeeId)
         {
-            var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.OrderId).SingleOrDefaultAsync();
-            if (order == null)
+            try
             {
-                throw new Exception("未找到该订单的相关信息！");
-            }
-            order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.RepeatOrder);
-            order.ToHospitalDate = input.ToHospitalDate;
-            order.IsToHospital = true;
-            order.UpdateDate = DateTime.Now;
-            order.ToHospitalDate = input.ToHospitalDate;
-            order.RepeatOrderPictureUrl = input.RepeatePictureUrl;
+                unitOfWork.BeginTransaction();
+                var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.OrderId).SingleOrDefaultAsync();
+                if (order == null)
+                {
+                    throw new Exception("未找到该订单的相关信息！");
+                }
+                if (input.IsProfundity)
+                {
+                    //重单可深度
+                    order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.RepeatOrderProfundity);
+                    order.IsRepeatProfundityOrder = true;
 
-            //获取医院客户列表并更新查重时间
-            var sendInfo = await _contentPlatformOrderSend.GetByIdAsync(input.Id);
-            var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(sendInfo.HospitalId, order.Phone);
-            UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
-            updateSendHospitalCustomerInfoDto.Id = customer.Id;
-            await hospitalCustomerInfoService.UpdateConfirmOrderDateAsync(updateSendHospitalCustomerInfoDto);
-            await _dalContentPlatformOrder.UpdateAsync(order, true);
+                    //绑定
+                    AddHospitalBindCustomerServiceDto addHospitalBindCustomerServiceDto = new AddHospitalBindCustomerServiceDto();
+                    addHospitalBindCustomerServiceDto.HospitalEmployeeId = hospitalEmployeeId;
+                    var goodsInfo = await amiyaGoodsDemandService.GetByIdAsync(order.GoodsId);
+                    addHospitalBindCustomerServiceDto.FirstProjectDemand = "(" + goodsInfo.HospitalDepartmentName + ")" + goodsInfo.ProjectNname;
+                    addHospitalBindCustomerServiceDto.CustomerPhone = order.Phone;
+                    var contentPlatForm = await _contentPlatformService.GetByIdAsync(order.ContentPlateformId);
+                    addHospitalBindCustomerServiceDto.NewContentPlatformName = contentPlatForm.ContentPlatformName;
+                    await hospitalBindCustomerService.AddAsync(addHospitalBindCustomerServiceDto);
+                }
+                else
+                {
+                    order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.RepeatOrder);
+                }
+
+                order.ToHospitalDate = input.ToHospitalDate;
+                order.IsToHospital = true;
+                order.UpdateDate = DateTime.Now;
+                order.ToHospitalDate = input.ToHospitalDate;
+                order.RepeatOrderPictureUrl = input.RepeatePictureUrl;
+
+                //获取医院客户列表并更新查重时间
+                var sendInfo = await _contentPlatformOrderSend.GetByIdAsync(input.Id);
+                var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(sendInfo.HospitalId, order.Phone);
+                UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
+                updateSendHospitalCustomerInfoDto.Id = customer.Id;
+                await hospitalCustomerInfoService.UpdateConfirmOrderDateAsync(updateSendHospitalCustomerInfoDto);
+                await _dalContentPlatformOrder.UpdateAsync(order, true);
+                unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw new Exception(ex.Message.ToString());               
+            }
+
+
+            
         }
 
 

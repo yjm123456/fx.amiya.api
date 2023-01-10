@@ -207,5 +207,9 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 佣金比例
         /// </summary>
         public decimal CommissionRatio { get; set; }
+        /// <summary>
+        /// 是否是重单可深度
+        /// </summary>
+        public bool IsRepeatProfundityOrder { get; set; }
     }
 }

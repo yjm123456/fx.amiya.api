@@ -15,5 +15,6 @@ namespace Fx.Amiya.Dto.ConsumptionVoucher
         public string VoucherName { get; set; }
         public int VoucherType { get; set; }
         public string VoucherCode { get; set; }
+        public string Remark { get; set; }
     }
 }

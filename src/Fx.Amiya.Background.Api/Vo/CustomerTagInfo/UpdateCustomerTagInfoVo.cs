@@ -20,5 +20,9 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerTagInfo
         /// 是否有效
         /// </summary>
         public bool Valid { get; set; }
+        /// <summary>
+        /// 标签类别
+        /// </summary>
+        public int TagCategory { get; set; }
     }
 }

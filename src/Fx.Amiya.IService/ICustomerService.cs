@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Dto.CustomerInfo;
+using Fx.Amiya.Dto.TagDetailInfo;
 using Fx.Common;
 using Fx.Infrastructure;
 using System;
@@ -156,6 +157,11 @@ namespace Fx.Amiya.IService
         /// <param name="encryptPhone"></param>
         /// <returns>没有返回null</returns>
         Task<string> GetCustomerIdByEncryptPhoneAsync(string encryptPhone);
+        /// <summary>
+        /// 添加用户标签
+        /// </summary>
+        /// <returns></returns>
+        Task AddCustomerTag(AddCustomerTagDto addCustomerTagDto);
 
     }
 }

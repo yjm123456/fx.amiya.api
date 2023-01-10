@@ -386,7 +386,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="encryptPhone">加密手机号</param>
         /// <returns></returns>
-        [HttpPost("SendGiftBaseInfo")]
+        [HttpGet("SendGiftBaseInfo")]
         public async Task<ResultData<SendGiftBaseInfoVo>> SendGiftBaseInfoAsync(string encryptPhone)
         {
             var customerBaseInfo = await customerBaseInfoService.GetByEncryptPhoneAsync(encryptPhone);

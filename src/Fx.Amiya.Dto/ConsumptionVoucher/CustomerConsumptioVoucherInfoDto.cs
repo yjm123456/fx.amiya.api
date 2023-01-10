@@ -64,5 +64,9 @@ namespace Fx.Amiya.Dto.ConsumptionVoucher
         /// 抵用券编码
         /// </summary>
         public string VoucherCode { get; set; }
+        /// <summary>
+        /// 抵用券备注
+        /// </summary>
+        public string Remark { get; set; }
     }
 }

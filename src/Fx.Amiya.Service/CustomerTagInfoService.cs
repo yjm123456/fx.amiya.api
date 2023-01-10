@@ -15,6 +15,7 @@ using Fx.Amiya.Dto.WareHouse.InventoryList;
 using Fx.Amiya.Dto.WareHouse.OutWareHouse;
 using Fx.Amiya.Dto.WareHouse.InWareHouse;
 using Fx.Amiya.Dto.CustomerTagInfo;
+using Fx.Amiya.Dto;
 
 namespace Fx.Amiya.Service
 {
@@ -55,6 +56,8 @@ namespace Fx.Amiya.Service
                                                  CreateDate = d.CreateDate,
                                                  UpdateDate = d.UpdateDate,
                                                  DeleteDate = d.DeleteDate,
+                                                 TagCategory = d.TagCategory,
+                                                 TagCategoryName = d.TagCategory==null?"": ServiceClass.GetTagCategoryType(d.TagCategory.Value),
                                                  Valid = d.Valid,
                                              };
                 FxPageInfo<CustomerTagInfoDto> customerTagInfoServicePageInfo = new FxPageInfo<CustomerTagInfoDto>();
@@ -76,6 +79,7 @@ namespace Fx.Amiya.Service
                 CustomerTagInfo customerTagInfoService = new CustomerTagInfo();
                 customerTagInfoService.Id = Guid.NewGuid().ToString();
                 customerTagInfoService.TagName = addDto.TagName;
+                customerTagInfoService.TagCategory = addDto.TagCategory;
                 customerTagInfoService.Valid = true;
                 customerTagInfoService.CreateDate = DateTime.Now;
 
@@ -105,7 +109,8 @@ namespace Fx.Amiya.Service
                 customerTagInfoServiceDto.CreateDate = customerTagInfoService.CreateDate;
                 customerTagInfoServiceDto.UpdateDate = customerTagInfoService.UpdateDate;
                 customerTagInfoServiceDto.DeleteDate = customerTagInfoService.DeleteDate;
-
+                customerTagInfoServiceDto.TagCategory = customerTagInfoService.TagCategory;
+                customerTagInfoServiceDto.TagCategoryName = customerTagInfoService.TagCategory == null ? "" : ServiceClass.GetTagCategoryType(customerTagInfoService.TagCategory.Value);
 
                 return customerTagInfoServiceDto;
             }
@@ -127,6 +132,7 @@ namespace Fx.Amiya.Service
                 customerTagInfoService.TagName = updateDto.TagName;
                 customerTagInfoService.UpdateDate = updateDto.UpdateDate;
                 customerTagInfoService.Valid = updateDto.Valid;
+                customerTagInfoService.TagCategory = updateDto.TagCategory;
                 if (updateDto.Valid == false)
                 {
                     customerTagInfoService.DeleteDate = DateTime.Now;
@@ -159,5 +165,36 @@ namespace Fx.Amiya.Service
             }
         }
 
+        /// <summary>
+        /// 获取标签类型列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<BaseKeyValueDto>> GetTagCategoryNameListAsync()
+        {
+            var consumptionVoucherTypes = Enum.GetValues(typeof(TagCategory));
+
+            List<BaseKeyValueDto> consumptionVoucherTypeList = new List<BaseKeyValueDto>();
+            foreach (var item in consumptionVoucherTypes)
+            {
+                BaseKeyValueDto baseKeyValueDto = new BaseKeyValueDto();
+                baseKeyValueDto.Key = Convert.ToInt32(item).ToString();
+                baseKeyValueDto.Value = ServiceClass.GetTagCategoryType(Convert.ToInt32(item));
+                consumptionVoucherTypeList.Add(baseKeyValueDto);
+            }
+            return consumptionVoucherTypeList;
+        }
+        /// <summary>
+        /// 获取用户标签名称列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<BaseKeyValueDto>> GetCustomerTagNameList()
+        {
+            var list = dalCustomerTagInfoService.GetAll().Where(e => e.TagCategory == (int)TagCategory.UserTag).Select(e => new BaseKeyValueDto
+            {
+                Key = e.Id,
+                Value=e.TagName
+            }).ToList();
+            return list;
+        }
     }
 }

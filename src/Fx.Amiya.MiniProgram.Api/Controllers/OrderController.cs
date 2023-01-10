@@ -682,6 +682,16 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             orderTradeAdd.AddressId = orderAdd.AddressId;
             orderTradeAdd.Remark = orderAdd.Remark;
             orderTradeAdd.OrderInfoAddList = amiyaOrderList;
+            if (IsExistThirdPartPay == true && !IsExistBalancePay) {
+                if (!string.IsNullOrEmpty(orderAdd.VoucherId))
+                {
+                    if (IsUseSpecifyVoucher)
+                    {
+                        throw new Exception("抵用券不能叠加使用");
+                    }
+                    orderTradeAdd.VoucherId = orderAdd.VoucherId;
+                }               
+            }
             string tradeId = await orderService.AddAmiyaOrderAsync(orderTradeAdd);
             OrderAddResultVo orderAddResult = new OrderAddResultVo();
             orderAddResult.TradeId = tradeId;
@@ -703,7 +713,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 //如果全局抵用券不为空
                 if (!string.IsNullOrEmpty(orderAdd.VoucherId))
                 {
-                    if (IsUseSpecifyVoucher) throw new Exception("抵用券不能叠加使用");
+                    
                     var voucher = await customerConsumptionVoucherService.GetVoucherByCustomerIdAndVoucherIdAsync(customerId, orderAdd.VoucherId);
                     if (voucher.IsNeedMinPrice)
                     {
@@ -717,6 +727,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                             totalFee = Math.Ceiling(totalFee*voucher.DeductMoney);
                         }
                     }
+                    UpdateCustomerConsumptionVoucherDto update = new UpdateCustomerConsumptionVoucherDto
+                    {
+                        CustomerVoucherId = voucher.Id,
+                        IsUsed = true,
+                        UseDate = DateTime.Now
+                    };
+                    await customerConsumptionVoucherService.UpdateCustomerConsumptionVoucherUseStatusAsync(update);
                 }
 
                 //微信支付
@@ -1306,7 +1323,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
             #endregion
             #region 上级奖励积分
-            if (!string.IsNullOrEmpty(userInfo.SuperiorId)) {
+            /*if (!string.IsNullOrEmpty(userInfo.SuperiorId)) {
                 var superiorUserInfo = await customerService.GetCustomerByUserIdAsync(userInfo.SuperiorId);
                 
                 decimal superiorIntegrationPercent = 0m;
@@ -1340,7 +1357,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     }
 
                 }
-            }
+            }*/
             #endregion
 
             #region 成长值奖励

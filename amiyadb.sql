@@ -1748,8 +1748,18 @@ CREATE TABLE `amiyadb`.`tbl_miniprogram_auto_send_message` (
 
 
 
+-----------------------------------------------王健 2023/1/9 BEGIN--------------------------------------------
 
+-----用户及商品标签关联表
 
+CREATE TABLE `tbl_tag_detail_info` (
+	`customer_goods_id` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_unicode_ci',
+	`tag_id` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_0900_ai_ci'
+)
+COLLATE='utf8mb4_0900_ai_ci'
+ENGINE=InnoDB;
+
+-----------------------------------------------王健 2023/1/9 END--------------------------------------------
 
 
 

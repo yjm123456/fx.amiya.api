@@ -65,6 +65,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.IsOldCustomer).HasColumnName("is_old_customer").HasColumnType("bit").IsRequired();
             builder.Property(t => t.IsAcompanying).HasColumnName("is_accompanying").HasColumnType("bit").IsRequired();
             builder.Property(e => e.CommissionRatio).HasColumnName("commission_ratio").HasColumnType("DECIMAL(5,2)").IsRequired();
+            builder.Property(e => e.IsRepeatProfundityOrder).HasColumnName("is_repeat_profundity_order").HasColumnType("bit").IsRequired();
 
             builder.HasOne(e => e.Contentplatform).WithMany(e => e.ContentPlatformOrderList).HasForeignKey(e=>e.ContentPlateformId);
             builder.HasOne(e => e.LiveAnchor).WithMany(e => e.ContentPlatformOrderList).HasForeignKey(e=>e.LiveAnchorId);

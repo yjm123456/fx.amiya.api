@@ -718,6 +718,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.SendHospitalName = order.SendHospitalName;
             var pictures = await _contentPlatFormCustomerPictureService.GetListAsync(orderUpdateInfo.Id);
             orderUpdateInfo.CustomerPictures = pictures.Select(z => z.CustomerPicture).ToList();
+            orderUpdateInfo.IsRepeatProfundityOrder = order.IsRepeatProfundityOrder;
             return ResultData<ContentPlateFormOrderVo>.Success().AddData("orderInfo", orderUpdateInfo);
         }
 
@@ -989,12 +990,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxTenantAuthorize]
         public async Task<ResultData> RepeateOrderAsync(ContentPlateFormOrderRepeateVo updateVo)
         {
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+            int hospitalempId = Convert.ToInt32(employee.Id);
             ContentPlateFormOrderRepeateDto updateDto = new ContentPlateFormOrderRepeateDto();
             updateDto.Id = updateVo.Id;
             updateDto.OrderId = updateVo.OrderId;
             updateDto.RepeatePictureUrl = updateVo.RepeatePictureUrl;
             updateDto.ToHospitalDate = updateVo.ToHospitalDate;
-            await _orderService.RepeateContentPlateFormOrderAsync(updateDto);
+            updateDto.IsProfundity = updateVo.IsProfundity;
+            await _orderService.RepeateContentPlateFormOrderAsync(updateDto, hospitalempId);
             return ResultData.Success();
         }
         /// <summary>

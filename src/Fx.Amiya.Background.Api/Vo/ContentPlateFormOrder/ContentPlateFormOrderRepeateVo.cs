@@ -30,5 +30,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 到院时间
         /// </summary>
         public DateTime ToHospitalDate { get; set; }
+        /// <summary>
+        /// 是否可深度
+        /// </summary>
+        public bool IsProfundity { get; set; }
     }
 }

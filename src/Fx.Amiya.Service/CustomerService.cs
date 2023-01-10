@@ -16,6 +16,7 @@ using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Common;
 using Fx.Common.Utils;
 using Fx.Infrastructure.DataAccess;
+using Fx.Amiya.Dto.TagDetailInfo;
 
 namespace Fx.Amiya.Service
 {
@@ -37,6 +38,8 @@ namespace Fx.Amiya.Service
         private IDalSendOrderInfo dalSendOrderInfo;
         private IDalTrackRecord dalTrackRecord;
         private IConsumptionLevelService _consumptionLevelService;
+        private IDalTagDetailInfo dalTagDetailInfo;
+        private ITagDetailInfoService tagDetailInfoService;
         public CustomerService(IDalCustomerInfo dalCustomerInfo,
             IDalUserInfo dalUserInfo,
             IDalBindCustomerService dalBindCustomerService,
@@ -52,7 +55,7 @@ namespace Fx.Amiya.Service
             IDalCustomerBaseInfo dalCustomerBaseInfo,
             IDalSendOrderInfo dalSendOrderInfo,
             IConsumptionLevelService consumptionLevelService,
-            IDalTrackRecord dalTrackRecord)
+            IDalTrackRecord dalTrackRecord, IDalTagDetailInfo dalTagDetailInfo, ITagDetailInfoService tagDetailInfoService)
         {
             this.dalCustomerInfo = dalCustomerInfo;
             this.dalUserInfo = dalUserInfo;
@@ -70,6 +73,8 @@ namespace Fx.Amiya.Service
             _customerHospitalConsumeService = customerHospitalConsumeService;
             _itemInfoService = itemInfoService;
             _amiyaHospitalDepartmentService = amiyaHospitalDepartmentService;
+            this.dalTagDetailInfo = dalTagDetailInfo;
+            this.tagDetailInfoService = tagDetailInfoService;
         }
         public async Task<string> BindCustomerAsync(string fxUserId, string phoneNumber)
         {
@@ -932,6 +937,28 @@ namespace Fx.Amiya.Service
             }).FirstOrDefaultAsync();
             return customer;
             
+        }
+        /// <summary>
+        /// 添加用户标签
+        /// </summary>
+        /// <param name="addCustomerTagDto"></param>
+        /// <returns></returns>
+        public async Task AddCustomerTag(AddCustomerTagDto addCustomerTagDto)
+        {
+            var tags = dalTagDetailInfo.GetAll().Where(e => e.CustomerGoodsId == addCustomerTagDto.CustomerId).Select(e=>e.TagId).ToList();
+            var listExcept= addCustomerTagDto.TagIds.Except(tags);
+            foreach (var item in listExcept)
+            {
+                AddTagDetailInfoDto add = new AddTagDetailInfoDto();
+                add.Id = addCustomerTagDto.CustomerId;
+                add.TagId = item;
+                await tagDetailInfoService.AddTagDetailInfoAsync(add);
+            }
+            var deleteTagIds = tags.Except(addCustomerTagDto.TagIds);
+            foreach (var item in deleteTagIds)
+            {
+                await tagDetailInfoService.DeleteAsync(addCustomerTagDto.CustomerId,item);
+            }
         }
     }
 }

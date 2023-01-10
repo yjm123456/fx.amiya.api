@@ -416,6 +416,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             ConsultatioType = d.ConsultationTypeText,
                                             CheckState = d.CheckState,
                                             OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
+                                            IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
                                         };
             FxPageInfo<SendContentPlatformOrderVo> pageInfo = new FxPageInfo<SendContentPlatformOrderVo>();
             pageInfo.TotalCount = orders.TotalCount;

@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Dto.WxAppConfig;
+using Fx.Amiya.Dto.WxAppInfo;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -42,5 +43,6 @@ namespace Fx.Amiya.IService
         /// <param name="updateInfo"></param>
         /// <returns></returns>
         Task UpdateEmailNotice(bool updateInfo);
+        Task SendNotice(WxNoticeDto wxNoticeDto);
     }
 }

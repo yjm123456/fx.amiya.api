@@ -114,6 +114,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 佣金比例
         /// </summary>
         public decimal CommissionRatio { get; set; }
+        /// <summary>
+        /// 是否是重单可深度订单
+        /// </summary>
+        public bool IsRepeatProfundityOrder { get; set; }
 
         public Contentplatform Contentplatform { get; set; }
         public LiveAnchor LiveAnchor { get; set; }

@@ -21,7 +21,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.CustomerName).HasColumnName("customer_name").HasColumnType("varchar(100)").IsRequired(false);
             builder.Property(e => e.CustomerPhone).HasColumnName("customer_phone").HasColumnType("varchar(45)").IsRequired(false);
             builder.Property(e => e.DealDate).HasColumnName("deal_date").HasColumnType("datetime").IsRequired(false);
-            builder.Property(e => e.DealGoods).HasColumnName("deal_goods").HasColumnType("varchar(300)").IsRequired(false);
+            builder.Property(e => e.DealGoods).HasColumnName("deal_goods").HasColumnType("varchar(3000)").IsRequired(false);
             builder.Property(e => e.TotalDealPrice).HasColumnName("total_deal_price").HasColumnType("decimal(12,2)").IsRequired(false);
             builder.Property(e => e.ReturnBackPricePercent).HasColumnName("return_back_price_percent").HasColumnType("decimal(4,2)").IsRequired(false);
             builder.Property(e => e.SystemUpdatePricePercent).HasColumnName("system_update_price_percent").HasColumnType("decimal(4,2)").IsRequired(false);

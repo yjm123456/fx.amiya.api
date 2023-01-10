@@ -158,7 +158,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task RepeateContentPlateFormOrderAsync(ContentPlateFormOrderRepeateDto input);
+        Task RepeateContentPlateFormOrderAsync(ContentPlateFormOrderRepeateDto input,int hospitalEmployeeId);
         Task<List<ContentPlatFormOrderInfoSimpleDto>> GetOrderListByPhoneAsync(string phone);
         /// <summary>
         /// 编辑订单

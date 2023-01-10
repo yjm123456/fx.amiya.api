@@ -1,7 +1,9 @@
 ﻿using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.WxAppConfig;
+using Fx.Amiya.Dto.WxAppInfo;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
+using Fx.Common.Utils;
 using Fx.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -17,12 +19,15 @@ namespace Fx.Amiya.Service
         private IDalConfig dalConfig;
         private IUnitOfWork unitOfWork;
         private IDalNoticeConfig dalNoticeConfig;
+        private IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService;
+
         public WxAppConfigService(IDalConfig dalConfig,
-            IUnitOfWork unitOfWork, IDalNoticeConfig dalNoticeConfig)
+            IUnitOfWork unitOfWork, IDalNoticeConfig dalNoticeConfig, IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService)
         {
             this.dalConfig = dalConfig;
             this.dalNoticeConfig = dalNoticeConfig;
             this.unitOfWork = unitOfWork;
+            this.dockingHospitalCustomerInfoService = dockingHospitalCustomerInfoService;
         }
 
 
@@ -169,6 +174,34 @@ namespace Fx.Amiya.Service
                 throw e;
             }
         }
+        /// <summary>
+        /// 给用户发送积分服务通知
+        /// </summary>
+        /// <param name="wxNoticeDto"></param>
+        /// <returns></returns>
+        public async Task SendNotice(WxNoticeDto wxNoticeDto)
+        {
+            var appInfo = await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(4);
+            var requestUrl = $"https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token={appInfo.AccessToken}";
+            var messageBody = new
+            {
+                template_id = "bbzpcTSDNUnsYCUQeeFz5u5-aRoVRDNUSffS1rNa_wE",
+                touser = "oJrxj5RfkI1gjFJOdAjA-t-UJJlA",
+                page = "/pages/index/default",// 点击提示信息要进入的小程序页面
+                miniprogram_state = "trial",
+                lang = "zh_CN",
+                data = new
+                {
+                    thing1 = new { value = $"{wxNoticeDto.Name}" },
+                    thing2 = new { value = $"{wxNoticeDto.ActivityName}" },
+                    character_string4 = new { value = $"+{wxNoticeDto.AddCount}" },
+                    time5 = new { value = wxNoticeDto.ExpireDate },
+                    number10 = new { value = wxNoticeDto.TotalCount }
+                }
+            };
+            string body = JsonConvert.SerializeObject(messageBody);
+            var result = HttpUtil.HTTPJsonPost(requestUrl, body);
 
+        }
     }
 }

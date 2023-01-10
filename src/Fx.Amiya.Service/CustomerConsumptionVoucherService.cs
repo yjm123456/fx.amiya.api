@@ -94,7 +94,8 @@ namespace Fx.Amiya.Service
                            Type = cv.Type,
                            WriteOfCode = ccv.WriteOfCode,
                            IsExpire = ccv.IsExpire,
-                           ExpireDate = ccv.ExpireDate
+                           ExpireDate = ccv.ExpireDate,
+                           Remark=cv.Remark
                        };
             //未使用
             if (type == 1)
@@ -488,8 +489,10 @@ namespace Fx.Amiya.Service
                  var voucher = dalConsumptionVoucher.GetAll().Where(e => e.MemberRankCode == member.MemberRankCode&&e.IsMemberVoucher==true).Select(e=>new MemberRecieveConsumptionVoucherDto { 
                     DeductMoney=e.Type==0? e.DeductMoney:e.DeductMoney*10,
                     VoucherName=e.Name,
-                     VoucherType=e.Type,
-                     VoucherCode=e.ConsumptionVoucherCode
+                    VoucherType=e.Type,
+                    VoucherCode=e.ConsumptionVoucherCode,
+                    Remark=e.Remark
+
                  }).ToList();
                 return voucher;
                 /*var voucherCode = member.MemberRankCode + "voucher";

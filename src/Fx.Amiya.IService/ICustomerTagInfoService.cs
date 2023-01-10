@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.CustomerTagInfo;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.CustomerTagInfo;
 using Fx.Amiya.Dto.WareHouse.WareHouseInfo;
 using Fx.Common;
 using System;
@@ -16,6 +17,16 @@ namespace Fx.Amiya.IService
         Task<CustomerTagInfoDto> GetByIdAsync(string id);
         Task UpdateAsync(UpdateCustomerTagInfoDto updateDto);
         Task DeleteAsync(string id);
+        /// <summary>
+        /// 获取分类标签名称
+        /// </summary>
+        /// <returns></returns>
+        Task<List<BaseKeyValueDto>> GetTagCategoryNameListAsync();
+        /// <summary>
+        /// 获取用户标签名称列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<BaseKeyValueDto>> GetCustomerTagNameList();
 
     }
 }

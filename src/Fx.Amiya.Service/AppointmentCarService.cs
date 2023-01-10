@@ -89,7 +89,7 @@ namespace Fx.Amiya.Service
             {
                 BaseKeyValueDto baseKeyValueDto = new BaseKeyValueDto();
                 baseKeyValueDto.Key = Convert.ToInt32(item).ToString();
-                baseKeyValueDto.Value = ServiceClass.GetAppointCArStatusType(Convert.ToInt32(item));
+                baseKeyValueDto.Value = ServiceClass.GetAppointmentCarStatusText(Convert.ToInt32(item));
                 consumptionVoucherTypeList.Add(baseKeyValueDto);
             }
             return consumptionVoucherTypeList;
@@ -152,7 +152,7 @@ namespace Fx.Amiya.Service
 
         public async Task<FxPageInfo<WxAppointmentCarInfoDto>> WxGetListByPageAsync(string customerId, int pageNum, int pageSize, int? status)
         {
-            var record = dalAppointmentCar.GetAll().Where(e => e.CustomerId == customerId && e.Valid == true && (!status.HasValue|| e.Status == status)).Select(e => new WxAppointmentCarInfoDto
+            var record = dalAppointmentCar.GetAll().Where(e => e.CustomerId == customerId && e.Valid == true && (!status.HasValue|| e.Status == status)).OrderByDescending(e=>e.CreateDate).Select(e => new WxAppointmentCarInfoDto
             {
                 Id=e.Id,
                 AppointmentDate = e.AppointmentDate,

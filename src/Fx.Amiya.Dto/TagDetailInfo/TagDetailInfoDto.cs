@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Dto.CustomerTagInfo
+namespace Fx.Amiya.Dto.TagDetailInfo
 {
-    public class UpdateCustomerTagInfoDto:BaseDto
+    
+    public class TagDetailInfoDto
     {
+        public string TagId { get; set; }
         public string TagName { get; set; }
-        public bool Valid { get; set; }
-        public int TagCategory { get; set; }
     }
 }

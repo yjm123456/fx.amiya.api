@@ -84,7 +84,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 unitOfWork.BeginTransaction();
                 if (string.IsNullOrEmpty(add.VoucherId))
                 {
-                    decimal TotalIntegration = 0;
+                    /*decimal TotalIntegration = 0;
                     switch (add.CarType)
                     {
                         case 0:
@@ -103,23 +103,23 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     if (TotalIntegration == 0)
                     {
                         throw new Exception("车型错误");
-                    }
+                    }*/
                     var date = DateTime.Now;
                     var NextDay = date.AddDays(1).Date;
                     if (add.AppointmentDate< NextDay) {
                         throw new Exception("预约时间不能早于明天");
                     }
-                    decimal integrationBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(customerId);
+                    /*decimal integrationBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(customerId);
                     if (TotalIntegration > integrationBalance)
-                        throw new Exception("积分余额不足");
+                        throw new Exception("积分余额不足");*/
                     AddAppointmentCarDto addAppointmentCarDto = new AddAppointmentCarDto();
                     addAppointmentCarDto.Id = Guid.NewGuid().ToString().Replace("-", "");
                     UseIntegrationDto useIntegrationDto = new UseIntegrationDto();
                     useIntegrationDto.CustomerId = customerId;
                     useIntegrationDto.OrderId = addAppointmentCarDto.Id;
                     useIntegrationDto.Date = DateTime.Now;
-                    useIntegrationDto.UseQuantity = TotalIntegration;
-                    await integrationAccountService.UseByGoodsConsumption(useIntegrationDto);
+                    useIntegrationDto.UseQuantity = 0;
+                    //await integrationAccountService.UseByGoodsConsumption(useIntegrationDto);
                     addAppointmentCarDto.Name = add.Name;
                     addAppointmentCarDto.Phone = add.Phone;
                     addAppointmentCarDto.AppointmentDate = add.AppointmentDate;

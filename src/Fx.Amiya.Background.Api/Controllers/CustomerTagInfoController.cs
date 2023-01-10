@@ -56,6 +56,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                               {
                                   Id = d.Id,
                                   TagName = d.TagName,
+                                  TagCategory=d.TagCategory,
+                                  TagCategoryName =d.TagCategoryName,
                                   CreateDate = d.CreateDate,
                                   Valid = d.Valid
                               };
@@ -112,6 +114,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 AddCustomerTagInfoDto addDto = new AddCustomerTagInfoDto();
                 addDto.TagName = addVo.TagName;
+                addDto.TagCategory = addVo.TagCategory;
                 await customerTagInfoService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -138,7 +141,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 customerTagInfoVo.Id = customerTagInfo.Id;
                 customerTagInfoVo.TagName = customerTagInfo.TagName;
                 customerTagInfoVo.Valid = customerTagInfo.Valid;
-
+                customerTagInfoVo.TagCategory = customerTagInfo.TagCategory;
+                customerTagInfoVo.TagCategoryName = customerTagInfo.TagCategoryName;
                 return ResultData<CustomerTagInfoVo>.Success().AddData("customerTagInfoInfo", customerTagInfoVo);
             }
             catch (Exception ex)
@@ -162,6 +166,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.Id = updateVo.Id;
                 updateDto.TagName = updateVo.TagName;
                 updateDto.Valid = updateVo.Valid;
+                updateDto.TagCategory = updateVo.TagCategory;
                 await customerTagInfoService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -190,6 +195,31 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 throw ex;
             }
+        }
+        /// <summary>
+        /// 获取用户标签名称列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("customerTagNameList")]
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetCustomerTagNameList() {
+            var list=(await customerTagInfoService.GetCustomerTagNameList()).Select(e=>new BaseIdAndNameVo { 
+                Id=e.Key,
+                Name=e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("customerTagNameList",list);
+        }
+        /// <summary>
+        /// 获取标签类别名称列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("tagCategoryNameList")]
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetTagCategoryNameList() { 
+            var list= (await customerTagInfoService.GetTagCategoryNameListAsync()).Select(e => new BaseIdAndNameVo
+            {
+                Id = e.Key,
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("tagCategoryNameList", list);
         }
 
     }

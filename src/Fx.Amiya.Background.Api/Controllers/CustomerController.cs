@@ -10,6 +10,7 @@ using Fx.Amiya.Core.Interfaces.MemberCard;
 using Fx.Amiya.Dto.CustomerBaseInfo;
 using Fx.Amiya.Dto.CustomerInfo;
 using Fx.Amiya.Dto.CustomerIntergration;
+using Fx.Amiya.Dto.TagDetailInfo;
 using Fx.Amiya.IService;
 using Fx.Amiya.Service;
 using Fx.Authorization.Attributes;
@@ -32,10 +33,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IMemberCard memberCardService;
         private IIntegrationAccount integrationAccountService;
         private IWxAppConfigService wxAppConfigService;
+        private ITagDetailInfoService tagDetailInfoService;
         public CustomerController(ICustomerService customerService, IHttpContextAccessor httpContextAccessor,
             ICustomerBaseInfoService customerBaseInfoService,
             IWxAppConfigService wxAppConfigService,
-            IMemberCard memberCardService, IIntegrationAccount integrationAccountService)
+            IMemberCard memberCardService, IIntegrationAccount integrationAccountService, ITagDetailInfoService tagDetailInfoService)
         {
             this.customerService = customerService;
             this.httpContextAccessor = httpContextAccessor;
@@ -43,6 +45,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             this.wxAppConfigService = wxAppConfigService;
             this.memberCardService = memberCardService;
             this.integrationAccountService = integrationAccountService;
+            this.tagDetailInfoService = tagDetailInfoService;
         }
 
 
@@ -607,6 +610,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             editDto.OrderId = editVo.OrderId;
             editDto.ActualPayment = editVo.ActualPayment;
             await integrationAccountService.AddInterGrationAsync(editDto);
+            
             return ResultData.Success();
         }
 
@@ -666,6 +670,21 @@ namespace Fx.Amiya.Background.Api.Controllers
             customerBaseInfoVo.Age = customerBaseInfo.Age;
             return ResultData<CustomerBaseInfoVo>.Success().AddData("customerBaseInfo", customerBaseInfoVo);
         }
+        /// <summary>
+        /// 添加用户标签
+        /// </summary>
+        /// <param name="add"></param>
+        /// <returns></returns>
+        [HttpPost("addCustomerTag")]
+        public async Task<ResultData> AddCustomerTag(AddCustomerTagVo add) {
+            AddCustomerTagDto tagDto = new AddCustomerTagDto();
+            tagDto.CustomerId = add.CustomerId;
+            tagDto.TagIds = add.TagIds;
+            await customerService.AddCustomerTag(tagDto);
+            return ResultData.Success();
+        }
+
+        
 
         /// <summary>
         /// 根据加密电话获取详细信息

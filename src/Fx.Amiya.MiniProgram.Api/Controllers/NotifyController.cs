@@ -548,6 +548,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     else {
                         if (notifyParam.orderStatus.ToUpper() == "SUCCESS")
                         {
+                            bool isMaterialOrder = false;
                             var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(notifyParam.transNo);
                             if (orderTrade.StatusCode == OrderStatusCode.WAIT_BUYER_PAY)
                             {
@@ -556,7 +557,15 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                 {
                                     UpdateOrderDto updateOrder = new UpdateOrderDto();
                                     updateOrder.OrderId = item.Id;
-                                    updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                                    if (item.OrderType == (byte)OrderType.MaterialOrder)
+                                    {
+                                        updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                                        isMaterialOrder = true;
+                                    }
+                                    else if(item.OrderType == (byte)OrderType.VirtualOrder)
+                                    {
+                                        updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                                    }                                    
                                     if (item.ActualPayment.HasValue)
                                     {
                                         updateOrder.Actual_payment = item.ActualPayment.Value;
@@ -586,7 +595,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                 UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
                                 updateOrderTrade.TradeId = notifyParam.transNo;
                                 updateOrderTrade.AddressId = orderTrade.AddressId;
-                                updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                                if (isMaterialOrder) {
+                                    updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                                } else {
+                                    updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                                }
+
                                 await orderService.UpdateOrderTradeAsync(updateOrderTrade);
                             }
                         }

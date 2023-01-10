@@ -80,7 +80,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
 
                 //计算积分
-                /*var orders = await orderService.GetTradeFinishOrderListByCustomerIdAsync(fxCustomerId);
+                var orders = await orderService.GetTradeFinishOrderListByCustomerIdAsync(fxCustomerId);
                 foreach (var order in orders.ToList())
                 {
                     var memberRank = await memberRankInfoService.GetMinGeneratePercentMemberRankInfoAsync();
@@ -91,10 +91,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     consumptionIntegration.Date = DateTime.Now;
                     consumptionIntegration.Quantity = Math.Floor(memberRank.GenerateIntegrationPercent * order.ActualPayment);
                     consumptionIntegration.Percent = memberRank.GenerateIntegrationPercent;
-                  
+
                     if (consumptionIntegration.Quantity > 0)
                         await integrationAccountService.AddByConsumptionAsync(consumptionIntegration);
-                }*/
+                }
 
                 //初始化成长值账号
                 await growthPointsAccountService.AddAsync(new CreateGrowthPointsAccountDto {CustomerId= fxCustomerId,Balance=0});

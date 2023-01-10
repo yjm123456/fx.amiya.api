@@ -80,12 +80,16 @@ namespace Fx.Amiya.Service
                 throw new Exception("当前订单状态不能退款");
             }
             
+            
             List<string> ids = new List<string>();
             foreach (var item in trade.OrderInfoList)
             {
+                if (item.ExchangeType==0) {
+                    throw new Exception("积分支付订单不能申请退款!");
+                }
                 if (item.AppType != (byte)AppType.MiniProgram)
                 {
-                    throw new Exception("当前订单不属于小程序");
+                    throw new Exception("当前订单不属于小程序!");
                 }
                 else {
                     ids.Add(item.Id);

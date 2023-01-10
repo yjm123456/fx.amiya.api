@@ -371,7 +371,7 @@ namespace Fx.Amiya.Service
                      && (string.IsNullOrEmpty(keyword) || d.ContentPlatformOrder.Id.Contains(keyword) || d.ContentPlatformOrder.Phone.Contains(keyword) || d.ContentPlatformOrder.CustomerName.Contains(keyword))
                      && (!IsToHospital.HasValue || d.ContentPlatformOrder.IsToHospital == IsToHospital)
                      && (!toHospitalType.HasValue || d.ContentPlatformOrder.ToHospitalType == toHospitalType.Value)
-                       && (d.ContentPlatformOrder.OrderStatus == Convert.ToInt32(ContentPlateFormOrderStatus.ConfirmOrder) || d.ContentPlatformOrder.OrderStatus == Convert.ToInt32(ContentPlateFormOrderStatus.WithoutCompleteOrder))
+                       && (d.ContentPlatformOrder.OrderStatus == Convert.ToInt32(ContentPlateFormOrderStatus.ConfirmOrder)|| d.ContentPlatformOrder.OrderStatus == Convert.ToInt32(ContentPlateFormOrderStatus.RepeatOrderProfundity) || d.ContentPlatformOrder.OrderStatus == Convert.ToInt32(ContentPlateFormOrderStatus.WithoutCompleteOrder))
                     select d;
 
             if (startDate != null && endDate != null)
@@ -591,7 +591,7 @@ namespace Fx.Amiya.Service
                        .Where(e => !toHospitalType.HasValue || e.ContentPlatformOrder.ToHospitalType == toHospitalType.Value)
                        .Where(e => !consultationEmpId.HasValue || e.ContentPlatformOrder.ConsultationEmpId == consultationEmpId.Value)
                        .Where(e => !liveAnchorId.HasValue || e.ContentPlatformOrder.LiveAnchorId == liveAnchorId.Value)
-                       .Where(e => orderStatus == null || e.ContentPlatformOrder.OrderStatus == orderStatus)
+                       .Where(e => orderStatus == null || ( orderStatus!=null && orderStatus == (int)ContentPlateFormOrderStatus.RepeatOrderProfundity ? e.ContentPlatformOrder.IsRepeatProfundityOrder == true : e.ContentPlatformOrder.OrderStatus == orderStatus))
                        .Where(e => string.IsNullOrWhiteSpace(contentPlatFormId) || e.ContentPlatformOrder.ContentPlateformId == contentPlatFormId);
             if (startDate != null && endDate != null)
             {
@@ -659,7 +659,8 @@ namespace Fx.Amiya.Service
                                             UnDealPictureUrl = d.ContentPlatformOrder.UnDealPictureUrl,
                                             OtherContentPlatFormOrderId = d.ContentPlatformOrder.OtherContentPlatFormOrderId,
                                             OrderSourceText = ServiceClass.GerContentPlatFormOrderSourceText(d.ContentPlatformOrder.OrderSource.Value),
-                                            AcceptConsulting = d.ContentPlatformOrder.AcceptConsulting
+                                            AcceptConsulting = d.ContentPlatformOrder.AcceptConsulting,
+                                            IsRepeatProfundityOrder=d.ContentPlatformOrder.IsRepeatProfundityOrder
                                         };
 
             FxPageInfo<SendContentPlatformOrderDto> pageInfo = new FxPageInfo<SendContentPlatformOrderDto>();

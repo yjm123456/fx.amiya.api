@@ -357,13 +357,15 @@ namespace Fx.Amiya.Service
                     break;
 
                 case 5:
-                    typeText = "医院重单";
+                    typeText = "重单-不可深度";
                     break;
 
                 case 6:
                     typeText = "未成交";
                     break;
-
+                case 7:
+                    typeText = "重单-可深度";
+                    break;
             }
             return typeText;
         }
@@ -908,6 +910,26 @@ namespace Fx.Amiya.Service
                     break;
             }
             return consumptionVoucherTypeText;
+        }
+        /// <summary>
+        /// 获取抵用券类型
+        /// </summary>
+        /// <param name="orderFrom"></param>
+        /// <returns></returns>
+        public static string GetTagCategoryType(int consumptionVoucherType)
+        {
+            string tagCategory = "";
+            switch (consumptionVoucherType)
+            {
+                case 0:
+                    tagCategory = "用户标签";
+                    break;
+
+                case 1:
+                    tagCategory = "商品标签";
+                    break;
+            }
+            return tagCategory;
         }
         /// <summary>
         /// 获取预约状态

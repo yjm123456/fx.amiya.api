@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.DbModels.Model
 {
-    public class CustomerTagInfo : BaseDbModel
+    public class TagDetailInfo
     {
-        public string TagName { get; set; }
-        public int? TagCategory { get; set; }
+        public string CustomerGoodsId { get; set; }
+        public string TagId { get; set; }
     }
 }

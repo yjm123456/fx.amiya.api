@@ -39,5 +39,6 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// </summary>
 
         public int SendBy { get; set; }
+
     }
 }

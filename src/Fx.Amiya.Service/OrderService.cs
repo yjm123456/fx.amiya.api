@@ -75,6 +75,7 @@ namespace Fx.Amiya.Service
         private IDalNoticeConfig dalNoticeConfig;
         private IExpressManageService _expressManageService;
         private IAmiyaGoodsDemandService _amiyaGoodsDemandService;
+        private ICustomerConsumptionVoucherService customerConsumptionVoucherService;
         public OrderService(
             IDalContentPlatformOrder dalContentPlatFormOrder,
             IDalOrderInfo dalOrderInfo,
@@ -103,7 +104,7 @@ namespace Fx.Amiya.Service
             IExpressManageService expressManageService,
             IFxSmsBasedTemplateSender smsSender,
              IMemberRankInfo memberRankInfoService,
-            IIntegrationAccount integrationAccountService)
+            IIntegrationAccount integrationAccountService, ICustomerConsumptionVoucherService customerConsumptionVoucherService)
         {
             this.dalOrderInfo = dalOrderInfo;
             this.dalCustomerInfo = dalCustomerInfo;
@@ -133,6 +134,7 @@ namespace Fx.Amiya.Service
             _smsSender = smsSender;
             _dalContentPlatFormOrder = dalContentPlatFormOrder;
             _expressManageService = expressManageService;
+            this.customerConsumptionVoucherService = customerConsumptionVoucherService;
         }
         //WxPayAccount _payAccount = new WxPayAccount("wx695942e4818de445", "0b2e89d17e84a947244569d0ec63b816", "1611476157", "asdfg67890asdfg67890asdfg67890as", false, "", "");
         WxPayAccount _payAccount = new WxPayAccount("wx695942e4818de445", "0b2e89d17e84a947244569d0ec63b816", "1632393371", "Amy20202020202020202020202020202", false, "", "");
@@ -1037,6 +1039,31 @@ namespace Fx.Amiya.Service
                 if (orderTradeAddDto.OrderInfoAddList.Count(e => e.OrderType == (byte)OrderType.MaterialOrder) > 0)
                     orderTrade.AddressId = orderTradeAddDto.AddressId;
                 orderTrade.TotalAmount = orderTradeAddDto.OrderInfoAddList.Sum(e => e.ActualPayment);
+                if (!string.IsNullOrEmpty(orderTradeAddDto.VoucherId)) {                   
+                    var voucher = await customerConsumptionVoucherService.GetVoucherByCustomerIdAndVoucherIdAsync(orderTradeAddDto.CustomerId, orderTradeAddDto.VoucherId);
+                    if (voucher.IsNeedMinPrice)
+                    {
+                        if (orderTrade.TotalAmount < voucher.MinPrice)
+                        {
+                            throw new Exception("支付金额不满足抵用券使用条件");
+                        }
+                        if (voucher.Type == 0)
+                        {
+                            orderTrade.TotalAmount = orderTrade.TotalAmount - voucher.DeductMoney;
+                        }
+                        else if (voucher.Type == 4)
+                        {
+                            orderTrade.TotalAmount = Math.Ceiling(orderTrade.TotalAmount.Value * voucher.DeductMoney);
+                        }
+                    }
+                    /*UpdateCustomerConsumptionVoucherDto update = new UpdateCustomerConsumptionVoucherDto
+                    {
+                        CustomerVoucherId = voucher.Id,
+                        IsUsed = true,
+                        UseDate = DateTime.Now
+                    };
+                    await customerConsumptionVoucherService.UpdateCustomerConsumptionVoucherUseStatusAsync(update);*/
+                }
                 orderTrade.TotalIntegration = orderTradeAddDto.OrderInfoAddList.Sum(e => e.IntegrationQuantity);
                 orderTrade.Remark = orderTradeAddDto.Remark;
                 orderTrade.IsAdminAdd = orderTradeAddDto.IsAdminAdd;

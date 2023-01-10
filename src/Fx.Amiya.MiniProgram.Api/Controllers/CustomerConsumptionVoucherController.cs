@@ -66,7 +66,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 UseDate = s.UseDate,
                 Source = s.Source,
                 Type = s.Type,
-                WirteOfCode = s.WriteOfCode
+                WirteOfCode = s.WriteOfCode,
+                Remark=s.Remark
             }).ToList();
             return ResultData<FxPageInfo<CustomerConsumptionVoucherInfoVo>>.Success().AddData("customerConsumptionVoucherList", pageInfo);
         }
@@ -125,7 +126,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             string token = _tokenReader.GetToken();
             var sessionInfo = _sessionStorage.GetSession(token);
             string customerId = sessionInfo.FxCustomerId;
-            var voucher = await customerConsumptionVoucherService.GetOverAllCustomerConsumptionVoucherListAsync(customerId, isUsed, goodsId);
+            var voucher = await customerConsumptionVoucherService.GetOverAllCustomerConsumptionVoucherListAsync(customerId, false, goodsId);
             if (voucher.Count()==0)
             {
                 return ResultData<List<CustomerConsumptionVoucherInfoVo>>.Success().AddData("customerOverAllConsumptionVoucher", null);
@@ -280,7 +281,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     VoucherName = e.VoucherName,
                     DeductMoney = e.DeductMoney,
                     VoucherType = e.VoucherType,
-                    VoucherCode = e.VoucherCode
+                    VoucherCode = e.VoucherCode,
+                    Remark=e.Remark
                 }).ToList();
             }
             /*MemberReciveVoucherVo memberReciveVoucherVo = new MemberReciveVoucherVo();

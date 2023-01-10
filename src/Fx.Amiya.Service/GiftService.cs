@@ -545,8 +545,6 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<FxPageInfo<ReceiveGiftWrapperOfWxDto>> GetReceiveGiftListByCustomerIdAsync(string customerId, int pageNum, int pageSize,string categoryId)
         {
-
-
             var receiveGift = from d in dalReceiveGift.GetAll()
                               .Include(e => e.GiftInfo)
                               where d.CustomerId == customerId && d.GiftInfo.CategoryId==categoryId
@@ -571,6 +569,7 @@ namespace Fx.Amiya.Service
             {
                 if (item.IsSendGoods)
                 {
+                    //当前快递单号是否已存在
                     if (receiveGiftOfWxDtoList.Exists(e => e.CourierNumber == item.CourierNumber))
                     {
                         var r = receiveGiftOfWxDtoList.SingleOrDefault(e => e.CourierNumber == item.CourierNumber);

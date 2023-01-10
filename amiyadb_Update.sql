@@ -1789,6 +1789,18 @@ ALTER TABLE `tbl_gift_info`
 -----------------------------王健 2023/01/03 END -----------------------------
 
 
+-----------------------------王健 2023/01/05 BEGIN -----------------------------
+
+---内容平台订单表添加是否是重单可深度订单
+
+ALTER TABLE `tbl_content_platform_order`
+	ADD COLUMN `is_repeat_profundity_order` BIT NOT NULL DEFAULT 0 AFTER `commission_ratio`;
+
+-----标签添加类别
+ALTER TABLE `tbl_customer_tag_info`
+	ADD COLUMN `tag_category` INT NULL DEFAULT NULL AFTER `tag_name`;
+
+-----------------------------王健 2023/01/05 END -----------------------------
 
 
 

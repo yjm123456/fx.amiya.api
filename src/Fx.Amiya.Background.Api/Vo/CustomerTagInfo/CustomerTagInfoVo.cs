@@ -11,5 +11,13 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerTagInfo
         /// 标签名称
         /// </summary>
         public string TagName { get; set; }
+        /// <summary>
+        /// 标签类别名称
+        /// </summary>
+        public string TagCategoryName { get; set; }
+        /// <summary>
+        /// 标签类别
+        /// </summary>
+        public int? TagCategory { get; set; }
     }
 }

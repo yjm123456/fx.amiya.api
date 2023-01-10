@@ -401,7 +401,6 @@ namespace Fx.Amiya.Service
             var requestUrl = $"https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token={appInfo.AccessToken}";
             var data = new { scene = userId, page = "pages/index/index", width =640, env_version= "release" };
             var res = await HttpUtil.HttpJsonPostForOriginStreamAsync(requestUrl, JsonConvert.SerializeObject(data));
-            //string result = Convert.ToBase64String(res);
             var str = WxQrCodeDemo(res,avatar);
             string result = Convert.ToBase64String(str);
             return result;
