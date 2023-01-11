@@ -724,7 +724,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         if (voucher.Type == 0) {
                             totalFee = (totalFee - voucher.DeductMoney)<=0 ? 0.01m: (totalFee - voucher.DeductMoney);
                         } else if (voucher.Type==4) {
-                            totalFee = Math.Ceiling(totalFee*voucher.DeductMoney)<=0 ? 0.01m : (totalFee - voucher.DeductMoney);
+                            totalFee = Math.Ceiling(totalFee*voucher.DeductMoney)<=0 ? 0.01m : Math.Ceiling(totalFee * voucher.DeductMoney);
                         }
                     }
                     UpdateCustomerConsumptionVoucherDto update = new UpdateCustomerConsumptionVoucherDto
