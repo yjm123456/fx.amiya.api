@@ -644,6 +644,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             ReturnBackDate = d.ReturnBackDate,
                                             ReturnBackPrice = d.ReturnBackPrice,
                                             CreateByEmpName = d.CreateByEmpName,
+                                            IsRepeatProfundityOrder=d.IsRepeatProfundityOrder==true ? "是":"否"
                                         };
             List<ContentPlatFormOrderDealInfoReportVo> pageInfo = new List<ContentPlatFormOrderDealInfoReportVo>();
             pageInfo = contentPlatformOrders.ToList();
@@ -728,6 +729,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             ReturnBackDate = d.ReturnBackDate,
                                             ReturnBackPrice = d.ReturnBackPrice,
                                             CreateByEmpName = d.CreateByEmpName,
+                                            IsRepeatProfundityOrder=d.IsRepeatProfundityOrder==true ? "是" : "否",
                                         };
             var exportContentPlatFormDealOrder = contentPlatformOrders.ToList();
             var stream = ExportExcelHelper.ExportExcel(exportContentPlatFormDealOrder);

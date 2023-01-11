@@ -230,5 +230,9 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 归属主播
         /// </summary>
         public string BelongLiveAnchor { get; set; }
+        /// <summary>
+        /// 是否是重单可深度订单
+        /// </summary>
+        public bool IsRepeatProfundityOrder { get; set; }
     }
 }

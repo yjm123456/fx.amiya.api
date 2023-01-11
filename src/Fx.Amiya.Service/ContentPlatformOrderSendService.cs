@@ -325,7 +325,8 @@ namespace Fx.Amiya.Service
                                 IsToHospital = d.ContentPlatformOrder.IsToHospital,
                                 ToHospitalDate = d.ContentPlatformOrder.ToHospitalDate,
                                 ToHospitalType = d.ContentPlatformOrder.ToHospitalType,
-                                ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ContentPlatformOrder.ToHospitalType)
+                                ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ContentPlatformOrder.ToHospitalType),
+                                IsRepeatProfundityOrder=d.ContentPlatformOrder.IsRepeatProfundityOrder
                             };
             FxPageInfo<ContentPlatFormOrderSendInfoDto> sendOrderPageInfo = new FxPageInfo<ContentPlatFormOrderSendInfoDto>();
             sendOrderPageInfo.TotalCount = await sendOrder.CountAsync();
@@ -434,7 +435,8 @@ namespace Fx.Amiya.Service
                                 IsToHospital = d.ContentPlatformOrder.IsToHospital,
                                 ToHospitalDate = d.ContentPlatformOrder.ToHospitalDate,
                                 ToHospitalType = d.ContentPlatformOrder.ToHospitalType,
-                                ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ContentPlatformOrder.ToHospitalType)
+                                ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ContentPlatformOrder.ToHospitalType),
+                                IsRepeatProfundityOrder=d.ContentPlatformOrder.IsRepeatProfundityOrder
                             };
             FxPageInfo<ContentPlatFormOrderSendInfoDto> sendOrderPageInfo = new FxPageInfo<ContentPlatFormOrderSendInfoDto>();
             sendOrderPageInfo.TotalCount = await sendOrder.CountAsync();

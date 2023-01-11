@@ -926,23 +926,111 @@ namespace Fx.Amiya.Service
             return await hospital.ToListAsync();
         }
 
-        public async Task<List<HospitalNameDto>> GetWxHospitalNameListAsync(bool? valid, string name, bool? isShowInMiniProgram)
+        public async Task<FxPageInfo<WxHospitalInfoDto>> GetWxHospitalNameListAsync(int pageNum, int pageSize, string city, string hospitalName, List<string> tags)
         {
             try
             {
-                var hospital = from d in dalHospitalInfo.GetAll()
-                               where (valid == null || d.Valid == valid) &&(isShowInMiniProgram==null || d.IsShareInMiniProgram==isShowInMiniProgram)
-                               && (string.IsNullOrWhiteSpace(name) || d.Name.Contains(name))
-                               select new HospitalNameDto
+                var hospital = from h in dalHospitalInfo.GetAll()
+                               .Include(e => e.RecommendHospitalInfoList)
+                               where h.Valid
+                               && (city == null || h.Address.Contains(city))
+                               && (hospitalName == null || h.Name.Contains(hospitalName))
+                               && (h.IsShareInMiniProgram==true)
+                               select new WxHospitalInfoDto
                                {
-                                   Id = d.Id,
-                                   Name = d.Name
-                               };
+                                   Id = h.Id,
+                                   Name = h.Name,
+                                   Address = h.Address,
+                                   Longitude = h.Longitude,
+                                   Latitude = h.Latitude,
+                                   Phone = h.Phone,
+                                   ThumbPicUrl = h.ThumbPicUrl,
+                                   IsRecommend = GetRecommendHospital(h.RecommendHospitalInfoList) == null ? false : true,
+                                   RecommendIndex = GetRecommendHospital(h.RecommendHospitalInfoList),
+                                   DocterList = (from d in h.DocterList
+                                                 select new DocterDto
+                                                 {
+                                                     Id = d.Id,
+                                                     Name = d.Name,
+                                                     PicUrl = d.PicUrl,
+                                                     Position = d.Position,
+                                                     WorkYearNumer = DateTime.Now.Year - d.ObtainEmploymentYear,
+                                                     Description = d.Description,
+                                                 }).ToList(),
 
-                return await hospital.ToListAsync();
+                                   ScaleTagList = (from s in h.HospitalTagDetailList
+                                                   where s.TagInfo.Valid && s.TagInfo.Type == 0
+                                                   select new HospitalTagNameDto
+                                                   {
+                                                       Id = s.TagId,
+                                                       Name = s.TagInfo.Name
+                                                   }).ToList(),
+
+                                   FacilityTagList = (from s in h.HospitalTagDetailList
+                                                      where s.TagInfo.Valid && s.TagInfo.Type == 1
+                                                      select new HospitalTagNameDto
+                                                      {
+                                                          Id = s.TagId,
+                                                          Name = s.TagInfo.Name
+                                                      }).ToList()
+                               };
+                var q = await hospital.ToListAsync();
+
+                List<WxHospitalInfoDto> hospitalListResult = new List<WxHospitalInfoDto>();
+                List<WxHospitalInfoDto> hospitalList = new List<WxHospitalInfoDto>();
+                hospitalList.AddRange(q.Where(e => e.IsRecommend).OrderBy(e => e.RecommendIndex));
+                hospitalList.AddRange(q.Where(e => e.IsRecommend == false));
+                if (tags.Count > 0)
+                {
+                    foreach (var x in hospitalList)
+                    {
+                        bool IsAdd = false;
+                        for (int a = 0; a < tags.Count; a++)
+                        {
+                            if (x.ScaleTagList.Exists(k => k.Id == Convert.ToInt16(tags[a])) || x.FacilityTagList.Exists(o => o.Id == Convert.ToInt16(tags[a])))
+                            {
+                                IsAdd = true;
+                            }
+                            else
+                            {
+                                IsAdd = false;
+                                break;
+                            }
+
+                        }
+                        if (IsAdd == true)
+                        {
+                            WxHospitalInfoDto hospitalInfoResultDto = new WxHospitalInfoDto();
+                            hospitalInfoResultDto.Id = x.Id;
+                            hospitalInfoResultDto.Name = x.Name;
+                            hospitalInfoResultDto.Address = x.Address;
+                            hospitalInfoResultDto.Longitude = x.Longitude;
+                            hospitalInfoResultDto.Latitude = x.Latitude;
+                            hospitalInfoResultDto.Phone = x.Phone;
+                            hospitalInfoResultDto.ThumbPicUrl = x.ThumbPicUrl;
+                            hospitalInfoResultDto.IsRecommend = x.IsRecommend;
+                            hospitalInfoResultDto.RecommendIndex = x.RecommendIndex;
+                            hospitalInfoResultDto.DocterList = x.DocterList;
+                            hospitalInfoResultDto.ScaleTagList = x.ScaleTagList;
+                            hospitalInfoResultDto.FacilityTagList = x.FacilityTagList;
+                            hospitalListResult.Add(hospitalInfoResultDto);
+                        }
+                    }
+                }
+                else
+                {
+                    hospitalListResult = hospitalList;
+                }
+
+                FxPageInfo<WxHospitalInfoDto> hospitalPageInfo = new FxPageInfo<WxHospitalInfoDto>();
+                hospitalPageInfo.TotalCount = hospitalListResult.Count();
+                hospitalPageInfo.List = hospitalListResult.Skip((pageNum - 1) * pageSize).Take(pageSize);
+                return hospitalPageInfo;
+                //HACK 排序
             }
             catch (Exception ex)
             {
+
                 throw ex;
             }
         }

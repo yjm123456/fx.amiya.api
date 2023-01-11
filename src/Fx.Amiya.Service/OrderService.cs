@@ -1049,11 +1049,11 @@ namespace Fx.Amiya.Service
                         }
                         if (voucher.Type == 0)
                         {
-                            orderTrade.TotalAmount = orderTrade.TotalAmount - voucher.DeductMoney;
+                            orderTrade.TotalAmount = (orderTrade.TotalAmount - voucher.DeductMoney)<=0 ? 0.01m: (orderTrade.TotalAmount - voucher.DeductMoney);
                         }
                         else if (voucher.Type == 4)
                         {
-                            orderTrade.TotalAmount = Math.Ceiling(orderTrade.TotalAmount.Value * voucher.DeductMoney);
+                            orderTrade.TotalAmount = Math.Ceiling(orderTrade.TotalAmount.Value * voucher.DeductMoney)<=0 ? 0.01m : Math.Ceiling(orderTrade.TotalAmount.Value * voucher.DeductMoney);
                         }
                     }
                     /*UpdateCustomerConsumptionVoucherDto update = new UpdateCustomerConsumptionVoucherDto
@@ -1709,6 +1709,7 @@ namespace Fx.Amiya.Service
                         where d.Phone == customer.Phone
                         && d.StatusCode == OrderStatusCode.TRADE_FINISHED
                         && d.ActualPayment > 0
+                        && d.AppType !=(byte)AppType.MiniProgram
                         select new OrderInfo
                         {
                             Id = d.Id,

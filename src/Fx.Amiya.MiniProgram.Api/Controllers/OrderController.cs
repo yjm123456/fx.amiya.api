@@ -722,9 +722,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                             throw new Exception("支付金额不满足抵用券使用条件");
                         }
                         if (voucher.Type == 0) {
-                            totalFee = totalFee - voucher.DeductMoney;
+                            totalFee = (totalFee - voucher.DeductMoney)<=0 ? 0.01m: (totalFee - voucher.DeductMoney);
                         } else if (voucher.Type==4) {
-                            totalFee = Math.Ceiling(totalFee*voucher.DeductMoney);
+                            totalFee = Math.Ceiling(totalFee*voucher.DeductMoney)<=0 ? 0.01m : (totalFee - voucher.DeductMoney);
                         }
                     }
                     UpdateCustomerConsumptionVoucherDto update = new UpdateCustomerConsumptionVoucherDto

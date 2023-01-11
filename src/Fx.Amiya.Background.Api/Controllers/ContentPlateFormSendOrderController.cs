@@ -132,6 +132,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 LiveAnchor = d.LiveAnchor,
                                 ToHospitalTypeText = d.ToHospitalTypeText,
                                 CheckState = d.CheckState,
+                                IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
                             };
 
             FxPageInfo<ContentPlatFormOrderSendInfoVo> sendOrderPageInfo = new FxPageInfo<ContentPlatFormOrderSendInfoVo>();
@@ -199,6 +200,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 LiveAnchor = d.LiveAnchor,
                                 ToHospitalTypeText = d.ToHospitalTypeText,
                                 CheckState = d.CheckState,
+                                IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
                             };
 
             FxPageInfo<ContentPlatFormOrderSendInfoVo> sendOrderPageInfo = new FxPageInfo<ContentPlatFormOrderSendInfoVo>();

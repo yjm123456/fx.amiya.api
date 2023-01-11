@@ -30,8 +30,9 @@ namespace Fx.Amiya.Dto.HuiShouQianPay
         //扩展信息 json格式
         public HuiShouQianMemoInfo Memo { get; set; }
         public HuiShouQianPayRequestInfo()
-        {                
+        {
             this.ReturnUrl = string.Format("{0}/amiya/wxmini/Notify/hsqPayResult", "https://app.ameiyes.com/amiyamini");
+            //this.ReturnUrl = string.Format("{0}/amiya/wxmini/Notify/hsqPayResult", "https://www.amyk.cn");
             this.PageUrl ="";
         }
     }

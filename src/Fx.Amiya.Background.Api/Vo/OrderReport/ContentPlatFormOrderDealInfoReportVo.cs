@@ -102,6 +102,11 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("到院医院")]
         public string LastDealHospital { get; set; }
+        /// <summary>
+        /// 是否是重单可深度订单
+        /// </summary>
+        [Description("是否重单深度")]
+        public string IsRepeatProfundityOrder { get; set; }
 
         /// <summary>
         /// 是否成交
@@ -213,5 +218,6 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("跟进人员")]
         public string CreateByEmpName { get; set; }
+       
     }
 }

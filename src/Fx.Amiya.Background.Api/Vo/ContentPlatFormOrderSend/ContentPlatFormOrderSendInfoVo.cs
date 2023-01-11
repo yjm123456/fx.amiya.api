@@ -171,5 +171,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// 最新消息
         /// </summary>
         public string FirstlyRemark { get; set; }
+        /// <summary>
+        /// 是否是重单可深度订单
+        /// </summary>
+        public bool IsRepeatProfundityOrder { get; set; }
     }
 }

@@ -42,7 +42,7 @@ namespace Fx.Amiya.IService
         /// 小程序获取医院名称列表
         /// </summary>
         /// <returns></returns>
-        Task<List<HospitalNameDto>> GetWxHospitalNameListAsync(bool? valid, string name,bool? isShowInMiniProgram);
+        Task<FxPageInfo<WxHospitalInfoDto>> GetWxHospitalNameListAsync(int pageNum, int pageSize, string city, string hospitalName, List<string> tags);
 
         /// <summary>
         /// 审核医院资料

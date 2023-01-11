@@ -194,7 +194,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 {
                     Tags = tags.Split(',').ToList();
                 }
-                var q = await hospitalInfoService.GetListHosPitalAsync(pageNum, pageSize, city, hospitalName,Tags);
+                var q = await hospitalInfoService.GetWxHospitalNameListAsync(pageNum, pageSize, city, hospitalName,Tags);
                 var hospital = from h in q.List
                                select new WxHospitalInfoVo
                                {
@@ -267,7 +267,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 return ResultData<List<TagNameVo>>.Fail(ex.Message);
             }
         }
-        [HttpGet("hospitalNameList")]
+        /*[HttpGet("hospitalNameList")]
         
         public async Task<ResultData<List<HospitalNameVo>>> GetHospitalNameListAsync(string name)
         {
@@ -286,6 +286,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             {
                 return ResultData<List<HospitalNameVo>>.Fail(ex.Message);
             }
-        }
+        }*/
     }
 }

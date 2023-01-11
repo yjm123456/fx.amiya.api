@@ -202,5 +202,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 对账单id
         /// </summary>
         public string ReconciliationDocumentsId { get; set; }
+        /// <summary>
+        /// 是否是重单可深度订单
+        /// </summary>
+        public bool IsRepeatProfundityOrder { get; set; }
     }
 }
