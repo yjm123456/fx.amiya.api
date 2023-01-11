@@ -351,7 +351,7 @@ namespace Fx.Amiya.Service
                                 ReturnBackPrice = d.ReturnBackPrice,
                                 IsReturnBackPrice = d.IsReturnBackPrice,
                                 ReturnBackDate = d.ReturnBackDate,
-                                IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
+                                IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
                             };
 
 
@@ -592,6 +592,8 @@ namespace Fx.Amiya.Service
                 //修改订单状态
                 await this.UpdateStateAndRepeateOrderPicAsync(addDto.OrderId, addDto.SendBy, contentPlatFormOrder.BelongEmpId, addDto.EmployeeId);
 
+                //更新医院接单人数据
+              //  await hospitalBindCustomerService.UpdateBindCustomerToZeroAsync(contentPlatFormOrder.Phone);
 
                 //小黄车更新派单触达
                 await _shoppingCartRegistration.UpdateSendOrderAsync(orderInfo.Phone);
@@ -646,6 +648,8 @@ namespace Fx.Amiya.Service
                 //修改订单状态
                 var send = await _contentPlatformOrderSend.GetSimpleByIdAsync(updateDto.Id);
                 var contentPlatFormOrder = await this.GetByOrderIdAsync(updateDto.OrderId);
+                //重置机构接单人
+               // await hospitalBindCustomerService.UpdateBindCustomerToZeroAsync(contentPlatFormOrder.Phone);
                 await this.UpdateStateAndRepeateOrderPicAsync(updateDto.OrderId, send.SendBy, contentPlatFormOrder.BelongEmpId, employeeId);
 
                 var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(updateDto.HospitalId, contentPlatFormOrder.Phone);
@@ -1132,7 +1136,7 @@ namespace Fx.Amiya.Service
                                 SendDate = d.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().SendDate,
                                 Sender = d.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().AmiyaEmployee.Name,
                                 SendHospital = d.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalInfo.Name,
-                                IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
+                                IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
                             };
                 var result = await order.OrderByDescending(e => e.CreateDate).ToListAsync();
                 foreach (var x in result)
@@ -1724,6 +1728,7 @@ namespace Fx.Amiya.Service
                 bindCustomerService.AllOrderCount = 1;
                 await _dalBindCustomerService.AddAsync(bindCustomerService, true);
             }
+            order.IsRepeatProfundityOrder = false;
             order.RepeatOrderPictureUrl = "";
             order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.SendOrder);
             order.SendDate = DateTime.Now;
@@ -1997,7 +2002,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task RepeateContentPlateFormOrderAsync(ContentPlateFormOrderRepeateDto input,int hospitalEmployeeId)
+        public async Task RepeateContentPlateFormOrderAsync(ContentPlateFormOrderRepeateDto input, int hospitalEmployeeId)
         {
             try
             {
@@ -2046,11 +2051,11 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw new Exception(ex.Message.ToString());               
+                throw new Exception(ex.Message.ToString());
             }
 
 
-            
+
         }
 
 

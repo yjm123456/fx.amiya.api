@@ -1324,6 +1324,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   SendGoodsName = d.SendGoodsName,
                                   SendGoodsDate = d.SendGoodsDate,
                                   CourierNumber = d.CourierNumber,
+                                  ExpressId= (!string.IsNullOrEmpty(d.ExpressId)) ? _expressManageService.GetByIdAsync(d.ExpressId).Result.ExpressCode.ToString() : "",
                                   ExpressName = (!string.IsNullOrEmpty(d.ExpressId)) ? _expressManageService.GetByIdAsync(d.ExpressId).Result.ExpressName.ToString() : ""
                               };
             FxPageInfo<MiniProgramOrderTradeVo> orderTradePageInfo = new FxPageInfo<MiniProgramOrderTradeVo>();

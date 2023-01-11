@@ -841,15 +841,20 @@ namespace Fx.Amiya.Service
 
             //环比月份操作
             //开始月份
-            DateTime monthStartDate = new DateTime(year, month - 1, 1);
-            //结束月份
-            DateTime monthEndDate = new DateTime(year, month - 1, 1).AddMonths(1);
-
+            DateTime monthStartDate = new DateTime();
+            DateTime monthEndDate = new DateTime();
             if (month == 1)
             {
                 monthStartDate = new DateTime(year - 1, 12, 1);
                 monthEndDate = new DateTime(year - 1, 12, 1).AddMonths(1);
             }
+            else
+            {
+                monthStartDate = new DateTime(year, month - 1, 1);
+                //结束月份
+                monthEndDate = new DateTime(year, month, 1);
+            }
+
 
             //上年的派单数
             var lastYearThisMonthStartDate = new DateTime(year - 1, month, 1);
@@ -1118,14 +1123,21 @@ namespace Fx.Amiya.Service
 
             //环比月份操作
             //开始月份
-            DateTime monthStartDate = new DateTime(year, month - 1, 1);
+            DateTime monthStartDate = new DateTime();
             //结束月份
-            DateTime monthEndDate = new DateTime(year, month - 1, 1).AddMonths(1);
+            DateTime monthEndDate = new DateTime();
 
             if (month == 1)
             {
                 monthStartDate = new DateTime(year - 1, 12, 1);
                 monthEndDate = new DateTime(year - 1, 12, 1).AddMonths(1);
+            }
+            else
+            {
+                //开始月份
+                 monthStartDate = new DateTime(year, month - 1, 1);
+                //结束月份
+                 monthEndDate = new DateTime(year, month - 1, 1).AddMonths(1);
             }
 
             //上年的

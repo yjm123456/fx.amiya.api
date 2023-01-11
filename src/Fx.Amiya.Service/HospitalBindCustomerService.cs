@@ -44,17 +44,17 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<SendHospitalCustomerInfoDto>> GetByHospitalEmployeeIdListWithPageAsync(string keyword,int hospitalEmployeeId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<SendHospitalCustomerInfoDto>> GetByHospitalEmployeeIdListWithPageAsync(string keyword, int hospitalEmployeeId, int pageNum, int pageSize)
         {
             try
             {
-                var hospitalCustomerInfo = from d in dalHospitalBindCustomerService.GetAll().OrderByDescending(x=>x.CreateDate)
+                var hospitalCustomerInfo = from d in dalHospitalBindCustomerService.GetAll().OrderByDescending(x => x.CreateDate)
                                            where (keyword == null || d.CustomerPhone.Contains(keyword))
                                            && (d.HospitalEmployeeId == hospitalEmployeeId)
                                            select new SendHospitalCustomerInfoDto
                                            {
                                                CustomerPhone = d.CustomerPhone,
-                                               hospitalId=d.HospitalCustomerServiceHospitalEmployee.HospitalId
+                                               hospitalId = d.HospitalCustomerServiceHospitalEmployee.HospitalId
                                            };
 
                 FxPageInfo<SendHospitalCustomerInfoDto> hospitalCustomerInfoPageInfo = new FxPageInfo<SendHospitalCustomerInfoDto>();
@@ -96,7 +96,7 @@ namespace Fx.Amiya.Service
                     {
                         bind.NewConsumptionDate = DateTime.Now;
                         bind.NewConsumptionContentPlatform = (int)OrderFrom.ContentPlatFormOrder;
-                        bind.NewContentPlatForm = addDto. NewContentPlatformName;
+                        bind.NewContentPlatForm = addDto.NewContentPlatformName;
                         await dalHospitalBindCustomerService.UpdateAsync(bind, true);
                     }
                 }
@@ -127,6 +127,22 @@ namespace Fx.Amiya.Service
             }
         }
 
+        /// <summary>
+        /// 派单/修改派单时根据医院客户手机号重置归属医院客服
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        public async Task UpdateBindCustomerToZeroAsync(string phone)
+        {
+            var bind = await dalHospitalBindCustomerService.GetAll()
+                 .Include(e => e.HospitalCustomerServiceHospitalEmployee)
+                 .FirstOrDefaultAsync(e => e.CustomerPhone == phone);
+            bind.HospitalEmployeeId = 0;
+            if (bind != null)
+            {
+                await dalHospitalBindCustomerService.UpdateAsync(bind, true);
+            }
+        }
         public async Task<HospitalBindCustomerServiceDto> GetEmployeeDetailsByPhoneAsync(string phone)
         {
             try

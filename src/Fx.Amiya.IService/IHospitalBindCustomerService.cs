@@ -27,6 +27,13 @@ namespace Fx.Amiya.IService
         /// <param name="addDto"></param>
         /// <returns></returns>
         Task AddAsync(AddHospitalBindCustomerServiceDto addDto);
+
+        /// <summary>
+        /// 派单/编辑派单时根据手机号更新医院绑定客服为0
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        Task UpdateBindCustomerToZeroAsync(string phone);
         /// <summary>
         /// 根据手机号获取绑定客户详情
         /// </summary>

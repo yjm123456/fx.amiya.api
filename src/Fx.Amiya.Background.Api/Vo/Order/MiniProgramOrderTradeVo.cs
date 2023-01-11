@@ -90,6 +90,11 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         [Description("快递单号")]
         public string CourierNumber { get; set; }
         /// <summary>
+        /// 物流公司id
+        /// </summary>
+        [Description("物流公司id")]
+        public string ExpressId { get; set; }
+        /// <summary>
         /// 物流公司
         /// </summary>
         [Description("物流公司")]
