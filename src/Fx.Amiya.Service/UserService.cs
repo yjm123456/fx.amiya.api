@@ -588,10 +588,12 @@ namespace Fx.Amiya.Service
             if (superiorId == null) throw new Exception("用户不存在");
             userInfo.SuperiorId = superiorId;
             await dalUserInfo.UpdateAsync(userInfo,true);
+            var customerInfo = dalCustomerInfo.GetAll().Where(e => e.UserId == superiorId).SingleOrDefault();
+            if (customerInfo == null) throw new Exception("上级用户不存在");
             //上级赠送抵用券
             AddCustomerConsumptionVoucherDto addCustomerConsumptionVoucherDto = new AddCustomerConsumptionVoucherDto();
             addCustomerConsumptionVoucherDto.ConsumptionVoucherCode = "superior";
-            addCustomerConsumptionVoucherDto.CustomerId = customerId;
+            addCustomerConsumptionVoucherDto.CustomerId = customerInfo.Id;
             addCustomerConsumptionVoucherDto.Source = 5;
             await customerConsumptionVoucherService.AddAsyn(addCustomerConsumptionVoucherDto);
             return true;

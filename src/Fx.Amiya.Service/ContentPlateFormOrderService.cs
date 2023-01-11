@@ -351,6 +351,7 @@ namespace Fx.Amiya.Service
                                 ReturnBackPrice = d.ReturnBackPrice,
                                 IsReturnBackPrice = d.IsReturnBackPrice,
                                 ReturnBackDate = d.ReturnBackDate,
+                                IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
                             };
 
 
@@ -1131,6 +1132,7 @@ namespace Fx.Amiya.Service
                                 SendDate = d.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().SendDate,
                                 Sender = d.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().AmiyaEmployee.Name,
                                 SendHospital = d.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalInfo.Name,
+                                IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
                             };
                 var result = await order.OrderByDescending(e => e.CreateDate).ToListAsync();
                 foreach (var x in result)

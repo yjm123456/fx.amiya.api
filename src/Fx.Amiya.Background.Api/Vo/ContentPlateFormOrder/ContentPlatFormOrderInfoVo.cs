@@ -260,6 +260,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         [Description("回款时间")]
         public DateTime? ReturnBackDate { get; set; }
+        /// <summary>
+        /// 是否是重单深度订单
+        /// </summary>
+        [Description("是否是重单深度订单")]
+        public bool IsRepeatProfundityOrder { get; set; }
 
 
     }

@@ -121,5 +121,9 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 三方订单号
         /// </summary>
         public string OtherContentPlatFormOrderId { get; set; }
+        /// <summary>
+        /// 是否是重单深度订单
+        /// </summary>
+        public bool IsRepeatProfundityOrder { get; set; }
     }
 }

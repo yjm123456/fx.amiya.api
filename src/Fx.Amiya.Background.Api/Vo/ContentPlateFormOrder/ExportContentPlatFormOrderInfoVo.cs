@@ -208,5 +208,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
 
         [Description("加密电话")]
         public string EncryptPhone { get; set; }
+        /// <summary>
+        /// 是否是重单深度订单
+        /// </summary>
+        [Description("是否重单深度订单")]
+        public string IsRepeatProfundityOrder { get; set; }
     }
 }

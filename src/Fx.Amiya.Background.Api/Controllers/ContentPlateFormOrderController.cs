@@ -218,6 +218,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     resultVo.ReturnBackDate = x.ReturnBackDate;
                     resultVo.ReturnBackPrice = x.ReturnBackPrice;
                     resultVo.OtherContentPlatFormOrderId = x.OtherContentPlatFormOrderId;
+                    resultVo.IsRepeatProfundityOrder = x.IsRepeatProfundityOrder;
 
                     //    if (x.BelongEmpId != 0)
                     //    {
@@ -501,7 +502,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 //ReturnBackDate = d.ReturnBackDate,
                                 //ReturnBackPrice = d.ReturnBackPrice,
                                 OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
-                                SendHospital = d.SendHospital
+                                SendHospital = d.SendHospital,
+                                IsRepeatProfundityOrder = d.IsRepeatProfundityOrder == true ? "是" : "否"
                             };
                 var exportSendOrder = order.ToList();
                 foreach (var x in exportSendOrder)
