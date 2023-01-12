@@ -593,7 +593,7 @@ namespace Fx.Amiya.Service
                 await this.UpdateStateAndRepeateOrderPicAsync(addDto.OrderId, addDto.SendBy, contentPlatFormOrder.BelongEmpId, addDto.EmployeeId);
 
                 //更新医院接单人数据
-              //  await hospitalBindCustomerService.UpdateBindCustomerToZeroAsync(contentPlatFormOrder.Phone);
+                //  await hospitalBindCustomerService.UpdateBindCustomerToZeroAsync(contentPlatFormOrder.Phone);
 
                 //小黄车更新派单触达
                 await _shoppingCartRegistration.UpdateSendOrderAsync(orderInfo.Phone);
@@ -649,7 +649,7 @@ namespace Fx.Amiya.Service
                 var send = await _contentPlatformOrderSend.GetSimpleByIdAsync(updateDto.Id);
                 var contentPlatFormOrder = await this.GetByOrderIdAsync(updateDto.OrderId);
                 //重置机构接单人
-               // await hospitalBindCustomerService.UpdateBindCustomerToZeroAsync(contentPlatFormOrder.Phone);
+                // await hospitalBindCustomerService.UpdateBindCustomerToZeroAsync(contentPlatFormOrder.Phone);
                 await this.UpdateStateAndRepeateOrderPicAsync(updateDto.OrderId, send.SendBy, contentPlatFormOrder.BelongEmpId, employeeId);
 
                 var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(updateDto.HospitalId, contentPlatFormOrder.Phone);
@@ -2476,7 +2476,8 @@ namespace Fx.Amiya.Service
 
             foreach (var x in result)
             {
-                if (!string.IsNullOrEmpty(x.HospitalName))
+                //获取面诊员数据
+                if (!string.IsNullOrEmpty(x.HospitalName) && x.HospitalName != "0")
                 {
                     HospitalOrderNumAndPriceDto returnResult = new HospitalOrderNumAndPriceDto();
                     var empInfo = await _amiyaEmployeeService.GetByIdAsync(Convert.ToInt32(x.HospitalName));
