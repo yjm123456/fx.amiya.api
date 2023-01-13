@@ -501,6 +501,7 @@ namespace Fx.Amiya.Service
                                                        ReturnBackPrice = d.ReturnBackPrice,
                                                        CreateBy = d.CreateBy,
                                                        ReconciliationDocumentsId = d.ReconciliationDocumentsId,
+                                                       IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();

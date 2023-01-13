@@ -461,6 +461,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             IsAcompanying = d.IsAcompanying,
                                             IsOldCustomer = d.IsOldCustomer,
                                             CommissionRatio = d.CommissionRatio,
+                                            IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;
@@ -501,6 +502,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             DealDate = d.DealDate,
                                             IsAcompanying = d.IsAcompanying,
                                             IsOldCustomer = d.IsOldCustomer,
+                                            IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;
