@@ -980,7 +980,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalempId = Convert.ToInt32(employee.Id);
-            await _orderService.HospitalConfirmOrderAsync(orderId, hospitalempId);
+            int hospitalId = Convert.ToInt32(employee.HospitalId);
+            await _orderService.HospitalConfirmOrderAsync(orderId, hospitalempId,hospitalId);
             return ResultData.Success();
         }
         /// <summary>
@@ -994,13 +995,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalempId = Convert.ToInt32(employee.Id);
+            int hospitalId = Convert.ToInt32(employee.HospitalId);
             ContentPlateFormOrderRepeateDto updateDto = new ContentPlateFormOrderRepeateDto();
             updateDto.Id = updateVo.Id;
             updateDto.OrderId = updateVo.OrderId;
             updateDto.RepeatePictureUrl = updateVo.RepeatePictureUrl;
             updateDto.ToHospitalDate = updateVo.ToHospitalDate;
             updateDto.IsProfundity = updateVo.IsProfundity;
-            await _orderService.RepeateContentPlateFormOrderAsync(updateDto, hospitalempId);
+            await _orderService.RepeateContentPlateFormOrderAsync(updateDto, hospitalempId,hospitalId);
             return ResultData.Success();
         }
         /// <summary>

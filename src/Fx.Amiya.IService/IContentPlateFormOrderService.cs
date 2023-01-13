@@ -152,13 +152,13 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="orderId"></param>
         /// <returns></returns>
-        Task HospitalConfirmOrderAsync(string orderId, int hospitalId);
+        Task HospitalConfirmOrderAsync(string orderId, int hospitalEmpId, int hospitalId);
         /// <summary>
         ///  医院重单退回
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task RepeateContentPlateFormOrderAsync(ContentPlateFormOrderRepeateDto input,int hospitalEmployeeId);
+        Task RepeateContentPlateFormOrderAsync(ContentPlateFormOrderRepeateDto input,int hospitalEmployeeId, int hospitalId);
         Task<List<ContentPlatFormOrderInfoSimpleDto>> GetOrderListByPhoneAsync(string phone);
         /// <summary>
         /// 编辑订单

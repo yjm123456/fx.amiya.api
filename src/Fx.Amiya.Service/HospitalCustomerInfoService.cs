@@ -78,7 +78,7 @@ namespace Fx.Amiya.Service
                     x.CustomerName = baseInfo.Name;
                     x.City = baseInfo.City;
                     var bindHospitalEmpId = await hospitalBindCustomerService.GetEmployeeIdByPhone(x.CustomerPhone);
-                    if (employeeId == bindHospitalEmpId)
+                    if (bindHospitalEmpId.Contains(employeeId))
                     {
                         x.IsMyFollow = true;
                     }

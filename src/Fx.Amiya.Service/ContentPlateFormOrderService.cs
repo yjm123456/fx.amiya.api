@@ -592,8 +592,8 @@ namespace Fx.Amiya.Service
                 //修改订单状态
                 await this.UpdateStateAndRepeateOrderPicAsync(addDto.OrderId, addDto.SendBy, contentPlatFormOrder.BelongEmpId, addDto.EmployeeId);
 
-                //更新医院接单人数据
-                //  await hospitalBindCustomerService.UpdateBindCustomerToZeroAsync(contentPlatFormOrder.Phone);
+                //当派单为新医院时更新医院接单人数据
+                  //await hospitalBindCustomerService.UpdateBindCustomerToZeroAsync(contentPlatFormOrder.Phone);
 
                 //小黄车更新派单触达
                 await _shoppingCartRegistration.UpdateSendOrderAsync(orderInfo.Phone);
@@ -703,7 +703,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task HospitalConfirmOrderAsync(string orderId, int hospitalempId)
+        public async Task HospitalConfirmOrderAsync(string orderId, int hospitalempId, int hospitalId)
         {
             unitOfWork.BeginTransaction();
             try
@@ -723,6 +723,7 @@ namespace Fx.Amiya.Service
                 addHospitalBindCustomerServiceDto.CustomerPhone = order.Phone;
                 var contentPlatForm = await _contentPlatformService.GetByIdAsync(order.ContentPlateformId);
                 addHospitalBindCustomerServiceDto.NewContentPlatformName = contentPlatForm.ContentPlatformName;
+                addHospitalBindCustomerServiceDto.hospitalId = hospitalId;
                 await hospitalBindCustomerService.AddAsync(addHospitalBindCustomerServiceDto);
 
 
@@ -2002,7 +2003,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task RepeateContentPlateFormOrderAsync(ContentPlateFormOrderRepeateDto input, int hospitalEmployeeId)
+        public async Task RepeateContentPlateFormOrderAsync(ContentPlateFormOrderRepeateDto input, int hospitalEmployeeId,int hospitalId)
         {
             try
             {
@@ -2026,6 +2027,7 @@ namespace Fx.Amiya.Service
                     addHospitalBindCustomerServiceDto.CustomerPhone = order.Phone;
                     var contentPlatForm = await _contentPlatformService.GetByIdAsync(order.ContentPlateformId);
                     addHospitalBindCustomerServiceDto.NewContentPlatformName = contentPlatForm.ContentPlatformName;
+                    addHospitalBindCustomerServiceDto.hospitalId = hospitalId;
                     await hospitalBindCustomerService.AddAsync(addHospitalBindCustomerServiceDto);
                 }
                 else

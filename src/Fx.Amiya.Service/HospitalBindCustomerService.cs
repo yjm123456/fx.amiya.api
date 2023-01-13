@@ -81,7 +81,8 @@ namespace Fx.Amiya.Service
 
                 var bind = await dalHospitalBindCustomerService.GetAll()
                   .Include(e => e.HospitalCustomerServiceHospitalEmployee)
-                  .FirstOrDefaultAsync(e => e.CustomerPhone == addDto.CustomerPhone);
+                  .Where(e => e.CustomerPhone == addDto.CustomerPhone)
+                  .Where(e => e.HospitalId == addDto.hospitalId).FirstOrDefaultAsync();
                 if (bind != null)
                 {
                     if (bind.HospitalEmployeeId != addDto.HospitalEmployeeId)
@@ -105,6 +106,7 @@ namespace Fx.Amiya.Service
 
                     HospitalBindCustomerService bindCustomerService = new HospitalBindCustomerService();
                     bindCustomerService.Id = Guid.NewGuid().ToString();
+                    bindCustomerService.HospitalId = addDto.hospitalId;
                     bindCustomerService.HospitalEmployeeId = addDto.HospitalEmployeeId;
                     bindCustomerService.CustomerPhone = addDto.CustomerPhone;
                     bindCustomerService.UserId = null;
@@ -132,17 +134,18 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="phone"></param>
         /// <returns></returns>
-        public async Task UpdateBindCustomerToZeroAsync(string phone)
-        {
-            var bind = await dalHospitalBindCustomerService.GetAll()
-                 .Include(e => e.HospitalCustomerServiceHospitalEmployee)
-                 .FirstOrDefaultAsync(e => e.CustomerPhone == phone);
-            bind.HospitalEmployeeId = 0;
-            if (bind != null)
-            {
-                await dalHospitalBindCustomerService.UpdateAsync(bind, true);
-            }
-        }
+        //public async Task UpdateBindCustomerToZeroAsync(string phone,int hospitalId)
+        //{
+        //    var bind = await dalHospitalBindCustomerService.GetAll()
+        //         .Include(e => e.HospitalCustomerServiceHospitalEmployee)
+        //         .FirstOrDefaultAsync(e => e.CustomerPhone == phone);
+        //    bind.HospitalEmployeeId = 0;
+        //    if (bind != null)
+        //    {
+        //        await dalHospitalBindCustomerService.UpdateAsync(bind, true);
+        //    }
+        //}
+
         public async Task<HospitalBindCustomerServiceDto> GetEmployeeDetailsByPhoneAsync(string phone)
         {
             try
@@ -197,19 +200,16 @@ namespace Fx.Amiya.Service
 
         }
 
-        public async Task<int> GetEmployeeIdByPhone(string phone)
+        public async Task<List<int>> GetEmployeeIdByPhone(string phone)
         {
             try
             {
-                var hospitalBindCustomerServiceInfo = await dalHospitalBindCustomerService.GetAll().SingleOrDefaultAsync(e => e.CustomerPhone == phone);
-                if (hospitalBindCustomerServiceInfo != null && hospitalBindCustomerServiceInfo.HospitalEmployeeId != 0)
-                {
-                    return hospitalBindCustomerServiceInfo.HospitalEmployeeId;
-                }
-                else { return 0; }
+                var hospitalBindCustomerServiceInfo = await dalHospitalBindCustomerService.GetAll().Where(e => e.CustomerPhone == phone).Select(x=>x.HospitalEmployeeId).ToListAsync();
+                return hospitalBindCustomerServiceInfo;
+
             }
             catch (Exception err)
-            { return 0; }
+            { return new List<int>(); }
 
         }
         public async Task<List<string>> GetEmployeePhoneByPhone(string phone)

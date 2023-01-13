@@ -33,7 +33,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="phone"></param>
         /// <returns></returns>
-        Task UpdateBindCustomerToZeroAsync(string phone);
+        //Task UpdateBindCustomerToZeroAsync(string phone);
         /// <summary>
         /// 根据手机号获取绑定客户详情
         /// </summary>
@@ -47,7 +47,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="phone"></param>
         /// <returns></returns>
-        Task<int> GetEmployeeIdByPhone(string phone);
+        Task<List<int>> GetEmployeeIdByPhone(string phone);
 
         Task<List<string>> GetEmployeePhoneByPhone(string phone);
         Task UpdateAsync(UpdateHospitalBindCustomerServiceDto updateDto, int employeeId);

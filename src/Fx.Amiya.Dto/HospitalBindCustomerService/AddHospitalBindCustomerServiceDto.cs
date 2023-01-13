@@ -7,6 +7,10 @@ namespace Fx.Amiya.Dto.HospitalBindCustomerService
    public class AddHospitalBindCustomerServiceDto
     {
         /// <summary>
+        /// 医院id
+        /// </summary>
+        public int hospitalId { get; set; }
+        /// <summary>
         /// 接单客服
         /// </summary>
         public int HospitalEmployeeId { get; set; }

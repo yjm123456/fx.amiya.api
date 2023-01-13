@@ -14,6 +14,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.ToTable("tbl_hospital_bind_customer_service");
             builder.HasKey(t => t.Id);
             builder.Property(t => t.Id).HasColumnName("id").HasColumnType("varchar(50)").IsRequired();
+            builder.Property(t => t.HospitalId).HasColumnName("hospital_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.HospitalEmployeeId).HasColumnName("hospital_emp_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.CustomerPhone).HasColumnName("customer_phone").HasColumnType("varchar(30)").IsRequired();
             builder.Property(t => t.UserId).HasColumnName("user_id").HasColumnType("varchar(50)").IsRequired(false);
