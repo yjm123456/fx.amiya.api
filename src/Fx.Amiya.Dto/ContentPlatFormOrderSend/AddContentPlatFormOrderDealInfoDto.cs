@@ -87,6 +87,10 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 创建人
         /// </summary>
         public int CreateBy { get; set; }
+        /// <summary>
+        /// 是否重单可深度
+        /// </summary>
+        public bool IsRepeatProfundityOrder { get; set; }
 
         /// <summary>
         /// 邀约凭证

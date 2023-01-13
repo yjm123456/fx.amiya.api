@@ -1234,6 +1234,16 @@ namespace Fx.Amiya.Background.Api.Controllers
                               };
             return ResultData<List<ContentPlateFormOrderStatusVo>>.Success().AddData("orderStatus", orderStatus.ToList());
         }
+        /// <summary>
+        /// 关闭重单可深度状态
+        /// </summary>
+        /// <param name="contentPlateFormId"></param>
+        /// <returns></returns>
+        [HttpPost("colseRepeatProfundityOrder/{contentPlateFormId}")]
+        public async Task<ResultData> CloseRepeatProfundityOrder(string contentPlateFormId) {
+            await _orderService.UpdateContentPalteformRepeaterOrderStatusAsync(contentPlateFormId);
+            return ResultData.Success();
+        }
 
 
         /// <summary>

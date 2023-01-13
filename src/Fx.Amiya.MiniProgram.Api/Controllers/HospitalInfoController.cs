@@ -267,13 +267,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 return ResultData<List<TagNameVo>>.Fail(ex.Message);
             }
         }
-        /*[HttpGet("hospitalNameList")]
-        
+        [HttpGet("hospitalNameList")]
+
         public async Task<ResultData<List<HospitalNameVo>>> GetHospitalNameListAsync(string name)
         {
             try
             {
-                var hospital = from d in await hospitalInfoService.GetWxHospitalNameListAsync(true, name,true)
+                var hospital = from d in await hospitalInfoService.GetWxAppointCarHospitalNameList()
                                select new HospitalNameVo
                                {
                                    Id = d.Id,
@@ -286,6 +286,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             {
                 return ResultData<List<HospitalNameVo>>.Fail(ex.Message);
             }
-        }*/
+        }
     }
 }

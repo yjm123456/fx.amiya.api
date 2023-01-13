@@ -12,6 +12,7 @@ using Fx.Amiya.DbModels.Model;
 using Fx.Infrastructure.DataAccess;
 using Fx.Common;
 using Fx.Amiya.Dto.HospitalEnvironmentPicture;
+using Fx.Amiya.Dto;
 
 namespace Fx.Amiya.Service
 {
@@ -1033,6 +1034,19 @@ namespace Fx.Amiya.Service
 
                 throw ex;
             }
+        }
+        /// <summary>
+        /// 获取预约叫车预约医院名称列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<HospitalNameDto>> GetWxAppointCarHospitalNameList()
+        {
+            var list= dalHospitalInfo.GetAll().Where(e=>e.Valid==true&&e.IsShareInMiniProgram==true).Select(e=>new HospitalNameDto
+            { 
+                Id=e.Id,
+                Name=e.Name      
+            }).ToList();
+            return list;
         }
     }
 }

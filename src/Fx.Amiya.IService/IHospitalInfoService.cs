@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.HospitalEnvironmentPicture;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.HospitalEnvironmentPicture;
 using Fx.Amiya.Dto.HospitalInfo;
 using Fx.Common;
 using Fx.Infrastructure;
@@ -144,5 +145,10 @@ namespace Fx.Amiya.IService
         /// <param name="name">医院名称，null：全部</param>
         /// <returns></returns>
         Task<List<HospitalNameDto>> GetPartakeItemHospitalNameListAsync(string goodsId,string name);
+        /// <summary>
+        /// 获取预约叫车预约医院名称列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<HospitalNameDto>> GetWxAppointCarHospitalNameList();
     }
 }

@@ -192,7 +192,7 @@ namespace Fx.Amiya.Service
                                                        CreateBy = d.CreateBy,
                                                        BelongLiveAnchor = d.ContentPlatFormOrder.LiveAnchor.Name,
                                                        ReconciliationDocumentsId = d.ReconciliationDocumentsId,
-                                                       IsRepeatProfundityOrder=d.ContentPlatFormOrder.IsRepeatProfundityOrder
+                                                       IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -258,7 +258,7 @@ namespace Fx.Amiya.Service
                                                        CreateBy = d.CreateBy,
                                                        ReturnBackPrice = d.ReturnBackPrice,
                                                        LiveAnchorName = d.ContentPlatFormOrder.LiveAnchor.Name,
-                                                       IsRepeatProfundityOrder=d.ContentPlatFormOrder.IsRepeatProfundityOrder
+                                                       IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -416,7 +416,7 @@ namespace Fx.Amiya.Service
                                                        ReturnBackPrice = d.ReturnBackPrice,
                                                        CreateBy = d.ContentPlatFormOrder.BelongEmpId.HasValue ? d.ContentPlatFormOrder.BelongEmpId.Value : -1,
                                                        ReconciliationDocumentsId = d.ReconciliationDocumentsId,
-                                                       IsRepeatProfundityOrder=d.ContentPlatFormOrder.IsRepeatProfundityOrder
+                                                       IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
                                                    };
 
                 List<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new List<ContentPlatFormOrderDealInfoDto>();

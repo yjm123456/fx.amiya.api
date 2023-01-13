@@ -273,6 +273,11 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<SendContentPlatformOrderDto>> GetSendOrderReportList(int? liveAnchorId, int employeeId, int belongEmpId, int? orderStatus
      , string contentPlatFormId, DateTime? startDate, DateTime? endDate, bool isHidePhone);
+        /// <summary>
+        /// 啊美雅端关闭重单可深度
+        /// </summary>
+        /// <returns></returns>
+        Task UpdateContentPalteformRepeaterOrderStatusAsync(string contentPlateFormId);
         #region 【数据中心】
         /// <summary>
         /// 获取时间段内未派单数据

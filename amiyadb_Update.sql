@@ -1809,6 +1809,24 @@ ALTER TABLE `tbl_customer_tag_info`
 
 
 
+-----------------------------余建明 2023/01/13 BEGIN -----------------------------
+
+
+--医院绑定客服列表新增医院id
+ALTER TABLE `amiyadb`.`tbl_hospital_bind_customer_service` 
+ADD COLUMN `hospital_id` INT NOT NULL AFTER `id`;
+
+
+-----------------------------余建明 2023/01/13 END -----------------------------
+
+-----------------------------王健 2023/01/13 Begin -----------------------------
+
+--成交消息添加是否重单深度
+ALTER TABLE `tbl_content_platform_order_deal_info`
+	ADD COLUMN `is_repeat_profundity_order` BIT NOT NULL DEFAULT 0 AFTER `reconciliation_documents_id`;
+
+
+-----------------------------王健 2023/01/13 END -----------------------------
 
 
 

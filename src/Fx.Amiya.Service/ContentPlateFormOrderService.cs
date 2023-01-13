@@ -1838,6 +1838,7 @@ namespace Fx.Amiya.Service
                 orderDealDto.IsOldCustomer = isoldCustomer;
                 orderDealDto.LastDealHospitalId = input.LastDealHospitalId;
                 orderDealDto.IsAcompanying = input.IsAcompanying;
+                orderDealDto.IsRepeatProfundityOrder = order.IsRepeatProfundityOrder;
                 if (input.IsFinish == true)
                 {
                     orderDealDto.IsToHospital = true;
@@ -1858,6 +1859,7 @@ namespace Fx.Amiya.Service
                 }
                 orderDealDto.CreateBy = input.EmpId;
                 orderDealDto.InvitationDocuments = input.InvitationDocuments;
+                
                 await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
 
                 //获取医院客户列表
@@ -1996,7 +1998,18 @@ namespace Fx.Amiya.Service
                 throw new Exception(err.Message.ToString());
             }
         }
-
+        /// <summary>
+        /// 啊美雅端关闭重单可深度
+        /// </summary>
+        /// <returns></returns>
+        public async Task UpdateContentPalteformRepeaterOrderStatusAsync(string contentPlateFormId)
+        {
+            var contentPalteFormOrder= await _dalContentPlatformOrder.GetAll().Where(e=>e.Id==contentPlateFormId).SingleOrDefaultAsync();
+            if (contentPalteFormOrder == null) throw new Exception("订单编号错误");
+            if (!contentPalteFormOrder.IsRepeatProfundityOrder) throw new Exception("该订单已标记为重单不可深度状态,请勿重复操作");
+            contentPalteFormOrder.IsRepeatProfundityOrder = false;
+            await _dalContentPlatformOrder.UpdateAsync(contentPalteFormOrder,true);
+        }
 
         /// <summary>
         /// 医院重单打回
@@ -2725,6 +2738,8 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
+
+        
 
         #endregion
     }

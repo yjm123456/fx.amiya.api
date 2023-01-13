@@ -116,6 +116,10 @@ namespace Fx.Amiya.DbModels.Model
         public DateTime? ReturnBackDate { get; set; }
 
         public  string ReconciliationDocumentsId { get; set; }
+        /// <summary>
+        /// 是否重单可深度
+        /// </summary>
+        public bool IsRepeatProfundityOrder { get; set; }
 
         public ContentPlatformOrder ContentPlatFormOrder { get; set; }
     }
