@@ -188,6 +188,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetSendOrderBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
+            if (year != DateTime.Now.Year)
+            {
+                month = 12;
+            }
             //派单情况
             var sendOrder = await hospitalPerformanceService.GetHospitalSendOrderNum(year, hospitalId);
             //派单折线图转换
@@ -210,6 +214,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetVisitBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
+            if (year != DateTime.Now.Year)
+            {
+                month = 12;
+            }
             var Visit = await hospitalPerformanceService.GetHospitalVisitNum(year, hospitalId);
             var VisitBrokenLine = Visit.Select(data => new PerformanceBrokenLine
             {
@@ -230,6 +238,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetVisitRateBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
+            if (year != DateTime.Now.Year)
+            {
+                month = 12;
+            }
             var VisitRate = await hospitalPerformanceService.GetHospitalVisitRateNum(year, hospitalId);
             var VisitRateBrokenLine = VisitRate.Select(data => new PerformanceBrokenLine
             {
@@ -250,6 +262,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetNewCustomerDealBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
+            if (year != DateTime.Now.Year)
+            {
+                month = 12;
+            }
             var NewCustomerDeal = await hospitalPerformanceService.GetHospitalNewCustomerDealNum(year, hospitalId);
             var NewCustomerDealBrokenLine = NewCustomerDeal.Select(data => new PerformanceBrokenLine
             {
@@ -269,6 +285,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetNewCustomerDealRateBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
+            if (year != DateTime.Now.Year)
+            {
+                month = 12;
+            }
             var NewCustomerDealRate = await hospitalPerformanceService.GetHospitalNewCustomerDealRateNum(year, hospitalId);
             var NewCustomerDealRateBrokenLine = NewCustomerDealRate.Select(data => new PerformanceBrokenLine
             {
@@ -288,6 +308,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetNewCustomerPerformanceBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
+            if (year != DateTime.Now.Year)
+            {
+                month = 12;
+            }
             var NewCustomerPerformance = await hospitalPerformanceService.GetHospitalNewCustomerPerformanceNum(year, hospitalId);
             var NewCustomerPerformanceBrokenLine = NewCustomerPerformance.Select(data => new PerformanceBrokenLine
             {
@@ -307,6 +331,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetNewCustomerUnitPriceBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
+            if (year != DateTime.Now.Year)
+            {
+                month = 12;
+            }
             var NewCustomerUnitPrice = await hospitalPerformanceService.GetHospitalNewCustomerUnitPriceNum(year, hospitalId);
             var NewCustomerUnitPriceBrokenLine = NewCustomerUnitPrice.Select(data => new PerformanceBrokenLine
             {
@@ -327,6 +355,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetOldCustomerDealBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
+            if (year != DateTime.Now.Year)
+            {
+                month = 12;
+            }
             var OldCustomerDeal = await hospitalPerformanceService.GetHospitalOldCustomerDealNum(year, hospitalId);
             var OldCustomerDealBrokenLine = OldCustomerDeal.Select(data => new PerformanceBrokenLine
             {
@@ -346,6 +378,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetOldCustomerPerformanceBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
+            if (year != DateTime.Now.Year)
+            {
+                month = 12;
+            }
             var OldCustomerPerformance = await hospitalPerformanceService.GetHospitalOldCustomerPerformanceNum(year, hospitalId);
             var OldCustomerPerformanceBrokenLine = OldCustomerPerformance.Select(data => new PerformanceBrokenLine
             {
@@ -366,6 +402,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetOldCustomerUnitPriceBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
+            if (year != DateTime.Now.Year)
+            {
+                month = 12;
+            }
             var OldCustomerUnitPrice = await hospitalPerformanceService.GetHospitalOldCustomerUnitPriceNum(year, hospitalId);
             var OldCustomerUnitPriceBrokenLine = OldCustomerUnitPrice.Select(data => new PerformanceBrokenLine
             {
@@ -385,6 +425,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetHospitalTotalPriceBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
+            if (year != DateTime.Now.Year)
+            {
+                month = 12;
+            }
             var OldCustomerUnitPrice = await hospitalPerformanceService.GetHospitalTotalCustomerPerformanceNum(year, hospitalId);
             var OldCustomerUnitPriceBrokenLine = OldCustomerUnitPrice.Select(data => new PerformanceBrokenLine
             {
