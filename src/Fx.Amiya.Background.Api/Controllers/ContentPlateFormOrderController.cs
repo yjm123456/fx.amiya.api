@@ -1239,9 +1239,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="contentPlateFormId"></param>
         /// <returns></returns>
-        [HttpPost("colseRepeatProfundityOrder/{contentPlateFormId}")]
-        public async Task<ResultData> CloseRepeatProfundityOrder(string contentPlateFormId) {
-            await _orderService.UpdateContentPalteformRepeaterOrderStatusAsync(contentPlateFormId);
+        [HttpPost("colseRepeatProfundityOrder")]
+        public async Task<ResultData> CloseRepeatProfundityOrder(CloseRepeatProfundityOrderVo  close) {
+            await _orderService.UpdateContentPalteformRepeaterOrderStatusAsync(close.ContentPlateFormId);
             return ResultData.Success();
         }
 
