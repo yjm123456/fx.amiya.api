@@ -556,6 +556,7 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.CheckPrice = 0.00M;
                 ContentPlatFOrmOrderDealInfo.CheckState = 0;
                 ContentPlatFOrmOrderDealInfo.SettlePrice = 0.00M;
+                ContentPlatFOrmOrderDealInfo.IsRepeatProfundityOrder = addDto.IsRepeatProfundityOrder;
                 await dalContentPlatFormOrderDealInfo.AddAsync(ContentPlatFOrmOrderDealInfo, true);
 
                 //添加邀约凭证图片
