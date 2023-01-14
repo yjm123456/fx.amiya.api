@@ -77,6 +77,7 @@ namespace Fx.Amiya.Service
         private IExpressManageService _expressManageService;
         private IAmiyaGoodsDemandService _amiyaGoodsDemandService;
         private ICustomerConsumptionVoucherService customerConsumptionVoucherService;
+        private IDalRecommandDocumentSettle dalRecommandDocumentSettle;
         public OrderService(
             IDalContentPlatformOrder dalContentPlatFormOrder,
             IDalOrderInfo dalOrderInfo,
@@ -106,7 +107,7 @@ namespace Fx.Amiya.Service
             IExpressManageService expressManageService,
             IFxSmsBasedTemplateSender smsSender,
              IMemberRankInfo memberRankInfoService,
-            IIntegrationAccount integrationAccountService, ICustomerConsumptionVoucherService customerConsumptionVoucherService)
+            IIntegrationAccount integrationAccountService, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IDalRecommandDocumentSettle dalRecommandDocumentSettle)
         {
             this.dalOrderInfo = dalOrderInfo;
             this.dalCustomerInfo = dalCustomerInfo;
@@ -138,6 +139,7 @@ namespace Fx.Amiya.Service
             _dalContentPlatFormOrder = dalContentPlatFormOrder;
             _expressManageService = expressManageService;
             this.customerConsumptionVoucherService = customerConsumptionVoucherService;
+            this.dalRecommandDocumentSettle = dalRecommandDocumentSettle;
         }
         //WxPayAccount _payAccount = new WxPayAccount("wx695942e4818de445", "0b2e89d17e84a947244569d0ec63b816", "1611476157", "asdfg67890asdfg67890asdfg67890as", false, "", "");
         WxPayAccount _payAccount = new WxPayAccount("wx695942e4818de445", "0b2e89d17e84a947244569d0ec63b816", "1632393371", "Amy20202020202020202020202020202", false, "", "");
@@ -403,8 +405,9 @@ namespace Fx.Amiya.Service
         {
             try
             {
+                var orderIdList = dalRecommandDocumentSettle.GetAll().Where(e => e.RecommandDocumentId == reconciliationDocumentsId && e.OrderFrom == (int)OrderFrom.ThirdPartyOrder).Select(e => e.OrderId).ToList();
                 var orders = from d in dalOrderInfo.GetAll()
-                             where (d.ReconciliationDocumentsId == reconciliationDocumentsId)
+                             where (orderIdList.Contains(d.Id))
                              select d;
 
                 var config = await _wxAppConfigService.GetCallCenterConfig();

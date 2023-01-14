@@ -29,13 +29,14 @@ namespace Fx.Amiya.Service
         private ILiveAnchorMonthlyTargetService _liveAnchorMonthlyTargetService;
         private IDalHospitalInfo _dalHospitalInfo;
         private IUnitOfWork unitOfWork;
+        private IDalRecommandDocumentSettle dalRecommandDocumentSettle;
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
             IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
             IDalBindCustomerService dalBindCustomerService,
             IDalAmiyaEmployee dalAmiyaEmployee,
             IUnitOfWork unitOfWork,
-            IHospitalInfoService hospitalInfoService, ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService, IDalHospitalInfo dalHospitalInfo)
+            IHospitalInfoService hospitalInfoService, ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService, IDalHospitalInfo dalHospitalInfo, IDalRecommandDocumentSettle dalRecommandDocumentSettle)
         {
             this.dalContentPlatFormOrderDealInfo = dalContentPlatFormOrderDealInfo;
             _hospitalInfoService = hospitalInfoService;
@@ -46,6 +47,7 @@ namespace Fx.Amiya.Service
             this.unitOfWork = unitOfWork;
             _liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
             _dalHospitalInfo = dalHospitalInfo;
+            this.dalRecommandDocumentSettle = dalRecommandDocumentSettle;
         }
         /// <summary>
         /// 获取成交情况列表
@@ -233,10 +235,11 @@ namespace Fx.Amiya.Service
         {
             try
             {
+                var dealInfoList = dalRecommandDocumentSettle.GetAll().Where(e => e.RecommandDocumentId == reconciliationDocumentsId && e.OrderFrom == (int)OrderFrom.ContentPlatFormOrder).Select(e=>e.DealInfoId).ToList();
                 var dealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor).OrderByDescending(x => x.CreateDate) select d;
 
                 var ContentPlatFOrmOrderDealInfo = from d in dealInfo
-                                                   where (string.IsNullOrEmpty(reconciliationDocumentsId) || d.ReconciliationDocumentsId == reconciliationDocumentsId)
+                                                   where (string.IsNullOrEmpty(reconciliationDocumentsId) || dealInfoList.Contains(d.Id)  )
                                                    select new ContentPlatFormOrderDealInfoDto
                                                    {
                                                        Id = d.Id,

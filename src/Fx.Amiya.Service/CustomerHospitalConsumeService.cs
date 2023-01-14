@@ -32,6 +32,7 @@ namespace Fx.Amiya.Service
         private IUnitOfWork unitOfWork;
         private ILiveAnchorService liveAnchorService;
         private IDalCustomerBaseInfo dalCustomerBaseInfo;
+        private IDalRecommandDocumentSettle dalRecommandDocumentSettle;
         public CustomerHospitalConsumeService(IDalCustomerHospitalConsume dalCustomerHospitalConsume,
             IDalConfig dalConfig,
             IDalAmiyaEmployee dalAmiyaEmployee,
@@ -41,7 +42,7 @@ namespace Fx.Amiya.Service
             ILiveAnchorService liveAnchorService,
             IDalBindCustomerService dalBindCustomerService,
             IOrderCheckPictureService orderCheckPictureService,
-            IDalCustomerBaseInfo dalCustomerBaseInfo)
+            IDalCustomerBaseInfo dalCustomerBaseInfo, IDalRecommandDocumentSettle dalRecommandDocumentSettle)
         {
             this.dalCustomerHospitalConsume = dalCustomerHospitalConsume;
             this.dalConfig = dalConfig;
@@ -53,6 +54,7 @@ namespace Fx.Amiya.Service
             this.recommandDocumentSettleService = recommandDocumentSettleService;
             this.liveAnchorService = liveAnchorService;
             this.dalCustomerBaseInfo = dalCustomerBaseInfo;
+            this.dalRecommandDocumentSettle = dalRecommandDocumentSettle;
         }
 
         public async Task AddAsync(AddCustomerHospitalConsumeDto addDto, int hospitalId)
@@ -742,10 +744,10 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<FxPageInfo<CustomerHospitalConsumeDto>> GetByReconciliationDocumentsIdListAsync(string reconciliationDocumentsId, int pageNum, int pageSize)
         {
-
+            var orderIdList = dalRecommandDocumentSettle.GetAll().Where(e => e.RecommandDocumentId == reconciliationDocumentsId && e.OrderFrom == (int)OrderFrom.BuyAgainOrder).Select(e => e.OrderId).ToList();
             var config = await GetCallCenterConfig();
             var customerHospitalConsumes = from d in dalCustomerHospitalConsume.GetAll()
-                                           where (d.ReconciliationDocumentsId == reconciliationDocumentsId)
+                                           where (orderIdList.Contains(d.Id.ToString()))
                                            join cb in dalCustomerBaseInfo.GetAll() on d.Phone equals cb.Phone into dcb
                                            from cb in dcb.DefaultIfEmpty()
                                            select new CustomerHospitalConsumeDto
