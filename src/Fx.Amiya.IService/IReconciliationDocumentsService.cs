@@ -56,6 +56,13 @@ namespace Fx.Amiya.IService
         Task<ReconciliationDocumentsDto> GetByIdAsync(string id);
 
         /// <summary>
+        /// 根据对账单编号获取累计审核服务费
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<decimal> GetTotalCheckPriceAsync(string id);
+
+        /// <summary>
         /// 编辑
         /// </summary>
         /// <param name="updateDto"></param>

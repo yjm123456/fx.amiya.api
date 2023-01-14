@@ -342,6 +342,19 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// 根据对账单编号获取累计审核金额
+        /// </summary>
+        /// <param name="recommandId"></param>
+        /// <returns></returns>
+        [HttpGet("getTotalCheckReturnBackPriceById")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<decimal>> GetReconciliationDocumentTotalCheckPrice(string recommandId)
+        {
+            var result = await reconciliationDocumentsService.GetTotalCheckPriceAsync(recommandId);
+            return ResultData<decimal>.Success().AddData("TotalCheckReturnBackPriceById", result); 
+        }
+
 
         /// <summary>
         /// 修改财务对账单信息（机构端）

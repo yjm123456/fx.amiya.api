@@ -70,18 +70,18 @@ namespace Fx.Amiya.Background.Api
                 List<AmiyaOrder> orderList = new List<AmiyaOrder>();
                 List<TikTokOrder> tikTokOrderList = new List<TikTokOrder>();
                 DateTime date = DateTime.Now;
-                if (_fxAppGlobal.AppConfig.SyncOrderConfig.Tmall == true)
-                {
-                    ////获取天猫发生改变的订单，开始时间和结束时间不能超过一天
-                    var tmallOrderResult = await syncOrder.TranslateTradesSoldChangedOrders(date.AddMinutes(-15), date);
-                    orderList.AddRange(tmallOrderResult);
-                }
-                if (_fxAppGlobal.AppConfig.SyncOrderConfig.WeiFenXiao == true)
-                {
-                    ////获取微分销发生改变的订单，开始时间和结束时间不能超过一天
-                    var weiFenXiaoOrderResult = await _syncWeiFenXiaoOrder.TranslateTradesSoldChangedOrders(date.AddMinutes(-15), date);
-                    orderList.AddRange(weiFenXiaoOrderResult);
-                }
+                //if (_fxAppGlobal.AppConfig.SyncOrderConfig.Tmall == true)
+                //{
+                //    ////获取天猫发生改变的订单，开始时间和结束时间不能超过一天
+                //    var tmallOrderResult = await syncOrder.TranslateTradesSoldChangedOrders(date.AddMinutes(-15), date);
+                //    orderList.AddRange(tmallOrderResult);
+                //}
+                //if (_fxAppGlobal.AppConfig.SyncOrderConfig.WeiFenXiao == true)
+                //{
+                //    ////获取微分销发生改变的订单，开始时间和结束时间不能超过一天
+                //    var weiFenXiaoOrderResult = await _syncWeiFenXiaoOrder.TranslateTradesSoldChangedOrders(date.AddMinutes(-15), date);
+                //    orderList.AddRange(weiFenXiaoOrderResult);
+                //}
                 if (_fxAppGlobal.AppConfig.SyncOrderConfig.DouYin == true)
                 {
                     ////获取抖音发生改变的订单，开始时间和结束时间不能超过一天

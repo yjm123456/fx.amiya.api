@@ -3,6 +3,7 @@ using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.ReconciliationDocuments;
+using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
@@ -192,7 +193,7 @@ namespace Fx.Amiya.Service
                                                        CreateBy = d.CreateBy,
                                                        BelongLiveAnchor = d.ContentPlatFormOrder.LiveAnchor.Name,
                                                        ReconciliationDocumentsId = d.ReconciliationDocumentsId,
-                                                       IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
+                                                       IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -232,7 +233,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var dealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Include(x=>x.ContentPlatFormOrder).ThenInclude(x=>x.LiveAnchor).OrderByDescending(x => x.CreateDate) select d;
+                var dealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor).OrderByDescending(x => x.CreateDate) select d;
 
                 var ContentPlatFOrmOrderDealInfo = from d in dealInfo
                                                    where (string.IsNullOrEmpty(reconciliationDocumentsId) || d.ReconciliationDocumentsId == reconciliationDocumentsId)
@@ -258,7 +259,7 @@ namespace Fx.Amiya.Service
                                                        CreateBy = d.CreateBy,
                                                        ReturnBackPrice = d.ReturnBackPrice,
                                                        LiveAnchorName = d.ContentPlatFormOrder.LiveAnchor.Name,
-                                                       IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
+                                                       IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -416,7 +417,7 @@ namespace Fx.Amiya.Service
                                                        ReturnBackPrice = d.ReturnBackPrice,
                                                        CreateBy = d.ContentPlatFormOrder.BelongEmpId.HasValue ? d.ContentPlatFormOrder.BelongEmpId.Value : -1,
                                                        ReconciliationDocumentsId = d.ReconciliationDocumentsId,
-                                                       IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
+                                                       IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
                                                    };
 
                 List<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new List<ContentPlatFormOrderDealInfoDto>();
@@ -501,7 +502,7 @@ namespace Fx.Amiya.Service
                                                        ReturnBackPrice = d.ReturnBackPrice,
                                                        CreateBy = d.CreateBy,
                                                        ReconciliationDocumentsId = d.ReconciliationDocumentsId,
-                                                       IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
+                                                       IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -761,29 +762,28 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="reconciliationDocumentsList"></param>
         /// <returns></returns>
-        public async Task<List<OrderReturnBackPriceDto>> SettleListAsync(ReconciliationDocumentsReturnBackPriceDto reconciliationDocumentsList)
+        public async Task SettleListAsync(ReturnBackOrderDto returnBackOrder)
         {
             try
             {
 
-                var ContentPlatFOrmOrderDealInfo = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => reconciliationDocumentsList.ReconciliationDocumentsIdList.Contains(e.ReconciliationDocumentsId)).ToListAsync();
-                List<OrderReturnBackPriceDto> OrderIdList = new List<OrderReturnBackPriceDto>();
+                var ContentPlatFOrmOrderDealInfo = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.Id == returnBackOrder.OrderDealId).FirstOrDefaultAsync();
                 if (ContentPlatFOrmOrderDealInfo != null)
                 {
-
-                    foreach (var x in ContentPlatFOrmOrderDealInfo)
+                    OrderReturnBackPriceDto orderReturnBackPriceDto = new OrderReturnBackPriceDto();
+                    ContentPlatFOrmOrderDealInfo.IsReturnBackPrice = true;
+                    ContentPlatFOrmOrderDealInfo.ReturnBackDate = returnBackOrder.ReturnBackDate;
+                    if (ContentPlatFOrmOrderDealInfo.ReturnBackPrice.HasValue)
                     {
-                        OrderReturnBackPriceDto orderReturnBackPriceDto = new OrderReturnBackPriceDto();
-                        x.IsReturnBackPrice = true;
-                        x.ReturnBackDate = reconciliationDocumentsList.ReturnBackDate;
-                        x.ReturnBackPrice = x.SettlePrice;
-                        await dalContentPlatFormOrderDealInfo.UpdateAsync(x, true);
-                        orderReturnBackPriceDto.OrderId = x.ContentPlatFormOrderId;
-                        orderReturnBackPriceDto.ReturnBackPrice = x.SettlePrice.Value;
-                        OrderIdList.Add(orderReturnBackPriceDto);
+                        ContentPlatFOrmOrderDealInfo.ReturnBackPrice += returnBackOrder.ReturnBackPrice;
                     }
+                    else
+                    {
+                        ContentPlatFOrmOrderDealInfo.ReturnBackPrice = returnBackOrder.ReturnBackPrice;
+                    }
+                    await dalContentPlatFormOrderDealInfo.UpdateAsync(ContentPlatFOrmOrderDealInfo, true);
+
                 }
-                return OrderIdList;
             }
             catch (Exception ex)
             {
@@ -1538,7 +1538,7 @@ namespace Fx.Amiya.Service
                          && (d.Price > 0)
                          && (!hospitalId.HasValue || d.LastDealHospitalId.Value == hospitalId)
                          select d;
-            var orderList =await orders.ToListAsync();
+            var orderList = await orders.ToListAsync();
             return orderList.GroupBy(x => x.LastDealHospitalId.Value).Select(x => new UnCheckHospitalOrderDto { HospitalId = x.Key, TotalUnCheckPrice = x.Sum(z => z.Price), TotalUnCheckOrderCount = x.Count() }).ToList();
         }
         #endregion

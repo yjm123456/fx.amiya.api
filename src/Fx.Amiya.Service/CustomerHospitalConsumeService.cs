@@ -23,6 +23,7 @@ namespace Fx.Amiya.Service
     {
         private IDalCustomerHospitalConsume dalCustomerHospitalConsume;
         private IDalConfig dalConfig;
+        private IRecommandDocumentSettleService recommandDocumentSettleService;
         private IDalAmiyaEmployee dalAmiyaEmployee;
         private IDalBindCustomerService _dalBindCustomerService;
         private IBindCustomerServiceService bindCustomerServiceService;
@@ -34,7 +35,7 @@ namespace Fx.Amiya.Service
         public CustomerHospitalConsumeService(IDalCustomerHospitalConsume dalCustomerHospitalConsume,
             IDalConfig dalConfig,
             IDalAmiyaEmployee dalAmiyaEmployee,
-
+            IRecommandDocumentSettleService recommandDocumentSettleService,
             IUnitOfWork unitOfWork,
             IBindCustomerServiceService bindCustomerServiceService,
             ILiveAnchorService liveAnchorService,
@@ -49,6 +50,7 @@ namespace Fx.Amiya.Service
             _orderCheckPictureService = orderCheckPictureService;
             this.dalAmiyaEmployee = dalAmiyaEmployee;
             _dalBindCustomerService = dalBindCustomerService;
+            this.recommandDocumentSettleService = recommandDocumentSettleService;
             this.liveAnchorService = liveAnchorService;
             this.dalCustomerBaseInfo = dalCustomerBaseInfo;
         }
@@ -271,8 +273,46 @@ namespace Fx.Amiya.Service
                     throw new Exception("该订单暂未确认，无法审核！");
                 }
                 result.CheckState = updateDto.CheckState;
-                result.CheckSettlePrice = updateDto.CheckSettlePrice;
-                result.CheckBuyAgainPrice = updateDto.CheckBuyAgainPrice;
+                //若审核金额等于交易金额，则审核通过，若不等于则审核中
+                if (updateDto.CheckState == (int)CheckType.CheckedSuccess)
+                {
+                    if (updateDto.CheckBuyAgainPrice == result.Price)
+                    {
+
+                        result.CheckState = (int)CheckType.CheckedSuccess;
+                        result.CheckSettlePrice = updateDto.CheckSettlePrice;
+                        result.CheckBuyAgainPrice = updateDto.CheckBuyAgainPrice;
+                    }
+                    else
+                    {
+                        if (result.CheckBuyAgainPrice + updateDto.CheckBuyAgainPrice == result.Price)
+                        {
+                            result.CheckState = (int)CheckType.CheckedSuccess;
+                            result.CheckSettlePrice += updateDto.CheckSettlePrice;
+                            result.CheckBuyAgainPrice = result.Price;
+                        }
+                        else
+                        {
+                            result.CheckState = (int)CheckType.Checking;
+                            if (result.CheckBuyAgainPrice.HasValue)
+                            {
+                                result.CheckBuyAgainPrice += updateDto.CheckBuyAgainPrice;
+                            }
+                            else
+                            {
+                                result.CheckBuyAgainPrice = updateDto.CheckBuyAgainPrice;
+                            }
+                            if (result.CheckSettlePrice.HasValue)
+                            {
+                                result.CheckSettlePrice += updateDto.CheckSettlePrice;
+                            }
+                            else
+                            {
+                                result.CheckSettlePrice = updateDto.CheckSettlePrice;
+                            }
+                        }
+                    }
+                }
                 result.CheckBy = updateDto.CheckEmpId;
                 result.CheckDate = DateTime.Now;
                 result.CheckRemark = updateDto.CheckRemark;
@@ -287,6 +327,14 @@ namespace Fx.Amiya.Service
                     addCheckPic.PictureUrl = x;
                     await _orderCheckPictureService.AddAsync(addCheckPic);
                 }
+                //对账单回款表插入数据
+                AddRecommandDocumentSettleDto addRecommandDocumentSettleDto = new AddRecommandDocumentSettleDto();
+                addRecommandDocumentSettleDto.RecommandDocumentId = updateDto.ReconciliationDocumentsId;
+                addRecommandDocumentSettleDto.OrderId = updateDto.Id.ToString();
+                addRecommandDocumentSettleDto.OrderFrom = (int)OrderFrom.BuyAgainOrder;
+                addRecommandDocumentSettleDto.ReturnBackPrice = updateDto.CheckSettlePrice;
+
+                await recommandDocumentSettleService.AddAsync(addRecommandDocumentSettleDto);
                 unitOfWork.Commit();
             }
             catch (Exception err)
@@ -338,17 +386,21 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var order = await dalCustomerHospitalConsume.GetAll().Where(x => input.ReconciliationDocumentsIdList.Contains(x.ReconciliationDocumentsId)).ToListAsync();
-                foreach (var x in order)
-                {
+                var order = await dalCustomerHospitalConsume.GetAll().Where(x => x.ConsumeId == input.OrderId).FirstOrDefaultAsync();
 
-                    if (x.IsConfirmOrder == true && x.CheckState == (int)CheckType.CheckedSuccess)
+                if (order.IsConfirmOrder == true && order.CheckState == (int)CheckType.CheckedSuccess)
+                {
+                    order.IsReturnBackPrice = true;
+                    if (order.ReturnBackPrice.HasValue)
                     {
-                        x.IsReturnBackPrice = true;
-                        x.ReturnBackPrice = x.CheckSettlePrice;
-                        x.ReturnBackDate = input.ReturnBackDate;
-                        await dalCustomerHospitalConsume.UpdateAsync(x, true);
+                        order.ReturnBackPrice += input.ReturnBackPrice;
                     }
+                    else
+                    {
+                        order.ReturnBackPrice = input.ReturnBackPrice;
+                    }
+                    order.ReturnBackDate = input.ReturnBackDate;
+                    await dalCustomerHospitalConsume.UpdateAsync(order, true);
                 }
 
             }

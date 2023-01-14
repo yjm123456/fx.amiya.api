@@ -42,6 +42,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<AfterLivingDailyTarget> AfterLivingDailyTarget { get; set; }
         public virtual DbSet<WxMpUserInfo> WxMpUserInfo { get; set; }
         public virtual DbSet<HospitalFeedBack> HospitalFeedBack { get; set; }
+        public virtual DbSet<RecommandDocumentSettle> RecommandDocumentSettle { get; set; }
         public virtual DbSet<CustomerConsumptionCredentials> CustomerConsumptionCredentials { get; set; }
         public virtual DbSet<InventoryList> InventoryList { get; set; }
         public virtual DbSet<CustomerIntegralOrderRefund> CustomerIntegralOrderRefund { get; set; }
@@ -293,6 +294,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new OrderTradeConfiguration());
             modelBuilder.ApplyConfiguration(new SendGoodsRecordConfiguration());
             modelBuilder.ApplyConfiguration(new SendOrderMessageBoardConfiguration());
+            modelBuilder.ApplyConfiguration(new RecommandDocumentSettleConfiguration());
             modelBuilder.ApplyConfiguration(new OrderRemarkConfiguration());
             modelBuilder.ApplyConfiguration(new OrderWriteOffInfoConfiguration());
             modelBuilder.ApplyConfiguration(new ContentPlatformOrderConfiguration());

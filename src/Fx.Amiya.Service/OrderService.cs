@@ -63,6 +63,7 @@ namespace Fx.Amiya.Service
         private IMemberCard memberCardService;
         private ILogger<OrderService> logger;
         private IDalOrderTrade dalOrderTrade;
+        private IRecommandDocumentSettleService recommandDocumentSettleService;
         private IDalSendGoodsRecord dalSendGoodsRecord;
         private readonly IItemInfoService _itemInfoService;
         private IGoodsCategory goodsCategoryService;
@@ -79,6 +80,7 @@ namespace Fx.Amiya.Service
         public OrderService(
             IDalContentPlatformOrder dalContentPlatFormOrder,
             IDalOrderInfo dalOrderInfo,
+            IRecommandDocumentSettleService recommandDocumentSettleService,
             IDalCustomerInfo dalCustomerInfo,
             IUnitOfWork unitOfWork,
             IWxAppConfigService wxAppConfigService,
@@ -114,6 +116,7 @@ namespace Fx.Amiya.Service
             _bindCustomerService = bindCustomerService;
             this.contentPlatFormService = contentPlatFormService;
             this.liveAnchorService = liveAnchorService;
+            this.recommandDocumentSettleService = recommandDocumentSettleService;
             this.customerService = customerService;
             this.memberCardService = memberCardService;
             this.dalNoticeConfig = dalNoticeConfig;
@@ -1039,7 +1042,8 @@ namespace Fx.Amiya.Service
                 if (orderTradeAddDto.OrderInfoAddList.Count(e => e.OrderType == (byte)OrderType.MaterialOrder) > 0)
                     orderTrade.AddressId = orderTradeAddDto.AddressId;
                 orderTrade.TotalAmount = orderTradeAddDto.OrderInfoAddList.Sum(e => e.ActualPayment);
-                if (!string.IsNullOrEmpty(orderTradeAddDto.VoucherId)) {                   
+                if (!string.IsNullOrEmpty(orderTradeAddDto.VoucherId))
+                {
                     var voucher = await customerConsumptionVoucherService.GetVoucherByCustomerIdAndVoucherIdAsync(orderTradeAddDto.CustomerId, orderTradeAddDto.VoucherId);
                     if (voucher.IsNeedMinPrice)
                     {
@@ -1049,11 +1053,11 @@ namespace Fx.Amiya.Service
                         }
                         if (voucher.Type == 0)
                         {
-                            orderTrade.TotalAmount = (orderTrade.TotalAmount - voucher.DeductMoney)<=0 ? 0.01m: (orderTrade.TotalAmount - voucher.DeductMoney);
+                            orderTrade.TotalAmount = (orderTrade.TotalAmount - voucher.DeductMoney) <= 0 ? 0.01m : (orderTrade.TotalAmount - voucher.DeductMoney);
                         }
                         else if (voucher.Type == 4)
                         {
-                            orderTrade.TotalAmount = Math.Ceiling(orderTrade.TotalAmount.Value * voucher.DeductMoney)<=0 ? 0.01m : Math.Ceiling(orderTrade.TotalAmount.Value * voucher.DeductMoney);
+                            orderTrade.TotalAmount = Math.Ceiling(orderTrade.TotalAmount.Value * voucher.DeductMoney) <= 0 ? 0.01m : Math.Ceiling(orderTrade.TotalAmount.Value * voucher.DeductMoney);
                         }
                     }
                     /*UpdateCustomerConsumptionVoucherDto update = new UpdateCustomerConsumptionVoucherDto
@@ -1511,10 +1515,43 @@ namespace Fx.Amiya.Service
                 {
                     throw new Exception("未找到该订单的相关信息！");
                 }
-                order.CheckState = input.CheckState;
+                //若审核金额等于交易金额，则审核通过，若不等于则审核中
+                if (input.CheckState == (int)CheckType.CheckedSuccess)
+                {
+                    if (input.CheckPrice == order.ActualPayment)
+                    {
+
+                        order.CheckState = (int)CheckType.CheckedSuccess;
+                    }
+                    else
+                    {
+                        if (order.CheckPrice + input.CheckPrice == order.ActualPayment)
+                        {
+                            order.CheckState = (int)CheckType.CheckedSuccess;
+                        }
+                        else
+                        {
+                            order.CheckState = (int)CheckType.Checking;
+                        }
+                    }
+                }
                 order.CheckBy = input.employeeId;
-                order.CheckPrice = input.CheckPrice;
-                order.SettlePrice = input.SettlePrice;
+                if (order.CheckPrice.HasValue)
+                {
+                    order.CheckPrice += input.CheckPrice;
+                }
+                else
+                {
+                    order.CheckPrice = input.CheckPrice;
+                }
+                if (order.SettlePrice.HasValue)
+                {
+                    order.SettlePrice += input.SettlePrice;
+                }
+                else
+                {
+                    order.SettlePrice = input.SettlePrice;
+                }
                 order.CheckRemark = input.CheckRemark;
                 order.CheckDate = DateTime.Now;
                 order.ReconciliationDocumentsId = input.ReconciliationDocumentsId;
@@ -1528,6 +1565,14 @@ namespace Fx.Amiya.Service
                     addCheckPic.PictureUrl = x;
                     await _orderCheckPictureService.AddAsync(addCheckPic);
                 }
+                //对账单回款表插入数据
+                AddRecommandDocumentSettleDto addRecommandDocumentSettleDto = new AddRecommandDocumentSettleDto();
+                addRecommandDocumentSettleDto.RecommandDocumentId = input.ReconciliationDocumentsId;
+                addRecommandDocumentSettleDto.OrderId = input.Id.ToString();
+                addRecommandDocumentSettleDto.OrderFrom = (int)OrderFrom.ThirdPartyOrder;
+                addRecommandDocumentSettleDto.ReturnBackPrice = input.SettlePrice;
+
+                await recommandDocumentSettleService.AddAsync(addRecommandDocumentSettleDto);
                 unitOfWork.Commit();
             }
             catch (Exception err)
@@ -1567,7 +1612,7 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
-        /// 根据对账单id批量回款
+        /// 订单回款
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -1575,17 +1620,22 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var order = await dalOrderInfo.GetAll().Where(x => input.ReconciliationDocumentsIdList.Contains(x.ReconciliationDocumentsId)).ToListAsync();
-                foreach (var x in order)
-                {
+                var order = await dalOrderInfo.GetAll().Where(x => x.Id == input.OrderId).FirstOrDefaultAsync();
 
-                    if (x.CheckState == (int)CheckType.CheckedSuccess)
+                if (order.CheckState == (int)CheckType.CheckedSuccess)
+                {
+                    order.IsReturnBackPrice = true;
+                    if (order.ReturnBackPrice.HasValue)
                     {
-                        x.IsReturnBackPrice = true;
-                        x.ReturnBackPrice = x.SettlePrice;
-                        x.ReturnBackDate = input.ReturnBackDate;
-                        await dalOrderInfo.UpdateAsync(x, true);
+                        order.ReturnBackPrice += input.ReturnBackPrice;
                     }
+                    else
+                    {
+                        order.ReturnBackPrice = input.ReturnBackPrice;
+                    }
+                    order.ReturnBackDate = input.ReturnBackDate;
+                    await dalOrderInfo.UpdateAsync(order, true);
+
                 }
 
             }
@@ -1709,7 +1759,7 @@ namespace Fx.Amiya.Service
                         where d.Phone == customer.Phone
                         && d.StatusCode == OrderStatusCode.TRADE_FINISHED
                         && d.ActualPayment > 0
-                        && d.AppType !=(byte)AppType.MiniProgram
+                        && d.AppType != (byte)AppType.MiniProgram
                         select new OrderInfo
                         {
                             Id = d.Id,
@@ -4221,7 +4271,7 @@ namespace Fx.Amiya.Service
             var orders = from d in dalOrderInfo.GetAll().Include(x => x.SendOrderInfoList)
                          where (!startDate.HasValue || d.CreateDate >= startrq)
                          && (d.SendOrderInfoList.Count > 0)
-                         &&(!hospitalId.HasValue||d.SendOrderInfoList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalId==hospitalId)
+                         && (!hospitalId.HasValue || d.SendOrderInfoList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalId == hospitalId)
                          && (!endDate.HasValue || d.CreateDate <= endrq)
                          && (d.CheckState == (int)CheckType.NotChecked)
                          && (d.StatusCode == OrderStatusCode.TRADE_FINISHED)

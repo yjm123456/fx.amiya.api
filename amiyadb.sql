@@ -1764,6 +1764,20 @@ ENGINE=InnoDB;
 
 
 
+-----------------------------------------------余建明 2023/1/14 BEGIN--------------------------------------------
+
+CREATE TABLE `amiyadb`.`tbl_recommand_document_settle` (
+  `id` VARCHAR(50) NOT NULL,
+  `recommand_document_id` VARCHAR(50) NOT NULL,
+  `order_id` VARCHAR(50) NOT NULL,
+  `deal_info_id` VARCHAR(50) NULL,
+  `order_from` INT NOT NULL,
+  `return_back_price` DECIMAL(12,2) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `is_settle` BIT(1) NOT NULL,
+  `settle_date` DATETIME NULL,
+  PRIMARY KEY (`id`));
+-----------------------------------------------余建明 2023/1/14 END--------------------------------------------
 
 
 

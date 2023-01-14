@@ -8,6 +8,7 @@ using Fx.Amiya.Dto.OrderCheckPicture;
 using Fx.Amiya.Dto.OrderRemark;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.Performance;
+using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
@@ -32,6 +33,7 @@ namespace Fx.Amiya.Service
         private IDalBindCustomerService _dalBindCustomerService;
         private IHospitalBindCustomerService hospitalBindCustomerService;
         private IAmiyaGoodsDemandService amiyaGoodsDemandService;
+        private IRecommandDocumentSettleService recommandDocumentSettleService;
         private IBindCustomerServiceService bindCustomerServiceService;
         private IHospitalCustomerInfoService hospitalCustomerInfoService;
         private IOrderCheckPictureService _orderCheckPictureService;
@@ -53,6 +55,7 @@ namespace Fx.Amiya.Service
         public ContentPlateFormOrderService(
            IDalContentPlatformOrder dalContentPlatformOrder,
            IDalAmiyaEmployee dalAmiyaEmployee,
+           IRecommandDocumentSettleService recommandDocumentSettleService,
            ICustomerBaseInfoService customerBaseInfoService,
             ILiveAnchorService liveAnchorService,
             IOrderRemarkService orderRemarkService,
@@ -85,6 +88,7 @@ namespace Fx.Amiya.Service
             this.customerBaseInfoService = customerBaseInfoService;
             this.orderRemarkService = orderRemarkService;
             _departmentService = departmentService;
+            this.recommandDocumentSettleService = recommandDocumentSettleService;
             this.amiyaGoodsDemandService = amiyaGoodsDemandService;
             this.employeeBindLiveAnchorService = employeeBindLiveAnchorService;
             _liveAnchorService = liveAnchorService;
@@ -593,7 +597,7 @@ namespace Fx.Amiya.Service
                 await this.UpdateStateAndRepeateOrderPicAsync(addDto.OrderId, addDto.SendBy, contentPlatFormOrder.BelongEmpId, addDto.EmployeeId);
 
                 //当派单为新医院时更新医院接单人数据
-                  //await hospitalBindCustomerService.UpdateBindCustomerToZeroAsync(contentPlatFormOrder.Phone);
+                //await hospitalBindCustomerService.UpdateBindCustomerToZeroAsync(contentPlatFormOrder.Phone);
 
                 //小黄车更新派单触达
                 await _shoppingCartRegistration.UpdateSendOrderAsync(orderInfo.Phone);
@@ -1561,14 +1565,62 @@ namespace Fx.Amiya.Service
                 UpdateContentPlatFormOrderDealInfoDto dealInfoCheck = new UpdateContentPlatFormOrderDealInfoDto();
                 dealInfoCheck.Id = input.OrderDealInfoId;
                 dealInfoCheck.CheckBy = input.employeeId;
-                dealInfoCheck.CheckPrice = input.CheckPrice;
                 dealInfoCheck.CheckRemark = input.CheckRemark;
                 dealInfoCheck.CheckState = input.CheckState;
+                //若审核金额等于交易金额，则审核通过，若不等于则审核中
+                if (input.CheckState == (int)CheckType.CheckedSuccess)
+                {
+                    if (input.CheckPrice == dealInfoCheck.Price)
+                    {
+
+                        dealInfoCheck.CheckState = (int)CheckType.CheckedSuccess;
+                        dealInfoCheck.CheckPrice = input.CheckPrice;
+                        dealInfoCheck.SettlePrice = input.SettlePrice;
+                    }
+                    else
+                    {
+                        if (dealInfoCheck.CheckPrice + input.CheckPrice == dealInfoCheck.Price)
+                        {
+                            dealInfoCheck.CheckState = (int)CheckType.CheckedSuccess;
+                            dealInfoCheck.CheckPrice = dealInfoCheck.Price;
+                            dealInfoCheck.SettlePrice += input.SettlePrice;
+                        }
+                        else
+                        {
+                            dealInfoCheck.CheckState = (int)CheckType.Checking;
+                            if (dealInfoCheck.CheckPrice.HasValue)
+                            {
+                                dealInfoCheck.CheckPrice += input.CheckPrice;
+                            }
+                            else
+                            {
+                                dealInfoCheck.CheckPrice = input.CheckPrice;
+                            }
+                            if (dealInfoCheck.SettlePrice.HasValue)
+                            {
+                                dealInfoCheck.SettlePrice += input.SettlePrice;
+                            }
+                            else
+                            {
+                                dealInfoCheck.SettlePrice = input.SettlePrice;
+                            }
+                        }
+                    }
+                }
                 dealInfoCheck.InformationPrice = input.InformationPrice;
                 dealInfoCheck.SystemUpdatePrice = input.SystemUpdatePrice;
-                dealInfoCheck.SettlePrice = input.SettlePrice;
                 dealInfoCheck.ReconciliationDocumentsId = input.ReconciliationDocumentsId;
                 await _contentPlatFormOrderDalService.CheckAsync(dealInfoCheck);
+
+                //对账单回款表插入数据
+                AddRecommandDocumentSettleDto addRecommandDocumentSettleDto = new AddRecommandDocumentSettleDto();
+                addRecommandDocumentSettleDto.RecommandDocumentId = input.ReconciliationDocumentsId;
+                addRecommandDocumentSettleDto.OrderId = input.Id;
+                addRecommandDocumentSettleDto.DealInfoId = input.OrderDealInfoId;
+                addRecommandDocumentSettleDto.OrderFrom = (int)OrderFrom.ContentPlatFormOrder;
+                addRecommandDocumentSettleDto.ReturnBackPrice = input.SettlePrice;
+
+                await recommandDocumentSettleService.AddAsync(addRecommandDocumentSettleDto);
                 unitOfWork.Commit();
             }
             catch (Exception err)
@@ -1578,7 +1630,7 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
-        /// 订单回款
+        /// 订单回款（旧版本）
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -1859,7 +1911,7 @@ namespace Fx.Amiya.Service
                 }
                 orderDealDto.CreateBy = input.EmpId;
                 orderDealDto.InvitationDocuments = input.InvitationDocuments;
-                
+
                 await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
 
                 //获取医院客户列表
@@ -2004,11 +2056,11 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task UpdateContentPalteformRepeaterOrderStatusAsync(string contentPlateFormId)
         {
-            var contentPalteFormOrder= await _dalContentPlatformOrder.GetAll().Where(e=>e.Id==contentPlateFormId).SingleOrDefaultAsync();
+            var contentPalteFormOrder = await _dalContentPlatformOrder.GetAll().Where(e => e.Id == contentPlateFormId).SingleOrDefaultAsync();
             if (contentPalteFormOrder == null) throw new Exception("订单编号错误");
             if (!contentPalteFormOrder.IsRepeatProfundityOrder) throw new Exception("该订单已标记为重单不可深度状态,请勿重复操作");
             contentPalteFormOrder.IsRepeatProfundityOrder = false;
-            await _dalContentPlatformOrder.UpdateAsync(contentPalteFormOrder,true);
+            await _dalContentPlatformOrder.UpdateAsync(contentPalteFormOrder, true);
         }
 
         /// <summary>
@@ -2016,7 +2068,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task RepeateContentPlateFormOrderAsync(ContentPlateFormOrderRepeateDto input, int hospitalEmployeeId,int hospitalId)
+        public async Task RepeateContentPlateFormOrderAsync(ContentPlateFormOrderRepeateDto input, int hospitalEmployeeId, int hospitalId)
         {
             try
             {
@@ -2739,7 +2791,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        
+
 
         #endregion
     }

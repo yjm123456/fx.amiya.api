@@ -22,6 +22,7 @@ namespace Fx.Amiya.Service
     {
         private IDalReconciliationDocuments dalReconciliationDocuments;
         private IContentPlateFormOrderService contentPlateFormOrderService;
+        private IRecommandDocumentSettleService recommandDocumentSettleService;
         private readonly IUnitOfWork _unitOfWork;
         private IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
         private IOrderService orderService;
@@ -29,6 +30,7 @@ namespace Fx.Amiya.Service
 
         public ReconciliationDocumentsService(IDalReconciliationDocuments dalReconciliationDocuments,
             IContentPlateFormOrderService contentPlateFormOrderService,
+            IRecommandDocumentSettleService recommandDocumentSettleService,
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
             IOrderService orderService,
             ICustomerHospitalConsumeService customerHospitalConsumeService,
@@ -37,6 +39,7 @@ namespace Fx.Amiya.Service
             this.dalReconciliationDocuments = dalReconciliationDocuments;
             _unitOfWork = unitOfWork;
             this.orderService = orderService;
+            this.recommandDocumentSettleService = recommandDocumentSettleService;
             this.customerHospitalConsumeService = customerHospitalConsumeService;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
             this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
@@ -240,6 +243,30 @@ namespace Fx.Amiya.Service
             }
         }
 
+
+        public async Task<decimal> GetTotalCheckPriceAsync(string id)
+        {
+            try
+            {
+                List<string> idList = new List<string>();
+                idList.Add(id);
+                var reconciliationDocuments = await recommandDocumentSettleService.GetRecommandDocumentSettleAsync(idList, null);
+                if (reconciliationDocuments.Count > 0)
+                {
+                    return reconciliationDocuments.Sum(x => x.ReturnBackPrice);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         public async Task UpdateAsync(UpdateReconciliationDocumentsDto updateDto)
         {
             try
@@ -327,35 +354,60 @@ namespace Fx.Amiya.Service
                         await dalReconciliationDocuments.UpdateAsync(x, true);
                     }
                 }
-                #region 下单平台订单回款
-                ReturnBackOrderDto tmallOrderReturnBackOrderDto = new ReturnBackOrderDto();
-                tmallOrderReturnBackOrderDto.ReconciliationDocumentsIdList = reconciliationDocumentsReturnBackPriceDto.ReconciliationDocumentsIdList;
-                tmallOrderReturnBackOrderDto.ReturnBackDate = reconciliationDocumentsReturnBackPriceDto.ReturnBackDate;
-                await orderService.ReturnBackOrderByReconciliationDocumentsIdsAsync(tmallOrderReturnBackOrderDto);
-                #endregion
-
-                #region 内容平台订单回款
-
-                var orderInfo = await contentPlatFormOrderDealInfoService.SettleListAsync(reconciliationDocumentsReturnBackPriceDto);
-                foreach (var x in orderInfo)
+                //查询对账单回款记录表（todo；）
+                var settleInfo = await recommandDocumentSettleService.GetRecommandDocumentSettleAsync(reconciliationDocumentsReturnBackPriceDto.ReconciliationDocumentsIdList, false);
+                foreach (var k in settleInfo)
                 {
-                    ReturnBackOrderDto returnBackOrderDto = new ReturnBackOrderDto();
-                    returnBackOrderDto.OrderId = x.OrderId;
-                    returnBackOrderDto.ReturnBackDate = reconciliationDocumentsReturnBackPriceDto.ReturnBackDate;
-                    returnBackOrderDto.ReturnBackPrice = x.ReturnBackPrice;
-                    await contentPlateFormOrderService.ReturnBackOrderOnlyAsync(returnBackOrderDto);
+                    if (k.OrderFrom == (int)OrderFrom.ThirdPartyOrder)
+                    {
+                        //已完成
+                        #region 下单平台订单回款
+                        ReturnBackOrderDto tmallOrderReturnBackOrderDto = new ReturnBackOrderDto();
+                        tmallOrderReturnBackOrderDto.OrderId = k.OrderId;
+                        tmallOrderReturnBackOrderDto.ReturnBackPrice = k.ReturnBackPrice;
+                        tmallOrderReturnBackOrderDto.ReturnBackDate = reconciliationDocumentsReturnBackPriceDto.ReturnBackDate;
+                        await orderService.ReturnBackOrderByReconciliationDocumentsIdsAsync(tmallOrderReturnBackOrderDto);
+                        #endregion
+                    }
+
+                    if (k.OrderFrom == (int)OrderFrom.ContentPlatFormOrder)
+                    {
+                        #region 内容平台订单回款
+
+                        ReturnBackOrderDto contentPlatFormReturnBackOrderDto = new ReturnBackOrderDto();
+                        contentPlatFormReturnBackOrderDto.OrderId = k.DealInfoId;
+                        contentPlatFormReturnBackOrderDto.ReturnBackPrice = k.ReturnBackPrice;
+                        contentPlatFormReturnBackOrderDto.ReturnBackDate = reconciliationDocumentsReturnBackPriceDto.ReturnBackDate;
+                        //成交情况回款
+                        await contentPlatFormOrderDealInfoService.SettleListAsync(contentPlatFormReturnBackOrderDto);
+                        //订单累计回款
+                        ReturnBackOrderDto returnBackOrderDto = new ReturnBackOrderDto();
+                        returnBackOrderDto.OrderId = k.OrderId;
+                        returnBackOrderDto.ReturnBackDate = reconciliationDocumentsReturnBackPriceDto.ReturnBackDate;
+                        returnBackOrderDto.ReturnBackPrice = k.ReturnBackPrice;
+                        await contentPlateFormOrderService.ReturnBackOrderOnlyAsync(returnBackOrderDto);
+                        #endregion
+                    }
+                    if (k.OrderFrom == (int)OrderFrom.BuyAgainOrder)
+                    {
+                        #region 升单回款
+                        ReturnBackOrderDto customerHospitalConsumeReturnBackOrderDto = new ReturnBackOrderDto();
+                        customerHospitalConsumeReturnBackOrderDto.OrderId = k.OrderId;
+                        customerHospitalConsumeReturnBackOrderDto.ReturnBackPrice = k.ReturnBackPrice;
+                        customerHospitalConsumeReturnBackOrderDto.ReturnBackDate = reconciliationDocumentsReturnBackPriceDto.ReturnBackDate;
+                        await customerHospitalConsumeService.ReturnBackOrderByReconciliationDocumentsIdsAsync(customerHospitalConsumeReturnBackOrderDto);
+                        #endregion
+
+                    }
+
+                    //对账单回款记录表更新“已回款”
+                    await recommandDocumentSettleService.UpdateIsRerturnBackAsync(k.Id);
                 }
-                #endregion
 
-                #region 升单回款
-
-                ReturnBackOrderDto customerHospitalConsumeReturnBackOrderDto = new ReturnBackOrderDto();
-                customerHospitalConsumeReturnBackOrderDto.ReturnBackDate = reconciliationDocumentsReturnBackPriceDto.ReturnBackDate;
-                customerHospitalConsumeReturnBackOrderDto.ReconciliationDocumentsIdList = reconciliationDocumentsReturnBackPriceDto.ReconciliationDocumentsIdList;
-                await customerHospitalConsumeService.ReturnBackOrderByReconciliationDocumentsIdsAsync(customerHospitalConsumeReturnBackOrderDto);
-                #endregion
                 _unitOfWork.Commit();
+
             }
+
             catch (Exception ex)
             {
                 _unitOfWork.RollBack();

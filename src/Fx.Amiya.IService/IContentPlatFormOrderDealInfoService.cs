@@ -2,6 +2,7 @@
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.ReconciliationDocuments;
+using Fx.Amiya.Dto.TmallOrder;
 using Fx.Common;
 using System;
 using System.Collections.Generic;
@@ -37,11 +38,11 @@ namespace Fx.Amiya.IService
 
         Task SettleAsync(UpdateContentPlatFormOrderDealInfoDto updateDto);
         /// <summary>
-        /// 根据对账单id批量回款
+        /// 回款
         /// </summary>
         /// <param name="reconciliationDocumentsList"></param>
         /// <returns></returns>
-        Task<List<OrderReturnBackPriceDto>> SettleListAsync(ReconciliationDocumentsReturnBackPriceDto reconciliationDocumentsList);
+        Task SettleListAsync(ReturnBackOrderDto returnBackOrder);
         /// <summary>
         /// 获取当日上门成交业绩
         /// </summary>
