@@ -207,26 +207,33 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData> CustomerManageCheckAsync(CustomerManageCheckconsumeVo updateVo)
         {
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int empId = Convert.ToInt32(employee.Id);
-            if (employee.PositionId != "1")
+            try
             {
-                if (employee.PositionId != "13")
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int empId = Convert.ToInt32(employee.Id);
+                if (employee.PositionId != "1")
                 {
-                    throw new Exception("只有管理员与财务才可进行升单审核！");
+                    if (employee.PositionId != "13")
+                    {
+                        throw new Exception("只有管理员与财务才可进行升单审核！");
+                    }
                 }
+                CustomerManageCheckconsumeDto checkDto = new CustomerManageCheckconsumeDto();
+                checkDto.Id = updateVo.Id;
+                checkDto.CheckState = updateVo.CheckState;
+                checkDto.CheckBuyAgainPrice = updateVo.CheckBuyAgainPrice;
+                checkDto.CheckSettlePrice = updateVo.CheckSettlePrice;
+                checkDto.CheckEmpId = empId;
+                checkDto.CheckRemark = updateVo.CheckRemark;
+                checkDto.CheckPicture = updateVo.CheckPicture;
+                checkDto.ReconciliationDocumentsId = updateVo.ReconciliationDocumentsId;
+                await customerHospitalConsumeService.CustomerManageCheckAsync(checkDto);
+                return ResultData.Success();
             }
-            CustomerManageCheckconsumeDto checkDto = new CustomerManageCheckconsumeDto();
-            checkDto.Id = updateVo.Id;
-            checkDto.CheckState = updateVo.CheckState;
-            checkDto.CheckBuyAgainPrice = updateVo.CheckBuyAgainPrice;
-            checkDto.CheckSettlePrice = updateVo.CheckSettlePrice;
-            checkDto.CheckEmpId = empId;
-            checkDto.CheckRemark = updateVo.CheckRemark;
-            checkDto.CheckPicture = updateVo.CheckPicture;
-            checkDto.ReconciliationDocumentsId = updateVo.ReconciliationDocumentsId;
-            await customerHospitalConsumeService.CustomerManageCheckAsync(checkDto);
-            return ResultData.Success();
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -403,7 +410,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             catch (Exception err)
             {
-                return null;
+               throw new Exception();
             }
 
         }

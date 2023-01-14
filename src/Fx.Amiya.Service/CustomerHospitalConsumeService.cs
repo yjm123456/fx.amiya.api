@@ -342,6 +342,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
+                throw err;
             }
         }
 
@@ -388,7 +389,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var order = await dalCustomerHospitalConsume.GetAll().Where(x => x.ConsumeId == input.OrderId).FirstOrDefaultAsync();
+                var order = await dalCustomerHospitalConsume.GetAll().Where(x => x.Id == Convert.ToInt32(input.OrderId)).FirstOrDefaultAsync();
 
                 if (order.IsConfirmOrder == true && order.CheckState == (int)CheckType.CheckedSuccess)
                 {

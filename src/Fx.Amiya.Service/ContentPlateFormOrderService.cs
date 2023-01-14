@@ -1561,16 +1561,16 @@ namespace Fx.Amiya.Service
                 }
 
                 //修改成交情况审核信息
-                var dealInfoUpdate = dealInfo.Where(x => x.Id == input.OrderDealInfoId);
+                var dealInfoUpdate = dealInfo.Where(x => x.Id == input.OrderDealInfoId).FirstOrDefault();
                 UpdateContentPlatFormOrderDealInfoDto dealInfoCheck = new UpdateContentPlatFormOrderDealInfoDto();
                 dealInfoCheck.Id = input.OrderDealInfoId;
                 dealInfoCheck.CheckBy = input.employeeId;
                 dealInfoCheck.CheckRemark = input.CheckRemark;
-                dealInfoCheck.CheckState = input.CheckState;
+                //dealInfoCheck.CheckState = input.CheckState;
                 //若审核金额等于交易金额，则审核通过，若不等于则审核中
                 if (input.CheckState == (int)CheckType.CheckedSuccess)
                 {
-                    if (input.CheckPrice == dealInfoCheck.Price)
+                    if (input.CheckPrice == dealInfoUpdate.Price)
                     {
 
                         dealInfoCheck.CheckState = (int)CheckType.CheckedSuccess;
@@ -1579,18 +1579,18 @@ namespace Fx.Amiya.Service
                     }
                     else
                     {
-                        if (dealInfoCheck.CheckPrice + input.CheckPrice == dealInfoCheck.Price)
+                        if (dealInfoUpdate.CheckPrice + input.CheckPrice == dealInfoUpdate.Price)
                         {
                             dealInfoCheck.CheckState = (int)CheckType.CheckedSuccess;
-                            dealInfoCheck.CheckPrice = dealInfoCheck.Price;
-                            dealInfoCheck.SettlePrice += input.SettlePrice;
+                            dealInfoCheck.CheckPrice = dealInfoUpdate.Price;
+                            dealInfoCheck.SettlePrice = input.SettlePrice + dealInfoUpdate.SettlePrice;
                         }
                         else
                         {
                             dealInfoCheck.CheckState = (int)CheckType.Checking;
-                            if (dealInfoCheck.CheckPrice.HasValue)
+                            if (dealInfoUpdate.CheckPrice.HasValue)
                             {
-                                dealInfoCheck.CheckPrice += input.CheckPrice;
+                                dealInfoCheck.CheckPrice = input.CheckPrice + dealInfoUpdate.CheckPrice.Value;
                             }
                             else
                             {
@@ -1598,7 +1598,7 @@ namespace Fx.Amiya.Service
                             }
                             if (dealInfoCheck.SettlePrice.HasValue)
                             {
-                                dealInfoCheck.SettlePrice += input.SettlePrice;
+                                dealInfoCheck.SettlePrice = input.SettlePrice + dealInfoUpdate.SettlePrice;
                             }
                             else
                             {
@@ -1607,8 +1607,23 @@ namespace Fx.Amiya.Service
                         }
                     }
                 }
-                dealInfoCheck.InformationPrice = input.InformationPrice;
-                dealInfoCheck.SystemUpdatePrice = input.SystemUpdatePrice;
+                if (dealInfoUpdate.InformationPrice.HasValue)
+                {
+
+                    dealInfoCheck.InformationPrice = input.InformationPrice + dealInfoUpdate.InformationPrice.Value;
+                }
+                else
+                {
+                    dealInfoCheck.InformationPrice = input.InformationPrice;
+                }
+                if (dealInfoUpdate.SystemUpdatePrice.HasValue)
+                {
+                    dealInfoCheck.SystemUpdatePrice = input.SystemUpdatePrice + dealInfoUpdate.SystemUpdatePrice.Value;
+                }
+                else
+                {
+                    dealInfoCheck.SystemUpdatePrice = input.SystemUpdatePrice;
+                }
                 dealInfoCheck.ReconciliationDocumentsId = input.ReconciliationDocumentsId;
                 await _contentPlatFormOrderDalService.CheckAsync(dealInfoCheck);
 
@@ -1626,6 +1641,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
+                throw err;
             }
         }
 

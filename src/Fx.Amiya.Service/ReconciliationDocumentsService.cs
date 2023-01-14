@@ -375,7 +375,7 @@ namespace Fx.Amiya.Service
                         #region 内容平台订单回款
 
                         ReturnBackOrderDto contentPlatFormReturnBackOrderDto = new ReturnBackOrderDto();
-                        contentPlatFormReturnBackOrderDto.OrderId = k.DealInfoId;
+                        contentPlatFormReturnBackOrderDto.OrderDealId = k.DealInfoId;
                         contentPlatFormReturnBackOrderDto.ReturnBackPrice = k.ReturnBackPrice;
                         contentPlatFormReturnBackOrderDto.ReturnBackDate = reconciliationDocumentsReturnBackPriceDto.ReturnBackDate;
                         //成交情况回款
