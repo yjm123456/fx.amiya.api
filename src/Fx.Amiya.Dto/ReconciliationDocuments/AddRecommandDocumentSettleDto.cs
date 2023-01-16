@@ -14,5 +14,27 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
 
         public int OrderFrom { get; set; }
         public decimal ReturnBackPrice { get; set; }
+
+        /// <summary>
+        /// 归属主播账号(可空)
+        /// </summary>
+        public int? BelongLiveAnchorAccount { get; set; }
+        /// <summary>
+        /// 归属客服(可空)
+        /// </summary>
+        public int? BelongEmpId { get; set; }
+        /// <summary>
+        /// 操作人
+        /// </summary>
+        public int CreateBy { get; set; }
+        /// <summary>
+        /// 账单类型
+        /// </summary>
+        public bool AccountType { get; set; }
+
+        /// <summary>
+        /// 出入账金额
+        /// </summary>
+        public decimal AccountPrice { get; set; }
     }
 }

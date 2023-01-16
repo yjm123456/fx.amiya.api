@@ -333,8 +333,14 @@ namespace Fx.Amiya.Service
                 AddRecommandDocumentSettleDto addRecommandDocumentSettleDto = new AddRecommandDocumentSettleDto();
                 addRecommandDocumentSettleDto.RecommandDocumentId = updateDto.ReconciliationDocumentsId;
                 addRecommandDocumentSettleDto.OrderId = updateDto.Id.ToString();
+                addRecommandDocumentSettleDto.DealInfoId = result.ConsumeId;
                 addRecommandDocumentSettleDto.OrderFrom = (int)OrderFrom.BuyAgainOrder;
                 addRecommandDocumentSettleDto.ReturnBackPrice = updateDto.CheckSettlePrice;
+                addRecommandDocumentSettleDto.BelongLiveAnchorAccount = result.LiveAnchorId;
+                addRecommandDocumentSettleDto.BelongEmpId = result.AddedBy;
+                addRecommandDocumentSettleDto.CreateBy = updateDto.CheckEmpId;
+                addRecommandDocumentSettleDto.AccountType = false;
+                addRecommandDocumentSettleDto.AccountPrice = updateDto.CheckSettlePrice;
 
                 await recommandDocumentSettleService.AddAsync(addRecommandDocumentSettleDto);
                 unitOfWork.Commit();

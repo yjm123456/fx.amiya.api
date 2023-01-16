@@ -67,7 +67,7 @@ namespace Fx.Amiya.Service
                     endDealrq = ((DateTime)endDealDate).AddDays(1);
                 }
                 var reconciliationDocuments = from d in dalReconciliationDocuments.GetAll().Include(x => x.HospitalEmployee).Include(x => x.HospitalInfo)
-                                              where (string.IsNullOrWhiteSpace(keyword) || d.CustomerName.Contains(keyword) || d.CustomerPhone.Contains(keyword))
+                                              where (string.IsNullOrWhiteSpace(keyword) || d.CustomerName.Contains(keyword) || d.CustomerPhone.Contains(keyword) || d.Id.Contains(keyword))
                                              && (!startDealDate.HasValue && !endDealDate.HasValue || d.DealDate >= startDealrq && d.DealDate <= endDealrq)
                                              && (!returnBackPricePercent.HasValue || d.ReturnBackPricePercent == returnBackPricePercent.Value)
                                              && (!reconciliationState.HasValue || d.ReconciliationState == reconciliationState.Value)
@@ -354,7 +354,7 @@ namespace Fx.Amiya.Service
                         await dalReconciliationDocuments.UpdateAsync(x, true);
                     }
                 }
-                //查询对账单回款记录表（todo；）
+                //查询对账单回款记录表
                 var settleInfo = await recommandDocumentSettleService.GetRecommandDocumentSettleAsync(reconciliationDocumentsReturnBackPriceDto.ReconciliationDocumentsIdList, false);
                 foreach (var k in settleInfo)
                 {

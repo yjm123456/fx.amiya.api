@@ -1574,7 +1574,11 @@ namespace Fx.Amiya.Service
                 addRecommandDocumentSettleDto.OrderId = input.Id.ToString();
                 addRecommandDocumentSettleDto.OrderFrom = (int)OrderFrom.ThirdPartyOrder;
                 addRecommandDocumentSettleDto.ReturnBackPrice = input.SettlePrice;
-
+                addRecommandDocumentSettleDto.BelongLiveAnchorAccount = order.LiveAnchorId;
+                addRecommandDocumentSettleDto.BelongEmpId = order.BelongEmpId;
+                addRecommandDocumentSettleDto.CreateBy = input.employeeId;
+                addRecommandDocumentSettleDto.AccountType = true;
+                addRecommandDocumentSettleDto.AccountPrice = input.CheckPrice - input.SettlePrice;
                 await recommandDocumentSettleService.AddAsync(addRecommandDocumentSettleDto);
                 unitOfWork.Commit();
             }
@@ -3740,26 +3744,26 @@ namespace Fx.Amiya.Service
 
             List<OrderWriteOffDto> orderPageInfo = new List<OrderWriteOffDto>();
             orderPageInfo = await order.ToListAsync();
-            foreach (var x in orderPageInfo)
-            {
-                var sendOrderInfo = await _sendOrderInfoService.GetSendOrderInfoByOrderId(x.Id);
-                if (sendOrderInfo.Count != 0)
-                {
-                    x.SendOrderHospital = sendOrderInfo.First().HospitalName;
-                    x.SendOrderPrice = sendOrderInfo.First().PurchaseSinglePrice * sendOrderInfo.First().PurchaseNum;
-                    x.SendEmployeeName = sendOrderInfo.First().SendName;
-                }
-                if (x.BelongEmpId != 0)
-                {
-                    var customerService = await dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(e => e.Id == x.BelongEmpId);
-                    x.BenlongEmpName = customerService.Name.ToString();
-                }
-                if (x.CheckBy.HasValue && x.CheckBy != 0)
-                {
-                    var checkBy = await dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(e => e.Id == x.CheckBy.Value);
-                    x.CheckByEmpName = checkBy.Name.ToString();
-                }
-            }
+            //foreach (var x in orderPageInfo)
+            //{
+            //    var sendOrderInfo = await _sendOrderInfoService.GetSendOrderInfoByOrderId(x.Id);
+            //    if (sendOrderInfo.Count != 0)
+            //    {
+            //        x.SendOrderHospital = sendOrderInfo.First().HospitalName;
+            //        x.SendOrderPrice = sendOrderInfo.First().PurchaseSinglePrice * sendOrderInfo.First().PurchaseNum;
+            //        x.SendEmployeeName = sendOrderInfo.First().SendName;
+            //    }
+            //    if (x.BelongEmpId != 0)
+            //    {
+            //        var customerService = await dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(e => e.Id == x.BelongEmpId);
+            //        x.BenlongEmpName = customerService.Name.ToString();
+            //    }
+            //    if (x.CheckBy.HasValue && x.CheckBy != 0)
+            //    {
+            //        var checkBy = await dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(e => e.Id == x.CheckBy.Value);
+            //        x.CheckByEmpName = checkBy.Name.ToString();
+            //    }
+            //}
             return orderPageInfo.OrderByDescending(z => z.NickName).ThenByDescending(z => z.WriteOffDate).ToList();
         }
 

@@ -1634,6 +1634,11 @@ namespace Fx.Amiya.Service
                 addRecommandDocumentSettleDto.DealInfoId = input.OrderDealInfoId;
                 addRecommandDocumentSettleDto.OrderFrom = (int)OrderFrom.ContentPlatFormOrder;
                 addRecommandDocumentSettleDto.ReturnBackPrice = input.SettlePrice;
+                addRecommandDocumentSettleDto.BelongLiveAnchorAccount = order.LiveAnchorId;
+                addRecommandDocumentSettleDto.BelongEmpId = order.BelongEmpId;
+                addRecommandDocumentSettleDto.CreateBy = input.employeeId;
+                addRecommandDocumentSettleDto.AccountType = false;
+                addRecommandDocumentSettleDto.AccountPrice = input.SettlePrice;
 
                 await recommandDocumentSettleService.AddAsync(addRecommandDocumentSettleDto);
                 unitOfWork.Commit();

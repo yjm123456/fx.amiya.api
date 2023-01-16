@@ -18,6 +18,28 @@ namespace Fx.Amiya.DbModels.Model
         public DateTime CreateDate { get; set; }
         public bool IsSettle { get; set; }
         public DateTime? SettleDate { get; set; }
+        /// <summary>
+        /// 归属主播账号(可空)
+        /// </summary>
+        public int? BelongLiveAnchorAccount { get; set; }
+        /// <summary>
+        /// 归属客服(可空)
+        /// </summary>
+        public int? BelongEmpId { get; set; }
+        /// <summary>
+        /// 操作人
+        /// </summary>
+        public int CreateBy { get; set; }
+        /// <summary>
+        /// 账单类型(false为入账，true为出账)
+        /// </summary>
+        public bool AccountType { get; set; }
 
+        /// <summary>
+        /// 出入账金额
+        /// </summary>
+        public decimal AccountPrice { get; set; }
+
+        public AmiyaEmployee AmiyaEmployee { get; set; }
     }
 }

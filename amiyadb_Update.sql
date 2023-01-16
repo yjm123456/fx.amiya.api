@@ -1826,8 +1826,30 @@ ALTER TABLE `tbl_content_platform_order_deal_info`
 
 
 -----------------------------王健 2023/01/13 END -----------------------------
-----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
+-----------------------------余建明 2023/01/16 BEGIN -----------------------------
+--对账单记录表新增归属客服与审核人
+ALTER TABLE `amiyadb`.`tbl_recommand_document_settle` 
+ADD COLUMN `belong_live_anchor_account` INT  NULL AFTER `settle_date`,
+ADD COLUMN `belong_emp_id` INT  NULL AFTER `belong_live_anchor_account`,
+ADD COLUMN `create_by` INT NOT NULL AFTER `belong_emp_id`,
+ADD COLUMN `account_type` BIT NOT NULL DEFAULT 0 AFTER `create_by`,
+ADD COLUMN `account_price` DECIMAL(12,2) NOT NULL AFTER `account_type`;
+-----------------------------余建明 2023/01/16 END -----------------------------
+
+--对账单记录表新增归属客服与审核人主外键
+ALTER TABLE `amiyadb`.`tbl_recommand_document_settle` 
+CHANGE COLUMN `create_by` `create_by` INT UNSIGNED NOT NULL ,
+ADD INDEX `fk_recommand_document_settle_amiyaempinfo_idx` (`create_by` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`tbl_recommand_document_settle` 
+ADD CONSTRAINT `fk_recommand_document_settle_amiyaempinfo`
+  FOREIGN KEY (`create_by`)
+  REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
 
