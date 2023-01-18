@@ -139,6 +139,7 @@ namespace Fx.Amiya.Service
                         bind.NewConsumptionDate = DateTime.Now;
                         bind.NewConsumptionContentPlatform = (int)OrderFrom.ContentPlatFormOrder;
                         bind.NewContentPlatForm = contentPlatForm.ContentPlatformName;
+                        bind.AllOrderCount += 1;
                         await _dalBindCustomerService.UpdateAsync(bind, true);
                     }
                 }
@@ -1446,6 +1447,7 @@ namespace Fx.Amiya.Service
                     {
                         throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应人员进行编辑！");
                     }
+                    //更新绑定客服列表bind_customer_info表的消费平台与主播微信数据（todo）
                 }
                 else
                 {

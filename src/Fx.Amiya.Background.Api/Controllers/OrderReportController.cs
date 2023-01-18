@@ -1530,7 +1530,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 isHidePhone = false;
             }
 
-            var q = await orderService.GetCustomerOrderReceivableAsync(startDate, endDate, appType, CheckState, ReturnBackPriceState, customerName, false);
+            var q = await orderService.GetCustomerOrderReceivableAsync(startDate, endDate, appType, CheckState, ReturnBackPriceState, customerName, isHidePhone);
             var res = from d in q
                       select new CustomerOrderReceivableReportVo()
                       {
