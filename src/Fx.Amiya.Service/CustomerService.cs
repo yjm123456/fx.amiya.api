@@ -850,33 +850,43 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task EditAsync(EditCustomerDto editDto)
         {
-            var config = await GetCallCenterConfig();
-            string phone = ServiceClass.Decrypto(editDto.EncryptPhone, config.PhoneEncryptKey);
-            var customerBaseInfo = await dalCustomerBaseInfo.GetAll().SingleOrDefaultAsync(e => e.Phone == phone);
-            if (customerBaseInfo == null)
+            unitOfWork.BeginTransaction();
+            try
             {
-                CustomerBaseInfo customerInfo = new CustomerBaseInfo();
-                customerInfo.Name = editDto.Name;
-                customerInfo.Sex = editDto.Sex;
-                customerInfo.Phone = phone;
-                customerInfo.Birthday = editDto.Birthday;
-                customerInfo.Occupation = editDto.Occupation;
-                customerInfo.WechatNumber = editDto.WechatNumber;
-                customerInfo.City = editDto.City;
-                await dalCustomerBaseInfo.AddAsync(customerInfo, true);
+                var config = await GetCallCenterConfig();
+                string phone = ServiceClass.Decrypto(editDto.EncryptPhone, config.PhoneEncryptKey);
+                var customerBaseInfo = await dalCustomerBaseInfo.GetAll().SingleOrDefaultAsync(e => e.Phone == phone);
+                if (customerBaseInfo == null)
+                {
+                    CustomerBaseInfo customerInfo = new CustomerBaseInfo();
+                    customerInfo.Name = editDto.Name;
+                    customerInfo.Sex = editDto.Sex;
+                    customerInfo.Phone = phone;
+                    customerInfo.Birthday = editDto.Birthday;
+                    customerInfo.Occupation = editDto.Occupation;
+                    customerInfo.WechatNumber = editDto.WechatNumber;
+                    customerInfo.City = editDto.City;
+                    await dalCustomerBaseInfo.AddAsync(customerInfo, true);
+                }
+                else
+                {
+                    customerBaseInfo.Name = editDto.Name;
+                    customerBaseInfo.Sex = editDto.Sex;
+                    customerBaseInfo.Birthday = editDto.Birthday;
+                    customerBaseInfo.Occupation = editDto.Occupation;
+                    customerBaseInfo.WechatNumber = editDto.WechatNumber;
+                    customerBaseInfo.City = editDto.City;
+                    await dalCustomerBaseInfo.UpdateAsync(customerBaseInfo, true);
+                }
+                unitOfWork.Commit();
             }
-            else
+            catch (Exception err)
             {
-                customerBaseInfo.Name = editDto.Name;
-                customerBaseInfo.Sex = editDto.Sex;
-                customerBaseInfo.Birthday = editDto.Birthday;
-                customerBaseInfo.Occupation = editDto.Occupation;
-                customerBaseInfo.WechatNumber = editDto.WechatNumber;
-                customerBaseInfo.City = editDto.City;
-                await dalCustomerBaseInfo.UpdateAsync(customerBaseInfo, true);
+                unitOfWork.RollBack();
+                throw err;
             }
-
         }
+
 
         public async Task<CustomerBaseInfoDto> GetCustomerBaseInfoByEncryptPhoneAsync(string encryptPhone)
         {

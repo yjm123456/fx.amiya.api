@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Fx.Amiya.Background.Api.Controllers
 {
     /// <summary>
-    /// 财务对账单（仿美呗版）板块数据接口
+    /// 【新】财务对账单板块数据接口
     /// </summary>
     [Route("[controller]")]
     [ApiController]

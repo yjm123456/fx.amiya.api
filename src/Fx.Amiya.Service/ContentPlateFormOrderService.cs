@@ -159,7 +159,7 @@ namespace Fx.Amiya.Service
                     bindCustomerService.NewConsumptionContentPlatform = (int)OrderFrom.ContentPlatFormOrder;
                     bindCustomerService.NewContentPlatForm = contentPlatForm.ContentPlatformName;
                     bindCustomerService.AllPrice = 0;
-                    bindCustomerService.AllOrderCount = 0;
+                    bindCustomerService.AllOrderCount = 1;
                     await _dalBindCustomerService.AddAsync(bindCustomerService, true);
                 }
 

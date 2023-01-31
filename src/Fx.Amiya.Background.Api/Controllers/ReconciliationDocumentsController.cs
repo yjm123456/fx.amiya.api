@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 namespace Fx.Amiya.Background.Api.Controllers
 {
     /// <summary>
-    /// 财务对账单（仿美呗版）板块数据接口
+    /// 【新】财务对账单板块数据接口
     /// </summary>
     [Route("[controller]")]
     [ApiController]
@@ -531,8 +531,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                         }
                         if (worksheet.Cells[x, 4].Value != null)
                         {
-                            int tempValue;
-                            if (int.TryParse(worksheet.Cells[x, 4].Value.ToString(), out tempValue))
+                            double tempValue;
+                            if (double.TryParse(worksheet.Cells[x, 4].Value.ToString(), out tempValue))
                             {
                                 var dealDate = DateTime.FromOADate(double.Parse(worksheet.Cells[x, 4].Value.ToString()));
                                 addDto.DealDate = dealDate;
