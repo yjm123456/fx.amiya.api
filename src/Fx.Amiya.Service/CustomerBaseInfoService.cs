@@ -94,7 +94,7 @@ namespace Fx.Amiya.Service
                 }
 
                 var customerInfo = await dalCustomerInfo.GetAll().Where(x => x.Phone == phone).FirstOrDefaultAsync();
-                
+                customerBaseInfoServiceDto.TagList = new List<BaseIdAndNameDto>();
                 if (customerInfo != null)
                 {
                     
@@ -106,6 +106,7 @@ namespace Fx.Amiya.Service
                                       Id = t.Id,
                                       Name = t.TagName
                                   };
+                    
                     customerBaseInfoServiceDto.TagList = tagList.ToList();
                     var memberCardHandle = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerInfo.Id);
                     if (memberCardHandle != null)
