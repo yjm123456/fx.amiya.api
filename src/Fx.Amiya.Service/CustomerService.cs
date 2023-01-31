@@ -17,6 +17,7 @@ using Fx.Common;
 using Fx.Common.Utils;
 using Fx.Infrastructure.DataAccess;
 using Fx.Amiya.Dto.TagDetailInfo;
+using Fx.Amiya.Dto;
 
 namespace Fx.Amiya.Service
 {
@@ -40,6 +41,7 @@ namespace Fx.Amiya.Service
         private IConsumptionLevelService _consumptionLevelService;
         private IDalTagDetailInfo dalTagDetailInfo;
         private ITagDetailInfoService tagDetailInfoService;
+        private IDalCustomerTagInfo dalCustomerTagInfo;
         public CustomerService(IDalCustomerInfo dalCustomerInfo,
             IDalUserInfo dalUserInfo,
             IDalBindCustomerService dalBindCustomerService,
@@ -55,7 +57,7 @@ namespace Fx.Amiya.Service
             IDalCustomerBaseInfo dalCustomerBaseInfo,
             IDalSendOrderInfo dalSendOrderInfo,
             IConsumptionLevelService consumptionLevelService,
-            IDalTrackRecord dalTrackRecord, IDalTagDetailInfo dalTagDetailInfo, ITagDetailInfoService tagDetailInfoService)
+            IDalTrackRecord dalTrackRecord, IDalTagDetailInfo dalTagDetailInfo, ITagDetailInfoService tagDetailInfoService, IDalCustomerTagInfo dalCustomerTagInfo)
         {
             this.dalCustomerInfo = dalCustomerInfo;
             this.dalUserInfo = dalUserInfo;
@@ -75,6 +77,7 @@ namespace Fx.Amiya.Service
             _amiyaHospitalDepartmentService = amiyaHospitalDepartmentService;
             this.dalTagDetailInfo = dalTagDetailInfo;
             this.tagDetailInfoService = tagDetailInfoService;
+            this.dalCustomerTagInfo = dalCustomerTagInfo;
         }
         public async Task<string> BindCustomerAsync(string fxUserId, string phoneNumber)
         {
@@ -946,19 +949,49 @@ namespace Fx.Amiya.Service
         public async Task AddCustomerTag(AddCustomerTagDto addCustomerTagDto)
         {
             var tags = dalTagDetailInfo.GetAll().Where(e => e.CustomerGoodsId == addCustomerTagDto.CustomerId).Select(e=>e.TagId).ToList();
-            var listExcept= addCustomerTagDto.TagIds.Except(tags);
-            foreach (var item in listExcept)
+            if (tags.Count()>0)
             {
-                AddTagDetailInfoDto add = new AddTagDetailInfoDto();
-                add.Id = addCustomerTagDto.CustomerId;
-                add.TagId = item;
-                await tagDetailInfoService.AddTagDetailInfoAsync(add);
+                //删除原有标签
+                foreach (var item in tags)
+                {
+                    await tagDetailInfoService.DeleteAsync(addCustomerTagDto.CustomerId, item);
+                }
+                //添加新标签
+                foreach (var item in addCustomerTagDto.TagIds)
+                {
+                    AddTagDetailInfoDto add = new AddTagDetailInfoDto();
+                    add.Id = addCustomerTagDto.CustomerId;
+                    add.TagId = item;
+                    await tagDetailInfoService.AddTagDetailInfoAsync(add);
+                }
+
             }
-            var deleteTagIds = tags.Except(addCustomerTagDto.TagIds);
-            foreach (var item in deleteTagIds)
-            {
-                await tagDetailInfoService.DeleteAsync(addCustomerTagDto.CustomerId,item);
-            }
+            else {
+                foreach (var item in addCustomerTagDto.TagIds)
+                {
+                    AddTagDetailInfoDto add = new AddTagDetailInfoDto();
+                    add.Id = addCustomerTagDto.CustomerId;
+                    add.TagId = item;
+                    await tagDetailInfoService.AddTagDetailInfoAsync(add);
+                }
+            }         
+        }
+        /// <summary>
+        /// 根据id获取用户标签列表
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        public async Task<List<BaseIdAndNameDto>> GetCustomerTagListAsync(string customerId)
+        {
+            var tagList = from td in dalTagDetailInfo.GetAll()
+                          join t in dalCustomerTagInfo.GetAll() on td.TagId equals t.Id
+                          where td.CustomerGoodsId == customerId
+                          select new BaseIdAndNameDto
+                          {
+                              Id = t.Id,
+                              Name = t.TagName
+                          };
+            return tagList.ToList();
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Fx.Amiya.Service
             TagDetailInfo tagDetailInfo = new TagDetailInfo();
             tagDetailInfo.CustomerGoodsId = add.Id;
             tagDetailInfo.TagId = add.TagId;
-            dalTagDetailInfo.AddAsync(tagDetailInfo,true);
+            await dalTagDetailInfo.AddAsync(tagDetailInfo,true);
             
         }
         
@@ -35,7 +35,7 @@ namespace Fx.Amiya.Service
         {
             var tagDetail = dalTagDetailInfo.GetAll().Where(e => e.CustomerGoodsId == id && e.TagId == tagid).SingleOrDefault();
             if (tagDetail == null) throw new Exception("编号错误");
-            dalTagDetailInfo.DeleteAsync(tagDetail,true);
+            await dalTagDetailInfo.DeleteAsync(tagDetail,true);
         }
         
 

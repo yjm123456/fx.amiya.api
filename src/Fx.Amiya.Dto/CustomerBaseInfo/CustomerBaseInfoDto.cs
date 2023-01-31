@@ -151,5 +151,10 @@ namespace Fx.Amiya.Dto.CustomerBaseInfo
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+        /// <summary>
+        /// 用户标签
+        /// </summary>
+        public List<BaseIdAndNameDto> TagList { get; set; }
+
     }
 }

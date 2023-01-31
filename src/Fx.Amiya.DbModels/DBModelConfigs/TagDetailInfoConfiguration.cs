@@ -14,7 +14,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
         public void Configure(EntityTypeBuilder<TagDetailInfo> builder)
         {
             builder.ToTable("tbl_tag_detail_info");
-            builder.HasNoKey();
+            builder.HasKey(e=>new { e.CustomerGoodsId,e.TagId});
             builder.Property(e=>e.CustomerGoodsId).HasColumnName("customer_goods_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(e => e.TagId).HasColumnName("tag_id").HasColumnType("varchar(50)").IsRequired();            
         }

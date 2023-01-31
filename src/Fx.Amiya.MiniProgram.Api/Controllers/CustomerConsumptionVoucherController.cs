@@ -316,5 +316,27 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
 
         }
+        /// <summary>
+        /// 获取用户所有可用的抵用券
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getAllValidVoucher")]
+        public async Task<ResultData<List<SimpleVoucherInfoVo>>> GetAllValidVoucherList() {
+            string token = _tokenReader.GetToken();
+            var sessionInfo = _sessionStorage.GetSession(token);
+            string customerId = sessionInfo.FxCustomerId;
+            var list= (await customerConsumptionVoucherService.GetCustomerAllVoucher(customerId)).Select(e=>new SimpleVoucherInfoVo { 
+                CustomerVoucherId=e.CustomerVoucherId,
+                VoucherName=e.VoucherName,
+                IsSpecifyProduct=e.IsSpecifyProduct,
+                Type=e.Type,
+                IsNeedMinFee=e.IsNeedMinFee,
+                MinPrice=e.MinPrice,
+                VioucherId=e.VoucherId,
+                Remark=e.Remark,
+                DeductMoney=e.DeductMoney
+            });
+            return ResultData<List<SimpleVoucherInfoVo>>.Success().AddData("voucherList", list.ToList());
+        }
     }
 }

@@ -213,13 +213,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("tagCategoryNameList")]
-        public async Task<ResultData<List<BaseIdAndNameVo>>> GetTagCategoryNameList() { 
-            var list= (await customerTagInfoService.GetTagCategoryNameListAsync()).Select(e => new BaseIdAndNameVo
+        public async Task<ResultData<List<TagCategoryIdAndNameVo>>> GetTagCategoryNameList() { 
+            var list= (await customerTagInfoService.GetTagCategoryNameListAsync()).Select(e => new TagCategoryIdAndNameVo
             {
-                Id = e.Key,
+                Id = Convert.ToInt32(e.Key),
                 Name = e.Value
             }).ToList();
-            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("tagCategoryNameList", list);
+            return ResultData<List<TagCategoryIdAndNameVo>>.Success().AddData("tagCategoryNameList", list);
         }
 
     }

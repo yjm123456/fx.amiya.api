@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Dto.ConsumptionVoucher;
+using Fx.Amiya.Dto.GoodsConsumptionVoucher;
 using Fx.Common;
 using System;
 using System.Collections.Generic;
@@ -132,5 +133,10 @@ namespace Fx.Amiya.IService
         /// <param name="goodsId"></param>
         /// <returns></returns>
         Task<List<CustomerConsumptioVoucherInfoDto>> GetOverAllCustomerConsumptionVoucherListAsync(string customerId, bool? isUsed, string goodsId);
+        /// <summary>
+        /// 获取可用的商品抵用券(不包含叫车抵用券)
+        /// </summary>
+        /// <returns></returns>
+        Task<List<SimpleVoucherInfoDto>> GetCustomerAllVoucher(string customerId); 
     }
 }

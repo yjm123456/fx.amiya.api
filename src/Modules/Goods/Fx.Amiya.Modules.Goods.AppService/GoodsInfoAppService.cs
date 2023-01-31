@@ -189,10 +189,10 @@ namespace Fx.Amiya.Modules.Goods.AppService
 
 
                 //会员价格
-                var goodsMemberrankPrice =await goodsMemberRankPriceService.GetMemeberRankPriceByGoodsIdAsync(id);
+                var goodsMemberrankPrice = await goodsMemberRankPriceService.GetMemeberRankPriceByGoodsIdAsync(id);
                 //可用抵用券
                 var consumptionVoucher = await goodsConsumptionVoucherService.GetGoodsConsumptionVoucherByGoodsIdAsync(id);
-                
+
                 GoodsInfoForSingleDto goods = new GoodsInfoForSingleDto()
                 {
                     Id = goodsInfo.Id,
@@ -228,7 +228,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     VisitCount = goodsInfo.VisitCount,
                     GoodsHospitalPrice = goodsHospitalPriceList,
                     GoodsStandardsPrice = goodsStandardsPrice,
-                    GoodsMemberRankPrice =goodsMemberrankPrice,
+                    GoodsMemberRankPrice = goodsMemberrankPrice,
                     CarouselImageUrls = (from d in goodsInfo.GoodsInfoCarouselImages
                                          select new GoodsInfoCarouselImageDto
                                          {
@@ -236,7 +236,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                                              PicUrl = d.PicUrl,
                                              DisplayIndex = d.DisplayIndex
                                          }).ToList(),
-                    GoodsConsumptionVoucher= consumptionVoucher
+                    GoodsConsumptionVoucher = consumptionVoucher
                 };
                 return goods;
             }
@@ -253,12 +253,12 @@ namespace Fx.Amiya.Modules.Goods.AppService
         {
             var goodsInfos = freeSql.Select<GoodsInfoDbModel>()
                 .Include(e => e.GoodsCategory)
-                .IncludeMany(e=>e.GoodsMemberRankPriceList)
+                .IncludeMany(e => e.GoodsMemberRankPriceList)
                 .Where(e => string.IsNullOrWhiteSpace(keyword) || e.Name.Contains(keyword) || e.SimpleCode.Contains(keyword) || e.Description.Contains(keyword))
                 .Where(e => exchangeType == null || e.ExchangeType == exchangeType)
                 .Where(e => categoryId == null || e.CategoryId == categoryId)
                 .Where(e => valid == null || e.Valid == valid);
-                
+
             var goodsInfoList = from d in await goodsInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync()
                                 select new GoodsInfoForListDto
                                 {
@@ -292,8 +292,9 @@ namespace Fx.Amiya.Modules.Goods.AppService
                                     MaxShowPrice = d.MaxShowPrice,
                                     VisitCount = d.VisitCount,
                                     ShowSaleCount = d.ShowSaleCount,
-                                    IsMember=d.GoodsMemberRankPriceList.Any()                                                                                                 
+                                    IsMember = d.GoodsMemberRankPriceList.Any()
                                 };
+
             FxPageInfo<GoodsInfoForListDto> goodsPageInfo = new FxPageInfo<GoodsInfoForListDto>();
             goodsPageInfo.TotalCount = (int)await goodsInfos.CountAsync();
             goodsPageInfo.List = goodsInfoList;
@@ -304,11 +305,11 @@ namespace Fx.Amiya.Modules.Goods.AppService
         {
             var goodsInfos = freeSql.Select<GoodsInfoDbModel>()
                 .Include(e => e.GoodsCategory)
-                .IncludeMany(e=>e.GoodsMemberRankPriceList)
+                .IncludeMany(e => e.GoodsMemberRankPriceList)
                 .Where(e => valid == null || e.Valid == valid)
-                .Where(e=>e.ExchangeType==1)
-                .OrderByDescending(e=>e.SaleCount);
-            var goodsInfoList = from d in await goodsInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync() 
+                .Where(e => e.ExchangeType == 1)
+                .OrderByDescending(e => e.SaleCount);
+            var goodsInfoList = from d in await goodsInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync()
                                 select new GoodsInfoForListDto
                                 {
                                     Id = d.Id,
@@ -340,8 +341,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
                                     MinShowPrice = d.MinShowPrice,
                                     MaxShowPrice = d.MaxShowPrice,
                                     VisitCount = d.VisitCount,
-                                    ShowSaleCount = d.ShowSaleCount,  
-                                    IsMember=d.GoodsMemberRankPriceList.Any()
+                                    ShowSaleCount = d.ShowSaleCount,
+                                    IsMember = d.GoodsMemberRankPriceList.Any()
                                 };
             FxPageInfo<GoodsInfoForListDto> goodsPageInfo = new FxPageInfo<GoodsInfoForListDto>();
             goodsPageInfo.TotalCount = (int)await goodsInfos.CountAsync();
@@ -531,7 +532,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
         {
             var goodsInfos = freeSql.Select<GoodsInfoDbModel>()
                 .Include(e => e.GoodsCategory)
-                .Where(e=>e.GoodsCategory.ShowDirectionType==0 && e.GoodsCategory.Valid==valid)
+                .Where(e => e.GoodsCategory.ShowDirectionType == 0 && e.GoodsCategory.Valid == valid)
                 .Where(e => valid == null || e.Valid == valid)
                 .Where(e => e.ExchangeType == 0)
                 .OrderByDescending(e => e.SaleCount);
@@ -639,7 +640,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     VisitCount = goodsInfo.VisitCount,
                     GoodsHospitalPrice = goodsHospitalPriceList,
                     GoodsMemberRankPrice = goodsMemberrankPrice,
-                    
+
                     GoodsConsumptionVoucher = consumptionVoucher
                 };
                 return goods;

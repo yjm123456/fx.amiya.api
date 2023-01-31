@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.CustomerInfo;
 using Fx.Amiya.Background.Api.Vo.CustomerIntergration;
 using Fx.Amiya.Core.Dto.MemberCard;
@@ -531,6 +532,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             customerSimpleInfoVo.WechatNumber = customer.WechatNumber;
             customerSimpleInfoVo.City = customer.City;
             customerSimpleInfoVo.Remark = customer.Remark;
+            customerSimpleInfoVo.TagList = customer.TagList.Select(e => new BaseIdAndNameVo { Id = e.Id, Name = e.Name }).ToList();
             return ResultData<CustomerBaseDetailInfoVo>.Success().AddData("customer", customerSimpleInfoVo);
         }
 
@@ -644,6 +646,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             editDto.IsSendWeChat = editVo.IsSendWeChat;
             editDto.UnTrackReason = editVo.UnTrackReason;
             editDto.Remark = editVo.Remark;
+            editDto.TagIds = editVo.TagIds;
             await customerBaseInfoService.UpdateAsync(editDto);
             return ResultData.Success();
         }
@@ -682,6 +685,22 @@ namespace Fx.Amiya.Background.Api.Controllers
             tagDto.TagIds = add.TagIds;
             await customerService.AddCustomerTag(tagDto);
             return ResultData.Success();
+        }
+        /// <summary>
+        /// 根据id获取用户标签
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        [HttpGet("/getCustomertagList/{customerId}")]
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetCustomerTagById(string customerId) {
+            
+            var tagList =await  customerService.GetCustomerTagListAsync(customerId);
+            var list = tagList.Select(e => new BaseIdAndNameVo
+            {
+                Id = e.Id,
+                Name = e.Name
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("customerTagList",list);
         }
 
         

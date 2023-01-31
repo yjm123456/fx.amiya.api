@@ -26,18 +26,19 @@ namespace Fx.Amiya.Service
         private IUnitOfWork unitOfWork;
         private IAmiyaOutWareHouseService amiyaOutWareHouseService;
         private IAmiyaInWareHouseService amiyaInWareHouseService;
-
+        private IDalTagDetailInfo dalTagDetailInfo;
         public CustomerTagInfoService(IDalCustomerTagInfo dalCustomerTagInfoService,
             IInventoryListService inventoryListService,
             IAmiyaInWareHouseService inWareHouseService,
             IAmiyaOutWareHouseService amiyaOutWareHouseService,
-            IUnitOfWork unitofWork)
+            IUnitOfWork unitofWork, IDalTagDetailInfo dalTagDetailInfo)
         {
             this.dalCustomerTagInfoService = dalCustomerTagInfoService;
             this.inventoryListService = inventoryListService;
             this.amiyaOutWareHouseService = amiyaOutWareHouseService;
             this.amiyaInWareHouseService = inWareHouseService;
             this.unitOfWork = unitofWork;
+            this.dalTagDetailInfo = dalTagDetailInfo;
         }
 
 
@@ -155,7 +156,8 @@ namespace Fx.Amiya.Service
 
                 if (customerTagInfoService == null)
                     throw new Exception("标签编号错误");
-
+                var tag = dalTagDetailInfo.GetAll().Where(e=>e.TagId==id).FirstOrDefault();
+                if (tag != null) throw new Exception("该标签已关联商品或用户不能删除");
                 await dalCustomerTagInfoService.DeleteAsync(customerTagInfoService, true);
             }
             catch (Exception ex)
@@ -189,7 +191,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<BaseKeyValueDto>> GetCustomerTagNameList()
         {
-            var list = dalCustomerTagInfoService.GetAll().Where(e => e.TagCategory == (int)TagCategory.UserTag).Select(e => new BaseKeyValueDto
+            var list = dalCustomerTagInfoService.GetAll().Where(e => e.TagCategory == (int)TagCategory.UserTag&&e.Valid==true).Select(e => new BaseKeyValueDto
             {
                 Key = e.Id,
                 Value=e.TagName

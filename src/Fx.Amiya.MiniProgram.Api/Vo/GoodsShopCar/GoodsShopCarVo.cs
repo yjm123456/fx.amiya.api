@@ -99,5 +99,9 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar
         /// 选中的规格
         /// </summary>
         public string SelectStandards { get; set; }
+        /// <summary>
+        /// 商品可用的抵用券id列表
+        /// </summary>
+        public List<string> VoucherIdList { get; set; }
     }
 }

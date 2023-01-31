@@ -101,5 +101,9 @@ namespace Fx.Amiya.Dto.GoodsShopCar
         /// 会员价格列表
         /// </summary>
         public List<GoodsMemberRankPriceDto> GoodsMemberRankPriceList { get; set; }
+        /// <summary>
+        /// 商品抵用券id集合
+        /// </summary>
+        public List<string> VoucherIdList { get; set; }
     }
 }

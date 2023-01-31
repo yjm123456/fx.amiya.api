@@ -149,5 +149,9 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerInfo
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+        /// <summary>
+        /// 标签
+        /// </summary>
+        public List<BaseIdAndNameVo> TagList { get; set; }
     }
 }

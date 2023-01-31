@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.CustomerInfo;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.CustomerInfo;
 using Fx.Amiya.Dto.TagDetailInfo;
 using Fx.Common;
 using Fx.Infrastructure;
@@ -162,6 +163,11 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task AddCustomerTag(AddCustomerTagDto addCustomerTagDto);
-
+        /// <summary>
+        /// 根据用户id获取用户标签列表
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        Task<List<BaseIdAndNameDto>> GetCustomerTagListAsync(string customerId);
     }
 }

@@ -69,7 +69,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                         IsMaterial=d.IsMaterial,
                                         HospitalSalePrice=d.HospitalSalePrice,
                                         IsMember=d.GoodsMemberRankPriceList.Find(e=>e.MemberRankId==member.MemberRankId)==null?false:true,
-                                        MemberPrice= d.GoodsMemberRankPriceList.Find(e=>e.MemberRankId==member.MemberRankId) ==null?d.Price.Value: d.GoodsMemberRankPriceList.Find(e => e.MemberRankId == member.MemberRankId).Price
+                                        MemberPrice= d.GoodsMemberRankPriceList.Find(e=>e.MemberRankId==member.MemberRankId) ==null?d.Price.Value: d.GoodsMemberRankPriceList.Find(e => e.MemberRankId == member.MemberRankId).Price,
+                                        VoucherIdList=d.VoucherIdList                                       
                                     };
             FxPageInfo<GoodsShopCarVo> goodsShopCarPageInfo = new FxPageInfo<GoodsShopCarVo>();
             goodsShopCarPageInfo.TotalCount = q.TotalCount;

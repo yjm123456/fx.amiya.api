@@ -18,13 +18,15 @@ namespace Fx.Amiya.Service
         private IDalGoodsShopCar dalGoodsShopCarService;
         private IDalGoodsHospitalPrice dalGoodsHospitalPrice;
         private IDalGoodsStandardsPrice dalGoodsStandardsPrice;
+        private IDalGoodsConsumptionVoucher dalGoodsConsumptionVoucher;
         public GoodsShopCarService(IDalGoodsShopCar dalGoodsShopCarService,
             IDalGoodsStandardsPrice dalGoodsStandardsPrice,
-            IDalGoodsHospitalPrice dalGoodsHospitalPrice)
+            IDalGoodsHospitalPrice dalGoodsHospitalPrice, IDalGoodsConsumptionVoucher dalGoodsConsumptionVoucher)
         {
             this.dalGoodsShopCarService = dalGoodsShopCarService;
             this.dalGoodsHospitalPrice = dalGoodsHospitalPrice;
             this.dalGoodsStandardsPrice = dalGoodsStandardsPrice;
+            this.dalGoodsConsumptionVoucher = dalGoodsConsumptionVoucher;
         }
 
 
@@ -67,11 +69,16 @@ namespace Fx.Amiya.Service
                                               {
                                                   MemberRankId = e.MemberRankId,
                                                   Price = e.Price
-                                              }).ToList()
+                                              }).ToList(),                                              
                                           };
+
                 FxPageInfo<GoodsShopCarDto> goodsShopCarServicePageInfo = new FxPageInfo<GoodsShopCarDto>();
                 goodsShopCarServicePageInfo.TotalCount = await goodsShopCarService.CountAsync();
                 goodsShopCarServicePageInfo.List = await goodsShopCarService.OrderByDescending(x => x.CreateDate).Where(e=>e.StandardsIsValid==true).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+                foreach (var item in goodsShopCarServicePageInfo.List)
+                {
+                    item.VoucherIdList = dalGoodsConsumptionVoucher.GetAll().Where(e => e.GoodsId == item.GoodsId).Select(e => e.ConsumptionVoucherId).ToList();
+                }
                 return goodsShopCarServicePageInfo;
             }
             catch (Exception ex)

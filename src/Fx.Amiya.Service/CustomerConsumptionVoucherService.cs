@@ -2,6 +2,7 @@
 using Fx.Amiya.Core.Dto.MemberCard;
 using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.ConsumptionVoucher;
+using Fx.Amiya.Dto.GoodsConsumptionVoucher;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
@@ -637,5 +638,24 @@ namespace Fx.Amiya.Service
                        };
             return await voucher.ToListAsync();
         }
+
+        public async Task<List<SimpleVoucherInfoDto>> GetCustomerAllVoucher(string customerId)
+        {
+            var voucherList = from cv in dalCustomerConsumptionVoucher.GetAll().Where(e => e.CustomerId == customerId && e.IsUsed == false && e.IsExpire == false && e.ExpireDate < DateTime.Now)
+                              join c in dalConsumptionVoucher.GetAll() on cv.ConsumptionVoucherId equals c.Id
+                              where (c.Type==0||c.Type==4)
+                              select new SimpleVoucherInfoDto { 
+                                CustomerVoucherId=cv.Id,
+                                VoucherName=c.Name,
+                                IsSpecifyProduct=c.IsSpecifyProduct,
+                                Type=c.Type,
+                                IsNeedMinFee=c.IsNeedMinFee,
+                                MinPrice=c.MinPrice.Value,
+                                VoucherId=cv.ConsumptionVoucherId,
+                                Remark=c.Remark,
+                                DeductMoney=c.DeductMoney
+                              };
+            return await voucherList.ToListAsync();
+    }
     }
 }
