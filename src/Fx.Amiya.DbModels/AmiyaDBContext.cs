@@ -22,6 +22,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<AmiyaLessonApply> AmiyaLessonApply { get; set; }
         public virtual DbSet<AmiyaInWarehouse> AmiyaInWarehouse { get; set; }
         public virtual DbSet<GreatHospitalDataWrite> GreatHospitalDataWrite { get; set; }
+        public virtual DbSet<UnCheckOrder> UnCheckOrder { get; set; }
         public virtual DbSet<CustomerTagInfo> CustomerTagInfo { get; set; }
         public virtual DbSet<HospitalNetWorkConsulationOperationData> HospitalNetWorkConsulationOperationData { get; set; }
         public virtual DbSet<HospitalConsulationOperationData> HospitalConsulationOperationData { get; set; }
@@ -253,6 +254,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new ProvinceConfiguration());
             modelBuilder.ApplyConfiguration(new PermissionInfoConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaPositionPermissionConfiguration());
+            modelBuilder.ApplyConfiguration(new UnCheckOrderConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalSurplusAppointmentConfiguration());
             modelBuilder.ApplyConfiguration(new SendOrderUpdateRecordConfiguration());
             modelBuilder.ApplyConfiguration(new ActivityInfoConfiguration());

@@ -62,6 +62,8 @@ namespace Fx.Amiya.Service
         /// <param name="toHospitalEndDate">到院结束时间</param>
         /// <param name="toHospitalType">到院类型（空查询所有）</param>
         /// <param name="isDeal">是否成交（空查询所有）</param>
+        /// <param name="dealStartDate">成交开始时间（是否成交为“是”时必填，其他情况可空）</param>
+        /// <param name="dealEndDate">成交结束时间(是否成交为“是”时必填，其他情况可空)</param>
         /// <param name="lastDealHospitalId">最终成交医院id（空查询所有）</param>
         /// <param name="isAccompanying">是否陪诊（空查询所有）</param>
         /// <param name="minAddOrderPrice">最小下单金额（空查询所有）</param>
@@ -77,7 +79,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, int pageNum, int pageSize)
         {
             try
             {
@@ -127,6 +129,21 @@ namespace Fx.Amiya.Service
                                where (d.ToHospitalDate.HasValue)
                                && (d.ToHospitalDate.Value >= startrq && d.ToHospitalDate.Value < endrq)
                                && (d.IsToHospital == true)
+                               select d;
+                }
+
+                if (isDeal == true)
+                {
+                    if (!dealStartDate.HasValue && !dealEndDate.HasValue)
+                    {
+                        throw new Exception("成交时间为必填项，请完整填写成交的开始时间与结束时间！");
+                    }
+                    DateTime startrq = ((DateTime)dealStartDate).Date;
+                    DateTime endrq = ((DateTime)dealEndDate).Date.AddDays(1);
+                    dealInfo = from d in dealInfo
+                               where (d.DealDate.HasValue)
+                               && (d.DealDate.Value >= startrq && d.DealDate.Value < endrq)
+                               && (d.IsDeal == true)
                                select d;
                 }
                 if (isReturnBakcPrice == true)
@@ -235,11 +252,11 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var dealInfoList = dalRecommandDocumentSettle.GetAll().Where(e => e.RecommandDocumentId == reconciliationDocumentsId && e.OrderFrom == (int)OrderFrom.ContentPlatFormOrder).Select(e=>e.DealInfoId).ToList();
+                var dealInfoList = dalRecommandDocumentSettle.GetAll().Where(e => e.RecommandDocumentId == reconciliationDocumentsId && e.OrderFrom == (int)OrderFrom.ContentPlatFormOrder).Select(e => e.DealInfoId).ToList();
                 var dealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor).OrderByDescending(x => x.CreateDate) select d;
 
                 var ContentPlatFOrmOrderDealInfo = from d in dealInfo
-                                                   where (string.IsNullOrEmpty(reconciliationDocumentsId) || dealInfoList.Contains(d.Id)  )
+                                                   where (string.IsNullOrEmpty(reconciliationDocumentsId) || dealInfoList.Contains(d.Id))
                                                    select new ContentPlatFormOrderDealInfoDto
                                                    {
                                                        Id = d.Id,

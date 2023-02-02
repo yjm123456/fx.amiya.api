@@ -64,5 +64,7 @@ namespace Fx.Amiya.DbModels.Model
         public List<AfterLivingDailyTarget> afterLivingDailyTarget { get; set; }
         public List<CustomerConsumptionCredentials> CustomerConsumptionCredentialsList { get; set; }
         public List<RecommandDocumentSettle> RecommandDocumentSettleList { get; set; }
+
+        public List<UnCheckOrder> UnCheckOrderList { get; set; }
     }
 }

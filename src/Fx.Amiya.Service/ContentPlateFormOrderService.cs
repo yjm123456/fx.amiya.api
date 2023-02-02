@@ -139,7 +139,6 @@ namespace Fx.Amiya.Service
                         bind.NewConsumptionDate = DateTime.Now;
                         bind.NewConsumptionContentPlatform = (int)OrderFrom.ContentPlatFormOrder;
                         bind.NewContentPlatForm = contentPlatForm.ContentPlatformName;
-                        bind.AllOrderCount += 1;
                         await _dalBindCustomerService.UpdateAsync(bind, true);
                     }
                 }
@@ -159,7 +158,7 @@ namespace Fx.Amiya.Service
                     bindCustomerService.NewConsumptionContentPlatform = (int)OrderFrom.ContentPlatFormOrder;
                     bindCustomerService.NewContentPlatForm = contentPlatForm.ContentPlatformName;
                     bindCustomerService.AllPrice = 0;
-                    bindCustomerService.AllOrderCount = 1;
+                    bindCustomerService.AllOrderCount = 0;
                     await _dalBindCustomerService.AddAsync(bindCustomerService, true);
                 }
 
@@ -1609,6 +1608,12 @@ namespace Fx.Amiya.Service
                         }
                     }
                 }
+                if (input.CheckState == (int)CheckType.CheckNotPassed)
+                {
+                    dealInfoCheck.CheckState = (int)CheckType.CheckNotPassed;
+                    dealInfoCheck.CheckPrice = 0.00M;
+                    dealInfoCheck.SettlePrice = 0.00M;
+                }
                 if (dealInfoUpdate.InformationPrice.HasValue)
                 {
 
@@ -1865,7 +1870,7 @@ namespace Fx.Amiya.Service
                 if (input.IsFinish == true)
                 {
                     var price = order.DepositAmount.HasValue ? order.DepositAmount.Value : 0.00M;
-                    await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + input.DealAmount.Value, (int)OrderFrom.ContentPlatFormOrder, 0);
+                    await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + input.DealAmount.Value, (int)OrderFrom.ContentPlatFormOrder, 1);
                     await customerBaseInfoService.UpdateState(1, order.Phone);
                     order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.OrderComplete);
                     order.DealAmount += input.DealAmount;

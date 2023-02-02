@@ -43,7 +43,7 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         /// 是否回款
         /// </summary>
         [Description("是否回款")]
-        public bool IsSettle { get; set; }
+        public string IsSettle { get; set; }
         /// <summary>
         /// 回款时间
         /// </summary>

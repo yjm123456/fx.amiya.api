@@ -148,6 +148,7 @@ namespace Fx.Amiya.Service
 
                 RecommandDocumentSettleDto recommandDocumentSettleDto = new RecommandDocumentSettleDto();
                 recommandDocumentSettleDto.RecommandDocumentId = z.RecommandDocumentId;
+                recommandDocumentSettleDto.Id = z.Id;
                 recommandDocumentSettleDto.OrderId = z.OrderId;
                 recommandDocumentSettleDto.DealInfoId = z.DealInfoId;
                 recommandDocumentSettleDto.OrderFrom = z.OrderFrom;

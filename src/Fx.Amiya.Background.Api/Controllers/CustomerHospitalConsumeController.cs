@@ -566,6 +566,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="channel">渠道（0：医院，1：天猫，2抖音，3抖音代运营）</param>
         /// <param name="liveAnchorId">主播IP编号</param>
         /// <param name="isConfirmOrder">客服是否确认</param>
+        /// <param name="consumeStartDate">升单开始时间（可空）</param>
+        /// <param name="consumeEndDate">升单结束时间（可空）</param>
         /// <param name="keyword"></param>
         /// <param name="consumeType">消费类型：0=当天其他消费，1=再消费</param>
         /// <param name="startDate"></param>
@@ -578,12 +580,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<CustomerHospitalConsumeVo>>> GetListAsync(int? hospitalId, int? channel, int? liveAnchorId, bool? isConfirmOrder, int? buyAgainType, string keyword, int? consumeType, DateTime startDate, DateTime endDate, int checkState, int? addedBy, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<CustomerHospitalConsumeVo>>> GetListAsync(int? hospitalId, int? channel, int? liveAnchorId, bool? isConfirmOrder, int? buyAgainType,DateTime? consumeStartDate,DateTime? consumeEndDate, string keyword, int? consumeType, DateTime startDate, DateTime endDate, int checkState, int? addedBy, int pageNum, int pageSize)
         {
             int? employeeId = null;
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             employeeId = Convert.ToInt32(employee.Id);
-            var q = await customerHospitalConsumeService.GetListAsync(hospitalId, channel, liveAnchorId, buyAgainType, employeeId, isConfirmOrder, keyword, consumeType, startDate, endDate, checkState, addedBy, pageNum, pageSize);
+            var q = await customerHospitalConsumeService.GetListAsync(hospitalId, channel, liveAnchorId, buyAgainType, employeeId, isConfirmOrder, consumeStartDate, consumeEndDate, keyword, consumeType, startDate, endDate, checkState, addedBy, pageNum, pageSize);
             var consumes = from d in q.List
                            select new CustomerHospitalConsumeVo
                            {

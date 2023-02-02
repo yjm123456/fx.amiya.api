@@ -352,7 +352,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<decimal>> GetReconciliationDocumentTotalCheckPrice(string recommandId)
         {
             var result = await reconciliationDocumentsService.GetTotalCheckPriceAsync(recommandId);
-            return ResultData<decimal>.Success().AddData("TotalCheckReturnBackPriceById", result); 
+            return ResultData<decimal>.Success().AddData("TotalCheckReturnBackPriceById", result);
         }
 
 
@@ -511,7 +511,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                         }
                         else
                         {
-                            throw new Exception("客户姓名有参数列为空，请检查表格数据！");
+                            if (string.IsNullOrEmpty(worksheet.Cells[x, 2].Value.ToString()))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                throw new Exception("客户姓名有参数列为空，请检查表格数据！");
+                            }
                         }
                         if (worksheet.Cells[x, 2].Value != null)
                         {
@@ -548,7 +555,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                         }
                         if (worksheet.Cells[x, 5].Value != null)
                         {
-                            addDto.TotalDealPrice = Convert.ToInt32(worksheet.Cells[x, 5].Value.ToString());
+                            addDto.TotalDealPrice = Convert.ToDecimal(worksheet.Cells[x, 5].Value.ToString());
                         }
                         else
                         {

@@ -1752,16 +1752,11 @@ CREATE TABLE `amiyadb`.`tbl_miniprogram_auto_send_message` (
 -----用户及商品标签关联表
 
 CREATE TABLE `tbl_tag_detail_info` (
-	`customer_goods_id` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	`tag_id` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_0900_ai_ci'
-)
-COLLATE='utf8mb4_0900_ai_ci'
-ENGINE=InnoDB;
+	`customer_goods_id` VARCHAR(50) NOT NULL,
+	`tag_id` VARCHAR(50) NOT NULL
+);
 
 -----------------------------------------------王健 2023/1/9 END--------------------------------------------
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
-
-
 
 
 -----------------------------------------------余建明 2023/1/14 BEGIN--------------------------------------------
@@ -1778,6 +1773,39 @@ CREATE TABLE `amiyadb`.`tbl_recommand_document_settle` (
   `settle_date` DATETIME NULL,
   PRIMARY KEY (`id`));
 -----------------------------------------------余建明 2023/1/14 END--------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+-----------------------------------------------余建明 2023/2/02 BEGIN--------------------------------------------
+--未对账订单列表
+CREATE TABLE `amiyadb`.`tbl_uncheck_order` (
+  `id` VARCHAR(50) NOT NULL,
+  `order_id` VARCHAR(50) NOT NULL,
+  `order_from` INT NOT NULL,
+  `phone` VARCHAR(11) NOT NULL,
+  `deal_date` DATETIME NOT NULL,
+  `deal_price` DECIMAL(12,2) NOT NULL,
+  `information_price_percent` DECIMAL(4,2) NOT NULL,
+  `system_update_percent` DECIMAL(4,2) NOT NULL,
+  `information_price` DECIMAL(12,2) NOT NULL,
+  `system_update_price` DECIMAL(12,2) NOT NULL,
+  `return_back_price` DECIMAL(12,2) NOT NULL,
+  `is_submit_reconciliation_documents` BIT(1) NOT NULL,
+  `send_hospital` INT NULL,
+  `create_by` INT UNSIGNED NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_uncheck_order_createinfo_idx` (`create_by` ASC) VISIBLE,
+  CONSTRAINT `fk_uncheck_order_createinfo`
+    FOREIGN KEY (`create_by`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+-----------------------------------------------余建明 2023/2/02 END--------------------------------------------
 
 
 

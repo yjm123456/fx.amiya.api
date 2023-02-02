@@ -200,40 +200,53 @@ namespace Fx.Amiya.Service
 
         public async Task CustomerManageUpdateAsync(CustomerManageUpdateconsumeDto updateDto)
         {
-            var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == updateDto.EmployeeId);
-            if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
+            unitOfWork.BeginTransaction();
+            try
             {
-                var bindCustomerServiceInfo = _dalBindCustomerService.GetAll().FirstOrDefaultAsync(x => x.BuyerPhone == updateDto.Phone && x.CustomerServiceId == updateDto.EmployeeId);
-                if (bindCustomerServiceInfo.Result == null)
+                var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == updateDto.EmployeeId);
+                if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
                 {
-                    throw new Exception("该手机号客户已绑定给其他客服人员或者未产生订单情况，请确认后再进行消费记录追踪修改！");
+                    var bindCustomerServiceInfo = _dalBindCustomerService.GetAll().FirstOrDefaultAsync(x => x.BuyerPhone == updateDto.Phone && x.CustomerServiceId == updateDto.EmployeeId);
+                    if (bindCustomerServiceInfo.Result == null)
+                    {
+                        throw new Exception("该手机号客户已绑定给其他客服人员或者未产生订单情况，请确认后再进行消费记录追踪修改！");
+                    }
                 }
+                var result = dalCustomerHospitalConsume.GetAll().Where(x => x.Id == updateDto.Id).FirstOrDefaultAsync().Result;
+                var dealPriceDetails = updateDto.Price - result.Price;
+                result.HospitalId = updateDto.HospitalId;
+                result.Phone = updateDto.Phone;
+                result.ItemName = updateDto.ItemName;
+                result.Price = updateDto.Price;
+                result.LiveAnchorId = updateDto.LiveAnchorId;
+                result.ConsumeType = updateDto.ConsumeType;
+                result.NickName = updateDto.NickName;
+                result.IsAddedOrder = updateDto.IsAddedOrder;
+                result.OtherContentPlatFormOrderId = updateDto.OtherContentPlatFormOrderId;
+                result.OrderId = updateDto.OrderId;
+                result.WriteOffDate = updateDto.WriteOffDate;
+                result.IsCconsultationCard = updateDto.IsCconsultationCard;
+                result.BuyAgainType = updateDto.BuyAgainType;
+                result.IsSelfLiving = updateDto.IsSelfLiving;
+                result.BuyAgainTime = updateDto.BuyAgainTime;
+                result.Channel = updateDto.Channel;
+                result.HasBuyagainEvidence = updateDto.HasBuyagainEvidence;
+                result.BuyagainEvidencePic = updateDto.BuyagainEvidencePic;
+                result.IsCheckToHospital = updateDto.IsCheckToHospital;
+                result.CheckToHospitalPic = updateDto.CheckToHospitalPic;
+                result.PersonTime = updateDto.PersonTime;
+                result.IsReceiveAdditionalPurchase = updateDto.IsReceiveAdditionalPurchase;
+                result.Remark = updateDto.Remark;
+                await dalCustomerHospitalConsume.UpdateAsync(result, true);
+
+                await bindCustomerServiceService.UpdateConsumePriceAsync(result.Phone, dealPriceDetails, (int)OrderFrom.BuyAgainOrder, 0);
+                unitOfWork.Commit();
             }
-            var result = dalCustomerHospitalConsume.GetAll().Where(x => x.Id == updateDto.Id).FirstOrDefaultAsync().Result;
-            result.HospitalId = updateDto.HospitalId;
-            result.Phone = updateDto.Phone;
-            result.ItemName = updateDto.ItemName;
-            result.Price = updateDto.Price;
-            result.LiveAnchorId = updateDto.LiveAnchorId;
-            result.ConsumeType = updateDto.ConsumeType;
-            result.NickName = updateDto.NickName;
-            result.IsAddedOrder = updateDto.IsAddedOrder;
-            result.OtherContentPlatFormOrderId = updateDto.OtherContentPlatFormOrderId;
-            result.OrderId = updateDto.OrderId;
-            result.WriteOffDate = updateDto.WriteOffDate;
-            result.IsCconsultationCard = updateDto.IsCconsultationCard;
-            result.BuyAgainType = updateDto.BuyAgainType;
-            result.IsSelfLiving = updateDto.IsSelfLiving;
-            result.BuyAgainTime = updateDto.BuyAgainTime;
-            result.Channel = updateDto.Channel;
-            result.HasBuyagainEvidence = updateDto.HasBuyagainEvidence;
-            result.BuyagainEvidencePic = updateDto.BuyagainEvidencePic;
-            result.IsCheckToHospital = updateDto.IsCheckToHospital;
-            result.CheckToHospitalPic = updateDto.CheckToHospitalPic;
-            result.PersonTime = updateDto.PersonTime;
-            result.IsReceiveAdditionalPurchase = updateDto.IsReceiveAdditionalPurchase;
-            result.Remark = updateDto.Remark;
-            await dalCustomerHospitalConsume.UpdateAsync(result, true);
+            catch (Exception er)
+            {
+                unitOfWork.RollBack();
+                throw er;
+            }
         }
         public async Task CustomerServiceCheckAsync(int Id)
         {
@@ -513,21 +526,33 @@ namespace Fx.Amiya.Service
 
         public async Task CustomerManageDeleteAsync(int Id, int enployeeId)
         {
-            var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == enployeeId);
-            var result = dalCustomerHospitalConsume.GetAll().Where(x => x.Id == Id).FirstOrDefaultAsync().Result;
-            if (result.CheckState == (int)CheckType.CheckedSuccess)
+            unitOfWork.BeginTransaction();
+            try
             {
-                throw new Exception("该订单已审核，无法删除！");
-            }
-            if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
-            {
-                var bindCustomerServiceInfo = _dalBindCustomerService.GetAll().FirstOrDefaultAsync(x => x.BuyerPhone == result.Phone && x.CustomerServiceId == enployeeId);
-                if (bindCustomerServiceInfo.Result == null)
+
+                var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == enployeeId);
+                var result = dalCustomerHospitalConsume.GetAll().Where(x => x.Id == Id).FirstOrDefaultAsync().Result;
+                if (result.CheckState == (int)CheckType.CheckedSuccess)
                 {
-                    throw new Exception("该手机号客户已绑定给其他客服人员或者未产生订单情况，请确认后再进行消费记录追踪删除！");
+                    throw new Exception("该订单已审核，无法删除！");
                 }
+                if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
+                {
+                    var bindCustomerServiceInfo = _dalBindCustomerService.GetAll().FirstOrDefaultAsync(x => x.BuyerPhone == result.Phone && x.CustomerServiceId == enployeeId);
+                    if (bindCustomerServiceInfo.Result == null)
+                    {
+                        throw new Exception("该手机号客户已绑定给其他客服人员或者未产生订单情况，请确认后再进行消费记录追踪删除！");
+                    }
+                }
+                await dalCustomerHospitalConsume.DeleteAsync(result, true);
+                await bindCustomerServiceService.ReduceConsumePriceAsync(result.Phone, result.Price, (int)OrderFrom.BuyAgainOrder);
+                unitOfWork.Commit();
             }
-            await dalCustomerHospitalConsume.DeleteAsync(result, true);
+            catch (Exception err)
+            {
+                unitOfWork.RollBack();
+                throw err;
+            }
         }
 
         /// <summary>
@@ -635,7 +660,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<CustomerHospitalConsumeDto>> GetListAsync(int? hospitalId, int? channel, int? liveAnchorId, int? buyAgainType, int? employeeId, bool? isConfirmOrder, string keyword, int? consumeType, DateTime startDate, DateTime endDate, int checkState, int? addedBy, int pageNum, int pageSize)
+        public async Task<FxPageInfo<CustomerHospitalConsumeDto>> GetListAsync(int? hospitalId, int? channel, int? liveAnchorId, int? buyAgainType, int? employeeId, bool? isConfirmOrder, DateTime? consumeStartDate, DateTime? consumeEndDate, string keyword, int? consumeType, DateTime startDate, DateTime endDate, int checkState, int? addedBy, int pageNum, int pageSize)
         {
 
             var config = await GetCallCenterConfig();
@@ -649,7 +674,8 @@ namespace Fx.Amiya.Service
                                            && (addedBy == -1 || d.AddedBy == addedBy)
                                            && (checkState == -1 || d.CheckState == checkState)
                                            && (buyAgainType == null || d.BuyAgainType == buyAgainType)
-                                           && d.CreateDate >= startDate.Date && d.CreateDate < endDate.AddDays(1).Date
+                                           && (d.CreateDate >= startDate.Date && d.CreateDate < endDate.AddDays(1).Date)
+                                           && (!consumeStartDate.HasValue && !consumeEndDate.HasValue || d.CreateDate >= startDate.Date && d.CreateDate < endDate.AddDays(1).Date)
                                            join cb in dalCustomerBaseInfo.GetAll() on d.Phone equals cb.Phone into dcb
                                            from cb in dcb.DefaultIfEmpty()
                                            select new CustomerHospitalConsumeDto
