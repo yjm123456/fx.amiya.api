@@ -675,8 +675,10 @@ namespace Fx.Amiya.Service
                                            && (addedBy == -1 || d.AddedBy == addedBy)
                                            && (checkState == -1 || d.CheckState == checkState)
                                            && (buyAgainType == null || d.BuyAgainType == buyAgainType)
-                                           && (!startDate.HasValue && !endDate.HasValue || d.CreateDate >= startDate.Value.Date && d.CreateDate < endDate.Value.AddDays(1).Date)
-                                           && (!consumeStartDate.HasValue && !consumeEndDate.HasValue || d.CreateDate >= consumeStartDate.Value.Date && d.CreateDate < consumeEndDate.Value.AddDays(1).Date)
+                                           && (!startDate.HasValue || d.CreateDate >= startDate.Value.Date)
+                                           && (!endDate.HasValue || d.CreateDate < endDate.Value.AddDays(1).Date)
+                                           && (!consumeStartDate.HasValue || d.BuyAgainTime >= consumeStartDate.Value.Date)
+                                           && (!consumeEndDate.HasValue || d.BuyAgainTime < consumeEndDate.Value.AddDays(1).Date)
                                            join cb in dalCustomerBaseInfo.GetAll() on d.Phone equals cb.Phone into dcb
                                            from cb in dcb.DefaultIfEmpty()
                                            select new CustomerHospitalConsumeDto

@@ -165,7 +165,7 @@ namespace Fx.Amiya.Service
             {
                 var orders = from d in dalOrderInfo.GetAll()
                              where (string.IsNullOrWhiteSpace(keyword) || d.Id.Contains(keyword) || d.GoodsName.Contains(keyword)
-                             || d.Phone == keyword || d.AppointmentHospital.Contains(keyword))
+                             || d.Phone.Contains(keyword) || d.AppointmentHospital.Contains(keyword))
                              && (string.IsNullOrWhiteSpace(statusCode) || d.StatusCode == statusCode.Trim())
                              && (appType == null || d.AppType == appType)
                              && (!belongEmpId.HasValue || d.BelongEmpId == belongEmpId)
@@ -286,7 +286,7 @@ namespace Fx.Amiya.Service
             {
                 var orders = from d in dalOrderInfo.GetAll()
                              where (string.IsNullOrWhiteSpace(keyword) || d.Id.Contains(keyword) || d.GoodsName.Contains(keyword)
-                             || d.Phone == keyword || d.AppointmentHospital.Contains(keyword))
+                             || d.Phone.Contains(keyword) || d.AppointmentHospital.Contains(keyword))
                              && d.StatusCode == OrderStatusCode.TRADE_FINISHED
                              && (!CheckState.HasValue || d.CheckState == CheckState.Value)
                              && (!ReturnBackPriceState.HasValue || d.IsReturnBackPrice == ReturnBackPriceState.Value)
@@ -2804,7 +2804,7 @@ namespace Fx.Amiya.Service
                               where d.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS
                               select d;
             }
-            
+
             var orderTradeList = from d in orderTrades
                                  select new OrderTradeDto
                                  {
@@ -3267,7 +3267,7 @@ namespace Fx.Amiya.Service
                 var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(orderInfo.Phone);
                 if (findInfo != 0)
                 {
-                    await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, 0, (int)OrderFrom.ThirdPartyOrder, 0);
+                    await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder, 1);
                 }
                 unitOfWork.Commit();
             }

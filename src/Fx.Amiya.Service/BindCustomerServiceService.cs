@@ -219,7 +219,7 @@ namespace Fx.Amiya.Service
             var bindCustomerService = await dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == phone);
             if (bindCustomerService != null)
             {
-                if (bindCustomerService.AllPrice == null)
+                if (bindCustomerService.AllPrice == null || bindCustomerService.AllPrice.Value == 0)
                 {
                     bindCustomerService.AllPrice = Price;
                 }
@@ -227,7 +227,14 @@ namespace Fx.Amiya.Service
                 {
                     bindCustomerService.AllPrice += Price;
                 }
-                bindCustomerService.AllOrderCount += AllOrderCount;
+                if (bindCustomerService.AllOrderCount.HasValue)
+                {
+                    bindCustomerService.AllOrderCount += AllOrderCount;
+                }
+                else
+                {
+                    bindCustomerService.AllOrderCount = AllOrderCount;
+                }
                 bindCustomerService.NewConsumptionContentPlatform = Channel;
                 bindCustomerService.NewConsumptionDate = DateTime.Now;
                 await dalBindCustomerService.UpdateAsync(bindCustomerService, true);

@@ -104,26 +104,38 @@ namespace Fx.Amiya.Service
                                where d.CreateBy != 61 && d.CreateBy != 80
                                select d;
                 }
-                if (startDate != null && endDate != null)
+                if (startDate != null)
                 {
                     DateTime startrq = ((DateTime)startDate).Date;
-                    DateTime endrq = ((DateTime)endDate).Date.AddDays(1);
                     dealInfo = from d in dealInfo
-                               where (d.CreateDate >= startrq && d.CreateDate < endrq)
+                               where (d.CreateDate >= startrq)
                                select d;
                 }
-                if (sendStartDate != null && sendEndDate != null)
+                if (endDate != null)
+                {
+                    DateTime enddate = ((DateTime)endDate).Date.AddDays(1);
+                    dealInfo = from d in dealInfo
+                               where (d.CreateDate < enddate)
+                               select d;
+                }
+
+                if (sendStartDate != null)
                 {
                     DateTime startrq = ((DateTime)sendStartDate).Date;
-                    DateTime endrq = ((DateTime)sendEndDate).Date.AddDays(1);
                     dealInfo = from d in dealInfo
-                               where (d.ContentPlatFormOrder.SendDate.HasValue)
-                               && (d.ContentPlatFormOrder.SendDate >= startrq && d.ContentPlatFormOrder.SendDate < endrq)
+                               where (d.ContentPlatFormOrder.SendDate >= startrq)
+                               select d;
+                }
+                if (sendEndDate != null)
+                {
+                    DateTime enddate = ((DateTime)sendEndDate).Date.AddDays(1);
+                    dealInfo = from d in dealInfo
+                               where (d.ContentPlatFormOrder.SendDate < enddate)
                                select d;
                 }
                 if (isToHospital == true)
                 {
-                    if (!tohospitalStartDate.HasValue && !toHospitalEndDate.HasValue)
+                    if (!tohospitalStartDate.HasValue || !toHospitalEndDate.HasValue)
                     {
                         throw new Exception("到院时间为必填项，请完整填写到院的开始时间与结束时间！");
                     }
@@ -138,7 +150,7 @@ namespace Fx.Amiya.Service
 
                 if (isDeal == true)
                 {
-                    if (!dealStartDate.HasValue && !dealEndDate.HasValue)
+                    if (!dealStartDate.HasValue || !dealEndDate.HasValue)
                     {
                         throw new Exception("成交时间为必填项，请完整填写成交的开始时间与结束时间！");
                     }
@@ -152,7 +164,7 @@ namespace Fx.Amiya.Service
                 }
                 if (isReturnBakcPrice == true)
                 {
-                    if (!returnBackPriceStartDate.HasValue && !returnBackPriceEndDate.HasValue)
+                    if (!returnBackPriceStartDate.HasValue || !returnBackPriceEndDate.HasValue)
                     {
                         throw new Exception("回款时间为必填项，请完整填写回款的开始时间与结束时间！");
                     }

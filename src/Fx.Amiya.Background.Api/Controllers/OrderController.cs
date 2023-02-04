@@ -95,44 +95,44 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 throw new Exception("该订单没有手机号，不能绑定客服");
             }
-            if (employee.PositionName == "客服" || employee.PositionName == "客服管理员" || employee.PositionName == "客服主管" || employee.PositionName == "财务")
+            //if (employee.PositionName == "客服" || employee.PositionName == "客服管理员" || employee.PositionName == "客服主管" || employee.PositionName == "财务")
+            //{
+            var bind = await _dalBindCustomerService.GetAll()
+          .Include(e => e.CustomerServiceAmiyaEmployee)
+          .SingleOrDefaultAsync(e => e.BuyerPhone == addVo.Phone);
+            if (bind != null)
             {
-                var bind = await _dalBindCustomerService.GetAll()
-              .Include(e => e.CustomerServiceAmiyaEmployee)
-              .SingleOrDefaultAsync(e => e.BuyerPhone == addVo.Phone);
-                if (bind != null)
+                if (bind.CustomerServiceId != employeeId)
                 {
-                    if (bind.CustomerServiceId != employeeId)
-                    {
-                        throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应客人员进行录单！");
-                    }
-                    else
-                    {
-                        bind.NewConsumptionDate = DateTime.Now;
-                        bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
-                        bind.NewContentPlatForm = ServiceClass.GetAppTypeText(addVo.AppType);
-                        await _dalBindCustomerService.UpdateAsync(bind, true);
-                    }
-
+                    throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应客人员进行录单！");
                 }
                 else
                 {
-                    //添加绑定客服
-                    BindCustomerService bindCustomerService = new BindCustomerService();
-                    bindCustomerService.CustomerServiceId = employeeId;
-                    bindCustomerService.BuyerPhone = addVo.Phone;
-                    bindCustomerService.UserId = null;
-                    bindCustomerService.CreateBy = employeeId;
-                    bindCustomerService.CreateDate = DateTime.Now;
-                    var goodsInfo = await _amiyaGoodsDemandService.GetByIdAsync(addVo.GoodsId);
-                    bindCustomerService.FirstProjectDemand = "(" + goodsInfo.HospitalDepartmentName + ")" + goodsInfo.ProjectNname;
-                    bindCustomerService.FirstConsumptionDate = DateTime.Now;
-                    bindCustomerService.NewConsumptionDate = DateTime.Now;
-                    bindCustomerService.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
-                    bindCustomerService.NewContentPlatForm = ServiceClass.GetAppTypeText(addVo.AppType);
-                    await _dalBindCustomerService.AddAsync(bindCustomerService, true);
+                    bind.NewConsumptionDate = DateTime.Now;
+                    bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
+                    bind.NewContentPlatForm = ServiceClass.GetAppTypeText(addVo.AppType);
+                    await _dalBindCustomerService.UpdateAsync(bind, true);
                 }
+
             }
+            else
+            {
+                //添加绑定客服
+                BindCustomerService bindCustomerService = new BindCustomerService();
+                bindCustomerService.CustomerServiceId = employeeId;
+                bindCustomerService.BuyerPhone = addVo.Phone;
+                bindCustomerService.UserId = null;
+                bindCustomerService.CreateBy = employeeId;
+                bindCustomerService.CreateDate = DateTime.Now;
+                var goodsInfo = await _amiyaGoodsDemandService.GetByIdAsync(addVo.GoodsId);
+                bindCustomerService.FirstProjectDemand = "(" + goodsInfo.HospitalDepartmentName + ")" + goodsInfo.ProjectNname;
+                bindCustomerService.FirstConsumptionDate = DateTime.Now;
+                bindCustomerService.NewConsumptionDate = DateTime.Now;
+                bindCustomerService.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
+                bindCustomerService.NewContentPlatForm = ServiceClass.GetAppTypeText(addVo.AppType);
+                await _dalBindCustomerService.AddAsync(bindCustomerService, true);
+            }
+            //}
 
             //添加订单
             List<OrderInfoAddDto> amiyaOrderList = new List<OrderInfoAddDto>();
@@ -1324,7 +1324,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   SendGoodsName = d.SendGoodsName,
                                   SendGoodsDate = d.SendGoodsDate,
                                   CourierNumber = d.CourierNumber,
-                                  ExpressId= (!string.IsNullOrEmpty(d.ExpressId)) ? _expressManageService.GetByIdAsync(d.ExpressId).Result.ExpressCode.ToString() : "",
+                                  ExpressId = (!string.IsNullOrEmpty(d.ExpressId)) ? _expressManageService.GetByIdAsync(d.ExpressId).Result.ExpressCode.ToString() : "",
                                   ExpressName = (!string.IsNullOrEmpty(d.ExpressId)) ? _expressManageService.GetByIdAsync(d.ExpressId).Result.ExpressName.ToString() : ""
                               };
             FxPageInfo<MiniProgramOrderTradeVo> orderTradePageInfo = new FxPageInfo<MiniProgramOrderTradeVo>();

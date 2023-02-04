@@ -658,6 +658,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="encryptPhone"></param>
         /// <returns></returns>
         [HttpGet("baseInfoByEncryptPhone")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<CustomerBaseInfoVo>> GetCustomerBaseInfoByEncryptPhoneAsync(string encryptPhone)
         {
             var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(encryptPhone);
@@ -679,6 +680,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="add"></param>
         /// <returns></returns>
         [HttpPost("addCustomerTag")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData> AddCustomerTag(AddCustomerTagVo add) {
             AddCustomerTagDto tagDto = new AddCustomerTagDto();
             tagDto.CustomerId = add.CustomerId;
@@ -691,7 +693,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns></returns>
-        [HttpGet("/getCustomertagList/{customerId}")]
+        [HttpGet("getCustomertagList/{customerId}")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<List<BaseIdAndNameVo>>> GetCustomerTagById(string customerId) {
             
             var tagList =await  customerService.GetCustomerTagListAsync(customerId);
