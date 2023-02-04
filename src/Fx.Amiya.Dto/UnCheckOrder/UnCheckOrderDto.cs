@@ -56,7 +56,11 @@ namespace Fx.Amiya.Dto.UnCheckOrder
         /// <summary>
         /// 是否上传对账单
         /// </summary>
-        public string IsSubmitReconciliationDocuments { get; set; }
+        public string IsSubmitReconciliationDocumentsText { get; set; }
+        /// <summary>
+        /// 是否上传对账单
+        /// </summary>
+        public bool IsSubmitReconciliationDocuments { get; set; }
         /// <summary>
         /// 指派医院
         /// </summary>

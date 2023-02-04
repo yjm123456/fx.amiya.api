@@ -12,26 +12,6 @@ namespace Fx.Amiya.Background.Api.Vo.UnCheckOrder
         /// </summary>
         public string Id { get; set; }
         /// <summary>
-        /// 订单号
-        /// </summary>
-        public string OrderId { get; set; }
-        /// <summary>
-        /// 订单来源
-        /// </summary>
-        public int OrderFrom { get; set; }
-        /// <summary>
-        /// 手机号
-        /// </summary>
-        public string Phone { get; set; }
-        /// <summary>
-        /// 成交时间
-        /// </summary>
-        public DateTime DealDate { get; set; }
-        /// <summary>
-        /// 成交金额
-        /// </summary>
-        public decimal DealPrice { get; set; }
-        /// <summary>
         /// 信息服务费比例
         /// </summary>
         public decimal InformationPricePercent { get; set; }
@@ -40,16 +20,20 @@ namespace Fx.Amiya.Background.Api.Vo.UnCheckOrder
         /// </summary>
         public decimal SystemUpdatePercent { get; set; }
         /// <summary>
-        /// 信息服务费
+        /// 信息服务费(计算获取)
         /// </summary>
         public decimal InformationPrice { get; set; }
         /// <summary>
-        /// 系统使用费
+        /// 系统使用费(计算获取)
         /// </summary>
         public decimal SystemUpdatePrice { get; set; }
         /// <summary>
-        /// 结算金额
+        /// 结算金额(计算获取)
         /// </summary>
         public decimal ReturnBackPrice { get; set; }
+        /// <summary>
+        /// 是否上传对账单
+        /// </summary>
+        public bool IsSubmitReconciliationDocuments { get; set; }
     }
 }

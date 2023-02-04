@@ -32,7 +32,7 @@ namespace Fx.Amiya.Service
         private IConsumptionLevelService consumptionLevelService;
         private IDalCustomerTagInfo dalCustomerTagInfo;
         private IDalTagDetailInfo dalTagDetailInfo;
-        
+
         private ITagDetailInfoService tagDetailInfoService;
         public CustomerBaseInfoService(IDalCustomerBaseInfo dalCustomerBaseInfo,
             IDalCustomerInfo dalCustomerInfo,
@@ -53,7 +53,7 @@ namespace Fx.Amiya.Service
             this.userService = userService;
             this.dalCustomerTagInfo = dalCustomerTagInfo;
             this.dalTagDetailInfo = dalTagDetailInfo;
-            
+
             this.tagDetailInfoService = tagDetailInfoService;
         }
 
@@ -97,7 +97,7 @@ namespace Fx.Amiya.Service
                 customerBaseInfoServiceDto.TagList = new List<BaseIdAndNameDto>();
                 if (customerInfo != null)
                 {
-                    
+
                     var tagList = from td in dalTagDetailInfo.GetAll()
                                   join t in dalCustomerTagInfo.GetAll() on td.TagId equals t.Id
                                   where td.CustomerGoodsId == customerInfo.Id
@@ -106,7 +106,7 @@ namespace Fx.Amiya.Service
                                       Id = t.Id,
                                       Name = t.TagName
                                   };
-                    
+
                     customerBaseInfoServiceDto.TagList = tagList.ToList();
                     var memberCardHandle = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerInfo.Id);
                     if (memberCardHandle != null)
@@ -286,45 +286,43 @@ namespace Fx.Amiya.Service
                     await dalCustomerBaseInfo.UpdateAsync(customerBaseInfoService, true);
                     //添加标签
                     var customerInfo = dalCustomerInfo.GetAll().Where(e => e.Phone == customerBaseInfoService.Phone).FirstOrDefault();
-                    if (customerInfo!=null&&updateDto.TagIds!=null) {
-                        if (updateDto.TagIds.Count()>0) {
-                            AddCustomerTagDto addCustomerTagDto = new AddCustomerTagDto
+                    if (customerInfo != null && updateDto.TagIds != null)
+                    {
+                        AddCustomerTagDto addCustomerTagDto = new AddCustomerTagDto
+                        {
+                            CustomerId = customerInfo.Id,
+                            TagIds = updateDto.TagIds
+                        };
+                        var tags = dalTagDetailInfo.GetAll().Where(e => e.CustomerGoodsId == addCustomerTagDto.CustomerId).Select(e => e.TagId).ToList();
+                        if (tags.Count() > 0)
+                        {
+                            //删除原有标签
+                            foreach (var item in tags)
                             {
-                                CustomerId=customerInfo.Id,
-                                TagIds=updateDto.TagIds
-                            };
-                            var tags = dalTagDetailInfo.GetAll().Where(e => e.CustomerGoodsId == addCustomerTagDto.CustomerId).Select(e => e.TagId).ToList();
-                            if (tags.Count() > 0)
-                            {
-                                //删除原有标签
-                                foreach (var item in tags)
-                                {
-                                    await tagDetailInfoService.DeleteAsync(addCustomerTagDto.CustomerId, item);
-                                }
-                                //添加新标签
-                                foreach (var item in addCustomerTagDto.TagIds)
-                                {
-                                    AddTagDetailInfoDto add = new AddTagDetailInfoDto();
-                                    add.Id = addCustomerTagDto.CustomerId;
-                                    add.TagId = item;
-                                    await tagDetailInfoService.AddTagDetailInfoAsync(add);
-                                }
-
+                                await tagDetailInfoService.DeleteAsync(addCustomerTagDto.CustomerId, item);
                             }
-                            else
+                            //添加新标签
+                            foreach (var item in addCustomerTagDto.TagIds)
                             {
-                                foreach (var item in addCustomerTagDto.TagIds)
-                                {
-                                    AddTagDetailInfoDto add = new AddTagDetailInfoDto();
-                                    add.Id = addCustomerTagDto.CustomerId;
-                                    add.TagId = item;
-                                    await tagDetailInfoService.AddTagDetailInfoAsync(add);
-                                }
+                                AddTagDetailInfoDto add = new AddTagDetailInfoDto();
+                                add.Id = addCustomerTagDto.CustomerId;
+                                add.TagId = item;
+                                await tagDetailInfoService.AddTagDetailInfoAsync(add);
+                            }
+
+                        }
+                        else
+                        {
+                            foreach (var item in addCustomerTagDto.TagIds)
+                            {
+                                AddTagDetailInfoDto add = new AddTagDetailInfoDto();
+                                add.Id = addCustomerTagDto.CustomerId;
+                                add.TagId = item;
+                                await tagDetailInfoService.AddTagDetailInfoAsync(add);
                             }
                         }
                     }
                 }
-
             }
             catch (Exception ex)
             {

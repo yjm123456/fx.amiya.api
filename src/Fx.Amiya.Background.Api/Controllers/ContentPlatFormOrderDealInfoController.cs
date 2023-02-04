@@ -84,6 +84,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             ContentPlatFormOrderId = d.ContentPlatFormOrderId,
                                             CreateDate = d.CreateDate,
                                             Phone = d.Phone,
+                                            EncryptPhone = d.EncryptPhone,
                                             IsDeal = d.IsDeal,
                                             IsOldCustomer = d.IsOldCustomer,
                                             AddOrderPrice = d.AddOrderPrice,
@@ -119,7 +120,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             CreateByEmpName = d.CreateByEmpName,
                                             BelongLiveAnchor = d.BelongLiveAnchor,
                                             ReconciliationDocumentsId = d.ReconciliationDocumentsId,
-                                            IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
+                                            IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;
@@ -166,7 +167,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             ReturnBackPrice = d.ReturnBackPrice,
                                             DealHospital = d.LastDealHospital,
                                             CheckByEmpName = d.CheckByEmpName,
-                                            IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
+                                            IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;

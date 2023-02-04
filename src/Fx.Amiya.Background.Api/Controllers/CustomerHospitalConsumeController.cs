@@ -580,7 +580,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<CustomerHospitalConsumeVo>>> GetListAsync(int? hospitalId, int? channel, int? liveAnchorId, bool? isConfirmOrder, int? buyAgainType,DateTime? consumeStartDate,DateTime? consumeEndDate, string keyword, int? consumeType, DateTime startDate, DateTime endDate, int checkState, int? addedBy, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<CustomerHospitalConsumeVo>>> GetListAsync(int? hospitalId, int? channel, int? liveAnchorId, bool? isConfirmOrder, int? buyAgainType,DateTime? consumeStartDate,DateTime? consumeEndDate, string keyword, int? consumeType, DateTime? startDate, DateTime? endDate, int checkState, int? addedBy, int pageNum, int pageSize)
         {
             int? employeeId = null;
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;

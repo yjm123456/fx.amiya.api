@@ -26,10 +26,12 @@ namespace Fx.Amiya.Service
         private readonly IUnitOfWork _unitOfWork;
         private IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
         private IOrderService orderService;
+        private IUnCheckOrderService unCheckOrderService;
         private ICustomerHospitalConsumeService customerHospitalConsumeService;
 
         public ReconciliationDocumentsService(IDalReconciliationDocuments dalReconciliationDocuments,
             IContentPlateFormOrderService contentPlateFormOrderService,
+            IUnCheckOrderService unCheckOrderService,
             IRecommandDocumentSettleService recommandDocumentSettleService,
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
             IOrderService orderService,
@@ -42,6 +44,7 @@ namespace Fx.Amiya.Service
             this.recommandDocumentSettleService = recommandDocumentSettleService;
             this.customerHospitalConsumeService = customerHospitalConsumeService;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
+            this.unCheckOrderService = unCheckOrderService;
             this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
         }
 
@@ -199,6 +202,12 @@ namespace Fx.Amiya.Service
                     reconciliationDocuments.CreateDate = DateTime.Now;
                     reconciliationDocuments.Valid = true;
                     await dalReconciliationDocuments.AddAsync(reconciliationDocuments, true);
+
+                    var unCheckOrderInfoList = await unCheckOrderService.GetByPhoneAsync(addDto.CustomerPhone, addDto.HospitalId);
+                    if (unCheckOrderInfoList.Count > 0)
+                    {
+                        await unCheckOrderService.UpdateIsSubmitByIdListAsync(unCheckOrderInfoList.Select(z => z.Id).ToList());
+                    }
                 }
 
                 _unitOfWork.Commit();

@@ -34,6 +34,17 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         [Description("订单来源")]
 
         public string OrderFromText { get; set; }
+
+        /// <summary>
+        /// 订单金额
+        /// </summary>
+        [Description("订单金额")]
+        public decimal OrderPrice { get; set; }
+        /// <summary>
+        /// 新/老客业绩
+        /// </summary>
+        [Description(" 新/老客业绩")]
+        public string IsOldCustomerText { get; set; }
         /// <summary>
         /// 审核服务费金额
         /// </summary>

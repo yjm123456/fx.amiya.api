@@ -25,6 +25,7 @@ namespace Fx.Amiya.Service
         private IHospitalInfoService _hospitalInfoService;
         private IDalBindCustomerService _dalBindCustomerService;
         private IAmiyaEmployeeService _amiyaEmployeeService;
+        private IWxAppConfigService wxAppConfigService;
         private IDalAmiyaEmployee _dalAmiyaEmployee;
         private ILiveAnchorMonthlyTargetService _liveAnchorMonthlyTargetService;
         private IDalHospitalInfo _dalHospitalInfo;
@@ -32,6 +33,7 @@ namespace Fx.Amiya.Service
         private IDalRecommandDocumentSettle dalRecommandDocumentSettle;
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
+            IWxAppConfigService wxAppConfigService,
             IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
             IDalBindCustomerService dalBindCustomerService,
             IDalAmiyaEmployee dalAmiyaEmployee,
@@ -41,6 +43,7 @@ namespace Fx.Amiya.Service
             this.dalContentPlatFormOrderDealInfo = dalContentPlatFormOrderDealInfo;
             _hospitalInfoService = hospitalInfoService;
             _amiyaEmployeeService = amiyaEmployeeService;
+            this.wxAppConfigService = wxAppConfigService;
             _contentPlatFormCustomerPictureService = contentPlatFormCustomerPictureService;
             _dalBindCustomerService = dalBindCustomerService;
             _dalAmiyaEmployee = dalAmiyaEmployee;
@@ -81,6 +84,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, int pageNum, int pageSize)
         {
+            var config = await wxAppConfigService.GetCallCenterConfig();
             try
             {
                 var dealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(z => z.ContentPlatformOrderSendList) select d;
@@ -180,6 +184,7 @@ namespace Fx.Amiya.Service
                                                        ContentPlatFormOrderId = d.ContentPlatFormOrderId,
                                                        CreateDate = d.CreateDate,
                                                        Phone = ServiceClass.GetIncompletePhone(d.ContentPlatFormOrder.Phone),
+                                                       EncryptPhone = ServiceClass.Encrypt(d.ContentPlatFormOrder.Phone, config.PhoneEncryptKey),
                                                        IsDeal = d.IsDeal,
                                                        IsOldCustomer = d.IsOldCustomer,
                                                        IsAcompanying = d.IsAcompanying,

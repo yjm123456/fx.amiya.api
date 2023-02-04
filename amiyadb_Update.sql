@@ -1849,7 +1849,16 @@ ADD CONSTRAINT `fk_recommand_document_settle_amiyaempinfo`
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
 
+
+-----------------------------余建明 2023/01/16 BEGIN -----------------------------
+--审核记录加入订单金额与新老客
+ALTER TABLE `amiyadb`.`tbl_recommand_document_settle` 
+ADD COLUMN `order_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `order_from`,
+ADD COLUMN `is_oldcustomer` BIT(1) NOT NULL AFTER `order_price`;
+
+-----------------------------余建明 2023/01/16 END -----------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
 
 
 

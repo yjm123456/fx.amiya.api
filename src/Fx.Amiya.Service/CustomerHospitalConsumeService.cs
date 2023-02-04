@@ -354,7 +354,8 @@ namespace Fx.Amiya.Service
                 addRecommandDocumentSettleDto.CreateBy = updateDto.CheckEmpId;
                 addRecommandDocumentSettleDto.AccountType = false;
                 addRecommandDocumentSettleDto.AccountPrice = updateDto.CheckSettlePrice;
-
+                addRecommandDocumentSettleDto.OrderPrice = result.Price;
+                addRecommandDocumentSettleDto.IsOldCustomer = true;
                 await recommandDocumentSettleService.AddAsync(addRecommandDocumentSettleDto);
                 unitOfWork.Commit();
             }
@@ -660,7 +661,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<CustomerHospitalConsumeDto>> GetListAsync(int? hospitalId, int? channel, int? liveAnchorId, int? buyAgainType, int? employeeId, bool? isConfirmOrder, DateTime? consumeStartDate, DateTime? consumeEndDate, string keyword, int? consumeType, DateTime startDate, DateTime endDate, int checkState, int? addedBy, int pageNum, int pageSize)
+        public async Task<FxPageInfo<CustomerHospitalConsumeDto>> GetListAsync(int? hospitalId, int? channel, int? liveAnchorId, int? buyAgainType, int? employeeId, bool? isConfirmOrder, DateTime? consumeStartDate, DateTime? consumeEndDate, string keyword, int? consumeType, DateTime? startDate, DateTime? endDate, int checkState, int? addedBy, int pageNum, int pageSize)
         {
 
             var config = await GetCallCenterConfig();
@@ -674,8 +675,8 @@ namespace Fx.Amiya.Service
                                            && (addedBy == -1 || d.AddedBy == addedBy)
                                            && (checkState == -1 || d.CheckState == checkState)
                                            && (buyAgainType == null || d.BuyAgainType == buyAgainType)
-                                           && (d.CreateDate >= startDate.Date && d.CreateDate < endDate.AddDays(1).Date)
-                                           && (!consumeStartDate.HasValue && !consumeEndDate.HasValue || d.CreateDate >= startDate.Date && d.CreateDate < endDate.AddDays(1).Date)
+                                           && (!startDate.HasValue && !endDate.HasValue || d.CreateDate >= startDate.Value.Date && d.CreateDate < endDate.Value.AddDays(1).Date)
+                                           && (!consumeStartDate.HasValue && !consumeEndDate.HasValue || d.CreateDate >= consumeStartDate.Value.Date && d.CreateDate < consumeEndDate.Value.AddDays(1).Date)
                                            join cb in dalCustomerBaseInfo.GetAll() on d.Phone equals cb.Phone into dcb
                                            from cb in dcb.DefaultIfEmpty()
                                            select new CustomerHospitalConsumeDto

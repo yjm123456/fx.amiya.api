@@ -41,6 +41,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 客户手机号
         /// </summary>
         public string Phone { get; set; }
+        /// <summary>
+        /// 加密手机号
+        /// </summary>
+        public string EncryptPhone { get; set; }
+
 
         /// <summary>
         /// 下单金额

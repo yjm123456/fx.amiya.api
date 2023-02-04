@@ -323,16 +323,16 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<FxPageInfo<ReceiveGiftDto>> GetReceiveGiftListAsync(DateTime? startDaste,DateTime? endDate, int employeeId, bool? isSendGoods, string keyword, int pageNum, int pageSize,string categoryId)
         {
-            bool hidePhone = false;
-            var config = await GetCallCenterConfig();
-            if (config.HidePhoneNumber)
-            {
-                var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
-                if (employee.IsCustomerService && employee.AmiyaPositionInfo.IsDirector == false)
-                {
-                    hidePhone = true;
-                }
-            }
+            bool hidePhone = true;
+            //var config = await GetCallCenterConfig();
+            //if (config.HidePhoneNumber)
+            //{
+            //    var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
+            //    if (employee.IsCustomerService && employee.AmiyaPositionInfo.IsDirector == false)
+            //    {
+            //        hidePhone = true;
+            //    }
+            //}
 
 
             var receiveGift = from d in dalReceiveGift.GetAll()

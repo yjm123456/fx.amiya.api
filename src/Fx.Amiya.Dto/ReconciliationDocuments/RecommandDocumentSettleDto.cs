@@ -15,6 +15,10 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
 
         public int OrderFrom { get; set; }
         public string OrderFromText { get; set; }
+        public decimal OrderPrice { get; set; }
+        public bool IsOldCustomer { get; set; }
+
+        public string IsOldCustomerText { get; set; }
         public decimal ReturnBackPrice { get; set; }
         public DateTime CreateDate { get; set; }
         public bool IsSettle { get; set; }

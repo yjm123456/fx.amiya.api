@@ -54,6 +54,9 @@ namespace Fx.Amiya.Service
                     DealInfoId = e.DealInfoId,
                     OrderFrom = e.OrderFrom,
                     OrderFromText = ServiceClass.GetOrderFromText(e.OrderFrom),
+                    IsOldCustomer = e.IsOldCustomer,
+                    IsOldCustomerText = e.IsOldCustomer == true ? "老客业绩" : "新客业绩",
+                    OrderPrice = e.OrderPrice,
                     ReturnBackPrice = e.ReturnBackPrice,
                     CreateDate = e.CreateDate,
                     IsSettle = e.IsSettle,
@@ -65,8 +68,8 @@ namespace Fx.Amiya.Service
                     AccountPrice = e.AccountPrice
                 });
             FxPageInfo<RecommandDocumentSettleDto> fxPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();
-            fxPageInfo.TotalCount =await record.CountAsync();
-            fxPageInfo.List =await record.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+            fxPageInfo.TotalCount = await record.CountAsync();
+            fxPageInfo.List = await record.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
             foreach (var x in fxPageInfo.List)
             {
                 if (x.BelongEmpId.HasValue)
@@ -112,6 +115,9 @@ namespace Fx.Amiya.Service
                     DealInfoId = e.DealInfoId,
                     OrderFrom = e.OrderFrom,
                     OrderFromText = ServiceClass.GetOrderFromText(e.OrderFrom),
+                    IsOldCustomer = e.IsOldCustomer,
+                    IsOldCustomerText = e.IsOldCustomer == true ? "老客业绩" : "新客业绩",
+                    OrderPrice = e.OrderPrice,
                     ReturnBackPrice = e.ReturnBackPrice,
                     CreateDate = e.CreateDate,
                     IsSettle = e.IsSettle,
@@ -150,6 +156,9 @@ namespace Fx.Amiya.Service
                 recommandDocumentSettleDto.RecommandDocumentId = z.RecommandDocumentId;
                 recommandDocumentSettleDto.Id = z.Id;
                 recommandDocumentSettleDto.OrderId = z.OrderId;
+                recommandDocumentSettleDto.OrderPrice = z.OrderPrice;
+                recommandDocumentSettleDto.IsOldCustomer = z.IsOldCustomer;
+                recommandDocumentSettleDto.IsOldCustomerText = z.IsOldCustomer == true ? "老客业绩" : "新客业绩";
                 recommandDocumentSettleDto.DealInfoId = z.DealInfoId;
                 recommandDocumentSettleDto.OrderFrom = z.OrderFrom;
                 recommandDocumentSettleDto.ReturnBackPrice = z.ReturnBackPrice;
@@ -168,6 +177,8 @@ namespace Fx.Amiya.Service
             recommandDocumentSettle.RecommandDocumentId = addRecommandDocumentSettleDto.RecommandDocumentId;
             recommandDocumentSettle.OrderId = addRecommandDocumentSettleDto.OrderId;
             recommandDocumentSettle.OrderFrom = addRecommandDocumentSettleDto.OrderFrom;
+            recommandDocumentSettle.OrderPrice = addRecommandDocumentSettleDto.OrderPrice;
+            recommandDocumentSettle.IsOldCustomer = addRecommandDocumentSettleDto.IsOldCustomer;
             recommandDocumentSettle.DealInfoId = addRecommandDocumentSettleDto.DealInfoId;
             recommandDocumentSettle.ReturnBackPrice = addRecommandDocumentSettleDto.ReturnBackPrice;
             recommandDocumentSettle.CreateDate = DateTime.Now;

@@ -471,6 +471,9 @@ namespace Fx.Amiya.Service
                 case 2:
                     orderTypeText = "私域合作";
                     break;
+                case 3:
+                    orderTypeText = "财务添加";
+                    break;
             }
             return orderTypeText;
         }
@@ -936,9 +939,11 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        public static string GetAppointmentStatusTypeText(int status) {
+        public static string GetAppointmentStatusTypeText(int status)
+        {
             var statusText = "";
-            switch (status) {
+            switch (status)
+            {
                 case 0:
                     statusText = "预约处理";
                     break;
@@ -950,11 +955,11 @@ namespace Fx.Amiya.Service
                     break;
                 default:
                     statusText = "未知";
-                    break;                       
+                    break;
             }
             return statusText;
         }
-            /// <summary>
+        /// <summary>
         /// 获取抵用券类型
         /// </summary>
         /// <param name="orderFrom"></param>
@@ -1011,9 +1016,11 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="carType"></param>
         /// <returns></returns>
-        public static string GetAppointmentCarTypeText(int carType) {
+        public static string GetAppointmentCarTypeText(int carType)
+        {
             string carTypeText = "";
-            switch (carType) {
+            switch (carType)
+            {
                 case 0:
                     carTypeText = "经济型";
                     break;
@@ -1062,7 +1069,8 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="exchageType"></param>
         /// <returns></returns>
-        public static string GetAppointmentCarExchageType(int exchageType) {
+        public static string GetAppointmentCarExchageType(int exchageType)
+        {
             string exchangeTypeText = "";
             switch (exchageType)
             {
@@ -1071,7 +1079,7 @@ namespace Fx.Amiya.Service
                     break;
                 case 1:
                     exchangeTypeText = "优惠券";
-                    break;         
+                    break;
             }
             return exchangeTypeText;
         }

@@ -55,7 +55,11 @@ namespace Fx.Amiya.Background.Api.Vo.UnCheckOrder
         /// <summary>
         /// 是否上传对账单
         /// </summary>
-        public string IsSubmitReconciliationDocuments { get; set; }
+        public bool IsSubmitReconciliationDocuments { get; set; }
+        /// <summary>
+        /// 是否上传对账单
+        /// </summary>
+        public string IsSubmitReconciliationDocumentsText { get; set; }
         /// <summary>
         /// 指派医院
         /// </summary>

@@ -67,7 +67,8 @@ namespace Fx.Amiya.Service
                     InformationPrice = e.InformationPrice,
                     SystemUpdatePrice = e.SystemUpdatePrice,
                     ReturnBackPrice = e.ReturnBackPrice,
-                    IsSubmitReconciliationDocuments = e.IsSubmitReconciliationDocuments == true ? "已上传" : "未上传",
+                    IsSubmitReconciliationDocuments = e.IsSubmitReconciliationDocuments,
+                    IsSubmitReconciliationDocumentsText = e.IsSubmitReconciliationDocuments == true ? "已上传" : "未上传",
                     SendHospital = e.SendHospital,
                     CreateBy = e.CreateBy,
                     CreateDate = e.CreateDate,
@@ -141,7 +142,37 @@ namespace Fx.Amiya.Service
             result.InformationPrice = selectResult.InformationPrice;
             result.SystemUpdatePrice = selectResult.SystemUpdatePrice;
             result.ReturnBackPrice = selectResult.ReturnBackPrice;
+            result.IsSubmitReconciliationDocuments = selectResult.IsSubmitReconciliationDocuments;
             return result;
+        }
+
+
+        public async Task<List<UnCheckOrderDto>> GetByPhoneAsync(string phone, int sendHospital)
+        {
+            List<UnCheckOrderDto> unCheckOrderDtos = new List<UnCheckOrderDto>();
+            var selectResult = await _dalUnCheckOrder.GetAll().Where(x => x.Phone == phone && x.Valid == true && x.SendHospital == sendHospital && x.IsSubmitReconciliationDocuments == false).ToListAsync();
+            if (selectResult == null)
+            {
+                return unCheckOrderDtos;
+            }
+            foreach (var x in selectResult)
+            {
+
+                UnCheckOrderDto result = new UnCheckOrderDto();
+                result.Id = x.Id;
+                result.OrderId = x.OrderId;
+                result.OrderFrom = x.OrderFrom;
+                result.Phone = x.Phone;
+                result.DealDate = x.DealDate;
+                result.DealPrice = x.DealPrice;
+                result.InformationPricePercent = x.InformationPricePercent;
+                result.SystemUpdatePercent = x.SystemUpdatePercent;
+                result.InformationPrice = x.InformationPrice;
+                result.SystemUpdatePrice = x.SystemUpdatePrice;
+                result.ReturnBackPrice = x.ReturnBackPrice;
+                unCheckOrderDtos.Add(result);
+            }
+            return unCheckOrderDtos;
         }
 
         public async Task UpdateAsync(UpdateUnCheckOrderDto updateUnCheckOrderDto)
@@ -151,16 +182,12 @@ namespace Fx.Amiya.Service
             {
                 throw new Exception("未找到未上传订单数据，请重新获取！");
             }
-            result.OrderId = updateUnCheckOrderDto.OrderId;
-            result.OrderFrom = updateUnCheckOrderDto.OrderFrom;
-            result.Phone = updateUnCheckOrderDto.Phone;
-            result.DealDate = updateUnCheckOrderDto.DealDate;
-            result.DealPrice = updateUnCheckOrderDto.DealPrice;
             result.InformationPricePercent = updateUnCheckOrderDto.InformationPricePercent;
             result.SystemUpdatePercent = updateUnCheckOrderDto.SystemUpdatePercent;
             result.InformationPrice = updateUnCheckOrderDto.InformationPrice;
             result.SystemUpdatePrice = updateUnCheckOrderDto.SystemUpdatePrice;
             result.ReturnBackPrice = updateUnCheckOrderDto.ReturnBackPrice;
+            result.IsSubmitReconciliationDocuments = updateUnCheckOrderDto.IsSubmitReconciliationDocuments;
             result.UpdateDate = DateTime.Now;
             await _dalUnCheckOrder.UpdateAsync(result, true);
         }
@@ -196,17 +223,16 @@ namespace Fx.Amiya.Service
         /// <summary>
         /// 医院上传对账单时更新未上传对账单数据
         /// </summary>
-        /// <param name="phoneList"></param>
+        /// <param name="idList"></param>
         /// <returns></returns>
-        public async Task UpdateIsSubmitByPhoneListAsync(List<string> phoneList)
+        public async Task UpdateIsSubmitByIdListAsync(List<string> idList)
         {
-            unitOfWork.BeginTransaction();
             try
             {
-                foreach (var k in phoneList)
+                foreach (var k in idList)
                 {
 
-                    var result = await _dalUnCheckOrder.GetAll().Where(x => x.Phone == k).ToListAsync();
+                    var result = await _dalUnCheckOrder.GetAll().Where(x => x.Id == k).ToListAsync();
                     if (result.Count() == 0)
                     {
                         continue;
@@ -217,11 +243,9 @@ namespace Fx.Amiya.Service
                         await _dalUnCheckOrder.UpdateAsync(u, true);
                     }
                 }
-                unitOfWork.Commit();
             }
             catch (Exception err)
             {
-                unitOfWork.RollBack();
                 throw err;
             }
         }
@@ -234,16 +258,13 @@ namespace Fx.Amiya.Service
                 foreach (var k in idList)
                 {
 
-                    var result = await _dalUnCheckOrder.GetAll().Where(x => x.Phone == k).ToListAsync();
-                    if (result.Count() == 0)
+                    var result = await _dalUnCheckOrder.GetAll().Where(x => x.Id == k).FirstOrDefaultAsync();
+                    if (result == null)
                     {
                         continue;
                     }
-                    foreach (var u in result)
-                    {
-                        u.Valid = false;
-                        await _dalUnCheckOrder.UpdateAsync(u, true);
-                    }
+                    result.Valid = false;
+                    await _dalUnCheckOrder.UpdateAsync(result, true);
                 }
                 unitOfWork.Commit();
             }

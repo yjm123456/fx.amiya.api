@@ -14,6 +14,8 @@ namespace Fx.Amiya.DbModels.Model
         public string DealInfoId { get; set; }
 
         public int OrderFrom { get; set; }
+        public decimal OrderPrice { get; set; }
+        public bool IsOldCustomer { get; set; }
         public decimal ReturnBackPrice { get; set; }
         public DateTime CreateDate { get; set; }
         public bool IsSettle { get; set; }

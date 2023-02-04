@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Fx.Common;
+using Fx.Amiya.Service;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
@@ -24,12 +25,15 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class UnCheckOrderController : ControllerBase
     {
         private readonly IUnCheckOrderService unCheckOrderService;
+        private IWxAppConfigService configService;
         private IHttpContextAccessor httpContextAccessor;
 
         public UnCheckOrderController(IUnCheckOrderService UnCheckOrderService,
+            IWxAppConfigService wxAppConfigService,
             IHttpContextAccessor httpContextAccessor)
         {
             this.unCheckOrderService = UnCheckOrderService;
+            this.configService = wxAppConfigService;
             this.httpContextAccessor = httpContextAccessor;
         }
         /// <summary>
@@ -70,6 +74,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   SystemUpdatePrice = e.SystemUpdatePrice,
                                   ReturnBackPrice = e.ReturnBackPrice,
                                   IsSubmitReconciliationDocuments = e.IsSubmitReconciliationDocuments,
+                                  IsSubmitReconciliationDocumentsText = e.IsSubmitReconciliationDocumentsText,
                                   SendHospital = e.SendHospital,
                                   CreateBy = e.CreateBy,
                                   CreateDate = e.CreateDate,
@@ -105,10 +110,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 List<AddUnCheckOrderDto> AddUnCheckOrderDtoList = new List<AddUnCheckOrderDto>();
                 foreach (var x in addVo.AddBaseOrderInfoVoList)
                 {
+                    var config = await configService.GetCallCenterConfig();
+                    string decryptPhone = ServiceClass.Decrypto(x.Phone, config.PhoneEncryptKey);
                     AddUnCheckOrderDto addUnCheckOrderDto = new AddUnCheckOrderDto();
                     addUnCheckOrderDto.OrderId = x.OrderId;
                     addUnCheckOrderDto.OrderFrom = addVo.OrderFrom;
-                    addUnCheckOrderDto.Phone = x.Phone;
+                    addUnCheckOrderDto.Phone = decryptPhone;
                     addUnCheckOrderDto.DealDate = x.DealDate;
                     addUnCheckOrderDto.DealPrice = x.DealPrice;
                     addUnCheckOrderDto.InformationPricePercent = addVo.InformationPricePercent;
@@ -117,6 +124,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addUnCheckOrderDto.SystemUpdatePrice = x.DealPrice * addVo.SystemUpdatePercent / 100;
                     addUnCheckOrderDto.ReturnBackPrice = addUnCheckOrderDto.InformationPrice + addUnCheckOrderDto.SystemUpdatePrice;
                     addUnCheckOrderDto.CreateBy = employeeId;
+                    AddUnCheckOrderDtoList.Add(addUnCheckOrderDto);
                 }
                 await unCheckOrderService.AddListAsync(AddUnCheckOrderDtoList);
                 return ResultData.Success();
@@ -151,6 +159,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.InformationPrice = selectResult.InformationPrice;
             result.SystemUpdatePrice = selectResult.SystemUpdatePrice;
             result.ReturnBackPrice = selectResult.ReturnBackPrice;
+            result.IsSubmitReconciliationDocuments = selectResult.IsSubmitReconciliationDocuments;
             return ResultData<UnCheckOrderVo>.Success().AddData("unCheckOrderVo", result);
 
         }
@@ -168,16 +177,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 UpdateUnCheckOrderDto updateUnCheckOrderDto = new UpdateUnCheckOrderDto();
-                updateUnCheckOrderDto.OrderId = updateVo.OrderId;
-                updateUnCheckOrderDto.OrderFrom = updateVo.OrderFrom;
-                updateUnCheckOrderDto.Phone = updateVo.Phone;
-                updateUnCheckOrderDto.DealDate = updateVo.DealDate;
-                updateUnCheckOrderDto.DealPrice = updateVo.DealPrice;
+                updateUnCheckOrderDto.Id = updateVo.Id;
                 updateUnCheckOrderDto.InformationPricePercent = updateVo.InformationPricePercent;
                 updateUnCheckOrderDto.SystemUpdatePercent = updateVo.SystemUpdatePercent;
                 updateUnCheckOrderDto.InformationPrice = updateVo.InformationPrice;
                 updateUnCheckOrderDto.SystemUpdatePrice = updateVo.SystemUpdatePrice;
                 updateUnCheckOrderDto.ReturnBackPrice = updateVo.ReturnBackPrice;
+                updateUnCheckOrderDto.IsSubmitReconciliationDocuments = updateVo.IsSubmitReconciliationDocuments;
                 await unCheckOrderService.UpdateAsync(updateUnCheckOrderDto);
                 return ResultData.Success();
             }
@@ -215,16 +221,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 删除
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="idList"></param>
         /// <returns></returns>
         [HttpDelete]
         [FxInternalAuthorize]
-        public async Task<ResultData> DeleteAsync(string id)
+        public async Task<ResultData> DeleteAsync(List<string> idList)
         {
             try
             {
-                List<string> idList = new List<string>();
-                idList.Add(id);
                 await unCheckOrderService.DeleteAsync(idList);
                 return ResultData.Success();
             }

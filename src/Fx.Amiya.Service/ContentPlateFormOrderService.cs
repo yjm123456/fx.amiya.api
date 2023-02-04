@@ -1646,7 +1646,8 @@ namespace Fx.Amiya.Service
                 addRecommandDocumentSettleDto.CreateBy = input.employeeId;
                 addRecommandDocumentSettleDto.AccountType = false;
                 addRecommandDocumentSettleDto.AccountPrice = input.SettlePrice;
-
+                addRecommandDocumentSettleDto.OrderPrice = dealInfoUpdate.Price;
+                addRecommandDocumentSettleDto.IsOldCustomer = dealInfoUpdate.IsOldCustomer;
                 await recommandDocumentSettleService.AddAsync(addRecommandDocumentSettleDto);
                 unitOfWork.Commit();
             }

@@ -439,6 +439,11 @@ namespace Fx.Amiya.IService
         /// </summary>
         PrivateDomainCooperation,
 
+        /// <summary>
+        /// 财务添加=3
+        /// </summary>
+        FinancialInsert,
+
     }
 
     /// <summary>

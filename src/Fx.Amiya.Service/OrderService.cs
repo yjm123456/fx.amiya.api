@@ -1579,6 +1579,8 @@ namespace Fx.Amiya.Service
                 addRecommandDocumentSettleDto.CreateBy = input.employeeId;
                 addRecommandDocumentSettleDto.AccountType = true;
                 addRecommandDocumentSettleDto.AccountPrice = input.CheckPrice - input.SettlePrice;
+                addRecommandDocumentSettleDto.OrderPrice = order.ActualPayment.HasValue ? order.ActualPayment.Value : 0.00M;
+                addRecommandDocumentSettleDto.IsOldCustomer = true;
                 await recommandDocumentSettleService.AddAsync(addRecommandDocumentSettleDto);
                 unitOfWork.Commit();
             }
@@ -2662,16 +2664,16 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<FxPageInfo<OrderTradeDto>> GetMiniProgramMaterialOrderTradeList(DateTime startDate, DateTime endDate, int employeeId, bool? isSendGoods, string keyword, int pageNum, int pageSize)
         {
-            bool hidePhone = false;
-            var config = await _wxAppConfigService.GetCallCenterConfig();
-            if (config.HidePhoneNumber)
-            {
-                var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
-                if (employee.IsCustomerService && employee.AmiyaPositionInfo.IsDirector == false)
-                {
-                    hidePhone = true;
-                }
-            }
+            bool hidePhone = true;
+            //var config = await _wxAppConfigService.GetCallCenterConfig();
+            //if (config.HidePhoneNumber)
+            //{
+            //    var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
+            //    if (employee.IsCustomerService && employee.AmiyaPositionInfo.IsDirector == false)
+            //    {
+            //        hidePhone = true;
+            //    }
+            //}
             var orderTrades = from d in dalOrderTrade.GetAll()
                               where d.OrderInfoList.Count(e => e.AppType == (byte)AppType.MiniProgram && e.OrderType == (byte)OrderType.MaterialOrder) > 0
                               && (string.IsNullOrWhiteSpace(keyword) || d.CustomerInfo.Phone == keyword)
@@ -2802,7 +2804,7 @@ namespace Fx.Amiya.Service
                               where d.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS
                               select d;
             }
-
+            
             var orderTradeList = from d in orderTrades
                                  select new OrderTradeDto
                                  {

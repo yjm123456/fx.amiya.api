@@ -15,9 +15,10 @@ namespace Fx.Amiya.IService
         Task<FxPageInfo<UnCheckOrderDto>> GetListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSubmitReconciliationDocuments, int? orderFrom, int? hospitalId, string keyword, int pageNum, int pageSize);
         Task AddListAsync(List<AddUnCheckOrderDto> addUnCheckOrderDtoList);
         Task<UnCheckOrderDto> GetByIdAsync(string id);
+        Task<List<UnCheckOrderDto>> GetByPhoneAsync(string phone, int sendHospital);
         Task UpdateAsync(UpdateUnCheckOrderDto updateUnCheckOrderDto);
         Task SendToHospitalByIdListAsync(UnCheckOrderSendToHospitalDto unCheckOrderSendToHospitalDto);
-        Task UpdateIsSubmitByPhoneListAsync(List<string> phoneList);
+        Task UpdateIsSubmitByIdListAsync(List<string> idList);
         Task DeleteAsync(List<string> idList);
     }
 }

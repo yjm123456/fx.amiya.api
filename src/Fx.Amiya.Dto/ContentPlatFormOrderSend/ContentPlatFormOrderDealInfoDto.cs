@@ -63,6 +63,11 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         public string Phone { get; set; }
 
         /// <summary>
+        /// 加密手机号
+        /// </summary>
+        public string EncryptPhone { get; set; }
+
+        /// <summary>
         /// 下单金额
         /// </summary>
         public decimal? AddOrderPrice { get; set; }
