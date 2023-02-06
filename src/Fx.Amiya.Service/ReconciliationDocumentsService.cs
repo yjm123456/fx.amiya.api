@@ -28,6 +28,8 @@ namespace Fx.Amiya.Service
         private IOrderService orderService;
         private IUnCheckOrderService unCheckOrderService;
         private ICustomerHospitalConsumeService customerHospitalConsumeService;
+        private IAmiyaEmployeeService amiyaEmployeeService;
+        private ILiveAnchorService liveAnchorService;
 
         public ReconciliationDocumentsService(IDalReconciliationDocuments dalReconciliationDocuments,
             IContentPlateFormOrderService contentPlateFormOrderService,
@@ -35,11 +37,15 @@ namespace Fx.Amiya.Service
             IRecommandDocumentSettleService recommandDocumentSettleService,
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
             IOrderService orderService,
+            ILiveAnchorService liveAnchorService,
+            IAmiyaEmployeeService amiyaEmployeeService,
             ICustomerHospitalConsumeService customerHospitalConsumeService,
             IUnitOfWork unitOfWork)
         {
             this.dalReconciliationDocuments = dalReconciliationDocuments;
             _unitOfWork = unitOfWork;
+            this.amiyaEmployeeService = amiyaEmployeeService;
+            this.liveAnchorService = liveAnchorService;
             this.orderService = orderService;
             this.recommandDocumentSettleService = recommandDocumentSettleService;
             this.customerHospitalConsumeService = customerHospitalConsumeService;
@@ -224,7 +230,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var reconciliationDocuments = await dalReconciliationDocuments.GetAll().SingleOrDefaultAsync(e => e.Id == id);
+                var reconciliationDocuments = await dalReconciliationDocuments.GetAll().Include(x=>x.HospitalInfo).SingleOrDefaultAsync(e => e.Id == id);
                 if (reconciliationDocuments == null)
                 {
                     throw new Exception("对账编号错误！");
@@ -233,6 +239,7 @@ namespace Fx.Amiya.Service
                 ReconciliationDocumentsDto reconciliationDocumentsDto = new ReconciliationDocumentsDto();
                 reconciliationDocumentsDto.Id = reconciliationDocuments.Id;
                 reconciliationDocumentsDto.HospitalId = reconciliationDocuments.HospitalId;
+                reconciliationDocumentsDto.HospitalName = reconciliationDocuments.HospitalInfo.Name;
                 reconciliationDocumentsDto.CustomerName = reconciliationDocuments.CustomerName;
                 reconciliationDocumentsDto.CustomerPhone = reconciliationDocuments.CustomerPhone;
                 reconciliationDocumentsDto.DealGoods = reconciliationDocuments.DealGoods;
@@ -448,5 +455,88 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
+
+
+        #region [对账单审核记录操作]
+        /// <summary>
+        /// 分页获取审核记录数据
+        /// </summary>
+        /// <param name="isSettle"></param>
+        /// <param name="accountType"></param>
+        /// <param name="keyword"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<RecommandDocumentSettleDto>> GetSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, string keyword, int pageNum, int pageSize)
+        {
+            if (endDate.HasValue)
+            {
+                endDate = endDate.Value.Date.AddDays(1);
+            }
+            var record = await recommandDocumentSettleService.GetAllAsync(startDate, endDate, isSettle, accountType, keyword);
+
+            FxPageInfo<RecommandDocumentSettleDto> fxPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();
+            fxPageInfo.TotalCount =  record.Count();
+            fxPageInfo.List =  record.OrderByDescending(x => x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToList(); ;
+            foreach (var x in fxPageInfo.List)
+            {
+                if (x.BelongEmpId.HasValue)
+                {
+                    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
+                    x.BelongEmpName = empInfo.Name;
+                }
+                if (x.BelongLiveAnchorAccount.HasValue)
+                {
+                    var liveAnchor = await liveAnchorService.GetByIdAsync(x.BelongLiveAnchorAccount.Value);
+                    x.BelongLiveAnchor = liveAnchor.Name;
+                }
+                if (!string.IsNullOrEmpty(x.RecommandDocumentId) && x.RecommandDocumentId != "string")
+                {
+                    var reconciliationDocumentsInfo = await this.GetByIdAsync(x.RecommandDocumentId);
+                    x.HospitalName = reconciliationDocumentsInfo.HospitalName;
+                }
+            }
+            return fxPageInfo;
+        }
+
+        /// <summary>
+        /// 导出审核记录数据
+        /// </summary>
+        /// <param name="isSettle"></param>
+        /// <param name="accountType"></param>
+        /// <param name="keyword"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<List<RecommandDocumentSettleDto>> ExportSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, string keyword)
+        {
+            if (endDate.HasValue)
+            {
+                endDate = endDate.Value.Date.AddDays(1);
+            }
+            var record = await recommandDocumentSettleService.GetAllAsync(startDate, endDate, isSettle, accountType, keyword);
+            List<RecommandDocumentSettleDto> resultInfo = new List<RecommandDocumentSettleDto>();
+            resultInfo =  record.ToList();
+            foreach (var x in resultInfo)
+            {
+                if (x.BelongEmpId.HasValue)
+                {
+                    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
+                    x.BelongEmpName = empInfo.Name;
+                }
+                if (x.BelongLiveAnchorAccount.HasValue)
+                {
+                    var liveAnchor = await liveAnchorService.GetByIdAsync(x.BelongLiveAnchorAccount.Value);
+                    x.BelongLiveAnchor = liveAnchor.Name;
+                }
+                if (!string.IsNullOrEmpty(x.RecommandDocumentId) && x.RecommandDocumentId != "string")
+                {
+                    var reconciliationDocumentsInfo = await this.GetByIdAsync(x.RecommandDocumentId);
+                    x.HospitalName = reconciliationDocumentsInfo.HospitalName;
+                }
+            }
+            return resultInfo.OrderByDescending(x => x.CreateDate).ToList();
+        }
+        #endregion
     }
 }

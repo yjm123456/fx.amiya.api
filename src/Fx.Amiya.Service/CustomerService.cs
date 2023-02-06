@@ -631,7 +631,77 @@ namespace Fx.Amiya.Service
             return customerPageInfo;
         }
 
-        public async Task<List<BindCustomerConsumptionInfoDto>> GetTopBindCustomerConsumptionServiceListAsync(DateTime startDate,DateTime endDate)
+        public async Task<List<BindCustomerConsumptionInfoDto>> ExportBindCustomerConsumptionServiceListAsync(CustomerCunsumptionSearchParamDto customerSearchParam)
+        {
+            decimal MinPrice = 0.00M;
+            decimal MaxPrice = 0.00M;
+            if (!string.IsNullOrEmpty(customerSearchParam.ConsumptionLevelId))
+            {
+                var consumptionInfo = await _consumptionLevelService.GetByIdAsync(customerSearchParam.ConsumptionLevelId);
+                MinPrice = consumptionInfo.MinPrice;
+                MaxPrice = consumptionInfo.MaxPrice;
+            }
+            if (!string.IsNullOrEmpty(customerSearchParam.OrderId))
+            {
+                var orderInfoResult = await dalOrderInfo.GetAll().Where(e => e.Id == customerSearchParam.OrderId).FirstOrDefaultAsync();
+                if (orderInfoResult != null)
+                {
+                    customerSearchParam.Keyword = orderInfoResult.Phone;
+                }
+                else
+                {
+                    var contentPlatOrderInfoResult = await _contentPlateFormOrderService.GetByOrderIdAsync(customerSearchParam.OrderId);
+                    if (contentPlatOrderInfoResult != null)
+                    { customerSearchParam.Keyword = contentPlatOrderInfoResult.Phone; }
+                    else
+                    {
+                        var customerHospitalConsumeInfo = await _customerHospitalConsumeService.GetByConsumeIdAsync(customerSearchParam.OrderId);
+                        if (customerHospitalConsumeInfo != null)
+                        {
+                            customerSearchParam.Keyword = customerHospitalConsumeInfo.Phone;
+                        }
+                        else
+                        {
+                            throw new Exception("订单号输入有误，请重新确认订单号后查询！");
+                        }
+                    }
+                }
+            }
+            DateTime startrq = ((DateTime)customerSearchParam.StartDate).Date;
+            DateTime endrq = ((DateTime)customerSearchParam.EndDate).AddDays(1).Date;
+            var config = await GetCallCenterConfig();
+            var bindCustomers = from d in dalBindCustomerService.GetAll()
+                                where (customerSearchParam.EmployeeId == -1 || d.CustomerServiceId == customerSearchParam.EmployeeId)
+                                && (string.IsNullOrWhiteSpace(customerSearchParam.Keyword) || d.BuyerPhone.Contains(customerSearchParam.Keyword))
+                                && (customerSearchParam.Channel == 0 || d.NewConsumptionContentPlatform == customerSearchParam.Channel)
+                                && (string.IsNullOrEmpty(customerSearchParam.ConsumptionLevelId) || d.AllPrice >= MinPrice && d.AllPrice <= MaxPrice)
+                                && (customerSearchParam.StartDate == null && customerSearchParam.EndDate == null || d.CreateDate >= startrq && d.CreateDate < endrq)
+                                select new BindCustomerConsumptionInfoDto
+                                {
+                                    CreateDate = d.CreateDate,
+                                    // Phone = config.EnablePhoneEncrypt == true ? ServiceClass.GetIncompletePhone(d.BuyerPhone) : d.BuyerPhone,
+                                    Phone = d.BuyerPhone,
+                                    EncryptPhone = ServiceClass.Encrypt(d.BuyerPhone, config.PhoneEncryptKey),
+                                    NewConsumptionPlatFormId = d.NewConsumptionContentPlatform.Value,
+                                    CustomerServiceId = d.CustomerServiceId,
+                                    CustomerServiceName = d.CustomerServiceAmiyaEmployee.Name,
+                                    FirstOrderCreateDate = d.FirstConsumptionDate.Value,
+                                    FirstOrderInfo = d.FirstProjectDemand,
+                                    NewConsumptionTime = d.NewConsumptionDate,
+                                    NewConsumptionPlatForm = d.NewConsumptionContentPlatform.HasValue ? ServiceClass.GetOrderFromText(d.NewConsumptionContentPlatform.Value) : "未知",
+                                    NewConsumptionPlatFormAppTypeText = d.NewContentPlatForm,
+                                    AllConsumptionPrice = d.AllPrice.HasValue ? d.AllPrice.Value : 0.00M,
+                                    CreatedOrderNum = d.AllOrderCount.HasValue ? d.AllOrderCount.Value : 0,
+                                };
+            int pageNum = customerSearchParam.PageNum;
+            int pageSize = customerSearchParam.PageSize;
+            List<BindCustomerConsumptionInfoDto> customerPageInfo = new List<BindCustomerConsumptionInfoDto>();
+            var bindCustomerInfos = await bindCustomers.OrderByDescending(x => x.CreateDate).ToListAsync();
+            customerPageInfo = bindCustomerInfos.ToList();
+            return customerPageInfo;
+        }
+
+        public async Task<List<BindCustomerConsumptionInfoDto>> GetTopBindCustomerConsumptionServiceListAsync(DateTime startDate, DateTime endDate)
         {
             DateTime startrq = startDate.Date;
             DateTime endrq = endDate.AddDays(1).Date;
@@ -944,12 +1014,13 @@ namespace Fx.Amiya.Service
 
         public async Task<CustomerDto> GetCustomerByUserIdAsync(string userId)
         {
-            var customer=await dalCustomerInfo.GetAll().Where(e => e.UserId == userId).Select(e=>new CustomerDto { 
-                Id=e.Id,
-                Phone=e.Phone
+            var customer = await dalCustomerInfo.GetAll().Where(e => e.UserId == userId).Select(e => new CustomerDto
+            {
+                Id = e.Id,
+                Phone = e.Phone
             }).FirstOrDefaultAsync();
             return customer;
-            
+
         }
         /// <summary>
         /// 添加用户标签
@@ -958,8 +1029,8 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task AddCustomerTag(AddCustomerTagDto addCustomerTagDto)
         {
-            var tags = dalTagDetailInfo.GetAll().Where(e => e.CustomerGoodsId == addCustomerTagDto.CustomerId).Select(e=>e.TagId).ToList();
-            if (tags.Count()>0)
+            var tags = dalTagDetailInfo.GetAll().Where(e => e.CustomerGoodsId == addCustomerTagDto.CustomerId).Select(e => e.TagId).ToList();
+            if (tags.Count() > 0)
             {
                 //删除原有标签
                 foreach (var item in tags)
@@ -976,7 +1047,8 @@ namespace Fx.Amiya.Service
                 }
 
             }
-            else {
+            else
+            {
                 foreach (var item in addCustomerTagDto.TagIds)
                 {
                     AddTagDetailInfoDto add = new AddTagDetailInfoDto();
@@ -984,7 +1056,7 @@ namespace Fx.Amiya.Service
                     add.TagId = item;
                     await tagDetailInfoService.AddTagDetailInfoAsync(add);
                 }
-            }         
+            }
         }
         /// <summary>
         /// 根据id获取用户标签列表

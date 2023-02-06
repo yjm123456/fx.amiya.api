@@ -18,6 +18,7 @@ using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Infrastructure;
 using Fx.Open.Infrastructure.Web;
+using Jd.Api.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -301,6 +302,77 @@ namespace Fx.Amiya.Background.Api.Controllers
 
         }
 
+        /// <summary>
+        /// 导出绑定了客服的客户消费列表
+        /// </summary>
+        /// <param name="employeeId">-1查全部</param>
+        /// <param name="keyword"></param>
+        /// <param name="startDate">开始时间</param>
+        /// <param name="channel">下单渠道（1：下单平台，2：内容平台,3：客户升单）</param>
+        /// <param name="orderId">订单号</param>
+        /// <param name="endDate">结束时间</param>
+        /// <param name="CconsumptionLevelId">消费等级id（空查询所有）</param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        [HttpGet("exportBindCustomerConsumptionServerList")]
+        [FxInternalAuthorize]
+        public async Task<FileStreamResult> ExportBindCustomerConsumptionServiceListAsync(string keyword, DateTime? startDate, DateTime? endDate, int? employeeId, string CconsumptionLevelId, int channel, string orderId, int pageNum, int pageSize)
+        {
+            //if (startDate.HasValue && endDate.HasValue)
+            //{
+            //    if ((endDate.Value - startDate.Value).TotalDays > 30)
+            //    {
+            //        throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
+            //    }
+            //}
+            if (employeeId == null)
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                employeeId = Convert.ToInt32(employee.Id);
+            }
+
+            CustomerCunsumptionSearchParamDto customerSearchParamDto = new CustomerCunsumptionSearchParamDto();
+            customerSearchParamDto.Keyword = keyword;
+            customerSearchParamDto.StartDate = startDate;
+            customerSearchParamDto.EndDate = endDate;
+            customerSearchParamDto.EmployeeId = (int)employeeId;
+            customerSearchParamDto.ConsumptionLevelId = CconsumptionLevelId;
+            customerSearchParamDto.PageNum = pageNum;
+            customerSearchParamDto.Channel = channel;
+            customerSearchParamDto.OrderId = orderId;
+            customerSearchParamDto.PageSize = pageSize;
+
+
+            var q = await customerService.ExportBindCustomerConsumptionServiceListAsync(customerSearchParamDto);
+            var customer = from d in q
+                           select new CustomerConsumptionInfoVo
+                           {
+                               Id = d.Id,
+                               CreateDate = d.CreateDate,
+                               UserId = d.UserId,
+                               Phone = d.Phone,
+                               EncryptPhone = d.EncryptPhone,
+                               Province = d.Province,
+                               City = d.City,
+                               Avatar = d.Avatar,
+                               CustomerServiceId = d.CustomerServiceId,
+                               CustomerServiceName = d.CustomerServiceName,
+                               NewConsumptionPlatFormId = d.NewConsumptionPlatFormId,
+                               NewConsumptionPlatForm = d.NewConsumptionPlatForm,
+                               NewConsumptionTime = d.NewConsumptionTime,
+                               AllConsumptionPrice = d.AllConsumptionPrice,
+                               CreatedOrderNum = d.CreatedOrderNum,
+                               FirstOrderInfo = d.FirstOrderInfo,
+                               FirstOrderCreateDate = d.FirstOrderCreateDate,
+                               NewConsumptionPlatFormAppTypeText = d.NewConsumptionPlatFormAppTypeText
+                           };
+            List<CustomerConsumptionInfoVo> customerPageInfo = new List<CustomerConsumptionInfoVo>();
+            customerPageInfo = customer.ToList();
+            var stream = ExportExcelHelper.ExportExcel(customerPageInfo);
+            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "客户消费列表.xls");
+            return result;
+
+        }
 
         /// <summary>
         /// 获取客户回访情况列表

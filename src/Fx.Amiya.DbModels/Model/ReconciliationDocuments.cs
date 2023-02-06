@@ -65,5 +65,6 @@ namespace Fx.Amiya.DbModels.Model
         public HospitalInfo HospitalInfo { get; set; }
 
         public HospitalEmployee HospitalEmployee { get; set; }
+        //public List<RecommandDocumentSettle> RecommandDocumentSettleList { get; set; }
     }
 }

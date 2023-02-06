@@ -19,6 +19,11 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         [Description("对账单编号")]
         public string RecommandDocumentId { get; set; }
         /// <summary>
+        /// 医院
+        /// </summary>
+        [Description("医院")]
+        public string HospitalName { get; set; }
+        /// <summary>
         /// 订单号
         /// </summary>
         [Description("订单号")]

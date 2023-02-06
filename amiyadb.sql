@@ -1809,6 +1809,41 @@ CREATE TABLE `amiyadb`.`tbl_uncheck_order` (
 
 
 
+-----------------------------------------------余建明 2023/2/02 BEGIN--------------------------------------------
+CREATE TABLE `amiyadb`.`tbl_bill` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `hospital_id` INT UNSIGNED NOT NULL,
+  `bill_price` DECIMAL(12,2) NOT NULL,
+  `tax_rate` DECIMAL(3) NOT NULL,
+  `tax_price` DECIMAL(12,2) NOT NULL,
+  `not_in_tax_price` DECIMAL(12,2) NOT NULL,
+  `other_price` DECIMAL(12,2) NULL,
+  `other_price_remark` VARCHAR(300) NULL,
+  `collecting_company_id` VARCHAR(50) NOT NULL,
+  `belong_start_time` DATETIME NOT NULL,
+  `belong_end_time` DATETIME NOT NULL,
+  `bill_type` INT NOT NULL,
+  `create_bill_reason` VARCHAR(300) NULL,
+  `return_back_state` INT NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `create_by` INT UNSIGNED NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_bill_hospitalinfo_idx` (`hospital_id` ASC) VISIBLE,
+  INDEX `fk_bill_amiyaemployeeinfo_idx` (`create_by` ASC) VISIBLE,
+  CONSTRAINT `fk_bill_hospitalinfo`
+    FOREIGN KEY (`hospital_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_bill_amiyaemployeeinfo`
+    FOREIGN KEY (`create_by`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+-----------------------------------------------余建明 2023/2/02 END--------------------------------------------
 
 
 

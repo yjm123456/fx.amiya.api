@@ -20,14 +20,16 @@ namespace Fx.Amiya.Background.Api.Controllers
     [ApiController]
     public class ReconciliationDocumentsSettleController : ControllerBase
     {
-        private IRecommandDocumentSettleService reconciliationDocumentsSettleService;
+        private IReconciliationDocumentsService reconciliationDocumentsService;
+        //private IRecommandDocumentSettleService reconciliationDocumentsSettleService;
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="reconciliationDocumentsSettleService"></param>
-        public ReconciliationDocumentsSettleController(IRecommandDocumentSettleService reconciliationDocumentsSettleService)
+        /// <param name="reconciliationDocumentsService"></param>
+        public ReconciliationDocumentsSettleController( IReconciliationDocumentsService reconciliationDocumentsService)
         {
-            this.reconciliationDocumentsSettleService = reconciliationDocumentsSettleService;
+            //this.reconciliationDocumentsSettleService = reconciliationDocumentsSettleService;
+            this.reconciliationDocumentsService = reconciliationDocumentsService;
         }
 
 
@@ -49,12 +51,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var q = await reconciliationDocumentsSettleService.GetListByPageAsync(startDate, endDate, isSettle, accountType, keyword, pageNum, pageSize);
+                var q = await reconciliationDocumentsService.GetSettleListByPageAsync(startDate, endDate, isSettle, accountType, keyword, pageNum, pageSize);
 
                 var reconciliationDocumentsSettle = from d in q.List
                                                     select new ReconciliationDocumentsSettleVo
                                                     {
                                                         RecommandDocumentId = d.RecommandDocumentId,
+                                                        HospitalName=d.HospitalName,
                                                         OrderId = d.OrderId,
                                                         DealInfoId = d.DealInfoId,
                                                         OrderFromText = d.OrderFromText,
@@ -108,12 +111,13 @@ namespace Fx.Amiya.Background.Api.Controllers
                 }
             }
             var res = new List<ReconciliationDocumentsSettleVo>();
-            var q = await reconciliationDocumentsSettleService.ExportListByPageAsync(startDate, endDate, isSettle, accountType, keyword);
+            var q = await reconciliationDocumentsService.ExportSettleListByPageAsync(startDate, endDate, isSettle, accountType, keyword);
 
             var reconciliationDocumentsSettle = from d in q
                                                 select new ReconciliationDocumentsSettleVo
                                                 {
                                                     RecommandDocumentId = d.RecommandDocumentId,
+                                                    HospitalName = d.HospitalName,
                                                     OrderId = d.OrderId,
                                                     DealInfoId = d.DealInfoId,
                                                     OrderFromText = d.OrderFromText,

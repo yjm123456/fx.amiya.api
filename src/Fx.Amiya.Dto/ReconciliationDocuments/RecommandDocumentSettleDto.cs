@@ -10,6 +10,7 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
     {
         public string Id { get; set; }
         public string RecommandDocumentId { get; set; }
+        public string HospitalName { get; set; }
         public string OrderId { get; set; }
         public string DealInfoId { get; set; }
 

@@ -89,6 +89,13 @@ namespace Fx.Amiya.IService
         Task<FxPageInfo<BindCustomerConsumptionInfoDto>> GetBindCustomerConsumptionServiceListAsync(CustomerCunsumptionSearchParamDto customerSearchParam);
 
         /// <summary>
+        /// 根据条件导出客户消费列表
+        /// </summary>
+        /// <param name="customerSearchParam"></param>
+        /// <returns></returns>
+        Task<List<BindCustomerConsumptionInfoDto>> ExportBindCustomerConsumptionServiceListAsync(CustomerCunsumptionSearchParamDto customerSearchParam);
+
+        /// <summary>
         /// 私域运营板块老客复购情况
         /// </summary>
         /// <param name="startDate"></param>

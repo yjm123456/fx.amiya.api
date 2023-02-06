@@ -43,5 +43,9 @@ namespace Fx.Amiya.DbModels.Model
         public decimal AccountPrice { get; set; }
 
         public AmiyaEmployee AmiyaEmployee { get; set; }
+        /// <summary>
+        /// 对账单
+        /// </summary>
+        //public ReconciliationDocuments ReconciliationDocuments { get; set; }
     }
 }

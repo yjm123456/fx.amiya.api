@@ -33,6 +33,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.AccountType).HasColumnName("account_type").HasColumnType("bit").IsRequired();
             builder.Property(e => e.AccountPrice).HasColumnName("account_price").HasColumnType("decimal(12,2)").IsRequired();
             builder.HasOne(e => e.AmiyaEmployee).WithMany(e => e.RecommandDocumentSettleList).HasForeignKey(e => e.CreateBy);
+            //builder.HasOne(e => e.ReconciliationDocuments).WithMany(e => e.RecommandDocumentSettleList).HasForeignKey(e => e.RecommandDocumentId);
         }
     }
 }
