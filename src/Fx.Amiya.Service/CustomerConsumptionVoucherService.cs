@@ -96,7 +96,7 @@ namespace Fx.Amiya.Service
                            WriteOfCode = ccv.WriteOfCode,
                            IsExpire = ccv.IsExpire,
                            ExpireDate = ccv.ExpireDate,
-                           Remark=cv.Remark
+                           Remark = cv.Remark
                        };
             //未使用
             if (type == 1)
@@ -129,8 +129,8 @@ namespace Fx.Amiya.Service
             FxPageInfo<CustomerConsumptioVoucherInfoDto> fxPageInfo = new FxPageInfo<CustomerConsumptioVoucherInfoDto>();
             var list = from ccv in dalCustomerConsumptionVoucher.GetAll()
                        join cv in dalConsumptionVoucher.GetAll() on ccv.ConsumptionVoucherId equals cv.Id
-                       join gv in dalGoodsConsumptionVoucher.GetAll() on cv.Id equals gv.ConsumptionVoucherId 
-                       where ccv.CustomerId == customerId && (isUsed == null || ccv.IsUsed == isUsed) && (cv.Type == 0||cv.Type==4) && ccv.IsExpire == false && ccv.ExpireDate > DateTime.Now && ccv.ConsumptionVoucherId == gv.ConsumptionVoucherId && gv.GoodsId == goodsId 
+                       join gv in dalGoodsConsumptionVoucher.GetAll() on cv.Id equals gv.ConsumptionVoucherId
+                       where ccv.CustomerId == customerId && (isUsed == null || ccv.IsUsed == isUsed) && (cv.Type == 0 || cv.Type == 4) && ccv.IsExpire == false && ccv.ExpireDate > DateTime.Now && ccv.ConsumptionVoucherId == gv.ConsumptionVoucherId && gv.GoodsId == goodsId
                        orderby cv.DeductMoney descending
                        select new CustomerConsumptioVoucherInfoDto
                        {
@@ -215,21 +215,29 @@ namespace Fx.Amiya.Service
             try
             {
                 //50元优惠券
-                AddCustomerConsumptionVoucherDto fifty = new AddCustomerConsumptionVoucherDto
+                /*AddCustomerConsumptionVoucherDto fifty = new AddCustomerConsumptionVoucherDto
                 {
                     CustomerId = customerId,
                     ConsumptionVoucherCode = ConsumptionVoucherCode.FiftyDeductVoucher,
                     ExpireDate = DateTime.Now.AddDays(30),
                     Source = 3
-                };
-                /*AddCustomerConsumptionVoucherDto twenty = new AddCustomerConsumptionVoucherDto
+                };*/
+                AddCustomerConsumptionVoucherDto twenty = new AddCustomerConsumptionVoucherDto
                 {
                     CustomerId = customerId,
                     ConsumptionVoucherCode = ConsumptionVoucherCode.TwentyDeductVoucher,
                     ExpireDate = DateTimeUtil.GetNextMonthFirstDay(),
                     Source = 3
-                };*/
-                await AddAsyn(fifty);
+                };
+                await AddAsyn(twenty);
+                AddCustomerConsumptionVoucherDto thirty = new AddCustomerConsumptionVoucherDto
+                {
+                    CustomerId = customerId,
+                    ConsumptionVoucherCode = ConsumptionVoucherCode.ThirtyDeductVoucher,
+                    ExpireDate = DateTimeUtil.GetNextMonthFirstDay(),
+                    Source = 3
+                };
+                await AddAsyn(thirty);
             }
             catch (Exception ex)
             {
@@ -418,7 +426,7 @@ namespace Fx.Amiya.Service
         {
             return await (from ccv in dalCustomerConsumptionVoucher.GetAll()
                           join cv in dalConsumptionVoucher.GetAll() on ccv.ConsumptionVoucherId equals cv.Id
-                          where ccv.CustomerId == customerid && (cv.Type==0 || cv.Type==4) && ccv.Id == voucherid
+                          where ccv.CustomerId == customerid && (cv.Type == 0 || cv.Type == 4) && ccv.Id == voucherid && ccv.IsUsed == false&&ccv.ExpireDate>DateTime.Now
                           select new CustomerConsumptioVoucherInfoDto
                           {
                               Id = ccv.Id,
@@ -427,7 +435,8 @@ namespace Fx.Amiya.Service
                               IsUsed = ccv.IsUsed,
                               IsNeedMinPrice = cv.IsNeedMinFee,
                               MinPrice = cv.MinPrice,
-                              Type=cv.Type
+                              Type = cv.Type,
+                              ConsumptionVoucherId = cv.Id
                           }).SingleOrDefaultAsync();
         }
         /// <summary>
@@ -487,14 +496,15 @@ namespace Fx.Amiya.Service
             }
             else
             {
-                 var voucher = dalConsumptionVoucher.GetAll().Where(e => e.MemberRankCode == member.MemberRankCode&&e.IsMemberVoucher==true).Select(e=>new MemberRecieveConsumptionVoucherDto { 
-                    DeductMoney=e.Type==0? e.DeductMoney:e.DeductMoney*10,
-                    VoucherName=e.Name,
-                    VoucherType=e.Type,
-                    VoucherCode=e.ConsumptionVoucherCode,
-                    Remark=e.Remark
+                var voucher = dalConsumptionVoucher.GetAll().Where(e => e.MemberRankCode == member.MemberRankCode && e.IsMemberVoucher == true).Select(e => new MemberRecieveConsumptionVoucherDto
+                {
+                    DeductMoney = e.Type == 0 ? e.DeductMoney : e.DeductMoney * 10,
+                    VoucherName = e.Name,
+                    VoucherType = e.Type,
+                    VoucherCode = e.ConsumptionVoucherCode,
+                    Remark = e.Remark
 
-                 }).ToList();
+                }).ToList();
                 return voucher;
                 /*var voucherCode = member.MemberRankCode + "voucher";
                 var voucher = dalConsumptionVoucher.GetAll().Where(e=>e.ConsumptionVoucherCode==voucherCode).SingleOrDefault();
@@ -545,46 +555,47 @@ namespace Fx.Amiya.Service
                            IsExpire = ccv.IsExpire,
                            ExpireDate = ccv.ExpireDate
                        };
-            var carList = list.Where(e => e.IsUsed == false && e.IsExpire == false && e.ExpireDate > DateTime.Now&&e.Type==(int)ConsumptionVoucherType.AppointmentCar).ToList();
+            var carList = list.Where(e => e.IsUsed == false && e.IsExpire == false && e.ExpireDate > DateTime.Now && e.Type == (int)ConsumptionVoucherType.AppointmentCar).ToList();
             return carList;
         }
 
         public async Task<CustomerConsumptioVoucherInfoDto> GetCarVoucherByCustomerIdAndVoucherIdAsync(string customerid, string voucherid)
         {
-            return await(from ccv in dalCustomerConsumptionVoucher.GetAll()
-                         join cv in dalConsumptionVoucher.GetAll() on ccv.ConsumptionVoucherId equals cv.Id
-                         where ccv.CustomerId == customerid && cv.Type == (int)ConsumptionVoucherType.AppointmentCar && ccv.Id == voucherid
-                         select new CustomerConsumptioVoucherInfoDto
-                         {
-                             Id = ccv.Id,
-                             DeductMoney = cv.DeductMoney,
-                             IsSpecifyProduct = cv.IsSpecifyProduct,
-                             IsUsed = ccv.IsUsed,
-                             IsNeedMinPrice = cv.IsNeedMinFee,
-                             MinPrice = cv.MinPrice,
-                             VoucherCode=cv.ConsumptionVoucherCode
-                         }).SingleOrDefaultAsync();
+            return await (from ccv in dalCustomerConsumptionVoucher.GetAll()
+                          join cv in dalConsumptionVoucher.GetAll() on ccv.ConsumptionVoucherId equals cv.Id
+                          where ccv.CustomerId == customerid && cv.Type == (int)ConsumptionVoucherType.AppointmentCar && ccv.Id == voucherid
+                          select new CustomerConsumptioVoucherInfoDto
+                          {
+                              Id = ccv.Id,
+                              DeductMoney = cv.DeductMoney,
+                              IsSpecifyProduct = cv.IsSpecifyProduct,
+                              IsUsed = ccv.IsUsed,
+                              IsNeedMinPrice = cv.IsNeedMinFee,
+                              MinPrice = cv.MinPrice,
+                              VoucherCode = cv.ConsumptionVoucherCode
+                          }).SingleOrDefaultAsync();
         }
 
         public async Task<CustomerConsumptioVoucherInfoDto> GetCarTypeVoucherByCustomerIdAndVoucherIdAsync(string customerid, string carType)
         {
-            return await(from ccv in dalCustomerConsumptionVoucher.GetAll()
-                         join cv in dalConsumptionVoucher.GetAll() on ccv.ConsumptionVoucherId equals cv.Id
-                         where ccv.CustomerId == customerid && cv.Type == (int)ConsumptionVoucherType.AppointmentCar &&cv.ConsumptionVoucherCode==carType && ccv.IsUsed==false orderby cv.DeductMoney descending
-                         select new CustomerConsumptioVoucherInfoDto
-                         {
-                             Id = ccv.Id,
-                             DeductMoney = cv.DeductMoney,
-                             IsSpecifyProduct = cv.IsSpecifyProduct,
-                             IsUsed = ccv.IsUsed,
-                             IsNeedMinPrice = cv.IsNeedMinFee,
-                             MinPrice = cv.MinPrice,
-                             VoucherCode = cv.ConsumptionVoucherCode,
-       
-                         }).FirstOrDefaultAsync();
+            return await (from ccv in dalCustomerConsumptionVoucher.GetAll()
+                          join cv in dalConsumptionVoucher.GetAll() on ccv.ConsumptionVoucherId equals cv.Id
+                          where ccv.CustomerId == customerid && cv.Type == (int)ConsumptionVoucherType.AppointmentCar && cv.ConsumptionVoucherCode == carType && ccv.IsUsed == false
+                          orderby cv.DeductMoney descending
+                          select new CustomerConsumptioVoucherInfoDto
+                          {
+                              Id = ccv.Id,
+                              DeductMoney = cv.DeductMoney,
+                              IsSpecifyProduct = cv.IsSpecifyProduct,
+                              IsUsed = ccv.IsUsed,
+                              IsNeedMinPrice = cv.IsNeedMinFee,
+                              MinPrice = cv.MinPrice,
+                              VoucherCode = cv.ConsumptionVoucherCode,
+
+                          }).FirstOrDefaultAsync();
         }
 
-        public async Task MemberRecieveCardWeekAsync(string customerId,string voucherCode)
+        public async Task MemberRecieveCardWeekAsync(string customerId, string voucherCode)
         {
             var startDate = DateTime.Now.AddDays(-30);
             var member = await memberCardHandleService.GetMemberCardByCustomeridAsync(customerId);
@@ -595,7 +606,8 @@ namespace Fx.Amiya.Service
             {
                 throw new Exception("本月已领取过会员抵用券,请勿重复领取");
             }
-            else {
+            else
+            {
                 var voucherInfo = consumptionVoucherService.GetConsumptionVoucherByCodeAsync(voucherCode);
                 if (voucherInfo == null) throw new Exception("抵用券编码错误");
                 AddCustomerConsumptionVoucherDto voucher = new AddCustomerConsumptionVoucherDto
@@ -617,45 +629,47 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<CustomerConsumptioVoucherInfoDto>> GetOverAllCustomerConsumptionVoucherListAsync(string customerId, bool? isUsed, string goodsId)
         {
-            
-            var voucher = from ccv in dalCustomerConsumptionVoucher.GetAll() where ccv.CustomerId==customerId
-                       join cv in dalConsumptionVoucher.GetAll() on ccv.ConsumptionVoucherId equals cv.Id                      
-                       where  cv.IsSpecifyProduct==false && (isUsed == null || ccv.IsUsed == isUsed) && (cv.Type == 0 || cv.Type == 4) && ccv.IsExpire == false && ccv.ExpireDate > DateTime.Now 
-                       orderby cv.DeductMoney descending
-                       select new CustomerConsumptioVoucherInfoDto
-                       {
-                           Id = ccv.Id,                           
-                           ConsumptionVoucherName = cv.Name,
-                           DeductMoney = cv.DeductMoney,
-                           IsShare = cv.IsShare,
-                           IsSpecifyProduct = cv.IsSpecifyProduct,
-                           ConsumptionVoucherId = ccv.ConsumptionVoucherId,
-                           IsUsed = ccv.IsUsed,
-                           CreateDate = ccv.CreateDate,
-                           Source = ccv.Source,
-                           Type = cv.Type,
-                           WriteOfCode = ccv.WriteOfCode
-                       };
+
+            var voucher = from ccv in dalCustomerConsumptionVoucher.GetAll()
+                          where ccv.CustomerId == customerId
+                          join cv in dalConsumptionVoucher.GetAll() on ccv.ConsumptionVoucherId equals cv.Id
+                          where cv.IsSpecifyProduct == false && (isUsed == null || ccv.IsUsed == isUsed) && (cv.Type == 0 || cv.Type == 4) && ccv.IsExpire == false && ccv.ExpireDate > DateTime.Now
+                          orderby cv.DeductMoney descending
+                          select new CustomerConsumptioVoucherInfoDto
+                          {
+                              Id = ccv.Id,
+                              ConsumptionVoucherName = cv.Name,
+                              DeductMoney = cv.DeductMoney,
+                              IsShare = cv.IsShare,
+                              IsSpecifyProduct = cv.IsSpecifyProduct,
+                              ConsumptionVoucherId = ccv.ConsumptionVoucherId,
+                              IsUsed = ccv.IsUsed,
+                              CreateDate = ccv.CreateDate,
+                              Source = ccv.Source,
+                              Type = cv.Type,
+                              WriteOfCode = ccv.WriteOfCode
+                          };
             return await voucher.ToListAsync();
         }
 
         public async Task<List<SimpleVoucherInfoDto>> GetCustomerAllVoucher(string customerId)
         {
-            var voucherList = from cv in dalCustomerConsumptionVoucher.GetAll().Where(e => e.CustomerId == customerId && e.IsUsed == false && e.IsExpire == false && e.ExpireDate < DateTime.Now)
+            var voucherList = from cv in dalCustomerConsumptionVoucher.GetAll().Where(e => e.CustomerId == customerId && e.IsUsed == false && e.IsExpire == false && e.ExpireDate > DateTime.Now)
                               join c in dalConsumptionVoucher.GetAll() on cv.ConsumptionVoucherId equals c.Id
-                              where (c.Type==0||c.Type==4)
-                              select new SimpleVoucherInfoDto { 
-                                CustomerVoucherId=cv.Id,
-                                VoucherName=c.Name,
-                                IsSpecifyProduct=c.IsSpecifyProduct,
-                                Type=c.Type,
-                                IsNeedMinFee=c.IsNeedMinFee,
-                                MinPrice=c.MinPrice.Value,
-                                VoucherId=cv.ConsumptionVoucherId,
-                                Remark=c.Remark,
-                                DeductMoney=c.DeductMoney
+                              where (c.Type == 0 || c.Type == 4)
+                              select new SimpleVoucherInfoDto
+                              {
+                                  CustomerVoucherId = cv.Id,
+                                  VoucherName = c.Name,
+                                  IsSpecifyProduct = c.IsSpecifyProduct,
+                                  Type = c.Type,
+                                  IsNeedMinFee = c.IsNeedMinFee,
+                                  MinPrice = c.MinPrice.Value,
+                                  VoucherId = cv.ConsumptionVoucherId,
+                                  Remark = c.Remark,
+                                  DeductMoney = c.DeductMoney
                               };
             return await voucherList.ToListAsync();
-    }
+        }
     }
 }

@@ -41,6 +41,7 @@ using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.OrderCheckPicture;
 using Fx.Amiya.Dto.ReconciliationDocuments;
+using Fx.Amiya.Core.Dto.Goods;
 
 namespace Fx.Amiya.Service
 {
@@ -1045,31 +1046,27 @@ namespace Fx.Amiya.Service
                 if (orderTradeAddDto.OrderInfoAddList.Count(e => e.OrderType == (byte)OrderType.MaterialOrder) > 0)
                     orderTrade.AddressId = orderTradeAddDto.AddressId;
                 orderTrade.TotalAmount = orderTradeAddDto.OrderInfoAddList.Sum(e => e.ActualPayment);
+
+                //全局抵用券价格计算
                 if (!string.IsNullOrEmpty(orderTradeAddDto.VoucherId))
                 {
                     var voucher = await customerConsumptionVoucherService.GetVoucherByCustomerIdAndVoucherIdAsync(orderTradeAddDto.CustomerId, orderTradeAddDto.VoucherId);
+                    if (voucher == null) throw new Exception("抵用券不存在");
                     if (voucher.IsNeedMinPrice)
                     {
                         if (orderTrade.TotalAmount < voucher.MinPrice)
                         {
                             throw new Exception("支付金额不满足抵用券使用条件");
                         }
-                        if (voucher.Type == 0)
-                        {
-                            orderTrade.TotalAmount = (orderTrade.TotalAmount - voucher.DeductMoney) <= 0 ? 0.01m : (orderTrade.TotalAmount - voucher.DeductMoney);
-                        }
-                        else if (voucher.Type == 4)
-                        {
-                            orderTrade.TotalAmount = Math.Ceiling(orderTrade.TotalAmount.Value * voucher.DeductMoney) <= 0 ? 0.01m : Math.Ceiling(orderTrade.TotalAmount.Value * voucher.DeductMoney);
-                        }
                     }
-                    /*UpdateCustomerConsumptionVoucherDto update = new UpdateCustomerConsumptionVoucherDto
+                    if (voucher.Type == (int)ConsumptionVoucherType.Material)
                     {
-                        CustomerVoucherId = voucher.Id,
-                        IsUsed = true,
-                        UseDate = DateTime.Now
-                    };
-                    await customerConsumptionVoucherService.UpdateCustomerConsumptionVoucherUseStatusAsync(update);*/
+                        orderTrade.TotalAmount = (orderTrade.TotalAmount - voucher.DeductMoney) <= 0 ? 0.01m : (orderTrade.TotalAmount - voucher.DeductMoney);
+                    }
+                    else if (voucher.Type == (int)ConsumptionVoucherType.Discount)
+                    {
+                        orderTrade.TotalAmount = Math.Ceiling(orderTrade.TotalAmount.Value * voucher.DeductMoney) <= 0 ? 0.01m : Math.Ceiling(orderTrade.TotalAmount.Value * voucher.DeductMoney);
+                    }
                 }
                 orderTrade.TotalIntegration = orderTradeAddDto.OrderInfoAddList.Sum(e => e.IntegrationQuantity);
                 orderTrade.Remark = orderTradeAddDto.Remark;

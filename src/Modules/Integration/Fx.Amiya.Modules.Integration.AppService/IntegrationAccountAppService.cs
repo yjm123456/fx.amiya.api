@@ -2,6 +2,7 @@
 using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.Core.Interfaces.MemberCard;
 using Fx.Amiya.Dto.CustomerIntergration;
+using Fx.Amiya.Dto.MiniProgramSendMessage;
 using Fx.Amiya.IService;
 using Fx.Amiya.Modules.Integration.DbModel;
 using Fx.Amiya.Modules.Integration.Domin;
@@ -25,12 +26,13 @@ namespace Fx.Amiya.Modules.Integration.AppService
         private ICustomerService customerService;
         private IMemberRankInfo memberRankInfoService;
         private IIntegrationAccountRepository _integrationAccountRepository;
+        private IMiniProgramTemplateMessageSendService miniProgramTemplateMessageSendService;
         public IntegrationAccountAppService(IIntegrationAccountRepository integrationAccountRepository,
             IMemberCard memberCardService,
             ICustomerService customerService,
              IMemberRankInfo memberRankInfoService,
             IUnitOfWork unitOfWork,
-            IFreeSql<IntegrationFlag> freeSql)
+            IFreeSql<IntegrationFlag> freeSql, IMiniProgramTemplateMessageSendService miniProgramTemplateMessageSendService)
         {
             _integrationAccountRepository = integrationAccountRepository;
             this.freeSql = freeSql;
@@ -38,6 +40,7 @@ namespace Fx.Amiya.Modules.Integration.AppService
             this.memberRankInfoService = memberRankInfoService;
             this.memberCardService = memberCardService;
             this.customerService = customerService;
+            this.miniProgramTemplateMessageSendService = miniProgramTemplateMessageSendService;
         }
 
         public Task AddIntegrationGenerateRecordAsync(IntegrationGenerateRecordAddDto item)
@@ -249,6 +252,15 @@ namespace Fx.Amiya.Modules.Integration.AppService
                 OrderId = addCustomerIntergration.OrderId
             };
             await this.AddByConsumptionAsync(consumptionIntegrationDto);
+            var account=await _integrationAccountRepository.GetIntegrationAccountAsync(customerId);
+            SendPointMessageDto sendPointMessageDto = new SendPointMessageDto();
+            sendPointMessageDto.CustomerId = customerId;
+            sendPointMessageDto.MerchantName = "啊美雅";
+            sendPointMessageDto.Title = "消费领积分";
+            sendPointMessageDto.ChangeCount = $"+{consumptionIntegrationDto.Quantity}";
+            sendPointMessageDto.ExpireDate=$"{DateTime.Now.Year}-12-31";
+            sendPointMessageDto.PointBalance = account.Balance;
+            await miniProgramTemplateMessageSendService.SendPointChangeMessgaeAsync(sendPointMessageDto);
         }
 
         /// <summary>

@@ -78,8 +78,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private readonly IHuiShouQianPaymentService huiShouQianPaymentService;
         private readonly IGoodsStandardsPriceService goodsStandardsPriceService;
         private readonly IUnitOfWork unitOfWork;
-        
-        
+
+
         private static readonly AsyncLock _mutex = new AsyncLock();
         public OrderController(IOrderService orderService,
             IOrderHistoryService orderHistoryService,
@@ -209,8 +209,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         orderInfoResult.SinglePrice = orderInfo.ActualPayment;
                     }
                     orderInfoResult.ActualPayment = orderInfo.ActualPayment;
-                    
-                    
+
+
                 }
                 else
                 {
@@ -229,7 +229,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     refundOrderInfo.CheckReason = refundOrderInfoResult.CheckReason;
                     refundOrderInfo.RefundReason = refundOrderInfoResult.RefundReasong;
                     orderInfoResult.RefundOrderInfo = refundOrderInfo;
-                    orderInfoResult.IntegrationQuantity = orderInfo.IntegrationQuantity;                                       
+                    orderInfoResult.IntegrationQuantity = orderInfo.IntegrationQuantity;
                 }
             }
             if (orderInfo.StatusCode == OrderStatusCode.CHECK_FAIL)
@@ -428,10 +428,17 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             bool IsExistThirdPartPay = false;
             //是否存在余额支付订单
             bool IsExistBalancePay = false;
-            //是否使用专用商品抵用券
+            //是否使用专用商品抵用券(默认没有使用)
             bool IsUseSpecifyVoucher = false;
             List<OrderInfoAddDto> amiyaOrderList = new List<OrderInfoAddDto>();
             Dictionary<string, int> inventoryQuantityDict = new Dictionary<string, int>();
+            CustomerConsumptioVoucherInfoDto voucher = null;
+            if (!string.IsNullOrEmpty(orderAdd.VoucherId) && orderAdd.VoucherId != "0")
+            {
+                voucher = await customerConsumptionVoucherService.GetVoucherByCustomerIdAndVoucherIdAsync(customerId, orderAdd.VoucherId);
+                if (voucher == null) throw new Exception("没有此抵用券信息");
+                if (voucher.IsUsed) throw new Exception("该抵用券已被使用");
+            }
             //商品下单
             foreach (var item in orderAdd.OrderItemList)
             {
@@ -458,7 +465,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     if (find == null) throw new Exception("规格错误");
                     amiyaOrder.IntegrationQuantity = find.Price * item.Quantity;
                     amiyaOrder.ExchangeType = (int)ExchangeType.Integration;
-                    
+
                 }
                 if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
                 {
@@ -540,8 +547,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         amiyaOrder.ActualPayment = find.Price * item.Quantity;
                         amiyaOrder.Standard = find.Standards;
                     }
-
-
                 }
                 else
                 {
@@ -566,39 +571,33 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 }
                 if (IsExistThirdPartPay)
                 {
-                    if (!string.IsNullOrEmpty(item.VoucherId))
+                    // 只有当抵用券为指定商品可用时才计算价格,全局商品抵用券在添加订单后再计算支付价格
+                    if (voucher != null && voucher.IsSpecifyProduct)
                     {
-                        //如果使用了专用商品抵用券
-                        IsUseSpecifyVoucher = true;
-                        var voucher = await customerConsumptionVoucherService.GetVoucherByCustomerIdAndVoucherIdAsync(customerId, item.VoucherId);
-                        if (voucher == null) throw new Exception("没有此抵用券信息");
-                        if (voucher.IsUsed) throw new Exception("该抵用券已被使用");
-                        amiyaOrder.IsUseCoupon = true;
-                        amiyaOrder.CouponId = voucher.Id;
-                        if (voucher.Type == (int)ConsumptionVoucherType.Discount)
+                        if (goodsInfo.GoodsConsumptionVoucher.Exists(e => e.ConsumptionVoucherId == voucher.ConsumptionVoucherId))
                         {
-                            var payCount = amiyaOrder.ActualPayment;
-                            
-                            amiyaOrder.ActualPayment = Math.Ceiling((amiyaOrder.ActualPayment.Value) * (voucher.DeductMoney));
-                            amiyaOrder.DeductMoney = payCount.Value - amiyaOrder.ActualPayment.Value;
+                            IsUseSpecifyVoucher = true;
+                            amiyaOrder.IsUseCoupon = true;
+                            amiyaOrder.CouponId = voucher.Id;
+                            //指定商品价格抵用券计算方式:(原价*数量)*折扣||(原价*数量)-折扣
+                            if (voucher.Type == (int)ConsumptionVoucherType.Discount)
+                            {
+                                var payCount = amiyaOrder.ActualPayment;
+                                amiyaOrder.ActualPayment = Math.Ceiling((amiyaOrder.ActualPayment.Value) * (voucher.DeductMoney));
+                                amiyaOrder.DeductMoney = payCount.Value - amiyaOrder.ActualPayment.Value;
+                            }
+                            else
+                            {
+                                amiyaOrder.DeductMoney = voucher.DeductMoney;
+                                amiyaOrder.ActualPayment = amiyaOrder.ActualPayment - voucher.DeductMoney;
+                            }
                         }
-                        else {
-                            amiyaOrder.DeductMoney = voucher.DeductMoney;
-                            amiyaOrder.ActualPayment = amiyaOrder.ActualPayment - voucher.DeductMoney;
-                        }
-                        
-                        //抵用券抵扣后付款小于0,赋值为0.01
-                        if (amiyaOrder.ActualPayment <= 0)
-                        {
-                            amiyaOrder.ActualPayment = 0.01m;
-                        }
-                        UpdateCustomerConsumptionVoucherDto update = new UpdateCustomerConsumptionVoucherDto
-                        {
-                            CustomerVoucherId = voucher.Id,
-                            IsUsed = true,
-                            UseDate = DateTime.Now
-                        };
-                        await customerConsumptionVoucherService.UpdateCustomerConsumptionVoucherUseStatusAsync(update);
+
+                    }
+                    //抵用券抵扣后付款小于0,赋值为0.01
+                    if (amiyaOrder.ActualPayment <= 0)
+                    {
+                        amiyaOrder.ActualPayment = 0.01m;
                     }
                 }
                 if (orderAdd.ExchangeType == (int)ExchangeType.BalancePay)
@@ -682,15 +681,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             orderTradeAdd.AddressId = orderAdd.AddressId;
             orderTradeAdd.Remark = orderAdd.Remark;
             orderTradeAdd.OrderInfoAddList = amiyaOrderList;
-            if (IsExistThirdPartPay == true && !IsExistBalancePay) {
-                if (!string.IsNullOrEmpty(orderAdd.VoucherId))
+            if (IsExistThirdPartPay == true && !IsExistBalancePay)
+            {
+                //将全局抵用券添加传递给订单计算交易支付金额
+                if (voucher != null && !voucher.IsSpecifyProduct)
                 {
-                    if (IsUseSpecifyVoucher)
-                    {
-                        throw new Exception("抵用券不能叠加使用");
-                    }
                     orderTradeAdd.VoucherId = orderAdd.VoucherId;
-                }               
+                }
             }
             string tradeId = await orderService.AddAmiyaOrderAsync(orderTradeAdd);
             OrderAddResultVo orderAddResult = new OrderAddResultVo();
@@ -710,30 +707,32 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 if (totalFee < 0) throw new Exception("支付金额异常");
                 orderId = orderId.Trim(',');
                 goodsName = goodsName.Trim(',');
-                //如果全局抵用券不为空
-                if (!string.IsNullOrEmpty(orderAdd.VoucherId))
+                //判断是否使用全局抵用券
+                if (voucher!=null&&!voucher.IsSpecifyProduct)
                 {
-                    
-                    var voucher = await customerConsumptionVoucherService.GetVoucherByCustomerIdAndVoucherIdAsync(customerId, orderAdd.VoucherId);
-                    if (voucher.IsNeedMinPrice)
+                    if (voucher.Type == (int)ConsumptionVoucherType.Material)
                     {
-                        if (totalFee < voucher.MinPrice)
-                        {
-                            throw new Exception("支付金额不满足抵用券使用条件");
-                        }
-                        if (voucher.Type == 0) {
-                            totalFee = (totalFee - voucher.DeductMoney)<=0 ? 0.01m: (totalFee - voucher.DeductMoney);
-                        } else if (voucher.Type==4) {
-                            totalFee = Math.Ceiling(totalFee*voucher.DeductMoney)<=0 ? 0.01m : Math.Ceiling(totalFee * voucher.DeductMoney);
-                        }
+                        totalFee = (totalFee - voucher.DeductMoney) <= 0 ? 0.01m : (totalFee - voucher.DeductMoney);
                     }
-                    UpdateCustomerConsumptionVoucherDto update = new UpdateCustomerConsumptionVoucherDto
+                    else if (voucher.Type == (int)ConsumptionVoucherType.Discount)
                     {
-                        CustomerVoucherId = voucher.Id,
-                        IsUsed = true,
-                        UseDate = DateTime.Now
-                    };
-                    await customerConsumptionVoucherService.UpdateCustomerConsumptionVoucherUseStatusAsync(update);
+                        totalFee = Math.Ceiling(totalFee * voucher.DeductMoney) <= 0 ? 0.01m : Math.Ceiling(totalFee * voucher.DeductMoney);
+                    }
+
+                }
+
+                //修改抵用券使用状态
+                if (voucher!=null) {
+                    if ((voucher.IsSpecifyProduct && IsUseSpecifyVoucher) || !voucher.IsSpecifyProduct)
+                    {
+                        UpdateCustomerConsumptionVoucherDto update = new UpdateCustomerConsumptionVoucherDto
+                        {
+                            CustomerVoucherId = orderAdd.VoucherId,
+                            IsUsed = true,
+                            UseDate = DateTime.Now
+                        };
+                        await customerConsumptionVoucherService.UpdateCustomerConsumptionVoucherUseStatusAsync(update);
+                    }
                 }
 
                 //微信支付
@@ -883,7 +882,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
             #endregion
 
-            
+
 
             return ResultData<OrderAddResultVo>.Success().AddData("orderPayGetResult", orderPayResult);
         }
@@ -1013,7 +1012,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         }
 
         [HttpPost("refundOrder")]
-        public Task<ResultData> RefundOrder(RefundOrderVo refundOrderVo) {
+        public Task<ResultData> RefundOrder(RefundOrderVo refundOrderVo)
+        {
             return null;
         }
 
@@ -1142,17 +1142,17 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("subordinatelist")]
-        public async Task<ResultData<FxPageInfo<SubordinateOrderVo>>> GetSubordinateListByCustomerId(string customerId , int pageNum, int pageSize)
-        {            
-            var q = await orderService.GetSubordinateOrder(customerId,pageNum, pageSize);
+        public async Task<ResultData<FxPageInfo<SubordinateOrderVo>>> GetSubordinateListByCustomerId(string customerId, int pageNum, int pageSize)
+        {
+            var q = await orderService.GetSubordinateOrder(customerId, pageNum, pageSize);
             var orders = from d in q.List
                          select new SubordinateOrderVo
                          {
-                             GoodsName=d.GoodsName,
-                             GoodsImgUrl=d.GoodsImgUrl,
-                             OrderDate=d.OrderDate,
-                             Price=d.Price,
-                             StatusCodeText=d.StatusCodeText
+                             GoodsName = d.GoodsName,
+                             GoodsImgUrl = d.GoodsImgUrl,
+                             OrderDate = d.OrderDate,
+                             Price = d.Price,
+                             StatusCodeText = d.StatusCodeText
                          };
             FxPageInfo<SubordinateOrderVo> orderTradePageInfo = new FxPageInfo<SubordinateOrderVo>();
             orderTradePageInfo.TotalCount = q.TotalCount;
@@ -1277,7 +1277,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             var sessionInfo = sessionStorage.GetSession(token);
             string customerId = sessionInfo.FxCustomerId;
             var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(tradeId);
-            var userInfo =await userService.GetUserInfoByUserIdAsync(sessionInfo.FxUserId);
+            var userInfo = await userService.GetUserInfoByUserIdAsync(sessionInfo.FxUserId);
             List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
             foreach (var item in orderTrade.OrderInfoList)
             {
@@ -1305,7 +1305,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             {
                 if (item.ExchangeType != 0 && item.ExchangeType != null)
                 {
-                    var exist= await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAndCustomerIdAsync(item.Id,customerId);
+                    var exist = await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAndCustomerIdAsync(item.Id, customerId);
                     if (exist) throw new Exception("该订单已赠送过积分");
                     ConsumptionIntegrationDto consumptionIntegrationDto = new ConsumptionIntegrationDto
                     {
@@ -1453,14 +1453,15 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <param name="tradeId"></param>
         /// <returns></returns>
         [HttpPost("refund")]
-        public async Task<ResultData> OrderRefundAsync(RefundOrderVo refundOrder) {
+        public async Task<ResultData> OrderRefundAsync(RefundOrderVo refundOrder)
+        {
             var token = tokenReader.GetToken();
             var sessionInfo = sessionStorage.GetSession(token);
             string customerId = sessionInfo.FxCustomerId;
             try
             {
                 using (await _mutex.LockAsync())
-                {         
+                {
                     unitOfWork.BeginTransaction();
                     CreateRefundOrderDto createRefundOrderDto = new CreateRefundOrderDto();
                     createRefundOrderDto.CustomerId = customerId;
@@ -1480,7 +1481,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     }
                 }
 
-                    
+
             }
             catch (Exception ex)
             {

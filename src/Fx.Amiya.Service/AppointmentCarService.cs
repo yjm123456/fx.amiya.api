@@ -2,6 +2,7 @@
 using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.AppointmentCar;
+using Fx.Amiya.Dto.MiniProgramSendMessage;
 using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -24,11 +25,13 @@ namespace Fx.Amiya.Service
     {
         private readonly IDalAppointmentCar dalAppointmentCar;
         private IDalConfig dalConfig;
+        private IMiniProgramTemplateMessageSendService miniProgramTemplateMessageSendService;
 
-        public AppointmentCarService(IDalAppointmentCar dalAppointmentCar, IDalConfig dalConfig)
+        public AppointmentCarService(IDalAppointmentCar dalAppointmentCar, IDalConfig dalConfig, IMiniProgramTemplateMessageSendService miniProgramTemplateMessageSendService)
         {
             this.dalAppointmentCar = dalAppointmentCar;
             this.dalConfig = dalConfig;
+            this.miniProgramTemplateMessageSendService = miniProgramTemplateMessageSendService;
         }
         /// <summary>
         /// 添加预约叫车服务
@@ -148,6 +151,17 @@ namespace Fx.Amiya.Service
             var record = dalAppointmentCar.GetAll().Where(e => e.Id == update.Id).SingleOrDefault();
             record.Status = update.Status;
             await dalAppointmentCar.UpdateAsync(record, true);
+            if (update.Status == (int)AppointmentCarStatus.Completed)
+            {
+                SendAppointmentMessageDto sendAppointmentMessageDto = new SendAppointmentMessageDto();
+                sendAppointmentMessageDto.CustomerId = record.CustomerId;
+                sendAppointmentMessageDto.Name = record.Name;
+                sendAppointmentMessageDto.Phone = record.Phone;
+                sendAppointmentMessageDto.AppointmentDate = record.AppointmentDate.ToString("yyyy-MM-dd");
+                sendAppointmentMessageDto.AppointmentStatus = "预约叫车成功";
+                sendAppointmentMessageDto.Remark = $"预约地点:{record.Address}";
+                await miniProgramTemplateMessageSendService.SendAppointmentMessageAsync(sendAppointmentMessageDto);
+            }
         }
 
         public async Task<FxPageInfo<WxAppointmentCarInfoDto>> WxGetListByPageAsync(string customerId, int pageNum, int pageSize, int? status)

@@ -264,7 +264,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Name=e.Value
             }).ToList();
             return ResultData<List<BaseIdAndNameVo>>.Success().AddData("statusList",result);
-
         }
     }
 }

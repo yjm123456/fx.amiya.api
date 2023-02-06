@@ -17,6 +17,7 @@ using Fx.Common;
 using Fx.Sms.Core;
 using jos_sdk_net.Util;
 using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.MiniProgramSendMessage;
 
 namespace Fx.Amiya.Service
 {
@@ -33,6 +34,7 @@ namespace Fx.Amiya.Service
         private IDalAmiyaEmployee dalAmiyaEmployee;
         private IFxSmsBasedTemplateSender _smsSender;
         private IDalGiftCategory dalGiftCategory;
+        private IMiniProgramTemplateMessageSendService miniProgramTemplateMessageSendService;
         public GiftService(IDalGiftInfo dalGiftInfo,
             IDalReceiveGift dalReceiveGift,
             IDalOrderInfo dalOrderInfo,
@@ -42,7 +44,7 @@ namespace Fx.Amiya.Service
             IDalBindCustomerService dalBindCustomerService,
             IDalConfig dalConfig,
             IDalAmiyaEmployee dalAmiyaEmployee,
-            IFxSmsBasedTemplateSender smsSender, IDalGiftCategory dalGiftCategory)
+            IFxSmsBasedTemplateSender smsSender, IDalGiftCategory dalGiftCategory, IMiniProgramTemplateMessageSendService miniProgramTemplateMessageSendService)
         {
             this.dalGiftInfo = dalGiftInfo;
             this.dalReceiveGift = dalReceiveGift;
@@ -55,6 +57,7 @@ namespace Fx.Amiya.Service
             this.dalAmiyaEmployee = dalAmiyaEmployee;
             _smsSender = smsSender;
             this.dalGiftCategory = dalGiftCategory;
+            this.miniProgramTemplateMessageSendService = miniProgramTemplateMessageSendService;
         }
 
 
@@ -690,6 +693,12 @@ namespace Fx.Amiya.Service
                 }
                 await dalReceiveGift.AddAsync(receiveGift, true);               
                 unitOfWork.Commit();
+                SendGiftPresentMessageDto sendGiftPresentMessageDto = new SendGiftPresentMessageDto();
+                sendGiftPresentMessageDto.CustomerId = customerId;
+                sendGiftPresentMessageDto.OrderId = addDto.OrderId;
+                sendGiftPresentMessageDto.GiftName = gift.Name;
+                sendGiftPresentMessageDto.Remark = "您的礼品你发放!";
+                await miniProgramTemplateMessageSendService.SendGiftPresentMessageAsync(sendGiftPresentMessageDto);
             }
             catch (Exception ex)
             {

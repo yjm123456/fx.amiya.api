@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.Appointment;
+using Fx.Amiya.Dto.MiniProgramSendMessage;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
@@ -34,6 +35,7 @@ namespace Fx.Amiya.Service
         private IDalHospitalSurplusAppointment dalHospitalSurplusAppointment;
         private IDalHospitalPartakeItem dalHospitalQuotedPriceItemInfo;
         private IDalConfig dalConfig;
+        private IMiniProgramTemplateMessageSendService miniProgramTemplateMessageSendService;
         public AppointmentService(
             IDalAppointmentInfo dalAppointmentInfo,
             IDalHospitalAppointmentNumer dalHospitalAppointmentNumer,
@@ -46,7 +48,7 @@ namespace Fx.Amiya.Service
             IDalOrderInfo dalOrderInfo,
             IDalHospitalSurplusAppointment dalHospitalSurplusAppointment,
             IDalHospitalPartakeItem dalHospitalQuotedPriceItemInfo,
-            IDalConfig dalConfig)
+            IDalConfig dalConfig, IMiniProgramTemplateMessageSendService miniProgramTemplateMessageSendService)
         {
             this.dalAppointmentInfo = dalAppointmentInfo;
             this.dalHospitalAppointmentNumer = dalHospitalAppointmentNumer;
@@ -60,6 +62,7 @@ namespace Fx.Amiya.Service
             this.dalHospitalQuotedPriceItemInfo = dalHospitalQuotedPriceItemInfo;
             this.dalConfig = dalConfig;
             _hospitalInfoService = hospitalInfoService;
+            this.miniProgramTemplateMessageSendService = miniProgramTemplateMessageSendService;
         }
 
 
@@ -798,10 +801,20 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task UpdateAppointmentStatusAsync(UpdateAppointmentStatus update)
         {
-            var appointment = dalAppointmentInfo.GetAll().Where(e => e.Id == update.Id).FirstOrDefault();
+            var appointment = dalAppointmentInfo.GetAll().Include(e=>e.HospitalInfo).Where(e => e.Id == update.Id).FirstOrDefault();
             if (appointment == null) throw new Exception("预约编号错误");
             appointment.Status = (byte)update.Status;
             await dalAppointmentInfo.UpdateAsync(appointment,true);
+            if (update.Status== (int)AppointmentStatusType.Success) {
+                SendAppointmentMessageDto sendAppointmentMessageDto = new SendAppointmentMessageDto();
+                sendAppointmentMessageDto.CustomerId = appointment.CustomerId;
+                sendAppointmentMessageDto.Name = appointment.CustomerName;
+                sendAppointmentMessageDto.Phone = appointment.Phone;
+                sendAppointmentMessageDto.AppointmentDate = appointment.AppointmentDate.ToString("yyyy-MM-dd");
+                sendAppointmentMessageDto.AppointmentStatus = "预约成功";
+                sendAppointmentMessageDto.Remark = $"预约医院:{appointment.HospitalInfo.Name}";
+                await miniProgramTemplateMessageSendService.SendAppointmentMessageAsync(sendAppointmentMessageDto);
+            }
         }
         /// <summary>
         /// 获取最近一次的预约医院

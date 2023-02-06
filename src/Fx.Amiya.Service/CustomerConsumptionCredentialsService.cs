@@ -177,6 +177,7 @@ namespace Fx.Amiya.Service
         {
             var resultCount = from d in dalCustomerConsumptionCredentials.GetAll().Where(x => x.Valid == true) select d;
             var result = resultCount.FirstOrDefault(e => e.Id == updateDto.Id);
+            if (result.CheckState == 2) throw new Exception("该凭证已通过审核不能修改!");
             result.Id = updateDto.Id;
             result.CustomerId = updateDto.CustomerId;
             result.CustomerName = updateDto.CustomerName;

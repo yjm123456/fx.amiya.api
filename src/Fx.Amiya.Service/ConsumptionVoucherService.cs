@@ -84,7 +84,8 @@ namespace Fx.Amiya.Service
                     UpdateDate = e.UpdateDate,
                     ConsumptionVoucherCode = e.ConsumptionVoucherCode,
                     Type = e.Type,
-                    EffectiveTime=e.EffectiveTime
+                    EffectiveTime=e.EffectiveTime,
+                    Remark=e.Remark
                 }).SingleOrDefault();
             }
             catch (Exception ex)

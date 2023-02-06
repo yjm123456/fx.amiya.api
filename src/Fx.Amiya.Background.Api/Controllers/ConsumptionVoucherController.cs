@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.ConsumptionVoucher;
 using Fx.Amiya.Dto.ConsumptionVoucher;
+using Fx.Amiya.Dto.MiniProgramSendMessage;
 using Fx.Amiya.IService;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
@@ -21,14 +22,15 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class ConsumptionVoucherController : ControllerBase
     {
         private readonly IConsumptionVoucherService consumptionVoucherService;
-        private readonly  ICustomerService customerService;
+        private readonly ICustomerService customerService;
         private readonly ICustomerConsumptionVoucherService customerConsumptionVoucherService;
-
-        public ConsumptionVoucherController(IConsumptionVoucherService consumptionVoucherService, ICustomerService customerService, ICustomerConsumptionVoucherService customerConsumptionVoucherService)
+        private readonly IMiniProgramTemplateMessageSendService miniProgramTemplateMessageSendService;
+        public ConsumptionVoucherController(IConsumptionVoucherService consumptionVoucherService, ICustomerService customerService, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IMiniProgramTemplateMessageSendService miniProgramTemplateMessageSendService)
         {
             this.consumptionVoucherService = consumptionVoucherService;
             this.customerService = customerService;
             this.customerConsumptionVoucherService = customerConsumptionVoucherService;
+            this.miniProgramTemplateMessageSendService = miniProgramTemplateMessageSendService;
         }
 
         /// <summary>
@@ -81,11 +83,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 IsValid = true,
                 CreateDate = DateTime.Now,
                 ConsumptionVoucherCode = add.ConsumptionVoucherCode,
-                Remark=add.Remark,
-                IsNeedMinPrice=add.IsNeedMinPrice,
-                MinPrice=add.MinPrice,
-                IsMemberVoucher=add.IsMemberVoucher,
-                MemberRankCode=add.MemberRankCode
+                Remark = add.Remark,
+                IsNeedMinPrice = add.IsNeedMinPrice,
+                MinPrice = add.MinPrice,
+                IsMemberVoucher = add.IsMemberVoucher,
+                MemberRankCode = add.MemberRankCode
             };
             await consumptionVoucherService.AddAsync(addConsumptionVoucherDto);
             return ResultData.Success();
@@ -127,12 +129,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 TypeText = c.TypeText,
                 IsValid = c.IsValid,
                 ConsumptionVoucherCode = c.ConsumptionVoucherCode,
-                Remark=c.Remark,
-                IsNeedMinPrice=c.IsNeedMinPrice,
-                MinPrice=c.MinPrice,
-                EffectiveTime=c.EffectiveTime,
-                IsMemberVoucher=c.IsMemberVoucher,
-                MemberRankCode=c.MemberRankCode
+                Remark = c.Remark,
+                IsNeedMinPrice = c.IsNeedMinPrice,
+                MinPrice = c.MinPrice,
+                EffectiveTime = c.EffectiveTime,
+                IsMemberVoucher = c.IsMemberVoucher,
+                MemberRankCode = c.MemberRankCode
             });
             return ResultData<FxPageInfo<ConsumptionVoucherInfoListVo>>.Success().AddData("consumptionVoucherInfoList", fxPageInfo);
         }
@@ -186,9 +188,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Remark = updateConsumption.Remark,
                 IsNeedMinPrice = updateConsumption.IsNeedMinPrice,
                 MinPrice = updateConsumption.MinPrice,
-                EffectiveTime= updateConsumption.EffectiveTime,
-                IsMemberVoucher=updateConsumption.IsMemberVoucher,
-                MemberRankCode=updateConsumption.MemberRankCode
+                EffectiveTime = updateConsumption.EffectiveTime,
+                IsMemberVoucher = updateConsumption.IsMemberVoucher,
+                MemberRankCode = updateConsumption.MemberRankCode
             };
             await consumptionVoucherService.UpdateConsumptionVoucherAsync(updateConsumptionVoucherDto);
             return ResultData.Success();
@@ -200,8 +202,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="code"></param>
         /// <returns></returns>
         [HttpPost("sendVoucher")]
-        public async Task<ResultData> SendVoucher(SendVoucherVo send) {
-            var voucher =await consumptionVoucherService.GetConsumptionVoucherByCodeAsync(send.VoucherCode);
+        public async Task<ResultData> SendVoucher(SendVoucherVo send)
+        {
+            var voucher = await consumptionVoucherService.GetConsumptionVoucherByCodeAsync(send.VoucherCode);
             if (voucher == null) throw new Exception("抵用券编码错误");
             var effictime = voucher.EffectiveTime;
             AddConsumptionVoucherDto addConsumptionVoucherDto = new AddConsumptionVoucherDto();
@@ -211,6 +214,26 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.Source = 4;
             addDto.ExpireDate = DateTime.Now.AddDays(effictime.Value);
             await customerConsumptionVoucherService.AddAsyn(addDto);
+            SendVoucherMessageDto sendVoucherMessageDto = new SendVoucherMessageDto();
+            sendVoucherMessageDto.CustomerId = send.CustomerId;
+            sendVoucherMessageDto.VoucherName = voucher.Name;
+            switch (voucher.Type)
+            {
+                case 0:
+                    sendVoucherMessageDto.DeductMoney = $"{voucher.DeductMoney}元抵用券";
+                    break;
+                case 4:
+                    sendVoucherMessageDto.DeductMoney = $"{voucher.DeductMoney}折抵用券";
+                    break;
+                default:
+                    sendVoucherMessageDto.DeductMoney = voucher.Name;
+                    break;
+            };
+            sendVoucherMessageDto.UseageRange = voucher.Remark;
+            sendVoucherMessageDto.ExpireDate = DateTime.Now.AddDays(voucher.EffectiveTime.Value).ToString("yyyy-MM-dd");
+            sendVoucherMessageDto.Remark = "抵用券已到账";
+            //手动发送抵用券成功后给客户发送消息
+            await miniProgramTemplateMessageSendService.SendVoucherMessageAsync(sendVoucherMessageDto);
             return ResultData.Success();
         }
     }
