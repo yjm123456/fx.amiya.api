@@ -194,6 +194,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                   UpdateDate = d.UpdateDate,
                                                   DeleteDate = d.DeleteDate,
                                                   Valid = d.Valid,
+                                                  IsCreateBill = d.IsCreateBill,
+                                                  BillId = d.BillId,
                                                   ReturnBackPrice = d.TotalDealPrice * d.ReturnBackPricePercent / 100,
                                                   SystemUpdatePrice = d.TotalDealPrice * d.SystemUpdatePricePercent / 100,
                                                   ReturnBackTotalPrice = (d.SystemUpdatePricePercent + d.ReturnBackPricePercent) * d.TotalDealPrice / 100
@@ -259,7 +261,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                               CreateDate = d.CreateDate,
                                               ReturnBackPrice = d.TotalDealPrice * d.ReturnBackPricePercent / 100,
                                               SystemUpdatePrice = d.TotalDealPrice * d.SystemUpdatePricePercent / 100,
-                                              ReturnBackTotalPrice = (d.SystemUpdatePricePercent + d.ReturnBackPricePercent) * d.TotalDealPrice / 100
+                                              ReturnBackTotalPrice = (d.SystemUpdatePricePercent + d.ReturnBackPricePercent) * d.TotalDealPrice / 100,
+                                              IsCreateBill = d.IsCreateBill,
+                                              BillId = d.BillId,
                                           };
 
             res = reconciliationDocuments.ToList();

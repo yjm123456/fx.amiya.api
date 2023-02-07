@@ -1810,11 +1810,12 @@ CREATE TABLE `amiyadb`.`tbl_uncheck_order` (
 
 
 -----------------------------------------------余建明 2023/2/02 BEGIN--------------------------------------------
+--新增票据表
 CREATE TABLE `amiyadb`.`tbl_bill` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `hospital_id` INT UNSIGNED NOT NULL,
   `bill_price` DECIMAL(12,2) NOT NULL,
-  `tax_rate` DECIMAL(3) NOT NULL,
+  `tax_rate` DECIMAL(3,2) NOT NULL,
   `tax_price` DECIMAL(12,2) NOT NULL,
   `not_in_tax_price` DECIMAL(12,2) NOT NULL,
   `other_price` DECIMAL(12,2) NULL,

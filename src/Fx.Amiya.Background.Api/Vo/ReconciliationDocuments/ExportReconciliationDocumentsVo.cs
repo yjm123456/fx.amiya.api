@@ -85,6 +85,16 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         [Description("对账状态")]
         public string ReconciliationStateText { get; set; }
         /// <summary>
+        /// 是否开票
+        /// </summary>
+        [Description("是否开票")]
+        public bool IsCreateBill { get; set; }
+        /// <summary>
+        /// 票据编号
+        /// </summary>
+        [Description("票据编号")]
+        public string BillId { get; set; }
+        /// <summary>
         /// 创建时间
         /// </summary>
         [Description("创建时间")]

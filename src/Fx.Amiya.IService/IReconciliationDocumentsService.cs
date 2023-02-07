@@ -56,6 +56,13 @@ namespace Fx.Amiya.IService
         Task<ReconciliationDocumentsDto> GetByIdAsync(string id);
 
         /// <summary>
+        /// 根据发票号获取对账单
+        /// </summary>
+        /// <param name="billId"></param>
+        /// <returns></returns>
+        Task<List<ReconciliationDocumentsDto>> GetByBillIdListAsync(string billId);
+
+        /// <summary>
         /// 根据对账单编号获取累计审核服务费
         /// </summary>
         /// <param name="id"></param>
@@ -79,11 +86,19 @@ namespace Fx.Amiya.IService
         Task TagReconciliationStateAsync(List<string> idList, int reconciliationState, string questionReason);
 
         /// <summary>
+        /// 对账单批量开票/作废发票
+        /// </summary>
+        /// <param name="reconciliationDocumentsCreateBillDto"></param>
+        /// <returns></returns>
+        Task ReconciliationDocumentsCreateBillAsync(ReconciliationDocumentsCreateBillDto reconciliationDocumentsCreateBillDto);
+
+        /// <summary>
         /// 对账单批量回款
         /// </summary>
         /// <param name="reconciliationDocumentsReturnBackPriceDto"></param>
         /// <returns></returns>
         Task TagReconciliationStateAsync(ReconciliationDocumentsReturnBackPriceDto reconciliationDocumentsReturnBackPriceDto);
+
 
         /// <summary>
         /// 删除

@@ -17,6 +17,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<CustomerInfo> CustomerInfo { get; set; }
         public virtual DbSet<HospitalCustomerInfo> HospitalCustomerInfo { get; set; }
         public virtual DbSet<WxMiniUserInfo> WxMiniUserInfo { get; set; }
+        public virtual DbSet<Bill> Bill { get; set; }
         public virtual DbSet<AmiyaWareHouse> AmiyaWareHouse { get; set; }
         public virtual DbSet<ShootingAndClip> ShootingAndClip { get; set; }
         public virtual DbSet<AmiyaLessonApply> AmiyaLessonApply { get; set; }
@@ -301,6 +302,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new OrderWriteOffInfoConfiguration());
             modelBuilder.ApplyConfiguration(new ContentPlatformOrderConfiguration());
             modelBuilder.ApplyConfiguration(new ContentPlatformOrderSendConfiguration());
+            modelBuilder.ApplyConfiguration(new BillConfiguration());
             modelBuilder.ApplyConfiguration(new TikTokOrderInfoConfiguration());
             modelBuilder.ApplyConfiguration(new TikTokUserInfoConfiguration());
             modelBuilder.ApplyConfiguration(new GrowthPointsAccountConfiguration());

@@ -25,8 +25,10 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.TotalDealPrice).HasColumnName("total_deal_price").HasColumnType("decimal(12,2)").IsRequired(false);
             builder.Property(e => e.ReturnBackPricePercent).HasColumnName("return_back_price_percent").HasColumnType("decimal(4,2)").IsRequired(false);
             builder.Property(e => e.SystemUpdatePricePercent).HasColumnName("system_update_price_percent").HasColumnType("decimal(4,2)").IsRequired(false);
-
             builder.Property(e => e.QuestionReason).HasColumnName("question_reason").HasColumnType("varchar(1000)").IsRequired(false);
+            builder.Property(e => e.IsCreateBill).HasColumnName("is_create_bill").HasColumnType("bit(1)").IsRequired();
+            builder.Property(e => e.BillId).HasColumnName("bill_id").HasColumnType("varchar(50)").IsRequired(false);
+
             builder.Property(e => e.Remark).HasColumnName("remark").HasColumnType("varchar(1000)").IsRequired(false);
             builder.Property(e => e.ReconciliationState).HasColumnName("reconciliation_state").HasColumnType("int").IsRequired();
             builder.Property(e => e.CreateBy).HasColumnName("create_by").HasColumnType("int").IsRequired();

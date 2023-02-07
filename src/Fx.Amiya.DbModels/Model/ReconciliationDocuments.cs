@@ -61,6 +61,14 @@ namespace Fx.Amiya.DbModels.Model
         /// (院方账户)创建人
         /// </summary>
         public int CreateBy { get; set; }
+        /// <summary>
+        /// 是否开票
+        /// </summary>
+        public bool IsCreateBill { get; set; }
+        /// <summary>
+        /// 票据编号
+        /// </summary>
+        public string BillId { get; set; }
 
         public HospitalInfo HospitalInfo { get; set; }
 

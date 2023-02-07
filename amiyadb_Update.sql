@@ -1859,6 +1859,35 @@ ADD COLUMN `is_oldcustomer` BIT(1) NOT NULL AFTER `order_price`;
 -----------------------------余建明 2023/01/16 END -----------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
+-----------------------------------------------余建明 2023/2/02 BEGIN--------------------------------------------
+--票据表关联公司表
+ALTER TABLE `amiyadb`.`tbl_bill` 
+ADD INDEX `fk_bill_companyinfo_idx` (`collecting_company_id` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`tbl_bill` 
+ADD CONSTRAINT `fk_bill_companyinfo`
+  FOREIGN KEY (`collecting_company_id`)
+  REFERENCES `amiyadb`.`tbl_company_base_info` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+  --票据表新增回款金额
+  ALTER TABLE `amiyadb`.`tbl_bill` 
+ADD COLUMN `return_back_price` DECIMAL(12,2) NULL AFTER `return_back_state`;
+
+--对账单表加入是否开票以及对应票据id列
+ALTER TABLE `amiyadb`.`tbl_reconciliation_documents` 
+ADD COLUMN `is_create_bill` BIT(1) NOT NULL DEFAULT 0 AFTER `remark`,
+ADD COLUMN `bill_id` VARCHAR(50) NULL AFTER `is_create_bill`;
+
+--票据表更改主键类型
+ALTER TABLE `amiyadb`.`tbl_bill` 
+CHANGE COLUMN `id` `id` VARCHAR(50) NOT NULL ;
+
+
+
+-----------------------------------------------余建明 2023/2/02 END--------------------------------------------
+
 
 
 

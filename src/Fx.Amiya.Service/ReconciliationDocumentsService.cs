@@ -104,6 +104,8 @@ namespace Fx.Amiya.Service
                                                   CreateDate = d.CreateDate,
                                                   UpdateDate = d.UpdateDate,
                                                   DeleteDate = d.DeleteDate,
+                                                  IsCreateBill = d.IsCreateBill,
+                                                  BillId = d.BillId,
                                                   Valid = d.Valid,
                                               };
 
@@ -168,6 +170,8 @@ namespace Fx.Amiya.Service
                                                   CreateDate = d.CreateDate,
                                                   UpdateDate = d.UpdateDate,
                                                   DeleteDate = d.DeleteDate,
+                                                  IsCreateBill = d.IsCreateBill,
+                                                  BillId = d.BillId,
                                                   Valid = d.Valid,
                                               };
 
@@ -230,7 +234,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var reconciliationDocuments = await dalReconciliationDocuments.GetAll().Include(x=>x.HospitalInfo).SingleOrDefaultAsync(e => e.Id == id);
+                var reconciliationDocuments = await dalReconciliationDocuments.GetAll().Include(x => x.HospitalInfo).SingleOrDefaultAsync(e => e.Id == id);
                 if (reconciliationDocuments == null)
                 {
                     throw new Exception("对账编号错误！");
@@ -251,6 +255,40 @@ namespace Fx.Amiya.Service
                 reconciliationDocumentsDto.ReconciliationState = reconciliationDocuments.ReconciliationState;
                 reconciliationDocumentsDto.CreateBy = reconciliationDocuments.CreateBy;
                 return reconciliationDocumentsDto;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public async Task<List<ReconciliationDocumentsDto>> GetByBillIdListAsync(string billId)
+        {
+            try
+            {
+                var reconciliationDocumentIdList = await dalReconciliationDocuments.GetAll().Where(x => x.BillId == billId).ToListAsync();
+                List<ReconciliationDocumentsDto> reconciliationDocumentsDtos = new List<ReconciliationDocumentsDto>();
+                foreach (var x in reconciliationDocumentIdList)
+                {
+                    ReconciliationDocumentsDto reconciliationDocumentsDto = new ReconciliationDocumentsDto();
+                    reconciliationDocumentsDto.Id = x.Id;
+                    reconciliationDocumentsDto.HospitalId = x.HospitalId;
+                    reconciliationDocumentsDto.HospitalName = x.HospitalInfo.Name;
+                    reconciliationDocumentsDto.CustomerName = x.CustomerName;
+                    reconciliationDocumentsDto.CustomerPhone = x.CustomerPhone;
+                    reconciliationDocumentsDto.DealGoods = x.DealGoods;
+                    reconciliationDocumentsDto.DealDate = x.DealDate;
+                    reconciliationDocumentsDto.TotalDealPrice = x.TotalDealPrice;
+                    reconciliationDocumentsDto.ReturnBackPricePercent = x.ReturnBackPricePercent;
+                    reconciliationDocumentsDto.SystemUpdatePricePercent = x.SystemUpdatePricePercent;
+                    reconciliationDocumentsDto.Remark = x.Remark;
+                    reconciliationDocumentsDto.ReconciliationState = x.ReconciliationState;
+                    reconciliationDocumentsDto.CreateBy = x.CreateBy;
+                    reconciliationDocumentsDtos.Add(reconciliationDocumentsDto);
+                }
+                return reconciliationDocumentsDtos;
             }
             catch (Exception ex)
             {
@@ -347,6 +385,30 @@ namespace Fx.Amiya.Service
             }
         }
 
+        /// <summary>
+        /// 批量开票完成/作废发票
+        /// </summary>
+        /// <param name="reconciliationDocumentsReturnBackPriceDto"></param>
+        /// <returns></returns>
+        public async Task ReconciliationDocumentsCreateBillAsync(ReconciliationDocumentsCreateBillDto reconciliationDocumentsCreateBillDto)
+        {
+            try
+            {
+                foreach (var x in reconciliationDocumentsCreateBillDto.ReconciliationDocumentsIdList)
+                {
+
+                    var reconciliationDocuments = await dalReconciliationDocuments.GetAll().Where(e => e.Id == x).FirstOrDefaultAsync();
+                    reconciliationDocuments.IsCreateBill = reconciliationDocumentsCreateBillDto.IsCreateBill;
+                    reconciliationDocuments.BillId = reconciliationDocumentsCreateBillDto.BillId;
+                    await dalReconciliationDocuments.UpdateAsync(reconciliationDocuments, true);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         /// <summary>
         /// 回款完成
@@ -355,7 +417,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task TagReconciliationStateAsync(ReconciliationDocumentsReturnBackPriceDto reconciliationDocumentsReturnBackPriceDto)
         {
-            _unitOfWork.BeginTransaction();
+            //_unitOfWork.BeginTransaction();
             try
             {
 
@@ -420,13 +482,13 @@ namespace Fx.Amiya.Service
                     await recommandDocumentSettleService.UpdateIsRerturnBackAsync(k.Id);
                 }
 
-                _unitOfWork.Commit();
+                //_unitOfWork.Commit();
 
             }
 
             catch (Exception ex)
             {
-                _unitOfWork.RollBack();
+                //_unitOfWork.RollBack();
                 throw ex;
             }
         }
@@ -476,8 +538,8 @@ namespace Fx.Amiya.Service
             var record = await recommandDocumentSettleService.GetAllAsync(startDate, endDate, isSettle, accountType, keyword);
 
             FxPageInfo<RecommandDocumentSettleDto> fxPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();
-            fxPageInfo.TotalCount =  record.Count();
-            fxPageInfo.List =  record.OrderByDescending(x => x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToList(); ;
+            fxPageInfo.TotalCount = record.Count();
+            fxPageInfo.List = record.OrderByDescending(x => x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToList(); ;
             foreach (var x in fxPageInfo.List)
             {
                 if (x.BelongEmpId.HasValue)
@@ -516,7 +578,7 @@ namespace Fx.Amiya.Service
             }
             var record = await recommandDocumentSettleService.GetAllAsync(startDate, endDate, isSettle, accountType, keyword);
             List<RecommandDocumentSettleDto> resultInfo = new List<RecommandDocumentSettleDto>();
-            resultInfo =  record.ToList();
+            resultInfo = record.ToList();
             foreach (var x in resultInfo)
             {
                 if (x.BelongEmpId.HasValue)

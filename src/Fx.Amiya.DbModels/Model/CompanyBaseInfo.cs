@@ -36,5 +36,6 @@ namespace Fx.Amiya.DbModels.Model
         /// 联系邮箱
         /// </summary>
         public string ContactEmail { get; set; }
+        public List<Bill> BillList { get; set; }
     }
 }

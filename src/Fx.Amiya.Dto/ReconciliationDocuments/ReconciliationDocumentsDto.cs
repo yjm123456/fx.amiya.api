@@ -71,6 +71,14 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// 创建人名
         /// </summary>
         public string CreateByName { get; set; }
+        /// <summary>
+        /// 是否开票
+        /// </summary>
+        public bool IsCreateBill { get; set; }
+        /// <summary>
+        /// 票据编号
+        /// </summary>
+        public string BillId { get; set; }
 
     }
 }

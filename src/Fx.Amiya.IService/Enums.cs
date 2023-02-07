@@ -756,6 +756,20 @@ namespace Fx.Amiya.IService
         Refunding = 3
     }
 
+    /// <summary>
+    /// 标签分类
+    /// </summary>
+    public enum TagCategory
+    {
+        /// <summary>
+        /// 用户标签
+        /// </summary>
+        UserTag = 0,
+        /// <summary>
+        /// 商品标签
+        /// </summary>
+        GoodsTag = 1
+    }
 
     /// <summary>
     /// 财务对账单状态
@@ -783,18 +797,38 @@ namespace Fx.Amiya.IService
         /// </summary>
         ReturnBackPriceSuccessful=4,
     }
-    /// <summary>
-    /// 标签分类
-    /// </summary>
-    public enum TagCategory { 
-        /// <summary>
-        /// 用户标签
-        /// </summary>
-        UserTag=0,
-        /// <summary>
-        /// 商品标签
-        /// </summary>
-        GoodsTag=1
-    }
 
+
+    /// <summary>
+    /// 票据类型
+    /// </summary>
+    public enum BillTypeTextEnum
+    {
+        /// <summary>
+        /// 医美票据
+        /// </summary>
+        BeautyClinic = 0,
+        /// <summary>
+        /// 其他票据
+        /// </summary>
+        Other = 1,
+    }
+    /// <summary>
+    /// 票据回款状态
+    /// </summary>
+    public enum BillReturnBackStateTextEnum
+    {
+        /// <summary>
+        /// 未回款
+        /// </summary>
+        UnReturnBack = 0,
+        /// <summary>
+        /// 回款中
+        /// </summary>
+        ReturnBacking = 1,
+        /// <summary>
+        /// 已回款
+        /// </summary>
+        ReturnBackSuccessful = 2,
+    }
 }

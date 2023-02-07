@@ -1380,5 +1380,53 @@ namespace Fx.Amiya.Service
             }
             return typeText;
         }
+
+        /// <summary>
+        /// 票据类型
+        /// </summary>
+        /// <param name="reconciliationDocumentsState"></param>
+        /// <returns></returns>
+        public static string GetBillTypeText(int BillType)
+        {
+            string typeText = "";
+            switch (BillType)
+            {
+                case 0:
+                    typeText = "医美票据";
+                    break;
+
+                case 1:
+                    typeText = "其他票据";
+                    break;
+
+            }
+            return typeText;
+        }
+
+        /// <summary>
+        /// 票据回款状态
+        /// </summary>
+        /// <param name="reconciliationDocumentsState"></param>
+        /// <returns></returns>
+        public static string GetBillReturnBackStateText(int BillReturnBackState)
+        {
+            string typeText = "";
+            switch (BillReturnBackState)
+            {
+                case 0:
+                    typeText = "未回款";
+                    break;
+
+                case 1:
+                    typeText = "回款中";
+                    break;
+
+                case 2:
+                    typeText = "已回款";
+                    break;
+
+            }
+            return typeText;
+        }
     }
 }

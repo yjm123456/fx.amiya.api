@@ -19,5 +19,16 @@ namespace jos_sdk_net.Util
             var nextNumber = $"{DateTime.Now.ToString("yyMMddhhmmss")}{orderNumbers.ToString().PadLeft(4, '0')}";
             return nextNumber;
         }
+        /// <summary>
+        /// 生成发票单号
+        /// </summary>
+        /// <returns></returns>
+        public static string GetBillNextNumber()
+        {
+            Random random = new Random();
+            long orderNumbers = random.Next(1, 10000);
+            var nextNumber = $"{DateTime.Now.ToString("yyMMddh")}{orderNumbers.ToString().PadLeft(4, '0')}";
+            return nextNumber;
+        }
     }
 }

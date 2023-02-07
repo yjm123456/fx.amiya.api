@@ -66,5 +66,7 @@ namespace Fx.Amiya.DbModels.Model
         public List<RecommandDocumentSettle> RecommandDocumentSettleList { get; set; }
 
         public List<UnCheckOrder> UnCheckOrderList { get; set; }
+
+        public List<Bill> BillList { get; set; }
     }
 }
