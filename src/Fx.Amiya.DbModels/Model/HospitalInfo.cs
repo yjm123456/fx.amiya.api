@@ -127,6 +127,6 @@ namespace Fx.Amiya.DbModels.Model
         public List<HospitalImprovePlanRemark> HospitalImprovePlanRemarkList { get; set; }
 
         public List<Bill> BillList { get; set; }
-
+        public List<BillReturnBackPriceData> BillReturnBackPriceDataList { get; set; }
     }
 }

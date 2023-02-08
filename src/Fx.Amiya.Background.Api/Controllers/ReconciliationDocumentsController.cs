@@ -160,16 +160,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="endDealDate">成交时间（结束）</param>
         /// <param name="keyword">关键词（客户姓名，手机号）</param>
         /// <param name="hospitalId">医院id（空值查询所有医院）</param>
+        /// <param name="isCreateBill">是否开票</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<FxPageInfo<ReconciliationDocumentsVo>>> GetListAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ReconciliationDocumentsVo>>> GetListAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId, bool? isCreateBill, int pageNum, int pageSize)
         {
             try
             {
-                var q = await reconciliationDocumentsService.GetListWithPageAsync(returnBackPricePercent, reconciliationState, startDate, endDate, startDealDate, endDealDate, keyword, hospitalId, pageNum, pageSize);
+                var q = await reconciliationDocumentsService.GetListWithPageAsync(returnBackPricePercent, reconciliationState, startDate, endDate, startDealDate, endDealDate, keyword, hospitalId, isCreateBill, pageNum, pageSize);
 
                 var reconciliationDocuments = from d in q.List
                                               select new ReconciliationDocumentsVo
@@ -196,9 +197,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                   Valid = d.Valid,
                                                   IsCreateBill = d.IsCreateBill,
                                                   BillId = d.BillId,
-                                                  ReturnBackPrice = d.TotalDealPrice * d.ReturnBackPricePercent / 100,
-                                                  SystemUpdatePrice = d.TotalDealPrice * d.SystemUpdatePricePercent / 100,
-                                                  ReturnBackTotalPrice = (d.SystemUpdatePricePercent + d.ReturnBackPricePercent) * d.TotalDealPrice / 100
+                                                  ReturnBackPrice = Math.Round(d.TotalDealPrice.Value * d.ReturnBackPricePercent.Value / 100, 2),
+                                                  SystemUpdatePrice = Math.Round(d.TotalDealPrice.Value * d.SystemUpdatePricePercent.Value / 100, 2),
+                                                  ReturnBackTotalPrice = Math.Round((d.SystemUpdatePricePercent.Value + d.ReturnBackPricePercent.Value) * d.TotalDealPrice.Value / 100, 2)
                                               };
 
                 FxPageInfo<ReconciliationDocumentsVo> reconciliationDocumentsResult = new FxPageInfo<ReconciliationDocumentsVo>();
@@ -259,9 +260,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                               ReconciliationStateText = d.ReconciliationStateText,
                                               CreateByName = d.CreateByName,
                                               CreateDate = d.CreateDate,
-                                              ReturnBackPrice = d.TotalDealPrice * d.ReturnBackPricePercent / 100,
-                                              SystemUpdatePrice = d.TotalDealPrice * d.SystemUpdatePricePercent / 100,
-                                              ReturnBackTotalPrice = (d.SystemUpdatePricePercent + d.ReturnBackPricePercent) * d.TotalDealPrice / 100,
+                                              ReturnBackPrice = Math.Round(d.TotalDealPrice.Value * d.ReturnBackPricePercent.Value / 100, 2),
+                                              SystemUpdatePrice = Math.Round(d.TotalDealPrice.Value * d.SystemUpdatePricePercent.Value / 100, 2),
+                                              ReturnBackTotalPrice = Math.Round((d.SystemUpdatePricePercent.Value + d.ReturnBackPricePercent.Value) * d.TotalDealPrice.Value / 100, 2),
                                               IsCreateBill = d.IsCreateBill,
                                               BillId = d.BillId,
                                           };
@@ -509,13 +510,13 @@ namespace Fx.Amiya.Background.Api.Controllers
                     for (int x = 2; x <= rowCount; x++)
                     {
                         AddReconciliationDocumentsDto addDto = new AddReconciliationDocumentsDto();
-                        if (!string.IsNullOrEmpty(worksheet.Cells[x, 1].Value.ToString()))
+                        if (worksheet.Cells[x, 1].Value != null)
                         {
                             addDto.CustomerName = worksheet.Cells[x, 1].Value.ToString();
                         }
                         else
                         {
-                            if (string.IsNullOrEmpty(worksheet.Cells[x, 2].Value.ToString()))
+                            if (worksheet.Cells[x, 2].Value == null)
                             {
                                 break;
                             }

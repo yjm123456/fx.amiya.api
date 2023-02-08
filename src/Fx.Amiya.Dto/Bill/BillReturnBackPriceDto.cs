@@ -14,5 +14,6 @@ namespace Fx.Amiya.Dto.Bill
         public DateTime ReturnBackDate { get; set; }
 
         public int CreateBy { get; set; }
+        public string Remark { get; set; }
     }
 }

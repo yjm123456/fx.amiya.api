@@ -1597,7 +1597,7 @@ namespace Fx.Amiya.Service
                             {
                                 dealInfoCheck.CheckPrice = input.CheckPrice;
                             }
-                            if (dealInfoCheck.SettlePrice.HasValue)
+                            if (dealInfoUpdate.SettlePrice.HasValue)
                             {
                                 dealInfoCheck.SettlePrice = input.SettlePrice + dealInfoUpdate.SettlePrice;
                             }
@@ -1634,7 +1634,7 @@ namespace Fx.Amiya.Service
                 dealInfoCheck.ReconciliationDocumentsId = input.ReconciliationDocumentsId;
                 await _contentPlatFormOrderDalService.CheckAsync(dealInfoCheck);
 
-                //对账单回款表插入数据
+                //对账单审核记录表插入数据
                 AddRecommandDocumentSettleDto addRecommandDocumentSettleDto = new AddRecommandDocumentSettleDto();
                 addRecommandDocumentSettleDto.RecommandDocumentId = input.ReconciliationDocumentsId;
                 addRecommandDocumentSettleDto.OrderId = input.Id;

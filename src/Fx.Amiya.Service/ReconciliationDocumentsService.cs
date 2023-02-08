@@ -56,7 +56,7 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<ReconciliationDocumentsDto>> GetListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ReconciliationDocumentsDto>> GetListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId, bool? isCreateBill, int pageNum, int pageSize)
         {
             try
             {
@@ -81,6 +81,7 @@ namespace Fx.Amiya.Service
                                              && (!returnBackPricePercent.HasValue || d.ReturnBackPricePercent == returnBackPricePercent.Value)
                                              && (!reconciliationState.HasValue || d.ReconciliationState == reconciliationState.Value)
                                              && (!hospitalId.HasValue || d.HospitalId == hospitalId)
+                                             && (!isCreateBill.HasValue || d.IsCreateBill == isCreateBill)
                                              && (!startDate.HasValue && !endDate.HasValue || d.CreateDate >= startrq.Date && d.CreateDate < endrq.Date)
                                              && d.Valid
                                               select new ReconciliationDocumentsDto
@@ -250,7 +251,10 @@ namespace Fx.Amiya.Service
                 reconciliationDocumentsDto.DealDate = reconciliationDocuments.DealDate;
                 reconciliationDocumentsDto.TotalDealPrice = reconciliationDocuments.TotalDealPrice;
                 reconciliationDocumentsDto.ReturnBackPricePercent = reconciliationDocuments.ReturnBackPricePercent;
+                reconciliationDocumentsDto.ReturnBackPrice = Math.Round(reconciliationDocuments.TotalDealPrice.Value * reconciliationDocuments.ReturnBackPricePercent.Value / 100, 2);
                 reconciliationDocumentsDto.SystemUpdatePricePercent = reconciliationDocuments.SystemUpdatePricePercent;
+                reconciliationDocumentsDto.SystemUpdatePrice = Math.Round(reconciliationDocuments.TotalDealPrice.Value * reconciliationDocuments.SystemUpdatePricePercent.Value / 100, 2);
+                reconciliationDocumentsDto.TotalReconciliationDocumentsPrice = Math.Round(reconciliationDocumentsDto.ReturnBackPrice.Value + reconciliationDocumentsDto.SystemUpdatePrice.Value);
                 reconciliationDocumentsDto.Remark = reconciliationDocuments.Remark;
                 reconciliationDocumentsDto.ReconciliationState = reconciliationDocuments.ReconciliationState;
                 reconciliationDocumentsDto.CreateBy = reconciliationDocuments.CreateBy;
@@ -268,7 +272,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var reconciliationDocumentIdList = await dalReconciliationDocuments.GetAll().Where(x => x.BillId == billId).ToListAsync();
+                var reconciliationDocumentIdList = await dalReconciliationDocuments.GetAll().Include(x => x.HospitalInfo).Where(x => x.BillId == billId).ToListAsync();
                 List<ReconciliationDocumentsDto> reconciliationDocumentsDtos = new List<ReconciliationDocumentsDto>();
                 foreach (var x in reconciliationDocumentIdList)
                 {
@@ -282,7 +286,10 @@ namespace Fx.Amiya.Service
                     reconciliationDocumentsDto.DealDate = x.DealDate;
                     reconciliationDocumentsDto.TotalDealPrice = x.TotalDealPrice;
                     reconciliationDocumentsDto.ReturnBackPricePercent = x.ReturnBackPricePercent;
+                    reconciliationDocumentsDto.ReturnBackPrice = Math.Round(x.TotalDealPrice.Value * x.ReturnBackPricePercent.Value / 100, 2);
                     reconciliationDocumentsDto.SystemUpdatePricePercent = x.SystemUpdatePricePercent;
+                    reconciliationDocumentsDto.SystemUpdatePrice = Math.Round(x.TotalDealPrice.Value * x.SystemUpdatePricePercent.Value / 100, 2);
+                    reconciliationDocumentsDto.TotalReconciliationDocumentsPrice = Math.Round(reconciliationDocumentsDto.ReturnBackPrice.Value + reconciliationDocumentsDto.SystemUpdatePrice.Value);
                     reconciliationDocumentsDto.Remark = x.Remark;
                     reconciliationDocumentsDto.ReconciliationState = x.ReconciliationState;
                     reconciliationDocumentsDto.CreateBy = x.CreateBy;

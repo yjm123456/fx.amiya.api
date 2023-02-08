@@ -21,14 +21,17 @@ namespace Fx.Amiya.Service
         private readonly IDalBill dalBill;
         private readonly IUnitOfWork unitOfWork;
         private IReconciliationDocumentsService reconciliationDocumentsService;
+        private IBillReturnBackPriceDataService billReturnBackPriceDataService;
 
         public BillService(IDalBill dalBill,
             IReconciliationDocumentsService reconciliationDocumentsService,
+            IBillReturnBackPriceDataService billReturnBackPriceDataService,
             IUnitOfWork unitOfWork)
         {
             this.dalBill = dalBill;
             this.unitOfWork = unitOfWork;
             this.reconciliationDocumentsService = reconciliationDocumentsService;
+            this.billReturnBackPriceDataService = billReturnBackPriceDataService;
         }
 
 
@@ -82,7 +85,7 @@ namespace Fx.Amiya.Service
                             CreateByEmployeeName = d.AmiyaEmployee.Name,
                             UpdateDate = d.UpdateDate,
                             Valid = d.Valid,
-                            ValidText = d.Valid == true ? "作废" : "正常",
+                            ValidText = d.Valid == true ? "正常" : "作废",
                             DeleteDate = d.DeleteDate,
                         };
             FxPageInfo<BillDto> billPageInfo = new FxPageInfo<BillDto>();
@@ -141,7 +144,7 @@ namespace Fx.Amiya.Service
 
         public async Task<BillDto> GetByIdAsync(string id)
         {
-            var result = await dalBill.GetAll().Where(x => x.Id == id).FirstOrDefaultAsync();
+            var result = await dalBill.GetAll().Include(x => x.HospitalInfo).Include(x => x.AmiyaEmployee).Include(x => x.CompanyBaseInfo).Where(x => x.Id == id).FirstOrDefaultAsync();
             if (result == null)
             {
                 return new BillDto();
@@ -171,7 +174,7 @@ namespace Fx.Amiya.Service
             returnResult.CreateByEmployeeName = result.AmiyaEmployee.Name;
             returnResult.UpdateDate = result.UpdateDate;
             returnResult.Valid = result.Valid;
-            returnResult.ValidText = result.Valid == true ? "作废" : "正常";
+            returnResult.ValidText = result.Valid == true ? "正常" : "作废";
             returnResult.DeleteDate = result.DeleteDate;
 
             var reconciliationDocuments = await reconciliationDocumentsService.GetByBillIdListAsync(id);
@@ -254,7 +257,12 @@ namespace Fx.Amiya.Service
                 if (result.ReturnBackPrice.HasValue)
                 {
                     result.ReturnBackPrice += updateDto.ReturnBackPrice;
-                    if (result.ReturnBackPrice == result.BillPrice)
+                    decimal billTotalPrice = result.BillPrice;
+                    if (result.OtherPrice.HasValue)
+                    {
+                        billTotalPrice += result.OtherPrice.Value;
+                    }
+                    if (result.ReturnBackPrice == billTotalPrice)
                     {
                         result.ReturnBackState = (int)BillReturnBackStateTextEnum.ReturnBackSuccessful;
 
@@ -265,6 +273,10 @@ namespace Fx.Amiya.Service
                         reconciliationDocumentsReturnBackPriceDto.ReconciliationDocumentsIdList = reconciliationDocuments.Select(x => x.Id).ToList();
                         await reconciliationDocumentsService.TagReconciliationStateAsync(reconciliationDocumentsReturnBackPriceDto);
                     }
+                    if (result.ReturnBackPrice > billTotalPrice)
+                    {
+                        throw new Exception("当前回款金额与已回款金额累计（" + result.ReturnBackPrice + "元）不能大于发票金额与其他费用的总和（" + billTotalPrice + "）！");
+                    }
                 }
                 else
                 {
@@ -274,7 +286,18 @@ namespace Fx.Amiya.Service
                 await dalBill.UpdateAsync(result, true);
 
                 //回款记录表插入数据(todo;)
-
+                AddBillReturnBackPriceDataDto addBillReturnBackPriceDataDto = new AddBillReturnBackPriceDataDto();
+                addBillReturnBackPriceDataDto.HospitalId = result.HospitalId;
+                addBillReturnBackPriceDataDto.CompanyId = result.CollectionCompanyId;
+                addBillReturnBackPriceDataDto.BillId = result.Id;
+                addBillReturnBackPriceDataDto.BillPrice = result.BillPrice;
+                addBillReturnBackPriceDataDto.OtherPrice = result.OtherPrice;
+                addBillReturnBackPriceDataDto.ReturnBackPrice = updateDto.ReturnBackPrice;
+                addBillReturnBackPriceDataDto.ReturnBackDate = updateDto.ReturnBackDate;
+                addBillReturnBackPriceDataDto.ReturnBackState = result.ReturnBackState;
+                addBillReturnBackPriceDataDto.CreateBy = updateDto.CreateBy;
+                addBillReturnBackPriceDataDto.Remark = updateDto.Remark;
+                await billReturnBackPriceDataService.AddAsync(addBillReturnBackPriceDataDto);
                 unitOfWork.Commit();
             }
             catch (Exception err)

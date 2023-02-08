@@ -61,8 +61,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                HospitalName = d.HospitalName,
                                BillPrice = d.BillPrice,
                                TaxRate = d.TaxRate,
-                               TaxPrice = d.TaxPrice,
-                               NotInTaxPrice = d.NotInTaxPrice,
+                               TaxPrice = Math.Round(d.TaxPrice, 2),
+                               NotInTaxPrice = Math.Round(d.NotInTaxPrice, 2),
                                OtherPrice = d.OtherPrice,
                                OtherPriceRemark = d.OtherPriceRemark,
                                CollectionCompanyId = d.CollectionCompanyId,
@@ -168,7 +168,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 billVo.BillTypeText = bill.BillTypeText;
                 billVo.CreateBillReason = bill.CreateBillReason;
                 billVo.ReturnBackState = bill.ReturnBackState;
-                billVo.ReturnBackStateText =bill.ReturnBackStateText;
+                billVo.ReturnBackStateText = bill.ReturnBackStateText;
                 billVo.CreateDate = bill.CreateDate;
                 billVo.CreateBy = bill.CreateBy;
                 billVo.CreateByEmployeeName = bill.CreateByEmployeeName;
@@ -189,7 +189,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                     reconciliationDocumentsVo.DealDate = x.DealDate;
                     reconciliationDocumentsVo.TotalDealPrice = x.TotalDealPrice;
                     reconciliationDocumentsVo.ReturnBackPricePercent = x.ReturnBackPricePercent;
+                    reconciliationDocumentsVo.ReturnBackPrice = x.ReturnBackPrice;
                     reconciliationDocumentsVo.SystemUpdatePricePercent = x.SystemUpdatePricePercent;
+                    reconciliationDocumentsVo.SystemUpdatePrice = x.SystemUpdatePrice;
+                    reconciliationDocumentsVo.ReturnBackTotalPrice = x.TotalReconciliationDocumentsPrice;
                     reconciliationDocumentsVo.Remark = x.Remark;
                     reconciliationDocumentsVo.ReconciliationState = x.ReconciliationState;
                     reconciliationDocumentsVo.CreateBy = x.CreateBy;
@@ -218,6 +221,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 UpdateBillDto updateDto = new UpdateBillDto();
+                updateDto.Id = updateVo.Id;
                 updateDto.HospitalId = updateVo.HospitalId;
                 updateDto.BillPrice = updateVo.BillPrice;
                 updateDto.TaxRate = updateVo.TaxRate;
@@ -266,9 +270,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="billReturnBackPriceVo"></param>
         /// <returns></returns>
-        [HttpPut("{returnBakcPriceAsync}")]
+        [HttpPut("returnBakcPriceAsync")]
         [FxInternalAuthorize]
-        public async Task<ResultData> ReturnBakcPriceAsync(BillReturnBackPriceVo billReturnBackPriceVo)
+        public async Task<ResultData> ReturnBakcPriceAsync(AddBillReturnBackPriceVo billReturnBackPriceVo)
         {
             try
             {
@@ -279,6 +283,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 billReturnBackPriceDto.Id = billReturnBackPriceVo.Id;
                 billReturnBackPriceDto.ReturnBackPrice = billReturnBackPriceVo.ReturnBackPrice;
                 billReturnBackPriceDto.CreateBy = employeeId;
+                billReturnBackPriceDto.Remark = billReturnBackPriceVo.Remark;
                 await billService.ReturnBakcPriceAsync(billReturnBackPriceDto);
                 return ResultData.Success();
             }
@@ -297,11 +302,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<BaseIdAndNameVo>>> GetBillTypeAsync()
         {
             var billTypeList = from d in await billService.GetBillTypeListAsync()
-                                    select new BaseIdAndNameVo
-                                    {
-                                        Id = d.Key,
-                                        Name=d.Value
-                                    };
+                               select new BaseIdAndNameVo
+                               {
+                                   Id = d.Key,
+                                   Name = d.Value
+                               };
             return ResultData<List<BaseIdAndNameVo>>.Success().AddData("billTypeList", billTypeList.ToList());
         }
 

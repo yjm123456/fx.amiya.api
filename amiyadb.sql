@@ -1809,7 +1809,7 @@ CREATE TABLE `amiyadb`.`tbl_uncheck_order` (
 
 
 
------------------------------------------------余建明 2023/2/02 BEGIN--------------------------------------------
+-----------------------------------------------余建明 2023/2/07 BEGIN--------------------------------------------
 --新增票据表
 CREATE TABLE `amiyadb`.`tbl_bill` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -1844,7 +1844,51 @@ CREATE TABLE `amiyadb`.`tbl_bill` (
     REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
------------------------------------------------余建明 2023/2/02 END--------------------------------------------
+
+    --新增票据回款记录表
+    CREATE TABLE `amiyadb`.`tbl_bill_return_back_price_data` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `create_by` INT UNSIGNED NOT NULL,
+  `hospital_id` INT UNSIGNED NOT NULL,
+  `company_id` VARCHAR(45) NOT NULL,
+  `bill_id` VARCHAR(50) NOT NULL,
+  `bill_price` DECIMAL(12,2) NOT NULL,
+  `other_price` DECIMAL(12,2) NULL,
+  `return_back_price` DECIMAL(12,2) NOT NULL,
+  `return_back_date` DATETIME NOT NULL,
+  `return_back_state` INT NOT NULL,
+  `remark` VARCHAR(500) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `bill_return_back_price_data_createby_idx` (`create_by` ASC) VISIBLE,
+  INDEX `fk_bill_return_back_price_data_hospitalinfo_idx` (`hospital_id` ASC) VISIBLE,
+  INDEX `fk_bill_return_back_price_data_companyinfo_idx` (`company_id` ASC) VISIBLE,
+  INDEX `fk_bill_return_back_price_data_billinfo_idx` (`bill_id` ASC) VISIBLE,
+  CONSTRAINT `fk_bill_return_back_price_data_amiyaemployeeinfo`
+    FOREIGN KEY (`create_by`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_bill_return_back_price_data_hospitalinfo`
+    FOREIGN KEY (`hospital_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_bill_return_back_price_data_companyinfo`
+    FOREIGN KEY (`company_id`)
+    REFERENCES `amiyadb`.`tbl_company_base_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_bill_return_back_price_data_billinfo`
+    FOREIGN KEY (`bill_id`)
+    REFERENCES `amiyadb`.`tbl_bill` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+-----------------------------------------------余建明 2023/2/07 END--------------------------------------------
 
 
 

@@ -68,5 +68,7 @@ namespace Fx.Amiya.DbModels.Model
         public List<UnCheckOrder> UnCheckOrderList { get; set; }
 
         public List<Bill> BillList { get; set; }
+
+        public List<BillReturnBackPriceData> BillReturnBackPriceDataList { get; set; }
     }
 }

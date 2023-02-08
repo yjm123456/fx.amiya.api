@@ -37,13 +37,26 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// </summary>
         public decimal? TotalDealPrice { get; set; }
         /// <summary>
-        /// 返款比例
+        /// 信息服务费比例
         /// </summary>
         public decimal? ReturnBackPricePercent { get; set; }
+
+        /// <summary>
+        /// 信息服务费
+        /// </summary>
+        public decimal? ReturnBackPrice { get; set; }
         /// <summary>
         /// 系统维护费比例
         /// </summary>
         public decimal? SystemUpdatePricePercent { get; set; }
+        /// <summary>
+        /// 系统维护费
+        /// </summary>
+        public decimal? SystemUpdatePrice { get; set; }
+        /// <summary>
+        /// 服务费合计
+        /// </summary>
+        public decimal? TotalReconciliationDocumentsPrice { get; set; }
         /// <summary>
         /// 问题原因
         /// </summary>

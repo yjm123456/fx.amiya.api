@@ -37,5 +37,7 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public string ContactEmail { get; set; }
         public List<Bill> BillList { get; set; }
+
+        public List<BillReturnBackPriceData> BillReturnBackPriceDataList { get; set; }
     }
 }

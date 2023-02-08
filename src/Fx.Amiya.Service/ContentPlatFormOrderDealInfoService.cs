@@ -886,6 +886,8 @@ namespace Fx.Amiya.Service
                     contentPlatFOrmOrderDealInfoDto.ReturnBackDate = ContentPlatFOrmOrderDealInfo.ReturnBackDate;
                     contentPlatFOrmOrderDealInfoDto.ReturnBackPrice = ContentPlatFOrmOrderDealInfo.ReturnBackPrice;
                     contentPlatFOrmOrderDealInfoDto.CreateBy = ContentPlatFOrmOrderDealInfo.CreateBy;
+                    contentPlatFOrmOrderDealInfoDto.InformationPrice = ContentPlatFOrmOrderDealInfo.InformationPrice;
+                    contentPlatFOrmOrderDealInfoDto.SystemUpdatePrice = ContentPlatFOrmOrderDealInfo.SystemUpdatePrice;
                     contentPlatFOrmOrderDealInfoDto.ReconciliationDocumentsId = ContentPlatFOrmOrderDealInfo.ReconciliationDocumentsId;
                     returnList.Add(contentPlatFOrmOrderDealInfoDto);
                 }

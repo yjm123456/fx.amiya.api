@@ -92,5 +92,7 @@ namespace Fx.Amiya.DbModels.Model
         public AmiyaEmployee AmiyaEmployee { get; set; }
         public HospitalInfo HospitalInfo { get; set; }
         public CompanyBaseInfo CompanyBaseInfo { get; set; }
+
+        public List<BillReturnBackPriceData> BillReturnBackPriceDataList { get; set; }
     }
 }
