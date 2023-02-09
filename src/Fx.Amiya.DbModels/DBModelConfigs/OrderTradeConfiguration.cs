@@ -23,6 +23,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.StatusCode).HasColumnName("status_code").HasColumnType("varchar(50)").IsRequired();
             builder.Property(t => t.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(t => t.IsAdminAdd).HasColumnName("is_admin_add").HasColumnType("bit").IsRequired();
+            
 
             builder.HasOne(t => t.CustomerInfo).WithMany(t => t.OrderTradeList).HasForeignKey(t=>t.CustomerId);
             builder.HasOne(t => t.Address).WithMany(t => t.OrderTradeList).HasForeignKey(t=>t.AddressId);

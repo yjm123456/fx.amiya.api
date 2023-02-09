@@ -52,6 +52,7 @@ namespace Fx.Amiya.Service
         private IContentPlatFormOrderDealInfoService _contentPlatFormOrderDalService;
         private IDalConfig _dalConfig;
         private IWxAppConfigService _wxAppConfigService;
+        private IDalLiveAnchor dalLiveAnchor;
         public ContentPlateFormOrderService(
            IDalContentPlatformOrder dalContentPlatformOrder,
            IDalAmiyaEmployee dalAmiyaEmployee,
@@ -76,7 +77,7 @@ namespace Fx.Amiya.Service
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDalService,
              IDalBindCustomerService dalBindCustomerService,
              IDalConfig dalConfig,
-             IWxAppConfigService wxAppConfigService)
+             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor)
         {
             _dalContentPlatformOrder = dalContentPlatformOrder;
             this.unitOfWork = unitOfWork;
@@ -102,6 +103,7 @@ namespace Fx.Amiya.Service
             _wxAppConfigService = wxAppConfigService;
             _contentPlatFormCustomerPictureService = contentPlatFormCustomerPictureService;
             _contentPlatFormOrderDalService = contentPlatFormOrderDalService;
+            this.dalLiveAnchor = dalLiveAnchor;
         }
 
         /// <summary>
@@ -139,6 +141,8 @@ namespace Fx.Amiya.Service
                         bind.NewConsumptionDate = DateTime.Now;
                         bind.NewConsumptionContentPlatform = (int)OrderFrom.ContentPlatFormOrder;
                         bind.NewContentPlatForm = contentPlatForm.ContentPlatformName;
+                        bind.NewLiveAnchor = dalLiveAnchor.GetAll().Where(e => e.Id == input.LiveAnchorId).FirstOrDefault().Name;
+                        bind.NewWechatNo = input.LiveAnchorWeChatNo;
                         await _dalBindCustomerService.UpdateAsync(bind, true);
                     }
                 }
@@ -157,6 +161,11 @@ namespace Fx.Amiya.Service
                     bindCustomerService.NewConsumptionDate = DateTime.Now;
                     bindCustomerService.NewConsumptionContentPlatform = (int)OrderFrom.ContentPlatFormOrder;
                     bindCustomerService.NewContentPlatForm = contentPlatForm.ContentPlatformName;
+                    var liveAnchor = dalLiveAnchor.GetAll().Where(e => e.Id == input.LiveAnchorId).FirstOrDefault();
+                    if (liveAnchor!=null) {
+                        bindCustomerService.NewLiveAnchor = liveAnchor.Name;
+                    }
+                    bindCustomerService.NewWechatNo = input.LiveAnchorWeChatNo;
                     bindCustomerService.AllPrice = 0;
                     bindCustomerService.AllOrderCount = 0;
                     await _dalBindCustomerService.AddAsync(bindCustomerService, true);
@@ -1446,7 +1455,17 @@ namespace Fx.Amiya.Service
                     {
                         throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应人员进行编辑！");
                     }
-                    //更新绑定客服列表bind_customer_info表的消费平台与主播微信数据（todo）
+                    //更新绑定客服列表bind_customer_info表的消费平台与主播微信数据
+                    bind.NewConsumptionDate = DateTime.Now;
+                    bind.NewConsumptionContentPlatform = (int)OrderFrom.ContentPlatFormOrder;
+                    bind.NewContentPlatForm = input.ContentPlateFormName;
+                    var liveAnchor = dalLiveAnchor.GetAll().Where(e => e.Id == input.LiveAnchorId).FirstOrDefault();
+                    if (liveAnchor != null)
+                    {
+                        bind.NewLiveAnchor = liveAnchor.Name;
+                    }
+                    bind.NewWechatNo = input.LiveAnchorWeChatNo;
+                    await _dalBindCustomerService.UpdateAsync(bind, true);
                 }
                 else
                 {
@@ -1456,7 +1475,17 @@ namespace Fx.Amiya.Service
                     bindCustomerService.BuyerPhone = input.Phone;
                     bindCustomerService.UserId = null;
                     bindCustomerService.CreateBy = input.EmployeeId;
-                    bindCustomerService.CreateDate = DateTime.Now;
+                    bindCustomerService.CreateDate = DateTime.Now;                    
+                    var goodsInfo = await amiyaGoodsDemandService.GetByIdAsync(input.GoodsId);
+                    bindCustomerService.FirstProjectDemand = "(" + goodsInfo.HospitalDepartmentName + ")" + goodsInfo.ProjectNname;
+                    bindCustomerService.FirstConsumptionDate = DateTime.Now;
+                    bindCustomerService.NewConsumptionDate = DateTime.Now;
+                    bindCustomerService.NewConsumptionContentPlatform = (int)OrderFrom.ContentPlatFormOrder;
+                    bindCustomerService.NewContentPlatForm = input.ContentPlateFormName;
+                    bindCustomerService.NewLiveAnchor = dalLiveAnchor.GetAll().Where(e => e.Id == input.LiveAnchorId).FirstOrDefault().Name;
+                    bindCustomerService.NewWechatNo = input.LiveAnchorWeChatNo;
+                    bindCustomerService.AllPrice = 0;
+                    bindCustomerService.AllOrderCount = 0;
                     await _dalBindCustomerService.AddAsync(bindCustomerService, true);
                 }
                 var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.Id).SingleOrDefaultAsync();

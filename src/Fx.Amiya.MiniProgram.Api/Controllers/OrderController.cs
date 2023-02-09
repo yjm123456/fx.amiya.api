@@ -78,6 +78,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private readonly IHuiShouQianPaymentService huiShouQianPaymentService;
         private readonly IGoodsStandardsPriceService goodsStandardsPriceService;
         private readonly IUnitOfWork unitOfWork;
+        
 
 
         private static readonly AsyncLock _mutex = new AsyncLock();
@@ -829,8 +830,18 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             var customerInfo = await customerService.GetByIdAsync(customerId);
             var miniUserInfo = await _wxMiniUserRepository.GetByUserIdAsync(customerInfo.UserId);
             string OpenId = miniUserInfo.OpenId;
-
-            string orderId = "";
+            OrderAddResultVo orderPayResult = new OrderAddResultVo();
+            var isExistThridPay = true;
+            if (orderTrade.StatusCode!= "WAIT_BUYER_PAY") {
+                throw new Exception("订单状态以改变不能重新支付!");
+            }
+            foreach (var item in orderTrade.OrderInfoList)
+            {
+                if (item.ExchangeType!=(int)ExchangeType.HuiShouQian) {
+                    throw new Exception("该订单不支持重新支付,请取消订单重新下单并支付!");
+                }
+            }
+            /*string orderId = "";
             string goodsName = "";
             decimal totalFee = 0M;
             bool IsExistThirdPartPay = false;
@@ -848,9 +859,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             orderId = orderId.Trim(',');
             goodsName = goodsName.Trim(',');
             orderId = orderId.Trim(',');
-            OrderAddResultVo orderPayResult = new OrderAddResultVo();
+            OrderAddResultVo orderPayResult = new OrderAddResultVo();*/
             #region 微信支付
-            PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
+            /*PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
             WxPackageInfo packageInfo = new WxPackageInfo();
             packageInfo.Body = orderId;
             //回调地址需重新设置(todo;)
@@ -879,9 +890,31 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 payRequestInfo.nonceStr = payRequest.nonceStr;
                 payRequestInfo.paySign = payRequest.paySign;
                 orderPayResult.PayRequestInfo = payRequestInfo;
-            }
+            }*/
             #endregion
 
+            #region 慧收钱支付
+
+
+            HuiShouQianPayRequestInfo huiShouQianPayRequestInfo = new HuiShouQianPayRequestInfo();
+            huiShouQianPayRequestInfo.TransNo = tradeId;
+            huiShouQianPayRequestInfo.PayType = "WECHAT_APPLET";
+            huiShouQianPayRequestInfo.OrderAmt = (orderTrade.TotalAmount * 100m).ToString().Split(".")[0];
+            huiShouQianPayRequestInfo.GoodsInfo = "商品付款";
+            huiShouQianPayRequestInfo.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
+            huiShouQianPayRequestInfo.Extend = "Goods";
+            var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId);
+            if (result.Success == false) throw new Exception("下单失败,请重新下单");
+            PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
+            payRequestInfo.appId = result.PayParam.AppId;
+            payRequestInfo.package = result.PayParam.Package;
+            payRequestInfo.timeStamp = result.PayParam.TimeStamp;
+            payRequestInfo.nonceStr = result.PayParam.NonceStr;
+            payRequestInfo.paySign = result.PayParam.PaySign;
+            orderPayResult.PayRequestInfo = payRequestInfo;
+
+
+            #endregion
 
 
             return ResultData<OrderAddResultVo>.Success().AddData("orderPayGetResult", orderPayResult);
@@ -894,67 +927,78 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         [HttpPost("pay/{tradeId}")]
         public async Task<ResultData> IntegrationPayAsync(string tradeId)
         {
-            var token = tokenReader.GetToken();
-            var sessionInfo = sessionStorage.GetSession(token);
-            string customerId = sessionInfo.FxCustomerId;
 
-            var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(tradeId);
-
-
-            List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
-            foreach (var item in orderTrade.OrderInfoList)
+            try
             {
-                if (item.ExchangeType == (byte)ExchangeType.Integration && item.IntegrationQuantity > 0)
-                {
-                    //积分余额
-                    decimal integrationBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(customerId);
-                    if (orderTrade.TotalIntegration > integrationBalance)
-                        throw new Exception("积分余额不足");
-                    UseIntegrationDto useIntegrationDto = new UseIntegrationDto();
-                    useIntegrationDto.CustomerId = customerId;
-                    useIntegrationDto.OrderId = item.Id;
-                    useIntegrationDto.Date = DateTime.Now;
-                    useIntegrationDto.UseQuantity = (decimal)item.IntegrationQuantity;
-                    await integrationAccountService.UseByGoodsConsumption(useIntegrationDto);
-                }
+                unitOfWork.BeginTransaction();
+                var token = tokenReader.GetToken();
+                var sessionInfo = sessionStorage.GetSession(token);
+                string customerId = sessionInfo.FxCustomerId;
 
-                UpdateOrderDto updateOrder = new UpdateOrderDto();
-                updateOrder.OrderId = item.Id;
-                updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
-                if (item.ActualPayment.HasValue)
-                {
-                    updateOrder.Actual_payment = item.ActualPayment.Value;
+                var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(tradeId);
 
-                    var bind = await _dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == item.Phone);
-                    if (bind != null)
+
+                List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
+                foreach (var item in orderTrade.OrderInfoList)
+                {
+                    if (item.ExchangeType == (byte)ExchangeType.Integration && item.IntegrationQuantity > 0)
                     {
-                        bind.NewConsumptionDate = DateTime.Now;
-                        bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
-                        bind.NewContentPlatForm = ServiceClass.GetAppTypeText(item.AppType);
-                        bind.AllPrice += item.ActualPayment.Value;
-                        bind.AllOrderCount += item.Quantity;
-                        await _dalBindCustomerService.UpdateAsync(bind, true);
+                        //积分余额
+                        decimal integrationBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(customerId);
+                        if (orderTrade.TotalIntegration > integrationBalance)
+                            throw new Exception("积分余额不足");
+                        UseIntegrationDto useIntegrationDto = new UseIntegrationDto();
+                        useIntegrationDto.CustomerId = customerId;
+                        useIntegrationDto.OrderId = item.Id;
+                        useIntegrationDto.Date = DateTime.Now;
+                        useIntegrationDto.UseQuantity = (decimal)item.IntegrationQuantity;
+                        await integrationAccountService.UseByGoodsConsumption(useIntegrationDto);
                     }
 
+                    UpdateOrderDto updateOrder = new UpdateOrderDto();
+                    updateOrder.OrderId = item.Id;
+                    updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                    if (item.ActualPayment.HasValue)
+                    {
+                        updateOrder.Actual_payment = item.ActualPayment.Value;
+
+                        var bind = await _dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == item.Phone);
+                        if (bind != null)
+                        {
+                            bind.NewConsumptionDate = DateTime.Now;
+                            bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
+                            bind.NewContentPlatForm = ServiceClass.GetAppTypeText(item.AppType);
+                            bind.AllPrice += item.ActualPayment.Value;
+                            bind.AllOrderCount += item.Quantity;
+                            await _dalBindCustomerService.UpdateAsync(bind, true);
+                        }
+
+                    }
+                    if (item.IntegrationQuantity.HasValue)
+                    {
+                        updateOrder.IntergrationQuantity = item.IntegrationQuantity;
+                    }
+                    Random random = new Random();
+                    updateOrder.AppType = item.AppType;
+                    updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
+                    updateOrderList.Add(updateOrder);
                 }
-                if (item.IntegrationQuantity.HasValue)
-                {
-                    updateOrder.IntergrationQuantity = item.IntegrationQuantity;
-                }
-                Random random = new Random();
-                updateOrder.AppType = item.AppType;
-                updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
-                updateOrderList.Add(updateOrder);
+
+                //修改订单状态
+                await orderService.UpdateWithNoTranstionAsync(updateOrderList);
+
+                UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
+                updateOrderTrade.TradeId = tradeId;
+                updateOrderTrade.AddressId = orderTrade.AddressId;
+                updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                await orderService.UpdateOrderTradeAsync(updateOrderTrade);
+                unitOfWork.Commit();
             }
-
-            //修改订单状态
-            await orderService.UpdateAsync(updateOrderList);
-
-            UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
-            updateOrderTrade.TradeId = tradeId;
-            updateOrderTrade.AddressId = orderTrade.AddressId;
-            updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
-            await orderService.UpdateOrderTradeAsync(updateOrderTrade);
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex;
+            }
             return ResultData.Success();
         }
 

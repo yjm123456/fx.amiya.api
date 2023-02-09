@@ -293,7 +293,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                CreatedOrderNum = d.CreatedOrderNum,
                                FirstOrderInfo = d.FirstOrderInfo,
                                FirstOrderCreateDate = d.FirstOrderCreateDate,
-                               NewConsumptionPlatFormAppTypeText = d.NewConsumptionPlatFormAppTypeText
+                               NewConsumptionPlatFormAppTypeText = d.NewConsumptionPlatFormAppTypeText,
+                               NewLiveAnchorName=d.NewLiveAnchorName,
+                               NewWechatNo=d.NewWechatNo
                            };
             FxPageInfo<CustomerConsumptionInfoVo> customerPageInfo = new FxPageInfo<CustomerConsumptionInfoVo>();
             customerPageInfo.TotalCount = q.TotalCount;
@@ -364,7 +366,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                CreatedOrderNum = d.CreatedOrderNum,
                                FirstOrderInfo = d.FirstOrderInfo,
                                FirstOrderCreateDate = d.FirstOrderCreateDate,
-                               NewConsumptionPlatFormAppTypeText = d.NewConsumptionPlatFormAppTypeText
+                               NewConsumptionPlatFormAppTypeText = d.NewConsumptionPlatFormAppTypeText,
+                               NewLiveAnchorName=d.NewLiveAnchorName,
+                               NewWechatNo=d.NewWechatNo
                            };
             List<CustomerConsumptionInfoVo> customerPageInfo = new List<CustomerConsumptionInfoVo>();
             customerPageInfo = customer.ToList();

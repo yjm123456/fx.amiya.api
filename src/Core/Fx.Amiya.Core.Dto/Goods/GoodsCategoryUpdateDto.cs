@@ -14,5 +14,9 @@ namespace Fx.Amiya.Core.Dto.Goods
         public string SimpleCode { get; set; }
         public bool Valid { get; set; }
         public int UpdateBy { get; set; }
+        /// <summary>
+        /// 类别图片
+        /// </summary>
+        public string CategoryImg { get; set; }
     }
 }

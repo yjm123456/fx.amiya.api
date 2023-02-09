@@ -13,5 +13,9 @@ namespace Fx.Amiya.Core.Dto.Goods
 
         public int ShowDirectionType { get; set; }
         public int CreateBy { get; set; }
+        /// <summary>
+        /// 类别图片
+        /// </summary>
+        public string CategoryImg { get; set; }
     }
 }

@@ -590,7 +590,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 LiveAnchor = d.LiveAnchorName,
                                 LiveAnchorPlatForm = d.LiveAnchorPlatForm,
                                 BelongEmpName = d.BelongEmpName,
-
+                                Standard=d.Standard
                             };
                 FxPageInfo<OrderInfoVo> orderPageInfo = new FxPageInfo<OrderInfoVo>();
                 orderPageInfo.TotalCount = q.TotalCount;
@@ -800,7 +800,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                             StatusText = d.StatusText,
                             Quantity = d.Quantity,
                             IntegrationQuantity = (d.IntegrationQuantity.HasValue) ? d.IntegrationQuantity.Value : 0,
-
+                            Standard=d.Standard
                         };
             var exportOrder = order.ToList();
             var stream = ExportExcelHelper.ExportExcel(exportOrder);
@@ -1410,7 +1410,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                              ExchangeType = d.ExchangeType,
                              ExchangeTypeText = d.ExchangeTypeText,
                              TradeId = d.TradeId,
-
+                             Standard=d.Standard
                          };
             return ResultData<List<OrderInfoVo>>.Success().AddData("orders", orders.ToList());
         }

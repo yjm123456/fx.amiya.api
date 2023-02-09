@@ -98,6 +98,10 @@ namespace Fx.Amiya.Dto.TmallOrder
         /// 归属客服
         /// </summary>
         public string BelongEmpName { get; set; }
+        /// <summary>
+        /// 规格
+        /// </summary>
+        public string Standard { get; set; }
 
         #region  财务审核板块
         /// <summary>

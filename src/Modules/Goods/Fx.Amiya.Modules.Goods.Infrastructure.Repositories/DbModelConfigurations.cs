@@ -27,6 +27,7 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                 entity.Property(t => t.UpdateBy).HasColumnName("update_by").HasColumnType("int");
                 entity.Property(t => t.UpdateDate).HasColumnName("update_date").HasColumnType("datetime");
                 entity.Property(t => t.Sort).HasColumnName("sort").HasColumnType("int");
+                entity.Property(t => t.CategoryImg).HasColumnName("category_img").HasColumnType("varchar(200)");
 
             });
             freeSql.CodeFirst.Entity<GoodsDetailDbModel>(entity =>

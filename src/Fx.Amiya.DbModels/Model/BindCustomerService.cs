@@ -45,7 +45,14 @@ namespace Fx.Amiya.DbModels.Model
         /// 总单数
         /// </summary>
         public int? AllOrderCount { get; set; }
-
+        /// <summary>
+        /// 最近消费所属主播
+        /// </summary>
+        public string NewLiveAnchor { get; set; }
+        /// <summary>
+        /// 最近消费所属微信号
+        /// </summary>
+        public string NewWechatNo { get; set; }
 
         public AmiyaEmployee CustomerServiceAmiyaEmployee { get; set; }
         public AmiyaEmployee CreateByAmiyaEmployee { get; set; }

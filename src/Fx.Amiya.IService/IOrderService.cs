@@ -143,7 +143,12 @@ namespace Fx.Amiya.IService
         /// <param name="updateListDto"></param>
         /// <returns></returns>
         Task UpdateAsync(List<UpdateOrderDto> updateListDto);
-
+        /// <summary>
+        /// 修改订单(无事务,解决积分下单事务嵌套问题)
+        /// </summary>
+        /// <param name="updateListDto"></param>
+        /// <returns></returns>
+        Task UpdateWithNoTranstionAsync(List<UpdateOrderDto> updateListDto);
         /// <summary>
         /// 修改录单的订单
         /// </summary>

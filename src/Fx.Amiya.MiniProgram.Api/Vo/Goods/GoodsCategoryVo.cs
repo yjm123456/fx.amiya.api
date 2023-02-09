@@ -14,5 +14,9 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Goods
         /// 展示方向
         /// </summary>
         public int ShowDirectionType { get; set; }
+        /// <summary>
+        /// 类别图片
+        /// </summary>
+        public string CategoryImg { get; set; }
     }
 }

@@ -20,5 +20,9 @@ namespace Fx.Amiya.Modules.Goods.Domin
         public DateTime? UpdateDate { get; set; }
         public int? UpdateBy { get; set; }
         public int Sort { get; set; }
+        /// <summary>
+        /// 类别图片
+        /// </summary>
+        public string CategoryImg { get; set; }
     }
 }

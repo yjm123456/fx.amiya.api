@@ -26,6 +26,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.NewContentPlatForm).HasColumnName("new_content_platform").HasColumnType("varchar(45)").IsRequired(false);
             builder.Property(t => t.AllPrice).HasColumnName("all_price").HasColumnType("decimal(12,2)").IsRequired(false);
             builder.Property(t => t.AllOrderCount).HasColumnName("all_order_count").HasColumnType("int").IsRequired(false);
+            builder.Property(t => t.NewLiveAnchor).HasColumnName("new_live_anchor").HasColumnType("varchar(200)").IsRequired(false);
+            builder.Property(t => t.NewWechatNo).HasColumnName("new_wechat_no").HasColumnType("varchar(200)").IsRequired(false);
 
             builder.HasOne(t => t.CustomerServiceAmiyaEmployee).WithMany(t => t.CustoemrServiceBindCustomerServiceList).HasForeignKey(t => t.CustomerServiceId);
             builder.HasOne(t => t.CreateByAmiyaEmployee).WithMany(t => t.CreateByBindCustomerServiceList).HasForeignKey(t => t.CreateBy);

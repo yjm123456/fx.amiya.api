@@ -35,7 +35,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 Valid = true,
                 CreateBy = goodsCategoryAdd.CreateBy,
                 CreateDate = DateTime.Now,
-                Sort = maxSort + 1
+                Sort = maxSort + 1,
+                CategoryImg = goodsCategoryAdd.CategoryImg
             };
             await _goodsCategoryRepository.AddAsync(goodsCategory);
         }
@@ -66,7 +67,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 ShowDirectionType = goodsCategory.ShowDirectionType.Value,
                 ShowDirectionTypeName = showDirectionTypeDict[((ShowDirectionType)goodsCategory.ShowDirectionType)],
                 UpdateDate = goodsCategory.UpdateDate,
-                UpdateBy = goodsCategory.UpdateBy
+                UpdateBy = goodsCategory.UpdateBy,
+                CategoryImg=goodsCategory.CategoryImg
             };
             return category;
         }
@@ -90,7 +92,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
                                 CreateBy = d.CreateBy,
                                 UpdateDate = d.UpdateDate,
                                 UpdateBy = d.UpdateBy,
-                                Sort = d.Sort
+                                Sort = d.Sort,
+                                CategoryImg=d.CategoryImg
                             };
             FxPageInfo<GoodsCategoryDto> categoryPageInfo = new FxPageInfo<GoodsCategoryDto>();
             categoryPageInfo.TotalCount = (int)await goodsCategorys.CountAsync();
@@ -111,7 +114,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
                             {
                                 Id = d.Id,
                                 Name = d.Name,
-                                ShowDirectionType = d.ShowDirectionType.Value
+                                ShowDirectionType = d.ShowDirectionType.Value,
+                                CategoryImg=d.CategoryImg
                             };
             return categorys.ToList();
         }
@@ -130,7 +134,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 Valid = goodsCategoryUpdate.Valid,
                 UpdateBy = goodsCategoryUpdate.UpdateBy,
                 UpdateDate = DateTime.Now,
-                Sort = goodsCategoryInfo.Sort
+                Sort = goodsCategoryInfo.Sort,
+                CategoryImg=goodsCategoryUpdate.CategoryImg
             };
             await _goodsCategoryRepository.UpdateAsync(goodsCategory);
 

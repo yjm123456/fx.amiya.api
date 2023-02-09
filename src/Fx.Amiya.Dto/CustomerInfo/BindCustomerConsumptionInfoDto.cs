@@ -58,5 +58,13 @@ namespace Fx.Amiya.Dto.CustomerInfo
         /// 首次消费时间
         /// </summary>
         public DateTime? FirstOrderCreateDate { get; set; }
+        /// <summary>
+        /// 最新消费所属主播
+        /// </summary>
+        public string NewLiveAnchorName { get; set; }
+        /// <summary>
+        /// 最新消费所属微信
+        /// </summary>
+        public string NewWechatNo { get; set; }
     }
 }

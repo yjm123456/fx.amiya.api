@@ -42,7 +42,7 @@ namespace Fx.Amiya.IService
         /// 获取抵用券信息列表
         /// </summary>
         /// <returns></returns>
-        Task<FxPageInfo<ConsumptionVoucherDto>> GetConsumptionListAsync(int pageNum,int pageSize);
+        Task<FxPageInfo<ConsumptionVoucherDto>> GetConsumptionListAsync(int pageNum,int pageSize,string keyword,bool valid);
         /// <summary>
         /// 根据抵用券id获取抵用券信息
         /// </summary>

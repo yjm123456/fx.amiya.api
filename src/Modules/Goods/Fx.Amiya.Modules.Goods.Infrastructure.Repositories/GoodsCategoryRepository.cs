@@ -28,7 +28,8 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                 Valid = entity.Valid,
                 CreateDate = entity.CreateDate,
                 CreateBy = entity.CreateBy,
-                Sort = entity.Sort
+                Sort = entity.Sort,
+                CategoryImg=entity.CategoryImg
             };
 
             entity.Id = (int)await freeSql.Insert<GoodsCategoryDbModel>().AppendData(goodsCategoryDbModel).ExecuteIdentityAsync();
@@ -51,7 +52,8 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                 CreateBy = goodsCategory.CreateBy,
                 UpdateDate = goodsCategory.UpdateDate,
                 UpdateBy = goodsCategory.UpdateBy,
-                Sort = goodsCategory.Sort
+                Sort = goodsCategory.Sort,
+                CategoryImg=goodsCategory.CategoryImg
             };
             return category;
         }
@@ -169,6 +171,7 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                  .Set(e => e.UpdateBy, entity.UpdateBy)
                  .Set(e => e.UpdateDate, entity.UpdateDate)
                  .Set(e => e.Sort, entity.Sort)
+                 .Set(e=>e.CategoryImg,entity.CategoryImg)
                  .Where(e => e.Id == entity.Id)
                  .ExecuteAffrowsAsync();
         }

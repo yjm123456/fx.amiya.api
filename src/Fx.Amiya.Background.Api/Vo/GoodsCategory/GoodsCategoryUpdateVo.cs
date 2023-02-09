@@ -16,5 +16,9 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsCategory
         public int ShowDirectionType { get; set; }
         public string SimpleCode { get; set; }
         public bool Valid { get; set; }
+        /// <summary>
+        /// 类别图片
+        /// </summary>
+        public string CategoryImg { get; set; }
     }
 }

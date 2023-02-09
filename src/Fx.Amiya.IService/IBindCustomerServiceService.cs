@@ -56,6 +56,13 @@ namespace Fx.Amiya.IService
         /// <param name="Channel"></param>
         /// <returns></returns>
         Task ReduceConsumePriceAsync(string phone, decimal Price, int Channel);
+        /// <summary>
+        /// 内容平台与升单成交加入成交金额并更新最近消费所属主播
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <param name="Price"></param>
+        /// <returns></returns>
+        Task UpdateConsumePriceAndLiveAnchorAsync(string phone, decimal Price, int Channel, int AllOrderCount,string LiveAnchorName);
 
     }
 }

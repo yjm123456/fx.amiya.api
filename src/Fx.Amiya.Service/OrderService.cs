@@ -232,6 +232,7 @@ namespace Fx.Amiya.Service
                                 TradeId = d.TradeId,
                                 FinalConsumptionHospital = d.FinalConsumptionHospital,
                                 LiveAnchorId = d.LiveAnchorId,
+                                Standard=d.Standard
                             };
 
 
@@ -572,6 +573,7 @@ namespace Fx.Amiya.Service
                                 ExchangeType = d.ExchangeType,
                                 ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)d.ExchangeType),
                                 TradeId = d.TradeId,
+                                Standard=d.Standard
                             };
 
 
@@ -1251,6 +1253,119 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
+                throw ex;
+            }
+            try
+            {
+                //发送短信通知(todo;)
+                if (!string.IsNullOrEmpty(orderId))
+                {
+                    if (appType == (byte)AppType.MiniProgram && intergration_quantity > 0)
+                    {
+                        string templateName = "order_intergrationpay_commit";
+                        orderId = orderId.ToString().Trim(',');
+                        await _smsSender.SendSingleAsync(phone, templateName, JsonConvert.SerializeObject(new { intergration = intergration_quantity.ToString("0").ToString().Trim(',') }));
+                    }
+                    else
+                    {
+                        string templateName = "order_buyerpay_commit";
+                        orderId = orderId.ToString().Trim(',');
+                        await _smsSender.SendSingleAsync(phone, templateName, JsonConvert.SerializeObject(new { orderId = orderId.ToString().Trim(',') }));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+
+            }
+
+        }
+        /// <summary>
+        /// 修改订单(无事务,解决积分下单时的事务嵌套问题)
+        /// </summary>
+        /// <param name="updateListDto"></param>
+        /// <returns></returns>
+        public async Task UpdateWithNoTranstionAsync(List<UpdateOrderDto> updateListDto)
+        {
+            var emailConfig = true;
+            //订单号集合
+            string orderId = "";
+            string phone = "";
+            string goodsName = "";
+            byte appType = 0;
+            decimal intergration_quantity = 0M;
+            try
+            {
+
+                DateTime date = DateTime.Now;
+                List<OrderTradeForWxDto> tradeList = new List<OrderTradeForWxDto>();
+                foreach (var item in updateListDto)
+                {
+                    appType = item.AppType.Value;
+                    if (item.IntergrationQuantity.HasValue)
+                        intergration_quantity = item.IntergrationQuantity.Value;
+                    var orderInfo = await dalOrderInfo.GetAll().SingleOrDefaultAsync(e => e.Id == item.OrderId);
+                    if (orderInfo != null)
+                    {
+                        orderInfo.StatusCode = item.StatusCode;
+                        orderInfo.WriteOffCode = item.WriteOffCode;
+                        if (orderInfo.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS)
+                        {
+                            orderId += orderInfo.Id + ",";
+                            goodsName += orderInfo.GoodsName + ",";
+                            phone = orderInfo.Phone;
+                            //组织邮件信息
+                            if (emailConfig == true)
+                            {
+                                BuildSendMailInfo(appType, orderInfo.Id, intergration_quantity, goodsName, orderInfo.Phone);
+                            }
+                        }
+                        if (orderInfo.StatusCode == OrderStatusCode.TRADE_BUYER_PAID && item.AppType == (byte)AppType.MiniProgram)
+                        {
+                            orderId += orderInfo.Id + ",";
+                            goodsName += orderInfo.GoodsName + ",";
+                            phone = orderInfo.Phone;
+                            //组织邮件信息
+                            if (emailConfig == true)
+                            {
+                                BuildSendMailInfo(appType, orderInfo.Id, intergration_quantity, goodsName, orderInfo.Phone);
+                            }
+                        }
+                        if (orderInfo.OrderType == 0 && item.StatusCode == OrderStatusCode.TRADE_FINISHED)
+                        {
+                            orderInfo.WriteOffDate = orderInfo.UpdateDate;
+                        }
+                        if (item.AppType == (byte)AppType.MiniProgram)
+                        {
+                            orderInfo.UpdateDate = orderInfo.UpdateDate;
+                            if (!tradeList.Exists(e => e.TradeId == orderInfo.TradeId))
+                            {
+                                OrderTradeForWxDto orderTradeDto = new OrderTradeForWxDto();
+                                orderTradeDto.TradeId = orderInfo.TradeId;
+                                orderTradeDto.StatusCode = item.StatusCode;
+                                tradeList.Add(orderTradeDto);
+                            }
+                            await dalOrderInfo.UpdateAsync(orderInfo, true);
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(item.AppointmentHospital))
+                            orderInfo.AppointmentHospital = item.AppointmentHospital;
+                        await dalOrderInfo.UpdateAsync(orderInfo, true);
+
+                    }
+                }
+
+                foreach (var item in tradeList)
+                {
+                    var orderTrade = await dalOrderTrade.GetAll().SingleOrDefaultAsync(e => e.TradeId == item.TradeId);
+                    orderTrade.StatusCode = item.StatusCode;
+                    orderTrade.UpdateDate = date;
+                    await dalOrderTrade.UpdateAsync(orderTrade, true);
+                }
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
             try
@@ -2724,7 +2839,7 @@ namespace Fx.Amiya.Service
                                      SendGoodsName = d.SendGoodsRecord.AmiyaEmployee.Name,
                                      SendGoodsDate = d.SendGoodsRecord.Date,
                                      CourierNumber = d.SendGoodsRecord.CourierNumber,
-                                     ExpressId = d.SendGoodsRecord.ExpressId
+                                     ExpressId = d.SendGoodsRecord.ExpressId,
                                  };
             FxPageInfo<OrderTradeDto> orderTradePageInfo = new FxPageInfo<OrderTradeDto>();
             orderTradePageInfo.TotalCount = await orderTradeList.CountAsync();
@@ -2827,7 +2942,7 @@ namespace Fx.Amiya.Service
                                      SendGoodsName = d.SendGoodsRecord.AmiyaEmployee.Name,
                                      SendGoodsDate = d.SendGoodsRecord.Date,
                                      CourierNumber = d.SendGoodsRecord.CourierNumber,
-                                     ExpressId = d.SendGoodsRecord.ExpressId
+                                     ExpressId = d.SendGoodsRecord.ExpressId,
                                  };
             List<OrderTradeDto> orderTradePageInfo = new List<OrderTradeDto>();
             orderTradePageInfo = await orderTradeList.OrderByDescending(e => e.CreateDate).ToListAsync();
@@ -2900,6 +3015,7 @@ namespace Fx.Amiya.Service
                              ExchangeType = d.ExchangeType,
                              ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)d.ExchangeType),
                              TradeId = d.TradeId,
+                             Standard=d.Standard
                          };
             return await orders.ToListAsync();
         }

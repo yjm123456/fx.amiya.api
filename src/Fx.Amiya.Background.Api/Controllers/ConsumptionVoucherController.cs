@@ -111,12 +111,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
+        /// <param name="keyword"></param>
+        /// <param name="valid"></param>
         /// <returns></returns>
         [HttpGet("list")]
-        public async Task<ResultData<FxPageInfo<ConsumptionVoucherInfoListVo>>> GetConsumptionVoucherInfoList(int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ConsumptionVoucherInfoListVo>>> GetConsumptionVoucherInfoList(int pageNum, int pageSize,string keyword,bool valid)
         {
             FxPageInfo<ConsumptionVoucherInfoListVo> fxPageInfo = new FxPageInfo<ConsumptionVoucherInfoListVo>();
-            var voucherList = (await consumptionVoucherService.GetConsumptionListAsync(pageNum, pageSize));
+            var voucherList = (await consumptionVoucherService.GetConsumptionListAsync(pageNum, pageSize,keyword,valid));
             fxPageInfo.TotalCount = voucherList.TotalCount;
             fxPageInfo.List = voucherList.List.Select(c => new ConsumptionVoucherInfoListVo
             {

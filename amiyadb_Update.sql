@@ -1891,6 +1891,26 @@ CHANGE COLUMN `id` `id` VARCHAR(50) NOT NULL ;
 
 
 
+-----------------------------------------------王健 2023/2/07 BEGIN--------------------------------------------
+---添加最近消费所属主播和微信号
+
+ALTER TABLE `tbl_bind_customer_service`
+	ADD COLUMN `new_live_anchor` VARCHAR(200) NULL DEFAULT NULL AFTER `all_order_count`,
+	ADD COLUMN `new_wechat_no` VARCHAR(200) NULL DEFAULT NULL AFTER `new_live_anchor`;
+
+
+
+--小程序类别添加图片
+
+ALTER TABLE `tbl_goods_category`
+	ADD COLUMN `category_img` VARCHAR(200) NULL DEFAULT NULL AFTER `sort`;
+
+
+-----------------------------------------------王健 2023/2/07 END--------------------------------------------
+
+
+
+
 
 
 

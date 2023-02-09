@@ -82,5 +82,9 @@ namespace Fx.Amiya.Dto.TmallOrder
         public int? SendGoodsBy { get; set; }
         public string SendGoodsName { get; set; }
         public DateTime? SendGoodsDate { get; set; }
+        /// <summary>
+        /// 规格
+        /// </summary>
+        public string Standard { get; set; }
     }
 }

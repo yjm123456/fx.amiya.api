@@ -36,8 +36,10 @@ namespace Fx.Amiya.Service
             if (consumerVoucher != null) throw new Exception("抵用券编码重复,请重新设置抵用券编码");
             if (addConsumptionVoucher.Type == 1 && addConsumptionVoucher.DeductMoney > 0) throw new Exception("虚拟商品抵用券无法设置抵扣量!");
             if (addConsumptionVoucher.Type != 1 && addConsumptionVoucher.DeductMoney <= 0) throw new Exception("现金/积分抵用券抵扣量不能小于0!");
-            if (addConsumptionVoucher.Type!=1 && addConsumptionVoucher.IsNeedMinPrice) {
-                if (!addConsumptionVoucher.MinPrice.HasValue|| addConsumptionVoucher.MinPrice.Value<=0) {
+            if (addConsumptionVoucher.Type != 1 && addConsumptionVoucher.IsNeedMinPrice)
+            {
+                if (!addConsumptionVoucher.MinPrice.HasValue || addConsumptionVoucher.MinPrice.Value <= 0)
+                {
                     throw new Exception("最小限制金额不能为空或小于0");
                 }
             }
@@ -57,9 +59,9 @@ namespace Fx.Amiya.Service
                 ConsumptionVoucherCode = addConsumptionVoucher.ConsumptionVoucherCode,
                 Remark = addConsumptionVoucher.Remark,
                 IsNeedMinFee = addConsumptionVoucher.IsNeedMinPrice,
-                MinPrice= addConsumptionVoucher.MinPrice,
-                MemberRankCode=addConsumptionVoucher.MemberRankCode,
-                IsMemberVoucher=addConsumptionVoucher.IsMemberVoucher
+                MinPrice = addConsumptionVoucher.MinPrice,
+                MemberRankCode = addConsumptionVoucher.MemberRankCode,
+                IsMemberVoucher = addConsumptionVoucher.IsMemberVoucher
             };
             await dalConsumptionVoucher.AddAsync(consumptionVoucher, true);
         }
@@ -84,8 +86,8 @@ namespace Fx.Amiya.Service
                     UpdateDate = e.UpdateDate,
                     ConsumptionVoucherCode = e.ConsumptionVoucherCode,
                     Type = e.Type,
-                    EffectiveTime=e.EffectiveTime,
-                    Remark=e.Remark
+                    EffectiveTime = e.EffectiveTime,
+                    Remark = e.Remark
                 }).SingleOrDefault();
             }
             catch (Exception ex)
@@ -127,28 +129,49 @@ namespace Fx.Amiya.Service
         /// 获取抵用券信息列表
         /// </summary>
         /// <returns></returns>
-        public async Task<FxPageInfo<ConsumptionVoucherDto>> GetConsumptionListAsync(int pageNum, int pageSize)
+        public async Task<FxPageInfo<ConsumptionVoucherDto>> GetConsumptionListAsync(int pageNum, int pageSize, string keyword, bool valid)
         {
             FxPageInfo<ConsumptionVoucherDto> fxPageInfo = new FxPageInfo<ConsumptionVoucherDto>();
-            var consumptionVoucherList = dalConsumptionVoucher.GetAll().Select(c => new ConsumptionVoucherDto
-            {
-                Id = c.Id,
-                Name = c.Name,
-                DeductMoney = c.DeductMoney,
-                IsSpecifyProduct = c.IsSpecifyProduct,
-                IsAccumulate = c.IsAccumulate,
-                IsShare = c.IsShare,
-                Type = c.Type,
-                IsValid = c.IsValid,
-                ConsumptionVoucherCode = c.ConsumptionVoucherCode,
-                TypeText =ServiceClass.GetConsumptionVoucherType(c.Type),
-                Remark=c.Remark,
-                IsNeedMinPrice=c.IsNeedMinFee,
-                MinPrice=c.MinPrice,
-                EffectiveTime = c.EffectiveTime,
-                IsMemberVoucher=c.IsMemberVoucher,
-                MemberRankCode=c.MemberRankCode
-            });
+            var consumptionVoucherList = from c in dalConsumptionVoucher.GetAll()
+                                         where(keyword == null || c.Name.Contains(keyword)) && (c.IsValid == valid)
+                                         select new ConsumptionVoucherDto
+                                         {
+                                             Id = c.Id,
+                                             Name = c.Name,
+                                             DeductMoney = c.DeductMoney,
+                                             IsSpecifyProduct = c.IsSpecifyProduct,
+                                             IsAccumulate = c.IsAccumulate,
+                                             IsShare = c.IsShare,
+                                             Type = c.Type,
+                                             IsValid = c.IsValid,
+                                             ConsumptionVoucherCode = c.ConsumptionVoucherCode,
+                                             TypeText = ServiceClass.GetConsumptionVoucherType(c.Type),
+                                             Remark = c.Remark,
+                                             IsNeedMinPrice = c.IsNeedMinFee,
+                                             MinPrice = c.MinPrice,
+                                             EffectiveTime = c.EffectiveTime,
+                                             IsMemberVoucher = c.IsMemberVoucher,
+                                             MemberRankCode = c.MemberRankCode
+                                         };
+            /*.Select(c => new ConsumptionVoucherDto
+{
+Id = c.Id,
+Name = c.Name,
+DeductMoney = c.DeductMoney,
+IsSpecifyProduct = c.IsSpecifyProduct,
+IsAccumulate = c.IsAccumulate,
+IsShare = c.IsShare,
+Type = c.Type,
+IsValid = c.IsValid,
+ConsumptionVoucherCode = c.ConsumptionVoucherCode,
+TypeText = ServiceClass.GetConsumptionVoucherType(c.Type),
+Remark = c.Remark,
+IsNeedMinPrice = c.IsNeedMinFee,
+MinPrice = c.MinPrice,
+EffectiveTime = c.EffectiveTime,
+IsMemberVoucher = c.IsMemberVoucher,
+MemberRankCode = c.MemberRankCode
+});*/
             fxPageInfo.TotalCount = consumptionVoucherList.Count();
             fxPageInfo.List = consumptionVoucherList.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
             return fxPageInfo;
@@ -170,12 +193,12 @@ namespace Fx.Amiya.Service
                 Type = e.Type,
                 IsValid = e.IsValid,
                 ConsumptionVoucherCode = e.ConsumptionVoucherCode,
-                Remark=e.Remark,
-                IsNeedMinPrice=e.IsNeedMinFee,
-                MinPrice=e.MinPrice,
-                EffectiveTime=e.EffectiveTime,
-                IsMemberVoucher=e.IsMemberVoucher,
-                MemberRankCode=e.MemberRankCode
+                Remark = e.Remark,
+                IsNeedMinPrice = e.IsNeedMinFee,
+                MinPrice = e.MinPrice,
+                EffectiveTime = e.EffectiveTime,
+                IsMemberVoucher = e.IsMemberVoucher,
+                MemberRankCode = e.MemberRankCode
             }).SingleOrDefault();
             return voucher;
         }
@@ -224,7 +247,7 @@ namespace Fx.Amiya.Service
         {
             return dalConsumptionVoucher.GetAll().Where(e => e.IsValid == true).Select(v => new ConsumptionVoucherCodeNameList
             {
-                VoucherCode=v.ConsumptionVoucherCode,
+                VoucherCode = v.ConsumptionVoucherCode,
                 Name = v.Name
             }).ToList();
         }

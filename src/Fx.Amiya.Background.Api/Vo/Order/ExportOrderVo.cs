@@ -48,6 +48,11 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         /// </summary>
         [Description("商品")]
         public string GoodsName { get; set; }
+        /// <summary>
+        /// 规格
+        /// </summary>
+        [Description("规格")]
+        public string Standard { get; set; }
 
         /// <summary>
         /// 实付款
@@ -101,6 +106,7 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         /// </summary>
         [Description("系统派单医院")]
         public string SendOrderHospital { get; set; }
+        
 
 
     }

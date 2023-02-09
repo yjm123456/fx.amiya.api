@@ -75,7 +75,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                      UpdateDate = d.UpdateDate,
                                      UpdateBy = d.UpdateBy,
                                      UpdateName = ue?.Name,
-                                     Sort=d.Sort
+                                     Sort=d.Sort,
+                                     CategoryImg=d.CategoryImg
                                  };
             FxPageInfo<GoodsCategoryVo> categoryPageInfo = new FxPageInfo<GoodsCategoryVo>();
             categoryPageInfo.TotalCount = q.TotalCount;
@@ -108,6 +109,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             category.UpdateBy = goodsCategory.UpdateBy;
             category.UpdateDate = goodsCategory.UpdateDate;
             category.UpdateName = "";
+            category.CategoryImg = goodsCategory.CategoryImg;
             return ResultData<GoodsCategoryVo>.Success().AddData("goodsCategory", category);
         }
 
@@ -165,7 +167,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Name = goodsCategoryAdd.Name,
                 SimpleCode = goodsCategoryAdd.SimpleCode,
                 ShowDirectionType=goodsCategoryAdd.ShowDirectionType,
-                CreateBy = employeeId
+                CreateBy = employeeId,
+                CategoryImg=goodsCategoryAdd.CategoryImg
             };
 
             await goodsCategoryService.AddAsync(category);
@@ -192,6 +195,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 SimpleCode = goodsCategoryUpdate.SimpleCode,
                 Valid = goodsCategoryUpdate.Valid,
                 UpdateBy = employeeId,
+                CategoryImg=goodsCategoryUpdate.CategoryImg
             };
             await goodsCategoryService.UpdateAsync(goodsCategoryUpdateDto);
             return ResultData.Success();

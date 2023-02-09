@@ -621,6 +621,8 @@ namespace Fx.Amiya.Service
                                     NewConsumptionPlatFormAppTypeText = d.NewContentPlatForm,
                                     AllConsumptionPrice = d.AllPrice.HasValue ? d.AllPrice.Value : 0.00M,
                                     CreatedOrderNum = d.AllOrderCount.HasValue ? d.AllOrderCount.Value : 0,
+                                    NewLiveAnchorName=d.NewLiveAnchor,
+                                    NewWechatNo=d.NewWechatNo
                                 };
             int pageNum = customerSearchParam.PageNum;
             int pageSize = customerSearchParam.PageSize;
@@ -692,6 +694,8 @@ namespace Fx.Amiya.Service
                                     NewConsumptionPlatFormAppTypeText = d.NewContentPlatForm,
                                     AllConsumptionPrice = d.AllPrice.HasValue ? d.AllPrice.Value : 0.00M,
                                     CreatedOrderNum = d.AllOrderCount.HasValue ? d.AllOrderCount.Value : 0,
+                                    NewLiveAnchorName=d.NewLiveAnchor,
+                                    NewWechatNo=d.NewWechatNo
                                 };
             int pageNum = customerSearchParam.PageNum;
             int pageSize = customerSearchParam.PageSize;

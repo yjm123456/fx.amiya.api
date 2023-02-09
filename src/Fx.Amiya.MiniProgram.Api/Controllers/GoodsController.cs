@@ -44,7 +44,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                  {
                                      Id = d.Id,
                                      Name = d.Name,
-                                     ShowDirectionType = d.ShowDirectionType.Value
+                                     ShowDirectionType = d.ShowDirectionType.Value,
+                                     CategoryImg=d.CategoryImg
                                  };
 
 

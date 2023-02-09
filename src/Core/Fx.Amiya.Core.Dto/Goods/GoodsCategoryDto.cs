@@ -23,5 +23,9 @@ namespace Fx.Amiya.Core.Dto.Goods
         /// 排序
         /// </summary>
         public int Sort { get; set; }
+        /// <summary>
+        /// 类别图片
+        /// </summary>
+        public string CategoryImg { get; set; }
     }
 }
