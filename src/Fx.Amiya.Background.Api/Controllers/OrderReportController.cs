@@ -585,6 +585,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="isAccompanying">是否陪诊（空查询所有）</param>
         /// <param name="isOldCustomer">新老客业绩（空查询所有）</param>
         /// <param name="CheckState">审核状态（空查询所有）</param>
+        /// <param name="checkStartDate">审核开始时间</param>
+        /// <param name="checkEndDate">审核结束时间</param>
         /// <param name="isReturnBakcPrice">是否回款（空查询所有）</param>
         /// <param name="returnBackPriceStartDate">回款开始时间</param>
         /// <param name="returnBackPriceEndDate">回款结束时间</param>
@@ -593,7 +595,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("contentPlatFormOrderDealInfo")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<ContentPlatFormOrderDealInfoReportVo>>> GetDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord)
+        public async Task<ResultData<List<ContentPlatFormOrderDealInfoReportVo>>> GetDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord)
         {
 
             bool isHidePhone = true;
@@ -603,7 +605,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 isHidePhone = false;
             }
             int employeeId = Convert.ToInt32(employee.Id);
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, sendStartDate, sendEndDate, minAddOrderPrice, maxAddOrderPrice, consultationType, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, isHidePhone);
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, sendStartDate, sendEndDate, minAddOrderPrice, maxAddOrderPrice, consultationType, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, checkStartDate, checkEndDate, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, isHidePhone);
 
             var contentPlatformOrders = from d in result
                                         select new ContentPlatFormOrderDealInfoReportVo
@@ -636,15 +638,15 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             CheckPrice = d.CheckPrice,
                                             CheckDate = d.CheckDate,
                                             CheckBy = d.CheckByEmpName,
-                                            InformationPrice=d.InformationPrice,
-                                            SystemUpdatePrice=d.SystemUpdatePrice,
+                                            InformationPrice = d.InformationPrice,
+                                            SystemUpdatePrice = d.SystemUpdatePrice,
                                             SettlePrice = d.SettlePrice,
                                             CheckRemark = d.CheckRemark,
                                             IsReturnBackPrice = d.IsReturnBackPrice == true ? "是" : "否",
                                             ReturnBackDate = d.ReturnBackDate,
                                             ReturnBackPrice = d.ReturnBackPrice,
                                             CreateByEmpName = d.CreateByEmpName,
-                                            IsRepeatProfundityOrder=d.IsRepeatProfundityOrder==true ? "是":"否"
+                                            IsRepeatProfundityOrder = d.IsRepeatProfundityOrder == true ? "是" : "否"
                                         };
             List<ContentPlatFormOrderDealInfoReportVo> pageInfo = new List<ContentPlatFormOrderDealInfoReportVo>();
             pageInfo = contentPlatformOrders.ToList();
@@ -670,6 +672,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="minAddOrderPrice">最小下单金额（空查询所有）</param>
         /// <param name="maxAddOrderPrice">最大下单金额（空查询所有）</param>
         /// <param name="CheckState">审核状态（空查询所有）</param>
+        /// <param name="checkStartDate">审核开始时间</param>
+        /// <param name="checkEndDate">审核结束时间</param>
         /// <param name="isReturnBakcPrice">是否回款（空查询所有）</param>
         /// <param name="returnBackPriceStartDate">回款开始时间</param>
         /// <param name="returnBackPriceEndDate">回款结束时间</param>
@@ -678,7 +682,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportContentPlatFormOrderDealInfo")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord)
+        public async Task<FileStreamResult> ExportDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord)
         {
 
             bool isHidePhone = true;
@@ -688,7 +692,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 isHidePhone = false;
             }
             int employeeId = Convert.ToInt32(employee.Id);
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, sendStartDate, sendEndDate, minAddOrderPrice, maxAddOrderPrice, consultationType, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, isHidePhone);
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, sendStartDate, sendEndDate, minAddOrderPrice, maxAddOrderPrice, consultationType, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, checkStartDate, checkEndDate, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, isHidePhone);
 
             var contentPlatformOrders = from d in result
                                         select new ContentPlatFormOrderDealInfoReportVo
@@ -721,15 +725,15 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             CheckPrice = d.CheckPrice,
                                             CheckDate = d.CheckDate,
                                             CheckBy = d.CheckByEmpName,
-                                            InformationPrice=d.InformationPrice,
-                                            SystemUpdatePrice=d.SystemUpdatePrice,
+                                            InformationPrice = d.InformationPrice,
+                                            SystemUpdatePrice = d.SystemUpdatePrice,
                                             SettlePrice = d.SettlePrice,
                                             CheckRemark = d.CheckRemark,
                                             IsReturnBackPrice = d.IsReturnBackPrice == true ? "是" : "否",
                                             ReturnBackDate = d.ReturnBackDate,
                                             ReturnBackPrice = d.ReturnBackPrice,
                                             CreateByEmpName = d.CreateByEmpName,
-                                            IsRepeatProfundityOrder=d.IsRepeatProfundityOrder==true ? "是" : "否",
+                                            IsRepeatProfundityOrder = d.IsRepeatProfundityOrder == true ? "是" : "否",
                                         };
             var exportContentPlatFormDealOrder = contentPlatformOrders.ToList();
             var stream = ExportExcelHelper.ExportExcel(exportContentPlatFormDealOrder);
@@ -1334,7 +1338,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           ToHospitalDate = d.ToHospitalDate,
                           DepositAmount = d.DepositAmount,
                           DealAmount = d.DealAmount,
-                          BelongEmpName=d.BelongEmpName,
+                          BelongEmpName = d.BelongEmpName,
                           SendHospital = d.SendHospital,
                           SendOrderRemark = d.SendOrderRemark,
                           OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
@@ -1473,7 +1477,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("customerOrderReceivableReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<CustomerOrderReceivableReportVo>>> GetCustomerOrderReceivableAsync(DateTime? startDate, DateTime? endDate,int? appType, int? CheckState, bool? ReturnBackPriceState, string customerName)
+        public async Task<ResultData<List<CustomerOrderReceivableReportVo>>> GetCustomerOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? appType, int? CheckState, bool? ReturnBackPriceState, string customerName)
         {
 
             var q = await orderService.GetCustomerOrderReceivableAsync(startDate, endDate, appType, CheckState, ReturnBackPriceState, customerName, true);

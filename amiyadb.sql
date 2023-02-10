@@ -1805,7 +1805,6 @@ CREATE TABLE `amiyadb`.`tbl_uncheck_order` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 -----------------------------------------------余建明 2023/2/02 END--------------------------------------------
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
 
@@ -1854,7 +1853,7 @@ CREATE TABLE `amiyadb`.`tbl_bill` (
   `delete_date` DATETIME NULL,
   `create_by` INT UNSIGNED NOT NULL,
   `hospital_id` INT UNSIGNED NOT NULL,
-  `company_id` VARCHAR(45) NOT NULL,
+  `company_id` VARCHAR(50) NOT NULL,
   `bill_id` VARCHAR(50) NOT NULL,
   `bill_price` DECIMAL(12,2) NOT NULL,
   `other_price` DECIMAL(12,2) NULL,
@@ -1890,6 +1889,7 @@ CREATE TABLE `amiyadb`.`tbl_bill` (
 
 -----------------------------------------------余建明 2023/2/07 END--------------------------------------------
 
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
 

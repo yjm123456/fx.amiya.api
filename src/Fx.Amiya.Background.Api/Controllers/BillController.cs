@@ -114,6 +114,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 int employeeId = Convert.ToInt32(employee.Id);
                 AddBillDto addDto = new AddBillDto();
                 addDto.HospitalId = addVo.HospitalId;
+                addDto.DealPrice = addVo.DealPrice;
+                addDto.InformationPrice = addVo.InformationPrice;
+                addDto.SystemUpdatePrice = addVo.SystemUpdatePrice;
                 addDto.BillPrice = addVo.BillPrice;
                 addDto.TaxRate = addVo.TaxRate;
                 addDto.TaxPrice = addVo.TaxPrice;

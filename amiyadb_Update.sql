@@ -1857,7 +1857,6 @@ ADD COLUMN `order_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `order_from`,
 ADD COLUMN `is_oldcustomer` BIT(1) NOT NULL AFTER `order_price`;
 
 -----------------------------余建明 2023/01/16 END -----------------------------
-----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 -----------------------------------------------余建明 2023/2/02 BEGIN--------------------------------------------
 --票据表关联公司表
@@ -1884,6 +1883,11 @@ ADD COLUMN `bill_id` VARCHAR(50) NULL AFTER `is_create_bill`;
 ALTER TABLE `amiyadb`.`tbl_bill` 
 CHANGE COLUMN `id` `id` VARCHAR(50) NOT NULL ;
 
+--账单表加入价格
+ALTER TABLE `amiyadb`.`tbl_bill` 
+ADD COLUMN `deal_price` DECIMAL(12,2) NULL DEFAULT 0.00 AFTER `hospital_id`,
+ADD COLUMN `information_price` DECIMAL(12,2) NULL DEFAULT 0.00 AFTER `deal_price`,
+ADD COLUMN `system_update_price` DECIMAL(12,2) NULL DEFAULT 0.00 AFTER `information_price`;
 
 
 -----------------------------------------------余建明 2023/2/02 END--------------------------------------------
@@ -1907,6 +1911,7 @@ ALTER TABLE `tbl_goods_category`
 
 
 -----------------------------------------------王健 2023/2/07 END--------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
 

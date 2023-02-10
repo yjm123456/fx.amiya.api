@@ -332,7 +332,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, bool hidePhone)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, bool hidePhone)
         {
             try
             {
@@ -395,6 +395,21 @@ namespace Fx.Amiya.Service
                     dealInfo = from d in dealInfo
                                where (d.ReturnBackDate.HasValue)
                                && (d.ReturnBackDate.Value >= startrq && d.ReturnBackDate.Value < endrq)
+                               && (d.IsToHospital == true)
+                               select d;
+                }
+
+                if (CheckState == (int)CheckType.CheckedSuccess)
+                {
+                    if (!checkStartDate.HasValue && !checkEndDate.HasValue)
+                    {
+                        throw new Exception("审核时间为必填项，请完整填写审核的开始时间与结束时间！");
+                    }
+                    DateTime startrq = ((DateTime)checkStartDate).Date;
+                    DateTime endrq = ((DateTime)checkEndDate).Date.AddDays(1);
+                    dealInfo = from d in dealInfo
+                               where (d.ToHospitalDate.HasValue)
+                               && (d.CheckDate.Value >= startrq && d.CheckDate.Value < endrq)
                                && (d.IsToHospital == true)
                                select d;
                 }

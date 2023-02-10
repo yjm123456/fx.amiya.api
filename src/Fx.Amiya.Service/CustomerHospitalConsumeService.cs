@@ -156,20 +156,20 @@ namespace Fx.Amiya.Service
             customerHospitalConsume.IsReceiveAdditionalPurchase = addDto.IsReceiveAdditionalPurchase;
             customerHospitalConsume.IsConfirmOrder = false;
             await dalCustomerHospitalConsume.AddAsync(customerHospitalConsume, true);
-            var bind = await _dalBindCustomerService.GetAll()
-                  .Include(e => e.CustomerServiceAmiyaEmployee)
-                  .FirstOrDefaultAsync(e => e.BuyerPhone == addDto.Phone);
-            bind.NewConsumptionDate = DateTime.Now;
-            bind.NewConsumptionContentPlatform = (int)OrderFrom.BuyAgainOrder;
-            bind.NewContentPlatForm = ServiceClass.GerConsumeChannelText(addDto.Channel);
-            var liveAnchor = dalLiveAnchor.GetAll().Where(e => e.Id == addDto.LiveAnchorId).FirstOrDefault();
-            if (liveAnchor != null)
-            {
-                bind.NewLiveAnchor = liveAnchor.Name;
-            }
-            bind.AllPrice += addDto.Price;
-            bind.AllOrderCount += 1;
-            await _dalBindCustomerService.UpdateAsync(bind, true);
+            //var bind = await _dalBindCustomerService.GetAll()
+            //      .Include(e => e.CustomerServiceAmiyaEmployee)
+            //      .FirstOrDefaultAsync(e => e.BuyerPhone == addDto.Phone);
+            //bind.NewConsumptionDate = DateTime.Now;
+            //bind.NewConsumptionContentPlatform = (int)OrderFrom.BuyAgainOrder;
+            //bind.NewContentPlatForm = ServiceClass.GerConsumeChannelText(addDto.Channel);
+            //var liveAnchor = dalLiveAnchor.GetAll().Where(e => e.Id == addDto.LiveAnchorId).FirstOrDefault();
+            //if (liveAnchor != null)
+            //{
+            //    bind.NewLiveAnchor = liveAnchor.Name;
+            //}
+            //bind.AllPrice += addDto.Price;
+            //bind.AllOrderCount += 1;
+            //await _dalBindCustomerService.UpdateAsync(bind, true);
         }
 
         public async Task CustomerManageImportAsync(List<ImportCustomerHospitalConsumeDto> importAddDto)
@@ -258,13 +258,13 @@ namespace Fx.Amiya.Service
                 result.IsReceiveAdditionalPurchase = updateDto.IsReceiveAdditionalPurchase;
                 result.Remark = updateDto.Remark;
                 await dalCustomerHospitalConsume.UpdateAsync(result, true);
-                var liveAnchor = dalLiveAnchor.GetAll().Where(e => e.Id == updateDto.LiveAnchorId).FirstOrDefault();
-                if (liveAnchor==null) {
-                    await bindCustomerServiceService.UpdateConsumePriceAsync(result.Phone, dealPriceDetails, (int)OrderFrom.BuyAgainOrder, 0);
+                //var liveAnchor = dalLiveAnchor.GetAll().Where(e => e.Id == updateDto.LiveAnchorId).FirstOrDefault();
+                //if (liveAnchor==null) {
+                //    await bindCustomerServiceService.UpdateConsumePriceAsync(result.Phone, dealPriceDetails, (int)OrderFrom.BuyAgainOrder, 0);
 
-                } else {
-                    await bindCustomerServiceService.UpdateConsumePriceAndLiveAnchorAsync(result.Phone, dealPriceDetails, (int)OrderFrom.BuyAgainOrder, 0, liveAnchor.Name);
-                }     
+                //} else {
+                //    await bindCustomerServiceService.UpdateConsumePriceAndLiveAnchorAsync(result.Phone, dealPriceDetails, (int)OrderFrom.BuyAgainOrder, 0, liveAnchor.Name);
+                //}     
                 unitOfWork.Commit();
             }
             catch (Exception er)

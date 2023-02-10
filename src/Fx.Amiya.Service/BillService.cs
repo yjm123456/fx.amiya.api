@@ -90,7 +90,7 @@ namespace Fx.Amiya.Service
                         };
             FxPageInfo<BillDto> billPageInfo = new FxPageInfo<BillDto>();
             billPageInfo.TotalCount = await bills.CountAsync();
-            billPageInfo.List = await bills.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+            billPageInfo.List = await bills.OrderByDescending(x => x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
             return billPageInfo;
         }
 
@@ -107,6 +107,9 @@ namespace Fx.Amiya.Service
             {
                 Bill bill = new Bill();
                 bill.Id = CreateOrderIdHelper.GetBillNextNumber();
+                bill.DealPrice = addDto.DealPrice;
+                bill.InformationPrice = addDto.InformationPrice;
+                bill.SystemUpdatePrice = addDto.SystemUpdatePrice;
                 bill.HospitalId = addDto.HospitalId;
                 bill.BillPrice = addDto.BillPrice;
                 bill.TaxRate = addDto.TaxRate;
@@ -124,13 +127,15 @@ namespace Fx.Amiya.Service
                 bill.CreateDate = addDto.CreateDate;
                 bill.Valid = true;
                 await dalBill.AddAsync(bill, true);
-
-                //调用对账单表更新是否开票接口
-                ReconciliationDocumentsCreateBillDto reconciliationDocumentsCreateBillDto = new ReconciliationDocumentsCreateBillDto();
-                reconciliationDocumentsCreateBillDto.BillId = bill.Id;
-                reconciliationDocumentsCreateBillDto.ReconciliationDocumentsIdList = addDto.ReconciliationDocumentsIdList;
-                reconciliationDocumentsCreateBillDto.IsCreateBill = true;
-                await reconciliationDocumentsService.ReconciliationDocumentsCreateBillAsync(reconciliationDocumentsCreateBillDto);
+                if (bill.BillType == (int)BillTypeTextEnum.BeautyClinic)
+                {
+                    //调用对账单表更新是否开票接口
+                    ReconciliationDocumentsCreateBillDto reconciliationDocumentsCreateBillDto = new ReconciliationDocumentsCreateBillDto();
+                    reconciliationDocumentsCreateBillDto.BillId = bill.Id;
+                    reconciliationDocumentsCreateBillDto.ReconciliationDocumentsIdList = addDto.ReconciliationDocumentsIdList;
+                    reconciliationDocumentsCreateBillDto.IsCreateBill = true;
+                    await reconciliationDocumentsService.ReconciliationDocumentsCreateBillAsync(reconciliationDocumentsCreateBillDto);
+                }
                 unitOfWork.Commit();
             }
             catch (Exception err)
@@ -223,14 +228,19 @@ namespace Fx.Amiya.Service
             {
 
                 var result = await dalBill.GetAll().SingleOrDefaultAsync(e => e.Id == id);
-                await dalBill.DeleteAsync(result, true);
-                //调用对账单表更新是否开票接口
-                ReconciliationDocumentsCreateBillDto reconciliationDocumentsCreateBillDto = new ReconciliationDocumentsCreateBillDto();
-                reconciliationDocumentsCreateBillDto.BillId = "";
-                var reconciliationDocuments = await reconciliationDocumentsService.GetByBillIdListAsync(id);
-                reconciliationDocumentsCreateBillDto.ReconciliationDocumentsIdList = reconciliationDocuments.Select(x => x.Id).ToList();
-                reconciliationDocumentsCreateBillDto.IsCreateBill = false;
-                await reconciliationDocumentsService.ReconciliationDocumentsCreateBillAsync(reconciliationDocumentsCreateBillDto);
+                result.Valid = false;
+                await dalBill.UpdateAsync(result, true);
+
+                if (result.BillType == (int)BillTypeTextEnum.BeautyClinic)
+                {
+                    //调用对账单表更新是否开票接口
+                    ReconciliationDocumentsCreateBillDto reconciliationDocumentsCreateBillDto = new ReconciliationDocumentsCreateBillDto();
+                    reconciliationDocumentsCreateBillDto.BillId = "";
+                    var reconciliationDocuments = await reconciliationDocumentsService.GetByBillIdListAsync(id);
+                    reconciliationDocumentsCreateBillDto.ReconciliationDocumentsIdList = reconciliationDocuments.Select(x => x.Id).ToList();
+                    reconciliationDocumentsCreateBillDto.IsCreateBill = false;
+                    await reconciliationDocumentsService.ReconciliationDocumentsCreateBillAsync(reconciliationDocumentsCreateBillDto);
+                }
                 unitOfWork.Commit();
             }
             catch (Exception er)
@@ -254,33 +264,33 @@ namespace Fx.Amiya.Service
                 result.ReturnBackState = (int)BillReturnBackStateTextEnum.ReturnBacking;
                 if (result == null)
                     throw new Exception("未找到发票信息");
+                decimal billTotalPrice = result.BillPrice;
+                if (result.OtherPrice.HasValue)
+                {
+                    billTotalPrice += result.OtherPrice.Value;
+                }
                 if (result.ReturnBackPrice.HasValue)
                 {
                     result.ReturnBackPrice += updateDto.ReturnBackPrice;
-                    decimal billTotalPrice = result.BillPrice;
-                    if (result.OtherPrice.HasValue)
-                    {
-                        billTotalPrice += result.OtherPrice.Value;
-                    }
-                    if (result.ReturnBackPrice == billTotalPrice)
-                    {
-                        result.ReturnBackState = (int)BillReturnBackStateTextEnum.ReturnBackSuccessful;
-
-                        //调用对账单表回款业务（todo;）
-                        ReconciliationDocumentsReturnBackPriceDto reconciliationDocumentsReturnBackPriceDto = new ReconciliationDocumentsReturnBackPriceDto();
-                        reconciliationDocumentsReturnBackPriceDto.ReturnBackDate = updateDto.ReturnBackDate;
-                        var reconciliationDocuments = await reconciliationDocumentsService.GetByBillIdListAsync(updateDto.Id);
-                        reconciliationDocumentsReturnBackPriceDto.ReconciliationDocumentsIdList = reconciliationDocuments.Select(x => x.Id).ToList();
-                        await reconciliationDocumentsService.TagReconciliationStateAsync(reconciliationDocumentsReturnBackPriceDto);
-                    }
-                    if (result.ReturnBackPrice > billTotalPrice)
-                    {
-                        throw new Exception("当前回款金额与已回款金额累计（" + result.ReturnBackPrice + "元）不能大于发票金额与其他费用的总和（" + billTotalPrice + "）！");
-                    }
                 }
                 else
                 {
                     result.ReturnBackPrice = updateDto.ReturnBackPrice;
+                }
+                if (result.ReturnBackPrice == billTotalPrice)
+                {
+                    result.ReturnBackState = (int)BillReturnBackStateTextEnum.ReturnBackSuccessful;
+
+                    //调用对账单表回款业务（todo;）
+                    ReconciliationDocumentsReturnBackPriceDto reconciliationDocumentsReturnBackPriceDto = new ReconciliationDocumentsReturnBackPriceDto();
+                    reconciliationDocumentsReturnBackPriceDto.ReturnBackDate = updateDto.ReturnBackDate;
+                    var reconciliationDocuments = await reconciliationDocumentsService.GetByBillIdListAsync(updateDto.Id);
+                    reconciliationDocumentsReturnBackPriceDto.ReconciliationDocumentsIdList = reconciliationDocuments.Select(x => x.Id).ToList();
+                    await reconciliationDocumentsService.TagReconciliationStateAsync(reconciliationDocumentsReturnBackPriceDto);
+                }
+                if (result.ReturnBackPrice > billTotalPrice)
+                {
+                    throw new Exception("当前回款金额与已回款金额累计（" + result.ReturnBackPrice + "元）不能大于发票金额与其他费用的总和（" + billTotalPrice + "）！");
                 }
                 result.UpdateDate = DateTime.Now;
                 await dalBill.UpdateAsync(result, true);

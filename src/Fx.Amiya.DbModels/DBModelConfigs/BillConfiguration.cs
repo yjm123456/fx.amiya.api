@@ -17,6 +17,9 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).HasColumnName("id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(e => e.HospitalId).HasColumnName("hospital_id").HasColumnType("int").IsRequired();
+            builder.Property(e => e.DealPrice).HasColumnName("deal_price").HasColumnType("DECIMAL(12,2)").IsRequired(false);
+            builder.Property(e => e.InformationPrice).HasColumnName("information_price").HasColumnType("DECIMAL(12,2)").IsRequired(false);
+            builder.Property(e => e.SystemUpdatePrice).HasColumnName("system_update_price").HasColumnType("DECIMAL(12,2)").IsRequired(false);
             builder.Property(e => e.BillPrice).HasColumnName("bill_price").HasColumnType("DECIMAL(12,2)").IsRequired();
             builder.Property(e => e.TaxRate).HasColumnName("tax_rate").HasColumnType("DECIMAL(3,2)").IsRequired();
             builder.Property(e => e.TaxPrice).HasColumnName("tax_price").HasColumnType("DECIMAL(12,2)").IsRequired();
