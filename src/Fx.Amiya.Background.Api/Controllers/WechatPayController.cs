@@ -81,7 +81,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception("退款失败请稍后重试");
             }
 
         }

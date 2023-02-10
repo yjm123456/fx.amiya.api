@@ -930,7 +930,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
             try
             {
-                unitOfWork.BeginTransaction();
+                
                 var token = tokenReader.GetToken();
                 var sessionInfo = sessionStorage.GetSession(token);
                 string customerId = sessionInfo.FxCustomerId;
@@ -992,11 +992,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 updateOrderTrade.AddressId = orderTrade.AddressId;
                 updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
                 await orderService.UpdateOrderTradeAsync(updateOrderTrade);
-                unitOfWork.Commit();
+                
             }
             catch (Exception ex)
             {
-                unitOfWork.RollBack();
+                
                 throw ex;
             }
             return ResultData.Success();

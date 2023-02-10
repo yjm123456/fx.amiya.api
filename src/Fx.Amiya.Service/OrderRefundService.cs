@@ -5,6 +5,7 @@ using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
+using Fx.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -22,9 +23,9 @@ namespace Fx.Amiya.Service
         private IDalOrderInfo dalOrderInfo;
         private IDalAmiyaEmployee dalAmiyaEmployee;
         private IBindCustomerServiceService bindCustomerServiceService;
+        private IUnitOfWork unitOfWork;
 
-
-        public OrderRefundService(IDalOrderRefund dalOrderRefund, IOrderService orderService, IDalOrderTrade dalOrderTrade, IDalOrderInfo dalOrderInfo, IDalAmiyaEmployee dalAmiyaEmployee, IBindCustomerServiceService bindCustomerServiceService)
+        public OrderRefundService(IDalOrderRefund dalOrderRefund, IOrderService orderService, IDalOrderTrade dalOrderTrade, IDalOrderInfo dalOrderInfo, IDalAmiyaEmployee dalAmiyaEmployee, IBindCustomerServiceService bindCustomerServiceService, IUnitOfWork unitOfWork)
         {
             this.dalOrderRefund = dalOrderRefund;
             this.orderService = orderService;
@@ -32,6 +33,7 @@ namespace Fx.Amiya.Service
             this.dalOrderInfo = dalOrderInfo;
             this.dalAmiyaEmployee = dalAmiyaEmployee;
             this.bindCustomerServiceService = bindCustomerServiceService;
+            this.unitOfWork = unitOfWork;
         }
         /// <summary>
         /// 退款订单审核
@@ -63,79 +65,97 @@ namespace Fx.Amiya.Service
 
         public async Task<CreateRefundOrderResult> CreateRefundOrderAsync(CreateRefundOrderDto createRefundOrderDto)
         {
-            OrderRefund orderRefund = new OrderRefund();
-            var refundOrder = dalOrderRefund.GetAll().Where(e=>e.TradeId==createRefundOrderDto.TradeId&&(createRefundOrderDto.OrderId==null||e.OrderId==createRefundOrderDto.OrderId)).FirstOrDefault();
-            if (refundOrder!=null) {
-                throw new Exception("请勿重复提交");
-            }
 
-            var trade = dalOrderTrade.GetAll().Where(e => e.TradeId == createRefundOrderDto.TradeId).Include(e=>e.OrderInfoList).SingleOrDefault();
-            if (trade==null) {
-                throw new Exception("交易编号不存在");
-            }
-            if (trade.StatusCode == OrderStatusCode.TRADE_FINISHED) {
-                throw new Exception("已核销订单不能退款");
-            }
-            if (!(trade.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || trade.StatusCode == OrderStatusCode.TRADE_BUYER_SIGNED || trade.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || trade.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS||trade.StatusCode==OrderStatusCode.PARTIAL_REFUND)) {
-                throw new Exception("当前订单状态不能退款");
-            }
-            
-            
-            List<string> ids = new List<string>();
-            foreach (var item in trade.OrderInfoList)
+            try
             {
-                if (item.ExchangeType==0) {
-                    throw new Exception("积分支付订单不能申请退款!");
-                }
-                if (item.AppType != (byte)AppType.MiniProgram)
+                unitOfWork.BeginTransaction();
+                OrderRefund orderRefund = new OrderRefund();
+                var refundOrder = dalOrderRefund.GetAll().Where(e => e.TradeId == createRefundOrderDto.TradeId && (createRefundOrderDto.OrderId == null || e.OrderId == createRefundOrderDto.OrderId)).FirstOrDefault();
+                if (refundOrder != null)
                 {
-                    throw new Exception("当前订单不属于小程序!");
+                    throw new Exception("请勿重复提交");
                 }
-                else {
-                    ids.Add(item.Id);
-                }
-            }
-            if (!string.IsNullOrEmpty(createRefundOrderDto.OrderId))
-            {
-                throw new Exception("暂不支持部分退款");
-                /*var order = await dalOrderInfo.GetAll().Where(e => e.Id == createRefundOrderDto.OrderId && e.TradeId == createRefundOrderDto.TradeId).SingleOrDefaultAsync();
-                if (order == null)
+
+                var trade = dalOrderTrade.GetAll().Where(e => e.TradeId == createRefundOrderDto.TradeId).Include(e => e.OrderInfoList).SingleOrDefault();
+                if (trade == null)
                 {
-                    throw new Exception("订单编号不存在");
+                    throw new Exception("交易编号不存在");
                 }
-                if (!(order.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || order.StatusCode == OrderStatusCode.TRADE_BUYER_SIGNED || order.StatusCode == OrderStatusCode.TRADE_FINISHED || order.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || order.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || order.StatusCode == OrderStatusCode.PARTIAL_REFUND))
+                if (trade.StatusCode == OrderStatusCode.TRADE_FINISHED)
+                {
+                    throw new Exception("已核销订单不能退款");
+                }
+                if (!(trade.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || trade.StatusCode == OrderStatusCode.TRADE_BUYER_SIGNED || trade.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || trade.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || trade.StatusCode == OrderStatusCode.PARTIAL_REFUND))
                 {
                     throw new Exception("当前订单状态不能退款");
-                }   */
-            }
-            else {
-                orderRefund.CheckState = (byte)CheckState.CheckPending;
-                orderRefund.IsPartial = false;
-                orderRefund.ActualPayAmount = trade.TotalAmount.Value;
-                orderRefund.RefundAmount = trade.TotalAmount.Value;
-                orderRefund.PayDate = trade.CreateDate;
-                orderRefund.ExchangeType = (trade.OrderInfoList.FirstOrDefault()?.ExchangeType).Value;
-                trade.StatusCode = OrderStatusCode.REFUNDING;
-                await dalOrderTrade.UpdateAsync(trade,true);
-                string goodsName = string.Empty;
-                var nameList = new List<string>();
+                }
+
+
+                List<string> ids = new List<string>();
                 foreach (var item in trade.OrderInfoList)
                 {
-                    nameList.Add(item.GoodsName);
-                    await orderService.UpdateOrderStatus(item.Id, OrderStatusCode.REFUNDING);
+                    if (item.ExchangeType == 0)
+                    {
+                        throw new Exception("积分支付订单不能申请退款!");
+                    }
+                    if (item.AppType != (byte)AppType.MiniProgram)
+                    {
+                        throw new Exception("当前订单不属于小程序!");
+                    }
+                    else
+                    {
+                        ids.Add(item.Id);
+                    }
                 }
-                orderRefund.GoodsName = string.Join(",",nameList);
+                if (!string.IsNullOrEmpty(createRefundOrderDto.OrderId))
+                {
+                    throw new Exception("暂不支持部分退款");
+                    /*var order = await dalOrderInfo.GetAll().Where(e => e.Id == createRefundOrderDto.OrderId && e.TradeId == createRefundOrderDto.TradeId).SingleOrDefaultAsync();
+                    if (order == null)
+                    {
+                        throw new Exception("订单编号不存在");
+                    }
+                    if (!(order.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || order.StatusCode == OrderStatusCode.TRADE_BUYER_SIGNED || order.StatusCode == OrderStatusCode.TRADE_FINISHED || order.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || order.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || order.StatusCode == OrderStatusCode.PARTIAL_REFUND))
+                    {
+                        throw new Exception("当前订单状态不能退款");
+                    }   */
+                }
+                else
+                {
+                    orderRefund.CheckState = (byte)CheckState.CheckPending;
+                    orderRefund.IsPartial = false;
+                    orderRefund.ActualPayAmount = trade.TotalAmount.Value;
+                    orderRefund.RefundAmount = trade.TotalAmount.Value;
+                    orderRefund.PayDate = trade.CreateDate;
+                    orderRefund.ExchangeType = (trade.OrderInfoList.FirstOrDefault()?.ExchangeType).Value;
+                    trade.StatusCode = OrderStatusCode.REFUNDING;
+                    await dalOrderTrade.UpdateAsync(trade, true);
+                    string goodsName = string.Empty;
+                    var nameList = new List<string>();
+                    foreach (var item in trade.OrderInfoList)
+                    {
+                        nameList.Add(item.GoodsName);
+                        await orderService.UpdateOrderStatus(item.Id, OrderStatusCode.REFUNDING);
+                    }
+                    orderRefund.GoodsName = string.Join(",", nameList);
+                }
+                orderRefund.Id = Guid.NewGuid().ToString().Replace("-", ""); ;
+                orderRefund.CustomerId = createRefundOrderDto.CustomerId;
+                orderRefund.OrderId = string.Join(",", ids);
+                orderRefund.TradeId = createRefundOrderDto.TradeId;
+                orderRefund.Remark = createRefundOrderDto.Remark;
+                orderRefund.CreateDate = DateTime.Now;
+                orderRefund.RefundState = (byte)RefundState.RefundPending;
+                orderRefund.Valid = true;
+                await dalOrderRefund.AddAsync(orderRefund, true);
+                unitOfWork.Commit();
+                return new CreateRefundOrderResult { Result = true, Msg = "提交成功" };
             }
-            orderRefund.Id = Guid.NewGuid().ToString().Replace("-",""); ;
-            orderRefund.CustomerId = createRefundOrderDto.CustomerId;
-            orderRefund.OrderId = string.Join(",",ids);
-            orderRefund.TradeId = createRefundOrderDto.TradeId;
-            orderRefund.Remark = createRefundOrderDto.Remark;           
-            orderRefund.CreateDate = DateTime.Now;
-            orderRefund.RefundState = (byte)RefundState.RefundPending;
-            orderRefund.Valid = true;
-            await dalOrderRefund.AddAsync(orderRefund,true);
-            return new CreateRefundOrderResult { Result=true,Msg="提交成功"};           
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw new Exception("退款提交失败请稍后重试!");
+            }    
         }
         /// <summary>
         /// 获取退款订单列表
