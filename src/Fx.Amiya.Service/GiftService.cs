@@ -697,7 +697,7 @@ namespace Fx.Amiya.Service
                 sendGiftPresentMessageDto.CustomerId = customerId;
                 sendGiftPresentMessageDto.OrderId = addDto.OrderId;
                 sendGiftPresentMessageDto.GiftName = gift.Name;
-                sendGiftPresentMessageDto.Remark = "您的礼品你发放!";
+                sendGiftPresentMessageDto.Remark = "您的礼品已发放!";
                 await miniProgramTemplateMessageSendService.SendGiftPresentMessageAsync(sendGiftPresentMessageDto);
             }
             catch (Exception ex)
