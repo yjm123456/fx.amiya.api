@@ -68,7 +68,7 @@ namespace Fx.Amiya.Service
 
             try
             {
-                unitOfWork.BeginTransaction();
+                
                 OrderRefund orderRefund = new OrderRefund();
                 var refundOrder = dalOrderRefund.GetAll().Where(e => e.TradeId == createRefundOrderDto.TradeId && (createRefundOrderDto.OrderId == null || e.OrderId == createRefundOrderDto.OrderId)).FirstOrDefault();
                 if (refundOrder != null)
@@ -148,12 +148,12 @@ namespace Fx.Amiya.Service
                 orderRefund.RefundState = (byte)RefundState.RefundPending;
                 orderRefund.Valid = true;
                 await dalOrderRefund.AddAsync(orderRefund, true);
-                unitOfWork.Commit();
+                
                 return new CreateRefundOrderResult { Result = true, Msg = "提交成功" };
             }
             catch (Exception ex)
             {
-                unitOfWork.RollBack();
+                
                 throw new Exception("退款提交失败请稍后重试!");
             }    
         }
