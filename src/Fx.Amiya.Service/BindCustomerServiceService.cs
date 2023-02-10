@@ -214,7 +214,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns></returns>
-        public async Task UpdateConsumePriceAsync(string phone, decimal Price, int Channel, int AllOrderCount)
+        public async Task UpdateConsumePriceAsync(string phone, decimal Price, int Channel, string newLiveAnchor, string newWeChatNo, string newContentPlatForm, int AllOrderCount)
         {
             var bindCustomerService = await dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == phone);
             if (bindCustomerService != null)
@@ -236,8 +236,20 @@ namespace Fx.Amiya.Service
                     bindCustomerService.AllOrderCount = AllOrderCount;
                 }
                 bindCustomerService.NewConsumptionContentPlatform = Channel;
+                if (!string.IsNullOrEmpty(newLiveAnchor))
+                {
+                    bindCustomerService.NewLiveAnchor = newLiveAnchor;
+                }
+                if (!string.IsNullOrEmpty(newWeChatNo))
+                {
+                    bindCustomerService.NewWechatNo = newWeChatNo;
+                }
+                if (!string.IsNullOrEmpty(newContentPlatForm))
+                {
+                    bindCustomerService.NewContentPlatForm = newContentPlatForm;
+                }
                 bindCustomerService.NewConsumptionDate = DateTime.Now;
-                
+
                 await dalBindCustomerService.UpdateAsync(bindCustomerService, true);
             }
 

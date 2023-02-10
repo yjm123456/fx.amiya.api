@@ -46,7 +46,7 @@ namespace Fx.Amiya.IService
         /// <param name="phone"></param>
         /// <param name="Price"></param>
         /// <returns></returns>
-        Task UpdateConsumePriceAsync(string phone, decimal Price,int Channel, int AllOrderCount);
+        Task UpdateConsumePriceAsync(string phone, decimal Price,int Channel, string newLiveAnchor, string newWeChatNo, string newContentPlatForm, int AllOrderCount);
 
         /// <summary>
         /// 扣除客户消费累计金额与订单数

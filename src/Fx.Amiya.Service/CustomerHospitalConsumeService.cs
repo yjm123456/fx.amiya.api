@@ -101,9 +101,10 @@ namespace Fx.Amiya.Service
                 bind.NewConsumptionContentPlatform = (int)OrderFrom.BuyAgainOrder;
                 bind.NewContentPlatForm = ServiceClass.GerConsumeChannelText(addDto.Channel);
                 var liveAnchor = dalLiveAnchor.GetAll().Where(e => e.Id == addDto.LiveAnchorId).FirstOrDefault();
-                if (liveAnchor!=null) {
+                if (liveAnchor != null)
+                {
                     bind.NewLiveAnchor = liveAnchor.Name;
-                }                
+                }
                 bind.AllPrice += addDto.Price;
                 bind.AllOrderCount += 1;
                 await _dalBindCustomerService.UpdateAsync(bind, true);
@@ -289,6 +290,13 @@ namespace Fx.Amiya.Service
                 bind.NewConsumptionDate = DateTime.Now;
                 bind.NewConsumptionContentPlatform = (int)OrderFrom.BuyAgainOrder;
                 bind.NewContentPlatForm = ServiceClass.GerConsumeChannelText(result.Channel.Value);
+                var liveanchorId = result.LiveAnchorId;
+                if (liveanchorId != 0)
+                {
+                    var liveAnchor = await liveAnchorService.GetByIdAsync(liveanchorId);
+                    bind.NewLiveAnchor = liveAnchor.Name;
+                }
+                bind.NewContentPlatForm = result.Channel.HasValue ? ServiceClass.GerConsumeChannelText(result.Channel.Value) : "消费追踪";
                 bind.AllPrice += result.Price;
                 bind.AllOrderCount += 1;
                 await _dalBindCustomerService.UpdateAsync(bind, true);

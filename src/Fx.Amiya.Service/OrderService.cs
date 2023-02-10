@@ -232,7 +232,7 @@ namespace Fx.Amiya.Service
                                 TradeId = d.TradeId,
                                 FinalConsumptionHospital = d.FinalConsumptionHospital,
                                 LiveAnchorId = d.LiveAnchorId,
-                                Standard=d.Standard
+                                Standard = d.Standard
                             };
 
 
@@ -573,7 +573,7 @@ namespace Fx.Amiya.Service
                                 ExchangeType = d.ExchangeType,
                                 ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)d.ExchangeType),
                                 TradeId = d.TradeId,
-                                Standard=d.Standard
+                                Standard = d.Standard
                             };
 
 
@@ -1500,7 +1500,7 @@ namespace Fx.Amiya.Service
                         if (findInfo != 0)
                         {
                             var dealPriceDetails = ActuralPayment - orderInfo.ActualPayment;
-                            await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder, 0);
+                            await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder, "", "", "", 0);
                         }
                     }
                 }
@@ -1607,7 +1607,7 @@ namespace Fx.Amiya.Service
                 orderInfo.UpdateDate = DateTime.Now;
                 await dalOrderInfo.UpdateAsync(orderInfo, true);
 
-                await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, 0, (int)OrderFrom.ThirdPartyOrder, 0);
+                await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, 0, (int)OrderFrom.ThirdPartyOrder, "", "", ServiceClass.GetAppTypeText(orderInfo.AppType), 0);
             }
             catch (Exception e)
             {
@@ -3015,7 +3015,7 @@ namespace Fx.Amiya.Service
                              ExchangeType = d.ExchangeType,
                              ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)d.ExchangeType),
                              TradeId = d.TradeId,
-                             Standard=d.Standard
+                             Standard = d.Standard
                          };
             return await orders.ToListAsync();
         }
@@ -3380,7 +3380,7 @@ namespace Fx.Amiya.Service
                 var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(orderInfo.Phone);
                 if (findInfo != 0)
                 {
-                    await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder, 1);
+                    await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder, "", "", ServiceClass.GetAppTypeText(orderInfo.AppType), 1);
                 }
                 unitOfWork.Commit();
             }

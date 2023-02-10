@@ -1869,7 +1869,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var order = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
+                var order = await _dalContentPlatformOrder.GetAll().Include(x=>x.LiveAnchor).Include(x=>x.Contentplatform).Include(x => x.ContentPlatformOrderSendList).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 var isoldCustomer = false;
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
                 var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true).FirstOrDefault();
@@ -1900,7 +1900,7 @@ namespace Fx.Amiya.Service
                 if (input.IsFinish == true)
                 {
                     var price = order.DepositAmount.HasValue ? order.DepositAmount.Value : 0.00M;
-                    await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + input.DealAmount.Value, (int)OrderFrom.ContentPlatFormOrder, 1);
+                    await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + input.DealAmount.Value, (int)OrderFrom.ContentPlatFormOrder,order.LiveAnchor.Name,order.LiveAnchorWeChatNo,order.Contentplatform.ContentPlatformName, 1);
                     await customerBaseInfoService.UpdateState(1, order.Phone);
                     order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.OrderComplete);
                     order.DealAmount += input.DealAmount;
@@ -2001,7 +2001,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.Id).SingleOrDefaultAsync();
+                var order = await _dalContentPlatformOrder.GetAll().Include(x=>x.LiveAnchor).Include(x=>x.Contentplatform).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 var isoldCustomer = false;
                 if (order.CheckState == (int)CheckType.CheckedSuccess)
                 {
@@ -2034,7 +2034,7 @@ namespace Fx.Amiya.Service
                 {
                     var dealPriceDetails = input.DealAmount.Value - orderDealInfo.Price;
                     var price = order.DepositAmount.HasValue ? order.DepositAmount.Value : 0.00M;
-                    await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + dealPriceDetails, (int)OrderFrom.ContentPlatFormOrder, 0);
+                    await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + dealPriceDetails, (int)OrderFrom.ContentPlatFormOrder, order.LiveAnchor.Name, order.LiveAnchorWeChatNo, order.Contentplatform.ContentPlatformName, 0);
                     order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.OrderComplete);
                     order.DealAmount += input.DealAmount;
                     order.LateProjectStage = input.LastProjectStage;

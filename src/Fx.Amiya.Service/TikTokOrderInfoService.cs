@@ -207,7 +207,7 @@ namespace Fx.Amiya.Service
                                 var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(orderInfo.Phone);
                                 if (findInfo != 0)
                                 {
-                                    await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder, 1);
+                                    await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder, "", "", "抖音", 1);
                                 }
                             }
 
@@ -589,7 +589,7 @@ namespace Fx.Amiya.Service
                     var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(tikTokOrder.Phone);
                     if (findInfo != 0)
                     {
-                        await _bindCustomerService.UpdateConsumePriceAsync(tikTokOrder.Phone, 0, (int)OrderFrom.ThirdPartyOrder, 0);
+                        await _bindCustomerService.UpdateConsumePriceAsync(tikTokOrder.Phone, 0, (int)OrderFrom.ThirdPartyOrder, "", "", "抖音", 0);
                     }
                 }
             }
