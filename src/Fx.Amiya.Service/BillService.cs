@@ -272,15 +272,9 @@ namespace Fx.Amiya.Service
 
                 if (result.BillType == (int)BillTypeTextEnum.BeautyClinic)
                 {
-                    //调用对账单表更新是否开票接口
-                    ReconciliationDocumentsCreateBillDto reconciliationDocumentsCreateBillDto = new ReconciliationDocumentsCreateBillDto();
-                    reconciliationDocumentsCreateBillDto.BillId = "";
+                    
                     var reconciliationDocuments = await reconciliationDocumentsService.GetByBillIdListAsync(id);
-                    reconciliationDocumentsCreateBillDto.ReconciliationDocumentsIdList = reconciliationDocuments.Select(x => x.Id).ToList();
-                    reconciliationDocumentsCreateBillDto.IsCreateBill = false;
-                    await reconciliationDocumentsService.ReconciliationDocumentsCreateBillAsync(reconciliationDocumentsCreateBillDto);
-
-                    var reconciliationDocumentsList=  (await reconciliationDocumentsService.GetByBillIdListAsync(id)).Select(e=>e.Id).ToList();
+                    var reconciliationDocumentsList= reconciliationDocuments.Select(x => x.Id).ToList();
 
                     //调用对账单表更新内容平台,成交信息,三方订单,升单 是否开票及开票公司
                     var settleList = await reconciliationDocumentsService.GetRecommandDocumentSettleListAsync(reconciliationDocumentsList);
@@ -312,6 +306,13 @@ namespace Fx.Amiya.Service
                             await customerHospitalConsumeService.UpdateCreateBillAndBelongCompany(update);
                         }
                     }
+
+                    //调用对账单表更新是否开票接口
+                    ReconciliationDocumentsCreateBillDto reconciliationDocumentsCreateBillDto = new ReconciliationDocumentsCreateBillDto();
+                    reconciliationDocumentsCreateBillDto.BillId = "";
+                    reconciliationDocumentsCreateBillDto.ReconciliationDocumentsIdList = reconciliationDocuments.Select(x => x.Id).ToList();
+                    reconciliationDocumentsCreateBillDto.IsCreateBill = false;
+                    await reconciliationDocumentsService.ReconciliationDocumentsCreateBillAsync(reconciliationDocumentsCreateBillDto);
                 }
                 unitOfWork.Commit();
             }
