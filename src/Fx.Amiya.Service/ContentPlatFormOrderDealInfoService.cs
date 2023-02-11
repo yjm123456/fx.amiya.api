@@ -23,6 +23,7 @@ namespace Fx.Amiya.Service
         private IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo;
         private IContentPlatFormCustomerPictureService _contentPlatFormCustomerPictureService;
         private IHospitalInfoService _hospitalInfoService;
+        private ICompanyBaseInfoService companyBaseInfoService;
         private IDalBindCustomerService _dalBindCustomerService;
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private IWxAppConfigService wxAppConfigService;
@@ -33,6 +34,7 @@ namespace Fx.Amiya.Service
         private IDalRecommandDocumentSettle dalRecommandDocumentSettle;
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
+            ICompanyBaseInfoService companyBaseInfoService,
             IWxAppConfigService wxAppConfigService,
             IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
             IDalBindCustomerService dalBindCustomerService,
@@ -48,6 +50,7 @@ namespace Fx.Amiya.Service
             _dalBindCustomerService = dalBindCustomerService;
             _dalAmiyaEmployee = dalAmiyaEmployee;
             this.unitOfWork = unitOfWork;
+            this.companyBaseInfoService = companyBaseInfoService;
             _liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
             _dalHospitalInfo = dalHospitalInfo;
             this.dalRecommandDocumentSettle = dalRecommandDocumentSettle;
@@ -332,7 +335,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, bool hidePhone)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord, int employeeId, bool hidePhone)
         {
             try
             {
@@ -396,6 +399,13 @@ namespace Fx.Amiya.Service
                                where (d.ReturnBackDate.HasValue)
                                && (d.ReturnBackDate.Value >= startrq && d.ReturnBackDate.Value < endrq)
                                && (d.IsToHospital == true)
+                               select d;
+                }
+                if (isCreateBill.HasValue)
+                {
+                    dealInfo = from d in dealInfo
+                               where (d.IsCreateBill == isCreateBill.Value)
+                               && (string.IsNullOrEmpty(belongCompanyId) || d.BelongCompany == belongCompanyId)
                                select d;
                 }
 
@@ -464,6 +474,8 @@ namespace Fx.Amiya.Service
                                                        SystemUpdatePrice = d.SystemUpdatePrice,
                                                        SettlePrice = d.SettlePrice,
                                                        CheckRemark = d.CheckRemark,
+                                                       IsCreateBill=d.IsCreateBill,
+                                                       BelongCompany=d.BelongCompany,
                                                        IsReturnBackPrice = d.IsReturnBackPrice,
                                                        ReturnBackDate = d.ReturnBackDate,
                                                        ReturnBackPrice = d.ReturnBackPrice,
@@ -498,6 +510,11 @@ namespace Fx.Amiya.Service
                     {
                         var empInfo = await _amiyaEmployeeService.GetByIdAsync(z.CreateBy);
                         z.CreateByEmpName = empInfo.Name;
+                    }
+                    if (z.IsCreateBill==true)
+                    {
+                        var belongCompanyInfo = await companyBaseInfoService.GetByIdAsync(z.BelongCompany);
+                        z.BelongCompanyName = belongCompanyInfo.Name;
                     }
                 }
                 return ContentPlatFOrmOrderDealInfoPageInfo;

@@ -1917,7 +1917,7 @@ ALTER TABLE `tbl_goods_category`
 
 
 
--------------------------------------2023/2/10 BEGIN----------------------------------------------
+-------------------------------------王健 2023/2/10 BEGIN----------------------------------------------
 
 ----内容平台订单加入是否开票和开票公司
 ALTER TABLE `tbl_content_platform_order`
@@ -1943,7 +1943,7 @@ ALTER TABLE `tbl_customer_hospital_consume`
 ALTER TABLE `tbl_order_info`
 	ADD COLUMN `is_create_bill` BIT NOT NULL DEFAULT 0 AFTER `reconciliation_documents_id`,
 	ADD COLUMN `belong_company` VARCHAR(50) NULL DEFAULT NULL AFTER `is_create_bill`;
--------------------------------------2023/2/10 END----------------------------------------------
+-------------------------------------王健 2023/2/10 END----------------------------------------------
 
 
 

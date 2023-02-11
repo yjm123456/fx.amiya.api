@@ -59,6 +59,7 @@ namespace Fx.Amiya.Service
         private IBindCustomerServiceService _bindCustomerService;
         private ILiveAnchorService liveAnchorService;
         private IDalAmiyaEmployee dalAmiyaEmployee;
+        private ICompanyBaseInfoService companyBaseInfoService;
         private ICustomerService customerService;
         private IMemberRankInfo memberRankInfoService;
         private IDalReceiveGift dalReceiveGift;
@@ -88,6 +89,7 @@ namespace Fx.Amiya.Service
             IDalCustomerInfo dalCustomerInfo,
             IUnitOfWork unitOfWork,
             IWxAppConfigService wxAppConfigService,
+            ICompanyBaseInfoService companyBaseInfoService,
             IBindCustomerServiceService bindCustomerService,
             IContentPlatformService contentPlatFormService,
              IMemberCard memberCardService,
@@ -114,6 +116,7 @@ namespace Fx.Amiya.Service
         {
             this.dalOrderInfo = dalOrderInfo;
             this.dalCustomerInfo = dalCustomerInfo;
+            this.companyBaseInfoService = companyBaseInfoService;
             this.unitOfWork = unitOfWork;
             this.dalBindCustomerService = dalBindCustomerService;
             this.dalAmiyaEmployee = dalAmiyaEmployee;
@@ -3793,7 +3796,7 @@ namespace Fx.Amiya.Service
             return orderPageInfo;
         }
 
-        public async Task<List<OrderWriteOffDto>> GetCustomerOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? appType, int? CheckState, bool? ReturnBackPriceState, string customerName, bool isHidePhone)
+        public async Task<List<OrderWriteOffDto>> GetCustomerOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? appType, int? CheckState, bool? ReturnBackPriceState, bool? isCreateBill, string companyId, string customerName, bool isHidePhone)
         {
             var orders = from d in dalOrderInfo.GetAll()
                          where (d.StatusCode == OrderStatusCode.TRADE_FINISHED)
@@ -3832,6 +3835,14 @@ namespace Fx.Amiya.Service
                          where d.AppType == appType.Value
                          select d;
             }
+
+            if (isCreateBill.HasValue)
+            {
+                orders = from d in orders
+                         where d.IsCreateBill == isCreateBill.Value
+                         where (string.IsNullOrEmpty(companyId) || d.BelongCompany == companyId)
+                         select d;
+            }
             var order = from d in orders
                         select new OrderWriteOffDto
                         {
@@ -3855,34 +3866,42 @@ namespace Fx.Amiya.Service
                             CheckBy = d.CheckBy,
                             CheckRemark = d.CheckRemark,
                             SettlePrice = d.SettlePrice,
+                            IsCreateBill = d.IsCreateBill,
+                            BelongCompany = d.BelongCompany,
                             IsReturnBackPrice = d.IsReturnBackPrice,
                             ReturnBackPrice = d.ReturnBackPrice,
                             ReturnBackDate = d.ReturnBackDate,
-                            
+
                         };
 
             List<OrderWriteOffDto> orderPageInfo = new List<OrderWriteOffDto>();
             orderPageInfo = await order.ToListAsync();
-            //foreach (var x in orderPageInfo)
-            //{
-            //    var sendOrderInfo = await _sendOrderInfoService.GetSendOrderInfoByOrderId(x.Id);
-            //    if (sendOrderInfo.Count != 0)
-            //    {
-            //        x.SendOrderHospital = sendOrderInfo.First().HospitalName;
-            //        x.SendOrderPrice = sendOrderInfo.First().PurchaseSinglePrice * sendOrderInfo.First().PurchaseNum;
-            //        x.SendEmployeeName = sendOrderInfo.First().SendName;
-            //    }
-            //    if (x.BelongEmpId != 0)
-            //    {
-            //        var customerService = await dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(e => e.Id == x.BelongEmpId);
-            //        x.BenlongEmpName = customerService.Name.ToString();
-            //    }
-            //    if (x.CheckBy.HasValue && x.CheckBy != 0)
-            //    {
-            //        var checkBy = await dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(e => e.Id == x.CheckBy.Value);
-            //        x.CheckByEmpName = checkBy.Name.ToString();
-            //    }
-            //}
+            foreach (var x in orderPageInfo)
+            {
+                if (x.IsCreateBill == true)
+                {
+                    var companyInfo = await companyBaseInfoService.GetByIdAsync(x.BelongCompany);
+                    x.BelongCompanyName = companyInfo.Name.ToString();
+                }
+
+                //    var sendOrderInfo = await _sendOrderInfoService.GetSendOrderInfoByOrderId(x.Id);
+                //    if (sendOrderInfo.Count != 0)
+                //    {
+                //        x.SendOrderHospital = sendOrderInfo.First().HospitalName;
+                //        x.SendOrderPrice = sendOrderInfo.First().PurchaseSinglePrice * sendOrderInfo.First().PurchaseNum;
+                //        x.SendEmployeeName = sendOrderInfo.First().SendName;
+                //    }
+                //    if (x.BelongEmpId != 0)
+                //    {
+                //        var customerService = await dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(e => e.Id == x.BelongEmpId);
+                //        x.BenlongEmpName = customerService.Name.ToString();
+                //    }
+                //    if (x.CheckBy.HasValue && x.CheckBy != 0)
+                //    {
+                //        var checkBy = await dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(e => e.Id == x.CheckBy.Value);
+                //        x.CheckByEmpName = checkBy.Name.ToString();
+                //    }
+            }
             return orderPageInfo.OrderByDescending(z => z.NickName).ThenByDescending(z => z.WriteOffDate).ToList();
         }
 
@@ -4377,7 +4396,7 @@ namespace Fx.Amiya.Service
             if (order == null) throw new Exception("订单不存在");
             order.IsCreateBill = update.IsCreateBill;
             order.BelongCompany = update.CreateBillCompanyId;
-            await dalOrderInfo.UpdateAsync(order,true);
+            await dalOrderInfo.UpdateAsync(order, true);
         }
 
 
@@ -4417,7 +4436,7 @@ namespace Fx.Amiya.Service
             return orderList.GroupBy(x => x.SendOrderInfoList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalId).Select(x => new UnCheckHospitalOrderDto { HospitalId = x.Key, TotalUnCheckPrice = x.Sum(z => z.ActualPayment.Value), TotalUnCheckOrderCount = x.Count() }).ToList();
         }
 
-        
+
         #endregion
     }
 }

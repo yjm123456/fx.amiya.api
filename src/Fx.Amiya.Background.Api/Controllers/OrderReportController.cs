@@ -587,6 +587,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="CheckState">审核状态（空查询所有）</param>
         /// <param name="checkStartDate">审核开始时间</param>
         /// <param name="checkEndDate">审核结束时间</param>
+        /// <param name="isCreateBill">是否开票</param>
+        /// <param name="belongCompanyId">开票公司</param>
         /// <param name="isReturnBakcPrice">是否回款（空查询所有）</param>
         /// <param name="returnBackPriceStartDate">回款开始时间</param>
         /// <param name="returnBackPriceEndDate">回款结束时间</param>
@@ -595,7 +597,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("contentPlatFormOrderDealInfo")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<ContentPlatFormOrderDealInfoReportVo>>> GetDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord)
+        public async Task<ResultData<List<ContentPlatFormOrderDealInfoReportVo>>> GetDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord)
         {
 
             bool isHidePhone = true;
@@ -605,7 +607,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 isHidePhone = false;
             }
             int employeeId = Convert.ToInt32(employee.Id);
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, sendStartDate, sendEndDate, minAddOrderPrice, maxAddOrderPrice, consultationType, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, checkStartDate, checkEndDate, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, isHidePhone);
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, sendStartDate, sendEndDate, minAddOrderPrice, maxAddOrderPrice, consultationType, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, checkStartDate, checkEndDate, isCreateBill, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, belongCompanyId, keyWord, employeeId, isHidePhone);
 
             var contentPlatformOrders = from d in result
                                         select new ContentPlatFormOrderDealInfoReportVo
@@ -642,6 +644,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             SystemUpdatePrice = d.SystemUpdatePrice,
                                             SettlePrice = d.SettlePrice,
                                             CheckRemark = d.CheckRemark,
+                                            BelongCompanyName = d.BelongCompanyName,
+                                            IsCreateBill = d.IsCreateBill == true ? "是" : "否",
                                             IsReturnBackPrice = d.IsReturnBackPrice == true ? "是" : "否",
                                             ReturnBackDate = d.ReturnBackDate,
                                             ReturnBackPrice = d.ReturnBackPrice,
@@ -674,6 +678,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="CheckState">审核状态（空查询所有）</param>
         /// <param name="checkStartDate">审核开始时间</param>
         /// <param name="checkEndDate">审核结束时间</param>
+        /// <param name="isCreateBill">是否开票</param>
+        /// <param name="belongCompanyId">开票公司</param>
         /// <param name="isReturnBakcPrice">是否回款（空查询所有）</param>
         /// <param name="returnBackPriceStartDate">回款开始时间</param>
         /// <param name="returnBackPriceEndDate">回款结束时间</param>
@@ -682,7 +688,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportContentPlatFormOrderDealInfo")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord)
+        public async Task<FileStreamResult> ExportDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord)
         {
 
             bool isHidePhone = true;
@@ -692,7 +698,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 isHidePhone = false;
             }
             int employeeId = Convert.ToInt32(employee.Id);
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, sendStartDate, sendEndDate, minAddOrderPrice, maxAddOrderPrice, consultationType, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, checkStartDate, checkEndDate, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, isHidePhone);
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, sendStartDate, sendEndDate, minAddOrderPrice, maxAddOrderPrice, consultationType, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, checkStartDate, checkEndDate, isCreateBill, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, belongCompanyId, keyWord, employeeId, isHidePhone);
 
             var contentPlatformOrders = from d in result
                                         select new ContentPlatFormOrderDealInfoReportVo
@@ -721,6 +727,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             Price = d.Price,
                                             DealDate = d.DealDate,
                                             OtherOrderId = d.OtherAppOrderId,
+                                            BelongCompanyName = d.BelongCompanyName,
+                                            IsCreateBill = d.IsCreateBill == true ? "是" : "否",
                                             CheckStateText = d.CheckStateText,
                                             CheckPrice = d.CheckPrice,
                                             CheckDate = d.CheckDate,
@@ -1473,14 +1481,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="customerName">客户名称</param>
         /// <param name="appType">下单平台</param>
         /// <param name="CheckState">审核状态</param>
+        /// <param name="isCreateBill">是否开票</param>
+        /// <param name="belongCompanyId">开票公司id</param>
         /// <param name="ReturnBackPriceState">是否回款</param>
         /// <returns></returns>
         [HttpGet("customerOrderReceivableReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<CustomerOrderReceivableReportVo>>> GetCustomerOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? appType, int? CheckState, bool? ReturnBackPriceState, string customerName)
+        public async Task<ResultData<List<CustomerOrderReceivableReportVo>>> GetCustomerOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? appType, int? CheckState, bool? ReturnBackPriceState, bool? isCreateBill, string belongCompanyId, string customerName)
         {
 
-            var q = await orderService.GetCustomerOrderReceivableAsync(startDate, endDate, appType, CheckState, ReturnBackPriceState, customerName, true);
+            var q = await orderService.GetCustomerOrderReceivableAsync(startDate, endDate, appType, CheckState, ReturnBackPriceState, isCreateBill, belongCompanyId, customerName, true);
             var res = from d in q
                       select new CustomerOrderReceivableReportVo()
                       {
@@ -1501,6 +1511,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                           SendHospitalEmployeeName = d.SendEmployeeName,
                           FinalConsumptionHospital = d.FinalConsumptionHospital,
                           BelongEmployeeName = d.BenlongEmpName,
+                          IsCreateBill = d.IsCreateBill == true ? "是" : "否",
+                          BelongCompanyName = d.BelongCompanyName,
                           CheckStateText = d.CheckStateText,
                           CheckPrice = d.CheckPrice,
                           CheckDate = d.CheckDate,
@@ -1525,7 +1537,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("customerOrderReceivableExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> GetCustomerOrderReceivableExportAsync(DateTime? startDate, DateTime? endDate, int? appType, int? CheckState, bool? ReturnBackPriceState, string customerName)
+        public async Task<FileStreamResult> GetCustomerOrderReceivableExportAsync(DateTime? startDate, DateTime? endDate, int? appType, int? CheckState, bool? ReturnBackPriceState, bool? isCreateBill, string belongCompanyId, string customerName)
         {
             bool isHidePhone = true;
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
@@ -1534,7 +1546,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 isHidePhone = false;
             }
 
-            var q = await orderService.GetCustomerOrderReceivableAsync(startDate, endDate, appType, CheckState, ReturnBackPriceState, customerName, isHidePhone);
+            var q = await orderService.GetCustomerOrderReceivableAsync(startDate, endDate, appType, CheckState, ReturnBackPriceState, isCreateBill, belongCompanyId, customerName, true);
             var res = from d in q
                       select new CustomerOrderReceivableReportVo()
                       {
@@ -1557,6 +1569,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                           BelongEmployeeName = d.BenlongEmpName,
                           CheckStateText = d.CheckStateText,
                           CheckPrice = d.CheckPrice,
+                          IsCreateBill = d.IsCreateBill == true ? "是" : "否",
+                          BelongCompanyName = d.BelongCompanyName,
                           CheckDate = d.CheckDate,
                           CheckBy = d.CheckByEmpName,
                           CheckRemark = d.CheckRemark,
@@ -1775,13 +1789,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="channel">渠道</param>
         /// <param name="customerName">客户名称</param>
         /// <param name="CheckState">审核状态</param>
+        /// <param name="isCreateBill">是否开票</param>
+        /// <param name="belongCompanyId">开票公司id</param>
         /// <returns></returns>
         [HttpGet("customerBuyAgainReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<CustomerHospitalConsumeReportVo>>> GetCustomerBuyAgainReportAsync(int? channel, DateTime? checkDateStart, DateTime? checkDateEnd, int? hospitalId, DateTime startDate, DateTime endDate, string customerName, int? CheckState)
+        public async Task<ResultData<List<CustomerHospitalConsumeReportVo>>> GetCustomerBuyAgainReportAsync(int? channel, DateTime? checkDateStart, DateTime? checkDateEnd, int? CheckState, int? hospitalId, bool? isCreateBill, string belongCompanyId, DateTime startDate, DateTime endDate, string customerName)
         {
 
-            var q = await _customerHospitalConsumeService.GetCustomerHospitalConsuleReportAsync(channel, checkDateStart, checkDateEnd, hospitalId, customerName, startDate, endDate, true, CheckState);
+            var q = await _customerHospitalConsumeService.GetCustomerHospitalConsuleReportAsync(channel, checkDateStart, checkDateEnd, CheckState, hospitalId, isCreateBill, belongCompanyId, customerName, startDate, endDate, true);
             var res = from d in q
                       select new CustomerHospitalConsumeReportVo()
                       {
@@ -1810,6 +1826,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                           CheckSettlePrice = d.CheckSettlePrice,
                           CheckDate = d.CheckDate,
                           CheckState = d.CheckState,
+                          IsCreateBill = d.IsCreateBill == true ? "是" : "否",
+                          BelongCompanyName = d.BelongCompanyName,
                           CheckByEmpName = d.CheckByEmpName,
                           Remark = d.Remark,
                           CheckRemark = d.CheckRemark,
@@ -1832,10 +1850,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="hospitalId">升单医院</param>
         /// <param name="customerName">客户名称</param>
         /// <param name="CheckState">审核状态</param>
+        /// <param name="isCreateBill">是否开票</param>
+        /// <param name="belongCompanyId">开票公司id</param>
         /// <returns></returns>
         [HttpGet("customerBuyAgainReportExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportCustomerBuyAgainReportAsync(int? channel, DateTime? checkDateStart, DateTime? checkDateEnd, int? hospitalId, DateTime startDate, DateTime endDate, string customerName, int? CheckState)
+        public async Task<FileStreamResult> ExportCustomerBuyAgainReportAsync(int? channel, DateTime? checkDateStart, DateTime? checkDateEnd, int? CheckState, int? hospitalId, bool? isCreateBill, string belongCompanyId, DateTime startDate, DateTime endDate, string customerName)
         {
 
             bool isHidePhone = true;
@@ -1844,7 +1864,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 isHidePhone = false;
             }
-            var q = await _customerHospitalConsumeService.GetCustomerHospitalConsuleReportAsync(channel, checkDateStart, checkDateEnd, hospitalId, customerName, startDate, endDate, isHidePhone, CheckState);
+            var q = await _customerHospitalConsumeService.GetCustomerHospitalConsuleReportAsync(channel, checkDateStart, checkDateEnd, CheckState, hospitalId, isCreateBill, belongCompanyId, customerName, startDate, endDate, true);
             var res = from d in q
                       select new CustomerHospitalConsumeReportVo()
                       {
@@ -1875,6 +1895,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                           CheckDate = d.CheckDate,
                           CheckState = d.CheckState,
                           CheckByEmpName = d.CheckByEmpName,
+                          IsCreateBill = d.IsCreateBill == true ? "是" : "否",
+                          BelongCompanyName = d.BelongCompanyName,
                           Remark = d.Remark,
                           CheckRemark = d.CheckRemark,
                           LiveAnchorName = d.LiveAnchorName,

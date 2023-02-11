@@ -126,6 +126,19 @@ namespace Fx.Amiya.Dto.CustomerHospitalConsume
         /// </summary>
         public decimal? CheckSettlePrice { get; set; }
         /// <summary>
+        /// 是否开票
+        /// </summary>
+        public bool IsCreateBill { get; set; }
+        /// <summary>
+        /// 开票公司id
+        /// </summary>
+        public string BelongCompanyId { get; set; }
+
+        /// <summary>
+        /// 开票公司
+        /// </summary>
+        public string BelongCompanyName { get; set; }
+        /// <summary>
         /// 对账单id
         /// </summary>
         public string ReconciliationDocumentsId { get; set; }

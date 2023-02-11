@@ -157,6 +157,18 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         public string CheckByEmpName { get; set; }
 
         /// <summary>
+        /// 是否开票
+        /// </summary>
+        [Description("是否开票")]
+        public string IsCreateBill { get; set; }
+
+        /// <summary>
+        /// 开票公司
+        /// </summary>
+        [Description("开票公司")]
+        public string BelongCompanyName { get; set; }
+
+        /// <summary>
         /// 备注
         /// </summary>
         [Description("备注")]

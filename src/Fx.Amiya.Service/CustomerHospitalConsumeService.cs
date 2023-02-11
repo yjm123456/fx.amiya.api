@@ -24,6 +24,7 @@ namespace Fx.Amiya.Service
     {
         private IDalCustomerHospitalConsume dalCustomerHospitalConsume;
         private IDalConfig dalConfig;
+        private ICompanyBaseInfoService companyBaseInfoService;
         private IRecommandDocumentSettleService recommandDocumentSettleService;
         private IDalAmiyaEmployee dalAmiyaEmployee;
         private IDalBindCustomerService _dalBindCustomerService;
@@ -38,6 +39,7 @@ namespace Fx.Amiya.Service
         public CustomerHospitalConsumeService(IDalCustomerHospitalConsume dalCustomerHospitalConsume,
             IDalConfig dalConfig,
             IDalAmiyaEmployee dalAmiyaEmployee,
+            ICompanyBaseInfoService companyBaseInfoService,
             IRecommandDocumentSettleService recommandDocumentSettleService,
             IUnitOfWork unitOfWork,
             IBindCustomerServiceService bindCustomerServiceService,
@@ -52,6 +54,7 @@ namespace Fx.Amiya.Service
             this.bindCustomerServiceService = bindCustomerServiceService;
             _orderCheckPictureService = orderCheckPictureService;
             this.dalAmiyaEmployee = dalAmiyaEmployee;
+            this.companyBaseInfoService = companyBaseInfoService;
             _dalBindCustomerService = dalBindCustomerService;
             this.recommandDocumentSettleService = recommandDocumentSettleService;
             this.liveAnchorService = liveAnchorService;
@@ -1040,7 +1043,7 @@ namespace Fx.Amiya.Service
 
         #region 报表相关
 
-        public async Task<List<CustomerHospitalConsumeDto>> GetCustomerHospitalConsuleReportAsync(int? channel, DateTime? checkDateStart, DateTime? checkDateEnd, int? hospitalId, string customerName, DateTime startDate, DateTime endDate, bool IsHidePhone, int? CheckState)
+        public async Task<List<CustomerHospitalConsumeDto>> GetCustomerHospitalConsuleReportAsync(int? channel, DateTime? checkDateStart, DateTime? checkDateEnd, int? CheckState, int? hospitalId, bool? isCreateBill, string belongCompanyId, string customerName, DateTime startDate, DateTime endDate, bool IsHidePhone)
         {
             var config = await GetCallCenterConfig();
             if (IsHidePhone == false)
@@ -1055,6 +1058,8 @@ namespace Fx.Amiya.Service
                                            && (!checkDateEnd.HasValue || d.CheckDate < checkDateEnd.Value.AddDays(1).Date)
                                            && (!hospitalId.HasValue || d.HospitalId == hospitalId)
                                            && (!CheckState.HasValue || d.CheckState == CheckState)
+                                           && (!isCreateBill.HasValue || d.IsCreateBill == isCreateBill)
+                                           && (string.IsNullOrEmpty(belongCompanyId) || d.BelongCompany == belongCompanyId)
                                            join cb in dalCustomerBaseInfo.GetAll() on d.Phone equals cb.Phone into dcb
                                            from cb in dcb.DefaultIfEmpty()
                                            select new CustomerHospitalConsumeDto
@@ -1079,6 +1084,8 @@ namespace Fx.Amiya.Service
                                                ConsumeTypeText = ServiceClass.GerConsumeTypeText(d.ConsumeType),
                                                NickName = d.NickName,
                                                IsAddedOrder = d.IsAddedOrder,
+                                               IsCreateBill = d.IsCreateBill,
+                                               BelongCompanyId = d.BelongCompany,
                                                OrderId = d.OrderId,
                                                OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
                                                WriteOffDate = d.WriteOffDate.Value,
@@ -1131,6 +1138,11 @@ namespace Fx.Amiya.Service
                 {
                     var liveanchor = await liveAnchorService.GetByIdAsync(x.LiveAnchorId);
                     x.LiveAnchorName = liveanchor.Name;
+                }
+                if (x.IsCreateBill == true)
+                {
+                    var belongCompanyInfo = await companyBaseInfoService.GetByIdAsync(x.BelongCompanyId);
+                    x.BelongCompanyName = belongCompanyInfo.Name;
                 }
             }
             return pageInfo;
@@ -1290,7 +1302,7 @@ namespace Fx.Amiya.Service
             if (order == null) throw new Exception("升单编号不存在");
             order.IsCreateBill = update.IsCreateBill;
             order.BelongCompany = update.CreateBillCompanyId;
-            await dalCustomerHospitalConsume.UpdateAsync(order,true);
+            await dalCustomerHospitalConsume.UpdateAsync(order, true);
         }
     }
 }

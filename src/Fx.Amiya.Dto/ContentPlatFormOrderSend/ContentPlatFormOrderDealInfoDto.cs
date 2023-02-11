@@ -188,6 +188,18 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// </summary>
         public string CheckRemark { get; set; }
         /// <summary>
+        /// 是否开票
+        /// </summary>
+        public bool IsCreateBill { get; set; }
+        /// <summary>
+        /// 开票公司id
+        /// </summary>
+        public string BelongCompany { get; set; }
+        /// <summary>
+        /// 开票公司名称
+        /// </summary>
+        public string BelongCompanyName { get; set; }
+        /// <summary>
         /// 是否回款
         /// </summary>
 

@@ -102,6 +102,11 @@ namespace Fx.Amiya.Dto.OrderReport
         /// 开票公司
         /// </summary>
         public string BelongCompany { get; set; }
+
+        /// <summary>
+        /// 开票公司名称
+        /// </summary>
+        public string BelongCompanyName { get; set; }
         #region  财务审核板块
 
         public string CheckStateText { get; set; }

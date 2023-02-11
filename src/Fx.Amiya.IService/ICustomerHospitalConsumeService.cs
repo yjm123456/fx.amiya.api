@@ -90,7 +90,7 @@ namespace Fx.Amiya.IService
         Task UpdateCreateBillAndBelongCompany(UpdateCreateBillAndCompanyDto update);
 
         #region 报表相关
-        Task<List<CustomerHospitalConsumeDto>> GetCustomerHospitalConsuleReportAsync(int? channel, DateTime? checkDateStart, DateTime? checkDateEnd, int? hospitalId, string customerName, DateTime startDate, DateTime endDate, bool IsHidePhone, int? CheckState);
+        Task<List<CustomerHospitalConsumeDto>> GetCustomerHospitalConsuleReportAsync(int? channel, DateTime? checkDateStart, DateTime? checkDateEnd, int? CheckState, int? hospitalId, bool? isCreateBill, string belongCompanyId, string customerName, DateTime startDate, DateTime endDate, bool IsHidePhone);
 
         #endregion
 
