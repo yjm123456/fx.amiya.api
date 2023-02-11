@@ -120,6 +120,14 @@ namespace Fx.Amiya.DbModels.Model
         /// 是否重单可深度
         /// </summary>
         public bool IsRepeatProfundityOrder { get; set; }
+        /// <summary>
+        /// 是否开票
+        /// </summary>
+        public bool IsCreateBill { get; set; }
+        /// <summary>
+        /// 开票公司id
+        /// </summary>
+        public string BelongCompany { get; set; }
 
         public ContentPlatformOrder ContentPlatFormOrder { get; set; }
     }

@@ -3,6 +3,7 @@ using Fx.Amiya.Dto.OrderAppInfo;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Dto.TmallOrder;
+using Fx.Amiya.Dto.UpdateCreateBillAndCompany;
 using Fx.Common;
 using Fx.Infrastructure;
 using System;
@@ -507,6 +508,12 @@ namespace Fx.Amiya.IService
         /// <param name="phone"></param>
         /// <returns></returns>
         Task<List<string>> GetOrderIdListByPhone(string phone);
+        /// <summary>
+        /// 更新开票状态和开票公司
+        /// </summary>
+        /// <param name="orderid"></param>
+        /// <returns></returns>
+        Task UpdateCreateBillAndBelongCompany(UpdateCreateBillAndCompanyDto update);
 
 
         #region 报表模块

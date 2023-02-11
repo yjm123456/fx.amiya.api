@@ -10,6 +10,7 @@ using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Dto.TmallOrder;
+using Fx.Amiya.Dto.UpdateCreateBillAndCompany;
 using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -53,6 +54,7 @@ namespace Fx.Amiya.Service
         private IDalConfig _dalConfig;
         private IWxAppConfigService _wxAppConfigService;
         private IDalLiveAnchor dalLiveAnchor;
+        private IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo;
         public ContentPlateFormOrderService(
            IDalContentPlatformOrder dalContentPlatformOrder,
            IDalAmiyaEmployee dalAmiyaEmployee,
@@ -77,7 +79,7 @@ namespace Fx.Amiya.Service
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDalService,
              IDalBindCustomerService dalBindCustomerService,
              IDalConfig dalConfig,
-             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor)
+             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo)
         {
             _dalContentPlatformOrder = dalContentPlatformOrder;
             this.unitOfWork = unitOfWork;
@@ -104,6 +106,7 @@ namespace Fx.Amiya.Service
             _contentPlatFormCustomerPictureService = contentPlatFormCustomerPictureService;
             _contentPlatFormOrderDalService = contentPlatFormOrderDalService;
             this.dalLiveAnchor = dalLiveAnchor;
+            this.dalContentPlatFormOrderDealInfo = dalContentPlatFormOrderDealInfo;
         }
 
         /// <summary>
@@ -2122,6 +2125,41 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
+        /// 更新订单和成交信息开票和开票公司信息
+        /// </summary>
+        /// <param name="update"></param>
+        /// <returns></returns>
+        public async Task UpdateCreateBillAndBelongCompany(UpdateCreateBillAndCompanyDto update)
+        {
+            var dealInfo = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.Id == update.OrderDetailInfoId).SingleOrDefault();
+            if (dealInfo == null) throw new Exception("成交编号错误");
+            dealInfo.IsCreateBill = update.IsCreateBill;
+            dealInfo.BelongCompany = update.CreateBillCompanyId;
+            await dalContentPlatFormOrderDealInfo.UpdateAsync(dealInfo, true);
+            if (update.IsCreateBill) {
+                var order = _dalContentPlatformOrder.GetAll().Where(e => e.Id == update.OrderId).SingleOrDefault();
+                if (order == null) throw new Exception("订单编号错误");
+                order.IsCreateBill = update.IsCreateBill;
+                order.BelongCompany = update.CreateBillCompanyId;
+                await _dalContentPlatformOrder.UpdateAsync(order, true);
+            }
+            else
+            {
+               var createBillCount= dalContentPlatFormOrderDealInfo.GetAll().Where(e=>e.ContentPlatFormOrderId==update.OrderId&&e.IsCreateBill==true).Count();
+                if (createBillCount<=0) {
+                    var order = _dalContentPlatformOrder.GetAll().Where(e => e.Id == update.OrderId).SingleOrDefault();
+                    if (order == null) throw new Exception("订单编号错误");
+                    order.IsCreateBill = false;
+                    order.BelongCompany = "";
+                    await _dalContentPlatformOrder.UpdateAsync(order, true);
+                }
+                
+            }
+            
+            
+        }
+
+        /// <summary>
         /// 医院重单打回
         /// </summary>
         /// <param name="input"></param>
@@ -2848,6 +2886,8 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
+
+        
 
 
 

@@ -94,6 +94,14 @@ namespace Fx.Amiya.Dto.OrderReport
         /// 归属人员
         /// </summary>
         public string BenlongEmpName { get; set; }
+        /// <summary>
+        /// 是否开票
+        /// </summary>
+        public bool IsCreateBill { get; set; }
+        /// <summary>
+        /// 开票公司
+        /// </summary>
+        public string BelongCompany { get; set; }
         #region  财务审核板块
 
         public string CheckStateText { get; set; }

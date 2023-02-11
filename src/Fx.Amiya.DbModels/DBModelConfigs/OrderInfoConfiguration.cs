@@ -57,6 +57,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.CouponId).HasColumnName("coupon_id").HasColumnType("varchar(100)").IsRequired(false);
             builder.Property(e => e.DeductMoney).HasColumnName("deduct_money").HasColumnType("decimal(10,2)").IsRequired().HasDefaultValue(0);
             builder.Property(t => t.ReconciliationDocumentsId).HasColumnName("reconciliation_documents_id").HasColumnType("varchar(50)").IsRequired(false);
+            builder.Property(e => e.IsCreateBill).HasColumnName("is_create_bill").HasColumnType("bit").IsRequired();
+            builder.Property(e => e.BelongCompany).HasColumnName("belong_company").HasColumnType("varchar(50)").IsRequired(false);
             builder.HasOne(t => t.OrderTrade).WithMany(t => t.OrderInfoList).HasForeignKey(t=>t.TradeId);
           
 

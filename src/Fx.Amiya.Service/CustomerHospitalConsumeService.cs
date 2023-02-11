@@ -16,6 +16,7 @@ using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.Dto.OrderReport;
 using jos_sdk_net.Util;
 using Fx.Amiya.Dto.ReconciliationDocuments;
+using Fx.Amiya.Dto.UpdateCreateBillAndCompany;
 
 namespace Fx.Amiya.Service
 {
@@ -1278,6 +1279,18 @@ namespace Fx.Amiya.Service
             }
             return orderAppTypeList;
         }
-
+        /// <summary>
+        /// 更新订单和成交信息开票和开票公司信息
+        /// </summary>
+        /// <param name="update"></param>
+        /// <returns></returns>
+        public async Task UpdateCreateBillAndBelongCompany(UpdateCreateBillAndCompanyDto update)
+        {
+            var order = dalCustomerHospitalConsume.GetAll().Where(e => e.Id == Convert.ToInt32(update.OrderId)).SingleOrDefault();
+            if (order == null) throw new Exception("升单编号不存在");
+            order.IsCreateBill = update.IsCreateBill;
+            order.BelongCompany = update.CreateBillCompanyId;
+            await dalCustomerHospitalConsume.UpdateAsync(order,true);
+        }
     }
 }

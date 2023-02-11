@@ -1917,6 +1917,43 @@ ALTER TABLE `tbl_goods_category`
 
 
 
+-------------------------------------2023/2/10 BEGIN----------------------------------------------
+
+----内容平台订单加入是否开票和开票公司
+ALTER TABLE `tbl_content_platform_order`
+	ADD COLUMN `is_create_bill` BIT NOT NULL DEFAULT 0 AFTER `is_repeat_profundity_order`,
+	ADD COLUMN `belong_company` VARCHAR(50) NULL DEFAULT NULL AFTER `is_create_bill`;
+
+
+
+----内容平台成交信息订单加入是否开票和开票公司
+ALTER TABLE `tbl_content_platform_order_deal_info`
+	ADD COLUMN `is_create_bill` BIT NOT NULL DEFAULT 0 AFTER `is_repeat_profundity_order`,
+	ADD COLUMN `belong_company` VARCHAR(50) NULL DEFAULT NULL AFTER `is_create_bill`;
+
+
+
+----升单订单加入是否开票和开票公司
+ALTER TABLE `tbl_customer_hospital_consume`
+	ADD COLUMN `is_create_bill` BIT NOT NULL DEFAULT 0 AFTER `reconciliation_documents_id`,
+	ADD COLUMN `belong_company` VARCHAR(50) NULL DEFAULT NULL AFTER `is_create_bill`;
+
+----下单怕太订单加入是否开票和开票公司
+
+ALTER TABLE `tbl_order_info`
+	ADD COLUMN `is_create_bill` BIT NOT NULL DEFAULT 0 AFTER `reconciliation_documents_id`,
+	ADD COLUMN `belong_company` VARCHAR(50) NULL DEFAULT NULL AFTER `is_create_bill`;
+-------------------------------------2023/2/10 END----------------------------------------------
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -42,6 +42,7 @@ using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.OrderCheckPicture;
 using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Core.Dto.Goods;
+using Fx.Amiya.Dto.UpdateCreateBillAndCompany;
 
 namespace Fx.Amiya.Service
 {
@@ -79,6 +80,7 @@ namespace Fx.Amiya.Service
         private IAmiyaGoodsDemandService _amiyaGoodsDemandService;
         private ICustomerConsumptionVoucherService customerConsumptionVoucherService;
         private IDalRecommandDocumentSettle dalRecommandDocumentSettle;
+        private IDalCompanyBaseInfo dalCompanyBaseInfo;
         public OrderService(
             IDalContentPlatformOrder dalContentPlatFormOrder,
             IDalOrderInfo dalOrderInfo,
@@ -108,7 +110,7 @@ namespace Fx.Amiya.Service
             IExpressManageService expressManageService,
             IFxSmsBasedTemplateSender smsSender,
              IMemberRankInfo memberRankInfoService,
-            IIntegrationAccount integrationAccountService, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IDalRecommandDocumentSettle dalRecommandDocumentSettle)
+            IIntegrationAccount integrationAccountService, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo)
         {
             this.dalOrderInfo = dalOrderInfo;
             this.dalCustomerInfo = dalCustomerInfo;
@@ -141,6 +143,7 @@ namespace Fx.Amiya.Service
             _expressManageService = expressManageService;
             this.customerConsumptionVoucherService = customerConsumptionVoucherService;
             this.dalRecommandDocumentSettle = dalRecommandDocumentSettle;
+            this.dalCompanyBaseInfo = dalCompanyBaseInfo;
         }
         //WxPayAccount _payAccount = new WxPayAccount("wx695942e4818de445", "0b2e89d17e84a947244569d0ec63b816", "1611476157", "asdfg67890asdfg67890asdfg67890as", false, "", "");
         WxPayAccount _payAccount = new WxPayAccount("wx695942e4818de445", "0b2e89d17e84a947244569d0ec63b816", "1632393371", "Amy20202020202020202020202020202", false, "", "");
@@ -3854,7 +3857,8 @@ namespace Fx.Amiya.Service
                             SettlePrice = d.SettlePrice,
                             IsReturnBackPrice = d.IsReturnBackPrice,
                             ReturnBackPrice = d.ReturnBackPrice,
-                            ReturnBackDate = d.ReturnBackDate
+                            ReturnBackDate = d.ReturnBackDate,
+                            
                         };
 
             List<OrderWriteOffDto> orderPageInfo = new List<OrderWriteOffDto>();
@@ -4362,8 +4366,19 @@ namespace Fx.Amiya.Service
 
         }
 
-
-
+        /// <summary>
+        /// 更新开票状态和开票公司
+        /// </summary>
+        /// <param name="orderid"></param>
+        /// <returns></returns>
+        public async Task UpdateCreateBillAndBelongCompany(UpdateCreateBillAndCompanyDto update)
+        {
+            var order = dalOrderInfo.GetAll().Where(e => e.Id == update.OrderId).SingleOrDefault();
+            if (order == null) throw new Exception("订单不存在");
+            order.IsCreateBill = update.IsCreateBill;
+            order.BelongCompany = update.CreateBillCompanyId;
+            await dalOrderInfo.UpdateAsync(order,true);
+        }
 
 
 
@@ -4401,6 +4416,8 @@ namespace Fx.Amiya.Service
             var orderList = await orders.ToListAsync();
             return orderList.GroupBy(x => x.SendOrderInfoList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalId).Select(x => new UnCheckHospitalOrderDto { HospitalId = x.Key, TotalUnCheckPrice = x.Sum(z => z.ActualPayment.Value), TotalUnCheckOrderCount = x.Count() }).ToList();
         }
+
+        
         #endregion
     }
 }

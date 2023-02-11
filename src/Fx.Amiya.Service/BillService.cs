@@ -2,6 +2,7 @@
 using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.Bill;
 using Fx.Amiya.Dto.ReconciliationDocuments;
+using Fx.Amiya.Dto.UpdateCreateBillAndCompany;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
@@ -22,16 +23,22 @@ namespace Fx.Amiya.Service
         private readonly IUnitOfWork unitOfWork;
         private IReconciliationDocumentsService reconciliationDocumentsService;
         private IBillReturnBackPriceDataService billReturnBackPriceDataService;
+        private IOrderService orderService;
+        private IContentPlateFormOrderService contentPlateFormOrderService;
+        private ICustomerHospitalConsumeService customerHospitalConsumeService;
 
         public BillService(IDalBill dalBill,
             IReconciliationDocumentsService reconciliationDocumentsService,
             IBillReturnBackPriceDataService billReturnBackPriceDataService,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork, IOrderService orderService, IContentPlateFormOrderService contentPlateFormOrderService, ICustomerHospitalConsumeService customerHospitalConsumeService)
         {
             this.dalBill = dalBill;
             this.unitOfWork = unitOfWork;
             this.reconciliationDocumentsService = reconciliationDocumentsService;
             this.billReturnBackPriceDataService = billReturnBackPriceDataService;
+            this.orderService = orderService;
+            this.contentPlateFormOrderService = contentPlateFormOrderService;
+            this.customerHospitalConsumeService = customerHospitalConsumeService;
         }
 
 
@@ -135,6 +142,38 @@ namespace Fx.Amiya.Service
                     reconciliationDocumentsCreateBillDto.ReconciliationDocumentsIdList = addDto.ReconciliationDocumentsIdList;
                     reconciliationDocumentsCreateBillDto.IsCreateBill = true;
                     await reconciliationDocumentsService.ReconciliationDocumentsCreateBillAsync(reconciliationDocumentsCreateBillDto);
+
+                    //调用对账单表更新内容平台,成交信息,三方订单,升单 是否开票及开票公司
+                    var settleList = await reconciliationDocumentsService.GetRecommandDocumentSettleListAsync(addDto.ReconciliationDocumentsIdList);
+                    foreach (var item in settleList)
+                    {
+                        if (item.OrderFrom == (int)OrderFrom.ThirdPartyOrder)
+                        {
+                            UpdateCreateBillAndCompanyDto update = new UpdateCreateBillAndCompanyDto();
+                            update.OrderId = item.OrderId;
+                            update.IsCreateBill = true;
+                            update.CreateBillCompanyId = addDto.CollectionCompanyId;
+                            await orderService.UpdateCreateBillAndBelongCompany(update);
+                        }
+                        if (item.OrderFrom == (int)OrderFrom.ContentPlatFormOrder)
+                        {
+                            UpdateCreateBillAndCompanyDto update = new UpdateCreateBillAndCompanyDto();
+                            update.OrderId = item.OrderId;
+                            update.OrderDetailInfoId = item.DealInfoId;
+                            update.IsCreateBill = true;
+                            update.CreateBillCompanyId = addDto.CollectionCompanyId;
+                            await contentPlateFormOrderService.UpdateCreateBillAndBelongCompany(update);
+                        }
+                        if (item.OrderFrom == (int)OrderFrom.BuyAgainOrder)
+                        {
+                            UpdateCreateBillAndCompanyDto update = new UpdateCreateBillAndCompanyDto();
+                            update.OrderId = item.OrderId;
+                            update.IsCreateBill = true;
+                            update.CreateBillCompanyId = addDto.CollectionCompanyId;
+                            await customerHospitalConsumeService.UpdateCreateBillAndBelongCompany(update);
+                        }
+                    }
+
                 }
                 unitOfWork.Commit();
             }
@@ -240,6 +279,39 @@ namespace Fx.Amiya.Service
                     reconciliationDocumentsCreateBillDto.ReconciliationDocumentsIdList = reconciliationDocuments.Select(x => x.Id).ToList();
                     reconciliationDocumentsCreateBillDto.IsCreateBill = false;
                     await reconciliationDocumentsService.ReconciliationDocumentsCreateBillAsync(reconciliationDocumentsCreateBillDto);
+
+                    var reconciliationDocumentsList=  (await reconciliationDocumentsService.GetByBillIdListAsync(id)).Select(e=>e.Id).ToList();
+
+                    //调用对账单表更新内容平台,成交信息,三方订单,升单 是否开票及开票公司
+                    var settleList = await reconciliationDocumentsService.GetRecommandDocumentSettleListAsync(reconciliationDocumentsList);
+                    foreach (var item in settleList)
+                    {
+                        if (item.OrderFrom == (int)OrderFrom.ThirdPartyOrder)
+                        {
+                            UpdateCreateBillAndCompanyDto update = new UpdateCreateBillAndCompanyDto();
+                            update.OrderId = item.OrderId;
+                            update.IsCreateBill = false;
+                            update.CreateBillCompanyId = "";
+                            await orderService.UpdateCreateBillAndBelongCompany(update);
+                        }
+                        if (item.OrderFrom == (int)OrderFrom.ContentPlatFormOrder)
+                        {
+                            UpdateCreateBillAndCompanyDto update = new UpdateCreateBillAndCompanyDto();
+                            update.OrderId = item.OrderId;
+                            update.OrderDetailInfoId = item.DealInfoId;
+                            update.IsCreateBill = false;
+                            update.CreateBillCompanyId = "";
+                            await contentPlateFormOrderService.UpdateCreateBillAndBelongCompany(update);
+                        }
+                        if (item.OrderFrom == (int)OrderFrom.BuyAgainOrder)
+                        {
+                            UpdateCreateBillAndCompanyDto update = new UpdateCreateBillAndCompanyDto();
+                            update.OrderId = item.OrderId;
+                            update.IsCreateBill = false;
+                            update.CreateBillCompanyId = "";
+                            await customerHospitalConsumeService.UpdateCreateBillAndBelongCompany(update);
+                        }
+                    }
                 }
                 unitOfWork.Commit();
             }

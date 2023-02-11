@@ -3,6 +3,7 @@ using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.TmallOrder;
+using Fx.Amiya.Dto.UpdateCreateBillAndCompany;
 using Fx.Common;
 using System;
 using System.Collections.Generic;
@@ -278,6 +279,14 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task UpdateContentPalteformRepeaterOrderStatusAsync(string contentPlateFormId);
+
+        /// <summary>
+        /// 更新订单和成交信息开票和开票公司信息
+        /// </summary>
+        /// <param name="update"></param>
+        /// <returns></returns>
+        Task UpdateCreateBillAndBelongCompany(UpdateCreateBillAndCompanyDto update);
+
         #region 【数据中心】
         /// <summary>
         /// 获取时间段内未派单数据

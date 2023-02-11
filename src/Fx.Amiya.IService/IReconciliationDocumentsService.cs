@@ -108,6 +108,13 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task DeleteAsync(List<string> idList);
 
+        /// <summary>
+        /// 根据对账单id获取对账详情列表
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<List<RecommandDocumentSettleDto>> GetRecommandDocumentSettleListAsync(List<string> ids);
+
         #region 【对账单审核记录操作】
         /// <summary>
         /// 分页获取审核记录数据

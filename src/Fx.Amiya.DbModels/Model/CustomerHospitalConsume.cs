@@ -142,5 +142,13 @@ namespace Fx.Amiya.DbModels.Model
         /// 确认升单
         /// </summary>
         public bool IsConfirmOrder { get; set; }
+        /// <summary>
+        /// 是否开票
+        /// </summary>
+        public bool IsCreateBill { get; set; }
+        /// <summary>
+        /// 开票公司id
+        /// </summary>
+        public string BelongCompany { get; set; }
     }
 }

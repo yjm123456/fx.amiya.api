@@ -2,6 +2,7 @@
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Dto.TmallOrder;
+using Fx.Amiya.Dto.UpdateCreateBillAndCompany;
 using Fx.Common;
 using Fx.Infrastructure;
 using System;
@@ -81,6 +82,12 @@ namespace Fx.Amiya.IService
         /// <param name="pageSize"></param>
         /// <returns></returns>
         Task<FxPageInfo<CustomerHospitalConsumeDto>> GetListByPhoneAsync(string phone, int pageNum, int pageSize);
+        /// <summary>
+        /// 更新订单和成交信息开票和开票公司信息
+        /// </summary>
+        /// <param name="update"></param>
+        /// <returns></returns>
+        Task UpdateCreateBillAndBelongCompany(UpdateCreateBillAndCompanyDto update);
 
         #region 报表相关
         Task<List<CustomerHospitalConsumeDto>> GetCustomerHospitalConsuleReportAsync(int? channel, DateTime? checkDateStart, DateTime? checkDateEnd, int? hospitalId, string customerName, DateTime startDate, DateTime endDate, bool IsHidePhone, int? CheckState);

@@ -417,6 +417,8 @@ namespace Fx.Amiya.Service
             }
         }
 
+
+
         /// <summary>
         /// 回款完成
         /// </summary>
@@ -524,8 +526,15 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
-
-
+        /// <summary>
+        /// 根据对账单id列表获取对账详情列表
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<List<RecommandDocumentSettleDto>> GetRecommandDocumentSettleListAsync(List<string> ids)
+        {
+            return await recommandDocumentSettleService.GetRecommandDocumentSettleAsync(ids,null);
+        }
         #region [对账单审核记录操作]
         /// <summary>
         /// 分页获取审核记录数据
@@ -606,6 +615,8 @@ namespace Fx.Amiya.Service
             }
             return resultInfo.OrderByDescending(x => x.CreateDate).ToList();
         }
+
+        
         #endregion
     }
 }
