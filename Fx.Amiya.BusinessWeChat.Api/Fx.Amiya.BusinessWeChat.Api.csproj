@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>E:\新建文件夹\amiya.api\Fx.Amiya.BusinessWeChat.Api\Fx.Amiya.BusinessWeChat.Api.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\方旋基础类库\web基础类库\方旋Web基础类库\Fx.Open.Infrastructure.Web\Fx.Open.Infrastructure.Web.csproj" />
+    <ProjectReference Include="..\..\方旋基础类库\业务基础类库\方旋业务基础类库\Fx.Infrastructure.DataAccess.EFCore\Fx.Infrastructure.DataAccess.EFCore.csproj" />
+    <ProjectReference Include="..\..\方旋基础类库\业务基础类库\方旋业务基础类库\Fx.Infrastructure.DataAccess.Mongodb.Standard\Fx.Infrastructure.DataAccess.Mongodb.Standard.csproj" />
+    <ProjectReference Include="..\..\方旋统一登录认证库\src\Fx.Authentication\Fx.Authentication.csproj" />
+    <ProjectReference Include="..\..\方旋统一登录认证库\src\Fx.Authorization\Fx.Authorization.csproj" />
+    <ProjectReference Include="..\..\方旋统一登录认证库\src\Fx.Identity.Core\Fx.Identity.Core.csproj" />
+    <ProjectReference Include="..\..\方旋通用基础库\src\Fx.Common\Fx.Common.csproj" />
+    <ProjectReference Include="..\src\Fx.Amiya.Common\Fx.Amiya.Common.csproj" />
+    <ProjectReference Include="..\src\Fx.Amiya.IService\Fx.Amiya.IService.csproj" />
+    <ProjectReference Include="..\src\Fx.Amiya.Service\Fx.Amiya.Service.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Fx.Amiya.BusinessWeChat.Api</name>
+    </assembly>
+    <members>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.AmiyaLoginAsync(System.String,System.String)">
+            <summary>
+            阿美雅员工登录
+            </summary>
+            <param name="userName"></param>
+            <param name="password"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.AmiyaRefreshToken(System.String)">
+            <summary>
+            刷新阿美雅登录账号token
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.HospitalLoginAsync(System.String,System.String)">
+            <summary>
+            医院员工登录
+            </summary>
+            <param name="userName"></param>
+            <param name="password"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.HospitalRefreshToken(System.String)">
+            <summary>
+            刷新医院登录账号token
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.Login.HospitalEmployeeAccountVo.EmployeeType">
+            <summary>
+            员工类型
+            </summary>
+        </member>
+    </members>
+</doc>
