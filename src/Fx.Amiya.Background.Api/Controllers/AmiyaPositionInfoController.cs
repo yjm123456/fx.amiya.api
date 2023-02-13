@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Fx.Amiya.Background.Api.Controllers
 {
     /// <summary>
-    /// 阿美雅职位 API
+    /// 啊美雅职位 API
     /// </summary>
     [Route("[controller]")]
     [ApiController]
@@ -32,7 +32,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 获取阿美雅职位列表
+        /// 获取啊美雅职位列表
         /// </summary>
         /// <returns></returns>
         [HttpGet("list")]
@@ -64,7 +64,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 添加阿美雅职位
+        /// 添加啊美雅职位
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
@@ -89,7 +89,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 根据职位编号获取阿美雅职位信息
+        /// 根据职位编号获取啊美雅职位信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -119,7 +119,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
         /// <summary>
-        /// 根据部门编号获取阿美雅职位信息
+        /// 根据部门编号获取啊美雅职位信息
         /// </summary>
         /// <param name="departmentId">部门id</param>
         /// <returns></returns>
@@ -155,7 +155,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 修改阿美雅职位
+        /// 修改啊美雅职位
         /// </summary>
         /// <param name="updateVo"></param>
         /// <returns></returns>
@@ -182,7 +182,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 根据职位编号删除阿美雅职位
+        /// 根据职位编号删除啊美雅职位
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

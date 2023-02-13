@@ -133,7 +133,7 @@ namespace Fx.Amiya.Service
 
 
         /// <summary>
-        /// 修改阿美雅职位权限
+        /// 修改啊美雅职位权限
         /// </summary>
         /// <param name="updateDto"></param>
         /// <returns></returns>
@@ -168,7 +168,7 @@ namespace Fx.Amiya.Service
             }
         }
         /// <summary>
-        /// 修改阿美雅职位首页
+        /// 修改啊美雅职位首页
         /// </summary>
         /// <param name="updateDto"></param>
         /// <returns></returns>
@@ -185,7 +185,7 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
-        /// 修改阿美雅职位首页
+        /// 修改啊美雅职位首页
         /// </summary>
         /// <param name="updateDto"></param>
         /// <returns></returns>

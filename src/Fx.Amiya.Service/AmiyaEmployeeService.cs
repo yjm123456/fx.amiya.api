@@ -311,7 +311,7 @@ namespace Fx.Amiya.Service
                    .SingleOrDefaultAsync(e => e.Id == employeeId);
 
                 if (employee == null)
-                    throw new Exception("阿美雅员工编号错误");
+                    throw new Exception("啊美雅员工编号错误");
 
                 await dalAmiyaEmployee.DeleteAsync(employee, true);
 

@@ -221,7 +221,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
         /// <summary>
-        /// 修改阿美雅职位按钮权限
+        /// 修改啊美雅职位按钮权限
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>

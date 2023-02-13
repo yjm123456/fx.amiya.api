@@ -7,7 +7,7 @@ namespace Fx.Amiya.Dto.SendOrderInfo
   public  class AddSendOrderMessageBoardDto
     {
         /// <summary>
-        /// 0=阿美雅，1=医院
+        /// 0=啊美雅，1=医院
         /// </summary>
         public byte Type { get; set; }
         public int SendOrderInfoId { get; set; }

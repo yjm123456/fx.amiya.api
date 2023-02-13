@@ -37,7 +37,7 @@ namespace Fx.Amiya.MiniProgram.Api
             services.AddControllers().AddFxValidateModelFilter();
             services.AddSingleton<IMiniSessionStorage, FxMiniSessionStorage>();
 
-            services.AddFxSwagger(xmlDocName: "Fx.Amiya.MiniProgram.Api.xml", title: "阿美雅微信小程序API");
+            services.AddFxSwagger(xmlDocName: "Fx.Amiya.MiniProgram.Api.xml", title: "啊美雅微信小程序API");
 
             services.AddAuthorization(options => {
                 options.AddPolicy("wx_mini_api_validate_usertype", policy =>

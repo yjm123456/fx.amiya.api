@@ -42,7 +42,7 @@ namespace Fx.Amiya.Background.Api
             services.AddControllers().AddFxValidateModelFilter();
             
 
-            services.AddFxSwagger("Fx.Amiya.Background.Api.xml", "阿美雅微信后台API");
+            services.AddFxSwagger("Fx.Amiya.Background.Api.xml", "啊美雅微信后台API");
             #region 配置全局路由
             //在各个控制器添加前缀
             //services.AddMvc(opt =>

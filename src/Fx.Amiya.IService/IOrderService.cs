@@ -83,7 +83,7 @@ namespace Fx.Amiya.IService
 
 
         /// <summary>
-        /// 添加阿美雅订单
+        /// 添加啊美雅订单
         /// </summary>
         /// <param name="orderTradeAddDto"></param>
         /// <returns>交易编号</returns>
@@ -197,7 +197,7 @@ namespace Fx.Amiya.IService
 
 
         /// <summary>
-        /// 获取超时未支付阿美雅订单列表
+        /// 获取超时未支付啊美雅订单列表
         /// </summary>
         /// <returns></returns>
         Task<List<OrderInfoSimpleDto>> TimeOutOrderAsync();

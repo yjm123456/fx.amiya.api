@@ -37,7 +37,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         }
 
         /// <summary>
-        /// 阿美雅员工登录
+        /// 啊美雅员工登录
         /// </summary>
         /// <param name="userName"></param>
         /// <param name="password"></param>
@@ -77,7 +77,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
 
 
         /// <summary>
-        /// 刷新阿美雅登录账号token
+        /// 刷新啊美雅登录账号token
         /// </summary>
         /// <returns></returns>
         [HttpGet("amiyaRefreshToken")]

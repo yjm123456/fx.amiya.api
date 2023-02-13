@@ -50,7 +50,7 @@ namespace Fx.Amiya.MiniProgram.Api
 
 
         /// <summary>
-        /// 处理阿美雅超时未支付的商城订单
+        /// 处理啊美雅超时未支付的商城订单
         /// </summary>
         /// <returns></returns>
         [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 5, SkipWhileExecuting = false)]

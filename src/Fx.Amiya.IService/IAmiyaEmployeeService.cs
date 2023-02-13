@@ -30,14 +30,14 @@ namespace Fx.Amiya.IService
 
 
         /// <summary>
-        /// 添加阿美雅员工
+        /// 添加啊美雅员工
         /// </summary>
         /// <param name="addDto"></param>
         /// <returns></returns>
         Task AddAsync(AddAmiyaEmployeeDto addDto);
 
         /// <summary>
-        /// 根据员工编号获取阿美雅员工信息
+        /// 根据员工编号获取啊美雅员工信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -51,7 +51,7 @@ namespace Fx.Amiya.IService
         Task<AmiyaEmployeeDto> GetByNameAsync(string name);
 
         /// <summary>
-        /// 取阿美雅员工列表（分页）
+        /// 取啊美雅员工列表（分页）
         /// </summary>
         /// <param name="keyword">搜索员工名字关键字</param>
         /// <param name="valid">是否有效</param>
@@ -113,7 +113,7 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 根据员工id集合获取员工基础信息列表
         /// </summary>
-        /// <param name="employeeIds">阿美雅员工编号</param>
+        /// <param name="employeeIds">啊美雅员工编号</param>
         /// <returns></returns>
         Task<List<AmiyaEmployeeBaseInfoDto>> GetInfoListIdsAsync(int[] employeeIds);
 

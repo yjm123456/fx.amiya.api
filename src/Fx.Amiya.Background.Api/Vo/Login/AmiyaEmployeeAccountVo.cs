@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Fx.Amiya.Background.Api.Vo.Login
 {
     /// <summary>
-    /// 阿美雅员工账户信息
+    /// 啊美雅员工账户信息
     /// </summary>
     public class AmiyaEmployeeAccountVo
     {

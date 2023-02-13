@@ -709,7 +709,7 @@ namespace Fx.Amiya.Service
                                     Id = d.Id,
                                     Date = d.Date,
                                     Type = d.Type,
-                                    TypeName = d.Type == (byte)SendOrderMessageBoardType.Amiya ? "阿美雅" : d.HospitalInfo.Name,
+                                    TypeName = d.Type == (byte)SendOrderMessageBoardType.Amiya ? "啊美雅" : d.HospitalInfo.Name,
                                     SendOrderInfoId = d.SendOrderInfoId,
                                     AmiyaEmployeeId = d.AmiyaEmployeeId,
                                     AmiyaEmployeeName = d.AmiyaEmployee.Name,

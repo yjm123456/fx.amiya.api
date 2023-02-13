@@ -34,12 +34,12 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalEmployee
 
 
         /// <summary>
-        /// 医院编号（阿美雅修改才需该字段）
+        /// 医院编号（啊美雅修改才需该字段）
         /// </summary>
         public int? HospitalId { get; set; }
 
         /// <summary>
-        /// 是否允许创建子账户（阿美雅修改才需该字段）
+        /// 是否允许创建子账户（啊美雅修改才需该字段）
         /// </summary>
         public bool IsCreateSubAccount { get; set; }
 

@@ -114,7 +114,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 修改阿美雅职位权限
+        /// 修改啊美雅职位权限
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -150,7 +150,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 修改阿美雅职位首页
+        /// 修改啊美雅职位首页
         /// </summary>
         /// <param name="amyPositionId">职位id</param>
         /// <param name="route">首页菜单id</param>

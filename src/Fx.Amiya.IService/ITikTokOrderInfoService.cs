@@ -40,7 +40,7 @@ namespace Fx.Amiya.IService
 
 
         /// <summary>
-        /// 添加阿美雅订单
+        /// 添加啊美雅订单
         /// </summary>
         /// <param name="orderTradeAddDto"></param>
         /// <returns>交易编号</returns>

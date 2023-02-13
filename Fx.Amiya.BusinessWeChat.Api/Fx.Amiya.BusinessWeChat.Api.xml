@@ -6,7 +6,7 @@
     <members>
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.AmiyaLoginAsync(System.String,System.String)">
             <summary>
-            阿美雅员工登录
+            啊美雅员工登录
             </summary>
             <param name="userName"></param>
             <param name="password"></param>
@@ -14,7 +14,7 @@
         </member>
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.AmiyaRefreshToken(System.String)">
             <summary>
-            刷新阿美雅登录账号token
+            刷新啊美雅登录账号token
             </summary>
             <returns></returns>
         </member>

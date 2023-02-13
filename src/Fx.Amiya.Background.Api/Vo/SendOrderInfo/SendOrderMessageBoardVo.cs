@@ -11,7 +11,7 @@ namespace Fx.Amiya.Background.Api.Vo.SendOrderInfo
         public DateTime Date { get; set; }
 
         /// <summary>
-        /// 留言方：0=阿美雅，1=医院
+        /// 留言方：0=啊美雅，1=医院
         /// </summary>
         public byte Type { get; set; }
 

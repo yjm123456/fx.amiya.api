@@ -159,7 +159,7 @@ namespace Fx.Amiya.IService
     public enum EmployeeType
     {
         /// <summary>
-        /// 阿美雅员工
+        /// 啊美雅员工
         /// </summary>
         AmiyaEmployee = 1,
 
@@ -563,7 +563,7 @@ namespace Fx.Amiya.IService
     public enum SendOrderMessageBoardType
     {
         /// <summary>
-        /// 阿美雅=0
+        /// 啊美雅=0
         /// </summary>
         Amiya,
 

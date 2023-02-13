@@ -23,7 +23,7 @@ using Fx.Common.Extensions;
 namespace Fx.Amiya.Background.Api.Controllers
 {
     /// <summary>
-    /// 阿美雅员工API
+    /// 啊美雅员工API
     /// </summary>
     [Route("[controller]")]
     [ApiController]
@@ -59,7 +59,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 添加阿美雅员工信息
+        /// 添加啊美雅员工信息
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
@@ -127,7 +127,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 取阿美雅员工列表（分页）
+        /// 取啊美雅员工列表（分页）
         /// </summary>
         /// <param name="keyword">搜索员工名字关键字</param>
         /// <param name="valid">是否有效</param>
@@ -344,7 +344,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 获取阿美雅客服列表（分页）
+        /// 获取啊美雅客服列表（分页）
         /// </summary>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>

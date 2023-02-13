@@ -277,7 +277,7 @@
         </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.AmiyaEmployeeController">
             <summary>
-            阿美雅员工API
+            啊美雅员工API
             </summary>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaEmployeeController.CheckPasswordAsync(System.String)">
@@ -288,7 +288,7 @@
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaEmployeeController.AddEmployeeAsync(Fx.Amiya.Background.Api.Vo.AmiyaEmployee.AddAmiyaEmployeeVo)">
             <summary>
-            添加阿美雅员工信息
+            添加啊美雅员工信息
             </summary>
             <param name="addVo"></param>
             <returns></returns>
@@ -310,7 +310,7 @@
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaEmployeeController.GetListWithPageAsync(System.String,System.Boolean,System.Int32,System.Int32,System.Int32)">
             <summary>
-            取阿美雅员工列表（分页）
+            取啊美雅员工列表（分页）
             </summary>
             <param name="keyword">搜索员工名字关键字</param>
             <param name="valid">是否有效</param>
@@ -362,7 +362,7 @@
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaEmployeeController.GetCustomerSeviceListWithPageAsync(System.Int32,System.Int32)">
             <summary>
-            获取阿美雅客服列表（分页）
+            获取啊美雅客服列表（分页）
             </summary>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
@@ -591,46 +591,46 @@
         </member>
         <member name="T:Fx.Amiya.Background.Api.Controllers.AmiyaPositionInfoController">
             <summary>
-            阿美雅职位 API
+            啊美雅职位 API
             </summary>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaPositionInfoController.GetListAsync">
             <summary>
-            获取阿美雅职位列表
+            获取啊美雅职位列表
             </summary>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaPositionInfoController.AddAsync(Fx.Amiya.Background.Api.Vo.AmiyaPositionInfo.AddAmiyaPositionInfoVo)">
             <summary>
-            添加阿美雅职位
+            添加啊美雅职位
             </summary>
             <param name="addVo"></param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaPositionInfoController.GetByIdAsync(System.Int32)">
             <summary>
-            根据职位编号获取阿美雅职位信息
+            根据职位编号获取啊美雅职位信息
             </summary>
             <param name="id"></param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaPositionInfoController.GetByDepartmentIdAsync(System.Int32)">
             <summary>
-            根据部门编号获取阿美雅职位信息
+            根据部门编号获取啊美雅职位信息
             </summary>
             <param name="departmentId">部门id</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaPositionInfoController.UpdateAsync(Fx.Amiya.Background.Api.Vo.AmiyaPositionInfo.UpdateAmiyaPositionInfoVo)">
             <summary>
-            修改阿美雅职位
+            修改啊美雅职位
             </summary>
             <param name="updateVo"></param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.AmiyaPositionInfoController.DeleteAsync(System.Int32)">
             <summary>
-            根据职位编号删除阿美雅职位
+            根据职位编号删除啊美雅职位
             </summary>
             <param name="id"></param>
             <returns></returns>
@@ -902,7 +902,7 @@
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.AuthController.AmiyaLoginAsync(System.String,System.String)">
             <summary>
-            阿美雅员工登录
+            啊美雅员工登录
             </summary>
             <param name="userName"></param>
             <param name="password"></param>
@@ -910,7 +910,7 @@
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.AuthController.AmiyaRefreshToken(System.String)">
             <summary>
-            刷新阿美雅登录账号token
+            刷新啊美雅登录账号token
             </summary>
             <returns></returns>
         </member>
@@ -5672,7 +5672,7 @@
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.PermissionController.UpdatePermissionsAsync(System.Collections.Generic.List{Fx.Amiya.Background.Api.Vo.Permission.UpdatePermissionsVo})">
             <summary>
-            修改阿美雅职位按钮权限
+            修改啊美雅职位按钮权限
             </summary>
             <param name="input"></param>
             <returns></returns>
@@ -5698,7 +5698,7 @@
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.PermissionModuleController.UpdateAmyPositionAuthAsync(System.Collections.Generic.List{Fx.Amiya.Background.Api.Vo.PermissionModule.UpdatePositionAuthVo})">
             <summary>
-            修改阿美雅职位权限
+            修改啊美雅职位权限
             </summary>
             <param name="input"></param>
             <returns></returns>
@@ -5713,7 +5713,7 @@
         </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.PermissionModuleController.UpdateAmyPositionIndexAsync(System.Int32,System.Int32)">
             <summary>
-            修改阿美雅职位首页
+            修改啊美雅职位首页
             </summary>
             <param name="amyPositionId">职位id</param>
             <param name="route">首页菜单id</param>
@@ -7179,7 +7179,7 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.AmiyaEmployee.EmployeeIdVo.Type">
             <summary>
-            员工类型：1=阿美雅员工，2=医院员工
+            员工类型：1=啊美雅员工，2=医院员工
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.AmiyaEmployee.UpdateAmiyaEmployeeVo.Id">
@@ -15399,12 +15399,12 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalEmployee.AddHospitalEmployeeVo.IsCreateSubAccount">
             <summary>
-            是否允许创建子账户（阿美雅添加员工）
+            是否允许创建子账户（啊美雅添加员工）
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalEmployee.AddHospitalEmployeeVo.HospitalId">
             <summary>
-            医院编号（阿美雅添加员工）
+            医院编号（啊美雅添加员工）
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalEmployee.AddHospitalEmployeeVo.HospitalPositionId">
@@ -15454,12 +15454,12 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalEmployee.UpdateHospitalEmployeeVo.HospitalId">
             <summary>
-            医院编号（阿美雅修改才需该字段）
+            医院编号（啊美雅修改才需该字段）
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalEmployee.UpdateHospitalEmployeeVo.IsCreateSubAccount">
             <summary>
-            是否允许创建子账户（阿美雅修改才需该字段）
+            是否允许创建子账户（啊美雅修改才需该字段）
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalEmployee.UpdateHospitalEmployeeVo.HospitalPositionId">
@@ -21479,7 +21479,7 @@
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.Login.AmiyaEmployeeAccountVo">
             <summary>
-            阿美雅员工账户信息
+            啊美雅员工账户信息
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.Login.HospitalEmployeeAccountVo">
@@ -27386,7 +27386,7 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.SendOrderInfo.AddSendOrderMessageBoardVo.HospitalId">
             <summary>
-            医院编号，阿美雅添加必传，医院添加为空
+            医院编号，啊美雅添加必传，医院添加为空
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.SendOrderInfo.AddSendOrderMessageBoardVo.Id">
@@ -27581,7 +27581,7 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.SendOrderInfo.SendOrderMessageBoardVo.Type">
             <summary>
-            留言方：0=阿美雅，1=医院
+            留言方：0=啊美雅，1=医院
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.SendOrderInfo.SendOrderMessageBoardVo.TypeName">

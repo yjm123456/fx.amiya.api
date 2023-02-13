@@ -9,7 +9,7 @@ namespace Fx.Amiya.Background.Api.Vo.SendOrderInfo
     public class AddSendOrderMessageBoardVo
     {
         /// <summary>
-        /// 医院编号，阿美雅添加必传，医院添加为空
+        /// 医院编号，啊美雅添加必传，医院添加为空
         /// </summary>
         public int? HospitalId { get; set; }
 

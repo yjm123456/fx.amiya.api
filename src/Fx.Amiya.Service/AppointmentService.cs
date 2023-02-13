@@ -425,7 +425,7 @@ namespace Fx.Amiya.Service
                     {
                         var email = empInfo.Email;
                         if (email != "0")
-                            sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "阿美雅", "3023330386@qq.com", email, "客户下单提示", sub);
+                            sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "啊美雅", "3023330386@qq.com", email, "客户下单提示", sub);
                     }
                 }
                 else
@@ -436,7 +436,7 @@ namespace Fx.Amiya.Service
                         var email = k.Email;
                         if (email == "0")
                             continue;
-                        sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "阿美雅", "3023330386@qq.com", email, "客户下单提示", sub);
+                        sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "啊美雅", "3023330386@qq.com", email, "客户下单提示", sub);
                     }
                 }
                 return appointmentInfo.Id;
@@ -668,7 +668,7 @@ namespace Fx.Amiya.Service
                 if (appointment == null)
                     throw new Exception("预约编号错误");
                 if (appointment.Status == (byte)AppointmentStatus.WaitAccomplish)
-                    throw new Exception("请耐心等待阿美雅和机构确认");
+                    throw new Exception("请耐心等待啊美雅和机构确认");
                 if (appointment.Status == (byte)AppointmentStatus.Finish)
                     throw new Exception("预约已完成，不可继续点击");
                 if (appointment.Status == (byte)AppointmentStatus.Cancel)

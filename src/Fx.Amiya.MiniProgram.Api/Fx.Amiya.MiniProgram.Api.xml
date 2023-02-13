@@ -810,7 +810,7 @@
         </member>
         <member name="M:Fx.Amiya.MiniProgram.Api.TimeJob.HandleTimeOutOrderAsync">
             <summary>
-            处理阿美雅超时未支付的商城订单
+            处理啊美雅超时未支付的商城订单
             </summary>
             <returns></returns>
         </member>

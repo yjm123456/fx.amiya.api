@@ -645,12 +645,12 @@ namespace Fx.Amiya.Service
                                             email = x.Email;
                                             if (email == "0" || string.IsNullOrEmpty(email))
                                                 continue;
-                                            sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "阿美雅", "3023330386@qq.com", email, "客户下单提示", sub);
+                                            sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "啊美雅", "3023330386@qq.com", email, "客户下单提示", sub);
                                         }
                                     }
                                     else
                                     {
-                                        sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "阿美雅", "3023330386@qq.com", email, "客户下单提示", sub);
+                                        sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "啊美雅", "3023330386@qq.com", email, "客户下单提示", sub);
                                     }
                                 }
                             }
@@ -662,7 +662,7 @@ namespace Fx.Amiya.Service
                                     var email = x.Email;
                                     if (email == "0" || string.IsNullOrEmpty(email))
                                         continue;
-                                    sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "阿美雅", "3023330386@qq.com", email, "客户下单提示", sub);
+                                    sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "啊美雅", "3023330386@qq.com", email, "客户下单提示", sub);
                                 }
                             }
                         }
@@ -792,7 +792,7 @@ namespace Fx.Amiya.Service
 
 
         /// <summary>
-        /// 获取超时未支付阿美雅订单列表
+        /// 获取超时未支付啊美雅订单列表
         /// </summary>
         /// <returns></returns>
         public async Task<List<OrderInfoSimpleDto>> TimeOutOrderAsync()
