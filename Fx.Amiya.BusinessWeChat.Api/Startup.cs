@@ -39,7 +39,7 @@ namespace Fx.Amiya.BusinessWechat.Api
             services.AddControllers().AddFxValidateModelFilter();
             services.AddFxSwagger("Fx.Amiya.BusinessWeChat.Api.xml", "啊美雅企业微信API");
             services.AddFxAmiyaCommonServices();
-            services.AddCors(option => option.AddPolicy("cors", policy => policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:5622")));
+            services.AddCors(option => option.AddPolicy("cors", policy => policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:5630")));
 
             services.AddScoped<IMongoRepository<CallRecordVo>, FxCallRecordMongoRepository>();
             services.AddFxJwtTokenAuthenticationServices();
