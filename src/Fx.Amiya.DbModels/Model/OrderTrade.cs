@@ -19,6 +19,10 @@ namespace Fx.Amiya.DbModels.Model
         public bool IsAdminAdd { get; set; } = false;
         public string StatusCode { get; set; }
         public DateTime? UpdateDate { get; set; }
+        /// <summary>
+        /// 支付时使用的交易单号
+        /// </summary>
+        public string TransNo { get; set; }
 
         public CustomerInfo CustomerInfo { get; set; }
         public Address Address { get; set; }

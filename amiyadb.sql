@@ -1895,11 +1895,21 @@ CREATE TABLE `amiyadb`.`tbl_bill` (
 
 
 
+----------------------------------------王健 2023/2/16 BEGIN-----------------------------------
+
+
+-----控制小程序页面显示
+
+CREATE TABLE `tbl_control_page_show` (
+	`id` INT(10) NOT NULL,
+	`show` BIT(1) NOT NULL DEFAULT 'b\'0\'',
+	PRIMARY KEY (`id`) USING BTREE
+)
+ENGINE=InnoDB;
 
 
 
-
-
+----------------------------------------王健 2023/2/16 END-----------------------------------
 
 
 

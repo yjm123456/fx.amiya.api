@@ -33,6 +33,7 @@ namespace Fx.Amiya.Service
             goodsStandardssPrice.GoodsId = goodsInfoAdd.GoodsId;
             goodsStandardssPrice.Standards = goodsInfoAdd.Standards;
             goodsStandardssPrice.Price = goodsInfoAdd.Price;
+            goodsStandardssPrice.IntegralAmount = goodsInfoAdd.IntegralAmount;
             goodsStandardssPrice.StandardsImg = goodsInfoAdd.StandardsImg;
             await dalGoodsStandardsPrice.AddAsync(goodsStandardssPrice, true);
         }
@@ -68,6 +69,7 @@ namespace Fx.Amiya.Service
                                                GoodsId = d.GoodsId,
                                                Standards = d.Standards,
                                                Price = d.Price,
+                                               IntegralAmount=d.IntegralAmount,
                                                StandardsImg=d.StandardsImg
                                            };
 

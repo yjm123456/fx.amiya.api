@@ -182,5 +182,13 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerHospitalConsume
         /// 登记日期
         /// </summary>
         public DateTime CreateDate { get; set; }
+        /// <summary>
+        /// 是否开票
+        /// </summary>
+        public bool IsCreateBill { get; set; }
+        /// <summary>
+        /// 开票公司
+        /// </summary>
+        public string CreateBillCompany { get; set; }
     }
 }

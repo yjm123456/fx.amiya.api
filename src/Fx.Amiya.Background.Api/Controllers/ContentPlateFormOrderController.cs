@@ -721,6 +721,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             var pictures = await _contentPlatFormCustomerPictureService.GetListAsync(orderUpdateInfo.Id);
             orderUpdateInfo.CustomerPictures = pictures.Select(z => z.CustomerPicture).ToList();
             orderUpdateInfo.IsRepeatProfundityOrder = order.IsRepeatProfundityOrder;
+            orderUpdateInfo.IsCreateBill = order.IsCreateBill;
+            orderUpdateInfo.CreateBillCompany = order.CreateBillCompany;
             return ResultData<ContentPlateFormOrderVo>.Success().AddData("orderInfo", orderUpdateInfo);
         }
 

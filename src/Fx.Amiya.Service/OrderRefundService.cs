@@ -64,7 +64,11 @@ namespace Fx.Amiya.Service
             }
         }
 
-
+        /// <summary>
+        /// 创建退款订单
+        /// </summary>
+        /// <param name="createRefundOrderDto"></param>
+        /// <returns></returns>
         public async Task<CreateRefundOrderResult> CreateRefundOrderAsync(CreateRefundOrderDto createRefundOrderDto)
         {
 
@@ -149,6 +153,7 @@ namespace Fx.Amiya.Service
                 orderRefund.CreateDate = DateTime.Now;
                 orderRefund.RefundState = (byte)RefundState.RefundPending;
                 orderRefund.Valid = true;
+                orderRefund.TransNo = trade.TransNo;
                 await dalOrderRefund.AddAsync(orderRefund, true);
                 
                 return new CreateRefundOrderResult { Result = true, Msg = "提交成功" };

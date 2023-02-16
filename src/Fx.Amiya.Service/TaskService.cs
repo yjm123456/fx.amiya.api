@@ -44,7 +44,7 @@ namespace Fx.Amiya.Service
             else {
                 try
                 {
-                    unitOfWork.BeginTransaction();
+                    
                     var growthRule = await growthPointsRuleService.GetTaskRuleByTaskCodeAsync(GrowthPointsRuleCode.CONSUMPTION);
                     AddGrowthPointsRecordDto record = new AddGrowthPointsRecordDto();
                     var account = await growthPointsAccountService.GetGrowthPointAccountByCustomerId(customerid);
@@ -75,11 +75,11 @@ namespace Fx.Amiya.Service
                     };
                     await growthPointsAccountService.UpdateAsync(updateGrowthPointsAccountDto);
                     await memberCardService.SendMemberCardAsync(customerid);
-                    unitOfWork.Commit();
+                    
                 }
                 catch (Exception ex)
                 {
-                    unitOfWork.RollBack();
+                    
                     throw ex;
                 }
             }

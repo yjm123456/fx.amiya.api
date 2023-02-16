@@ -149,7 +149,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     GoodsId=d.GoodsId,
                     Standards=d.Standards,
                     StandardsImg=d.StandardsImg,
-                    Price=d.Price
+                    Price=d.Price,
+                    IntegralAmount=d.IntegralAmount
                 }).ToList()
             };
             //当前用户的会员价格

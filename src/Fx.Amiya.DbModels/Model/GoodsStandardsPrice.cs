@@ -16,5 +16,6 @@ namespace Fx.Amiya.DbModels.Model
         public string GoodsId { get; set; }
         public string Standards { get; set; }
         public decimal Price { get; set; }
+        public decimal? IntegralAmount { get; set; }
     }
 }

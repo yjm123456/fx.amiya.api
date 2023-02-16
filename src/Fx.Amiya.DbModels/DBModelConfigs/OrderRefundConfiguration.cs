@@ -34,6 +34,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.RefundStartDate).HasColumnName("refund_start_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.RefundResultDate).HasColumnName("refund_result_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.RefundTradeNo).HasColumnName("refund_trade_no").HasColumnType("varchar(50)").IsRequired(false);
+            builder.Property(e => e.TransNo).HasColumnName("trans_no").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();

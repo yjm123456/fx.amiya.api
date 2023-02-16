@@ -36,6 +36,7 @@ namespace Fx.Amiya.Service
         private IDalCustomerBaseInfo dalCustomerBaseInfo;
         private IDalRecommandDocumentSettle dalRecommandDocumentSettle;
         private IDalLiveAnchor dalLiveAnchor;
+        private IDalCompanyBaseInfo dalCompanyBaseInfo;
         public CustomerHospitalConsumeService(IDalCustomerHospitalConsume dalCustomerHospitalConsume,
             IDalConfig dalConfig,
             IDalAmiyaEmployee dalAmiyaEmployee,
@@ -46,7 +47,7 @@ namespace Fx.Amiya.Service
             ILiveAnchorService liveAnchorService,
             IDalBindCustomerService dalBindCustomerService,
             IOrderCheckPictureService orderCheckPictureService,
-            IDalCustomerBaseInfo dalCustomerBaseInfo, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalLiveAnchor dalLiveAnchor)
+            IDalCustomerBaseInfo dalCustomerBaseInfo, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalLiveAnchor dalLiveAnchor, IDalCompanyBaseInfo dalCompanyBaseInfo)
         {
             this.dalCustomerHospitalConsume = dalCustomerHospitalConsume;
             this.dalConfig = dalConfig;
@@ -61,6 +62,7 @@ namespace Fx.Amiya.Service
             this.dalCustomerBaseInfo = dalCustomerBaseInfo;
             this.dalRecommandDocumentSettle = dalRecommandDocumentSettle;
             this.dalLiveAnchor = dalLiveAnchor;
+            this.dalCompanyBaseInfo = dalCompanyBaseInfo;
         }
 
         public async Task AddAsync(AddCustomerHospitalConsumeDto addDto, int hospitalId)
@@ -523,6 +525,8 @@ namespace Fx.Amiya.Service
             result.Remark = selectResult.Remark;
             result.IsConfirmOrder = selectResult.IsConfirmOrder;
             result.IsReceiveAdditionalPurchase = selectResult.IsReceiveAdditionalPurchase;
+            result.IsCreateBill = selectResult.IsCreateBill;
+            result.BelongCompanyName= dalCompanyBaseInfo.GetAll().Where(e => e.Id == selectResult.BelongCompany).SingleOrDefault()?.Name;
             return result;
         }
 

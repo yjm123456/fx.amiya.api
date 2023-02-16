@@ -50,7 +50,12 @@ namespace Fx.Amiya.Core.Dto.Goods
         /// <summary>
         /// 慧收钱
         /// </summary>
-        HuiShouQian
+        HuiShouQian,
+        /// <summary>
+        /// 积分加钱购
+        /// </summary>
+        PointAndMoney
+
     }
 
     /// <summary>

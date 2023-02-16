@@ -427,7 +427,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <returns></returns>
         private async Task<ConsumptionIntegrationDto> CreateIntegrationRecordAsync(string customerId, decimal awardAmount)
         {
-            var exist = await integrationAccount.ExistNewCustomerRewardAsync(customerId, awardAmount, (int)GenerateType.NewCustomer);
+            var exist = await integrationAccount.ExistNewCustomerRewardAsync(customerId, awardAmount, (int)GenerateType.NewCustomer,null);
             if (exist)
             {
                 return null;

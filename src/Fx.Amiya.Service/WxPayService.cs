@@ -40,6 +40,9 @@ namespace Fx.Amiya.Service
             if (refundOrder.ExchangeType== (int)ExchangeType.HuiShouQian) {
               return  await huiShouQianPaymentService.CreateHuiShouQianRefundOrde(refundOrderId);
             }
+            if (refundOrder.ExchangeType==(int)ExchangeType.PointAndMoney) {
+                return await huiShouQianPaymentService.CreateHuiShouQianAndPointRefundOrder(refundOrderId);
+            }
 
             if (refundOrder == null) { throw new Exception("退款编号错误"); }
             if (refundOrder.CheckState != (int)CheckState.CheckSuccess) throw new Exception("只有审核通过的订单才能退款");

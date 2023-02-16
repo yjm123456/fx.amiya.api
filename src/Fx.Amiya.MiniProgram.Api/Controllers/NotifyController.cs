@@ -549,7 +549,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         if (notifyParam.orderStatus.ToUpper() == "SUCCESS")
                         {
                             bool isMaterialOrder = false;
-                            var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(notifyParam.transNo);
+                            var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(notifyParam.extend);
                             if (orderTrade.StatusCode == OrderStatusCode.WAIT_BUYER_PAY)
                             {
                                 List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
@@ -593,7 +593,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                 //修改订单状态
                                 await orderService.UpdateAsync(updateOrderList);
                                 UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
-                                updateOrderTrade.TradeId = notifyParam.transNo;
+                                updateOrderTrade.TradeId = notifyParam.extend;
                                 updateOrderTrade.AddressId = orderTrade.AddressId;
                                 if (isMaterialOrder) {
                                     updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;

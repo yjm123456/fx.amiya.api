@@ -614,17 +614,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="ReturnBackPriceState">回款状态,为空查询所有</param>
         /// <param name="appType">渠道</param>
         /// <param name="orderNature">订单性质</param>
+        /// <param name="createBillCompanyId">开票公司id</param>
+        /// <param name="isCreateBill">是否开票</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("tmallOrderFinishLlistWithPage")]
-        public async Task<ResultData<FxPageInfo<OrderInfoVo>>> GetOrderFinishListWithPageAsync(DateTime? writeOffStartDate, DateTime? writeOffEndDate, int? CheckState, bool? ReturnBackPriceState, string keyword, byte? appType, byte? orderNature, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<OrderInfoVo>>> GetOrderFinishListWithPageAsync(DateTime? writeOffStartDate, DateTime? writeOffEndDate, int? CheckState, bool? ReturnBackPriceState, string keyword, byte? appType, byte? orderNature, int pageNum, int pageSize,string createBillCompanyId,bool? isCreateBill)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await orderService.GetOrderFinishListWithPageAsync(writeOffStartDate, writeOffEndDate, CheckState, ReturnBackPriceState, keyword, appType, orderNature, employeeId, pageNum, pageSize);
+                var q = await orderService.GetOrderFinishListWithPageAsync(writeOffStartDate, writeOffEndDate, CheckState, ReturnBackPriceState, keyword, appType, orderNature, employeeId, createBillCompanyId, isCreateBill,pageNum, pageSize);
                 var order = from d in q.List
                             select new OrderInfoVo
                             {
@@ -952,6 +954,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 获取订单数据
         /// </summary>
         /// <returns></returns>
+        /// <returns></returns>
         [HttpGet("headOrderData")]
         public async Task<ResultData<OrderDataVo>> GetHeadOrderDataAsync(int? employeeId)
         {
@@ -1199,7 +1202,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             tmallOrderVo.CheckRemark = order.CheckRemark;
             tmallOrderVo.ReturnBackPrice = order.ReturnBackPrice;
             tmallOrderVo.ReturnBackDate = order.ReturnBackDate;
-
+            tmallOrderVo.IsCreateBill = order.IsCreateBill;
+            tmallOrderVo.CreateBillCompany = order.BelongCompany;
             return ResultData<OrderInfoVo>.Success().AddData("order", tmallOrderVo);
         }
 

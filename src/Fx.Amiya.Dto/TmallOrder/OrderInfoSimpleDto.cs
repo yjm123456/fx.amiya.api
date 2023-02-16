@@ -74,6 +74,14 @@ namespace Fx.Amiya.Dto.TmallOrder
         /// 订单使用的抵用券id
         /// </summary>
         public string CouponId { get; set; }
+        /// <summary>
+        /// 支付方式
+        /// </summary>
+        public int ExchageType { get; set; }
+        /// <summary>
+        /// 用户id
+        /// </summary>
+        public string CustomerId { get; set; }
 
     }
 }

@@ -12,5 +12,6 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Goods
         public string Standards { get; set; }
         public string StandardsImg { get; set; }
         public decimal Price { get; set; }
+        public decimal? IntegralAmount { get; set; }
     }
 }

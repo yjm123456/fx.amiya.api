@@ -51,7 +51,7 @@ namespace Fx.Amiya.Service
             appointmentCar.AppointmentDate = add.AppointmentDate;
             appointmentCar.Address = add.Address;
             appointmentCar.Hospital = add.Hospital;
-            appointmentCar.CarType = add.CarType;
+            appointmentCar.CarType = 0;
             appointmentCar.Valid = true;
             appointmentCar.CreateDate = DateTime.Now;
             appointmentCar.CustomerId = add.CustomerId;

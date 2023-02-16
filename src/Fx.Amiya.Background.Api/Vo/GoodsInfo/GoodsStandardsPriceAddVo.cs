@@ -19,6 +19,10 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         /// </summary>
         public decimal Price { get; set; }
         /// <summary>
+        /// 积分价格
+        /// </summary>
+        public decimal? IntegralAmount { get; set; }
+        /// <summary>
         /// 规格图片
         /// </summary>
         public string StandardsImg { get; set; }

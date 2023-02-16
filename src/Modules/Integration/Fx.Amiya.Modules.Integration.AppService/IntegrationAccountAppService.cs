@@ -304,7 +304,9 @@ namespace Fx.Amiya.Modules.Integration.AppService
         /// <returns></returns>
         public async Task UseByGoodsConsumption(UseIntegrationDto useIntegration)
         {
+
             await UseAsync(useIntegration, IntegrationUseType.Consumption);
+
         }
 
         private async Task UseAsync(UseIntegrationDto useIntegration, IntegrationUseType integrationUseType)
@@ -339,9 +341,9 @@ namespace Fx.Amiya.Modules.Integration.AppService
             return true;
         }
 
-        public async Task<bool> ExistNewCustomerRewardAsync(string customerId, decimal amount, int type)
+        public async Task<bool> ExistNewCustomerRewardAsync(string customerId, decimal amount, int type, string orderId)
         {
-            var record = await freeSql.Select<IntegrationGenerateRecordDbModel>().Where(e => e.CustomerId == customerId && e.Quantity == amount && e.Type == type).FirstAsync();
+            var record = await freeSql.Select<IntegrationGenerateRecordDbModel>().Where(e => e.CustomerId == customerId && e.Quantity == amount && e.Type == type).Where(e=>string.IsNullOrEmpty(orderId)||e.OrderId==orderId).FirstAsync();
             return record == null ? false : true;
         }
     }

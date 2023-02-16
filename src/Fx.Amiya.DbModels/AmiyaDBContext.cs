@@ -339,6 +339,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new CompanyBaseInfoConfiguration());
             modelBuilder.ApplyConfiguration(new GiftCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new TagDetailInfoConfiguration());
+            modelBuilder.ApplyConfiguration(new ControlPageShowConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

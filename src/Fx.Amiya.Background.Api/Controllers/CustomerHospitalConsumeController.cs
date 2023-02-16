@@ -465,6 +465,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             customerManageUpdateConsume.Remark = result.Remark;
             customerManageUpdateConsume.IsReceiveAdditionalPurchase = result.IsReceiveAdditionalPurchase;
             customerManageUpdateConsume.IsConfirmOrder = result.IsConfirmOrder;
+            customerManageUpdateConsume.IsCreateBill = result.IsCreateBill;
+            customerManageUpdateConsume.CreateBillCompany = result.BelongCompanyName;
+
             return ResultData<CustomerManageUpdateconsumeVo>.Success().AddData("CustomerManageUpdateconsume", customerManageUpdateConsume);
         }
         /// <summary>

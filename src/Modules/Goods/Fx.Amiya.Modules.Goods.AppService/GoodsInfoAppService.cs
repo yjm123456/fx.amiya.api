@@ -109,6 +109,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     goodsStandardsPrice.GoodsId = goodsInfo.Id;
                     goodsStandardsPrice.Standards = x.Standards;
                     goodsStandardsPrice.Price = x.Price;
+                    goodsStandardsPrice.IntegralAmount = x.IntegralAmount;
                     goodsStandardsPrice.StandardsImg = x.StandardsImg;
                     await goodsStandardsPriceService.AddAsync(goodsStandardsPrice);
                 }
@@ -183,6 +184,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     goodsStandardsPricedto.GoodsId = id;
                     goodsStandardsPricedto.Standards = z.Standards;
                     goodsStandardsPricedto.Price = z.Price;
+                    goodsStandardsPricedto.IntegralAmount = z.IntegralAmount;
                     goodsStandardsPricedto.StandardsImg = z.StandardsImg;
                     goodsStandardsPriceList.Add(goodsStandardsPricedto);
                 }
@@ -405,6 +407,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 goodsHospitalPrice.GoodsId = goodsInfo.Id;
                 goodsHospitalPrice.Standards = x.Standards;
                 goodsHospitalPrice.Price = x.Price;
+                goodsHospitalPrice.IntegralAmount = x.IntegralAmount;
                 goodsHospitalPrice.StandardsImg = x.StandardsImg;
                 await goodsStandardsPriceService.AddAsync(goodsHospitalPrice);
             }
@@ -663,7 +666,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
             {ExchangeType.BalancePay,"余额支付"},
             {ExchangeType.Wechat,"微信支付"},
             {ExchangeType.Alipay,"支付宝"},
-            { ExchangeType.HuiShouQian,"慧收钱"}
+            { ExchangeType.HuiShouQian,"慧收钱"},
+            { ExchangeType.PointAndMoney,"积分加钱购"}
         };
     }
 }

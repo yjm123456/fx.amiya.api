@@ -65,17 +65,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="returnBackPriceEndDate">回款结束时间</param>
         /// <param name="customerServiceId">跟进人员（空查询所有，0查医院）</param>
         /// <param name="keyWord">关键字</param>
+        /// <param name="createBillCompanyId">开票公司</param>
+        /// <param name="isCreateBill">是否开票</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("contentPlatFormOrderDealInfo")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderDealInfoVo>>> GetDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderDealInfoVo>>> GetDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord,string createBillCompanyId,bool? isCreateBill, int pageNum, int pageSize)
         {
 
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderListWithPageAsync(startDate, endDate, sendStartDate, sendEndDate, consultationType, minAddOrderPrice, maxAddOrderPrice, isToHospital, tohospitalStartDate, toHospitalEndDate, dealStartDate, dealEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, pageNum, pageSize);
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderListWithPageAsync(startDate, endDate, sendStartDate, sendEndDate, consultationType, minAddOrderPrice, maxAddOrderPrice, isToHospital, tohospitalStartDate, toHospitalEndDate, dealStartDate, dealEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId,createBillCompanyId,isCreateBill, pageNum, pageSize);
 
             var contentPlatformOrders = from d in result.List
                                         select new ContentPlatFormOrderDealInfoVo
@@ -120,7 +122,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             CreateByEmpName = d.CreateByEmpName,
                                             BelongLiveAnchor = d.BelongLiveAnchor,
                                             ReconciliationDocumentsId = d.ReconciliationDocumentsId,
-                                            IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
+                                            IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
+                                            IsCreateBill=d.IsCreateBill,
+                                            CreatBillCompany=d.BelongCompany
+                                            
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;

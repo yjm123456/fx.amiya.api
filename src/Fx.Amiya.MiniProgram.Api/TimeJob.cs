@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Core.Interfaces.Goods;
+﻿using Fx.Amiya.Core.Dto.Goods;
+using Fx.Amiya.Core.Interfaces.Goods;
 using Fx.Amiya.Dto.ConsumptionVoucher;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IService;
@@ -62,8 +63,10 @@ namespace Fx.Amiya.MiniProgram.Api
                 var goodsService = scope.ServiceProvider.GetService<IGoodsInfo>();
                 var customerConsumptionVoucherService = scope.ServiceProvider.GetService<ICustomerConsumptionVoucherService>();
                 var ordres = await orderService.TimeOutOrderAsync();
+                var thridOrder = ordres.Where(e => e.ExchageType != (int)ExchangeType.PointAndMoney).ToList();
+                var pointAndMoneyOrder = ordres.Where(e => e.ExchageType == (int)ExchangeType.PointAndMoney).ToList();
                 List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
-                foreach (var item in ordres)
+                foreach (var item in thridOrder)
                 {
                     UpdateOrderDto updateOrder = new UpdateOrderDto();
                     updateOrder.OrderId = item.Id;
@@ -74,7 +77,12 @@ namespace Fx.Amiya.MiniProgram.Api
                         await goodsService.AddGoodsInventoryQuantityAsync(item.GoodsId, (int)item.Quantity);
                     }                                      
                 }
-              await orderService.UpdateAsync(updateOrderList);
+                await orderService.UpdateAsync(updateOrderList);
+                foreach (var item in pointAndMoneyOrder)
+                {
+                    await orderService.CancelPointAndMoneyOrderAsync(item.TradeId,item.CustomerId);
+                }
+                
                 //退还抵用券
                 foreach (var item in ordres)
                 {

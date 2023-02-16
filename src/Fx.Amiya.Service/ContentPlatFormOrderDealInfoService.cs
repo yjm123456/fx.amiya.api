@@ -32,6 +32,7 @@ namespace Fx.Amiya.Service
         private IDalHospitalInfo _dalHospitalInfo;
         private IUnitOfWork unitOfWork;
         private IDalRecommandDocumentSettle dalRecommandDocumentSettle;
+        private IDalCompanyBaseInfo dalCompanyBaseInfo;
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
             ICompanyBaseInfoService companyBaseInfoService,
@@ -40,7 +41,7 @@ namespace Fx.Amiya.Service
             IDalBindCustomerService dalBindCustomerService,
             IDalAmiyaEmployee dalAmiyaEmployee,
             IUnitOfWork unitOfWork,
-            IHospitalInfoService hospitalInfoService, ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService, IDalHospitalInfo dalHospitalInfo, IDalRecommandDocumentSettle dalRecommandDocumentSettle)
+            IHospitalInfoService hospitalInfoService, ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService, IDalHospitalInfo dalHospitalInfo, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo)
         {
             this.dalContentPlatFormOrderDealInfo = dalContentPlatFormOrderDealInfo;
             _hospitalInfoService = hospitalInfoService;
@@ -54,6 +55,7 @@ namespace Fx.Amiya.Service
             _liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
             _dalHospitalInfo = dalHospitalInfo;
             this.dalRecommandDocumentSettle = dalRecommandDocumentSettle;
+            this.dalCompanyBaseInfo = dalCompanyBaseInfo;
         }
         /// <summary>
         /// 获取成交情况列表
@@ -82,10 +84,11 @@ namespace Fx.Amiya.Service
         /// <param name="customerServiceId">跟进人员（空查询所有）</param>
         /// <param name="keyWord">关键字</param>
         /// <param name="employeeId"></param>
+        /// <param name="createBillCompanyId">开票公司id</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId,string createBillCompanyId,bool? isCreateBill, int pageNum, int pageSize)
         {
             var config = await wxAppConfigService.GetCallCenterConfig();
             try
@@ -135,6 +138,16 @@ namespace Fx.Amiya.Service
                     dealInfo = from d in dealInfo
                                where (d.ContentPlatFormOrder.SendDate < enddate)
                                select d;
+                }
+                if (!string.IsNullOrEmpty(createBillCompanyId)) {
+                    dealInfo = from d in dealInfo
+                               where d.BelongCompany == createBillCompanyId
+                               select d;
+                }
+                if (isCreateBill != null) {
+                    dealInfo= from d in dealInfo
+                              where d.IsCreateBill == isCreateBill
+                              select d;
                 }
                 if (isToHospital == true)
                 {
@@ -232,7 +245,9 @@ namespace Fx.Amiya.Service
                                                        CreateBy = d.CreateBy,
                                                        BelongLiveAnchor = d.ContentPlatFormOrder.LiveAnchor.Name,
                                                        ReconciliationDocumentsId = d.ReconciliationDocumentsId,
-                                                       IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
+                                                       IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
+                                                       IsCreateBill=d.IsCreateBill,
+                                                       BelongCompany=d.BelongCompany
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -240,6 +255,13 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfoPageInfo.List = await ContentPlatFOrmOrderDealInfo.OrderByDescending(x => x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
                 foreach (var z in ContentPlatFOrmOrderDealInfoPageInfo.List)
                 {
+                    if (string.IsNullOrEmpty(z.BelongCompany))
+                    {
+                        z.BelongCompany = "";
+                    }
+                    else {
+                        z.BelongCompany = dalCompanyBaseInfo.GetAll().Where(e => e.Id == z.BelongCompany).SingleOrDefault()?.Name;
+                    }
                     if (z.LastDealHospitalId.HasValue)
                     {
                         var dealHospital = await _hospitalInfoService.GetBaseByIdAsync(z.LastDealHospitalId.Value);

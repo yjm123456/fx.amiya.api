@@ -19,7 +19,7 @@ namespace Fx.Amiya.IService
 
         Task<FxPageInfo<OrderInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? writeOffStartDate, DateTime? writeOffEndDate, int? belongEmpId, string keyword, string statusCode, byte? appType, byte? orderNature, int employeeId, int pageNum, int pageSize);
 
-        Task<FxPageInfo<OrderInfoDto>> GetOrderFinishListWithPageAsync(DateTime? writeOffStartDate, DateTime? writeOffEndDate, int? CheckState, bool? ReturnBackPriceState, string keyword, byte? appType, byte? orderNature, int employeeId, int pageNum, int pageSize);
+        Task<FxPageInfo<OrderInfoDto>> GetOrderFinishListWithPageAsync(DateTime? writeOffStartDate, DateTime? writeOffEndDate, int? CheckState, bool? ReturnBackPriceState, string keyword, byte? appType, byte? orderNature, int employeeId,string createBillCompanyId, bool? iscreateBill,int pageNum, int pageSize);
 
         Task<FxPageInfo<OrderInfoDto>> GetOrderByReconciliationDocumentsIdLlistWithPageAsync(string reconciliationDocumentsId, int pageNum, int pageSize);
 
@@ -88,6 +88,12 @@ namespace Fx.Amiya.IService
         /// <param name="orderTradeAddDto"></param>
         /// <returns>交易编号</returns>
         Task<string> AddAmiyaOrderAsync(OrderTradeAddDto orderTradeAddDto);
+        /// <summary>
+        /// 添加啊美雅订单无事务
+        /// </summary>
+        /// <param name="orderTradeAddDto"></param>
+        /// <returns>交易编号</returns>
+        Task<string> AddAmiyaOrderWithNoTransactionAsync(OrderTradeAddDto orderTradeAddDto);
 
         /// <summary>
         /// 获取微信支付参数
@@ -514,7 +520,23 @@ namespace Fx.Amiya.IService
         /// <param name="orderid"></param>
         /// <returns></returns>
         Task UpdateCreateBillAndBelongCompany(UpdateCreateBillAndCompanyDto update);
+        /// <summary>
+        /// 交易订单添加支付交易单号(用于退款)
+        /// </summary>
+        /// <typeparam name="List"></typeparam>
+        /// <param name=""></param>
+        /// <param name=""></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        Task TradeAddTransNoAsync(string tradeId,string transId);
 
+        /// <summary>
+        /// 取消积分加钱购订单
+        /// </summary>
+        /// <param name="tradeId"></param>
+        /// <returns></returns>
+        Task CancelPointAndMoneyOrderAsync(string tradeId,string customerId);
+        
 
         #region 报表模块
 
@@ -541,6 +563,13 @@ namespace Fx.Amiya.IService
         Task<List<OrderWriteOffDto>> GetCustomerOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? appType, int? CheckState, bool? ReturnBackPriceState, bool? isCreateBill, string companyId, string customerName, bool isHidePhone);
 
         Task<List<OrderWriteOffDto>> GetCustomerPaidOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? CheckState, bool? ReturnBackPriceState, string customerName, bool isHidePhone);
+        /// <summary>
+        /// 积分加钱购退还积分(无事务版本,事务有外层控制)
+        /// </summary>
+        /// <param name="tradeId"></param>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        Task CancelPointAndMoneyOrderWithNoTransactionAsync(string tradeId, string customerId);
 
         #endregion
 

@@ -20,10 +20,12 @@ namespace Fx.Amiya.Service
     public class HuiShouQianPaymentService : IHuiShouQianPaymentService
     {
         private readonly IDalOrderRefund dalOrderRefund;
+        private readonly IOrderService orderService;
 
-        public HuiShouQianPaymentService(IDalOrderRefund dalOrderRefund)
+        public HuiShouQianPaymentService(IDalOrderRefund dalOrderRefund, IOrderService orderService)
         {
             this.dalOrderRefund = dalOrderRefund;
+            this.orderService = orderService;
         }
 
         public bool CheckHSQCommonParams(HuiShouQianCommonInfo huiShouQianCommonInfo, out string errmsg)
@@ -203,7 +205,7 @@ namespace Fx.Amiya.Service
             if (order.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
             HuiShouQianRefundRequestParam huiShouQianRefundRequestParam = new HuiShouQianRefundRequestParam();
             huiShouQianRefundRequestParam.TransNo = Guid.NewGuid().ToString().Replace("-", "");
-            huiShouQianRefundRequestParam.OrigTransNo = order.TradeId;
+            huiShouQianRefundRequestParam.OrigTransNo = string.IsNullOrEmpty(order.TransNo)?order.TradeId:order.TransNo;
             huiShouQianRefundRequestParam.OrigOrderAmt = (order.ActualPayAmount * 100m).ToString().Split(".")[0];
             huiShouQianRefundRequestParam.OrderAmt = (order.ActualPayAmount * 100m).ToString().Split(".")[0];
             huiShouQianRefundRequestParam.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
@@ -213,6 +215,7 @@ namespace Fx.Amiya.Service
             var commonParam = BuildRefundCommonParam(huiShouQianRefundRequestParam);
             var result = await PostRefundData(huiShouQianPackageInfo.RefundUrl + "?", commonParam);
             result.TardeId = order.TradeId;
+            
             return result;
         }
         /// <summary>
@@ -463,6 +466,40 @@ namespace Fx.Amiya.Service
                 builder.Append(key);
             }
             return builder.ToString();
+        }
+        /// <summary>
+        /// 创建积分加钱购退款订单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<RefundOrderResult> CreateHuiShouQianAndPointRefundOrder(string id)
+        {
+            var order = dalOrderRefund.GetAll().Where(e => e.Id == id).SingleOrDefault();
+            if (order == null) { throw new Exception("退款编号错误"); }
+            if (order.CheckState != (int)CheckState.CheckSuccess) throw new Exception("只有审核通过的订单才能退款");
+            var success = dalOrderRefund.GetAll().Where(e => e.TradeId == order.TradeId && e.RefundState == (int)RefundState.RefundSuccess).ToList();
+            if (success.Count > 0)
+            {
+                throw new Exception("订单已退款,请勿重复请求");
+            }
+            if (order.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
+
+            //退还积分
+            await orderService.CancelPointAndMoneyOrderWithNoTransactionAsync(order.TradeId, order.CustomerId);
+
+            HuiShouQianRefundRequestParam huiShouQianRefundRequestParam = new HuiShouQianRefundRequestParam();
+            huiShouQianRefundRequestParam.TransNo = Guid.NewGuid().ToString().Replace("-", "");
+            huiShouQianRefundRequestParam.OrigTransNo = string.IsNullOrEmpty(order.TransNo) ? order.TradeId : order.TransNo;
+            huiShouQianRefundRequestParam.OrigOrderAmt = (order.ActualPayAmount * 100m).ToString().Split(".")[0];
+            huiShouQianRefundRequestParam.OrderAmt = (order.ActualPayAmount * 100m).ToString().Split(".")[0];
+            huiShouQianRefundRequestParam.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
+            huiShouQianRefundRequestParam.RefundReason = "退款";
+            huiShouQianRefundRequestParam.Extend = order.Id;
+            HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
+            var commonParam = BuildRefundCommonParam(huiShouQianRefundRequestParam);
+            var result = await PostRefundData(huiShouQianPackageInfo.RefundUrl + "?", commonParam);
+            result.TardeId = order.TradeId;
+            return result;
         }
     }
 }

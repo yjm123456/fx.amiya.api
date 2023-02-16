@@ -1950,6 +1950,27 @@ ALTER TABLE `tbl_order_info`
 
 
 
+-------------------------------------王健 2023/2/16 BEGIN-------------------------------------------
+
+
+---积分加钱购相关
+
+ALTER TABLE `tbl_order_trade`
+	ADD COLUMN `trans_no` VARCHAR(50) NULL DEFAULT NULL AFTER `is_admin_add`;
+
+
+ALTER TABLE `tbl_order_refund`
+	ADD COLUMN `trans_no` VARCHAR(50) NULL DEFAULT NULL AFTER `delete_date`;
+
+ALTER TABLE `tbl_goods_standards_price`
+	ADD COLUMN `integral_amount` DECIMAL(10,2) NULL DEFAULT NULL AFTER `standards_img`;
+
+
+--------------------------------------王健 2023/2/16 END--------------------------------------
+
+
+
+
 
 
 

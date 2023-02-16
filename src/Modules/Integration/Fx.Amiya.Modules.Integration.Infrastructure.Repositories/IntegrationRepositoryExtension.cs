@@ -28,6 +28,7 @@ namespace Fx.Amiya.Modules.Integration.Infrastructure.Repositories
             services.BatchAddRepositoriesServices("Fx.Amiya.Modules.Integration.Infrastructure.Repositories", "repository");
             var freeSql = new FreeSql.FreeSqlBuilder().UseConnectionString(map[dbType], connectionString).UseSlave(readDbConnectionString).Build<IntegrationFlag>();
             services.AddSingleton<IFreeSql<IntegrationFlag>>(freeSql);
+            services.AddScoped<UnitOfWorkManager>();
             DbModelConfigurations.Configuration(freeSql);
             return services;
         }

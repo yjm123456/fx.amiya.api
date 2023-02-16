@@ -129,6 +129,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 goodsStandardsPriceVo.Standards = x.Standards;
                 goodsStandardsPriceVo.Price = x.Price;
                 goodsStandardsPriceVo.StandardsImg = x.StandardsImg;
+                goodsStandardsPriceVo.IntegralAmount = x.IntegralAmount;
                 goodsStandardsPriceVoList.Add(goodsStandardsPriceVo);
 
             }
@@ -237,6 +238,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                              {
                                                  Standards = d.Standards,
                                                  Price = d.Price,
+                                                 IntegralAmount=d.IntegralAmount,
                                                  StandardsImg=d.StandardsImg
                                              }).ToList();
             goodsInfo.CarouselImageUrls = (from d in goodsInfoAdd.CarouselImageUrls
@@ -304,6 +306,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                              {
                                                  Standards = d.Standards,
                                                  Price = d.Price,
+                                                 IntegralAmount=d.IntegralAmount,
                                                  StandardsImg=d.StandardsImg
                                              }).ToList();
             //医院价格

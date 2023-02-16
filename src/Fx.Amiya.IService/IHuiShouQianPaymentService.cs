@@ -38,5 +38,11 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<RefundOrderResult> CreateHuiShouQianRefundOrde(string id);
+        /// <summary>
+        /// 创建积分加钱购退款订单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<RefundOrderResult> CreateHuiShouQianAndPointRefundOrder(string id);
     }
 }

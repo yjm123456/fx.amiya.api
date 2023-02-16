@@ -72,5 +72,9 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public string RefundTradeNo { get; set; }
         public int? CheckBy { get; set; }
+        /// <summary>
+        /// 支付交易订单号
+        /// </summary>
+        public string TransNo { get; set; }
     }
 }

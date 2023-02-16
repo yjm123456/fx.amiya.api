@@ -143,6 +143,6 @@ namespace Fx.Amiya.Core.Interfaces.Integration
         /// <param name="amount"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        Task<bool> ExistNewCustomerRewardAsync(string customerId, decimal amount,int type);
+        Task<bool> ExistNewCustomerRewardAsync(string customerId, decimal amount,int type,string orderId);
     }
 }

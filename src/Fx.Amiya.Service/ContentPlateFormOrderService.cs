@@ -55,6 +55,7 @@ namespace Fx.Amiya.Service
         private IWxAppConfigService _wxAppConfigService;
         private IDalLiveAnchor dalLiveAnchor;
         private IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo;
+        private IDalCompanyBaseInfo dalCompanyBaseInfo;
         public ContentPlateFormOrderService(
            IDalContentPlatformOrder dalContentPlatformOrder,
            IDalAmiyaEmployee dalAmiyaEmployee,
@@ -79,7 +80,7 @@ namespace Fx.Amiya.Service
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDalService,
              IDalBindCustomerService dalBindCustomerService,
              IDalConfig dalConfig,
-             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo)
+             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalCompanyBaseInfo dalCompanyBaseInfo)
         {
             _dalContentPlatformOrder = dalContentPlatformOrder;
             this.unitOfWork = unitOfWork;
@@ -107,6 +108,7 @@ namespace Fx.Amiya.Service
             _contentPlatFormOrderDalService = contentPlatFormOrderDalService;
             this.dalLiveAnchor = dalLiveAnchor;
             this.dalContentPlatFormOrderDealInfo = dalContentPlatFormOrderDealInfo;
+            this.dalCompanyBaseInfo = dalCompanyBaseInfo;
         }
 
         /// <summary>
@@ -1327,6 +1329,8 @@ namespace Fx.Amiya.Service
             var contentPlatFormInfo = await _contentPlatformService.GetByIdAsync(order.ContentPlateformId);
             result.ContentPlateFormName = contentPlatFormInfo.ContentPlatformName;
             result.IsRepeatProfundityOrder = order.IsRepeatProfundityOrder;
+            result.IsCreateBill = order.IsCreateBill;
+            result.CreateBillCompany = dalCompanyBaseInfo.GetAll().Where(e => e.Id == order.BelongCompany).SingleOrDefault()?.Name;
             return result;
         }
 

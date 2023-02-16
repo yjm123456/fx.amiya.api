@@ -357,5 +357,13 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 是否是重单可深度订单
         /// </summary>
         public bool IsRepeatProfundityOrder { get; set; }
+        /// <summary>
+        /// 是否开票
+        /// </summary>
+        public bool IsCreateBill { get; set; }
+        /// <summary>
+        /// 开票公司
+        /// </summary>
+        public string CreateBillCompany { get; set; }
     }
 }
