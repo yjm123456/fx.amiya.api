@@ -150,5 +150,10 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<HospitalNameDto>> GetWxAppointCarHospitalNameList();
+        /// <summary>
+        /// 根据归属公司获取医院名称列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<HospitalNameDto>> GetHospitalNameListByCompany(string companyId);
     }
 }

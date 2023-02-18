@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.Bill;
+using Fx.Amiya.Dto.FinancialBoard;
 using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Dto.UpdateCreateBillAndCompany;
 using Fx.Amiya.IDal;
@@ -26,11 +27,12 @@ namespace Fx.Amiya.Service
         private IOrderService orderService;
         private IContentPlateFormOrderService contentPlateFormOrderService;
         private ICustomerHospitalConsumeService customerHospitalConsumeService;
-
+        private readonly IDalHospitalInfo dalHospitalInfo;
+        private readonly IDalCompanyBaseInfo dalCompanyBaseInfo;
         public BillService(IDalBill dalBill,
             IReconciliationDocumentsService reconciliationDocumentsService,
             IBillReturnBackPriceDataService billReturnBackPriceDataService,
-            IUnitOfWork unitOfWork, IOrderService orderService, IContentPlateFormOrderService contentPlateFormOrderService, ICustomerHospitalConsumeService customerHospitalConsumeService)
+            IUnitOfWork unitOfWork, IOrderService orderService, IContentPlateFormOrderService contentPlateFormOrderService, ICustomerHospitalConsumeService customerHospitalConsumeService, IDalHospitalInfo dalHospitalInfo, IDalCompanyBaseInfo dalCompanyBaseInfo)
         {
             this.dalBill = dalBill;
             this.unitOfWork = unitOfWork;
@@ -39,6 +41,8 @@ namespace Fx.Amiya.Service
             this.orderService = orderService;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
             this.customerHospitalConsumeService = customerHospitalConsumeService;
+            this.dalHospitalInfo = dalHospitalInfo;
+            this.dalCompanyBaseInfo = dalCompanyBaseInfo;
         }
 
 
@@ -272,9 +276,9 @@ namespace Fx.Amiya.Service
 
                 if (result.BillType == (int)BillTypeTextEnum.BeautyClinic)
                 {
-                    
+
                     var reconciliationDocuments = await reconciliationDocumentsService.GetByBillIdListAsync(id);
-                    var reconciliationDocumentsList= reconciliationDocuments.Select(x => x.Id).ToList();
+                    var reconciliationDocumentsList = reconciliationDocuments.Select(x => x.Id).ToList();
 
                     //调用对账单表更新内容平台,成交信息,三方订单,升单 是否开票及开票公司
                     var settleList = await reconciliationDocumentsService.GetRecommandDocumentSettleListAsync(reconciliationDocumentsList);
@@ -390,6 +394,86 @@ namespace Fx.Amiya.Service
             }
         }
 
+        #region
+
+        /// <summary>
+        /// 获取医院维度财务看板数据
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<FinancialHospitalBoardDto>> FinancialHospitalBoardDataAsync(int? hospitalId, DateTime? startDate, DateTime? endDate, int pageNum, int pageSize)
+        {
+            startDate = startDate == null ? DateTime.Now.Date : startDate.Value.Date;
+            endDate = endDate == null ? DateTime.Now.AddDays(1).Date : endDate.Value.AddDays(1).Date;
+            var bill = dalBill.GetAll().Include(e => e.HospitalInfo).Where(e => e.Valid == true && e.CreateDate > startDate && e.CreateDate < endDate);
+            if (hospitalId.HasValue)
+            {
+                bill = bill.Where(e => e.HospitalId == hospitalId);
+            }
+            var data = bill.GroupBy(e => e.HospitalId).OrderByDescending(g => g.Sum(item => item.DealPrice)).Select(g => new FinancialHospitalBoardDto
+            {
+                HospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == g.Key).SingleOrDefault().Name,
+                DealPrice = g.Sum(item => item.DealPrice) ?? 0m,
+                NoIncludeTaxPrice = g.Sum(item => item.NotInTaxPrice),
+                InformationPrice = g.Sum(item => item.InformationPrice) ?? 0m,
+                SystemUsePrice = g.Sum(item => item.SystemUpdatePrice) ?? 0m,
+                ReturnBackPrice = g.Sum(item => item.ReturnBackPrice) ?? 0m,
+                UnReturnBackPrice = (g.Sum(item => item.BillPrice) + g.Sum(item => item.OtherPrice) ?? 0m) - g.Sum(item => item.ReturnBackPrice) ?? 0m
+            });
+            FxPageInfo<FinancialHospitalBoardDto> fxPageInfo = new FxPageInfo<FinancialHospitalBoardDto>();
+            fxPageInfo.TotalCount = await data.CountAsync();
+            fxPageInfo.List = data.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+            return fxPageInfo;
+        }
+
+
+        /// <summary>
+        /// 获取子公司维度财务看板数据
+        /// </summary>
+        /// <param name="companyId">子公司id</param>
+        /// <param name="hospitalId">医院id</param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<FinancialHospitalBoardDto>> FinancialCompanyBoardDataAsync(string companyId, int? hospitalId, DateTime? startDate, DateTime? endDate, int pageNum, int pageSize)
+        {
+            startDate = startDate == null ? DateTime.Now.Date : startDate.Value.Date;
+            endDate = endDate == null ? DateTime.Now.AddDays(1).Date : endDate.Value.AddDays(1).Date;
+            var bill = dalBill.GetAll().Include(e => e.HospitalInfo).Where(e => e.Valid == true && e.CreateDate > startDate && e.CreateDate < endDate);
+            if (!string.IsNullOrEmpty(companyId))
+            {
+                bill = bill.Where(e => e.CollectionCompanyId == companyId);
+            }
+            if (hospitalId.HasValue)
+            {
+                bill = bill.Where(e => e.HospitalId == hospitalId);
+            }
+
+            var data = bill.GroupBy(e => new { e.CollectionCompanyId, e.HospitalId }).OrderByDescending(g => g.Sum(item => item.DealPrice)).Select(g => new FinancialHospitalBoardDto
+            {
+                CompanyName = dalCompanyBaseInfo.GetAll().Where(e => e.Id == g.Key.CollectionCompanyId).SingleOrDefault().Name,
+                HospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == g.Key.HospitalId).SingleOrDefault().Name,
+                DealPrice = g.Sum(item => item.DealPrice) ?? 0m,
+                NoIncludeTaxPrice = g.Sum(item => item.NotInTaxPrice),
+                InformationPrice = g.Sum(item => item.InformationPrice) ?? 0m,
+                SystemUsePrice = g.Sum(item => item.SystemUpdatePrice) ?? 0m,
+                ReturnBackPrice = g.Sum(item => item.ReturnBackPrice) ?? 0m,
+                UnReturnBackPrice = (g.Sum(item => item.BillPrice) + g.Sum(item => item.OtherPrice) ?? 0m) - g.Sum(item => item.ReturnBackPrice) ?? 0m
+            });
+            FxPageInfo<FinancialHospitalBoardDto> fxPageInfo = new FxPageInfo<FinancialHospitalBoardDto>();
+            fxPageInfo.TotalCount = await data.CountAsync();
+            fxPageInfo.List = data.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+            return fxPageInfo;
+        }
+
+        #endregion
+
         #region [枚举下拉框]
 
         /// <summary>
@@ -428,6 +512,8 @@ namespace Fx.Amiya.Service
             }
             return billReturnBackStateTextList;
         }
+
+
 
         #endregion
     }

@@ -23,5 +23,9 @@ namespace Fx.Amiya.Dto.CustomerIntergration
         /// 消费金额
         /// </summary>
         public decimal? ActualPayment { get; set; }
+        /// <summary>
+        /// 发放人
+        /// </summary>
+        public int HandleBy { get; set; }
     }
 }

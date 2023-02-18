@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Dto.CustomerHospitalConsume;
+using Fx.Amiya.Dto.FinancialBoard;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Dto.TmallOrder;
@@ -108,5 +109,12 @@ namespace Fx.Amiya.IService
         Task<List<UnCheckHospitalOrderDto>> GetUnCheckHospitalOrderAsync(DateTime? startDate, DateTime? endDate, int? hospitalId);
         #endregion
         List<CheckStateTypeDto> GetCheckStateType();
+
+        #region 财务看板板块
+
+        Task<List<LiveAnchorBoardDataDto>> GetLiveAnchorPriceByLiveAnchorIdAsync(DateTime? startDate, DateTime? endDate, int? liveAnchorId);
+
+        Task<CustomerServiceBoardDataDto> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int customerServiceId);
+        #endregion
     }
 }

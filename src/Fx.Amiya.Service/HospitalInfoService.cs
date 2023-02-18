@@ -25,13 +25,14 @@ namespace Fx.Amiya.Service
         private IHospitalEnvironmentPictureService _hospitalEnvironmentPictureService;
         private IDalItemInfo dalItemInfo;
         private IAmiyaEmployeeService _amiyaEmployeeService;
+        private IDalCompanyBaseInfo dalCompanyBaseInfo;
         public HospitalInfoService(IDalHospitalInfo dalHospitalInfo,
             IDalHospitalTagDetail dalHospitalTagDetail,
             IUnitOfWork unitOfWork,
             IHospitalEnvironmentPictureService hospitalEnvironmentPictureService,
             IDalHospitalPartakeItem dalHospitalQuotedPriceItemInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
-            IDalItemInfo dalItemInfo)
+            IDalItemInfo dalItemInfo, IDalCompanyBaseInfo dalCompanyBaseInfo)
         {
             this.dalHospitalInfo = dalHospitalInfo;
             this.dalHospitalTagDetail = dalHospitalTagDetail;
@@ -40,6 +41,7 @@ namespace Fx.Amiya.Service
             this.dalItemInfo = dalItemInfo;
             _hospitalEnvironmentPictureService = hospitalEnvironmentPictureService;
             _amiyaEmployeeService = amiyaEmployeeService;
+            this.dalCompanyBaseInfo = dalCompanyBaseInfo;
         }
 
 
@@ -81,7 +83,7 @@ namespace Fx.Amiya.Service
                                    City = d.CooperativeHospitalCity.Name,
                                    DueTime = d.DueTime,
                                    ContractUrl = d.ContractUrl,
-                                   BelongCompany=d.BelongCompany,
+                                   BelongCompany= d.BelongCompany,
                                    IsShareInMiniProgram=d.IsShareInMiniProgram,
                                };
                 FxPageInfo<HospitalInfoDto> hospitalPageInfo = new FxPageInfo<HospitalInfoDto>();
@@ -91,6 +93,7 @@ namespace Fx.Amiya.Service
                 //展示离到期时间还有多少并且如果到期后自动改为无效
                 foreach (var x in hospitalPageInfo.List)
                 {
+                    
                     if (x.DueTime.HasValue)
                     {
                         var dateResultDay = (x.DueTime.Value - DateTime.Now).Days;
@@ -334,7 +337,7 @@ namespace Fx.Amiya.Service
                                        Address = d.Address,
                                        Longitude = d.Longitude,
                                        Latitude = d.Latitude,
-                                       BelongCompany=d.BelongCompany,
+                                       BelongCompany= d.BelongCompany,
                                        Phone = d.Phone,
                                        Valid = d.Valid,
                                        CityId = d.CityId,
@@ -1047,6 +1050,18 @@ namespace Fx.Amiya.Service
                 Name=e.Name      
             }).ToList();
             return list;
+        }
+        /// <summary>
+        /// 根据归属公司获取医院名称列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<HospitalNameDto>> GetHospitalNameListByCompany(string companyId)
+        {
+            return dalHospitalInfo.GetAll().Where(e => e.BelongCompany == companyId).Select(e => new HospitalNameDto
+            {
+                Id = e.Id,
+                Name = e.Name
+            }).ToList();            
         }
     }
 }

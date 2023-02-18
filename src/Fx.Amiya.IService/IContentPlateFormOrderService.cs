@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
+using Fx.Amiya.Dto.FinancialBoard;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.TmallOrder;
@@ -362,6 +363,16 @@ namespace Fx.Amiya.IService
         /// <param name="liveAnchorIds"></param>
         /// <returns></returns>
         Task<List<PerformanceBrokenLine>> GetPictureOrVideoPerformanceByLiveAnchorBrokenLineAsync(int year, int month, bool isVideo, List<int> liveAnchorIds);
+        /// <summary>
+        /// 财务看板主播业绩数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="liveAnchorId"></param>
+        /// <returns></returns>
+        Task<List<LiveAnchorBoardDataDto>> GetLiveAnchorPriceByLiveAnchorIdAsync(DateTime? startDate, DateTime? endDate, int? liveAnchorId);
         #endregion
+
+
     }
 }

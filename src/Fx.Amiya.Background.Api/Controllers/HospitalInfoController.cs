@@ -558,5 +558,19 @@ namespace Fx.Amiya.Background.Api.Controllers
                            };
             return ResultData<List<HospitalNameVo>>.Success().AddData("hospital", hospital.ToList());
         }
+        /// <summary>
+        /// 根据公司id获取医院名称列表
+        /// </summary>
+        /// <param name="companyId"></param>
+        /// <returns></returns>
+        [HttpGet("getHospitalNameListByCompanyId")]
+        public async Task<ResultData<List<HospitalNameVo>>> GetHospitalNameListByCompanyId(string companyId) {
+            var nameList= await hospitalInfoService.GetHospitalNameListByCompany(companyId);
+            var nameListVo= nameList.Select(c=>new HospitalNameVo { 
+                Id=c.Id,
+                Name=c.Name
+            }).ToList();
+            return ResultData<List<HospitalNameVo>>.Success().AddData("hospital", nameListVo);
+        }
     }
 }

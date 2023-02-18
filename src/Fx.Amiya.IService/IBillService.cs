@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.Bill;
+using Fx.Amiya.Dto.FinancialBoard;
 using Fx.Amiya.Dto.WareHouse.OutWareHouse;
 using Fx.Amiya.Dto.WareHouse.WareHouseInfo;
 using Fx.Common;
@@ -36,6 +37,32 @@ namespace Fx.Amiya.IService
         /// <param name="updateDto"></param>
         /// <returns></returns>
         Task ReturnBakcPriceAsync(BillReturnBackPriceDto updateDto);
+
+        #region 财务看板
+        /// <summary>
+        /// 获取医院维度财务看板数据
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<FinancialHospitalBoardDto>> FinancialHospitalBoardDataAsync(int? hospitalId,DateTime? startDate,DateTime? endDate,int pageNum,int pageSize);
+
+        /// <summary>
+        /// 获取子公司维度财务看板数据
+        /// </summary>
+        /// <param name="companyId">子公司id</param>
+        /// <param name="hospitalId">医院id</param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<FinancialHospitalBoardDto>> FinancialCompanyBoardDataAsync(string companyId,int? hospitalId, DateTime? startDate, DateTime? endDate, int pageNum, int pageSize);
+
+        #endregion
 
         #region [枚举下拉框]
         /// <summary>

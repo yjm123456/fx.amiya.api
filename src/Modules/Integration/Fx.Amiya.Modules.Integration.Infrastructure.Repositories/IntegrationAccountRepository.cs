@@ -104,6 +104,7 @@ namespace Fx.Amiya.Modules.Integration.Infrastructure.Repositories
                                     model.AmountOfConsumption = consumptionIntegration.AmountOfConsumption;
                                     model.OrderId = consumptionIntegration.OrderId;
                                     model.ProviderId = consumptionIntegration.ProviderId;
+                                    model.HandleBy = consumptionIntegration.HandleBy;
                                     generateRecordId = await freeSql.Insert<IntegrationGenerateRecordDbModel>().WithTransaction(uow.GetOrBeginTransaction()).AppendData(model).ExecuteIdentityAsync();
                                 }
 

@@ -22,5 +22,6 @@ namespace Fx.Amiya.Modules.Integration.Domin
 
         public string ProviderId { get; set; }
         public decimal Percent { get; set; }
+        public int? HandleBy { get; set; }
     }
 }

@@ -44,6 +44,7 @@ using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Core.Dto.Goods;
 using Fx.Amiya.Dto.UpdateCreateBillAndCompany;
 using Fx.Amiya.Dto.ConsumptionVoucher;
+using Fx.Amiya.Dto.FinancialBoard;
 
 namespace Fx.Amiya.Service
 {
@@ -83,6 +84,7 @@ namespace Fx.Amiya.Service
         private ICustomerConsumptionVoucherService customerConsumptionVoucherService;
         private IDalRecommandDocumentSettle dalRecommandDocumentSettle;
         private IDalCompanyBaseInfo dalCompanyBaseInfo;
+        private IDalLiveAnchor dalLiveAnchor;
         public OrderService(
             IDalContentPlatformOrder dalContentPlatFormOrder,
             IDalOrderInfo dalOrderInfo,
@@ -113,7 +115,7 @@ namespace Fx.Amiya.Service
             IExpressManageService expressManageService,
             IFxSmsBasedTemplateSender smsSender,
              IMemberRankInfo memberRankInfoService,
-            IIntegrationAccount integrationAccountService, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo)
+            IIntegrationAccount integrationAccountService, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor)
         {
             this.dalOrderInfo = dalOrderInfo;
             this.dalCustomerInfo = dalCustomerInfo;
@@ -148,6 +150,7 @@ namespace Fx.Amiya.Service
             this.customerConsumptionVoucherService = customerConsumptionVoucherService;
             this.dalRecommandDocumentSettle = dalRecommandDocumentSettle;
             this.dalCompanyBaseInfo = dalCompanyBaseInfo;
+            this.dalLiveAnchor = dalLiveAnchor;
         }
         //WxPayAccount _payAccount = new WxPayAccount("wx695942e4818de445", "0b2e89d17e84a947244569d0ec63b816", "1611476157", "asdfg67890asdfg67890asdfg67890as", false, "", "");
         WxPayAccount _payAccount = new WxPayAccount("wx695942e4818de445", "0b2e89d17e84a947244569d0ec63b816", "1632393371", "Amy20202020202020202020202020202", false, "", "");
@@ -4630,10 +4633,75 @@ namespace Fx.Amiya.Service
             return orderList.GroupBy(x => x.SendOrderInfoList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalId).Select(x => new UnCheckHospitalOrderDto { HospitalId = x.Key, TotalUnCheckPrice = x.Sum(z => z.ActualPayment.Value), TotalUnCheckOrderCount = x.Count() }).ToList();
         }
 
-        
 
 
 
+
+
+        #endregion
+
+        #region 财务看板板块
+
+        /// <summary>
+        /// 财务看板主播业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="liveAnchorId">主播id</param>
+        /// <returns></returns>
+        public async Task<List<LiveAnchorBoardDataDto>> GetLiveAnchorPriceByLiveAnchorIdAsync(DateTime? startDate, DateTime? endDate, int? liveAnchorId)
+        {
+            startDate = startDate == null ? DateTime.Now.Date : startDate;
+            endDate = startDate == null ? DateTime.Now.AddDays(1).Date : endDate;
+            var dataList = dalOrderInfo.GetAll().Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == 2)
+                .Where(e => liveAnchorId == null || e.LiveAnchorId == liveAnchorId)
+                .GroupBy(e => new { e.LiveAnchorId, e.BelongCompany })
+                .Select(e => new LiveAnchorBoardDataDto
+                {
+                    CompanyName = e.Key.BelongCompany,
+                    LiveAnchorName = e.Key.LiveAnchorId.ToString(),
+                    DealPrice = e.Sum(item => item.CheckPrice) ?? 0m,
+                    TotalServicePrice = e.Sum(item => item.SettlePrice) ?? 0m,
+                    NewCustomerPrice =  0m,
+                    OldCustomerPrice = e.Sum(item => item.CheckPrice) ?? 0m,
+                    NewCustomerServicePrice =  0m,
+                    OldCustomerServicePrice = e.Sum(item => item.SettlePrice) ?? 0m,
+                }).ToList();
+            foreach (var item in dataList)
+            {
+                item.LiveAnchorName = dalLiveAnchor.GetAll().Where(e => e.Id == Convert.ToInt32(item.LiveAnchorName)).Select(e => e.Name).SingleOrDefault() ?? "未知";
+                item.CompanyName = dalCompanyBaseInfo.GetAll().Where(e => e.Id == item.CompanyName).Select(e => e.Name).SingleOrDefault() ?? "未知";
+            }
+            return dataList;
+
+        }
+
+        /// <summary>
+        /// 根据客服id获取财务看板客服业绩信息
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="customerServiceId"></param>
+        /// <returns></returns>
+        public async Task<CustomerServiceBoardDataDto> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int customerServiceId)
+        {
+            var dealData = dalOrderInfo.GetAll()
+                .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.BelongEmpId == customerServiceId && e.CheckState == 2)
+                .GroupBy(e => e.BelongEmpId)
+                .Select(e => new CustomerServiceBoardDataDto
+                {
+                    CustomerServiceName = Convert.ToString(e.Key),
+                    DealPrice = e.Sum(item => item.CheckPrice) ?? 0m,
+                    TotalServicePrice = e.Sum(item => item.SettlePrice) ?? 0m,
+                    NewCustomerPrice = 0,
+                    NewCustomerServicePrice = 0,
+                    OldCustomerPrice = e.Sum(item =>  item.CheckPrice ?? 0m),
+                    OldCustomerServicePrice = e.Sum(item =>item.SettlePrice ?? 0m)
+                }).FirstOrDefault();
+            if(dealData!=null)
+                dealData.CustomerServiceName = await dalAmiyaEmployee.GetAll().Where(e => e.Id == customerServiceId).Select(e => e.Name).FirstOrDefaultAsync();
+            return dealData;
+        }
 
         #endregion
     }

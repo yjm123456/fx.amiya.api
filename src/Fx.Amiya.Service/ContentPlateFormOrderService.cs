@@ -2,6 +2,7 @@
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.CustomerInfo;
+using Fx.Amiya.Dto.FinancialBoard;
 using Fx.Amiya.Dto.HospitalBindCustomerService;
 using Fx.Amiya.Dto.HospitalCustomerInfo;
 using Fx.Amiya.Dto.OrderCheckPicture;
@@ -2891,10 +2892,41 @@ namespace Fx.Amiya.Service
             }
         }
 
-        
+        /// <summary>
+        /// 财务看板主播业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="liveAnchorId">主播id</param>
+        /// <returns></returns>
+        public async Task<List<LiveAnchorBoardDataDto>> GetLiveAnchorPriceByLiveAnchorIdAsync(DateTime? startDate, DateTime? endDate, int? liveAnchorId)
+        {
+            startDate = startDate == null ? DateTime.Now.Date:startDate;
+            endDate = startDate == null ? DateTime.Now.AddDays(1).Date : endDate;
+            var dataList= _dalContentPlatformOrder.GetAll().Where(e => e.CheckDate >= startDate && e.CheckDate < endDate&&e.CheckState==2)
+                .Where(e => liveAnchorId == null || e.LiveAnchorId == liveAnchorId)
+                .GroupBy(e=>new { e.LiveAnchorId,e.BelongCompany})
+                .Select(e=>new LiveAnchorBoardDataDto { 
+                    CompanyName=e.Key.BelongCompany,
+                    LiveAnchorName=e.Key.LiveAnchorId.ToString(),
+                    DealPrice=e.Sum(item=>item.CheckPrice)?? 0m,
+                    TotalServicePrice=e.Sum(item=>item.SettlePrice)?? 0m,
+                    NewCustomerPrice = e.Sum(item => item.IsOldCustomer==false? item.CheckPrice:0) ?? 0m,
+                    OldCustomerPrice = e.Sum(item => item.IsOldCustomer == true? item.CheckPrice:0) ?? 0m,
+                    NewCustomerServicePrice = e.Sum(item => item.IsOldCustomer == false?item.SettlePrice:0) ?? 0m,
+                    OldCustomerServicePrice = e.Sum(item => item.IsOldCustomer == true?item.SettlePrice:0) ?? 0m,
+                }).ToList();
+            foreach (var item in dataList)
+            {
+                item.LiveAnchorName = dalLiveAnchor.GetAll().Where(e => e.Id == Convert.ToInt32(item.LiveAnchorName)).Select(e => e.Name).SingleOrDefault() ?? "未知";
+                item.CompanyName = dalCompanyBaseInfo.GetAll().Where(e => e.Id == item.CompanyName).Select(e => e.Name).SingleOrDefault() ?? "未知";
+            }
+            return dataList;
 
+        }
 
 
         #endregion
+
     }
 }

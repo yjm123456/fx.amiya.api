@@ -81,7 +81,8 @@ namespace Fx.Amiya.Modules.Integration.AppService
                 Percent = consumptionIntegration.Percent,
                 ProviderId = consumptionIntegration.ProviderId,
                 Quantity = consumptionIntegration.Quantity, 
-                GenerateType= (GenerateType)consumptionIntegration.Type
+                GenerateType= (GenerateType)consumptionIntegration.Type,
+                HandleBy= consumptionIntegration.HandleBy
             });
 
             await _integrationAccountRepository.SaveIntegrationAccountAsync(integrationAccount);
@@ -249,7 +250,9 @@ namespace Fx.Amiya.Modules.Integration.AppService
                 AmountOfConsumption = addCustomerIntergration.ActualPayment.Value,
                 Date = DateTime.Now,
                 CustomerId = customerId,
-                OrderId = addCustomerIntergration.OrderId
+                OrderId = addCustomerIntergration.OrderId,
+                Type=(int)GenerateType.Handsel,
+                HandleBy=addCustomerIntergration.HandleBy
             };
             await this.AddByConsumptionAsync(consumptionIntegrationDto);
             var account=await _integrationAccountRepository.GetIntegrationAccountAsync(customerId);

@@ -1583,7 +1583,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     updateOrder.AppType = (byte)AppType.MiniProgram;
                     updateOrderList.Add(updateOrder);
                 }
-                await orderService.UpdateAsync(updateOrderList);
+                await orderService.UpdateWithNoTranstionAsync(updateOrderList);
 
                 #region 本人积分奖励
                 decimal integrationPercent = 0m;

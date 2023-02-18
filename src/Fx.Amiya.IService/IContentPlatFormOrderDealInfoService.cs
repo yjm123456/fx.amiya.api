@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
+using Fx.Amiya.Dto.FinancialBoard;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Dto.TmallOrder;
@@ -262,6 +263,19 @@ namespace Fx.Amiya.IService
 
         #region 【对账单板块】
         Task<List<UnCheckHospitalOrderDto>> GetUnCheckHospitalOrderAsync(DateTime? startDate, DateTime? endDate, int? hospitalId);
+        #endregion
+
+        #region 财务看板板块
+
+        /// <summary>
+        /// 根据客服id获取财务看板客服业绩信息
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="customerServiceId"></param>
+        /// <returns></returns>
+        Task<CustomerServiceBoardDataDto> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate,DateTime? endDate,int customerServiceId);
+
         #endregion
     }
 }

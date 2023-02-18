@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
+using Fx.Amiya.Dto.FinancialBoard;
 using Fx.Amiya.Dto.OrderAppInfo;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.ReconciliationDocuments;
@@ -592,5 +593,21 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<UnCheckHospitalOrderDto>> GetUnCheckHospitalOrderAsync(DateTime? startDate, DateTime? endDate, int? hospitalId);
         #endregion
+        /// <summary>
+        /// 财务看板获取主播业绩数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="liveAnchorId"></param>
+        /// <returns></returns>
+        Task<List<LiveAnchorBoardDataDto>> GetLiveAnchorPriceByLiveAnchorIdAsync(DateTime? startDate, DateTime? endDate, int? liveAnchorId);
+        /// <summary>
+        /// 根据客服id获取财务看板客服业绩信息
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="customerServiceId"></param>
+        /// <returns></returns>
+        Task<CustomerServiceBoardDataDto> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int customerServiceId);
     }
 }

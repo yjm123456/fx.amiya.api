@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
+using Fx.Amiya.Dto.FinancialBoard;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Dto.TmallOrder;
@@ -33,6 +34,7 @@ namespace Fx.Amiya.Service
         private IUnitOfWork unitOfWork;
         private IDalRecommandDocumentSettle dalRecommandDocumentSettle;
         private IDalCompanyBaseInfo dalCompanyBaseInfo;
+      
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
             ICompanyBaseInfoService companyBaseInfoService,
@@ -1634,6 +1636,44 @@ namespace Fx.Amiya.Service
             var orderList = await orders.ToListAsync();
             return orderList.GroupBy(x => x.LastDealHospitalId.Value).Select(x => new UnCheckHospitalOrderDto { HospitalId = x.Key, TotalUnCheckPrice = x.Sum(z => z.Price), TotalUnCheckOrderCount = x.Count() }).ToList();
         }
+
+
+
+
         #endregion
+
+
+        #region 财务看板板块
+
+
+        /// <summary>
+        /// 根据客服id获取财务看板客服业绩信息
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="customerServiceId"></param>
+        /// <returns></returns>
+        public async Task<CustomerServiceBoardDataDto> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int customerServiceId)
+        {
+            var dealData = dalContentPlatFormOrderDealInfo.GetAll()
+                .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CreateBy == customerServiceId && e.CheckState == 2)
+                .GroupBy(e=>e.CreateBy)
+                .Select(e=>new CustomerServiceBoardDataDto {
+                    CustomerServiceName = Convert.ToString(e.Key),
+                    DealPrice=e.Sum(item=>item.CheckPrice)?? 0m,
+                    TotalServicePrice=e.Sum(item=>item.SettlePrice)??0m,
+                    NewCustomerPrice=e.Sum(item=>item.IsOldCustomer==false?item.CheckPrice??0m:0m),
+                    NewCustomerServicePrice=e.Sum(item=>item.IsOldCustomer==false?item.SettlePrice??0m:0m),
+                    OldCustomerPrice=e.Sum(item => item.IsOldCustomer == true ? item.CheckPrice ?? 0m : 0m),
+                    OldCustomerServicePrice=e.Sum(item => item.IsOldCustomer == true ? item.SettlePrice ?? 0m : 0m)
+                }).FirstOrDefault();
+            if (dealData != null)
+                dealData.CustomerServiceName = await _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(customerServiceId)).Select(e => e.Name).FirstOrDefaultAsync();
+            return dealData;
+        }
+
+        #endregion
+
+
     }
 }

@@ -17,6 +17,7 @@ using Fx.Amiya.Dto.OrderReport;
 using jos_sdk_net.Util;
 using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Dto.UpdateCreateBillAndCompany;
+using Fx.Amiya.Dto.FinancialBoard;
 
 namespace Fx.Amiya.Service
 {
@@ -1280,6 +1281,69 @@ namespace Fx.Amiya.Service
             var orderList = await orders.ToListAsync();
             return orderList.GroupBy(x => x.HospitalId).Select(x => new UnCheckHospitalOrderDto { HospitalId = x.Key, TotalUnCheckPrice = x.Sum(z => z.Price), TotalUnCheckOrderCount = x.Count() }).ToList();
         }
+        #endregion
+
+        #region 财务看板
+
+        /// <summary>
+        /// 财务看板主播业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="liveAnchorId">主播id</param>
+        /// <returns></returns>
+        public async Task<List<LiveAnchorBoardDataDto>> GetLiveAnchorPriceByLiveAnchorIdAsync(DateTime? startDate, DateTime? endDate, int? liveAnchorId)
+        {
+            startDate = startDate == null ? DateTime.Now.Date : startDate;
+            endDate = startDate == null ? DateTime.Now.AddDays(1).Date : endDate;
+            var dataList = dalCustomerHospitalConsume.GetAll().Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == 2)
+                .Where(e => liveAnchorId == null || e.LiveAnchorId == liveAnchorId)
+                .GroupBy(e => new { e.LiveAnchorId, e.BelongCompany })
+                .Select(e => new LiveAnchorBoardDataDto
+                {
+                    CompanyName = e.Key.BelongCompany,
+                    LiveAnchorName = e.Key.LiveAnchorId.ToString(),
+                    DealPrice = e.Sum(item => item.CheckBuyAgainPrice) ?? 0m,
+                    TotalServicePrice = e.Sum(item => item.CheckSettlePrice) ?? 0m,
+                    NewCustomerPrice = 0m,
+                    OldCustomerPrice = e.Sum(item => item.CheckBuyAgainPrice) ?? 0m,
+                    NewCustomerServicePrice = 0m,
+                    OldCustomerServicePrice = e.Sum(item => item.CheckSettlePrice) ?? 0m,
+                }).ToList();
+            foreach (var item in dataList)
+            {
+                item.LiveAnchorName = dalLiveAnchor.GetAll().Where(e => e.Id == Convert.ToInt32(item.LiveAnchorName)).Select(e => e.Name).SingleOrDefault() ?? "未知";
+                item.CompanyName = dalCompanyBaseInfo.GetAll().Where(e => e.Id == item.CompanyName).Select(e => e.Name).SingleOrDefault() ?? "未知";
+            }
+            return dataList;
+        }
+        /// <summary>
+        /// 根据客服id获取财务看板客服业绩信息
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="customerServiceId"></param>
+        /// <returns></returns>
+        public async Task<CustomerServiceBoardDataDto> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int customerServiceId)
+        {
+            var dealData = dalCustomerHospitalConsume.GetAll()
+                .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.AddedBy == customerServiceId && e.CheckState == 2)
+                .GroupBy(e => e.AddedBy)
+                .Select(e => new CustomerServiceBoardDataDto
+                {
+                    CustomerServiceName = Convert.ToString(e.Key),
+                    DealPrice = e.Sum(item => item.CheckBuyAgainPrice) ?? 0m,
+                    TotalServicePrice = e.Sum(item => item.CheckSettlePrice) ?? 0m,
+                    NewCustomerPrice = 0m,
+                    NewCustomerServicePrice = 0m,
+                    OldCustomerPrice = e.Sum(item => item.CheckBuyAgainPrice ?? 0m),
+                    OldCustomerServicePrice = e.Sum(item => item.CheckSettlePrice ?? 0m)
+                }).FirstOrDefault();
+            if (dealData != null)
+                dealData.CustomerServiceName = await dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(customerServiceId)).Select(e => e.Name).FirstOrDefaultAsync() ?? "未知";
+            return dealData;
+        }
+
         #endregion
 
         public List<CheckStateTypeDto> GetCheckStateType()
