@@ -3,22 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
+namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend
 {
     /// <summary>
-    /// 内容平台订单改派
+    /// 派单基础信息
     /// </summary>
-    public class UpdateContentPlatFormSendOrderInfoVo
+    public class ContentPlatFormSendOrderInfoSimpleVo
     {
         /// <summary>
-        /// 派单id
+        /// 派单编号
         /// </summary>
         public int Id { get; set; }
-
-        /// <summary>
-        /// 订单id
-        /// </summary>
-        public string OrderId { get;set; }
 
         /// <summary>
         /// 医院编号

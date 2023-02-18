@@ -1,31 +1,30 @@
-﻿using Fx.Amiya.Background.Api.Vo;
-using Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder;
+﻿
+
+using Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder;
+using Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
-using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Background.Api.Controllers
+namespace Fx.Amiya.BusinessWechat.Api.Controllers
 {
     /// <summary>
     /// 客户照片板块数据接口
     /// </summary>
     [Route("[controller]")]
     [ApiController]
-    [FxInternalOrTenantAuthroize]
     public class ContentPlatFormCustomerPictureController : ControllerBase
     {
         private IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService;
 
         /// <summary>
-        /// 构造函数
+        /// 客户照片板块数据接口
         /// </summary>
         /// <param name="contentPlatFormCustomerPictureService"></param>
         public ContentPlatFormCustomerPictureController(IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService)
@@ -44,19 +43,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormCustomerPictureVo>>> GetListWithPageAsync(string contentPlatFormOrderId,string orderDealId,string description, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormCustomerPictureVo>>> GetListWithPageAsync(string contentPlatFormOrderId, string orderDealId, string description, int pageNum, int pageSize)
         {
             try
             {
-                var q = await contentPlatFormCustomerPictureService.GetListWithPageAsync(contentPlatFormOrderId,orderDealId,description, pageNum, pageSize);
+                var q = await contentPlatFormCustomerPictureService.GetListWithPageAsync(contentPlatFormOrderId, orderDealId, description, pageNum, pageSize);
 
                 var contentPlatFormCustomerPicture = from d in q.List
-                              select new ContentPlatFormCustomerPictureVo
-                              {
-                                  Id = d.Id,
-                                  CustomerPicture = d.CustomerPicture,
-                                  ContentPlatFormId = d.ContentPlatFormOrderId,
-                              };
+                                                     select new ContentPlatFormCustomerPictureVo
+                                                     {
+                                                         Id = d.Id,
+                                                         CustomerPicture = d.CustomerPicture,
+                                                         ContentPlatFormId = d.ContentPlatFormOrderId,
+                                                     };
 
                 FxPageInfo<ContentPlatFormCustomerPictureVo> contentPlatFormCustomerPicturePageInfo = new FxPageInfo<ContentPlatFormCustomerPictureVo>();
                 contentPlatFormCustomerPicturePageInfo.TotalCount = q.TotalCount;
@@ -90,7 +89,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 throw ex;
             }
         }
-
 
 
     }

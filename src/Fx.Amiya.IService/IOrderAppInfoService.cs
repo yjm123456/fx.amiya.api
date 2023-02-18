@@ -32,6 +32,12 @@ namespace Fx.Amiya.IService
         Task<OrderAppInfoDto> GetJdAppInfo();
 
         Task<OrderAppInfoDto> GetWeiFenXiaoAppInfo();
+
+        /// <summary>
+        /// 获取企业微信token
+        /// </summary>
+        /// <returns></returns>
+        Task<OrderAppInfoDto> GetBusinessWeChatAppInfo();
         Task<OrderAppInfoDto> GetTikTokAppInfo(string belongLiveAnchor);
 
     }

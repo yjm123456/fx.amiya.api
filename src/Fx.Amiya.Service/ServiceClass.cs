@@ -323,10 +323,10 @@ namespace Fx.Amiya.Service
             {
 
                 case 1:
-                    typeText = "独立跟进";
+                    typeText = "照片面诊";
                     break;
                 case 2:
-                    typeText = "协作完成";
+                    typeText = "视频面诊";
                     break;
                 case 0:
                     typeText = "其他";
@@ -937,7 +937,7 @@ namespace Fx.Amiya.Service
             }
             return tagCategory;
         }
-        
+
         /// <summary>
         /// 获取预约状态
         /// </summary>

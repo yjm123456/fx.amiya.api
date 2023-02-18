@@ -35,21 +35,67 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             this.httpContextAccessor = httpContextAccessor;
             _fxAppGlobal = fxAppGlobal;
         }
-
         /// <summary>
-        /// 啊美雅员工登录
+        /// 通过code检索啊美雅员工信息
         /// </summary>
         /// <param name="userName"></param>
         /// <param name="password"></param>
+        /// <param name="userId">企业微信UserId</param>
+        /// <param name="code">企业微信Code</param>
+        /// <returns></returns>
+        [HttpGet("businessWechatAuth")]
+        public async Task<ResultData<AmiyaEmployeeAccountVo>> AmiyaLoginAsync(string code)
+        {
+            try
+            {
+                var employee = await amiyaEmployeeService.GetByCodeAsync(code);
+
+                AmiyaEmployeeAccountVo accountVo = new AmiyaEmployeeAccountVo()
+                {
+                    EmployeeId = employee.Id,
+                    EmployeeName = employee.Name,
+                    AmiyaPositionId = employee.PositionId,
+                    AmiyaPositionName = employee.PositionName,
+                    EmployeeType = EmployeeTypeConstant.AMIYA_EMPLOYEE_TYPE,
+                    IsCustomerService = employee.IsCustomerService,
+                    DepartmentId = employee.DepartmentId,
+                    DepartmentName = employee.DepartmentName,
+                    UserId = employee.UserId,
+                    Code = employee.Code
+                };
+
+                return ResultData<AmiyaEmployeeAccountVo>.Success().AddData("businessWechatAuth", accountVo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<AmiyaEmployeeAccountVo>.Fail(ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// 啊美雅员工登录【使用场景：code检索返回无啊美雅员工数据时使用】
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <param name="userId">企业微信UserId</param>
+        /// <param name="code">企业微信Code</param>
         /// <returns></returns>
         [HttpGet("amiyaLogin")]
-        public async Task<ResultData<AmiyaEmployeeAccountVo>> AmiyaLoginAsync([Required(ErrorMessage = "请输入用户名")] string userName, [Required(ErrorMessage = "请输入密码")] string password)
+        public async Task<ResultData<AmiyaEmployeeAccountVo>> AmiyaLoginAsync([Required(ErrorMessage = "请输入用户名")] string userName, [Required(ErrorMessage = "请输入密码")] string password, string userId, string code)
         {
             try
             {
                 var jwtConfig = _fxAppGlobal.AppConfig.FxJwtConfig;
                 var employee = await amiyaEmployeeService.LoginAsync(userName.Trim(), password.Trim().GetMD5String());
-
+                if (!string.IsNullOrEmpty(userId) && !string.IsNullOrEmpty(code))
+                {
+                    if (!string.IsNullOrEmpty(employee.UserId) && employee.UserId != userId)
+                    {
+                        throw new Exception("该用户已绑定过企业微信账号，无法绑定到您的企业微信中,请重新登陆！");
+                    }
+                    await amiyaEmployeeService.UpdateBusinessWechatUserIdAndCode(employee.Id, userId, code);
+                }
                 var identity = new FxInternalEmployeeIdentity().CreateFxIdentity(employee.Id.ToString());
 
                 AmiyaEmployeeAccountVo accountVo = new AmiyaEmployeeAccountVo()
@@ -66,7 +112,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                     DepartmentName = employee.DepartmentName
                 };
 
-                return ResultData<AmiyaEmployeeAccountVo>.Success().AddData("token", accountVo);
+                return ResultData<AmiyaEmployeeAccountVo>.Success().AddData("amiyaLogin", accountVo);
             }
             catch (Exception ex)
             {
@@ -75,6 +121,48 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         }
 
 
+        /// <summary>
+        /// 啊美雅员工登录2【使用场景：code检索返回有啊美雅员工数据时使用】
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <param name="userId">企业微信UserId</param>
+        /// <param name="code">企业微信Code</param>
+        /// <returns></returns>
+        [HttpGet("amiyaLoginByUserIdAndCode")]
+        public async Task<ResultData<AmiyaEmployeeAccountVo>> AmiyaLoginByUserIdAndCodeAsync([Required(ErrorMessage = "请输入用户id")] string userId, [Required(ErrorMessage = "请输入用户code")] string code)
+        {
+            try
+            {
+                var jwtConfig = _fxAppGlobal.AppConfig.FxJwtConfig;
+                var employee = await amiyaEmployeeService.LoginByUserIdAndCodeAsync(userId, code);
+                if (!string.IsNullOrEmpty(userId) && !string.IsNullOrEmpty(code))
+                {
+                    await amiyaEmployeeService.UpdateBusinessWechatUserIdAndCode(employee.Id, userId, code);
+                }
+                var identity = new FxInternalEmployeeIdentity().CreateFxIdentity(employee.Id.ToString());
+
+                AmiyaEmployeeAccountVo accountVo = new AmiyaEmployeeAccountVo()
+                {
+                    EmployeeId = employee.Id,
+                    EmployeeName = employee.Name,
+                    AmiyaPositionId = employee.PositionId,
+                    AmiyaPositionName = employee.PositionName,
+                    EmployeeType = EmployeeTypeConstant.AMIYA_EMPLOYEE_TYPE,
+                    IsCustomerService = employee.IsCustomerService,
+                    Token = identity.BuildJwtToken(jwtConfig.Key, jwtConfig.ExpireInSeconds / 60),
+                    RefreshToken = identity.BuildRefreshToken(jwtConfig.Key, jwtConfig.RefreshTokenExpireInSeconds / 60),
+                    DepartmentId = employee.DepartmentId,
+                    DepartmentName = employee.DepartmentName
+                };
+
+                return ResultData<AmiyaEmployeeAccountVo>.Success().AddData("amiyaLoginByUserIdAndCode", accountVo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<AmiyaEmployeeAccountVo>.Fail(ex.Message);
+            }
+        }
 
         /// <summary>
         /// 刷新啊美雅登录账号token

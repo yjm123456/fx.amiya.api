@@ -3,27 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
+namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend
 {
     /// <summary>
-    /// 内容平台订单改派
+    /// 内容平台添加派单
     /// </summary>
-    public class UpdateContentPlatFormSendOrderInfoVo
+    public class AddContentPlatFormSendOrderInfoVo
     {
         /// <summary>
-        /// 派单id
+        /// 订单编号
         /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// 订单id
-        /// </summary>
-        public string OrderId { get;set; }
+        public string OrderId { get; set; }
 
         /// <summary>
         /// 医院编号
         /// </summary>
         public int HospitalId { get; set; }
+
 
         /// <summary>
         /// 是否未明确时间
@@ -38,5 +34,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+        /// <summary>
+        /// 派单人员
+        /// </summary>
+
+        public int SendBy { get; set; }
     }
 }

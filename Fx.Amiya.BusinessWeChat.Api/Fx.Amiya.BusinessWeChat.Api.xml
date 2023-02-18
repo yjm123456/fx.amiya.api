@@ -4,12 +4,34 @@
         <name>Fx.Amiya.BusinessWeChat.Api</name>
     </assembly>
     <members>
-        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.AmiyaLoginAsync(System.String,System.String)">
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.AmiyaLoginAsync(System.String)">
             <summary>
-            啊美雅员工登录
+            通过code检索啊美雅员工信息
             </summary>
             <param name="userName"></param>
             <param name="password"></param>
+            <param name="userId">企业微信UserId</param>
+            <param name="code">企业微信Code</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.AmiyaLoginAsync(System.String,System.String,System.String,System.String)">
+            <summary>
+            啊美雅员工登录【使用场景：code检索返回无啊美雅员工数据时使用】
+            </summary>
+            <param name="userName"></param>
+            <param name="password"></param>
+            <param name="userId">企业微信UserId</param>
+            <param name="code">企业微信Code</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.AmiyaLoginByUserIdAndCodeAsync(System.String,System.String)">
+            <summary>
+            啊美雅员工登录2【使用场景：code检索返回有啊美雅员工数据时使用】
+            </summary>
+            <param name="userName"></param>
+            <param name="password"></param>
+            <param name="userId">企业微信UserId</param>
+            <param name="code">企业微信Code</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.AmiyaRefreshToken(System.String)">
@@ -32,9 +54,2322 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController">
+            <summary>
+            内容平台订单模块
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.#ctor(Fx.Amiya.IService.IContentPlateFormOrderService,Fx.Amiya.IService.IContentPlatFormCustomerPictureService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Fx.Amiya.IService.ICustomerService,Fx.Amiya.IService.IWxAppConfigService)">
+            <summary>
+            内容平台订单模块
+            </summary>
+            <param name="orderService"></param>
+            <param name="customerService"></param>
+            <param name="contentPlatFormCustomerPictureService"></param>
+            <param name="httpContextAccessor"></param>
+            <param name="wxAppConfigService"></param>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.ContentPlateFormAddOrderAsync(Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo)">
+            <summary>
+            录单
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.GetOrderListWithPageAsync(System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Int32,System.Int32,System.Int32)">
+            <summary>
+            根据条件获取内容平台订单
+            </summary>
+            <param name="liveAnchorId">主播id</param>
+            <param name="startDate">开始时间</param>
+            <param name="endDate">结束时间</param>
+            <param name="keyword">关键词</param>
+            <param name="belongMonth">归属月份</param>
+            <param name="minAddOrderPrice">最小下单金额</param>
+            <param name="maxAddOrderPrice">最大下单金额</param>
+            <param name="hospitalDepartmentId">科室id</param>
+            <param name="orderStatus">订单状态</param>
+            <param name="appointmentHospital">预约医院</param>
+            <param name="consultationType">面诊状态</param>
+            <param name="contentPlateFormId">内容平台</param>
+            <param name="orderSource">订单来源(-1查询全部)</param>
+            <param name="belongEmpId">归属客服id</param>
+            <param name="pageNum">第/页</param>
+            <param name="pageSize">每页显示/行</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.GetUnSendOrderListWithPageAsync(System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Int32},System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            获取未派单订单列表（分页）
+            </summary>
+            <param name="liveAnchorId">归属主播id</param>
+            <param name="keyword">关键词</param>
+            <param name="startDate">开始时间</param>
+            <param name="endDate">结束时间</param>
+            <param name="contentPlateFormId">内容平台</param>
+            <param name="consultationEmpId">面诊员id</param>
+            <param name="employeeId">员工id（-1查询所有）</param>
+            <param name="orderSource">订单来源（-1查询所有）</param>
+            <param name="orderStatus">订单状态</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.GetByIdAsync(System.String)">
+            <summary>
+            根据订单编号获取订单信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.SelectRepeateOrderPicAsync(System.String)">
+            <summary>
+            根据订单编号查看重单截图
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.UpdateOrderAsync(Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo)">
+            <summary>
+            修改订单
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.CloseRepeatProfundityOrder(Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.CloseRepeatProfundityOrderVo)">
+            <summary>
+            关闭重单可深度状态
+            </summary>
+            <param name="close"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.AddAsync(Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.AddContentPlatFormSendOrderInfoVo)">
+            <summary>
+            添加派单
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.UpdateAsync(Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UpdateContentPlatFormSendOrderInfoVo)">
+            <summary>
+            修改派单
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.FinishOrderByEmployeeAsync(Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo)">
+            <summary>
+            客服完成订单
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.UpdateFinishOrderByEmployeeAsync(Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo)">
+            <summary>
+            客服修改已完成订单
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.DeleteAsync(System.String)">
+            <summary>
+            删除订单
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.GetOrderConsultationTypeList">
+            <summary>
+            获取内容平台面诊状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.GetContentPlateFormOrderTypeList">
+            <summary>
+            获取内容平台订单类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.GetContentPlateFormOrderStatusList">
+            <summary>
+            获取内容平台订单状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.GetContentPlateFormOrderSourceList">
+            <summary>
+            获取内容平台订单来源
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.GetContentPlateFormOrderToHospitalTypeList">
+            <summary>
+            获取内容平台订单到院状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormSendOrderController">
+            <summary>
+            派单API
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormSendOrderController.#ctor(Fx.Amiya.IService.IContentPlatformOrderSendService,Fx.Amiya.IService.IContentPlatFormOrderDealInfoService,Fx.Amiya.IService.IHospitalCustomerInfoService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Fx.Amiya.IService.IWxAppConfigService)">
+            <summary>
+            派单API
+            </summary>
+            <param name="sendOrderInfoService"></param>
+            <param name="orderDealInfoService"></param>
+            <param name="hospitalCustomerInfoService"></param>
+            <param name="httpContextAccessor"></param>
+            <param name="wxAppConfigService"></param>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormSendOrderController.GetSimpleByIdAsync(System.Int32)">
+            <summary>
+            根据编号获取简单的派单信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormSendOrderController.GetSendOrderList(System.String,System.Nullable{System.Int32},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},System.Nullable{System.Int32},System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Int32,System.Int32,System.Int32)">
+            <summary>
+            获取内容平台订单已派单信息列表
+            </summary>
+            <param name="keyword"></param>
+            <param name="employeeId"> -1(归属客服)查询全部</param>
+            <param name="sendBy"> 派单人（空查询全部）</param>
+            <param name="isAcompanying">是否陪诊，为空查询所有</param>
+            <param name="isOldCustomer">新老客业绩，为空查询所有</param>
+            <param name="commissionRatio">佣金比例，为空查询所有</param>
+            <param name="belongMonth">归属月份</param>
+            <param name="minAddOrderPrice">最小下单金额</param>
+            <param name="maxAddOrderPrice">最大下单金额</param>
+            <param name="liveAnchorId">归属主播ID</param>
+            <param name="orderStatus">订单状态</param>
+            <param name="contentPlatFormId">内容平台id</param>
+            <param name="consultationEmpId">面诊员id</param>
+            <param name="startDate"></param>
+            <param name="endDate"></param>        
+            <param name="hospitalId"></param>        
+            <param name="IsToHospital">是否到院，为空查询全部</param>
+            <param name="toHospitalStartDate">到院时间起</param>
+            <param name="toHospitalEndDate">到院时间止</param>           
+            <param name="toHospitalType">到院类型</param>        
+            <param name="orderSource">订单来源， -1查询全部</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormSendOrderController.GetDealInfo(System.String,System.Int32,System.Int32)">
+            <summary>
+            根据订单号获取订单成交情况
+            </summary>
+            <param name="contentPlatFormOrderId">订单号</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormCustomerPictureController">
+            <summary>
+            客户照片板块数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormCustomerPictureController.#ctor(Fx.Amiya.IService.IContentPlatFormCustomerPictureService)">
+            <summary>
+            客户照片板块数据接口
+            </summary>
+            <param name="contentPlatFormCustomerPictureService"></param>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormCustomerPictureController.GetListWithPageAsync(System.String,System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            获取客户照片信息列表（分页）
+            </summary>
+            <param name="contentPlatFormOrderId">内容平台订单号</param>
+            <param name="orderDealId">内容平台成交编号</param>
+            <param name="description">描述（顾客照片/邀约凭证）</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormCustomerPictureController.DeleteAsync(System.String)">
+            <summary>
+            删除客户照片信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.CustomerController.GetBaseAndBindCustomerInfoByPhoneAsync(System.String)">
+            <summary>
+            根据加密电话查询客户资料
+            </summary>
+            <param name="encryptPhone">加密电话</param>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.OrderCheckPictureController">
+            <summary>
+            审核照片板块数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.OrderCheckPictureController.#ctor(Fx.Amiya.IService.IOrderCheckPictureService)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="orderCheckPictureService"></param>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.OrderCheckPictureController.GetListWithPageAsync(System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            获取审核照片信息列表（分页）
+            </summary>
+            <param name="OrderId">订单号</param>
+            <param name="OrderFrom">订单来源【1：下单平台，2：内容平台，3：升单】</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.OrderCheckPictureController.DeleteAsync(System.String)">
+            <summary>
+            删除审核照片信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.Login.HospitalEmployeeAccountVo.EmployeeType">
             <summary>
             员工类型
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.Base.BaseKeyAndValueVo">
+            <summary>
+            枚举数据返回
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Base.BaseKeyAndValueVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Base.BaseKeyAndValueVo.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.CloseRepeatProfundityOrderVo">
+            <summary>
+            关闭重单深度
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.CloseRepeatProfundityOrderVo.ContentPlateFormId">
+            <summary>
+            id
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo">
+            <summary>
+            内容平台录单
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.OrderType">
+            <summary>
+            订单类型(1：咨询:2：定金)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.ContentPlateFormId">
+            <summary>
+            内容平台id（下单平台）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.BelongMonth">
+            <summary>
+            归属月份
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.AddOrderPrice">
+            <summary>
+            下单金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.LiveAnchorId">
+            <summary>
+            主播账号id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.LiveAnchorWeChatNo">
+            <summary>
+            主播微信号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.CustomerName">
+            <summary>
+            客户姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.Phone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.City">
+            <summary>
+            城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.Sex">
+            <summary>
+            性别
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.Birthday">
+            <summary>
+            生日
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.Occupation">
+            <summary>
+            职业
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.WechatNumber">
+            <summary>
+            微信号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.AppointmentDate">
+            <summary>
+            预约日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.AppointmentHospitalId">
+            <summary>
+            预约门店
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.DepositAmount">
+            <summary>
+            定金金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.GoodsId">
+            <summary>
+            商品id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.HospitalDepartmentId">
+            <summary>
+            医院科室id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.BelongEmpId">
+            <summary>
+            录单人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.ConsultationEmpId">
+            <summary>
+            面诊员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.ConsultationType">
+            <summary>
+            面诊状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.ConsultingContent">
+            <summary>
+            咨询内容
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.LateProjectStage">
+            <summary>
+            后期项目铺垫
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.OrderSource">
+            <summary>
+            订单来源（1：面诊卡，2：非面诊卡）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.UnSendReason">
+            <summary>
+            未派单原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.AcceptConsulting">
+            <summary>
+            院方接诊人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.CustomerPictures">
+            <summary>
+            顾客照片（最多上传5张）
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo">
+            <summary>
+            内容平台完成订单
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.Id">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.IsFinish">
+            <summary>
+            是否成交
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.LastDealHospitalId">
+            <summary>
+            成交医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.IsToHospital">
+            <summary>
+            是否到院（成交则默认true）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.ToHospitalType">
+            <summary>
+            到院类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.ToHospitalDate">
+            <summary>
+            到院时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.DealAmount">
+            <summary>
+            成交金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.LastProjectStage">
+            <summary>
+            后期项目铺垫
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.DealPictureUrl">
+            <summary>
+            成交截图url
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.UnDealReason">
+            <summary>
+            未成交原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.UnDealPictureUrl">
+            <summary>
+            未成交截图url
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.DealDate">
+            <summary>
+            成交时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.IsAcompanying">
+            <summary>
+            是否陪诊
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.CommissionRatio">
+            <summary>
+            佣金比例
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.OtherContentPlatFormOrderId">
+            <summary>
+            三方订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.InvitationDocuments">
+            <summary>
+            邀约凭证
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo">
+            <summary>
+            内容平台录单修改
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.OrderType">
+            <summary>
+            订单类型(1：咨询:2：定金)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.AddOrderPirce">
+            <summary>
+            下单金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.BelongMonth">
+            <summary>
+            归属月份
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.ContentPlateFormId">
+            <summary>
+            内容平台id（下单平台）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.LiveAnchorId">
+            <summary>
+            主播账号id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.LiveAnchorWeChatNo">
+            <summary>
+            主播微信号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.GoodsId">
+            <summary>
+            商品id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.HospitalDepartmentId">
+            <summary>
+            医院科室id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.CustomerName">
+            <summary>
+            客户姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.Phone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.City">
+            <summary>
+            城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.Sex">
+            <summary>
+            性别
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.Birthday">
+            <summary>
+            生日
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.Age">
+            <summary>
+            年龄
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.Occupation">
+            <summary>
+            职业
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.WechatNumber">
+            <summary>
+            微信号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.ConsultationEmpId">
+            <summary>
+            面诊员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.ConsultationType">
+            <summary>
+            面诊状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.AppointmentDate">
+            <summary>
+            预约日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.AppointmentHospitalId">
+            <summary>
+            预约门店id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.DepositAmount">
+            <summary>
+            定金金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.ConsultingContent">
+            <summary>
+            咨询内容
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.LateProjectStage">
+            <summary>
+            后期项目铺垫
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.CheckState">
+            <summary>
+            审核状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.CheckPrice">
+            <summary>
+            审核金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.SettlePrice">
+            <summary>
+            结算金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.OrderSource">
+            <summary>
+            订单来源（1：面诊卡，2：非面诊卡）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.UnSendReason">
+            <summary>
+            未派单原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.AcceptConsulting">
+            <summary>
+            院方接诊人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.CustomerPictures">
+            <summary>
+            顾客照片（最多上传5张）
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo">
+            <summary>
+            内容平台订单
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.UserId">
+            <summary>
+            用户id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.OrderType">
+            <summary>
+            订单类型(1：咨询:2：定金)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.OrderTypeText">
+            <summary>
+            订单类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.BelongMonth">
+            <summary>
+            归属月份
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.OrderStatus">
+            <summary>
+            订单状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.OrderStatusText">
+            <summary>
+            订单状态文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ContentPlateFormId">
+            <summary>
+            内容平台id（下单平台）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.LiveAnchorId">
+            <summary>
+            主播账号id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.LiveAnchorWeChatNo">
+            <summary>
+            主播微信号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.GoodsId">
+            <summary>
+            商品id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.HospitalDepartmentId">
+            <summary>
+            医院科室id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.CustomerName">
+            <summary>
+            客户姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.Phone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.EncryptPhone">
+            <summary>
+            加密手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.Sex">
+            <summary>
+            性别
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.Birthday">
+            <summary>
+            生日
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.Age">
+            <summary>
+            年龄
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.Occupation">
+            <summary>
+            职业
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.WechatNumber">
+            <summary>
+            微信号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.City">
+            <summary>
+            城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.AddOrderPrice">
+            <summary>
+            下单金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ConsultationEmpId">
+            <summary>
+            面诊员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ConsultationType">
+            <summary>
+            面诊状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ConsultationTypeText">
+            <summary>
+            面诊状态文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.AppointmentDate">
+            <summary>
+            预约日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.AppointmentHospitalId">
+            <summary>
+            预约门店id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.DepositAmount">
+            <summary>
+            定金金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ConsultingContent">
+            <summary>
+            咨询内容
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.LateProjectStage">
+            <summary>
+            后期项目铺垫
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.CheckState">
+            <summary>
+            审核状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.CheckPrice">
+            <summary>
+            审核金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.SettlePrice">
+            <summary>
+            结算金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.OrderSource">
+            <summary>
+            订单来源（1：面诊卡，2：非面诊卡）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.OrderSourceText">
+            <summary>
+            订单来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.UnSendReason">
+            <summary>
+            未派单原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.AcceptConsulting">
+            <summary>
+            院方接诊人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.CustomerPictures">
+            <summary>
+            顾客照片（最多上传5张）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.CreateDate">
+            <summary>
+            录单时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.SendDate">
+            <summary>
+            派单时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.SendBy">
+            <summary>
+            派单人id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.SendByName">
+            <summary>
+            派单人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.SendHospitalName">
+            <summary>
+            派单医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.DealDate">
+            <summary>
+            成交时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.DealAmount">
+            <summary>
+            成交金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.UpdateDate">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.AppointmentHospitalName">
+            <summary>
+            预约医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.GoodsName">
+            <summary>
+            商品
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ContentPlateFormName">
+            <summary>
+            下单平台
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.HospitalDepartmentName">
+            <summary>
+            医院科室
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ConsultationEmpName">
+            <summary>
+            面诊员名字
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.LiveAnchorName">
+            <summary>
+            主播
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.CheckStateText">
+            <summary>
+            审核状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ThumbPicture">
+            <summary>
+            商品图片
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.BelongEmpId">
+            <summary>
+            归属客服id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.BelongEmpName">
+            <summary>
+            归属客服
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.LastDealHospitalId">
+            <summary>
+            最终成交医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.LastDealHospitalName">
+            <summary>
+            最终成交医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.OtherContentPlatFormOrderId">
+            <summary>
+            三方订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.CheckBy">
+            <summary>
+            审核人id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.CheckByName">
+            <summary>
+            审核人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.CheckDate">
+            <summary>
+            审核日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.IsReturnBackPrice">
+            <summary>
+            是否回款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ReturnBackPrice">
+            <summary>
+            回款金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ReturnBackDate">
+            <summary>
+            回款时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.IsToHospital">
+            <summary>
+            是否到院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ToHospitalType">
+            <summary>
+            到院类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ToHospitalTypeText">
+            <summary>
+            到院类型文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.ToHospitalDate">
+            <summary>
+            到院时间（最新）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.UnDealPictureUrl">
+            <summary>
+            未成交截图url
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.DealPictureUrl">
+            <summary>
+            成交凭证
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.IsOldCustomer">
+            <summary>
+            新客/老客
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.IsAcompanying">
+            <summary>
+            是否陪诊
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.CommissionRatio">
+            <summary>
+            佣金比例
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.IsRepeatProfundityOrder">
+            <summary>
+            是否是重单可深度订单
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.IsCreateBill">
+            <summary>
+            是否开票
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.CreateBillCompany">
+            <summary>
+            开票公司
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormCustomerPictureVo">
+            <summary>
+            内容平台订单客户照片基础类
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormCustomerPictureVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormCustomerPictureVo.ContentPlatFormId">
+            <summary>
+            内容平台订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormCustomerPictureVo.CustomerPicture">
+            <summary>
+            客户照片地址
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo">
+            <summary>
+            订单成交情况
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.ContentPlatFormOrderId">
+            <summary>
+            订单编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CreateDate">
+            <summary>
+            登记时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.SendDate">
+            <summary>
+            派单时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.ConsultationTypeText">
+            <summary>
+            面诊状态文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CustomerNickName">
+            <summary>
+            客户昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.Phone">
+            <summary>
+            客户手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.EncryptPhone">
+            <summary>
+            加密手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.AddOrderPrice">
+            <summary>
+            下单金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.IsToHospital">
+            <summary>
+            是否到院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.ToHospitalType">
+            <summary>
+            到院类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.ToHospitalTypeText">
+            <summary>
+            到院类型文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.TohospitalDate">
+            <summary>
+            到院时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.IsDeal">
+            <summary>
+            是否成交
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.LastDealHospitalId">
+            <summary>
+            最终成交医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.DealHospital">
+            <summary>
+            成交医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.DealPicture">
+            <summary>
+            截图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.Price">
+            <summary>
+            成交金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.DealDate">
+            <summary>
+            成交时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.OtherOrderId">
+            <summary>
+            三方订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.IsOldCustomer">
+            <summary>
+            新客/老客
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.IsAcompanying">
+            <summary>
+            是否陪诊
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CommissionRatio">
+            <summary>
+            佣金比例
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CheckState">
+            <summary>
+            审核状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CheckStateText">
+            <summary>
+            审核状态文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CheckPrice">
+            <summary>
+            审核金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CheckDate">
+            <summary>
+            审核日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.InformationPrice">
+            <summary>
+            信息服务费
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.SystemUpdatePrice">
+            <summary>
+            系统使用费
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.SettlePrice">
+            <summary>
+            结算金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CheckBy">
+            <summary>
+            审核人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CheckByEmpName">
+            <summary>
+            审核人名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CheckRemark">
+            <summary>
+            审核备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.IsReturnBackPrice">
+            <summary>
+            是否回款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.ReturnBackPrice">
+            <summary>
+            回款金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.ReturnBackDate">
+            <summary>
+            回款日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CreateBy">
+            <summary>
+            创建人（0为医院）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CreateByEmpName">
+            <summary>
+            创建人名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.BelongLiveAnchor">
+            <summary>
+            归属主播
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.InvitationDocuments">
+            <summary>
+            邀约凭证图片
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.ReconciliationDocumentsId">
+            <summary>
+            对账单id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.IsRepeatProfundityOrder">
+            <summary>
+            是否是重单可深度订单
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.IsCreateBill">
+            <summary>
+            是否开票
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CreatBillCompany">
+            <summary>
+            开票公司
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo">
+            <summary>
+            内容平台订单列表
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.Id">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.AppointmentDate">
+            <summary>
+            预约时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.BelongEmpName">
+            <summary>
+            归属客服
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.CustomerName">
+            <summary>
+            客户昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.Phone">
+            <summary>
+            电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.EncryptPhone">
+            <summary>
+            加密电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.City">
+            <summary>
+            城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.IsOldCustomer">
+            <summary>
+            新/老客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.AddOrderPrice">
+            <summary>
+            下单金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.AppointmentHospitalName">
+            <summary>
+            预约医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.GoodsName">
+            <summary>
+            项目
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.ThumbPictureUrl">
+            <summary>
+            项目图片
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.DepartmentName">
+            <summary>
+            科室
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.ConsultingContent">
+            <summary>
+            咨询内容
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.CreateDate">
+            <summary>
+            下单时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.ContentPlatformName">
+            <summary>
+            下单平台
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.LiveAnchorName">
+            <summary>
+            主播ip账号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.LiveAnchorWeChatNo">
+            <summary>
+            主播微信号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.OrderTypeText">
+            <summary>
+            订单类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.BelongMonth">
+            <summary>
+            归属月份
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.OrderStatusText">
+            <summary>
+            订单状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.OtherContentPlatFormOrderId">
+            <summary>
+            三方订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.OrderSourceText">
+            <summary>
+            订单来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.SendHospital">
+            <summary>
+            派单医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.Sender">
+            <summary>
+            派单人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.SendDate">
+            <summary>
+            派单时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.ConsultationType">
+            <summary>
+            面诊状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.AcceptConsulting">
+            <summary>
+            院方接诊人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.DepositAmount">
+            <summary>
+            定金金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.IsToHospital">
+            <summary>
+            是否到院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.ToHospitalDate">
+            <summary>
+            最近到院时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.LastDealHospital">
+            <summary>
+            最终成交医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.DealAmount">
+            <summary>
+            成交金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.DealDate">
+            <summary>
+            成交时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.UnDealReason">
+            <summary>
+            未成交原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.LateProjectStage">
+            <summary>
+            后期项目铺垫
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.UnSendReason">
+            <summary>
+            未派单原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.CheckStateText">
+            <summary>
+            审核状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.CheckPrice">
+            <summary>
+            审核金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.SettlePrice">
+            <summary>
+            结算金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.CheckDate">
+            <summary>
+            审核日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.CheckByName">
+            <summary>
+            审核人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.CheckRemark">
+            <summary>
+            审核备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.IsReturnBackPrice">
+            <summary>
+            是否回款
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.ReturnBackPrice">
+            <summary>
+            回款金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.ReturnBackDate">
+            <summary>
+            回款时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo.IsRepeatProfundityOrder">
+            <summary>
+            是否是重单深度订单
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo">
+            <summary>
+            客服修改已完成订单
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.Id">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.DealId">
+            <summary>
+            成交情况id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.IsFinish">
+            <summary>
+            是否成交
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.LastDealHospitalId">
+            <summary>
+            成交医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.IsToHospital">
+            <summary>
+            是否到院（成交则默认true）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.ToHospitalType">
+            <summary>
+            到院类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.ToHospitalDate">
+            <summary>
+            到院时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.DealAmount">
+            <summary>
+            成交金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.LastProjectStage">
+            <summary>
+            后期项目铺垫
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.DealPictureUrl">
+            <summary>
+            成交截图url
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.UnDealReason">
+            <summary>
+            未成交原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.UnDealPictureUrl">
+            <summary>
+            未成交截图url
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.DealDate">
+            <summary>
+            成交时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.OtherContentPlatFormOrderId">
+            <summary>
+            三方订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.IsAcompanying">
+            <summary>
+            是否陪诊
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.CommissionRatio">
+            <summary>
+            佣金比例
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.InvitationDocuments">
+            <summary>
+            邀约凭证图片
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.AddContentPlatFormSendOrderInfoVo">
+            <summary>
+            内容平台添加派单
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.AddContentPlatFormSendOrderInfoVo.OrderId">
+            <summary>
+            订单编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.AddContentPlatFormSendOrderInfoVo.HospitalId">
+            <summary>
+            医院编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.AddContentPlatFormSendOrderInfoVo.IsUncertainDate">
+            <summary>
+            是否未明确时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.AddContentPlatFormSendOrderInfoVo.AppointmentDate">
+            <summary>
+            预约到院日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.AddContentPlatFormSendOrderInfoVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.AddContentPlatFormSendOrderInfoVo.SendBy">
+            <summary>
+            派单人员
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormSendOrderInfoSimpleVo">
+            <summary>
+            派单基础信息
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormSendOrderInfoSimpleVo.Id">
+            <summary>
+            派单编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormSendOrderInfoSimpleVo.HospitalId">
+            <summary>
+            医院编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormSendOrderInfoSimpleVo.IsUncertainDate">
+            <summary>
+            是否未明确时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormSendOrderInfoSimpleVo.AppointmentDate">
+            <summary>
+            预约到院日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.ContentPlatFormSendOrderInfoSimpleVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo">
+            <summary>
+            获取已派单数据信息
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.Id">
+            <summary>
+            派单编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.OrderId">
+            <summary>
+            内容平台订单编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.BelongMonth">
+            <summary>
+            归属月份
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.ContentPlatFormName">
+            <summary>
+            内容平台名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.LiveAnchorName">
+            <summary>
+            主播
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.LiveAnchorWeChatNo">
+            <summary>
+            微信编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.CustomerName">
+            <summary>
+            客户姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.Phone">
+            <summary>
+            电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.AddOrderPrice">
+            <summary>   
+            下单金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.EncryptPhone">
+            <summary>
+            加密电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.IsHospitalCheckPhone">
+            <summary>
+            医院是否已查看过该单电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.AppointmentHospital">
+            <summary>
+            预约医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.SendHospitalId">
+            <summary>
+            派单医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.SendHospital">
+            <summary>
+            派单医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.IsToHospital">
+            <summary>
+            是否到院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.ToHospitalTypeText">
+            <summary>
+            到院类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.ToHospitalDate">
+            <summary>
+            到院时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.AppointmentDate">
+            <summary>
+            预约时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.GoodsName">
+            <summary>
+            项目名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.ConsultingContent">
+            <summary>
+            咨询内容
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.ThumbPictureUrl">
+            <summary>
+            项目图片
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.LateProjectStage">
+            <summary>
+            后期项目铺垫
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.OrderTypeText">
+            <summary>
+            订单类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.OrderStatusText">
+            <summary>
+            订单状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.DepositAmount">
+            <summary>
+            定金
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.DealAmount">
+            <summary>
+            成交金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.DealPictureUrl">
+            <summary>
+            成交截图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.DealDate">
+            <summary>
+            成交时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.UnDealReason">
+            <summary>
+            未成交原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.UnDealPictureUrl">
+            <summary>
+            未成交截图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.Sender">
+            <summary>
+            派单人id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.SenderName">
+            <summary>
+            派单人姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.SendDate">
+            <summary>
+            派单时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.SendOrderRemark">
+            <summary>
+            派单留言
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.OrderRemark">
+            <summary>
+            订单备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.HospitalRemark">
+            <summary>
+            医院备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.OrderSourceText">
+            <summary>
+            订单来源（1：面诊卡，2：非面诊卡）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.ConsultatioType">
+            <summary>
+            面诊状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.AcceptConsulting">
+            <summary>
+            院方接诊人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.CheckState">
+            <summary>
+            审核状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.OtherContentPlatFormOrderId">
+            <summary>
+            三方订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.IsOldCustomer">
+            <summary>
+            新客/老客
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.IsAcompanying">
+            <summary>
+            是否陪诊
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.CommissionRatio">
+            <summary>
+            佣金比例
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.SendContentPlatformOrderVo.IsRepeatProfundityOrder">
+            <summary>
+            是否是重单可深度订单
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo">
+            <summary>
+            未派单列表
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.OrderId">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.ContentPlatFormName">
+            <summary>
+            下单平台
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.LiveAnchorName">
+            <summary>
+            主播IP账号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.GoodsName">
+            <summary>
+            项目
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.ThumbPictureUrl">
+            <summary>
+            项目图片
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.ConsultationTypeText">
+            <summary>
+            面诊状态文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.ConsultingContent">
+            <summary>
+            咨询内容
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.CustomerName">
+            <summary>
+            客户姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.Phone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.EncryptPhone">
+            <summary>
+            加密手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.DepositAmount">
+            <summary>
+            定金
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.DealAmount">
+            <summary>
+            成交金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.OrderTypeText">
+            <summary>
+            订单类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.OrderStatusText">
+            <summary>
+            订单状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.AppointmentHospital">
+            <summary>
+            预约门店
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.AppointmentDate">
+            <summary>
+            预约时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.LateProjectStage">
+            <summary>
+            后期项目铺垫
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.OrderSourceText">
+            <summary>
+            订单来源文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UnContentPlateFormSendOrderInfoVo.UnSendReason">
+            <summary>
+            未派单原因
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UpdateContentPlatFormSendOrderInfoVo">
+            <summary>
+            内容平台订单改派
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UpdateContentPlatFormSendOrderInfoVo.Id">
+            <summary>
+            派单id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UpdateContentPlatFormSendOrderInfoVo.OrderId">
+            <summary>
+            订单id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UpdateContentPlatFormSendOrderInfoVo.HospitalId">
+            <summary>
+            医院编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UpdateContentPlatFormSendOrderInfoVo.IsUncertainDate">
+            <summary>
+            是否未明确时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UpdateContentPlatFormSendOrderInfoVo.AppointmentDate">
+            <summary>
+            预约到院日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UpdateContentPlatFormSendOrderInfoVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.BindCustomerServiceId">
+            <summary>
+            绑定客服列表编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Avatar">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Name">
+            <summary>
+            客户昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.MemberCardNo">
+            <summary>
+            会员卡号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.MemberRankName">
+            <summary>
+            会员卡名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.CreateDate">
+            <summary>
+            建档时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.AllPrice">
+            <summary>
+            累计消费
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.RealName">
+            <summary>
+            真实姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Sex">
+            <summary>
+            性别
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Phone">
+            <summary>
+            联系电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Birthday">
+            <summary>
+            生日
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Age">
+            <summary>
+            年龄
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Occupation">
+            <summary>
+            职业
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.FirstProjectDemand">
+            <summary>
+            首次项目需求
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.NewConsumptionContentPlatform">
+            <summary>
+            最新消费平台
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.PersonalWechat">
+            <summary>
+            是否为微信来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.BusinessWeChat">
+            <summary>
+            是否为企业微信来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.WechatMiniProgram">
+            <summary>
+            是否为小程序来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.OfficialAccounts">
+            <summary>
+            是否为公众号来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.BelongCustomerService">
+            <summary>
+            归属客服
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.NewContentPlatForm">
+            <summary>
+            最新消费渠道
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.OtherPhone">
+            <summary>
+            辅助号码（多个号码用逗号分隔开）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.DetailAddress">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.IsSendNote">
+            <summary>
+            是否发短信（回访）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.IsCall">
+            <summary>
+            是否打电话（回访）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.IsSendWeChat">
+            <summary>
+            是否发微信（回访）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.UnTrackReason">
+            <summary>
+            不回访原因
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.ConsumptionLevel">
+            <summary>
+            消费等级
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.CustomerState">
+            <summary>
+            客户状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.CustomerRequirement">
+            <summary>
+            客户需求
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.WechatNumber">
+            <summary>
+            微信昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.City">
+            <summary>
+            城市
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.TagList">
+            <summary>
+            标签
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.OrderCheckPicture.OrderCheckPictureVo">
+            <summary>
+            照片审核基础类
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.OrderCheckPicture.OrderCheckPictureVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.OrderCheckPicture.OrderCheckPictureVo.OrderId">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.OrderCheckPicture.OrderCheckPictureVo.OrderFrom">
+            <summary>
+            订单来源
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.OrderCheckPicture.OrderCheckPictureVo.PictureUrl">
+            <summary>
+            照片地址
             </summary>
         </member>
     </members>

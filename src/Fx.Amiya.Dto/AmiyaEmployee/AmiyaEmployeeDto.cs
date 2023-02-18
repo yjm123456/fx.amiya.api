@@ -19,6 +19,8 @@ namespace Fx.Amiya.Dto.AmiyaEmployee
         public bool IsCustomerService { get; set; }
         public int DepartmentId { get; set; }
         public string DepartmentName { get; set; }
+        public string UserId { get; set; }
+        public string Code { get; set; }
 
         public List<int> LiveAnchorIds { get; set; }
     }

@@ -13,12 +13,34 @@ namespace Fx.Amiya.IService
     {
 
         /// <summary>
+        /// 根据企业微信code获取啊美雅员工
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        Task<AmiyaEmployeeDto> GetByCodeAsync(string code);
+
+        /// <summary>
         /// 登录
         /// </summary>
         /// <param name="userName"></param>
         /// <param name="password"></param>
         /// <returns></returns>
         Task<AmiyaEmployeeDto> LoginAsync(string userName, string password);
+        /// <summary>
+        /// 根据企业微信userId与code登陆
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        Task<AmiyaEmployeeDto> LoginByUserIdAndCodeAsync(string userId, string code);
+        /// <summary>
+        /// 更新用户在企业微信的userId与code
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        Task UpdateBusinessWechatUserIdAndCode(int id, string userId, string code);
 
 
         /// <summary>
@@ -90,16 +112,16 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="employeeId"></param>
         /// <returns></returns>
-        Task DeleteAsync(int employeeId,int deleteBy);
+        Task DeleteAsync(int employeeId, int deleteBy);
 
 
-     
+
         /// <summary>
         /// 修改用户名密码
         /// </summary>
         /// <param name="employeeId"></param>
         /// <returns></returns>
-        Task UpdatePasswordAsync(UpdatePasswordAmiyaDto updateDto,int employeeId);
+        Task UpdatePasswordAsync(UpdatePasswordAmiyaDto updateDto, int employeeId);
 
 
         /// <summary>

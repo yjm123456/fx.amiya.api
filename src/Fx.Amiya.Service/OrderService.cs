@@ -2978,7 +2978,7 @@ namespace Fx.Amiya.Service
             var orderTrades = from d in dalOrderTrade.GetAll()
                               where d.OrderInfoList.Count(e => e.AppType == (byte)AppType.MiniProgram && e.OrderType == (byte)OrderType.MaterialOrder) > 0
                               && (string.IsNullOrWhiteSpace(keyword) || d.CustomerInfo.Phone == keyword)
-                              && (d.CreateDate >= startDate && d.CreateDate <= endDate)
+                              && (d.CreateDate >= startDate && d.CreateDate <= endDate.AddDays(1))
                               select d;
 
             if (isSendGoods == null)

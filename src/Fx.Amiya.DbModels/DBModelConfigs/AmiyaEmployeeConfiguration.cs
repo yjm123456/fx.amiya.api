@@ -22,8 +22,11 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.AmiyaPositionId).HasColumnName("amiya_position_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.IsCustomerService).HasColumnName("is_customer_service").HasColumnType("bit").IsRequired();
             builder.Property(t => t.Email).HasColumnName("e_mail").HasColumnType("varchar(100)").IsRequired();
+            builder.Property(t => t.UserId).HasColumnName("user_id").HasColumnType("varchar(600)").IsRequired(false);
+            builder.Property(t => t.Code).HasColumnName("code").HasColumnType("varchar(600)").IsRequired(false);
+            builder.Property(t => t.CodeExpireDate).HasColumnName("code_expire_date").HasColumnType("DATETIME").IsRequired(false);
 
-            builder.HasOne(t => t.AmiyaPositionInfo).WithMany(t => t.AmiyaEmployeeList).HasForeignKey(t=>t.AmiyaPositionId);
+            builder.HasOne(t => t.AmiyaPositionInfo).WithMany(t => t.AmiyaEmployeeList).HasForeignKey(t => t.AmiyaPositionId);
 
         }
     }

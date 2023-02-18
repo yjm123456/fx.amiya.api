@@ -199,6 +199,45 @@ namespace Fx.Amiya.Service
             tiktokAppInfoDto.BelongLiveAnchorId = appInfo.BelongLiveAnchor;
             return tiktokAppInfoDto;
         }
+
+
+        public async Task<OrderAppInfoDto> GetBusinessWeChatAppInfo()
+        {
+            var appInfo = await dalOrderAppInfo.GetAll().SingleOrDefaultAsync(e => e.AppType == (byte)AppType.Other);
+            if (appInfo == null)
+                throw new Exception("企业微信同步应用证书信息为空");
+            DateTime date = DateTime.Now;
+            if (appInfo.ExpireDate <= date)
+            {
+                string url = $"https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={appInfo.ShopId}&corpsecret={appInfo.AppSecret}";
+                var res = await HttpUtil.HTTPJsonGetAsync(url);
+                JObject requestObject = JsonConvert.DeserializeObject(res) as JObject;
+                var errCode = requestObject["errcode"].ToString();
+                if (errCode != "0")
+                {
+                    throw new Exception(requestObject["errmsg"].ToString());
+                }
+                string token = requestObject["access_token"].ToString();
+                double expires_in = Convert.ToDouble(requestObject["expires_in"].ToString());
+                appInfo.RefreshToken = token;
+                appInfo.AccessToken = token;
+                appInfo.ExpireDate = date.AddSeconds(expires_in - 400);//1.8小时过期
+                appInfo.AuthorizeDate = date;
+                await dalOrderAppInfo.UpdateAsync(appInfo, true);
+            }
+
+            OrderAppInfoDto appInfoDto = new OrderAppInfoDto();
+            appInfoDto.Id = appInfo.Id;
+            appInfoDto.AppKey = appInfo.AppKey;
+            appInfoDto.AppSecret = appInfo.AppSecret;
+            appInfoDto.AccessToken = appInfo.AccessToken;
+            appInfoDto.AuthorizeDate = appInfo.AuthorizeDate;
+            appInfoDto.AppType = appInfo.AppType;
+            appInfoDto.ExpireDate = appInfo.ExpireDate;
+            appInfoDto.RefreshToken = appInfo.RefreshToken;
+            return appInfoDto;
+        }
+
         private static DateTime UnixTimestampToDateTime(DateTime target, long timestamp)
         {
             var start = new DateTime(1970, 1, 1, 0, 0, 0, target.Kind);

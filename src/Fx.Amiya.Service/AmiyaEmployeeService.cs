@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 using Fx.Amiya.Dto.AmiyaEmployee;
 using System.Text.RegularExpressions;
 using Fx.Common;
+using Fx.Common.Utils;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace Fx.Amiya.Service
 {
@@ -18,13 +21,16 @@ namespace Fx.Amiya.Service
     {
         private IDalAmiyaEmployee dalAmiyaEmployee;
         private IDalBindCustomerService dalBindCustomerService;
+        private IOrderAppInfoService orderAppInfoService;
         private IEmployeeBindLiveAnchorService employeeBindLiveAnchorService;
         public AmiyaEmployeeService(IDalAmiyaEmployee dalAmiyaEmployee,
             IDalBindCustomerService dalBindCustomerService,
+            IOrderAppInfoService orderAppInfoService,
             IEmployeeBindLiveAnchorService employeeBindLiveAnchorService)
         {
             this.dalAmiyaEmployee = dalAmiyaEmployee;
             this.dalBindCustomerService = dalBindCustomerService;
+            this.orderAppInfoService = orderAppInfoService;
             this.employeeBindLiveAnchorService = employeeBindLiveAnchorService;
         }
 
@@ -57,6 +63,44 @@ namespace Fx.Amiya.Service
                 employeeDto.IsCustomerService = employee.IsCustomerService;
                 employeeDto.DepartmentId = employee.AmiyaPositionInfo.DepartmentId;
                 employeeDto.DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name;
+                employeeDto.UserId = employee.UserId;
+
+                return employeeDto;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<AmiyaEmployeeDto> LoginByUserIdAndCodeAsync(string userId, string code)
+        {
+            try
+            {
+                var employee = await dalAmiyaEmployee.GetAll()
+                    .Include(e => e.AmiyaPositionInfo).ThenInclude(e => e.AmiyaDepartment)
+                    .SingleOrDefaultAsync(e => e.UserId == userId && e.Code == code);
+
+                if (employee == null)
+                    throw new Exception("用户名不存在");
+
+                if (employee.Valid == false)
+                    throw new Exception("账户已失效");
+
+                if (employee.CodeExpireDate < DateTime.Now)
+                    throw new Exception("登陆已超时，请重新登陆！");
+
+                AmiyaEmployeeDto employeeDto = new AmiyaEmployeeDto();
+                employeeDto.Id = employee.Id;
+                employeeDto.Name = employee.Name;
+                employeeDto.UserName = employee.UserName;
+                employeeDto.Password = employee.Password;
+                employeeDto.Valid = employee.Valid;
+                employeeDto.PositionId = employee.AmiyaPositionId;
+                employeeDto.PositionName = employee.AmiyaPositionInfo.Name;
+                employeeDto.IsCustomerService = employee.IsCustomerService;
+                employeeDto.DepartmentId = employee.AmiyaPositionInfo.DepartmentId;
+                employeeDto.DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name;
 
 
                 return employeeDto;
@@ -68,7 +112,74 @@ namespace Fx.Amiya.Service
         }
 
 
+        public async Task<AmiyaEmployeeDto> GetByCodeAsync(string code)
+        {
+            try
+            {
+                string userId = "";
+                var employee = await dalAmiyaEmployee.GetAll()
+                    .Include(e => e.AmiyaPositionInfo).ThenInclude(e => e.AmiyaDepartment)
+                    .SingleOrDefaultAsync(e => e.Code == code);
 
+                if (employee == null || employee.CodeExpireDate < DateTime.Now)
+                {
+                    var businessInfo = await orderAppInfoService.GetBusinessWeChatAppInfo();
+                    string url = $"https://qyapi.weixin.qq.com/cgi-bin/auth/getuserinfo?access_token={businessInfo.AccessToken}&code={code}";
+                    var res = await HttpUtil.HTTPJsonGetAsync(url);
+                    JObject requestObject = JsonConvert.DeserializeObject(res) as JObject;
+                    var errCode = requestObject["errcode"].ToString();
+                    if (errCode != "0")
+                    {
+                        throw new Exception(requestObject["errmsg"].ToString());
+                    }
+                    userId = requestObject["userid"].ToString();
+                    employee = await dalAmiyaEmployee.GetAll()
+                    .Include(e => e.AmiyaPositionInfo).ThenInclude(e => e.AmiyaDepartment).SingleOrDefaultAsync(e => e.UserId == userId);
+                    if (employee == null)
+                    {
+                        AmiyaEmployeeDto noExistEmployeeDto = new AmiyaEmployeeDto();
+                        noExistEmployeeDto.UserId = userId;
+                        noExistEmployeeDto.Code = code;
+                        return noExistEmployeeDto;
+                    }
+                    else
+                    {
+                        //刷新用户code
+                        await this.UpdateBusinessWechatUserIdAndCode(employee.Id, userId, code);
+                    }
+                }
+                if (employee.Valid == false)
+                    throw new Exception("账户已失效");
+                AmiyaEmployeeDto employeeDto = new AmiyaEmployeeDto();
+                employeeDto.Id = employee.Id;
+                employeeDto.Name = employee.Name;
+                employeeDto.UserName = employee.UserName;
+                employeeDto.Password = employee.Password;
+                employeeDto.Valid = employee.Valid;
+                employeeDto.PositionId = employee.AmiyaPositionId;
+                employeeDto.PositionName = employee.AmiyaPositionInfo.Name;
+                employeeDto.IsCustomerService = employee.IsCustomerService;
+                employeeDto.DepartmentId = employee.AmiyaPositionInfo.DepartmentId;
+                employeeDto.DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name;
+                employeeDto.UserId = employee.UserId;
+                employeeDto.Code = code;
+
+                return employeeDto;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task UpdateBusinessWechatUserIdAndCode(int id, string userId, string code)
+        {
+            var employeeInfo = await dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(x => x.Id == id);
+            employeeInfo.UserId = userId;
+            employeeInfo.Code = code;
+            employeeInfo.CodeExpireDate = DateTime.Now.AddSeconds(300);
+            await dalAmiyaEmployee.UpdateAsync(employeeInfo, true);
+        }
 
         public async Task<bool> CheckPasswordAsync(string password)
         {
@@ -432,8 +543,8 @@ namespace Fx.Amiya.Service
         public async Task<List<AmiyaEmployeeNameDto>> GetCustomerServiceNameListAsync()
         {
             var employee = from d in dalAmiyaEmployee.GetAll()
-                           where d.IsCustomerService==true
-                           && d.Valid==true
+                           where d.IsCustomerService == true
+                           && d.Valid == true
                            select new AmiyaEmployeeNameDto
                            {
                                Id = d.Id,
