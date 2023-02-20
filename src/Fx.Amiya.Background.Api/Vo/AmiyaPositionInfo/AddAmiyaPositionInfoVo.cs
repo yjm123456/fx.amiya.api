@@ -23,5 +23,9 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaPositionInfo
         /// 是否为管理员
         /// </summary>
         public bool IsDirector { get; set; }
+        /// <summary>
+        /// 是否可读取数据中心
+        /// </summary>
+        public bool ReadDataCenter { get; set; }
     }
 }

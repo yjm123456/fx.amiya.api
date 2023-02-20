@@ -133,7 +133,7 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task<OrderAppInfoDto> GetTikTokAppInfo(string belongLiveAnchor)
+        public async Task<OrderAppInfoDto> GetTikTokAppInfo(int belongLiveAnchor)
         {
             var appInfo = await dalOrderAppInfo.GetAll().SingleOrDefaultAsync(e => e.AppType == (byte)AppType.Douyin && e.BelongLiveAnchor == belongLiveAnchor);
             if (appInfo == null)

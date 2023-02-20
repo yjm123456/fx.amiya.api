@@ -11,12 +11,12 @@ using Fx.Amiya.DbModels.Model;
 
 namespace Fx.Amiya.Service
 {
-  public  class AmiyaPositionInfoService: IAmiyaPositionInfoService
+    public class AmiyaPositionInfoService : IAmiyaPositionInfoService
     {
         private IDalAmiyaPositionInfo dalAmiyaPositionInfo;
         private IDalAmiyaPositionPermission _dalAmiyaPositionPermission;
 
-        public AmiyaPositionInfoService(IDalAmiyaPositionInfo dalAmiyaPositionInfo,IDalAmiyaPositionPermission dalAmiyaPositionPermission)
+        public AmiyaPositionInfoService(IDalAmiyaPositionInfo dalAmiyaPositionInfo, IDalAmiyaPositionPermission dalAmiyaPositionPermission)
         {
             this.dalAmiyaPositionInfo = dalAmiyaPositionInfo;
             _dalAmiyaPositionPermission = dalAmiyaPositionPermission;
@@ -25,20 +25,21 @@ namespace Fx.Amiya.Service
 
         public async Task<List<AmiyaPositionInfoDto>> GetListAsync()
         {
-            try 
+            try
             {
                 var position = from d in dalAmiyaPositionInfo.GetAll()
                                select new AmiyaPositionInfoDto
                                {
-                                   Id=d.Id,
-                                   Name=d.Name,
-                                   CreateDate=d.CreateDate,
-                                   UpdateDate=d.UpdateDate,
-                                   UpdateBy=d.UpdateBy,
-                                   UpdateName=d.UpdateByAmiyaEmployee.Name,
-                                   IsDirector=d.IsDirector,
-                                   DepartmentId=d.DepartmentId,
-                                   DepartmentName=d.AmiyaDepartment.Name
+                                   Id = d.Id,
+                                   Name = d.Name,
+                                   CreateDate = d.CreateDate,
+                                   UpdateDate = d.UpdateDate,
+                                   UpdateBy = d.UpdateBy,
+                                   UpdateName = d.UpdateByAmiyaEmployee.Name,
+                                   IsDirector = d.IsDirector,
+                                   DepartmentId = d.DepartmentId,
+                                   DepartmentName = d.AmiyaDepartment.Name,
+                                   ReadDataCenter = d.ReadDataCenter
                                };
                 return await position.ToListAsync();
             }
@@ -58,7 +59,8 @@ namespace Fx.Amiya.Service
                 positionInfo.CreateDate = DateTime.Now;
                 positionInfo.DepartmentId = addDto.DepartmentId;
                 positionInfo.IsDirector = addDto.IsDirector;
-               await dalAmiyaPositionInfo.AddAsync(positionInfo,true);
+                positionInfo.ReadDataCenter = addDto.ReadDataCenter;
+                await dalAmiyaPositionInfo.AddAsync(positionInfo, true);
             }
             catch (Exception ex)
             {
@@ -72,8 +74,8 @@ namespace Fx.Amiya.Service
             try
             {
                 var position = await dalAmiyaPositionInfo.GetAll()
-                    .Include(e=>e.UpdateByAmiyaEmployee)
-                    .Include(e=>e.AmiyaDepartment)
+                    .Include(e => e.UpdateByAmiyaEmployee)
+                    .Include(e => e.AmiyaDepartment)
                     .SingleOrDefaultAsync(e => e.Id == id);
 
                 if (position == null)
@@ -89,6 +91,7 @@ namespace Fx.Amiya.Service
                 positionDto.IsDirector = position.IsDirector;
                 positionDto.DepartmentId = position.DepartmentId;
                 positionDto.DepartmentName = position.AmiyaDepartment.Name;
+                positionDto.ReadDataCenter = position.ReadDataCenter;
                 return positionDto;
             }
             catch (Exception ex)
@@ -109,7 +112,7 @@ namespace Fx.Amiya.Service
                     throw new Exception("职位编号错误");
 
                 List<AmiyaPositionInfoDto> amiyaPositionInfoDtos = new List<AmiyaPositionInfoDto>();
-                foreach(var x in position)
+                foreach (var x in position)
                 {
                     AmiyaPositionInfoDto positionDto = new AmiyaPositionInfoDto();
                     positionDto.Id = x.Id;
@@ -121,6 +124,7 @@ namespace Fx.Amiya.Service
                     positionDto.IsDirector = x.IsDirector;
                     positionDto.DepartmentId = x.DepartmentId;
                     positionDto.DepartmentName = x.AmiyaDepartment.Name;
+                    positionDto.ReadDataCenter = x.ReadDataCenter;
                     amiyaPositionInfoDtos.Add(positionDto);
                 }
                 return amiyaPositionInfoDtos;
@@ -131,7 +135,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task UpdateAsync(UpdateAmiyaPositionInfoDto updateDto,int employeeId)
+        public async Task UpdateAsync(UpdateAmiyaPositionInfoDto updateDto, int employeeId)
         {
             try
             {
@@ -145,7 +149,8 @@ namespace Fx.Amiya.Service
                 position.UpdateDate = DateTime.Now;
                 position.DepartmentId = updateDto.DepartmentId;
                 position.IsDirector = updateDto.IsDirector;
-                await dalAmiyaPositionInfo.UpdateAsync(position,true);
+                position.ReadDataCenter = updateDto.ReadDataCenter;
+                await dalAmiyaPositionInfo.UpdateAsync(position, true);
             }
             catch (Exception ex)
             {
@@ -159,7 +164,7 @@ namespace Fx.Amiya.Service
             try
             {
                 var position = await dalAmiyaPositionInfo.GetAll()
-                    .Include(e=>e.AmiyaEmployeeList)
+                    .Include(e => e.AmiyaEmployeeList)
                    .SingleOrDefaultAsync(e => e.Id == id);
 
                 if (position.AmiyaEmployeeList.Count > 0)
@@ -168,10 +173,10 @@ namespace Fx.Amiya.Service
                 var permission = await _dalAmiyaPositionPermission.GetAll()
                   .SingleOrDefaultAsync(e => e.AmiyaPositionId == id);
 
-                if (permission!=null)
+                if (permission != null)
                     throw new Exception("请先清除该职位的权限后再进行删除！");
 
-                await dalAmiyaPositionInfo.DeleteAsync(position,true);
+                await dalAmiyaPositionInfo.DeleteAsync(position, true);
             }
             catch (Exception ex)
             {
@@ -180,6 +185,6 @@ namespace Fx.Amiya.Service
         }
 
 
-       
+
     }
 }

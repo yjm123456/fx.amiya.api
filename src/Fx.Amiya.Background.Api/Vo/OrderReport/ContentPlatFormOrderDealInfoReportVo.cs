@@ -44,9 +44,9 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("派单时间")]
         public DateTime? SendOrderDate { get; set; }
         /// <summary>
-        /// 面诊状态
+        /// 面诊类型
         /// </summary>
-        [Description("面诊状态")]
+        [Description("面诊类型")]
         public string ConsultationType { get; set; }
 
 

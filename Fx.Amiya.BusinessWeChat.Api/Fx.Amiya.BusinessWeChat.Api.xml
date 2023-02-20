@@ -4,6 +4,80 @@
         <name>Fx.Amiya.BusinessWeChat.Api</name>
     </assembly>
     <members>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaEmployeeController">
+            <summary>
+            啊美雅员工API
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaEmployeeController.#ctor(Fx.Amiya.IService.IAmiyaEmployeeService,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="employeeService"></param>
+            <param name="httpContextAccessor"></param>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaEmployeeController.GetByIdAsync(System.Int32)">
+            <summary>
+            根据员工编号获取员工信息
+            </summary>
+            <param name="id">员工编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaEmployeeController.UpdateAsync(Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.UpdateAmiyaEmployeeVo)">
+            <summary>
+            修改员工信息
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaEmployeeController.UpdatePasswordAsync(Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.UpdatePasswordAmiyaVo)">
+            <summary>
+            修改密码
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaEmployeeController.GetCustomerServiceNameListAsync">
+            <summary>
+            获取客服姓名列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaGoodsDemandController">
+            <summary>
+            商品需求数据板块接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaGoodsDemandController.#ctor(Fx.Amiya.IService.IAmiyaGoodsDemandService,Fx.Amiya.IService.IAmiyaHospitalDepartmentService)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="amiyaGoodsDemandService"></param>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaGoodsDemandController.getAmiyaGoodsDemandList(System.String)">
+            <summary>
+            获取商品需求id和名称（下拉框使用）【可根据科室id进行筛选】
+            </summary>
+            <param name="hospitalDepartmentId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaHospitalDepartmentController">
+            <summary>
+            医院科室数据板块接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaHospitalDepartmentController.#ctor(Fx.Amiya.IService.IAmiyaHospitalDepartmentService)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="amiyaHospitalDepartmentService"></param>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaHospitalDepartmentController.getAmiyaHospitalDepartmentList">
+            <summary>
+            获取医院科室id和名称（下拉框使用）
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.AmiyaLoginAsync(System.String)">
             <summary>
             通过code检索啊美雅员工信息
@@ -268,6 +342,24 @@
             <param name="pageSize"></param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormController">
+            <summary>
+            内容平台管理功能接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormController.#ctor(Fx.Amiya.IService.IContentPlatformService)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="contentPalteFormService"></param>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormController.GetValidListAsync(System.String)">
+            <summary>
+            获取有效的内容平台列表
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormCustomerPictureController">
             <summary>
             客户照片板块数据接口
@@ -304,6 +396,60 @@
             <param name="encryptPhone">加密电话</param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.HospitalInfoController">
+            <summary>
+            医院数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.HospitalInfoController.#ctor(Fx.Amiya.IService.IHospitalInfoService)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="hospitalInfoService"></param>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.HospitalInfoController.GetCheckPassedNameListAsync(System.String)">
+            <summary>
+            获取资料审核通过医院名称列表
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.LiveAnchorController">
+            <summary>
+            主播账号
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.LiveAnchorController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor,Fx.Amiya.IService.ILiveAnchorService)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="httpContextAccessor"></param>
+            <param name="liveAnchorService"></param>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.LiveAnchorController.GetValidListAsync">
+            <summary>
+             获取有效的主播账号列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.LiveAnchorWechatInfoController">
+            <summary>
+            主播微信账号
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.LiveAnchorWechatInfoController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor,Fx.Amiya.IService.ILiveAnchorWeChatInfoService)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="httpContextAccessor"></param>
+            <param name="liveAnchorWechatInfoService"></param>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.LiveAnchorWechatInfoController.GetValidListAsync">
+            <summary>
+             获取有效的主播微信账号列表
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.OrderCheckPictureController">
             <summary>
             审核照片板块数据接口
@@ -332,9 +478,114 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.Login.AmiyaEmployeeAccountVo.ReadDataCenter">
+            <summary>
+            读取数据中心
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.Login.HospitalEmployeeAccountVo.EmployeeType">
             <summary>
             员工类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.AmiyaEmployeeVo.Id">
+            <summary>
+            员工编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.AmiyaEmployeeVo.Name">
+            <summary>
+            姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.AmiyaEmployeeVo.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.AmiyaEmployeeVo.PositionId">
+            <summary>
+            职位编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.AmiyaEmployeeVo.PositionName">
+            <summary>
+            职位名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.AmiyaEmployeeVo.Valid">
+            <summary>
+            是否有效
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.AmiyaEmployeeVo.Email">
+            <summary>
+            邮箱
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.AmiyaEmployeeVo.IsCustomerService">
+            <summary>
+            是否是客服
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.AmiyaEmployeeVo.LiveAnchorIds">
+            <summary>
+            绑定主播信息
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.UpdateAmiyaEmployeeVo.Id">
+            <summary>
+            员工编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.UpdateAmiyaEmployeeVo.Name">
+            <summary>
+            姓名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.UpdateAmiyaEmployeeVo.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.UpdateAmiyaEmployeeVo.Email">
+            <summary>
+            邮箱
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.UpdateAmiyaEmployeeVo.Valid">
+            <summary>
+            是否有效
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.UpdateAmiyaEmployeeVo.PositionId">
+            <summary>
+            职位编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.UpdateAmiyaEmployeeVo.IsCustomerService">
+            <summary>
+            是否是客服
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.UpdateAmiyaEmployeeVo.IsResetPassword">
+            <summary>
+            是否重置密码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.UpdateAmiyaEmployeeVo.LiveAnchorIds">
+            <summary>
+            当为客服/运营咨询情况下上传绑定主播ID
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.UpdatePasswordAmiyaVo.OldPassword">
+            <summary>
+            旧密码
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.UpdatePasswordAmiyaVo.NewPassword">
+            <summary>
+            新密码
             </summary>
         </member>
         <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.Base.BaseKeyAndValueVo">

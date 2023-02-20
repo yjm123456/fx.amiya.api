@@ -15,5 +15,7 @@ namespace Fx.Amiya.Dto.AmiyaPositionInfo
         public bool IsDirector { get; set; }
         public int DepartmentId { get; set; }
         public string DepartmentName { get; set; }
+        public bool ReadDataCenter { get; set; }
+
     }
 }

@@ -74,7 +74,7 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public DateTime? FinishDate { get; set; }
 
-        public string BelongLiveAnchorId { get; set; }
+        public int BelongLiveAnchorId { get; set; }
 
         #region  财务审核板块
         /// <summary>

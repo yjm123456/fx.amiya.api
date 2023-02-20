@@ -19,6 +19,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
     /// </summary>
     [Route("[controller]")]
     [ApiController]
+    [FxInternalAuthorize]
     public class ContentPlatFormCustomerPictureController : ControllerBase
     {
         private IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService;

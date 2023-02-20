@@ -19,7 +19,7 @@ namespace Fx.Amiya.SyncOrder.Core
         /// 同步发生改变的订单
         /// </summary>
         /// <returns></returns>
-        Task<List<TikTokOrder>> TranslateTradesSoldChangedOrders(DateTime startDate, DateTime endDate, string belongLiveAnchorId);
+        Task<List<TikTokOrder>> TranslateTradesSoldChangedOrders(DateTime startDate, DateTime endDate, int belongLiveAnchorId);
 
 
 
@@ -45,7 +45,7 @@ namespace Fx.Amiya.SyncOrder.Core
         /// </summary>
         /// <param name="orderId"></param>
         /// <returns></returns>
-        Task<List<TikTokOrder>> TranslateTradesSoldOrdersByOrderId(string orderId, string belongLiveAnchorId);
+        Task<List<TikTokOrder>> TranslateTradesSoldOrdersByOrderId(string orderId, int belongLiveAnchorId);
 
 
     }

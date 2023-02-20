@@ -54,7 +54,7 @@ namespace Fx.Amiya.SyncOrder.TikTok
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        public async Task<List<TikTokOrder>> TranslateTradesSoldChangedOrders(DateTime startDate, DateTime endDate, string belongLiveAnchorId)
+        public async Task<List<TikTokOrder>> TranslateTradesSoldChangedOrders(DateTime startDate, DateTime endDate, int belongLiveAnchorId)
         {
             int pageNum = 0;
             var tikTokAppInfo = await _tikTokAppInfoReader.GetTikTokAppInfo(belongLiveAnchorId);
@@ -312,7 +312,7 @@ namespace Fx.Amiya.SyncOrder.TikTok
             return start.AddSeconds(timestamp);
         }
 
-        public async Task<List<TikTokOrder>> TranslateTradesSoldOrdersByOrderId(string orderId, string belongLiveAnchorId)
+        public async Task<List<TikTokOrder>> TranslateTradesSoldOrdersByOrderId(string orderId, int belongLiveAnchorId)
         {
             try
             {

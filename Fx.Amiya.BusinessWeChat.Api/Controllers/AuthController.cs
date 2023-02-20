@@ -109,7 +109,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                     Token = identity.BuildJwtToken(jwtConfig.Key, jwtConfig.ExpireInSeconds / 60),
                     RefreshToken = identity.BuildRefreshToken(jwtConfig.Key, jwtConfig.RefreshTokenExpireInSeconds / 60),
                     DepartmentId = employee.DepartmentId,
-                    DepartmentName = employee.DepartmentName
+                    DepartmentName = employee.DepartmentName,
+                    ReadDataCenter = employee.ReadDataCenter
                 };
 
                 return ResultData<AmiyaEmployeeAccountVo>.Success().AddData("amiyaLogin", accountVo);
@@ -153,7 +154,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                     Token = identity.BuildJwtToken(jwtConfig.Key, jwtConfig.ExpireInSeconds / 60),
                     RefreshToken = identity.BuildRefreshToken(jwtConfig.Key, jwtConfig.RefreshTokenExpireInSeconds / 60),
                     DepartmentId = employee.DepartmentId,
-                    DepartmentName = employee.DepartmentName
+                    DepartmentName = employee.DepartmentName,
+                    ReadDataCenter = employee.ReadDataCenter
                 };
 
                 return ResultData<AmiyaEmployeeAccountVo>.Success().AddData("amiyaLoginByUserIdAndCode", accountVo);

@@ -145,9 +145,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         [Description("成交医院")]
         public string LastDealHospital { get; set; }
         /// <summary>
-        /// 面诊状态
+        /// 面诊类型
         /// </summary>
-        [Description("面诊状态")]
+        [Description("面诊类型")]
         public string ConsultationType { get; set; }
         /// <summary>
         /// 院方接诊人员

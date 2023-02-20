@@ -46,7 +46,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="endDate">登记结束日期</param>
         /// <param name="sendStartDate">派单开始日期</param>
         /// <param name="sendEndDate">派单结束日期</param>
-        /// <param name="consultationType">面诊状态（空查询所有）</param>
+        /// <param name="consultationType">面诊类型（空查询所有）</param>
         /// <param name="isToHospital">是否到院（空查询所有）</param>
         /// <param name="tohospitalStartDate">到院开始时间</param>
         /// <param name="toHospitalEndDate">到院结束时间</param>

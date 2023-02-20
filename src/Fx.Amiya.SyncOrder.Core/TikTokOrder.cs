@@ -56,7 +56,7 @@ namespace Fx.Amiya.SyncOrder.Core
         /// <summary>
         /// 归属主播id
         /// </summary>
-        public string BelongLiveAnchorId { get; set; }
+        public int BelongLiveAnchorId { get; set; }
 
     }
 }

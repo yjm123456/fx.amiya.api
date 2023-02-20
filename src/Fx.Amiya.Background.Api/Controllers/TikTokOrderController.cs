@@ -100,7 +100,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("tikTokOrderLlistWithPage")]
-        public async Task<ResultData<FxPageInfo<TikTokOrderInfoVo>>> GetTikTokOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, string keyword, string belongLiveAnchorId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<TikTokOrderInfoVo>>> GetTikTokOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, string keyword, int belongLiveAnchorId, int pageNum, int pageSize)
         {
             try
             {
@@ -155,7 +155,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="belongLiveAnchorId">归属主播id</param>
         /// <returns></returns>
         [HttpGet("decryptUserInfo")]
-        public async Task<ResultData> DecryptUserInfo(string orderid, string belongLiveAnchorId)
+        public async Task<ResultData> DecryptUserInfo(string orderid, int belongLiveAnchorId)
         {
             var info = dalTikTokOrderInfo.GetAll().Where(e => e.Id == orderid).Include(e => e.TikTokUserInfo).SingleOrDefault();
             if (!string.IsNullOrEmpty(info.Phone))

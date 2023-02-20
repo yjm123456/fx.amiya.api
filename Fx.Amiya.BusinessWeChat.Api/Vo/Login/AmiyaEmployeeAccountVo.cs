@@ -18,6 +18,10 @@ namespace Fx.Amiya.BusinessWechat.Api.Vo.Login
         public string RefreshToken { get; set; }
         public int DepartmentId { get; set; }
         public string DepartmentName { get; set; }
+        /// <summary>
+        /// 读取数据中心
+        /// </summary>
+        public bool ReadDataCenter { get; set; }
         public string UserId { get; set; }
         public string Code { get; set; }
     }

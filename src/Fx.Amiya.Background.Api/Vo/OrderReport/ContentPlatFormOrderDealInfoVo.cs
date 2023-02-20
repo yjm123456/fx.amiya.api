@@ -19,9 +19,9 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("归属月份")]
         public string BelongMonth { get; set; }
         /// <summary>
-        /// 面诊状态
+        /// 面诊类型
         /// </summary>
-        [Description("面诊状态")]
+        [Description("面诊类型")]
         public string ConsultationTypeText { get; set; }
         /// <summary>
         /// 客户昵称

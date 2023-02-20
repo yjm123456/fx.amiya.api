@@ -82,6 +82,6 @@ namespace Fx.Amiya.Dto.TikTokOrder
         /// <summary>
         /// 归属主播ID
         /// </summary>
-        public string BelongLiveAnchorId { get; set; }
+        public int BelongLiveAnchorId { get; set; }
     }
 }

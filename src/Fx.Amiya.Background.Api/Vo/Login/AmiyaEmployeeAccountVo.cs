@@ -21,5 +21,6 @@ namespace Fx.Amiya.Background.Api.Vo.Login
         public string RefreshToken { get; set; }
         public int DepartmentId { get; set; }
         public string DepartmentName { get; set; }
+        public bool ReadDataCenter { get; set; }
     }
 }

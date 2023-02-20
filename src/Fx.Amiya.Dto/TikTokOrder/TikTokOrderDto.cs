@@ -37,7 +37,7 @@ namespace Fx.Amiya.Dto.TikTokOrder
         public DateTime? WriteOffDate { get; set; }
         public byte AppType { get; set; }
         public string AppTypeText { get; set; }
-        public string BelongLiveAnchorId { get; set; }
+        public int BelongLiveAnchorId { get; set; }
         public string BelongLiveAnchorName { get; set; }
         public long? OrderType { get; set; }
         /// <summary>

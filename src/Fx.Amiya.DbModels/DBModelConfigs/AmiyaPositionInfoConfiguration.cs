@@ -20,6 +20,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.UpdateBy).HasColumnName("update_by").HasColumnType("int").IsRequired(false);
             builder.Property(t => t.IsDirector).HasColumnName("is_director").HasColumnType("bit").IsRequired();
             builder.Property(t => t.DepartmentId).HasColumnName("department_id").HasColumnType("int").IsRequired();
+            builder.Property(t => t.ReadDataCenter).HasColumnName("read_datacenter").HasColumnType("bit").IsRequired();
 
 
             builder.HasOne(t => t.UpdateByAmiyaEmployee).WithMany(t => t.UpdateByAmiyaPositionInfoList).HasForeignKey(t=>t.UpdateBy);

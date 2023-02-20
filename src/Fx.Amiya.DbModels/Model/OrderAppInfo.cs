@@ -16,7 +16,7 @@ namespace Fx.Amiya.DbModels.Model
         public DateTime ExpireDate { get; set; }
         public string RefreshToken { get; set; }
 
-        public string BelongLiveAnchor { get; set; }
+        public int BelongLiveAnchor { get; set; }
 
     }
 }

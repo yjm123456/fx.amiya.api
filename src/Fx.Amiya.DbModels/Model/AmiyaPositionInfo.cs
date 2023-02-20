@@ -13,6 +13,7 @@ namespace Fx.Amiya.DbModels.Model
         public int? UpdateBy { get; set; }
         public bool IsDirector { get; set; }
         public int DepartmentId { get; set; }
+        public bool ReadDataCenter { get; set; }
 
         public AmiyaEmployee UpdateByAmiyaEmployee { get; set; }
 

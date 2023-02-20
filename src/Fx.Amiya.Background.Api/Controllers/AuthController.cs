@@ -58,7 +58,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var employee = await amiyaEmployeeService.LoginAsync(userName.Trim(), password.Trim().GetMD5String());
 
                 var identity = new FxInternalEmployeeIdentity().CreateFxIdentity(employee.Id.ToString());
-                
+
                 AmiyaEmployeeAccountVo accountVo = new AmiyaEmployeeAccountVo()
                 {
                     EmployeeId = employee.Id,
@@ -70,7 +70,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                     Token = identity.BuildJwtToken(jwtConfig.Key, jwtConfig.ExpireInSeconds / 60),
                     RefreshToken = identity.BuildRefreshToken(jwtConfig.Key, jwtConfig.RefreshTokenExpireInSeconds / 60),
                     DepartmentId = employee.DepartmentId,
-                    DepartmentName = employee.DepartmentName
+                    DepartmentName = employee.DepartmentName,
+                    ReadDataCenter = employee.ReadDataCenter
                 };
 
                 return ResultData<AmiyaEmployeeAccountVo>.Success().AddData("token", accountVo);

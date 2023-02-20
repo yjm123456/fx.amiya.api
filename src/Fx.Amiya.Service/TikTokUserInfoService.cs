@@ -56,7 +56,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<TikTokUserDto> DecryptUserInfoAsync(string userinfoid, string orderid, string belongLiveAnchorId)
+        public async Task<TikTokUserDto> DecryptUserInfoAsync(string userinfoid, string orderid, int belongLiveAnchorId)
         {
             var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
             var host = "https://openapi-fxg.jinritemai.com";
@@ -123,7 +123,7 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task<TikTokUserDto> DecryptUserInfoByOrderIdAsync(string orderid, string cipherName, string cipherPhone, string belongLiveAnchorId)
+        public async Task<TikTokUserDto> DecryptUserInfoByOrderIdAsync(string orderid, string cipherName, string cipherPhone, int belongLiveAnchorId)
         {
             var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
             var host = "https://openapi-fxg.jinritemai.com";

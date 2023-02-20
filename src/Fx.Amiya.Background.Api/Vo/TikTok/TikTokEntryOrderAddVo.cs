@@ -82,6 +82,6 @@ namespace Fx.Amiya.Background.Api.Vo.TikTok
         /// <summary>
         /// 归属主播ID
         /// </summary>
-        public string BelongLiveAnchorId { get; set; }
+        public int BelongLiveAnchorId { get; set; }
     }
 }

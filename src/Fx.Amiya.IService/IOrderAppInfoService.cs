@@ -38,7 +38,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<OrderAppInfoDto> GetBusinessWeChatAppInfo();
-        Task<OrderAppInfoDto> GetTikTokAppInfo(string belongLiveAnchor);
+        Task<OrderAppInfoDto> GetTikTokAppInfo(int belongLiveAnchor);
 
     }
 }

@@ -15,6 +15,6 @@ namespace Fx.Amiya.Dto.OrderAppInfo
         public byte AppType { get; set; }
         public DateTime ExpireDate { get; set; }
         public string RefreshToken { get; set; }
-        public string BelongLiveAnchorId { get; set; }
+        public int BelongLiveAnchorId { get; set; }
     }
 }

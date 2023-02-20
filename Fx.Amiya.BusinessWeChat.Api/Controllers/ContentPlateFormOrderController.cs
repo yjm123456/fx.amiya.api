@@ -490,6 +490,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <param name="close"></param>
         /// <returns></returns>
         [HttpPost("colseRepeatProfundityOrder")]
+        [FxInternalAuthorize]
         public async Task<ResultData> CloseRepeatProfundityOrder(CloseRepeatProfundityOrderVo close)
         {
             await _orderService.UpdateContentPalteformRepeaterOrderStatusAsync(close.ContentPlateFormId);
@@ -638,6 +639,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getOrderConsultationTypeList")]
+        [FxInternalAuthorize]
         public ResultData<List<BaseKeyAndValueVo>> GetOrderConsultationTypeList()
         {
             var orderTypes = from d in _orderService.GetOrderConsultationTypeList()
@@ -653,6 +655,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// 获取内容平台订单类型
         /// </summary>
         /// <returns></returns>
+        [FxInternalAuthorize]
         [HttpGet("contentPlateFormOrderTypeList")]
         public ResultData<List<BaseKeyAndValueVo>> GetContentPlateFormOrderTypeList()
         {
@@ -669,6 +672,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// 获取内容平台订单状态
         /// </summary>
         /// <returns></returns>
+        [FxInternalAuthorize]
         [HttpGet("contentPlateFormOrderStatusList")]
         public ResultData<List<BaseKeyAndValueVo>> GetContentPlateFormOrderStatusList()
         {
@@ -686,6 +690,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// 获取内容平台订单来源
         /// </summary>
         /// <returns></returns>
+        [FxInternalAuthorize]
         [HttpGet("contentPlateFormOrderSourceList")]
         public ResultData<List<BaseKeyAndValueVo>> GetContentPlateFormOrderSourceList()
         {
@@ -702,6 +707,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// 获取内容平台订单到院状态
         /// </summary>
         /// <returns></returns>
+        [FxInternalAuthorize]
         [HttpGet("contentPlateFormOrderToHospitalTypeList")]
         public ResultData<List<BaseKeyAndValueVo>> GetContentPlateFormOrderToHospitalTypeList()
         {

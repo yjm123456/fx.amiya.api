@@ -21,6 +21,7 @@ namespace Fx.Amiya.Dto.AmiyaEmployee
         public string DepartmentName { get; set; }
         public string UserId { get; set; }
         public string Code { get; set; }
+        public bool ReadDataCenter { get; set; }
 
         public List<int> LiveAnchorIds { get; set; }
     }

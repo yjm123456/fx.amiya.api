@@ -23,9 +23,9 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("归属客服")]
         public string BelongEmpName { get; set; }
         /// <summary>
-        /// 面诊状态
+        /// 面诊类型
         /// </summary>
-        [Description("面诊状态")]
+        [Description("面诊类型")]
         public string ConsultationTypeText { get; set; }
 
         /// <summary>

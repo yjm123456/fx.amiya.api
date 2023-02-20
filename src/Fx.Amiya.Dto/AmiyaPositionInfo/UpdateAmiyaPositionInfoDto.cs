@@ -13,5 +13,9 @@ namespace Fx.Amiya.Dto.AmiyaPositionInfo
         /// 是否为管理员
         /// </summary>
         public bool IsDirector { get; set; }
+        /// <summary>
+        /// 是否可查看数据中心
+        /// </summary>
+        public bool ReadDataCenter { get; set; }
     }
 }

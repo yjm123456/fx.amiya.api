@@ -20,6 +20,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
     /// </summary>
     [Route("[controller]")]
     [ApiController]
+    [FxInternalAuthorize]
     public class OrderCheckPictureController : ControllerBase
     {
         private IOrderCheckPictureService orderCheckPictureService;

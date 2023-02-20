@@ -150,7 +150,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="hospitalDepartmentId">科室id</param>
         /// <param name="orderStatus">订单状态</param>
         /// <param name="appointmentHospital">预约医院</param>
-        /// <param name="consultationType">面诊状态</param>
+        /// <param name="consultationType">面诊类型</param>
         /// <param name="contentPlateFormId">内容平台</param>
         /// <param name="orderSource">订单来源(-1查询全部)</param>
         /// <param name="belongEmpId">归属客服id</param>
@@ -1190,10 +1190,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         #region 枚举下拉框
 
         /// <summary>
-        /// 获取内容平台面诊状态
+        /// 获取内容平台面诊类型
         /// </summary>
         /// <returns></returns>
         [HttpGet("getOrderConsultationTypeList")]
+        [FxInternalAuthorize]
         public ResultData<List<ContentPlateFormOrderTypeVo>> GetOrderConsultationTypeList()
         {
             var orderTypes = from d in _orderService.GetOrderConsultationTypeList()
@@ -1210,6 +1211,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("contentPlateFormOrderTypeList")]
+        [FxInternalAuthorize]
         public ResultData<List<ContentPlateFormOrderTypeVo>> GetContentPlateFormOrderTypeList()
         {
             var orderTypes = from d in _orderService.GetOrderTypeList()
@@ -1226,6 +1228,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("contentPlateFormOrderStatusList")]
+        [FxInternalAuthorize]
         public ResultData<List<ContentPlateFormOrderStatusVo>> GetContentPlateFormOrderStatusList()
         {
             var orderStatus = from d in _orderService.GetOrderStatusList()
@@ -1242,6 +1245,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="contentPlateFormId"></param>
         /// <returns></returns>
         [HttpPost("colseRepeatProfundityOrder")]
+        [FxInternalAuthorize]
         public async Task<ResultData> CloseRepeatProfundityOrder(CloseRepeatProfundityOrderVo  close) {
             await _orderService.UpdateContentPalteformRepeaterOrderStatusAsync(close.ContentPlateFormId);
             return ResultData.Success();
@@ -1252,6 +1256,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 获取内容平台订单来源
         /// </summary>
         /// <returns></returns>
+        [FxInternalAuthorize]
         [HttpGet("contentPlateFormOrderSourceList")]
         public ResultData<List<ContentPlateFormOrderSourceVo>> GetContentPlateFormOrderSourceList()
         {
@@ -1268,6 +1273,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 获取内容平台订单到院状态
         /// </summary>
         /// <returns></returns>
+        [FxInternalAuthorize]
         [HttpGet("contentPlateFormOrderToHospitalTypeList")]
         public ResultData<List<ContentPlateFormOrderTypeVo>> GetContentPlateFormOrderToHospitalTypeList()
         {

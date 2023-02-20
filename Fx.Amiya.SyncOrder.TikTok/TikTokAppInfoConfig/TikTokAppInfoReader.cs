@@ -20,7 +20,7 @@ namespace Fx.Amiya.SyncOrder.TikTok.TikTokAppInfoConfig
         }
 
 
-        public async Task<TikTokAppInfo> GetTikTokAppInfo(string belongLiveAnchor)
+        public async Task<TikTokAppInfo> GetTikTokAppInfo(int belongLiveAnchor)
         {
             var tikTokAppInfoDto = await orderAppInfoService.GetTikTokAppInfo(belongLiveAnchor);
             TikTokAppInfo tikTokAppInfo = new TikTokAppInfo();

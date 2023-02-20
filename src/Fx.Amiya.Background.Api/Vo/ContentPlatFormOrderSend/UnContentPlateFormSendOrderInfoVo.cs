@@ -31,7 +31,7 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// </summary>
         public string ThumbPictureUrl { get; set; }
         /// <summary>
-        /// 面诊状态文本
+        /// 面诊类型文本
         /// </summary>
         public string ConsultationTypeText { get; set; }
 

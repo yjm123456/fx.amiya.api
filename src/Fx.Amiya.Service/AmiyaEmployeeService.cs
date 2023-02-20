@@ -64,7 +64,7 @@ namespace Fx.Amiya.Service
                 employeeDto.DepartmentId = employee.AmiyaPositionInfo.DepartmentId;
                 employeeDto.DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name;
                 employeeDto.UserId = employee.UserId;
-
+                employeeDto.ReadDataCenter = employee.AmiyaPositionInfo.ReadDataCenter;
                 return employeeDto;
             }
             catch (Exception ex)
@@ -101,7 +101,7 @@ namespace Fx.Amiya.Service
                 employeeDto.IsCustomerService = employee.IsCustomerService;
                 employeeDto.DepartmentId = employee.AmiyaPositionInfo.DepartmentId;
                 employeeDto.DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name;
-
+                employeeDto.ReadDataCenter = employee.AmiyaPositionInfo.ReadDataCenter;
 
                 return employeeDto;
             }

@@ -23,7 +23,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.AppType).HasColumnName("app_type").HasColumnType("tinyint").IsRequired();
             builder.Property(t => t.ExpireDate).HasColumnName("expire_date").HasColumnType("datetime").IsRequired();
             builder.Property(t => t.RefreshToken).HasColumnName("refresh_token").HasColumnType("varchar(200)").IsRequired();
-            builder.Property(t => t.BelongLiveAnchor).HasColumnName("belong_liveanchor").HasColumnType("varchar(50)").IsRequired(false);
+            builder.Property(t => t.BelongLiveAnchor).HasColumnName("belong_liveanchor").HasColumnType("int").IsRequired(false);
         }
     }
 }
