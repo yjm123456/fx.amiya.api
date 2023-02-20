@@ -404,6 +404,7 @@ namespace Fx.Amiya.Service
                 appointmentInfo.Remark = addDto.Remark;
                 appointmentInfo.Status = (byte)AppointmentStatusType.Process;
                 appointmentInfo.HospitalId = addDto.HospitalId;
+                appointmentInfo.AppointArea = addDto.AppointArea;
                 appointmentInfo.ItemInfoName = addDto.ItemInfoName;
 
                 await dalAppointmentInfo.AddAsync(appointmentInfo, true);
@@ -492,7 +493,7 @@ namespace Fx.Amiya.Service
                             Phone = d.Phone,
                             Remark = d.Remark,
                             ItemInfoName = d.ItemInfoName,
-
+                            AppointArea=d.AppointArea,
                             HospitalInfo = new AppointmentHospitalDto
                             {
                                 HospitalId = d.HospitalId,

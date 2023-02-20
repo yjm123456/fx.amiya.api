@@ -19,6 +19,10 @@ namespace Fx.Amiya.DbModels.Model
         public byte Status { get; set; }
         public int HospitalId { get; set; }
         /// <summary>
+        /// 预约地区
+        /// </summary>
+        public string AppointArea { get; set; }
+        /// <summary>
         /// 项目名称
         /// </summary>
         public string ItemInfoName { get; set; }

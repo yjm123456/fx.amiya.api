@@ -260,7 +260,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 .Where(e => exchangeType == null || e.ExchangeType == exchangeType)
                 .Where(e => categoryId == null || e.CategoryId == categoryId)
                 .Where(e => valid == null || e.Valid == valid);
-
+                
             var goodsInfoList = from d in await goodsInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync()
                                 select new GoodsInfoForListDto
                                 {

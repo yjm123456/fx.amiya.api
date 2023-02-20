@@ -136,7 +136,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 addDto.CreateDate = DateTime.Now;
                 addDto.Phone = addVo.Phone;
                 addDto.Remark = addVo.Remark;
-                addDto.HospitalId = addVo.HospitalId;
+                addDto.HospitalId = 1;
+                addDto.AppointArea = addVo.AppointArea;
                 addDto.ItemInfoName = addVo.ItemInfoName;
 
                 int appointmentId = await appointmentService.AddAsync(addDto, customerId);
@@ -179,6 +180,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                       Remark = d.Remark,
                                       ItemInfoName = d.ItemInfoName,
                                       ItemInfopicUrl = _goodsDemandService.GetByNameAsync(d.ItemInfoName).Result.ThumbPictureUrl,
+                                      AppointArea = d.AppointArea,
                                       HospitalInfo = new AppointmentHospitalVo
                                       {
                                           HospitalId = d.HospitalInfo.HospitalId,

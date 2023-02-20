@@ -48,6 +48,10 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Appointment
         /// 医院编号
         /// </summary>
         public int HospitalId { get; set; }
+        /// <summary>
+        /// 预约地区
+        /// </summary>
+        public string AppointArea { get; set; }
 
         /// <summary>
         /// 项目名称

@@ -520,9 +520,9 @@ namespace Fx.Amiya.Service
                     //    x.BelongEmpName = customerService.Name;
                     //}
 
-                    if (x.BelongLiveAnchorId!=0)
+                    if (x.BelongLiveAnchorId!=0&&x.BelongLiveAnchorId.HasValue)
                     {
-                        var liveAnchorInfoService = await liveAnchorService.GetByIdAsync(x.BelongLiveAnchorId);
+                        var liveAnchorInfoService = await liveAnchorService.GetByIdAsync(x.BelongLiveAnchorId.Value);
                         x.BelongLiveAnchorName = liveAnchorInfoService.Name;
                     }
                 }

@@ -56,6 +56,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 子公司维度
         /// </summary>
+        /// <param name="companyId">公司id</param>
+        /// <param name="hospitalId">医院id</param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("subsidiaryBoard")]
         public async Task<ResultData<FxPageInfo<FinancialHospitalBoardVo>>> GetSubsidiaryBoard(string companyId, int? hospitalId, DateTime? startDate, DateTime? endDate, int pageNum, int pageSize) {
@@ -103,10 +109,12 @@ namespace Fx.Amiya.Background.Api.Controllers
             }).OrderBy(e=>e.DealPrice).ToList();
             return ResultData<List<LiveAnchorBoardVo>>.Success().AddData("data", resultList);
         }
-        
+
         /// <summary>
         /// 客服业绩
         /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
         /// <returns></returns>
         [HttpGet("customerServiceBoardData")]
         public async Task<ResultData<List<CustomerServiceBoardVo>>> GetCustomerServiceBoard(DateTime? startDate, DateTime? endDate) {

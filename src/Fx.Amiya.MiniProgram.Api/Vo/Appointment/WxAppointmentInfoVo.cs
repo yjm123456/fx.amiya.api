@@ -64,6 +64,10 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Appointment
         public string ItemInfopicUrl { get; set; }
 
         public AppointmentHospitalVo HospitalInfo { get; set; }
+        /// <summary>
+        /// 预约地址
+        /// </summary>
+        public string AppointArea { get; set; }
 
 
     }
