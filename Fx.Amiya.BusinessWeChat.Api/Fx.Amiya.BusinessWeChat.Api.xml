@@ -128,6 +128,24 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.BindCustomerServiceController">
+            <summary>
+            绑定客服板块数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.BindCustomerServiceController.#ctor(Fx.Amiya.IService.IBindCustomerServiceService,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="bindCustomerService"></param>
+            <param name="httpContextAccessor"></param>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.BindCustomerServiceController.GetMyCustomerAsync">
+            <summary>
+            获取我的客户（放在前端缓存中）
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController">
             <summary>
             内容平台订单模块
@@ -389,6 +407,62 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormOrderDealInfoController">
+            <summary>
+            订单成交情况数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormOrderDealInfoController.GetDealInfoAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Boolean},System.Int32,System.Int32)">
+            <summary>
+            获取成交情况列表
+            </summary>
+            <param name="startDate">登记开始日期</param>
+            <param name="endDate">登记结束日期</param>
+            <param name="sendStartDate">派单开始日期</param>
+            <param name="sendEndDate">派单结束日期</param>
+            <param name="consultationType">面诊类型（空查询所有）</param>
+            <param name="isToHospital">是否到院（空查询所有）</param>
+            <param name="tohospitalStartDate">到院开始时间</param>
+            <param name="toHospitalEndDate">到院结束时间</param>
+            <param name="toHospitalType">到院类型（空查询所有）</param>
+            <param name="isDeal">是否成交（空查询所有）</param>
+            <param name="dealStartDate">成交开始时间</param>
+            <param name="dealEndDate">成交结束时间</param>
+            <param name="lastDealHospitalId">最终成交医院id（空查询所有）</param>
+            <param name="isAccompanying">是否陪诊（空查询所有）</param>
+            <param name="isOldCustomer">新老客业绩（空查询所有）</param>
+            <param name="minAddOrderPrice">最小下单金额（空查询所有）</param>
+            <param name="maxAddOrderPrice">最大下单金额（空查询所有）</param>
+            <param name="CheckState">审核状态（空查询所有）</param>
+            <param name="isReturnBakcPrice">是否回款（空查询所有）</param>
+            <param name="returnBackPriceStartDate">回款开始时间</param>
+            <param name="returnBackPriceEndDate">回款结束时间</param>
+            <param name="customerServiceId">跟进人员（空查询所有，0查医院）</param>
+            <param name="keyWord">关键字</param>
+            <param name="createBillCompanyId">开票公司</param>
+            <param name="isCreateBill">是否开票</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormOrderDealInfoController.GetTodayToHospitalInfoAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.String,System.Int32,System.Int32)">
+            <summary>
+            获取今日到院订单
+            </summary>
+            <param name="startDate">登记开始日期</param>
+            <param name="endDate">登记结束日期</param>
+            <param name="isDeal">是否成交（空查询所有）</param>
+            <param name="lastDealHospitalId">最终成交医院id（空查询所有）</param>
+            <param name="keyWord">关键词（支持模糊查询订单编号，手机号，成交编号）</param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.CustomerController">
+            <summary>
+            客户资料板块数据接口
+            </summary>
+        </member>
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.CustomerController.GetBaseAndBindCustomerInfoByPhoneAsync(System.String)">
             <summary>
             根据加密电话查询客户资料
@@ -601,6 +675,26 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Base.BaseKeyAndValueVo.Name">
             <summary>
             名称
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService.MyCustomerInfoVo">
+            <summary>
+            "我的客户"基础类
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService.MyCustomerInfoVo.MyCustomerCount">
+            <summary>
+            我的客户
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService.MyCustomerInfoVo.SevenDaysInsertCount">
+            <summary>
+            近期新增（七日内）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService.MyCustomerInfoVo.TodayInsertCount">
+            <summary>
+            今日新增
             </summary>
         </member>
         <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.CloseRepeatProfundityOrderVo">
@@ -1651,6 +1745,66 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.CreatBillCompany">
             <summary>
             开票公司
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealSimpleInfoVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealSimpleInfoVo.ContentPlatFormOrderId">
+            <summary>
+            订单编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealSimpleInfoVo.CreateDate">
+            <summary>
+            登记时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealSimpleInfoVo.IsRepeatProfundityOrder">
+            <summary>
+            是否是重单可深度订单
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealSimpleInfoVo.Phone">
+            <summary>
+            客户手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealSimpleInfoVo.IsDeal">
+            <summary>
+            是否成交
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealSimpleInfoVo.DealPrice">
+            <summary>
+            成交金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealSimpleInfoVo.IsOldCustomer">
+            <summary>
+            新客/老客
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealSimpleInfoVo.ConsultationTypeText">
+            <summary>
+            面诊状态文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealSimpleInfoVo.ToHospitalTypeText">
+            <summary>
+            到院类型文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealSimpleInfoVo.TohospitalDate">
+            <summary>
+            到院时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealSimpleInfoVo.DealDate">
+            <summary>
+            成交时间
             </summary>
         </member>
         <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderInfoVo">

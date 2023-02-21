@@ -21,6 +21,9 @@ using Fx.Amiya.BusinessWeChat.Api.Vo.Base;
 
 namespace Fx.Amiya.BusinessWechat.Api.Controllers
 {
+    /// <summary>
+    /// 客户资料板块数据接口
+    /// </summary>
     [Route("[controller]")]
     [ApiController]
     [FxInternalAuthorize]
@@ -80,5 +83,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             customerSimpleInfoVo.TagList = customer.TagList.Select(e => new BaseKeyAndValueVo { Id = e.Id, Name = e.Name }).ToList();
             return ResultData<CustomerBaseDetailInfoVo>.Success().AddData("customer", customerSimpleInfoVo);
         }
+
+
     }
 }

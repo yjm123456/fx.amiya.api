@@ -20,12 +20,14 @@ namespace Fx.Amiya.Service
         private IDalBindCustomerService dalBindCustomerService;
         private IUnitOfWork unitOfWork;
         private IDalCustomerInfo dalCustomerInfo;
+        private IDalAmiyaEmployee _dalAmiyaEmployee;
         private IAmiyaHospitalDepartmentService amiyaHospitalDepartmentService;
         private IDalOrderInfo dalOrderInfo;
         private IDalConfig dalConfig;
         private IItemInfoService itemInfoService;
         public BindCustomerServiceService(IDalBindCustomerService dalBindCustomerService,
             IUnitOfWork unitOfWork,
+            IDalAmiyaEmployee dalAmiyaEmployee,
             IDalCustomerInfo dalCustomerInfo,
             IAmiyaHospitalDepartmentService amiyaHospitalDepartmentService,
             IDalOrderInfo dalOrderInfo,
@@ -34,6 +36,7 @@ namespace Fx.Amiya.Service
         {
             this.dalBindCustomerService = dalBindCustomerService;
             this.unitOfWork = unitOfWork;
+            _dalAmiyaEmployee = dalAmiyaEmployee;
             this.itemInfoService = itemInfoService;
             this.dalCustomerInfo = dalCustomerInfo;
             this.amiyaHospitalDepartmentService = amiyaHospitalDepartmentService;
@@ -156,6 +159,26 @@ namespace Fx.Amiya.Service
             }
             catch (Exception err)
             { return new BindCustomerServiceDto(); }
+
+        }
+
+        public async Task<MyCustomerInfoDto> GetCustomerCountByEmployeeIdAsync(int employeeId)
+        {
+            try
+            {
+                var bindCustomerServiceInfo = await dalBindCustomerService.GetAll().ToListAsync();
+                var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
+                bindCustomerServiceInfo = bindCustomerServiceInfo.Where(e => e.CustomerServiceId == employeeId).ToList();
+                //if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
+                //{ }
+                MyCustomerInfoDto result = new MyCustomerInfoDto();
+                result.MyCustomerCount = bindCustomerServiceInfo.Count();
+                result.SevenDaysInsertCount = bindCustomerServiceInfo.Where(x => x.CreateDate > DateTime.Now.Date.AddDays(-7)).Count();
+                result.TodayInsertCount = bindCustomerServiceInfo.Where(x => x.CreateDate > DateTime.Now.Date && x.CreateDate <= DateTime.Now.Date.AddDays(1)).Count();
+                return result;
+            }
+            catch (Exception err)
+            { return new MyCustomerInfoDto(); }
 
         }
 

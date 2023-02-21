@@ -34,7 +34,7 @@ namespace Fx.Amiya.Service
         private IUnitOfWork unitOfWork;
         private IDalRecommandDocumentSettle dalRecommandDocumentSettle;
         private IDalCompanyBaseInfo dalCompanyBaseInfo;
-      
+
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
             ICompanyBaseInfoService companyBaseInfoService,
@@ -59,6 +59,104 @@ namespace Fx.Amiya.Service
             this.dalRecommandDocumentSettle = dalRecommandDocumentSettle;
             this.dalCompanyBaseInfo = dalCompanyBaseInfo;
         }
+
+        /// <summary>
+        /// 获取简易的到院订单
+        /// </summary>
+        /// <param name="startDate">登记开始日期</param>
+        /// <param name="endDate">登记结束日期</param>
+        /// <param name="isDeal">是否成交（空查询所有）</param>
+        ///// <param name="dealStartDate">成交开始时间</param>
+        ///// <param name="dealEndDate">成交结束时间</param>
+        /// <param name="lastDealHospitalId">最终成交医院id（空查询所有）</param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetSimpleOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, bool? isDeal, int? lastDealHospitalId, string keyWord, int employeeId, int pageNum, int pageSize)
+        {
+            var config = await wxAppConfigService.GetCallCenterConfig();
+            try
+            {
+                var dealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(z => z.ContentPlatformOrderSendList) select d;
+
+                var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
+                if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
+                {
+                    dealInfo = from d in dealInfo
+                               where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0
+                               select d;
+                }
+                //财务录入数据只有管理员研发与财务能看到
+                if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16)
+                {
+
+                    dealInfo = from d in dealInfo
+                               where d.CreateBy != 61 && d.CreateBy != 80
+                               select d;
+                }
+                if (startDate != null)
+                {
+                    DateTime startrq = ((DateTime)startDate).Date;
+                    dealInfo = from d in dealInfo
+                               where (d.CreateDate >= startrq)
+                               select d;
+                }
+                if (endDate != null)
+                {
+                    DateTime enddate = ((DateTime)endDate).Date.AddDays(1);
+                    dealInfo = from d in dealInfo
+                               where (d.CreateDate < enddate)
+                               select d;
+                }
+
+
+                //if (isDeal == true)
+                //{
+                //    //if (!dealStartDate.HasValue || !dealEndDate.HasValue)
+                //    //{
+                //    //    throw new Exception("成交时间为必填项，请完整填写成交的开始时间与结束时间！");
+                //    //}
+                //    DateTime startrq = ((DateTime)dealStartDate).Date;
+                //    DateTime endrq = ((DateTime)dealEndDate).Date.AddDays(1);
+                //    dealInfo = from d in dealInfo
+                //               where (d.DealDate.HasValue)
+                //               && (d.DealDate.Value >= startrq && d.DealDate.Value < endrq)
+                //               && (d.IsDeal == true)
+                //               select d;
+                //}
+                var ContentPlatFOrmOrderDealInfo = from d in dealInfo
+                                                   where (string.IsNullOrEmpty(keyWord) || d.ContentPlatFormOrderId.Contains(keyWord) || d.ContentPlatFormOrder.Phone.Contains(keyWord) || d.Id.Contains(keyWord))
+                                                   && (!isDeal.HasValue || d.IsDeal == isDeal.Value)
+                                                   && (!lastDealHospitalId.HasValue || d.LastDealHospitalId.Value == lastDealHospitalId.Value)
+                                                   && (d.IsToHospital)
+                                                   select new ContentPlatFormOrderDealInfoDto
+                                                   {
+                                                       Id = d.Id,
+                                                       ContentPlatFormOrderId = d.ContentPlatFormOrderId,
+                                                       CreateDate = d.CreateDate,
+                                                       IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
+                                                       Phone = ServiceClass.GetIncompletePhone(d.ContentPlatFormOrder.Phone),
+                                                       IsDeal = d.IsDeal,
+                                                       Price = d.Price,
+                                                       IsOldCustomer = d.IsOldCustomer,
+                                                       ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ContentPlatFormOrder.ConsultationType),
+                                                       ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
+                                                       ToHospitalDate = d.ToHospitalDate,
+                                                       DealDate = d.DealDate,
+                                                   };
+
+                FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
+                ContentPlatFOrmOrderDealInfoPageInfo.TotalCount = await ContentPlatFOrmOrderDealInfo.CountAsync();
+                ContentPlatFOrmOrderDealInfoPageInfo.List = await ContentPlatFOrmOrderDealInfo.OrderByDescending(x => x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+              
+                return ContentPlatFOrmOrderDealInfoPageInfo;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         /// <summary>
         /// 获取成交情况列表
         /// </summary>
@@ -90,7 +188,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId,string createBillCompanyId,bool? isCreateBill, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, string createBillCompanyId, bool? isCreateBill, int pageNum, int pageSize)
         {
             var config = await wxAppConfigService.GetCallCenterConfig();
             try
@@ -141,15 +239,17 @@ namespace Fx.Amiya.Service
                                where (d.ContentPlatFormOrder.SendDate < enddate)
                                select d;
                 }
-                if (!string.IsNullOrEmpty(createBillCompanyId)) {
+                if (!string.IsNullOrEmpty(createBillCompanyId))
+                {
                     dealInfo = from d in dealInfo
                                where d.BelongCompany == createBillCompanyId
                                select d;
                 }
-                if (isCreateBill != null) {
-                    dealInfo= from d in dealInfo
-                              where d.IsCreateBill == isCreateBill
-                              select d;
+                if (isCreateBill != null)
+                {
+                    dealInfo = from d in dealInfo
+                               where d.IsCreateBill == isCreateBill
+                               select d;
                 }
                 if (isToHospital == true)
                 {
@@ -248,8 +348,8 @@ namespace Fx.Amiya.Service
                                                        BelongLiveAnchor = d.ContentPlatFormOrder.LiveAnchor.Name,
                                                        ReconciliationDocumentsId = d.ReconciliationDocumentsId,
                                                        IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
-                                                       IsCreateBill=d.IsCreateBill,
-                                                       BelongCompany=d.BelongCompany
+                                                       IsCreateBill = d.IsCreateBill,
+                                                       BelongCompany = d.BelongCompany
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -261,7 +361,8 @@ namespace Fx.Amiya.Service
                     {
                         z.BelongCompany = "";
                     }
-                    else {
+                    else
+                    {
                         z.BelongCompany = dalCompanyBaseInfo.GetAll().Where(e => e.Id == z.BelongCompany).SingleOrDefault()?.Name;
                     }
                     if (z.LastDealHospitalId.HasValue)
@@ -498,8 +599,8 @@ namespace Fx.Amiya.Service
                                                        SystemUpdatePrice = d.SystemUpdatePrice,
                                                        SettlePrice = d.SettlePrice,
                                                        CheckRemark = d.CheckRemark,
-                                                       IsCreateBill=d.IsCreateBill,
-                                                       BelongCompany=d.BelongCompany,
+                                                       IsCreateBill = d.IsCreateBill,
+                                                       BelongCompany = d.BelongCompany,
                                                        IsReturnBackPrice = d.IsReturnBackPrice,
                                                        ReturnBackDate = d.ReturnBackDate,
                                                        ReturnBackPrice = d.ReturnBackPrice,
@@ -535,7 +636,7 @@ namespace Fx.Amiya.Service
                         var empInfo = await _amiyaEmployeeService.GetByIdAsync(z.CreateBy);
                         z.CreateByEmpName = empInfo.Name;
                     }
-                    if (z.IsCreateBill==true)
+                    if (z.IsCreateBill == true)
                     {
                         var belongCompanyInfo = await companyBaseInfoService.GetByIdAsync(z.BelongCompany);
                         z.BelongCompanyName = belongCompanyInfo.Name;
@@ -1657,15 +1758,16 @@ namespace Fx.Amiya.Service
         {
             var dealData = dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CreateBy == customerServiceId && e.CheckState == 2)
-                .GroupBy(e=>e.CreateBy)
-                .Select(e=>new CustomerServiceBoardDataDto {
+                .GroupBy(e => e.CreateBy)
+                .Select(e => new CustomerServiceBoardDataDto
+                {
                     CustomerServiceName = Convert.ToString(e.Key),
-                    DealPrice=e.Sum(item=>item.CheckPrice)?? 0m,
-                    TotalServicePrice=e.Sum(item=>item.SettlePrice)??0m,
-                    NewCustomerPrice=e.Sum(item=>item.IsOldCustomer==false?item.CheckPrice??0m:0m),
-                    NewCustomerServicePrice=e.Sum(item=>item.IsOldCustomer==false?item.SettlePrice??0m:0m),
-                    OldCustomerPrice=e.Sum(item => item.IsOldCustomer == true ? item.CheckPrice ?? 0m : 0m),
-                    OldCustomerServicePrice=e.Sum(item => item.IsOldCustomer == true ? item.SettlePrice ?? 0m : 0m)
+                    DealPrice = e.Sum(item => item.CheckPrice) ?? 0m,
+                    TotalServicePrice = e.Sum(item => item.SettlePrice) ?? 0m,
+                    NewCustomerPrice = e.Sum(item => item.IsOldCustomer == false ? item.CheckPrice ?? 0m : 0m),
+                    NewCustomerServicePrice = e.Sum(item => item.IsOldCustomer == false ? item.SettlePrice ?? 0m : 0m),
+                    OldCustomerPrice = e.Sum(item => item.IsOldCustomer == true ? item.CheckPrice ?? 0m : 0m),
+                    OldCustomerServicePrice = e.Sum(item => item.IsOldCustomer == true ? item.SettlePrice ?? 0m : 0m)
                 }).FirstOrDefault();
             if (dealData != null)
                 dealData.CustomerServiceName = await _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(customerServiceId)).Select(e => e.Name).FirstOrDefaultAsync();

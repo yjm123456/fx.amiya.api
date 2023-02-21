@@ -25,6 +25,13 @@ namespace Fx.Amiya.IService
         Task<BindCustomerServiceDto> GetByIdAsync(int id);
 
         /// <summary>
+        /// 获取我的客户
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        Task<MyCustomerInfoDto> GetCustomerCountByEmployeeIdAsync(int employeeId);
+
+        /// <summary>
         /// 根据手机号获取归属客服
         /// </summary>
         /// <param name="phone"></param>
@@ -46,7 +53,7 @@ namespace Fx.Amiya.IService
         /// <param name="phone"></param>
         /// <param name="Price"></param>
         /// <returns></returns>
-        Task UpdateConsumePriceAsync(string phone, decimal Price,int Channel, string newLiveAnchor, string newWeChatNo, string newContentPlatForm, int AllOrderCount);
+        Task UpdateConsumePriceAsync(string phone, decimal Price, int Channel, string newLiveAnchor, string newWeChatNo, string newContentPlatForm, int AllOrderCount);
 
         /// <summary>
         /// 扣除客户消费累计金额与订单数
@@ -62,7 +69,7 @@ namespace Fx.Amiya.IService
         /// <param name="phone"></param>
         /// <param name="Price"></param>
         /// <returns></returns>
-        Task UpdateConsumePriceAndLiveAnchorAsync(string phone, decimal Price, int Channel, int AllOrderCount,string LiveAnchorName);
+        Task UpdateConsumePriceAndLiveAnchorAsync(string phone, decimal Price, int Channel, int AllOrderCount, string LiveAnchorName);
 
     }
 }
