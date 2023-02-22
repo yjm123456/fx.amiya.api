@@ -22,7 +22,10 @@ namespace Fx.Amiya.Background.Api.Vo.Appointment
         /// </summary>
         [Required]
         public DateTime AppointmentDate { get; set; }
-
+        /// <summary>
+        /// 预约地区
+        /// </summary>
+        public string AppointArea{ get; set; }
         /// <summary>
         /// 星期
         /// </summary>
@@ -47,6 +50,7 @@ namespace Fx.Amiya.Background.Api.Vo.Appointment
         /// </summary>
         [Required]
         public string Phone { get; set; }
+        
 
     }
 }

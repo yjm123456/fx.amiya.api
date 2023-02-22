@@ -78,6 +78,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 goodsInfo.VisitCount = goodsInfoAdd.VisitCount;
                 goodsInfo.ShowSaleCount = goodsInfoAdd.ShowSaleCount;
                 goodsInfo.SaleCount = 0;
+                goodsInfo.Sort = goodsInfoAdd.Sort;
                 goodsInfo.GoodsDetail = new GoodsDetail()
                 {
                     GoodsDetailHtml = goodsInfoAdd.GoodsDetailHtml,
@@ -227,6 +228,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     MaxShowPrice = goodsInfo.MaxShowPrice,
                     MinShowPrice = goodsInfo.MinShowPrice,
                     ShowSaleCount = goodsInfo.ShowSaleCount,
+                    Sort=goodsInfo.Sort,
                     VisitCount = goodsInfo.VisitCount,
                     GoodsHospitalPrice = goodsHospitalPriceList,
                     GoodsStandardsPrice = goodsStandardsPrice,
@@ -259,7 +261,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 .Where(e => string.IsNullOrWhiteSpace(keyword) || e.Name.Contains(keyword) || e.SimpleCode.Contains(keyword) || e.Description.Contains(keyword))
                 .Where(e => exchangeType == null || e.ExchangeType == exchangeType)
                 .Where(e => categoryId == null || e.CategoryId == categoryId)
-                .Where(e => valid == null || e.Valid == valid);
+                .Where(e => valid == null || e.Valid == valid).OrderByDescending(e=>e.Sort);
                 
             var goodsInfoList = from d in await goodsInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync()
                                 select new GoodsInfoForListDto
@@ -294,7 +296,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
                                     MaxShowPrice = d.MaxShowPrice,
                                     VisitCount = d.VisitCount,
                                     ShowSaleCount = d.ShowSaleCount,
-                                    IsMember = d.GoodsMemberRankPriceList.Any()
+                                    IsMember = d.GoodsMemberRankPriceList.Any(),
+                                    Sort=d.Sort
                                 };
 
             FxPageInfo<GoodsInfoForListDto> goodsPageInfo = new FxPageInfo<GoodsInfoForListDto>();
@@ -385,6 +388,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
             goodsInfo.VisitCount = goodsInfoUpdate.VisitCount;
             goodsInfo.ShowSaleCount = goodsInfoUpdate.ShowSaleCount;
             goodsInfo.UpdatedDate = date;
+            goodsInfo.Sort = goodsInfoUpdate.Sort;
             goodsInfo.GoodsDetail = new GoodsDetail()
             {
                 Id = goodsInfoUpdate.GoodsDetailId,

@@ -92,6 +92,10 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.TmallOrder
         /// 抵扣金额
         /// </summary>
         public decimal DeductMoney { get; set; }
+        /// <summary>
+        /// 支付方式
+        /// </summary>
+        public int ExchangeType { get; set; }
 
     }
 

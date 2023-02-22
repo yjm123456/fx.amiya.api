@@ -112,6 +112,10 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         /// 限购数量
         /// </summary>
         public int? LimitBuyQuantity { get; set; }
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int Sort { get; set; }
 
         /// <summary>
         /// 规格价格

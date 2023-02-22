@@ -1987,6 +1987,21 @@ ALTER TABLE `amiyadb`.`tbl_order_app_info`
 CHANGE COLUMN `belong_liveanchor` `belong_liveanchor` INT NULL DEFAULT NULL ;
 
 
+------------------王健 2023-02-20 BEGIN--------------------------------------------
+
+-----预约医院添加预约信息
+ALTER TABLE `tbl_appointment_info`
+	ADD COLUMN `appoint_area` VARCHAR(200) NOT NULL AFTER `hospital_id`;
+
+
+-----商品信息添加排序
+
+ALTER TABLE `tbl_goods_info`
+	ADD COLUMN `sort` INT NOT NULL DEFAULT 0 AFTER `is_optional`;
+
+------------------王健 2023-02-20 END----------------------------------------------
+
+
 
 
 

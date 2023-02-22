@@ -123,6 +123,12 @@ namespace Fx.Amiya.Core.Dto.Goods
         /// 商品详情编号
         /// </summary>
         public int? GoodsDetailId { get; set; }
+
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int Sort { get; set; }
+
         /// <summary>
         /// 门店价格
         /// </summary>

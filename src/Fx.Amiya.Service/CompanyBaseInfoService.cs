@@ -44,7 +44,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<BaseKeyValueDto>> GetCompanyNameListAsync()
         {
-            return  dalCompanyBaseInfo.GetAll().OrderByDescending(e => e.CreateDate).Select(e => new BaseKeyValueDto
+            return  dalCompanyBaseInfo.GetAll().Where(e=>e.Valid==true).OrderByDescending(e => e.CreateDate).Select(e => new BaseKeyValueDto
             {
                 Key = e.Id,
                 Value = e.Name
@@ -112,7 +112,8 @@ namespace Fx.Amiya.Service
         public async Task DeleteAsync(string id)
         {
             var comapny = dalCompanyBaseInfo.GetAll().Where(e => e.Id == id).SingleOrDefault();
-            await dalCompanyBaseInfo.DeleteAsync(comapny,true);
+            comapny.Valid = false;
+            await dalCompanyBaseInfo.UpdateAsync(comapny,true);
         }
     }
 }

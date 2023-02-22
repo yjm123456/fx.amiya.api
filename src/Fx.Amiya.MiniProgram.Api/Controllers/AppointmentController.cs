@@ -136,7 +136,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 addDto.CreateDate = DateTime.Now;
                 addDto.Phone = addVo.Phone;
                 addDto.Remark = addVo.Remark;
-                addDto.HospitalId = 1;
+                addDto.HospitalId = 192;
                 addDto.AppointArea = addVo.AppointArea;
                 addDto.ItemInfoName = addVo.ItemInfoName;
 

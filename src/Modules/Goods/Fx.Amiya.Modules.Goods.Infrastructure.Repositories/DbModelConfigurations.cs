@@ -75,6 +75,7 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                 entity.Property(t => t.VisitCount).HasColumnName("visit_count").HasColumnType("int");
                 entity.Property(t => t.SaleCount).HasColumnName("sale_count").HasColumnType("int");
                 entity.Property(t => t.ShowSaleCount).HasColumnName("show_sale_count").HasColumnType("int");
+                entity.Property(t => t.Sort).HasColumnName("sort").HasColumnType("int");
 
                 entity.HasOne(t => t.GoodsCategory).WithMany(t => t.GoodsInfoList).HasForeignKey(t => t.CategoryId);
                 entity.HasOne(t => t.GoodsDetail).WithMany(t => t.GoodsInfoList).HasForeignKey(t => t.GoodsDetailId);

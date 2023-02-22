@@ -107,7 +107,10 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         public int? CreateBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public int? UpdateBy { get; set; }
-
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int Sort { get; set; }
         /// <summary>
         /// 轮播图数组
         /// </summary>

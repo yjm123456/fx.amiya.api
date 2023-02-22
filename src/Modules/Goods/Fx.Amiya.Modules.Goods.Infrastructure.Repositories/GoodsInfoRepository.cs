@@ -60,7 +60,8 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                 MinShowPrice = entity.MinShowPrice,
                 VisitCount = entity.VisitCount,
                 ShowSaleCount = entity.ShowSaleCount,
-                SaleCount = 0
+                SaleCount = 0,
+                Sort=entity.Sort
         };
         await freeSql.Insert<GoodsInfoDbModel>().AppendData(goodsInfo).ExecuteAffrowsAsync();
 
@@ -121,7 +122,7 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
             MinShowPrice = goodsInfo.MinShowPrice,
             ShowSaleCount = goodsInfo.ShowSaleCount,
             VisitCount = goodsInfo.VisitCount,
-
+            Sort=goodsInfo.Sort,
             GoodsDetail = goodsInfo.GoodsDetailId == null ? null : new GoodsDetail()
             {
                 Id = (int)goodsInfo.GoodsDetailId,
@@ -297,6 +298,7 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
             .Set(e => e.ShowSaleCount, entity.ShowSaleCount)
             .Set(e => e.VisitCount, entity.VisitCount)
             .Set(e => e.GoodsDetailId, detailId)
+            .Set(e=>e.Sort,entity.Sort)
             .Where(e => e.Id == entity.Id)
             .ExecuteAffrowsAsync();
 

@@ -74,6 +74,10 @@ namespace Fx.Amiya.Background.Api.Vo.Appointment
         /// 医院名称
         /// </summary>
         public string HospitalName { get; set; }
+        /// <summary>
+        /// 预约地区
+        /// </summary>
+        public string AppointArea { get; set; }
 
         /// <summary>
         /// 备注

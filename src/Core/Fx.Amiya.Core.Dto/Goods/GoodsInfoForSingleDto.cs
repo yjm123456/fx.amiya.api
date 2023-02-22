@@ -124,7 +124,10 @@ namespace Fx.Amiya.Core.Dto.Goods
         public DateTime? UpdatedDate { get; set; }
         public int? UpdateBy { get; set; }
         public string UpdateByName { get; set; }
-
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int Sort { get; set; }
         /// <summary>
         /// 轮播图数组
         /// </summary>

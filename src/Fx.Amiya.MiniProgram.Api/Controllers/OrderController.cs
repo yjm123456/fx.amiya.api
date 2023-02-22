@@ -168,6 +168,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             orderInfoResult.OrderType = (orderInfo.OrderType.HasValue) ? Convert.ToInt16(orderInfo.OrderType.Value) : 0;
             orderInfoResult.appType = orderInfo.AppType;
             orderInfoResult.AppointmentCity = orderInfo.AppointmentCity;
+            orderInfoResult.ExchangeType = orderInfo.ExchangeType ?? 10;
             if (orderInfo.AppointmentDate.HasValue)
             {
                 orderInfoResult.AppointmentDate = orderInfo.AppointmentDate.Value.ToString("yyyy-MM-dd");
@@ -210,7 +211,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         orderInfoResult.SinglePrice = orderInfo.ActualPayment;
                     }
                     orderInfoResult.ActualPayment = orderInfo.ActualPayment;
-
+                    if (orderInfo.ExchangeType == (byte)ExchangeType.PointAndMoney)
+                    {
+                        orderInfoResult.IntegrationQuantity = orderInfo.IntegrationQuantity;
+                    }
 
                 }
                 else
@@ -415,6 +419,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         [HttpPost]
         public async Task<ResultData<OrderAddResultVo>> AddOrderAsync(OrderAddVo orderAdd)
         {
+            if (orderAdd.ExchangeType != 0 && orderAdd.ExchangeType != 4)
+            {
+                throw new Exception("不支持的支付方式");
+            }
             var token = tokenReader.GetToken();
             var sessionInfo = sessionStorage.GetSession(token);
             string customerId = sessionInfo.FxCustomerId;
@@ -453,14 +461,18 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     }
                 }
                 var goodsInfo = await goodsInfoService.GetByIdAsync(item.GoodsId);
+                if (goodsInfo.ExchangeType != ExchangeType.Integration && goodsInfo.ExchangeType != ExchangeType.ThirdPartyPayment) throw new Exception("付款方式错误");
                 OrderInfoAddDto amiyaOrder = new OrderInfoAddDto();
                 if (goodsInfo.ExchangeType == ExchangeType.ThirdPartyPayment)
                 {
+                    if (orderAdd.ExchangeType != 4) throw new Exception("付款方式错误");
                     IsExistThirdPartPay = true;
+                    amiyaOrder.ExchangeType = (int)ExchangeType.HuiShouQian;
                 }
                 //积分商品计算所选规格价
                 if (goodsInfo.ExchangeType == ExchangeType.Integration)
                 {
+                    if (orderAdd.ExchangeType != 0) throw new Exception("付款方式错误");
                     var standard = await goodsStandardsPriceService.GetByGoodsId(item.GoodsId);
                     var find = standard.Find(e => e.Id == item.SelectStandard);
                     if (find == null) throw new Exception("规格错误");
@@ -606,21 +618,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     //余额支付
                     amiyaOrder.ExchangeType = (byte)ExchangeType.BalancePay;
                 }
-                else
-                {
-                    if (orderAdd.ExchangeType == 1)
-                    {
-                        amiyaOrder.ExchangeType = (byte)ExchangeType.Alipay;
-                    }
-                    else if (orderAdd.ExchangeType == 2)
-                    {
-                        amiyaOrder.ExchangeType = (byte)ExchangeType.Wechat;
-                    }
-                    else if (orderAdd.ExchangeType == 4)
-                    {
-                        amiyaOrder.ExchangeType = (byte)ExchangeType.HuiShouQian;
-                    }
-                }
+              
                 if (item.IsFaceCard || item.IsSkinCare)
                 {
                     amiyaOrder.Phone = orderAdd.Phone;
@@ -1064,7 +1062,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 //不管用户是否支付金额先扣除积分(取消支付,支付超时自动取消后退还)
                 //放在添加订单前确保订单生成成功一定会扣除积分
                 List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
-                
+
                 if (voucher != null && !IsSpecifyVoucher)
                 {
                     orderTradeAdd.VoucherId = voucher.Id;
@@ -1143,10 +1141,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw new Exception("下单失败请稍后重试");
+                throw ex;
             }
             #endregion
-            
+
         }
         /// <summary>
         /// 积分订单重新支付
@@ -1170,7 +1168,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
                 foreach (var item in orderTrade.OrderInfoList)
                 {
-                    
+                    if (item.ExchangeType != (byte)ExchangeType.Integration) throw new Exception("支付方式错误");
 
                     UpdateOrderDto updateOrder = new UpdateOrderDto();
                     updateOrder.OrderId = item.Id;
@@ -1546,13 +1544,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// </summary>
         /// <param name="tradeId"></param>
         /// <returns></returns>
-        [HttpPost("canclePointAndMoneyOrder")]
+        [HttpPost("canclePointAndMoneyOrder/{tradeId}")]
         public async Task<ResultData<bool>> CanclePointAndMoneyOrder(string tradeId)
         {
             var token = tokenReader.GetToken();
             var sessionInfo = sessionStorage.GetSession(token);
             string customerId = sessionInfo.FxCustomerId;
-            await orderService.CancelPointAndMoneyOrderAsync(customerId, tradeId);
+            await orderService.CancelPointAndMoneyOrderAsync(tradeId, customerId);
             return ResultData<bool>.Success().AddData("cacelStatus", true);
         }
 
@@ -1675,9 +1673,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             catch (Exception)
             {
                 unitOfWork.RollBack();
-                throw new Exception("确认收货失败"); 
+                throw new Exception("确认收货失败");
             }
-            
+
         }
         /// <summary>
         /// 微信支付回调地址

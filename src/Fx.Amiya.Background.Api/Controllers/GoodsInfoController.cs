@@ -85,7 +85,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                  MaxShowPrice = d.MaxShowPrice,
                                  MinShowPrice = d.MinShowPrice,
                                  ShowSaleCount = d.ShowSaleCount,
-                                 VisitCount = d.VisitCount
+                                 VisitCount = d.VisitCount,
+                                 Sort=d.Sort
                              };
             FxPageInfo<GoodsInfoForListVo> goodsPageInfo = new FxPageInfo<GoodsInfoForListVo>();
             goodsPageInfo.TotalCount = q.TotalCount;
@@ -167,7 +168,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 ShowSaleCount = goodsInfo.ShowSaleCount,
                 VisitCount = goodsInfo.VisitCount,
                 GoodsHospitalPrice = goodsHospitalPriceVoList,
-                GoodsStandardPrice=goodsStandardsPriceVoList,
+                GoodsStandardPrice = goodsStandardsPriceVoList,
+                Sort = goodsInfo.Sort,
                 GoodsMemberRankPrices = goodsInfo.GoodsMemberRankPrice.Select(e => new GoodsMemberRankPriceVo
                 {
                     MemberRankId = e.MemberRankId,
@@ -226,6 +228,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             goodsInfo.MinShowPrice = goodsInfoAdd.MinShowPrice;
             goodsInfo.VisitCount = goodsInfoAdd.VisitCount;
             goodsInfo.ShowSaleCount = goodsInfoAdd.ShowSaleCount;
+            goodsInfo.Sort = goodsInfoAdd.Sort;
             goodsInfo.GoodsHospitalsAPrice = (from d in goodsInfoAdd.AddGoodsHospitalPrice
                                               select new GoodsHospitalPriceAddDto
                                               {
@@ -300,6 +303,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             goodsInfo.MinShowPrice = goodsInfoUpdate.MinShowPrice;
             goodsInfo.VisitCount = goodsInfoUpdate.VisitCount;
             goodsInfo.ShowSaleCount = goodsInfoUpdate.ShowSaleCount;
+            goodsInfo.Sort = goodsInfoUpdate.Sort;
             //规格价格
             goodsInfo.GoodsStandardsPrice = (from d in goodsInfoUpdate.UpdateGoodsStandardsPrice
                                              select new GoodsStandardsPriceAddDto

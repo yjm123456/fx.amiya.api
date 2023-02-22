@@ -138,6 +138,7 @@ namespace Fx.Amiya.Service
                                           HospitalId = d.HospitalId,
                                           HospitalName = d.HospitalInfo.Name,
                                           Remark = d.Remark,
+                                          AppointArea=d.AppointArea
                                       };
 
                 FxPageInfo<AppointmentInfoDto> appointmentPageInfo = new FxPageInfo<AppointmentInfoDto>(); ;
@@ -547,7 +548,7 @@ namespace Fx.Amiya.Service
                     Phone = appointment.Phone,
                     Remark = appointment.Remark,
                     ItemInfoName = appointment.ItemInfoName,
-
+                    AppointArea=appointment.AppointArea,
                     HospitalInfo = new AppointmentHospitalDto
                     {
                         HospitalId = appointment.HospitalId,
@@ -707,6 +708,7 @@ namespace Fx.Amiya.Service
             appointment.Time = input.Time;
             appointment.ItemInfoName = input.ItemName;
             appointment.Phone = input.Phone;
+            appointment.AppointArea = input.AppointArea;
             await dalAppointmentInfo.UpdateAsync(appointment, false);
 
             await unitOfWork.SaveChangesAsync();

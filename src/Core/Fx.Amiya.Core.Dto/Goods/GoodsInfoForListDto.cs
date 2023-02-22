@@ -121,5 +121,9 @@ namespace Fx.Amiya.Core.Dto.Goods
         /// 是否是会员优惠商品
         /// </summary>
         public bool IsMember { get; set; }
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int Sort { get; set; }
     }
 }

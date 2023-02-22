@@ -125,6 +125,10 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         public int? CreateBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public int? UpdateBy { get; set; }
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int Sort { get; set; }
 
     }
 }

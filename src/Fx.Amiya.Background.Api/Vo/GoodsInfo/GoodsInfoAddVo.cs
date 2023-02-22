@@ -132,6 +132,12 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         /// </summary>
         [StringLength(8000, ErrorMessage = "商品详情内容最多不超过{1}个字符")]
         public string GoodsDetailHtml { get; set; }
+
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int Sort { get; set; }
+
         public List<GoodsInfoCarouselImageAddVo> CarouselImageUrls { get; set; }
         /// <summary>
         /// 会员价格

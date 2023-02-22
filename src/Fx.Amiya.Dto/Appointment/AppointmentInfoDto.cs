@@ -26,7 +26,7 @@ namespace Fx.Amiya.Dto.Appointment
        
         public int HospitalId { get; set; }
         public string HospitalName { get; set; }
-   
+        public string AppointArea { get; set; }
         public string Remark { get; set; }
 
         public string EmpolyeeName{ get; set; }

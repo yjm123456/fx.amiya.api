@@ -4510,7 +4510,7 @@ namespace Fx.Amiya.Service
                 {
                     return;
                 }
-                var integrationRecord = await CreateIntegrationRecordAsync(customerId, orderTrade.TotalIntegration.Value, tradeId);
+                var integrationRecord = await CreateIntegrationRecordAsync(customerId, orderTrade.TotalIntegration.Value, orderTrade.OrderInfoList.First().Id);
                 if (integrationRecord != null) await integrationAccountService.AddByConsumptionAsync(integrationRecord);
                 var orderList = dalOrderInfo.GetAll().Where(e => e.TradeId == tradeId).ToList();
                 foreach (var item in orderList)

@@ -115,6 +115,12 @@ namespace Fx.Amiya.Core.Dto.Goods
         /// </summary>
 
         public int ShowSaleCount { get; set; }
+
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int Sort { get; set; }
+
         /// <summary>
         /// 门店价格
         /// </summary>

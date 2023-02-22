@@ -63,7 +63,10 @@ namespace Fx.Amiya.Modules.Goods.DbModel
         public int? UpdateBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public int Version { get; set; }
-
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int Sort { get; set; }
         public GoodsCategoryDbModel GoodsCategory { get; set; }
         public GoodsDetailDbModel GoodsDetail { get; set; }
         public List<GoodsInfoCarouselImageDbModel> GoodsInfoCarouselImageList { get; set; }

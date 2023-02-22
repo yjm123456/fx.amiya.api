@@ -124,7 +124,10 @@ namespace Fx.Amiya.Modules.Goods.Domin
         public DateTime? UpdatedDate { get; set; }
         public int? UpdateBy { get; set; }
         public int Version { get; set; }
-
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int Sort { get; set; }
 
         public GoodsDetail GoodsDetail { get; set; }
         public List<GoodsInfoCarouselImage> GoodsInfoCarouselImages { get; set; }
