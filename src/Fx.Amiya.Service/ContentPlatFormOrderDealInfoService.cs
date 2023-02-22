@@ -86,8 +86,8 @@ namespace Fx.Amiya.Service
                                where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0
                                select d;
                 }
-                //财务录入数据只有管理员研发与财务能看到
-                if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16)
+                //财务录入数据只有管理员研发财务和CMO能看到
+                if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16 && employee.AmiyaPositionInfo.Id != 29)
                 {
 
                     dealInfo = from d in dealInfo
@@ -202,8 +202,8 @@ namespace Fx.Amiya.Service
                                where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0
                                select d;
                 }
-                //财务录入数据只有管理员研发与财务能看到
-                if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16)
+                //财务录入数据只有管理员研发财务和CMO能看到
+                if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16 && employee.AmiyaPositionInfo.Id != 29)
                 {
 
                     dealInfo = from d in dealInfo
@@ -474,8 +474,8 @@ namespace Fx.Amiya.Service
                                where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0
                                select d;
                 }
-                //财务录入数据只有管理员研发与财务能看到
-                if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16)
+                //财务录入数据只有管理员研发财务和CMO能看到
+                if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16 && employee.AmiyaPositionInfo.Id != 29)
                 {
 
                     dealInfo = from d in dealInfo

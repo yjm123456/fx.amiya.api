@@ -55,7 +55,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var liveAnchors = from d in await liveAnchorService.GetValidListAsync(contentPlatFormId, employeeId)
+            var liveAnchors = from d in await liveAnchorService.GetValidListByContentPlatFormIdAsync(contentPlatFormId, employeeId)
                               select new LiveAnchorVo
                               {
                                   Id = d.Id,

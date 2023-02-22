@@ -21,7 +21,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="contentPlatFormId">内容平台id</param>
         /// <returns></returns>
-        Task<List<LiveAnchorDto>> GetValidListAsync(string contentPlatFormId, int employeeId);
+        Task<List<LiveAnchorDto>> GetValidListByContentPlatFormIdAsync(string contentPlatFormId, int employeeId);
 
         /// <summary>
         /// 获取有效的主播列表

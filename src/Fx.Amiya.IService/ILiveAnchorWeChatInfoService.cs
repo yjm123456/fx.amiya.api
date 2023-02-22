@@ -12,7 +12,7 @@ namespace Fx.Amiya.IService
 {
     public interface ILiveAnchorWeChatInfoService
     {
-        Task<List<LiveAnchorWeChatInfoDto>> GetValidListAsync(int? liveAnchorId, int employeeId);
+        Task<List<LiveAnchorWeChatInfoDto>> GetValidListByLiveAnchorIdAsync(int? liveAnchorId, int employeeId);
         Task<List<LiveAnchorWeChatInfoDto>> GetValidAsync();
         Task<FxPageInfo<LiveAnchorWeChatInfoDto>> GetListAsync(string keyword, int? liveAnchorId, int employeeId, bool valid, int pageNum, int pageSize);
         Task AddAsync(AddLiveAnchorWeChatInfoDto addDto);

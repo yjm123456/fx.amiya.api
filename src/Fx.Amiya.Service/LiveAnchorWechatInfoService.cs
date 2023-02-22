@@ -75,7 +75,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="contentPlatFormId">内容平台id</param>
         /// <returns></returns>
-        public async Task<List<LiveAnchorWeChatInfoDto>> GetValidListAsync(int? liveAnchorId, int employeeId)
+        public async Task<List<LiveAnchorWeChatInfoDto>> GetValidListByLiveAnchorIdAsync(int? liveAnchorId, int employeeId)
         {
             List<int> liveAnchorIds = new List<int>();
             if (liveAnchorId.HasValue)

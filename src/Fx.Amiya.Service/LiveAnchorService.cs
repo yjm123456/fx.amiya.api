@@ -68,7 +68,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="contentPlatFormId">内容平台id</param>
         /// <returns></returns>
-        public async Task<List<LiveAnchorDto>> GetValidListAsync(string contentPlatFormId, int employeeId)
+        public async Task<List<LiveAnchorDto>> GetValidListByContentPlatFormIdAsync(string contentPlatFormId, int employeeId)
         {
             if (string.IsNullOrEmpty(contentPlatFormId))
             {

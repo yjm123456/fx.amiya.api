@@ -56,7 +56,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var liveAnchorWechatInfos = from d in await liveAnchorWechatInfoService.GetValidListAsync(liveanchorId, employeeId)
+            var liveAnchorWechatInfos = from d in await liveAnchorWechatInfoService.GetValidListByLiveAnchorIdAsync(liveanchorId, employeeId)
                               select new LiveAnchorWechatInfoVo
                               {
                                   Id = d.Id,

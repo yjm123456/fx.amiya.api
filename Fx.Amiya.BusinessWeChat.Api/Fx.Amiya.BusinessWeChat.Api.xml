@@ -506,6 +506,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.LiveAnchorController.GetValidListByContentPlatFormIdAsync(System.String)">
+            <summary>
+             根据内容平台获取有效的主播账号列表
+            </summary>
+            <param name="contentPlatFormId">内容平台id</param>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.LiveAnchorWechatInfoController">
             <summary>
             主播微信账号
@@ -522,6 +529,13 @@
             <summary>
              获取有效的主播微信账号列表
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.LiveAnchorWechatInfoController.GetValidListByLiveAnchorIdAsync(System.Int32)">
+            <summary>
+             根据主播获取有效的主播微信账号列表
+            </summary>
+            <param name="liveanchorId">主播id</param>
             <returns></returns>
         </member>
         <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.OrderCheckPictureController">
