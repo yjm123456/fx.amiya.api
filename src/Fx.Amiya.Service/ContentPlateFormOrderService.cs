@@ -168,7 +168,8 @@ namespace Fx.Amiya.Service
                     bindCustomerService.NewConsumptionContentPlatform = (int)OrderFrom.ContentPlatFormOrder;
                     bindCustomerService.NewContentPlatForm = contentPlatForm.ContentPlatformName;
                     var liveAnchor = dalLiveAnchor.GetAll().Where(e => e.Id == input.LiveAnchorId).FirstOrDefault();
-                    if (liveAnchor!=null) {
+                    if (liveAnchor != null)
+                    {
                         bindCustomerService.NewLiveAnchor = liveAnchor.Name;
                     }
                     bindCustomerService.NewWechatNo = input.LiveAnchorWeChatNo;
@@ -1485,7 +1486,7 @@ namespace Fx.Amiya.Service
                     bindCustomerService.BuyerPhone = input.Phone;
                     bindCustomerService.UserId = null;
                     bindCustomerService.CreateBy = input.EmployeeId;
-                    bindCustomerService.CreateDate = DateTime.Now;                    
+                    bindCustomerService.CreateDate = DateTime.Now;
                     var goodsInfo = await amiyaGoodsDemandService.GetByIdAsync(input.GoodsId);
                     bindCustomerService.FirstProjectDemand = "(" + goodsInfo.HospitalDepartmentName + ")" + goodsInfo.ProjectNname;
                     bindCustomerService.FirstConsumptionDate = DateTime.Now;
@@ -1879,7 +1880,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var order = await _dalContentPlatformOrder.GetAll().Include(x=>x.LiveAnchor).Include(x=>x.Contentplatform).Include(x => x.ContentPlatformOrderSendList).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
+                var order = await _dalContentPlatformOrder.GetAll().Include(x => x.LiveAnchor).Include(x => x.Contentplatform).Include(x => x.ContentPlatformOrderSendList).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 var isoldCustomer = false;
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
                 var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true).FirstOrDefault();
@@ -1910,7 +1911,7 @@ namespace Fx.Amiya.Service
                 if (input.IsFinish == true)
                 {
                     var price = order.DepositAmount.HasValue ? order.DepositAmount.Value : 0.00M;
-                    await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + input.DealAmount.Value, (int)OrderFrom.ContentPlatFormOrder,order.LiveAnchor.Name,order.LiveAnchorWeChatNo,order.Contentplatform.ContentPlatformName, 1);
+                    await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + input.DealAmount.Value, (int)OrderFrom.ContentPlatFormOrder, order.LiveAnchor.Name, order.LiveAnchorWeChatNo, order.Contentplatform.ContentPlatformName, 1);
                     await customerBaseInfoService.UpdateState(1, order.Phone);
                     order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.OrderComplete);
                     order.DealAmount += input.DealAmount;
@@ -2012,14 +2013,14 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var order = await _dalContentPlatformOrder.GetAll().Include(x=>x.LiveAnchor).Include(x=>x.Contentplatform).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
+                var order = await _dalContentPlatformOrder.GetAll().Include(x => x.LiveAnchor).Include(x => x.Contentplatform).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 var isoldCustomer = false;
                 if (order.CheckState == (int)CheckType.CheckedSuccess)
                 {
                     throw new Exception("该订单已审核，无法编辑！");
                 }
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
-                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true).FirstOrDefault();
+                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true & x.Id != input.DealId).FirstOrDefault();
                 if (dealCount != null)
                 {
                     if (dealCount.DealDate > input.DealDate)
@@ -2146,7 +2147,8 @@ namespace Fx.Amiya.Service
             dealInfo.IsCreateBill = update.IsCreateBill;
             dealInfo.BelongCompany = update.CreateBillCompanyId;
             await dalContentPlatFormOrderDealInfo.UpdateAsync(dealInfo, true);
-            if (update.IsCreateBill) {
+            if (update.IsCreateBill)
+            {
                 var order = _dalContentPlatformOrder.GetAll().Where(e => e.Id == update.OrderId).SingleOrDefault();
                 if (order == null) throw new Exception("订单编号错误");
                 order.IsCreateBill = update.IsCreateBill;
@@ -2155,18 +2157,19 @@ namespace Fx.Amiya.Service
             }
             else
             {
-               var createBillCount= dalContentPlatFormOrderDealInfo.GetAll().Where(e=>e.ContentPlatFormOrderId==update.OrderId&&e.IsCreateBill==true).Count();
-                if (createBillCount<=0) {
+                var createBillCount = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.ContentPlatFormOrderId == update.OrderId && e.IsCreateBill == true).Count();
+                if (createBillCount <= 0)
+                {
                     var order = _dalContentPlatformOrder.GetAll().Where(e => e.Id == update.OrderId).SingleOrDefault();
                     if (order == null) throw new Exception("订单编号错误");
                     order.IsCreateBill = false;
                     order.BelongCompany = "";
                     await _dalContentPlatformOrder.UpdateAsync(order, true);
                 }
-                
+
             }
-            
-            
+
+
         }
 
         /// <summary>
@@ -2906,20 +2909,21 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<LiveAnchorBoardDataDto>> GetLiveAnchorPriceByLiveAnchorIdAsync(DateTime? startDate, DateTime? endDate, int? liveAnchorId)
         {
-            startDate = startDate == null ? DateTime.Now.Date:startDate;
+            startDate = startDate == null ? DateTime.Now.Date : startDate;
             endDate = startDate == null ? DateTime.Now.AddDays(1).Date : endDate;
-            var dataList= _dalContentPlatformOrder.GetAll().Where(e => e.CheckDate >= startDate && e.CheckDate < endDate&&e.CheckState==2)
+            var dataList = _dalContentPlatformOrder.GetAll().Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == 2)
                 .Where(e => liveAnchorId == null || e.LiveAnchorId == liveAnchorId)
-                .GroupBy(e=>new { e.LiveAnchorId,e.BelongCompany})
-                .Select(e=>new LiveAnchorBoardDataDto { 
-                    CompanyName=e.Key.BelongCompany,
-                    LiveAnchorName=e.Key.LiveAnchorId.ToString(),
-                    DealPrice=e.Sum(item=>item.CheckPrice)?? 0m,
-                    TotalServicePrice=e.Sum(item=>item.SettlePrice)?? 0m,
-                    NewCustomerPrice = e.Sum(item => item.IsOldCustomer==false? item.CheckPrice:0) ?? 0m,
-                    OldCustomerPrice = e.Sum(item => item.IsOldCustomer == true? item.CheckPrice:0) ?? 0m,
-                    NewCustomerServicePrice = e.Sum(item => item.IsOldCustomer == false?item.SettlePrice:0) ?? 0m,
-                    OldCustomerServicePrice = e.Sum(item => item.IsOldCustomer == true?item.SettlePrice:0) ?? 0m,
+                .GroupBy(e => new { e.LiveAnchorId, e.BelongCompany })
+                .Select(e => new LiveAnchorBoardDataDto
+                {
+                    CompanyName = e.Key.BelongCompany,
+                    LiveAnchorName = e.Key.LiveAnchorId.ToString(),
+                    DealPrice = e.Sum(item => item.CheckPrice) ?? 0m,
+                    TotalServicePrice = e.Sum(item => item.SettlePrice) ?? 0m,
+                    NewCustomerPrice = e.Sum(item => item.IsOldCustomer == false ? item.CheckPrice : 0) ?? 0m,
+                    OldCustomerPrice = e.Sum(item => item.IsOldCustomer == true ? item.CheckPrice : 0) ?? 0m,
+                    NewCustomerServicePrice = e.Sum(item => item.IsOldCustomer == false ? item.SettlePrice : 0) ?? 0m,
+                    OldCustomerServicePrice = e.Sum(item => item.IsOldCustomer == true ? item.SettlePrice : 0) ?? 0m,
                 }).ToList();
             foreach (var item in dataList)
             {

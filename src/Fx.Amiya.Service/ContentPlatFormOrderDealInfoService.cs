@@ -1799,7 +1799,7 @@ namespace Fx.Amiya.Service
             foreach (var item in orderTypes)
             {
                 BaseIdAndNameDto orderType = new BaseIdAndNameDto();
-                orderType.Id = item.ToString();
+                orderType.Id = Convert.ToInt32(item).ToString();
                 orderType.Name = ServiceClass.GetContentPlateFormOrderDealPerformanceType(Convert.ToInt32(item));
                 orderTypeList.Add(orderType);
             }

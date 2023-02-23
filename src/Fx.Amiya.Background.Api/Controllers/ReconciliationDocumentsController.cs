@@ -199,9 +199,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                   BillId = d.BillId,
                                                   ReturnBackPrice = Math.Round(d.TotalDealPrice.Value * d.ReturnBackPricePercent.Value / 100, 2),
                                                   SystemUpdatePrice = Math.Round(d.TotalDealPrice.Value * d.SystemUpdatePricePercent.Value / 100, 2),
-                                                  ReturnBackTotalPrice = Math.Round((d.SystemUpdatePricePercent.Value + d.ReturnBackPricePercent.Value) * d.TotalDealPrice.Value / 100, 2)
+                                                  ReturnBackTotalPrice = Math.Round((d.SystemUpdatePricePercent.Value + d.ReturnBackPricePercent.Value) * d.TotalDealPrice.Value / 100, 2,MidpointRounding.AwayFromZero)
                                               };
-
                 FxPageInfo<ReconciliationDocumentsVo> reconciliationDocumentsResult = new FxPageInfo<ReconciliationDocumentsVo>();
                 reconciliationDocumentsResult.List = reconciliationDocuments.ToList();
                 reconciliationDocumentsResult.TotalCount = q.TotalCount;

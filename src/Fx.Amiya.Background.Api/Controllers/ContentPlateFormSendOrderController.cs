@@ -452,6 +452,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             ToHospitalType = d.ToHospitalType,
                                             ToHospitalTypeText = d.ToHospitalTypeText,
                                             TohospitalDate = d.ToHospitalDate,
+                                            DealPerformanceType=d.DealPerformanceType,
                                             DealPerformanceTypeText=d.DealPerformanceTypeText,
                                             DealHospital = d.LastDealHospital,
                                             DealPicture = d.DealPicture,
