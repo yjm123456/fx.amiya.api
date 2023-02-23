@@ -458,6 +458,12 @@
             <param name="pageSize"></param>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormOrderDealInfoController.GetContentPlateFormOrderDealPerformanceTypeList">
+            <summary>
+            获取内容平台成交业绩类型
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.CustomerController">
             <summary>
             客户资料板块数据接口
@@ -480,6 +486,13 @@
             构造函数
             </summary>
             <param name="hospitalInfoService"></param>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.HospitalInfoController.GetHospitalNameListAsync(System.String)">
+            <summary>
+            获取有效医院名称列表
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
         </member>
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.HospitalInfoController.GetCheckPassedNameListAsync(System.String)">
             <summary>
@@ -931,6 +944,11 @@
             成交时间
             </summary>
         </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.DealPerformanceType">
+            <summary>
+            业绩类型
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.IsAcompanying">
             <summary>
             是否陪诊
@@ -1351,6 +1369,11 @@
             成交金额
             </summary>
         </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.DealPerformanceTypeText">
+            <summary>
+            业绩类型文本
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.UpdateDate">
             <summary>
             更新时间
@@ -1609,6 +1632,16 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.LastDealHospitalId">
             <summary>
             最终成交医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.DealPerformanceType">
+            <summary>
+            业绩类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.DealPerformanceTypeText">
+            <summary>
+            业绩类型文本
             </summary>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.DealHospital">
@@ -2109,6 +2142,11 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.DealAmount">
             <summary>
             成交金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.DealPerformanceType">
+            <summary>
+            业绩类型
             </summary>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.LastProjectStage">

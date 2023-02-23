@@ -126,6 +126,12 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         public decimal Price { get; set; }
 
         /// <summary>
+        /// 业绩类型
+        /// </summary>
+        [Description("业绩类型")]
+        public string DealPerformanceTypeText { get; set; }
+
+        /// <summary>
         /// 成交时间
         /// </summary>
         [Description("成交时间")]

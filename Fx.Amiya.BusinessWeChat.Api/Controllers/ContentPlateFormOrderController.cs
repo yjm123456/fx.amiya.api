@@ -341,6 +341,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.Age = customerBaseInfo.Age;
             orderUpdateInfo.Occupation = customerBaseInfo.Occupation;
             orderUpdateInfo.WechatNumber = customerBaseInfo.WechatNumber;
+            orderUpdateInfo.DealPerformanceTypeText = order.DealPerformanceTypeText;
 
             orderUpdateInfo.AppointmentDate = order.AppointmentDate;
             orderUpdateInfo.ConsultationEmpId = order.ConsultationEmpId;
@@ -581,6 +582,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
             updateDto.DealDate = updateVo.DealDate;
             updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
+            updateDto.DealPerformanceType = updateVo.DealPerformanceType;
             updateDto.EmpId = Convert.ToInt32(employee.Id);
             updateDto.InvitationDocuments = updateVo.InvitationDocuments;
             await _orderService.FinishContentPlateFormOrderAsync(updateDto);
@@ -610,6 +612,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             updateDto.ToHospitalType = updateVo.ToHospitalType;
             updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
             updateDto.DealDate = updateVo.DealDate;
+            updateDto.DealPerformanceType = updateVo.DealPerformanceType;
             updateDto.CommissionRatio = updateVo.CommissionRatio;
             updateDto.IsAcompanying = updateVo.IsAcompanying;
             updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;

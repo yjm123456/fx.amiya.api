@@ -189,7 +189,14 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 后期项目铺垫
         /// </summary>
         public string LateProjectStage { get; set; }
-
+        /// <summary>
+        /// 业绩类型
+        /// </summary>
+        public int DealPerformanceType { get; set; }
+        /// <summary>
+        /// 业绩类型文本
+        /// </summary>
+        public string DealPerformanceTypeText { get; set; }
         public int EmployeeId { get; set; }
         public int? CheckBy { get; set; }
         public DateTime? CheckDate { get; set; }

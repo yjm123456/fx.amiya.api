@@ -1982,9 +1982,21 @@ ALTER TABLE `amiyadb`.`tbl_amiya_position_info`
 ADD COLUMN `read_datacenter` BIT(1) NOT NULL AFTER `department_id`;
 ----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
-
+-----------------------------------------------余建明 2023/2/19 BEGIN--------------------------------------------
+--orderappInfo表更改归属主播字段类型
 ALTER TABLE `amiyadb`.`tbl_order_app_info` 
 CHANGE COLUMN `belong_liveanchor` `belong_liveanchor` INT NULL DEFAULT NULL ;
+
+--成交情况表加入业绩类型
+ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
+ADD COLUMN `deal_performance_type` INT NOT NULL DEFAULT 0 AFTER `reconciliation_documents_id`;
+
+--内容平台订单列表加入业绩类型
+ALTER TABLE `amiyadb`.`tbl_content_platform_order` 
+ADD COLUMN `deal_performance_type` INT NOT NULL DEFAULT 0 AFTER `deal_date`;
+
+-----------------------------------------------余建明 2023/2/22 END--------------------------------------------
+
 
 
 ------------------王健 2023-02-20 BEGIN--------------------------------------------

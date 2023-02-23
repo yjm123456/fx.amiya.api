@@ -50,6 +50,10 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public decimal? DealAmount { get; set; }
         /// <summary>
+        /// 业绩类型
+        /// </summary>
+        public int DealPerformanceType { get; set; }
+        /// <summary>
         /// 后期项目铺垫
         /// </summary>
         public string LastProjectStage { get; set; }

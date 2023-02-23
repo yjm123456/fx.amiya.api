@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder;
+﻿using Fx.Amiya.Background.Api.Vo;
+using Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.WareHouse.WareHouseInfo;
 using Fx.Amiya.IService;
@@ -105,6 +106,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             Price = d.Price,
                                             DealDate = d.DealDate,
                                             OtherOrderId = d.OtherAppOrderId,
+                                            DealPerformanceType=d.DealPerformanceType,
+                                            DealPerformanceTypeText=d.DealPerformanceTypeText,
                                             CheckState = d.CheckState,
                                             CheckStateText = d.CheckStateText,
                                             CheckPrice = d.CheckPrice,
@@ -168,6 +171,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             CreateByEmpName = d.CreateByEmpName,
                                             CheckRemark = d.CheckRemark,
                                             IsReturnBackPrice = d.IsReturnBackPrice,
+                                            DealPerformanceTypeText=d.DealPerformanceTypeText,
                                             ReturnBackDate = d.ReturnBackDate,
                                             ReturnBackPrice = d.ReturnBackPrice,
                                             DealHospital = d.LastDealHospital,
@@ -206,6 +210,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 contentPlatFormOrderDealInfoVo.LastDealHospitalId = contentPlatFormOrderDealInfo.LastDealHospitalId;
                 contentPlatFormOrderDealInfoVo.DealPicture = contentPlatFormOrderDealInfo.DealPicture;
                 contentPlatFormOrderDealInfoVo.Remark = contentPlatFormOrderDealInfo.Remark;
+                contentPlatFormOrderDealInfoVo.DealPerformanceType = contentPlatFormOrderDealInfo.DealPerformanceType;
                 contentPlatFormOrderDealInfoVo.Price = contentPlatFormOrderDealInfo.Price;
                 contentPlatFormOrderDealInfoVo.DealDate = contentPlatFormOrderDealInfo.DealDate;
                 contentPlatFormOrderDealInfoVo.OtherOrderId = contentPlatFormOrderDealInfo.OtherAppOrderId;
@@ -243,6 +248,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.Price = updateVo.Price;
                 updateDto.DealDate = updateVo.DealDate;
                 updateDto.OtherAppOrderId = updateVo.OtherAppOrderId;
+                updateDto.DealPerformanceType = updateVo.DealPerformanceType;
                 await _contentPlatFormOrderDealInfoService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -252,5 +258,23 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+        #region 【枚举下拉框】
+        /// <summary>
+        /// 获取内容平台成交业绩类型
+        /// </summary>
+        /// <returns></returns>
+        [FxInternalAuthorize]
+        [HttpGet("contentPlateFormOrderDealPerformanceType")]
+        public ResultData<List<BaseIdAndNameVo>> GetContentPlateFormOrderDealPerformanceTypeList()
+        {
+            var orderTypes = from d in _contentPlatFormOrderDealInfoService.GetOrderDealPerformanceTypeList()
+                             select new BaseIdAndNameVo
+                             {
+                                 Id = d.Id,
+                                 Name = d.Name
+                             };
+            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("contentPlateFormOrderDealPerformanceType", orderTypes.ToList());
+        }
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.FinancialBoard;
 using Fx.Amiya.Dto.Performance;
@@ -275,6 +276,10 @@ namespace Fx.Amiya.IService
         /// <param name="customerServiceId"></param>
         /// <returns></returns>
         Task<CustomerServiceBoardDataDto> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate,DateTime? endDate,int customerServiceId);
+
+        #endregion
+        #region 【枚举下拉框】
+        List<BaseIdAndNameDto> GetOrderDealPerformanceTypeList();
 
         #endregion
     }

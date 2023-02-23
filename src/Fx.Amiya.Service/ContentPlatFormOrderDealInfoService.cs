@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.FinancialBoard;
@@ -325,6 +326,8 @@ namespace Fx.Amiya.Service
                                                        ToHospitalType = d.ToHospitalType,
                                                        ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
                                                        ToHospitalDate = d.ToHospitalDate,
+                                                       DealPerformanceType=d.DealPerformanceType,
+                                                       DealPerformanceTypeText=ServiceClass.GetContentPlateFormOrderDealPerformanceType(d.DealPerformanceType),
                                                        LastDealHospitalId = d.LastDealHospitalId,
                                                        SendDate = d.ContentPlatFormOrder.SendDate,
                                                        DealPicture = d.DealPicture,
@@ -415,6 +418,8 @@ namespace Fx.Amiya.Service
                                                        CheckPrice = d.CheckPrice,
                                                        CheckDate = d.CheckDate,
                                                        CheckBy = d.CheckBy,
+                                                       DealPerformanceType = d.DealPerformanceType,
+                                                       DealPerformanceTypeText = ServiceClass.GetContentPlateFormOrderDealPerformanceType(d.DealPerformanceType),
                                                        InformationPrice = d.InformationPrice,
                                                        SystemUpdatePrice = d.SystemUpdatePrice,
                                                        SettlePrice = d.SettlePrice,
@@ -579,6 +584,8 @@ namespace Fx.Amiya.Service
                                                        IsDeal = d.IsDeal,
                                                        IsOldCustomer = d.IsOldCustomer,
                                                        IsAcompanying = d.IsAcompanying,
+                                                       DealPerformanceType=d.DealPerformanceType,
+                                                       DealPerformanceTypeText=ServiceClass.GetContentPlateFormOrderDealPerformanceType(d.DealPerformanceType),
                                                        Phone = hidePhone == true ? ServiceClass.GetIncompletePhone(d.ContentPlatFormOrder.Phone) : d.ContentPlatFormOrder.Phone,
                                                        CommissionRatio = d.CommissionRatio,
                                                        IsToHospital = d.IsToHospital,
@@ -678,6 +685,8 @@ namespace Fx.Amiya.Service
                                                        ToHospitalDate = d.ToHospitalDate,
                                                        LastDealHospitalId = d.LastDealHospitalId,
                                                        DealPicture = d.DealPicture,
+                                                       DealPerformanceType=d.DealPerformanceType,
+                                                       DealPerformanceTypeText=ServiceClass.GetContentPlateFormOrderDealPerformanceType(d.DealPerformanceType),
                                                        Remark = d.Remark,
                                                        Price = d.Price,
                                                        DealDate = d.DealDate,
@@ -752,6 +761,7 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.CheckPrice = 0.00M;
                 ContentPlatFOrmOrderDealInfo.CheckState = 0;
                 ContentPlatFOrmOrderDealInfo.SettlePrice = 0.00M;
+                ContentPlatFOrmOrderDealInfo.DealPerformanceType = addDto.DealPerformanceType;
                 ContentPlatFOrmOrderDealInfo.IsRepeatProfundityOrder = addDto.IsRepeatProfundityOrder;
                 await dalContentPlatFormOrderDealInfo.AddAsync(ContentPlatFOrmOrderDealInfo, true);
 
@@ -808,6 +818,7 @@ namespace Fx.Amiya.Service
                 contentPlatFOrmOrderDealInfoDto.CheckDate = ContentPlatFOrmOrderDealInfo.CheckDate;
                 contentPlatFOrmOrderDealInfoDto.CheckBy = ContentPlatFOrmOrderDealInfo.CheckBy;
                 contentPlatFOrmOrderDealInfoDto.SettlePrice = ContentPlatFOrmOrderDealInfo.SettlePrice;
+                contentPlatFOrmOrderDealInfoDto.DealPerformanceType = ContentPlatFOrmOrderDealInfo.DealPerformanceType;
                 contentPlatFOrmOrderDealInfoDto.CheckRemark = ContentPlatFOrmOrderDealInfo.CheckRemark;
                 contentPlatFOrmOrderDealInfoDto.IsReturnBackPrice = ContentPlatFOrmOrderDealInfo.IsReturnBackPrice;
                 contentPlatFOrmOrderDealInfoDto.ReturnBackDate = ContentPlatFOrmOrderDealInfo.ReturnBackDate;
@@ -852,6 +863,7 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.OtherAppOrderId = updateDto.OtherAppOrderId;
                 ContentPlatFOrmOrderDealInfo.IsAcompanying = updateDto.IsAcompanying;
                 ContentPlatFOrmOrderDealInfo.IsOldCustomer = updateDto.IsOldCustomer;
+                ContentPlatFOrmOrderDealInfo.DealPerformanceType = updateDto.DealPerformanceType;
                 ContentPlatFOrmOrderDealInfo.CommissionRatio = updateDto.CommissionRatio;
                 await dalContentPlatFormOrderDealInfo.UpdateAsync(ContentPlatFOrmOrderDealInfo, true);
                 await _contentPlatFormCustomerPictureService.DeleteByContentPlatFormOrderDealIdAsync(updateDto.Id);
@@ -1043,6 +1055,8 @@ namespace Fx.Amiya.Service
                     contentPlatFOrmOrderDealInfoDto.ReturnBackDate = ContentPlatFOrmOrderDealInfo.ReturnBackDate;
                     contentPlatFOrmOrderDealInfoDto.ReturnBackPrice = ContentPlatFOrmOrderDealInfo.ReturnBackPrice;
                     contentPlatFOrmOrderDealInfoDto.CreateBy = ContentPlatFOrmOrderDealInfo.CreateBy;
+                    contentPlatFOrmOrderDealInfoDto.DealPerformanceType = ContentPlatFOrmOrderDealInfo.DealPerformanceType;
+                    contentPlatFOrmOrderDealInfoDto.DealPerformanceTypeText = ServiceClass.GetContentPlateFormOrderDealPerformanceType(ContentPlatFOrmOrderDealInfo.DealPerformanceType);
                     contentPlatFOrmOrderDealInfoDto.InformationPrice = ContentPlatFOrmOrderDealInfo.InformationPrice;
                     contentPlatFOrmOrderDealInfoDto.SystemUpdatePrice = ContentPlatFOrmOrderDealInfo.SystemUpdatePrice;
                     contentPlatFOrmOrderDealInfoDto.ReconciliationDocumentsId = ContentPlatFOrmOrderDealInfo.ReconciliationDocumentsId;
@@ -1776,6 +1790,21 @@ namespace Fx.Amiya.Service
 
         #endregion
 
+        #region 【枚举下拉框】
 
+        public List<BaseIdAndNameDto> GetOrderDealPerformanceTypeList()
+        {
+            var orderTypes = Enum.GetValues(typeof(ContentPlateFormOrderDealPerformanceType));
+            List<BaseIdAndNameDto> orderTypeList = new List<BaseIdAndNameDto>();
+            foreach (var item in orderTypes)
+            {
+                BaseIdAndNameDto orderType = new BaseIdAndNameDto();
+                orderType.Id = item.ToString();
+                orderType.Name = ServiceClass.GetContentPlateFormOrderDealPerformanceType(Convert.ToInt32(item));
+                orderTypeList.Add(orderType);
+            }
+            return orderTypeList;
+        }
+        #endregion
     }
 }

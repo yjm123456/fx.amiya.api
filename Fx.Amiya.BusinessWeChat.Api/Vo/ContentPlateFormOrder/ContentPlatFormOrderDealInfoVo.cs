@@ -82,6 +82,15 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public int? LastDealHospitalId { get; set; }
         /// <summary>
+        /// 业绩类型
+        /// </summary>
+        public int DealPerformanceType { get; set; }
+
+        /// <summary>
+        /// 业绩类型文本
+        /// </summary>
+        public string DealPerformanceTypeText { get; set; }
+        /// <summary>
         /// 成交医院
         /// </summary>
         public string DealHospital { get; set; }

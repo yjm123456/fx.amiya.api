@@ -1255,6 +1255,8 @@ namespace Fx.Amiya.Service
                 result.ConsultationEmpName = empInfo.Name;
             }
             result.LateProjectStage = order.LateProjectStage;
+            result.DealPerformanceType = order.DealPerformanceType;
+            result.DealPerformanceTypeText = ServiceClass.GetContentPlateFormOrderDealPerformanceType(result.DealPerformanceType);
             result.CheckState = order.CheckState;
             result.CheckStateText = ServiceClass.GetCheckTypeText(result.CheckState.Value);
             result.CheckPrice = order.CheckPrice;
@@ -1921,7 +1923,7 @@ namespace Fx.Amiya.Service
                     order.UnDealReason = "";
                     order.UnDealPictureUrl = "";
                     order.DealDate = input.DealDate;
-
+                    order.DealPerformanceType = input.DealPerformanceType;
 
                 }
                 else
@@ -1966,6 +1968,7 @@ namespace Fx.Amiya.Service
                     orderDealDto.Price = input.DealAmount.Value;
                     orderDealDto.CommissionRatio = input.CommissionRatio;
                     orderDealDto.Remark = input.LastProjectStage;
+                    orderDealDto.DealPerformanceType = input.DealPerformanceType;
                 }
                 else
                 {
@@ -2049,6 +2052,7 @@ namespace Fx.Amiya.Service
                     order.ToHospitalDate = input.ToHospitalDate;
                     order.DealPictureUrl = input.DealPictureUrl;
                     order.IsToHospital = true;
+                    order.DealPerformanceType = input.DealPerformanceType;
                     order.CommissionRatio = input.CommissionRatio;
                     order.ToHospitalDate = input.ToHospitalDate;
                     order.UnDealReason = "";
@@ -2090,6 +2094,7 @@ namespace Fx.Amiya.Service
                 orderDealDto.ToHospitalType = input.ToHospitalType;
                 if (input.IsFinish == true)
                 {
+                    orderDealDto.DealPerformanceType = input.DealPerformanceType;
                     orderDealDto.IsToHospital = true;
                     orderDealDto.ToHospitalDate = input.ToHospitalDate;
                     orderDealDto.CommissionRatio = input.CommissionRatio;

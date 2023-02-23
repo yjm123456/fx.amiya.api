@@ -687,6 +687,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.SendDate = order.SendDate;
             orderUpdateInfo.UnDealPictureUrl = order.UnDealPictureUrl;
             orderUpdateInfo.DealPictureUrl = order.DealPictureUrl;
+            orderUpdateInfo.DealPerformanceTypeText = order.DealPerformanceTypeText;
             orderUpdateInfo.UpdateDate = order.UpdateDate;
             orderUpdateInfo.DealDate = order.DealDate;
             orderUpdateInfo.DealAmount = order.DealAmount;
@@ -983,7 +984,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalempId = Convert.ToInt32(employee.Id);
             int hospitalId = Convert.ToInt32(employee.HospitalId);
-            await _orderService.HospitalConfirmOrderAsync(orderId, hospitalempId,hospitalId);
+            await _orderService.HospitalConfirmOrderAsync(orderId, hospitalempId, hospitalId);
             return ResultData.Success();
         }
         /// <summary>
@@ -1004,7 +1005,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.RepeatePictureUrl = updateVo.RepeatePictureUrl;
             updateDto.ToHospitalDate = updateVo.ToHospitalDate;
             updateDto.IsProfundity = updateVo.IsProfundity;
-            await _orderService.RepeateContentPlateFormOrderAsync(updateDto, hospitalempId,hospitalId);
+            await _orderService.RepeateContentPlateFormOrderAsync(updateDto, hospitalempId, hospitalId);
             return ResultData.Success();
         }
         /// <summary>
@@ -1115,6 +1116,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.UnDealReason = updateVo.UnDealReason;
             updateDto.IsToHospital = updateVo.IsToHospital;
             updateDto.ToHospitalType = updateVo.ToHospitalType;
+            updateDto.DealPerformanceType = updateVo.DealPerformanceType;
             updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
             updateDto.DealDate = updateVo.DealDate;
             updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
@@ -1149,6 +1151,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.ToHospitalType = updateVo.ToHospitalType;
             updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
             updateDto.DealDate = updateVo.DealDate;
+            updateDto.DealPerformanceType = updateVo.DealPerformanceType;
             updateDto.CommissionRatio = updateVo.CommissionRatio;
             updateDto.IsAcompanying = updateVo.IsAcompanying;
             updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
@@ -1180,6 +1183,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
             updateDto.DealDate = updateVo.DealDate;
             updateDto.IsAcompanying = updateVo.IsAcompanying;
+            updateDto.DealPerformanceType = (int)ContentPlateFormOrderDealPerformanceType.HospitalDeclaration;
             updateDto.InvitationDocuments = updateVo.InvitationDocuments;
             updateDto.EmpId = 0;
             await _orderService.FinishContentPlateFormOrderAsync(updateDto);
@@ -1246,7 +1250,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpPost("colseRepeatProfundityOrder")]
         [FxInternalAuthorize]
-        public async Task<ResultData> CloseRepeatProfundityOrder(CloseRepeatProfundityOrderVo  close) {
+        public async Task<ResultData> CloseRepeatProfundityOrder(CloseRepeatProfundityOrderVo close)
+        {
             await _orderService.UpdateContentPalteformRepeaterOrderStatusAsync(close.ContentPlateFormId);
             return ResultData.Success();
         }

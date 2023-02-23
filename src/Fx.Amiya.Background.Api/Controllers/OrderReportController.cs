@@ -628,6 +628,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             IsAcompanying = d.IsAcompanying == true ? "是" : "否",
                                             /*CommissionRatio = d.CommissionRatio,*/
                                             Phone = d.Phone,
+                                            DealPerformanceTypeText=d.DealPerformanceTypeText,
                                             IsToHospital = d.IsToHospital == true ? "是" : "否",
                                             ToHospitalTypeText = d.ToHospitalTypeText,
                                             TohospitalDate = d.ToHospitalDate,
@@ -719,6 +720,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             /* CommissionRatio = d.CommissionRatio,*/
                                             AddOrderPrice = d.AddOrderPrice,
                                             Phone = d.Phone,
+                                            DealPerformanceTypeText = d.DealPerformanceTypeText,
                                             IsToHospital = d.IsToHospital == true ? "是" : "否",
                                             ToHospitalTypeText = d.ToHospitalTypeText,
                                             TohospitalDate = d.ToHospitalDate,

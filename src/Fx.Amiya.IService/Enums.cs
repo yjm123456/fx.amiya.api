@@ -415,7 +415,42 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 医院重单-可深度
         /// </summary>
-        RepeatOrderProfundity=7
+        RepeatOrderProfundity = 7
+    }
+
+    /// <summary>
+    /// 业绩类型
+    /// </summary>
+    public enum ContentPlateFormOrderDealPerformanceType
+    {
+        /// <summary>
+        /// 其他
+        /// </summary>
+        Others = 0,
+        /// <summary>
+        /// 助理激活
+        /// </summary>
+        AssistantActivate = 1,
+        /// <summary>
+        /// VIP管家激活
+        /// </summary>
+        VIPHousekeeperActivate = 2,
+        /// <summary>
+        /// 机构报单
+        /// </summary>
+        HospitalDeclaration = 3,
+        /// <summary>
+        /// 助理稽查
+        /// </summary>
+        AssistantCheck = 4,
+        /// <summary>
+        /// 财务稽查
+        /// </summary>
+        FinanceCheck = 5,
+        /// <summary>
+        /// VIP管家稽查
+        /// </summary>
+        VIPHousekeeperCheck = 6
     }
     #endregion
 
@@ -662,13 +697,14 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 预约状态
     /// </summary>
-    public enum AppointmentStatusType { 
+    public enum AppointmentStatusType
+    {
         //预约处理
-        Process=0,
+        Process = 0,
         //预约取消
-        Cancel=1,
+        Cancel = 1,
         //预约成功
-        Success=2
+        Success = 2
     }
 
 
@@ -795,7 +831,7 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 回款完成
         /// </summary>
-        ReturnBackPriceSuccessful=4,
+        ReturnBackPriceSuccessful = 4,
     }
 
 

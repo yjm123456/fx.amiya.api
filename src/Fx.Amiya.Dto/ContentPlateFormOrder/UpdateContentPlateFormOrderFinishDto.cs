@@ -87,6 +87,10 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 邀约凭证图片
         /// </summary>
         public List<string> InvitationDocuments { get; set; }
+        /// <summary>
+        /// 业绩类型
+        /// </summary>
+        public int DealPerformanceType { get; set; }
 
     }
 }

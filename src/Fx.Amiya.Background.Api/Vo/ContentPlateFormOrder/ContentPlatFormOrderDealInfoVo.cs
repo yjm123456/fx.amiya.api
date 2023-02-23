@@ -99,6 +99,15 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 成交金额
         /// </summary>
         public decimal Price { get; set; }
+        /// <summary>
+        /// 业绩类型
+        /// </summary>
+        public int DealPerformanceType { get; set; }
+
+        /// <summary>
+        /// 业绩类型文本
+        /// </summary>
+        public string DealPerformanceTypeText { get; set; }
 
         /// <summary>
         /// 成交时间

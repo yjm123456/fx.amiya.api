@@ -66,6 +66,10 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public DateTime? DealDate { get; set; }
         /// <summary>
+        /// 业绩类型
+        /// </summary>
+        public int DealPerformanceType { get; set; }
+        /// <summary>
         /// 是否陪诊
         /// </summary>
         public bool IsAcompanying { get; set; }

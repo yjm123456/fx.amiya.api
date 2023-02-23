@@ -41,6 +41,34 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         }
 
 
+
+        /// <summary>
+        /// 获取有效医院名称列表
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [HttpGet("nameList")]
+        public async Task<ResultData<List<BaseKeyAndValueVo>>> GetHospitalNameListAsync(string name)
+        {
+            try
+            {
+                var hospital = from d in await hospitalInfoService.GetHospitalNameListAsync(true, name)
+                               select new BaseKeyAndValueVo
+                               {
+                                   Id = d.Id.ToString(),
+                                   Name = d.Name
+                               };
+
+                return ResultData<List<BaseKeyAndValueVo>>.Success().AddData("hospitalInfo", hospital.ToList());
+            }
+            catch (Exception ex)
+            {
+                return ResultData<List<BaseKeyAndValueVo>>.Fail(ex.Message);
+            }
+        }
+
+
+
         /// <summary>
         /// 获取资料审核通过医院名称列表
         /// </summary>

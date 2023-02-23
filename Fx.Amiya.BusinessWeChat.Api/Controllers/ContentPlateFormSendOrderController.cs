@@ -193,6 +193,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                                             ToHospitalType = d.ToHospitalType,
                                             ToHospitalTypeText = d.ToHospitalTypeText,
                                             TohospitalDate = d.ToHospitalDate,
+                                            DealPerformanceTypeText=d.DealPerformanceTypeText,
                                             DealHospital = d.LastDealHospital,
                                             DealPicture = d.DealPicture,
                                             Remark = d.Remark,

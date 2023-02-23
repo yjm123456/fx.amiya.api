@@ -1,5 +1,6 @@
 ﻿
 
+using Fx.Amiya.BusinessWeChat.Api.Vo.Base;
 using Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder;
 using Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend;
 using Fx.Amiya.IService;
@@ -9,6 +10,7 @@ using Fx.Open.Infrastructure.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -93,6 +95,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                                             SendDate = d.SendDate,
                                             TohospitalDate = d.ToHospitalDate,
                                             LastDealHospitalId = d.LastDealHospitalId,
+                                            DealPerformanceType = d.DealPerformanceType,
+                                            DealPerformanceTypeText = d.DealPerformanceTypeText,
                                             DealHospital = d.LastDealHospital,
                                             DealPicture = d.DealPicture,
                                             Remark = d.Remark,
@@ -170,5 +174,24 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             pageInfo.List = contentPlatformOrders;
             return ResultData<FxPageInfo<ContentPlatFormOrderDealSimpleInfoVo>>.Success().AddData("contentPlatFormOrderDealInfo", pageInfo);
         }
+
+        #region 【枚举下拉框】
+        /// <summary>
+        /// 获取内容平台成交业绩类型
+        /// </summary>
+        /// <returns></returns>
+        [FxInternalAuthorize]
+        [HttpGet("contentPlateFormOrderDealPerformanceType")]
+        public ResultData<List<BaseKeyAndValueVo>> GetContentPlateFormOrderDealPerformanceTypeList()
+        {
+            var orderTypes = from d in _contentPlatFormOrderDealInfoService.GetOrderDealPerformanceTypeList()
+                             select new BaseKeyAndValueVo
+                             {
+                                 Id = d.Id,
+                                 Name = d.Name
+                             };
+            return ResultData<List<BaseKeyAndValueVo>>.Success().AddData("contentPlateFormOrderDealPerformanceType", orderTypes.ToList());
+        }
+        #endregion
     }
 }

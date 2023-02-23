@@ -370,6 +370,37 @@ namespace Fx.Amiya.Service
             return typeText;
         }
 
+        public static string GetContentPlateFormOrderDealPerformanceType(int performanceType)
+        {
+            string typeText = "";
+            switch (performanceType)
+            {
+                case 0:
+                    typeText = "其他";
+                    break;
+                case 1:
+                    typeText = "助理激活";
+                    break;
+
+                case 2:
+                    typeText = "VIP管家激活";
+                    break;
+                case 3:
+                    typeText = "机构报单";
+                    break;
+                case 4:
+                    typeText = "助理稽查";
+                    break;
+                case 5:
+                    typeText = "财务稽查";
+                    break;
+                case 6:
+                    typeText = "VIP管家稽查";
+                    break;
+            }
+            return typeText;
+        }
+
         #endregion
 
         /// <summary>

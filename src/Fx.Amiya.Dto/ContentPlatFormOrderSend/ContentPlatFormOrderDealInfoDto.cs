@@ -120,6 +120,14 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 成交时间
         /// </summary>
         public DateTime? DealDate { get; set; }
+        /// <summary>
+        /// 业绩类型
+        /// </summary>
+        public int DealPerformanceType { get; set; }
+        /// <summary>
+        /// 业绩类型文本
+        /// </summary>
+        public string DealPerformanceTypeText { get; set; }
 
         /// <summary>
         /// 三方订单号

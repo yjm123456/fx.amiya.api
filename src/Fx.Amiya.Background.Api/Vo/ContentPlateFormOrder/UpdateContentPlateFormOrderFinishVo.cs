@@ -68,6 +68,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 成交时间
         /// </summary>
         public DateTime? DealDate { get; set; }
+        /// <summary>
+        /// 业绩类型
+        /// </summary>
+        public int DealPerformanceType { get; set; }
 
         /// <summary>
         /// 三方订单号

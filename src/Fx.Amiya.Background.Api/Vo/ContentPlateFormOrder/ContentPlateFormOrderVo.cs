@@ -230,6 +230,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public decimal? DealAmount { get; set; }
         /// <summary>
+        /// 业绩类型
+        /// </summary>
+        public string DealPerformanceTypeText { get; set; }
+        /// <summary>
         /// 更新时间
         /// </summary>
         public DateTime? UpdateDate { get; set; }

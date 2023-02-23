@@ -36,6 +36,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.OrderStatus).HasColumnName("order_status").HasColumnType("int").IsRequired();
             builder.Property(e => e.DepositAmount).HasColumnName("deposit_amount").HasColumnType("DECIMAL").IsRequired(false);
             builder.Property(e => e.DealAmount).HasColumnName("deal_amount").HasColumnType("DECIMAL").IsRequired(false);
+            builder.Property(e => e.DealPerformanceType).HasColumnName("deal_performance_type").HasColumnType("int").IsRequired();
             builder.Property(e => e.DealPictureUrl).HasColumnName("deal_picture_url").HasColumnType("VARCHAR(200)").IsRequired(false);
             builder.Property(e => e.DealDate).HasColumnName("deal_date").HasColumnType("DATETIME").IsRequired(false);
             builder.Property(e => e.RepeatOrderPictureUrl).HasColumnName("repeat_order_picture_url").HasColumnType("VARCHAR(200)").IsRequired(false);

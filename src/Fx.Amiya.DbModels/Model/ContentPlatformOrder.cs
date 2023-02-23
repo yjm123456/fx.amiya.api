@@ -79,6 +79,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 最终成交医院id
         /// </summary>
         public int? LastDealHospitalId { get; set; }
+        /// <summary>
+        /// 业绩类型
+        /// </summary>
+        public int DealPerformanceType { get; set; }
         public int? CheckState { get; set; }
 
         public decimal? CheckPrice { get; set; }

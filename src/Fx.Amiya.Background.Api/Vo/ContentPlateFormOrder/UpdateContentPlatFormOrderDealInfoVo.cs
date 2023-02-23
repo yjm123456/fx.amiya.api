@@ -56,6 +56,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public decimal Price { get; set; }
         /// <summary>
+        /// 业绩类型
+        /// </summary>
+        public int DealPerformanceType { get; set; }
+        /// <summary>
         /// 成交时间
         /// </summary>
         public DateTime? DealDate { get; set; }
