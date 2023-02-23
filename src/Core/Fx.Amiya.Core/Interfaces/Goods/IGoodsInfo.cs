@@ -111,5 +111,10 @@ namespace Fx.Amiya.Core.Interfaces.Goods
         /// <param name="code">简码</param>
         /// <returns></returns>
         Task<GoodsInfoForSingleDto> GetSkinCareByCode(string code);
+        /// <summary>
+        /// 根据id获取商品分类名称
+        /// </summary>
+        /// <returns></returns>
+        Task<string> GetCategoryByIdAsync(string id);
     }
 }

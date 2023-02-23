@@ -53,11 +53,21 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         [Description("绑定订单号")]
         public string BindOrderIds { get; set; }
         /// <summary>
+        /// 商品类别
+        /// </summary>
+        [Description("商品类别")]
+        public string GoodsCategory { get; set; }
+        /// <summary>
         /// 商品
         /// </summary>
         [Description("商品")]
         public string Goods { get; set; }
 
+        /// <summary>
+        /// 规格
+        /// </summary>
+        [Description("规格")]
+        public string Standard { get; set; }
 
         /// <summary>
         /// 购买总量
@@ -75,6 +85,11 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         /// </summary>
         [Description("实付款")]
         public decimal TotalAmount { get; set; }
+        /// <summary>
+        /// 支付类型
+        /// </summary>
+        [Description("支付类型")]
+        public string ExchageType { get; set; }
         /// <summary>
         /// 快递单号
         /// </summary>

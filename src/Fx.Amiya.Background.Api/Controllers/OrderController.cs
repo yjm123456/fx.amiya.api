@@ -1363,16 +1363,20 @@ namespace Fx.Amiya.Background.Api.Controllers
                             StatusText = d.StatusText,
                             Address = d.Address,
                             BindOrderIds = d.OrderIds,
+                            GoodsCategory=d.CategoryName,
                             Goods = d.GoodsName,
+                            Standard=d.Standard,
                             IntergrationAccounts = d.IntergrationAccounts,
-                            TotalAmount = d.TotalAmount.HasValue ? d.TotalAmount.Value : 0M,
+                            TotalAmount = d.ActualPay,
                             Quantities = d.Quantities,
                             ReceiveName = d.ReceiveName,
                             ReceivePhone = d.ReceivePhone,
                             SendGoodsName = d.SendGoodsName,
                             SendGoodsDate = d.SendGoodsDate,
                             CourierNumber = d.CourierNumber,
-                            ExpressName = (!string.IsNullOrEmpty(d.ExpressId)) ? _expressManageService.GetByIdAsync(d.ExpressId).Result.ExpressName.ToString() : ""
+                            ExpressName = (!string.IsNullOrEmpty(d.ExpressId)) ? _expressManageService.GetByIdAsync(d.ExpressId).Result.ExpressName.ToString() : "",
+                            ExchageType=d.ExchangeType,
+                            
                         };
             var exportOrder = order.ToList();
             var stream = ExportExcelHelper.ExportExcel(exportOrder);
@@ -1414,7 +1418,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                              ExchangeType = d.ExchangeType,
                              ExchangeTypeText = d.ExchangeTypeText,
                              TradeId = d.TradeId,
-                             Standard=d.Standard
+                             Standard=d.Standard,
+                             CategoryName=d.GoodsCategory
                          };
             return ResultData<List<OrderInfoVo>>.Success().AddData("orders", orders.ToList());
         }

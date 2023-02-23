@@ -61,21 +61,16 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var hospitalCustomerInfo = from d in dalGoodsStandardsPrice.GetAll()
-                                           where (d.GoodsId == goodsId)
-                                           select new GoodsStandardsPriceDto
-                                           {
-                                               Id=d.Id,
-                                               GoodsId = d.GoodsId,
-                                               Standards = d.Standards,
-                                               Price = d.Price,
-                                               IntegralAmount=d.IntegralAmount,
-                                               StandardsImg=d.StandardsImg
-                                           };
-
-                List<GoodsStandardsPriceDto> resultList = new List<GoodsStandardsPriceDto>();
-                resultList = await hospitalCustomerInfo.ToListAsync();
-                return resultList;
+                var hospitalCustomerInfo = dalGoodsStandardsPrice.GetAll().Where(d => d.GoodsId == goodsId).Select(d => new GoodsStandardsPriceDto
+                {
+                    Id = d.Id,
+                    GoodsId = d.GoodsId,
+                    Standards = d.Standards,
+                    Price = d.Price,
+                    IntegralAmount = d.IntegralAmount,
+                    StandardsImg = d.StandardsImg
+                }).ToList();             
+                return hospitalCustomerInfo;
             }
             catch (Exception ex)
             {

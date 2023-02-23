@@ -2963,7 +2963,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<List<OrderTradeDto>> ExportMiniProgramMaterialOrderTradeList(DateTime startDate, DateTime endDate, int employeeId, bool? isSendGoods, string keyword)
+        public async Task<List<MiniprogramOrderExportDto>> ExportMiniProgramMaterialOrderTradeList(DateTime startDate, DateTime endDate, int employeeId, bool? isSendGoods, string keyword)
         {
             bool hidePhone = false;
             var config = await _wxAppConfigService.GetCallCenterConfig();
@@ -2975,82 +2975,66 @@ namespace Fx.Amiya.Service
                     hidePhone = true;
                 }
             }
-            var orderTrades = from d in dalOrderTrade.GetAll()
-                              where d.OrderInfoList.Count(e => e.AppType == (byte)AppType.MiniProgram && e.OrderType == (byte)OrderType.MaterialOrder) > 0
-                              && (string.IsNullOrWhiteSpace(keyword) || d.CustomerInfo.Phone == keyword)
-                              && (d.CreateDate >= startDate && d.CreateDate <= endDate.AddDays(1))
-                              select d;
+            var order = dalOrderInfo.GetAll().Include(e => e.OrderTrade).Where(e => e.AppType == (byte)AppType.MiniProgram && e.OrderType == (byte)OrderType.MaterialOrder && (e.CreateDate >= startDate && e.CreateDate <= endDate.AddDays(1)));
 
             if (isSendGoods == null)
             {
-                orderTrades = from d in orderTrades
-                              where d.StatusCode == OrderStatusCode.TRADE_FINISHED
+                order = from d in order
+                        where d.StatusCode == OrderStatusCode.TRADE_FINISHED
                               || d.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS
                               || d.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS
                               select d;
             }
             else if (isSendGoods == true)
             {
-                orderTrades = from d in orderTrades
-                              where d.StatusCode == OrderStatusCode.TRADE_FINISHED
+                order = from d in order
+                        where d.StatusCode == OrderStatusCode.TRADE_FINISHED
                               || d.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS
                               select d;
             }
             else
             {
-                orderTrades = from d in orderTrades
-                              where d.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS
+                order = from d in order
+                        where d.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS
                               select d;
             }
-
-            var orderTradeList = from d in orderTrades
-                                 select new OrderTradeDto
-                                 {
-                                     TradeId = d.TradeId,
-                                     CustomerId = d.CustomerId,
-                                     Phone = hidePhone == true ? ServiceClass.GetIncompletePhone(d.CustomerInfo.Phone) : d.CustomerInfo.Phone,
-                                     CreateDate = d.CreateDate,
-                                     UpdateDate = d.UpdateDate,
-                                     TotalAmount = d.TotalAmount,
-                                     TotalIntegration = d.TotalIntegration,
-                                     Remark = d.Remark,
-                                     StatusCode = d.StatusCode,
-                                     StatusText = ServiceClass.GetOrderStatusText(d.StatusCode),
-                                     AddressId = d.AddressId,
-                                     OrderIdsList = d.OrderInfoList.Select(x => x.Id).ToList(),
-                                     Quantities = d.OrderInfoList.Sum(x => x.Quantity).Value,
-                                     IntergrationAccounts = d.OrderInfoList.Sum(x => x.IntegrationQuantity).Value,
-                                     GoodsList = d.OrderInfoList.Select(x => x.GoodsName).ToList(),
-                                     Address = d.Address.Province + d.Address.City + d.Address.District + d.Address.Other,
-                                     ReceiveName = d.Address.Contact,
-                                     ReceivePhone = hidePhone == true ? ServiceClass.GetIncompletePhone(d.Address.Phone) : d.Address.Phone,
-                                     SendGoodsBy = d.SendGoodsRecord.HandleBy,
-                                     SendGoodsName = d.SendGoodsRecord.AmiyaEmployee.Name,
-                                     SendGoodsDate = d.SendGoodsRecord.Date,
-                                     CourierNumber = d.SendGoodsRecord.CourierNumber,
-                                     ExpressId = d.SendGoodsRecord.ExpressId,
-                                 };
-            List<OrderTradeDto> orderTradePageInfo = new List<OrderTradeDto>();
-            orderTradePageInfo = await orderTradeList.OrderByDescending(e => e.CreateDate).ToListAsync();
-            foreach (var x in orderTradePageInfo)
+            var orderList = order.Select(d=>new MiniprogramOrderExportDto
             {
-                if (x.OrderIdsList.Count > 0)
-                {
-                    foreach (var z in x.OrderIdsList)
-                    {
-                        x.OrderIds += z + ",";
-                    }
-                    x.OrderIds = x.OrderIds.Substring(0, x.OrderIds.Length - 1);
-                }
-                if (x.GoodsList.Count > 0)
-                {
-                    foreach (var y in x.GoodsList)
-                    {
-                        x.GoodsName += y + ",";
-                    }
-                    x.GoodsName = x.GoodsName.Substring(0, x.GoodsName.Length - 1);
-                }
+                TradeId = d.OrderTrade.TradeId,
+                OrderIds=d.Id,
+                CustomerId = d.OrderTrade.CustomerId,
+                Phone = hidePhone == true ? ServiceClass.GetIncompletePhone(d.OrderTrade.CustomerInfo.Phone) : d.OrderTrade.CustomerInfo.Phone,
+                CreateDate = d.OrderTrade.CreateDate,
+                UpdateDate = d.OrderTrade.UpdateDate,
+                ActualPay = d.ActualPayment.Value,
+                IntergrationAccounts = d.IntegrationQuantity.Value,
+                Remark = d.OrderTrade.Remark,
+                StatusCode = d.StatusCode,
+                StatusText = ServiceClass.GetOrderStatusText(d.StatusCode),
+                AddressId = d.OrderTrade.AddressId,
+                Quantities = d.Quantity.Value,
+                Address = d.OrderTrade.Address.Province + d.OrderTrade.Address.City + d.OrderTrade.Address.District + d.OrderTrade.Address.Other,
+                ReceiveName = d.OrderTrade.Address.Contact,
+                ReceivePhone = hidePhone == true ? ServiceClass.GetIncompletePhone(d.OrderTrade.Address.Phone) : d.OrderTrade.Address.Phone,
+                SendGoodsBy = d.OrderTrade.SendGoodsRecord.HandleBy,
+                SendGoodsName = d.OrderTrade.SendGoodsRecord.AmiyaEmployee.Name,
+                SendGoodsDate = d.OrderTrade.SendGoodsRecord.Date,
+                CourierNumber = d.OrderTrade.SendGoodsRecord.CourierNumber,
+                ExpressId = d.OrderTrade.SendGoodsRecord.ExpressId,
+                GoodsName=d.GoodsName,
+                Standard=d.Standard,
+                GoodsId=d.GoodsId,
+                ExchangeType=ServiceClass.GetExchangeTypeText((byte)d.ExchangeType)
+            }).ToList();;
+            foreach (var item in orderList)
+            {
+                var categoryName = await _goodsInfoService.GetCategoryByIdAsync(item.GoodsId);
+                item.CategoryName = categoryName;
             }
+            orderList= orderList.Where(e=>string.IsNullOrEmpty(keyword)||(e.GoodsName.Contains(keyword)||e.CategoryName.Contains(keyword)||e.Standard.Contains(keyword))).ToList();
+            List<MiniprogramOrderExportDto> orderTradePageInfo = new List<MiniprogramOrderExportDto>();
+            orderTradePageInfo = orderList.OrderByDescending(e => e.CreateDate).ToList();
+            
             return orderTradePageInfo;
         }
 
@@ -3101,9 +3085,14 @@ namespace Fx.Amiya.Service
                              ExchangeType = d.ExchangeType,
                              ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)d.ExchangeType),
                              TradeId = d.TradeId,
-                             Standard = d.Standard
+                             Standard = d.Standard,
                          };
-            return await orders.ToListAsync();
+            var orderList =await orders.ToListAsync();
+            foreach (var order in orderList)
+            {
+                order.GoodsCategory =(await _goodsInfoService.GetByIdAsync(order.GoodsId)).CategoryName;
+            }
+            return orderList;
         }
 
 

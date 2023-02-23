@@ -174,6 +174,10 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         /// 开票公司
         /// </summary>
         public string CreateBillCompany { get; set; }
+        /// <summary>
+        /// 商品类别
+        /// </summary>
+        public string CategoryName { get; set; }
 
         #region  财务审核板块
         /// <summary>

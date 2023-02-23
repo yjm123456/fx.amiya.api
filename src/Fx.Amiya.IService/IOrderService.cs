@@ -454,7 +454,7 @@ namespace Fx.Amiya.IService
         /// <param name="keyword"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
-        Task<List<OrderTradeDto>> ExportMiniProgramMaterialOrderTradeList(DateTime startDate, DateTime endDate, int employeeId, bool? isSendGoods, string keyword);
+        Task<List<MiniprogramOrderExportDto>> ExportMiniProgramMaterialOrderTradeList(DateTime startDate, DateTime endDate, int employeeId, bool? isSendGoods, string keyword);
 
         /// <summary>
         /// 根据交易编号获取订单列表
