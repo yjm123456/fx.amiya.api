@@ -188,7 +188,7 @@ namespace Fx.Amiya.Service
                     case 1:
                         text = "预约取消";
                         break;
-                    case 3:
+                    case 2:
                         text = "预约成功";
                         break;
                     default:
