@@ -36,21 +36,23 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("hospitalBoard")]
-        public async Task<ResultData<FxPageInfo<FinancialHospitalBoardVo>>> GetHospitalBoard(int? hospitalId,DateTime? startDate,DateTime? endDate,int pageNum,int pageSize) {
-            var data=await billService.FinancialHospitalBoardDataAsync(hospitalId,startDate,endDate,pageNum,pageSize);
+        public async Task<ResultData<FxPageInfo<FinancialHospitalBoardVo>>> GetHospitalBoard(int? hospitalId, DateTime? startDate, DateTime? endDate, int pageNum, int pageSize)
+        {
+            var data = await billService.FinancialHospitalBoardDataAsync(hospitalId, startDate, endDate, pageNum, pageSize);
             FxPageInfo<FinancialHospitalBoardVo> fxPageInfo = new FxPageInfo<FinancialHospitalBoardVo>();
             fxPageInfo.TotalCount = data.TotalCount;
-            fxPageInfo.List = data.List.Select(e=>new FinancialHospitalBoardVo { 
-                HospitalName=e.HospitalName,
-                DealPrice=e.DealPrice,
-                TotalServicePrice=e.TotalServicePrice,
-                NoIncludeTaxPrice=e.NoIncludeTaxPrice,
-                InformationPrice=e.InformationPrice,
-                SystemUsePrice=e.SystemUsePrice,
-                ReturnBackPrice=e.ReturnBackPrice,
-                UnReturnBackPrice=e.UnReturnBackPrice
+            fxPageInfo.List = data.List.Select(e => new FinancialHospitalBoardVo
+            {
+                HospitalName = e.HospitalName,
+                DealPrice = e.DealPrice,
+                TotalServicePrice = e.TotalServicePrice,
+                NoIncludeTaxPrice = e.NoIncludeTaxPrice,
+                InformationPrice = e.InformationPrice,
+                SystemUsePrice = e.SystemUsePrice,
+                ReturnBackPrice = e.ReturnBackPrice,
+                UnReturnBackPrice = e.TotalServicePrice - e.ReturnBackPrice
             });
-            return ResultData<FxPageInfo<FinancialHospitalBoardVo>>.Success().AddData("data",fxPageInfo);
+            return ResultData<FxPageInfo<FinancialHospitalBoardVo>>.Success().AddData("data", fxPageInfo);
         }
 
         /// <summary>
@@ -64,13 +66,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("subsidiaryBoard")]
-        public async Task<ResultData<FxPageInfo<FinancialHospitalBoardVo>>> GetSubsidiaryBoard(string companyId, int? hospitalId, DateTime? startDate, DateTime? endDate, int pageNum, int pageSize) {
-            var data = await billService.FinancialCompanyBoardDataAsync(companyId,hospitalId, startDate, endDate, pageNum, pageSize);
+        public async Task<ResultData<FxPageInfo<FinancialHospitalBoardVo>>> GetSubsidiaryBoard(string companyId, int? hospitalId, DateTime? startDate, DateTime? endDate, int pageNum, int pageSize)
+        {
+            var data = await billService.FinancialCompanyBoardDataAsync(companyId, hospitalId, startDate, endDate, pageNum, pageSize);
             FxPageInfo<FinancialHospitalBoardVo> fxPageInfo = new FxPageInfo<FinancialHospitalBoardVo>();
             fxPageInfo.TotalCount = data.TotalCount;
             fxPageInfo.List = data.List.Select(e => new FinancialHospitalBoardVo
             {
-                CompanyName=e.CompanyName,
+                CompanyName = e.CompanyName,
                 HospitalName = e.HospitalName,
                 DealPrice = e.DealPrice,
                 TotalServicePrice = e.TotalServicePrice,
@@ -78,7 +81,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 InformationPrice = e.InformationPrice,
                 SystemUsePrice = e.SystemUsePrice,
                 ReturnBackPrice = e.ReturnBackPrice,
-                UnReturnBackPrice = e.UnReturnBackPrice
+                UnReturnBackPrice = e.TotalServicePrice - e.ReturnBackPrice
             });
             return ResultData<FxPageInfo<FinancialHospitalBoardVo>>.Success().AddData("data", fxPageInfo);
         }
@@ -95,18 +98,20 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="liveAnchorId">主播id</param>
         /// <returns></returns>
         [HttpGet("liveAnchorBoardData")]
-        public async Task<ResultData<List<LiveAnchorBoardVo>>> GetLiveAnchorBoard(DateTime? startDate,DateTime? endDate,int? liveAnchorId) {
-            var dataList =await financialboardSerice.GetBoardLiveAnchorDataAsync(startDate,endDate,liveAnchorId);
-            var resultList= dataList.Select(e => new LiveAnchorBoardVo {
-                CompanyName=e.CompanyName,
-                DealPrice=e.DealPrice,
-                TotalServicePrice=e.TotalServicePrice,
-                NewCustomerPrice=e.NewCustomerPrice,
-                NewCustomerServicePrice=e.NewCustomerServicePrice,
-                OldCustomerPrice=e.OldCustomerPrice,
-                OldCustomerServicePrice=e.OldCustomerServicePrice,
-                LiveAnchorName=e.LiveAnchorName
-            }).OrderBy(e=>e.DealPrice).ToList();
+        public async Task<ResultData<List<LiveAnchorBoardVo>>> GetLiveAnchorBoard(DateTime? startDate, DateTime? endDate, int? liveAnchorId)
+        {
+            var dataList = await financialboardSerice.GetBoardLiveAnchorDataAsync(startDate, endDate, liveAnchorId);
+            var resultList = dataList.Select(e => new LiveAnchorBoardVo
+            {
+                CompanyName = e.CompanyName,
+                DealPrice = e.DealPrice,
+                TotalServicePrice = e.TotalServicePrice,
+                NewCustomerPrice = e.NewCustomerPrice,
+                NewCustomerServicePrice = e.NewCustomerServicePrice,
+                OldCustomerPrice = e.OldCustomerPrice,
+                OldCustomerServicePrice = e.OldCustomerServicePrice,
+                LiveAnchorName = e.LiveAnchorName
+            }).OrderByDescending(e => e.LiveAnchorName).ThenByDescending(e=>e.DealPrice).ToList();
             return ResultData<List<LiveAnchorBoardVo>>.Success().AddData("data", resultList);
         }
 
@@ -117,7 +122,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="endDate"></param>
         /// <returns></returns>
         [HttpGet("customerServiceBoardData")]
-        public async Task<ResultData<List<CustomerServiceBoardVo>>> GetCustomerServiceBoard(DateTime? startDate, DateTime? endDate) {
+        public async Task<ResultData<List<CustomerServiceBoardVo>>> GetCustomerServiceBoard(DateTime? startDate, DateTime? endDate)
+        {
             var dataList = await financialboardSerice.GetBoardCustomerServiceDataAsync(startDate, endDate, null);
             var resultList = dataList.Select(e => new CustomerServiceBoardVo
             {
@@ -128,7 +134,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 NewCustomerServicePrice = e.NewCustomerServicePrice,
                 OldCustomerPrice = e.OldCustomerPrice,
                 OldCustomerServicePrice = e.OldCustomerServicePrice,
-            }).OrderByDescending(e=>e.DealPrice).ToList();
+            }).OrderByDescending(e => e.DealPrice).ToList();
             return ResultData<List<CustomerServiceBoardVo>>.Success().AddData("data", resultList);
         }
 
