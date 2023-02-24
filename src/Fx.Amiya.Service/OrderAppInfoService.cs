@@ -228,6 +228,7 @@ namespace Fx.Amiya.Service
 
             OrderAppInfoDto appInfoDto = new OrderAppInfoDto();
             appInfoDto.Id = appInfo.Id;
+            appInfoDto.ShopId = appInfo.ShopId;
             appInfoDto.AppKey = appInfo.AppKey;
             appInfoDto.AppSecret = appInfo.AppSecret;
             appInfoDto.AccessToken = appInfo.AccessToken;

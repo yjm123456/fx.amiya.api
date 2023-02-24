@@ -14,6 +14,7 @@ using Fx.Common;
 using Fx.Common.Utils;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.Web;
 
 namespace Fx.Amiya.Service
 {
@@ -110,7 +111,30 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
+        public async Task<string> GetCodeAsync()
+        {
+            try
+            {
+                var businessInfo = await orderAppInfoService.GetBusinessWeChatAppInfo();
+                string redirecturi = "https://app.ameiyes.com/amiyabusinesswechat/#/";
+                redirecturi = HttpUtility.UrlEncode(redirecturi);
+                string url2 = $"https://open.weixin.qq.com/connect/oauth2/authorize?appid={businessInfo.ShopId}&redirect_uri={redirecturi}&response_type=code&scope=snsapi_privateinfo&state=test&agentid={businessInfo.AppSecret}#wechat_redirect";
+                var res = await HttpUtil.HTTPJsonGetAsync(url2);
+                JObject requestObject = JsonConvert.DeserializeObject(res) as JObject;
+                var errCode = requestObject["errcode"].ToString();
+                if (errCode != "0")
+                {
+                    throw new Exception(requestObject["errmsg"].ToString());
+                }
 
+
+                return res;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public async Task<AmiyaEmployeeDto> GetByCodeAsync(string code)
         {

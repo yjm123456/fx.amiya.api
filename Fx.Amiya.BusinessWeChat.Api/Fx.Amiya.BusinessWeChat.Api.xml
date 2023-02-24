@@ -78,6 +78,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.GetCode">
+            <summary>
+            获取code
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.AmiyaLoginAsync(System.String)">
             <summary>
             通过code检索啊美雅员工信息

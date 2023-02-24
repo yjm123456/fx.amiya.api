@@ -35,6 +35,24 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             this.httpContextAccessor = httpContextAccessor;
             _fxAppGlobal = fxAppGlobal;
         }
+
+        /// <summary>
+        /// 获取code
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getCode")]
+        public async Task<ResultData<string>> GetCode()
+        {
+            try
+            {
+                var res = await amiyaEmployeeService.GetCodeAsync();
+                return ResultData<string>.Success().AddData("businessWechatAuth", res);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<string>.Fail(ex.Message);
+            }
+        }
         /// <summary>
         /// 通过code检索啊美雅员工信息
         /// </summary>

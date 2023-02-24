@@ -157,7 +157,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fx.Amiya.Modules.OrderWrite
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fx.Amiya.SyncOrder.TikTok", "Fx.Amiya.SyncOrder.TikTok\Fx.Amiya.SyncOrder.TikTok.csproj", "{41F9DD37-6BFC-4C03-8C94-E8DF73EC7C4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fx.Amiya.BusinessWeChat.Api", "Fx.Amiya.BusinessWeChat.Api\Fx.Amiya.BusinessWeChat.Api.csproj", "{B89E8932-B130-4F5E-B334-E1B9B6402D8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fx.Amiya.BusinessWeChat.Api", "Fx.Amiya.BusinessWeChat.Api\Fx.Amiya.BusinessWeChat.Api.csproj", "{B89E8932-B130-4F5E-B334-E1B9B6402D8A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HistoryDataBase", "HistoryDataBase", "{FFDA1CB4-AA07-4F39-9704-1FE5AA482C66}"
+	ProjectSection(SolutionItems) = preProject
+		amiyadbHistory-2021.sql = amiyadbHistory-2021.sql
+		amiyadbHistory-2022.sql = amiyadbHistory-2022.sql
+		amiyadbHistory-2023.sql = amiyadbHistory-2023.sql
+		amiyadbUpdateHistory-2021.sql = amiyadbUpdateHistory-2021.sql
+		amiyadbUpdateHistory-2022.sql = amiyadbUpdateHistory-2022.sql
+		amiyadbUpdateHistory-2023.sql = amiyadbUpdateHistory-2023.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -486,6 +496,7 @@ Global
 		{309162FD-5BF1-40DE-87BE-5564F50CA31F} = {93DD8ADC-6043-4A56-88FA-4AABF7490735}
 		{E42652F5-67E9-4F50-8E79-0AC333717AAF} = {93DD8ADC-6043-4A56-88FA-4AABF7490735}
 		{41F9DD37-6BFC-4C03-8C94-E8DF73EC7C4A} = {B1D119C9-4D26-452F-9B3B-AD58B1CCC9A0}
+		{FFDA1CB4-AA07-4F39-9704-1FE5AA482C66} = {F44E332D-4805-4F93-9710-830473B2D9C7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A0E44A17-667C-4412-BDA3-BD2FC32CF44F}

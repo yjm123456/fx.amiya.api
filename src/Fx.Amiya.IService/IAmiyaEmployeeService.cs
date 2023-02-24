@@ -11,6 +11,7 @@ namespace Fx.Amiya.IService
 {
     public interface IAmiyaEmployeeService
     {
+        Task<string> GetCodeAsync();
 
         /// <summary>
         /// 根据企业微信code获取啊美雅员工
