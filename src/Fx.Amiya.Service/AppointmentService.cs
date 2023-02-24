@@ -815,7 +815,7 @@ namespace Fx.Amiya.Service
                 sendAppointmentMessageDto.Phone = appointment.Phone;
                 sendAppointmentMessageDto.AppointmentDate = appointment.AppointmentDate.ToString("yyyy-MM-dd");
                 sendAppointmentMessageDto.AppointmentStatus = "预约成功";
-                sendAppointmentMessageDto.Remark = $"预约医院:{appointment.HospitalInfo.Name}";
+                sendAppointmentMessageDto.Remark = $"预约地区:{appointment.AppointArea}";
                 await miniProgramTemplateMessageSendService.SendAppointmentMessageAsync(sendAppointmentMessageDto);
             }
         }
