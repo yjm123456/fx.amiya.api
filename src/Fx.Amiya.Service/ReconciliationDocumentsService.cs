@@ -79,7 +79,7 @@ namespace Fx.Amiya.Service
                                               where (string.IsNullOrWhiteSpace(keyword) || d.CustomerName.Contains(keyword) || d.CustomerPhone.Contains(keyword) || d.Id.Contains(keyword))
                                              && (!startDealDate.HasValue && !endDealDate.HasValue || d.DealDate >= startDealrq && d.DealDate <= endDealrq)
                                              && (!returnBackPricePercent.HasValue || d.ReturnBackPricePercent == returnBackPricePercent.Value)
-                                             && (!reconciliationState.HasValue || d.ReconciliationState == reconciliationState.Value)
+                                             && (reconciliationState.HasValue? d.ReconciliationState == reconciliationState.Value:(d.ReconciliationState==(int)ReconciliationDocumentsStateEnum.Successful || d.ReconciliationState == (int)ReconciliationDocumentsStateEnum.ReturnBackPriceSuccessful))
                                              && (!hospitalId.HasValue || d.HospitalId == hospitalId)
                                              && (!isCreateBill.HasValue || d.IsCreateBill == isCreateBill)
                                              && (!startDate.HasValue && !endDate.HasValue || d.CreateDate >= startrq.Date && d.CreateDate < endrq.Date)
@@ -123,7 +123,7 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task<List<ReconciliationDocumentsDto>> ExportListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId)
+        public async Task<List<ReconciliationDocumentsDto>> ExportListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId,bool? isCreateBill)
         {
             try
             {
@@ -146,7 +146,8 @@ namespace Fx.Amiya.Service
                                               where (string.IsNullOrWhiteSpace(keyword) || d.CustomerName.Contains(keyword) || d.CustomerPhone.Contains(keyword))
                                              && (!startDealDate.HasValue && !endDealDate.HasValue || d.DealDate >= startDealrq && d.DealDate <= endDealrq)
                                              && (!returnBackPricePercent.HasValue || d.ReturnBackPricePercent == returnBackPricePercent.Value)
-                                             && (!reconciliationState.HasValue || d.ReconciliationState == reconciliationState.Value)
+                                             && (reconciliationState.HasValue? d.ReconciliationState == reconciliationState.Value:(d.ReconciliationState == (int)ReconciliationDocumentsStateEnum.Successful || d.ReconciliationState == (int)ReconciliationDocumentsStateEnum.ReturnBackPriceSuccessful))
+                                             &&(!isCreateBill.HasValue||d.IsCreateBill==isCreateBill)
                                              && (!hospitalId.HasValue || d.HospitalId == hospitalId)
                                              && (!startDate.HasValue && !endDate.HasValue || d.CreateDate >= startrq.Date && d.CreateDate < endrq.Date)
                                              && d.Valid

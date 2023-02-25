@@ -153,7 +153,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 获取财务对账单信息列表(管理端与机构端公用)
         /// </summary>
         /// <param name="returnBackPricePercent">返款比例</param>
-        /// <param name="reconciliationState">对账单状态（0：已提交，1:待确认,2:问题账单,3:对账完成，4：回款完成）</param>
+        /// <param name="reconciliationState">对账单状态（0：已提交，1:待确认,2:问题账单,3:对账完成，4：回款完成,）</param>
         /// <param name="startDate">创建时间（开始）</param>
         /// <param name="endDate">创建时间（结束）</param>
         /// <param name="startDealDate">成交时间（开始）</param>
@@ -225,10 +225,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="endDealDate">成交时间（结束）</param>
         /// <param name="keyword">关键词（客户姓名，手机号）</param>
         /// <param name="hospitalId">医院id（空值查询所有医院）</param>
+        /// <param name="isCreateBill">是否开票</param>
         /// <returns></returns>
         [HttpGet("internalExportReconciliationDocuments")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> InternalxportReconciliationDocuments(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId)
+        public async Task<FileStreamResult> InternalxportReconciliationDocuments(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId,bool? isCreateBill)
         {
             if (!startDate.HasValue && !endDate.HasValue)
             { throw new Exception("请选择时间进行查询"); }
@@ -240,7 +241,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 }
             }
             var res = new List<ExportReconciliationDocumentsVo>();
-            var q = await reconciliationDocumentsService.ExportListWithPageAsync(returnBackPricePercent, reconciliationState, startDate, endDate, startDealDate, endDealDate, keyword, hospitalId);
+            var q = await reconciliationDocumentsService.ExportListWithPageAsync(returnBackPricePercent, reconciliationState, startDate, endDate, startDealDate, endDealDate, keyword, hospitalId,isCreateBill);
 
             var reconciliationDocuments = from d in q
                                           select new ExportReconciliationDocumentsVo

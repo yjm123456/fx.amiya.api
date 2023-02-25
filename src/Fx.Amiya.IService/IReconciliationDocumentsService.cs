@@ -41,7 +41,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageSize"></param>
         /// <returns></returns>
 
-        Task<List<ReconciliationDocumentsDto>> ExportListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId);
+        Task<List<ReconciliationDocumentsDto>> ExportListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId,bool? isCreateBill);
         /// <summary>
         /// 根据活动编号获取医院参与的项目
         /// </summary>
