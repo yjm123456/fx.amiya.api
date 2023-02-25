@@ -46,6 +46,11 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         [Description("订单金额")]
         public decimal OrderPrice { get; set; }
         /// <summary>
+        /// 对账金额
+        /// </summary>
+        [Description("对账金额")]
+        public decimal? RecolicationPrice { get; set; }
+        /// <summary>
         /// 新/老客业绩
         /// </summary>
         [Description(" 新/老客业绩")]
@@ -75,6 +80,11 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         /// </summary>
         [Description("归属客服")]
         public string BelongEmpName { get; set; }
+        /// <summary>
+        /// 业绩上传人员名称
+        /// </summary>
+        [Description("业绩上传人员")]
+        public string? CreateEmpName { get; set; }
         /// <summary>
         /// 操作人
         /// </summary>

@@ -1770,6 +1770,8 @@ namespace Fx.Amiya.Service
                 addRecommandDocumentSettleDto.BelongLiveAnchorAccount = order.LiveAnchorId;
                 addRecommandDocumentSettleDto.BelongEmpId = order.BelongEmpId;
                 addRecommandDocumentSettleDto.CreateBy = input.employeeId;
+                addRecommandDocumentSettleDto.CreateEmpId = order.BelongEmpId;
+                addRecommandDocumentSettleDto.RecolicationPrice = input.CheckPrice;
                 addRecommandDocumentSettleDto.AccountType = true;
                 addRecommandDocumentSettleDto.AccountPrice = input.CheckPrice - input.SettlePrice;
                 addRecommandDocumentSettleDto.OrderPrice = order.ActualPayment.HasValue ? order.ActualPayment.Value : 0.00M;

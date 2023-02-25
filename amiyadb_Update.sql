@@ -279,3 +279,7 @@ ALTER TABLE `tbl_goods_info`
 
 ------------------王健 2023-02-20 END----------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+--对账单审核记录加入对账金额与业绩上传人员
+ALTER TABLE `amiyadb`.`tbl_recommand_document_settle` 
+ADD COLUMN `recolication_price` DECIMAL(12,2) NULL AFTER `order_price`,
+ADD COLUMN `create_emp_id` INT NULL AFTER `belong_emp_id`;

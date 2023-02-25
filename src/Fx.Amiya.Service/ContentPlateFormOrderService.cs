@@ -36,6 +36,7 @@ namespace Fx.Amiya.Service
         private IHospitalBindCustomerService hospitalBindCustomerService;
         private IAmiyaGoodsDemandService amiyaGoodsDemandService;
         private IRecommandDocumentSettleService recommandDocumentSettleService;
+        private ILiveAnchorWeChatInfoService liveAnchorWeChatInfoService;
         private IBindCustomerServiceService bindCustomerServiceService;
         private IHospitalCustomerInfoService hospitalCustomerInfoService;
         private IOrderCheckPictureService _orderCheckPictureService;
@@ -62,6 +63,7 @@ namespace Fx.Amiya.Service
            IDalAmiyaEmployee dalAmiyaEmployee,
            IRecommandDocumentSettleService recommandDocumentSettleService,
            ICustomerBaseInfoService customerBaseInfoService,
+           ILiveAnchorWeChatInfoService liveAnchorWeChatInfoService,
             ILiveAnchorService liveAnchorService,
             IOrderRemarkService orderRemarkService,
             IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
@@ -85,6 +87,7 @@ namespace Fx.Amiya.Service
         {
             _dalContentPlatformOrder = dalContentPlatformOrder;
             this.unitOfWork = unitOfWork;
+            this.liveAnchorWeChatInfoService = liveAnchorWeChatInfoService;
             this.hospitalBindCustomerService = hospitalBindCustomerService;
             _shoppingCartRegistration = shoppingCartRegistration;
             this.hospitalCustomerInfoService = hospitalCustomerInfoService;
@@ -389,6 +392,11 @@ namespace Fx.Amiya.Service
                     {
                         var departmentInfo = await _departmentService.GetByIdAsync(x.GoodsDepartmentId);
                         x.DepartmentName = departmentInfo.DepartmentName;
+                    }
+                    if (!string.IsNullOrEmpty(x.LiveAnchorWeChatNo))
+                    {
+                        var wechatNoInfo = await liveAnchorWeChatInfoService.GetByIdAsync(x.LiveAnchorWeChatNo);
+                        x.LiveAnchorWeChatNo = wechatNoInfo.WeChatNo;
                     }
                     //if (x.CheckBy.HasValue && x.CheckBy != 0)
                     //{
@@ -911,6 +919,11 @@ namespace Fx.Amiya.Service
                         var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.BelongEmpId);
                         x.BelongEmpName = empInfo.Name.ToString();
                     }
+                    if (!string.IsNullOrEmpty(x.LiveAnchorWeChatNo))
+                    {
+                        var wechatInfo = await liveAnchorWeChatInfoService.GetByIdAsync(x.LiveAnchorWeChatNo);
+                        x.LiveAnchorWeChatNo = wechatInfo.WeChatNo.ToString();
+                    }
                 }
                 return orderPageInfo;
             }
@@ -1037,6 +1050,11 @@ namespace Fx.Amiya.Service
                         {
                             k.LastDealHospital = "";
                         }
+                    }
+                    if (!string.IsNullOrEmpty(k.LiveAnchorWeChatNo))
+                    {
+                        var wechatInfo = await liveAnchorWeChatInfoService.GetByIdAsync(k.LiveAnchorWeChatNo);
+                        k.LiveAnchorWeChatNo = wechatInfo.WeChatNo;
                     }
                 }
                 var result = x;
@@ -1172,6 +1190,11 @@ namespace Fx.Amiya.Service
                     //    var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.CheckBy);
                     //    x.CheckByName = empInfo.Name.ToString();
                     //}
+                    if (!string.IsNullOrEmpty(x.LiveAnchorWeChatNo))
+                    {
+                        var wechatInfo = await liveAnchorWeChatInfoService.GetByIdAsync(x.LiveAnchorWeChatNo);
+                        x.LiveAnchorWeChatNo = wechatInfo.WeChatNo;
+                    }
                     if (!string.IsNullOrEmpty(x.GoodsDepartmentId))
                     {
                         var departmentInfo = await _departmentService.GetByIdAsync(x.GoodsDepartmentId);
@@ -1233,7 +1256,12 @@ namespace Fx.Amiya.Service
             var bindCustomerServiceInfo = await bindCustomerServiceService.GetEmployeeDetailsByPhoneAsync(order.Phone);
             result.UserId = bindCustomerServiceInfo.UserId;
             result.CreateDate = order.CreateDate;
-            result.LiveAnchorWeChatNo = order.LiveAnchorWeChatNo;
+            if (!string.IsNullOrEmpty(order.LiveAnchorWeChatNo))
+            {
+                var wechatInfo = await liveAnchorWeChatInfoService.GetByIdAsync(order.LiveAnchorWeChatNo);
+                result.LiveAnchorWeChatNo = wechatInfo.WeChatNo;
+
+            }
             result.IsOldCustomer = order.IsOldCustomer;
             result.IsAcompanying = order.IsAcompanying;
             result.ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(order.ConsultationType);
@@ -1683,6 +1711,8 @@ namespace Fx.Amiya.Service
                 addRecommandDocumentSettleDto.ReturnBackPrice = input.SettlePrice;
                 addRecommandDocumentSettleDto.BelongLiveAnchorAccount = order.LiveAnchorId;
                 addRecommandDocumentSettleDto.BelongEmpId = order.BelongEmpId;
+                addRecommandDocumentSettleDto.CreateEmpId = dealInfoUpdate.CreateBy;
+                addRecommandDocumentSettleDto.RecolicationPrice = input.CheckPrice;
                 addRecommandDocumentSettleDto.CreateBy = input.employeeId;
                 addRecommandDocumentSettleDto.AccountType = false;
                 addRecommandDocumentSettleDto.AccountPrice = input.SettlePrice;
@@ -2912,7 +2942,7 @@ namespace Fx.Amiya.Service
             startDate = startDate == null ? DateTime.Now.Date : startDate;
             endDate = startDate == null ? DateTime.Now.AddDays(1).Date : endDate;
             var dataList = _dalContentPlatformOrder.GetAll().Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == 2)
-                .Where(e => liveAnchorIds.Count==0 || liveAnchorIds.Contains(e.LiveAnchorId.HasValue?e.LiveAnchorId.Value:0))
+                .Where(e => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(e.LiveAnchorId.HasValue ? e.LiveAnchorId.Value : 0))
                 .GroupBy(e => new { e.LiveAnchorId, e.BelongCompany })
                 .Select(e => new LiveAnchorBoardDataDto
                 {

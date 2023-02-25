@@ -1278,7 +1278,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 获取内容平台订单到院状态
         /// </summary>
         /// <returns></returns>
-        [FxInternalAuthorize]
+        [FxInternalOrTenantAuthroize]
         [HttpGet("contentPlateFormOrderToHospitalTypeList")]
         public ResultData<List<ContentPlateFormOrderTypeVo>> GetContentPlateFormOrderToHospitalTypeList()
         {

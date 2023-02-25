@@ -21,6 +21,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.DealInfoId).HasColumnName("deal_info_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(e => e.OrderFrom).HasColumnName("order_from").HasColumnType("int").IsRequired();
             builder.Property(e => e.OrderPrice).HasColumnName("order_price").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.RecolicationPrice).HasColumnName("recolication_price").HasColumnType("decimal(12,2)").IsRequired(false);
             builder.Property(e => e.IsOldCustomer).HasColumnName("is_oldcustomer").HasColumnType("bit").IsRequired();
             builder.Property(e => e.ReturnBackPrice).HasColumnName("return_back_price").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
@@ -29,6 +30,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
 
             builder.Property(e => e.BelongLiveAnchorAccount).HasColumnName("belong_live_anchor_account").HasColumnType("int").IsRequired(false);
             builder.Property(e => e.BelongEmpId).HasColumnName("belong_emp_id").HasColumnType("int").IsRequired(false);
+            builder.Property(e => e.CreateEmpId).HasColumnName("create_emp_id").HasColumnType("int").IsRequired(false);
             builder.Property(e => e.CreateBy).HasColumnName("create_by").HasColumnType("int").IsRequired();
             builder.Property(e => e.AccountType).HasColumnName("account_type").HasColumnType("bit").IsRequired();
             builder.Property(e => e.AccountPrice).HasColumnName("account_price").HasColumnType("decimal(12,2)").IsRequired();

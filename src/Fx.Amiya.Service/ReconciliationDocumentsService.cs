@@ -563,6 +563,11 @@ namespace Fx.Amiya.Service
                     var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
                     x.BelongEmpName = empInfo.Name;
                 }
+                if (x.CreateEmpId.HasValue)
+                {
+                    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CreateEmpId.Value);
+                    x.CreateEmpName = empInfo.Name;
+                }
                 if (x.BelongLiveAnchorAccount.HasValue)
                 {
                     var liveAnchor = await liveAnchorService.GetByIdAsync(x.BelongLiveAnchorAccount.Value);
@@ -601,6 +606,11 @@ namespace Fx.Amiya.Service
                 {
                     var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
                     x.BelongEmpName = empInfo.Name;
+                }
+                if (x.CreateEmpId.HasValue)
+                {
+                    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CreateEmpId.Value);
+                    x.CreateEmpName = empInfo.Name;
                 }
                 if (x.BelongLiveAnchorAccount.HasValue)
                 {

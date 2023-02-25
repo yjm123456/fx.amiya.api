@@ -47,6 +47,8 @@ namespace Fx.Amiya.Service
                   OrderPrice = e.OrderPrice,
                   ReturnBackPrice = e.ReturnBackPrice,
                   CreateDate = e.CreateDate,
+                  RecolicationPrice=e.RecolicationPrice,
+                  CreateEmpId=e.CreateEmpId,
                   IsSettle = e.IsSettle,
                   SettleDate = e.SettleDate,
                   BelongLiveAnchorAccount = e.BelongLiveAnchorAccount,
@@ -75,6 +77,8 @@ namespace Fx.Amiya.Service
                 recommandDocumentSettleDto.IsOldCustomerText = z.IsOldCustomer == true ? "老客业绩" : "新客业绩";
                 recommandDocumentSettleDto.DealInfoId = z.DealInfoId;
                 recommandDocumentSettleDto.OrderFrom = z.OrderFrom;
+                recommandDocumentSettleDto.RecolicationPrice = z.RecolicationPrice;
+                recommandDocumentSettleDto.CreateEmpId = z.CreateEmpId;
                 recommandDocumentSettleDto.ReturnBackPrice = z.ReturnBackPrice;
                 recommandDocumentSettleDto.CreateDate = z.CreateDate;
                 recommandDocumentSettleDto.IsSettle = z.IsSettle;
@@ -92,10 +96,12 @@ namespace Fx.Amiya.Service
             recommandDocumentSettle.OrderId = addRecommandDocumentSettleDto.OrderId;
             recommandDocumentSettle.OrderFrom = addRecommandDocumentSettleDto.OrderFrom;
             recommandDocumentSettle.OrderPrice = addRecommandDocumentSettleDto.OrderPrice;
+            recommandDocumentSettle.RecolicationPrice = addRecommandDocumentSettleDto.RecolicationPrice;
             recommandDocumentSettle.IsOldCustomer = addRecommandDocumentSettleDto.IsOldCustomer;
             recommandDocumentSettle.DealInfoId = addRecommandDocumentSettleDto.DealInfoId;
             recommandDocumentSettle.ReturnBackPrice = addRecommandDocumentSettleDto.ReturnBackPrice;
             recommandDocumentSettle.CreateDate = DateTime.Now;
+            recommandDocumentSettle.CreateEmpId = addRecommandDocumentSettleDto.CreateEmpId;
             recommandDocumentSettle.IsSettle = false;
             recommandDocumentSettle.BelongEmpId = addRecommandDocumentSettleDto.BelongEmpId;
             recommandDocumentSettle.BelongLiveAnchorAccount = addRecommandDocumentSettleDto.BelongLiveAnchorAccount;

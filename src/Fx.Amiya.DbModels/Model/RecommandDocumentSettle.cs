@@ -14,8 +14,18 @@ namespace Fx.Amiya.DbModels.Model
         public string DealInfoId { get; set; }
 
         public int OrderFrom { get; set; }
+        /// <summary>
+        /// 订单金额
+        /// </summary>
         public decimal OrderPrice { get; set; }
+        /// <summary>
+        /// 对账金额
+        /// </summary>
+        public decimal? RecolicationPrice { get; set; }
         public bool IsOldCustomer { get; set; }
+        /// <summary>
+        /// 服务费合计
+        /// </summary>
         public decimal ReturnBackPrice { get; set; }
         public DateTime CreateDate { get; set; }
         public bool IsSettle { get; set; }
@@ -28,6 +38,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 归属客服(可空)
         /// </summary>
         public int? BelongEmpId { get; set; }
+        /// <summary>
+        /// 业绩上传人员
+        /// </summary>
+        public int? CreateEmpId { get; set; }
         /// <summary>
         /// 操作人
         /// </summary>

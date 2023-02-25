@@ -14,8 +14,16 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
 
         public int OrderFrom { get; set; }
         public decimal OrderPrice { get; set; }
+        /// <summary>
+        /// 对账金额
+        /// </summary>
+        public decimal RecolicationPrice { get; set; }
         public bool IsOldCustomer { get; set; }
         public decimal ReturnBackPrice { get; set; }
+        /// <summary>
+        /// 业绩上传人员
+        /// </summary>
+        public int? CreateEmpId { get; set; }
 
         /// <summary>
         /// 归属主播账号(可空)

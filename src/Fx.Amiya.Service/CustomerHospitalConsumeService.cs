@@ -391,7 +391,9 @@ namespace Fx.Amiya.Service
                 addRecommandDocumentSettleDto.ReturnBackPrice = updateDto.CheckSettlePrice;
                 addRecommandDocumentSettleDto.BelongLiveAnchorAccount = result.LiveAnchorId;
                 addRecommandDocumentSettleDto.BelongEmpId = result.AddedBy;
+                addRecommandDocumentSettleDto.RecolicationPrice = updateDto.CheckBuyAgainPrice;
                 addRecommandDocumentSettleDto.CreateBy = updateDto.CheckEmpId;
+                addRecommandDocumentSettleDto.CreateEmpId = result.AddedBy;
                 addRecommandDocumentSettleDto.AccountType = false;
                 addRecommandDocumentSettleDto.AccountPrice = updateDto.CheckSettlePrice;
                 addRecommandDocumentSettleDto.OrderPrice = result.Price;

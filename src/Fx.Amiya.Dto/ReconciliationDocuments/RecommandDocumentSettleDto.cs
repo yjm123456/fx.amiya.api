@@ -17,6 +17,10 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         public int OrderFrom { get; set; }
         public string OrderFromText { get; set; }
         public decimal OrderPrice { get; set; }
+        /// <summary>
+        /// 对账金额
+        /// </summary>
+        public decimal? RecolicationPrice { get; set; }
         public bool IsOldCustomer { get; set; }
 
         public string IsOldCustomerText { get; set; }
@@ -34,6 +38,14 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// </summary>
         public int? BelongEmpId { get; set; }
         public string BelongEmpName { get; set; }
+        /// <summary>
+        /// 业绩上传人员
+        /// </summary>
+        public int? CreateEmpId { get; set; }
+        /// <summary>
+        /// 业绩上传人员名称
+        /// </summary>
+        public string? CreateEmpName { get; set; }
         /// <summary>
         /// 操作人
         /// </summary>
