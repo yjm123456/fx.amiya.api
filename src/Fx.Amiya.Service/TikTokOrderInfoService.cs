@@ -455,7 +455,7 @@ namespace Fx.Amiya.Service
                 var orders = from d in dalTikTokOrderInfo.GetAll()
                              where (string.IsNullOrWhiteSpace(keyword) || d.Id.Contains(keyword) || d.GoodsName.Contains(keyword)
                              || d.Phone == keyword || d.AppointmentHospital.Contains(keyword))
-                             && (d.BelongLiveAnchorId == 0 || d.BelongLiveAnchorId == belongLiveAnchorId)
+                             && (belongLiveAnchorId == 0 || d.BelongLiveAnchorId == belongLiveAnchorId)
                              select d;
 
                 if (startDate != null && endDate != null)
