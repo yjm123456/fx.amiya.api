@@ -534,7 +534,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<RecommandDocumentSettleDto>> GetRecommandDocumentSettleListAsync(List<string> ids)
         {
-            return await recommandDocumentSettleService.GetRecommandDocumentSettleAsync(ids,null);
+            return await recommandDocumentSettleService.GetRecommandDocumentSettleAsync(ids, null);
         }
         #region [对账单审核记录操作]
         /// <summary>
@@ -566,8 +566,15 @@ namespace Fx.Amiya.Service
                 }
                 if (x.CreateEmpId.HasValue)
                 {
-                    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CreateEmpId.Value);
-                    x.CreateEmpName = empInfo.Name;
+                    if (x.CreateEmpId.Value == 0)
+                    {
+                        x.CreateEmpName = "医院创建";
+                    }
+                    else
+                    {
+                        var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CreateEmpId.Value);
+                        x.CreateEmpName = empInfo.Name;
+                    }
                 }
                 if (x.BelongLiveAnchorAccount.HasValue)
                 {
@@ -610,8 +617,15 @@ namespace Fx.Amiya.Service
                 }
                 if (x.CreateEmpId.HasValue)
                 {
-                    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CreateEmpId.Value);
-                    x.CreateEmpName = empInfo.Name;
+                    if (x.CreateEmpId.Value == 0)
+                    {
+                        x.CreateEmpName = "医院创建";
+                    }
+                    else
+                    {
+                        var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CreateEmpId.Value);
+                        x.CreateEmpName = empInfo.Name;
+                    }
                 }
                 if (x.BelongLiveAnchorAccount.HasValue)
                 {
@@ -627,7 +641,7 @@ namespace Fx.Amiya.Service
             return resultInfo.OrderByDescending(x => x.CreateDate).ToList();
         }
 
-        
+
         #endregion
     }
 }
