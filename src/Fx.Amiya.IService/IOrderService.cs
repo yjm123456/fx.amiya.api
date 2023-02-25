@@ -600,7 +600,7 @@ namespace Fx.Amiya.IService
         /// <param name="endDate"></param>
         /// <param name="liveAnchorId"></param>
         /// <returns></returns>
-        Task<List<LiveAnchorBoardDataDto>> GetLiveAnchorPriceByLiveAnchorIdAsync(DateTime? startDate, DateTime? endDate, int? liveAnchorId);
+        Task<List<LiveAnchorBoardDataDto>> GetLiveAnchorPriceByLiveAnchorIdAsync(DateTime? startDate, DateTime? endDate, List<int> liveAnchorId);
         /// <summary>
         /// 根据客服id获取财务看板客服业绩信息
         /// </summary>

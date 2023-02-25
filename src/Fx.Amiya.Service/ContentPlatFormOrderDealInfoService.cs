@@ -35,7 +35,7 @@ namespace Fx.Amiya.Service
         private IUnitOfWork unitOfWork;
         private IDalRecommandDocumentSettle dalRecommandDocumentSettle;
         private IDalCompanyBaseInfo dalCompanyBaseInfo;
-
+        private IDalLiveAnchor dalLiveAnchor;
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
             ICompanyBaseInfoService companyBaseInfoService,
@@ -44,7 +44,7 @@ namespace Fx.Amiya.Service
             IDalBindCustomerService dalBindCustomerService,
             IDalAmiyaEmployee dalAmiyaEmployee,
             IUnitOfWork unitOfWork,
-            IHospitalInfoService hospitalInfoService, ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService, IDalHospitalInfo dalHospitalInfo, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo)
+            IHospitalInfoService hospitalInfoService, ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService, IDalHospitalInfo dalHospitalInfo, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor)
         {
             this.dalContentPlatFormOrderDealInfo = dalContentPlatFormOrderDealInfo;
             _hospitalInfoService = hospitalInfoService;
@@ -59,6 +59,7 @@ namespace Fx.Amiya.Service
             _dalHospitalInfo = dalHospitalInfo;
             this.dalRecommandDocumentSettle = dalRecommandDocumentSettle;
             this.dalCompanyBaseInfo = dalCompanyBaseInfo;
+            this.dalLiveAnchor = dalLiveAnchor;
         }
 
         /// <summary>
@@ -1762,7 +1763,7 @@ namespace Fx.Amiya.Service
 
 
         /// <summary>
-        /// 根据客服id获取财务看板客服业绩信息
+        /// 根据客服id获取财务看板客服录入成交单业绩信息
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
@@ -1786,6 +1787,62 @@ namespace Fx.Amiya.Service
             if (dealData != null)
                 dealData.CustomerServiceName = await _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(customerServiceId)).Select(e => e.Name).FirstOrDefaultAsync();
             return dealData;
+        }
+
+
+        /// <summary>
+        /// 根据客服id获取财务看板归属客服业绩信息
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="customerServiceId"></param>
+        /// <returns></returns>
+        public async Task<CustomerServiceBoardDataDto> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int customerServiceId)
+        {
+            var dealData = dalContentPlatFormOrderDealInfo.GetAll()
+                .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.ContentPlatFormOrder.BelongEmpId == customerServiceId && e.CheckState == 2)
+                .GroupBy(e => e.ContentPlatFormOrder.BelongEmpId)
+                .Select(e => new CustomerServiceBoardDataDto
+                {
+                    CustomerServiceName = Convert.ToString(e.Key),
+                    DealPrice = e.Sum(item => item.CheckPrice) ?? 0m,
+                    TotalServicePrice = e.Sum(item => item.SettlePrice) ?? 0m,
+                    NewCustomerPrice = e.Sum(item => item.IsOldCustomer == false ? item.CheckPrice ?? 0m : 0m),
+                    NewCustomerServicePrice = e.Sum(item => item.IsOldCustomer == false ? item.SettlePrice ?? 0m : 0m),
+                    OldCustomerPrice = e.Sum(item => item.IsOldCustomer == true ? item.CheckPrice ?? 0m : 0m),
+                    OldCustomerServicePrice = e.Sum(item => item.IsOldCustomer == true ? item.SettlePrice ?? 0m : 0m)
+                }).FirstOrDefault();
+            if (dealData != null)
+                dealData.CustomerServiceName = await _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(customerServiceId)).Select(e => e.Name).FirstOrDefaultAsync();
+            return dealData;
+        }
+
+
+        public async Task<List<LiveAnchorBoardDataDto>> GetLiveAnchorPriceByLiveAnchorIdAsync(DateTime? startDate, DateTime? endDate, List<int> liveAnchorIds)
+        {
+            startDate = startDate == null ? DateTime.Now.Date : startDate;
+            endDate = startDate == null ? DateTime.Now.AddDays(1).Date : endDate;
+            var dataList = dalContentPlatFormOrderDealInfo.GetAll().Include(e=>e.ContentPlatFormOrder).Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == 2)
+                .Where(e => liveAnchorIds.Count==0 || liveAnchorIds.Contains(e.ContentPlatFormOrder.LiveAnchorId.HasValue ? e.ContentPlatFormOrder.LiveAnchorId.Value : 0))
+                .GroupBy(e => new { e.ContentPlatFormOrder.LiveAnchorId, e.BelongCompany })
+                .Select(e => new LiveAnchorBoardDataDto
+                {
+                    CompanyName = e.Key.BelongCompany,
+                    LiveAnchorName = e.Key.LiveAnchorId.ToString(),
+                    DealPrice = e.Sum(item => item.CheckPrice) ?? 0m,
+                    TotalServicePrice = e.Sum(item => item.SettlePrice) ?? 0m,
+                    NewCustomerPrice = e.Sum(item => item.IsOldCustomer == false ? item.CheckPrice : 0) ?? 0m,
+                    OldCustomerPrice = e.Sum(item => item.IsOldCustomer == true ? item.CheckPrice : 0) ?? 0m,
+                    NewCustomerServicePrice = e.Sum(item => item.IsOldCustomer == false ? item.SettlePrice : 0) ?? 0m,
+                    OldCustomerServicePrice = e.Sum(item => item.IsOldCustomer == true ? item.SettlePrice : 0) ?? 0m,
+                }).ToList();
+            foreach (var item in dataList)
+            {
+                item.LiveAnchorName = dalLiveAnchor.GetAll().Where(e => e.Id == Convert.ToInt32(item.LiveAnchorName)).Select(e => e.Name).SingleOrDefault() ?? "未知(订单没有主播归属信息)";
+                item.CompanyName = dalCompanyBaseInfo.GetAll().Where(e => e.Id == item.CompanyName).Select(e => e.Name).SingleOrDefault() ?? "未知(已对账未开票)";
+            }
+            return dataList;
+
         }
 
         #endregion

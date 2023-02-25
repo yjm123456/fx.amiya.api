@@ -16,7 +16,7 @@ namespace Fx.Amiya.IService
         /// <param name="endDate"></param>
         /// <param name="liveAnchorId"></param>
         /// <returns></returns>
-        Task<List<LiveAnchorBoardDataDto>> GetBoardLiveAnchorDataAsync(DateTime? startDate,DateTime? endDate,int? liveAnchorId);
+        Task<List<LiveAnchorBoardDataDto>> GetBoardLiveAnchorDataAsync(DateTime? startDate,DateTime? endDate,List<int> liveAnchorId);
         /// <summary>
         /// 财务看板产出板块客服业绩数据
         /// </summary>
@@ -25,5 +25,13 @@ namespace Fx.Amiya.IService
         /// <param name="liveAnchorId"></param>
         /// <returns></returns>
         Task<List<CustomerServiceBoardDataDto>> GetBoardCustomerServiceDataAsync(DateTime? startDate, DateTime? endDate, int? customerServiceId);
+        /// <summary>
+        /// 财务看板产出板块归属客服业绩数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="liveAnchorId"></param>
+        /// <returns></returns>
+        Task<List<CustomerServiceBoardDataDto>> GetBoardCustomerServiceBelongDataAsync(DateTime? startDate, DateTime? endDate, int? customerServiceId);
     }
 }

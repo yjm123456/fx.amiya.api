@@ -370,7 +370,7 @@ namespace Fx.Amiya.IService
         /// <param name="endDate"></param>
         /// <param name="liveAnchorId"></param>
         /// <returns></returns>
-        Task<List<LiveAnchorBoardDataDto>> GetLiveAnchorPriceByLiveAnchorIdAsync(DateTime? startDate, DateTime? endDate, int? liveAnchorId);
+        Task<List<LiveAnchorBoardDataDto>> GetLiveAnchorPriceByLiveAnchorIdAsync(DateTime? startDate, DateTime? endDate, List<int> liveAnchorIds);
         #endregion
 
 

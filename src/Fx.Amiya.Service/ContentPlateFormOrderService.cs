@@ -2907,12 +2907,12 @@ namespace Fx.Amiya.Service
         /// <param name="endDate"></param>
         /// <param name="liveAnchorId">主播id</param>
         /// <returns></returns>
-        public async Task<List<LiveAnchorBoardDataDto>> GetLiveAnchorPriceByLiveAnchorIdAsync(DateTime? startDate, DateTime? endDate, int? liveAnchorId)
+        public async Task<List<LiveAnchorBoardDataDto>> GetLiveAnchorPriceByLiveAnchorIdAsync(DateTime? startDate, DateTime? endDate, List<int> liveAnchorIds)
         {
             startDate = startDate == null ? DateTime.Now.Date : startDate;
             endDate = startDate == null ? DateTime.Now.AddDays(1).Date : endDate;
             var dataList = _dalContentPlatformOrder.GetAll().Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == 2)
-                .Where(e => liveAnchorId == null || e.LiveAnchorId == liveAnchorId)
+                .Where(e => liveAnchorIds.Count==0 || liveAnchorIds.Contains(e.LiveAnchorId.HasValue?e.LiveAnchorId.Value:0))
                 .GroupBy(e => new { e.LiveAnchorId, e.BelongCompany })
                 .Select(e => new LiveAnchorBoardDataDto
                 {

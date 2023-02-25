@@ -97,10 +97,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="endDate"></param>
         /// <param name="liveAnchorId">主播id</param>
         /// <returns></returns>
-        [HttpGet("liveAnchorBoardData")]
-        public async Task<ResultData<List<LiveAnchorBoardVo>>> GetLiveAnchorBoard(DateTime? startDate, DateTime? endDate, int? liveAnchorId)
+        [HttpPost("liveAnchorBoardData")]
+        public async Task<ResultData<List<LiveAnchorBoardVo>>> GetLiveAnchorBoard(SearchVo search)
         {
-            var dataList = await financialboardSerice.GetBoardLiveAnchorDataAsync(startDate, endDate, liveAnchorId);
+            var dataList = await financialboardSerice.GetBoardLiveAnchorDataAsync(search.StartDate, search.EndDate, search.liveAnchorIds);
             var resultList = dataList.Select(e => new LiveAnchorBoardVo
             {
                 CompanyName = e.CompanyName,
@@ -112,11 +112,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 OldCustomerServicePrice = e.OldCustomerServicePrice,
                 LiveAnchorName = e.LiveAnchorName
             }).OrderByDescending(e => e.LiveAnchorName).ThenByDescending(e=>e.DealPrice).ToList();
+            var total = resultList.Sum(e => e.DealPrice);
             return ResultData<List<LiveAnchorBoardVo>>.Success().AddData("data", resultList);
         }
 
         /// <summary>
-        /// 客服业绩
+        /// 客服录入成交单业绩
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
@@ -125,6 +126,29 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<CustomerServiceBoardVo>>> GetCustomerServiceBoard(DateTime? startDate, DateTime? endDate)
         {
             var dataList = await financialboardSerice.GetBoardCustomerServiceDataAsync(startDate, endDate, null);
+            var resultList = dataList.Select(e => new CustomerServiceBoardVo
+            {
+                CustomerServiceName = e.CustomerServiceName,
+                DealPrice = e.DealPrice,
+                TotalServicePrice = e.TotalServicePrice,
+                NewCustomerPrice = e.NewCustomerPrice,
+                NewCustomerServicePrice = e.NewCustomerServicePrice,
+                OldCustomerPrice = e.OldCustomerPrice,
+                OldCustomerServicePrice = e.OldCustomerServicePrice,
+            }).OrderByDescending(e => e.DealPrice).ToList();
+            return ResultData<List<CustomerServiceBoardVo>>.Success().AddData("data", resultList);
+        }
+
+        /// <summary>
+        /// 客服归属业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        [HttpGet("customerServiceBelongBoardData")]
+        public async Task<ResultData<List<CustomerServiceBoardVo>>> GetCustomerServiceBelongBoard(DateTime? startDate, DateTime? endDate)
+        {
+            var dataList = await financialboardSerice.GetBoardCustomerServiceBelongDataAsync(startDate, endDate, null);
             var resultList = dataList.Select(e => new CustomerServiceBoardVo
             {
                 CustomerServiceName = e.CustomerServiceName,
