@@ -1798,8 +1798,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData<List<CustomerHospitalConsumeReportVo>>> GetCustomerBuyAgainReportAsync(int? channel, DateTime? checkDateStart, DateTime? checkDateEnd, int? CheckState, int? hospitalId, bool? isCreateBill, string belongCompanyId, DateTime startDate, DateTime endDate, string customerName)
         {
-
-            var q = await _customerHospitalConsumeService.GetCustomerHospitalConsuleReportAsync(channel, checkDateStart, checkDateEnd, CheckState, hospitalId, isCreateBill, belongCompanyId, customerName, startDate, endDate, true);
+            bool isHidePhone = true;
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            {
+                isHidePhone = false;
+            }
+            var q = await _customerHospitalConsumeService.GetCustomerHospitalConsuleReportAsync(channel, checkDateStart, checkDateEnd, CheckState, hospitalId, isCreateBill, belongCompanyId, customerName, startDate, endDate, isHidePhone);
             var res = from d in q
                       select new CustomerHospitalConsumeReportVo()
                       {
@@ -1866,7 +1871,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 isHidePhone = false;
             }
-            var q = await _customerHospitalConsumeService.GetCustomerHospitalConsuleReportAsync(channel, checkDateStart, checkDateEnd, CheckState, hospitalId, isCreateBill, belongCompanyId, customerName, startDate, endDate, true);
+            var q = await _customerHospitalConsumeService.GetCustomerHospitalConsuleReportAsync(channel, checkDateStart, checkDateEnd, CheckState, hospitalId, isCreateBill, belongCompanyId, customerName, startDate, endDate, isHidePhone);
             var res = from d in q
                       select new CustomerHospitalConsumeReportVo()
                       {

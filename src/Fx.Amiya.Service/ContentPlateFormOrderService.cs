@@ -396,7 +396,10 @@ namespace Fx.Amiya.Service
                     if (!string.IsNullOrEmpty(x.LiveAnchorWeChatNo))
                     {
                         var wechatNoInfo = await liveAnchorWeChatInfoService.GetByIdAsync(x.LiveAnchorWeChatNo);
-                        x.LiveAnchorWeChatNo = wechatNoInfo.WeChatNo;
+                        if (wechatNoInfo.Id != null)
+                        {
+                            x.LiveAnchorWeChatNo = wechatNoInfo.WeChatNo;
+                        }
                     }
                     //if (x.CheckBy.HasValue && x.CheckBy != 0)
                     //{
@@ -922,7 +925,10 @@ namespace Fx.Amiya.Service
                     if (!string.IsNullOrEmpty(x.LiveAnchorWeChatNo))
                     {
                         var wechatInfo = await liveAnchorWeChatInfoService.GetByIdAsync(x.LiveAnchorWeChatNo);
-                        x.LiveAnchorWeChatNo = wechatInfo.WeChatNo.ToString();
+                        if (wechatInfo.Id != null)
+                        {
+                            x.LiveAnchorWeChatNo = wechatInfo.WeChatNo.ToString();
+                        }
                     }
                 }
                 return orderPageInfo;
@@ -1054,7 +1060,10 @@ namespace Fx.Amiya.Service
                     if (!string.IsNullOrEmpty(k.LiveAnchorWeChatNo))
                     {
                         var wechatInfo = await liveAnchorWeChatInfoService.GetByIdAsync(k.LiveAnchorWeChatNo);
-                        k.LiveAnchorWeChatNo = wechatInfo.WeChatNo;
+                         if (wechatInfo.Id != null)
+                        {
+                            k.LiveAnchorWeChatNo = wechatInfo.WeChatNo.ToString();
+                        }
                     }
                 }
                 var result = x;
@@ -1193,7 +1202,10 @@ namespace Fx.Amiya.Service
                     if (!string.IsNullOrEmpty(x.LiveAnchorWeChatNo))
                     {
                         var wechatInfo = await liveAnchorWeChatInfoService.GetByIdAsync(x.LiveAnchorWeChatNo);
-                        x.LiveAnchorWeChatNo = wechatInfo.WeChatNo;
+                        if (wechatInfo.Id != null)
+                        {
+                            x.LiveAnchorWeChatNo = wechatInfo.WeChatNo.ToString();
+                        }
                     }
                     if (!string.IsNullOrEmpty(x.GoodsDepartmentId))
                     {
@@ -1259,7 +1271,10 @@ namespace Fx.Amiya.Service
             if (!string.IsNullOrEmpty(order.LiveAnchorWeChatNo))
             {
                 var wechatInfo = await liveAnchorWeChatInfoService.GetByIdAsync(order.LiveAnchorWeChatNo);
-                result.LiveAnchorWeChatNo = wechatInfo.WeChatNo;
+                if (wechatInfo.Id != null)
+                {
+                    result.LiveAnchorWeChatNo = wechatInfo.WeChatNo;
+                }
 
             }
             result.IsOldCustomer = order.IsOldCustomer;
@@ -2754,12 +2769,19 @@ namespace Fx.Amiya.Service
                 DateTime currentDate = new DateTime(year, month, 1);
                 //结束月份
                 DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
-                decimal? Price = 99.00M;
+                //decimal? Price = 99.00M;
+                int consolationType = 0;
                 if (isVideo == true)
-                { Price = 199.00M; }
+                {
+                    consolationType = (int)ContentPlateFormOrderConsultationType.Collaboration;
+                }
+                else
+                {
+                    consolationType = (int)ContentPlateFormOrderConsultationType.IndependentFollowUp;
+                }
                 var order = from d in _dalContentPlatformOrder.GetAll()
-                            where (liveAnchorIds.Contains(d.LiveAnchorId.Value) && d.AddOrderPrice == Price && d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
-                            where (d.DealDate.HasValue == true && d.DealDate.Value >= currentDate && d.DealDate.Value < endDate)
+                            where (liveAnchorIds.Contains(d.LiveAnchorId.Value) && d.ConsultationType == consolationType && d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
+                            where (d.DealDate.HasValue == true && d.DealAmount.HasValue && d.DealDate.Value >= currentDate && d.DealDate.Value < endDate)
                             select new ContentPlatFormOrderInfoSimpleDto
                             {
                                 Id = d.Id,
@@ -2785,6 +2807,7 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
+
 
 
         /// <summary>
@@ -2875,12 +2898,18 @@ namespace Fx.Amiya.Service
                 DateTime startTime = new DateTime(year, 1, 1);
                 //筛选结束的月份
                 DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
-                decimal? Price = 99.00M;
+                int consolationType = 0;
                 if (isVideo == true)
-                { Price = 199.00M; }
+                {
+                    consolationType = (int)ContentPlateFormOrderConsultationType.Collaboration;
+                }
+                else
+                {
+                    consolationType = (int)ContentPlateFormOrderConsultationType.IndependentFollowUp;
+                }
                 var orderinfo = await _dalContentPlatformOrder.GetAll()
                    .Where(d => d.DealDate.HasValue == true && d.DealAmount.HasValue && d.DealDate.Value >= startTime && d.DealDate.Value < endDate)
-                    .Where(d => liveAnchorIds.Contains(d.LiveAnchorId.Value) && d.AddOrderPrice == Price && d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
+                    .Where(d => liveAnchorIds.Contains(d.LiveAnchorId.Value) && d.ConsultationType == consolationType && d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
                     .ToListAsync();
 
 

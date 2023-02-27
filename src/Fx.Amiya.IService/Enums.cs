@@ -314,12 +314,12 @@ namespace Fx.Amiya.IService
     {
 
         /// <summary>
-        /// 独立跟进=1
+        /// 照片面诊=1
         /// </summary>
         IndependentFollowUp = 1,
 
         /// <summary>
-        /// 协作完成=2
+        /// 视频面诊=2
         /// </summary>
         Collaboration = 2,
         /// <summary>
