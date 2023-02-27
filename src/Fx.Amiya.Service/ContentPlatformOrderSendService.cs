@@ -27,6 +27,7 @@ namespace Fx.Amiya.Service
         private IHospitalInfoService _hospitalInfoService;
         //private AmiyaHospitalDepartmentService amiyaDepartmentService;
         private IDalConfig _dalConfig;
+        private ILiveAnchorWeChatInfoService liveAnchorWeChatInfoService;
         private IOrderRemarkService orderRemarkService;
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private IWxAppConfigService _wxAppConfigService;
@@ -37,6 +38,7 @@ namespace Fx.Amiya.Service
             IDalBindCustomerService dalBindCustomerService,
             //AmiyaHospitalDepartmentService departmentService,
             IOrderRemarkService orderRemarkService,
+           ILiveAnchorWeChatInfoService liveAnchorWeChatInfoService,
             ICustomerBaseInfoService customerBaseInfoService,
             IAmiyaEmployeeService amiyaEmployeeService,
             IDalConfig dalConfig,
@@ -48,6 +50,7 @@ namespace Fx.Amiya.Service
             _dalBindCustomerService = dalBindCustomerService;
             this.customerBaseInfoService = customerBaseInfoService;
             //this.amiyaDepartmentService = departmentService;
+            this.liveAnchorWeChatInfoService = liveAnchorWeChatInfoService;
             _wxAppConfigService = wxAppConfigService;
             _dalHospitalCheckPhoneRecord = dalHospitalCheckPhoneRecord;
             _hospitalInfoService = hospitalInfoService;
@@ -671,6 +674,15 @@ namespace Fx.Amiya.Service
             foreach (var x in pageInfo.List)
             {
                 x.SendHospital = _hospitalInfoService.GetByIdAsync(x.SendHospitalId).Result.Name;
+                if (!string.IsNullOrEmpty(x.LiveAnchorWeChatNo))
+                {
+                    var wechatInfo = await liveAnchorWeChatInfoService.GetByIdAsync(x.LiveAnchorWeChatNo);
+                    if (wechatInfo.Id != null)
+                    {
+                        x.LiveAnchorWeChatNo = wechatInfo.WeChatNo;
+                    }
+
+                }
             }
             return pageInfo;
         }
