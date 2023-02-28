@@ -340,6 +340,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.Birthday = customerBaseInfo.Birthday;
             orderUpdateInfo.Age = customerBaseInfo.Age;
             orderUpdateInfo.Occupation = customerBaseInfo.Occupation;
+            orderUpdateInfo.LiveAnchorBaseWechatId = order.LiveAnchorBaseWechatId;
             orderUpdateInfo.WechatNumber = customerBaseInfo.WechatNumber;
             orderUpdateInfo.DealPerformanceTypeText = order.DealPerformanceTypeText;
 

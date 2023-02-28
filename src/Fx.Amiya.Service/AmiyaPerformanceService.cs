@@ -3,8 +3,10 @@ using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.LiveAnchorMonthlyTarget;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.Performance;
+using Fx.Amiya.Dto.Performance.BusinessWechatDto;
 using Fx.Amiya.Dto.ShoppingCartRegistration;
 using Fx.Amiya.IService;
+using Fx.Common.Extensions;
 using jos_sdk_net.Util;
 using System;
 using System.Collections.Generic;
@@ -41,6 +43,7 @@ namespace Fx.Amiya.Service
             this.contentPlateFormOrderService = contentPlateFormOrderService;
         }
 
+        //管理端
 
         #region 【啊美雅业绩】
 
@@ -1135,9 +1138,9 @@ namespace Fx.Amiya.Service
             else
             {
                 //开始月份
-                 monthStartDate = new DateTime(year, month - 1, 1);
+                monthStartDate = new DateTime(year, month - 1, 1);
                 //结束月份
-                 monthEndDate = new DateTime(year, month - 1, 1).AddMonths(1);
+                monthEndDate = new DateTime(year, month - 1, 1).AddMonths(1);
             }
 
             //上年的
@@ -1342,6 +1345,123 @@ namespace Fx.Amiya.Service
 
             return baseBusinessPerformanceDto;
 
+        }
+        #endregion
+
+
+        //企业微信
+
+
+        #region 【自播/合作达人总业绩】
+        /// <summary>
+        /// 自播/合作达人总业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        public async Task<MonthPerformanceBWDto> GetMonthPerformanceBySelfLiveAnchorAsync(int year, int month, string liveAnchorBaseId, bool? isSelfLiveAnchor)
+        {
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(year,month);
+            //获取各个平台的主播ID
+            var LiveAnchorInfo = await this.GetLiveAnchorIdsByBaseIdAndIsSelfLiveAnchorAsync(liveAnchorBaseId, isSelfLiveAnchor);
+
+            MonthPerformanceBWDto monthPerformanceBWDto = new MonthPerformanceBWDto();
+            return monthPerformanceBWDto;
+            //查询成交情况主播业绩
+            //var order = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year, month, null, LiveAnchorInfo);
+            //#region 总业绩
+            //var curTotalPerformance = order.Sum(o => o.Price);
+            //var orderYearOnYear = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year - 1, month, null, LiveAnchorInfo);
+            //var totalPerformanceYearOnYear = orderYearOnYear.Sum(o => o.Price);
+
+            //List<ContentPlatFormOrderDealInfoDto> orderChain = null;
+            //if (month == 1)
+            //{
+            //    orderChain = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year - 1, 12, null, LiveAnchorInfo);
+            //}
+            //else
+            //{
+            //    orderChain = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year, month - 1, null, LiveAnchorInfo);
+            //}
+            //var totalPerformanceChainRatio = orderChain.Sum(o => o.Price);
+            //#endregion
+
+
+            //#region 新客业绩
+            //var curNewCustomer = order.Where(o => o.IsOldCustomer == false).Sum(o => o.Price);
+            //var newOrderYearOnYear = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year - 1, month, false, LiveAnchorInfo);
+            //var newPerformanceYearOnYear = newOrderYearOnYear.Sum(o => o.Price);
+            //List<ContentPlatFormOrderDealInfoDto> newOrderChainRatio = null;
+            //if (month == 1)
+            //{
+            //    newOrderChainRatio = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year - 1, 12, false, LiveAnchorInfo);
+            //}
+            //else
+            //{
+            //    newOrderChainRatio = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year, month - 1, false, LiveAnchorInfo);
+            //}
+            //var newPerformanceChainRatio = newOrderChainRatio.Sum(o => o.Price);
+            //#endregion
+
+
+            //#region 老客业绩
+            //var curOldCustomer = order.Where(o => o.IsOldCustomer == true).Sum(o => o.Price);
+
+            //var oldOrderYearOnYearr = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year - 1, month, true, LiveAnchorInfo);
+            //var oldPerformanceYearOnYear = oldOrderYearOnYearr.Sum(o => o.Price);
+            //List<ContentPlatFormOrderDealInfoDto> oldOrderChainRatio = null;
+            //if (month == 1)
+            //{
+            //    oldOrderChainRatio = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year - 1, 12, true, LiveAnchorInfo);
+            //}
+            //else
+            //{
+            //    oldOrderChainRatio = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year, month - 1, true, LiveAnchorInfo);
+            //}
+            //var oldPerformanceRatio = oldOrderChainRatio.Sum(o => o.Price);
+            //#endregion
+
+
+            //#region 带货业绩
+            //var target = await liveAnchorMonthlyTargetService.GetPerformance(year, month, LiveAnchorInfo);
+            //var commercePerformanceYearOnYear = await liveAnchorMonthlyTargetService.GetPerformance(year - 1, month, LiveAnchorInfo);
+            //LiveAnchorMonthTargetPerformanceDto liveAnchorMonthTargetPerformanceDto = new LiveAnchorMonthTargetPerformanceDto();
+            //if (month == 1)
+            //{
+            //    liveAnchorMonthTargetPerformanceDto = await liveAnchorMonthlyTargetService.GetPerformance(year - 1, 12, LiveAnchorInfo);
+            //}
+            //else
+            //{
+            //    liveAnchorMonthTargetPerformanceDto = await liveAnchorMonthlyTargetService.GetPerformance(year, month - 1, LiveAnchorInfo);
+            //}
+            //#endregion
+
+
+            //MonthPerformanceRatioDto monthPerformanceRatioDto = new MonthPerformanceRatioDto
+            //{
+            //    CueerntMonthTotalPerformance = curTotalPerformance + target.CommerceCompletePerformance,
+            //    CurrentMonthNewCustomerPerformance = curNewCustomer,
+            //    CurrentMonthOldCustomerPerformance = curOldCustomer,
+            //    CurrentMonthCommercePerformance = target.CommerceCompletePerformance,
+            //    TotalPerformanceYearOnYear = CalculateYearOnYear(curTotalPerformance + target.CommerceCompletePerformance, totalPerformanceYearOnYear + commercePerformanceYearOnYear.CommerceCompletePerformance),
+            //    TotalPerformanceChainratio = CalculateChainratio(curTotalPerformance + target.CommerceCompletePerformance, totalPerformanceChainRatio + liveAnchorMonthTargetPerformanceDto.CommerceCompletePerformance),
+            //    TotalPerformanceTargetComplete = CalculateTargetComplete(curTotalPerformance + target.CommerceCompletePerformance, target.CommercePerformanceTarget + target.TotalPerformanceTarget),
+            //    NewCustomerPerformanceYearOnYear = CalculateYearOnYear(curNewCustomer, newPerformanceYearOnYear),
+            //    NewCustomerPerformanceChainRatio = CalculateChainratio(curNewCustomer, newPerformanceChainRatio),
+            //    NewCustomerPerformanceTargetComplete = CalculateTargetComplete(curNewCustomer, target.NewCustomerPerformanceTarget),
+            //    OldCustomerPerformanceYearOnYear = CalculateYearOnYear(curOldCustomer, oldPerformanceYearOnYear),
+            //    OldCustomerPerformanceChainRatio = CalculateChainratio(curOldCustomer, oldPerformanceRatio),
+            //    OldCustomerTargetComplete = CalculateTargetComplete(curOldCustomer, target.OldCustomerPerformanceTarget),
+            //    CommercePerformanceYearOnYear = CalculateYearOnYear(target.CommerceCompletePerformance, commercePerformanceYearOnYear.CommerceCompletePerformance),
+            //    CommercePerformanceChainRatio = CalculateChainratio(target.CommerceCompletePerformance, liveAnchorMonthTargetPerformanceDto.CommerceCompletePerformance),
+            //    CommercePerformanceTargetComplete = CalculateTargetComplete(target.CommerceCompletePerformance, target.CommercePerformanceTarget),
+            //    NewCustomerPerformanceRatio = CalculateTargetComplete(curNewCustomer, curTotalPerformance + target.CommerceCompletePerformance),
+            //    OldCustomerPerformanceRatio = CalculateTargetComplete(curOldCustomer, curTotalPerformance + target.CommerceCompletePerformance),
+            //    CommercePerformanceRatio = CalculateTargetComplete(target.CommerceCompletePerformance, curTotalPerformance + target.CommerceCompletePerformance)
+            //};
+
+
+            //return monthPerformanceRatioDto;
         }
         #endregion
 
@@ -1565,6 +1685,25 @@ namespace Fx.Amiya.Service
             if (liveanchorBaseId != null)
             {
                 var liveAnchor = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync(liveanchorBaseId);
+                LiveAnchorInfo = liveAnchor.Select(x => x.Id).ToList();
+            }
+            return LiveAnchorInfo;
+        }
+
+        /// <summary>
+        /// 根据主播id与是否自播获取主播id集合
+        /// </summary>
+        /// <param name="liveAnchorName"></param>
+        /// <returns></returns>
+        private async Task<List<int>> GetLiveAnchorIdsByBaseIdAndIsSelfLiveAnchorAsync(string baseLiveAnchorId, bool? isSelfLiveAnchor)
+        {
+            List<int> LiveAnchorInfo = new List<int>();
+            //获取主播基础信息id
+            var liveAnchorBaseInfo = await liveAnchorBaseInfoService.GetByIdAndIsSelfLiveAnchorAsync(baseLiveAnchorId, isSelfLiveAnchor);
+            var liveanchorBaseIds = liveAnchorBaseInfo.Select(x => x.Id).ToList();
+            if (liveanchorBaseIds.Count != 0)
+            {
+                var liveAnchor = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync(liveanchorBaseIds);
                 LiveAnchorInfo = liveAnchor.Select(x => x.Id).ToList();
             }
             return LiveAnchorInfo;

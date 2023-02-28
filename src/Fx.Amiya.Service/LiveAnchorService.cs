@@ -64,6 +64,33 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
+        /// 根据主播基础id集合获取有效的主播列表
+        /// </summary>
+        /// <param name="contentPlatFormId">内容平台id</param>
+        /// <returns></returns>
+        public async Task<List<LiveAnchorDto>> GetValidListByLiveAnchorBaseIdAsync(List<string> liveAnchorBaseIds)
+        {
+            if (liveAnchorBaseIds.Count == 0)
+            {
+                throw new Exception("主播基础id为空！");
+            }
+            var liveAnchors = from d in dalLiveAnchor.GetAll()
+                              where d.Valid == true
+                              && liveAnchorBaseIds.Contains(d.LiveAnchorBaseId)
+                              select new LiveAnchorDto
+                              {
+                                  Id = d.Id,
+                                  Name = d.Name,
+                                  HostAccountName = string.IsNullOrWhiteSpace(d.HostAccountName) ? "" : d.HostAccountName,
+                                  ContentPlateFormId = string.IsNullOrWhiteSpace(d.ContentPlateFormId) ? "" : d.ContentPlateFormId,
+                                  LiveAnchorBaseId = d.LiveAnchorBaseId,
+                                  Valid = d.Valid
+                              };
+            var resultList = await liveAnchors.ToListAsync();
+            return resultList;
+        }
+
+        /// <summary>
         /// 根据内容平台id获取有效的主播列表
         /// </summary>
         /// <param name="contentPlatFormId">内容平台id</param>

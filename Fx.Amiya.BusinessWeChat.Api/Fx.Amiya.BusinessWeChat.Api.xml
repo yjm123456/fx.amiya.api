@@ -4,6 +4,27 @@
         <name>Fx.Amiya.BusinessWeChat.Api</name>
     </assembly>
     <members>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaBusinessPerformanceController">
+            <summary>
+            数据中心板块接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaBusinessPerformanceController.#ctor(Fx.Amiya.IService.IAmiyaPerformanceService)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="amiyaPerformanceService"></param>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaBusinessPerformanceController.GetPerformanceByGroupAsync(System.Int32,System.Int32,System.String,System.Nullable{System.Boolean})">
+            <summary>
+            达人业绩
+            </summary>
+            <param name="year"></param>
+            <param name="month"></param>
+            <param name="liveAnchorBaseId">主播基础id，不传查询所有</param>
+            <param name="isSelfLiveAnchor">是否为自播主播</param>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaEmployeeController">
             <summary>
             啊美雅员工API
@@ -1238,6 +1259,11 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.Occupation">
             <summary>
             职业
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.LiveAnchorBaseWechatId">
+            <summary>
+            微信号Id
             </summary>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.WechatNumber">
@@ -2833,6 +2859,251 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.OrderCheckPicture.OrderCheckPictureVo.PictureUrl">
             <summary>
             照片地址
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo">
+            <summary>
+            达人业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.CueerntMonthTotalPerformance">
+            <summary>
+            本月总业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.TotalPerformanceYearOnYear">
+            <summary>
+            总业绩同比增长
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.TotalPerformanceChainratio">
+            <summary>
+            总业绩环比增长
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.TotalPerformanceTarget">
+            <summary>
+            总业绩目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.TotalPerformanceTargetComplete">
+            <summary>
+            总业绩目标达成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.CurrentMonthNewCustomerPerformance">
+            <summary>
+            当前月新客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.NewCustomerPerformanceRatio">
+            <summary>
+            新客业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.NewCustomerPerformanceYearOnYear">
+            <summary>
+            新客业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.NewCustomerPerformanceChainRatio">
+            <summary>
+            新客业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.NewCustomerPerformanceTarget">
+            <summary>
+            新客业绩目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.NewCustomerPerformanceTargetComplete">
+            <summary>
+            新客业绩目标达成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.CurrentMonthOldCustomerPerformance">
+            <summary>
+            当前月老客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.OldCustomerPerformanceRatio">
+            <summary>
+            老客业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.OldCustomerPerformanceYearOnYear">
+            <summary>
+            老客业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.OldCustomerPerformanceChainRatio">
+            <summary>
+            老客业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.OldCustomerTarget">
+            <summary>
+            老客业绩目标
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.OldCustomerTargetComplete">
+            <summary>
+            老客业绩目标达成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.PictureConsultationPerformance">
+            <summary>
+            照片面诊业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.PictureConsultationPerformancePerformanceRatio">
+            <summary>
+            照片面诊业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.PictureConsultationPerformanceYearOnYear">
+            <summary>
+            照片面诊业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.PictureConsultationPerformanceChainRatio">
+            <summary>
+            照片面诊业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.VideoConsultationPerformance">
+            <summary>
+            视频面诊业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.VideoConsultationPerformancePerformanceRatio">
+            <summary>
+            视频面诊业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.VideoConsultationPerformanceYearOnYear">
+            <summary>
+            视频面诊业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.VideoConsultationPerformanceChainRatio">
+            <summary>
+            视频面诊业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.AcompanyingPerformance">
+            <summary>
+            主播接诊业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.AcompanyingPerformancePerformanceRatio">
+            <summary>
+            主播接诊业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.AcompanyingPerformanceYearOnYear">
+            <summary>
+            主播接诊业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.AcompanyingPerformanceChainRatio">
+            <summary>
+            主播接诊业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.NotAcompanyingPerformance">
+            <summary>
+            非主播接诊业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.NotAcompanyingPerformancePerformanceRatio">
+            <summary>
+            非主播接诊业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.NotAcompanyingPerformanceYearOnYear">
+            <summary>
+            非主播接诊业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.NotAcompanyingPerformanceChainRatio">
+            <summary>
+            非主播接诊业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.ZeroPricePerformance">
+            <summary>
+            0元业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.ZeroPricePerformancePerformanceRatio">
+            <summary>
+            0元业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.ZeroPricePerformanceYearOnYear">
+            <summary>
+            0元业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.ZeroPricePerformanceChainRatio">
+            <summary>
+            0元业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.ExistPricePerformance">
+            <summary>
+            199元业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.ExistPricePerformancePerformanceRatio">
+            <summary>
+            199元业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.ExistPricePerformanceYearOnYear">
+            <summary>
+            199元业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.ExistPricePerformanceChainRatio">
+            <summary>
+            199元业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.HistorySendDuringMonthDeal">
+            <summary>
+            历史派单当月成交
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.HistorySendDuringMonthDealPerformanceRatio">
+            <summary>
+            历史派单当月成交业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.HistorySendDuringMonthDealYearOnYear">
+            <summary>
+            历史派单当月成交同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.HistorySendDuringMonthDealChainRatio">
+            <summary>
+            历史派单当月成交环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.DuringMonthSendDuringMonthDealPerformanceRatio">
+            <summary>
+            当月派单当月成交业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.DuringMonthSendDuringMonthDealYearOnYear">
+            <summary>
+            当月派单当月成交同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.DuringMonthSendDuringMonthDealChainRatio">
+            <summary>
+            当月派单当月成交环比
             </summary>
         </member>
     </members>

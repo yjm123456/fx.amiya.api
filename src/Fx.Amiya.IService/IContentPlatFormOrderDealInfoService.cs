@@ -120,7 +120,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="year"></param>
         /// <param name="month"></param>
-        /// <param name="isCustomer"></param>
+        /// <param name="isOldCustomer">新客/老客</param>
         /// <param name="LiveAnchorIds">各个平台主播id集合</param>
         /// <returns></returns>
         Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByYearAndMonth(int year, int month, bool? isCustomer, List<int> LiveAnchorIds);

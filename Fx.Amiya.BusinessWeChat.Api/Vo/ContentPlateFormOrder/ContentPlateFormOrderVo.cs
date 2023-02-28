@@ -102,6 +102,10 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public string Occupation { get; set; }
         /// <summary>
+        /// 微信号Id
+        /// </summary>
+        public string LiveAnchorBaseWechatId { get; set; }
+        /// <summary>
         /// 微信号
         /// </summary>
         public string WechatNumber { get; set; }

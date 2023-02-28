@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.Performance;
+using Fx.Amiya.Dto.Performance.BusinessWechatDto;
 using Fx.Amiya.Dto.ShoppingCartRegistration;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace Fx.Amiya.IService
 {
     public interface IAmiyaPerformanceService
     {
+
+        //管理端
         #region 【啊美雅业绩】
         /// <summary>
         /// 获取当月 总/新客/老客/带货业绩 以及各业绩同比/环比/目标达成率
@@ -221,6 +224,13 @@ namespace Fx.Amiya.IService
         /// <param name="LiveAnchorName"></param>
         /// <returns></returns>
         Task<List<ShoppingCartRegistrationDto>> GetPictureOrVideoConsultationByLiveAnchorAsync(int year, int month, bool isVideo, string LiveAnchorName);
+        #endregion
+
+        //企业微信
+
+
+        #region 【自播达人业绩】
+        Task<MonthPerformanceBWDto> GetMonthPerformanceBySelfLiveAnchorAsync(int year, int month, string liveAnchorBaseId, bool? isSelfLiveAnchor);
         #endregion
     }
 }

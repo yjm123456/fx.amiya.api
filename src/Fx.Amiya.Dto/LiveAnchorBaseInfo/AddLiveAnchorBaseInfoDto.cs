@@ -18,6 +18,7 @@ namespace Fx.Amiya.Dto.LiveAnchorBaseInfo
         public string ContractUrl { get; set; }
 
         public DateTime? DueTime { get; set; }
+        public bool IsSelfLivevAnchor { get; set; }
         public int? IsMain { get; set; }
     }
 }

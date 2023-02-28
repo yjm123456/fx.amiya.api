@@ -207,7 +207,7 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
 
         public decimal? CheckPrice { get; set; }
         public bool IsToHospital { get; set; }
-
+        public string LiveAnchorBaseWechatId { get; set; }
         public int ToHospitalType { get; set; }
 
         public string ToHospitalTypeText { get; set; }

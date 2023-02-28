@@ -1268,6 +1268,7 @@ namespace Fx.Amiya.Service
             var bindCustomerServiceInfo = await bindCustomerServiceService.GetEmployeeDetailsByPhoneAsync(order.Phone);
             result.UserId = bindCustomerServiceInfo.UserId;
             result.CreateDate = order.CreateDate;
+            result.LiveAnchorBaseWechatId = order.LiveAnchorWeChatNo;
             if (!string.IsNullOrEmpty(order.LiveAnchorWeChatNo))
             {
                 var wechatInfo = await liveAnchorWeChatInfoService.GetByIdAsync(order.LiveAnchorWeChatNo);

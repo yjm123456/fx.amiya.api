@@ -56,5 +56,9 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorBaseInfo
         /// 是否可用
         /// </summary>
         public bool Valid { get; set; }
+        /// <summary>
+        /// 是否为自播达人
+        /// </summary>
+        public bool IsSelfLivevAnchor { get; set; }
     }
 }

@@ -25,6 +25,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.IsMain).HasColumnName("is_main").HasColumnType("int").IsRequired(false);
             builder.Property(t => t.DueTime).HasColumnName("due_time").HasColumnType("datetime").IsRequired(false);
             builder.Property(t => t.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();
+            builder.Property(t => t.IsSelfLivevAnchor).HasColumnName("is_self_live_anchor").HasColumnType("bit").IsRequired();
         }
     }
 }

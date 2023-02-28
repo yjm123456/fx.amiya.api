@@ -103,6 +103,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public string Occupation { get; set; }
         /// <summary>
+        /// 微信号id
+        /// </summary>
+        public string LiveAnchorBaseWechatId { get; set; }
+        /// <summary>
         /// 微信号
         /// </summary>
         public string WechatNumber { get; set; }

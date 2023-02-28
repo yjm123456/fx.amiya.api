@@ -48,5 +48,9 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorBaseInfo
         /// 是否主推，默认传否
         /// </summary>
         public int? IsMain { get; set; }
+        /// <summary>
+        /// 是否为自播达人
+        /// </summary>
+        public bool IsSelfLivevAnchor { get; set; }
     }
 }

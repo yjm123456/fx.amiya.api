@@ -660,7 +660,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.Age = customerBaseInfo.Age;
             orderUpdateInfo.Occupation = customerBaseInfo.Occupation;
             orderUpdateInfo.WechatNumber = customerBaseInfo.WechatNumber;
-
+            orderUpdateInfo.LiveAnchorBaseWechatId = order.LiveAnchorBaseWechatId;
             orderUpdateInfo.AppointmentDate = order.AppointmentDate;
             orderUpdateInfo.ConsultationEmpId = order.ConsultationEmpId;
             orderUpdateInfo.AppointmentHospitalId = order.AppointmentHospitalId;

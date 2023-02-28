@@ -60,20 +60,21 @@ namespace Fx.Amiya.Background.Api.Controllers
             int employeeId = Convert.ToInt32(employee.Id);
             var q = await liveAnchorBaseInfoService.GetListAsync(name, valid, pageNum, pageSize);
             var liveAnchorBaseInfos = from d in q.List
-                              select new LiveAnchorBaseInfoVo
-                              {
-                                  Id = d.Id,
-                                  LiveAnchorName = d.LiveAnchorName,
-                                  ThumbPicture = d.ThumbPicture,
-                                  NickName = d.NickName,
-                                  ContractUrl=d.ContractUrl,
-                                  VideoUrl=d.VideoUrl,
-                                  DueTime=d.DueTime,
-                                  IndividualitySignature = d.IndividualitySignature,
-                                  Description = d.Description,
-                                  DetailPicture = d.DetailPicture,
-                                  IsMain = d.IsMain,
-                                  Valid = d.Valid
+                                      select new LiveAnchorBaseInfoVo
+                                      {
+                                          Id = d.Id,
+                                          LiveAnchorName = d.LiveAnchorName,
+                                          ThumbPicture = d.ThumbPicture,
+                                          NickName = d.NickName,
+                                          ContractUrl = d.ContractUrl,
+                                          VideoUrl = d.VideoUrl,
+                                          DueTime = d.DueTime,
+                                          IndividualitySignature = d.IndividualitySignature,
+                                          Description = d.Description,
+                                          DetailPicture = d.DetailPicture,
+                                          IsMain = d.IsMain,
+                                          Valid = d.Valid,
+                                          IsSelfLivevAnchor = d.IsSelfLivevAnchor,
                               };
             FxPageInfo<LiveAnchorBaseInfoVo> liveAnchorBaseInfoPageInfo = new FxPageInfo<LiveAnchorBaseInfoVo>();
             liveAnchorBaseInfoPageInfo.TotalCount = q.TotalCount;
@@ -99,6 +100,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.VideoUrl = addVo.VideoUrl;
             addDto.DueTime = addVo.DueTime;
             addDto.NickName = addVo.NickName;
+            addDto.IsSelfLivevAnchor = addVo.IsSelfLivevAnchor;
             addDto.IndividualitySignature = addVo.IndividualitySignature;
             addDto.Description = addVo.Description;
             addDto.DetailPicture = addVo.DetailPicture;
@@ -118,20 +120,21 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
 
             var result = await liveAnchorBaseInfoService.GetByIdAsync(id);
-            LiveAnchorBaseInfoVo liveAnchorBaseInfoDto = new LiveAnchorBaseInfoVo();
-            liveAnchorBaseInfoDto.Id = result.Id;
-            liveAnchorBaseInfoDto.LiveAnchorName = result.LiveAnchorName;
-            liveAnchorBaseInfoDto.ThumbPicture = result.ThumbPicture;
-            liveAnchorBaseInfoDto.DueTime = result.DueTime;
-            liveAnchorBaseInfoDto.ContractUrl = result.ContractUrl;
-            liveAnchorBaseInfoDto.VideoUrl = result.VideoUrl;
-            liveAnchorBaseInfoDto.NickName = result.NickName;
-            liveAnchorBaseInfoDto.IndividualitySignature = result.IndividualitySignature;
-            liveAnchorBaseInfoDto.Description = result.Description;
-            liveAnchorBaseInfoDto.DetailPicture = result.DetailPicture;
-            liveAnchorBaseInfoDto.IsMain = result.IsMain;
-            liveAnchorBaseInfoDto.Valid = true;
-            return ResultData<LiveAnchorBaseInfoVo>.Success().AddData("liveAnchorBaseInfo", liveAnchorBaseInfoDto);
+            LiveAnchorBaseInfoVo liveAnchorBaseInfoVo = new LiveAnchorBaseInfoVo();
+            liveAnchorBaseInfoVo.Id = result.Id;
+            liveAnchorBaseInfoVo.LiveAnchorName = result.LiveAnchorName;
+            liveAnchorBaseInfoVo.ThumbPicture = result.ThumbPicture;
+            liveAnchorBaseInfoVo.DueTime = result.DueTime;
+            liveAnchorBaseInfoVo.ContractUrl = result.ContractUrl;
+            liveAnchorBaseInfoVo.VideoUrl = result.VideoUrl;
+            liveAnchorBaseInfoVo.NickName = result.NickName;
+            liveAnchorBaseInfoVo.IndividualitySignature = result.IndividualitySignature;
+            liveAnchorBaseInfoVo.Description = result.Description;
+            liveAnchorBaseInfoVo.DetailPicture = result.DetailPicture;
+            liveAnchorBaseInfoVo.IsMain = result.IsMain;
+            liveAnchorBaseInfoVo.IsSelfLivevAnchor = result.IsSelfLivevAnchor;
+            liveAnchorBaseInfoVo.Valid = true;
+            return ResultData<LiveAnchorBaseInfoVo>.Success().AddData("liveAnchorBaseInfo", liveAnchorBaseInfoVo);
         }
 
         /// <summary>
@@ -155,6 +158,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.VideoUrl = updateVo.VideoUrl;
             updateDto.DueTime = updateVo.DueTime;
             updateDto.Valid = updateVo.Valid;
+            updateDto.IsSelfLivevAnchor = updateVo.IsSelfLivevAnchor;
             await liveAnchorBaseInfoService.UpdateAsync(updateDto);
             return ResultData.Success();
         }

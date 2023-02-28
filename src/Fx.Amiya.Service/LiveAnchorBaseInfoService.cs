@@ -29,13 +29,14 @@ namespace Fx.Amiya.Service
         public async Task<List<LiveAnchorBaseInfoDto>> GetValidAsync()
         {
             var liveAnchorBaseInfos = from d in dalLiveAnchorBaseInfo.GetAll()
-                              where d.Valid == true
-                              select new LiveAnchorBaseInfoDto
-                              {
-                                  Id = d.Id,
-                                  LiveAnchorName = d.LiveAnchorName,
-                                  Valid = d.Valid
-                              };
+                                      where d.Valid == true
+                                      select new LiveAnchorBaseInfoDto
+                                      {
+                                          Id = d.Id,
+                                          LiveAnchorName = d.LiveAnchorName,
+                                          Valid = d.Valid,
+                                          IsSelfLivevAnchor = d.IsSelfLivevAnchor,
+                                      };
             var resultList = await liveAnchorBaseInfos.ToListAsync();
             return resultList;
         }
@@ -46,23 +47,24 @@ namespace Fx.Amiya.Service
         {
 
             var liveAnchorBaseInfos = from d in dalLiveAnchorBaseInfo.GetAll()
-                              where (string.IsNullOrWhiteSpace(name) || d.NickName.Contains(name) || d.LiveAnchorName.Contains(name))
-                              && (d.Valid == valid)
-                              select new LiveAnchorBaseInfoDto
-                              {
-                                  Id = d.Id,
-                                  LiveAnchorName = d.LiveAnchorName,
-                                  ThumbPicture = d.ThumbPicture,
-                                  NickName = d.NickName,
-                                  IndividualitySignature = d.IndividualitySignature,
-                                  Description = d.Description,
-                                  ContractUrl=d.ContractUrl,
-                                  VideoUrl=d.VideoUrl,
-                                  DueTime=d.DueTime,
-                                  DetailPicture = d.DetailPicture,
-                                  IsMain = d.IsMain,
-                                  Valid = d.Valid
-                              };
+                                      where (string.IsNullOrWhiteSpace(name) || d.NickName.Contains(name) || d.LiveAnchorName.Contains(name))
+                                      && (d.Valid == valid)
+                                      select new LiveAnchorBaseInfoDto
+                                      {
+                                          Id = d.Id,
+                                          LiveAnchorName = d.LiveAnchorName,
+                                          ThumbPicture = d.ThumbPicture,
+                                          NickName = d.NickName,
+                                          IndividualitySignature = d.IndividualitySignature,
+                                          Description = d.Description,
+                                          ContractUrl = d.ContractUrl,
+                                          VideoUrl = d.VideoUrl,
+                                          DueTime = d.DueTime,
+                                          DetailPicture = d.DetailPicture,
+                                          IsMain = d.IsMain,
+                                          Valid = d.Valid,
+                                          IsSelfLivevAnchor = d.IsSelfLivevAnchor
+                                      };
             FxPageInfo<LiveAnchorBaseInfoDto> liveAnchorBaseInfoPageInfo = new FxPageInfo<LiveAnchorBaseInfoDto>();
             liveAnchorBaseInfoPageInfo.TotalCount = await liveAnchorBaseInfos.CountAsync();
             liveAnchorBaseInfoPageInfo.List = await liveAnchorBaseInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -95,6 +97,7 @@ namespace Fx.Amiya.Service
                 liveAchor.VideoUrl = addDto.VideoUrl;
                 liveAchor.DetailPicture = addDto.DetailPicture;
                 liveAchor.IsMain = addDto.IsMain;
+                liveAchor.IsSelfLivevAnchor = addDto.IsSelfLivevAnchor;
                 liveAchor.Valid = true;
                 await dalLiveAnchorBaseInfo.AddAsync(liveAchor, true);
             }
@@ -118,7 +121,7 @@ namespace Fx.Amiya.Service
             }
 
             LiveAnchorBaseInfoDto liveAnchorBaseInfoDto = new LiveAnchorBaseInfoDto();
-            liveAnchorBaseInfoDto.Id =x.Id;
+            liveAnchorBaseInfoDto.Id = x.Id;
             liveAnchorBaseInfoDto.LiveAnchorName = x.LiveAnchorName;
             liveAnchorBaseInfoDto.ThumbPicture = x.ThumbPicture;
             liveAnchorBaseInfoDto.NickName = x.NickName;
@@ -129,6 +132,7 @@ namespace Fx.Amiya.Service
             liveAnchorBaseInfoDto.Description = x.Description;
             liveAnchorBaseInfoDto.DetailPicture = x.DetailPicture;
             liveAnchorBaseInfoDto.IsMain = x.IsMain;
+            liveAnchorBaseInfoDto.IsSelfLivevAnchor = x.IsSelfLivevAnchor;
             liveAnchorBaseInfoDto.Valid = true;
             return liveAnchorBaseInfoDto;
         }
@@ -156,8 +160,43 @@ namespace Fx.Amiya.Service
             liveAnchorBaseInfoDto.Description = x.Description;
             liveAnchorBaseInfoDto.DetailPicture = x.DetailPicture;
             liveAnchorBaseInfoDto.IsMain = x.IsMain;
+            liveAnchorBaseInfoDto.IsSelfLivevAnchor = x.IsSelfLivevAnchor;
             liveAnchorBaseInfoDto.Valid = true;
             return liveAnchorBaseInfoDto;
+        }
+
+
+        public async Task<List<LiveAnchorBaseInfoDto>> GetByIdAndIsSelfLiveAnchorAsync(string id, bool? isSelfLiveAnchor)
+        {
+            var result = from d in dalLiveAnchorBaseInfo.GetAll()
+                         select d;
+            var x = result.Where(e => string.IsNullOrEmpty(id) || e.Id == id)
+                .Where(e => !isSelfLiveAnchor.HasValue || e.IsSelfLivevAnchor == isSelfLiveAnchor.Value);
+            if (x == null)
+            {
+                return new List<LiveAnchorBaseInfoDto>();
+            }
+            List<LiveAnchorBaseInfoDto> liveAnchorBaseInfoDtos = new List<LiveAnchorBaseInfoDto>();
+            var baseInfList = await x.ToListAsync();
+            foreach (var k in baseInfList)
+            {
+                LiveAnchorBaseInfoDto liveAnchorBaseInfoDto = new LiveAnchorBaseInfoDto();
+                liveAnchorBaseInfoDto.Id = k.Id;
+                liveAnchorBaseInfoDto.LiveAnchorName = k.LiveAnchorName;
+                liveAnchorBaseInfoDto.ThumbPicture = k.ThumbPicture;
+                liveAnchorBaseInfoDto.NickName = k.NickName;
+                liveAnchorBaseInfoDto.VideoUrl = k.VideoUrl;
+                liveAnchorBaseInfoDto.ContractUrl = k.ContractUrl;
+                liveAnchorBaseInfoDto.DueTime = k.DueTime;
+                liveAnchorBaseInfoDto.IndividualitySignature = k.IndividualitySignature;
+                liveAnchorBaseInfoDto.Description = k.Description;
+                liveAnchorBaseInfoDto.DetailPicture = k.DetailPicture;
+                liveAnchorBaseInfoDto.IsMain = k.IsMain;
+                liveAnchorBaseInfoDto.IsSelfLivevAnchor = k.IsSelfLivevAnchor;
+                liveAnchorBaseInfoDto.Valid = true;
+                liveAnchorBaseInfoDtos.Add(liveAnchorBaseInfoDto);
+            }
+            return liveAnchorBaseInfoDtos;
         }
 
         /// <summary>
@@ -180,6 +219,7 @@ namespace Fx.Amiya.Service
             liveAchor.Description = updateDto.Description;
             liveAchor.DetailPicture = updateDto.DetailPicture;
             liveAchor.IsMain = updateDto.IsMain;
+            liveAchor.IsSelfLivevAnchor = updateDto.IsSelfLivevAnchor;
             liveAchor.Valid = updateDto.Valid;
             liveAchor.VideoUrl = updateDto.VideoUrl;
             liveAchor.ContractUrl = updateDto.ContractUrl;
@@ -207,22 +247,23 @@ namespace Fx.Amiya.Service
         private async Task<List<LiveAnchorBaseInfoDto>> GetValidListAsync()
         {
             var liveAnchorBaseInfos = from d in dalLiveAnchorBaseInfo.GetAll()
-                              where d.Valid == true
-                              select new LiveAnchorBaseInfoDto
-                              {
-                                  Id = d.Id,
-                                  LiveAnchorName = d.LiveAnchorName,
-                                  ThumbPicture = d.ThumbPicture,
-                                  NickName = d.NickName,
-                                  IndividualitySignature = d.IndividualitySignature,
-                                  Description = d.Description,
-                                  DetailPicture = d.DetailPicture,
-                                  IsMain = d.IsMain,
-                                  Valid = d.Valid,
-                                  DueTime=d.DueTime,
-                                  ContractUrl=d.ContractUrl,
-                                  VideoUrl=d.VideoUrl,
-                              };
+                                      where d.Valid == true
+                                      select new LiveAnchorBaseInfoDto
+                                      {
+                                          Id = d.Id,
+                                          LiveAnchorName = d.LiveAnchorName,
+                                          ThumbPicture = d.ThumbPicture,
+                                          NickName = d.NickName,
+                                          IndividualitySignature = d.IndividualitySignature,
+                                          Description = d.Description,
+                                          DetailPicture = d.DetailPicture,
+                                          IsMain = d.IsMain,
+                                          Valid = d.Valid,
+                                          DueTime = d.DueTime,
+                                          ContractUrl = d.ContractUrl,
+                                          VideoUrl = d.VideoUrl,
+                                          IsSelfLivevAnchor = d.IsSelfLivevAnchor,
+                                      };
             var resultList = await liveAnchorBaseInfos.ToListAsync();
             return resultList;
         }
