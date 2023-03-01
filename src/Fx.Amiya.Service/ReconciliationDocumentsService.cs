@@ -410,7 +410,7 @@ namespace Fx.Amiya.Service
                     {
                         if (reconciliationDocuments.IsCreateBill == true)
                         {
-                            throw new Exception("选中的对账单存在已开票数据，请认真核对选中数据后重试！");
+                            throw new Exception("您选中的对账单存在已开票数据，请认真核对后重试！");
                         }
                     }
                     reconciliationDocuments.IsCreateBill = reconciliationDocumentsCreateBillDto.IsCreateBill;

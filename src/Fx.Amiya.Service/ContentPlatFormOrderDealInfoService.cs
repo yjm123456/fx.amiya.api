@@ -150,7 +150,7 @@ namespace Fx.Amiya.Service
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
                 ContentPlatFOrmOrderDealInfoPageInfo.TotalCount = await ContentPlatFOrmOrderDealInfo.CountAsync();
                 ContentPlatFOrmOrderDealInfoPageInfo.List = await ContentPlatFOrmOrderDealInfo.OrderByDescending(x => x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
-              
+
                 return ContentPlatFOrmOrderDealInfoPageInfo;
             }
             catch (Exception ex)
@@ -327,8 +327,8 @@ namespace Fx.Amiya.Service
                                                        ToHospitalType = d.ToHospitalType,
                                                        ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
                                                        ToHospitalDate = d.ToHospitalDate,
-                                                       DealPerformanceType=d.DealPerformanceType,
-                                                       DealPerformanceTypeText=ServiceClass.GetContentPlateFormOrderDealPerformanceType(d.DealPerformanceType),
+                                                       DealPerformanceType = d.DealPerformanceType,
+                                                       DealPerformanceTypeText = ServiceClass.GetContentPlateFormOrderDealPerformanceType(d.DealPerformanceType),
                                                        LastDealHospitalId = d.LastDealHospitalId,
                                                        SendDate = d.ContentPlatFormOrder.SendDate,
                                                        DealPicture = d.DealPicture,
@@ -585,8 +585,8 @@ namespace Fx.Amiya.Service
                                                        IsDeal = d.IsDeal,
                                                        IsOldCustomer = d.IsOldCustomer,
                                                        IsAcompanying = d.IsAcompanying,
-                                                       DealPerformanceType=d.DealPerformanceType,
-                                                       DealPerformanceTypeText=ServiceClass.GetContentPlateFormOrderDealPerformanceType(d.DealPerformanceType),
+                                                       DealPerformanceType = d.DealPerformanceType,
+                                                       DealPerformanceTypeText = ServiceClass.GetContentPlateFormOrderDealPerformanceType(d.DealPerformanceType),
                                                        Phone = hidePhone == true ? ServiceClass.GetIncompletePhone(d.ContentPlatFormOrder.Phone) : d.ContentPlatFormOrder.Phone,
                                                        CommissionRatio = d.CommissionRatio,
                                                        IsToHospital = d.IsToHospital,
@@ -686,8 +686,8 @@ namespace Fx.Amiya.Service
                                                        ToHospitalDate = d.ToHospitalDate,
                                                        LastDealHospitalId = d.LastDealHospitalId,
                                                        DealPicture = d.DealPicture,
-                                                       DealPerformanceType=d.DealPerformanceType,
-                                                       DealPerformanceTypeText=ServiceClass.GetContentPlateFormOrderDealPerformanceType(d.DealPerformanceType),
+                                                       DealPerformanceType = d.DealPerformanceType,
+                                                       DealPerformanceTypeText = ServiceClass.GetContentPlateFormOrderDealPerformanceType(d.DealPerformanceType),
                                                        Remark = d.Remark,
                                                        Price = d.Price,
                                                        DealDate = d.DealDate,
@@ -1471,6 +1471,78 @@ namespace Fx.Amiya.Service
 
 
         #endregion
+
+        #region 【新业绩板块】
+
+        /// <summary>
+        /// 根据精确时间线获取主播获取啊美雅业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isOldCustomer">新客/老客</param>
+        /// <param name="LiveAnchorIds">各个平台主播id集合</param>
+        /// <returns></returns>
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByDateAsync(DateTime startDate, DateTime endDate, List<int> LiveAnchorIds)
+        {
+            return await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
+                .Where(o => o.DealDate >= startDate && o.DealDate < endDate && o.IsDeal == true)
+                .Where(o => LiveAnchorIds.Count == 0 || LiveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id))
+                .Select(ContentPlatFOrmOrderDealInfo => new ContentPlatFormOrderDealInfoDto
+                {
+                    Id = ContentPlatFOrmOrderDealInfo.Id,
+                    Price = ContentPlatFOrmOrderDealInfo.Price,
+                    IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,
+                    ConsultationType = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ConsultationType,
+                    IsAcompanying = ContentPlatFOrmOrderDealInfo.IsAcompanying,
+                    AddOrderPrice = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.AddOrderPrice
+                }
+                ).ToListAsync();
+        }
+
+        /// <summary>
+        /// 根据精确时间线获取派单成交业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isOldSend">历史/当月派单,true为历史派单当月成交，false为当月派单当月成交</param>
+        /// <param name="LiveAnchorIds">各个平台主播id集合</param>
+        /// <returns></returns>
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetSendAndDealPerformanceAsync(DateTime startDate, DateTime endDate, bool? isOldSend, List<int> liveAnchorIds)
+        {
+            var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
+                .Where(o => o.IsDeal == true && o.DealDate >= startDate && o.DealDate < endDate)
+                .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id))
+                .ToListAsync();
+            if (isOldSend == true)
+            {
+                result = result.Where(x => x.ContentPlatFormOrder.SendDate.HasValue && x.ContentPlatFormOrder.SendDate.Value.Month != x.CreateDate.Month).ToList();
+            }
+            if (isOldSend == false)
+            {
+                result = result.Where(x => x.ContentPlatFormOrder.SendDate.HasValue && x.ContentPlatFormOrder.SendDate.Value.Month == x.CreateDate.Month).ToList();
+            }
+            var returnInfo = result.Select(
+                  d =>
+                       new ContentPlatFormOrderDealInfoDto
+                       {
+                           Id = d.Id,
+                           ContentPlatFormOrderId = d.ContentPlatFormOrderId,
+                           CreateDate = d.CreateDate,
+                           SendDate = d.ContentPlatFormOrder.SendDate,
+                           CustomerNickName = d.ContentPlatFormOrder.CustomerName,
+                           Phone = ServiceClass.GetIncompletePhone(d.ContentPlatFormOrder.Phone),
+                           IsOldCustomer = d.IsOldCustomer,
+                           ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
+                           AddOrderPrice = d.ContentPlatFormOrder.AddOrderPrice,
+                           Price = d.Price,
+                       }
+                ).ToList();
+
+            return returnInfo;
+        }
+
+
+        #endregion
         #region 全国机构top10运营数据
 
         /// <summary>
@@ -1822,8 +1894,8 @@ namespace Fx.Amiya.Service
         {
             startDate = startDate == null ? DateTime.Now.Date : startDate;
             endDate = startDate == null ? DateTime.Now.AddDays(1).Date : endDate;
-            var dataList = dalContentPlatFormOrderDealInfo.GetAll().Include(e=>e.ContentPlatFormOrder).Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == 2)
-                .Where(e => liveAnchorIds.Count==0 || liveAnchorIds.Contains(e.ContentPlatFormOrder.LiveAnchorId.HasValue ? e.ContentPlatFormOrder.LiveAnchorId.Value : 0))
+            var dataList = dalContentPlatFormOrderDealInfo.GetAll().Include(e => e.ContentPlatFormOrder).Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == 2)
+                .Where(e => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(e.ContentPlatFormOrder.LiveAnchorId.HasValue ? e.ContentPlatFormOrder.LiveAnchorId.Value : 0))
                 .GroupBy(e => new { e.ContentPlatFormOrder.LiveAnchorId, e.BelongCompany })
                 .Select(e => new LiveAnchorBoardDataDto
                 {

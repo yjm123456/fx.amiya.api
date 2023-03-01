@@ -125,7 +125,6 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByYearAndMonth(int year, int month, bool? isCustomer, List<int> LiveAnchorIds);
 
-
         /// <summary>
         /// 获取派单成交业绩
         /// </summary>
@@ -188,6 +187,28 @@ namespace Fx.Amiya.IService
         Task<List<PerformanceBrokenLine>> GetIndependenceOrAssistAsync(int year, int month, bool? isAssist, List<int> LiveAnchorIds, int amiyaEmployeeId);
 
 
+        #endregion
+
+        #region 【新业绩板块】
+        /// <summary>
+        /// 根据精确时间线主播获取啊美雅业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="isOldCustomer"></param>
+        /// <param name="LiveAnchorIds"></param>
+        /// <returns></returns>
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByDateAsync(DateTime startDate, DateTime endDate, List<int> LiveAnchorIds);
+
+        /// <summary>
+        /// 根据精确时间线获取派单成交业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="isOldSend"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetSendAndDealPerformanceAsync(DateTime startDate, DateTime endDate, bool? isOldSend, List<int> liveAnchorIds);
         #endregion
 
         #region 【分组业绩板块】

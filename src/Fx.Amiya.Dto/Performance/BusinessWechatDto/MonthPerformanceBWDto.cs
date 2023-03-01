@@ -17,7 +17,7 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
         /// </summary>
         public decimal CueerntMonthTotalPerformance { get; set; }
         /// <summary>
-        /// 总业绩同比增长
+        /// 总业绩同比
         /// </summary>
         public decimal? TotalPerformanceYearOnYear { get; set; }
         /// <summary>
@@ -96,7 +96,7 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
         /// <summary>
         /// 照片面诊业绩占比
         /// </summary>
-        public decimal? PictureConsultationPerformancePerformanceRatio { get; set; }
+        public decimal? PictureConsultationPerformanceRatio { get; set; }
 
         /// <summary>
         /// 照片面诊业绩同比
@@ -114,7 +114,7 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
         /// <summary>
         /// 视频面诊业绩占比
         /// </summary>
-        public decimal? VideoConsultationPerformancePerformanceRatio { get; set; }
+        public decimal? VideoConsultationPerformanceRatio { get; set; }
 
         /// <summary>
         /// 视频面诊业绩同比
@@ -134,7 +134,7 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
         /// <summary>
         /// 主播接诊业绩占比
         /// </summary>
-        public decimal? AcompanyingPerformancePerformanceRatio { get; set; }
+        public decimal? AcompanyingPerformanceRatio { get; set; }
 
         /// <summary>
         /// 主播接诊业绩同比
@@ -152,7 +152,7 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
         /// <summary>
         /// 非主播接诊业绩占比
         /// </summary>
-        public decimal? NotAcompanyingPerformancePerformanceRatio { get; set; }
+        public decimal? NotAcompanyingPerformanceRatio { get; set; }
 
         /// <summary>
         /// 非主播接诊业绩同比
@@ -172,7 +172,7 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
         /// <summary>
         /// 0元业绩占比
         /// </summary>
-        public decimal? ZeroPricePerformancePerformanceRatio { get; set; }
+        public decimal? ZeroPricePerformanceRatio { get; set; }
 
         /// <summary>
         /// 0元业绩同比
@@ -190,7 +190,7 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
         /// <summary>
         /// 199元业绩占比
         /// </summary>
-        public decimal? ExistPricePerformancePerformanceRatio { get; set; }
+        public decimal? ExistPricePerformanceRatio { get; set; }
 
         /// <summary>
         /// 199元业绩同比
@@ -220,6 +220,10 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
         /// 历史派单当月成交环比
         /// </summary>
         public decimal? HistorySendDuringMonthDealChainRatio { get; set; }
+        /// <summary>
+        /// 当月派单当月成交
+        /// </summary>
+        public decimal? DuringMonthSendDuringMonthDeal { get; set; }
 
         /// <summary>
         /// 当月派单当月成交业绩占比

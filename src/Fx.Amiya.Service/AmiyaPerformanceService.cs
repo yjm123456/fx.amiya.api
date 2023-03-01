@@ -1361,108 +1361,186 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<MonthPerformanceBWDto> GetMonthPerformanceBySelfLiveAnchorAsync(int year, int month, string liveAnchorBaseId, bool? isSelfLiveAnchor)
         {
-            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(year,month);
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month);
             //获取各个平台的主播ID
             var LiveAnchorInfo = await this.GetLiveAnchorIdsByBaseIdAndIsSelfLiveAnchorAsync(liveAnchorBaseId, isSelfLiveAnchor);
+            //获取目标
+            var target = await liveAnchorMonthlyTargetService.GetPerformance(year, month, LiveAnchorInfo);
 
-            MonthPerformanceBWDto monthPerformanceBWDto = new MonthPerformanceBWDto();
-            return monthPerformanceBWDto;
-            //查询成交情况主播业绩
-            //var order = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year, month, null, LiveAnchorInfo);
-            //#region 总业绩
-            //var curTotalPerformance = order.Sum(o => o.Price);
-            //var orderYearOnYear = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year - 1, month, null, LiveAnchorInfo);
-            //var totalPerformanceYearOnYear = orderYearOnYear.Sum(o => o.Price);
+            #region 总业绩
+            //总业绩
+            var order = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.StartDate, sequentialDate.EndDate, LiveAnchorInfo);
+            var curTotalPerformance = order.Sum(o => o.Price);
+            //同比业绩
+            var orderYearOnYear = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, LiveAnchorInfo);
+            var totalPerformanceYearOnYear = orderYearOnYear.Sum(o => o.Price);
+            //环比业绩
+            var orderChain = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, LiveAnchorInfo);
+            var totalPerformanceChainRatio = orderChain.Sum(o => o.Price);
+            #endregion
 
-            //List<ContentPlatFormOrderDealInfoDto> orderChain = null;
-            //if (month == 1)
-            //{
-            //    orderChain = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year - 1, 12, null, LiveAnchorInfo);
-            //}
-            //else
-            //{
-            //    orderChain = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year, month - 1, null, LiveAnchorInfo);
-            //}
-            //var totalPerformanceChainRatio = orderChain.Sum(o => o.Price);
-            //#endregion
+            #region 新客业绩
+            var curNewCustomer = order.Where(o => o.IsOldCustomer == false).Sum(o => o.Price);
+            var newOrderYearOnYear = orderYearOnYear.Where(x => x.IsOldCustomer == false);
+            var newPerformanceYearOnYear = newOrderYearOnYear.Sum(o => o.Price);
+            List<ContentPlatFormOrderDealInfoDto> newOrderChainRatio = orderChain.Where(x => x.IsOldCustomer == false).ToList();
+            var newPerformanceChainRatio = newOrderChainRatio.Sum(o => o.Price);
+            #endregion
+
+            #region 老客业绩
+            var curOldCustomer = order.Where(o => o.IsOldCustomer == true).Sum(o => o.Price);
+            var oldOrderYearOnYear = orderYearOnYear.Where(x => x.IsOldCustomer == true);
+            var oldPerformanceYearOnYear = oldOrderYearOnYear.Sum(o => o.Price);
+            List<ContentPlatFormOrderDealInfoDto> oldOrderChainRatio = orderChain.Where(x => x.IsOldCustomer == true).ToList();
+            var oldPerformanceRatio = oldOrderChainRatio.Sum(o => o.Price);
+            #endregion
+
+            #region 视频业绩
+            var curVideoPerformance = order.Where(o => o.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Sum(o => o.Price);
+            var videoYearOnYearr = orderYearOnYear.Where(x => x.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).ToList();
+            var videoPerformanceYearOnYear = videoYearOnYearr.Sum(o => o.Price);
+            var videoOrderChainRatio = orderChain.Where(x => x.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).ToList();
+            var videoPerformanceRatio = videoOrderChainRatio.Sum(o => o.Price);
+            #endregion
+
+            #region 照片业绩
+            var curPicturePerformance = order.Where(o => o.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).Sum(o => o.Price);
+            var pictureYearOnYearr = orderYearOnYear.Where(x => x.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).ToList();
+            var picturePerformanceYearOnYear = pictureYearOnYearr.Sum(o => o.Price);
+            var pictureOrderChainRatio = orderChain.Where(x => x.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).ToList();
+            var picturePerformanceRatio = pictureOrderChainRatio.Sum(o => o.Price);
+            #endregion
+
+            #region 主播接诊业绩
+            var curLiveAnchorAcompanyingPerformance = order.Where(o => o.IsAcompanying == true).Sum(o => o.Price);
+            var liveAnchorAcompanyingYearOnYearr = orderYearOnYear.Where(x => x.IsAcompanying == true).ToList();
+            var liveAnchorAcompanyingPerformanceYearOnYear = liveAnchorAcompanyingYearOnYearr.Sum(o => o.Price);
+            var liveAnchorAcompanyingOrderChainRatio = orderChain.Where(x => x.IsAcompanying == true).ToList();
+            var liveAnchorAcompanyingPerformanceRatio = liveAnchorAcompanyingOrderChainRatio.Sum(o => o.Price);
+            #endregion
+
+            #region 非主播接诊业绩
+            var curNotLiveAnchorAcompanyingPerformance = order.Where(o => o.IsAcompanying == false).Sum(o => o.Price);
+            var notLiveAnchorAcompanyingYearOnYearr = orderYearOnYear.Where(x => x.IsAcompanying == false).ToList();
+            var notLiveAnchorAcompanyingPerformanceYearOnYear = notLiveAnchorAcompanyingYearOnYearr.Sum(o => o.Price);
+            var notLiveAnchorAcompanyingOrderChainRatio = orderChain.Where(x => x.IsAcompanying == false).ToList();
+            var notLiveAnchorAcompanyingPerformanceRatio = notLiveAnchorAcompanyingOrderChainRatio.Sum(o => o.Price);
+            #endregion
+
+            #region 199业绩
+            var curHavingPricePerformance = order.Where(o => o.AddOrderPrice > 0).Sum(o => o.Price);
+            var havingPriceYearOnYearr = orderYearOnYear.Where(x => x.AddOrderPrice > 0).ToList();
+            var havingPricePerformanceYearOnYear = havingPriceYearOnYearr.Sum(o => o.Price);
+            var havingPriceOrderChainRatio = orderChain.Where(x => x.AddOrderPrice > 0).ToList();
+            var havingPricePerformanceRatio = havingPriceOrderChainRatio.Sum(o => o.Price);
+            #endregion
+
+            #region 0元业绩
+            var curNotHavePricePerformance = order.Where(o => o.AddOrderPrice == 0).Sum(o => o.Price);
+            var notHavePriceYearOnYearr = orderYearOnYear.Where(x => x.AddOrderPrice == 0).ToList();
+            var notHavePricePerformanceYearOnYear = notHavePriceYearOnYearr.Sum(o => o.Price);
+            var notHavePriceOrderChainRatio = orderChain.Where(x => x.AddOrderPrice == 0).ToList();
+            var notHavePricePerformanceRatio = notHavePriceOrderChainRatio.Sum(o => o.Price);
+            #endregion
+
+            #region 当月派单当月成交业绩
+            //总业绩
+            var thisMonthSendAndDealInfo = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.StartDate, sequentialDate.EndDate, false, LiveAnchorInfo);
+            var thisMonthSendAndDealPerformance = thisMonthSendAndDealInfo.Sum(o => o.Price);
+            //同比业绩
+            var thisMonthSendAndDealInfoYearOnYear = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, false, LiveAnchorInfo);
+            var thisMonthSendAndDealPerformanceYearOnYear = thisMonthSendAndDealInfoYearOnYear.Sum(o => o.Price);
+            //环比业绩
+            var thisMonthSendAndDealPerformanceChain = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, false, LiveAnchorInfo);
+            var thisMonthSendAndDealPerformanceChainRatio = orderChain.Sum(o => o.Price);
+            #endregion
+
+            #region 历史派单当月成交业绩
+            //总业绩
+            var historyMonthSendAndDealInfo = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.StartDate, sequentialDate.EndDate, true, LiveAnchorInfo);
+            var historyMonthSendAndDealPerformance = historyMonthSendAndDealInfo.Sum(o => o.Price);
+            //同比业绩
+            var historyMonthSendAndDealInfoYearOnYear = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, true, LiveAnchorInfo);
+            var historyMonthSendAndDealPerformanceYearOnYear = historyMonthSendAndDealInfoYearOnYear.Sum(o => o.Price);
+            //环比业绩
+            var historyMonthSendAndDealPerformanceChain = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, true, LiveAnchorInfo);
+            var historyMonthSendAndDealPerformanceChainRatio = orderChain.Sum(o => o.Price);
+            #endregion
+
+            //数据组合
+            MonthPerformanceBWDto monthPerformanceRatioDto = new MonthPerformanceBWDto
+            {
+                CueerntMonthTotalPerformance = curTotalPerformance,
+                TotalPerformanceYearOnYear = CalculateYearOnYear(curTotalPerformance, totalPerformanceYearOnYear),
+                TotalPerformanceChainratio = CalculateChainratio(curTotalPerformance, totalPerformanceChainRatio),
+                TotalPerformanceTarget = target.TotalPerformanceTarget,
+                TotalPerformanceTargetComplete = CalculateTargetComplete(curTotalPerformance, target.TotalPerformanceTarget),
+
+                CurrentMonthNewCustomerPerformance = curNewCustomer,
+                NewCustomerPerformanceRatio = CalculateTargetComplete(curNewCustomer, curTotalPerformance),
+                NewCustomerPerformanceYearOnYear = CalculateYearOnYear(curNewCustomer, newPerformanceYearOnYear),
+                NewCustomerPerformanceChainRatio = CalculateChainratio(curNewCustomer, newPerformanceChainRatio),
+                NewCustomerPerformanceTarget = target.NewCustomerPerformanceTarget,
+                NewCustomerPerformanceTargetComplete = CalculateTargetComplete(curNewCustomer, target.NewCustomerPerformanceTarget),
+
+                CurrentMonthOldCustomerPerformance = curOldCustomer,
+                OldCustomerPerformanceRatio = CalculateTargetComplete(curOldCustomer, curTotalPerformance),
+                OldCustomerPerformanceYearOnYear = CalculateYearOnYear(curOldCustomer, oldPerformanceYearOnYear),
+                OldCustomerPerformanceChainRatio = CalculateChainratio(curOldCustomer, oldPerformanceRatio),
+                OldCustomerTarget = target.OldCustomerPerformanceTarget,
+                OldCustomerTargetComplete = CalculateTargetComplete(curOldCustomer, target.OldCustomerPerformanceTarget),
 
 
-            //#region 新客业绩
-            //var curNewCustomer = order.Where(o => o.IsOldCustomer == false).Sum(o => o.Price);
-            //var newOrderYearOnYear = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year - 1, month, false, LiveAnchorInfo);
-            //var newPerformanceYearOnYear = newOrderYearOnYear.Sum(o => o.Price);
-            //List<ContentPlatFormOrderDealInfoDto> newOrderChainRatio = null;
-            //if (month == 1)
-            //{
-            //    newOrderChainRatio = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year - 1, 12, false, LiveAnchorInfo);
-            //}
-            //else
-            //{
-            //    newOrderChainRatio = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year, month - 1, false, LiveAnchorInfo);
-            //}
-            //var newPerformanceChainRatio = newOrderChainRatio.Sum(o => o.Price);
-            //#endregion
+                PictureConsultationPerformance = curPicturePerformance,
+                PictureConsultationPerformanceRatio = CalculateTargetComplete(curPicturePerformance, curTotalPerformance),
+                PictureConsultationPerformanceYearOnYear = CalculateYearOnYear(curPicturePerformance, picturePerformanceYearOnYear),
+                PictureConsultationPerformanceChainRatio = CalculateChainratio(curPicturePerformance, picturePerformanceRatio),
+
+                VideoConsultationPerformance = curVideoPerformance,
+                VideoConsultationPerformanceRatio = CalculateTargetComplete(curVideoPerformance, curTotalPerformance),
+                VideoConsultationPerformanceYearOnYear = CalculateYearOnYear(curVideoPerformance, videoPerformanceYearOnYear),
+                VideoConsultationPerformanceChainRatio = CalculateChainratio(curVideoPerformance, videoPerformanceRatio),
 
 
-            //#region 老客业绩
-            //var curOldCustomer = order.Where(o => o.IsOldCustomer == true).Sum(o => o.Price);
-
-            //var oldOrderYearOnYearr = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year - 1, month, true, LiveAnchorInfo);
-            //var oldPerformanceYearOnYear = oldOrderYearOnYearr.Sum(o => o.Price);
-            //List<ContentPlatFormOrderDealInfoDto> oldOrderChainRatio = null;
-            //if (month == 1)
-            //{
-            //    oldOrderChainRatio = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year - 1, 12, true, LiveAnchorInfo);
-            //}
-            //else
-            //{
-            //    oldOrderChainRatio = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year, month - 1, true, LiveAnchorInfo);
-            //}
-            //var oldPerformanceRatio = oldOrderChainRatio.Sum(o => o.Price);
-            //#endregion
+                AcompanyingPerformance = curLiveAnchorAcompanyingPerformance,
+                AcompanyingPerformanceRatio = CalculateTargetComplete(curLiveAnchorAcompanyingPerformance, curTotalPerformance),
+                AcompanyingPerformanceYearOnYear = CalculateYearOnYear(curLiveAnchorAcompanyingPerformance, liveAnchorAcompanyingPerformanceYearOnYear),
+                AcompanyingPerformanceChainRatio = CalculateChainratio(curLiveAnchorAcompanyingPerformance, liveAnchorAcompanyingPerformanceRatio),
 
 
-            //#region 带货业绩
-            //var target = await liveAnchorMonthlyTargetService.GetPerformance(year, month, LiveAnchorInfo);
-            //var commercePerformanceYearOnYear = await liveAnchorMonthlyTargetService.GetPerformance(year - 1, month, LiveAnchorInfo);
-            //LiveAnchorMonthTargetPerformanceDto liveAnchorMonthTargetPerformanceDto = new LiveAnchorMonthTargetPerformanceDto();
-            //if (month == 1)
-            //{
-            //    liveAnchorMonthTargetPerformanceDto = await liveAnchorMonthlyTargetService.GetPerformance(year - 1, 12, LiveAnchorInfo);
-            //}
-            //else
-            //{
-            //    liveAnchorMonthTargetPerformanceDto = await liveAnchorMonthlyTargetService.GetPerformance(year, month - 1, LiveAnchorInfo);
-            //}
-            //#endregion
+                NotAcompanyingPerformance = curNotLiveAnchorAcompanyingPerformance,
+                NotAcompanyingPerformanceRatio = CalculateTargetComplete(curNotLiveAnchorAcompanyingPerformance, curTotalPerformance),
+                NotAcompanyingPerformanceYearOnYear = CalculateYearOnYear(curNotLiveAnchorAcompanyingPerformance, notLiveAnchorAcompanyingPerformanceYearOnYear),
+                NotAcompanyingPerformanceChainRatio = CalculateChainratio(curNotLiveAnchorAcompanyingPerformance, notLiveAnchorAcompanyingPerformanceRatio),
 
 
-            //MonthPerformanceRatioDto monthPerformanceRatioDto = new MonthPerformanceRatioDto
-            //{
-            //    CueerntMonthTotalPerformance = curTotalPerformance + target.CommerceCompletePerformance,
-            //    CurrentMonthNewCustomerPerformance = curNewCustomer,
-            //    CurrentMonthOldCustomerPerformance = curOldCustomer,
-            //    CurrentMonthCommercePerformance = target.CommerceCompletePerformance,
-            //    TotalPerformanceYearOnYear = CalculateYearOnYear(curTotalPerformance + target.CommerceCompletePerformance, totalPerformanceYearOnYear + commercePerformanceYearOnYear.CommerceCompletePerformance),
-            //    TotalPerformanceChainratio = CalculateChainratio(curTotalPerformance + target.CommerceCompletePerformance, totalPerformanceChainRatio + liveAnchorMonthTargetPerformanceDto.CommerceCompletePerformance),
-            //    TotalPerformanceTargetComplete = CalculateTargetComplete(curTotalPerformance + target.CommerceCompletePerformance, target.CommercePerformanceTarget + target.TotalPerformanceTarget),
-            //    NewCustomerPerformanceYearOnYear = CalculateYearOnYear(curNewCustomer, newPerformanceYearOnYear),
-            //    NewCustomerPerformanceChainRatio = CalculateChainratio(curNewCustomer, newPerformanceChainRatio),
-            //    NewCustomerPerformanceTargetComplete = CalculateTargetComplete(curNewCustomer, target.NewCustomerPerformanceTarget),
-            //    OldCustomerPerformanceYearOnYear = CalculateYearOnYear(curOldCustomer, oldPerformanceYearOnYear),
-            //    OldCustomerPerformanceChainRatio = CalculateChainratio(curOldCustomer, oldPerformanceRatio),
-            //    OldCustomerTargetComplete = CalculateTargetComplete(curOldCustomer, target.OldCustomerPerformanceTarget),
-            //    CommercePerformanceYearOnYear = CalculateYearOnYear(target.CommerceCompletePerformance, commercePerformanceYearOnYear.CommerceCompletePerformance),
-            //    CommercePerformanceChainRatio = CalculateChainratio(target.CommerceCompletePerformance, liveAnchorMonthTargetPerformanceDto.CommerceCompletePerformance),
-            //    CommercePerformanceTargetComplete = CalculateTargetComplete(target.CommerceCompletePerformance, target.CommercePerformanceTarget),
-            //    NewCustomerPerformanceRatio = CalculateTargetComplete(curNewCustomer, curTotalPerformance + target.CommerceCompletePerformance),
-            //    OldCustomerPerformanceRatio = CalculateTargetComplete(curOldCustomer, curTotalPerformance + target.CommerceCompletePerformance),
-            //    CommercePerformanceRatio = CalculateTargetComplete(target.CommerceCompletePerformance, curTotalPerformance + target.CommerceCompletePerformance)
-            //};
+                ZeroPricePerformance = curNotHavePricePerformance,
+                ZeroPricePerformanceRatio = CalculateTargetComplete(curNotHavePricePerformance, curTotalPerformance),
+                ZeroPricePerformanceYearOnYear = CalculateYearOnYear(curNotHavePricePerformance, notHavePricePerformanceYearOnYear),
+                ZeroPricePerformanceChainRatio = CalculateChainratio(curNotHavePricePerformance, notHavePricePerformanceRatio),
 
 
-            //return monthPerformanceRatioDto;
+                ExistPricePerformance = curHavingPricePerformance,
+                ExistPricePerformanceRatio = CalculateTargetComplete(curHavingPricePerformance, curTotalPerformance),
+                ExistPricePerformanceYearOnYear = CalculateYearOnYear(curHavingPricePerformance, havingPricePerformanceYearOnYear),
+                ExistPricePerformanceChainRatio = CalculateChainratio(curHavingPricePerformance, havingPricePerformanceRatio),
+
+
+                DuringMonthSendDuringMonthDeal = thisMonthSendAndDealPerformance,
+                DuringMonthSendDuringMonthDealPerformanceRatio = CalculateTargetComplete(thisMonthSendAndDealPerformance, curTotalPerformance),
+                DuringMonthSendDuringMonthDealYearOnYear = CalculateYearOnYear(thisMonthSendAndDealPerformance, thisMonthSendAndDealPerformanceYearOnYear),
+                DuringMonthSendDuringMonthDealChainRatio = CalculateChainratio(thisMonthSendAndDealPerformance, thisMonthSendAndDealPerformanceChainRatio),
+
+
+                HistorySendDuringMonthDeal = historyMonthSendAndDealPerformance,
+                HistorySendDuringMonthDealPerformanceRatio = CalculateTargetComplete(historyMonthSendAndDealPerformance, curTotalPerformance),
+                HistorySendDuringMonthDealYearOnYear = CalculateYearOnYear(historyMonthSendAndDealPerformance, historyMonthSendAndDealPerformanceYearOnYear),
+                HistorySendDuringMonthDealChainRatio = CalculateChainratio(historyMonthSendAndDealPerformance, historyMonthSendAndDealPerformanceChainRatio),
+
+            };
+            return monthPerformanceRatioDto;
         }
+
         #endregion
 
         #region【公共使用业务，包括折线图，业绩明细等】

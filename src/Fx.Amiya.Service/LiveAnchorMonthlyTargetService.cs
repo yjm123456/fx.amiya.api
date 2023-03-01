@@ -74,35 +74,35 @@ namespace Fx.Amiya.Service
                                                   ZhihuFlowinvestmentTarget = d.ZhihuFlowinvestmentTarget,
                                                   CumulativeZhihuFlowinvestment = d.CumulativeZhihuFlowinvestment,
                                                   ZhihuFlowinvestmentCompleteRate = d.ZhihuFlowinvestmentCompleteRate,
-                                                 
+
                                                   VideoReleaseTarget = d.VideoReleaseTarget,
                                                   CumulativeVideoRelease = d.CumulativeVideoRelease,
                                                   VideoReleaseCompleteRate = d.VideoReleaseCompleteRate,
                                                   VideoFlowinvestmentTarget = d.VideoFlowinvestmentTarget,
                                                   CumulativeVideoFlowinvestment = d.CumulativeVideoFlowinvestment,
                                                   VideoFlowinvestmentCompleteRate = d.VideoFlowinvestmentCompleteRate,
-                                                  
+
                                                   TikTokReleaseTarget = d.TikTokReleaseTarget,
                                                   CumulativeTikTokRelease = d.CumulativeTikTokRelease,
                                                   TikTokReleaseCompleteRate = d.TikTokReleaseCompleteRate,
                                                   TikTokFlowinvestmentTarget = d.TikTokFlowinvestmentTarget,
                                                   CumulativeTikTokFlowinvestment = d.CumulativeTikTokFlowinvestment,
                                                   TikTokFlowinvestmentCompleteRate = d.TikTokFlowinvestmentCompleteRate,
-                                                 
+
                                                   XiaoHongShuReleaseTarget = d.XiaoHongShuReleaseTarget,
                                                   CumulativeXiaoHongShuRelease = d.CumulativeXiaoHongShuRelease,
                                                   XiaoHongShuReleaseCompleteRate = d.XiaoHongShuReleaseCompleteRate,
                                                   XiaoHongShuFlowinvestmentTarget = d.XiaoHongShuFlowinvestmentTarget,
                                                   CumulativeXiaoHongShuFlowinvestment = d.CumulativeXiaoHongShuFlowinvestment,
                                                   XiaoHongShuFlowinvestmentCompleteRate = d.XiaoHongShuFlowinvestmentCompleteRate,
-                                                 
+
                                                   SinaWeiBoReleaseTarget = d.SinaWeiBoReleaseTarget,
                                                   CumulativeSinaWeiBoRelease = d.CumulativeSinaWeiBoRelease,
                                                   SinaWeiBoReleaseCompleteRate = d.SinaWeiBoReleaseCompleteRate,
                                                   SinaWeiBoFlowinvestmentTarget = d.SinaWeiBoFlowinvestmentTarget,
                                                   CumulativeSinaWeiBoFlowinvestment = d.CumulativeSinaWeiBoFlowinvestment,
                                                   SinaWeiBoFlowinvestmentCompleteRate = d.SinaWeiBoFlowinvestmentCompleteRate,
-                                                  
+
                                                   ReleaseTarget = d.ReleaseTarget,
                                                   CumulativeRelease = d.CumulativeRelease,
                                                   ReleaseCompleteRate = d.ReleaseCompleteRate,
@@ -1038,7 +1038,7 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
-        /// 带货业绩
+        /// 获取业绩目标
         /// </summary>
         /// <param name="year"></param>
         /// <param name="month"></param>
@@ -1059,6 +1059,7 @@ namespace Fx.Amiya.Service
             };
             return performanceInfoDto;
         }
+
 
         /// <summary>
         /// 根据平台id按年月获取数据
@@ -1096,7 +1097,7 @@ namespace Fx.Amiya.Service
             return performanceInfoDto;
         }
 
-     
+
 
         /// <summary>
         /// 根据主播基础id按年月获取折线图

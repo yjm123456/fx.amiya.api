@@ -2956,7 +2956,7 @@
             照片面诊业绩
             </summary>
         </member>
-        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.PictureConsultationPerformancePerformanceRatio">
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.PictureConsultationPerformanceRatio">
             <summary>
             照片面诊业绩占比
             </summary>
@@ -2976,7 +2976,7 @@
             视频面诊业绩
             </summary>
         </member>
-        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.VideoConsultationPerformancePerformanceRatio">
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.VideoConsultationPerformanceRatio">
             <summary>
             视频面诊业绩占比
             </summary>
@@ -2996,7 +2996,7 @@
             主播接诊业绩
             </summary>
         </member>
-        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.AcompanyingPerformancePerformanceRatio">
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.AcompanyingPerformanceRatio">
             <summary>
             主播接诊业绩占比
             </summary>
@@ -3016,7 +3016,7 @@
             非主播接诊业绩
             </summary>
         </member>
-        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.NotAcompanyingPerformancePerformanceRatio">
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.NotAcompanyingPerformanceRatio">
             <summary>
             非主播接诊业绩占比
             </summary>
@@ -3036,7 +3036,7 @@
             0元业绩
             </summary>
         </member>
-        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.ZeroPricePerformancePerformanceRatio">
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.ZeroPricePerformanceRatio">
             <summary>
             0元业绩占比
             </summary>
@@ -3056,7 +3056,7 @@
             199元业绩
             </summary>
         </member>
-        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.ExistPricePerformancePerformanceRatio">
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.ExistPricePerformanceRatio">
             <summary>
             199元业绩占比
             </summary>
@@ -3089,6 +3089,11 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.HistorySendDuringMonthDealChainRatio">
             <summary>
             历史派单当月成交环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.DuringMonthSendDuringMonthDeal">
+            <summary>
+            当月派单当月成交
             </summary>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo.DuringMonthSendDuringMonthDealPerformanceRatio">
