@@ -236,6 +236,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.BelongStartTime = updateVo.BelongStartTime;
                 updateDto.BelongEndTime = updateVo.BelongEndTime;
                 updateDto.BillType = updateVo.BillType;
+                updateDto.CreateBillDate = updateVo.CreateBillDate;
                 updateDto.CreateBillReason = updateVo.CreateBillReason;
 
                 await billService.UpdateAsync(updateDto);

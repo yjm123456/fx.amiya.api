@@ -48,6 +48,11 @@ namespace Fx.Amiya.Background.Api.Vo.Bill
         /// </summary>
         public string CollectionCompanyId { get; set; }
         /// <summary>
+        /// 开票时间
+        /// </summary>
+
+        public DateTime CreateBillDate { get; set; }
+        /// <summary>
         /// 票据归属时间（起）
         /// </summary>
         public DateTime BelongStartTime { get; set; }

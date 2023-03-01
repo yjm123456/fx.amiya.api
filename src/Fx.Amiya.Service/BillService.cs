@@ -240,7 +240,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task UpdateAsync(UpdateBillDto updateDto)
         {
-            var result = await dalBill.GetAll().Where(x => x.Id == updateDto.Id).FirstOrDefaultAsync();
+            var result = await dalBill.GetAll().Where(x => x.Id == updateDto.Id && x.Valid == true).FirstOrDefaultAsync();
             if (result == null)
                 throw new Exception("未找到发票信息");
             result.HospitalId = updateDto.HospitalId;
@@ -254,6 +254,7 @@ namespace Fx.Amiya.Service
             result.BelongStartTime = updateDto.BelongStartTime;
             result.BelongEndTime = updateDto.BelongEndTime;
             result.BillType = updateDto.BillType;
+            result.CreateDate = updateDto.CreateBillDate;
             result.CreateBillReason = updateDto.CreateBillReason;
             result.UpdateDate = DateTime.Now;
             await dalBill.UpdateAsync(result, true);
@@ -270,7 +271,9 @@ namespace Fx.Amiya.Service
             try
             {
 
-                var result = await dalBill.GetAll().SingleOrDefaultAsync(e => e.Id == id);
+                var result = await dalBill.GetAll().SingleOrDefaultAsync(e => e.Id == id && e.Valid == true);
+                if (result == null)
+                    throw new Exception("未找到发票信息");
                 result.Valid = false;
                 await dalBill.UpdateAsync(result, true);
 
@@ -337,7 +340,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var result = await dalBill.GetAll().Where(x => x.Id == updateDto.Id).FirstOrDefaultAsync();
+                var result = await dalBill.GetAll().Where(x => x.Id == updateDto.Id && x.Valid == true).FirstOrDefaultAsync();
                 result.ReturnBackState = (int)BillReturnBackStateTextEnum.ReturnBacking;
                 if (result == null)
                     throw new Exception("未找到发票信息");
@@ -421,7 +424,7 @@ namespace Fx.Amiya.Service
                 NoIncludeTaxPrice = g.Sum(item => item.NotInTaxPrice),
                 InformationPrice = g.Sum(item => item.InformationPrice) ?? 0m,
                 SystemUsePrice = g.Sum(item => item.SystemUpdatePrice) ?? 0m,
-                ReturnBackPrice = g.Sum(item => item.ReturnBackPrice) ?? 0m,               
+                ReturnBackPrice = g.Sum(item => item.ReturnBackPrice) ?? 0m,
             });
             FxPageInfo<FinancialHospitalBoardDto> fxPageInfo = new FxPageInfo<FinancialHospitalBoardDto>();
             fxPageInfo.TotalCount = await data.CountAsync();

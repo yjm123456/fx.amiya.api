@@ -406,6 +406,13 @@ namespace Fx.Amiya.Service
                 {
 
                     var reconciliationDocuments = await dalReconciliationDocuments.GetAll().Where(e => e.Id == x).FirstOrDefaultAsync();
+                    if (reconciliationDocumentsCreateBillDto.IsCreateBill == true)
+                    {
+                        if (reconciliationDocuments.IsCreateBill == true)
+                        {
+                            throw new Exception("选中的对账单存在已开票数据，请认真核对选中数据后重试！");
+                        }
+                    }
                     reconciliationDocuments.IsCreateBill = reconciliationDocumentsCreateBillDto.IsCreateBill;
                     reconciliationDocuments.BillId = reconciliationDocumentsCreateBillDto.BillId;
                     await dalReconciliationDocuments.UpdateAsync(reconciliationDocuments, true);
