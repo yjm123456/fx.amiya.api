@@ -1351,6 +1351,106 @@ namespace Fx.Amiya.Service
 
         //企业微信
 
+        #region 【公司累计总业绩】
+        /// <summary>
+        /// 公司累计总业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        public async Task<CompanyMonthPerformanceBWDto> GetMonthPerformanceAsync(int year, int month)
+        {
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month);
+            //获取自播主播ID
+            var SelfLiveAnchorInfo = await this.GetLiveAnchorIdsByBaseIdAndIsSelfLiveAnchorAsync("", true);
+            //获取合作达人主播ID
+            var OtherLiveAnchorInfo = await this.GetLiveAnchorIdsByBaseIdAndIsSelfLiveAnchorAsync("", false);
+            //获取自播达人目标
+            var selfLiveAnchortarget = await liveAnchorMonthlyTargetService.GetPerformance(year, month, SelfLiveAnchorInfo);
+            //获取合作达人目标
+            var otherLiveAnchortarget = await liveAnchorMonthlyTargetService.GetPerformance(year, month, OtherLiveAnchorInfo);
+
+            #region 自播达人业绩
+            //总业绩
+            var selfLiveAnchorOrder = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.StartDate, sequentialDate.EndDate, SelfLiveAnchorInfo);
+            var curSelfLiveAnchorTotalPerformance = selfLiveAnchorOrder.Sum(o => o.Price);
+            //同比业绩
+            var selfLiveAnchorOrderYearOnYear = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, SelfLiveAnchorInfo);
+            var selfLiveAnchorTotalPerformanceYearOnYear = selfLiveAnchorOrderYearOnYear.Sum(o => o.Price);
+            //环比业绩
+            var selfLiveAnchorOrderChain = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, SelfLiveAnchorInfo);
+            var selfLiveAnchorTotalPerformanceChainRatio = selfLiveAnchorOrderChain.Sum(o => o.Price);
+            #endregion
+
+            #region 合作达人业绩
+            //总业绩
+            var otherLiveAnchorOrder = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.StartDate, sequentialDate.EndDate, OtherLiveAnchorInfo);
+            var curOtherLiveAnchorTotalPerformance = otherLiveAnchorOrder.Sum(o => o.Price);
+            //同比业绩
+            var otherLiveAnchorOrderYearOnYear = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, OtherLiveAnchorInfo);
+            var otherLiveAnchorTotalPerformanceYearOnYear = otherLiveAnchorOrderYearOnYear.Sum(o => o.Price);
+            //环比业绩
+            var otherLiveAnchorOrderChain = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, OtherLiveAnchorInfo);
+            var otherLiveAnchorTotalPerformanceChainRatio = otherLiveAnchorOrderChain.Sum(o => o.Price);
+            #endregion
+
+            #region 带货业绩
+            List<int> LiveAnchorInfo = new List<int>();
+            var target = await liveAnchorMonthlyTargetService.GetPerformance(year, month, LiveAnchorInfo);
+            var commercePerformanceYearOnYear = await liveAnchorMonthlyTargetService.GetPerformance(sequentialDate.LastYearThisMonthStartDate.Year, sequentialDate.LastYearThisMonthEndDate.Month, LiveAnchorInfo);
+            var commercePerformanceChainRatio = await liveAnchorMonthlyTargetService.GetPerformance(sequentialDate.LastMonthStartDate.Year, sequentialDate.LastMonthEndDate.Month, LiveAnchorInfo);
+            #endregion
+
+            #region 其他业绩(todo;)
+
+            #endregion
+
+            #region 总业绩
+            var totalPerformance = Math.Round(curSelfLiveAnchorTotalPerformance + curOtherLiveAnchorTotalPerformance + target.CommerceCompletePerformance, MidpointRounding.AwayFromZero);
+            var lastMonthPerformance = Math.Round(selfLiveAnchorTotalPerformanceChainRatio + otherLiveAnchorTotalPerformanceChainRatio + commercePerformanceChainRatio.CommerceCompletePerformance, MidpointRounding.AwayFromZero);
+            #endregion
+
+            //数据组合
+            CompanyMonthPerformanceBWDto monthPerformanceRatioDto = new CompanyMonthPerformanceBWDto
+            {
+
+                SelfLiveAnchorPerformance = curSelfLiveAnchorTotalPerformance,
+                SelfLiveAnchorPerformanceTarget = selfLiveAnchortarget.TotalPerformanceTarget,
+                SelfLiveAnchorPerformanceCompleteRate = CalculateTargetComplete(curSelfLiveAnchorTotalPerformance, selfLiveAnchortarget.TotalPerformanceTarget),
+                SelfLiveAnchorPerformanceYearToYear = CalculateYearOnYear(curSelfLiveAnchorTotalPerformance, selfLiveAnchorTotalPerformanceYearOnYear),
+                SelfLiveAnchorPerformanceChainRatio = CalculateChainratio(curSelfLiveAnchorTotalPerformance, selfLiveAnchorTotalPerformanceChainRatio),
+
+                OtherLiveAnchorPerformance = curOtherLiveAnchorTotalPerformance,
+                OtherLiveAnchorPerformanceTarget = otherLiveAnchortarget.TotalPerformanceTarget,
+                OtherLiveAnchorPerformanceCompleteRate = CalculateTargetComplete(curOtherLiveAnchorTotalPerformance, otherLiveAnchortarget.TotalPerformanceTarget),
+                OtherLiveAnchorPerformanceYearToYear = CalculateYearOnYear(curOtherLiveAnchorTotalPerformance, otherLiveAnchorTotalPerformanceYearOnYear),
+                OtherLiveAnchorPerformanceChainRatio = CalculateChainratio(curOtherLiveAnchorTotalPerformance, otherLiveAnchorTotalPerformanceChainRatio),
+
+                CommercePerformance = target.CommerceCompletePerformance,
+                CommercePerformanceTarget = target.CommercePerformanceTarget,
+                CommercePerformanceCompleteRate = CalculateTargetComplete(target.CommerceCompletePerformance, target.CommercePerformanceTarget),
+                CommercePerformanceYearToYear = CalculateYearOnYear(target.CommerceCompletePerformance, commercePerformanceYearOnYear.CommerceCompletePerformance),
+                CommercePerformanceChainRatio = CalculateChainratio(target.CommerceCompletePerformance, commercePerformanceChainRatio.CommerceCompletePerformance),
+
+                OtherPerformance = 0.00M,
+                OtherPerformanceTarget = 0.00M,
+                OtherPerformanceCompleteRate = 0.00M,
+                OtherPerformanceYearToYear = 0.00M,
+                OtherPerformanceChainRatio = 0.00M,
+
+                TotalPerformance = totalPerformance,
+                TotalPerformanceChainRatio = CalculateChainratio(totalPerformance, lastMonthPerformance),
+                SelfLiveAnchorPerformanceRatio = CalculateTargetComplete(curSelfLiveAnchorTotalPerformance, totalPerformance),
+                OtherLiveAnchorPerformanceRatio = CalculateTargetComplete(curOtherLiveAnchorTotalPerformance, totalPerformance),
+                CommercePerformanceRatio = CalculateTargetComplete(target.CommerceCompletePerformance, totalPerformance),
+                OtherPerformanceRatio = 0.00M,
+            };
+
+            return monthPerformanceRatioDto;
+        }
+
+        #endregion
+
 
         #region 【自播/合作达人总业绩】
         /// <summary>
@@ -1720,7 +1820,17 @@ namespace Fx.Amiya.Service
         {
             if (performanceYearOnYear == 0m)
                 return null;
-            return Math.Round((currentMonthPerformance - performanceYearOnYear) / performanceYearOnYear * 100, 2);
+            var result = Math.Round((currentMonthPerformance - performanceYearOnYear) / performanceYearOnYear * 100, 2, MidpointRounding.AwayFromZero);
+            if (result > 99.99M)
+            {
+                result = Math.Round(result, 1, MidpointRounding.AwayFromZero);
+            }
+            if (result > 999.99M)
+            {
+                result = Math.Round(result, 0, MidpointRounding.AwayFromZero);
+            }
+            return result;
+
         }
         /// <summary>
         /// 计算环比增长率
@@ -1732,7 +1842,16 @@ namespace Fx.Amiya.Service
         {
             if (performanceChainRatio == 0m)
                 return null;
-            return Math.Round((currentMonthPerformance - performanceChainRatio) / performanceChainRatio * 100, 2);
+            var result = Math.Round((currentMonthPerformance - performanceChainRatio) / performanceChainRatio * 100, 2, MidpointRounding.AwayFromZero);
+            if (result > 99.99M)
+            {
+                result = Math.Round(result, 1, MidpointRounding.AwayFromZero);
+            }
+            if (result > 999.99M)
+            {
+                result = Math.Round(result, 0, MidpointRounding.AwayFromZero);
+            }
+            return result;
         }
         /// <summary>
         /// 计算目标达成率
@@ -1744,7 +1863,16 @@ namespace Fx.Amiya.Service
         {
             if (monthTarget == 0m)
                 return null;
-            return Math.Round(completePerformance / monthTarget * 100, 2);
+            var result = Math.Round(completePerformance / monthTarget * 100, 2, MidpointRounding.AwayFromZero);
+            if (result > 99.99M)
+            {
+                result = Math.Round(result, 1, MidpointRounding.AwayFromZero);
+            }
+            if (result > 999.99M)
+            {
+                result = Math.Round(result, 0, MidpointRounding.AwayFromZero);
+            }
+            return result;
         }
 
         /// <summary>

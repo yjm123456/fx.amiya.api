@@ -34,9 +34,65 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         {
             this.amiyaPerformanceService = amiyaPerformanceService;
         }
+
+        #region 【总业绩】
+        /// <summary>
+        /// 获取总业绩数据
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        [HttpGet("TotalPerformance")]
+        public async Task<ResultData<CompanyMonthPerformanceVo>> GetTotalPerformanceAsync(int year, int month)
+        {
+            //获取当前月同比,环比等数据
+            var groupPerformance = await amiyaPerformanceService.GetMonthPerformanceAsync(year, month);
+
+            //数据组合
+            CompanyMonthPerformanceVo monthPerformanceRatioDto = new CompanyMonthPerformanceVo
+            {
+                SelfLiveAnchorPerformance = groupPerformance.SelfLiveAnchorPerformance,
+                SelfLiveAnchorPerformanceTarget = groupPerformance.SelfLiveAnchorPerformanceTarget,
+                SelfLiveAnchorPerformanceCompleteRate = groupPerformance.SelfLiveAnchorPerformanceCompleteRate,
+                SelfLiveAnchorPerformanceYearToYear = groupPerformance.SelfLiveAnchorPerformanceYearToYear,
+                SelfLiveAnchorPerformanceChainRatio = groupPerformance.SelfLiveAnchorPerformanceChainRatio,
+
+                OtherLiveAnchorPerformance = groupPerformance.OtherLiveAnchorPerformance,
+                OtherLiveAnchorPerformanceTarget = groupPerformance.OtherLiveAnchorPerformanceTarget,
+                OtherLiveAnchorPerformanceCompleteRate = groupPerformance.OtherLiveAnchorPerformanceCompleteRate,
+                OtherLiveAnchorPerformanceYearToYear = groupPerformance.OtherLiveAnchorPerformanceYearToYear,
+                OtherLiveAnchorPerformanceChainRatio = groupPerformance.OtherLiveAnchorPerformanceChainRatio,
+
+                CommercePerformance = groupPerformance.CommercePerformance,
+                CommercePerformanceTarget = groupPerformance.CommercePerformanceTarget,
+                CommercePerformanceCompleteRate = groupPerformance.CommercePerformanceCompleteRate,
+                CommercePerformanceYearToYear = groupPerformance.CommercePerformanceYearToYear,
+                CommercePerformanceChainRatio = groupPerformance.CommercePerformanceChainRatio,
+
+                OtherPerformance = groupPerformance.OtherPerformance,
+                OtherPerformanceTarget = groupPerformance.OtherPerformanceTarget,
+                OtherPerformanceCompleteRate = groupPerformance.OtherPerformanceCompleteRate,
+                OtherPerformanceYearToYear = groupPerformance.OtherPerformanceYearToYear,
+                OtherPerformanceChainRatio = groupPerformance.OtherPerformanceChainRatio,
+
+                TotalPerformance = groupPerformance.TotalPerformance,
+                TotalPerformanceChainRatio = groupPerformance.TotalPerformanceChainRatio,
+                SelfLiveAnchorPerformanceRatio = groupPerformance.SelfLiveAnchorPerformanceRatio,
+                OtherLiveAnchorPerformanceRatio = groupPerformance.OtherLiveAnchorPerformanceRatio,
+                CommercePerformanceRatio = groupPerformance.CommercePerformanceRatio,
+                OtherPerformanceRatio = groupPerformance.OtherPerformanceRatio,
+
+
+            };
+
+            return ResultData<CompanyMonthPerformanceVo>.Success().AddData("performance", monthPerformanceRatioDto);
+        }
+
+        #endregion
+
         #region 【达人业绩】
         /// <summary>
-        /// 达人业绩
+        /// 获取达人业绩数据
         /// </summary>
         /// <param name="year"></param>
         /// <param name="month"></param>
