@@ -16,6 +16,7 @@ using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
+using Fx.Common.Utils;
 using Fx.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -2342,33 +2343,6 @@ namespace Fx.Amiya.Service
 
         #region 财务看板
 
-        /// <summary>
-        /// 根据客服id获取财务看板归属客服业绩信息
-        /// </summary>
-        /// <param name="startDate"></param>
-        /// <param name="endDate"></param>
-        /// <param name="customerServiceId"></param>
-        /// <returns></returns>
-        public async Task<CustomerServiceBoardDataDto> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int? customerServiceId)
-        {
-            var dealData =  _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
-                .Where(e => !customerServiceId.HasValue|| e.BelongEmpId == customerServiceId.Value)
-                .SelectMany(e => e.ContentPlatformOrderDealInfoList)
-                .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == (int)CheckType.CheckedSuccess)
-                .GroupBy(e => e.CheckState)
-                .Select(e => new CustomerServiceBoardDataDto
-                {
-                    DealPrice = e.Sum(e => e.CheckPrice ?? 0m),
-                    TotalServicePrice = e.Sum(e => e.SettlePrice ?? 0m),
-                    NewCustomerPrice = e.Sum(e => e.IsOldCustomer ? 0m : e.CheckPrice ?? 0m),
-                    NewCustomerServicePrice = e.Sum(e => e.IsOldCustomer ? 0m : e.SettlePrice ?? 0m),
-                    OldCustomerPrice = e.Sum(e => e.IsOldCustomer ? e.CheckPrice ?? 0m : 0m),
-                    OldCustomerServicePrice= e.Sum(e => e.IsOldCustomer ? e.SettlePrice ?? 0m : 0m)
-                }).FirstOrDefault();
-            if (dealData != null)
-                dealData.CustomerServiceName = await _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(customerServiceId)).Select(e => e.Name).FirstOrDefaultAsync();
-            return dealData;
-        }
 
         #endregion
 
@@ -2702,6 +2676,68 @@ namespace Fx.Amiya.Service
                 }
             }
             return returnInfo;
+        }
+
+        /// <summary>
+        /// 根据客服id获取客服业绩信息
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="customerServiceId"></param>
+        /// <returns></returns>
+        public async Task<List<CustomerServiceDetailsPerformanceDto>> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, List<int> belongCustomerServiceIds)
+        {
+            var dealData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
+                .Where(e => belongCustomerServiceIds.Count == 0 || belongCustomerServiceIds.Contains(e.BelongEmpId.Value));
+            var dealResult = dealData
+                .SelectMany(e => e.ContentPlatformOrderDealInfoList)
+                .Where(e => e.DealDate >= startDate && e.DealDate < endDate && e.IsDeal == true)
+                .GroupBy(e => e.ContentPlatFormOrder.BelongEmpId)
+                .Select(e => new CustomerServiceDetailsPerformanceDto
+                {
+                    CustomerServiceId = e.Key.Value,
+                    DealPrice = e.Sum(e => e.CheckPrice ?? 0m),
+                    TotalServicePrice = e.Sum(e => e.Price),
+                    NewCustomerPrice = e.Sum(e => e.IsOldCustomer ? 0m : e.Price),
+                    NewCustomerServicePrice = e.Sum(e => e.IsOldCustomer ? 0m : e.SettlePrice ?? 0m),
+                    OldCustomerPrice = e.Sum(e => e.IsOldCustomer ? e.Price : 0m),
+                    OldCustomerServicePrice = e.Sum(e => e.IsOldCustomer ? e.SettlePrice ?? 0m : 0m),
+                    AcompanyingPerformance = e.Sum(x => x.IsAcompanying ? x.Price : 0m),
+                    NotAcompanyingPerformance = e.Sum(x => x.IsAcompanying ? 0m : x.Price),
+
+                }).ToList();
+
+            foreach (var z in dealResult)
+            {
+                z.CustomerServiceName = await _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(z.CustomerServiceId)).Select(e => e.Name).FirstOrDefaultAsync();
+                var sendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.BelongEmpId == z.CustomerServiceId && x.SendDate >= startDate && x.SendDate < endDate).ToList();
+                var visitInfo = sendInfo.Where(x => x.IsToHospital == true).ToList();
+                var dealInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.BelongEmpId == z.CustomerServiceId)
+                    .SelectMany(x => x.ContentPlatformOrderDealInfoList).Include(x => x.ContentPlatFormOrder)
+                    .Where(e => e.DealDate >= startDate && e.DealDate < endDate && e.IsDeal == true)
+                    .ToList();
+
+                z.VideoPerformance = dealInfo.Where(x => x.ContentPlatFormOrder.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Sum(k => k.Price);
+                z.PicturePerformance = dealInfo.Where(x => x.ContentPlatFormOrder.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).Sum(k => k.Price);
+
+                z.ZeroPerformance = dealInfo.Where(x => x.ContentPlatFormOrder.AddOrderPrice == 0).Sum(k => k.Price);
+                z.HavingPricePerformance = dealInfo.Where(x => x.ContentPlatFormOrder.AddOrderPrice > 0).Sum(k => k.Price);
+
+                //今年的数据
+                var history1 = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.Value.Month != DateTime.Now.Month && c.ContentPlatFormOrder.SendDate.Value.Year == DateTime.Now.Year).Sum(x => x.Price);
+                //历年的数据
+                var history2 = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.Value.Year != DateTime.Now.Year).Sum(x => x.Price);
+                z.HistorySendThisMonthDealPerformance = history1 + history2;
+                z.ThisMonthSendThisMonthDealPerformance = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.Value.Month == DateTime.Now.Month && c.ContentPlatFormOrder.SendDate.Value.Year == DateTime.Now.Year).Sum(x => x.Price);
+
+                DecimalChangeHelper decimalChangeHelper = new DecimalChangeHelper();
+                z.VisitNumRatio = decimalChangeHelper.CalculateTargetComplete(visitInfo.Count(), sendInfo.Count());
+                z.VideoAndPictureCompare = decimalChangeHelper.CalculateAccounted(z.VideoPerformance, z.PicturePerformance);
+                z.IsAcompanyingCompare = decimalChangeHelper.CalculateAccounted(z.AcompanyingPerformance, z.NotAcompanyingPerformance);
+                z.ZeroAndHavingPriceCompare = decimalChangeHelper.CalculateAccounted(z.ZeroPerformance, z.HavingPricePerformance);
+                z.HistoryAndThisMonthCompare = decimalChangeHelper.CalculateAccounted(z.HistorySendThisMonthDealPerformance, z.ThisMonthSendThisMonthDealPerformance);
+            }
+            return dealResult;
         }
 
         /// <summary>

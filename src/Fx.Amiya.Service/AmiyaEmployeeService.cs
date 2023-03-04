@@ -233,9 +233,9 @@ namespace Fx.Amiya.Service
                     Valid = true,
                     Email = addDto.Email,
                     IsCustomerService = addDto.IsCustomerService,
-                    LiveAnchorBaseId=addDto.LiveAnchorBaseId
+                    LiveAnchorBaseId = addDto.LiveAnchorBaseId
                 };
-                
+
                 await dalAmiyaEmployee.AddAsync(employee, true);
             }
             catch (Exception ex)
@@ -271,7 +271,7 @@ namespace Fx.Amiya.Service
                     IsCustomerService = employee.IsCustomerService,
                     DepartmentId = employee.AmiyaPositionInfo.DepartmentId,
                     DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name,
-                    LiveAnchorBaseId=employee.LiveAnchorBaseId
+                    LiveAnchorBaseId = employee.LiveAnchorBaseId
                 };
                 if (employeeDto.IsCustomerService == true || employeeDto.PositionId == 19)
                 {
@@ -286,6 +286,59 @@ namespace Fx.Amiya.Service
                     }
                 }
                 return employeeDto;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<List<AmiyaEmployeeDto>> GetByLiveAnchorBaseIdAsync(string liveAnchorBaseId)
+        {
+            try
+            {
+                List<AmiyaEmployeeDto> amiyaEmployeeDtos = new List<AmiyaEmployeeDto>();
+                var employeeInfo = dalAmiyaEmployee.GetAll()
+                    .Include(e => e.AmiyaPositionInfo).ThenInclude(e => e.AmiyaDepartment)
+                    .Where(e => e.LiveAnchorBaseId == liveAnchorBaseId);
+
+                if (employeeInfo == null)
+                    return amiyaEmployeeDtos;
+                var employee = await employeeInfo.ToListAsync();
+                foreach (var x in employee)
+                {
+                    AmiyaEmployeeDto employeeDto = new AmiyaEmployeeDto()
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Avatar = x.Avatar,
+                        UserName = x.UserName,
+                        Password = x.Password,
+                        Valid = x.Valid,
+                        Email = (x.Email == "0") ? "" : x.Email,
+                        PositionId = x.AmiyaPositionId,
+                        PositionName = x.AmiyaPositionInfo.Name,
+                        IsCustomerService = x.IsCustomerService,
+                        DepartmentId = x.AmiyaPositionInfo.DepartmentId,
+                        DepartmentName = x.AmiyaPositionInfo.AmiyaDepartment.Name,
+                        LiveAnchorBaseId = x.LiveAnchorBaseId
+                    };
+                    if (employeeDto.IsCustomerService == true || employeeDto.PositionId == 19)
+                    {
+                        employeeDto.LiveAnchorIds = new List<int>();
+                        var liveAnchorIdsResult = await employeeBindLiveAnchorService.GetByEmpIdAsync(employeeDto.Id);
+                        if (liveAnchorIdsResult.Count > 0)
+                        {
+                            foreach (var z in liveAnchorIdsResult)
+                            {
+                                employeeDto.LiveAnchorIds.Add(z.LiveAnchorId);
+                            }
+                        }
+                    }
+                    amiyaEmployeeDtos.Add(employeeDto);
+                }
+                return amiyaEmployeeDtos;
             }
             catch (Exception ex)
             {

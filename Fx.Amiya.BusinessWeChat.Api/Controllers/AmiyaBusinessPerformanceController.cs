@@ -188,7 +188,71 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
 
         #endregion
 
-        #region【助理业绩(todo;)】
+        #region【助理业绩】
+
+        /// <summary>
+        /// 获取助理业绩数据
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorBaseId"></param>
+        /// <returns></returns>
+        [HttpGet("customerServicePerformance")]
+        public async Task<ResultData<List<CustomerPerformanceVo>>> GetHospitalPerformanceAsync(int year, int month, string liveAnchorBaseId)
+        {
+            List<CustomerPerformanceVo> performanceVo = new List<CustomerPerformanceVo>();
+            var selectResult = await amiyaPerformanceService.GetBelongCustomerServicePerformanceByLiveAnchorBaseIdAsync(year, month, liveAnchorBaseId);
+            foreach (var x in selectResult)
+            {
+                CustomerPerformanceVo customerPerformanceVo = new CustomerPerformanceVo();
+                customerPerformanceVo.CustomerServiceId = x.CustomerServiceId;
+                customerPerformanceVo.CustomerServiceName = x.CustomerServiceName;
+                customerPerformanceVo.TotalPerformance = x.TotalPerformance;
+                customerPerformanceVo.NewCustomerPerformance = x.NewCustomerPerformance;
+                customerPerformanceVo.OldCustomerPerformance = x.OldCustomerPerformance;
+                customerPerformanceVo.VisitNumRatio = x.VisitNumRatio;
+                performanceVo.Add(customerPerformanceVo);
+            }
+
+            return ResultData<List<CustomerPerformanceVo>>.Success().AddData("performance", performanceVo);
+        }
+
+
+        /// <summary>
+        /// 根据客服id获取助理详细业绩数据
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="customerServiceId"></param>
+        /// <returns></returns>
+        [HttpGet("customerServiceDetailPerformanceById")]
+        public async Task<ResultData<CustomerPerformanceDetailsVo>> GetHospitalPerformanceAsync(int year, int month, int customerServiceId)
+        {
+            var selectResult = await amiyaPerformanceService.GetCustomerServicePerformanceDetails(year, month, customerServiceId);
+            CustomerPerformanceDetailsVo customerPerformanceVo = new CustomerPerformanceDetailsVo();
+            customerPerformanceVo.CustomerServiceName = selectResult.CustomerServiceName;
+            customerPerformanceVo.TotalPerformance = selectResult.TotalPerformance;
+            customerPerformanceVo.NewCustomerPerformance = selectResult.NewCustomerPerformance;
+            customerPerformanceVo.OldCustomerPerformance = selectResult.OldCustomerPerformance;
+            customerPerformanceVo.VisitNumRatio = selectResult.VisitNumRatio;
+
+            customerPerformanceVo.VideoPerformance = selectResult.VideoPerformance;
+            customerPerformanceVo.PicturePerformance = selectResult.PicturePerformance;
+            customerPerformanceVo.VideoAndPictureCompare = selectResult.VideoAndPictureCompare;
+
+            customerPerformanceVo.AcompanyingPerformance = selectResult.AcompanyingPerformance;
+            customerPerformanceVo.NotAcompanyingPerformance = selectResult.NotAcompanyingPerformance;
+            customerPerformanceVo.IsAcompanyingCompare = selectResult.IsAcompanyingCompare;
+
+            customerPerformanceVo.ZeroPerformance = selectResult.ZeroPerformance;
+            customerPerformanceVo.HavingPricePerformance = selectResult.HavingPricePerformance;
+            customerPerformanceVo.ZeroAndHavingPriceCompare = selectResult.ZeroAndHavingPriceCompare;
+
+            customerPerformanceVo.HistorySendThisMonthDealPerformance = selectResult.HistorySendThisMonthDealPerformance;
+            customerPerformanceVo.ThisMonthSendThisMonthDealPerformance = selectResult.ThisMonthSendThisMonthDealPerformance;
+            customerPerformanceVo.HistoryAndThisMonthCompare = selectResult.HistoryAndThisMonthCompare;
+            return ResultData<CustomerPerformanceDetailsVo>.Success().AddData("performance", customerPerformanceVo);
+        }
 
         #endregion
 

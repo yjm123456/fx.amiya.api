@@ -4,30 +4,58 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Dto.FinancialBoard
+namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
 {
-    public class CustomerServiceBoardDataDto
+    /// <summary>
+    /// 客服总业绩数据
+    /// </summary>
+    public class CustomerPerformanceBWDto
     {
         public int CustomerServiceId { get; set; }
         public string CustomerServiceName { get; set; }
-        public decimal? VisitNumRatio { get; set; }
-        public decimal DealPrice { get; set; }
-        public decimal TotalServicePrice { get; set; }
-        public decimal NewCustomerPrice { get; set; }
-        public decimal NewCustomerServicePrice { get; set; }
-        public decimal OldCustomerPrice { get; set; }
-        public decimal OldCustomerServicePrice { get; set; }
+        /// <summary>
+        /// 总业绩
+        /// </summary>
+        public decimal? TotalPerformance { get; set; }
 
+        /// <summary>
+        /// 新客业绩
+        /// </summary>
+        public decimal? NewCustomerPerformance { get; set; }
+
+        /// <summary>
+        /// 老客业绩
+        /// </summary>
+        public decimal? OldCustomerPerformance { get; set; }
+
+        /// <summary>
+        /// 上门率
+        /// </summary>
+        public decimal? VisitNumRatio { get; set; }
     }
 
-    /// <summary>
-    /// 企业微信客服业绩相关功能展示
-    /// </summary>
-    public class CustomerServiceDetailsPerformanceDto
+    public class DetailCustomerPerformanceBWDto
     {
-
         public int CustomerServiceId { get; set; }
         public string CustomerServiceName { get; set; }
+        /// <summary>
+        /// 总业绩
+        /// </summary>
+        public decimal? TotalPerformance { get; set; }
+
+        /// <summary>
+        /// 新客业绩
+        /// </summary>
+        public decimal? NewCustomerPerformance { get; set; }
+
+        /// <summary>
+        /// 老客业绩
+        /// </summary>
+        public decimal? OldCustomerPerformance { get; set; }
+
+        /// <summary>
+        /// 上门率
+        /// </summary>
         public decimal? VisitNumRatio { get; set; }
         public decimal DealPrice { get; set; }
         public decimal TotalServicePrice { get; set; }

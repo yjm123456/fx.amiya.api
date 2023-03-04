@@ -1,40 +1,77 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Dto.FinancialBoard
+namespace Fx.Amiya.BusinessWeChat.Api.Vo.Performance
 {
-    public class CustomerServiceBoardDataDto
+    /// <summary>
+    /// 客服总体业绩数据
+    /// </summary>
+    public class CustomerPerformanceVo
     {
+        /// <summary>
+        /// 客服id
+        /// </summary>
         public int CustomerServiceId { get; set; }
+        /// <summary>
+        /// 客服名称
+        /// </summary>
         public string CustomerServiceName { get; set; }
-        public decimal? VisitNumRatio { get; set; }
-        public decimal DealPrice { get; set; }
-        public decimal TotalServicePrice { get; set; }
-        public decimal NewCustomerPrice { get; set; }
-        public decimal NewCustomerServicePrice { get; set; }
-        public decimal OldCustomerPrice { get; set; }
-        public decimal OldCustomerServicePrice { get; set; }
+        /// <summary>
+        /// 总业绩
+        /// </summary>
+        public decimal? TotalPerformance { get; set; }
 
+        /// <summary>
+        /// 新客业绩
+        /// </summary>
+        public decimal? NewCustomerPerformance { get; set; }
+
+        /// <summary>
+        /// 老客业绩
+        /// </summary>
+        public decimal? OldCustomerPerformance { get; set; }
+
+        /// <summary>
+        /// 上门率
+        /// </summary>
+        public decimal? VisitNumRatio { get; set; }
     }
 
     /// <summary>
-    /// 企业微信客服业绩相关功能展示
+    /// 客服详情业绩展示
     /// </summary>
-    public class CustomerServiceDetailsPerformanceDto
+    public class CustomerPerformanceDetailsVo
     {
 
+        /// <summary>
+        /// 客服id
+        /// </summary>
         public int CustomerServiceId { get; set; }
+        /// <summary>
+        /// 客服名称
+        /// </summary>
         public string CustomerServiceName { get; set; }
+        /// <summary>
+        /// 总业绩
+        /// </summary>
+        public decimal? TotalPerformance { get; set; }
+
+        /// <summary>
+        /// 新客业绩
+        /// </summary>
+        public decimal? NewCustomerPerformance { get; set; }
+
+        /// <summary>
+        /// 老客业绩
+        /// </summary>
+        public decimal? OldCustomerPerformance { get; set; }
+
+        /// <summary>
+        /// 上门率
+        /// </summary>
         public decimal? VisitNumRatio { get; set; }
-        public decimal DealPrice { get; set; }
-        public decimal TotalServicePrice { get; set; }
-        public decimal NewCustomerPrice { get; set; }
-        public decimal NewCustomerServicePrice { get; set; }
-        public decimal OldCustomerPrice { get; set; }
-        public decimal OldCustomerServicePrice { get; set; }
         /// <summary>
         /// 照片业绩
         /// </summary>

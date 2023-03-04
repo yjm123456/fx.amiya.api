@@ -244,6 +244,24 @@ namespace Fx.Amiya.IService
         /// <param name="isSelfLiveAnchor"></param>
         /// <returns></returns>
         Task<MonthPerformanceBWDto> GetMonthPerformanceBySelfLiveAnchorAsync(int year, int month, string liveAnchorBaseId, bool? isSelfLiveAnchor);
+
+        /// <summary>
+        /// 助理总体业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorBaseId"></param>
+        /// <returns></returns>
+        Task<List<CustomerPerformanceBWDto>> GetBelongCustomerServicePerformanceByLiveAnchorBaseIdAsync(int year, int month, string liveAnchorBaseId);
+
+        /// <summary>
+        /// 根据客服id查询客服详细业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="customerServiceId"></param>
+        /// <returns></returns>
+        Task<DetailCustomerPerformanceBWDto> GetCustomerServicePerformanceDetails(int year, int month, int customerServiceId);
         #endregion
     }
 }

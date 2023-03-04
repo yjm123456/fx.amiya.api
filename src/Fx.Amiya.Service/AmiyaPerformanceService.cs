@@ -1451,7 +1451,6 @@ namespace Fx.Amiya.Service
 
         #endregion
 
-
         #region 【自播/合作达人总业绩】
         /// <summary>
         /// 自播/合作达人总业绩
@@ -1639,6 +1638,82 @@ namespace Fx.Amiya.Service
 
             };
             return monthPerformanceRatioDto;
+        }
+
+        #endregion
+
+        #region 【助理业绩】
+        /// <summary>
+        /// 根据主播基础id获取助理业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        public async Task<List<CustomerPerformanceBWDto>> GetBelongCustomerServicePerformanceByLiveAnchorBaseIdAsync(int year, int month, string liveAnchorBaseId)
+        {
+            List<int> amiyaEmployeeIds = new List<int>();
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month);
+            //获取绑定了该主播基础id的客服id集合
+            var employeeInfos = await amiyaEmployeeService.GetByLiveAnchorBaseIdAsync(liveAnchorBaseId);
+            amiyaEmployeeIds = employeeInfos.Select(x => x.Id).ToList();
+
+            var dealInfo = await contentPlateFormOrderService.GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(sequentialDate.StartDate, sequentialDate.EndDate, amiyaEmployeeIds);
+            //数据组合
+            var monthPerformanceRatioDto = from d in dealInfo
+                                           select new CustomerPerformanceBWDto()
+                                           {
+                                               CustomerServiceId = d.CustomerServiceId,
+                                               CustomerServiceName = d.CustomerServiceName,
+                                               NewCustomerPerformance = d.NewCustomerPrice,
+                                               OldCustomerPerformance = d.OldCustomerPrice,
+                                               TotalPerformance = d.TotalServicePrice,
+                                               VisitNumRatio = d.VisitNumRatio,
+                                           };
+
+            return monthPerformanceRatioDto.ToList();
+        }
+        /// <summary>
+        /// 根据助理id获取助理详细业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="customerServiceId"></param>
+        /// <returns></returns>
+        public async Task<DetailCustomerPerformanceBWDto> GetCustomerServicePerformanceDetails(int year, int month, int customerServiceId)
+        {
+            List<int> customerServiceIdList = new List<int>();
+            customerServiceIdList.Add(customerServiceId);
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month);
+            var dealInfo = await contentPlateFormOrderService.GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(sequentialDate.StartDate, sequentialDate.EndDate, customerServiceIdList);
+            var selectResult = dealInfo.FirstOrDefault();
+            //数据组合
+            var result = new DetailCustomerPerformanceBWDto()
+            {
+                CustomerServiceId = selectResult.CustomerServiceId,
+                CustomerServiceName = selectResult.CustomerServiceName,
+                NewCustomerPerformance = selectResult.NewCustomerPrice,
+                OldCustomerPerformance = selectResult.OldCustomerPrice,
+                TotalPerformance = selectResult.TotalServicePrice,
+                VisitNumRatio = selectResult.VisitNumRatio,
+
+                VideoPerformance = selectResult.VideoPerformance,
+                PicturePerformance = selectResult.PicturePerformance,
+                VideoAndPictureCompare = selectResult.VideoAndPictureCompare,
+
+                ZeroPerformance = selectResult.ZeroPerformance,
+                HavingPricePerformance = selectResult.HavingPricePerformance,
+                ZeroAndHavingPriceCompare = selectResult.ZeroAndHavingPriceCompare,
+
+                AcompanyingPerformance=selectResult.AcompanyingPerformance,
+                NotAcompanyingPerformance=selectResult.NotAcompanyingPerformance,
+                IsAcompanyingCompare=selectResult.IsAcompanyingCompare,
+
+                HistorySendThisMonthDealPerformance = selectResult.HistorySendThisMonthDealPerformance,
+                ThisMonthSendThisMonthDealPerformance = selectResult.ThisMonthSendThisMonthDealPerformance,
+                HistoryAndThisMonthCompare = selectResult.HistoryAndThisMonthCompare
+            };
+
+            return result;
         }
 
         #endregion
