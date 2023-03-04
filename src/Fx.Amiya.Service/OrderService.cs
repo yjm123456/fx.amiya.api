@@ -4674,10 +4674,11 @@ namespace Fx.Amiya.Service
         /// <param name="endDate"></param>
         /// <param name="customerServiceId"></param>
         /// <returns></returns>
-        public async Task<CustomerServiceBoardDataDto> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int customerServiceId)
+        public async Task<List<CustomerServiceBoardDataDto>> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int? customerServiceId)
         {
-            var dealData = dalOrderInfo.GetAll()
-                .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.BelongEmpId == customerServiceId && e.CheckState == 2)
+            var dealData =await dalOrderInfo.GetAll()
+                .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate  && e.CheckState == 2)
+                .Where(e=>!customerServiceId.HasValue||e.BelongEmpId==customerServiceId)
                 .GroupBy(e => e.BelongEmpId)
                 .Select(e => new CustomerServiceBoardDataDto
                 {
@@ -4688,11 +4689,72 @@ namespace Fx.Amiya.Service
                     NewCustomerServicePrice = 0,
                     OldCustomerPrice = e.Sum(item =>  item.CheckPrice ?? 0m),
                     OldCustomerServicePrice = e.Sum(item =>item.SettlePrice ?? 0m)
-                }).FirstOrDefault();
-            if(dealData!=null)
-                dealData.CustomerServiceName = await dalAmiyaEmployee.GetAll().Where(e => e.Id == customerServiceId).Select(e => e.Name).FirstOrDefaultAsync();
+                }).ToListAsync();
+            //if(dealData!=null)
+            //    dealData.CustomerServiceName = await dalAmiyaEmployee.GetAll().Where(e => e.Id == customerServiceId).Select(e => e.Name).FirstOrDefaultAsync();
             return dealData;
         }
+
+        public async Task UpdateExpressInfoAsync(SendGoodsDto sendGoodsDto)
+        {
+            try
+            {
+                unitOfWork.BeginTransaction();
+
+                var orderTrade = await dalOrderTrade.GetAll().Include(e => e.OrderInfoList).SingleOrDefaultAsync(e => e.TradeId == sendGoodsDto.TradeId);
+                if (orderTrade == null)
+                    throw new Exception("交易编号错误！");
+
+                var sendGoodsRecord = await dalSendGoodsRecord.GetAll().SingleOrDefaultAsync(e => e.TradeId == sendGoodsDto.TradeId);
+                if (sendGoodsRecord == null)
+                    throw new Exception("该交易没有发货信息,无法修改！");
+
+                sendGoodsRecord.HandleBy = sendGoodsDto.HandleBy;
+                sendGoodsRecord.CourierNumber = sendGoodsDto.CourierNumber;
+                sendGoodsRecord.ExpressId = sendGoodsDto.ExpressId;               
+                await dalSendGoodsRecord.UpdateAsync(sendGoodsRecord, true);
+                unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 获取医院对账业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        //public async Task<List<FinancialHospitalDealPriceBoardDto>> GetHospitalDealPriceDataAsync(DateTime? startDate, DateTime? endDate, int? hospitalId)
+        //{
+        //    startDate = startDate.HasValue ? startDate : DateTime.Now.Date;
+        //    endDate = endDate.HasValue ? endDate : DateTime.Now.Date.AddDays(1).Date;
+        //    var dealInfo = dalOrderInfo.GetAll().Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == (int)CheckState.CheckSuccess);
+        //    if (hospitalId.HasValue)
+        //    {
+        //        dealInfo = dealInfo.Where(e => e. == hospitalId);
+        //    }
+        //    var data = await dealInfo.GroupBy(e => e.LastDealHospitalId).Select(e => new FinancialHospitalDealPriceBoardDto
+        //    {
+        //        HospitalName = e.Key.ToString(),
+        //        DealPrice = e.Sum(item => item.CheckPrice ?? 0m),
+        //        TotalServicePrice = e.Sum(item => item.SettlePrice ?? 0m),
+        //        InformationPrice = e.Sum(item => item.InformationPrice ?? 0m),
+        //        SystemUsePrice = e.Sum(item => item.SystemUpdatePrice ?? 0m),
+        //        ReturnBackPrice = e.Sum(item => item.ReturnBackPrice ?? 0m)
+        //    }).ToListAsync();
+        //    foreach (var item in data)
+        //    {
+        //        var hospitalInfo = await _hospitalInfoService.GetByIdAsync(Convert.ToInt32(item.HospitalName));
+        //        item.HospitalName = hospitalInfo.Name;
+        //    }
+        //    return data;
+
+        //}
 
         #endregion
     }

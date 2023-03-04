@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Dto.FinancialBoard;
+using Fx.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace Fx.Amiya.IService
 {
     public interface IFinancialboardService
     {
+        
         /// <summary>
         /// 产出版块主播业绩
         /// </summary>
@@ -33,5 +35,14 @@ namespace Fx.Amiya.IService
         /// <param name="liveAnchorId"></param>
         /// <returns></returns>
         Task<List<CustomerServiceBoardDataDto>> GetBoardCustomerServiceBelongDataAsync(DateTime? startDate, DateTime? endDate, int? customerServiceId);
+
+        /// <summary>
+        /// 医院对账业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<FinancialHospitalDealPriceBoardDto>> GetHospitalDealPriceDataAsync(DateTime? startDate, DateTime? endDate, int? hospitalId,int pageNum,int pageSize);
     }
 }

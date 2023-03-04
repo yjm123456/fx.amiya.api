@@ -116,6 +116,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
+
                 Bill bill = new Bill();
                 bill.Id = CreateOrderIdHelper.GetBillNextNumber();
                 bill.DealPrice = addDto.DealPrice;
@@ -443,7 +444,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<FinancialHospitalBoardDto>> FinancialCompanyBoardDataAsync(string companyId, int? hospitalId, DateTime? startDate, DateTime? endDate, int pageNum, int pageSize)
+        public async Task<FxPageInfo<FinancialHospitalBoardDto>> FinancialCompanyBoardDataAsync(string companyId, DateTime? startDate, DateTime? endDate, int pageNum, int pageSize)
         {
             startDate = startDate == null ? DateTime.Now.Date : startDate.Value.Date;
             endDate = endDate == null ? DateTime.Now.AddDays(1).Date : endDate.Value.AddDays(1).Date;
@@ -452,15 +453,11 @@ namespace Fx.Amiya.Service
             {
                 bill = bill.Where(e => e.CollectionCompanyId == companyId);
             }
-            if (hospitalId.HasValue)
-            {
-                bill = bill.Where(e => e.HospitalId == hospitalId);
-            }
+            
 
-            var data = bill.GroupBy(e => new { e.CollectionCompanyId, e.HospitalId }).OrderByDescending(g => g.Sum(item => item.DealPrice)).Select(g => new FinancialHospitalBoardDto
+            var data = bill.GroupBy(e => new { e.CollectionCompanyId }).OrderByDescending(g => g.Sum(item => item.DealPrice)).Select(g => new FinancialHospitalBoardDto
             {
                 CompanyName = dalCompanyBaseInfo.GetAll().Where(e => e.Id == g.Key.CollectionCompanyId).SingleOrDefault().Name,
-                HospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == g.Key.HospitalId).SingleOrDefault().Name,
                 DealPrice = g.Sum(item => item.DealPrice) ?? 0m,
                 NoIncludeTaxPrice = g.Sum(item => item.NotInTaxPrice),
                 InformationPrice = g.Sum(item => item.InformationPrice) ?? 0m,

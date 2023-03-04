@@ -1326,10 +1326,11 @@ namespace Fx.Amiya.Service
         /// <param name="endDate"></param>
         /// <param name="customerServiceId"></param>
         /// <returns></returns>
-        public async Task<CustomerServiceBoardDataDto> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int customerServiceId)
+        public async Task<List<CustomerServiceBoardDataDto>> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int? customerServiceId)
         {
-            var dealData = dalCustomerHospitalConsume.GetAll()
-                .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.AddedBy == customerServiceId && e.CheckState == 2)
+            var dealData =await dalCustomerHospitalConsume.GetAll()
+                .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate  && e.CheckState == 2)
+                .Where(e=>!customerServiceId.HasValue||e.AddedBy==customerServiceId)
                 .GroupBy(e => e.AddedBy)
                 .Select(e => new CustomerServiceBoardDataDto
                 {
@@ -1340,9 +1341,9 @@ namespace Fx.Amiya.Service
                     NewCustomerServicePrice = 0m,
                     OldCustomerPrice = e.Sum(item => item.CheckBuyAgainPrice ?? 0m),
                     OldCustomerServicePrice = e.Sum(item => item.CheckSettlePrice ?? 0m)
-                }).FirstOrDefault();
-            if (dealData != null)
-                dealData.CustomerServiceName = await dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(customerServiceId)).Select(e => e.Name).FirstOrDefaultAsync() ?? "未知";
+                }).ToListAsync();
+            //if (dealData != null)
+            //    dealData.CustomerServiceName = await dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(customerServiceId)).Select(e => e.Name).FirstOrDefaultAsync() ?? "未知";
             return dealData;
         }
 

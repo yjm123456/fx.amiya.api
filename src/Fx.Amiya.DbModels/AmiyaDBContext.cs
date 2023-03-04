@@ -171,6 +171,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<CompanyBaseInfo> CompanyBaseInfos { get; set; }
         public virtual DbSet<GiftCategory> GiftCategories { get; set; }
         public virtual DbSet<TagDetailInfo> TagDetailInfos { get; set; }
+        public virtual DbSet<IntegrationGenerateRecord> IntegrationGenerateRecords { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -340,6 +341,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new GiftCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new TagDetailInfoConfiguration());
             modelBuilder.ApplyConfiguration(new ControlPageShowConfiguration());
+            modelBuilder.ApplyConfiguration(new IntegrationGenerateRecordConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

@@ -471,7 +471,11 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task SendGoodsAsync(SendGoodsDto sendGoodsDto);
 
-
+        /// <summary>
+        /// 修改发货信息
+        /// </summary>
+        /// <returns></returns>
+        Task UpdateExpressInfoAsync(SendGoodsDto sendGoodsDto);
         /// <summary>
         /// 获取下单平台列表
         /// </summary>
@@ -608,6 +612,6 @@ namespace Fx.Amiya.IService
         /// <param name="endDate"></param>
         /// <param name="customerServiceId"></param>
         /// <returns></returns>
-        Task<CustomerServiceBoardDataDto> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int customerServiceId);
+        Task<List<CustomerServiceBoardDataDto>> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int? customerServiceId);
     }
 }

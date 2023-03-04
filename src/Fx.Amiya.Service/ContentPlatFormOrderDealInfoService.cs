@@ -36,6 +36,7 @@ namespace Fx.Amiya.Service
         private IDalRecommandDocumentSettle dalRecommandDocumentSettle;
         private IDalCompanyBaseInfo dalCompanyBaseInfo;
         private IDalLiveAnchor dalLiveAnchor;
+        private IDalContentPlatformOrder dalContentPlatformOrder;
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
             ICompanyBaseInfoService companyBaseInfoService,
@@ -44,7 +45,7 @@ namespace Fx.Amiya.Service
             IDalBindCustomerService dalBindCustomerService,
             IDalAmiyaEmployee dalAmiyaEmployee,
             IUnitOfWork unitOfWork,
-            IHospitalInfoService hospitalInfoService, ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService, IDalHospitalInfo dalHospitalInfo, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor)
+            IHospitalInfoService hospitalInfoService, ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService, IDalHospitalInfo dalHospitalInfo, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor, IDalContentPlatformOrder dalContentPlatformOrder)
         {
             this.dalContentPlatFormOrderDealInfo = dalContentPlatFormOrderDealInfo;
             _hospitalInfoService = hospitalInfoService;
@@ -60,6 +61,7 @@ namespace Fx.Amiya.Service
             this.dalRecommandDocumentSettle = dalRecommandDocumentSettle;
             this.dalCompanyBaseInfo = dalCompanyBaseInfo;
             this.dalLiveAnchor = dalLiveAnchor;
+            this.dalContentPlatformOrder = dalContentPlatformOrder;
         }
 
         /// <summary>
@@ -1869,23 +1871,26 @@ namespace Fx.Amiya.Service
         /// <param name="endDate"></param>
         /// <param name="customerServiceId"></param>
         /// <returns></returns>
-        public async Task<CustomerServiceBoardDataDto> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int customerServiceId)
+        public async Task<List<CustomerServiceBoardDataDto>> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int? customerServiceId)
         {
-            var dealData = dalContentPlatFormOrderDealInfo.GetAll()
-                .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.ContentPlatFormOrder.BelongEmpId == customerServiceId && e.CheckState == 2)
+            var dealData =await dalContentPlatFormOrderDealInfo.GetAll()
+                .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == 2)
+                .Where(e=> !customerServiceId.HasValue|| e.ContentPlatFormOrder.BelongEmpId==customerServiceId.Value)
                 .GroupBy(e => e.ContentPlatFormOrder.BelongEmpId)
                 .Select(e => new CustomerServiceBoardDataDto
                 {
-                    CustomerServiceName = Convert.ToString(e.Key),
+                    CustomerServiceName=Convert.ToString(e.Key),
                     DealPrice = e.Sum(item => item.CheckPrice) ?? 0m,
                     TotalServicePrice = e.Sum(item => item.SettlePrice) ?? 0m,
                     NewCustomerPrice = e.Sum(item => item.IsOldCustomer == false ? item.CheckPrice ?? 0m : 0m),
                     NewCustomerServicePrice = e.Sum(item => item.IsOldCustomer == false ? item.SettlePrice ?? 0m : 0m),
                     OldCustomerPrice = e.Sum(item => item.IsOldCustomer == true ? item.CheckPrice ?? 0m : 0m),
                     OldCustomerServicePrice = e.Sum(item => item.IsOldCustomer == true ? item.SettlePrice ?? 0m : 0m)
-                }).FirstOrDefault();
-            if (dealData != null)
-                dealData.CustomerServiceName = await _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(customerServiceId)).Select(e => e.Name).FirstOrDefaultAsync();
+                }).ToListAsync();
+
+
+            //if(dealData!=null)
+            //    dealData.CustomerServiceName = await _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(customerServiceId)).Select(e => e.Name).FirstOrDefaultAsync();
             return dealData;
         }
 
@@ -1916,6 +1921,42 @@ namespace Fx.Amiya.Service
             return dataList;
 
         }
+        /// <summary>
+        /// 获取医院对账业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<FinancialHospitalDealPriceBoardDto>> GetHospitalDealPriceDataAsync(DateTime? startDate, DateTime? endDate, int? hospitalId,int pageNum,int pageSize)
+        {
+            startDate = startDate.HasValue ? startDate : DateTime.Now.Date;
+            endDate = endDate.HasValue ? endDate : DateTime.Now.Date.AddDays(1).Date;
+            var dealInfo = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == (int)CheckType.CheckedSuccess);
+            if (hospitalId.HasValue)
+            {
+                dealInfo = dealInfo.Where(e => e.LastDealHospitalId == hospitalId);
+            }
+            var dealInfoResult = dealInfo.GroupBy(e => e.LastDealHospitalId).Select(e => new FinancialHospitalDealPriceBoardDto
+            {
+                HospitalName = e.Key.ToString(),
+                DealPrice = e.Sum(item => item.CheckPrice ?? 0m),
+                TotalServicePrice = e.Sum(item => item.SettlePrice ?? 0m),
+                InformationPrice = e.Sum(item => item.InformationPrice ?? 0m),
+                SystemUsePrice = e.Sum(item => item.SystemUpdatePrice ?? 0m),
+                ReturnBackPrice = e.Sum(item => item.ReturnBackPrice ?? 0m)
+            });
+            FxPageInfo<FinancialHospitalDealPriceBoardDto> fxPageInfo = new FxPageInfo<FinancialHospitalDealPriceBoardDto>();
+            fxPageInfo.TotalCount = dealInfoResult.Count();
+            fxPageInfo.List = dealInfoResult.Skip((pageNum - 1)*pageSize).Take(pageSize).ToList();
+            foreach (var item in fxPageInfo.List)
+            {
+                var hospitalInfo = await _hospitalInfoService.GetByIdAsync(Convert.ToInt32(item.HospitalName));
+                item.HospitalName = hospitalInfo.Name;
+            }
+            return fxPageInfo;
+
+        }
 
         #endregion
 
@@ -1934,6 +1975,7 @@ namespace Fx.Amiya.Service
             }
             return orderTypeList;
         }
+        
         #endregion
     }
 }

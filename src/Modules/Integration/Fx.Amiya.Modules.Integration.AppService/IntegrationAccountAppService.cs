@@ -307,8 +307,14 @@ namespace Fx.Amiya.Modules.Integration.AppService
         /// <returns></returns>
         public async Task UseByGoodsConsumption(UseIntegrationDto useIntegration)
         {
-
-            await UseAsync(useIntegration, IntegrationUseType.Consumption);
+            if (useIntegration.Type == 1)
+            {
+                await UseAsync(useIntegration, IntegrationUseType.CustomerServiceEdit);
+            }
+            else {
+                await UseAsync(useIntegration, IntegrationUseType.Consumption);
+            }
+            
 
         }
 

@@ -43,7 +43,6 @@ namespace Fx.Amiya.Modules.Integration.Infrastructure.Repositories
                                           }
                                       }).ToList()
             };
-
         }
 
         public async Task<List<string>> GetAllIntegrationAccountAsync()
@@ -202,5 +201,7 @@ namespace Fx.Amiya.Modules.Integration.Infrastructure.Repositories
 
             }
         }
+
+        
     }
 }

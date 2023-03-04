@@ -110,8 +110,12 @@ namespace Fx.Amiya.IService
         /// <param name="month"></param>
         /// <returns></returns>
         Task<List<ContentPlatFormOrderDealInfoDto>> GetSendPerformanceByHospitalIdAndMonthAsync(int hospitalId, int year, int month);
-
-
+        /// <summary>
+        /// 获取医院对账业绩
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<FinancialHospitalDealPriceBoardDto>> GetHospitalDealPriceDataAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int pageNum, int pageSize);
 
         #region【业绩板块】
 
@@ -312,7 +316,7 @@ namespace Fx.Amiya.IService
         /// <param name="endDate"></param>
         /// <param name="customerServiceId"></param>
         /// <returns></returns>
-        Task<CustomerServiceBoardDataDto> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int customerServiceId);
+        Task<List<CustomerServiceBoardDataDto>> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int? customerServiceId);
 
         #endregion
         #region 【枚举下拉框】

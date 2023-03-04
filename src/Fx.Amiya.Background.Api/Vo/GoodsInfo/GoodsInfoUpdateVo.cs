@@ -135,6 +135,10 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         /// 抵用券
         /// </summary>
         public List<GoodsConsumptionVoucherAddVo> UpdateGoodsConsumptionVoucher { get; set; } 
+        /// <summary>
+        /// 标签
+        /// </summary>
+        public List<UpdateGoodTagVo> UpdateGoodTag { get; set; }
         
         /// <summary>
         /// 商品详情编号

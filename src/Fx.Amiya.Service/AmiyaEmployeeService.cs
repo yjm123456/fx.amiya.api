@@ -221,8 +221,9 @@ namespace Fx.Amiya.Service
             {
                 var count = await dalAmiyaEmployee.GetAll().CountAsync(e => e.UserName == addDto.UserName);
                 if (count > 0)
-                    throw new Exception("用户名已被占用，请重新输入");
-
+                    throw new Exception("用户名已被占用，请重新输入！");
+                if (addDto.IsCustomerService && string.IsNullOrEmpty(addDto.LiveAnchorBaseId))
+                    throw new Exception("请为该客服添加绑定主播！");
                 AmiyaEmployee employee = new AmiyaEmployee()
                 {
                     Name = addDto.Name,
@@ -231,8 +232,10 @@ namespace Fx.Amiya.Service
                     AmiyaPositionId = addDto.PositionId,
                     Valid = true,
                     Email = addDto.Email,
-                    IsCustomerService = addDto.IsCustomerService
+                    IsCustomerService = addDto.IsCustomerService,
+                    LiveAnchorBaseId=addDto.LiveAnchorBaseId
                 };
+                
                 await dalAmiyaEmployee.AddAsync(employee, true);
             }
             catch (Exception ex)
@@ -268,6 +271,7 @@ namespace Fx.Amiya.Service
                     IsCustomerService = employee.IsCustomerService,
                     DepartmentId = employee.AmiyaPositionInfo.DepartmentId,
                     DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name,
+                    LiveAnchorBaseId=employee.LiveAnchorBaseId
                 };
                 if (employeeDto.IsCustomerService == true || employeeDto.PositionId == 19)
                 {

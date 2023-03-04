@@ -41,6 +41,10 @@ namespace Fx.Amiya.Modules.Integration.Domin
         /// 新用户赠送
         /// </summary>
         NewCustomer,
+        /// <summary>
+        /// 客服修改(积分超发时扣除超发的积分)
+        /// </summary>
+        CustomerServiceEdit
 
     }
 

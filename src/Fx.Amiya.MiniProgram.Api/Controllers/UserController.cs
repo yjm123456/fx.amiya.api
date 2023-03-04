@@ -22,6 +22,7 @@ using Fx.Weixin.MP.Dto.Mini;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -44,6 +45,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private ICustomerBaseInfoService customerBaseInfoService;
         private IDalCustomerInfo dalCustomerInfo;
         private IUnitOfWork unitOfWork;
+        private static readonly AsyncLock _mutex = new AsyncLock();
         public UserController(IUserService userService,
             IMiniSessionStorage sessionStorage,
             TokenReader tokenReader,
@@ -97,55 +99,60 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         [AllowAnonymous]
         public async Task<ResultData<string>> Login([FromBody] LoginVo loginVo)
         {
-            try
+            //加锁防止重复注册
+            using (await _mutex.LockAsync())
             {
-                var appInfo = _fxAppGlobal.WxAppInfoList.SingleOrDefault(t => t.WxAppId == loginVo.AppId);
-                if (appInfo == null)
-                    return ResultData<string>.Fail("无效APPID！");
-
-                var sessionInfo = await WxMiniBaseApi.GetCode2SessionAsync(loginVo.Code, appInfo.WxAppId, appInfo.WxAppSecret);
-
-                if (sessionInfo.ErrCode == 0)
+                try
                 {
-                    //if (string.IsNullOrEmpty(sessionInfo.UnionId))
-                    //{
-                    //    return ResultData<string>.Fail(-2, "unionid获取不到！");
-                    //}
+                    var appInfo = _fxAppGlobal.WxAppInfoList.SingleOrDefault(t => t.WxAppId == loginVo.AppId);
+                    if (appInfo == null)
+                        return ResultData<string>.Fail("无效APPID！");
 
-                    //添加用户，如果已经存在，则不会添加
-                    var wxMiniUserInfo = await userService.AddUnauthorizedWxMiniUserAsync(new UnauthorizedWxMiniUserAddDto()
+                    var sessionInfo = await WxMiniBaseApi.GetCode2SessionAsync(loginVo.Code, appInfo.WxAppId, appInfo.WxAppSecret);
+
+                    if (sessionInfo.ErrCode == 0)
                     {
-                        AppId = appInfo.WxAppId,
-                        AppPath = loginVo.AppPath,
-                        OpenId = sessionInfo.OpenId,
-                        Scene = loginVo.Scene,
-                        UnionId = sessionInfo.UnionId
-                    });
-                    string token = Guid.NewGuid().ToString().Replace("-", "");
+                        //if (string.IsNullOrEmpty(sessionInfo.UnionId))
+                        //{
+                        //    return ResultData<string>.Fail(-2, "unionid获取不到！");
+                        //}
 
-                    sessionStorage.SetSession(token, new FxWxMiniUserSession()
+                        //添加用户，如果已经存在，则不会添加
+                        var wxMiniUserInfo = await userService.AddUnauthorizedWxMiniUserAsync(new UnauthorizedWxMiniUserAddDto()
+                        {
+                            AppId = appInfo.WxAppId,
+                            AppPath = loginVo.AppPath,
+                            OpenId = sessionInfo.OpenId,
+                            Scene = loginVo.Scene,
+                            UnionId = sessionInfo.UnionId
+                        });
+                        string token = Guid.NewGuid().ToString().Replace("-", "");
+
+                        sessionStorage.SetSession(token, new FxWxMiniUserSession()
+                        {
+                            FxUserId = wxMiniUserInfo.UserId,
+                            OpenId = sessionInfo.OpenId,
+                            SessionKey = sessionInfo.SessionKey,
+                            UnionId = sessionInfo.UnionId,
+                            FxCustomerId = wxMiniUserInfo.CustomerId,
+                            AppId = loginVo.AppId,
+                            ExpireTime = DateTime.Now.AddDays(SessionLiveDays)
+                        });
+
+                        return ResultData<string>.Success().AddData("token", token);
+                    }
+                    else
                     {
-                        FxUserId = wxMiniUserInfo.UserId,
-                        OpenId = sessionInfo.OpenId,
-                        SessionKey = sessionInfo.SessionKey,
-                        UnionId = sessionInfo.UnionId,
-                        FxCustomerId = wxMiniUserInfo.CustomerId,
-                        AppId = loginVo.AppId,
-                        ExpireTime = DateTime.Now.AddDays(SessionLiveDays)
-                    });
-
-                    return ResultData<string>.Success().AddData("token", token);
+                        return ResultData<string>.Fail(sessionInfo.ErrMsg);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    return ResultData<string>.Fail(sessionInfo.ErrMsg);
+
+                    return ResultData<string>.Fail(ex.Message);
                 }
             }
-            catch (Exception ex)
-            {
 
-                return ResultData<string>.Fail(ex.Message);
-            }
         }
 
 
@@ -411,11 +418,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("isComplete")]
-        public async Task<ResultData<bool>> IsCompleteUserInfo() {
+        public async Task<ResultData<bool>> IsCompleteUserInfo()
+        {
             var sessionInfo = sessionStorage.GetSession(tokenReader.GetToken());
             string customerId = sessionInfo.FxCustomerId;
-            var result= await userService.IsCompleteUserInfo(sessionInfo.FxUserId);
-            return ResultData<bool>.Success().AddData("isComplete",result);
+            var result = await userService.IsCompleteUserInfo(sessionInfo.FxUserId);
+            return ResultData<bool>.Success().AddData("isComplete", result);
         }
 
         /// <summary>
@@ -427,7 +435,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <returns></returns>
         private async Task<ConsumptionIntegrationDto> CreateIntegrationRecordAsync(string customerId, decimal awardAmount)
         {
-            var exist = await integrationAccount.ExistNewCustomerRewardAsync(customerId, awardAmount, (int)GenerateType.NewCustomer,null);
+            var exist = await integrationAccount.ExistNewCustomerRewardAsync(customerId, awardAmount, (int)GenerateType.NewCustomer, null);
             if (exist)
             {
                 return null;

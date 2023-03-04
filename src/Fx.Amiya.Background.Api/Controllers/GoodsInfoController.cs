@@ -5,9 +5,11 @@ using Fx.Amiya.Core.Dto.Goods;
 using Fx.Amiya.Core.Dto.GoodsHospitalPrice;
 using Fx.Amiya.Core.Infrastructure;
 using Fx.Amiya.Core.Interfaces.Goods;
+using Fx.Amiya.Dto.CustomerTagInfo;
 using Fx.Amiya.Dto.GoodsConsumptionVoucher;
 using Fx.Amiya.Dto.GoodsStandardsPrice;
 using Fx.Amiya.Dto.MemberRankPrice;
+using Fx.Amiya.Dto.TagDetailInfo;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -134,6 +136,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 goodsStandardsPriceVoList.Add(goodsStandardsPriceVo);
 
             }
+            List<TagVo> goodsTagList = new List<TagVo>();
+            foreach (var tag in goodsInfo.Tags)
+            {
+                TagVo tagVo = new TagVo();
+                tagVo.TagId = tag.TagId;
+                tagVo.TagName = tag.TagName;
+                goodsTagList.Add(tagVo);
+            }
             GoodsInfoForSingleVo goods = new GoodsInfoForSingleVo()
             {
                 Id = goodsInfo.Id,
@@ -169,6 +179,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 VisitCount = goodsInfo.VisitCount,
                 GoodsHospitalPrice = goodsHospitalPriceVoList,
                 GoodsStandardPrice = goodsStandardsPriceVoList,
+                GoodsTags=goodsTagList,
                 Sort = goodsInfo.Sort,
                 GoodsMemberRankPrices = goodsInfo.GoodsMemberRankPrice.Select(e => new GoodsMemberRankPriceVo
                 {
@@ -193,7 +204,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<GoodsInfoForSingleVo>.Success().AddData("goodsInfo", goods);
         }
 
-
+       
 
         /// <summary>
         /// 添加商品信息
@@ -262,6 +273,11 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 ConsumptionVoucherId = e.ConsumptionVoucherId
             }).ToList();
+            //添加标签
+            goodsInfo.GoodsTags = goodsInfoAdd.AddGoodsTag.Select(e => new AddTagDetailInfoDto
+            { 
+                TagId=e.TagId
+            }).ToList();
             await goodsInfoService.AddAsync(goodsInfo);
             return ResultData.Success();
         }
@@ -304,6 +320,11 @@ namespace Fx.Amiya.Background.Api.Controllers
             goodsInfo.VisitCount = goodsInfoUpdate.VisitCount;
             goodsInfo.ShowSaleCount = goodsInfoUpdate.ShowSaleCount;
             goodsInfo.Sort = goodsInfoUpdate.Sort;
+            goodsInfo.GoodsTags = (from d in goodsInfoUpdate.UpdateGoodTag
+                                   select new GoodsTagDto { 
+                                    GoodsId= goodsInfoUpdate.Id,
+                                    TagId=d.TagId
+                                   }).ToList();
             //规格价格
             goodsInfo.GoodsStandardsPrice = (from d in goodsInfoUpdate.UpdateGoodsStandardsPrice
                                              select new GoodsStandardsPriceAddDto
@@ -389,5 +410,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 };
             return ResultData<List<ExchangeTypeVo>>.Success().AddData("exchangeTypes", exchangeTypes.ToList());
         }
+        
     }
 }

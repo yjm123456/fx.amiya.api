@@ -1,8 +1,10 @@
 ﻿using Fx.Amiya.Dto.FinancialBoard;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
+using Fx.Common;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +26,8 @@ namespace Fx.Amiya.Service
             this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
             _dalAmiyaEmployee = dalAmiyaEmployee;
         }
+
+       
 
         /// <summary>
         /// 财务看板产出板块主播业绩数据
@@ -75,11 +79,11 @@ namespace Fx.Amiya.Service
                 var contentPlatFormOrderData = await contentPlatFormOrderDealInfoService.GetCustomerServiceBoardDataByCustomerServiceIdAsync(startDate, endDate, id);
                 var customerHospitalConsumeData = await customerHospitalConsumeService.GetCustomerServiceBoardDataByCustomerServiceIdAsync(startDate, endDate, id);
                 if (orderData != null)
-                    liveAnchorBoardDataList.Add(orderData);
+                    liveAnchorBoardDataList.AddRange(orderData);
                 if (contentPlatFormOrderData != null)
                     liveAnchorBoardDataList.Add(contentPlatFormOrderData);
                 if (customerHospitalConsumeData != null)
-                    liveAnchorBoardDataList.Add(customerHospitalConsumeData);
+                    liveAnchorBoardDataList.AddRange(customerHospitalConsumeData);
             }
             var dataList = liveAnchorBoardDataList.GroupBy(e => e.CustomerServiceName).Select(e => new CustomerServiceBoardDataDto
             {
@@ -102,22 +106,20 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<CustomerServiceBoardDataDto>> GetBoardCustomerServiceBelongDataAsync(DateTime? startDate, DateTime? endDate, int? customerServiceId)
         {
+            
             startDate = startDate == null ? DateTime.Now.Date : startDate.Value.Date;
             endDate = endDate == null ? DateTime.Now.AddDays(1).Date : endDate.Value.AddDays(1).Date;
             List<CustomerServiceBoardDataDto> liveAnchorBoardDataList = new List<CustomerServiceBoardDataDto>();
             var customerServiceIdList = _dalAmiyaEmployee.GetAll().Where(e => e.IsCustomerService).Select(e => e.Id).ToList();
-            foreach (var id in customerServiceIdList)
-            {
-                var orderData = await orderService.GetCustomerServiceBoardDataByCustomerServiceIdAsync(startDate, endDate, id);
-                var contentPlatFormOrderData = await contentPlatFormOrderDealInfoService.GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(startDate, endDate, id);
-                var customerHospitalConsumeData = await customerHospitalConsumeService.GetCustomerServiceBoardDataByCustomerServiceIdAsync(startDate, endDate, id);
-                if (orderData != null)
-                    liveAnchorBoardDataList.Add(orderData);
-                if (contentPlatFormOrderData != null)
-                    liveAnchorBoardDataList.Add(contentPlatFormOrderData);
-                if (customerHospitalConsumeData != null)
-                    liveAnchorBoardDataList.Add(customerHospitalConsumeData);
-            }
+            var orderData = await orderService.GetCustomerServiceBoardDataByCustomerServiceIdAsync(startDate, endDate, null);
+            var contentPlatFormOrderData = await contentPlatFormOrderDealInfoService.GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(startDate, endDate, null);            
+            var customerHospitalConsumeData = await customerHospitalConsumeService.GetCustomerServiceBoardDataByCustomerServiceIdAsync(startDate, endDate, null);
+            if (orderData != null)
+                liveAnchorBoardDataList.AddRange(orderData);
+            if (contentPlatFormOrderData != null)
+                liveAnchorBoardDataList.AddRange(contentPlatFormOrderData);
+            if (customerHospitalConsumeData != null)
+                liveAnchorBoardDataList.AddRange(customerHospitalConsumeData);    
             var dataList = liveAnchorBoardDataList.GroupBy(e => e.CustomerServiceName).Select(e => new CustomerServiceBoardDataDto
             {
                 CustomerServiceName = e.Key,
@@ -128,7 +130,16 @@ namespace Fx.Amiya.Service
                 OldCustomerPrice = e.Sum(item => item.OldCustomerPrice),
                 OldCustomerServicePrice = e.Sum(item => item.OldCustomerServicePrice),
             }).ToList();
+            foreach (var item in dataList)
+            {
+                item.CustomerServiceName= _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(item.CustomerServiceName)).FirstOrDefault()?.Name??"未知";
+            }
             return dataList;
+        }
+
+        public async Task<FxPageInfo<FinancialHospitalDealPriceBoardDto>> GetHospitalDealPriceDataAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int pageNum, int pageSize)
+        {
+            return await contentPlatFormOrderDealInfoService.GetHospitalDealPriceDataAsync(startDate,endDate,hospitalId,pageNum,pageSize);
         }
     }
 }

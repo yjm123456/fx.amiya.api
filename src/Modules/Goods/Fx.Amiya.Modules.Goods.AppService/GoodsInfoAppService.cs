@@ -5,6 +5,7 @@ using Fx.Amiya.Core.Interfaces.Goods;
 using Fx.Amiya.Core.Interfaces.GoodsHospitalPrice;
 using Fx.Amiya.Dto.GoodsStandardsPrice;
 using Fx.Amiya.Dto.MemberRankPrice;
+using Fx.Amiya.Dto.TagDetailInfo;
 using Fx.Amiya.IService;
 using Fx.Amiya.Modules.Goods.DbModel;
 using Fx.Amiya.Modules.Goods.Domin;
@@ -29,12 +30,14 @@ namespace Fx.Amiya.Modules.Goods.AppService
         private IUnitOfWork unitOfWork;
         private readonly IGoodsMemberRankPriceService goodsMemberRankPriceService;
         private readonly IGoodsConsumptionVoucherService goodsConsumptionVoucherService;
+        private readonly ITagDetailInfoService tagDetailInfoService;
+
         public GoodsInfoAppService(IFreeSql<GoodsFlag> freeSql,
             IGoodsInfoRepository goodsInfoRepository,
             IUnitOfWork unitOfWork,
             IGoodsHospitalsPrice goodsHospitalsPrice, IGoodsMemberRankPriceService goodsMemberRankPriceService,
             IGoodsStandardsPriceService goodsStandardsPriceService,
-            IGoodsConsumptionVoucherService goodsConsumptionVoucherService)
+            IGoodsConsumptionVoucherService goodsConsumptionVoucherService, ITagDetailInfoService tagDetailInfoService)
         {
             this.freeSql = freeSql;
             _goodsInfoRepository = goodsInfoRepository;
@@ -43,6 +46,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
             _goodsHospitalsPrice = goodsHospitalsPrice;
             this.goodsMemberRankPriceService = goodsMemberRankPriceService;
             this.goodsConsumptionVoucherService = goodsConsumptionVoucherService;
+            this.tagDetailInfoService = tagDetailInfoService;
         }
         public async Task AddAsync(GoodsInfoAddDto goodsInfoAdd)
         {
@@ -128,6 +132,12 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     await goodsConsumptionVoucherService.AddAsync(voucher);
 
                 }
+                //添加标签
+                foreach (var tag in goodsInfoAdd.GoodsTags)
+                {
+                    tag.Id = goodsInfo.Id;
+                    await tagDetailInfoService.AddTagDetailInfoAsync(tag);
+                }
                 unitOfWork.Commit();
             }
             catch (Exception er)
@@ -195,7 +205,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 var goodsMemberrankPrice = await goodsMemberRankPriceService.GetMemeberRankPriceByGoodsIdAsync(id);
                 //可用抵用券
                 var consumptionVoucher = await goodsConsumptionVoucherService.GetGoodsConsumptionVoucherByGoodsIdAsync(id);
-
+                //商品标签
+                var goodsTag = await tagDetailInfoService.GetTagNameListAsync(id);
                 GoodsInfoForSingleDto goods = new GoodsInfoForSingleDto()
                 {
                     Id = goodsInfo.Id,
@@ -233,6 +244,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     GoodsHospitalPrice = goodsHospitalPriceList,
                     GoodsStandardsPrice = goodsStandardsPrice,
                     GoodsMemberRankPrice = goodsMemberrankPrice,
+                    Tags=goodsTag,
                     CarouselImageUrls = (from d in goodsInfo.GoodsInfoCarouselImages
                                          select new GoodsInfoCarouselImageDto
                                          {
@@ -441,6 +453,17 @@ namespace Fx.Amiya.Modules.Goods.AppService
             foreach (var item in goodsInfoUpdate.GoodsConsumptionVoucher)
             {
                 await goodsConsumptionVoucherService.AddAsync(item);
+            }
+            //移除标签
+            await tagDetailInfoService.DeleteGoodsTagAsync(goodsInfoUpdate.Id);
+            //新增标签
+            foreach (var item in goodsInfoUpdate.GoodsTags)
+            {
+                AddTagDetailInfoDto addTagDetailInfoDto=new AddTagDetailInfoDto { 
+                    Id=item.GoodsId,
+                    TagId=item.TagId
+                };
+                await tagDetailInfoService.AddTagDetailInfoAsync(addTagDetailInfoDto);
             }
         }
 

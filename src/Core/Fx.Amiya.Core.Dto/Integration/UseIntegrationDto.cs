@@ -13,6 +13,10 @@ namespace Fx.Amiya.Core.Dto.Integration
 
         public DateTime Date { get; set; }
         public decimal UseQuantity { get; set; }
+        /// <summary>
+        /// null为商品消费,1为客服修正积分
+        /// </summary>
+        public int? Type { get; set; }
 
 
     }

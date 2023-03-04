@@ -16,5 +16,6 @@ namespace Fx.Amiya.Modules.Integration.Domin.IRepository
         /// </summary>
         /// <returns></returns>
         Task<List<string>> GetAllIntegrationAccountAsync();
+        
     }
 }

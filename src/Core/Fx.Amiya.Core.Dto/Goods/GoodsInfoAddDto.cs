@@ -1,7 +1,9 @@
 ﻿using Fx.Amiya.Core.Dto.GoodsHospitalPrice;
+using Fx.Amiya.Dto.CustomerTagInfo;
 using Fx.Amiya.Dto.GoodsConsumptionVoucher;
 using Fx.Amiya.Dto.GoodsStandardsPrice;
 using Fx.Amiya.Dto.MemberRankPrice;
+using Fx.Amiya.Dto.TagDetailInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -143,6 +145,10 @@ namespace Fx.Amiya.Core.Dto.Goods
         /// 抵用券
         /// </summary>
         public List<GoodsConsumptionVoucherAddDto> GoodsConsumptionVouchers { get; set; }
+        /// <summary>
+        /// 商品标签
+        /// </summary>
+        public List<AddTagDetailInfoDto> GoodsTags { get; set; }
 
     }
 }

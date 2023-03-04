@@ -1445,6 +1445,25 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData.Success();
         }
 
+        /// <summary>
+        /// 发货
+        /// </summary>
+        /// <param name="sendGoodsVo"></param>
+        /// <returns></returns>
+        [HttpPost("updateSendGoodsInfo")]
+        public async Task<ResultData> UpdateSendGoodsInfoAsync(SendGoodsVo sendGoodsVo)
+        {
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            SendGoodsDto sendGoodsDto = new SendGoodsDto();
+            sendGoodsDto.TradeId = sendGoodsVo.TradeId;
+            sendGoodsDto.CourierNumber = sendGoodsVo.CourierNumber;
+            sendGoodsDto.HandleBy = employeeId;
+            sendGoodsDto.ExpressId = sendGoodsVo.ExpressId;
+            await orderService.UpdateExpressInfoAsync(sendGoodsDto);
+            return ResultData.Success();
+        }
+
 
         /// <summary>
         /// 获取下单平台列表

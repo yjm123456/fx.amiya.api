@@ -35,6 +35,7 @@ namespace Fx.Amiya.Service
                                                           where (string.IsNullOrWhiteSpace(keyWord) || d.CustomerName.Contains(keyWord) || d.ToHospitalPhone.Contains(keyWord))
                                                           && (d.Valid == valid)
                                                           && (!checkState.HasValue || d.CheckState == checkState)
+                                                          orderby d.CreateDate descending
                                                           select new CustomerConsumptionCredentialsDto
                                                           {
                                                               Id = d.Id,

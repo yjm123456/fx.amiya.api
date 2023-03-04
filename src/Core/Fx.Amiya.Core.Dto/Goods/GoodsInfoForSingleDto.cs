@@ -2,6 +2,7 @@
 using Fx.Amiya.Dto.GoodsConsumptionVoucher;
 using Fx.Amiya.Dto.GoodsStandardsPrice;
 using Fx.Amiya.Dto.MemberRankPrice;
+using Fx.Amiya.Dto.TagDetailInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -150,6 +151,10 @@ namespace Fx.Amiya.Core.Dto.Goods
         /// </summary>
 
         public List<GoodsConsumptionVoucherDto> GoodsConsumptionVoucher { get; set; }
+        /// <summary>
+        /// 商品标签
+        /// </summary>
+        public List<TagDetailInfoDto> Tags { get; set; }
 
         /// <summary> 
         /// 商品html详情

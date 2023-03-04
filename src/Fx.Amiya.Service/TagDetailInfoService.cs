@@ -28,7 +28,6 @@ namespace Fx.Amiya.Service
             tagDetailInfo.CustomerGoodsId = add.Id;
             tagDetailInfo.TagId = add.TagId;
             await dalTagDetailInfo.AddAsync(tagDetailInfo,true);
-            
         }
         
         public async Task DeleteAsync(string id,string tagid)
@@ -37,7 +36,17 @@ namespace Fx.Amiya.Service
             if (tagDetail == null) throw new Exception("编号错误");
             await dalTagDetailInfo.DeleteAsync(tagDetail,true);
         }
-        
+
+        public async Task DeleteGoodsTagAsync(string goodsOrCustomerId)
+        {
+            var tagDetail=dalTagDetailInfo.GetAll().Where(e => e.CustomerGoodsId == goodsOrCustomerId);
+            foreach (var item in tagDetail)
+            {
+                await dalTagDetailInfo.DeleteAsync(item,true);
+            }
+        }
+
+
 
         /// <summary>
         /// 获取指定id的用户或商品的标签

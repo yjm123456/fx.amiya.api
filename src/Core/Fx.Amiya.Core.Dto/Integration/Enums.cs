@@ -65,6 +65,10 @@ namespace Fx.Amiya.Core.Dto.Integration
         /// <summary>
         /// 兑换礼品
         /// </summary>
-        GiftExchange
+        GiftExchange,
+        /// <summary>
+        /// 客服修正积分
+        /// </summary>
+        CustomerServiceEdit
     }
 }

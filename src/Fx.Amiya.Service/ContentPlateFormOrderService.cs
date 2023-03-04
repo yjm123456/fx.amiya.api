@@ -1060,7 +1060,7 @@ namespace Fx.Amiya.Service
                     if (!string.IsNullOrEmpty(k.LiveAnchorWeChatNo))
                     {
                         var wechatInfo = await liveAnchorWeChatInfoService.GetByIdAsync(k.LiveAnchorWeChatNo);
-                         if (wechatInfo.Id != null)
+                        if (wechatInfo.Id != null)
                         {
                             k.LiveAnchorWeChatNo = wechatInfo.WeChatNo.ToString();
                         }
@@ -2340,6 +2340,37 @@ namespace Fx.Amiya.Service
             return JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig;
         }
 
+        #region 财务看板
+
+        /// <summary>
+        /// 根据客服id获取财务看板归属客服业绩信息
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="customerServiceId"></param>
+        /// <returns></returns>
+        public async Task<CustomerServiceBoardDataDto> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int? customerServiceId)
+        {
+            var dealData =  _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
+                .Where(e => !customerServiceId.HasValue|| e.BelongEmpId == customerServiceId.Value)
+                .SelectMany(e => e.ContentPlatformOrderDealInfoList)
+                .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == (int)CheckType.CheckedSuccess)
+                .GroupBy(e => e.CheckState)
+                .Select(e => new CustomerServiceBoardDataDto
+                {
+                    DealPrice = e.Sum(e => e.CheckPrice ?? 0m),
+                    TotalServicePrice = e.Sum(e => e.SettlePrice ?? 0m),
+                    NewCustomerPrice = e.Sum(e => e.IsOldCustomer ? 0m : e.CheckPrice ?? 0m),
+                    NewCustomerServicePrice = e.Sum(e => e.IsOldCustomer ? 0m : e.SettlePrice ?? 0m),
+                    OldCustomerPrice = e.Sum(e => e.IsOldCustomer ? e.CheckPrice ?? 0m : 0m),
+                    OldCustomerServicePrice= e.Sum(e => e.IsOldCustomer ? e.SettlePrice ?? 0m : 0m)
+                }).FirstOrDefault();
+            if (dealData != null)
+                dealData.CustomerServiceName = await _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(customerServiceId)).Select(e => e.Name).FirstOrDefaultAsync();
+            return dealData;
+        }
+
+        #endregion
 
         #region 【报表相关】
         public async Task<List<SendContentPlatformOrderDto>> GetSendOrderReportList(int? liveAnchorId, int employeeId, int belongEmpId, int? orderStatus

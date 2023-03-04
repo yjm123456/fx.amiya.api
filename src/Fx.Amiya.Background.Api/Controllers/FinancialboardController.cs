@@ -32,6 +32,34 @@ namespace Fx.Amiya.Background.Api.Controllers
         #region 财务看板展示
 
         /// <summary>
+        /// 医院对账业绩
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("hospitalDealPriceBoard")]
+        public async Task<ResultData<FxPageInfo<FinancialHospitalBoardVo>>> GetHospitalDealPriceBoard( DateTime? startDate, DateTime? endDate, int? hospitalId, int pageNum, int pageSize)
+        {
+            var data = await financialboardSerice.GetHospitalDealPriceDataAsync( startDate, endDate, hospitalId, pageNum, pageSize);
+            FxPageInfo<FinancialHospitalBoardVo> fxPageInfo = new FxPageInfo<FinancialHospitalBoardVo>();
+            fxPageInfo.TotalCount = data.TotalCount;
+            fxPageInfo.List = data.List.Select(e => new FinancialHospitalBoardVo
+            {
+                HospitalName = e.HospitalName,
+                DealPrice = e.DealPrice,
+                TotalServicePrice = e.TotalServicePrice,
+                InformationPrice = e.InformationPrice,
+                SystemUsePrice = e.SystemUsePrice,
+                ReturnBackPrice = e.ReturnBackPrice,
+                UnReturnBackPrice = e.TotalServicePrice - e.ReturnBackPrice
+            });
+            return ResultData<FxPageInfo<FinancialHospitalBoardVo>>.Success().AddData("data", fxPageInfo);
+        }
+
+        /// <summary>
         /// 医院维度
         /// </summary>
         /// <returns></returns>
@@ -59,22 +87,20 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 子公司维度
         /// </summary>
         /// <param name="companyId">公司id</param>
-        /// <param name="hospitalId">医院id</param>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("subsidiaryBoard")]
-        public async Task<ResultData<FxPageInfo<FinancialHospitalBoardVo>>> GetSubsidiaryBoard(string companyId, int? hospitalId, DateTime? startDate, DateTime? endDate, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<FinancialHospitalBoardVo>>> GetSubsidiaryBoard(string companyId, DateTime? startDate, DateTime? endDate, int pageNum, int pageSize)
         {
-            var data = await billService.FinancialCompanyBoardDataAsync(companyId, hospitalId, startDate, endDate, pageNum, pageSize);
+            var data = await billService.FinancialCompanyBoardDataAsync(companyId, startDate, endDate, pageNum, pageSize);
             FxPageInfo<FinancialHospitalBoardVo> fxPageInfo = new FxPageInfo<FinancialHospitalBoardVo>();
             fxPageInfo.TotalCount = data.TotalCount;
             fxPageInfo.List = data.List.Select(e => new FinancialHospitalBoardVo
             {
                 CompanyName = e.CompanyName,
-                HospitalName = e.HospitalName,
                 DealPrice = e.DealPrice,
                 TotalServicePrice = e.TotalServicePrice,
                 NoIncludeTaxPrice = e.NoIncludeTaxPrice,

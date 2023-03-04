@@ -28,5 +28,9 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaEmployee
         /// 是否是客服
         /// </summary>
         public bool IsCustomerService { get; set; }
+        /// <summary>
+        /// 绑定的主播id
+        /// </summary>
+        public string LiveAnchorBaseId { get; set; }
     }
 }

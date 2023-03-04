@@ -198,5 +198,15 @@ namespace Fx.Amiya.Service
             }).ToList();
             return list;
         }
+
+        public async Task<List<BaseKeyValueDto>> GetGoodsTagNameListAsync()
+        {
+            var list = dalCustomerTagInfoService.GetAll().Where(e => e.TagCategory == (int)TagCategory.GoodsTag && e.Valid == true).Select(e => new BaseKeyValueDto
+            {
+                Key = e.Id,
+                Value = e.TagName
+            }).ToList();
+            return list;
+        }
     }
 }

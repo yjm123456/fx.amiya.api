@@ -75,6 +75,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.PositionId = addVo.PositionId;
                 addDto.IsCustomerService = addVo.IsCustomerService;
                 addDto.Email = addVo.Email;
+                addDto.LiveAnchorBaseId = addVo.LiveAnchorBaseId;
                 await employeeService.AddAsync(addDto);
                 return ResultData.Success();
             }

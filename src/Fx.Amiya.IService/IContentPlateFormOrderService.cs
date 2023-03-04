@@ -288,6 +288,12 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task UpdateCreateBillAndBelongCompany(UpdateCreateBillAndCompanyDto update);
 
+        #region 财务看板
+
+        Task<CustomerServiceBoardDataDto> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int? customerServiceId);
+
+        #endregion
+
         #region 【数据中心】
         /// <summary>
         /// 获取时间段内未派单数据
