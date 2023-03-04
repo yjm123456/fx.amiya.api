@@ -882,6 +882,7 @@ namespace Fx.Amiya.Service
                          {
                              OrderId = d.ContentPlatformOrderId,
                              SendHospitalId = d.HospitalId,
+                             ThumbPictureUrl=d.HospitalInfo.ThumbPicUrl,
                              SendHospital = d.HospitalInfo.Name,
                              City = d.HospitalInfo.CooperativeHospitalCity.Name,
                              SendDate = d.SendDate,

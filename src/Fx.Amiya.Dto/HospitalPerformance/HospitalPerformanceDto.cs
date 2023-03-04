@@ -23,6 +23,11 @@ namespace Fx.Amiya.Dto.HospitalPerformance
         public string HospitalName { get; set; }
 
         /// <summary>
+        /// 医院图片
+        /// </summary>
+        public string HospitalLogo { get; set; }
+
+        /// <summary>
         /// 派单量
         /// </summary>
         public int SendNum { get; set; }

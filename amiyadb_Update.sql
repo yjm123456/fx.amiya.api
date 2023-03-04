@@ -291,3 +291,7 @@ ALTER TABLE `amiyadb`.`tbl_live_anchor_base_info`
 ADD COLUMN `is_self_live_anchor` BIT(1) NOT NULL AFTER `valid`;
 -----------------------------------------------余建明 2023/2/28 BEGIN--------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+--啊美雅员工新增绑定主播基础账户id
+ALTER TABLE `amiyadb`.`tbl_amiya_employee` 
+ADD COLUMN `bind_base_live_anchor_id` VARCHAR(50) NULL AFTER `code_expire_date`;
+

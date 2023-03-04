@@ -9,11 +9,12 @@
             数据中心板块接口
             </summary>
         </member>
-        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaBusinessPerformanceController.#ctor(Fx.Amiya.IService.IAmiyaPerformanceService)">
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaBusinessPerformanceController.#ctor(Fx.Amiya.IService.IAmiyaPerformanceService,Fx.Amiya.IService.IHospitalPerformanceService)">
             <summary>
             构造函数
             </summary>
             <param name="amiyaPerformanceService"></param>
+            <param name="hospitalPerformanceService"></param>
         </member>
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaBusinessPerformanceController.GetTotalPerformanceAsync(System.Int32,System.Int32)">
             <summary>
@@ -31,6 +32,14 @@
             <param name="month"></param>
             <param name="liveAnchorBaseId">主播基础id，不传查询所有</param>
             <param name="isSelfLiveAnchor">是否为自播主播</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaBusinessPerformanceController.GetHospitalPerformanceAsync(System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            获取机构业绩数据
+            </summary>
+            <param name="year"></param>
+            <param name="month"></param>
             <returns></returns>
         </member>
         <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaEmployeeController">
@@ -3002,6 +3011,86 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CompanyMonthPerformanceVo.OtherPerformanceChainRatio">
             <summary>
             其他业绩环比
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.HospitalPerformanceVo">
+            <summary>
+            机构业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.HospitalPerformanceVo.HospitalName">
+            <summary>
+            医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.HospitalPerformanceVo.HospitalLogo">
+            <summary>
+            医院图片
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.HospitalPerformanceVo.SendNum">
+            <summary>
+            派单量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.HospitalPerformanceVo.VisitNum">
+            <summary>
+            上门数
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.HospitalPerformanceVo.VisitRate">
+            <summary>
+            上门率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.HospitalPerformanceVo.NewCustomerDealNum">
+            <summary>
+            新客成交（人数）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.HospitalPerformanceVo.NewCustomerDealRate">
+            <summary>
+            新客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.HospitalPerformanceVo.NewCustomerAchievement">
+            <summary>
+            新客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.HospitalPerformanceVo.NewCustomerUnitPrice">
+            <summary>
+            新客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.HospitalPerformanceVo.OldCustomerDealNum">
+            <summary>
+            老客成交（人数）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.HospitalPerformanceVo.OldCustomerAchievement">
+            <summary>
+            老客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.HospitalPerformanceVo.OldCustomerUnitPrice">
+            <summary>
+            老客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.HospitalPerformanceVo.TotalAchievement">
+            <summary>
+            总业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.HospitalPerformanceVo.TotalAchievementRatio">
+            <summary>
+            业绩贡献值
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.HospitalPerformanceVo.NewOrOldCustomerRate">
+            <summary>
+            新老客占比
             </summary>
         </member>
         <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.LiveAnchorMonthPerformanceVo">
