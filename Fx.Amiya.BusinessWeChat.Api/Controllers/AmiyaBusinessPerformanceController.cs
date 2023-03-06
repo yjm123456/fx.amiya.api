@@ -7,6 +7,7 @@ using Fx.Amiya.BusinessWeChat.Api.Vo.Performance;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
+using Fx.Common.Extensions;
 using Fx.Common.Utils;
 using Fx.Open.Infrastructure.Web;
 using Microsoft.AspNetCore.Http;
@@ -267,7 +268,6 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("hospitalPerformance")]
         public async Task<ResultData<List<HospitalPerformanceVo>>> GetHospitalPerformanceAsync(int? year, int? month)
         {
-            DecimalChangeHelper decimalChangeHelper = new DecimalChangeHelper();
             List<HospitalPerformanceVo> hospitalPerformanceVo = new List<HospitalPerformanceVo>();
             var hospitalPerformanceDatasResult = await hospitalPerformanceService.GetHospitalPerformanceBymonthBWAsync(year, month);
             var hospitalPerformanceDatasDecending = hospitalPerformanceDatasResult.OrderByDescending(x => x.TotalAchievement).ToList();
@@ -282,7 +282,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 hospitalOperatingDataVo.OldCustomerAchievement = x.OldCustomerAchievement;
                 hospitalOperatingDataVo.TotalAchievement = x.TotalAchievement;
                 hospitalOperatingDataVo.NewOrOldCustomerRate = x.NewOrOldCustomerRate;
-                hospitalOperatingDataVo.TotalAchievementRatio = decimalChangeHelper.CalculateTargetComplete(x.TotalAchievement, totalAchievement);
+                hospitalOperatingDataVo.TotalAchievementRatio = DecimalExtension.CalculateTargetComplete(x.TotalAchievement, totalAchievement);
                 hospitalPerformanceVo.Add(hospitalOperatingDataVo);
             }
 
@@ -293,8 +293,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             otherHospitalOperatingDataVo.NewCustomerAchievement = hospitalPerformanceDatasDecending.Sum(x => x.NewCustomerAchievement) - hospitalPerformanceDatas.Sum(x => x.NewCustomerAchievement);
             otherHospitalOperatingDataVo.OldCustomerAchievement = hospitalPerformanceDatasDecending.Sum(x => x.OldCustomerAchievement) - hospitalPerformanceDatas.Sum(x => x.OldCustomerAchievement);
             otherHospitalOperatingDataVo.TotalAchievement = hospitalPerformanceDatasDecending.Sum(x => x.TotalAchievement) - hospitalPerformanceDatas.Sum(x => x.TotalAchievement);
-            otherHospitalOperatingDataVo.NewOrOldCustomerRate = decimalChangeHelper.CalculateAccounted(otherHospitalOperatingDataVo.NewCustomerAchievement, otherHospitalOperatingDataVo.OldCustomerAchievement);
-            otherHospitalOperatingDataVo.TotalAchievementRatio = decimalChangeHelper.CalculateTargetComplete(otherHospitalOperatingDataVo.TotalAchievement, totalAchievement);
+            otherHospitalOperatingDataVo.NewOrOldCustomerRate = DecimalExtension.CalculateAccounted(otherHospitalOperatingDataVo.NewCustomerAchievement, otherHospitalOperatingDataVo.OldCustomerAchievement);
+            otherHospitalOperatingDataVo.TotalAchievementRatio = DecimalExtension.CalculateTargetComplete(otherHospitalOperatingDataVo.TotalAchievement, totalAchievement);
             hospitalPerformanceVo.Add(otherHospitalOperatingDataVo);
             return ResultData<List<HospitalPerformanceVo>>.Success().AddData("performance", hospitalPerformanceVo);
         }

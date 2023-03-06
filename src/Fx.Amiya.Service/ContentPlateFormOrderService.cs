@@ -16,6 +16,7 @@ using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
+using Fx.Common.Extensions;
 using Fx.Common.Utils;
 using Fx.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
@@ -2730,12 +2731,11 @@ namespace Fx.Amiya.Service
                 z.HistorySendThisMonthDealPerformance = history1 + history2;
                 z.ThisMonthSendThisMonthDealPerformance = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.Value.Month == DateTime.Now.Month && c.ContentPlatFormOrder.SendDate.Value.Year == DateTime.Now.Year).Sum(x => x.Price);
 
-                DecimalChangeHelper decimalChangeHelper = new DecimalChangeHelper();
-                z.VisitNumRatio = decimalChangeHelper.CalculateTargetComplete(visitInfo.Count(), sendInfo.Count());
-                z.VideoAndPictureCompare = decimalChangeHelper.CalculateAccounted(z.VideoPerformance, z.PicturePerformance);
-                z.IsAcompanyingCompare = decimalChangeHelper.CalculateAccounted(z.AcompanyingPerformance, z.NotAcompanyingPerformance);
-                z.ZeroAndHavingPriceCompare = decimalChangeHelper.CalculateAccounted(z.ZeroPerformance, z.HavingPricePerformance);
-                z.HistoryAndThisMonthCompare = decimalChangeHelper.CalculateAccounted(z.HistorySendThisMonthDealPerformance, z.ThisMonthSendThisMonthDealPerformance);
+                z.VisitNumRatio = DecimalExtension.CalculateTargetComplete(visitInfo.Count(), sendInfo.Count());
+                z.VideoAndPictureCompare = DecimalExtension.CalculateAccounted(z.VideoPerformance, z.PicturePerformance);
+                z.IsAcompanyingCompare = DecimalExtension.CalculateAccounted(z.AcompanyingPerformance, z.NotAcompanyingPerformance);
+                z.ZeroAndHavingPriceCompare = DecimalExtension.CalculateAccounted(z.ZeroPerformance, z.HavingPricePerformance);
+                z.HistoryAndThisMonthCompare = DecimalExtension.CalculateAccounted(z.HistorySendThisMonthDealPerformance, z.ThisMonthSendThisMonthDealPerformance);
             }
             return dealResult;
         }
