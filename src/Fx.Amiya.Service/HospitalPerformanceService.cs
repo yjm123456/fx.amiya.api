@@ -345,23 +345,14 @@ namespace Fx.Amiya.Service
                 HospitalPerformanceDto hospitalPerformanceDto = new HospitalPerformanceDto();
                 hospitalPerformanceDto.HospitalId = x.SendHospitalId;
                 hospitalPerformanceDto.HospitalName = x.SendHospital;
-                hospitalPerformanceDto.City = x.City;
                 hospitalPerformanceDto.HospitalLogo = x.ThumbPictureUrl;
                 List<int> hospitalIds = new List<int>();
                 hospitalIds.Add(x.SendHospitalId);
-                hospitalPerformanceDto.SendNum = contentPlatFormOrderSendList.Where(z => hospitalIds.Contains(z.SendHospitalId)).Count();
                 var contentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetMonthSendPerformanceByHospitalIdListAsync(hospitalIds, date);
-                hospitalPerformanceDto.VisitNum = contentPlatFormOrderDealInfoList.Count();
-                hospitalPerformanceDto.VisitRate = CalculateTargetComplete(hospitalPerformanceDto.VisitNum, hospitalPerformanceDto.SendNum).Value;
                 var dealInfoList = contentPlatFormOrderDealInfoList.Where(x => x.IsDeal == true && x.DealDate.HasValue == true);
-                hospitalPerformanceDto.NewCustomerDealNum = dealInfoList.Where(x => x.IsOldCustomer == false).Count();
-                hospitalPerformanceDto.NewCustomerDealRate = CalculateTargetComplete(hospitalPerformanceDto.NewCustomerDealNum, hospitalPerformanceDto.VisitNum).Value;
                 hospitalPerformanceDto.NewCustomerAchievement = dealInfoList.Where(x => x.IsOldCustomer == false).Sum(x => x.Price);
-                hospitalPerformanceDto.NewCustomerUnitPrice = this.Division(hospitalPerformanceDto.NewCustomerAchievement, hospitalPerformanceDto.NewCustomerDealNum).Value;
 
-                hospitalPerformanceDto.OldCustomerDealNum = dealInfoList.Where(x => x.IsOldCustomer == true).Count();
                 hospitalPerformanceDto.OldCustomerAchievement = dealInfoList.Where(x => x.IsOldCustomer == true).Sum(x => x.Price);
-                hospitalPerformanceDto.OldCustomerUnitPrice = this.Division(hospitalPerformanceDto.OldCustomerAchievement, hospitalPerformanceDto.OldCustomerDealNum).Value;
                 hospitalPerformanceDto.TotalAchievement = dealInfoList.Sum(x => x.Price);
                 hospitalPerformanceDto.NewOrOldCustomerRate = CalculateAccounted(hospitalPerformanceDto.NewCustomerAchievement, hospitalPerformanceDto.OldCustomerAchievement);
                 resultList.Add(hospitalPerformanceDto);
@@ -1125,11 +1116,11 @@ namespace Fx.Amiya.Service
             }
             if (dataA == 0.00M && dataB != 0.00M)
             {
-                return "10:0";
+                return "0:10";
             }
             if (dataA != 0.00M && dataB == 0.00M)
             {
-                return "0:10";
+                return "10:0";
             }
             var dataAcount = Math.Round(dataA / count * 10, 1);
             var dataBcount = Math.Round(dataB / count * 10, 1);
