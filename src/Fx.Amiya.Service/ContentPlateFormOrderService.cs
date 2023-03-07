@@ -2692,7 +2692,7 @@ namespace Fx.Amiya.Service
                 .Where(e => belongCustomerServiceIds.Count == 0 || belongCustomerServiceIds.Contains(e.BelongEmpId.Value));
             var dealResult = dealData
                 .SelectMany(e => e.ContentPlatformOrderDealInfoList)
-                .Where(e => e.DealDate >= startDate && e.DealDate < endDate && e.IsDeal == true)
+                .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true)
                 .GroupBy(e => e.ContentPlatFormOrder.BelongEmpId)
                 .Select(e => new CustomerServiceDetailsPerformanceDto
                 {
@@ -2715,7 +2715,7 @@ namespace Fx.Amiya.Service
                 var visitInfo = sendInfo.Where(x => x.IsToHospital == true).ToList();
                 var dealInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.BelongEmpId == z.CustomerServiceId)
                     .SelectMany(x => x.ContentPlatformOrderDealInfoList).Include(x => x.ContentPlatFormOrder)
-                    .Where(e => e.DealDate >= startDate && e.DealDate < endDate && e.IsDeal == true)
+                    .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true)
                     .ToList();
 
                 z.VideoPerformance = dealInfo.Where(x => x.ContentPlatFormOrder.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Sum(k => k.Price);
@@ -2732,12 +2732,12 @@ namespace Fx.Amiya.Service
                 z.ThisMonthSendThisMonthDealPerformance = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.Value.Month == DateTime.Now.Month && c.ContentPlatFormOrder.SendDate.Value.Year == DateTime.Now.Year).Sum(x => x.Price);
 
                 z.VisitNumRatio = DecimalExtension.CalculateTargetComplete(visitInfo.Count(), sendInfo.Count());
-                z.VideoAndPictureCompare = DecimalExtension.CalculateAccounted(z.VideoPerformance, z.PicturePerformance);
-                z.IsAcompanyingCompare = DecimalExtension.CalculateAccounted(z.AcompanyingPerformance, z.NotAcompanyingPerformance);
-                z.ZeroAndHavingPriceCompare = DecimalExtension.CalculateAccounted(z.ZeroPerformance, z.HavingPricePerformance);
+                z.VideoAndPictureCompare = DecimalExtension.CalculateAccounted(z.PicturePerformance, z.VideoPerformance);
+                z.IsAcompanyingCompare = DecimalExtension.CalculateAccounted(z.NotAcompanyingPerformance, z.AcompanyingPerformance);
+                z.ZeroAndHavingPriceCompare = DecimalExtension.CalculateAccounted(z.HavingPricePerformance, z.ZeroPerformance);
                 z.HistoryAndThisMonthCompare = DecimalExtension.CalculateAccounted(z.HistorySendThisMonthDealPerformance, z.ThisMonthSendThisMonthDealPerformance);
             }
-            return dealResult;
+            return dealResult.OrderByDescending(x => x.TotalServicePrice).ToList();
         }
 
         /// <summary>

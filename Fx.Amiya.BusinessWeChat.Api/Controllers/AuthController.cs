@@ -110,7 +110,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 {
                     if (!string.IsNullOrEmpty(employee.UserId) && employee.UserId != userId)
                     {
-                        throw new Exception("该用户已绑定过企业微信账号，无法绑定到您的企业微信中,请重新登陆！");
+                        throw new Exception("该用户已绑定过他人企业微信账号，无法绑定到您的企业微信中,请重新登录！");
                     }
                     await amiyaEmployeeService.UpdateBusinessWechatUserIdAndCode(employee.Id, userId, code);
                 }

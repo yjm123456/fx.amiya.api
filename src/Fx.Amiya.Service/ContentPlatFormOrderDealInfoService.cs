@@ -1487,7 +1487,7 @@ namespace Fx.Amiya.Service
         public async Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByDateAsync(DateTime startDate, DateTime endDate, List<int> LiveAnchorIds)
         {
             return await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
-                .Where(o => o.DealDate >= startDate && o.DealDate < endDate && o.IsDeal == true)
+                .Where(o => o.CreateDate >= startDate && o.CreateDate < endDate && o.IsDeal == true)
                 .Where(o => LiveAnchorIds.Count == 0 || LiveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id))
                 .Select(ContentPlatFOrmOrderDealInfo => new ContentPlatFormOrderDealInfoDto
                 {

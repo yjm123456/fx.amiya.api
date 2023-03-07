@@ -3103,12 +3103,12 @@
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerPerformanceDetailsVo.VideoPerformance">
             <summary>
-            照片业绩
+            视频业绩
             </summary>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerPerformanceDetailsVo.PicturePerformance">
             <summary>
-            视频业绩
+            照片业绩
             </summary>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerPerformanceDetailsVo.VideoAndPictureCompare">

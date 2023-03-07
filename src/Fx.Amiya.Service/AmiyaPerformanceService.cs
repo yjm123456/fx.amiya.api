@@ -1415,19 +1415,19 @@ namespace Fx.Amiya.Service
             {
 
                 SelfLiveAnchorPerformance = curSelfLiveAnchorTotalPerformance,
-                SelfLiveAnchorPerformanceTarget = selfLiveAnchortarget.TotalPerformanceTarget,
+                SelfLiveAnchorPerformanceTarget = DecimalExtension.ChangePriceToTenThousand(selfLiveAnchortarget.TotalPerformanceTarget),
                 SelfLiveAnchorPerformanceCompleteRate = CalculateTargetComplete(curSelfLiveAnchorTotalPerformance, selfLiveAnchortarget.TotalPerformanceTarget),
                 SelfLiveAnchorPerformanceYearToYear = CalculateYearOnYear(curSelfLiveAnchorTotalPerformance, selfLiveAnchorTotalPerformanceYearOnYear),
                 SelfLiveAnchorPerformanceChainRatio = CalculateChainratio(curSelfLiveAnchorTotalPerformance, selfLiveAnchorTotalPerformanceChainRatio),
 
                 OtherLiveAnchorPerformance = curOtherLiveAnchorTotalPerformance,
-                OtherLiveAnchorPerformanceTarget = otherLiveAnchortarget.TotalPerformanceTarget,
+                OtherLiveAnchorPerformanceTarget = DecimalExtension.ChangePriceToTenThousand(otherLiveAnchortarget.TotalPerformanceTarget),
                 OtherLiveAnchorPerformanceCompleteRate = CalculateTargetComplete(curOtherLiveAnchorTotalPerformance, otherLiveAnchortarget.TotalPerformanceTarget),
                 OtherLiveAnchorPerformanceYearToYear = CalculateYearOnYear(curOtherLiveAnchorTotalPerformance, otherLiveAnchorTotalPerformanceYearOnYear),
                 OtherLiveAnchorPerformanceChainRatio = CalculateChainratio(curOtherLiveAnchorTotalPerformance, otherLiveAnchorTotalPerformanceChainRatio),
 
                 CommercePerformance = target.CommerceCompletePerformance,
-                CommercePerformanceTarget = target.CommercePerformanceTarget,
+                CommercePerformanceTarget = DecimalExtension.ChangePriceToTenThousand(target.CommercePerformanceTarget),
                 CommercePerformanceCompleteRate = CalculateTargetComplete(target.CommerceCompletePerformance, target.CommercePerformanceTarget),
                 CommercePerformanceYearToYear = CalculateYearOnYear(target.CommerceCompletePerformance, commercePerformanceYearOnYear.CommerceCompletePerformance),
                 CommercePerformanceChainRatio = CalculateChainratio(target.CommerceCompletePerformance, commercePerformanceChainRatio.CommerceCompletePerformance),
@@ -1569,69 +1569,69 @@ namespace Fx.Amiya.Service
             //数据组合
             MonthPerformanceBWDto monthPerformanceRatioDto = new MonthPerformanceBWDto
             {
-                CueerntMonthTotalPerformance = curTotalPerformance,
+                CueerntMonthTotalPerformance = DecimalExtension.ChangePriceToTenThousand(curTotalPerformance),
                 TotalPerformanceYearOnYear = CalculateYearOnYear(curTotalPerformance, totalPerformanceYearOnYear),
                 TotalPerformanceChainratio = CalculateChainratio(curTotalPerformance, totalPerformanceChainRatio),
-                TotalPerformanceTarget = target.TotalPerformanceTarget,
+                TotalPerformanceTarget = DecimalExtension.ChangePriceToTenThousand(target.TotalPerformanceTarget),
                 TotalPerformanceTargetComplete = CalculateTargetComplete(curTotalPerformance, target.TotalPerformanceTarget),
 
-                CurrentMonthNewCustomerPerformance = curNewCustomer,
+                CurrentMonthNewCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(curNewCustomer),
                 NewCustomerPerformanceRatio = CalculateTargetComplete(curNewCustomer, curTotalPerformance),
                 NewCustomerPerformanceYearOnYear = CalculateYearOnYear(curNewCustomer, newPerformanceYearOnYear),
                 NewCustomerPerformanceChainRatio = CalculateChainratio(curNewCustomer, newPerformanceChainRatio),
-                NewCustomerPerformanceTarget = target.NewCustomerPerformanceTarget,
+                NewCustomerPerformanceTarget = DecimalExtension.ChangePriceToTenThousand(target.NewCustomerPerformanceTarget),
                 NewCustomerPerformanceTargetComplete = CalculateTargetComplete(curNewCustomer, target.NewCustomerPerformanceTarget),
 
-                CurrentMonthOldCustomerPerformance = curOldCustomer,
+                CurrentMonthOldCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(curOldCustomer),
                 OldCustomerPerformanceRatio = CalculateTargetComplete(curOldCustomer, curTotalPerformance),
                 OldCustomerPerformanceYearOnYear = CalculateYearOnYear(curOldCustomer, oldPerformanceYearOnYear),
                 OldCustomerPerformanceChainRatio = CalculateChainratio(curOldCustomer, oldPerformanceRatio),
-                OldCustomerTarget = target.OldCustomerPerformanceTarget,
+                OldCustomerTarget = DecimalExtension.ChangePriceToTenThousand(target.OldCustomerPerformanceTarget),
                 OldCustomerTargetComplete = CalculateTargetComplete(curOldCustomer, target.OldCustomerPerformanceTarget),
 
 
-                PictureConsultationPerformance = curPicturePerformance,
+                PictureConsultationPerformance = DecimalExtension.ChangePriceToTenThousand(curPicturePerformance),
                 PictureConsultationPerformanceRatio = CalculateTargetComplete(curPicturePerformance, curTotalPerformance),
                 PictureConsultationPerformanceYearOnYear = CalculateYearOnYear(curPicturePerformance, picturePerformanceYearOnYear),
                 PictureConsultationPerformanceChainRatio = CalculateChainratio(curPicturePerformance, picturePerformanceRatio),
 
-                VideoConsultationPerformance = curVideoPerformance,
+                VideoConsultationPerformance = DecimalExtension.ChangePriceToTenThousand(curVideoPerformance),
                 VideoConsultationPerformanceRatio = CalculateTargetComplete(curVideoPerformance, curTotalPerformance),
                 VideoConsultationPerformanceYearOnYear = CalculateYearOnYear(curVideoPerformance, videoPerformanceYearOnYear),
                 VideoConsultationPerformanceChainRatio = CalculateChainratio(curVideoPerformance, videoPerformanceRatio),
 
 
-                AcompanyingPerformance = curLiveAnchorAcompanyingPerformance,
+                AcompanyingPerformance = DecimalExtension.ChangePriceToTenThousand(curLiveAnchorAcompanyingPerformance),
                 AcompanyingPerformanceRatio = CalculateTargetComplete(curLiveAnchorAcompanyingPerformance, curTotalPerformance),
                 AcompanyingPerformanceYearOnYear = CalculateYearOnYear(curLiveAnchorAcompanyingPerformance, liveAnchorAcompanyingPerformanceYearOnYear),
                 AcompanyingPerformanceChainRatio = CalculateChainratio(curLiveAnchorAcompanyingPerformance, liveAnchorAcompanyingPerformanceRatio),
 
 
-                NotAcompanyingPerformance = curNotLiveAnchorAcompanyingPerformance,
+                NotAcompanyingPerformance = DecimalExtension.ChangePriceToTenThousand(curNotLiveAnchorAcompanyingPerformance),
                 NotAcompanyingPerformanceRatio = CalculateTargetComplete(curNotLiveAnchorAcompanyingPerformance, curTotalPerformance),
                 NotAcompanyingPerformanceYearOnYear = CalculateYearOnYear(curNotLiveAnchorAcompanyingPerformance, notLiveAnchorAcompanyingPerformanceYearOnYear),
                 NotAcompanyingPerformanceChainRatio = CalculateChainratio(curNotLiveAnchorAcompanyingPerformance, notLiveAnchorAcompanyingPerformanceRatio),
 
 
-                ZeroPricePerformance = curNotHavePricePerformance,
+                ZeroPricePerformance = DecimalExtension.ChangePriceToTenThousand(curNotHavePricePerformance),
                 ZeroPricePerformanceRatio = CalculateTargetComplete(curNotHavePricePerformance, curTotalPerformance),
                 ZeroPricePerformanceYearOnYear = CalculateYearOnYear(curNotHavePricePerformance, notHavePricePerformanceYearOnYear),
                 ZeroPricePerformanceChainRatio = CalculateChainratio(curNotHavePricePerformance, notHavePricePerformanceRatio),
 
 
-                ExistPricePerformance = curHavingPricePerformance,
+                ExistPricePerformance = DecimalExtension.ChangePriceToTenThousand(curHavingPricePerformance),
                 ExistPricePerformanceRatio = CalculateTargetComplete(curHavingPricePerformance, curTotalPerformance),
                 ExistPricePerformanceYearOnYear = CalculateYearOnYear(curHavingPricePerformance, havingPricePerformanceYearOnYear),
                 ExistPricePerformanceChainRatio = CalculateChainratio(curHavingPricePerformance, havingPricePerformanceRatio),
 
 
-                DuringMonthSendDuringMonthDeal = thisMonthSendAndDealPerformance,
+                DuringMonthSendDuringMonthDeal = DecimalExtension.ChangePriceToTenThousand(thisMonthSendAndDealPerformance),
                 DuringMonthSendDuringMonthDealPerformanceRatio = CalculateTargetComplete(thisMonthSendAndDealPerformance, curTotalPerformance),
                 DuringMonthSendDuringMonthDealYearOnYear = CalculateYearOnYear(thisMonthSendAndDealPerformance, thisMonthSendAndDealPerformanceYearOnYear),
                 DuringMonthSendDuringMonthDealChainRatio = CalculateChainratio(thisMonthSendAndDealPerformance, thisMonthSendAndDealPerformanceChainRatio),
 
 
-                HistorySendDuringMonthDeal = historyMonthSendAndDealPerformance,
+                HistorySendDuringMonthDeal = DecimalExtension.ChangePriceToTenThousand(historyMonthSendAndDealPerformance),
                 HistorySendDuringMonthDealPerformanceRatio = CalculateTargetComplete(historyMonthSendAndDealPerformance, curTotalPerformance),
                 HistorySendDuringMonthDealYearOnYear = CalculateYearOnYear(historyMonthSendAndDealPerformance, historyMonthSendAndDealPerformanceYearOnYear),
                 HistorySendDuringMonthDealChainRatio = CalculateChainratio(historyMonthSendAndDealPerformance, historyMonthSendAndDealPerformanceChainRatio),
@@ -1664,9 +1664,9 @@ namespace Fx.Amiya.Service
                                            {
                                                CustomerServiceId = d.CustomerServiceId,
                                                CustomerServiceName = d.CustomerServiceName,
-                                               NewCustomerPerformance = d.NewCustomerPrice,
-                                               OldCustomerPerformance = d.OldCustomerPrice,
-                                               TotalPerformance = d.TotalServicePrice,
+                                               NewCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(d.NewCustomerPrice),
+                                               OldCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(d.OldCustomerPrice),
+                                               TotalPerformance = DecimalExtension.ChangePriceToTenThousand(d.TotalServicePrice),
                                                VisitNumRatio = d.VisitNumRatio,
                                            };
 
@@ -1685,31 +1685,36 @@ namespace Fx.Amiya.Service
             customerServiceIdList.Add(customerServiceId);
             var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month);
             var dealInfo = await contentPlateFormOrderService.GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(sequentialDate.StartDate, sequentialDate.EndDate, customerServiceIdList);
+            var result  = new DetailCustomerPerformanceBWDto();
             var selectResult = dealInfo.FirstOrDefault();
+            if (selectResult == null)
+            {
+                return result;
+            }
             //数据组合
-            var result = new DetailCustomerPerformanceBWDto()
+            result = new DetailCustomerPerformanceBWDto()
             {
                 CustomerServiceId = selectResult.CustomerServiceId,
                 CustomerServiceName = selectResult.CustomerServiceName,
-                NewCustomerPerformance = selectResult.NewCustomerPrice,
-                OldCustomerPerformance = selectResult.OldCustomerPrice,
-                TotalPerformance = selectResult.TotalServicePrice,
+                NewCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.NewCustomerPrice),
+                OldCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.OldCustomerPrice),
+                TotalPerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.TotalServicePrice),
                 VisitNumRatio = selectResult.VisitNumRatio,
 
-                VideoPerformance = selectResult.VideoPerformance,
-                PicturePerformance = selectResult.PicturePerformance,
+                VideoPerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.VideoPerformance),
+                PicturePerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.PicturePerformance),
                 VideoAndPictureCompare = selectResult.VideoAndPictureCompare,
 
-                ZeroPerformance = selectResult.ZeroPerformance,
-                HavingPricePerformance = selectResult.HavingPricePerformance,
+                ZeroPerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.ZeroPerformance),
+                HavingPricePerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.HavingPricePerformance),
                 ZeroAndHavingPriceCompare = selectResult.ZeroAndHavingPriceCompare,
 
-                AcompanyingPerformance=selectResult.AcompanyingPerformance,
-                NotAcompanyingPerformance=selectResult.NotAcompanyingPerformance,
-                IsAcompanyingCompare=selectResult.IsAcompanyingCompare,
+                AcompanyingPerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.AcompanyingPerformance),
+                NotAcompanyingPerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.NotAcompanyingPerformance),
+                IsAcompanyingCompare = selectResult.IsAcompanyingCompare,
 
-                HistorySendThisMonthDealPerformance = selectResult.HistorySendThisMonthDealPerformance,
-                ThisMonthSendThisMonthDealPerformance = selectResult.ThisMonthSendThisMonthDealPerformance,
+                HistorySendThisMonthDealPerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.HistorySendThisMonthDealPerformance),
+                ThisMonthSendThisMonthDealPerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.ThisMonthSendThisMonthDealPerformance),
                 HistoryAndThisMonthCompare = selectResult.HistoryAndThisMonthCompare
             };
 

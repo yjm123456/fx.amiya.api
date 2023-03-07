@@ -36,11 +36,11 @@ namespace Fx.Amiya.Dto.FinancialBoard
         public decimal OldCustomerPrice { get; set; }
         public decimal OldCustomerServicePrice { get; set; }
         /// <summary>
-        /// 照片业绩
+        /// 视频业绩
         /// </summary>
         public decimal VideoPerformance { get; set; }
         /// <summary>
-        /// 视频业绩
+        /// 照片业绩
         /// </summary>
         public decimal PicturePerformance { get; set; }
 
