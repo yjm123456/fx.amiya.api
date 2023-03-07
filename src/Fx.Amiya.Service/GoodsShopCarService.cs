@@ -51,6 +51,7 @@ namespace Fx.Amiya.Service
                                               Unit = d.GoodsInfo.Unit,
                                               Price = dalGoodsStandardsPrice.GetAll().Where(e => e.Id == d.SelectStandards).SingleOrDefault().Price * d.Num,
                                               InterGrationAccount = dalGoodsStandardsPrice.GetAll().Where(e => e.Id == d.SelectStandards).SingleOrDefault().Price,
+                                              InterGrationPrice= dalGoodsStandardsPrice.GetAll().Where(e => e.Id == d.SelectStandards).SingleOrDefault().IntegralAmount ?? 0m,
                                               ExchangeType = d.GoodsInfo.ExchangeType,
                                               SelectStandards = d.SelectStandards,
                                               StandardsIsValid = dalGoodsStandardsPrice.GetAll().Where(e => e.Id == d.SelectStandards).SingleOrDefault() == null ? false : true,

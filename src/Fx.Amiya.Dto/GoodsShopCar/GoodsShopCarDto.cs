@@ -45,6 +45,10 @@ namespace Fx.Amiya.Dto.GoodsShopCar
         /// 积分
         /// </summary>
         public decimal? InterGrationAccount { get; set; }
+        /// <summary>
+        /// 规格的积分价格
+        /// </summary>
+        public decimal InterGrationPrice { get; set; }
 
         /// <summary>
         /// 交易类型(积分支付展示积分；三方支付展示价格)

@@ -18,12 +18,42 @@ namespace Fx.Amiya.Service
         private readonly IDalCustomerTagInfo dalCustomerTagInfo;
         private readonly IDalTagDetailInfo dalTagDetailInfo;
         private readonly IGoodsCategory goodsCategory;
-        public GoodsInfoService(IDalGoodsInfo dalGoodsInfo, IDalCustomerTagInfo dalCustomerTagInfo, IDalTagDetailInfo dalTagDetailInfo, IGoodsCategory goodsCategory)
+        private readonly IDalGoodsStandardsPrice dalGoodsStandardsPrice;
+        private readonly IDalGoodsConsumptionVoucher dalGoodsConsumptionVoucher;
+        private readonly IGoodsStandardsPriceService goodsStandardsPriceService;
+        private readonly IGoodsConsumptionVoucherService goodsConsumptionVoucherService;
+        public GoodsInfoService(IDalGoodsInfo dalGoodsInfo, IDalCustomerTagInfo dalCustomerTagInfo, IDalTagDetailInfo dalTagDetailInfo, IGoodsCategory goodsCategory, IDalGoodsStandardsPrice dalGoodsStandardsPrice, IDalGoodsConsumptionVoucher dalGoodsConsumptionVoucher, IGoodsStandardsPriceService goodsStandardsPriceService, IGoodsConsumptionVoucherService goodsConsumptionVoucherService)
         {
             this.dalGoodsInfo = dalGoodsInfo;
             this.dalCustomerTagInfo = dalCustomerTagInfo;
             this.dalTagDetailInfo = dalTagDetailInfo;
             this.goodsCategory = goodsCategory;
+            this.dalGoodsStandardsPrice = dalGoodsStandardsPrice;
+            this.dalGoodsConsumptionVoucher = dalGoodsConsumptionVoucher;
+            this.goodsStandardsPriceService = goodsStandardsPriceService;
+            this.goodsConsumptionVoucherService = goodsConsumptionVoucherService;
+        }
+
+        public async Task<List<GoodsOrderInfoDto>> GetGoodListByIdsAsync(List<string> ids)
+        {          
+            var goodsInfoList = dalGoodsInfo.GetAll().Where(e => ids.Contains(e.Id)).Select(e=>new GoodsOrderInfoDto { 
+                Id=e.Id,
+                ExchageType=e.ExchangeType,
+                GoodsName=e.Name,
+                InventoryQuantity=e.InventoryQuantity.Value,
+                ThumailPic=e.ThumbPicUrl,
+            }).ToList();
+            if (ids.Count != goodsInfoList.Count) throw new Exception("订单商品包含无效商品,请检查后重新下单！");
+            var unAvailableGoods = goodsInfoList.Select(e => e.GoodsName).ToList();
+            if (unAvailableGoods.Count > 0) throw new Exception($"商品{string.Join(",",unAvailableGoods)}已下架,请剔除后重新下单！");
+            var standardList =await goodsStandardsPriceService.GetStandardByGoodsIdsAsync(ids);
+            var voucherList =await goodsConsumptionVoucherService.GetGoodsConsumptionVoucherByGoodsIdsAsync(ids);
+            foreach (var goods in goodsInfoList)
+            {
+                goods.StandardList = standardList.FindAll(e=>e.GoodsId==goods.Id);
+                goods.VoucherList = voucherList.FindAll(e=>e.GoodsId==goods.Id);
+            }
+            return goodsInfoList;
         }
 
         public async Task<FxPageInfo<SimpleGoodsInfoDto>> SearchAsync(string keyword, int? categoryId, bool? orderByPrice, bool? orderBySaleCount, int pageNum, int pageSize)

@@ -23,6 +23,7 @@ namespace Fx.Amiya.Dto.AmiyaEmployee
         public string Code { get; set; }
         public bool ReadDataCenter { get; set; }
         public string LiveAnchorBaseId { get; set; }
+        public string LiveAnchorBaseName { get; set; }
         public List<int> LiveAnchorIds { get; set; }
     }
 }

@@ -20,12 +20,12 @@ namespace Fx.Amiya.Service
     public class HuiShouQianPaymentService : IHuiShouQianPaymentService
     {
         private readonly IDalOrderRefund dalOrderRefund;
-        private readonly IOrderService orderService;
+        
 
-        public HuiShouQianPaymentService(IDalOrderRefund dalOrderRefund, IOrderService orderService)
+        public HuiShouQianPaymentService(IDalOrderRefund dalOrderRefund)
         {
             this.dalOrderRefund = dalOrderRefund;
-            this.orderService = orderService;
+            
         }
 
         public bool CheckHSQCommonParams(HuiShouQianCommonInfo huiShouQianCommonInfo, out string errmsg)
@@ -484,8 +484,7 @@ namespace Fx.Amiya.Service
             }
             if (order.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
 
-            //退还积分
-            await orderService.CancelPointAndMoneyOrderWithNoTransactionAsync(order.TradeId, order.CustomerId);
+           
 
             HuiShouQianRefundRequestParam huiShouQianRefundRequestParam = new HuiShouQianRefundRequestParam();
             huiShouQianRefundRequestParam.TransNo = Guid.NewGuid().ToString().Replace("-", "");

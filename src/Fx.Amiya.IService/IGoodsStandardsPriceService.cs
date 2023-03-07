@@ -37,5 +37,11 @@ namespace Fx.Amiya.IService
         /// <param name="standards"></param>
         /// <returns></returns>
         Task<GoodsStandardsPriceDto> GetByGoodsIdAndHospitalId(string goodsId, string standards);
+        /// <summary>
+        /// 根据商品id集合获取商品规格
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        Task<List<PriceDto>> GetStandardByGoodsIdsAsync(List<string> ids);
     }
 }

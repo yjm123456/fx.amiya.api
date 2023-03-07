@@ -1,5 +1,7 @@
 ﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.FinancialBoard;
+using Fx.Amiya.Dto.HuiShouQianPay;
+using Fx.Amiya.Dto.Order;
 using Fx.Amiya.Dto.OrderAppInfo;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.ReconciliationDocuments;
@@ -576,6 +578,13 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task CancelPointAndMoneyOrderWithNoTransactionAsync(string tradeId, string customerId);
 
+        /// <summary>
+        /// 购物车生成订单
+        /// </summary>
+        /// <param name="orderTradeAddDto"></param>
+        /// <returns></returns>
+        Task AddAmiyaCartOrderWithNoTransactionAsync(CartOrderTradeAddDto orderTradeAddDto);
+
         #endregion
 
         #region  【数据中心模块】
@@ -613,5 +622,16 @@ namespace Fx.Amiya.IService
         /// <param name="customerServiceId"></param>
         /// <returns></returns>
         Task<List<CustomerServiceBoardDataDto>> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int? customerServiceId);
+        /// <summary>
+        /// 新的购物车下单接口
+        /// </summary>
+        /// <returns></returns>
+        Task<PayRequestInfoDto> NewCartOrderAsync(CartOrderAddDto cartOrderAddDto);
+        /// <summary>
+        /// 订单绑定客服无事务版
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task UpdateOrderBelongEmpIdWithNoTransactionAsync(UpdateBelongEmpInfoOrderDto input);
     }
 }

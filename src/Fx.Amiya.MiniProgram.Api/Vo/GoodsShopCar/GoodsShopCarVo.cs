@@ -47,6 +47,10 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.GoodsShopCar
         /// 积分
         /// </summary>
         public decimal? InterGrationAccount { get; set; }
+        /// <summary>
+        /// 规格积分价格
+        /// </summary>
+        public decimal InterGrationPrice { get; set; }
 
         /// <summary>
         /// 交易类型(0:积分支付展示积分；1:三方支付展示价格)

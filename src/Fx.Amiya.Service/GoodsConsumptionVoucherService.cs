@@ -1,5 +1,6 @@
 ﻿
 using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto.ConsumptionVoucher;
 using Fx.Amiya.Dto.GoodsConsumptionVoucher;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -41,6 +42,20 @@ namespace Fx.Amiya.Service
             {
                 await dalGoodsConsumptionVoucher.DeleteAsync(item,true);
             }
+        }
+
+        public async Task<List<GoodsConsumVoucherDto>> GetGoodsConsumptionVoucherByGoodsIdsAsync(List<string> ids)
+        {
+            return (from d in dalGoodsConsumptionVoucher.GetAll().Where(e => ids.Contains(e.Id))
+                    from c in dalConsumptionVoucher.GetAll()
+                    where d.ConsumptionVoucherId == c.Id
+                    select new GoodsConsumVoucherDto
+                    {
+                        GoodsId = d.GoodsId,
+                        VoucherId = d.ConsumptionVoucherId,
+                        VoucherType = c.Type,
+                        DeductMoney = c.DeductMoney
+                    }).ToList();          
         }
 
         /// <summary>

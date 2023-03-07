@@ -16,6 +16,13 @@ namespace Fx.Amiya.IService
         /// <param name="keyword"></param>
         /// <param name="categoryId"></param>
         /// <returns></returns>
-        Task<FxPageInfo<SimpleGoodsInfoDto>> SearchAsync(string keyword,int? categoryId,bool? orderByPrice,bool? orderBySaleCount,int pageNum,int pageSize);  
+        Task<FxPageInfo<SimpleGoodsInfoDto>> SearchAsync(string keyword,int? categoryId,bool? orderByPrice,bool? orderBySaleCount,int pageNum,int pageSize);
+
+        /// <summary>
+        /// 根据商品id集合
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        Task<List<GoodsOrderInfoDto>> GetGoodListByIdsAsync(List<string> ids);
     }
 }

@@ -56,6 +56,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                         Unit = d.Unit,
                                         Price = d.Price,
                                         InterGrationAccount = d.InterGrationAccount,
+                                        InterGrationPrice=d.InterGrationPrice,
                                         ExchangeType = d.ExchangeType,
                                         Num = d.Num,
                                         City=d.City,

@@ -13,6 +13,12 @@ namespace Fx.Amiya.Dto.AmiyaEmployee
         public int PositionId { get; set; }
         public string Email { get; set; }
         public bool IsCustomerService { get; set; }
+
+        /// <summary>
+        /// 主播基础信息id
+        /// </summary>
+        public string LiveAnchorBaseId { get; set; }
+
         /// <summary>
         /// 当为客服/运营咨询情况下上传绑定主播ID
         /// </summary>

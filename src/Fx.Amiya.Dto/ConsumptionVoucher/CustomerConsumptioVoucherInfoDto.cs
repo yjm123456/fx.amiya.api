@@ -13,6 +13,10 @@ namespace Fx.Amiya.Dto.ConsumptionVoucher
         /// </summary>
         public string CustomerId { get; set; }
         /// <summary>
+        /// 用户抵用券id
+        /// </summary>
+        public string CustomerConsumptionVoucherId { get; set; }
+        /// <summary>
         /// 抵用券名称
         /// </summary>
         public string ConsumptionVoucherName { get; set; }

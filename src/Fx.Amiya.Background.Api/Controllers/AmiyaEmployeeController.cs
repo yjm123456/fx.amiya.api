@@ -154,6 +154,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                         PositionId = d.PositionId,
                                         PositionName = d.PositionName,
                                         IsCustomerService = d.IsCustomerService,
+                                        LiveAnchorBaseName=d.LiveAnchorBaseName
                                     };
 
                 FxPageInfo<AmiyaEmployeeVo> employeePage = new FxPageInfo<AmiyaEmployeeVo>();
@@ -191,6 +192,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     employeeVo.PositionName = q.PositionName;
                     employeeVo.IsCustomerService = q.IsCustomerService;
                     employeeVo.LiveAnchorIds = q.LiveAnchorIds;
+                    employeeVo.LiveAnchorBaseId = q.LiveAnchorBaseId;
                 }
                 return ResultData<AmiyaEmployeeVo>.Success().AddData("employeeInfo", employeeVo);
             }
@@ -221,7 +223,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.PositionId = updateVo.PositionId;
                 updateDto.IsCustomerService = updateVo.IsCustomerService;
                 updateDto.LiveAnchorIds = updateVo.LiveAnchorIds;
-
+                updateDto.LiveAnchorBaseId = updateVo.LiveAnchorBaseId;
                 await employeeService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

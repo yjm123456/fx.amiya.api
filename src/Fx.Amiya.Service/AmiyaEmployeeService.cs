@@ -24,15 +24,17 @@ namespace Fx.Amiya.Service
         private IDalBindCustomerService dalBindCustomerService;
         private IOrderAppInfoService orderAppInfoService;
         private IEmployeeBindLiveAnchorService employeeBindLiveAnchorService;
+        private IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo;
         public AmiyaEmployeeService(IDalAmiyaEmployee dalAmiyaEmployee,
             IDalBindCustomerService dalBindCustomerService,
             IOrderAppInfoService orderAppInfoService,
-            IEmployeeBindLiveAnchorService employeeBindLiveAnchorService)
+            IEmployeeBindLiveAnchorService employeeBindLiveAnchorService, IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo)
         {
             this.dalAmiyaEmployee = dalAmiyaEmployee;
             this.dalBindCustomerService = dalBindCustomerService;
             this.orderAppInfoService = orderAppInfoService;
             this.employeeBindLiveAnchorService = employeeBindLiveAnchorService;
+            this.dalLiveAnchorBaseInfo = dalLiveAnchorBaseInfo;
         }
 
 
@@ -379,7 +381,9 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var employees = from d in dalAmiyaEmployee.GetAll()
+                var employees = from d in dalAmiyaEmployee.GetAll() 
+                                join c in dalLiveAnchorBaseInfo.GetAll() 
+                                on d.LiveAnchorBaseId equals c.Id
                                 where (keyword == null || d.Name.Contains(keyword))
                                 && (d.Valid == valid)
                                 && (positionId == 0 || d.AmiyaPositionId == positionId)
@@ -393,7 +397,8 @@ namespace Fx.Amiya.Service
                                     Valid = d.Valid,
                                     PositionId = d.AmiyaPositionId,
                                     PositionName = d.AmiyaPositionInfo.Name,
-                                    IsCustomerService = d.IsCustomerService
+                                    IsCustomerService = d.IsCustomerService,
+                                    LiveAnchorBaseName=c.LiveAnchorName
                                 };
                 FxPageInfo<AmiyaEmployeeDto> employeePageInfo = new FxPageInfo<AmiyaEmployeeDto>();
                 employeePageInfo.TotalCount = await employees.CountAsync();
@@ -456,18 +461,21 @@ namespace Fx.Amiya.Service
 
                 var employee = await dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
                 if (employee == null)
-                    throw new Exception("员工编号错误");
+                    throw new Exception("员工编号错误！");
 
                 var count = await dalAmiyaEmployee.GetAll().CountAsync(e => e.UserName == updateDto.UserName && e.Id != updateDto.Id);
                 if (count > 0)
-                    throw new Exception("用户名已被占用，请重新输入");
+                    throw new Exception("用户名已被占用，请重新输入！");
 
+                if (updateDto.IsCustomerService && string.IsNullOrEmpty(updateDto.LiveAnchorBaseId))
+                    throw new Exception("请为该客服绑定基础基础主播！");
                 employee.Name = updateDto.Name;
                 employee.UserName = updateDto.UserName;
                 employee.Valid = updateDto.Valid;
                 employee.Email = updateDto.Email;
                 employee.AmiyaPositionId = updateDto.PositionId;
                 employee.IsCustomerService = updateDto.IsCustomerService;
+                employee.LiveAnchorBaseId = updateDto.LiveAnchorBaseId;
                 await dalAmiyaEmployee.UpdateAsync(employee, true);
 
 

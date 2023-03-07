@@ -122,7 +122,7 @@ namespace Fx.Amiya.Service
                 liveAnchorBoardDataList.AddRange(customerHospitalConsumeData);    
             var dataList = liveAnchorBoardDataList.GroupBy(e => e.CustomerServiceName).Select(e => new CustomerServiceBoardDataDto
             {
-                CustomerServiceName = e.Key,
+                CustomerServiceName = _dalAmiyaEmployee.GetAll().FirstOrDefault(x => x.Id == Convert.ToInt32(e.Key)).Name??"未知",
                 DealPrice = e.Sum(item => item.DealPrice),
                 TotalServicePrice = e.Sum(item => item.TotalServicePrice),
                 NewCustomerPrice = e.Sum(item => item.NewCustomerPrice),

@@ -20,6 +20,7 @@ using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.BindCustomerService;
 using Fx.Amiya.Dto.ConsumptionVoucher;
 using Fx.Amiya.Dto.HuiShouQianPay;
+using Fx.Amiya.Dto.Order;
 using Fx.Amiya.Dto.OrderAppInfo;
 using Fx.Amiya.Dto.OrderRefund;
 using Fx.Amiya.Dto.TmallOrder;
@@ -657,6 +658,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     addBindCustomerServiceDto.OrderIdList = orderIdList;
                     //添加客服绑定关系
                     await _bindCustomerService.AddAsync(addBindCustomerServiceDto, 1);
+                    bindCustomerId = 188;
                 }
                 amiyaOrder.BelongEmpId = bindCustomerId;
                 amiyaOrderList.Add(amiyaOrder);
@@ -816,8 +818,42 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     #endregion
                 }
             }
-
             return ResultData<OrderAddResultVo>.Success().AddData("orderAddResult", orderAddResult);
+        }
+
+        /// <summary>
+        /// 新的购物车下单接口 CartOrderAddVo cartOrder
+        /// </summary>
+        /// <param name="cartOrder"></param>
+        /// <returns></returns>
+        [HttpPost("newCartOrder")]
+        public async Task<ResultData<PayResultVo>> NewCartOrderAsync(CartOrderAddVo add) {
+            var token = tokenReader.GetToken();
+            var sessionInfo = sessionStorage.GetSession(token);
+            string customerId = sessionInfo.FxCustomerId;
+            var customerInfo = await customerService.GetByIdAsync(customerId);
+            string phone = await customerService.GetPhoneByCustomerIdAsync(customerId);
+            var miniUserInfo = await _wxMiniUserRepository.GetByUserIdAsync(customerInfo.UserId);
+            string OpenId = miniUserInfo.OpenId;
+            CartOrderAddDto cartOrderAdd = new CartOrderAddDto();
+            cartOrderAdd.CustomerId = customerId;
+            cartOrderAdd.OpenId = OpenId;
+            cartOrderAdd.AddressId = add.AddressId;
+            cartOrderAdd.Remark = add.Remark;
+            cartOrderAdd.VoucherId = add.VoucherId;
+            cartOrderAdd.OrderItemList = add.OrderItemList.Select(e => new Fx.Amiya.Dto.Order.OrderItem {
+                GoodsId=e.GoodsId,
+                Quantity=e.Quantity,
+                StandardId=e.StandardId
+            }).ToList();
+            var payResult= await orderService.NewCartOrderAsync(cartOrderAdd);
+            PayResultVo payRequestInfo = new PayResultVo();
+            payRequestInfo.appId = payResult.appId;
+            payRequestInfo.package = payResult.package;
+            payRequestInfo.timeStamp = payResult.timeStamp;
+            payRequestInfo.nonceStr = payResult.nonceStr;
+            payRequestInfo.paySign = payResult.paySign;
+            return ResultData<PayResultVo>.Success().AddData("payInfo", payRequestInfo);
         }
 
         /// <summary>
@@ -1105,6 +1141,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 huiShouQianPayRequestInfo.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
                 huiShouQianPayRequestInfo.Extend = tradeId;
                 var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId);
+
                 if (result.Success == false) throw new Exception("下单失败,请重新下单");
                 //交易信息添加支付交易订单号
                 await orderService.TradeAddTransNoAsync(tradeId, huiShouQianPayRequestInfo.TransNo);
@@ -1164,7 +1201,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
                 var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(tradeId);
 
-
+                decimal integrationBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(customerId);
+                if (orderTrade.TotalIntegration > integrationBalance)
+                    throw new Exception("积分余额不足！");
                 List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
                 foreach (var item in orderTrade.OrderInfoList)
                 {
@@ -1210,11 +1249,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 foreach (var item in orderTrade.OrderInfoList)
                 {
                     if (item.ExchangeType == (byte)ExchangeType.Integration && item.IntegrationQuantity > 0)
-                    {
-                        //积分余额
-                        decimal integrationBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(customerId);
-                        if (orderTrade.TotalIntegration > integrationBalance)
-                            throw new Exception("积分余额不足");
+                    {                                           
                         UseIntegrationDto useIntegrationDto = new UseIntegrationDto();
                         useIntegrationDto.CustomerId = customerId;
                         useIntegrationDto.OrderId = item.Id;

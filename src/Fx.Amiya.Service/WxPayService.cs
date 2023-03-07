@@ -21,10 +21,12 @@ namespace Fx.Amiya.Service
     {
         private IDalOrderRefund dalOrderRefund;
         private readonly IHuiShouQianPaymentService huiShouQianPaymentService;
-        public WxPayService(IDalOrderRefund dalOrderRefund, IHuiShouQianPaymentService huiShouQianPaymentService)
+        private readonly IOrderService orderService;
+        public WxPayService(IDalOrderRefund dalOrderRefund, IHuiShouQianPaymentService huiShouQianPaymentService, IOrderService orderService)
         {
             this.dalOrderRefund = dalOrderRefund;
             this.huiShouQianPaymentService = huiShouQianPaymentService;
+            this.orderService = orderService;
         }
 
         /// <summary>
@@ -41,7 +43,10 @@ namespace Fx.Amiya.Service
               return  await huiShouQianPaymentService.CreateHuiShouQianRefundOrde(refundOrderId);
             }
             if (refundOrder.ExchangeType==(int)ExchangeType.PointAndMoney) {
-                return await huiShouQianPaymentService.CreateHuiShouQianAndPointRefundOrder(refundOrderId);
+                var refunResult= await huiShouQianPaymentService.CreateHuiShouQianAndPointRefundOrder(refundOrderId);
+                //退还积分
+                await orderService.CancelPointAndMoneyOrderWithNoTransactionAsync(refundOrder.TradeId, refundOrder.CustomerId);
+                return refunResult;
             }
 
             if (refundOrder == null) { throw new Exception("退款编号错误"); }

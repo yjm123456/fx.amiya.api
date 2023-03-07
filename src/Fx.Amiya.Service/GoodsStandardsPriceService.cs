@@ -97,5 +97,16 @@ namespace Fx.Amiya.Service
             var result = await hospitalCustomerInfo.FirstOrDefaultAsync();
             return result;
         }
+
+        public async Task<List<PriceDto>> GetStandardByGoodsIdsAsync(List<string> ids)
+        {
+             return await dalGoodsStandardsPrice.GetAll().Where(e => ids.Contains(e.GoodsId)).Select(e => new PriceDto {
+                Id=e.Id,
+                GoodsId=e.GoodsId,
+                Price=e.Price,
+                IntegralAmount=e.IntegralAmount,
+                StandardName=e.Standards,
+            }).ToListAsync();
+        }
     }
 }
