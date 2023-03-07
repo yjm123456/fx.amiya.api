@@ -134,7 +134,7 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         /// <summary>
         /// 商品标签
         /// </summary>
-        public List<TagVo> GoodsTags { get; set; }
+        public List<string> GoodsTags { get; set; }
 
         /// <summary>
         /// 商品html详情

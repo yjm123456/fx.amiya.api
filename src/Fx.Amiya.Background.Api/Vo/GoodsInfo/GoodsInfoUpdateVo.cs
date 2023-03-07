@@ -138,7 +138,7 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         /// <summary>
         /// 标签
         /// </summary>
-        public List<UpdateGoodTagVo> UpdateGoodTag { get; set; }
+        public List<string> UpdateGoodTag { get; set; }
         
         /// <summary>
         /// 商品详情编号

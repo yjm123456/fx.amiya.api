@@ -1333,6 +1333,7 @@ namespace Fx.Amiya.Service
             try
             {
                 OrderTrade orderTrade = new OrderTrade();
+                orderTrade.TradeId = orderTradeAddDto.Id;
                 orderTrade.CustomerId = orderTradeAddDto.CustomerId;
                 orderTrade.CreateDate = orderTradeAddDto.CreateDate;
                 if (orderTradeAddDto.OrderInfoAddList.Count(e => e.OrderType == (byte)OrderType.MaterialOrder) > 0)
@@ -4694,7 +4695,7 @@ namespace Fx.Amiya.Service
                 unitOfWork.BeginTransaction();
                 var orderTrade = dalOrderTrade.GetAll().Where(e => e.TradeId == tradeId).Include(e => e.OrderInfoList).SingleOrDefault();
                 if (orderTrade == null) throw new Exception("交易编号错误");
-                if (orderTrade.OrderInfoList.First().ExchangeType != (byte)ExchangeType.PointAndMoney) throw new Exception("该订单不属于积分加钱购订单");
+                //if (orderTrade.OrderInfoList.First().ExchangeType != (byte)ExchangeType.PointAndMoney) throw new Exception("该订单不属于积分加钱购订单");
                 if (orderTrade.StatusCode != "WAIT_BUYER_PAY") throw new Exception("订单状态已改变不能取消");
                 var existRecord = await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAndCustomerIdAsync(orderTrade.TradeId, orderTrade.CustomerId);
                 //如果已存在该积分的记录则直接返回
@@ -4702,8 +4703,10 @@ namespace Fx.Amiya.Service
                 {
                     return;
                 }
-                var integrationRecord = await CreateIntegrationRecordAsync(customerId, orderTrade.TotalIntegration.Value, orderTrade.OrderInfoList.First().Id);
-                if (integrationRecord != null) await integrationAccountService.AddByConsumptionAsync(integrationRecord);
+                if (orderTrade.TotalIntegration > 0&&orderTrade.OrderInfoList.FirstOrDefault()?.ExchangeType!=0) {
+                    var integrationRecord = await CreateIntegrationRecordAsync(customerId, orderTrade.TotalIntegration.Value, orderTrade.OrderInfoList.First().Id);
+                    if (integrationRecord != null) await integrationAccountService.AddByConsumptionAsync(integrationRecord);
+                }
                 var orderList = dalOrderInfo.GetAll().Where(e => e.TradeId == tradeId).ToList();
                 foreach (var item in orderList)
                 {
@@ -4741,6 +4744,7 @@ namespace Fx.Amiya.Service
                 var orderTrade = dalOrderTrade.GetAll().Where(e => e.TradeId == tradeId).Include(e => e.OrderInfoList).SingleOrDefault();
                 if (orderTrade == null) throw new Exception("交易编号错误");
                 if (orderTrade.OrderInfoList.First().ExchangeType != (byte)ExchangeType.PointAndMoney) throw new Exception("该订单不属于积分加钱购订单");
+                if (orderTrade.TotalIntegration <= 0) return;
                 var existRecord = await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAndCustomerIdAsync(orderTrade.TradeId, orderTrade.CustomerId);
                 //如果已存在该积分的记录则直接返回
                 if (existRecord)
@@ -4965,6 +4969,17 @@ namespace Fx.Amiya.Service
             if (moneyOrintegralMoneyOrderList.Count()>0) {
                 payRequestInfoDto = await AddMoneyOrPointAndMoneyTradeAsync(moneyOrintegralMoneyOrderList, voucher, cartOrderAddDto.CustomerId, cartOrderAddDto.AddressId.Value, cartOrderAddDto.Remark, cartOrderAddDto.OpenId);
             }
+
+            //更改抵用券状态
+            if (!string.IsNullOrEmpty(cartOrderAddDto.VoucherId)) {
+                UpdateCustomerConsumptionVoucherDto update = new UpdateCustomerConsumptionVoucherDto
+                {
+                    CustomerVoucherId = cartOrderAddDto.VoucherId,
+                    IsUsed = true,
+                    UseDate = DateTime.Now
+                };
+                await customerConsumptionVoucherService.UpdateCustomerConsumptionVoucherUseStatusAsync(update);
+            }
             return payRequestInfoDto;
         }
 
@@ -5024,7 +5039,7 @@ namespace Fx.Amiya.Service
                 cartCreateOrderDto.Quantity = orderItem.Quantity;
                 cartCreateOrderDto.Description = "";
                 cartCreateOrderDto.Standard = orderStandard.StandardName;
-                cartCreateOrderDto.ExchangeType = (byte)goodsInfo.ExchageType;
+                cartCreateOrderDto.ExchangeType = (byte)(goodsInfo.ExchageType == (int)ExchangeType.ThirdPartyPayment? (byte)ExchangeType.HuiShouQian: goodsInfo.ExchageType) ;
                 if (bindCustomerId != 0)
                 {
                     cartCreateOrderDto.BelongEmpId = bindCustomerId;
@@ -5118,7 +5133,7 @@ namespace Fx.Amiya.Service
             {
                 unitOfWork.BeginTransaction();
                 //计算全局抵用券折扣价格
-                if (!voucher.IsSpecifyProduct && voucher != null)
+                if (voucher != null&&!voucher.IsSpecifyProduct)
                 {
                     if (voucher.IsNeedMinPrice)
                     {
@@ -5175,7 +5190,7 @@ namespace Fx.Amiya.Service
                 //扣除库存
                 foreach (var item in moneyOrPointOrderList)
                 {
-                    await goodsInfoService.ReductionGoodsInventoryQuantityAsync(item.GoodsId, item.Quantity.Value);
+                    await _goodsInfoService.ReductionGoodsInventoryQuantityAsync(item.GoodsId, item.Quantity.Value);
                 }
 
                 //如果包含积分加钱购订单扣除积分(放在最后解决积分回滚问题)
@@ -5191,7 +5206,7 @@ namespace Fx.Amiya.Service
                 unitOfWork.Commit();
                 return payRequestInfo;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 unitOfWork.RollBack();
                 throw new Exception("商城商品下单失败！");

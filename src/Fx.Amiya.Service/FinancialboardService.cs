@@ -122,7 +122,7 @@ namespace Fx.Amiya.Service
                 liveAnchorBoardDataList.AddRange(customerHospitalConsumeData);    
             var dataList = liveAnchorBoardDataList.GroupBy(e => e.CustomerServiceName).Select(e => new CustomerServiceBoardDataDto
             {
-                CustomerServiceName = _dalAmiyaEmployee.GetAll().FirstOrDefault(x => x.Id == Convert.ToInt32(e.Key)).Name??"未知",
+                CustomerServiceName = _dalAmiyaEmployee.GetAll().FirstOrDefault(x => x.Id == Convert.ToInt32(e.Key))?.Name??"未知(未归属客服)",
                 DealPrice = e.Sum(item => item.DealPrice),
                 TotalServicePrice = e.Sum(item => item.TotalServicePrice),
                 NewCustomerPrice = e.Sum(item => item.NewCustomerPrice),
@@ -130,10 +130,10 @@ namespace Fx.Amiya.Service
                 OldCustomerPrice = e.Sum(item => item.OldCustomerPrice),
                 OldCustomerServicePrice = e.Sum(item => item.OldCustomerServicePrice),
             }).ToList();
-            foreach (var item in dataList)
-            {
-                item.CustomerServiceName= _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(item.CustomerServiceName)).FirstOrDefault()?.Name??"未知";
-            }
+            //foreach (var item in dataList)
+            //{
+            //    item.CustomerServiceName= _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(item.CustomerServiceName)).FirstOrDefault()?.Name??"未知";
+            //}
             return dataList;
         }
 

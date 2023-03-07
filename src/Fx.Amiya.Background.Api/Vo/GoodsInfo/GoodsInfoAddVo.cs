@@ -150,6 +150,6 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         /// <summary>
         /// 商品标签
         /// </summary>
-        public List<GoodsTagVo> AddGoodsTag { get; set; }
+        public List<string> AddGoodsTag { get; set; }
     }
 }

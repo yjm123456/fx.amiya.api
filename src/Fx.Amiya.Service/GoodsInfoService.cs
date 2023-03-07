@@ -42,9 +42,10 @@ namespace Fx.Amiya.Service
                 GoodsName=e.Name,
                 InventoryQuantity=e.InventoryQuantity.Value,
                 ThumailPic=e.ThumbPicUrl,
+                Valid=e.Valid
             }).ToList();
             if (ids.Count != goodsInfoList.Count) throw new Exception("订单商品包含无效商品,请检查后重新下单！");
-            var unAvailableGoods = goodsInfoList.Select(e => e.GoodsName).ToList();
+            var unAvailableGoods = goodsInfoList.Where(e=>e.Valid==false).Select(e => e.GoodsName).ToList();
             if (unAvailableGoods.Count > 0) throw new Exception($"商品{string.Join(",",unAvailableGoods)}已下架,请剔除后重新下单！");
             var standardList =await goodsStandardsPriceService.GetStandardByGoodsIdsAsync(ids);
             var voucherList =await goodsConsumptionVoucherService.GetGoodsConsumptionVoucherByGoodsIdsAsync(ids);

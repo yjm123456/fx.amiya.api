@@ -38,11 +38,8 @@ namespace Fx.Amiya.Service
         {
             var refundOrder = dalOrderRefund.GetAll().Where(e => e.Id == refundOrderId).SingleOrDefault();
 
-            //慧收钱退款
-            if (refundOrder.ExchangeType== (int)ExchangeType.HuiShouQian) {
-              return  await huiShouQianPaymentService.CreateHuiShouQianRefundOrde(refundOrderId);
-            }
-            if (refundOrder.ExchangeType==(int)ExchangeType.PointAndMoney) {
+            
+            if (refundOrder.ExchangeType==(int)ExchangeType.PointAndMoney|| refundOrder.ExchangeType == (int)ExchangeType.HuiShouQian) {
                 var refunResult= await huiShouQianPaymentService.CreateHuiShouQianAndPointRefundOrder(refundOrderId);
                 //退还积分
                 await orderService.CancelPointAndMoneyOrderWithNoTransactionAsync(refundOrder.TradeId, refundOrder.CustomerId);
@@ -58,7 +55,6 @@ namespace Fx.Amiya.Service
             if (refundOrder.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
             WxRefundPackageInfo packageInfo = new WxRefundPackageInfo();
             packageInfo.NotifyUrl = "https://app.ameiyes.com/amiyamini";
-            //packageInfo.NotifyUrl = "http://ymjxui.gnway.cc";
             packageInfo.OutTradeNo = refundOrder.TradeId;
             packageInfo.OutRefundNo = refundOrder.Id;
             packageInfo.TotalFee = (int)(refundOrder.ActualPayAmount * 100m);

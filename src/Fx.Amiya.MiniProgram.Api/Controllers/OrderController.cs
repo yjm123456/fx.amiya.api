@@ -853,6 +853,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             payRequestInfo.timeStamp = payResult.timeStamp;
             payRequestInfo.nonceStr = payResult.nonceStr;
             payRequestInfo.paySign = payResult.paySign;
+            
             return ResultData<PayResultVo>.Success().AddData("payInfo", payRequestInfo);
         }
 
@@ -878,7 +879,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
             foreach (var item in orderTrade.OrderInfoList)
             {
-                if (item.ExchangeType != (int)ExchangeType.HuiShouQian)
+                if (item.ExchangeType != (int)ExchangeType.HuiShouQian&&item.ExchangeType != (int)ExchangeType.PointAndMoney)
                 {
                     throw new Exception("该订单不支持重新支付,请取消订单重新下单并支付!");
                 }

@@ -308,7 +308,9 @@ namespace Fx.Amiya.Service
                                                    && (!isAccompanying.HasValue || d.IsAcompanying == isAccompanying.Value)
                                                    && (!CheckState.HasValue || d.CheckState == CheckState.Value)
                                                    && (!isReturnBakcPrice.HasValue || d.IsReturnBackPrice == isReturnBakcPrice.Value)
-                                                   && (!customerServiceId.HasValue || d.CreateBy == customerServiceId)
+                                                   //&& (!customerServiceId.HasValue || d.CreateBy == customerServiceId) 
+                                                   && (!customerServiceId.HasValue || d.ContentPlatFormOrder.BelongEmpId == customerServiceId)
+                                                   && (!customerServiceId.HasValue || d.ContentPlatFormOrder.BelongEmpId == customerServiceId)
                                                    && (!consultationType.HasValue || d.ContentPlatFormOrder.ConsultationType == consultationType)
                                                    && (!minAddOrderPrice.HasValue || d.ContentPlatFormOrder.AddOrderPrice >= minAddOrderPrice)
                                                    && (!maxAddOrderPrice.HasValue || d.ContentPlatFormOrder.AddOrderPrice <= maxAddOrderPrice)
@@ -1873,13 +1875,13 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<CustomerServiceBoardDataDto>> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int? customerServiceId)
         {
-            var dealData =await dalContentPlatFormOrderDealInfo.GetAll()
+            var dealData = await dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == 2)
-                .Where(e=> !customerServiceId.HasValue|| e.ContentPlatFormOrder.BelongEmpId==customerServiceId.Value)
+                .Where(e => !customerServiceId.HasValue || e.ContentPlatFormOrder.BelongEmpId == customerServiceId.Value)
                 .GroupBy(e => e.ContentPlatFormOrder.BelongEmpId)
                 .Select(e => new CustomerServiceBoardDataDto
                 {
-                    CustomerServiceName=Convert.ToString(e.Key),
+                    CustomerServiceName = Convert.ToString(e.Key),
                     DealPrice = e.Sum(item => item.CheckPrice) ?? 0m,
                     TotalServicePrice = e.Sum(item => item.SettlePrice) ?? 0m,
                     NewCustomerPrice = e.Sum(item => item.IsOldCustomer == false ? item.CheckPrice ?? 0m : 0m),
@@ -1928,12 +1930,12 @@ namespace Fx.Amiya.Service
         /// <param name="endDate"></param>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<FinancialHospitalDealPriceBoardDto>> GetHospitalDealPriceDataAsync(DateTime? startDate, DateTime? endDate, int? hospitalId,int pageNum,int pageSize)
+        public async Task<FxPageInfo<FinancialHospitalDealPriceBoardDto>> GetHospitalDealPriceDataAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int pageNum, int pageSize)
         {
             startDate = startDate.HasValue ? startDate : DateTime.Now.Date;
             endDate = endDate.HasValue ? endDate : DateTime.Now.Date.AddDays(1).Date;
             var dealInfo = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == (int)CheckType.CheckedSuccess);
-            if (hospitalId.HasValue)
+            if (hospitalId.HasValue && hospitalId != -1)
             {
                 dealInfo = dealInfo.Where(e => e.LastDealHospitalId == hospitalId);
             }
@@ -1948,7 +1950,7 @@ namespace Fx.Amiya.Service
             });
             FxPageInfo<FinancialHospitalDealPriceBoardDto> fxPageInfo = new FxPageInfo<FinancialHospitalDealPriceBoardDto>();
             fxPageInfo.TotalCount = dealInfoResult.Count();
-            fxPageInfo.List = dealInfoResult.Skip((pageNum - 1)*pageSize).Take(pageSize).ToList();
+            fxPageInfo.List = dealInfoResult.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
             foreach (var item in fxPageInfo.List)
             {
                 var hospitalInfo = await _hospitalInfoService.GetByIdAsync(Convert.ToInt32(item.HospitalName));
@@ -1975,7 +1977,7 @@ namespace Fx.Amiya.Service
             }
             return orderTypeList;
         }
-        
+
         #endregion
     }
 }

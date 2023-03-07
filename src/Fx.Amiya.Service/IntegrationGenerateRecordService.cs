@@ -47,8 +47,8 @@ namespace Fx.Amiya.Service
 
         public async Task<FxPageInfo<IntegrationgenerationRecordDto>> GetAllIntegrationgenerationRecordAsync(string keyword,DateTime? startDate,DateTime? endDate, int pageNum, int pageSize)
         {
-            startDate = startDate.HasValue ? startDate : DateTime.Now.Date;
-            endDate = endDate.HasValue ? endDate : DateTime.Now.AddDays(1).Date;
+            startDate = startDate.HasValue ? startDate.Value.Date : DateTime.Now.Date;
+            endDate = endDate.HasValue ? endDate.Value.AddDays(1).Date : DateTime.Now.AddDays(1).Date;
             var record = from d in dalIntegrationGenerateRecord.GetAll()
                          join c in dalCustomerInfo.GetAll()
                          on d.CustomerId equals c.Id
@@ -66,7 +66,6 @@ namespace Fx.Amiya.Service
                              ConsumptionAmount = d.AmountOfConsumption,
                              Percent = d.Percents,
                              StockQuantity = d.StockQuantity,
-                             AccountBalance = d.AccountBalance,
                              HandleBy = d.HandleBy.ToString()
                          };
             FxPageInfo<IntegrationgenerationRecordDto> fxPageInfo = new FxPageInfo<IntegrationgenerationRecordDto>();
@@ -75,6 +74,7 @@ namespace Fx.Amiya.Service
             foreach (var item in fxPageInfo.List)
             {
                 item.HandleBy = string.IsNullOrEmpty(item.HandleBy) ? "未知" : dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(item.HandleBy)).FirstOrDefault()?.Name;
+                item.AccountBalance =await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(item.CustomerId);
             }
             return fxPageInfo;
         }

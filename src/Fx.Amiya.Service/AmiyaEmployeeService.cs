@@ -382,8 +382,6 @@ namespace Fx.Amiya.Service
             try
             {
                 var employees = from d in dalAmiyaEmployee.GetAll() 
-                                join c in dalLiveAnchorBaseInfo.GetAll() 
-                                on d.LiveAnchorBaseId equals c.Id
                                 where (keyword == null || d.Name.Contains(keyword))
                                 && (d.Valid == valid)
                                 && (positionId == 0 || d.AmiyaPositionId == positionId)
@@ -398,11 +396,15 @@ namespace Fx.Amiya.Service
                                     PositionId = d.AmiyaPositionId,
                                     PositionName = d.AmiyaPositionInfo.Name,
                                     IsCustomerService = d.IsCustomerService,
-                                    LiveAnchorBaseName=c.LiveAnchorName
+                                    LiveAnchorBaseId=d.LiveAnchorBaseId
                                 };
                 FxPageInfo<AmiyaEmployeeDto> employeePageInfo = new FxPageInfo<AmiyaEmployeeDto>();
                 employeePageInfo.TotalCount = await employees.CountAsync();
                 employeePageInfo.List = await employees.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+                foreach (var item in employeePageInfo.List)
+                {
+                    item.LiveAnchorBaseName = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == item.LiveAnchorBaseId).FirstOrDefault()?.LiveAnchorName;
+                }
                 return employeePageInfo;
             }
             catch (Exception ex)

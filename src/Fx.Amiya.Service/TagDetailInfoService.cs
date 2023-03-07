@@ -39,7 +39,7 @@ namespace Fx.Amiya.Service
 
         public async Task DeleteGoodsTagAsync(string goodsOrCustomerId)
         {
-            var tagDetail=dalTagDetailInfo.GetAll().Where(e => e.CustomerGoodsId == goodsOrCustomerId);
+            var tagDetail=dalTagDetailInfo.GetAll().Where(e => e.CustomerGoodsId == goodsOrCustomerId).ToList();
             foreach (var item in tagDetail)
             {
                 await dalTagDetailInfo.DeleteAsync(item,true);
