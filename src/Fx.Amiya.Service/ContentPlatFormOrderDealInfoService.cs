@@ -352,7 +352,7 @@ namespace Fx.Amiya.Service
                                                        IsReturnBackPrice = d.IsReturnBackPrice,
                                                        ReturnBackDate = d.ReturnBackDate,
                                                        ReturnBackPrice = d.ReturnBackPrice,
-                                                       CreateBy = d.CreateBy,
+                                                       CreateBy = d.ContentPlatFormOrder.BelongEmpId.HasValue ? d.ContentPlatFormOrder.BelongEmpId.Value : -1,
                                                        BelongLiveAnchor = d.ContentPlatFormOrder.LiveAnchor.Name,
                                                        ReconciliationDocumentsId = d.ReconciliationDocumentsId,
                                                        IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
@@ -389,8 +389,15 @@ namespace Fx.Amiya.Service
                     }
                     else
                     {
-                        var empInfo = await _amiyaEmployeeService.GetByIdAsync(z.CreateBy);
-                        z.CreateByEmpName = empInfo.Name;
+                        if (z.CreateBy != -1)
+                        {
+                            var empInfo = await _amiyaEmployeeService.GetByIdAsync(z.CreateBy);
+                            z.CreateByEmpName = empInfo.Name;
+                        }
+                        else
+                        {
+                            z.CreateByEmpName = "未知";
+                        }
                     }
                 }
                 return ContentPlatFOrmOrderDealInfoPageInfo;
