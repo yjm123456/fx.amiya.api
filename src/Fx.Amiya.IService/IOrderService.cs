@@ -479,6 +479,12 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task UpdateExpressInfoAsync(SendGoodsDto sendGoodsDto);
         /// <summary>
+        /// 根据交易id获取发货物流信息
+        /// </summary>
+        /// <param name="tradeId"></param>
+        /// <returns></returns>
+        Task<OrderSendInfoDto> GetOrderSendInfoAsync(string tradeId);
+        /// <summary>
         /// 获取下单平台列表
         /// </summary>
         /// <returns></returns>

@@ -46,7 +46,7 @@ namespace Fx.Amiya.Service
 
         public async Task<List<GoodsConsumVoucherDto>> GetGoodsConsumptionVoucherByGoodsIdsAsync(List<string> ids)
         {
-            return (from d in dalGoodsConsumptionVoucher.GetAll().Where(e => ids.Contains(e.Id))
+            return (from d in dalGoodsConsumptionVoucher.GetAll().Where(e => ids.Contains(e.GoodsId))
                     from c in dalConsumptionVoucher.GetAll()
                     where d.ConsumptionVoucherId == c.Id
                     select new GoodsConsumVoucherDto

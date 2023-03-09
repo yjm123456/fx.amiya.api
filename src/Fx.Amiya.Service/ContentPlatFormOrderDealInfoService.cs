@@ -37,6 +37,7 @@ namespace Fx.Amiya.Service
         private IDalCompanyBaseInfo dalCompanyBaseInfo;
         private IDalLiveAnchor dalLiveAnchor;
         private IDalContentPlatformOrder dalContentPlatformOrder;
+        
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
             ICompanyBaseInfoService companyBaseInfoService,
@@ -1854,6 +1855,8 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<CustomerServiceBoardDataDto> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int customerServiceId)
         {
+            startDate = startDate == null ? DateTime.Now.Date : startDate.Value.Date;
+            endDate = endDate == null ? DateTime.Now.AddDays(1).Date : endDate.Value.AddDays(1).Date;
             var dealData = dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CreateBy == customerServiceId && e.CheckState == 2)
                 .GroupBy(e => e.CreateBy)
@@ -1882,6 +1885,8 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<CustomerServiceBoardDataDto>> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int? customerServiceId)
         {
+            startDate = startDate == null ? DateTime.Now.Date : startDate.Value.Date;
+            endDate = endDate == null ? DateTime.Now.AddDays(1).Date : endDate.Value.AddDays(1).Date;
             var dealData = await dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == 2)
                 .Where(e => !customerServiceId.HasValue || e.ContentPlatFormOrder.BelongEmpId == customerServiceId.Value)
@@ -1906,8 +1911,8 @@ namespace Fx.Amiya.Service
 
         public async Task<List<LiveAnchorBoardDataDto>> GetLiveAnchorPriceByLiveAnchorIdAsync(DateTime? startDate, DateTime? endDate, List<int> liveAnchorIds)
         {
-            startDate = startDate == null ? DateTime.Now.Date : startDate;
-            endDate = startDate == null ? DateTime.Now.AddDays(1).Date : endDate;
+            startDate = startDate == null ? DateTime.Now.Date : startDate.Value.Date;
+            endDate = endDate == null ? DateTime.Now.AddDays(1).Date : endDate.Value.AddDays(1).Date;
             var dataList = dalContentPlatFormOrderDealInfo.GetAll().Include(e => e.ContentPlatFormOrder).Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == 2)
                 .Where(e => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(e.ContentPlatFormOrder.LiveAnchorId.HasValue ? e.ContentPlatFormOrder.LiveAnchorId.Value : 0))
                 .GroupBy(e => new { e.ContentPlatFormOrder.LiveAnchorId, e.BelongCompany })
@@ -1939,8 +1944,8 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<FxPageInfo<FinancialHospitalDealPriceBoardDto>> GetHospitalDealPriceDataAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int pageNum, int pageSize)
         {
-            startDate = startDate.HasValue ? startDate : DateTime.Now.Date;
-            endDate = endDate.HasValue ? endDate : DateTime.Now.Date.AddDays(1).Date;
+            startDate = startDate.HasValue ? startDate.Value.Date : DateTime.Now.Date;
+            endDate = endDate.HasValue ? endDate.Value.AddDays(1).Date : DateTime.Now.Date.AddDays(1).Date;
             var dealInfo = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == (int)CheckType.CheckedSuccess);
             if (hospitalId.HasValue && hospitalId != -1)
             {
@@ -1948,7 +1953,7 @@ namespace Fx.Amiya.Service
             }
             var dealInfoResult = dealInfo.GroupBy(e => e.LastDealHospitalId).Select(e => new FinancialHospitalDealPriceBoardDto
             {
-                HospitalName = e.Key.ToString(),
+                HospitalName = _dalHospitalInfo.GetAll().Where(h => h.Id == e.Key).FirstOrDefault()==null?"未知(订单未归属医院)": _dalHospitalInfo.GetAll().Where(h => h.Id == e.Key).FirstOrDefault().Name,
                 DealPrice = e.Sum(item => item.CheckPrice ?? 0m),
                 TotalServicePrice = e.Sum(item => item.SettlePrice ?? 0m),
                 InformationPrice = e.Sum(item => item.InformationPrice ?? 0m),
@@ -1958,11 +1963,6 @@ namespace Fx.Amiya.Service
             FxPageInfo<FinancialHospitalDealPriceBoardDto> fxPageInfo = new FxPageInfo<FinancialHospitalDealPriceBoardDto>();
             fxPageInfo.TotalCount = dealInfoResult.Count();
             fxPageInfo.List = dealInfoResult.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
-            foreach (var item in fxPageInfo.List)
-            {
-                var hospitalInfo = await _hospitalInfoService.GetByIdAsync(Convert.ToInt32(item.HospitalName));
-                item.HospitalName = hospitalInfo.Name;
-            }
             return fxPageInfo;
 
         }

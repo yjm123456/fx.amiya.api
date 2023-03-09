@@ -31,8 +31,12 @@ namespace Fx.Amiya.Dto.HuiShouQianPay
         public HuiShouQianMemoInfo Memo { get; set; }
         public HuiShouQianPayRequestInfo()
         {
+            //正式环境
             this.ReturnUrl = string.Format("{0}/amiya/wxmini/Notify/hsqPayResult", "https://app.ameiyes.com/amiyamini");
+            //测试环境
             //this.ReturnUrl = string.Format("{0}/amiya/wxmini/Notify/hsqPayResult", "https://www.amyk.cn");
+            //本地环境
+            //this.ReturnUrl = string.Format("{0}/amiya/wxmini/Notify/hsqPayResult", "http://ymjxui.gnway.cc");
             this.PageUrl ="";
         }
     }

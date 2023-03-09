@@ -41,6 +41,7 @@ namespace Fx.Amiya.Service
                                                && (d.CustomerId == customerId)
                                                && (d.Status == 1)
                                                && (d.Num > 0)
+                                               && d.GoodsInfo.ExchangeType!=0
                                           orderby d.CreateDate descending
                                           select new GoodsShopCarDto
                                           {

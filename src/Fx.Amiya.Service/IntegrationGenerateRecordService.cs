@@ -58,7 +58,7 @@ namespace Fx.Amiya.Service
                          {
                              Id = d.Id,
                              CustomerId = d.CustomerId,
-                             Phone = c.Phone,
+                             Phone = ServiceClass.GetIncompletePhone(c.Phone),
                              CreateDate = d.Date,
                              TypeText = ServiceClass.GetIntegrationTypeText(d.Type),
                              Quantity = d.Quantity,

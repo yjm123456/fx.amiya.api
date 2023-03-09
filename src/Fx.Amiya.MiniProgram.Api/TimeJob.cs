@@ -63,21 +63,21 @@ namespace Fx.Amiya.MiniProgram.Api
                 var goodsService = scope.ServiceProvider.GetService<IGoodsInfo>();
                 var customerConsumptionVoucherService = scope.ServiceProvider.GetService<ICustomerConsumptionVoucherService>();
                 var ordres = await orderService.TimeOutOrderAsync();
-                var thridOrder = ordres.Where(e => e.ExchageType != (int)ExchangeType.PointAndMoney).ToList();
+                //var thridOrder = ordres.Where(e => e.ExchageType != (int)ExchangeType.PointAndMoney).ToList();
                 var pointAndMoneyOrder = ordres.Where(e => e.ExchageType == (int)ExchangeType.PointAndMoney).ToList();
                 List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
-                foreach (var item in thridOrder)
-                {
-                    UpdateOrderDto updateOrder = new UpdateOrderDto();
-                    updateOrder.OrderId = item.Id;
-                    updateOrder.StatusCode = OrderStatusCode.TRADE_CLOSED_BY_TAOBAO;
-                    updateOrder.AppType = (byte)AppType.MiniProgram;
-                    updateOrderList.Add(updateOrder);
-                    if (item.GoodsId!= "00000000") {
-                        await goodsService.AddGoodsInventoryQuantityAsync(item.GoodsId, (int)item.Quantity);
-                    }                                      
-                }
-                await orderService.UpdateAsync(updateOrderList);
+                //foreach (var item in thridOrder)
+                //{
+                //    UpdateOrderDto updateOrder = new UpdateOrderDto();
+                //    updateOrder.OrderId = item.Id;
+                //    updateOrder.StatusCode = OrderStatusCode.TRADE_CLOSED_BY_TAOBAO;
+                //    updateOrder.AppType = (byte)AppType.MiniProgram;
+                //    updateOrderList.Add(updateOrder);
+                //    if (item.GoodsId!= "00000000") {
+                //        await goodsService.AddGoodsInventoryQuantityAsync(item.GoodsId, (int)item.Quantity);
+                //    }                                      
+                //}
+                //await orderService.UpdateAsync(updateOrderList);
                 foreach (var item in pointAndMoneyOrder)
                 {
                     await orderService.CancelPointAndMoneyOrderAsync(item.TradeId,item.CustomerId);

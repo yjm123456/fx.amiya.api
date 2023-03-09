@@ -54,7 +54,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 InformationPrice = e.InformationPrice,
                 SystemUsePrice = e.SystemUsePrice,
                 ReturnBackPrice = e.ReturnBackPrice,
-                UnReturnBackPrice = e.TotalServicePrice - e.ReturnBackPrice
+                UnReturnBackPrice = e.TotalServicePrice - e.ReturnBackPrice<0?0m:(e.TotalServicePrice - e.ReturnBackPrice)
             });
             return ResultData<FxPageInfo<FinancialHospitalBoardVo>>.Success().AddData("data", fxPageInfo);
         }
@@ -107,7 +107,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 InformationPrice = e.InformationPrice,
                 SystemUsePrice = e.SystemUsePrice,
                 ReturnBackPrice = e.ReturnBackPrice,
-                UnReturnBackPrice = e.TotalServicePrice - e.ReturnBackPrice
+                UnReturnBackPrice = e.TotalServicePrice - e.ReturnBackPrice<0?0m:(e.TotalServicePrice - e.ReturnBackPrice)
             });
             return ResultData<FxPageInfo<FinancialHospitalBoardVo>>.Success().AddData("data", fxPageInfo);
         }

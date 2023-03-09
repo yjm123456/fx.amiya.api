@@ -1296,8 +1296,8 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<LiveAnchorBoardDataDto>> GetLiveAnchorPriceByLiveAnchorIdAsync(DateTime? startDate, DateTime? endDate, List<int> liveAnchorIds)
         {
-            startDate = startDate == null ? DateTime.Now.Date : startDate;
-            endDate = startDate == null ? DateTime.Now.AddDays(1).Date : endDate;
+            startDate = startDate == null ? DateTime.Now.Date : startDate.Value.Date;
+            endDate = endDate == null ? DateTime.Now.AddDays(1).Date : endDate.Value.AddDays(1).Date;
             var dataList = dalCustomerHospitalConsume.GetAll().Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == 2)
                 .Where(e => liveAnchorIds.Count==0 || liveAnchorIds.Contains(e.LiveAnchorId))
                 .GroupBy(e => new { e.LiveAnchorId, e.BelongCompany })
@@ -1328,6 +1328,8 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<CustomerServiceBoardDataDto>> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int? customerServiceId)
         {
+            startDate = startDate == null ? DateTime.Now.Date : startDate.Value.Date;
+            endDate = endDate == null ? DateTime.Now.AddDays(1).Date : endDate.Value.AddDays(1).Date;
             var dealData =await dalCustomerHospitalConsume.GetAll()
                 .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate  && e.CheckState == 2)
                 .Where(e=>!customerServiceId.HasValue||e.AddedBy==customerServiceId)

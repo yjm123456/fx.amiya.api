@@ -16,6 +16,7 @@ using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.Core.Interfaces.MemberCard;
 using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
+using Fx.Amiya.Dto.Order;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -1464,6 +1465,19 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData.Success();
         }
 
+        /// <summary>
+        /// 获取交易物流信息
+        /// </summary>
+        /// <param name="tradeId"></param>
+        /// <returns></returns>
+        [HttpGet("getSendGoodsInfo/{tradeId}")]
+        public async Task<ResultData<OrderSendInfoVo>> GetSendGoodsInfo(string tradeId) {
+             var record= await orderService.GetOrderSendInfoAsync(tradeId);
+            OrderSendInfoVo orderSendInfoVo = new OrderSendInfoVo();
+            orderSendInfoVo.ExpressId = record.ExpressId;
+            orderSendInfoVo.CourierNumber = record.CourierNumber;
+            return ResultData<OrderSendInfoVo>.Success().AddData("sendInfo", orderSendInfoVo);
+        }
 
         /// <summary>
         /// 获取下单平台列表

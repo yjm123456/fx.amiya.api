@@ -40,9 +40,9 @@ namespace Fx.Amiya.Service
 
             
             if (refundOrder.ExchangeType==(int)ExchangeType.PointAndMoney|| refundOrder.ExchangeType == (int)ExchangeType.HuiShouQian) {
-                var refunResult= await huiShouQianPaymentService.CreateHuiShouQianAndPointRefundOrder(refundOrderId);
                 //退还积分
                 await orderService.CancelPointAndMoneyOrderWithNoTransactionAsync(refundOrder.TradeId, refundOrder.CustomerId);
+                var refunResult= await huiShouQianPaymentService.CreateHuiShouQianAndPointRefundOrder(refundOrderId);
                 return refunResult;
             }
 
