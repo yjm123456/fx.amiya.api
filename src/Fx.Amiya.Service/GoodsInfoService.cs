@@ -73,6 +73,7 @@ namespace Fx.Amiya.Service
                               on d.TagId equals c.Id
                               select new { c.TagName, d.CustomerGoodsId };
             var goodsList = from g in dalGoodsInfo.GetAll()
+                            where g.Valid == true
                             join t in tagInfoList
                             on g.Id equals t.CustomerGoodsId into gt
                             from goods_tag in gt.DefaultIfEmpty()
