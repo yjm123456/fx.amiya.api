@@ -1023,7 +1023,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     {
                         if (voucher.Type == (int)ConsumptionVoucherType.Material)
                         {
-                            amiyaOrder.ActualPayment = amiyaOrder.ActualPayment - voucher.DeductMoney;
+                            amiyaOrder.ActualPayment = (amiyaOrder.ActualPayment - voucher.DeductMoney <= 0)?0.01m : (amiyaOrder.ActualPayment - voucher.DeductMoney);
                             amiyaOrder.DeductMoney = voucher.DeductMoney;
                             amiyaOrder.IsUseCoupon = true;
                             amiyaOrder.CouponId = voucher.Id;
@@ -1031,7 +1031,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         else if (voucher.Type == (int)ConsumptionVoucherType.Discount)
                         {
                             var payCount = amiyaOrder.ActualPayment;
-                            amiyaOrder.ActualPayment = Math.Ceiling(amiyaOrder.ActualPayment.Value * voucher.DeductMoney);
+                            amiyaOrder.ActualPayment = Math.Ceiling(amiyaOrder.ActualPayment.Value * voucher.DeductMoney)<=0?0.01m: Math.Ceiling(amiyaOrder.ActualPayment.Value * voucher.DeductMoney);
                             amiyaOrder.DeductMoney = payCount.Value - amiyaOrder.ActualPayment.Value;
                             amiyaOrder.IsUseCoupon = true;
                             amiyaOrder.CouponId = voucher.Id;

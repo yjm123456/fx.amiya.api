@@ -5006,7 +5006,10 @@ namespace Fx.Amiya.Service
                 var goodsInfo = goodsInfoList.Where(e => e.Id == orderItem.GoodsId).FirstOrDefault();
                 var orderStandard = goodsInfo.StandardList.Where(e => e.Id == orderItem.StandardId).FirstOrDefault();
                 if (orderStandard == null) throw new Exception($"{goodsInfo.GoodsName}商品的规格无效！");
-                var orderVoucher = goodsInfo.VoucherList.Where(e => e.VoucherId == voucher.ConsumptionVoucherId).FirstOrDefault();
+                GoodsConsumVoucherDto orderVoucher = null;
+                if (voucher!=null) {
+                    orderVoucher = goodsInfo.VoucherList.Where(e => e.VoucherId == voucher.ConsumptionVoucherId).FirstOrDefault();
+                }
                 CartCreateOrderDto cartCreateOrderDto = new CartCreateOrderDto();
                 cartCreateOrderDto.Id = CreateOrderIdHelper.GetNextNumber();
                 cartCreateOrderDto.GoodsName = goodsInfo.GoodsName;
@@ -5077,8 +5080,7 @@ namespace Fx.Amiya.Service
                                 cartCreateOrderDto.CouponId = voucher.CustomerConsumptionVoucherId;
                                 if (orderVoucher.VoucherType == (int)ConsumptionVoucherType.Material)
                                 {
-                                    cartCreateOrderDto.DeductMoney = cartCreateOrderDto.ActualPayment.Value - orderVoucher.DeductMoney.Value;
-                                    cartCreateOrderDto.DeductMoney = cartCreateOrderDto.DeductMoney <= 0 ? 0.01m : cartCreateOrderDto.DeductMoney;
+                                    cartCreateOrderDto.DeductMoney = orderVoucher.DeductMoney.Value;
                                 }
                                 if (orderVoucher.VoucherType == (int)ConsumptionVoucherType.Discount)
                                 {
@@ -5164,7 +5166,7 @@ namespace Fx.Amiya.Service
                 foreach (var item in moneyOrPointOrderList)
                 {
                     item.TradeId = orderTradeAdd.Id;
-                    item.ActualPayment = item.ActualPayment - item.DeductMoney;
+                    item.ActualPayment = (item.ActualPayment - item.DeductMoney <= 0)?0.01m:(item.ActualPayment - item.DeductMoney);
                 }
                 orderTradeAdd.OrderInfoAddList = moneyOrPointOrderList;
 

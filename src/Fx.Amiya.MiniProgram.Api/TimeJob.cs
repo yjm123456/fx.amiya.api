@@ -84,7 +84,7 @@ namespace Fx.Amiya.MiniProgram.Api
                 }
                 
                 //退还抵用券
-                foreach (var item in ordres)
+                foreach (var item in pointAndMoneyOrder)
                 {
                     if (item.IsUseCoupon)
                     {
