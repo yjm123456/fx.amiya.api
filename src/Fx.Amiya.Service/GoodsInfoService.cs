@@ -72,8 +72,9 @@ namespace Fx.Amiya.Service
                               join c in dalCustomerTagInfo.GetAll()
                               on d.TagId equals c.Id
                               select new { c.TagName, d.CustomerGoodsId };
+            var categoryIds =(await goodsCategory.GetCategoryNameListAsync(true)).Select(e=>e.Id);
             var goodsList = from g in dalGoodsInfo.GetAll()
-                            where g.Valid == true
+                            where g.Valid == true && categoryIds.Contains(g.CategoryId)
                             join t in tagInfoList
                             on g.Id equals t.CustomerGoodsId into gt
                             from goods_tag in gt.DefaultIfEmpty()
@@ -102,6 +103,7 @@ namespace Fx.Amiya.Service
             {
                 goodsList = goodsList.OrderByDescending(e => e.g.Sort);
             }
+
             FxPageInfo<SimpleGoodsInfoDto> fxPageInfo = new FxPageInfo<SimpleGoodsInfoDto>();
             fxPageInfo.TotalCount = goodsList.Count();
             fxPageInfo.List = goodsList.Skip((pageNum - 1) * pageSize).Take(pageSize).Select(e => new SimpleGoodsInfoDto
