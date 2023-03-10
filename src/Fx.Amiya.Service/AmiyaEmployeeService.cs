@@ -163,16 +163,30 @@ namespace Fx.Amiya.Service
                     .Include(e => e.AmiyaPositionInfo).ThenInclude(e => e.AmiyaDepartment).SingleOrDefaultAsync(e => e.UserId == userId);
                     if (employee == null)
                     {
-                        AmiyaEmployeeDto noExistEmployeeDto = new AmiyaEmployeeDto();
-                        noExistEmployeeDto.UserId = userId;
-                        noExistEmployeeDto.Code = code;
-                        return noExistEmployeeDto;
+                        var requestUrl = $"https://qyapi.weixin.qq.com/cgi-bin/auth/getuserdetail?access_token={businessInfo.AccessToken}";
+                        var data = new { user_ticket = requestObject["user_ticket"].ToString() };
+                        var ticketResult = await HttpUtil.HttpJsonPostAsync(requestUrl, JsonConvert.SerializeObject(data));
+                        JObject ticketObject = JsonConvert.DeserializeObject(ticketResult) as JObject;
+                        var ticketErrCode = ticketObject["errcode"].ToString();
+                        if (ticketErrCode != "0")
+                        {
+                            var errmsg = ticketObject["errmsg"].ToString();
+                            if (errmsg.Contains("invalid code"))
+                            {
+                                errmsg = "授权超时，请重新试一下~";
+                            }
+                            throw new Exception(errmsg);
+                        }
+                        string phone = ticketObject["mobile"].ToString();
+                        employee = await dalAmiyaEmployee.GetAll()
+                        .Include(e => e.AmiyaPositionInfo).ThenInclude(e => e.AmiyaDepartment).SingleOrDefaultAsync(e => e.UserName == phone);
+                        if (employee == null)
+                        {
+                            throw new Exception("您使用的企业微信绑定的手机号与啊美雅预约系统的手机号不同，请确保绑定手机号相同后再进行企业微信授权登陆！");
+                        }
                     }
-                    else
-                    {
-                        //刷新用户code
-                        await this.UpdateBusinessWechatUserIdAndCode(employee.Id, userId, code);
-                    }
+                    //刷新用户code
+                    await this.UpdateBusinessWechatUserIdAndCode(employee.Id, userId, code);
                 }
                 if (employee.Valid == false)
                     throw new Exception("账户已失效");
@@ -381,7 +395,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var employees = from d in dalAmiyaEmployee.GetAll() 
+                var employees = from d in dalAmiyaEmployee.GetAll()
                                 where (keyword == null || d.Name.Contains(keyword))
                                 && (d.Valid == valid)
                                 && (positionId == 0 || d.AmiyaPositionId == positionId)
@@ -396,7 +410,7 @@ namespace Fx.Amiya.Service
                                     PositionId = d.AmiyaPositionId,
                                     PositionName = d.AmiyaPositionInfo.Name,
                                     IsCustomerService = d.IsCustomerService,
-                                    LiveAnchorBaseId=d.LiveAnchorBaseId
+                                    LiveAnchorBaseId = d.LiveAnchorBaseId
                                 };
                 FxPageInfo<AmiyaEmployeeDto> employeePageInfo = new FxPageInfo<AmiyaEmployeeDto>();
                 employeePageInfo.TotalCount = await employees.CountAsync();

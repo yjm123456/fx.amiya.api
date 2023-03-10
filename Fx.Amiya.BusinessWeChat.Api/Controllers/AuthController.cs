@@ -112,7 +112,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                     {
                         throw new Exception("该用户已绑定过他人企业微信账号，无法绑定到您的企业微信中,请重新登录！");
                     }
-                    await amiyaEmployeeService.UpdateBusinessWechatUserIdAndCode(employee.Id, userId, code);
+                    //await amiyaEmployeeService.UpdateBusinessWechatUserIdAndCode(employee.Id, userId, code);
                 }
                 var identity = new FxInternalEmployeeIdentity().CreateFxIdentity(employee.Id.ToString());
 

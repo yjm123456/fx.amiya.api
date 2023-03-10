@@ -331,7 +331,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.GoodsId = order.GoodsId;
             orderUpdateInfo.CustomerName = order.CustomerName;
             orderUpdateInfo.Phone = order.Phone;
-            orderUpdateInfo.EncryptPhone = order.EncryptPhone;
+            orderUpdateInfo.EncryptPhone = ServiceClass.GetIncompletePhone(order.Phone);
             var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
             string encryptPhone = ServiceClass.Encrypt(order.Phone, config.PhoneEncryptKey);
             var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(encryptPhone);
@@ -650,7 +650,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                              select new BaseKeyAndValueVo
                              {
                                  Id = d.OrderType.ToString(),
-                                 Name = d.OrderTypeText 
+                                 Name = d.OrderTypeText
                              };
             return ResultData<List<BaseKeyAndValueVo>>.Success().AddData("orderConsultationTypes", orderTypes.ToList());
         }
@@ -719,7 +719,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                              select new BaseKeyAndValueVo
                              {
                                  Id = d.OrderType.ToString(),
-                                 Name = d.OrderTypeText 
+                                 Name = d.OrderTypeText
                              };
             return ResultData<List<BaseKeyAndValueVo>>.Success().AddData("orderTypes", orderTypes.ToList());
         }

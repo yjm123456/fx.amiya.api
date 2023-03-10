@@ -775,6 +775,14 @@ namespace Fx.Amiya.Service
                 {
                     x.BelongEmpName = _amiyaEmployeeService.GetByIdAsync(x.BelongEmpId).Result.Name;
                 }
+                if (!string.IsNullOrEmpty(x.LiveAnchorWeChatNo))
+                {
+                    var wechatInfo = await liveAnchorWeChatInfoService.GetByIdAsync(x.LiveAnchorWeChatNo);
+                    if (wechatInfo != null)
+                    {
+                        x.LiveAnchorWeChatNo = wechatInfo.WeChatNo;
+                    }
+                }
             }
             return pageInfo;
         }
