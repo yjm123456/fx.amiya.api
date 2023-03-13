@@ -306,3 +306,16 @@ ADD COLUMN `bind_base_live_anchor_id` VARCHAR(50) NULL AFTER `code_expire_date`;
 
 
 
+----------------------------------------------王健 2023/3/11 BEGIN-----------------------------------------------------
+
+
+------发票添加回款时间
+ALTER TABLE `tbl_bill`
+	ADD COLUMN `return_back_price_date` DATETIME NULL DEFAULT NULL AFTER `delete_date`;
+
+
+----------------------------------------------王健 2023/3/11 BEGIN-----------------------------------------------------
+
+
+
+

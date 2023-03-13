@@ -1200,6 +1200,67 @@ namespace Fx.Amiya.Service
                 throw new Exception("生成订单失败！");
             }
         }
+        /// <summary>
+        /// 添加积分虚拟商品订单
+        /// </summary>
+        /// <param name="orderList"></param>
+        /// <returns></returns>
+        public async Task AddIntegralVirtualOrderAsync(AddIntegralVirtualOrderDto addOrder)
+        {
+            try
+            {
+                //var noticeConfigResult = from notice in dalNoticeConfig.GetAll() where notice.Name == "EMailNoticeConfig" select notice;
+                //var noticeRes = noticeConfigResult.FirstOrDefault();
+                var emailConfig = false;
+                //订单号集合
+                string goodsName = "";
+                Dictionary<string, string> orderPhoneDict = new Dictionary<string, string>();
+                byte appType = 0;
+                decimal intergration_quantity = 0M;
+                List<OrderInfo> orderInfoList = new List<OrderInfo>();
+
+                appType = addOrder.AppType;
+                if (addOrder.IntegrationQuantity.HasValue)
+                    intergration_quantity = addOrder.IntegrationQuantity.Value;
+
+                OrderInfo order = new OrderInfo();
+                order.Id = addOrder.Id;
+                order.GoodsId = addOrder.GoodsId;
+                order.GoodsName = addOrder.GoodsName;
+                order.Phone = addOrder.Phone;
+                order.StatusCode = addOrder.StatusCode;
+                order.ActualPayment = addOrder.ActualPayment;
+                order.AppointmentHospital = addOrder.HospitalName;
+                order.CreateDate = addOrder.CreateDate;
+                order.BuyerNick = addOrder.BuyerNick;
+                order.ThumbPicUrl = addOrder.ThumbPicUrl;
+                order.CheckState = (int)CheckType.NotChecked;
+                order.AppType = addOrder.AppType;
+                order.OrderType = addOrder.OrderType;
+                order.OrderNature = addOrder.OrderNature.HasValue ? addOrder.OrderNature.Value : (byte)0;
+                order.Description = addOrder.Description;
+                order.Standard = addOrder.Standard;
+                order.Quantity = addOrder.Quantity;
+                order.IntegrationQuantity = addOrder.IntegrationQuantity;
+                order.ExchangeType = addOrder.ExchangeType;
+                order.TradeId = addOrder.TradeId;
+                order.WriteOffCode = "";
+                order.AlreadyWriteOffAmount = 0;
+                order.BelongEmpId = addOrder.BelongEmpId;
+                order.IsUseCoupon = addOrder.IsUseCoupon;
+                order.CouponId = addOrder.CouponId;
+                order.DeductMoney = addOrder.DeductMoney;
+                orderInfoList.Add(order);
+                await dalOrderInfo.AddCollectionAsync(orderInfoList, true);
+                //发送短信通知
+                SendPhoneInfo(orderPhoneDict, appType, intergration_quantity);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("生成订单失败！");
+            }
+        }
 
         /// <summary>
         /// 添加啊美雅订单
@@ -4702,7 +4763,8 @@ namespace Fx.Amiya.Service
                 {
                     return;
                 }
-                if (orderTrade.TotalIntegration > 0&&orderTrade.OrderInfoList.FirstOrDefault()?.ExchangeType!=0) {
+                if (orderTrade.TotalIntegration > 0 && orderTrade.OrderInfoList.FirstOrDefault()?.ExchangeType != 0)
+                {
                     var integrationRecord = await CreateIntegrationRecordAsync(customerId, orderTrade.TotalIntegration.Value, orderTrade.TradeId);
                     if (integrationRecord != null) await integrationAccountService.AddByConsumptionAsync(integrationRecord);
                 }
@@ -4935,7 +4997,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<PayRequestInfoDto> NewCartOrderAsync(CartOrderAddDto cartOrderAddDto)
         {
-            
+
             //订单总积分
             decimal totalIntegral = 0m;
             //积分支付订单
@@ -4968,12 +5030,14 @@ namespace Fx.Amiya.Service
             //}
 
             //钱购买或积分加钱购商品下单返回支付信息
-            if (moneyOrintegralMoneyOrderList.Count()>0) {
+            if (moneyOrintegralMoneyOrderList.Count() > 0)
+            {
                 payRequestInfoDto = await AddMoneyOrPointAndMoneyTradeAsync(moneyOrintegralMoneyOrderList, voucher, cartOrderAddDto.CustomerId, cartOrderAddDto.AddressId.Value, cartOrderAddDto.Remark, cartOrderAddDto.OpenId);
             }
 
             //更改抵用券状态
-            if (!string.IsNullOrEmpty(cartOrderAddDto.VoucherId)) {
+            if (!string.IsNullOrEmpty(cartOrderAddDto.VoucherId))
+            {
                 UpdateCustomerConsumptionVoucherDto update = new UpdateCustomerConsumptionVoucherDto
                 {
                     CustomerVoucherId = cartOrderAddDto.VoucherId,
@@ -5007,7 +5071,8 @@ namespace Fx.Amiya.Service
                 var orderStandard = goodsInfo.StandardList.Where(e => e.Id == orderItem.StandardId).FirstOrDefault();
                 if (orderStandard == null) throw new Exception($"{goodsInfo.GoodsName}商品的规格无效！");
                 GoodsConsumVoucherDto orderVoucher = null;
-                if (voucher!=null) {
+                if (voucher != null)
+                {
                     orderVoucher = goodsInfo.VoucherList.Where(e => e.VoucherId == voucher.ConsumptionVoucherId).FirstOrDefault();
                 }
                 CartCreateOrderDto cartCreateOrderDto = new CartCreateOrderDto();
@@ -5044,7 +5109,7 @@ namespace Fx.Amiya.Service
                 cartCreateOrderDto.Quantity = orderItem.Quantity;
                 cartCreateOrderDto.Description = "";
                 cartCreateOrderDto.Standard = orderStandard.StandardName;
-                cartCreateOrderDto.ExchangeType = (byte)(goodsInfo.ExchageType == (int)ExchangeType.ThirdPartyPayment? (byte)ExchangeType.HuiShouQian: goodsInfo.ExchageType) ;
+                cartCreateOrderDto.ExchangeType = (byte)(goodsInfo.ExchageType == (int)ExchangeType.ThirdPartyPayment ? (byte)ExchangeType.HuiShouQian : goodsInfo.ExchageType);
                 if (bindCustomerId != 0)
                 {
                     cartCreateOrderDto.BelongEmpId = bindCustomerId;
@@ -5137,7 +5202,7 @@ namespace Fx.Amiya.Service
             {
                 unitOfWork.BeginTransaction();
                 //计算全局抵用券折扣价格
-                if (voucher != null&&!voucher.IsSpecifyProduct)
+                if (voucher != null && !voucher.IsSpecifyProduct)
                 {
                     if (voucher.IsNeedMinPrice)
                     {
@@ -5166,7 +5231,7 @@ namespace Fx.Amiya.Service
                 foreach (var item in moneyOrPointOrderList)
                 {
                     item.TradeId = orderTradeAdd.Id;
-                    item.ActualPayment = (item.ActualPayment - item.DeductMoney <= 0)?0.01m:(item.ActualPayment - item.DeductMoney);
+                    item.ActualPayment = (item.ActualPayment - item.DeductMoney <= 0) ? 0.01m : (item.ActualPayment - item.DeductMoney);
                 }
                 orderTradeAdd.OrderInfoAddList = moneyOrPointOrderList;
 
@@ -5247,7 +5312,7 @@ namespace Fx.Amiya.Service
                 //扣除库存
                 foreach (var item in integralOrderList)
                 {
-                    await goodsInfoService.ReductionGoodsInventoryQuantityAsync(item.GoodsId, item.Quantity.Value);
+                    await _goodsInfoService.ReductionGoodsInventoryQuantityAsync(item.GoodsId, item.Quantity.Value);
                 }
                 UseIntegrationDto useIntegrationDto = new UseIntegrationDto();
                 useIntegrationDto.CustomerId = customerId;
@@ -5268,11 +5333,99 @@ namespace Fx.Amiya.Service
         {
             return dalSendGoodsRecord.GetAll().Where(e => e.TradeId == tradeId).Select(e => new OrderSendInfoDto
             {
-                ExpressId=e.ExpressId,
-                CourierNumber=e.CourierNumber
+                ExpressId = e.ExpressId,
+                CourierNumber = e.CourierNumber
             }).FirstOrDefault();
         }
+
+
+        public async Task<string> CreateIntegralVirtualOrderAsync(CreateIntegralVirtualOrderDto virtualOrder)
+        {
+            if (virtualOrder.Quantity <= 0) throw new Exception("购买数量错误！");
+            var goodsInfo = await _goodsInfoService.GetByIdAsync(virtualOrder.GoodsId);
+            if (goodsInfo == null || !goodsInfo.Valid) throw new Exception("无效商品！");
+            if (goodsInfo.ExchangeType != ExchangeType.Integration) throw new Exception("非积分支付商品！");
+            var hospitalPrice = goodsInfo.GoodsHospitalPrice.Find(e => e.HospitalId == virtualOrder.HospitalId);
+            if (hospitalPrice == null) throw new Exception("无效门店！");
+            var hospitalInfo =await _hospitalInfoService.GetByIdAsync(hospitalPrice.HospitalId);
+            var integralBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(virtualOrder.CustomerId);
+            var totalIntegral = hospitalPrice.Price * virtualOrder.Quantity;
+            if (totalIntegral > integralBalance) throw new Exception("积分余额不足！");
+            var bindCustomerId = await _bindCustomerService.GetEmployeeIdByPhone(virtualOrder.Phone);
+            AddIntegralVirtualTradeDto addTrade = new AddIntegralVirtualTradeDto();
+            addTrade.Id = Guid.NewGuid().ToString().Replace("-", "");
+            addTrade.CustomerId = virtualOrder.CustomerId;
+            addTrade.Remark = virtualOrder.Remark;
+            AddIntegralVirtualOrderDto addOrder = new AddIntegralVirtualOrderDto();
+            addOrder.Id = CreateOrderIdHelper.GetNextNumber();
+            addOrder.GoodsName = goodsInfo.Name;
+            addOrder.GoodsId = goodsInfo.Id;
+            addOrder.Phone = virtualOrder.Phone;
+            addOrder.StatusCode = OrderStatusCode.WAIT_BUYER_PAY;
+            addOrder.ActualPayment = 0m;
+            addOrder.CreateDate = DateTime.Now;
+            addOrder.ThumbPicUrl = goodsInfo.ThumbPicUrl;
+            addOrder.BuyerNick = virtualOrder.BuyerNick;
+            addOrder.AppType = (byte)AppType.MiniProgram;
+            addOrder.OrderType = (byte)OrderType.VirtualOrder;
+            addOrder.OrderNature = (byte)OrderNatureType.RegularOrder;
+            addOrder.HospitalName = hospitalInfo.Name;
+            addOrder.Quantity = virtualOrder.Quantity;
+            addOrder.IntegrationQuantity = totalIntegral;
+            addOrder.Description = goodsInfo.Description;
+            addOrder.Standard = goodsInfo.Standard;
+            addOrder.ExchangeType = (byte)ExchangeType.Integration;
+            if (bindCustomerId != 0)
+            {
+                addOrder.BelongEmpId = bindCustomerId;
+            }
+            else
+            {
+                await AddOrderBindCustomerServiceAsync(virtualOrder.Phone);
+                addOrder.BelongEmpId = 188;
+            }
+            addOrder.TradeId = addTrade.Id;
+            addOrder.IsUseCoupon = false;
+            addOrder.CouponId = "";
+            addOrder.DeductMoney = 0m;
+            addTrade.OrderInfo = addOrder;
+            await AddAmiyaIntegralVirtualOrderAsync(addTrade);
+            return addTrade.Id;
+        }
+        /// <summary>
+        /// 添加积分虚拟商品订单
+        /// </summary>
+        /// <returns></returns>
+        private async Task AddAmiyaIntegralVirtualOrderAsync(AddIntegralVirtualTradeDto addVirtualTrade)
+        {
+            try
+            {
+                OrderTrade orderTrade = new OrderTrade();
+                orderTrade.TradeId = addVirtualTrade.Id;
+                orderTrade.CustomerId = addVirtualTrade.CustomerId;
+                orderTrade.CreateDate = DateTime.Now;
+                orderTrade.TotalAmount = 0m;
+                orderTrade.TotalIntegration = addVirtualTrade.OrderInfo.IntegrationQuantity;
+                orderTrade.Remark = addVirtualTrade.Remark;
+                orderTrade.IsAdminAdd = false;
+                orderTrade.StatusCode = OrderStatusCode.WAIT_BUYER_PAY;
+                await dalOrderTrade.AddAsync(orderTrade, true);
+                await AddIntegralVirtualOrderAsync(addVirtualTrade.OrderInfo);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("下单失败！");
+            }
+        }
+
+        public bool WriteOffCodeIsExist(string code)
+        {
+            var writeOffCode= dalOrderInfo.GetAll().Select(e => e.WriteOffCode).Where(e => e == code).FirstOrDefault();
+            return string.IsNullOrEmpty(writeOffCode) ? false : true;
+
+        }
     }
+
 
     /// <summary>
     /// 获取医院对账业绩

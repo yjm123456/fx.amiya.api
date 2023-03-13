@@ -1184,7 +1184,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             tmallOrderVo.ExchangeType = order.ExchangeType;
             tmallOrderVo.ExchangeTypeText = order.ExchangeTypeText;
             tmallOrderVo.Quantity = order.Quantity;
-
+            tmallOrderVo.IntegrationQuantity = order.IntegrationQuantity;
             tmallOrderVo.WriteOffDate = order.WriteOffDate;
             tmallOrderVo.LiveAnchor = order.LiveAnchorName;
             tmallOrderVo.IsReturnBackPrice = order.IsReturnBackPrice;

@@ -33,6 +33,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.CreateBillReason).HasColumnName("create_bill_reason").HasColumnType("VARCHAR(300)").IsRequired(false);
             builder.Property(e => e.ReturnBackState).HasColumnName("return_back_state").HasColumnType("INT").IsRequired();
             builder.Property(e => e.ReturnBackPrice).HasColumnName("return_back_price").HasColumnType("DECIMAL(12,2)").IsRequired(false);
+            builder.Property(e => e.ReturnBackPriceDate).HasColumnName("return_back_price_date").HasColumnType("DATETIME").IsRequired(false);
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("DATETIME").IsRequired();
             builder.Property(e => e.CreateBy).HasColumnName("create_by").HasColumnType("INT").IsRequired();
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("DATETIME").IsRequired(false);

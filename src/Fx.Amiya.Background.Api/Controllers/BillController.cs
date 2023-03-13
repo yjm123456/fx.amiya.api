@@ -11,6 +11,7 @@ using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Infrastructure;
 using Fx.Open.Infrastructure.Web;
+using Jd.Api.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,6 +38,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 根据条件获取发票信息
         /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
         /// <param name="keyWord">关键词（可搜索费用备注，开票事由）</param>
         /// <param name="hospitalId">客户id</param>
         /// <param name="billType">票据类型（医美/其他）</param>
@@ -48,11 +51,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("listWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<BillVo>>> GetListWithPageAsync(int? hospitalId, bool? valid, int? billType, int? returnBackState, string companyId, string keyWord, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<BillVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, bool? valid, int? billType, int? returnBackState, string companyId, string keyWord, int pageNum, int pageSize)
         {
             try
             {
-                var q = await billService.GetListAsync(hospitalId, valid, billType, returnBackState, companyId, keyWord, pageNum, pageSize);
+                var q = await billService.GetListAsync(startDate, endDate, hospitalId, valid, billType, returnBackState, companyId, keyWord, pageNum, pageSize);
                 var bill = from d in q.List
                            select new BillVo
                            {
@@ -82,6 +85,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                Valid = d.Valid,
                                ValidText = d.ValidText,
                                DeleteDate = d.DeleteDate,
+                               ReturnBackPriceDate = d.ReturnBackPriceDate
                            };
 
                 FxPageInfo<BillVo> tagPageInfo = new FxPageInfo<BillVo>();
@@ -94,6 +98,51 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 return ResultData<FxPageInfo<BillVo>>.Fail(ex.Message);
             }
+        }
+
+        /// <summary>
+        /// 根据条件导出发票信息
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="keyWord">关键词（可搜索费用备注，开票事由）</param>
+        /// <param name="hospitalId">客户id</param>
+        /// <param name="billType">票据类型（医美/其他）</param>
+        /// <param name="returnBackState"></param>
+        /// <param name="companyId">回款状态（未回款/回款中/已回款）</param>
+        /// <param name="valid">是否作废（1正常，0作废）</param>
+        /// <returns></returns>
+        [HttpGet("exportBillList")]
+        [FxInternalAuthorize]
+        public async Task<FileStreamResult> ExportBillListAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, bool? valid, int? billType, int? returnBackState, string companyId, string keyWord)
+        {
+            var q = await billService.ExportBillListAsync(startDate, endDate, hospitalId, valid, billType, returnBackState, companyId, keyWord);
+            var bill = from d in q
+                       select new ExportBillVo
+                       {
+                           Id = d.Id,
+                           HospitalName = d.HospitalName,
+                           BillPrice = d.BillPrice,
+                           TaxRate = d.TaxRate,
+                           TaxPrice = Math.Round(d.TaxPrice, 2),
+                           NotInTaxPrice = Math.Round(d.NotInTaxPrice, 2),
+                           OtherPrice = d.OtherPrice,
+                           OtherPriceRemark = d.OtherPriceRemark,
+                           CollectionCompanyName = d.CollectionCompanyName,
+                           BelongDate = d.BelongStartTime.ToString("yyyy-MM-dd") + "  -  " + d.BelongEndTime.ToString("yyyy-MM-dd"),
+                           BillTypeText = d.BillTypeText,
+                           CreateBillReason = d.CreateBillReason,
+                           ReturnBackStateText = d.ReturnBackStateText,
+                           ReturnBackPrice = d.ReturnBackPrice,
+                           CreateDate = d.CreateDate,
+                           CreateByEmployeeName = d.CreateByEmployeeName,
+                           ValidText = d.ValidText,
+                           ReturnBackPriceDate = d.ReturnBackPriceDate
+                       };
+            var exportOrder = bill.ToList();
+            var stream = ExportExcelHelper.ExportExcel(exportOrder);
+            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "发票.xls");
+            return result;
         }
 
 

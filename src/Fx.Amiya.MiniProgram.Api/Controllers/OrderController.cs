@@ -161,8 +161,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             orderInfoResult.OrderId = orderInfo.Id;
             orderInfoResult.StatusCode = orderInfo.StatusCode;
             orderInfoResult.StatusText = orderInfo.StatusText;
-            /*orderInfoResult.AppointmentCity = orderInfo.AppointmentCity;
-            orderInfoResult.AppointmentDate = orderInfo.AppointmentDate.Value.ToString("");*/
             orderInfoResult.CreateDate = orderInfo.CreateDate.Value.ToString("yyyy-MM-dd hh:mm:ss");
             orderInfoResult.ThumbPicUrl = orderInfo.ThumbPicUrl;
             orderInfoResult.GoodsName = orderInfo.GoodsName;
@@ -175,7 +173,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 orderInfoResult.AppointmentDate = orderInfo.AppointmentDate.Value.ToString("yyyy-MM-dd");
             }
 
-            if (orderInfo.OrderType == 0)
+            if (orderInfo.OrderType == 0&&orderInfo.ExchangeType!=0)
             {
                 if (orderInfo.Quantity.HasValue)
                 {
@@ -187,6 +185,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     {
                         orderInfoResult.SinglePrice = orderInfo.ActualPayment;
                     }
+
                 }
                 else
                 {
@@ -236,6 +235,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     refundOrderInfo.RefundReason = refundOrderInfoResult.RefundReasong;
                     orderInfoResult.RefundOrderInfo = refundOrderInfo;
                     orderInfoResult.IntegrationQuantity = orderInfo.IntegrationQuantity;
+                    if (orderInfo.OrderType == (byte)OrderType.VirtualOrder) {
+                        var hospitalInfo = await _hospitalInfoService.GetBaseByNameAsync(orderInfo.AppointmentHospital);
+                        if (hospitalInfo != null)
+                        { orderInfoResult.HospitalAddress = hospitalInfo.Address; }
+                        orderInfoResult.AppointmentHospital = orderInfo.AppointmentHospital;
+                        orderInfoResult.WriteOffCode = orderInfo.WriteOffCode;
+                    }
                 }
             }
             if (orderInfo.StatusCode == OrderStatusCode.CHECK_FAIL)
@@ -858,6 +864,30 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         }
 
         /// <summary>
+        /// 积分虚拟商品下单接口
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("newIntegralVirtualOrder")]
+        public async Task<ResultData<string>> NewIntegralVirtualOrderAsync(CreateIntegralVirtualOrderVo createOrder) {
+            var token = tokenReader.GetToken();
+            var sessionInfo = sessionStorage.GetSession(token);
+            string customerId = sessionInfo.FxCustomerId;
+            var customerInfo = await customerService.GetByIdAsync(customerId);
+            string phone = await customerService.GetPhoneByCustomerIdAsync(customerId);
+            var miniUserInfo = await _wxMiniUserRepository.GetByUserIdAsync(customerInfo.UserId);
+            CreateIntegralVirtualOrderDto order = new CreateIntegralVirtualOrderDto();
+            order.CustomerId = customerId;
+            order.Phone = phone;
+            order.BuyerNick = miniUserInfo.NickName;
+            order.Remark = createOrder.Remark;
+            order.GoodsId = createOrder.GoodsId;
+            order.HospitalId = createOrder.HospitalId;
+            order.Quantity = createOrder.Quantity;
+            var tradeId =await orderService.CreateIntegralVirtualOrderAsync(order);
+            return ResultData<string>.Success().AddData("tradeId",tradeId);
+        }
+
+        /// <summary>
         /// 订单重新支付
         /// </summary>
         /// <param name="tradeId"></param>
@@ -1199,9 +1229,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 var token = tokenReader.GetToken();
                 var sessionInfo = sessionStorage.GetSession(token);
                 string customerId = sessionInfo.FxCustomerId;
+                //是否是虚拟订单
+                bool isMaterialOrder = false;
 
                 var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(tradeId);
-
+                isMaterialOrder = orderTrade.OrderInfoList.Where(e => e.OrderType == (byte)OrderType.MaterialOrder).Count()>0;
                 decimal integrationBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(customerId);
                 if (orderTrade.TotalIntegration > integrationBalance)
                     throw new Exception("积分余额不足！");
@@ -1212,8 +1244,15 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
                     UpdateOrderDto updateOrder = new UpdateOrderDto();
                     updateOrder.OrderId = item.Id;
-                    updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
-                    if (item.ActualPayment.HasValue)
+                    if (isMaterialOrder)
+                    {
+                        updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                    }
+                    else {
+                        updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                    }
+                    
+                    if (item.ActualPayment.HasValue&&item.ActualPayment>0)
                     {
                         updateOrder.Actual_payment = item.ActualPayment.Value;
 
@@ -1236,17 +1275,28 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     Random random = new Random();
                     updateOrder.AppType = item.AppType;
                     updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
+                    var exist= orderService.WriteOffCodeIsExist(updateOrder.WriteOffCode);
+                    if (exist) {
+                        updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
+                    }
                     updateOrderList.Add(updateOrder);
                 }
 
                 //修改订单状态
                 await orderService.UpdateWithNoTranstionAsync(updateOrderList);
 
-                UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
-                updateOrderTrade.TradeId = tradeId;
-                updateOrderTrade.AddressId = orderTrade.AddressId;
-                updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
-                await orderService.UpdateOrderTradeAsync(updateOrderTrade);
+                //UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
+                //updateOrderTrade.TradeId = tradeId;
+                //updateOrderTrade.AddressId = orderTrade.AddressId;
+                //if (isMaterialOrder)
+                //{
+                //    updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                //}
+                //else {
+                //    updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                //}
+               
+                //await orderService.UpdateOrderTradeAsync(updateOrderTrade);
                 foreach (var item in orderTrade.OrderInfoList)
                 {
                     if (item.ExchangeType == (byte)ExchangeType.Integration && item.IntegrationQuantity > 0)

@@ -99,6 +99,10 @@ namespace Fx.Amiya.Background.Api.Vo.Bill
         /// 是否作废文本（正常，作废）
         /// </summary>
         public string ValidText { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime? ReturnBackPriceDate { get; set; }
 
         /// <summary>
         /// 发票明细

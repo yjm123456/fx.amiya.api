@@ -26,7 +26,18 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<BillDto>> GetListAsync(int? hospitalId, bool? valid, int? billType, int? returnBackState, string companyId, string keyWord, int pageNum, int pageSize);
+        Task<FxPageInfo<BillDto>> GetListAsync(DateTime? startDate,DateTime? endDate,int? hospitalId, bool? valid, int? billType, int? returnBackState, string companyId, string keyWord, int pageNum, int pageSize);
+        /// <summary>
+        /// 根据条件获取发票信息
+        /// </summary>
+        /// <param name="keyWord">关键词（可搜索费用备注，开票事由）</param>
+        /// <param name="hospitalId">客户id</param>
+        /// <param name="billType">票据类型（医美/其他）</param>
+        /// <param name="returnBackState"></param>
+        /// <param name="companyId">回款状态（未回款/回款中/已回款）</param>
+        /// <param name="valid">是否作废（1正常，0作废）</param>
+        /// <returns></returns>
+        Task<List<ExportBillDto>> ExportBillListAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, bool? valid, int? billType, int? returnBackState, string companyId, string keyWord);
         Task AddAsync(AddBillDto addDto);
         Task<BillDto> GetByIdAsync(string id);
         Task UpdateAsync(UpdateBillDto updateDto);

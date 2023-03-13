@@ -60,9 +60,10 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<BillDto>> GetListAsync(int? hospitalId, bool? valid, int? billType, int? returnBackState, string companyId, string keyWord, int pageNum, int pageSize)
+        public async Task<FxPageInfo<BillDto>> GetListAsync(DateTime? startDate,DateTime? endDate, int? hospitalId, bool? valid, int? billType, int? returnBackState, string companyId, string keyWord, int pageNum, int pageSize)
         {
-
+            startDate = startDate.HasValue ? startDate.Value.Date:DateTime.Now.Date;
+            endDate = endDate.HasValue ? endDate.Value.AddDays(1).Date : DateTime.Now.AddDays(1).Date;
             var bills = from d in dalBill.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.HospitalInfo).Include(x => x.CompanyBaseInfo)
                         where (string.IsNullOrWhiteSpace(keyWord) || d.OtherPriceRemark.Contains(keyWord) || d.CreateBillReason.Contains(keyWord))
                         && (!hospitalId.HasValue || d.HospitalId == hospitalId.Value)
@@ -70,6 +71,7 @@ namespace Fx.Amiya.Service
                         && (!billType.HasValue || d.BillType == billType.Value)
                         && (!returnBackState.HasValue || d.ReturnBackState == returnBackState.Value)
                         && (!valid.HasValue || d.Valid == valid.Value)
+                        && (d.CreateDate>=endDate&&d.CreateDate<endDate)
                         select new BillDto
                         {
                             Id = d.Id,
@@ -98,6 +100,7 @@ namespace Fx.Amiya.Service
                             Valid = d.Valid,
                             ValidText = d.Valid == true ? "正常" : "作废",
                             DeleteDate = d.DeleteDate,
+                            ReturnBackPriceDate = d.ReturnBackPriceDate
                         };
             FxPageInfo<BillDto> billPageInfo = new FxPageInfo<BillDto>();
             billPageInfo.TotalCount = await bills.CountAsync();
@@ -105,6 +108,60 @@ namespace Fx.Amiya.Service
             return billPageInfo;
         }
 
+        /// <summary>
+        /// 根据条件获取发票信息
+        /// </summary>
+        /// <param name="keyWord">关键词（可搜索费用备注，开票事由）</param>
+        /// <param name="hospitalId">客户id</param>
+        /// <param name="billType">票据类型（医美/其他）</param>
+        /// <param name="returnBackState"></param>
+        /// <param name="companyId">回款状态（未回款/回款中/已回款）</param>
+        /// <param name="valid">是否作废（1正常，0作废）</param>
+        /// <returns></returns>
+        public async Task<List<ExportBillDto>> ExportBillListAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, bool? valid, int? billType, int? returnBackState, string companyId, string keyWord)
+        {
+            startDate = startDate.HasValue ? startDate.Value.Date : DateTime.Now.Date;
+            endDate = endDate.HasValue ? endDate.Value.AddDays(1).Date : DateTime.Now.AddDays(1).Date;
+            var bills = from d in dalBill.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.HospitalInfo).Include(x => x.CompanyBaseInfo)
+                        where (string.IsNullOrWhiteSpace(keyWord) || d.OtherPriceRemark.Contains(keyWord) || d.CreateBillReason.Contains(keyWord))
+                        && (!hospitalId.HasValue || d.HospitalId == hospitalId.Value)
+                        && (string.IsNullOrEmpty(companyId) || d.CollectionCompanyId == companyId)
+                        && (!billType.HasValue || d.BillType == billType.Value)
+                        && (!returnBackState.HasValue || d.ReturnBackState == returnBackState.Value)
+                        && (!valid.HasValue || d.Valid == valid.Value)
+                        && (d.CreateDate >= startDate && d.CreateDate < endDate)
+                        select new ExportBillDto
+                        {
+                            Id = d.Id,
+                            HospitalId = d.HospitalId,
+                            HospitalName = d.HospitalInfo.Name,
+                            BillPrice = d.BillPrice,
+                            TaxRate = d.TaxRate,
+                            TaxPrice = d.TaxPrice,
+                            NotInTaxPrice = d.NotInTaxPrice,
+                            OtherPrice = d.OtherPrice,
+                            OtherPriceRemark = d.OtherPriceRemark,
+                            CollectionCompanyId = d.CollectionCompanyId,
+                            CollectionCompanyName = d.CompanyBaseInfo.Name,
+                            BelongStartTime = d.BelongStartTime,
+                            BelongEndTime = d.BelongEndTime,
+                            BillType = d.BillType,
+                            BillTypeText = ServiceClass.GetBillTypeText(d.BillType),
+                            CreateBillReason = d.CreateBillReason,
+                            ReturnBackState = d.ReturnBackState,
+                            ReturnBackStateText = ServiceClass.GetBillReturnBackStateText(d.ReturnBackState),
+                            ReturnBackPrice = d.ReturnBackPrice,
+                            CreateDate = d.CreateDate,
+                            CreateBy = d.CreateBy,
+                            CreateByEmployeeName = d.AmiyaEmployee.Name,
+                            UpdateDate = d.UpdateDate,
+                            Valid = d.Valid,
+                            ValidText = d.Valid == true ? "正常" : "作废",
+                            DeleteDate = d.DeleteDate,
+                            ReturnBackPriceDate = d.ReturnBackPriceDate
+                        };
+            return await bills.ToListAsync();
+        }
 
         /// <summary>
         /// 添加发票
@@ -374,6 +431,7 @@ namespace Fx.Amiya.Service
                     throw new Exception("当前回款金额与已回款金额累计（" + result.ReturnBackPrice + "元）不能大于发票金额与其他费用的总和（" + billTotalPrice + "）！");
                 }
                 result.UpdateDate = DateTime.Now;
+                result.ReturnBackPriceDate = DateTime.Now;
                 await dalBill.UpdateAsync(result, true);
 
                 //回款记录表插入数据(todo;)
@@ -510,6 +568,8 @@ namespace Fx.Amiya.Service
             }
             return billReturnBackStateTextList;
         }
+
+        
 
 
 

@@ -639,5 +639,23 @@ namespace Fx.Amiya.IService
         /// <param name="input"></param>
         /// <returns></returns>
         Task UpdateOrderBelongEmpIdWithNoTransactionAsync(UpdateBelongEmpInfoOrderDto input);
+        /// <summary>
+        /// 积分虚拟商品下单接口
+        /// </summary>
+        /// <param name="cartOrderAddDto"></param>
+        /// <returns></returns>
+        Task<string> CreateIntegralVirtualOrderAsync(CreateIntegralVirtualOrderDto virtualOrder);
+        /// <summary>
+        /// 添加积分虚拟商品订单
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        Task AddIntegralVirtualOrderAsync(AddIntegralVirtualOrderDto order);
+        /// <summary>
+        /// 判断核销码是否已存在
+        /// </summary>
+        /// <param name="code">核销码</param>
+        /// <returns></returns>
+        bool WriteOffCodeIsExist(string code);
     }
 }
