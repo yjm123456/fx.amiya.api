@@ -2784,11 +2784,11 @@ namespace Fx.Amiya.Service
             foreach (var z in dealResult)
             {
                 z.CustomerServiceName = await _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(z.CustomerServiceId)).Select(e => e.Name).FirstOrDefaultAsync();
-                var sendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.BelongEmpId == z.CustomerServiceId && x.SendDate >= startDate && x.SendDate < endDate).ToList();
                 //根据手机号去重派单数据
-                var distinctSendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.BelongEmpId == z.CustomerServiceId && x.SendDate >= startDate && x.SendDate < endDate).GroupBy(x=>x.Phone).Select(k=>k.Key.First()).ToList();
-                var visitInfo = sendInfo.Where(x => x.IsToHospital == true).ToList();
-                var dealInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.BelongEmpId == z.CustomerServiceId)
+                var distinctSendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.BelongEmpId == z.CustomerServiceId && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.SendDate >= startDate && x.SendDate < endDate).GroupBy(x => x.Phone).Select(k => k.Key.First()).ToList();
+                var visitInfo = dealData.Where(x => x.IsToHospital == true && x.ToHospitalDate >= startDate && x.ToHospitalDate < endDate && x.IsOldCustomer == false && x.BelongEmpId == z.CustomerServiceId).ToList();
+
+                var dealInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder)
                     .SelectMany(x => x.ContentPlatformOrderDealInfoList).Include(x => x.ContentPlatFormOrder)
                     .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true)
                     .ToList();
