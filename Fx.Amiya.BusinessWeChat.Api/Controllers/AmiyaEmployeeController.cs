@@ -61,6 +61,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 {
                     employeeVo.Id = q.Id;
                     employeeVo.Name = q.Name;
+                    employeeVo.Avatar = q.Avatar;
                     employeeVo.UserName = q.UserName;
                     employeeVo.Valid = q.Valid;
                     employeeVo.PositionId = q.PositionId;

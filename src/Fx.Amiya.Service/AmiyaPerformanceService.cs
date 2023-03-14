@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
+using Fx.Amiya.Dto.FinancialBoard;
 using Fx.Amiya.Dto.LiveAnchorMonthlyTarget;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.Performance;
@@ -1672,6 +1673,22 @@ namespace Fx.Amiya.Service
 
             return monthPerformanceRatioDto.ToList();
         }
+
+        /// <summary>
+        /// 根据助理id获取助理简单业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="customerServiceId"></param>
+        /// <returns></returns>
+        public async Task<CustomerServiceSimplePerformanceDto> GetSimpleCustomerServicePerformanceDetails(int year, int month, int customerServiceId)
+        {
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month);
+            var dealInfo = await contentPlateFormOrderService.GetCustomerServiceSimpleByCustomerServiceIdAsync(sequentialDate.StartDate, sequentialDate.EndDate, customerServiceId);
+            return dealInfo;
+        }
+
+
         /// <summary>
         /// 根据助理id获取助理详细业绩
         /// </summary>

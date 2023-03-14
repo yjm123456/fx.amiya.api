@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
+using Fx.Amiya.Dto.FinancialBoard;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.Performance.BusinessWechatDto;
 using Fx.Amiya.Dto.ShoppingCartRegistration;
@@ -253,6 +254,15 @@ namespace Fx.Amiya.IService
         /// <param name="liveAnchorBaseId"></param>
         /// <returns></returns>
         Task<List<CustomerPerformanceBWDto>> GetBelongCustomerServicePerformanceByLiveAnchorBaseIdAsync(int year, int month, string liveAnchorBaseId);
+
+        /// <summary>
+        /// 根据助理id获取助理简单业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="customerServiceId"></param>
+        /// <returns></returns>
+        Task<CustomerServiceSimplePerformanceDto> GetSimpleCustomerServicePerformanceDetails(int year, int month, int customerServiceId);
 
         /// <summary>
         /// 根据客服id查询客服详细业绩

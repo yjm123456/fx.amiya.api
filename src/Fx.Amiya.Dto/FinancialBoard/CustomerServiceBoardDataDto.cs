@@ -90,4 +90,69 @@ namespace Fx.Amiya.Dto.FinancialBoard
         /// </summary>
         public string HistoryAndThisMonthCompare { get; set; }
     }
+
+
+    /// <summary>
+    /// 企业微信客服简单业绩
+    /// </summary>
+    public class CustomerServiceSimplePerformanceDto
+    {
+
+        public int CustomerServiceId { get; set; }
+        public string CustomerServiceName { get; set; }
+        /// <summary>
+        /// 排名
+        /// </summary>
+        public string Rank { get; set; }
+        /// <summary>
+        /// 总业绩
+        /// </summary>
+        public decimal TotaPrice { get; set; }
+
+        /// <summary>
+        /// 新客业绩
+        /// </summary>
+        public decimal NewCustomerPrice { get; set; }
+        /// <summary>
+        /// 老客业绩
+        /// </summary>
+        public decimal OldCustomerPrice { get; set; }
+
+        /// <summary>
+        /// 新诊人数
+        /// </summary>
+        public int NewCustomerNum { get; set; }
+
+        /// <summary>
+        /// 复诊人数
+        /// </summary>
+        public int SequentCustomerNum { get; set; }
+
+        /// <summary>
+        /// 成交人数
+        /// </summary>
+        public int DealNum { get; set; }
+
+        /// <summary>
+        /// 老客人数
+        /// </summary>
+        public int OldCustomerNum { get; set; }
+
+        /// <summary>
+        /// 排名集合
+        /// </summary>
+        public List<CustomerServiceRankDto> CustomerServiceRankDtoList { get; set; }
+    }
+    /// <summary>
+    /// 客服排名类
+    /// </summary>
+
+    public class CustomerServiceRankDto
+    {
+        public int RankId { get; set; }
+        public int CustomerServiceId { get; set; }
+        public string CustomerServiceName { get; set; }
+
+        public decimal TotalAchievement { get; set; }
+    }
 }

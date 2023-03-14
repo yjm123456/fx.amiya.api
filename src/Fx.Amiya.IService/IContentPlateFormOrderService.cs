@@ -160,7 +160,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task RepeateContentPlateFormOrderAsync(ContentPlateFormOrderRepeateDto input,int hospitalEmployeeId, int hospitalId);
+        Task RepeateContentPlateFormOrderAsync(ContentPlateFormOrderRepeateDto input, int hospitalEmployeeId, int hospitalId);
         Task<List<ContentPlatFormOrderInfoSimpleDto>> GetOrderListByPhoneAsync(string phone);
         /// <summary>
         /// 编辑订单
@@ -292,6 +292,14 @@ namespace Fx.Amiya.IService
 
         Task<List<CustomerServiceDetailsPerformanceDto>> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, List<int> belongCustomerServiceIds);
 
+        /// <summary>
+        /// 企业微信获取简单的客服数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="belongCustomerServiceId"></param>
+        /// <returns></returns>
+        Task<CustomerServiceSimplePerformanceDto> GetCustomerServiceSimpleByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int belongCustomerServiceId);
         #endregion
 
         #region 【数据中心】

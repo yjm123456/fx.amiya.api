@@ -1371,7 +1371,7 @@ namespace Fx.Amiya.Service
             result.AcceptConsulting = order.AcceptConsulting;
             result.LastDealHospitalId = order.LastDealHospitalId;
             result.OtherContentPlatFormOrderId = order.OtherContentPlatFormOrderId;
-            if (result.LastDealHospitalId.HasValue)
+            if (result.LastDealHospitalId.HasValue && result.LastDealHospitalId != 0)
             {
                 var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(result.LastDealHospitalId.Value);
                 result.LastDealHospitalName = hospitalInfo.Name;
@@ -2680,6 +2680,79 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
+        /// 根据客服id获取简单的客服数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="belongCustomerServiceIds"></param>
+        /// <returns></returns>
+        public async Task<CustomerServiceSimplePerformanceDto> GetCustomerServiceSimpleByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int belongCustomerServiceId)
+        {
+            var dealData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
+                .Where(e => belongCustomerServiceId == 0 || belongCustomerServiceId == e.BelongEmpId.Value);
+            var dealResult = await dealData
+                .SelectMany(e => e.ContentPlatformOrderDealInfoList)
+                .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsToHospital == true)
+                .GroupBy(e => e.ContentPlatFormOrder.BelongEmpId)
+                .Select(e => new CustomerServiceSimplePerformanceDto
+                {
+                    CustomerServiceId = e.Key.Value,
+                    TotaPrice = DecimalExtension.ChangePriceToTenThousand(e.Sum(e => e.Price)),
+                    NewCustomerPrice = DecimalExtension.ChangePriceToTenThousand(e.Sum(e => e.IsOldCustomer ? 0m : e.Price)),
+                    OldCustomerPrice = DecimalExtension.ChangePriceToTenThousand(e.Sum(e => e.IsOldCustomer ? e.Price : 0m)),
+                    NewCustomerNum = e.Sum(x => x.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.FIRST_SEEK_ADVICE ? 1 : 0),
+                    DealNum = e.Sum(e => e.IsDeal == true ? 1 : 0),
+                    SequentCustomerNum = e.Sum(x => ((x.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.AGAIN_SEEK_ADVICE || x.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.AGAIN_CONSUMPTION) && x.IsDeal == true) ? 1 : 0),
+                    OldCustomerNum = e.Sum(x => x.IsOldCustomer == true && x.IsDeal == true ? 1 : 0),
+                }).FirstOrDefaultAsync();
+
+            if (dealResult == null)
+            {
+                dealResult = new CustomerServiceSimplePerformanceDto();
+            }
+            string belongLiveAnchorId = "";
+            var empInfo = await _amiyaEmployeeService.GetByIdAsync(belongCustomerServiceId);
+            dealResult.CustomerServiceName = empInfo.Name;
+            belongLiveAnchorId = empInfo.LiveAnchorBaseId;
+            if (empInfo.IsCustomerService == true)
+            {
+
+                var employeeInfos = await _amiyaEmployeeService.GetByLiveAnchorBaseIdAsync(belongLiveAnchorId);
+                var amiyaEmployeeIds = employeeInfos.Select(x => x.Id).ToList();
+
+                var rankResult = await this.GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(startDate, endDate, amiyaEmployeeIds);
+                List<CustomerServiceRankDto> CustomerServiceRankDtoList = new List<CustomerServiceRankDto>();
+                int rank = 1;
+                bool hasRank = false;
+                foreach (var x in rankResult)
+                {
+                    CustomerServiceRankDto customerServiceRankDto = new CustomerServiceRankDto();
+                    customerServiceRankDto.RankId = rank;
+                    customerServiceRankDto.CustomerServiceId = x.CustomerServiceId;
+                    customerServiceRankDto.CustomerServiceName = x.CustomerServiceName;
+                    customerServiceRankDto.TotalAchievement = DecimalExtension.ChangePriceToTenThousand(x.TotalServicePrice);
+                    if (hasRank == false)
+                    {
+                        if (belongCustomerServiceId == x.CustomerServiceId)
+                        {
+                            dealResult.Rank = rank.ToString();
+                            hasRank = true;
+                        }
+                        else
+                        {
+                            dealResult.Rank = "#";
+                        }
+                    }
+                    CustomerServiceRankDtoList.Add(customerServiceRankDto);
+
+                    rank++;
+                }
+                dealResult.CustomerServiceRankDtoList = CustomerServiceRankDtoList;
+            }
+            return dealResult;
+        }
+
+        /// <summary>
         /// 根据客服id获取客服业绩信息
         /// </summary>
         /// <param name="startDate"></param>
@@ -2712,6 +2785,8 @@ namespace Fx.Amiya.Service
             {
                 z.CustomerServiceName = await _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(z.CustomerServiceId)).Select(e => e.Name).FirstOrDefaultAsync();
                 var sendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.BelongEmpId == z.CustomerServiceId && x.SendDate >= startDate && x.SendDate < endDate).ToList();
+                //根据手机号去重派单数据
+                var distinctSendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.BelongEmpId == z.CustomerServiceId && x.SendDate >= startDate && x.SendDate < endDate).GroupBy(x=>x.Phone).Select(k=>k.Key.First()).ToList();
                 var visitInfo = sendInfo.Where(x => x.IsToHospital == true).ToList();
                 var dealInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.BelongEmpId == z.CustomerServiceId)
                     .SelectMany(x => x.ContentPlatformOrderDealInfoList).Include(x => x.ContentPlatFormOrder)
@@ -2731,7 +2806,7 @@ namespace Fx.Amiya.Service
                 z.HistorySendThisMonthDealPerformance = history1 + history2;
                 z.ThisMonthSendThisMonthDealPerformance = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.Value.Month == DateTime.Now.Month && c.ContentPlatFormOrder.SendDate.Value.Year == DateTime.Now.Year).Sum(x => x.Price);
 
-                z.VisitNumRatio = DecimalExtension.CalculateTargetComplete(visitInfo.Count(), sendInfo.Count());
+                z.VisitNumRatio = DecimalExtension.CalculateTargetComplete(visitInfo.Count(), distinctSendInfo.Count());
                 z.VideoAndPictureCompare = DecimalExtension.CalculateAccounted(z.PicturePerformance, z.VideoPerformance);
                 z.IsAcompanyingCompare = DecimalExtension.CalculateAccounted(z.NotAcompanyingPerformance, z.AcompanyingPerformance);
                 z.ZeroAndHavingPriceCompare = DecimalExtension.CalculateAccounted(z.HavingPricePerformance, z.ZeroPerformance);

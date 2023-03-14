@@ -199,7 +199,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <param name="liveAnchorBaseId"></param>
         /// <returns></returns>
         [HttpGet("customerServicePerformance")]
-        public async Task<ResultData<List<CustomerPerformanceVo>>> GetHospitalPerformanceAsync(int year, int month, string liveAnchorBaseId)
+        public async Task<ResultData<List<CustomerPerformanceVo>>> GetCustomerServicePerformanceAsync(int year, int month, string liveAnchorBaseId)
         {
             List<CustomerPerformanceVo> performanceVo = new List<CustomerPerformanceVo>();
             var selectResult = await amiyaPerformanceService.GetBelongCustomerServicePerformanceByLiveAnchorBaseIdAsync(year, month, liveAnchorBaseId);
@@ -220,6 +220,44 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
 
 
         /// <summary>
+        /// 根据客服id获取助理简单业绩数据
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="customerServiceId"></param>
+        /// <returns></returns>
+        [HttpGet("customerServiceSimplePerformanceById")]
+        public async Task<ResultData<CustomerServiceSimplePerformanceVo>> GetCustomerServiceSimplePerformanceByIdAsync(int year, int month, int customerServiceId)
+        {
+            var selectResult = await amiyaPerformanceService.GetSimpleCustomerServicePerformanceDetails(year, month, customerServiceId);
+            CustomerServiceSimplePerformanceVo customerPerformanceVo = new CustomerServiceSimplePerformanceVo();
+            customerPerformanceVo.CustomerServiceName = selectResult.CustomerServiceName;
+            customerPerformanceVo.Rank = selectResult.Rank == null ? "#" : selectResult.Rank;
+            customerPerformanceVo.TotaPrice = selectResult.TotaPrice;
+            customerPerformanceVo.NewCustomerPrice = selectResult.NewCustomerPrice;
+            customerPerformanceVo.OldCustomerPrice = selectResult.OldCustomerPrice;
+            customerPerformanceVo.NewCustomerNum = selectResult.NewCustomerNum;
+            customerPerformanceVo.SequentCustomerNum = selectResult.SequentCustomerNum;
+            customerPerformanceVo.DealNum = selectResult.DealNum;
+            customerPerformanceVo.OldCustomerNum = selectResult.OldCustomerNum;
+
+            List<CustomerServiceRankVo> CustomerServiceRankVoList = new List<CustomerServiceRankVo>();
+            if (selectResult.CustomerServiceRankDtoList != null)
+            {
+                foreach (var x in selectResult.CustomerServiceRankDtoList)
+                {
+                    CustomerServiceRankVo customerServiceRankVo = new CustomerServiceRankVo();
+                    customerServiceRankVo.RankId = x.RankId;
+                    customerServiceRankVo.CustomerServiceName = x.CustomerServiceName;
+                    customerServiceRankVo.TotalAchievement = x.TotalAchievement;
+                    CustomerServiceRankVoList.Add(customerServiceRankVo);
+                }
+                customerPerformanceVo.CustomerServiceRankDtoList = CustomerServiceRankVoList;
+            }
+            return ResultData<CustomerServiceSimplePerformanceVo>.Success().AddData("performance", customerPerformanceVo);
+        }
+
+        /// <summary>
         /// 根据客服id获取助理详细业绩数据
         /// </summary>
         /// <param name="year"></param>
@@ -227,7 +265,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <param name="customerServiceId"></param>
         /// <returns></returns>
         [HttpGet("customerServiceDetailPerformanceById")]
-        public async Task<ResultData<CustomerPerformanceDetailsVo>> GetHospitalPerformanceAsync(int year, int month, int customerServiceId)
+        public async Task<ResultData<CustomerPerformanceDetailsVo>> GetCustomerServiceDetailPerformanceByIdAsync(int year, int month, int customerServiceId)
         {
             var selectResult = await amiyaPerformanceService.GetCustomerServicePerformanceDetails(year, month, customerServiceId);
             CustomerPerformanceDetailsVo customerPerformanceVo = new CustomerPerformanceDetailsVo();
@@ -254,6 +292,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             customerPerformanceVo.HistoryAndThisMonthCompare = selectResult.HistoryAndThisMonthCompare;
             return ResultData<CustomerPerformanceDetailsVo>.Success().AddData("performance", customerPerformanceVo);
         }
+
 
         #endregion
 

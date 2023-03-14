@@ -4,6 +4,7 @@ using Fx.Authentication;
 using Fx.Authorization;
 using Fx.Identity.Core;
 using Fx.Infrastructure.DataAccess.Mongodb.Standard;
+using Fx.Open.Infrastructure.Web;
 using Fx.Open.Infrastructure.Web.Filters;
 using Fx.Open.Infrastructure.Web.Middleware;
 using Fx.Open.Infrastructure.Web.Swagger;
@@ -38,6 +39,11 @@ namespace Fx.Amiya.BusinessWechat.Api
 
             services.AddControllers().AddFxValidateModelFilter();
             services.AddFxSwagger("Fx.Amiya.BusinessWeChat.Api.xml", "啊美雅企业微信API");
+            //在各个控制器添加前缀
+            services.AddMvc(opt =>
+            {
+                opt.UseCentralRoutePrefix(new RouteAttribute("/businessWechat"));
+            });
             services.AddFxAmiyaCommonServices();
             services.AddCors(option => option.AddPolicy("cors", policy => policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:5630")));
 
