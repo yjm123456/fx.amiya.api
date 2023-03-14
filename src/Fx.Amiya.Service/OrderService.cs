@@ -91,7 +91,6 @@ namespace Fx.Amiya.Service
         private IDalLiveAnchor dalLiveAnchor;
         private IGoodsInfoService goodsInfoService2;
         private IHuiShouQianPaymentService huiShouQianPaymentService;
-        private IGoodsInfo goodsInfoService;
         public OrderService(
             IDalContentPlatformOrder dalContentPlatFormOrder,
             IDalOrderInfo dalOrderInfo,
@@ -1295,12 +1294,22 @@ namespace Fx.Amiya.Service
                     }
                     if (voucher.Type == (int)ConsumptionVoucherType.Material)
                     {
+                        var payCount = orderTrade.TotalAmount;
                         orderTrade.TotalAmount = (orderTrade.TotalAmount - voucher.DeductMoney) <= 0 ? 0.01m : (orderTrade.TotalAmount - voucher.DeductMoney);
+                        var deductMoney = payCount - orderTrade.TotalAmount;
+                        orderTradeAddDto.OrderInfoAddList.First().DeductMoney = deductMoney.Value < 0 ? 0m : deductMoney.Value;
+                        orderTradeAddDto.OrderInfoAddList.First().ActualPayment = orderTrade.TotalAmount;
                     }
                     else if (voucher.Type == (int)ConsumptionVoucherType.Discount)
                     {
+                        var payCount = orderTrade.TotalAmount;
                         orderTrade.TotalAmount = Math.Ceiling(orderTrade.TotalAmount.Value * voucher.DeductMoney) <= 0 ? 0.01m : Math.Ceiling(orderTrade.TotalAmount.Value * voucher.DeductMoney);
+                        var deductMoney = payCount - orderTrade.TotalAmount;
+                        orderTradeAddDto.OrderInfoAddList.First().DeductMoney = deductMoney.Value < 0 ? 0m : deductMoney.Value;
+                        orderTradeAddDto.OrderInfoAddList.First().ActualPayment = orderTrade.TotalAmount;
                     }
+                    orderTradeAddDto.OrderInfoAddList.First().IsUseCoupon = true;
+                    orderTradeAddDto.OrderInfoAddList.First().CouponId = orderTradeAddDto.VoucherId;
                 }
                 orderTrade.TotalIntegration = orderTradeAddDto.OrderInfoAddList.Sum(e => e.IntegrationQuantity);
                 orderTrade.Remark = orderTradeAddDto.Remark;
@@ -1332,8 +1341,6 @@ namespace Fx.Amiya.Service
         {
             try
             {
-
-
                 OrderTrade orderTrade = new OrderTrade();
                 orderTrade.TradeId = Guid.NewGuid().ToString("N");
                 orderTrade.CustomerId = orderTradeAddDto.CustomerId;
@@ -1356,12 +1363,22 @@ namespace Fx.Amiya.Service
                     }
                     if (voucher.Type == (int)ConsumptionVoucherType.Material)
                     {
+                        var payCount = orderTrade.TotalAmount;
                         orderTrade.TotalAmount = (orderTrade.TotalAmount - voucher.DeductMoney) <= 0 ? 0.01m : (orderTrade.TotalAmount - voucher.DeductMoney);
+                        var deductMoney = payCount - orderTrade.TotalAmount;
+                        orderTradeAddDto.OrderInfoAddList.First().DeductMoney = deductMoney.Value < 0 ? 0m : deductMoney.Value;
+                        orderTradeAddDto.OrderInfoAddList.First().ActualPayment = orderTrade.TotalAmount;
                     }
                     else if (voucher.Type == (int)ConsumptionVoucherType.Discount)
                     {
+                        var payCount = orderTrade.TotalAmount;
                         orderTrade.TotalAmount = Math.Ceiling(orderTrade.TotalAmount.Value * voucher.DeductMoney) <= 0 ? 0.01m : Math.Ceiling(orderTrade.TotalAmount.Value * voucher.DeductMoney);
+                        var deductMoney = payCount - orderTrade.TotalAmount;
+                        orderTradeAddDto.OrderInfoAddList.First().DeductMoney = deductMoney.Value < 0 ? 0m : deductMoney.Value;
+                        orderTradeAddDto.OrderInfoAddList.First().ActualPayment = orderTrade.TotalAmount;
                     }
+                    orderTradeAddDto.OrderInfoAddList.First().IsUseCoupon = true;
+                    orderTradeAddDto.OrderInfoAddList.First().CouponId = orderTradeAddDto.VoucherId;
                 }
                 orderTrade.TotalIntegration = orderTradeAddDto.OrderInfoAddList.Sum(e => e.IntegrationQuantity);
                 orderTrade.Remark = orderTradeAddDto.Remark;
@@ -4771,6 +4788,7 @@ namespace Fx.Amiya.Service
                 var orderList = dalOrderInfo.GetAll().Where(e => e.TradeId == tradeId).ToList();
                 foreach (var item in orderList)
                 {
+                    await _goodsInfoService.AddGoodsInventoryQuantityAsync(item.GoodsId, (int)item.Quantity);
                     item.StatusCode = OrderStatusCode.TRADE_CLOSED_BY_TAOBAO;
                     await dalOrderInfo.UpdateAsync(item, true);
                     //退还抵用券
@@ -4792,6 +4810,49 @@ namespace Fx.Amiya.Service
                 throw new Exception("取消订单失败");
             }
         }
+
+        /// <summary>
+        /// 取消积分订单
+        /// </summary>
+        /// <param name="tradeId"></param>
+        /// <returns></returns>
+        public async Task CancelPointOrderAsync(string tradeId)
+        {
+            try
+            {
+                unitOfWork.BeginTransaction();
+                var orderTrade = dalOrderTrade.GetAll().Where(e => e.TradeId == tradeId).Include(e => e.OrderInfoList).SingleOrDefault();
+                if (orderTrade == null) throw new Exception("交易编号错误");
+
+                //if (orderTrade.OrderInfoList.First().ExchangeType != (byte)ExchangeType.PointAndMoney) throw new Exception("该订单不属于积分加钱购订单");
+                if (orderTrade.StatusCode != "WAIT_BUYER_PAY") return;
+                var orderList = dalOrderInfo.GetAll().Where(e => e.TradeId == tradeId).ToList();
+                foreach (var item in orderList)
+                {
+                    await _goodsInfoService.AddGoodsInventoryQuantityAsync(item.GoodsId, (int)item.Quantity);
+                    item.StatusCode = OrderStatusCode.TRADE_CLOSED_BY_TAOBAO;
+                    await dalOrderInfo.UpdateAsync(item, true);
+                    //退还抵用券
+                    if (item.IsUseCoupon)
+                    {
+                        UpdateCustomerConsumptionVoucherDto updateCustomerConsumptionVoucherDto = new UpdateCustomerConsumptionVoucherDto();
+                        updateCustomerConsumptionVoucherDto.CustomerVoucherId = item.CouponId;
+                        updateCustomerConsumptionVoucherDto.IsUsed = false;
+                        await customerConsumptionVoucherService.UpdateCustomerConsumptionVoucherUseStatusAsync(updateCustomerConsumptionVoucherDto);
+                    }
+                }
+                orderTrade.StatusCode = OrderStatusCode.TRADE_CLOSED_BY_TAOBAO;
+                await dalOrderTrade.UpdateAsync(orderTrade, true);
+                unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw new Exception("取消订单失败");
+            }
+        }
+
+
         /// <summary>
         /// 取消积分加钱购订单(无事务,事务操作由外层方法控制)
         /// </summary>
@@ -4818,6 +4879,7 @@ namespace Fx.Amiya.Service
                 var orderList = dalOrderInfo.GetAll().Where(e => e.TradeId == tradeId).ToList();
                 foreach (var item in orderList)
                 {
+                    await _goodsInfoService.AddGoodsInventoryQuantityAsync(item.GoodsId, item.Quantity.Value);
                     item.StatusCode = OrderStatusCode.TRADE_CLOSED_BY_TAOBAO;
                     await dalOrderInfo.UpdateAsync(item, true);
                     //退还抵用券
@@ -5067,7 +5129,17 @@ namespace Fx.Amiya.Service
             List<CartCreateOrderDto> orderList = new List<CartCreateOrderDto>();
             foreach (var orderItem in orderItems)
             {
+
+                var isOverLimitCount = await IsOverLimitOrderAsync(orderItem.GoodsId, customerId, orderItem.Quantity);
+                if (isOverLimitCount)
+                {
+                    throw new Exception("已超出商品限购数量！");
+                }
                 var goodsInfo = goodsInfoList.Where(e => e.Id == orderItem.GoodsId).FirstOrDefault();
+                if (orderItem.Quantity > goodsInfo.InventoryQuantity)
+                {
+                    throw new Exception("库存不足！");
+                }
                 var orderStandard = goodsInfo.StandardList.Where(e => e.Id == orderItem.StandardId).FirstOrDefault();
                 if (orderStandard == null) throw new Exception($"{goodsInfo.GoodsName}商品的规格无效！");
                 GoodsConsumVoucherDto orderVoucher = null;
@@ -5343,11 +5415,17 @@ namespace Fx.Amiya.Service
         {
             if (virtualOrder.Quantity <= 0) throw new Exception("购买数量错误！");
             var goodsInfo = await _goodsInfoService.GetByIdAsync(virtualOrder.GoodsId);
+            if (goodsInfo.InventoryQuantity < virtualOrder.Quantity) throw new Exception("库存不足！");
+            var isOverLimitCount = await IsOverLimitOrderAsync(virtualOrder.GoodsId, virtualOrder.CustomerId, virtualOrder.Quantity);
+            if (isOverLimitCount)
+            {
+                throw new Exception("已超出商品限购数量！");
+            }
             if (goodsInfo == null || !goodsInfo.Valid) throw new Exception("无效商品！");
             if (goodsInfo.ExchangeType != ExchangeType.Integration) throw new Exception("非积分支付商品！");
             var hospitalPrice = goodsInfo.GoodsHospitalPrice.Find(e => e.HospitalId == virtualOrder.HospitalId);
             if (hospitalPrice == null) throw new Exception("无效门店！");
-            var hospitalInfo =await _hospitalInfoService.GetByIdAsync(hospitalPrice.HospitalId);
+            var hospitalInfo = await _hospitalInfoService.GetByIdAsync(hospitalPrice.HospitalId);
             var integralBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(virtualOrder.CustomerId);
             var totalIntegral = hospitalPrice.Price * virtualOrder.Quantity;
             if (totalIntegral > integralBalance) throw new Exception("积分余额不足！");
@@ -5390,6 +5468,7 @@ namespace Fx.Amiya.Service
             addOrder.DeductMoney = 0m;
             addTrade.OrderInfo = addOrder;
             await AddAmiyaIntegralVirtualOrderAsync(addTrade);
+            await _goodsInfoService.ReductionGoodsInventoryQuantityAsync(addOrder.GoodsId, addOrder.Quantity.Value);
             return addTrade.Id;
         }
         /// <summary>
@@ -5420,9 +5499,50 @@ namespace Fx.Amiya.Service
 
         public bool WriteOffCodeIsExist(string code)
         {
-            var writeOffCode= dalOrderInfo.GetAll().Select(e => e.WriteOffCode).Where(e => e == code).FirstOrDefault();
+            var writeOffCode = dalOrderInfo.GetAll().Select(e => e.WriteOffCode).Where(e => e == code).FirstOrDefault();
             return string.IsNullOrEmpty(writeOffCode) ? false : true;
 
+        }
+
+        public bool IsOrdered(string goodsId, string customerId)
+        {
+            return dalOrderInfo.GetAll().Where(e => (e.GoodsId == goodsId && e.OrderTrade.CustomerId == customerId)
+            && (e.StatusCode == OrderStatusCode.WAIT_BUYER_PAY
+            || e.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS
+            || e.StatusCode == OrderStatusCode.TRADE_BUYER_PAID
+            || e.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS
+            || e.StatusCode == OrderStatusCode.TRADE_FINISHED
+            || e.StatusCode == OrderStatusCode.REFUNDING
+            || e.StatusCode == OrderStatusCode.CHECK_FAIL)).FirstOrDefault() == null ? false : true;
+        }
+
+        public async Task<bool> IsOverLimitOrderAsync(string goodsId, string customerId, int purcheCount)
+        {
+            var goodsInfo = await _goodsInfoService.GetByIdAsync(goodsId);
+            if (goodsInfo.IsLimitBuy)
+            {
+                var limitCount = goodsInfo.LimitBuyQuantity;
+                var orderCount = await dalOrderInfo.GetAll().Where(e => (e.GoodsId == goodsId && e.OrderTrade.CustomerId == customerId)
+                    && (e.StatusCode == OrderStatusCode.WAIT_BUYER_PAY
+                || e.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS
+                || e.StatusCode == OrderStatusCode.TRADE_BUYER_PAID
+                || e.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS
+                || e.StatusCode == OrderStatusCode.TRADE_FINISHED
+                || e.StatusCode == OrderStatusCode.REFUNDING
+                || e.StatusCode == OrderStatusCode.CHECK_FAIL)).SumAsync(e=>e.Quantity);
+                if ((orderCount + purcheCount) > limitCount)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 

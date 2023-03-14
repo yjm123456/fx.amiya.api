@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Core.Dto.Integration;
+using Fx.Amiya.Core.Interfaces.Goods;
 using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.CustomerIntegralOrderRefunds;
@@ -24,12 +25,13 @@ namespace Fx.Amiya.Service
         private IIntegrationAccount _interGrationAccountService;
         private IOrderService _orderService;
         private IDalOrderTrade _orderTrade;
+        private IGoodsInfo goodsInfoService;
 
         public CustomerIntegralOrderRefundService(IDalCustomerIntegralOrderRefund dalCustomerIntegralOrderRefunds,
                IUnitOfWork unitOfWork,
             IDalAmiyaEmployee dalAmiyaEmployee,
             IIntegrationAccount interGrationAccountService,
-            IOrderService orderService, IDalOrderTrade orderTrade)
+            IOrderService orderService, IDalOrderTrade orderTrade, IGoodsInfo goodsInfoService)
         {
             this.dalCustomerIntegralOrderRefund = dalCustomerIntegralOrderRefunds;
             this.dalAmiyaEmployee = dalAmiyaEmployee;
@@ -37,6 +39,7 @@ namespace Fx.Amiya.Service
             _interGrationAccountService = interGrationAccountService;
             _orderService = orderService;
             _orderTrade = orderTrade;
+            this.goodsInfoService = goodsInfoService;
         }
 
 
@@ -271,6 +274,7 @@ namespace Fx.Amiya.Service
                 ConsumptionIntegrationDto updateIntegrationDto = new ConsumptionIntegrationDto();
 
                 var orderInfo = await _orderService.GetByIdAsync(customerIntegralOrderRefund.OrderId);
+                await goodsInfoService.AddGoodsInventoryQuantityAsync(orderInfo.GoodsId, (int)orderInfo.Quantity);
                 if (updateDto.CheckState == (int)CheckType.CheckedSuccess)
                 {
                     //积分返还，新增积分情况

@@ -70,7 +70,11 @@ namespace Fx.Amiya.Core.Dto.Goods
         /// <summary>
         /// 商城
         /// </summary>
-        Store
+        Store,
+        /// <summary>
+        /// 积分加钱
+        /// </summary>
+        IntegralAndStore
        
     }
     /// <summary>

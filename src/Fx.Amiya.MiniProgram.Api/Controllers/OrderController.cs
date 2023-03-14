@@ -459,6 +459,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             foreach (var item in orderAdd.OrderItemList)
             {
                 if (item.Quantity <= 0) throw new Exception("下单数量错误");
+                
                 if (item.IsSkinCare)
                 {
                     var orderExist = await orderService.IsExistMFCard(customerId);
@@ -468,6 +469,19 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     }
                 }
                 var goodsInfo = await goodsInfoService.GetByIdAsync(item.GoodsId);
+                var isOverLimitCount=await orderService.IsOverLimitOrderAsync(goodsInfo.Id,customerId, item.Quantity);
+                if (isOverLimitCount) {
+                    throw new Exception("已超出商品限购数量！");
+                }
+                //if (goodsInfo.ExchangeType==(byte)ExchangeType.Integration) {
+                //    if (item.Quantity>1) {
+                //        throw new Exception("同一商品只能兑换一件哦！");
+                //    }
+                //    //如果为积分商品,判断用户是否已购买过该商品
+                //    if (orderService.IsOrdered(item.GoodsId,customerId)) {
+                //        throw new Exception("该商品只能兑换一次,您已兑换过该商品,请勿重复兑换！");
+                //    }
+                //}
                 if (goodsInfo.ExchangeType != ExchangeType.Integration && goodsInfo.ExchangeType != ExchangeType.ThirdPartyPayment) throw new Exception("付款方式错误");
                 OrderInfoAddDto amiyaOrder = new OrderInfoAddDto();
                 if (goodsInfo.ExchangeType == ExchangeType.ThirdPartyPayment)
@@ -714,19 +728,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 if (totalFee < 0) throw new Exception("支付金额异常");
                 orderId = orderId.Trim(',');
                 goodsName = goodsName.Trim(',');
-                //判断是否使用全局抵用券
-                if (voucher != null && !voucher.IsSpecifyProduct)
-                {
-                    if (voucher.Type == (int)ConsumptionVoucherType.Material)
-                    {
-                        totalFee = (totalFee - voucher.DeductMoney) <= 0 ? 0.01m : (totalFee - voucher.DeductMoney);
-                    }
-                    else if (voucher.Type == (int)ConsumptionVoucherType.Discount)
-                    {
-                        totalFee = Math.Ceiling(totalFee * voucher.DeductMoney) <= 0 ? 0.01m : Math.Ceiling(totalFee * voucher.DeductMoney);
-                    }
-
-                }
+               
 
                 //修改抵用券使用状态
                 if (voucher != null)
@@ -828,7 +830,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         }
 
         /// <summary>
-        /// 新的购物车下单接口 CartOrderAddVo cartOrder
+        /// 新的购物车下单接口 
         /// </summary>
         /// <param name="cartOrder"></param>
         /// <returns></returns>
@@ -1034,6 +1036,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 {
                     if (item.Quantity <= 0) throw new Exception("下单数量错误");
                     var goodsInfo = await goodsInfoService.GetByIdAsync(item.GoodsId);
+                    var isOverLimitCount = await orderService.IsOverLimitOrderAsync(item.GoodsId, customerId, item.Quantity);
+                    if (isOverLimitCount)
+                    {
+                        throw new Exception("已超出商品限购数量！");
+                    }
                     if (goodsInfo.ExchangeType != ExchangeType.PointAndMoney)
                     {
                         throw new Exception("该商品不支持积分加钱购");
@@ -1146,17 +1153,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     orderId += x.Id + ",";
                     totalFee += x.ActualPayment.Value;
                     goodsName += x.GoodsName + ",";
-                }
-                if (!IsSpecifyVoucher && voucher != null)
-                {
-                    if (voucher.Type == (int)ConsumptionVoucherType.Material)
-                    {
-                        totalFee = (totalFee - voucher.DeductMoney) <= 0 ? 0.01m : (totalFee - voucher.DeductMoney);
-                    }
-                    else if (voucher.Type == (int)ConsumptionVoucherType.Discount)
-                    {
-                        totalFee = Math.Ceiling(totalFee * voucher.DeductMoney) <= 0 ? 0.01m : Math.Ceiling(totalFee * voucher.DeductMoney);
-                    }
                 }
                 if (totalFee < 0) throw new Exception("支付金额异常");
                 orderId = orderId.Trim(',');
@@ -1284,19 +1280,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
                 //修改订单状态
                 await orderService.UpdateWithNoTranstionAsync(updateOrderList);
-
-                //UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
-                //updateOrderTrade.TradeId = tradeId;
-                //updateOrderTrade.AddressId = orderTrade.AddressId;
-                //if (isMaterialOrder)
-                //{
-                //    updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
-                //}
-                //else {
-                //    updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
-                //}
-               
-                //await orderService.UpdateOrderTradeAsync(updateOrderTrade);
                 foreach (var item in orderTrade.OrderInfoList)
                 {
                     if (item.ExchangeType == (byte)ExchangeType.Integration && item.IntegrationQuantity > 0)

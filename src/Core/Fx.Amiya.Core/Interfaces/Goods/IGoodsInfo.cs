@@ -32,6 +32,7 @@ namespace Fx.Amiya.Core.Interfaces.Goods
         /// <returns></returns>
         Task<GoodsInfoForSingleDto> GetByIdAsync(string id);
 
+        
 
         /// <summary>
         /// 添加商品信息

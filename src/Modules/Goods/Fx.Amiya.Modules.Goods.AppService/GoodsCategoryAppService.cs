@@ -208,7 +208,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
         Dictionary<ShowDirectionType, string> showDirectionTypeDict = new Dictionary<ShowDirectionType, string>()
         {
             { ShowDirectionType.Store,"商城"},
-            { ShowDirectionType.Integral,"积分兑换"}
+            { ShowDirectionType.Integral,"积分兑换"},
+            { ShowDirectionType.IntegralAndStore,"积分加钱购"}
         };
 
 

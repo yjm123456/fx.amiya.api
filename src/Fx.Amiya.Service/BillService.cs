@@ -71,7 +71,7 @@ namespace Fx.Amiya.Service
                         && (!billType.HasValue || d.BillType == billType.Value)
                         && (!returnBackState.HasValue || d.ReturnBackState == returnBackState.Value)
                         && (!valid.HasValue || d.Valid == valid.Value)
-                        && (d.CreateDate>=endDate&&d.CreateDate<endDate)
+                        && (d.CreateDate>= startDate && d.CreateDate<endDate)
                         select new BillDto
                         {
                             Id = d.Id,
@@ -431,7 +431,7 @@ namespace Fx.Amiya.Service
                     throw new Exception("当前回款金额与已回款金额累计（" + result.ReturnBackPrice + "元）不能大于发票金额与其他费用的总和（" + billTotalPrice + "）！");
                 }
                 result.UpdateDate = DateTime.Now;
-                result.ReturnBackPriceDate = DateTime.Now;
+                result.ReturnBackPriceDate = updateDto.ReturnBackDate;
                 await dalBill.UpdateAsync(result, true);
 
                 //回款记录表插入数据(todo;)

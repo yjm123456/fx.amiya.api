@@ -76,6 +76,19 @@ namespace Fx.Amiya.IService
         /// <param name="customerId"></param>
         /// <returns></returns>
         Task<bool> IsExistMFCard(string customerId);
+        /// <summary>
+        /// 判断用户是否下单过商品
+        /// </summary>
+        /// <param name="goodsId"></param>
+        /// <returns></returns>
+        bool IsOrdered(string goodsId,string customerId);
+        /// <summary>
+        /// 判断是否超出限购数量
+        /// </summary>
+        /// <param name="goodsId"></param>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        Task<bool> IsOverLimitOrderAsync(string goodsId,string customerId,int purcheCount);
 
         /// <summary>
         /// 添加订单
@@ -549,7 +562,13 @@ namespace Fx.Amiya.IService
         /// <param name="tradeId"></param>
         /// <returns></returns>
         Task CancelPointAndMoneyOrderAsync(string tradeId,string customerId);
-        
+
+        /// <summary>
+        /// 取消积分订单
+        /// </summary>
+        /// <param name="tradeId"></param>
+        /// <returns></returns>
+        Task CancelPointOrderAsync(string tradeId);
 
         #region 报表模块
 

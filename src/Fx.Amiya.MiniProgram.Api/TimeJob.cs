@@ -64,38 +64,32 @@ namespace Fx.Amiya.MiniProgram.Api
                 var customerConsumptionVoucherService = scope.ServiceProvider.GetService<ICustomerConsumptionVoucherService>();
                 var ordres = await orderService.TimeOutOrderAsync();
                 //var thridOrder = ordres.Where(e => e.ExchageType != (int)ExchangeType.PointAndMoney).ToList();
-                var pointAndMoneyOrder = ordres.Where(e => e.ExchageType == (int)ExchangeType.PointAndMoney).ToList();
-                List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
-                //foreach (var item in thridOrder)
-                //{
-                //    UpdateOrderDto updateOrder = new UpdateOrderDto();
-                //    updateOrder.OrderId = item.Id;
-                //    updateOrder.StatusCode = OrderStatusCode.TRADE_CLOSED_BY_TAOBAO;
-                //    updateOrder.AppType = (byte)AppType.MiniProgram;
-                //    updateOrderList.Add(updateOrder);
-                //    if (item.GoodsId!= "00000000") {
-                //        await goodsService.AddGoodsInventoryQuantityAsync(item.GoodsId, (int)item.Quantity);
-                //    }                                      
-                //}
-                //await orderService.UpdateAsync(updateOrderList);
+                var pointAndMoneyOrder = ordres.Where(e => e.ExchageType == (int)ExchangeType.PointAndMoney||e.ExchageType==(int)ExchangeType.HuiShouQian).Select(e=>new { e.TradeId ,e.CustomerId}).Distinct().ToList();
+                var pointOrder = ordres.Where(e => e.ExchageType == (int)ExchangeType.Integration).Select(e => e.TradeId).Distinct().ToList();
+                List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();         
+                foreach (var item in pointOrder)
+                {
+                   await orderService.CancelPointOrderAsync(item);
+                } 
+
                 foreach (var item in pointAndMoneyOrder)
                 {
                     await orderService.CancelPointAndMoneyOrderAsync(item.TradeId,item.CustomerId);
                 }
                 
                 //退还抵用券
-                foreach (var item in pointAndMoneyOrder)
-                {
-                    if (item.IsUseCoupon)
-                    {
-                        UpdateCustomerConsumptionVoucherDto updateCustomerConsumptionVoucherDto = new UpdateCustomerConsumptionVoucherDto();
-                        updateCustomerConsumptionVoucherDto.CustomerVoucherId = item.CouponId;
-                        updateCustomerConsumptionVoucherDto.IsUsed = false;
-                        updateCustomerConsumptionVoucherDto.UseDate = DateTime.Now;
-                        await customerConsumptionVoucherService.UpdateCustomerConsumptionVoucherUseStatusAsync(updateCustomerConsumptionVoucherDto);
-                    }
+                //foreach (var item in pointAndMoneyOrder)
+                //{
+                //    if (item.IsUseCoupon)
+                //    {
+                //        UpdateCustomerConsumptionVoucherDto updateCustomerConsumptionVoucherDto = new UpdateCustomerConsumptionVoucherDto();
+                //        updateCustomerConsumptionVoucherDto.CustomerVoucherId = item.CouponId;
+                //        updateCustomerConsumptionVoucherDto.IsUsed = false;
+                //        updateCustomerConsumptionVoucherDto.UseDate = DateTime.Now;
+                //        await customerConsumptionVoucherService.UpdateCustomerConsumptionVoucherUseStatusAsync(updateCustomerConsumptionVoucherDto);
+                //    }
 
-                }
+                //}
             }
                
         }

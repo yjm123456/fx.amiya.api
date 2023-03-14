@@ -85,6 +85,7 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                     category.CreateBy = categoryModel.CreateBy;
                     category.UpdateDate = categoryModel.UpdateDate;
                     category.UpdateBy = categoryModel.UpdateBy;
+                    category.CategoryImg = categoryModel.CategoryImg;
                     category.Sort = categoryModel.Sort;
                 }
                 else{
@@ -98,6 +99,7 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                     category.CreateBy = nearRow.CreateBy;
                     category.UpdateDate = nearRow.UpdateDate;
                     category.UpdateBy = nearRow.UpdateBy;
+                    category.CategoryImg = nearRow.CategoryImg;
                     category.Sort = nearRow.Sort;
                 }
             }
@@ -114,6 +116,7 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                     category.CreateBy = categoryModel.CreateBy;
                     category.UpdateDate = categoryModel.UpdateDate;
                     category.UpdateBy = categoryModel.UpdateBy;
+                    category.CategoryImg = categoryModel.CategoryImg;
                     category.Sort = categoryModel.Sort;
                 }
                 else{
@@ -127,6 +130,7 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                     category.CreateBy = nearRow.CreateBy;
                     category.UpdateDate = nearRow.UpdateDate;
                     category.UpdateBy = nearRow.UpdateBy;
+                    category.CategoryImg = nearRow.CategoryImg;
                     category.Sort = nearRow.Sort;
                 }
             }

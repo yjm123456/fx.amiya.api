@@ -73,7 +73,7 @@ namespace Fx.Amiya.Service
             fxPageInfo.List = record.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
             foreach (var item in fxPageInfo.List)
             {
-                item.HandleBy = string.IsNullOrEmpty(item.HandleBy) ? "未知" : dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(item.HandleBy)).FirstOrDefault()?.Name;
+                item.HandleBy = string.IsNullOrEmpty(item.HandleBy) ? "系统发放" : dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(item.HandleBy)).FirstOrDefault()?.Name;
                 item.AccountBalance =await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(item.CustomerId);
             }
             return fxPageInfo;
