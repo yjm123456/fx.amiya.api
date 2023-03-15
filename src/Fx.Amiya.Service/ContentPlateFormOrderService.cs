@@ -2808,9 +2808,9 @@ namespace Fx.Amiya.Service
 
                 z.VisitNumRatio = DecimalExtension.CalculateTargetComplete(visitInfo.Count(), distinctSendInfo.Count());
                 z.VideoAndPictureCompare = DecimalExtension.CalculateAccounted(z.PicturePerformance, z.VideoPerformance);
-                z.IsAcompanyingCompare = DecimalExtension.CalculateAccounted(z.NotAcompanyingPerformance, z.AcompanyingPerformance);
-                z.ZeroAndHavingPriceCompare = DecimalExtension.CalculateAccounted(z.HavingPricePerformance, z.ZeroPerformance);
-                z.HistoryAndThisMonthCompare = DecimalExtension.CalculateAccounted(z.HistorySendThisMonthDealPerformance, z.ThisMonthSendThisMonthDealPerformance);
+                z.IsAcompanyingCompare = DecimalExtension.CalculateAccounted(z.AcompanyingPerformance, z.NotAcompanyingPerformance);
+                z.ZeroAndHavingPriceCompare = DecimalExtension.CalculateAccounted(z.ZeroPerformance, z.HavingPricePerformance);
+                z.HistoryAndThisMonthCompare = DecimalExtension.CalculateAccounted(z.ThisMonthSendThisMonthDealPerformance, z.HistorySendThisMonthDealPerformance);
             }
             return dealResult.OrderByDescending(x => x.TotalServicePrice).ToList();
         }

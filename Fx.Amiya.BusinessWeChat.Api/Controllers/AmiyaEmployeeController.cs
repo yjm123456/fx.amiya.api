@@ -69,6 +69,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                     employeeVo.PositionName = q.PositionName;
                     employeeVo.IsCustomerService = q.IsCustomerService;
                     employeeVo.LiveAnchorIds = q.LiveAnchorIds;
+                    employeeVo.LiveAnchorBaseId = q.LiveAnchorBaseId;
+                    employeeVo.LiveAnchorBaseName = q.LiveAnchorBaseName;
                 }
                 return ResultData<AmiyaEmployeeVo>.Success().AddData("employeeInfo", employeeVo);
             }
@@ -107,6 +109,18 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             {
                 return ResultData.Fail(ex.Message);
             }
+        }
+
+
+        /// <summary>
+        /// 检查密码是否合法
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("checkPassword/{password}")]
+        public async Task<ResultData<bool>> CheckPasswordAsync(string password)
+        {
+            bool legitimate = await employeeService.CheckPasswordAsync(password);
+            return ResultData<bool>.Success().AddData("islegitimate", legitimate);
         }
 
         /// <summary>

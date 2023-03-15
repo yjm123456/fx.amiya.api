@@ -27,5 +27,9 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaPositionInfo
         /// 是否可读取数据中心
         /// </summary>
         public bool ReadDataCenter { get; set; }
+        /// <summary>
+        /// 是否可查看主播数据
+        /// </summary>
+        public bool ReadLiveAnchorData { get; set; }
     }
 }

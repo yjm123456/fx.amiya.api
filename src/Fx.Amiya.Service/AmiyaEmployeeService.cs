@@ -68,6 +68,7 @@ namespace Fx.Amiya.Service
                 employeeDto.DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name;
                 employeeDto.UserId = employee.UserId;
                 employeeDto.ReadDataCenter = employee.AmiyaPositionInfo.ReadDataCenter;
+                employeeDto.ReadLiveAnchorData = employee.AmiyaPositionInfo.ReadLiveAnchorData;
                 return employeeDto;
             }
             catch (Exception ex)
@@ -105,6 +106,7 @@ namespace Fx.Amiya.Service
                 employeeDto.DepartmentId = employee.AmiyaPositionInfo.DepartmentId;
                 employeeDto.DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name;
                 employeeDto.ReadDataCenter = employee.AmiyaPositionInfo.ReadDataCenter;
+                employeeDto.ReadLiveAnchorData = employee.AmiyaPositionInfo.ReadLiveAnchorData;
 
                 return employeeDto;
             }
@@ -287,8 +289,9 @@ namespace Fx.Amiya.Service
                     IsCustomerService = employee.IsCustomerService,
                     DepartmentId = employee.AmiyaPositionInfo.DepartmentId,
                     DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name,
-                    LiveAnchorBaseId = employee.LiveAnchorBaseId
-                };
+                    LiveAnchorBaseId = employee.LiveAnchorBaseId,
+                    LiveAnchorBaseName = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == employee.LiveAnchorBaseId).FirstOrDefault()?.LiveAnchorName
+            };
                 if (employeeDto.IsCustomerService == true || employeeDto.PositionId == 19)
                 {
                     employeeDto.LiveAnchorIds = new List<int>();

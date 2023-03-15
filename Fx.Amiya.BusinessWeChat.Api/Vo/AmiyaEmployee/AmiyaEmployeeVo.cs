@@ -56,5 +56,14 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee
         /// 绑定主播信息
         /// </summary>
         public List<int> LiveAnchorIds { get; set; }
+
+        /// <summary>
+        /// 绑定主播基础信息
+        /// </summary>
+        public string LiveAnchorBaseId { get; set; }
+        /// <summary>
+        /// 绑定主播基础名称
+        /// </summary>
+        public string LiveAnchorBaseName { get; set; }
     }
 }

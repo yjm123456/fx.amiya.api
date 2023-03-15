@@ -17,5 +17,9 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaPositionInfo
         public int DepartmentId { get; set; }
         public string DepartmentName { get; set; }
         public bool ReadDataCenter { get; set; }
+        /// <summary>
+        /// 查看主播数据
+        /// </summary>
+        public bool ReadLiveAnchorData { get; set; }
     }
 }

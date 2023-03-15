@@ -39,7 +39,8 @@ namespace Fx.Amiya.Service
                                    IsDirector = d.IsDirector,
                                    DepartmentId = d.DepartmentId,
                                    DepartmentName = d.AmiyaDepartment.Name,
-                                   ReadDataCenter = d.ReadDataCenter
+                                   ReadDataCenter = d.ReadDataCenter,
+                                   ReadLiveAnchorData=d.ReadLiveAnchorData,
                                };
                 return await position.ToListAsync();
             }
@@ -60,6 +61,7 @@ namespace Fx.Amiya.Service
                 positionInfo.DepartmentId = addDto.DepartmentId;
                 positionInfo.IsDirector = addDto.IsDirector;
                 positionInfo.ReadDataCenter = addDto.ReadDataCenter;
+                positionInfo.ReadLiveAnchorData = addDto.ReadLiveAnchorData;
                 await dalAmiyaPositionInfo.AddAsync(positionInfo, true);
             }
             catch (Exception ex)
@@ -92,6 +94,7 @@ namespace Fx.Amiya.Service
                 positionDto.DepartmentId = position.DepartmentId;
                 positionDto.DepartmentName = position.AmiyaDepartment.Name;
                 positionDto.ReadDataCenter = position.ReadDataCenter;
+                positionDto.ReadLiveAnchorData = position.ReadLiveAnchorData;
                 return positionDto;
             }
             catch (Exception ex)
@@ -125,6 +128,7 @@ namespace Fx.Amiya.Service
                     positionDto.DepartmentId = x.DepartmentId;
                     positionDto.DepartmentName = x.AmiyaDepartment.Name;
                     positionDto.ReadDataCenter = x.ReadDataCenter;
+                    positionDto.ReadLiveAnchorData = x.ReadLiveAnchorData;
                     amiyaPositionInfoDtos.Add(positionDto);
                 }
                 return amiyaPositionInfoDtos;
@@ -150,6 +154,7 @@ namespace Fx.Amiya.Service
                 position.DepartmentId = updateDto.DepartmentId;
                 position.IsDirector = updateDto.IsDirector;
                 position.ReadDataCenter = updateDto.ReadDataCenter;
+                position.ReadLiveAnchorData = updateDto.ReadLiveAnchorData;
                 await dalAmiyaPositionInfo.UpdateAsync(position, true);
             }
             catch (Exception ex)

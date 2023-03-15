@@ -22,6 +22,10 @@ namespace Fx.Amiya.Dto.AmiyaEmployee
         public string UserId { get; set; }
         public string Code { get; set; }
         public bool ReadDataCenter { get; set; }
+        /// <summary>
+        /// 查看主播数据
+        /// </summary>
+        public bool ReadLiveAnchorData { get; set; }
         public string LiveAnchorBaseId { get; set; }
         public string LiveAnchorBaseName { get; set; }
         public List<int> LiveAnchorIds { get; set; }

@@ -17,5 +17,9 @@ namespace Fx.Amiya.Dto.AmiyaPositionInfo
         /// 是否可查看数据中心
         /// </summary>
         public bool ReadDataCenter { get; set; }
+        /// <summary>
+        /// 查看主播数据
+        /// </summary>
+        public bool ReadLiveAnchorData { get; set; }
     }
 }

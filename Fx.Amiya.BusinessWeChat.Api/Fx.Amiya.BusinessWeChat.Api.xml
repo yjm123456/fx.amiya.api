@@ -95,6 +95,12 @@
             <param name="updateVo"></param>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaEmployeeController.CheckPasswordAsync(System.String)">
+            <summary>
+            检查密码是否合法
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaEmployeeController.UpdatePasswordAsync(Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.UpdatePasswordAmiyaVo)">
             <summary>
             修改密码
@@ -708,6 +714,16 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.AmiyaEmployeeVo.LiveAnchorIds">
             <summary>
             绑定主播信息
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.AmiyaEmployeeVo.LiveAnchorBaseId">
+            <summary>
+            绑定主播基础信息
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.AmiyaEmployeeVo.LiveAnchorBaseName">
+            <summary>
+            绑定主播基础名称
             </summary>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.UpdateAmiyaEmployeeVo.Id">

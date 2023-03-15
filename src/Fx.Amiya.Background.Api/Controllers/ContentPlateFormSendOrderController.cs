@@ -271,7 +271,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalId = employee.HospitalId;
-            var q = await _sendOrderInfoService.GetContentPlatFormHospitalOrderReportAsync(startDate, endDate, orderStatus, hospitalId, false);
+            var q = await _sendOrderInfoService.GetContentPlatFormHospitalOrderReportAsync(startDate, endDate, orderStatus, hospitalId, true);
             var sendOrder = from d in q
                             select new ExportContentPlatFormSendOrderInfoVo
                             {

@@ -14,6 +14,10 @@ namespace Fx.Amiya.DbModels.Model
         public bool IsDirector { get; set; }
         public int DepartmentId { get; set; }
         public bool ReadDataCenter { get; set; }
+        /// <summary>
+        /// 查看主播数据
+        /// </summary>
+        public bool ReadLiveAnchorData { get; set; }
 
         public AmiyaEmployee UpdateByAmiyaEmployee { get; set; }
 

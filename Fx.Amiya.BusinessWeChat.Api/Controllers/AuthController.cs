@@ -128,7 +128,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                     RefreshToken = identity.BuildRefreshToken(jwtConfig.Key, jwtConfig.RefreshTokenExpireInSeconds / 60),
                     DepartmentId = employee.DepartmentId,
                     DepartmentName = employee.DepartmentName,
-                    ReadDataCenter = employee.ReadDataCenter
+                    ReadDataCenter = employee.ReadDataCenter,
+                    ReadLiveAnchorData = employee.ReadLiveAnchorData
                 };
 
                 return ResultData<AmiyaEmployeeAccountVo>.Success().AddData("amiyaLogin", accountVo);
@@ -173,7 +174,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                     RefreshToken = identity.BuildRefreshToken(jwtConfig.Key, jwtConfig.RefreshTokenExpireInSeconds / 60),
                     DepartmentId = employee.DepartmentId,
                     DepartmentName = employee.DepartmentName,
-                    ReadDataCenter = employee.ReadDataCenter
+                    ReadDataCenter = employee.ReadDataCenter,
+                    ReadLiveAnchorData = employee.ReadLiveAnchorData
                 };
 
                 return ResultData<AmiyaEmployeeAccountVo>.Success().AddData("amiyaLoginByUserIdAndCode", accountVo);

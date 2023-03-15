@@ -53,6 +53,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                         DepartmentId = d.DepartmentId,
                                         DepartmentName = d.DepartmentName,
                                         ReadDataCenter=d.ReadDataCenter,
+                                        ReadLiveAnchorData=d.ReadLiveAnchorData,
                                     };
                 return ResultData<List<AmiyaPositionInfoVo>>.Success().AddData("positionInfo", positionInfos.ToList());
             }
@@ -79,6 +80,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.DepartmentId = addVo.DepartmentId;
                 addDto.IsDirector = addVo.IsDirector;
                 addDto.ReadDataCenter = addVo.ReadDataCenter;
+                addDto.ReadLiveAnchorData = addVo.ReadLiveAnchorData;
                 await amiyaPositionInfoService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -112,6 +114,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 positionInfoVo.DepartmentId = position.DepartmentId;
                 positionInfoVo.DepartmentName = position.DepartmentName;
                 positionInfoVo.ReadDataCenter = position.ReadDataCenter;
+                positionInfoVo.ReadLiveAnchorData = position.ReadLiveAnchorData;
 
                 return ResultData<AmiyaPositionInfoVo>.Success().AddData("positionInfo", positionInfoVo);
             }
@@ -146,6 +149,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     positionInfoVo.DepartmentId = x.DepartmentId;
                     positionInfoVo.DepartmentName = x.DepartmentName;
                     positionInfoVo.ReadDataCenter = x.ReadDataCenter;
+                    positionInfoVo.ReadLiveAnchorData = x.ReadLiveAnchorData;
                     amiyaPositionInfoVos.Add(positionInfoVo);
                 }
 
@@ -176,7 +180,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.DepartmentId = updateVo.DepartmentId;
                 updateDto.IsDirector = updateVo.IsDirector;
                 updateDto.ReadDataCenter = updateVo.ReadDataCenter;
-
+                updateDto.ReadLiveAnchorData = updateVo.ReadLiveAnchorData;
                 await amiyaPositionInfoService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }
