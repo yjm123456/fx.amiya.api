@@ -818,6 +818,37 @@ namespace Fx.Amiya.Service
             }
             return CheckTypeText;
         }
+
+        /// <summary>
+        /// 获取接口访问类型
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string GetRequestTypeText(int type) {
+            string requestTypeText = "";
+            switch (type) {
+                case 0:
+                    requestTypeText = "数据添加";
+                    break;
+                case 1:
+                    requestTypeText = "数据删除";
+                    break;
+                case 2:
+                    requestTypeText = "数据更改";
+                    break;
+                case 3:
+                    requestTypeText = "数据查询";
+                    break;
+                case 4:
+                    requestTypeText = "数据导出";
+                    break;
+                default:
+                    requestTypeText = "其他";
+                    break;
+            }
+            return requestTypeText;
+        }
+
         /// <summary>
         /// 获取退款订审核情况
         /// </summary>

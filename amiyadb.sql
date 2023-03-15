@@ -192,3 +192,28 @@ ENGINE=InnoDB;
 
 ----------------------------------------王健 2023/2/16 END-----------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+
+--------------------------------------王健 2023/3/15 BEGIN----------------------------------------
+
+-----系统操作日志
+
+CREATE TABLE `tbl_system_operation_log` (
+	`id` VARCHAR(50) NOT NULL,
+	`route_address` VARCHAR(500) NOT NULL,
+	`request_type` INT(10) NOT NULL,
+	`code` INT(10) NOT NULL,
+	`parameters` VARCHAR(5000) NULL DEFAULT NULL,
+	`message` VARCHAR(2000) NULL DEFAULT NULL,
+	`operation_by` INT(10) NULL DEFAULT '0',
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT(1) NOT NULL DEFAULT 'b\'0\'',
+	`delete_date` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+);
+
+--------------------------------------王健 2023/3/15 END----------------------------------------
+
+

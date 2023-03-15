@@ -100,6 +100,33 @@ namespace Fx.Amiya.IService
 
     }
 
+    /// <summary>
+    /// 请求类型
+    /// </summary>
+    public enum RequestType { 
+        /// <summary>
+        /// 添加数据
+        /// </summary>
+        Add=0,
+        /// <summary>
+        /// 删除数据
+        /// </summary>
+        Delete=1,
+        /// <summary>
+        /// 更新数据
+        /// </summary>
+        Update=2,
+        /// <summary>
+        /// 查询数据
+        /// </summary>
+        Select=3,
+        /// <summary>
+        /// 导出数据
+        /// </summary>
+        Export=4
+        
+    }
+
     public enum SubmintType
     {
         /// <summary>
