@@ -135,69 +135,84 @@ namespace Fx.Amiya.Service
 
         public async Task<OrderAppInfoDto> GetTikTokAppInfo(int belongLiveAnchor)
         {
-            var appInfo = await dalOrderAppInfo.GetAll().SingleOrDefaultAsync(e => e.AppType == (byte)AppType.Douyin && e.BelongLiveAnchor == belongLiveAnchor);
-            if (appInfo == null)
-                throw new Exception("抖音订单同步应用证书信息为空");
+            try
+            {
+                var appInfo = await dalOrderAppInfo.GetAll().SingleOrDefaultAsync(e => e.AppType == (byte)AppType.Douyin && e.BelongLiveAnchor == belongLiveAnchor);
+                if (appInfo == null)
+                    throw new Exception("抖音订单同步应用证书信息为空");
 
-            if (string.IsNullOrEmpty(appInfo.AccessToken))
-            {
-                var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
-                var host = "https://openapi-fxg.jinritemai.com";
-                //请求参数
-                var param = new Dictionary<string, object> {
-                    //{"shop_id","40391623" },
-                    {"shop_id",appInfo.ShopId },
-                    {"grant_type","authorization_self" }
-                };
-                var paramJson = Marshal(param);
-                //计算签名
-                var signVal = Sign(appInfo.AppKey, appInfo.AppSecret, "token.create", timestamp, paramJson);
-                //发起请求
-                var res = Fetch(appInfo.AppKey, host, "token.create", timestamp, paramJson, appInfo.AccessToken, signVal);
-                var tokenResult = JsonConvert.DeserializeObject<dynamic>(res);
-                appInfo.ExpireDate = DateTime.Now.AddSeconds(Convert.ToDouble(tokenResult.data.expires_in) - 3000);
-                appInfo.AccessToken = tokenResult.data.access_token;
-                appInfo.AuthorizeDate = DateTime.Now;
-                appInfo.RefreshToken = tokenResult.data.refresh_token;
-                await dalOrderAppInfo.UpdateAsync(appInfo, true);
-            }
-            else
-            {
-                var now = DateTime.Now;
-                if (now > appInfo.ExpireDate)
+                if (string.IsNullOrEmpty(appInfo.AccessToken))
                 {
                     var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
                     var host = "https://openapi-fxg.jinritemai.com";
                     //请求参数
                     var param = new Dictionary<string, object> {
+                    //{"shop_id","40391623" },
+                    {"shop_id",appInfo.ShopId },
+                    {"grant_type","authorization_self" }
+                     };
+                    var paramJson = Marshal(param);
+                    //计算签名
+                    var signVal = Sign(appInfo.AppKey, appInfo.AppSecret, "token.create", timestamp, paramJson);
+                    //发起请求
+                    var res = Fetch(appInfo.AppKey, host, "token.create", timestamp, paramJson, appInfo.AccessToken, signVal);
+                    var tokenResult = JsonConvert.DeserializeObject<dynamic>(res);
+                    if (tokenResult.code != "10000")
+                    {
+                        throw new Exception("操作失败，" + tokenResult.code + "," + tokenResult.msg + "！");
+                    }
+                    appInfo.ExpireDate = DateTime.Now.AddSeconds(Convert.ToDouble(tokenResult.data.expires_in) - 3000);
+                    appInfo.AccessToken = tokenResult.data.access_token;
+                    appInfo.AuthorizeDate = DateTime.Now;
+                    appInfo.RefreshToken = tokenResult.data.refresh_token;
+                    await dalOrderAppInfo.UpdateAsync(appInfo, true);
+                }
+                else
+                {
+                    var now = DateTime.Now;
+                    if (now > appInfo.ExpireDate)
+                    {
+                        var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
+                        var host = "https://openapi-fxg.jinritemai.com";
+                        //请求参数
+                        var param = new Dictionary<string, object> {
                         {"refresh_token",appInfo.RefreshToken },
                         { "grant_type","refresh_token"},
                     };
-                    var paramJson = Marshal(param);
-                    //计算签名
-                    var signVal = Sign(appInfo.AppKey, appInfo.AppSecret, "token.refresh", timestamp, paramJson);
-                    //发起请求
-                    var res = Fetch(appInfo.AppKey, host, "token.refresh", timestamp, paramJson, appInfo.AccessToken, signVal);
-                    var refreshTokenResult = JsonConvert.DeserializeObject<dynamic>(res);
-                    appInfo.AccessToken = refreshTokenResult.access_token;
-                    appInfo.AuthorizeDate = DateTime.Now;
-                    appInfo.RefreshToken = refreshTokenResult.refresh_token;
-                    appInfo.ExpireDate = DateTime.Now.AddSeconds(refreshTokenResult.data.expires_in);
-                    await dalOrderAppInfo.UpdateAsync(appInfo, true);
+                        var paramJson = Marshal(param);
+                        //计算签名
+                        var signVal = Sign(appInfo.AppKey, appInfo.AppSecret, "token.refresh", timestamp, paramJson);
+                        //发起请求
+                        var res = Fetch(appInfo.AppKey, host, "token.refresh", timestamp, paramJson, appInfo.AccessToken, signVal);
+                        var refreshTokenResult = JsonConvert.DeserializeObject<dynamic>(res);
+                        if (refreshTokenResult.code != "10000")
+                        {
+                            throw new Exception("操作失败，" + refreshTokenResult.code + "," +refreshTokenResult.msg + "！");
+                        }
+                        appInfo.AccessToken = refreshTokenResult.access_token;
+                        appInfo.AuthorizeDate = DateTime.Now;
+                        appInfo.RefreshToken = refreshTokenResult.refresh_token;
+                        appInfo.ExpireDate = DateTime.Now.AddSeconds(refreshTokenResult.data.expires_in);
+                        await dalOrderAppInfo.UpdateAsync(appInfo, true);
+                    }
                 }
+                OrderAppInfoDto tiktokAppInfoDto = new OrderAppInfoDto();
+                tiktokAppInfoDto.Id = appInfo.Id;
+                tiktokAppInfoDto.ShopId = appInfo.ShopId;
+                tiktokAppInfoDto.AppKey = appInfo.AppKey;
+                tiktokAppInfoDto.AppSecret = appInfo.AppSecret;
+                tiktokAppInfoDto.AccessToken = appInfo.AccessToken;
+                tiktokAppInfoDto.AuthorizeDate = appInfo.AuthorizeDate;
+                tiktokAppInfoDto.AppType = appInfo.AppType;
+                tiktokAppInfoDto.ExpireDate = appInfo.ExpireDate;
+                tiktokAppInfoDto.RefreshToken = appInfo.RefreshToken;
+                tiktokAppInfoDto.BelongLiveAnchorId = appInfo.BelongLiveAnchor;
+                return tiktokAppInfoDto;
             }
-            OrderAppInfoDto tiktokAppInfoDto = new OrderAppInfoDto();
-            tiktokAppInfoDto.Id = appInfo.Id;
-            tiktokAppInfoDto.ShopId = appInfo.ShopId;
-            tiktokAppInfoDto.AppKey = appInfo.AppKey;
-            tiktokAppInfoDto.AppSecret = appInfo.AppSecret;
-            tiktokAppInfoDto.AccessToken = appInfo.AccessToken;
-            tiktokAppInfoDto.AuthorizeDate = appInfo.AuthorizeDate;
-            tiktokAppInfoDto.AppType = appInfo.AppType;
-            tiktokAppInfoDto.ExpireDate = appInfo.ExpireDate;
-            tiktokAppInfoDto.RefreshToken = appInfo.RefreshToken;
-            tiktokAppInfoDto.BelongLiveAnchorId = appInfo.BelongLiveAnchor;
-            return tiktokAppInfoDto;
+            catch (Exception err)
+            {
+                throw new Exception(err.Message.ToString());
+            }
         }
 
 
