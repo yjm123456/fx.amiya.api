@@ -661,6 +661,11 @@
             读取数据中心
             </summary>
         </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.Login.AmiyaEmployeeAccountVo.ReadLiveAnchorData">
+            <summary>
+            查看主播数据
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.Login.HospitalEmployeeAccountVo.EmployeeType">
             <summary>
             员工类型
@@ -3219,6 +3224,16 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerServiceSimplePerformanceVo.OldCustomerPrice">
             <summary>
             老客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerServiceSimplePerformanceVo.NewOrOldCustomerRate">
+            <summary>
+            新老客业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerServiceSimplePerformanceVo.VisitRate">
+            <summary>
+            上门率
             </summary>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerServiceSimplePerformanceVo.NewCustomerNum">

@@ -240,7 +240,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             customerPerformanceVo.SequentCustomerNum = selectResult.SequentCustomerNum;
             customerPerformanceVo.DealNum = selectResult.DealNum;
             customerPerformanceVo.OldCustomerNum = selectResult.OldCustomerNum;
-
+            customerPerformanceVo.NewOrOldCustomerRate = selectResult.NewOrOldCustomerRate;
+            customerPerformanceVo.VisitRate = selectResult.VisitRate;
             List<CustomerServiceRankVo> CustomerServiceRankVoList = new List<CustomerServiceRankVo>();
             if (selectResult.CustomerServiceRankDtoList != null)
             {

@@ -2713,6 +2713,10 @@ namespace Fx.Amiya.Service
             string belongLiveAnchorId = "";
             var empInfo = await _amiyaEmployeeService.GetByIdAsync(belongCustomerServiceId);
             dealResult.CustomerServiceName = empInfo.Name;
+            dealResult.NewOrOldCustomerRate = DecimalExtension.CalculateAccounted(dealResult.NewCustomerPrice, dealResult.OldCustomerPrice);
+            var distinctSendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.BelongEmpId == belongCustomerServiceId && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.SendDate >= startDate && x.SendDate < endDate).GroupBy(x => x.Phone).Select(k => k.Key.First()).ToList();
+            var visitInfo = dealData.Where(x => x.IsToHospital == true && x.ToHospitalDate >= startDate && x.ToHospitalDate < endDate && x.IsOldCustomer == false && x.BelongEmpId == belongCustomerServiceId).ToList();
+            dealResult.VisitRate = DecimalExtension.CalculateTargetComplete(visitInfo.Count(), distinctSendInfo.Count());
             belongLiveAnchorId = empInfo.LiveAnchorBaseId;
             if (empInfo.IsCustomerService == true)
             {
@@ -2731,6 +2735,7 @@ namespace Fx.Amiya.Service
                     customerServiceRankDto.CustomerServiceId = x.CustomerServiceId;
                     customerServiceRankDto.CustomerServiceName = x.CustomerServiceName;
                     customerServiceRankDto.TotalAchievement = DecimalExtension.ChangePriceToTenThousand(x.TotalServicePrice);
+
                     if (hasRank == false)
                     {
                         if (belongCustomerServiceId == x.CustomerServiceId)

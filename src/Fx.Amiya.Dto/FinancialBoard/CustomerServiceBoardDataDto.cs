@@ -117,6 +117,14 @@ namespace Fx.Amiya.Dto.FinancialBoard
         /// 老客业绩
         /// </summary>
         public decimal OldCustomerPrice { get; set; }
+        /// <summary>
+        /// 新老客业绩占比
+        /// </summary>
+        public string NewOrOldCustomerRate { get; set; }
+        /// <summary>
+        /// 上门率
+        /// </summary>
+        public decimal? VisitRate { get; set; }
 
         /// <summary>
         /// 新诊人数
