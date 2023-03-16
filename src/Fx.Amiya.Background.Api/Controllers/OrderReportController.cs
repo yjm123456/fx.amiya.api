@@ -29,6 +29,7 @@ namespace Fx.Amiya.Background.Api.Controllers
     [ApiController]
     public class OrderReportController : ControllerBase
     {
+        private IOperationLogService operationLogService;
         private IOrderService orderService;
         private ISendOrderInfoService _sendOrderInfoService;
         private IShoppingCartRegistrationService _shoppingCartRegistrationService;
@@ -42,12 +43,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IAppointmentService appointmentService;
         private ICustomerHospitalConsumeService _customerHospitalConsumeService;
         private ILiveAnchorDailyTargetService _liveAnchorDailyTargetService;
-        private IOperatonLogService operatonLogService;
+        private IOperationLogService operatonLogService;
         public OrderReportController(IOrderService orderService,
             IContentPlatformOrderSendService sendContentPlatFormOrderInfoService,
             IAppointmentService appointmentService,
             IHttpContextAccessor httpContextAccessor,
             IShootingAndClipService shootingAndClipService,
+            IOperationLogService operationLogService,
             ICustomerService customerService,
             IContentPlateFormOrderService contentPlatFormOrderService,
             IHospitalInfoService hospitalInfoService,
@@ -55,13 +57,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             ISendOrderInfoService sendOrderInfoService,
             ICustomerHospitalConsumeService customerHospitalConsumeService,
             IShoppingCartRegistrationService shoppingCartRegistrationService,
-            ILiveAnchorDailyTargetService liveAnchorDailyTargetService, IOperatonLogService operatonLogService)
+            ILiveAnchorDailyTargetService liveAnchorDailyTargetService, IOperationLogService operatonLogService)
         {
             this.orderService = orderService;
             _sendContentPlatFormOrderInfoService = sendContentPlatFormOrderInfoService;
             _sendOrderInfoService = sendOrderInfoService;
             this.httpContextAccessor = httpContextAccessor;
             this.appointmentService = appointmentService;
+            this.operationLogService = operationLogService;
             _contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
             this.shootingAndClipService = shootingAndClipService;
             this.customerService = customerService;
@@ -164,41 +167,62 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 付款订单报表导出
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="belongEmpId">归属客服id</param>
         /// <returns></returns>
         [HttpGet("OrderBuyReportExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> GetOrderBuyExportAsync(DateTime? startDate, DateTime? endDate, int belongEmpId)
+        public async Task<FileStreamResult> GetOrderBuyExportAsync([FromQuery] GetOrderBuyExportVo getOrderBuyExport)
         {
-            bool isHidePhone = true;
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            OperationAddDto operationAddDto = new OperationAddDto();
+            operationAddDto.RouteAddress = "/amiyabg/OrderReport/OrderBuyReportExport";
+            operationAddDto.RequestType = (int)RequestType.Export;
+            operationAddDto.Parameters = JsonConvert.SerializeObject(getOrderBuyExport);
+            operationAddDto.OperationBy = Convert.ToInt32(employee.Id);
+            int code = 0;
+            string message = "";
+            try
             {
-                isHidePhone = false;
+                bool isHidePhone = true;
+
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
+                getOrderBuyExport.BelongEmpId = 999;
+                var q = await orderService.GetOrderBuyAsync(getOrderBuyExport.StartDate, getOrderBuyExport.EndDate, getOrderBuyExport.BelongEmpId, isHidePhone);
+                var res = from d in q
+                          select new BuyOrderReportVo()
+                          {
+                              Id = d.Id,
+                              Phone = d.Phone,
+                              GoodsName = d.GoodsName,
+                              NickName = d.NickName,
+                              UpdateDate = d.UpdateDate,
+                              AppointmentHospital = d.AppointmentHospital,
+                              StatusText = d.StatusText,
+                              ActualPayment = d.ActualPayment,
+                              CreateDate = d.CreateDate,
+                              AppTypeText = d.AppTypeText,
+                              Quantity = d.Quantity,
+                              BelongEmpName = d.BelongEmpName
+                          };
+                var exportOrderWriteOff = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
+                var result = File(stream, "application/vnd.ms-excel", $"" + getOrderBuyExport.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + getOrderBuyExport.EndDate.Value.ToString("yyyy年MM月dd日") + "已付款订单报表.xls");
+                return result;
             }
-            var q = await orderService.GetOrderBuyAsync(startDate, endDate, belongEmpId, isHidePhone);
-            var res = from d in q
-                      select new BuyOrderReportVo()
-                      {
-                          Id = d.Id,
-                          Phone = d.Phone,
-                          GoodsName = d.GoodsName,
-                          NickName = d.NickName,
-                          UpdateDate = d.UpdateDate,
-                          AppointmentHospital = d.AppointmentHospital,
-                          StatusText = d.StatusText,
-                          ActualPayment = d.ActualPayment,
-                          CreateDate = d.CreateDate,
-                          AppTypeText = d.AppTypeText,
-                          Quantity = d.Quantity,
-                          BelongEmpName = d.BelongEmpName
-                      };
-            var exportOrderWriteOff = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "已付款订单报表.xls");
-            return result;
+            catch (Exception err)
+            {
+                code = -1;
+                message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
+            }
+            finally
+            {
+                operationAddDto.Code = code;
+                operationAddDto.Message = message;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
+            }
         }
 
         /// <summary>
@@ -633,7 +657,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             IsAcompanying = d.IsAcompanying == true ? "是" : "否",
                                             /*CommissionRatio = d.CommissionRatio,*/
                                             Phone = d.Phone,
-                                            DealPerformanceTypeText=d.DealPerformanceTypeText,
+                                            DealPerformanceTypeText = d.DealPerformanceTypeText,
                                             IsToHospital = d.IsToHospital == true ? "是" : "否",
                                             ToHospitalTypeText = d.ToHospitalTypeText,
                                             TohospitalDate = d.ToHospitalDate,
@@ -695,7 +719,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("exportContentPlatFormOrderDealInfo")]
         [FxInternalAuthorize]
         //public async Task<FileStreamResult> ExportDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord)
-        public async Task<FileStreamResult> ExportDealInfo([FromQuery]ExportContentPlatFormOrderDealInfoSearchVo export)
+        public async Task<FileStreamResult> ExportDealInfo([FromQuery] ExportContentPlatFormOrderDealInfoSearchVo export)
         {
             OperationAddDto operationLog = new OperationAddDto();
             try
@@ -765,7 +789,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 operationLog.Message = ex.Message;
                 throw ex;
             }
-            finally {
+            finally
+            {
                 operationLog.Message = "";
                 operationLog.Parameters = JsonConvert.SerializeObject(export);
                 operationLog.RequestType = (int)RequestType.Export;

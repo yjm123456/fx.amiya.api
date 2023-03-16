@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.IService
 {
-    public interface IOperatonLogService
+    public interface IOperationLogService
     {
         /// <summary>
         /// 添加操作日志

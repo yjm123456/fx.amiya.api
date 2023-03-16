@@ -17,13 +17,13 @@ namespace Fx.Amiya.Dto.OperationLog
         /// </summary>
         public int RequestType { get; set; }
         /// <summary>
-        /// 返回code()
-        /// </summary>
-        public int Code { get; set; }
-        /// <summary>
         /// 请求参数
         /// </summary>
         public string Parameters { get; set; }
+        /// <summary>
+        /// 返回code()
+        /// </summary>
+        public int Code { get; set; }
         /// <summary>
         /// 返回说明
         /// </summary>

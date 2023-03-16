@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Service
 {
-    public class OperatonLogService : IOperatonLogService
+    public class OperationLogService : IOperationLogService
     {
         private readonly IDalOpertionLog dalOpertionLog;
         private readonly IDalAmiyaEmployee dalAmiyaEmployee;
 
-        public OperatonLogService(IDalOpertionLog dalOpertionLog, IDalAmiyaEmployee dalAmiyaEmployee)
+        public OperationLogService(IDalOpertionLog dalOpertionLog, IDalAmiyaEmployee dalAmiyaEmployee)
         {
             this.dalOpertionLog = dalOpertionLog;
             this.dalAmiyaEmployee = dalAmiyaEmployee;

@@ -22,9 +22,9 @@ namespace Fx.Amiya.Background.Api.Controllers
     [FxInternalAuthorize]
     public class OperationLogController : ControllerBase
     {
-        private readonly IOperatonLogService operatonLogService;
+        private readonly IOperationLogService operatonLogService;
 
-        public OperationLogController(IOperatonLogService operatonLogService)
+        public OperationLogController(IOperationLogService operatonLogService)
         {
             this.operatonLogService = operatonLogService;
         }

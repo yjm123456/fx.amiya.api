@@ -2805,9 +2805,9 @@ namespace Fx.Amiya.Service
                 z.HavingPricePerformance = dealInfo.Where(x => x.ContentPlatFormOrder.AddOrderPrice > 0).Sum(k => k.Price);
 
                 //今年的数据
-                var history1 = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.Value.Month != DateTime.Now.Month && c.ContentPlatFormOrder.SendDate.Value.Year == DateTime.Now.Year).Sum(x => x.Price);
+                var history1 = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.HasValue && c.ContentPlatFormOrder.SendDate.Value.Month != DateTime.Now.Month && c.ContentPlatFormOrder.SendDate.Value.Year == DateTime.Now.Year).Sum(x => x.Price);
                 //历年的数据
-                var history2 = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.Value.Year != DateTime.Now.Year).Sum(x => x.Price);
+                var history2 = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.HasValue && c.ContentPlatFormOrder.SendDate.Value.Year != DateTime.Now.Year).Sum(x => x.Price);
                 z.HistorySendThisMonthDealPerformance = history1 + history2;
                 z.ThisMonthSendThisMonthDealPerformance = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.Value.Month == DateTime.Now.Month && c.ContentPlatFormOrder.SendDate.Value.Year == DateTime.Now.Year).Sum(x => x.Price);
 
