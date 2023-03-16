@@ -1420,7 +1420,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                              ExchangeTypeText = d.ExchangeTypeText,
                              TradeId = d.TradeId,
                              Standard=d.Standard,
-                             CategoryName=d.GoodsCategory
+                             CategoryName=d.GoodsCategory,
+                             ExpressId=d.ExpressId,
+                             CourierNumber=d.CourierNumber
                          };
             return ResultData<List<OrderInfoVo>>.Success().AddData("orders", orders.ToList());
         }
@@ -1439,6 +1441,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             int employeeId = Convert.ToInt32(employee.Id);
             SendGoodsDto sendGoodsDto = new SendGoodsDto();
             sendGoodsDto.TradeId = sendGoodsVo.TradeId;
+            sendGoodsDto.OrderId = sendGoodsVo.OrderId;
             sendGoodsDto.CourierNumber = sendGoodsVo.CourierNumber;
             sendGoodsDto.HandleBy = employeeId;
             sendGoodsDto.ExpressId = sendGoodsVo.ExpressId;
@@ -1447,7 +1450,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
         /// <summary>
-        /// 发货
+        /// 修改发货
         /// </summary>
         /// <param name="sendGoodsVo"></param>
         /// <returns></returns>
@@ -1461,6 +1464,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             sendGoodsDto.CourierNumber = sendGoodsVo.CourierNumber;
             sendGoodsDto.HandleBy = employeeId;
             sendGoodsDto.ExpressId = sendGoodsVo.ExpressId;
+            sendGoodsDto.OrderId = sendGoodsVo.OrderId;
             await orderService.UpdateExpressInfoAsync(sendGoodsDto);
             return ResultData.Success();
         }
@@ -1469,10 +1473,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 获取交易物流信息
         /// </summary>
         /// <param name="tradeId"></param>
+        /// <param name="orderId">订单id</param>
         /// <returns></returns>
-        [HttpGet("getSendGoodsInfo/{tradeId}")]
-        public async Task<ResultData<OrderSendInfoVo>> GetSendGoodsInfo(string tradeId) {
-             var record= await orderService.GetOrderSendInfoAsync(tradeId);
+        [HttpGet("getSendGoodsInfo/{tradeId}/{orderId}")]
+        public async Task<ResultData<OrderSendInfoVo>> GetSendGoodsInfo(string tradeId,string orderId) {
+             var record= await orderService.GetOrderSendInfoAsync(tradeId,orderId);
+            if(record==null)　throw new Exception("暂无物流信息！");
             OrderSendInfoVo orderSendInfoVo = new OrderSendInfoVo();
             orderSendInfoVo.ExpressId = record.ExpressId;
             orderSendInfoVo.CourierNumber = record.CourierNumber;

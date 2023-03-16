@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -29,9 +30,9 @@ namespace Fx.Amiya.Service
             operationLog.RouteAddress = operationAdd.RouteAddress;
             operationLog.RequestType = operationAdd.RequestType;
             operationLog.Parameters = operationAdd.Parameters;
-            operationLog.Code = operationLog.Code;
-            operationLog.Message = operationLog.Message;
-            operationLog.OperationBy = operationLog.OperationBy;
+            operationLog.Code = operationAdd.Code;
+            operationLog.Message = operationAdd.Message;
+            operationLog.OperationBy = operationAdd.OperationBy;
             operationLog.CreateDate = DateTime.Now;
             operationLog.Valid = true;
             await dalOpertionLog.AddAsync(operationLog, true);
@@ -62,6 +63,20 @@ namespace Fx.Amiya.Service
                 CreateDate=e.CreateDate
             }).ToList();
             return fxPageInfo;
+        }
+
+        public List<BaseKeyValueDto<int>> GetRequestTypeNameList()
+        {
+            var showDirectionTypes = Enum.GetValues(typeof(RequestType));
+            List<BaseKeyValueDto<int>> requestTypeList = new List<BaseKeyValueDto<int>>();
+            foreach (var item in showDirectionTypes)
+            {
+                BaseKeyValueDto<int> requestType = new BaseKeyValueDto<int>();
+                requestType.Key = Convert.ToInt32(item);
+                requestType.Value = ServiceClass.GetRequestTypeText(Convert.ToInt32(item));
+                requestTypeList.Add(requestType);
+            }
+            return requestTypeList;
         }
     }
 }

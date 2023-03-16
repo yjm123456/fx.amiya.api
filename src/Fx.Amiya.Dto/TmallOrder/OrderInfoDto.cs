@@ -110,6 +110,14 @@ namespace Fx.Amiya.Dto.TmallOrder
         /// 开票公司
         /// </summary>
         public string BelongCompany { get; set; }
+        /// <summary>
+        /// 快递公司id
+        /// </summary>
+        public string ExpressId { get; set; }
+        /// <summary>
+        /// 物流单号
+        /// </summary>
+        public string CourierNumber { get; set; }
 
         #region  财务审核板块
         /// <summary>

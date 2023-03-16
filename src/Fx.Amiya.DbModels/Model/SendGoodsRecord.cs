@@ -8,6 +8,7 @@ namespace Fx.Amiya.DbModels.Model
     {
         public int Id { get; set; }
         public string TradeId { get; set; }
+        public string OrderId { get; set; }
         public DateTime Date { get; set; }
         public int HandleBy { get; set; }
         public string CourierNumber{get;set;}

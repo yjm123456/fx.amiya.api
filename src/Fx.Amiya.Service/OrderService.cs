@@ -91,6 +91,7 @@ namespace Fx.Amiya.Service
         private IDalLiveAnchor dalLiveAnchor;
         private IGoodsInfoService goodsInfoService2;
         private IHuiShouQianPaymentService huiShouQianPaymentService;
+        
         public OrderService(
             IDalContentPlatformOrder dalContentPlatFormOrder,
             IDalOrderInfo dalOrderInfo,
@@ -3342,7 +3343,7 @@ namespace Fx.Amiya.Service
                 }
             }
 
-            var orders = from d in dalOrderInfo.GetAll()
+            var orders = from d in dalOrderInfo.GetAll()                        
                          where d.TradeId == tradeId
                          select new OrderInfoDto
                          {
@@ -3368,6 +3369,8 @@ namespace Fx.Amiya.Service
                              ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)d.ExchangeType),
                              TradeId = d.TradeId,
                              Standard = d.Standard,
+                             ExpressId=dalSendGoodsRecord.GetAll().Where(e=>e.TradeId==d.TradeId&&e.OrderId==d.Id).Select(e=>e.ExpressId).FirstOrDefault(),
+                             CourierNumber= dalSendGoodsRecord.GetAll().Where(e => e.TradeId == d.TradeId && e.OrderId == d.Id).Select(e => e.CourierNumber).FirstOrDefault()
                          };
             var orderList = await orders.ToListAsync();
             foreach (var order in orderList)
@@ -3392,25 +3395,38 @@ namespace Fx.Amiya.Service
 
                 var orderTrade = await dalOrderTrade.GetAll().Include(e => e.OrderInfoList).SingleOrDefaultAsync(e => e.TradeId == sendGoodsDto.TradeId);
                 if (orderTrade == null)
-                    throw new Exception("交易编号错误");
+                    throw new Exception("交易编号错误！");
 
-                var sendGoodsRecord = await dalSendGoodsRecord.GetAll().SingleOrDefaultAsync(e => e.TradeId == sendGoodsDto.TradeId);
+                var sendGoodsRecord = await dalSendGoodsRecord.GetAll().SingleOrDefaultAsync(e => e.TradeId == sendGoodsDto.TradeId&&e.OrderId==sendGoodsDto.OrderId);
                 if (sendGoodsRecord != null)
-                    throw new Exception("该交易已发货，请勿重复操作");
+                    throw new Exception("该交易已发货，请勿重复操作！");
 
                 DateTime date = DateTime.Now;
-                foreach (var item in orderTrade.OrderInfoList)
+
+                var order = dalOrderInfo.GetAll().Where(e => e.Id == sendGoodsDto.OrderId).SingleOrDefault();
+                if(order==null) throw new Exception("订单编号错误！");
+                if (order.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || order.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS)
                 {
-                    item.StatusCode = OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS;
-                    item.UpdateDate = date;
-                    await dalOrderInfo.UpdateAsync(item, true);
+                    order.StatusCode = OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS;
+                    order.UpdateDate = date;
+                    await dalOrderInfo.UpdateAsync(order, true);
+                    var orderList = dalOrderInfo.GetAll().Where(e => e.TradeId == sendGoodsDto.TradeId).Select(e => e.StatusCode).ToList();
+                    if (!orderList.Contains(OrderStatusCode.WAIT_SELLER_SEND_GOODS) && orderTrade.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS)
+                    {
+                        orderTrade.StatusCode = OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS;
+                        orderTrade.UpdateDate = date;
+                        await dalOrderTrade.UpdateAsync(orderTrade, true);
+                    }
                 }
-                orderTrade.StatusCode = OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS;
-                orderTrade.UpdateDate = date;
-                await dalOrderTrade.UpdateAsync(orderTrade, true);
+                else {
+                    return;
+                }
+               
+                
 
                 SendGoodsRecord model = new SendGoodsRecord();
                 model.TradeId = sendGoodsDto.TradeId;
+                model.OrderId = sendGoodsDto.OrderId;
                 model.Date = date;
                 model.HandleBy = sendGoodsDto.HandleBy;
                 model.CourierNumber = sendGoodsDto.CourierNumber;
@@ -3767,10 +3783,12 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task<OrderExpressInfoDto> GetOrderExpressInfoAsync(string tradeId)
+        public async Task<OrderExpressInfoDto> GetOrderExpressInfoAsync(string tradeId,string orderId)
         {
             var sendGoodsRecordInfoList = await dalSendGoodsRecord.GetAll().ToListAsync();
-            var sendGoodsRecordInfo = sendGoodsRecordInfoList.Where(x => x.TradeId == tradeId).FirstOrDefault();
+            var sendGoodsRecordInfo = sendGoodsRecordInfoList.Where(x => x.TradeId == tradeId&&x.OrderId==orderId).FirstOrDefault();
+            if(sendGoodsRecordInfo==null)
+                sendGoodsRecordInfo= sendGoodsRecordInfoList.Where(x => x.TradeId == tradeId && string.IsNullOrEmpty(x.OrderId)).FirstOrDefault();
             if (sendGoodsRecordInfo == null)
             {
                 throw new Exception("未找到该交易编号！");
@@ -4723,6 +4741,7 @@ namespace Fx.Amiya.Service
                                      ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)(o.ExchangeType == null ? 255 : (o.ExchangeType))),
                                      TradeId = o.TradeId,
                                      AppType = o.AppType,
+                                     StatusCode=o.StatusCode,
                                      StatusText = ServiceClass.GetOrderStatusText(o.StatusCode),
                                      AppTypeText = ServiceClass.GetAppTypeText((byte)o.AppType)
                                  }).ToList()
@@ -5036,9 +5055,9 @@ namespace Fx.Amiya.Service
                 if (orderTrade == null)
                     throw new Exception("交易编号错误！");
 
-                var sendGoodsRecord = await dalSendGoodsRecord.GetAll().SingleOrDefaultAsync(e => e.TradeId == sendGoodsDto.TradeId);
+                var sendGoodsRecord = await dalSendGoodsRecord.GetAll().SingleOrDefaultAsync(e => e.TradeId == sendGoodsDto.TradeId&&e.OrderId==sendGoodsDto.OrderId);
                 if (sendGoodsRecord == null)
-                    throw new Exception("该交易没有发货信息,无法修改！");
+                    throw new Exception("该订单没有发货信息,无法修改！");
 
                 sendGoodsRecord.HandleBy = sendGoodsDto.HandleBy;
                 sendGoodsRecord.CourierNumber = sendGoodsDto.CourierNumber;
@@ -5082,14 +5101,8 @@ namespace Fx.Amiya.Service
             if (totalIntegral > balance) throw new Exception("积分余额不足！");
             //integralOrderList = amiyaOrderList.Where(e => e.ExchangeType == (int)ExchangeType.Integration).ToList();
             moneyOrintegralMoneyOrderList = amiyaOrderList.Where(e => e.ExchangeType == (int)ExchangeType.HuiShouQian || e.ExchangeType == (int)ExchangeType.PointAndMoney).ToList();
+            
             PayRequestInfoDto payRequestInfoDto = null;
-
-            //拆分为两个交易订单: 1.积分交易订单,2.人民币支付商品和积分加钱购商品合并为一个订单
-
-            //积分订单直接生成订单并支付积分
-            //if (integralOrderList.Count()>0) {
-            //    await AddIntegralTradeAsync(integralOrderList, cartOrderAddDto.CustomerId, cartOrderAddDto.AddressId.Value, cartOrderAddDto.Remark);
-            //}
 
             //钱购买或积分加钱购商品下单返回支付信息
             if (moneyOrintegralMoneyOrderList.Count() > 0)
@@ -5149,6 +5162,7 @@ namespace Fx.Amiya.Service
                 }
                 CartCreateOrderDto cartCreateOrderDto = new CartCreateOrderDto();
                 cartCreateOrderDto.Id = CreateOrderIdHelper.GetNextNumber();
+                cartCreateOrderDto.CategoryId = goodsInfo.CategoryId;
                 cartCreateOrderDto.GoodsName = goodsInfo.GoodsName;
                 cartCreateOrderDto.GoodsId = goodsInfo.Id;
                 cartCreateOrderDto.Phone = phone;
@@ -5353,6 +5367,99 @@ namespace Fx.Amiya.Service
                 throw new Exception("商城商品下单失败！");
             }
         }
+
+        /// <summary>
+        /// 添加钱或积分加钱购交易订单并返回需要支付的金额
+        /// </summary>
+        /// <returns></returns>
+        private async Task<decimal> AddMoneyOrPointAndMoneyTradeBackAmountAsync(List<CartCreateOrderDto> moneyOrPointOrderList, CustomerConsumptioVoucherInfoDto voucher, string customerId, int addressId, string remark, string OpenId)
+        {
+
+            try
+            {
+                unitOfWork.BeginTransaction();
+                PayAmountDto pay = new PayAmountDto();
+                //计算全局抵用券折扣价格
+                if (voucher != null && !voucher.IsSpecifyProduct)
+                {
+                    if (voucher.IsNeedMinPrice)
+                    {
+                        if (moneyOrPointOrderList.Sum(e => e.ActualPayment).Value < voucher.MinPrice) throw new Exception("商品支付总金额不满足抵用券最低消费金额！");
+                    }
+
+                    moneyOrPointOrderList.First().IsUseCoupon = true;
+                    moneyOrPointOrderList.First().CouponId = voucher.CustomerConsumptionVoucherId;
+                    if (voucher.Type == (int)ConsumptionVoucherType.Material)
+                    {
+                        moneyOrPointOrderList.First().DeductMoney = voucher.DeductMoney;
+                    }
+                    else if (voucher.Type == (int)ConsumptionVoucherType.Discount)
+                    {
+                        var deductedMoney = Math.Ceiling(moneyOrPointOrderList.First().ActualPayment.Value * voucher.DeductMoney);
+                        moneyOrPointOrderList.First().DeductMoney = moneyOrPointOrderList.First().ActualPayment.Value - deductedMoney;
+                    }
+                }
+                CartOrderTradeAddDto orderTradeAdd = new CartOrderTradeAddDto();
+                orderTradeAdd.Id = Guid.NewGuid().ToString().Replace("-", "");
+                orderTradeAdd.CustomerId = customerId;
+                orderTradeAdd.CreateDate = DateTime.Now;
+                orderTradeAdd.AddressId = addressId;
+                orderTradeAdd.Remark = remark;
+                orderTradeAdd.IsAdminAdd = false;
+                foreach (var item in moneyOrPointOrderList)
+                {
+                    item.TradeId = orderTradeAdd.Id;
+                    item.ActualPayment = (item.ActualPayment - item.DeductMoney <= 0) ? 0.01m : (item.ActualPayment - item.DeductMoney);
+                }
+                orderTradeAdd.OrderInfoAddList = moneyOrPointOrderList;
+
+                ////添加订单
+                //await AddAmiyaCartOrderWithNoTransactionAsync(orderTradeAdd);
+                ////生成支付信息
+                //HuiShouQianPayRequestInfo huiShouQianPayRequestInfo = new HuiShouQianPayRequestInfo();
+                //huiShouQianPayRequestInfo.TransNo = Guid.NewGuid().ToString().Replace("-", "");
+                //huiShouQianPayRequestInfo.PayType = "WECHAT_APPLET";
+                //huiShouQianPayRequestInfo.OrderAmt = (moneyOrPointOrderList.Sum(e => e.ActualPayment).Value * 100m).ToString().Split(".")[0];
+                //huiShouQianPayRequestInfo.GoodsInfo = "商品付款";
+                //huiShouQianPayRequestInfo.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
+                //huiShouQianPayRequestInfo.Extend = orderTradeAdd.Id;
+                //var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId);
+                //if (result.Success == false) throw new Exception("下单失败,请重新下单！");
+                ////交易信息添加支付交易订单号
+                //await this.TradeAddTransNoAsync(orderTradeAdd.Id, huiShouQianPayRequestInfo.TransNo);
+                //PayRequestInfoDto payRequestInfo = new PayRequestInfoDto();
+                //payRequestInfo.appId = result.PayParam.AppId;
+                //payRequestInfo.package = result.PayParam.Package;
+                //payRequestInfo.timeStamp = result.PayParam.TimeStamp;
+                //payRequestInfo.nonceStr = result.PayParam.NonceStr;
+                //payRequestInfo.paySign = result.PayParam.PaySign;
+
+                //扣除库存
+                foreach (var item in moneyOrPointOrderList)
+                {
+                    await _goodsInfoService.ReductionGoodsInventoryQuantityAsync(item.GoodsId, item.Quantity.Value);
+                }
+                pay.TotalMoney = moneyOrPointOrderList.Sum(e => e.ActualPayment);
+                //如果包含积分加钱购订单扣除积分(放在最后解决积分回滚问题)
+                if (moneyOrPointOrderList.Sum(e => e.IntegrationQuantity) > 0)
+                {
+                    UseIntegrationDto useIntegrationDto = new UseIntegrationDto();
+                    useIntegrationDto.CustomerId = customerId;
+                    useIntegrationDto.OrderId = orderTradeAdd.Id;
+                    useIntegrationDto.Date = DateTime.Now;
+                    useIntegrationDto.UseQuantity = moneyOrPointOrderList.Sum(e => e.IntegrationQuantity).Value;
+                    await integrationAccountService.UseByGoodsConsumption(useIntegrationDto);
+                }
+                unitOfWork.Commit();
+                return pay.TotalMoney.Value;
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw new Exception("商城商品下单失败！");
+            }
+        }
+
         /// <summary>
         /// 添加积分交易订单并扣除积分
         /// </summary>
@@ -5401,9 +5508,9 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<OrderSendInfoDto> GetOrderSendInfoAsync(string tradeId)
+        public async Task<OrderSendInfoDto> GetOrderSendInfoAsync(string tradeId,string orderId)
         {
-            return dalSendGoodsRecord.GetAll().Where(e => e.TradeId == tradeId).Select(e => new OrderSendInfoDto
+            return dalSendGoodsRecord.GetAll().Where(e => e.TradeId == tradeId&&e.OrderId==orderId).Select(e => new OrderSendInfoDto
             {
                 ExpressId = e.ExpressId,
                 CourierNumber = e.CourierNumber

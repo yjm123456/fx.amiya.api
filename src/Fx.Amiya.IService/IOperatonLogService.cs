@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.OperationLog;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Common;
 using System;
 using System.Collections.Generic;
@@ -23,5 +24,11 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
 
         Task<FxPageInfo<OperationLogInfoDto>> GetListByPageAsync(OperationLogSearchDto searchDto);
+        /// <summary>
+        /// 获取请求类型名称列表
+        /// </summary>
+        /// <returns></returns>
+
+        List<BaseKeyValueDto<int>> GetRequestTypeNameList();
     }
 }

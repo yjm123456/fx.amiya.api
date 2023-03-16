@@ -42,7 +42,8 @@ namespace Fx.Amiya.Service
                 GoodsName=e.Name,
                 InventoryQuantity=e.InventoryQuantity.Value,
                 ThumailPic=e.ThumbPicUrl,
-                Valid=e.Valid
+                Valid=e.Valid,
+                CategoryId=e.CategoryId
             }).ToList();
             if (ids.Count != goodsInfoList.Count) throw new Exception("订单商品包含无效商品,请检查后重新下单！");
             var unAvailableGoods = goodsInfoList.Where(e=>e.Valid==false).Select(e => e.GoodsName).ToList();

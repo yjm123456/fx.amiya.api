@@ -1465,6 +1465,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                                   Standard = goodsInfoService.GetByIdAsync(o.GoodsId).Result.Standard,
                                                   AppType = o.AppType,
                                                   AppTypeText = o.AppTypeText,
+                                                  StatusCode=o.StatusCode,
                                                   StatusCodeText = o.StatusText
                                               }).ToList()
                          };
@@ -1552,10 +1553,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// </summary>
         /// <param name="tradeId"></param>
         /// <returns></returns>
-        [HttpGet("expressInfo/{tradeId}")]
-        public async Task<ResultData<OrderExpressInfoVo>> GetExpressInfoAsync(string tradeId)
+        [HttpGet("expressInfo/{tradeId}/{orderId}")]
+        public async Task<ResultData<OrderExpressInfoVo>> GetExpressInfoAsync(string tradeId,string orderId)
         {
-            var orderExpressInfoDto = await orderService.GetOrderExpressInfoAsync(tradeId);
+            var orderExpressInfoDto = await orderService.GetOrderExpressInfoAsync(tradeId,orderId);
             var orderExpressInfoDetails = from d in orderExpressInfoDto.data
                                           select new ExpressDetailsVo
                                           {

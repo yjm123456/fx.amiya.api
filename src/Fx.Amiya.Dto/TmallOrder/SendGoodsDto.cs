@@ -7,6 +7,7 @@ namespace Fx.Amiya.Dto.TmallOrder
     public class SendGoodsDto
     {
         public string TradeId{get;set;}
+        public string OrderId { get; set; }
         public int HandleBy { get; set; }
         
         /// <summary>

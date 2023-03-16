@@ -69,5 +69,9 @@ namespace Fx.Amiya.Dto.Order
         /// 抵用券抵扣金额
         /// </summary>
         public decimal DeductMoney { get; set; }
+        /// <summary>
+        /// 商品分类
+        /// </summary>
+        public int CategoryId { get; set; }
     }
 }

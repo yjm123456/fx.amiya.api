@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Background.Api.Vo.OperationLog;
+﻿using Fx.Amiya.Background.Api.Vo;
+using Fx.Amiya.Background.Api.Vo.OperationLog;
 using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
@@ -28,7 +29,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             this.operatonLogService = operatonLogService;
         }
 
-        public async Task<ResultData<FxPageInfo<OperationLogInfoVo>>> GetListByPage(SearchVo search) {
+
+        /// <summary>
+        /// 获取操作日志记录
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        [HttpGet("list")]
+        public async Task<ResultData<FxPageInfo<OperationLogInfoVo>>> GetListByPage([FromQuery]SearchVo search) {
             OperationLogSearchDto searchDto = new OperationLogSearchDto();
             searchDto.StartDate = search.StartDate;
             searchDto.EndDate = search.EndDate;
@@ -51,8 +59,20 @@ namespace Fx.Amiya.Background.Api.Controllers
                 CreateDate = e.CreateDate
             }).ToList();
             return ResultData<FxPageInfo<OperationLogInfoVo>>.Success().AddData("log", fxPageInfo);
-
-
+        }
+        /// <summary>
+        /// 获取请求类型名称列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("nameList")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetRequestTypeNameListAsync() {
+            var nameList= operatonLogService.GetRequestTypeNameList();
+            var result= nameList.Select(e=>new BaseIdAndNameVo<int> { 
+                Id=e.Key,
+                Name=e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("nameList", result);
+            
         }
     }
 }

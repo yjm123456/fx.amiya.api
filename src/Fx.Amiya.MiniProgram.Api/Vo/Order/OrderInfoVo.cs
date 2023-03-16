@@ -42,6 +42,7 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Order
         public string Standard { get; set; }
         public byte AppType { get; set; }
         public string AppTypeText { get; set; }
+        public string StatusCode { get; set; }
         public string StatusCodeText { get; set; }
         /// <summary>
         /// 是否使用抵用券

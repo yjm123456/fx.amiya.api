@@ -1,6 +1,8 @@
 ﻿using Fx.Amiya.Background.Api.Vo.Appointment;
 using Fx.Amiya.Background.Api.Vo.OrderReport;
 using Fx.Amiya.Core.Interfaces.Goods;
+using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Amiya.Service;
@@ -10,6 +12,7 @@ using Fx.Open.Infrastructure.Web;
 using Jd.Api.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -39,6 +42,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IAppointmentService appointmentService;
         private ICustomerHospitalConsumeService _customerHospitalConsumeService;
         private ILiveAnchorDailyTargetService _liveAnchorDailyTargetService;
+        private IOperatonLogService operatonLogService;
         public OrderReportController(IOrderService orderService,
             IContentPlatformOrderSendService sendContentPlatFormOrderInfoService,
             IAppointmentService appointmentService,
@@ -51,7 +55,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             ISendOrderInfoService sendOrderInfoService,
             ICustomerHospitalConsumeService customerHospitalConsumeService,
             IShoppingCartRegistrationService shoppingCartRegistrationService,
-            ILiveAnchorDailyTargetService liveAnchorDailyTargetService)
+            ILiveAnchorDailyTargetService liveAnchorDailyTargetService, IOperatonLogService operatonLogService)
         {
             this.orderService = orderService;
             _sendContentPlatFormOrderInfoService = sendContentPlatFormOrderInfoService;
@@ -66,6 +70,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             _contentPlatFormOrderService = contentPlatFormOrderService;
             _customerHospitalConsumeService = customerHospitalConsumeService;
             _liveAnchorDailyTargetService = liveAnchorDailyTargetService;
+            this.operatonLogService = operatonLogService;
         }
 
         /// <summary>
@@ -689,66 +694,84 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportContentPlatFormOrderDealInfo")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord)
+        //public async Task<FileStreamResult> ExportDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord)
+        public async Task<FileStreamResult> ExportDealInfo([FromQuery]ExportContentPlatFormOrderDealInfoSearchVo export)
         {
-
-            bool isHidePhone = true;
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            OperationAddDto operationLog = new OperationAddDto();
+            try
             {
-                isHidePhone = false;
-            }
-            int employeeId = Convert.ToInt32(employee.Id);
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, sendStartDate, sendEndDate, minAddOrderPrice, maxAddOrderPrice, consultationType, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, checkStartDate, checkEndDate, isCreateBill, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, belongCompanyId, keyWord, employeeId, isHidePhone);
+                bool isHidePhone = true;
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
+                var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(export.StartDate, export.EndDate, export.SendStartDate, export.SendEndDate, export.MinAddOrderPrice, export.MaxAddOrderPrice, export.ConsultationType, export.IsToHospital, export.TohospitalStartDate, export.ToHospitalEndDate, export.ToHospitalType, export.IsDeal, export.LastDealHospitalId, export.IsAccompanying, export.IsOldCustomer, export.CheckState, export.CheckStartDate, export.CheckEndDate, export.IsCreateBill, export.IsReturnBakcPrice, export.ReturnBackPriceStartDate, export.ReturnBackPriceEndDate, export.CustomerServiceId, export.BelongCompanyId, export.KeyWord, employeeId, isHidePhone);
 
-            var contentPlatformOrders = from d in result
-                                        select new ContentPlatFormOrderDealInfoReportVo
-                                        {
-                                            Id = d.Id,
-                                            ContentPlatFormOrderId = d.ContentPlatFormOrderId,
-                                            CreateDate = d.CreateDate,
-                                            SendOrderDate = d.SendDate,
-                                            OrderCreateDate = d.OrderCreateDate,
-                                            ContentPlatFormName = d.ContentPlatFormName,
-                                            LiveAnchorName = d.LiveAnchorName,
-                                            GoodsName = d.GoodsName,
-                                            CustomerNickName = d.CustomerNickName,
-                                            ConsultationType = d.ConsultationTypeText,
-                                            IsDeal = d.IsDeal == true ? "是" : "否",
-                                            IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
-                                            IsAcompanying = d.IsAcompanying == true ? "是" : "否",
-                                            /* CommissionRatio = d.CommissionRatio,*/
-                                            AddOrderPrice = d.AddOrderPrice,
-                                            Phone = d.Phone,
-                                            DealPerformanceTypeText = d.DealPerformanceTypeText,
-                                            IsToHospital = d.IsToHospital == true ? "是" : "否",
-                                            ToHospitalTypeText = d.ToHospitalTypeText,
-                                            TohospitalDate = d.ToHospitalDate,
-                                            LastDealHospital = d.LastDealHospital,
-                                            Remark = d.Remark,
-                                            Price = d.Price,
-                                            DealDate = d.DealDate,
-                                            OtherOrderId = d.OtherAppOrderId,
-                                            BelongCompanyName = d.BelongCompanyName,
-                                            IsCreateBill = d.IsCreateBill == true ? "是" : "否",
-                                            CheckStateText = d.CheckStateText,
-                                            CheckPrice = d.CheckPrice,
-                                            CheckDate = d.CheckDate,
-                                            CheckBy = d.CheckByEmpName,
-                                            InformationPrice = d.InformationPrice,
-                                            SystemUpdatePrice = d.SystemUpdatePrice,
-                                            SettlePrice = d.SettlePrice,
-                                            CheckRemark = d.CheckRemark,
-                                            IsReturnBackPrice = d.IsReturnBackPrice == true ? "是" : "否",
-                                            ReturnBackDate = d.ReturnBackDate,
-                                            ReturnBackPrice = d.ReturnBackPrice,
-                                            CreateByEmpName = d.CreateByEmpName,
-                                            IsRepeatProfundityOrder = d.IsRepeatProfundityOrder == true ? "是" : "否",
-                                        };
-            var exportContentPlatFormDealOrder = contentPlatformOrders.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportContentPlatFormDealOrder);
-            var exportInfo = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "内容平台成交情况报表.xls");
-            return exportInfo;
+                var contentPlatformOrders = from d in result
+                                            select new ContentPlatFormOrderDealInfoReportVo
+                                            {
+                                                Id = d.Id,
+                                                ContentPlatFormOrderId = d.ContentPlatFormOrderId,
+                                                CreateDate = d.CreateDate,
+                                                SendOrderDate = d.SendDate,
+                                                OrderCreateDate = d.OrderCreateDate,
+                                                ContentPlatFormName = d.ContentPlatFormName,
+                                                LiveAnchorName = d.LiveAnchorName,
+                                                GoodsName = d.GoodsName,
+                                                CustomerNickName = d.CustomerNickName,
+                                                ConsultationType = d.ConsultationTypeText,
+                                                IsDeal = d.IsDeal == true ? "是" : "否",
+                                                IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
+                                                IsAcompanying = d.IsAcompanying == true ? "是" : "否",
+                                                /* CommissionRatio = d.CommissionRatio,*/
+                                                AddOrderPrice = d.AddOrderPrice,
+                                                Phone = d.Phone,
+                                                DealPerformanceTypeText = d.DealPerformanceTypeText,
+                                                IsToHospital = d.IsToHospital == true ? "是" : "否",
+                                                ToHospitalTypeText = d.ToHospitalTypeText,
+                                                TohospitalDate = d.ToHospitalDate,
+                                                LastDealHospital = d.LastDealHospital,
+                                                Remark = d.Remark,
+                                                Price = d.Price,
+                                                DealDate = d.DealDate,
+                                                OtherOrderId = d.OtherAppOrderId,
+                                                BelongCompanyName = d.BelongCompanyName,
+                                                IsCreateBill = d.IsCreateBill == true ? "是" : "否",
+                                                CheckStateText = d.CheckStateText,
+                                                CheckPrice = d.CheckPrice,
+                                                CheckDate = d.CheckDate,
+                                                CheckBy = d.CheckByEmpName,
+                                                InformationPrice = d.InformationPrice,
+                                                SystemUpdatePrice = d.SystemUpdatePrice,
+                                                SettlePrice = d.SettlePrice,
+                                                CheckRemark = d.CheckRemark,
+                                                IsReturnBackPrice = d.IsReturnBackPrice == true ? "是" : "否",
+                                                ReturnBackDate = d.ReturnBackDate,
+                                                ReturnBackPrice = d.ReturnBackPrice,
+                                                CreateByEmpName = d.CreateByEmpName,
+                                                IsRepeatProfundityOrder = d.IsRepeatProfundityOrder == true ? "是" : "否",
+                                            };
+                var exportContentPlatFormDealOrder = contentPlatformOrders.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportContentPlatFormDealOrder);
+                var exportInfo = File(stream, "application/vnd.ms-excel", $"" + export.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + export.EndDate.Value.ToString("yyyy年MM月dd日") + "内容平台成交情况报表.xls");
+                return exportInfo;
+            }
+            catch (Exception ex)
+            {
+                operationLog.Code = -1;
+                operationLog.Message = ex.Message;
+                throw ex;
+            }
+            finally {
+                operationLog.Message = "";
+                operationLog.Parameters = JsonConvert.SerializeObject(export);
+                operationLog.RequestType = (int)RequestType.Export;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operatonLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
 

@@ -1959,7 +1959,7 @@ namespace Fx.Amiya.Service
                 InformationPrice = e.Sum(item => item.InformationPrice ?? 0m),
                 SystemUsePrice = e.Sum(item => item.SystemUpdatePrice ?? 0m),
                 ReturnBackPrice = e.Sum(item => item.ReturnBackPrice ?? 0m)
-            });
+            }).OrderByDescending(e=>e.DealPrice);
             FxPageInfo<FinancialHospitalDealPriceBoardDto> fxPageInfo = new FxPageInfo<FinancialHospitalDealPriceBoardDto>();
             fxPageInfo.TotalCount = dealInfoResult.Count();
             fxPageInfo.List = dealInfoResult.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();

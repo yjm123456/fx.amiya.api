@@ -10,6 +10,11 @@ namespace Fx.Amiya.Background.Api.Vo.Order
     {
         [Required(ErrorMessage ="交易编号不能为空")]
         public string TradeId { get; set; }
+        /// <summary>
+        /// 订单id
+        /// </summary>
+
+        public string OrderId { get; set; }
 
         /// <summary>
         /// 快递单号

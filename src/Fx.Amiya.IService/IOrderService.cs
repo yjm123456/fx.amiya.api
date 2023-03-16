@@ -136,8 +136,9 @@ namespace Fx.Amiya.IService
         /// 根据交易编号获取订单物流信息
         /// </summary>
         /// <param name="tradeId"></param>
+        /// <param name="orderId"></param>
         /// <returns></returns>
-        Task<OrderExpressInfoDto> GetOrderExpressInfoAsync(string tradeId);
+        Task<OrderExpressInfoDto> GetOrderExpressInfoAsync(string tradeId,string orderId);
 
         /// <summary>
         /// 根据手机号，快递单号，物流公司id获取快递信息
@@ -496,7 +497,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="tradeId"></param>
         /// <returns></returns>
-        Task<OrderSendInfoDto> GetOrderSendInfoAsync(string tradeId);
+        Task<OrderSendInfoDto> GetOrderSendInfoAsync(string tradeId,string orderId);
         /// <summary>
         /// 获取下单平台列表
         /// </summary>

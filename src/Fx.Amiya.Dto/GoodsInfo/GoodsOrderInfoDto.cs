@@ -16,6 +16,7 @@ namespace Fx.Amiya.Dto.GoodsInfo
         public int InventoryQuantity { get; set; }
         public string ThumailPic { get; set; }
         public bool Valid { get; set; }
+        public int CategoryId { get; set; }
         public List<PriceDto> StandardList { get; set; }
         public List<GoodsConsumVoucherDto> VoucherList { get; set; }
 

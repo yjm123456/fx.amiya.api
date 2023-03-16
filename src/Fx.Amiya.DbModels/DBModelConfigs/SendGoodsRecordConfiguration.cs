@@ -19,7 +19,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t=>t.HandleBy).HasColumnName("handle_by").HasColumnType("int").IsRequired();
             builder.Property(t=>t.CourierNumber).HasColumnName("courier_number").HasColumnType("varchar(100)").IsRequired();
             builder.Property(t => t.ExpressId).HasColumnName("express_id").HasColumnType("varchar(50)").IsRequired(false);
-
+            builder.Property(t => t.OrderId).HasColumnName("order_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.HasOne(t => t.OrderTrade).WithOne(t => t.SendGoodsRecord).HasForeignKey<SendGoodsRecord>(t=>t.TradeId);
             builder.HasOne(t => t.AmiyaEmployee).WithMany(t => t.SendGoodsRecordList).HasForeignKey(t=>t.HandleBy);
         }

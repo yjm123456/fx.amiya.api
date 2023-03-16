@@ -178,6 +178,14 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         /// 商品类别
         /// </summary>
         public string CategoryName { get; set; }
+        /// <summary>
+        /// 快递公司id
+        /// </summary>
+        public string ExpressId { get; set; }
+        /// <summary>
+        /// 物流单号
+        /// </summary>
+        public string CourierNumber { get; set; }
 
         #region  财务审核板块
         /// <summary>
