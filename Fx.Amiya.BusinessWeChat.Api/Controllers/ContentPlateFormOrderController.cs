@@ -401,7 +401,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.SendBy = order.SendBy;
             orderUpdateInfo.SendByName = order.SendByName;
             orderUpdateInfo.SendHospitalName = order.SendHospitalName;
-            var pictures = await _contentPlatFormCustomerPictureService.GetListAsync(orderUpdateInfo.Id);
+            var pictures = await _contentPlatFormCustomerPictureService.GetListAsync(orderUpdateInfo.Id,"顾客照片");
             orderUpdateInfo.CustomerPictures = pictures.Select(z => z.CustomerPicture).ToList();
             orderUpdateInfo.IsRepeatProfundityOrder = order.IsRepeatProfundityOrder;
             orderUpdateInfo.IsCreateBill = order.IsCreateBill;

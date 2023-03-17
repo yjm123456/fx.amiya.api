@@ -23,14 +23,14 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<ContentPlatFormOrderCustomerPictureDto>> GetListWithPageAsync(string contentPlatFormId,string orderDealId, string description, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderCustomerPictureDto>> GetListWithPageAsync(string contentPlatFormId, string orderDealId, string description, int pageNum, int pageSize)
         {
             try
             {
                 var contentPlatFormCustomerPicture = from d in dalContentPlatFormCustomerPicture.GetAll()
                                                      where (contentPlatFormId == null || d.ContentPlatFormOrderId.Contains(contentPlatFormId))
                                                      && (orderDealId == null || d.OrderDealId.Contains(orderDealId))
-                                                     && (string.IsNullOrEmpty(description) || d.Description==description)
+                                                     && (string.IsNullOrEmpty(description) || d.Description == description)
                                                      select new ContentPlatFormOrderCustomerPictureDto
                                                      {
                                                          Id = d.Id,
@@ -49,12 +49,13 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
-        public async Task<List<ContentPlatFormOrderCustomerPictureDto>> GetListAsync(string contentPlatFormId)
+        public async Task<List<ContentPlatFormOrderCustomerPictureDto>> GetListAsync(string contentPlatFormId, string description)
         {
             try
             {
                 var contentPlatFormCustomerPicture = from d in dalContentPlatFormCustomerPicture.GetAll()
-                                                     where contentPlatFormId == null || d.ContentPlatFormOrderId.Contains(contentPlatFormId)
+                                                     where (contentPlatFormId == null || d.ContentPlatFormOrderId.Contains(contentPlatFormId))
+                                                     where (description == null || d.Description == description)
                                                      select new ContentPlatFormOrderCustomerPictureDto
                                                      {
                                                          Id = d.Id,

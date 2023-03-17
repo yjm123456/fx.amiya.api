@@ -19,13 +19,13 @@ namespace Fx.Amiya.IService
         /// <param name="pageSize"></param>
         /// <returns></returns>
         Task<FxPageInfo<ContentPlatFormOrderCustomerPictureDto>> GetListWithPageAsync(string contentPlatFormId, string orderDealId, string description, int pageNum, int pageSize);
-
         /// <summary>
         /// 根据内容平台订单编号获取客户图片
         /// </summary>
         /// <param name="contentPlatFormId"></param>
+        /// <param name="description"></param>
         /// <returns></returns>
-        Task<List<ContentPlatFormOrderCustomerPictureDto>> GetListAsync(string contentPlatFormId);
+        Task<List<ContentPlatFormOrderCustomerPictureDto>> GetListAsync(string contentPlatFormId, string description);
         /// <summary>
         /// 新增客户图片
         /// </summary>
