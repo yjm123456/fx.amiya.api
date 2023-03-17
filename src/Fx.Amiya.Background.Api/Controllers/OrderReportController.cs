@@ -174,7 +174,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             OperationAddDto operationAddDto = new OperationAddDto();
-            operationAddDto.RouteAddress = "/amiyabg/OrderReport/OrderBuyReportExport";
+            operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
             operationAddDto.RequestType = (int)RequestType.Export;
             operationAddDto.Parameters = JsonConvert.SerializeObject(getOrderBuyExport);
             operationAddDto.OperationBy = Convert.ToInt32(employee.Id);

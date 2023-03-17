@@ -40,7 +40,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             OperationLogSearchDto searchDto = new OperationLogSearchDto();
             searchDto.StartDate = search.StartDate;
             searchDto.EndDate = search.EndDate;
-            searchDto.Keyword = search.Keyword;
+            searchDto.RouteAddress = search.RouteAddress;
+            searchDto.Parameters = search.Parameters;
             searchDto.RequestType = search.RequestType;
             searchDto.Code = search.Code;
             searchDto.PageNum = search.PageNum;

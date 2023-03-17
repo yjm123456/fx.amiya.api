@@ -578,6 +578,30 @@
             <param name="name"></param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.LiveAnchorBaseInfoController">
+            <summary>
+            主播基础信息API
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.LiveAnchorBaseInfoController.#ctor(Fx.Amiya.IService.ILiveAnchorBaseInfoService)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="liveAnchorBaseInfoService"></param>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.LiveAnchorBaseInfoController.GetValidListAsync(System.Nullable{System.Boolean})">
+            <summary>
+             获取有效的主播基础信息列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.LiveAnchorBaseInfoController.GetByIdAsync(System.String)">
+            <summary>
+            根据编号获取主播基础信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.LiveAnchorController">
             <summary>
             主播账号
@@ -2904,6 +2928,76 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.TagList">
             <summary>
             标签
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.LiveAnchorBaseInfo.LiveAnchorBaseInfoVo">
+            <summary>
+            主播基础信息输出类
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.LiveAnchorBaseInfo.LiveAnchorBaseInfoVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.LiveAnchorBaseInfo.LiveAnchorBaseInfoVo.LiveAnchorName">
+            <summary>
+            主播名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.LiveAnchorBaseInfo.LiveAnchorBaseInfoVo.ThumbPicture">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.LiveAnchorBaseInfo.LiveAnchorBaseInfoVo.NickName">
+            <summary>
+            昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.LiveAnchorBaseInfo.LiveAnchorBaseInfoVo.IndividualitySignature">
+            <summary>
+            个性签名
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.LiveAnchorBaseInfo.LiveAnchorBaseInfoVo.Description">
+            <summary>
+            简介
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.LiveAnchorBaseInfo.LiveAnchorBaseInfoVo.DetailPicture">
+            <summary>
+            详情图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.LiveAnchorBaseInfo.LiveAnchorBaseInfoVo.VideoUrl">
+            <summary>
+            视频地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.LiveAnchorBaseInfo.LiveAnchorBaseInfoVo.ContractUrl">
+            <summary>
+            合同地址
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.LiveAnchorBaseInfo.LiveAnchorBaseInfoVo.IsMain">
+            <summary>
+            是否主推，默认传否
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.LiveAnchorBaseInfo.LiveAnchorBaseInfoVo.DueTime">
+            <summary>
+            到期时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.LiveAnchorBaseInfo.LiveAnchorBaseInfoVo.Valid">
+            <summary>
+            是否可用
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.LiveAnchorBaseInfo.LiveAnchorBaseInfoVo.IsSelfLivevAnchor">
+            <summary>
+            是否为自播达人
             </summary>
         </member>
         <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.OrderCheckPicture.OrderCheckPictureVo">

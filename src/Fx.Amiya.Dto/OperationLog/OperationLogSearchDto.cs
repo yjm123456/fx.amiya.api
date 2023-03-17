@@ -10,7 +10,14 @@ namespace Fx.Amiya.Dto.OperationLog
     {
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public string Keyword { get; set; }
+        /// <summary>
+        /// 请求地址
+        /// </summary>
+        public string RouteAddress { get; set; }
+        /// <summary>
+        /// 请求参数
+        /// </summary>
+        public string Parameters { get; set; }
         /// <summary>
         /// 访问类型
         /// </summary>

@@ -24,12 +24,12 @@ namespace Fx.Amiya.Service
         /// <summary>
         /// 获取有效的主播列表
         /// </summary>
-        /// <param name="contentPlatFormId">内容平台id</param>
+        /// <param name="isSelfLiveAnchor">是否为自播达人主播</param>
         /// <returns></returns>
-        public async Task<List<LiveAnchorBaseInfoDto>> GetValidAsync()
+        public async Task<List<LiveAnchorBaseInfoDto>> GetValidAsync(bool? isSelfLiveAnchor)
         {
             var liveAnchorBaseInfos = from d in dalLiveAnchorBaseInfo.GetAll()
-                                      where d.Valid == true
+                                      where (d.Valid == true)&&(!isSelfLiveAnchor.HasValue || d.IsSelfLivevAnchor == isSelfLiveAnchor.Value)
                                       select new LiveAnchorBaseInfoDto
                                       {
                                           Id = d.Id,

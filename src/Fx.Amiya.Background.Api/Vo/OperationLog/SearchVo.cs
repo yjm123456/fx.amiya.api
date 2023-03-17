@@ -16,9 +16,13 @@ namespace Fx.Amiya.Background.Api.Vo.OperationLog
         /// </summary>
         public DateTime? EndDate { get; set; }
         /// <summary>
-        /// 关键词
+        /// 请求地址
         /// </summary>
-        public string Keyword { get; set; }
+        public string RouteAddress { get; set; }
+        /// <summary>
+        /// 请求参数
+        /// </summary>
+        public string Parameters { get; set; }
         /// <summary>
         /// 访问类型
         /// </summary>

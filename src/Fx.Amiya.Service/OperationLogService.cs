@@ -45,7 +45,8 @@ namespace Fx.Amiya.Service
             var endDate = searchDto.EndDate == null ? DateTime.Now.Date.AddDays(1).Date : searchDto.EndDate.Value.AddDays(1).Date;
             var result =  dalOpertionLog.GetAll()
                 .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate)
-                .Where(e => string.IsNullOrEmpty(searchDto.Keyword) || e.RouteAddress.Contains(searchDto.Keyword))
+                .Where(e => string.IsNullOrEmpty(searchDto.RouteAddress) || e.RouteAddress.Contains(searchDto.RouteAddress))
+                .Where(e => string.IsNullOrEmpty(searchDto.Parameters) || e.RouteAddress.Contains(searchDto.Parameters))
                 .Where(e => !searchDto.RequestType.HasValue || e.RequestType == searchDto.RequestType)
                 .Where(e => !searchDto.Code.HasValue || e.Code == searchDto.Code)
                 .OrderByDescending(e=>e.CreateDate);

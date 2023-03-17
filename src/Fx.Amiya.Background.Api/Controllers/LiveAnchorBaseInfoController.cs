@@ -34,9 +34,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("valid")]
-        public async Task<ResultData<List<LiveAnchorBaseInfoIdAndNameVo>>> GetValidListAsync()
+        public async Task<ResultData<List<LiveAnchorBaseInfoIdAndNameVo>>> GetValidListAsync(bool? isSelfLiveAnchor)
         {
-            var liveAnchorBaseInfos = from d in await liveAnchorBaseInfoService.GetValidAsync()
+            var liveAnchorBaseInfos = from d in await liveAnchorBaseInfoService.GetValidAsync(isSelfLiveAnchor)
                               select new LiveAnchorBaseInfoIdAndNameVo
                               {
                                   Id = d.Id,
