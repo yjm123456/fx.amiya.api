@@ -210,8 +210,7 @@ namespace Fx.Amiya.Service
             var result = resultCount.FirstOrDefault(e => e.Id != updateDto.Id && e.NickName == updateDto.NickName && e.LiveAnchorName == updateDto.LiveAnchorName);
             if (result != null)
                 throw new Exception("已存在该主播基础信息");
-            LiveAnchorBaseInfo liveAchor = new LiveAnchorBaseInfo();
-            liveAchor.Id = updateDto.Id;
+            var liveAchor = dalLiveAnchorBaseInfo.GetAll().Where(x=>x.Id==updateDto.Id).SingleOrDefault();
             liveAchor.LiveAnchorName = updateDto.LiveAnchorName;
             liveAchor.ThumbPicture = updateDto.ThumbPicture;
             liveAchor.NickName = updateDto.NickName;
