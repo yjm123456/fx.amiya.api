@@ -30,9 +30,17 @@ namespace Fx.Amiya.Dto.AestheticsDesignReport
         /// </summary>
         public bool? HasAestheticMedicineHistory { get; set; }
         /// <summary>
-        /// 经历描述
+        /// 微创调整的部位以及所用材料
         /// </summary>
-        public string HistoryDescribe { get; set; }
+        public string HistoryDescribe1 { get; set; }
+        /// <summary>
+        /// 整形调整的部位
+        /// </summary>
+        public string HistoryDescribe2 { get; set; }
+        /// <summary>
+        /// 皮肤做过的仪器或项目
+        /// </summary>
+        public string HistoryDescribe3 { get; set; }
         /// <summary>
         /// 是否接受手术
         /// </summary>

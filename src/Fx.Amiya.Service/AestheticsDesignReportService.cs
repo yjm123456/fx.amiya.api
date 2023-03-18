@@ -20,7 +20,11 @@ namespace Fx.Amiya.Service
         {
             this.dalAestheticsDesignReport = dalAestheticsDesignReport;
         }
-
+        /// <summary>
+        /// 添加美学设计报告
+        /// </summary>
+        /// <param name="addDto"></param>
+        /// <returns></returns>
         public async Task AddAestheticsDesignReportAsync(AddAestheticsDesignReportDto addDto)
         {
             AestheticsDesignReport aestheticsDesignReport = new AestheticsDesignReport();
@@ -31,7 +35,9 @@ namespace Fx.Amiya.Service
             aestheticsDesignReport.Phone = addDto.Phone;
             aestheticsDesignReport.City = addDto.City;
             aestheticsDesignReport.HasAestheticMedicineHistory = addDto.HasAestheticMedicineHistory;
-            aestheticsDesignReport.HistoryDescribe = addDto.HistoryDescribe;
+            aestheticsDesignReport.HistoryDescribe1 = addDto.HistoryDescribe1;
+            aestheticsDesignReport.HistoryDescribe2 = addDto.HistoryDescribe2;
+            aestheticsDesignReport.HistoryDescribe3 = addDto.HistoryDescribe3;
             aestheticsDesignReport.WhetherAcceptOperation = addDto.WhetherAcceptOperation;
             aestheticsDesignReport.WhetherAllergyOrOtherDisease = addDto.WhetherAllergyOrOtherDisease;
             aestheticsDesignReport.AllergyOrOtherDiseaseDescribe = addDto.AllergyOrOtherDiseaseDescribe;
@@ -44,7 +50,12 @@ namespace Fx.Amiya.Service
             aestheticsDesignReport.Valid = true;
             await dalAestheticsDesignReport.AddAsync(aestheticsDesignReport,true);
         }
-
+        /// <summary>
+        /// 删除美学设计报告
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
         public async Task DeleteAsync(string id,string customerId)
         {
             var report= dalAestheticsDesignReport.GetAll().Where(e => e.Id == id && e.CustomerId == customerId).SingleOrDefault();
@@ -53,7 +64,11 @@ namespace Fx.Amiya.Service
             report.Valid = false;
             await dalAestheticsDesignReport.UpdateAsync(report,true);
         }
-
+        /// <summary>
+        /// 根据id获取美学设计报告信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<AestheticsDesignReportInfoDto> GetById(string id)
         {
             var report= dalAestheticsDesignReport.GetAll().Where(e => e.Id == id).Select(e=>new AestheticsDesignReportInfoDto {
@@ -65,8 +80,10 @@ namespace Fx.Amiya.Service
                 Phone=e.Phone,
                 City=e.City,
                 HasAestheticMedicineHistory=e.HasAestheticMedicineHistory,
-                HistoryDescribe=e.HistoryDescribe,
-                WhetherAcceptOperation=e.WhetherAcceptOperation,
+                HistoryDescribe1=e.HistoryDescribe1,
+                HistoryDescribe2 = e.HistoryDescribe2,
+                HistoryDescribe3 = e.HistoryDescribe3,
+                WhetherAcceptOperation =e.WhetherAcceptOperation,
                 WhetherAllergyOrOtherDisease=e.WhetherAllergyOrOtherDisease,
                 AllergyOrOtherDiseaseDescribe=e.AllergyOrOtherDiseaseDescribe,
                 BeautyDemand=e.BeautyDemand,
@@ -96,7 +113,9 @@ namespace Fx.Amiya.Service
                     Phone = e.Phone,
                     City = e.City,
                     HasAestheticMedicineHistory = e.HasAestheticMedicineHistory,
-                    HistoryDescribe = e.HistoryDescribe,
+                    HistoryDescribe1 = e.HistoryDescribe1,
+                    HistoryDescribe2 = e.HistoryDescribe2,
+                    HistoryDescribe3 = e.HistoryDescribe3,
                     WhetherAcceptOperation = e.WhetherAcceptOperation,
                     WhetherAllergyOrOtherDisease = e.WhetherAllergyOrOtherDisease,
                     AllergyOrOtherDiseaseDescribe = e.AllergyOrOtherDiseaseDescribe,
@@ -122,7 +141,9 @@ namespace Fx.Amiya.Service
             report.Phone = updateDto.Phone;
             report.City = updateDto.City;
             report.HasAestheticMedicineHistory = updateDto.HasAestheticMedicineHistory;
-            report.HistoryDescribe = updateDto.HistoryDescribe;
+            report.HistoryDescribe1 = updateDto.HistoryDescribe1;
+            report.HistoryDescribe2 = updateDto.HistoryDescribe2;
+            report.HistoryDescribe3 = updateDto.HistoryDescribe3;
             report.WhetherAcceptOperation = updateDto.WhetherAcceptOperation;
             report.WhetherAllergyOrOtherDisease = updateDto.WhetherAllergyOrOtherDisease;
             report.AllergyOrOtherDiseaseDescribe = updateDto.AllergyOrOtherDiseaseDescribe;

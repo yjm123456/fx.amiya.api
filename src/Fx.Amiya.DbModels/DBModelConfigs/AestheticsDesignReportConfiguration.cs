@@ -21,7 +21,9 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.BirthDay).HasColumnName("birth_day").HasColumnType("datetime").IsRequired();
             builder.Property(e => e.Phone).HasColumnName("phone").HasColumnType("varchar(50)").IsRequired();
             builder.Property(e => e.HasAestheticMedicineHistory).HasColumnName("has_aesthetic_history").HasColumnType("bit").IsRequired();
-            builder.Property(e => e.HistoryDescribe).HasColumnName("history_describe").HasColumnType("varchar(5000)").IsRequired(false);
+            builder.Property(e => e.HistoryDescribe1).HasColumnName("history_describe1").HasColumnType("varchar(5000)").IsRequired(false);
+            builder.Property(e => e.HistoryDescribe2).HasColumnName("history_describe2").HasColumnType("varchar(5000)").IsRequired(false);
+            builder.Property(e => e.HistoryDescribe3).HasColumnName("history_describe3").HasColumnType("varchar(5000)").IsRequired(false);
             builder.Property(e => e.WhetherAcceptOperation).HasColumnName("whether_accept_operation").HasColumnType("bit").IsRequired();
             builder.Property(e => e.WhetherAllergyOrOtherDisease).HasColumnName("whether_allergy").HasColumnType("bit").IsRequired();
             builder.Property(e => e.AllergyOrOtherDiseaseDescribe).HasColumnName("allergy_describe").HasColumnType("varchar(5000)").IsRequired(false);

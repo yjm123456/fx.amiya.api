@@ -260,8 +260,8 @@ CREATE TABLE `tbl_aesthetics_design` (
 
 ----美学设计标签
 CREATE TABLE `tbl_aesthetics_design_report_tags` (
-	`report_id` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	`tag_id` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_unicode_ci'
+	`report_id` VARCHAR(50) NOT NULL,
+	`tag_id` VARCHAR(50) NOT NULL
 );
 
 

@@ -40,13 +40,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             OperationLogSearchDto searchDto = new OperationLogSearchDto();
             searchDto.StartDate = search.StartDate;
             searchDto.EndDate = search.EndDate;
-            searchDto.RouteAddress = search.RouteAddress;
-            searchDto.Parameters = search.Parameters;
             searchDto.RequestType = search.RequestType;
             searchDto.Code = search.Code;
             searchDto.PageNum = search.PageNum;
             searchDto.PageSize = search.PageSize;
             searchDto.Source = search.RequestSource;
+            searchDto.RouteAddress = search.RouteAddress;
+            searchDto.Parameters = search.Parameters;
             var result=await operatonLogService.GetListByPageAsync(searchDto);
             FxPageInfo<OperationLogInfoVo> fxPageInfo = new FxPageInfo<OperationLogInfoVo>();
             fxPageInfo.TotalCount = result.TotalCount;
@@ -59,7 +59,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Message = e.Message,
                 OperaterName = e.OperaterName,
                 CreateDate = e.CreateDate,
-                RequestSourceText=e.RequestTypeText
+                RequestSourceText=e.SourceText
             }).ToList();
             return ResultData<FxPageInfo<OperationLogInfoVo>>.Success().AddData("log", fxPageInfo);
         }
