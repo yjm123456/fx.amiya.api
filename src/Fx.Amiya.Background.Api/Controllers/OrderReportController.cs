@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Background.Api.Vo.Appointment;
+﻿using Fx.Amiya.Background.Api.Vo;
+using Fx.Amiya.Background.Api.Vo.Appointment;
 using Fx.Amiya.Background.Api.Vo.OrderReport;
 using Fx.Amiya.Core.Interfaces.Goods;
 using Fx.Amiya.DbModels.Model;
@@ -136,16 +137,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 付款订单报表
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="belongEmpId">归属客服id</param>
+        /// <param name="getOrderBuyExport"></param>
         /// <returns></returns>
         [HttpGet("OrderBuyReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<BuyOrderReportVo>>> GetOrderBuyAsync(DateTime? startDate, DateTime? endDate, int belongEmpId)
+        public async Task<ResultData<List<BuyOrderReportVo>>> GetOrderBuyAsync([FromQuery] GetOrderBuyExportVo getOrderBuyExport)
         {
 
-            var q = await orderService.GetOrderBuyAsync(startDate, endDate, belongEmpId, true);
+            var q = await orderService.GetOrderBuyAsync(getOrderBuyExport.StartDate, getOrderBuyExport.EndDate, getOrderBuyExport.BelongEmpId, true);
             var res = from d in q
                       select new BuyOrderReportVo()
                       {
@@ -188,7 +187,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 {
                     isHidePhone = false;
                 }
-                getOrderBuyExport.BelongEmpId = 999;
                 var q = await orderService.GetOrderBuyAsync(getOrderBuyExport.StartDate, getOrderBuyExport.EndDate, getOrderBuyExport.BelongEmpId, isHidePhone);
                 var res = from d in q
                           select new BuyOrderReportVo()
@@ -228,15 +226,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 退款订单报表
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
+        /// <param name="baseQueryVo"></param>
         /// <returns></returns>
         [HttpGet("OrderCloseReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<BuyOrderReportVo>>> GetOrderCloseAsync(DateTime? startDate, DateTime? endDate)
+        public async Task<ResultData<List<BuyOrderReportVo>>> GetOrderCloseAsync([FromQuery] BaseQueryVo baseQueryVo)
         {
 
-            var q = await orderService.GetOrderCloseAsync(startDate, endDate, true);
+            var q = await orderService.GetOrderCloseAsync(baseQueryVo.StartDate, baseQueryVo.EndDate, true);
             var res = from d in q
                       select new BuyOrderReportVo()
                       {
@@ -257,53 +254,72 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 退款订单报表导出
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
+        /// <param name="baseQueryVo"></param>
         /// <returns></returns>
         [HttpGet("OrderCloseReportExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> GetOrderCloseExportAsync(DateTime? startDate, DateTime? endDate)
+        public async Task<FileStreamResult> GetOrderCloseExportAsync([FromQuery] BaseQueryVo baseQueryVo)
         {
-            bool isHidePhone = true;
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            OperationAddDto operationAddDto = new OperationAddDto();
+            operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+            operationAddDto.RequestType = (int)RequestType.Export;
+            operationAddDto.Parameters = JsonConvert.SerializeObject(baseQueryVo);
+            operationAddDto.OperationBy = Convert.ToInt32(employee.Id);
+            int code = 0;
+            string message = "";
+            try
             {
-                isHidePhone = false;
+                bool isHidePhone = true;
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
+                var q = await orderService.GetOrderCloseAsync(baseQueryVo.StartDate, baseQueryVo.EndDate, isHidePhone);
+                var res = from d in q
+                          select new BuyOrderReportVo()
+                          {
+                              Id = d.Id,
+                              Phone = d.Phone,
+                              GoodsName = d.GoodsName,
+                              NickName = d.NickName,
+                              UpdateDate = d.UpdateDate,
+                              AppointmentHospital = d.AppointmentHospital,
+                              StatusText = d.StatusText,
+                              ActualPayment = d.ActualPayment,
+                              CreateDate = d.CreateDate,
+                              AppTypeText = d.AppTypeText,
+                              Quantity = d.Quantity,
+                          };
+                var exportOrderWriteOff = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
+                var result = File(stream, "application/vnd.ms-excel", $"" + baseQueryVo.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + baseQueryVo.EndDate.Value.ToString("yyyy年MM月dd日") + "退款订单报表.xls");
+                return result;
             }
-            var q = await orderService.GetOrderCloseAsync(startDate, endDate, isHidePhone);
-            var res = from d in q
-                      select new BuyOrderReportVo()
-                      {
-                          Id = d.Id,
-                          Phone = d.Phone,
-                          GoodsName = d.GoodsName,
-                          NickName = d.NickName,
-                          UpdateDate = d.UpdateDate,
-                          AppointmentHospital = d.AppointmentHospital,
-                          StatusText = d.StatusText,
-                          ActualPayment = d.ActualPayment,
-                          CreateDate = d.CreateDate,
-                          AppTypeText = d.AppTypeText,
-                          Quantity = d.Quantity,
-                      };
-            var exportOrderWriteOff = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "退款订单报表.xls");
-            return result;
+            catch (Exception err)
+            {
+                code = -1;
+                message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
+            }
+            finally
+            {
+                operationAddDto.Code = code;
+                operationAddDto.Message = message;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
+            }
         }
 
         /// <summary>
         /// 订单核销报表
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
+        /// <param name="baseQueryVo"></param>
         /// <returns></returns>
         [HttpGet("OrderWriteOffReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<WriteOffOrderReportVo>>> GetOrderWriteOffAsync(DateTime? startDate, DateTime? endDate)
+        public async Task<ResultData<List<WriteOffOrderReportVo>>> GetOrderWriteOffAsync([FromQuery] BaseQueryVo baseQueryVo)
         {
-
-            var q = await orderService.GetOrderWriteOffAsync(startDate, endDate, true);
+            var q = await orderService.GetOrderWriteOffAsync(baseQueryVo.StartDate, baseQueryVo.EndDate, true);
             var res = from d in q
                       select new WriteOffOrderReportVo()
                       {
@@ -321,44 +337,66 @@ namespace Fx.Amiya.Background.Api.Controllers
                           SendOrderHospital = d.SendOrderHospital
                       };
             return ResultData<List<WriteOffOrderReportVo>>.Success().AddData("OrderWriteOffReport", res.ToList());
+
         }
         /// <summary>
         /// 订单核销报表导出
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
+        /// <param name="baseQueryVo">开始时间</param>
         /// <returns></returns>
         [HttpGet("OrderWriteOffReportExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> GetOrderWriteOffExportAsync(DateTime? startDate, DateTime? endDate)
+        public async Task<FileStreamResult> GetOrderWriteOffExportAsync([FromQuery] BaseQueryVo baseQueryVo)
         {
-            bool isHidePhone = true;
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            OperationAddDto operationAddDto = new OperationAddDto();
+            operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+            operationAddDto.RequestType = (int)RequestType.Export;
+            operationAddDto.Parameters = JsonConvert.SerializeObject(baseQueryVo);
+            operationAddDto.OperationBy = Convert.ToInt32(employee.Id);
+            int code = 0;
+            string message = "";
+            try
             {
-                isHidePhone = false;
+                bool isHidePhone = true;
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
+                var q = await orderService.GetOrderWriteOffAsync(baseQueryVo.StartDate, baseQueryVo.EndDate, isHidePhone);
+                var res = from d in q
+                          select new WriteOffOrderReportVo()
+                          {
+                              Id = d.Id,
+                              GoodsName = d.GoodsName,
+                              NickName = d.NickName,
+                              EncryptPhone = d.EncryptPhone,
+                              AppointmentHospital = d.AppointmentHospital,
+                              StatusText = d.StatusText,
+                              ActualPayment = d.ActualPayment,
+                              CreateDate = d.CreateDate,
+                              WriteOffDate = d.WriteOffDate,
+                              AppTypeText = d.AppTypeText,
+                              Quantity = d.Quantity,
+                              SendOrderHospital = d.SendOrderHospital
+                          };
+                var exportOrderWriteOff = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
+                var result = File(stream, "application/vnd.ms-excel", $"" + baseQueryVo.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + baseQueryVo.EndDate.Value.ToString("yyyy年MM月dd日") + "订单核销报表.xls");
+                return result;
             }
-            var q = await orderService.GetOrderWriteOffAsync(startDate, endDate, isHidePhone);
-            var res = from d in q
-                      select new WriteOffOrderReportVo()
-                      {
-                          Id = d.Id,
-                          GoodsName = d.GoodsName,
-                          NickName = d.NickName,
-                          EncryptPhone = d.EncryptPhone,
-                          AppointmentHospital = d.AppointmentHospital,
-                          StatusText = d.StatusText,
-                          ActualPayment = d.ActualPayment,
-                          CreateDate = d.CreateDate,
-                          WriteOffDate = d.WriteOffDate,
-                          AppTypeText = d.AppTypeText,
-                          Quantity = d.Quantity,
-                          SendOrderHospital = d.SendOrderHospital
-                      };
-            var exportOrderWriteOff = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "订单核销报表.xls");
-            return result;
+            catch (Exception err)
+            {
+                code = -1;
+                message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
+            }
+            finally
+            {
+                operationAddDto.Code = code;
+                operationAddDto.Message = message;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
+            }
         }
 
 

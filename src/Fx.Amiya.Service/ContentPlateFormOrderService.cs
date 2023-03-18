@@ -2812,7 +2812,7 @@ namespace Fx.Amiya.Service
                 z.ThisMonthSendThisMonthDealPerformance = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.HasValue && c.ContentPlatFormOrder.SendDate.Value.Month == DateTime.Now.Month && c.ContentPlatFormOrder.SendDate.Value.Year == DateTime.Now.Year).Sum(x => x.Price);
 
                 z.VisitNumRatio = DecimalExtension.CalculateTargetComplete(visitInfo.Count(), distinctSendInfo.Count());
-                z.VideoAndPictureCompare = DecimalExtension.CalculateAccounted(z.PicturePerformance, z.VideoPerformance);
+                z.VideoAndPictureCompare = DecimalExtension.CalculateAccounted(z.VideoPerformance, z.PicturePerformance);
                 z.IsAcompanyingCompare = DecimalExtension.CalculateAccounted(z.AcompanyingPerformance, z.NotAcompanyingPerformance);
                 z.ZeroAndHavingPriceCompare = DecimalExtension.CalculateAccounted(z.ZeroPerformance, z.HavingPricePerformance);
                 z.HistoryAndThisMonthCompare = DecimalExtension.CalculateAccounted(z.ThisMonthSendThisMonthDealPerformance, z.HistorySendThisMonthDealPerformance);

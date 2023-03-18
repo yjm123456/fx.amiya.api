@@ -8,16 +8,8 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
     /// <summary>
     /// 付款订单报表导出查询类
     /// </summary>
-    public class GetOrderBuyExportVo
+    public class GetOrderBuyExportVo : BaseQueryVo
     {
-        /// <summary>
-        /// 开始时间
-        /// </summary>
-        public DateTime? StartDate { get; set; }
-        /// <summary>
-        /// 结束时间
-        /// </summary>
-        public DateTime? EndDate { get; set; }
         /// <summary>
         /// 归属客服id
         /// </summary>
