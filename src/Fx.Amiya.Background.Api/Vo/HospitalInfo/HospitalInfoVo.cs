@@ -13,6 +13,58 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalInfo
         /// 医院名称
         /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// 简称
+        /// </summary>
+        public string SimpleName { get; set; }
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int Sort { get; set; }
+        /// <summary>
+        /// 派单顺序
+        /// </summary>
+        public int? SendOrder { get; set; }
+        /// <summary>
+        /// 派单栓徐文本
+        /// </summary>
+        public string SendOrderText { get; set; }
+        /// <summary>
+        /// 新诊佣金比例
+        /// </summary>
+        public decimal? NewCustomerCommissionRatio { get; set; }
+        /// <summary>
+        /// 复诊佣金比例
+        /// </summary>
+        public decimal? OldCustomerCommissionRatio { get; set; }
+        /// <summary>
+        /// 重单规则
+        /// </summary>
+        public string RepeatOrderRule { get; set; }
+        /// <summary>
+        /// 年服务费缴纳状态
+        /// </summary>
+        public int? YearServiceFee { get; set; }
+        /// <summary>
+        /// 年服务费缴纳状态
+        /// </summary>
+        public string YearServiceFeeText { get; set; }
+        /// <summary>
+        /// 保证金缴纳状态
+        /// </summary>
+        public int? SecurityDeposit { get; set; }
+        /// <summary>
+        /// 保证金缴纳状态
+        /// </summary>
+        public string SecurityDepositText { get; set; }
+        /// <summary>
+        /// 年服务费金额
+        /// </summary>
+        public decimal YearServiceMoney { get; set; }
+        /// <summary>
+        /// 保证金金额
+        /// </summary>
+        public decimal SecurityDepositMoney { get; set; }
 
         /// <summary>
         /// 图片url

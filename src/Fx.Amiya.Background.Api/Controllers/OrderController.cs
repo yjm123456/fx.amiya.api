@@ -1422,7 +1422,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                              Standard=d.Standard,
                              CategoryName=d.GoodsCategory,
                              ExpressId=d.ExpressId,
-                             CourierNumber=d.CourierNumber
+                             ExpressName= (!string.IsNullOrEmpty(d.ExpressId)) ? _expressManageService.GetByIdAsync(d.ExpressId).Result.ExpressName.ToString() : "",
+                             CourierNumber =d.CourierNumber
                          };
             return ResultData<List<OrderInfoVo>>.Success().AddData("orders", orders.ToList());
         }

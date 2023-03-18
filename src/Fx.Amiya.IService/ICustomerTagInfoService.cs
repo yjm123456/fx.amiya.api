@@ -12,7 +12,7 @@ namespace Fx.Amiya.IService
 {
     public interface ICustomerTagInfoService
     {
-        Task<FxPageInfo<CustomerTagInfoDto>> GetListWithPageAsync(string keyword, int pageNum, int pageSize);
+        Task<FxPageInfo<CustomerTagInfoDto>> GetListWithPageAsync(string keyword, int? categoryId, int pageNum, int pageSize);
         Task AddAsync(AddCustomerTagInfoDto addDto);
         Task<CustomerTagInfoDto> GetByIdAsync(string id);
         Task UpdateAsync(UpdateCustomerTagInfoDto updateDto);
@@ -32,6 +32,11 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<BaseKeyValueDto>> GetGoodsTagNameListAsync();
+        /// <summary>
+        /// 获取面部标签名称列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<BaseKeyValueDto>> GetFaceTagNameListAsync();
 
     }
 }

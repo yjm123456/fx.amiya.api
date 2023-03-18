@@ -30,5 +30,10 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
 
         List<BaseKeyValueDto<int>> GetRequestTypeNameList();
+        /// <summary>
+        /// 获取请求来源名称列表
+        /// </summary>
+        /// <returns></returns>
+        List<BaseKeyValueDto<int>> GetRequestSourceNameList();
     }
 }

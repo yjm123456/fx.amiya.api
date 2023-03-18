@@ -23,9 +23,13 @@ namespace Fx.Amiya.Dto.OperationLog
         /// </summary>
         public int? RequestType { get; set; }
         /// <summary>
-        /// code:0:请求成功 1:请求异常
+        /// code:0:请求成功 -1:请求异常
         /// </summary>
         public int? Code { get; set; }
+        /// <summary>
+        /// 操作来源
+        /// </summary>
+        public int? Source { get; set; }
         public int PageNum { get; set; }
         public int PageSize { get; set; }
        

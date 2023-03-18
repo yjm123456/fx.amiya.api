@@ -32,5 +32,9 @@ namespace Fx.Amiya.Dto.OperationLog
         /// 操作人
         /// </summary>
         public int OperationBy { get; set; }
+        /// <summary>
+        /// 操作来源
+        /// </summary>
+        public int Source { get; set; }
     }
 }

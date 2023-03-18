@@ -8,7 +8,46 @@ namespace Fx.Amiya.DbModels.Model
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
+        /// <summary>
+        /// 医院简称
+        /// </summary>
+        public string SimpleName { get; set; }
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int Sort { get; set; }
+        /// <summary>
+        /// 派单顺序
+        /// </summary>
+        public int? SendOrder { get; set; }
+        /// <summary>
+        /// 新诊佣金比例
+        /// </summary>
+        public decimal? NewCustomerCommissionRatio { get; set; }
+        /// <summary>
+        /// 复诊佣金比例
+        /// </summary>
+        public decimal? OldCustomerCommissionRatio { get; set; }
+        /// <summary>
+        /// 重单规则
+        /// </summary>
+        public string RepeatOrderRule { get; set; }
+        /// <summary>
+        /// 年服务费
+        /// </summary>
+        public int? YearServiceFee { get; set; }
+        /// <summary>
+        /// 保证金
+        /// </summary>
+        public int? SecurityDeposit { get; set; }
+        /// <summary>
+        /// 年服务费金额
+        /// </summary>
+        public decimal YearServiceMoney { get; set; }
+        /// <summary>
+        /// 保证金金额
+        /// </summary>
+        public decimal SecurityDepositMoney { get; set; }
         /// <summary>
         /// 医院成立时间
         /// </summary>

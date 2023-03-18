@@ -335,3 +335,31 @@ ALTER TABLE `tbl_send_goods_record`
 ----------------------------------------------王健2023/3/16 END-----------------------------------------------------
 
 
+---------------------------------------王健2023/3/18 BEGIN-----------------------------------------------
+
+
+----医院信息添加字段
+ALTER TABLE `tbl_hospital_info`
+	ADD COLUMN `send_order` INT NULL DEFAULT NULL AFTER `belong_company`,
+	ADD COLUMN `new_customer_commission_ratio` DECIMAL(10,2) NULL DEFAULT NULL AFTER `send_order`,
+	ADD COLUMN `old_customer_commission_ratio` DECIMAL(10,2) NULL DEFAULT NULL AFTER `new_customer_commission_ratio`,
+	ADD COLUMN `repeat_order_rule` VARCHAR(1000) NULL DEFAULT NULL AFTER `old_customer_commission_ratio`,
+	ADD COLUMN `year_service_fee` INT NULL DEFAULT NULL AFTER `repeat_order_rule`,
+	ADD COLUMN `security_deposit` INT NULL DEFAULT NULL AFTER `year_service_fee`;
+
+
+---医院添加简称,排序
+ALTER TABLE `tbl_hospital_info`
+	ADD COLUMN `simple_name` VARCHAR(100) NULL DEFAULT NULL AFTER `security_deposit`,
+	ADD COLUMN `sort` INT NOT NULL DEFAULT 0 AFTER `simple_name`;
+
+----医院添加年服务费,保证金金额
+ALTER TABLE `tbl_hospital_info`
+	ADD COLUMN `year_service_money` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `sort`,
+	ADD COLUMN `security_deposit_money` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `year_service_money`;
+
+---操作日志添加来源
+ALTER TABLE `tbl_system_operation_log`
+	ADD COLUMN `source` INT NULL DEFAULT 0 AFTER `delete_date`;
+
+---------------------------------------王健2023/3/18 END-----------------------------------------------

@@ -183,6 +183,10 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         /// </summary>
         public string ExpressId { get; set; }
         /// <summary>
+        /// 快递公司名称
+        /// </summary>
+        public string ExpressName { get; set; }
+        /// <summary>
         /// 物流单号
         /// </summary>
         public string CourierNumber { get; set; }

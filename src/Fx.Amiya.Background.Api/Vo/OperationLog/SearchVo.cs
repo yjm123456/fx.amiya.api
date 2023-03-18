@@ -28,7 +28,11 @@ namespace Fx.Amiya.Background.Api.Vo.OperationLog
         /// </summary>
         public int? RequestType { get; set; }
         /// <summary>
-        /// code:0:请求成功 1:请求异常
+        /// 请求来源
+        /// </summary>
+        public int? RequestSource { get; set; }
+        /// <summary>
+        /// code:0:请求成功 -1:请求异常
         /// </summary>
         public int? Code { get; set; }
         public int PageNum { get; set; }

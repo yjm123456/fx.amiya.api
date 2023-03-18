@@ -155,5 +155,16 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<HospitalNameDto>> GetHospitalNameListByCompany(string companyId);
+        /// <summary>
+        /// 派单顺序列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<BaseKeyValueDto<int>>> GetSendOrderListAsync();
+        /// <summary>
+        /// 年费和保证金缴纳状态列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<BaseKeyValueDto<int>>> GetYearServiceStatusAsync();
+       
     }
 }

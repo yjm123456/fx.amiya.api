@@ -17,6 +17,10 @@ namespace Fx.Amiya.Dto.OperationLog
         /// </summary>
         public string RequestTypeText { get; set; }
         /// <summary>
+        /// 操作来源
+        /// </summary>
+        public string SourceText { get; set; }
+        /// <summary>
         /// 返回code
         /// </summary>
         public int Code { get; set; }

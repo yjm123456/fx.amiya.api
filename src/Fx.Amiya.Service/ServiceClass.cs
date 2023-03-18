@@ -824,9 +824,11 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static string GetRequestTypeText(int type) {
+        public static string GetRequestTypeText(int type)
+        {
             string requestTypeText = "";
-            switch (type) {
+            switch (type)
+            {
                 case 0:
                     requestTypeText = "数据添加";
                     break;
@@ -848,7 +850,92 @@ namespace Fx.Amiya.Service
             }
             return requestTypeText;
         }
+        /// <summary>
+        /// 操作来源
+        /// </summary>
+        /// <param name="requestSource"></param>
+        /// <returns></returns>
+        public static string GetRequestSourceText(int requestSource)
+        {
+            string requestSourceText = "";
+            switch (requestSource)
+            {
+                case 0:
+                    requestSourceText = "啊美雅预约系统";
+                    break;
+                case 1:
+                    requestSourceText = "啊美雅企业微信";
+                    break;
+                default:
+                    requestSourceText = "其他";
+                    break;
+            }
+            return requestSourceText;
 
+        }
+
+        /// <summary>
+        /// 获取派单顺序
+        /// </summary>
+        /// <returns></returns>
+        public static string GetSendOrderText(int sendOrder)
+        {
+            string sendOrderText = "";
+            switch (sendOrder)
+            {
+                case 0:
+                    sendOrderText = "首派";
+                    break;
+                case 1:
+                    sendOrderText = "次派";
+                    break;
+                case 2:
+                    sendOrderText = "查重单";
+                    break;
+                case 3:
+                    sendOrderText = "首派(微整)";
+                    break;
+                case 4:
+                    sendOrderText = "首派(整外)";
+                    break;
+                case 5:
+                    sendOrderText = "首派(新合作整外)";
+                    break;
+                case 6:
+                    sendOrderText = "次派(微整)";
+                    break;
+                default:
+                    sendOrderText = "";
+                    break;
+            }
+            return sendOrderText;
+        }
+
+        /// <summary>
+        /// 获取年费,保证金缴纳状态
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string GetYearServiceFeeOrSecurityDepositText(int type) {
+            string text = "";
+            switch (type)
+            {
+                case 0:
+                    text = "已缴纳";
+                    break;
+                case 1:
+                    text = "未缴纳";
+                    break;
+                case 2:
+                    text = "未缴纳(走审批)";
+                    break;               
+                default:
+                    text = "";
+                    break;
+            }
+            return text;
+        }
+            
         /// <summary>
         /// 获取退款订审核情况
         /// </summary>
@@ -985,6 +1072,26 @@ namespace Fx.Amiya.Service
             }
             return consumptionVoucherTypeText;
         }
+
+        /// <summary>
+        /// 获取美学设计报告状态
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public static string GetAestheticsDesignReportStatus(int status)
+        {
+            string statusText = "";
+            switch (status)
+            {
+                case 0:
+                    statusText = "已提交";
+                    break;
+                case 1:
+                    statusText = "设计完成";
+                    break;
+            }
+            return statusText;
+        }
         /// <summary>
         /// 获取抵用券类型
         /// </summary>
@@ -1001,6 +1108,9 @@ namespace Fx.Amiya.Service
 
                 case 1:
                     tagCategory = "商品标签";
+                    break;
+                case 2:
+                    tagCategory = "面部标签";
                     break;
             }
             return tagCategory;

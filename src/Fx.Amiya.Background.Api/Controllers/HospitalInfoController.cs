@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.Doctor;
 using Fx.Amiya.Background.Api.Vo.HospitalInfo;
 using Fx.Amiya.Dto.HospitalEnvironmentPicture;
@@ -64,6 +65,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                {
                                    Id = d.Id,
                                    Name = d.Name,
+                                   SimpleName=d.SimpleName,
+                                   Sort=d.Sort,
                                    Address = d.Address,
                                    Longitude = d.Longitude,
                                    Latitude = d.Latitude,
@@ -77,6 +80,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                                    HasUsedTime = d.HasUsedTime,
                                    BelongCompany=d.BelongCompany,
                                    IsShareInMiniProgram=d.IsShareInMiniProgram,
+                                   SendOrder=d.SendOrder,
+                                   SendOrderText=d.SendOrderText,
+                                   NewCustomerCommissionRatio=d.NewCustomerCommissionRatio,
+                                   OldCustomerCommissionRatio=d.OldCustomerCommissionRatio,
+                                   RepeatOrderRule=d.RepeatOrderRule,
+                                   YearServiceFee=d.YearServiceFee,
+                                   YearServiceFeeText=d.YearServiceFeeText,
+                                   SecurityDeposit=d.SecurityDeposit,
+                                   SecurityDepositText=d.SecurityDepositText,
+                                   YearServiceMoney=d.YearServiceMoney,
+                                   SecurityDepositMoney=d.SecurityDepositMoney
                                };
 
 
@@ -213,6 +227,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 hospitalInfoVo.SubmitStateText = hospital.SubmitStateText;
                 hospitalInfoVo.CheckStateText = hospital.CheckStateText;
                 hospitalInfoVo.CheckRemark = hospital.CheckRemark;
+                
                 List<int> scaleTagList = new List<int>();
                 foreach (var item in hospital.ScaleTagList)
                 {
@@ -353,6 +368,8 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 AddHospitalInfoDto addDto = new AddHospitalInfoDto();
                 addDto.Name = addVo.Name;
+                addDto.SimpleName = addVo.SimpleName;
+                addDto.Sort = addVo.Sort;
                 addDto.ThumbPicUrl = addVo.ThumbPicUrl;
                 addDto.Address = addVo.Address;
                 addDto.Longitude = addVo.Longitude;
@@ -365,6 +382,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.BusinessHours = addVo.BusinessHours;
                 addDto.BelongCompany = addVo.BelongCompany;
                 addDto.IsShareInMiniProgram = addVo.IsShareInMiniProgram;
+                addDto.SendOrder = addVo.SendOrder;
+                addDto.NewCustomerCommissionRatio = addVo.NewCustomerCommissionRatio;
+                addDto.OldCustomerCommissionRatio = addVo.OldCustomerCommissionRatio;
+                addDto.RepeatOrderRule = addVo.RepeatOrderRule;
+                addDto.YearServiceFee = addVo.YearServiceFee;
+                addDto.SecurityDeposit = addVo.SecurityDeposit;
+                addDto.YearServiceMoney = addVo.YearServiceMoney;
+                addDto.SecurityDepositMoney = addVo.SecurityDepositMoney;
                 await hospitalInfoService.AddAsync(addDto, employeeId);
                 return ResultData.Success();
             }
@@ -389,6 +414,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var hospital = await hospitalInfoService.GetByIdAsync(id);
                 HospitalInfoDetailVo hospitalInfoVo = new HospitalInfoDetailVo();
                 hospitalInfoVo.Id = hospital.Id;
+                hospitalInfoVo.SimpleName = hospital.SimpleName;
+                hospitalInfoVo.Sort= hospital.Sort;
                 hospitalInfoVo.Name = hospital.Name;
                 hospitalInfoVo.ThumbPicUrl = hospital.ThumbPicUrl;
                 hospitalInfoVo.Address = hospital.Address;
@@ -403,6 +430,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                 hospitalInfoVo.BusinessHours = hospital.BusinessHours;
                 hospitalInfoVo.BelongCompany = hospital.BelongCompany;
                 hospitalInfoVo.IsShareInMiniProgram = hospital.IsShareInMiniProgram;
+                hospitalInfoVo.SendOrder = hospital.SendOrder;
+                hospitalInfoVo.SendOrderText = hospital.SendOrderText;
+                hospitalInfoVo.NewCustomerCommissionRatio = hospital.NewCustomerCommissionRatio;
+                hospitalInfoVo.OldCustomerCommissionRatio = hospital.OldCustomerCommissionRatio;
+                hospitalInfoVo.RepeatOrderRule = hospital.RepeatOrderRule;
+                hospitalInfoVo.YearServiceFee = hospital.YearServiceFee;
+                hospitalInfoVo.YearServiceFeeText = hospital.YearServiceFeeText;
+                hospitalInfoVo.SecurityDeposit = hospital.SecurityDeposit;
+                hospitalInfoVo.SecurityDepositText = hospital.SecurityDepositText;
+                hospitalInfoVo.SecurityDepositMoney = hospital.SecurityDepositMoney;
+                hospitalInfoVo.YearServiceMoney = hospital.YearServiceMoney;
                 List<int> scaleTagList = new List<int>();
                 foreach (var item in hospital.ScaleTagList)
                 {
@@ -457,6 +495,15 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.BusinessHours = updateVo.BusinessHours;
                 updateDto.BelongCompany = updateVo.BelongCompany;
                 updateDto.IsShareInMiniProgram = updateVo.IsShareInMiniProgram;
+                updateDto.SendOrder = updateVo.SendOrder;
+                updateDto.NewCustomerCommissionRatio = updateVo.NewCustomerCommissionRatio;
+                updateDto.OldCustomerCommissionRatio = updateVo.OldCustomerCommissionRatio;
+                updateDto.RepeatOrderRule = updateVo.RepeatOrderRule;
+                updateDto.YearServiceFee = updateVo.YearServiceFee;
+                
+                updateDto.SecurityDeposit = updateVo.SecurityDeposit;
+                updateDto.YearServiceMoney = updateVo.YearServiceMoney;
+                updateDto.SecurityDepositMoney = updateVo.SecurityDepositMoney;
                 await hospitalInfoService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }
@@ -489,6 +536,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 HospitalUpdateHospitalInfoDto updateDto = new HospitalUpdateHospitalInfoDto();
                 updateDto.Id = hospitalId;
                 updateDto.Name = updateVo.Name;
+                updateDto.SimpleName = updateVo.SimpleName;
+                updateDto.Sort = updateVo.Sort;
                 updateDto.ThumbPicUrl = updateVo.ThumbPicUrl;
                 updateDto.Address = updateVo.Address;
                 updateDto.Area = updateVo.Area;
@@ -571,6 +620,38 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Name=c.Name
             }).ToList();
             return ResultData<List<HospitalNameVo>>.Success().AddData("hospital", nameListVo);
+        }
+        /// <summary>
+        /// 派单顺序名称列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("sendOrderList")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetRequestSourceNameListAsync()
+        {
+            var nameList = await hospitalInfoService.GetSendOrderListAsync();
+            var result = nameList.Select(e => new BaseIdAndNameVo<int>
+            {
+                Id = e.Key,
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("nameList", result);
+
+        }
+        /// <summary>
+        /// 年费或保证金缴纳状态列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("payStatusList")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetStatusListAsync()
+        {
+            var nameList = await hospitalInfoService.GetYearServiceStatusAsync();
+            var result = nameList.Select(e => new BaseIdAndNameVo<int>
+            {
+                Id = e.Key,
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("nameList", result);
+
         }
     }
 }

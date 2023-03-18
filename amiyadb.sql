@@ -217,3 +217,54 @@ CREATE TABLE `tbl_system_operation_log` (
 --------------------------------------王健 2023/3/15 END----------------------------------------
 
 
+
+----------------------------------------------王健2023/3/17 BEGIN-----------------------------------------------------
+
+
+----美学设计报告
+CREATE TABLE `tbl_aesthetics_design_report` (
+	`id` VARCHAR(50) NOT NULL,
+	`customer_id` VARCHAR(50) NOT NULL,
+	`name` VARCHAR(50) NOT NULL,
+	`birth_day` DATETIME NOT NULL,
+	`phone` VARCHAR(50) NOT NULL,
+	`has_aesthetic_history` BIT NOT NULL,
+	`history_describe` VARCHAR(5000) NULL DEFAULT NULL,
+	`whether_accept_operation` BIT NOT NULL,
+	`whether_allergy` BIT NOT NULL,
+	`allergy_describe` VARCHAR(5000) NULL,
+	`beauty_demand` VARCHAR(5000) NULL,
+	`budge` DECIMAL(10,2) NOT NULL,
+	`pictrue1` VARCHAR(500) NULL DEFAULT NULL,
+	`pictrue2` VARCHAR(500) NULL DEFAULT NULL,
+	`status` INT NULL,
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL,
+	`valid` BIT NOT NULL,
+	`delete_date` DATETIME NULL,
+	PRIMARY KEY (`id`)
+);
+
+----美学设计
+CREATE TABLE `tbl_aesthetics_design` (
+	`id` INT NOT NULL,
+	`aesthetics_design_report_id` VARCHAR(50) NOT NULL,
+	`design` VARCHAR(5000) NULL DEFAULT NULL,
+	`simple_hospital_name` VARCHAR(100) NULL DEFAULT NULL,
+	`recommend_doctor` VARCHAR(50) NULL DEFAULT NULL,
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT NOT NULL,
+	`delete_date` DATETIME NULL DEFAULT NULL
+);
+
+----美学设计标签
+CREATE TABLE `tbl_aesthetics_design_report_tags` (
+	`report_id` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_unicode_ci',
+	`tag_id` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_unicode_ci'
+);
+
+
+----------------------------------------------王健2023/3/17 END-----------------------------------------------------
+
+

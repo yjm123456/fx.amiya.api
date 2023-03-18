@@ -42,6 +42,16 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.CheckDate).HasColumnName("check_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(t => t.BelongCompany).HasColumnName("belong_company").HasColumnType("varchar(200)").IsRequired(false);
             builder.Property(t => t.IsShareInMiniProgram).HasColumnName("is_share_in_miniprogram").HasColumnType("bit").IsRequired();
+            builder.Property(t => t.SimpleName).HasColumnName("simple_name").HasColumnType("varchar(100)").IsRequired(false);
+            builder.Property(t => t.Sort).HasColumnName("sort").HasColumnType("int").IsRequired();
+            builder.Property(t => t.SendOrder).HasColumnName("send_order").HasColumnType("int").IsRequired(false);
+            builder.Property(t => t.NewCustomerCommissionRatio).HasColumnName("new_customer_commission_ratio").HasColumnType("decimal(10,2)").IsRequired(false);
+            builder.Property(t => t.OldCustomerCommissionRatio).HasColumnName("old_customer_commission_ratio").HasColumnType("decimal(10,2)").IsRequired(false);
+            builder.Property(t => t.RepeatOrderRule).HasColumnName("repeat_order_rule").HasColumnType("varchar(1000)").IsRequired(false);
+            builder.Property(t => t.YearServiceFee).HasColumnName("year_service_fee").HasColumnType("int").IsRequired(false);
+            builder.Property(t => t.SecurityDeposit).HasColumnName("security_deposit").HasColumnType("int").IsRequired(false);
+            builder.Property(t => t.YearServiceMoney).HasColumnName("year_service_money").HasColumnType("decimal(10,2)").IsRequired();
+            builder.Property(t => t.SecurityDepositMoney).HasColumnName("security_deposit_money").HasColumnType("decimal(10,2)").IsRequired();
 
             builder.HasOne(t => t.CreateByAmiyaEmployee).WithMany(t => t.CreateByHospitalInfoList).HasForeignKey(t=>t.CreateBy);
             builder.HasOne(t => t.UpdateByAmiyaEmployee).WithMany(t => t.UpdateByHospitalInfoList).HasForeignKey(t=>t.UpdateBy);

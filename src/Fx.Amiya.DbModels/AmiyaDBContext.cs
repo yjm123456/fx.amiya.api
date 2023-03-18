@@ -173,6 +173,9 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<TagDetailInfo> TagDetailInfos { get; set; }
         public virtual DbSet<IntegrationGenerateRecord> IntegrationGenerateRecords { get; set; }
         public virtual DbSet<OperationLog> OperationLogs { get; set; }
+        public virtual DbSet<AestheticsDesignReport> AestheticsDesignReports { get; set; }
+        public virtual DbSet<FaceTagWithAestheticsDesignReport> FaceTagWithAestheticsDesignReports { get; set; }
+        public virtual DbSet<AestheticsDesign> AestheticsDesigns { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -344,6 +347,9 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new ControlPageShowConfiguration());
             modelBuilder.ApplyConfiguration(new IntegrationGenerateRecordConfiguration());
             modelBuilder.ApplyConfiguration(new OperationLogConfiguration());
+            modelBuilder.ApplyConfiguration(new AestheticsDesignReportConfiguration());
+            modelBuilder.ApplyConfiguration(new AestheticsDesignConfiguration());
+            modelBuilder.ApplyConfiguration(new FaceTagWithAestheticsDesignReportConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

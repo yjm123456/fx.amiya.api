@@ -21,6 +21,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.Parameters).HasColumnName("parameters").HasColumnType("varchar(5000)").IsRequired(false);
             builder.Property(t => t.Message).HasColumnName("message").HasColumnType("varchar(2000)").IsRequired(false);
             builder.Property(t => t.OperationBy).HasColumnName("operation_by").HasColumnType("int").IsRequired(false);
+            builder.Property(t => t.Sounrce).HasColumnName("source").HasColumnType("int").IsRequired(false);
             builder.Property(t => t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.Property(t => t.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(t => t.Valid).HasColumnName("valid").HasColumnType("BIT(1)").IsRequired();

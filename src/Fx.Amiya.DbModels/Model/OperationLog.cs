@@ -32,5 +32,9 @@ namespace Fx.Amiya.DbModels.Model
         /// 操作人
         /// </summary>
         public int? OperationBy { get; set; }
+        /// <summary>
+        /// 来源
+        /// </summary>
+        public int? Sounrce { get; set; }
     }
 }

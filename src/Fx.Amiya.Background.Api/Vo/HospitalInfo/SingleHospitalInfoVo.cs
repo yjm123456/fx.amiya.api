@@ -83,6 +83,7 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalInfo
         /// 设施
         /// </summary>
         public List<int> FacilityTagList { get; set; }
+        
 
         /// <summary>
         /// 医院环境

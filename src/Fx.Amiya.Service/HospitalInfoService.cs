@@ -63,6 +63,7 @@ namespace Fx.Amiya.Service
                                where (keyword == null || d.Name.Contains(keyword))
                                && (valid == null || d.Valid == valid)
                                && (cityId == null || d.CityId == cityId)
+                               orderby d.Sort descending
                                select new HospitalInfoDto
                                {
                                    Id = d.Id,
@@ -83,8 +84,22 @@ namespace Fx.Amiya.Service
                                    City = d.CooperativeHospitalCity.Name,
                                    DueTime = d.DueTime,
                                    ContractUrl = d.ContractUrl,
-                                   BelongCompany= d.BelongCompany,
-                                   IsShareInMiniProgram=d.IsShareInMiniProgram,
+                                   BelongCompany = d.BelongCompany,
+                                   IsShareInMiniProgram = d.IsShareInMiniProgram,
+                                   SimpleName = d.SimpleName,
+                                   Sort = d.Sort,
+                                   SendOrder = d.SendOrder,
+                                   SendOrderText = d.SendOrder.HasValue ? ServiceClass.GetSendOrderText(d.SendOrder.Value) : null,
+                                   NewCustomerCommissionRatio = d.NewCustomerCommissionRatio,
+                                   OldCustomerCommissionRatio = d.OldCustomerCommissionRatio,
+                                   RepeatOrderRule = d.RepeatOrderRule,
+                                   YearServiceFee = d.YearServiceFee,
+                                   YearServiceFeeText = d.YearServiceFee.HasValue ? ServiceClass.GetYearServiceFeeOrSecurityDepositText(d.YearServiceFee.Value) : null,
+                                   SecurityDeposit = d.SecurityDeposit,
+                                   SecurityDepositText = d.SecurityDeposit.HasValue ? ServiceClass.GetYearServiceFeeOrSecurityDepositText(d.SecurityDeposit.Value) : null,
+                                   YearServiceMoney=d.YearServiceMoney,
+                                   SecurityDepositMoney=d.SecurityDepositMoney
+                                   
                                };
                 FxPageInfo<HospitalInfoDto> hospitalPageInfo = new FxPageInfo<HospitalInfoDto>();
                 hospitalPageInfo.TotalCount = await hospital.CountAsync();
@@ -280,6 +295,8 @@ namespace Fx.Amiya.Service
 
                 HospitalInfo hospitalInfo = new HospitalInfo();
                 hospitalInfo.Name = addDto.Name;
+                hospitalInfo.SimpleName = addDto.SimpleName;
+                hospitalInfo.Sort = addDto.Sort;
                 hospitalInfo.ThumbPicUrl = addDto.ThumbPicUrl;
                 hospitalInfo.Address = addDto.Address;
                 hospitalInfo.Longitude = addDto.Longitude;
@@ -294,6 +311,14 @@ namespace Fx.Amiya.Service
                 hospitalInfo.BusinessHours = addDto.BusinessHours;
                 hospitalInfo.BelongCompany = addDto.BelongCompany;
                 hospitalInfo.IsShareInMiniProgram = addDto.IsShareInMiniProgram;
+                hospitalInfo.SendOrder = addDto.SendOrder;
+                hospitalInfo.NewCustomerCommissionRatio = addDto.NewCustomerCommissionRatio;
+                hospitalInfo.OldCustomerCommissionRatio = addDto.OldCustomerCommissionRatio;
+                hospitalInfo.RepeatOrderRule = addDto.RepeatOrderRule;
+                hospitalInfo.YearServiceFee = addDto.YearServiceFee;
+                hospitalInfo.SecurityDeposit = addDto.SecurityDeposit;
+                hospitalInfo.YearServiceMoney = addDto.YearServiceMoney;
+                hospitalInfo.SecurityDepositMoney = addDto.SecurityDepositMoney;
                 await dalHospitalInfo.AddAsync(hospitalInfo, true);
 
                 List<HospitalTagDetail> hospitalTagDetailList = new List<HospitalTagDetail>();
@@ -333,6 +358,8 @@ namespace Fx.Amiya.Service
                                    {
                                        Id = d.Id,
                                        Name = d.Name,
+                                       SimpleName = d.SimpleName,
+                                       Sort = d.Sort,
                                        ThumbPicUrl = d.ThumbPicUrl,
                                        Address = d.Address,
                                        Longitude = d.Longitude,
@@ -359,6 +386,17 @@ namespace Fx.Amiya.Service
                                        SubmitState = d.SubmitState,
                                        IsShareInMiniProgram=d.IsShareInMiniProgram,
                                        HospitalCreateDate = d.HospitalCreateTime,
+                                       SendOrder = d.SendOrder,
+                                       SendOrderText = d.SendOrder.HasValue ? ServiceClass.GetSendOrderText(d.SendOrder.Value) : null,
+                                       NewCustomerCommissionRatio = d.NewCustomerCommissionRatio,
+                                       OldCustomerCommissionRatio = d.OldCustomerCommissionRatio,
+                                       RepeatOrderRule = d.RepeatOrderRule,
+                                       YearServiceFee = d.YearServiceFee,
+                                       YearServiceFeeText = d.YearServiceFee.HasValue ? ServiceClass.GetYearServiceFeeOrSecurityDepositText(d.YearServiceFee.Value) : null,
+                                       SecurityDeposit = d.SecurityDeposit,
+                                       SecurityDepositText = d.SecurityDeposit.HasValue ? ServiceClass.GetYearServiceFeeOrSecurityDepositText(d.SecurityDeposit.Value) : null,
+                                       SecurityDepositMoney=d.SecurityDepositMoney,
+                                       YearServiceMoney=d.YearServiceMoney,
                                        ScaleTagList = (from t in d.HospitalTagDetailList
                                                        where t.TagInfo.Valid && t.TagInfo.Type == 0
                                                        select new HospitalTagNameDto
@@ -504,6 +542,14 @@ namespace Fx.Amiya.Service
                 hospital.BusinessHours = updateDto.BusinessHours;
                 hospital.IsShareInMiniProgram = updateDto.IsShareInMiniProgram;
                 hospital.BelongCompany = updateDto.BelongCompany;
+                hospital.SendOrder = updateDto.SendOrder;
+                hospital.NewCustomerCommissionRatio = updateDto.NewCustomerCommissionRatio;
+                hospital.OldCustomerCommissionRatio = updateDto.OldCustomerCommissionRatio;
+                hospital.RepeatOrderRule = updateDto.RepeatOrderRule;
+                hospital.YearServiceFee = updateDto.YearServiceFee;
+                hospital.SecurityDeposit = updateDto.SecurityDeposit;
+                hospital.YearServiceMoney = updateDto.YearServiceMoney;
+                hospital.SecurityDepositMoney = updateDto.SecurityDepositMoney;
                 await dalHospitalInfo.UpdateAsync(hospital, true);
 
                 var tagDetail = await dalHospitalTagDetail.GetAll().Where(e => e.HospitalId == updateDto.Id).ToListAsync();
@@ -568,6 +614,8 @@ namespace Fx.Amiya.Service
                 hospital.SubmitState = Convert.ToInt32(SubmintType.Submited);
                 hospital.CheckState = Convert.ToInt32(CheckType.NotChecked);
                 hospital.UpdateDate = DateTime.Now;
+                hospital.SimpleName = updateDto.SimpleName;
+                hospital.Sort = updateDto.Sort;
                 await dalHospitalInfo.UpdateAsync(hospital, true);
 
                 var tagDetail = await dalHospitalTagDetail.GetAll().Where(e => e.HospitalId == updateDto.Id).ToListAsync();
@@ -1063,5 +1111,34 @@ namespace Fx.Amiya.Service
                 Name = e.Name
             }).ToList();            
         }
+
+        public async Task<List<BaseKeyValueDto<int>>> GetSendOrderListAsync()
+        {
+            var showDirectionTypes = Enum.GetValues(typeof(SendOrder));
+            List<BaseKeyValueDto<int>> requestTypeList = new List<BaseKeyValueDto<int>>();
+            foreach (var item in showDirectionTypes)
+            {
+                BaseKeyValueDto<int> requestType = new BaseKeyValueDto<int>();
+                requestType.Key = Convert.ToInt32(item);
+                requestType.Value = ServiceClass.GetSendOrderText(Convert.ToInt32(item));
+                requestTypeList.Add(requestType);
+            }
+            return requestTypeList;
+        }
+
+        public async Task<List<BaseKeyValueDto<int>>> GetYearServiceStatusAsync()
+        {
+            var showDirectionTypes = Enum.GetValues(typeof(YearServiceFeeOrSecurityDeposit));
+            List<BaseKeyValueDto<int>> requestTypeList = new List<BaseKeyValueDto<int>>();
+            foreach (var item in showDirectionTypes)
+            {
+                BaseKeyValueDto<int> requestType = new BaseKeyValueDto<int>();
+                requestType.Key = Convert.ToInt32(item);
+                requestType.Value = ServiceClass.GetYearServiceFeeOrSecurityDepositText(Convert.ToInt32(item));
+                requestTypeList.Add(requestType);
+            }
+            return requestTypeList;
+        }
+
     }
 }

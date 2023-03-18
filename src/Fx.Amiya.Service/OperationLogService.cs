@@ -35,6 +35,7 @@ namespace Fx.Amiya.Service
             operationLog.OperationBy = operationAdd.OperationBy;
             operationLog.CreateDate = DateTime.Now;
             operationLog.Valid = true;
+            operationLog.Sounrce = operationAdd.Source;
             await dalOpertionLog.AddAsync(operationLog, true);
 
         }
@@ -49,6 +50,7 @@ namespace Fx.Amiya.Service
                 .Where(e => string.IsNullOrEmpty(searchDto.Parameters) || e.RouteAddress.Contains(searchDto.Parameters))
                 .Where(e => !searchDto.RequestType.HasValue || e.RequestType == searchDto.RequestType)
                 .Where(e => !searchDto.Code.HasValue || e.Code == searchDto.Code)
+                .Where(e=>!searchDto.Source.HasValue||e.Sounrce==searchDto.Source)
                 .OrderByDescending(e=>e.CreateDate);
             FxPageInfo<OperationLogInfoDto> fxPageInfo = new FxPageInfo<OperationLogInfoDto>();
             fxPageInfo.TotalCount = result.Count();
@@ -57,11 +59,12 @@ namespace Fx.Amiya.Service
             {
                 RouteAddress = e.RouteAddress,
                 RequestTypeText = ServiceClass.GetRequestTypeText(e.RequestType),
-                Code=e.Code,
-                Parameters=e.Parameters,
-                Message=e.Message,
-                OperaterName=e.OperationBy==null?"游客访问": dalAmiyaEmployee.GetAll().Where(a=>a.Id==e.OperationBy).SingleOrDefault().Name,
-                CreateDate=e.CreateDate
+                SourceText = ServiceClass.GetRequestSourceText(e.Sounrce.Value),
+                Code = e.Code,
+                Parameters = e.Parameters,
+                Message = e.Message,
+                OperaterName = e.OperationBy == null ? "游客访问" : dalAmiyaEmployee.GetAll().Where(a => a.Id == e.OperationBy).SingleOrDefault().Name,
+                CreateDate = e.CreateDate
             }).ToList();
             return fxPageInfo;
         }
@@ -75,6 +78,19 @@ namespace Fx.Amiya.Service
                 BaseKeyValueDto<int> requestType = new BaseKeyValueDto<int>();
                 requestType.Key = Convert.ToInt32(item);
                 requestType.Value = ServiceClass.GetRequestTypeText(Convert.ToInt32(item));
+                requestTypeList.Add(requestType);
+            }
+            return requestTypeList;
+        }
+        public List<BaseKeyValueDto<int>> GetRequestSourceNameList()
+        {
+            var showDirectionTypes = Enum.GetValues(typeof(RequestSource));
+            List<BaseKeyValueDto<int>> requestTypeList = new List<BaseKeyValueDto<int>>();
+            foreach (var item in showDirectionTypes)
+            {
+                BaseKeyValueDto<int> requestType = new BaseKeyValueDto<int>();
+                requestType.Key = Convert.ToInt32(item);
+                requestType.Value = ServiceClass.GetRequestSourceText(Convert.ToInt32(item));
                 requestTypeList.Add(requestType);
             }
             return requestTypeList;

@@ -43,12 +43,12 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<CustomerTagInfoDto>> GetListWithPageAsync(string keyword,  int pageNum, int pageSize)
+        public async Task<FxPageInfo<CustomerTagInfoDto>> GetListWithPageAsync(string keyword,int? categoryId,  int pageNum, int pageSize)
         {
             try
             {
                 var customerTagInfoService = from d in dalCustomerTagInfoService.GetAll()
-                                             where (keyword == null || d.TagName.Contains(keyword))
+                                             where (keyword == null || d.TagName.Contains(keyword))&&(!categoryId.HasValue||d.TagCategory==categoryId)
                                              && (d.Valid == true)
                                              select new CustomerTagInfoDto
                                              {
@@ -208,5 +208,16 @@ namespace Fx.Amiya.Service
             }).ToList();
             return list;
         }
+
+        public async Task<List<BaseKeyValueDto>> GetFaceTagNameListAsync()
+        {
+            var list = dalCustomerTagInfoService.GetAll().Where(e => e.TagCategory == (int)TagCategory.FaceTag && e.Valid == true).Select(e => new BaseKeyValueDto
+            {
+                Key = e.Id,
+                Value = e.TagName
+            }).ToList();
+            return list;
+        }
+
     }
 }

@@ -46,6 +46,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             searchDto.Code = search.Code;
             searchDto.PageNum = search.PageNum;
             searchDto.PageSize = search.PageSize;
+            searchDto.Source = search.RequestSource;
             var result=await operatonLogService.GetListByPageAsync(searchDto);
             FxPageInfo<OperationLogInfoVo> fxPageInfo = new FxPageInfo<OperationLogInfoVo>();
             fxPageInfo.TotalCount = result.TotalCount;
@@ -57,7 +58,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Parameters = e.Parameters,
                 Message = e.Message,
                 OperaterName = e.OperaterName,
-                CreateDate = e.CreateDate
+                CreateDate = e.CreateDate,
+                RequestSourceText=e.RequestTypeText
             }).ToList();
             return ResultData<FxPageInfo<OperationLogInfoVo>>.Success().AddData("log", fxPageInfo);
         }
@@ -74,6 +76,22 @@ namespace Fx.Amiya.Background.Api.Controllers
             }).ToList();
             return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("nameList", result);
             
+        }
+        /// <summary>
+        /// 获取请求来源名称列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("sourceNameList")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetRequestSourceNameListAsync()
+        {
+            var nameList = operatonLogService.GetRequestSourceNameList();
+            var result = nameList.Select(e => new BaseIdAndNameVo<int>
+            {
+                Id = e.Key,
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("nameList", result);
+
         }
     }
 }

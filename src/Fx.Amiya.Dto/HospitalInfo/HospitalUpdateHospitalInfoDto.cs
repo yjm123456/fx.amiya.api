@@ -19,6 +19,14 @@ namespace Fx.Amiya.Dto.HospitalInfo
         /// 医院名称
         /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// 简称
+        /// </summary>
+        public string SimpleName { get; set; }
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int Sort { get; set; }
 
         /// <summary>
         /// 医院图标

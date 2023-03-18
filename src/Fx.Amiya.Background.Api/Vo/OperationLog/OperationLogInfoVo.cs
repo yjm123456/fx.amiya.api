@@ -16,6 +16,10 @@ namespace Fx.Amiya.Background.Api.Vo.OperationLog
         /// </summary>
         public string RequestTypeText { get; set; }
         /// <summary>
+        /// 操作来源
+        /// </summary>
+        public string RequestSourceText { get; set; }
+        /// <summary>
         /// 返回code
         /// </summary>
         public int Code { get; set; }

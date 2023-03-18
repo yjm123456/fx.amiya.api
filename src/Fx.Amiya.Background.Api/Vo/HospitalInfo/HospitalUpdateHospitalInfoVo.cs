@@ -15,6 +15,14 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalInfo
         [Required(ErrorMessage = "医院名称不能为空")]
         [StringLength(100, ErrorMessage = "医院名称最多{1}个字符")]
         public string Name { get; set; }
+        /// <summary>
+        /// 简称
+        /// </summary>
+        public string SimpleName { get; set; }
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int Sort { get; set; }
 
         /// <summary>
         /// 医院图标

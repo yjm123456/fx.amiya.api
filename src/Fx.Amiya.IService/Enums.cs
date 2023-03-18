@@ -127,6 +127,20 @@ namespace Fx.Amiya.IService
         
     }
 
+    /// <summary>
+    /// 请求来源
+    /// </summary>
+    public enum RequestSource {
+        /// <summary>
+        /// 啊美雅预约系统
+        /// </summary>
+        AmiyaBackground=0,
+        /// <summary>
+        /// 啊美雅企业微信
+        /// </summary>
+        AmiyaBusinessWechat=1
+    }
+
     public enum SubmintType
     {
         /// <summary>
@@ -139,6 +153,57 @@ namespace Fx.Amiya.IService
         Submited = 1,
     }
 
+    /// <summary>
+    /// 派单顺序
+    /// </summary>
+    public enum SendOrder { 
+        /// <summary>
+        /// 首派
+        /// </summary>
+        First=0,
+        /// <summary>
+        /// 次派
+        /// </summary>
+        Second=1,
+        /// <summary>
+        /// 查重单
+        /// </summary>
+        SelectRepeatOrder=2,
+        /// <summary>
+        /// 首派(微整)
+        /// </summary>
+        FirstMinorAdjustment=3,
+        /// <summary>
+        /// 首派(整外)
+        /// </summary>
+        FirstAdjustmentOut=4,
+        /// <summary>
+        /// 首派(新合作整外)
+        /// </summary>
+        FirstNewAdjustmentOut=5,
+        /// <summary>
+        /// 次派(微整)
+        /// </summary>
+        SecondMinorAdjustment=6,
+
+    }
+    /// <summary>
+    /// 年服务费和保证金缴纳状态
+    /// </summary>
+    public enum YearServiceFeeOrSecurityDeposit {
+        /// <summary>
+        /// 已缴纳
+        /// </summary>
+        Paid=0,
+        /// <summary>
+        /// 未缴纳
+        /// </summary>
+        UnPaid=1,
+        /// <summary>
+        /// 未缴纳(走审批)
+        /// </summary>
+        UnPaidAndApproval=2
+    }
 
     public enum TagType
     {
@@ -831,8 +896,24 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 商品标签
         /// </summary>
-        GoodsTag = 1
+        GoodsTag = 1,
+        /// <summary>
+        /// 面部标签
+        /// </summary>
+        FaceTag=2
     }
+
+    public enum AestheticsDesignReportStatus { 
+        /// <summary>
+        /// 已提交
+        /// </summary>
+        Commit=0,
+        /// <summary>
+        /// 已设计
+        /// </summary>
+        Desgined
+    }
+    
 
     /// <summary>
     /// 财务对账单状态
