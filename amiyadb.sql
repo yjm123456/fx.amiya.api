@@ -205,7 +205,7 @@ CREATE TABLE `tbl_system_operation_log` (
 	`request_type` INT(10) NOT NULL,
 	`code` INT(10) NOT NULL,
 	`parameters` VARCHAR(5000) NULL DEFAULT NULL,
-	`message` VARCHAR(2000) NULL DEFAULT NULL,
+	`message` VARCHAR(5000) NULL DEFAULT NULL,
 	`operation_by` INT(10) NULL DEFAULT '0',
 	`create_date` DATETIME NOT NULL,
 	`update_date` DATETIME NULL DEFAULT NULL,

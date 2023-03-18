@@ -31,7 +31,13 @@ namespace Fx.Amiya.Service
             operationLog.RequestType = operationAdd.RequestType;
             operationLog.Parameters = operationAdd.Parameters;
             operationLog.Code = operationAdd.Code;
-            operationLog.Message = operationAdd.Message;
+            var message = operationAdd.Message;
+            //字符串大于5000字节后截取
+            if (message.Length > 5000)
+            {
+                message = message.Substring(0, 4999);
+            }
+            operationLog.Message = message;
             operationLog.OperationBy = operationAdd.OperationBy;
             operationLog.CreateDate = DateTime.Now;
             operationLog.Valid = true;
@@ -44,14 +50,14 @@ namespace Fx.Amiya.Service
         {
             var startDate = searchDto.StartDate == null ? DateTime.Now.Date : searchDto.StartDate.Value.Date;
             var endDate = searchDto.EndDate == null ? DateTime.Now.Date.AddDays(1).Date : searchDto.EndDate.Value.AddDays(1).Date;
-            var result =  dalOpertionLog.GetAll()
+            var result = dalOpertionLog.GetAll()
                 .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate)
                 .Where(e => string.IsNullOrEmpty(searchDto.RouteAddress) || e.RouteAddress.Contains(searchDto.RouteAddress))
                 .Where(e => string.IsNullOrEmpty(searchDto.Parameters) || e.RouteAddress.Contains(searchDto.Parameters))
                 .Where(e => !searchDto.RequestType.HasValue || e.RequestType == searchDto.RequestType)
                 .Where(e => !searchDto.Code.HasValue || e.Code == searchDto.Code)
-                .Where(e=>!searchDto.Source.HasValue||e.Sounrce==searchDto.Source)
-                .OrderByDescending(e=>e.CreateDate);
+                .Where(e => !searchDto.Source.HasValue || e.Sounrce == searchDto.Source)
+                .OrderByDescending(e => e.CreateDate);
             FxPageInfo<OperationLogInfoDto> fxPageInfo = new FxPageInfo<OperationLogInfoDto>();
             fxPageInfo.TotalCount = result.Count();
             fxPageInfo.List = result.Skip((searchDto.PageNum - 1) * searchDto.PageSize).Take(searchDto.PageSize)
