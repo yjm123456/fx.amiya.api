@@ -137,14 +137,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 付款订单报表
         /// </summary>
-        /// <param name="getOrderBuyExport"></param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("OrderBuyReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<BuyOrderReportVo>>> GetOrderBuyAsync([FromQuery] GetOrderBuyExportVo getOrderBuyExport)
+        public async Task<ResultData<List<BuyOrderReportVo>>> GetOrderBuyAsync([FromQuery] GetOrderBuyExportVo query)
         {
 
-            var q = await orderService.GetOrderBuyAsync(getOrderBuyExport.StartDate, getOrderBuyExport.EndDate, getOrderBuyExport.BelongEmpId, true);
+            var q = await orderService.GetOrderBuyAsync(query.StartDate, query.EndDate, query.BelongEmpId, true);
             var res = from d in q
                       select new BuyOrderReportVo()
                       {
@@ -169,26 +169,20 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("OrderBuyReportExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> GetOrderBuyExportAsync([FromQuery] GetOrderBuyExportVo getOrderBuyExport)
+        public async Task<FileStreamResult> GetOrderBuyExportAsync([FromQuery] GetOrderBuyExportVo query)
         {
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             OperationAddDto operationAddDto = new OperationAddDto();
-            operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
-            operationAddDto.RequestType = (int)RequestType.Export;
-            operationAddDto.Parameters = JsonConvert.SerializeObject(getOrderBuyExport);
-            operationAddDto.OperationBy = Convert.ToInt32(employee.Id);
-            operationAddDto.Source = (int)RequestSource.AmiyaBackground;
-            int code = 0;
-            string message = "";
             try
             {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 bool isHidePhone = true;
 
                 if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
                 {
                     isHidePhone = false;
                 }
-                var q = await orderService.GetOrderBuyAsync(getOrderBuyExport.StartDate, getOrderBuyExport.EndDate, getOrderBuyExport.BelongEmpId, isHidePhone);
+                operationAddDto.OperationBy = Convert.ToInt32(employee.Id);
+                var q = await orderService.GetOrderBuyAsync(query.StartDate, query.EndDate, query.BelongEmpId, isHidePhone);
                 var res = from d in q
                           select new BuyOrderReportVo()
                           {
@@ -207,19 +201,21 @@ namespace Fx.Amiya.Background.Api.Controllers
                           };
                 var exportOrderWriteOff = res.ToList();
                 var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-                var result = File(stream, "application/vnd.ms-excel", $"" + getOrderBuyExport.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + getOrderBuyExport.EndDate.Value.ToString("yyyy年MM月dd日") + "已付款订单报表.xls");
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "已付款订单报表.xls");
                 return result;
             }
             catch (Exception err)
             {
-                code = -1;
-                message = err.Message.ToString();
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
                 throw new Exception(err.Message.ToString());
             }
             finally
             {
-                operationAddDto.Code = code;
-                operationAddDto.Message = message;
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = JsonConvert.SerializeObject(query);
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
                 await operationLogService.AddOperationLogAsync(operationAddDto);
             }
         }
@@ -227,14 +223,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 退款订单报表
         /// </summary>
-        /// <param name="baseQueryVo"></param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("OrderCloseReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<BuyOrderReportVo>>> GetOrderCloseAsync([FromQuery] BaseQueryVo baseQueryVo)
+        public async Task<ResultData<List<BuyOrderReportVo>>> GetOrderCloseAsync([FromQuery] BaseQueryVo query)
         {
 
-            var q = await orderService.GetOrderCloseAsync(baseQueryVo.StartDate, baseQueryVo.EndDate, true);
+            var q = await orderService.GetOrderCloseAsync(query.StartDate, query.EndDate, true);
             var res = from d in q
                       select new BuyOrderReportVo()
                       {
@@ -255,28 +251,23 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 退款订单报表导出
         /// </summary>
-        /// <param name="baseQueryVo"></param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("OrderCloseReportExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> GetOrderCloseExportAsync([FromQuery] BaseQueryVo baseQueryVo)
+        public async Task<FileStreamResult> GetOrderCloseExportAsync([FromQuery] BaseQueryVo query)
         {
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             OperationAddDto operationAddDto = new OperationAddDto();
-            operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
-            operationAddDto.RequestType = (int)RequestType.Export;
-            operationAddDto.Parameters = JsonConvert.SerializeObject(baseQueryVo);
-            operationAddDto.OperationBy = Convert.ToInt32(employee.Id);
-            int code = 0;
-            string message = "";
             try
             {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                operationAddDto.OperationBy = Convert.ToInt32(employee.Id);
                 bool isHidePhone = true;
                 if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
                 {
                     isHidePhone = false;
                 }
-                var q = await orderService.GetOrderCloseAsync(baseQueryVo.StartDate, baseQueryVo.EndDate, isHidePhone);
+                var q = await orderService.GetOrderCloseAsync(query.StartDate, query.EndDate, isHidePhone);
                 var res = from d in q
                           select new BuyOrderReportVo()
                           {
@@ -294,19 +285,21 @@ namespace Fx.Amiya.Background.Api.Controllers
                           };
                 var exportOrderWriteOff = res.ToList();
                 var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-                var result = File(stream, "application/vnd.ms-excel", $"" + baseQueryVo.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + baseQueryVo.EndDate.Value.ToString("yyyy年MM月dd日") + "退款订单报表.xls");
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "退款订单报表.xls");
                 return result;
             }
             catch (Exception err)
             {
-                code = -1;
-                message = err.Message.ToString();
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
                 throw new Exception(err.Message.ToString());
             }
             finally
             {
-                operationAddDto.Code = code;
-                operationAddDto.Message = message;
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = JsonConvert.SerializeObject(query);
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
                 await operationLogService.AddOperationLogAsync(operationAddDto);
             }
         }
@@ -314,13 +307,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 订单核销报表
         /// </summary>
-        /// <param name="baseQueryVo"></param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("OrderWriteOffReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<WriteOffOrderReportVo>>> GetOrderWriteOffAsync([FromQuery] BaseQueryVo baseQueryVo)
+        public async Task<ResultData<List<WriteOffOrderReportVo>>> GetOrderWriteOffAsync([FromQuery] BaseQueryVo query)
         {
-            var q = await orderService.GetOrderWriteOffAsync(baseQueryVo.StartDate, baseQueryVo.EndDate, true);
+            var q = await orderService.GetOrderWriteOffAsync(query.StartDate, query.EndDate, true);
             var res = from d in q
                       select new WriteOffOrderReportVo()
                       {
@@ -343,28 +336,23 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 订单核销报表导出
         /// </summary>
-        /// <param name="baseQueryVo">开始时间</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("OrderWriteOffReportExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> GetOrderWriteOffExportAsync([FromQuery] BaseQueryVo baseQueryVo)
+        public async Task<FileStreamResult> GetOrderWriteOffExportAsync([FromQuery] BaseQueryVo query)
         {
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             OperationAddDto operationAddDto = new OperationAddDto();
-            operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
-            operationAddDto.RequestType = (int)RequestType.Export;
-            operationAddDto.Parameters = JsonConvert.SerializeObject(baseQueryVo);
-            operationAddDto.OperationBy = Convert.ToInt32(employee.Id);
-            int code = 0;
-            string message = "";
             try
             {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                operationAddDto.OperationBy = Convert.ToInt32(employee.Id);
                 bool isHidePhone = true;
                 if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
                 {
                     isHidePhone = false;
                 }
-                var q = await orderService.GetOrderWriteOffAsync(baseQueryVo.StartDate, baseQueryVo.EndDate, isHidePhone);
+                var q = await orderService.GetOrderWriteOffAsync(query.StartDate, query.EndDate, isHidePhone);
                 var res = from d in q
                           select new WriteOffOrderReportVo()
                           {
@@ -383,19 +371,21 @@ namespace Fx.Amiya.Background.Api.Controllers
                           };
                 var exportOrderWriteOff = res.ToList();
                 var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-                var result = File(stream, "application/vnd.ms-excel", $"" + baseQueryVo.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + baseQueryVo.EndDate.Value.ToString("yyyy年MM月dd日") + "订单核销报表.xls");
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "订单核销报表.xls");
                 return result;
             }
             catch (Exception err)
             {
-                code = -1;
-                message = err.Message.ToString();
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
                 throw new Exception(err.Message.ToString());
             }
             finally
             {
-                operationAddDto.Code = code;
-                operationAddDto.Message = message;
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = JsonConvert.SerializeObject(query);
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
                 await operationLogService.AddOperationLogAsync(operationAddDto);
             }
         }
@@ -404,26 +394,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 小黄车登记报表
         /// </summary>
-        /// <param name="startDate">登记开始时间</param>
-        /// <param name="endDate">登记结束时间</param>
-        /// <param name="isSendOrder">派单触达</param>
-        /// <param name="isCreateOrder">录单触达</param>
-        /// <param name="isAddWechat">是否加v</param>
-        /// <param name="isWriteOff">是否核销</param>
-        /// <param name="isConsultation">是否面诊</param>
-        /// <param name="emergencyLevel">重要程度</param>
-        /// <param name="isReturnBackPrice">是否回款</param>
-        /// <param name="LiveAnchorId">主播id</param>
-        /// <param name="keyword">关键词</param>
-        /// <param name="contentPlatFormId">内容平台id</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("ShoppingCartRegistrationReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<ShoppingCartRegistrationReportVo>>> GetShoppingCartRegistrationAsync(DateTime? startDate, DateTime? endDate, int? emergencyLevel, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId)
+        public async Task<ResultData<List<ShoppingCartRegistrationReportVo>>> GetShoppingCartRegistrationAsync([FromQuery] QueryShoppingCartRegistrationReportVo query)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(startDate, endDate, emergencyLevel, LiveAnchorId, isCreateOrder, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, true);
+            var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(query.StartDate, query.EndDate, query.emergencyLevel, query.LiveAnchorId, query.IsCreateOrder, query.IsSendOrder, employeeId, query.IsAddWechat, query.IsWriteOff, query.IsConsultation, query.IsReturnBackPrice, query.KeyWord, query.ContentPlatFormId, true);
             var res = from d in q
                       select new ShoppingCartRegistrationReportVo()
                       {
@@ -452,76 +431,77 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 小黄车登记报表导出
         /// </summary>
-        /// <param name="startDate">登记开始时间</param>
-        /// <param name="endDate">登记结束时间</param>
-        /// <param name="isSendOrder">派单触达</param>
-        /// <param name="isCreateOrder">录单触达</param>
-        /// <param name="isAddWechat">是否加v</param>
-        /// <param name="isWriteOff">是否核销</param>
-        /// <param name="isConsultation">是否面诊</param>
-        /// <param name="emergencyLevel">重要程度</param>
-        /// <param name="isReturnBackPrice">是否回款</param>
-        /// <param name="LiveAnchorId">主播id</param>
-        /// <param name="keyword">关键词</param>
-        /// <param name="contentPlatFormId">内容平台id</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("ShoppingCartRegistrationExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> GetShoppingCartRegistrationExportAsync(DateTime? startDate, DateTime? endDate, int? emergencyLevel, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId)
+        public async Task<FileStreamResult> GetShoppingCartRegistrationExportAsync([FromQuery] QueryShoppingCartRegistrationReportVo query)
         {
-            bool isHidePhone = true;
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int employeeId = Convert.ToInt32(employee.Id);
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            OperationAddDto operationAddDto = new OperationAddDto();
+            try
             {
-                isHidePhone = false;
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                operationAddDto.OperationBy = Convert.ToInt32(employee.Id);
+                bool isHidePhone = true;
+                int employeeId = Convert.ToInt32(employee.Id);
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
+                var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(query.StartDate, query.EndDate, query.emergencyLevel, query.LiveAnchorId, query.IsCreateOrder, query.IsSendOrder, employeeId, query.IsAddWechat, query.IsWriteOff, query.IsConsultation, query.IsReturnBackPrice, query.KeyWord, query.ContentPlatFormId, isHidePhone);
+                var res = from d in q
+                          select new ShoppingCartRegistrationReportVo()
+                          {
+                              Id = d.Id,
+                              RecordDate = d.RecordDate,
+                              ContentPlatFormName = d.ContentPlatFormName,
+                              EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(d.EmergencyLevel),
+                              LiveAnchorName = d.LiveAnchorName,
+                              IsAddWechat = d.IsAddWeChat == true ? "是" : "否",
+                              IsCreateOrder = d.IsCreateOrder == true ? "是" : "否",
+                              IsSendOrder = d.IsSendOrder == true ? "是" : "否",
+                              LiveAnchorWechatNo = d.LiveAnchorWechatNo,
+                              CustomerNickName = d.CustomerNickName,
+                              Phone = d.Phone,
+                              Price = d.Price,
+                              ConsultationTypeText = d.ConsultationTypeText,
+                              IsWriteOff = d.IsWriteOff == true ? "是" : "否",
+                              IsConsultation = d.IsConsultation == true ? "是" : "否",
+                              IsReturnBackPrice = d.IsReturnBackPrice == true ? "是" : "否",
+                              Remark = d.Remark,
+                              CreateBy = d.CreateByName,
+                              CreateDate = d.CreateDate,
+                          };
+                var exportOrderWriteOff = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "小黄车登记报表.xls");
+                return result;
             }
-            var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(startDate, endDate, emergencyLevel, LiveAnchorId, isCreateOrder, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, isHidePhone);
-            var res = from d in q
-                      select new ShoppingCartRegistrationReportVo()
-                      {
-                          Id = d.Id,
-                          RecordDate = d.RecordDate,
-                          ContentPlatFormName = d.ContentPlatFormName,
-                          EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(d.EmergencyLevel),
-                          LiveAnchorName = d.LiveAnchorName,
-                          IsAddWechat = d.IsAddWeChat == true ? "是" : "否",
-                          IsCreateOrder = d.IsCreateOrder == true ? "是" : "否",
-                          IsSendOrder = d.IsSendOrder == true ? "是" : "否",
-                          LiveAnchorWechatNo = d.LiveAnchorWechatNo,
-                          CustomerNickName = d.CustomerNickName,
-                          Phone = d.Phone,
-                          Price = d.Price,
-                          ConsultationTypeText = d.ConsultationTypeText,
-                          IsWriteOff = d.IsWriteOff == true ? "是" : "否",
-                          IsConsultation = d.IsConsultation == true ? "是" : "否",
-                          IsReturnBackPrice = d.IsReturnBackPrice == true ? "是" : "否",
-                          Remark = d.Remark,
-                          CreateBy = d.CreateByName,
-                          CreateDate = d.CreateDate,
-                      };
-            var exportOrderWriteOff = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "小黄车登记报表.xls");
-            return result;
+            catch (Exception err)
+            {
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
+            }
+            finally
+            {
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = JsonConvert.SerializeObject(query);
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
+            }
         }
         /// <summary>
         /// 内容平台订单成交报表
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="checkState">审核情况（查询全部传空）</param>
-        /// <param name="liveAnchorId">主播id</param>
-        /// <param name="dealHospitalId">成交医院（全部则不传）</param>
-        /// <param name="belongMonth">归属月份</param>
-        /// <param name="minAddOrderPrice">最小下单金额</param>
-        /// <param name="maxAddOrderPrice">最大下单金额</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("ContentPlatFormOrderDealReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<ContentPlatFormOrderDealInfoVo>>> GetContentPlatFormOrderDealAsync(DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? dealHospitalId, int? checkState, int? liveAnchorId)
+        public async Task<ResultData<List<ContentPlatFormOrderDealInfoVo>>> GetContentPlatFormOrderDealAsync([FromQuery] QueryContentPlatFormOrderDeal query)
         {
-            var q = await _contentPlatFormOrderService.GetOrderDealAsync(startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, dealHospitalId, checkState, liveAnchorId, true);
+            var q = await _contentPlatFormOrderService.GetOrderDealAsync(query.StartDate, query.EndDate, query.BelongMonth, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.DealHospitalId, query.CheckState, query.LiveAnchorId, true);
             var res = from d in q
                       select new ContentPlatFormOrderDealInfoVo()
                       {
@@ -568,114 +548,96 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 内容平台订单成交报表导出
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="checkState">审核情况（查询全部传空）</param>
-        /// <param name="dealHospitalId">成交医院（全部则不传）</param>
-        /// <param name="liveAnchorId">主播id</param>
-        /// <param name="belongMonth">归属月份</param>
-        /// <param name="minAddOrderPrice">最小下单金额</param>
-        /// <param name="maxAddOrderPrice">最大下单金额</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("ExportContentPlatFormOrderDealReport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportContentPlatFormOrderDealAsync(DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? dealHospitalId, int? checkState, int? liveAnchorId)
+        public async Task<FileStreamResult> ExportContentPlatFormOrderDealAsync([FromQuery] QueryContentPlatFormOrderDeal query)
         {
-            bool isHidePhone = true;
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            OperationAddDto operationAddDto = new OperationAddDto();
+            try
             {
-                isHidePhone = false;
+                bool isHidePhone = true;
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
+                operationAddDto.OperationBy = Convert.ToInt32(employee.Id);
+                var q = await _contentPlatFormOrderService.GetOrderDealAsync(query.StartDate, query.EndDate, query.BelongMonth, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.DealHospitalId, query.CheckState, query.LiveAnchorId, isHidePhone);
+                var res = from d in q
+                          select new ContentPlatFormOrderDealInfoVo()
+                          {
+                              Id = d.Id,
+                              OrderTypeText = d.OrderTypeText,
+                              BelongMonth = d.BelongMonth == 0 ? "当月" : "次月",
+                              AddOrderPrice = d.AddOrderPrice,
+                              ContentPlatformName = d.ContentPlatformName,
+                              LiveAnchorName = d.LiveAnchorName,
+                              LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
+                              ConsultationTypeText = d.ConsultationTypeText,
+                              IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
+                              IsAcompanying = d.IsAcompanying == true ? "是" : "否",
+                              CreateDate = d.CreateDate,
+                              CustomerName = d.CustomerName,
+                              Phone = d.Phone,
+                              AppointmentHospitalName = d.AppointmentHospitalName,
+                              GoodsName = d.GoodsName,
+                              ConsultingContent = d.ConsultingContent,
+                              OrderStatusText = d.OrderStatusText,
+                              DepositAmount = d.DepositAmount,
+                              DealAmount = d.DealAmount,
+                              DealDate = d.DealDate,
+                              UnDealReason = d.UnDealReason,
+                              LateProjectStage = d.LateProjectStage,
+                              Remark = d.Remark,
+                              CheckStateText = d.CheckStateText,
+                              CheckPrice = d.CheckPrice,
+                              SettlePrice = d.SettlePrice,
+                              CheckDate = d.CheckDate,
+                              CheckByName = d.CheckByName,
+                              BelongEmpName = d.BelongEmpName,
+                              CheckRemark = d.CheckRemark,
+                              IsReturnBackPrice = d.IsReturnBackPrice,
+                              ReturnBackDate = d.ReturnBackDate,
+                              ReturnBackPrice = d.ReturnBackPrice,
+                              OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
+                              LastDealHospital = d.LastDealHospital,
+                              CommissionRatio = d.CommissionRatio,
+                          };
+                var exportContentPlatFormDealOrder = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportContentPlatFormDealOrder);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "内容平台订单成交报表.xls");
+                return result;
             }
-            var q = await _contentPlatFormOrderService.GetOrderDealAsync(startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, dealHospitalId, checkState, liveAnchorId, isHidePhone);
-            var res = from d in q
-                      select new ContentPlatFormOrderDealInfoVo()
-                      {
-                          Id = d.Id,
-                          OrderTypeText = d.OrderTypeText,
-                          BelongMonth = d.BelongMonth == 0 ? "当月" : "次月",
-                          AddOrderPrice = d.AddOrderPrice,
-                          ContentPlatformName = d.ContentPlatformName,
-                          LiveAnchorName = d.LiveAnchorName,
-                          LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
-                          ConsultationTypeText = d.ConsultationTypeText,
-                          IsOldCustomer = d.IsOldCustomer == true ? "老客业绩" : "新客业绩",
-                          IsAcompanying = d.IsAcompanying == true ? "是" : "否",
-                          CreateDate = d.CreateDate,
-                          CustomerName = d.CustomerName,
-                          Phone = d.Phone,
-                          AppointmentHospitalName = d.AppointmentHospitalName,
-                          GoodsName = d.GoodsName,
-                          ConsultingContent = d.ConsultingContent,
-                          OrderStatusText = d.OrderStatusText,
-                          DepositAmount = d.DepositAmount,
-                          DealAmount = d.DealAmount,
-                          DealDate = d.DealDate,
-                          UnDealReason = d.UnDealReason,
-                          LateProjectStage = d.LateProjectStage,
-                          Remark = d.Remark,
-                          CheckStateText = d.CheckStateText,
-                          CheckPrice = d.CheckPrice,
-                          SettlePrice = d.SettlePrice,
-                          CheckDate = d.CheckDate,
-                          CheckByName = d.CheckByName,
-                          BelongEmpName = d.BelongEmpName,
-                          CheckRemark = d.CheckRemark,
-                          IsReturnBackPrice = d.IsReturnBackPrice,
-                          ReturnBackDate = d.ReturnBackDate,
-                          ReturnBackPrice = d.ReturnBackPrice,
-                          OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
-                          LastDealHospital = d.LastDealHospital,
-                          CommissionRatio = d.CommissionRatio,
-                      };
-            var exportContentPlatFormDealOrder = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportContentPlatFormDealOrder);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "内容平台订单成交报表.xls");
-            return result;
+            catch (Exception err)
+            {
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
+            }
+            finally
+            {
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = JsonConvert.SerializeObject(query);
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
+            }
         }
 
         /// <summary>
         /// 获取成交情况列表
         /// </summary>
-        /// <param name="startDate">登记开始日期</param>
-        /// <param name="endDate">登记结束日期</param>
-        /// <param name="sendStartDate">派单开始日期</param>
-        /// <param name="sendEndDate">派单结束日期</param>
-        /// <param name="consultationType">面诊类型（空查询所有）</param>
-        /// <param name="isToHospital">是否到院（空查询所有）</param>
-        /// <param name="tohospitalStartDate">到院开始时间</param>
-        /// <param name="toHospitalEndDate">到院结束时间</param>
-        /// <param name="minAddOrderPrice">最小下单金额（空查询所有）</param>
-        /// <param name="maxAddOrderPrice">最大下单金额（空查询所有）</param>
-        /// <param name="toHospitalType">到院类型（空查询所有）</param>
-        /// <param name="isDeal">是否成交（空查询所有）</param>
-        /// <param name="lastDealHospitalId">最终成交医院id（空查询所有）</param>
-        /// <param name="isAccompanying">是否陪诊（空查询所有）</param>
-        /// <param name="isOldCustomer">新老客业绩（空查询所有）</param>
-        /// <param name="CheckState">审核状态（空查询所有）</param>
-        /// <param name="checkStartDate">审核开始时间</param>
-        /// <param name="checkEndDate">审核结束时间</param>
-        /// <param name="isCreateBill">是否开票</param>
-        /// <param name="belongCompanyId">开票公司</param>
-        /// <param name="isReturnBakcPrice">是否回款（空查询所有）</param>
-        /// <param name="returnBackPriceStartDate">回款开始时间</param>
-        /// <param name="returnBackPriceEndDate">回款结束时间</param>
-        /// <param name="customerServiceId">跟进人员（空查询所有，0查医院）</param>
-        /// <param name="keyWord">关键字</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("contentPlatFormOrderDealInfo")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<ContentPlatFormOrderDealInfoReportVo>>> GetDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord)
+        public async Task<ResultData<List<ContentPlatFormOrderDealInfoReportVo>>> GetDealInfo([FromQuery] QueryContentPlatFormOrderDealInfoVo query)
         {
-
-            bool isHidePhone = true;
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
-            {
-                isHidePhone = false;
-            }
             int employeeId = Convert.ToInt32(employee.Id);
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(startDate, endDate, sendStartDate, sendEndDate, minAddOrderPrice, maxAddOrderPrice, consultationType, isToHospital, tohospitalStartDate, toHospitalEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, checkStartDate, checkEndDate, isCreateBill, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, belongCompanyId, keyWord, employeeId, isHidePhone);
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(query.StartDate, query.EndDate, query.SendStartDate, query.SendEndDate, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.ConsultationType, query.IsToHospital, query.TohospitalStartDate, query.ToHospitalEndDate, query.ToHospitalType, query.IsDeal, query.LastDealHospitalId, query.IsAccompanying, query.IsOldCustomer, query.CheckState, query.CheckStartDate, query.CheckEndDate, query.IsCreateBill, query.IsReturnBakcPrice, query.ReturnBackPriceStartDate, query.ReturnBackPriceEndDate, query.CustomerServiceId, query.BelongCompanyId, query.KeyWord, employeeId, true);
 
             var contentPlatformOrders = from d in result
                                         select new ContentPlatFormOrderDealInfoReportVo
@@ -729,36 +691,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 导出成交情况列表
         /// </summary>
-        /// <param name="startDate">登记开始日期</param>
-        /// <param name="endDate">登记结束日期</param>
-        /// <param name="sendStartDate">派单开始日期</param>
-        /// <param name="sendEndDate">派单结束日期</param>
-        /// <param name="consultationType">面诊类型（空查询所有）</param>
-        /// <param name="isToHospital">是否到院（空查询所有）</param>
-        /// <param name="tohospitalStartDate">到院开始时间</param>
-        /// <param name="toHospitalEndDate">到院结束时间</param>
-        /// <param name="toHospitalType">到院类型（空查询所有）</param>
-        /// <param name="isDeal">是否成交（空查询所有）</param>
-        /// <param name="lastDealHospitalId">最终成交医院id（空查询所有）</param>
-        /// <param name="isAccompanying">是否陪诊（空查询所有）</param>
-        /// <param name="isOldCustomer">新老客业绩（空查询所有）</param>
-        /// <param name="minAddOrderPrice">最小下单金额（空查询所有）</param>
-        /// <param name="maxAddOrderPrice">最大下单金额（空查询所有）</param>
-        /// <param name="CheckState">审核状态（空查询所有）</param>
-        /// <param name="checkStartDate">审核开始时间</param>
-        /// <param name="checkEndDate">审核结束时间</param>
-        /// <param name="isCreateBill">是否开票</param>
-        /// <param name="belongCompanyId">开票公司</param>
-        /// <param name="isReturnBakcPrice">是否回款（空查询所有）</param>
-        /// <param name="returnBackPriceStartDate">回款开始时间</param>
-        /// <param name="returnBackPriceEndDate">回款结束时间</param>
-        /// <param name="customerServiceId">跟进人员（空查询所有，0查医院）</param>
-        /// <param name="keyWord">关键字</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("exportContentPlatFormOrderDealInfo")]
         [FxInternalAuthorize]
-        //public async Task<FileStreamResult> ExportDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord)
-        public async Task<FileStreamResult> ExportDealInfo([FromQuery] ExportContentPlatFormOrderDealInfoSearchVo export)
+        public async Task<FileStreamResult> ExportDealInfo([FromQuery] QueryContentPlatFormOrderDealInfoVo query)
         {
             OperationAddDto operationLog = new OperationAddDto();
             try
@@ -771,8 +708,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 }
                 int employeeId = Convert.ToInt32(employee.Id);
                 operationLog.OperationBy = employeeId;
-                operationLog.Source = (int)RequestSource.AmiyaBackground;
-                var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(export.StartDate, export.EndDate, export.SendStartDate, export.SendEndDate, export.MinAddOrderPrice, export.MaxAddOrderPrice, export.ConsultationType, export.IsToHospital, export.TohospitalStartDate, export.ToHospitalEndDate, export.ToHospitalType, export.IsDeal, export.LastDealHospitalId, export.IsAccompanying, export.IsOldCustomer, export.CheckState, export.CheckStartDate, export.CheckEndDate, export.IsCreateBill, export.IsReturnBakcPrice, export.ReturnBackPriceStartDate, export.ReturnBackPriceEndDate, export.CustomerServiceId, export.BelongCompanyId, export.KeyWord, employeeId, isHidePhone);
+                var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(query.StartDate, query.EndDate, query.SendStartDate, query.SendEndDate, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.ConsultationType, query.IsToHospital, query.TohospitalStartDate, query.ToHospitalEndDate, query.ToHospitalType, query.IsDeal, query.LastDealHospitalId, query.IsAccompanying, query.IsOldCustomer, query.CheckState, query.CheckStartDate, query.CheckEndDate, query.IsCreateBill, query.IsReturnBakcPrice, query.ReturnBackPriceStartDate, query.ReturnBackPriceEndDate, query.CustomerServiceId, query.BelongCompanyId, query.KeyWord, employeeId, isHidePhone);
 
                 var contentPlatformOrders = from d in result
                                             select new ContentPlatFormOrderDealInfoReportVo
@@ -820,19 +756,19 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             };
                 var exportContentPlatFormDealOrder = contentPlatformOrders.ToList();
                 var stream = ExportExcelHelper.ExportExcel(exportContentPlatFormDealOrder);
-                var exportInfo = File(stream, "application/vnd.ms-excel", $"" + export.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + export.EndDate.Value.ToString("yyyy年MM月dd日") + "内容平台成交情况报表.xls");
+                var exportInfo = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "内容平台成交情况报表.xls");
                 return exportInfo;
             }
             catch (Exception ex)
             {
                 operationLog.Code = -1;
                 operationLog.Message = ex.Message;
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
             finally
             {
                 operationLog.Message = "";
-                operationLog.Parameters = JsonConvert.SerializeObject(export);
+                operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
                 await operatonLogService.AddOperationLogAsync(operationLog);
