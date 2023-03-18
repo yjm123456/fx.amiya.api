@@ -265,6 +265,15 @@ namespace Fx.Amiya.IService
         Task<CustomerServiceSimplePerformanceDto> GetSimpleCustomerServicePerformanceDetails(int year, int month, int customerServiceId);
 
         /// <summary>
+        /// 获取我的排名
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="customerServiceId"></param>
+        /// <returns></returns>
+        Task<string> GetMyRankAsync(int year, int month, int customerServiceId);
+
+        /// <summary>
         /// 根据客服id查询客服详细业绩
         /// </summary>
         /// <param name="year"></param>

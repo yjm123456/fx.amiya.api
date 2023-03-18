@@ -2805,11 +2805,11 @@ namespace Fx.Amiya.Service
                 z.HavingPricePerformance = dealInfo.Where(x => x.ContentPlatFormOrder.AddOrderPrice > 0).Sum(k => k.Price);
 
                 //今年的数据
-                var history1 = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.HasValue && c.ContentPlatFormOrder.SendDate.Value.Month != DateTime.Now.Month && c.ContentPlatFormOrder.SendDate.Value.Year == DateTime.Now.Year).Sum(x => x.Price);
+                var history1 = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.HasValue && c.ContentPlatFormOrder.SendDate.Value.Month != DateTime.Now.Month && c.ContentPlatFormOrder.SendDate.HasValue && c.ContentPlatFormOrder.SendDate.Value.Year == DateTime.Now.Year).Sum(x => x.Price);
                 //历年的数据
                 var history2 = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.HasValue && c.ContentPlatFormOrder.SendDate.Value.Year != DateTime.Now.Year).Sum(x => x.Price);
                 z.HistorySendThisMonthDealPerformance = history1 + history2;
-                z.ThisMonthSendThisMonthDealPerformance = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.Value.Month == DateTime.Now.Month && c.ContentPlatFormOrder.SendDate.Value.Year == DateTime.Now.Year).Sum(x => x.Price);
+                z.ThisMonthSendThisMonthDealPerformance = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.HasValue && c.ContentPlatFormOrder.SendDate.Value.Month == DateTime.Now.Month && c.ContentPlatFormOrder.SendDate.Value.Year == DateTime.Now.Year).Sum(x => x.Price);
 
                 z.VisitNumRatio = DecimalExtension.CalculateTargetComplete(visitInfo.Count(), distinctSendInfo.Count());
                 z.VideoAndPictureCompare = DecimalExtension.CalculateAccounted(z.PicturePerformance, z.VideoPerformance);
@@ -2901,6 +2901,32 @@ namespace Fx.Amiya.Service
 
 
         #region 【业绩数据】
+
+        /// <summary>
+        /// 获取我的排名
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="belongCustomerServiceId"></param>
+        /// <returns></returns>
+        public async Task<string> GetMyRankAsync(DateTime? startDate, DateTime? endDate, int belongCustomerServiceId)
+        {
+            string returnResult = "";
+            var empInfo = await _amiyaEmployeeService.GetByIdAsync(belongCustomerServiceId);
+            var employeeInfos = await _amiyaEmployeeService.GetByLiveAnchorBaseIdAsync(empInfo.LiveAnchorBaseId);
+            var amiyaEmployeeIds = employeeInfos.Select(x => x.Id).ToList();
+            var rankResult = await this.GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(startDate, endDate, amiyaEmployeeIds);
+            var res = rankResult.FindIndex(x => x.CustomerServiceId == belongCustomerServiceId) + 1;
+            if (res == 0)
+            {
+                returnResult = "#";
+            }
+            else
+            {
+                returnResult = res.ToString();
+            }
+            return returnResult;
+        }
         /// <summary>
         ///  根据条件获取照片/视频面诊业绩
         /// </summary>
@@ -3143,6 +3169,7 @@ namespace Fx.Amiya.Service
 
 
         #endregion
+
 
     }
 }

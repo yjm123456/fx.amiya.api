@@ -324,6 +324,15 @@ namespace Fx.Amiya.IService
 
         #endregion
         #region 【业绩板块】
+
+        /// <summary>
+        /// 获取我的排名
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="belongCustomerServiceId"></param>
+        /// <returns></returns>
+        Task<string> GetMyRankAsync(DateTime? startDate, DateTime? endDate, int belongCustomerServiceId);
         /// <summary>
         ///  根据条件获取照片/视频面诊业绩
         /// </summary>

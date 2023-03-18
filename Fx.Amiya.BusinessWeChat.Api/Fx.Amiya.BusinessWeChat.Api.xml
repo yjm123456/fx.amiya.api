@@ -34,6 +34,15 @@
             <param name="isSelfLiveAnchor">是否为自播主播</param>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaBusinessPerformanceController.GetMyRankAsync(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            获取我的当月业绩排名
+            </summary>
+            <param name="year"></param>
+            <param name="month"></param>
+            <param name="custonerServiceId"></param>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaBusinessPerformanceController.GetCustomerServicePerformanceAsync(System.Int32,System.Int32,System.String)">
             <summary>
             获取助理业绩数据

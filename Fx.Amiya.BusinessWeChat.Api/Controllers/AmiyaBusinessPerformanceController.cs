@@ -192,6 +192,20 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         #region【助理业绩】
 
         /// <summary>
+        /// 获取我的当月业绩排名
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="custonerServiceId"></param>
+        /// <returns></returns>
+        [HttpGet("getMyRank")]
+        public async Task<ResultData<string>> GetMyRankAsync(int year, int month, int custonerServiceId)
+        {
+            var result = await amiyaPerformanceService.GetMyRankAsync(year, month, custonerServiceId);
+            return ResultData<string>.Success().AddData("rank", result); ;
+        }
+
+        /// <summary>
         /// 获取助理业绩数据
         /// </summary>
         /// <param name="year"></param>

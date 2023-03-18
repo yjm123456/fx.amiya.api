@@ -1688,6 +1688,19 @@ namespace Fx.Amiya.Service
             return dealInfo;
         }
 
+        /// <summary>
+        /// 获取我的排名
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="customerServiceId"></param>
+        /// <returns></returns>
+        public async Task<string> GetMyRankAsync(int year, int month, int customerServiceId)
+        {
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month);
+            var dealInfo = await contentPlateFormOrderService.GetMyRankAsync(sequentialDate.StartDate, sequentialDate.EndDate, customerServiceId);
+            return dealInfo;
+        }
 
         /// <summary>
         /// 根据助理id获取助理详细业绩
@@ -1702,7 +1715,7 @@ namespace Fx.Amiya.Service
             customerServiceIdList.Add(customerServiceId);
             var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month);
             var dealInfo = await contentPlateFormOrderService.GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(sequentialDate.StartDate, sequentialDate.EndDate, customerServiceIdList);
-            var result  = new DetailCustomerPerformanceBWDto();
+            var result = new DetailCustomerPerformanceBWDto();
             var selectResult = dealInfo.FirstOrDefault();
             if (selectResult == null)
             {
