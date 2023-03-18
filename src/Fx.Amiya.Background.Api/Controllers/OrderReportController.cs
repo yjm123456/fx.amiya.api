@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.Appointment;
-using Fx.Amiya.Background.Api.Vo.OrderReport;
+using Fx.Amiya.Background.Api.Vo.OrderReport.OutPut;
+using Fx.Amiya.Background.Api.Vo.OrderReport.Input;
 using Fx.Amiya.Core.Interfaces.Goods;
 using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.OperationLog;
@@ -780,16 +781,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 下单平台订单派单报表
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="status">订单状态</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("sendOrderReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<SendOrderReportVo>>> GetSendOrderAsync(DateTime? startDate, DateTime? endDate, string status)
+        public async Task<ResultData<List<SendOrderReportVo>>> GetSendOrderAsync([FromQuery] QueryTmallSendOrderVo query)
         {
 
-            var q = await _sendOrderInfoService.GetSendOrderReportAsync(startDate, endDate, status, true);
+            var q = await _sendOrderInfoService.GetSendOrderReportAsync(query.StartDate, query.EndDate, query.Status, true);
             var res = from d in q
                       select new SendOrderReportVo()
                       {
@@ -812,42 +811,59 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 下单平台订单派单报表导出
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="status">订单状态</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("sendOrderReportExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> GetSendOrderExportAsync(DateTime? startDate, DateTime? endDate, string status)
+        public async Task<FileStreamResult> GetSendOrderExportAsync([FromQuery] QueryTmallSendOrderVo query)
         {
-            bool isHidePhone = true;
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            OperationAddDto operationLog = new OperationAddDto();
+            try
             {
-                isHidePhone = false;
+                bool isHidePhone = true;
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
+                operationLog.OperationBy = Convert.ToInt32(employee.Id);
+                var q = await _sendOrderInfoService.GetSendOrderReportAsync(query.StartDate, query.EndDate, query.Status, isHidePhone);
+                var res = from d in q
+                          select new SendOrderReportVo()
+                          {
+                              OrderId = d.OrderId,
+                              HospitalName = d.HospitalName,
+                              SendName = d.SendName,
+                              SendDate = d.SendDate,
+                              Time = d.Time,
+                              GoodsName = d.GoodsName,
+                              PurchaseSinglePrice = d.PurchaseSinglePrice,
+                              PurchaseNum = d.PurchaseNum,
+                              PurchasePrice = d.PurchasePrice,
+                              ActualPayment = d.ActualPayment,
+                              EncryptPhone = d.EncryptPhone,
+                              StatusText = d.StatusText,
+                              AppTypeText = d.AppTypeText,
+                          };
+                var exportSendOrder = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "订单派单报表.xls");
+                return result;
             }
-            var q = await _sendOrderInfoService.GetSendOrderReportAsync(startDate, endDate, status, isHidePhone);
-            var res = from d in q
-                      select new SendOrderReportVo()
-                      {
-                          OrderId = d.OrderId,
-                          HospitalName = d.HospitalName,
-                          SendName = d.SendName,
-                          SendDate = d.SendDate,
-                          Time = d.Time,
-                          GoodsName = d.GoodsName,
-                          PurchaseSinglePrice = d.PurchaseSinglePrice,
-                          PurchaseNum = d.PurchaseNum,
-                          PurchasePrice = d.PurchasePrice,
-                          ActualPayment = d.ActualPayment,
-                          EncryptPhone = d.EncryptPhone,
-                          StatusText = d.StatusText,
-                          AppTypeText = d.AppTypeText,
-                      };
-            var exportSendOrder = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "订单派单报表.xls");
-            return result;
+            catch (Exception ex)
+            {
+                operationLog.Code = -1;
+                operationLog.Message = ex.Message;
+                throw new Exception(ex.Message.ToString());
+            }
+            finally
+            {
+                operationLog.Message = "";
+                operationLog.Parameters = JsonConvert.SerializeObject(query);
+                operationLog.RequestType = (int)RequestType.Export;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operatonLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
 
@@ -855,16 +871,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 客户预约报表
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="status">预约状态</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("customerAppointmentReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<AppointmentReportVo>>> GetCustomerAppointmentAsync(DateTime? startDate, DateTime? endDate, int status)
+        public async Task<ResultData<List<AppointmentReportVo>>> GetCustomerAppointmentAsync([FromQuery] QueryCustomerAppointmentVo query)
         {
 
-            var q = await appointmentService.GetAppointmentReportAsync(startDate, endDate, status, true);
+            var q = await appointmentService.GetAppointmentReportAsync(query.StartDate, query.EndDate, query.Status, true);
             var res = from d in q
                       select new AppointmentReportVo()
                       {
@@ -882,52 +896,67 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 客户预约报表导出
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="status">预约状态</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("customerAppointmentReportExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> GetCustomerAppointmentReportExportAsync(DateTime? startDate, DateTime? endDate, int status)
+        public async Task<FileStreamResult> GetCustomerAppointmentReportExportAsync([FromQuery] QueryCustomerAppointmentVo query)
         {
-            bool isHidePhone = true;
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            OperationAddDto operationLog = new OperationAddDto();
+            try
             {
-                isHidePhone = false;
+                bool isHidePhone = true;
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
+                operationLog.OperationBy = Convert.ToInt32(employee.Id);
+                var q = await appointmentService.GetAppointmentReportAsync(query.StartDate, query.EndDate, query.Status, isHidePhone);
+                var res = from d in q
+                          select new AppointmentReportVo()
+                          {
+                              AppointmentDate = d.AppointmentDate,
+                              Week = d.Week,
+                              Time = d.Time,
+                              StatusText = d.StatusText,
+                              ItemName = d.ItemName,
+                              Phone = d.Phone,
+                              HospitalName = d.HospitalName,
+                              Remark = d.Remark
+                          };
+                var exportSendOrder = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "客户预约报表.xls");
+                return result;
             }
-            var q = await appointmentService.GetAppointmentReportAsync(startDate, endDate, status, isHidePhone);
-            var res = from d in q
-                      select new AppointmentReportVo()
-                      {
-                          AppointmentDate = d.AppointmentDate,
-                          Week = d.Week,
-                          Time = d.Time,
-                          StatusText = d.StatusText,
-                          ItemName = d.ItemName,
-                          Phone = d.Phone,
-                          HospitalName = d.HospitalName,
-                          Remark = d.Remark
-                      };
-            var exportSendOrder = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "客户预约报表.xls");
-            return result;
+            catch (Exception ex)
+            {
+                operationLog.Code = -1;
+                operationLog.Message = ex.Message;
+                throw new Exception(ex.Message.ToString());
+            }
+            finally
+            {
+                operationLog.Message = "";
+                operationLog.Parameters = JsonConvert.SerializeObject(query);
+                operationLog.RequestType = (int)RequestType.Export;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operatonLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
         /// <summary>
         /// 医院订单量报表
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="hospitalName">医院名称</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("hospitalOrderReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<HospitalOrderReportVo>>> GetHospitalOrderReportAsync(DateTime? startDate, DateTime? endDate, string hospitalName)
+        public async Task<ResultData<List<HospitalOrderReportVo>>> GetHospitalOrderReportAsync([FromQuery] QueryHospitalOrderReportVo query)
         {
 
-            var q = await _sendOrderInfoService.GetHospitalOrderReportAsync(startDate, endDate, hospitalName, true);
+            var q = await _sendOrderInfoService.GetHospitalOrderReportAsync(query.StartDate, query.EndDate, query.HospitalName, true);
             var res = from d in q
                       select new HospitalOrderReportVo()
                       {
@@ -950,57 +979,72 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 医院订单量报表导出
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="hospitalName">医院名称</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("hospitalOrderReportExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> GetHospitalOrderExportAsync(DateTime? startDate, DateTime? endDate, string hospitalName)
+        public async Task<FileStreamResult> GetHospitalOrderExportAsync([FromQuery] QueryHospitalOrderReportVo query)
         {
-            bool isHidePhone = true;
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            OperationAddDto operationLog = new OperationAddDto();
+            try
             {
-                isHidePhone = false;
+                bool isHidePhone = true;
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
+                operationLog.OperationBy = Convert.ToInt32(employee.Id);
+                var q = await _sendOrderInfoService.GetHospitalOrderReportAsync(query.StartDate, query.EndDate, query.HospitalName, isHidePhone);
+                var res = from d in q
+                          select new HospitalOrderReportVo()
+                          {
+                              OrderId = d.OrderId,
+                              HospitalName = d.HospitalName,
+                              SendName = d.SendName,
+                              SendDate = d.SendDate,
+                              Time = d.Time,
+                              GoodsName = d.GoodsName,
+                              PurchaseSinglePrice = d.PurchaseSinglePrice,
+                              PurchaseNum = d.PurchaseNum,
+                              PurchasePrice = d.PurchasePrice,
+                              ActualPayment = d.ActualPayment,
+                              EncryptPhone = d.EncryptPhone,
+                              StatusText = d.StatusText,
+                              AppTypeText = d.AppTypeText
+                          };
+                var exportSendOrder = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "医院订单量报表.xls");
+                return result;
             }
-            var q = await _sendOrderInfoService.GetHospitalOrderReportAsync(startDate, endDate, hospitalName, isHidePhone);
-            var res = from d in q
-                      select new HospitalOrderReportVo()
-                      {
-                          OrderId = d.OrderId,
-                          HospitalName = d.HospitalName,
-                          SendName = d.SendName,
-                          SendDate = d.SendDate,
-                          Time = d.Time,
-                          GoodsName = d.GoodsName,
-                          PurchaseSinglePrice = d.PurchaseSinglePrice,
-                          PurchaseNum = d.PurchaseNum,
-                          PurchasePrice = d.PurchasePrice,
-                          ActualPayment = d.ActualPayment,
-                          EncryptPhone = d.EncryptPhone,
-                          StatusText = d.StatusText,
-                          AppTypeText = d.AppTypeText
-                      };
-            var exportSendOrder = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "医院订单量报表.xls");
-            return result;
+            catch (Exception ex)
+            {
+                operationLog.Code = -1;
+                operationLog.Message = ex.Message;
+                throw new Exception(ex.Message.ToString());
+            }
+            finally
+            {
+                operationLog.Message = "";
+                operationLog.Parameters = JsonConvert.SerializeObject(query);
+                operationLog.RequestType = (int)RequestType.Export;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operatonLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
         /// <summary>
         /// 医院预约量报表
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="hospitalName">医院名称</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("hospitalAppointmentReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<HospitalAppointmentReportVo>>> GetHospitalAppointmentAsync(DateTime? startDate, DateTime? endDate, string hospitalName)
+        public async Task<ResultData<List<HospitalAppointmentReportVo>>> GetHospitalAppointmentAsync([FromQuery] QueryHospitalOrderReportVo query)
         {
 
-            var q = await appointmentService.GetHospitalAppointmentReportAsync(startDate, endDate, hospitalName, true);
+            var q = await appointmentService.GetHospitalAppointmentReportAsync(query.StartDate, query.EndDate, query.HospitalName, true);
             var res = from d in q
                       select new HospitalAppointmentReportVo()
                       {
@@ -1018,62 +1062,75 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 医院预约量报表导出
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="hospitalName">医院名称</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("hospitalAppointmentReportExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> GetHospitalAppointmentReportExportAsync(DateTime? startDate, DateTime? endDate, string hospitalName)
+        public async Task<FileStreamResult> GetHospitalAppointmentReportExportAsync([FromQuery] QueryHospitalOrderReportVo query)
         {
-            bool isHidePhone = true;
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            OperationAddDto operationLog = new OperationAddDto();
+            try
             {
-                isHidePhone = false;
+                bool isHidePhone = true;
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
+                operationLog.OperationBy = Convert.ToInt32(employee.Id);
+                var q = await appointmentService.GetHospitalAppointmentReportAsync(query.StartDate, query.EndDate, query.HospitalName, isHidePhone);
+                var res = from d in q
+                          select new HospitalAppointmentReportVo()
+                          {
+                              AppointmentDate = d.AppointmentDate,
+                              Week = d.Week,
+                              Time = d.Time,
+                              StatusText = d.StatusText,
+                              ItemName = d.ItemName,
+                              Phone = d.Phone,
+                              HospitalName = d.HospitalName,
+                              Remark = d.Remark
+                          };
+                var exportSendOrder = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "医院预约量报表.xls");
+                return result;
             }
-            var q = await appointmentService.GetHospitalAppointmentReportAsync(startDate, endDate, hospitalName, isHidePhone);
-            var res = from d in q
-                      select new HospitalAppointmentReportVo()
-                      {
-                          AppointmentDate = d.AppointmentDate,
-                          Week = d.Week,
-                          Time = d.Time,
-                          StatusText = d.StatusText,
-                          ItemName = d.ItemName,
-                          Phone = d.Phone,
-                          HospitalName = d.HospitalName,
-                          Remark = d.Remark
-                      };
-            var exportSendOrder = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "医院预约量报表.xls");
-            return result;
+            catch (Exception ex)
+            {
+                operationLog.Code = -1;
+                operationLog.Message = ex.Message;
+                throw new Exception(ex.Message.ToString());
+            }
+            finally
+            {
+                operationLog.Message = "";
+                operationLog.Parameters = JsonConvert.SerializeObject(query);
+                operationLog.RequestType = (int)RequestType.Export;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operatonLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
         /// <summary>
         /// 下单平台客服已派单报表
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="employeeId">派单客服</param>
-        /// <param name="belongEmpId">归属客服</param>
-        /// <param name="orderStatus">订单状态</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("customerSendOrderReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<CustomerSendOrderReportVo>>> GetCustomerSendOrderAsync(DateTime? startDate, DateTime? endDate, int employeeId, int belongEmpId, string orderStatus)
+        public async Task<ResultData<List<CustomerSendOrderReportVo>>> GetCustomerSendOrderAsync([FromQuery] QueryCustomerSendTmallOrderVo query)
         {
-            if (!startDate.HasValue && !endDate.HasValue)
+            if (!query.StartDate.HasValue && !query.EndDate.HasValue)
             { throw new Exception("请选择时间进行查询"); }
-            if (startDate.HasValue && endDate.HasValue)
+            if (query.StartDate.HasValue && query.EndDate.HasValue)
             {
-                if ((endDate.Value - startDate.Value).TotalDays > 31)
+                if ((query.EndDate.Value - query.StartDate.Value).TotalDays > 31)
                 {
                     throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
                 }
             }
-            var q = await _sendOrderInfoService.GetCustomerSendOrderReportAsync(startDate, endDate, employeeId, belongEmpId, orderStatus, true);
+            var q = await _sendOrderInfoService.GetCustomerSendOrderReportAsync(query.StartDate, query.EndDate, query.EmployeeId, query.BelongEmpId, query.OrderStatus, true);
             var res = from d in q
                       select new CustomerSendOrderReportVo()
                       {
@@ -1099,77 +1156,90 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 下单平台客服已派单报表导出
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="employeeId">派单客服</param>
-        /// <param name="belongEmpId">归属客服</param>
-        /// <param name="orderStatus">订单状态</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("customerSendOrderReportExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> GetCustomerSendOrderExportAsync(DateTime? startDate, DateTime? endDate, int employeeId, int belongEmpId, string orderStatus)
+        public async Task<FileStreamResult> GetCustomerSendOrderExportAsync([FromQuery] QueryCustomerSendTmallOrderVo query)
         {
-            if (!startDate.HasValue && !endDate.HasValue)
-            { throw new Exception("请选择时间进行查询"); }
-            if (startDate.HasValue && endDate.HasValue)
+            OperationAddDto operationLog = new OperationAddDto();
+            try
             {
-                if ((endDate.Value - startDate.Value).TotalDays > 31)
+                if (!query.StartDate.HasValue && !query.EndDate.HasValue)
+                { throw new Exception("请选择时间进行查询"); }
+                if (query.StartDate.HasValue && query.EndDate.HasValue)
                 {
-                    throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
+                    if ((query.EndDate.Value - query.StartDate.Value).TotalDays > 31)
+                    {
+                        throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
+                    }
                 }
+                bool isHidePhone = true;
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
+                operationLog.OperationBy = Convert.ToInt32(employee.Id);
+                var q = await _sendOrderInfoService.GetCustomerSendOrderReportAsync(query.StartDate, query.EndDate, query.EmployeeId, query.BelongEmpId, query.OrderStatus, isHidePhone);
+                var res = from d in q
+                          select new CustomerSendOrderReportVo()
+                          {
+                              OrderId = d.OrderId,
+                              HospitalName = d.HospitalName,
+                              SendName = d.SendName,
+                              SendDate = d.SendDate,
+                              Time = d.Time,
+                              GoodsName = d.GoodsName,
+                              PurchaseSinglePrice = d.PurchaseSinglePrice,
+                              PurchaseNum = d.PurchaseNum,
+                              PurchasePrice = d.PurchasePrice,
+                              ActualPayment = d.ActualPayment,
+                              EncryptPhone = d.EncryptPhone,
+                              StatusText = d.StatusText,
+                              AppTypeText = d.AppTypeText,
+                              BelongEmpName = d.BelongEmpName,
+                          };
+                var exportSendOrder = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "客服已派单报表.xls");
+                return result;
             }
-            bool isHidePhone = true;
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            catch (Exception ex)
             {
-                isHidePhone = false;
+                operationLog.Code = -1;
+                operationLog.Message = ex.Message;
+                throw new Exception(ex.Message.ToString());
             }
-            var q = await _sendOrderInfoService.GetCustomerSendOrderReportAsync(startDate, endDate, employeeId, belongEmpId, orderStatus, isHidePhone);
-            var res = from d in q
-                      select new CustomerSendOrderReportVo()
-                      {
-                          OrderId = d.OrderId,
-                          HospitalName = d.HospitalName,
-                          SendName = d.SendName,
-                          SendDate = d.SendDate,
-                          Time = d.Time,
-                          GoodsName = d.GoodsName,
-                          PurchaseSinglePrice = d.PurchaseSinglePrice,
-                          PurchaseNum = d.PurchaseNum,
-                          PurchasePrice = d.PurchasePrice,
-                          ActualPayment = d.ActualPayment,
-                          EncryptPhone = d.EncryptPhone,
-                          StatusText = d.StatusText,
-                          AppTypeText = d.AppTypeText,
-                          BelongEmpName = d.BelongEmpName,
-                      };
-            var exportSendOrder = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "客服已派单报表.xls");
-            return result;
+            finally
+            {
+                operationLog.Message = "";
+                operationLog.Parameters = JsonConvert.SerializeObject(query);
+                operationLog.RequestType = (int)RequestType.Export;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operatonLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
         /// <summary>
         /// 客服下单平台未派单报表
         /// </summary>
-        /// <param name="startDate"></param>
-        /// <param name="endDate"></param>
-        /// <param name="employeeId">归属客服id</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("customerUnSendOrderReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<CustomerUnSendOrderReportVo>>> GetCustomerUnSendOrderAsync(DateTime? startDate, DateTime? endDate, int employeeId)
+        public async Task<ResultData<List<CustomerUnSendOrderReportVo>>> GetCustomerUnSendOrderAsync([FromQuery] QueryCustomerTmallUnSendOrderVo query)
         {
-            if (!startDate.HasValue && !endDate.HasValue)
+            if (!query.StartDate.HasValue && !query.EndDate.HasValue)
             { throw new Exception("请选择时间进行查询"); }
-            if (startDate.HasValue && endDate.HasValue)
+            if (query.StartDate.HasValue && query.EndDate.HasValue)
             {
-                if ((endDate.Value - startDate.Value).TotalDays > 31)
+                if ((query.EndDate.Value - query.StartDate.Value).TotalDays > 31)
                 {
                     throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
                 }
             }
-            var q = await _sendOrderInfoService.GetUnSendOrderReportWithPageAsync(startDate, endDate, employeeId, true);
+            var q = await _sendOrderInfoService.GetUnSendOrderReportWithPageAsync(query.StartDate, query.EndDate, query.EmployeeId, true);
             var res = from d in q
                       select new CustomerUnSendOrderReportVo()
                       {
@@ -1189,48 +1259,64 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 客服下单平台未派单报表导出
         /// </summary>
-        /// <param name="startDate"></param>
-        /// <param name="endDate"></param>
-        /// <param name="employeeId"></param>
-        /// <param name="orderStatus"></param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("customerUnSendOrderReportExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> GetCustomerUnSendOrderExportAsync(DateTime? startDate, DateTime? endDate, int employeeId)
+        public async Task<FileStreamResult> GetCustomerUnSendOrderExportAsync([FromQuery] QueryCustomerTmallUnSendOrderVo query)
         {
-            if (!startDate.HasValue && !endDate.HasValue)
-            { throw new Exception("请选择时间进行查询"); }
-            if (startDate.HasValue && endDate.HasValue)
+            OperationAddDto operationLog = new OperationAddDto();
+            try
             {
-                if ((endDate.Value - startDate.Value).TotalDays > 31)
+                if (!query.StartDate.HasValue && !query.EndDate.HasValue)
+                { throw new Exception("请选择时间进行查询"); }
+                if (query.StartDate.HasValue && query.EndDate.HasValue)
                 {
-                    throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
+                    if ((query.EndDate.Value - query.StartDate.Value).TotalDays > 31)
+                    {
+                        throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
+                    }
                 }
+                bool isHidePhone = true;
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
+                operationLog.OperationBy = Convert.ToInt32(employee.Id);
+                var q = await _sendOrderInfoService.GetUnSendOrderReportWithPageAsync(query.StartDate, query.EndDate, query.EmployeeId, isHidePhone);
+                var res = from d in q
+                          select new CustomerUnSendOrderReportVo()
+                          {
+                              OrderId = d.OrderId,
+                              GoodsName = d.GoodsName,
+                              EncryptPhone = d.EncryptPhone,
+                              AppointmentHospital = d.AppointmentHospital,
+                              ActualPayment = d.ActualPayment,
+                              CreateDate = d.CreateDate,
+                              StatusText = d.StatusText,
+                              AppTypeText = d.AppTypeText,
+                              BindCustomerServiceName = d.BindCustomerServiceName,
+                          };
+                var exportSendOrder = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "下单平台客服未派单报表.xls");
+                return result;
             }
-            bool isHidePhone = true;
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            catch (Exception ex)
             {
-                isHidePhone = false;
+                operationLog.Code = -1;
+                operationLog.Message = ex.Message;
+                throw new Exception(ex.Message.ToString());
             }
-            var q = await _sendOrderInfoService.GetUnSendOrderReportWithPageAsync(startDate, endDate, employeeId, isHidePhone);
-            var res = from d in q
-                      select new CustomerUnSendOrderReportVo()
-                      {
-                          OrderId = d.OrderId,
-                          GoodsName = d.GoodsName,
-                          EncryptPhone = d.EncryptPhone,
-                          AppointmentHospital = d.AppointmentHospital,
-                          ActualPayment = d.ActualPayment,
-                          CreateDate = d.CreateDate,
-                          StatusText = d.StatusText,
-                          AppTypeText = d.AppTypeText,
-                          BindCustomerServiceName = d.BindCustomerServiceName,
-                      };
-            var exportSendOrder = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "下单平台客服未派单报表.xls");
-            return result;
+            finally
+            {
+                operationLog.Message = "";
+                operationLog.Parameters = JsonConvert.SerializeObject(query);
+                operationLog.RequestType = (int)RequestType.Export;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operatonLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
         /// <summary>

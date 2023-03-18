@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Background.Api.Vo.OrderReport
+namespace Fx.Amiya.Background.Api.Vo.OrderReport.OutPut
 {
     /// <summary>
     /// 数据中心

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Background.Api.Vo.OrderReport
+namespace Fx.Amiya.Background.Api.Vo.OrderReport.Input
 {
     /// <summary>
     /// 导出成交情况列表查询类

@@ -4,19 +4,13 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Background.Api.Vo.OrderReport
+namespace Fx.Amiya.Background.Api.Vo.OrderReport.OutPut
 {
     /// <summary>
-    /// 医院订单量报表
+    /// 派单报表
     /// </summary>
-    public class HospitalOrderReportVo
+    public class SendOrderReportVo
     {
-        /// <summary>
-        /// 医院名称
-        /// </summary>
-        [Description("医院名称")]
-        public string HospitalName { get; set; }
-
         /// <summary>
         /// 订单号
         /// </summary>
@@ -27,6 +21,15 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("下单平台")]
         public string AppTypeText { get; set; }
+        /// <summary>
+        /// 派单医院名称
+        /// </summary>
+        [Description("派单医院名称")]
+        public string HospitalName { get; set; }
+        ///// <summary>
+        ///// 预约时间
+        ///// </summary>
+        //public DateTime? AppointmentDate { get; set; }
         /// <summary>
         /// 预约时间
         /// </summary>
@@ -57,6 +60,7 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("采购总价")]
         public decimal? PurchasePrice { get; set; }
+
         /// <summary>
         /// 实付款
         /// </summary>

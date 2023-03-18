@@ -4,18 +4,19 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Background.Api.Vo.OrderReport
+namespace Fx.Amiya.Background.Api.Vo.OrderReport.OutPut
 {
     /// <summary>
-    /// 客服订单报表
+    /// 医院订单量报表
     /// </summary>
-    public class CustomerSendOrderReportVo
+    public class HospitalOrderReportVo
     {
         /// <summary>
-        /// 派单客服
+        /// 医院名称
         /// </summary>
-        [Description("派单客服")]
-        public string SendName { get; set; }
+        [Description("医院名称")]
+        public string HospitalName { get; set; }
+
         /// <summary>
         /// 订单号
         /// </summary>
@@ -26,20 +27,6 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         /// </summary>
         [Description("下单平台")]
         public string AppTypeText { get; set; }
-        /// <summary>
-        /// 派单日期
-        /// </summary>
-        [Description("派单日期")]
-        public DateTime SendDate { get; set; }
-        /// <summary>
-        /// 派单医院名称
-        /// </summary>
-        [Description("派单医院名称")]
-        public string HospitalName { get; set; }
-        ///// <summary>
-        ///// 预约时间
-        ///// </summary>
-        //public DateTime? AppointmentDate { get; set; }
         /// <summary>
         /// 预约时间
         /// </summary>
@@ -81,9 +68,14 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport
         [Description("电话")]
         public string EncryptPhone { get; set; }
         /// <summary>
-        /// 归属客服
+        /// 派单人姓名
         /// </summary>
-        [Description("归属客服")]
-        public string BelongEmpName { get; set; }
+        [Description("派单人姓名")]
+        public string SendName { get; set; }
+        /// <summary>
+        /// 派单日期
+        /// </summary>
+        [Description("派单日期")]
+        public DateTime SendDate { get; set; }
     }
 }

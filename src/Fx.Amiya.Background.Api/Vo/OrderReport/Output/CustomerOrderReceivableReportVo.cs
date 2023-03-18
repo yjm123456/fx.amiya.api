@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Background.Api.Vo.OrderReport
+namespace Fx.Amiya.Background.Api.Vo.OrderReport.OutPut
 {
     /// <summary>
     /// 客户订单应收款统计
