@@ -53,7 +53,7 @@ namespace Fx.Amiya.Service
             var result = dalOpertionLog.GetAll()
                 .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate)
                 .Where(e => string.IsNullOrEmpty(searchDto.RouteAddress) || e.RouteAddress.Contains(searchDto.RouteAddress))
-                .Where(e => string.IsNullOrEmpty(searchDto.Parameters) || e.RouteAddress.Contains(searchDto.Parameters))
+                .Where(e => string.IsNullOrEmpty(searchDto.Parameters) || e.Parameters.Contains(searchDto.Parameters))
                 .Where(e => !searchDto.RequestType.HasValue || e.RequestType == searchDto.RequestType)
                 .Where(e => !searchDto.Code.HasValue || e.Code == searchDto.Code)
                 .Where(e => !searchDto.Source.HasValue || e.Sounrce == searchDto.Source)
