@@ -499,11 +499,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.NewCustomerCommissionRatio = updateVo.NewCustomerCommissionRatio;
                 updateDto.OldCustomerCommissionRatio = updateVo.OldCustomerCommissionRatio;
                 updateDto.RepeatOrderRule = updateVo.RepeatOrderRule;
-                updateDto.YearServiceFee = updateVo.YearServiceFee;
-                
+                updateDto.YearServiceFee = updateVo.YearServiceFee;               
                 updateDto.SecurityDeposit = updateVo.SecurityDeposit;
                 updateDto.YearServiceMoney = updateVo.YearServiceMoney;
                 updateDto.SecurityDepositMoney = updateVo.SecurityDepositMoney;
+                updateDto.SimpleName = updateVo.SimpleName;
+                updateDto.Sort = updateVo.Sort;
                 await hospitalInfoService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }
@@ -536,8 +537,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 HospitalUpdateHospitalInfoDto updateDto = new HospitalUpdateHospitalInfoDto();
                 updateDto.Id = hospitalId;
                 updateDto.Name = updateVo.Name;
-                updateDto.SimpleName = updateVo.SimpleName;
-                updateDto.Sort = updateVo.Sort;
                 updateDto.ThumbPicUrl = updateVo.ThumbPicUrl;
                 updateDto.Address = updateVo.Address;
                 updateDto.Area = updateVo.Area;

@@ -550,6 +550,8 @@ namespace Fx.Amiya.Service
                 hospital.SecurityDeposit = updateDto.SecurityDeposit;
                 hospital.YearServiceMoney = updateDto.YearServiceMoney;
                 hospital.SecurityDepositMoney = updateDto.SecurityDepositMoney;
+                hospital.Sort = updateDto.Sort;
+                hospital.SimpleName = updateDto.SimpleName;
                 await dalHospitalInfo.UpdateAsync(hospital, true);
 
                 var tagDetail = await dalHospitalTagDetail.GetAll().Where(e => e.HospitalId == updateDto.Id).ToListAsync();
@@ -614,8 +616,6 @@ namespace Fx.Amiya.Service
                 hospital.SubmitState = Convert.ToInt32(SubmintType.Submited);
                 hospital.CheckState = Convert.ToInt32(CheckType.NotChecked);
                 hospital.UpdateDate = DateTime.Now;
-                hospital.SimpleName = updateDto.SimpleName;
-                hospital.Sort = updateDto.Sort;
                 await dalHospitalInfo.UpdateAsync(hospital, true);
 
                 var tagDetail = await dalHospitalTagDetail.GetAll().Where(e => e.HospitalId == updateDto.Id).ToListAsync();

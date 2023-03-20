@@ -79,6 +79,14 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalInfo
         /// </summary>
         public string BelongCompany { get; set; }
         /// <summary>
+        /// 序号
+        /// </summary>
+        public int Sort { get; set; }
+        /// <summary>
+        /// 简称
+        /// </summary>
+        public string SimpleName { get; set; }
+        /// <summary>
         /// 是否在小程序展示
         /// </summary>
         public bool IsShareInMiniProgram { get; set; }

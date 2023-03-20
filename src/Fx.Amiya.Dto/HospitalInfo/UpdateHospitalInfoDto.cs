@@ -54,6 +54,14 @@ namespace Fx.Amiya.Dto.HospitalInfo
         /// </summary>
         public bool IsShareInMiniProgram { get; set; }
         /// <summary>
+        /// 序号
+        /// </summary>
+        public int Sort { get; set; }
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public string SimpleName { get; set; }
+        /// <summary>
         /// 派单顺序
         /// </summary>
         public int? SendOrder { get; set; }
