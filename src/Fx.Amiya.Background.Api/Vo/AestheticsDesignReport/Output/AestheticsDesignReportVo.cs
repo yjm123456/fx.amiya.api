@@ -1,13 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Dto.AestheticsDesignReport
+namespace Fx.Amiya.Background.Api.Vo.AestheticsDesignReport.Output
 {
-    public class AddAestheticsDesignReportDto
+    /// <summary>
+    /// 美学设计报告信息
+    /// </summary>
+    public class AestheticsDesignReportVo
     {
+        public string Id { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime? CreateDate { get; set; }
+        /// <summary>
+        /// 客户id
+        /// </summary>
         public string CustomerId { get; set; }
         /// <summary>
         /// 姓名
@@ -62,12 +72,20 @@ namespace Fx.Amiya.Dto.AestheticsDesignReport
         /// </summary>
         public decimal Budget { get; set; }
         /// <summary>
-        ///平面照片
+        /// 平面照片1
         /// </summary>
         public string Picture1 { get; set; }
         /// <summary>
-        /// 平面照片
+        /// 平面照片2
         /// </summary>
         public string Picture2 { get; set; }
+        /// <summary>
+        /// 美学设计报告状态
+        /// </summary>
+        public int Status { get; set; }
+        /// <summary>
+        /// 状态文本
+        /// </summary>
+        public string StatusText { get; set; }
     }
 }

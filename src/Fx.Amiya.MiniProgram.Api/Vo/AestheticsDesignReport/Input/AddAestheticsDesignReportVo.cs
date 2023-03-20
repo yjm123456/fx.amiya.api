@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Dto.AestheticsDesignReport
+namespace Fx.Amiya.MiniProgram.Api.Vo.AestheticsDesignReport.Input
 {
-    public class AddAestheticsDesignReportDto
+    public class AddAestheticsDesignReportVo
     {
-        public string CustomerId { get; set; }
         /// <summary>
         /// 姓名
         /// </summary>
@@ -62,12 +60,17 @@ namespace Fx.Amiya.Dto.AestheticsDesignReport
         /// </summary>
         public decimal Budget { get; set; }
         /// <summary>
-        ///平面照片
+        /// 平面照片
         /// </summary>
         public string Picture1 { get; set; }
         /// <summary>
         /// 平面照片
         /// </summary>
+
         public string Picture2 { get; set; }
+        /// <summary>
+        /// 状态(0:已提交,1:已设计)
+        /// </summary>
+        public int Status { get; set; }
     }
 }

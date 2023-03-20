@@ -64,11 +64,13 @@ namespace Fx.Amiya.Dto.AestheticsDesignReport
         /// </summary>
         public decimal Budget { get; set; }
         /// <summary>
-        /// 三张平面照片
+        /// 平面照片1
         /// </summary>
         public string Picture1 { get; set; }
+        /// <summary>
+        /// 平面照片2
+        /// </summary>
         public string Picture2 { get; set; }
-        public string Picture3 { get; set; }
         /// <summary>
         /// 美学设计报告状态
         /// </summary>

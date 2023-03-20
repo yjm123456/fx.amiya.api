@@ -228,22 +228,25 @@ CREATE TABLE `tbl_aesthetics_design_report` (
 	`name` VARCHAR(50) NOT NULL,
 	`birth_day` DATETIME NOT NULL,
 	`phone` VARCHAR(50) NOT NULL,
-	`has_aesthetic_history` BIT NOT NULL,
-	`history_describe` VARCHAR(5000) NULL DEFAULT NULL,
-	`whether_accept_operation` BIT NOT NULL,
-	`whether_allergy` BIT NOT NULL,
-	`allergy_describe` VARCHAR(5000) NULL,
-	`beauty_demand` VARCHAR(5000) NULL,
+	`has_aesthetic_history` BIT(1) NOT NULL,
+	`history_describe1` VARCHAR(3000) NULL DEFAULT NULL,
+	`whether_accept_operation` BIT(1) NOT NULL,
+	`whether_allergy` BIT(1) NOT NULL,
+	`allergy_describe` VARCHAR(3000) NULL DEFAULT NULL,
+	`beauty_demand` VARCHAR(3000) NULL DEFAULT NULL,
 	`budge` DECIMAL(10,2) NOT NULL,
 	`pictrue1` VARCHAR(500) NULL DEFAULT NULL,
 	`pictrue2` VARCHAR(500) NULL DEFAULT NULL,
-	`status` INT NULL,
+	`status` INT(10) NULL DEFAULT NULL,
 	`create_date` DATETIME NOT NULL,
-	`update_date` DATETIME NULL,
-	`valid` BIT NOT NULL,
-	`delete_date` DATETIME NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT(1) NOT NULL,
+	`delete_date` DATETIME NULL DEFAULT NULL,
+	`history_describe2` VARCHAR(3000) NULL DEFAULT NULL,
+	`history_describe3` VARCHAR(3000) NULL DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
+
 
 ----美学设计
 CREATE TABLE `tbl_aesthetics_design` (
@@ -255,7 +258,8 @@ CREATE TABLE `tbl_aesthetics_design` (
 	`create_date` DATETIME NOT NULL,
 	`update_date` DATETIME NULL DEFAULT NULL,
 	`valid` BIT NOT NULL,
-	`delete_date` DATETIME NULL DEFAULT NULL
+	`delete_date` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
 );
 
 ----美学设计标签

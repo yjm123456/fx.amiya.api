@@ -1,4 +1,6 @@
-﻿using Fx.Amiya.IService;
+﻿using Fx.Amiya.Background.Api.Vo.AestheticsDesignReport.Input;
+using Fx.Amiya.Background.Api.Vo.AestheticsDesignReport.Output;
+using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +24,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         public AestheticsDesignReportController(IAestheticsDesignReportService aestheticsDesignReportService)
         {
             this.aestheticsDesignReportService = aestheticsDesignReportService;
+        }
+        /// <summary>
+        /// 获取美学设计报告列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<AestheticsDesignReportVo> GetListByPage([FromQuery]QueryAestheticsDesignReportVo query) {
+            return null;
         }
         
     }
