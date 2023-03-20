@@ -31,6 +31,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// 添加美学设计报告
         /// </summary>
         /// <returns></returns>
+        [HttpPost("add")]
         public async Task<ResultData> AddAestheticsDesignReport(AddAestheticsDesignReportVo add) {
             string token = _tokenReader.GetToken();
             var sessionInfo = _sessionStorage.GetSession(token);

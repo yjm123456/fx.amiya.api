@@ -30,6 +30,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
+        [HttpGet("list")]
         public async Task<AestheticsDesignReportVo> GetListByPage([FromQuery]QueryAestheticsDesignReportVo query) {
             return null;
         }
