@@ -31,5 +31,9 @@ namespace Fx.Amiya.Background.Api.Vo.CooperativeHospitalCity
         /// 是否有效
         /// </summary>
         public bool Valid { get; set; }
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int Sort { get; set; }
     }
 }

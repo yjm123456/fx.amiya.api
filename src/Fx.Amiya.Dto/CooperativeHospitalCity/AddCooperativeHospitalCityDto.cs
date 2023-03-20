@@ -16,5 +16,9 @@ namespace Fx.Amiya.Dto.CooperativeHospitalCity
         /// 是否热门
         /// </summary>
         public bool IsHot { get; set; }
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int Sort { get; set; }
     }
 }

@@ -97,9 +97,9 @@ namespace Fx.Amiya.Service
                                    YearServiceFeeText = d.YearServiceFee.HasValue ? ServiceClass.GetYearServiceFeeOrSecurityDepositText(d.YearServiceFee.Value) : null,
                                    SecurityDeposit = d.SecurityDeposit,
                                    SecurityDepositText = d.SecurityDeposit.HasValue ? ServiceClass.GetYearServiceFeeOrSecurityDepositText(d.SecurityDeposit.Value) : null,
-                                   YearServiceMoney=d.YearServiceMoney,
-                                   SecurityDepositMoney=d.SecurityDepositMoney
-                                   
+                                   YearServiceMoney = d.YearServiceMoney,
+                                   SecurityDepositMoney = d.SecurityDepositMoney
+
                                };
                 FxPageInfo<HospitalInfoDto> hospitalPageInfo = new FxPageInfo<HospitalInfoDto>();
                 hospitalPageInfo.TotalCount = await hospital.CountAsync();
@@ -108,7 +108,7 @@ namespace Fx.Amiya.Service
                 //展示离到期时间还有多少并且如果到期后自动改为无效
                 foreach (var x in hospitalPageInfo.List)
                 {
-                    
+
                     if (x.DueTime.HasValue)
                     {
                         var dateResultDay = (x.DueTime.Value - DateTime.Now).Days;
@@ -211,6 +211,109 @@ namespace Fx.Amiya.Service
             }
         }
 
+
+        /// <summary>
+        /// 啊美雅全国供应链派单指南
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<List<HospitalInfoDto>> GetAmiyaTotalSendHospitalInstructionsAsync(QueryAmiyaTotalSendHospitalInstructionsDto query)
+        {
+            try
+            {
+                var hospital = from d in dalHospitalInfo.GetAll().Include(x => x.CooperativeHospitalCity).ThenInclude(x => x.Province)
+                               where
+                               (query.HospitalName == null || d.Name.Contains(query.HospitalName) || d.SimpleName.Contains(query.HospitalName))
+                                && (d.Valid == true)
+                               && (query.CityId == 0 || d.CityId == query.CityId)
+                               select new HospitalInfoDto
+                               {
+                                   Id = d.Id,
+                                   Name = d.Name,
+                                   CityId = d.CityId,
+                                   City = d.CooperativeHospitalCity.Name,
+                                   CitySort = d.CooperativeHospitalCity.Sort,
+                                   ProvinceId = d.CooperativeHospitalCity.ProvinceId,
+                                   ProvinceName = d.CooperativeHospitalCity.Province.Name,
+                                   DueTime = d.DueTime,
+                                   Sort = d.Sort,
+                                   SendOrderText = d.SendOrder.HasValue ? ServiceClass.GetSendOrderText(d.SendOrder.Value) : null,
+                                   NewCustomerCommissionRatio = d.NewCustomerCommissionRatio,
+                                   OldCustomerCommissionRatio = d.OldCustomerCommissionRatio,
+                                   RepeatOrderRule = d.RepeatOrderRule,
+                                   YearServiceFeeText = d.YearServiceFee.HasValue ? ServiceClass.GetYearServiceFeeOrSecurityDepositText(d.YearServiceFee.Value) : null,
+                                   SecurityDepositText = d.SecurityDeposit.HasValue ? ServiceClass.GetYearServiceFeeOrSecurityDepositText(d.SecurityDeposit.Value) : null,
+                                   YearServiceMoney = d.YearServiceMoney,
+                                   SecurityDepositMoney = d.SecurityDepositMoney
+
+                               };
+                List<HospitalInfoDto> hospitalPageInfo = new List<HospitalInfoDto>();
+                hospitalPageInfo = await hospital.OrderByDescending(x => x.CitySort).ThenByDescending(x => x.Sort).ToListAsync();
+
+                //展示离到期时间还有多少并且如果到期后自动改为无效
+                foreach (var x in hospitalPageInfo)
+                {
+                    //if (x.CityId.HasValue)
+                    //{
+                    //    var province = await provinceService.GetByIdAsync(x.ProvinceId);
+                    //    x.ProvinceName = province.Name;
+                    //}
+                    if (x.DueTime.HasValue)
+                    {
+                        var dateResultDay = (x.DueTime.Value - DateTime.Now).Days;
+                        var dateResultHours = (x.DueTime.Value - DateTime.Now).Hours;
+                        var dateResultMin = (x.DueTime.Value - DateTime.Now).Minutes;
+                        var dateResultSecond = (x.DueTime.Value - DateTime.Now).Seconds;
+                        if (dateResultDay > 0)
+                        {
+                            if (dateResultDay < 10)
+                            {
+                                x.HasUsedTime = "<span style=color:red>" + dateResultDay + "天</span>";
+                            }
+                            else
+                            {
+                                x.HasUsedTime = "<span style=color:green>" + dateResultDay + "天</span>";
+                            }
+                        }
+                        else if (dateResultHours > 0)
+                        {
+                            x.HasUsedTime = "<span style=color:red>" + dateResultHours + "小时</span>";
+                        }
+
+                        else if (dateResultMin > 0)
+                        {
+                            x.HasUsedTime = "<span style=color:red>" + dateResultMin + "分</span>";
+                        }
+                        else if (dateResultSecond > 0)
+                        {
+                            x.HasUsedTime = "<span style=color:red>" + dateResultSecond + "秒</span>";
+                        }
+
+                        else
+                        {
+
+                            x.HasUsedTime = "<span style=color:gray>已过期</span>";
+                            //验证是否需要修改为已过期
+                            if (x.Valid != false)
+                            {
+                                var updateInfo = await dalHospitalInfo.GetAll().SingleOrDefaultAsync(e => e.Id == x.Id);
+                                updateInfo.Valid = false;
+                                await dalHospitalInfo.UpdateAsync(updateInfo, true);
+                                x.Valid = false;
+                            }
+                        }
+                    }
+
+                }
+                return hospitalPageInfo;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         /// <summary>
         /// 获取医院名称列表
@@ -364,7 +467,7 @@ namespace Fx.Amiya.Service
                                        Address = d.Address,
                                        Longitude = d.Longitude,
                                        Latitude = d.Latitude,
-                                       BelongCompany= d.BelongCompany,
+                                       BelongCompany = d.BelongCompany,
                                        Phone = d.Phone,
                                        Valid = d.Valid,
                                        CityId = d.CityId,
@@ -384,7 +487,7 @@ namespace Fx.Amiya.Service
                                        CheckRemark = d.CheckRemark,
                                        SubmitStateText = ServiceClass.GetSubmitTypeText(d.SubmitState),
                                        SubmitState = d.SubmitState,
-                                       IsShareInMiniProgram=d.IsShareInMiniProgram,
+                                       IsShareInMiniProgram = d.IsShareInMiniProgram,
                                        HospitalCreateDate = d.HospitalCreateTime,
                                        SendOrder = d.SendOrder,
                                        SendOrderText = d.SendOrder.HasValue ? ServiceClass.GetSendOrderText(d.SendOrder.Value) : null,
@@ -395,8 +498,8 @@ namespace Fx.Amiya.Service
                                        YearServiceFeeText = d.YearServiceFee.HasValue ? ServiceClass.GetYearServiceFeeOrSecurityDepositText(d.YearServiceFee.Value) : null,
                                        SecurityDeposit = d.SecurityDeposit,
                                        SecurityDepositText = d.SecurityDeposit.HasValue ? ServiceClass.GetYearServiceFeeOrSecurityDepositText(d.SecurityDeposit.Value) : null,
-                                       SecurityDepositMoney=d.SecurityDepositMoney,
-                                       YearServiceMoney=d.YearServiceMoney,
+                                       SecurityDepositMoney = d.SecurityDepositMoney,
+                                       YearServiceMoney = d.YearServiceMoney,
                                        ScaleTagList = (from t in d.HospitalTagDetailList
                                                        where t.TagInfo.Valid && t.TagInfo.Type == 0
                                                        select new HospitalTagNameDto
@@ -987,7 +1090,7 @@ namespace Fx.Amiya.Service
                                where h.Valid
                                && (city == null || h.Address.Contains(city))
                                && (hospitalName == null || h.Name.Contains(hospitalName))
-                               && (h.IsShareInMiniProgram==true)
+                               && (h.IsShareInMiniProgram == true)
                                select new WxHospitalInfoDto
                                {
                                    Id = h.Id,
@@ -1092,10 +1195,10 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<HospitalNameDto>> GetWxAppointCarHospitalNameList()
         {
-            var list= dalHospitalInfo.GetAll().Where(e=>e.Valid==true&&e.IsShareInMiniProgram==true).Select(e=>new HospitalNameDto
-            { 
-                Id=e.Id,
-                Name=e.Name      
+            var list = dalHospitalInfo.GetAll().Where(e => e.Valid == true && e.IsShareInMiniProgram == true).Select(e => new HospitalNameDto
+            {
+                Id = e.Id,
+                Name = e.Name
             }).ToList();
             return list;
         }
@@ -1109,7 +1212,7 @@ namespace Fx.Amiya.Service
             {
                 Id = e.Id,
                 Name = e.Name
-            }).ToList();            
+            }).ToList();
         }
 
         public async Task<List<BaseKeyValueDto<int>>> GetSendOrderListAsync()

@@ -705,10 +705,14 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<CustomerHospitalConsumeDto>> GetListAsync(int? hospitalId, int? channel, int? liveAnchorId, int? buyAgainType, int? employeeId, bool? isConfirmOrder, DateTime? consumeStartDate, DateTime? consumeEndDate, string keyword, int? consumeType, DateTime? startDate, DateTime? endDate, int checkState, int? addedBy, int pageNum, int pageSize)
+        public async Task<FxPageInfo<CustomerHospitalConsumeDto>> GetListAsync(int? hospitalId, int? channel, int? liveAnchorId, int? buyAgainType, int? employeeId, bool? isConfirmOrder, DateTime? consumeStartDate, DateTime? consumeEndDate, string keyword, int? consumeType, DateTime? startDate, DateTime? endDate, int checkState, int? addedBy, int pageNum, int pageSize, bool? dataFrom)
         {
 
             var config = await GetCallCenterConfig();
+            if (dataFrom.HasValue&& dataFrom.Value == true)
+            {
+                config.HidePhoneNumber = false;
+            }
             var customerHospitalConsumes = from d in dalCustomerHospitalConsume.GetAll()
                                            where (hospitalId == null || d.HospitalId == hospitalId)
                                            && (channel == null || d.Channel == channel)

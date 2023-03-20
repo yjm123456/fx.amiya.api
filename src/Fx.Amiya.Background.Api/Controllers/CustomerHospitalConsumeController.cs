@@ -230,7 +230,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 await customerHospitalConsumeService.CustomerManageCheckAsync(checkDto);
                 return ResultData.Success();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -410,7 +410,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             catch (Exception err)
             {
-               throw new Exception();
+                throw new Exception();
             }
 
         }
@@ -583,12 +583,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<CustomerHospitalConsumeVo>>> GetListAsync(int? hospitalId, int? channel, int? liveAnchorId, bool? isConfirmOrder, int? buyAgainType,DateTime? consumeStartDate,DateTime? consumeEndDate, string keyword, int? consumeType, DateTime? startDate, DateTime? endDate, int checkState, int? addedBy, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<CustomerHospitalConsumeVo>>> GetListAsync(int? hospitalId, int? channel, int? liveAnchorId, bool? isConfirmOrder, int? buyAgainType, DateTime? consumeStartDate, DateTime? consumeEndDate, string keyword, int? consumeType, DateTime? startDate, DateTime? endDate, int checkState, int? addedBy, int pageNum, int pageSize, bool? dataFrom)
         {
             int? employeeId = null;
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             employeeId = Convert.ToInt32(employee.Id);
-            var q = await customerHospitalConsumeService.GetListAsync(hospitalId, channel, liveAnchorId, buyAgainType, employeeId, isConfirmOrder, consumeStartDate, consumeEndDate, keyword, consumeType, startDate, endDate, checkState, addedBy, pageNum, pageSize);
+            var q = await customerHospitalConsumeService.GetListAsync(hospitalId, channel, liveAnchorId, buyAgainType, employeeId, isConfirmOrder, consumeStartDate, consumeEndDate, keyword, consumeType, startDate, endDate, checkState, addedBy, pageNum, pageSize, dataFrom);
             var consumes = from d in q.List
                            select new CustomerHospitalConsumeVo
                            {

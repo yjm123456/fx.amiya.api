@@ -65,8 +65,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                {
                                    Id = d.Id,
                                    Name = d.Name,
-                                   SimpleName=d.SimpleName,
-                                   Sort=d.Sort,
+                                   SimpleName = d.SimpleName,
+                                   Sort = d.Sort,
                                    Address = d.Address,
                                    Longitude = d.Longitude,
                                    Latitude = d.Latitude,
@@ -78,19 +78,19 @@ namespace Fx.Amiya.Background.Api.Controllers
                                    DueTime = d.DueTime,
                                    ContractUrl = d.ContractUrl,
                                    HasUsedTime = d.HasUsedTime,
-                                   BelongCompany=d.BelongCompany,
-                                   IsShareInMiniProgram=d.IsShareInMiniProgram,
-                                   SendOrder=d.SendOrder,
-                                   SendOrderText=d.SendOrderText,
-                                   NewCustomerCommissionRatio=d.NewCustomerCommissionRatio,
-                                   OldCustomerCommissionRatio=d.OldCustomerCommissionRatio,
-                                   RepeatOrderRule=d.RepeatOrderRule,
-                                   YearServiceFee=d.YearServiceFee,
-                                   YearServiceFeeText=d.YearServiceFeeText,
-                                   SecurityDeposit=d.SecurityDeposit,
-                                   SecurityDepositText=d.SecurityDepositText,
-                                   YearServiceMoney=d.YearServiceMoney,
-                                   SecurityDepositMoney=d.SecurityDepositMoney
+                                   BelongCompany = d.BelongCompany,
+                                   IsShareInMiniProgram = d.IsShareInMiniProgram,
+                                   SendOrder = d.SendOrder,
+                                   SendOrderText = d.SendOrderText,
+                                   NewCustomerCommissionRatio = d.NewCustomerCommissionRatio,
+                                   OldCustomerCommissionRatio = d.OldCustomerCommissionRatio,
+                                   RepeatOrderRule = d.RepeatOrderRule,
+                                   YearServiceFee = d.YearServiceFee,
+                                   YearServiceFeeText = d.YearServiceFeeText,
+                                   SecurityDeposit = d.SecurityDeposit,
+                                   SecurityDepositText = d.SecurityDepositText,
+                                   YearServiceMoney = d.YearServiceMoney,
+                                   SecurityDepositMoney = d.SecurityDepositMoney
                                };
 
 
@@ -118,11 +118,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("hospitalCheckWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<HospitalCheckInfoVo>>> GetListWithAsync(string keyword, int pageNum, int pageSize, int CheckState ,int submitState)
+        public async Task<ResultData<FxPageInfo<HospitalCheckInfoVo>>> GetListWithAsync(string keyword, int pageNum, int pageSize, int CheckState, int submitState)
         {
             try
             {
-                var q = await hospitalInfoService.GetCheckListWithPageAsync(keyword,  pageNum, pageSize,  CheckState,  submitState);
+                var q = await hospitalInfoService.GetCheckListWithPageAsync(keyword, pageNum, pageSize, CheckState, submitState);
                 var hospital = from d in q.List
                                select new HospitalCheckInfoVo
                                {
@@ -134,7 +134,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                    CheckBy = d.CheckBy,
                                    CheckDate = d.CheckDate,
                                    CheckRemark = d.CheckRemark,
-                                   SubmitStateText =d.SubmitStateText,
+                                   SubmitStateText = d.SubmitStateText,
                                    SubmitState = d.SubmitState,
                                };
 
@@ -227,7 +227,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 hospitalInfoVo.SubmitStateText = hospital.SubmitStateText;
                 hospitalInfoVo.CheckStateText = hospital.CheckStateText;
                 hospitalInfoVo.CheckRemark = hospital.CheckRemark;
-                
+
                 List<int> scaleTagList = new List<int>();
                 foreach (var item in hospital.ScaleTagList)
                 {
@@ -294,6 +294,54 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData<SingleHospitalInfoVo>.Fail(ex.Message);
             }
         }
+
+
+        /// <summary>
+        /// 啊美雅全国供应链派单指南
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+
+        [HttpGet("getAmiyaTotalSendHospitalInstructions")]
+        public async Task<ResultData<List<AmiyaTotalSendHospitalInstructionsVo>>> GetAmiyaTotalSendHospitalInstructionsAsync([FromQuery] QueryAmiyaTotalSendHospitalInstructionsVo query)
+        {
+            try
+            {
+                QueryAmiyaTotalSendHospitalInstructionsDto queryAmiyaTotalSendHospitalInstructionsVo = new QueryAmiyaTotalSendHospitalInstructionsDto();
+                queryAmiyaTotalSendHospitalInstructionsVo.CityId = query.CityId;
+                queryAmiyaTotalSendHospitalInstructionsVo.HospitalName = query.HospitalName;
+                var q = await hospitalInfoService.GetAmiyaTotalSendHospitalInstructionsAsync(queryAmiyaTotalSendHospitalInstructionsVo);
+                var hospital = from d in q
+                               select new AmiyaTotalSendHospitalInstructionsVo
+                               {
+                                   Id = d.Id,
+                                   Province = d.ProvinceName,
+                                   City = d.City,
+                                   SendOrderText = d.SendOrderText,
+                                   Name = d.Name,
+                                   NewCustomerCommissionRatio = d.NewCustomerCommissionRatio,
+                                   OldCustomerCommissionRatio = d.OldCustomerCommissionRatio,
+                                   RepeatOrderRule = d.RepeatOrderRule,
+                                   YearServiceFeeText = d.YearServiceFeeText,
+                                   YearServiceMoney = d.YearServiceMoney,
+                                   SecurityDepositText = d.SecurityDepositText,
+                                   SecurityDepositMoney = d.SecurityDepositMoney,
+                                   DueTime = d.DueTime,
+                                   HasUsedTime = d.HasUsedTime,
+                               };
+
+
+                List<AmiyaTotalSendHospitalInstructionsVo> hospitalPageInfo = new List<AmiyaTotalSendHospitalInstructionsVo>();
+                hospitalPageInfo = hospital.ToList();
+                return ResultData<List<AmiyaTotalSendHospitalInstructionsVo>>.Success().AddData("hospitalInfo", hospitalPageInfo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<List<AmiyaTotalSendHospitalInstructionsVo>>.Fail(ex.Message);
+            }
+        }
+
+
 
         /// <summary>
         /// 获取有效医院名称列表
@@ -415,7 +463,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 HospitalInfoDetailVo hospitalInfoVo = new HospitalInfoDetailVo();
                 hospitalInfoVo.Id = hospital.Id;
                 hospitalInfoVo.SimpleName = hospital.SimpleName;
-                hospitalInfoVo.Sort= hospital.Sort;
+                hospitalInfoVo.Sort = hospital.Sort;
                 hospitalInfoVo.Name = hospital.Name;
                 hospitalInfoVo.ThumbPicUrl = hospital.ThumbPicUrl;
                 hospitalInfoVo.Address = hospital.Address;
@@ -499,7 +547,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.NewCustomerCommissionRatio = updateVo.NewCustomerCommissionRatio;
                 updateDto.OldCustomerCommissionRatio = updateVo.OldCustomerCommissionRatio;
                 updateDto.RepeatOrderRule = updateVo.RepeatOrderRule;
-                updateDto.YearServiceFee = updateVo.YearServiceFee;               
+                updateDto.YearServiceFee = updateVo.YearServiceFee;
                 updateDto.SecurityDeposit = updateVo.SecurityDeposit;
                 updateDto.YearServiceMoney = updateVo.YearServiceMoney;
                 updateDto.SecurityDepositMoney = updateVo.SecurityDepositMoney;
@@ -612,11 +660,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="companyId"></param>
         /// <returns></returns>
         [HttpGet("getHospitalNameListByCompanyId")]
-        public async Task<ResultData<List<HospitalNameVo>>> GetHospitalNameListByCompanyId(string companyId) {
-            var nameList= await hospitalInfoService.GetHospitalNameListByCompany(companyId);
-            var nameListVo= nameList.Select(c=>new HospitalNameVo { 
-                Id=c.Id,
-                Name=c.Name
+        public async Task<ResultData<List<HospitalNameVo>>> GetHospitalNameListByCompanyId(string companyId)
+        {
+            var nameList = await hospitalInfoService.GetHospitalNameListByCompany(companyId);
+            var nameListVo = nameList.Select(c => new HospitalNameVo
+            {
+                Id = c.Id,
+                Name = c.Name
             }).ToList();
             return ResultData<List<HospitalNameVo>>.Success().AddData("hospital", nameListVo);
         }

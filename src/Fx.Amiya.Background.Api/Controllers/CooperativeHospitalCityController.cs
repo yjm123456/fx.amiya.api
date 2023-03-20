@@ -31,13 +31,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 获取合作医院城市列表（分页）
         /// </summary>
+        /// <param name="provinceId">省份id</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<CooperativeHospitalCityVo>>> GetListWithPageAsync(int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<CooperativeHospitalCityVo>>> GetListWithPageAsync(string provinceId, int pageNum, int pageSize)
         {
-            var q = await cooperativeHospitalCityService.GetListWithPageAsync(pageNum, pageSize);
+            var q = await cooperativeHospitalCityService.GetListWithPageAsync(provinceId, pageNum, pageSize);
 
             var city = from d in q.List
                        select new CooperativeHospitalCityVo
@@ -45,9 +46,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                            Id = d.Id,
                            Name = d.Name,
                            Valid = d.Valid,
-                           ProvinceId=d.ProvinceId,
-                           ProvinceName=(d.ProvinceId!="0")? _provinceService.GetByIdAsync(d.ProvinceId).Result.Name.ToString():"",
-                           IsHot=d.IsHot
+                           ProvinceId = d.ProvinceId,
+                           ProvinceName = (d.ProvinceId != "0") ? _provinceService.GetByIdAsync(d.ProvinceId).Result.Name.ToString() : "",
+                           IsHot = d.IsHot,
+                           Sort = d.Sort
                        };
             FxPageInfo<CooperativeHospitalCityVo> cityPageInfo = new FxPageInfo<CooperativeHospitalCityVo>();
             cityPageInfo.TotalCount = q.TotalCount;
@@ -59,17 +61,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 获取所有合作医院城市列表
         /// </summary>
         /// <returns></returns>
-       [HttpGet("allList")]
+        [HttpGet("allList")]
         public async Task<ResultData<List<CooperativeHospitalCityVo>>> GetListAsync(string name)
         {
             var citys = from d in await cooperativeHospitalCityService.GetListAsync(name, null)
                         select new CooperativeHospitalCityVo
-                        { 
-                            Id=d.Id,
-                            Name=d.Name,
-                            Valid=d.Valid
+                        {
+                            Id = d.Id,
+                            Name = d.Name,
+                            Valid = d.Valid
                         };
-            return ResultData<List<CooperativeHospitalCityVo>>.Success().AddData("citys",citys.ToList());
+            return ResultData<List<CooperativeHospitalCityVo>>.Success().AddData("citys", citys.ToList());
         }
 
 
@@ -106,6 +108,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.Name = addVo.Name;
             addDto.ProvinceId = addVo.ProvinceId;
             addDto.IsHot = addVo.IsHot;
+            addDto.Sort = addVo.Sort;
             await cooperativeHospitalCityService.AddAsync(addDto);
             return ResultData.Success();
         }
@@ -127,7 +130,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             cooperativeHospitalCityVo.Valid = city.Valid;
             cooperativeHospitalCityVo.ProvinceId = city.ProvinceId;
             cooperativeHospitalCityVo.IsHot = city.IsHot;
-
+            cooperativeHospitalCityVo.Sort = city.Sort;
             return ResultData<CooperativeHospitalCityVo>.Success().AddData("city", cooperativeHospitalCityVo);
         }
 
@@ -145,6 +148,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.Valid = updateVo.Valid;
             updateDto.ProvinceId = updateVo.ProvinceId;
             updateDto.IsHot = updateVo.IsHot;
+            updateDto.Sort = updateVo.Sort;
             await cooperativeHospitalCityService.UpdateAsync(updateDto);
             return ResultData.Success();
         }
@@ -157,7 +161,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public async Task<ResultData> DeleteAsync([FromRoute]int id)
+        public async Task<ResultData> DeleteAsync([FromRoute] int id)
         {
             await cooperativeHospitalCityService.DeleteAsync(id);
             return ResultData.Success();

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Fx.Amiya.Dto.HospitalInfo
 {
-   public class HospitalInfoDto
+    public class HospitalInfoDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -36,6 +36,9 @@ namespace Fx.Amiya.Dto.HospitalInfo
         public DateTime? UpdateDate { get; set; }
         public int? CityId { get; set; }
         public string City { get; set; }
+        public int CitySort { get; set; }
+        public string ProvinceId { get; set; }
+        public string ProvinceName { get; set; }
 
         /// <summary>
         /// 营业时间

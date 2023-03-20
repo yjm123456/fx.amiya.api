@@ -35,20 +35,22 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<CooperativeHospitalCityDto>> GetListWithPageAsync(int pageNum, int pageSize)
+        public async Task<FxPageInfo<CooperativeHospitalCityDto>> GetListWithPageAsync(string provinceId, int pageNum, int pageSize)
         {
             var city = from d in dalCooperativeHospitalCity.GetAll()
+                       where (string.IsNullOrEmpty(provinceId) || d.ProvinceId == provinceId)
                        select new CooperativeHospitalCityDto
                        {
                            Id = d.Id,
                            Name = d.Name,
                            Valid = d.Valid,
-                           ProvinceId=d.ProvinceId,
-                           IsHot=d.IsHot
+                           ProvinceId = d.ProvinceId,
+                           IsHot = d.IsHot,
+                           Sort = d.Sort
                        };
             FxPageInfo<CooperativeHospitalCityDto> cityPageInfo = new FxPageInfo<CooperativeHospitalCityDto>();
             cityPageInfo.TotalCount = await city.CountAsync();
-            cityPageInfo.List = await city.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+            cityPageInfo.List = await city.OrderByDescending(x => x.Sort).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
             return cityPageInfo;
         }
 
@@ -67,9 +69,11 @@ namespace Fx.Amiya.Service
                         {
                             Id = d.Id,
                             Name = d.Name,
-                            Valid = d.Valid
+                            Valid = d.Valid,
+                            Sort = d.Sort,
                         };
-            return await citys.ToListAsync();
+            var rx = await citys.ToListAsync();
+            return rx.OrderByDescending(x => x.Sort).ToList();
         }
 
 
@@ -87,10 +91,11 @@ namespace Fx.Amiya.Service
                        {
                            Id = d.Id,
                            Name = d.Name,
+                           Sort = d.Sort,
                            Valid = d.Valid
                        };
 
-            return await city.ToListAsync();
+            return await city.OrderByDescending(x => x.Sort).ToListAsync();
         }
 
 
@@ -102,15 +107,16 @@ namespace Fx.Amiya.Service
         {
             var city = from d in dalCooperativeHospitalCity.GetAll()
                        where d.Valid
-                       &&d.ProvinceId==provinceId
+                       && d.ProvinceId == provinceId
                        select new CooperativeHospitalCityDto
                        {
                            Id = d.Id,
                            Name = d.Name,
+                           Sort = d.Sort,
                            Valid = d.Valid
                        };
 
-            return await city.ToListAsync();
+            return await city.OrderByDescending(x => x.Sort).ToListAsync();
         }
 
 
@@ -122,15 +128,16 @@ namespace Fx.Amiya.Service
         {
             var city = from d in dalCooperativeHospitalCity.GetAll()
                        where d.Valid
-                       &&d.IsHot
+                       && d.IsHot
                        select new CooperativeHospitalCityDto
                        {
                            Id = d.Id,
                            Name = d.Name,
+                           Sort = d.Sort,
                            Valid = d.Valid
                        };
 
-            return await city.OrderBy(z=>z.Name).ToListAsync();
+            return await city.OrderByDescending(z => z.Sort).ToListAsync();
         }
 
         /// <summary>
@@ -146,6 +153,7 @@ namespace Fx.Amiya.Service
                        {
                            Id = d.Id,
                            Name = d.Name,
+                           Sort = d.Sort,
                            Valid = d.Valid
                        };
 
@@ -159,12 +167,12 @@ namespace Fx.Amiya.Service
             var result = await city.ToListAsync();
             foreach (var x in city)
             {
-                if (!goodsCityList.Exists(z=>z== x.Id))
+                if (!goodsCityList.Exists(z => z == x.Id))
                 {
-                   result.RemoveAll((z)=>z.Id==x.Id);
+                    result.RemoveAll((z) => z.Id == x.Id);
                 }
             }
-            return  result;
+            return result;
         }
 
 
@@ -185,6 +193,7 @@ namespace Fx.Amiya.Service
             cooperativeHospitalCity.Valid = true;
             cooperativeHospitalCity.IsHot = addDto.IsHot;
             cooperativeHospitalCity.ProvinceId = addDto.ProvinceId;
+            cooperativeHospitalCity.Sort = addDto.Sort;
             await dalCooperativeHospitalCity.AddAsync(cooperativeHospitalCity, true);
         }
 
@@ -202,6 +211,7 @@ namespace Fx.Amiya.Service
             cooperativeHospitalCityDto.Valid = city.Valid;
             cooperativeHospitalCityDto.ProvinceId = city.ProvinceId;
             cooperativeHospitalCityDto.IsHot = city.IsHot;
+            cooperativeHospitalCityDto.Sort = city.Sort;
             return cooperativeHospitalCityDto;
         }
 
@@ -222,7 +232,7 @@ namespace Fx.Amiya.Service
             city.Name = updateDto.Name;
             city.IsHot = updateDto.IsHot;
             city.Valid = updateDto.Valid;
-
+            city.Sort = updateDto.Sort;
             await dalCooperativeHospitalCity.UpdateAsync(city, true);
         }
 

@@ -363,3 +363,9 @@ ALTER TABLE `tbl_system_operation_log`
 	ADD COLUMN `source` INT NULL DEFAULT 0 AFTER `delete_date`;
 
 ---------------------------------------王健2023/3/18 END-----------------------------------------------
+
+----------------------------------------------余建明2023/3/20 BEGIN-----------------------------------------------------
+--城市新增排序功能
+ALTER TABLE `amiyadb`.`tbl_cooperative_hospital_city` 
+ADD COLUMN `sort` INT NOT NULL DEFAULT 0 AFTER `province_id`;
+----------------------------------------------余建明2023/3/20 END-----------------------------------------------------

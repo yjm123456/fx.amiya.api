@@ -26,7 +26,7 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalInfo
         /// </summary>
         public int? SendOrder { get; set; }
         /// <summary>
-        /// 派单栓徐文本
+        /// 派单顺序文本
         /// </summary>
         public string SendOrderText { get; set; }
         /// <summary>

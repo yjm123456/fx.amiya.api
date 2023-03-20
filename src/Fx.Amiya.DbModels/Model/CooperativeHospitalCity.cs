@@ -12,7 +12,8 @@ namespace Fx.Amiya.DbModels.Model
 
         public string ProvinceId { get; set; }
         public bool IsHot { get; set; }
-
+        public int Sort { get; set; }
+        public Province Province { get; set; }
         public List<HospitalInfo> HospitalInfoList { get; set; }
         public List<GoodsShopCar> GoodsShopCar { get; set; }
     }

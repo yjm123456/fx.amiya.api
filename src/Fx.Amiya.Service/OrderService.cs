@@ -91,7 +91,7 @@ namespace Fx.Amiya.Service
         private IDalLiveAnchor dalLiveAnchor;
         private IGoodsInfoService goodsInfoService2;
         private IHuiShouQianPaymentService huiShouQianPaymentService;
-        
+
         public OrderService(
             IDalContentPlatformOrder dalContentPlatFormOrder,
             IDalOrderInfo dalOrderInfo,
@@ -300,8 +300,9 @@ namespace Fx.Amiya.Service
         /// <param name="employeeId"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
+        /// <param name="dataFrom">true:财务，false：其他</param>
         /// <returns></returns>
-        public async Task<FxPageInfo<OrderInfoDto>> GetOrderFinishListWithPageAsync(DateTime? writeOffStartDate, DateTime? writeOffEndDate, int? CheckState, bool? ReturnBackPriceState, string keyword, byte? appType, byte? orderNature, int employeeId, string createBIllCompanyId, bool? iscreateBill, int pageNum, int pageSize)
+        public async Task<FxPageInfo<OrderInfoDto>> GetOrderFinishListWithPageAsync(DateTime? writeOffStartDate, DateTime? writeOffEndDate, int? CheckState, bool? ReturnBackPriceState, string keyword, byte? appType, byte? orderNature, int employeeId, string createBIllCompanyId, bool? iscreateBill, int pageNum, int pageSize, bool? dataFrom)
         {
             try
             {
@@ -334,6 +335,10 @@ namespace Fx.Amiya.Service
                 }
 
                 var config = await _wxAppConfigService.GetCallCenterConfig();
+                if (dataFrom.HasValue && dataFrom.Value == true)
+                {
+                    config.HidePhoneNumber = false;
+                }
                 var order = from d in orders
                             select new OrderInfoDto
                             {
@@ -3343,7 +3348,7 @@ namespace Fx.Amiya.Service
                 }
             }
 
-            var orders = from d in dalOrderInfo.GetAll()                        
+            var orders = from d in dalOrderInfo.GetAll()
                          where d.TradeId == tradeId
                          select new OrderInfoDto
                          {
@@ -3369,8 +3374,8 @@ namespace Fx.Amiya.Service
                              ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)d.ExchangeType),
                              TradeId = d.TradeId,
                              Standard = d.Standard,
-                             ExpressId=dalSendGoodsRecord.GetAll().Where(e=>e.TradeId==d.TradeId&&e.OrderId==d.Id).Select(e=>e.ExpressId).FirstOrDefault(),
-                             CourierNumber= dalSendGoodsRecord.GetAll().Where(e => e.TradeId == d.TradeId && e.OrderId == d.Id).Select(e => e.CourierNumber).FirstOrDefault()
+                             ExpressId = dalSendGoodsRecord.GetAll().Where(e => e.TradeId == d.TradeId && e.OrderId == d.Id).Select(e => e.ExpressId).FirstOrDefault(),
+                             CourierNumber = dalSendGoodsRecord.GetAll().Where(e => e.TradeId == d.TradeId && e.OrderId == d.Id).Select(e => e.CourierNumber).FirstOrDefault()
                          };
             var orderList = await orders.ToListAsync();
             foreach (var order in orderList)
@@ -3397,14 +3402,14 @@ namespace Fx.Amiya.Service
                 if (orderTrade == null)
                     throw new Exception("交易编号错误！");
 
-                var sendGoodsRecord = await dalSendGoodsRecord.GetAll().SingleOrDefaultAsync(e => e.TradeId == sendGoodsDto.TradeId&&e.OrderId==sendGoodsDto.OrderId);
+                var sendGoodsRecord = await dalSendGoodsRecord.GetAll().SingleOrDefaultAsync(e => e.TradeId == sendGoodsDto.TradeId && e.OrderId == sendGoodsDto.OrderId);
                 if (sendGoodsRecord != null)
                     throw new Exception("该交易已发货，请勿重复操作！");
 
                 DateTime date = DateTime.Now;
 
                 var order = dalOrderInfo.GetAll().Where(e => e.Id == sendGoodsDto.OrderId).SingleOrDefault();
-                if(order==null) throw new Exception("订单编号错误！");
+                if (order == null) throw new Exception("订单编号错误！");
                 if (order.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || order.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS)
                 {
                     order.StatusCode = OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS;
@@ -3418,11 +3423,12 @@ namespace Fx.Amiya.Service
                         await dalOrderTrade.UpdateAsync(orderTrade, true);
                     }
                 }
-                else {
+                else
+                {
                     return;
                 }
-               
-                
+
+
 
                 SendGoodsRecord model = new SendGoodsRecord();
                 model.TradeId = sendGoodsDto.TradeId;
@@ -3783,12 +3789,12 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task<OrderExpressInfoDto> GetOrderExpressInfoAsync(string tradeId,string orderId)
+        public async Task<OrderExpressInfoDto> GetOrderExpressInfoAsync(string tradeId, string orderId)
         {
             var sendGoodsRecordInfoList = await dalSendGoodsRecord.GetAll().ToListAsync();
-            var sendGoodsRecordInfo = sendGoodsRecordInfoList.Where(x => x.TradeId == tradeId&&x.OrderId==orderId).FirstOrDefault();
-            if(sendGoodsRecordInfo==null)
-                sendGoodsRecordInfo= sendGoodsRecordInfoList.Where(x => x.TradeId == tradeId && string.IsNullOrEmpty(x.OrderId)).FirstOrDefault();
+            var sendGoodsRecordInfo = sendGoodsRecordInfoList.Where(x => x.TradeId == tradeId && x.OrderId == orderId).FirstOrDefault();
+            if (sendGoodsRecordInfo == null)
+                sendGoodsRecordInfo = sendGoodsRecordInfoList.Where(x => x.TradeId == tradeId && string.IsNullOrEmpty(x.OrderId)).FirstOrDefault();
             if (sendGoodsRecordInfo == null)
             {
                 throw new Exception("未找到该交易编号！");
@@ -4741,7 +4747,7 @@ namespace Fx.Amiya.Service
                                      ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)(o.ExchangeType == null ? 255 : (o.ExchangeType))),
                                      TradeId = o.TradeId,
                                      AppType = o.AppType,
-                                     StatusCode=o.StatusCode,
+                                     StatusCode = o.StatusCode,
                                      StatusText = ServiceClass.GetOrderStatusText(o.StatusCode),
                                      AppTypeText = ServiceClass.GetAppTypeText((byte)o.AppType)
                                  }).ToList()
@@ -5055,7 +5061,7 @@ namespace Fx.Amiya.Service
                 if (orderTrade == null)
                     throw new Exception("交易编号错误！");
 
-                var sendGoodsRecord = await dalSendGoodsRecord.GetAll().SingleOrDefaultAsync(e => e.TradeId == sendGoodsDto.TradeId&&e.OrderId==sendGoodsDto.OrderId);
+                var sendGoodsRecord = await dalSendGoodsRecord.GetAll().SingleOrDefaultAsync(e => e.TradeId == sendGoodsDto.TradeId && e.OrderId == sendGoodsDto.OrderId);
                 if (sendGoodsRecord == null)
                     throw new Exception("该订单没有发货信息,无法修改！");
 
@@ -5101,7 +5107,7 @@ namespace Fx.Amiya.Service
             if (totalIntegral > balance) throw new Exception("积分余额不足！");
             //integralOrderList = amiyaOrderList.Where(e => e.ExchangeType == (int)ExchangeType.Integration).ToList();
             moneyOrintegralMoneyOrderList = amiyaOrderList.Where(e => e.ExchangeType == (int)ExchangeType.HuiShouQian || e.ExchangeType == (int)ExchangeType.PointAndMoney).ToList();
-            
+
             PayRequestInfoDto payRequestInfoDto = null;
 
             //钱购买或积分加钱购商品下单返回支付信息
@@ -5508,9 +5514,9 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<OrderSendInfoDto> GetOrderSendInfoAsync(string tradeId,string orderId)
+        public async Task<OrderSendInfoDto> GetOrderSendInfoAsync(string tradeId, string orderId)
         {
-            return dalSendGoodsRecord.GetAll().Where(e => e.TradeId == tradeId&&e.OrderId==orderId).Select(e => new OrderSendInfoDto
+            return dalSendGoodsRecord.GetAll().Where(e => e.TradeId == tradeId && e.OrderId == orderId).Select(e => new OrderSendInfoDto
             {
                 ExpressId = e.ExpressId,
                 CourierNumber = e.CourierNumber
@@ -5636,7 +5642,7 @@ namespace Fx.Amiya.Service
                 || e.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS
                 || e.StatusCode == OrderStatusCode.TRADE_FINISHED
                 || e.StatusCode == OrderStatusCode.REFUNDING
-                || e.StatusCode == OrderStatusCode.CHECK_FAIL)).SumAsync(e=>e.Quantity);
+                || e.StatusCode == OrderStatusCode.CHECK_FAIL)).SumAsync(e => e.Quantity);
                 if ((orderCount + purcheCount) > limitCount)
                 {
                     return true;

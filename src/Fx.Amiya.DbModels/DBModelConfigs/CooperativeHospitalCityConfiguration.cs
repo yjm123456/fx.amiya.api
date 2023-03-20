@@ -13,11 +13,13 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
         {
             builder.ToTable("tbl_cooperative_hospital_city");
             builder.HasKey(e => e.Id);
-            builder.Property(e=>e.Id).HasColumnName("id").HasColumnType("int").IsRequired();
-            builder.Property(e=>e.Name).HasColumnName("name").HasColumnType("varchar(20)").IsRequired();
-            builder.Property(e=>e.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();
+            builder.Property(e => e.Id).HasColumnName("id").HasColumnType("int").IsRequired();
+            builder.Property(e => e.Name).HasColumnName("name").HasColumnType("varchar(20)").IsRequired();
+            builder.Property(e => e.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();
             builder.Property(e => e.ProvinceId).HasColumnName("province_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(e => e.IsHot).HasColumnName("is_hot").HasColumnType("bit").IsRequired();
+            builder.Property(e => e.Sort).HasColumnName("sort").HasColumnType("int").IsRequired();
+            builder.HasOne(e => e.Province).WithMany(e => e.CooperativeHospitalCityList).HasForeignKey(e => e.ProvinceId);
         }
     }
 }

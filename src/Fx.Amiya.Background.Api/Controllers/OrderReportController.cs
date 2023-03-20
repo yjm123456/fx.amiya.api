@@ -1322,44 +1322,21 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         ///  内容平台客服已派单报表
         /// </summary>
-        /// <param name="startDate">派单开始时间</param>
-        /// <param name="endDate">派单结束时间</param>
-        /// <param name="contentPlatFormId">平台id</param>
-        /// <param name="hospitalId">医院id（为空查询所有）</param>
-        /// <param name="liveAnchorId">主播id</param>
-        /// <param name="employeeId">派单客服id</param>
-        /// <param name="belongEmpId">归属客服id</param>
-        /// <param name="orderStatus">订单状态</param>
-        /// <param name="IsToHospital">是否到院，为空查询全部</param>
-        /// <param name="toHospitalStartDate">到院时间起</param>
-        /// <param name="toHospitalEndDate">到院时间止</param>        
-        /// <param name="toHospitalType">到院类型，为空查询所有</param>
-        /// <param name="commissionRatio">佣金比例</param>
-        /// <param name="isAcompanying">是否陪诊</param>
-        /// <param name="isOldCustomer">新/老客业绩</param>
-        /// <param name="belongMonth">归属月份</param>
-        /// <param name="minAddOrderPrice">最小下单金额</param>
-        /// <param name="maxAddOrderPrice">最大下单金额</param>
+        /// <param name="query">派单开始时间</param>
         /// <returns></returns>
         [HttpGet("customerSendContentPlatFormOrderReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<CustomerSendContentPlatFormOrderReportVo>>> GetCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? hospitalId, int? liveAnchorId, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, string contentPlatFormId, int employeeId, int belongEmpId, int? orderStatus)
+        public async Task<ResultData<List<CustomerSendContentPlatFormOrderReportVo>>> GetCustomerSendContentPlatFormOrderAsync([FromQuery] QueryCustomerSendContentPlatFormOrderVo query)
         {
-            if (!startDate.HasValue && !endDate.HasValue)
+            if (!query.StartDate.HasValue && !query.EndDate.HasValue)
             { throw new Exception("请选择时间进行查询"); }
-            //if (startDate.HasValue && endDate.HasValue)
-            //{
-            //    if ((endDate.Value - startDate.Value).TotalDays > 31)
-            //    {
-            //        throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
-            //    }
-            //}
-            if (employeeId == 0)
+
+            if (query.EmployeeId == 0)
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-                employeeId = Convert.ToInt32(employee.Id);
+                query.EmployeeId = Convert.ToInt32(employee.Id);
             }
-            var q = await _sendContentPlatFormOrderInfoService.GetSendOrderReportList(liveAnchorId, belongMonth, minAddOrderPrice, maxAddOrderPrice, hospitalId, employeeId, belongEmpId, orderStatus, isAcompanying, isOldCustomer, commissionRatio, contentPlatFormId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, startDate, endDate, true);
+            var q = await _sendContentPlatFormOrderInfoService.GetSendOrderReportList(query.LiveAnchorId, query.BelongMonth, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.HospitalId, query.EmployeeId, query.BelongEmpId, query.OrderStatus, query.IsAcompanying, query.IsOldCustomer, query.CommissionRatio, query.ContentPlatFormId, query.IsToHospital, query.ToHospitalStartDate, query.ToHospitalEndDate, query.ToHospitalType, query.StartDate, query.EndDate, true);
             var res = from d in q
                       select new CustomerSendContentPlatFormOrderReportVo()
                       {
@@ -1393,112 +1370,109 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         ///  内容平台客服已派单报表导出
         /// </summary>
-        /// <param name="startDate">派单开始时间</param>
-        /// <param name="endDate">派单结束时间</param>
-        /// <param name="contentPlatFormId">平台id</param>
-        /// <param name="hospitalId">医院id（为空查询所有）</param>
-        /// <param name="liveAnchorId">主播id</param>
-        /// <param name="employeeId">派单客服id</param>
-        /// <param name="belongEmpId">归属客服id</param>
-        /// <param name="orderStatus">订单状态</param>
-        /// <param name="IsToHospital">是否到院，为空查询全部</param>
-        /// <param name="toHospitalStartDate">到院时间起</param>
-        /// <param name="toHospitalEndDate">到院时间止</param>        
-        /// <param name="toHospitalType">到院类型，为空查询所有</param>
-        /// <param name="commissionRatio">佣金比例</param>
-        /// <param name="isAcompanying">是否陪诊</param>
-        /// <param name="isOldCustomer">新/老客业绩</param>
-        /// <param name="belongMonth">归属月份</param>
-        /// <param name="minAddOrderPrice">最小下单金额</param>
-        /// <param name="maxAddOrderPrice">最大下单金额</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("customerSendContentPlatFormOrderExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportCustomerSendContentPlatFormOrderAsync(DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? hospitalId, int? liveAnchorId, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, string contentPlatFormId, int employeeId, int belongEmpId, int? orderStatus)
+        public async Task<FileStreamResult> ExportCustomerSendContentPlatFormOrderAsync([FromQuery] QueryCustomerSendContentPlatFormOrderVo query)
         {
-            bool isHidePhone = true;
-            if (!startDate.HasValue && !endDate.HasValue)
-            { throw new Exception("请选择时间进行查询"); }
-            //if (startDate.HasValue && endDate.HasValue)
-            //{
-            //    if ((endDate.Value - startDate.Value).TotalDays > 31)
-            //    {
-            //        throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
-            //    }
-            //}
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            OperationAddDto operationLog = new OperationAddDto();
+            try
             {
-                isHidePhone = false;
+                bool isHidePhone = true;
+                if (!query.StartDate.HasValue && !query.EndDate.HasValue)
+                { throw new Exception("请选择时间进行查询"); }
+                //if (startDate.HasValue && endDate.HasValue)
+                //{
+                //    if ((endDate.Value - startDate.Value).TotalDays > 31)
+                //    {
+                //        throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
+                //    }
+                //}
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
+                if (query.EmployeeId == 0)
+                {
+                    query.EmployeeId = Convert.ToInt32(employee.Id);
+                }
+                operationLog.OperationBy = Convert.ToInt32(employee.Id);
+                var q = await _sendContentPlatFormOrderInfoService.GetSendOrderReportList(query.LiveAnchorId, query.BelongMonth, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.HospitalId, query.EmployeeId, query.BelongEmpId, query.OrderStatus, query.IsAcompanying, query.IsOldCustomer, query.CommissionRatio, query.ContentPlatFormId, query.IsToHospital, query.ToHospitalStartDate, query.ToHospitalEndDate, query.ToHospitalType, query.StartDate, query.EndDate, isHidePhone);
+                var res = from d in q
+                          select new CustomerSendContentPlatFormOrderReportVo()
+                          {
+                              SenderName = d.SenderName,
+                              SendDate = d.SendDate,
+                              OrderId = d.OrderId,
+                              ContentPlatFormName = d.ContentPlatFormName,
+                              LiveAnchorName = d.LiveAnchorName,
+                              ConsultationTypeText = d.ConsultationTypeText,
+                              LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
+                              GoodsName = d.GoodsName,
+                              CustomerName = d.CustomerName,
+                              IsOldCustomer = d.IsOldCustomer,
+                              IsAcompanying = d.IsAcompanying == true ? "是" : "否",
+                              /*CommissionRatio = d.CommissionRatio,*/
+                              Phone = d.Phone,
+                              OrderStatusText = d.OrderStatusText,
+                              IsToHospital = d.IsToHospital == true ? "是" : "否",
+                              ToHospitalTypeText = d.ToHospitalTypeText,
+                              ToHospitalDate = d.ToHospitalDate,
+                              DepositAmount = d.DepositAmount,
+                              DealAmount = d.DealAmount,
+                              BelongEmpName = d.BelongEmpName,
+                              SendHospital = d.SendHospital,
+                              SendOrderRemark = d.SendOrderRemark,
+                              OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
+                          };
+                var exportSendOrder = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "内容平台客服已派单报表.xls");
+                return result;
             }
-            if (employeeId == 0)
+            catch (Exception ex)
             {
-                employeeId = Convert.ToInt32(employee.Id);
+                operationLog.Code = -1;
+                operationLog.Message = ex.Message;
+                throw new Exception(ex.Message.ToString());
             }
-            var q = await _sendContentPlatFormOrderInfoService.GetSendOrderReportList(liveAnchorId, belongMonth, minAddOrderPrice, maxAddOrderPrice, hospitalId, employeeId, belongEmpId, orderStatus, isAcompanying, isOldCustomer, commissionRatio, contentPlatFormId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, startDate, endDate, isHidePhone);
-            var res = from d in q
-                      select new CustomerSendContentPlatFormOrderReportVo()
-                      {
-                          SenderName = d.SenderName,
-                          SendDate = d.SendDate,
-                          OrderId = d.OrderId,
-                          ContentPlatFormName = d.ContentPlatFormName,
-                          LiveAnchorName = d.LiveAnchorName,
-                          ConsultationTypeText = d.ConsultationTypeText,
-                          LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
-                          GoodsName = d.GoodsName,
-                          CustomerName = d.CustomerName,
-                          IsOldCustomer = d.IsOldCustomer,
-                          IsAcompanying = d.IsAcompanying == true ? "是" : "否",
-                          /*CommissionRatio = d.CommissionRatio,*/
-                          Phone = d.Phone,
-                          OrderStatusText = d.OrderStatusText,
-                          IsToHospital = d.IsToHospital == true ? "是" : "否",
-                          ToHospitalTypeText = d.ToHospitalTypeText,
-                          ToHospitalDate = d.ToHospitalDate,
-                          DepositAmount = d.DepositAmount,
-                          DealAmount = d.DealAmount,
-                          BelongEmpName = d.BelongEmpName,
-                          SendHospital = d.SendHospital,
-                          SendOrderRemark = d.SendOrderRemark,
-                          OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
-                      };
-            var exportSendOrder = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "内容平台客服已派单报表.xls");
-            return result;
+            finally
+            {
+                operationLog.Message = "";
+                operationLog.Parameters = JsonConvert.SerializeObject(query);
+                operationLog.RequestType = (int)RequestType.Export;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operatonLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
         /// <summary>
         /// 内容平台未派单报表
         /// </summary>
-        /// <param name="liveAnchorId">归属主播id</param>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="contentPlateFormId">内容平台</param>
-        /// <param name="employeeId">归属客服id（-1查询所有）</param>
-        /// <param name="orderStatus">订单状态</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("customerunContentPlatFormSendOrderList")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<CustomerUnContentPlateFormSendOrderReportInfoVo>>> GetUnSendOrderListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, string contentPlateFormId, int? employeeId, int orderStatus)
+        public async Task<ResultData<List<CustomerUnContentPlateFormSendOrderReportInfoVo>>> GetCustomerunContentPlatFormSendOrderListAsync([FromQuery] QueryCustomerunContentPlatFormSendOrderListVo query)
         {
-            if (!startDate.HasValue && !endDate.HasValue)
+            if (!query.StartDate.HasValue && !query.EndDate.HasValue)
             { throw new Exception("请选择时间进行查询"); }
-            if (startDate.HasValue && endDate.HasValue)
+            if (query.StartDate.HasValue && query.EndDate.HasValue)
             {
-                if ((endDate.Value - startDate.Value).TotalDays > 31)
+                if ((query.EndDate.Value - query.StartDate.Value).TotalDays > 31)
                 {
                     throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
                 }
             }
-            if (employeeId == null)
+            if (query.employeeId == null)
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-                employeeId = Convert.ToInt32(employee.Id);
+                query.employeeId = Convert.ToInt32(employee.Id);
             }
 
-            var q = await _contentPlatFormOrderService.GetUnSendOrderReportListAsync(liveAnchorId, startDate, endDate, (int)employeeId, orderStatus, contentPlateFormId, true);
+            var q = await _contentPlatFormOrderService.GetUnSendOrderReportListAsync(query.liveAnchorId, query.StartDate, query.EndDate, (int)query.employeeId, query.orderStatus, query.contentPlateFormId, true);
             var unSendOrder = from d in q
                               select new CustomerUnContentPlateFormSendOrderReportInfoVo
                               {
@@ -1526,61 +1500,70 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 导出内容平台未派单报表
         /// </summary>
-        /// <param name="liveAnchorId">归属主播id</param>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="contentPlateFormId">内容平台</param>
-        /// <param name="employeeId">归属客服id（-1查询所有）</param>
-        /// <param name="orderStatus">订单状态</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("customerunContentPlatFormSendOrderListExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportUnSendOrderListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, string contentPlateFormId, int? employeeId, int orderStatus)
+        public async Task<FileStreamResult> ExportCustomerunContentPlatFormSendOrderListAsync([FromQuery] QueryCustomerunContentPlatFormSendOrderListVo query)
         {
-            if (!startDate.HasValue && !endDate.HasValue)
-            { throw new Exception("请选择时间进行查询"); }
-            if (startDate.HasValue && endDate.HasValue)
+            OperationAddDto operationLog = new OperationAddDto();
+            try
             {
-                if ((endDate.Value - startDate.Value).TotalDays > 31)
+                bool isHidePhone = true;
+                if (!query.StartDate.HasValue && !query.EndDate.HasValue)
+                { throw new Exception("请选择时间进行查询"); }
+                if (query.StartDate.HasValue && query.EndDate.HasValue)
                 {
-                    throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
+                    if ((query.EndDate.Value - query.StartDate.Value).TotalDays > 31)
+                    {
+                        throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
+                    }
                 }
+                if (query.employeeId == null)
+                {
+                    var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                    query.employeeId = Convert.ToInt32(employee.Id);
+                    operationLog.OperationBy = Convert.ToInt32(employee.Id);
+                }
+                var q = await _contentPlatFormOrderService.GetUnSendOrderReportListAsync(query.liveAnchorId, query.StartDate, query.EndDate, (int)query.employeeId, query.orderStatus, query.contentPlateFormId, isHidePhone);
+                var unSendOrder = from d in q
+                                  select new CustomerUnContentPlateFormSendOrderReportInfoVo
+                                  {
+                                      EmployeeName = d.BelongEmpName,
+                                      OrderId = d.OrderId,
+                                      ContentPlatFormName = d.ContentPlatFormName,
+                                      LiveAnchorName = d.LiveAnchorName,
+                                      GoodsName = d.GoodsName,
+                                      ConsultingContent = d.ConsultingContent,
+                                      CustomerName = d.CustomerName,
+                                      Phone = d.Phone,
+                                      DealAmount = d.DealAmount,
+                                      DepositAmount = d.DepositAmount.HasValue ? d.DepositAmount : 0,
+                                      OrderTypeText = d.OrderTypeText,
+                                      OrderStatusText = d.OrderStatusText,
+                                      AppointmentHospital = d.AppointmentHospital,
+                                      Remark = d.Remark,
+                                      LateProjectStage = d.LateProjectStage
+                                  };
+                var exportSendOrder = unSendOrder.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "内容平台客服未派单报表.xls");
+                return result;
             }
-            bool isHidePhone = true;
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            catch (Exception ex)
             {
-                isHidePhone = false;
+                operationLog.Code = -1;
+                operationLog.Message = ex.Message;
+                throw new Exception(ex.Message.ToString());
             }
-            if (employeeId == null)
+            finally
             {
-                employeeId = Convert.ToInt32(employee.Id);
+                operationLog.Message = "";
+                operationLog.Parameters = JsonConvert.SerializeObject(query);
+                operationLog.RequestType = (int)RequestType.Export;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operatonLogService.AddOperationLogAsync(operationLog);
             }
-
-            var q = await _contentPlatFormOrderService.GetUnSendOrderReportListAsync(liveAnchorId, startDate, endDate, (int)employeeId, orderStatus, contentPlateFormId, isHidePhone);
-            var unSendOrder = from d in q
-                              select new CustomerUnContentPlateFormSendOrderReportInfoVo
-                              {
-                                  EmployeeName = d.BelongEmpName,
-                                  OrderId = d.OrderId,
-                                  ContentPlatFormName = d.ContentPlatFormName,
-                                  LiveAnchorName = d.LiveAnchorName,
-                                  GoodsName = d.GoodsName,
-                                  ConsultingContent = d.ConsultingContent,
-                                  CustomerName = d.CustomerName,
-                                  Phone = d.Phone,
-                                  DealAmount = d.DealAmount,
-                                  DepositAmount = d.DepositAmount.HasValue ? d.DepositAmount : 0,
-                                  OrderTypeText = d.OrderTypeText,
-                                  OrderStatusText = d.OrderStatusText,
-                                  AppointmentHospital = d.AppointmentHospital,
-                                  Remark = d.Remark,
-                                  LateProjectStage = d.LateProjectStage
-                              };
-            var exportSendOrder = unSendOrder.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "内容平台客服未派单报表.xls");
-            return result;
         }
 
 

@@ -591,7 +591,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 LiveAnchor = d.LiveAnchorName,
                                 LiveAnchorPlatForm = d.LiveAnchorPlatForm,
                                 BelongEmpName = d.BelongEmpName,
-                                Standard=d.Standard
+                                Standard = d.Standard
                             };
                 FxPageInfo<OrderInfoVo> orderPageInfo = new FxPageInfo<OrderInfoVo>();
                 orderPageInfo.TotalCount = q.TotalCount;
@@ -617,17 +617,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="orderNature">订单性质</param>
         /// <param name="createBillCompanyId">开票公司id</param>
         /// <param name="isCreateBill">是否开票</param>
+        /// <param name="dataFrom">true:财务，false：其他</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("tmallOrderFinishLlistWithPage")]
-        public async Task<ResultData<FxPageInfo<OrderInfoVo>>> GetOrderFinishListWithPageAsync(DateTime? writeOffStartDate, DateTime? writeOffEndDate, int? CheckState, bool? ReturnBackPriceState, string keyword, byte? appType, byte? orderNature, int pageNum, int pageSize,string createBillCompanyId,bool? isCreateBill)
+        public async Task<ResultData<FxPageInfo<OrderInfoVo>>> GetOrderFinishListWithPageAsync(DateTime? writeOffStartDate, DateTime? writeOffEndDate, int? CheckState, bool? ReturnBackPriceState, string keyword, byte? appType, byte? orderNature, int pageNum, int pageSize, string createBillCompanyId, bool? isCreateBill, bool? dataFrom)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await orderService.GetOrderFinishListWithPageAsync(writeOffStartDate, writeOffEndDate, CheckState, ReturnBackPriceState, keyword, appType, orderNature, employeeId, createBillCompanyId, isCreateBill,pageNum, pageSize);
+                var q = await orderService.GetOrderFinishListWithPageAsync(writeOffStartDate, writeOffEndDate, CheckState, ReturnBackPriceState, keyword, appType, orderNature, employeeId, createBillCompanyId, isCreateBill, pageNum, pageSize, dataFrom);
                 var order = from d in q.List
                             select new OrderInfoVo
                             {
@@ -803,7 +804,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                             StatusText = d.StatusText,
                             Quantity = d.Quantity,
                             IntegrationQuantity = (d.IntegrationQuantity.HasValue) ? d.IntegrationQuantity.Value : 0,
-                            Standard=d.Standard
+                            Standard = d.Standard
                         };
             var exportOrder = order.ToList();
             var stream = ExportExcelHelper.ExportExcel(exportOrder);
@@ -1364,9 +1365,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                             StatusText = d.StatusText,
                             Address = d.Address,
                             BindOrderIds = d.OrderIds,
-                            GoodsCategory=d.CategoryName,
+                            GoodsCategory = d.CategoryName,
                             Goods = d.GoodsName,
-                            Standard=d.Standard,
+                            Standard = d.Standard,
                             IntergrationAccounts = d.IntergrationAccounts,
                             TotalAmount = d.ActualPay,
                             Quantities = d.Quantities,
@@ -1376,8 +1377,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                             SendGoodsDate = d.SendGoodsDate,
                             CourierNumber = d.CourierNumber,
                             ExpressName = (!string.IsNullOrEmpty(d.ExpressId)) ? _expressManageService.GetByIdAsync(d.ExpressId).Result.ExpressName.ToString() : "",
-                            ExchageType=d.ExchangeType,
-                            
+                            ExchageType = d.ExchangeType,
+
                         };
             var exportOrder = order.ToList();
             var stream = ExportExcelHelper.ExportExcel(exportOrder);
@@ -1419,11 +1420,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                              ExchangeType = d.ExchangeType,
                              ExchangeTypeText = d.ExchangeTypeText,
                              TradeId = d.TradeId,
-                             Standard=d.Standard,
-                             CategoryName=d.GoodsCategory,
-                             ExpressId=d.ExpressId,
-                             ExpressName= (!string.IsNullOrEmpty(d.ExpressId)) ? _expressManageService.GetByIdAsync(d.ExpressId).Result.ExpressName.ToString() : "",
-                             CourierNumber =d.CourierNumber
+                             Standard = d.Standard,
+                             CategoryName = d.GoodsCategory,
+                             ExpressId = d.ExpressId,
+                             ExpressName = (!string.IsNullOrEmpty(d.ExpressId)) ? _expressManageService.GetByIdAsync(d.ExpressId).Result.ExpressName.ToString() : "",
+                             CourierNumber = d.CourierNumber
                          };
             return ResultData<List<OrderInfoVo>>.Success().AddData("orders", orders.ToList());
         }
@@ -1477,9 +1478,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="orderId">订单id</param>
         /// <returns></returns>
         [HttpGet("getSendGoodsInfo/{tradeId}/{orderId}")]
-        public async Task<ResultData<OrderSendInfoVo>> GetSendGoodsInfo(string tradeId,string orderId) {
-             var record= await orderService.GetOrderSendInfoAsync(tradeId,orderId);
-            if(record==null)　throw new Exception("暂无物流信息！");
+        public async Task<ResultData<OrderSendInfoVo>> GetSendGoodsInfo(string tradeId, string orderId)
+        {
+            var record = await orderService.GetOrderSendInfoAsync(tradeId, orderId);
+            if (record == null) throw new Exception("暂无物流信息！");
             OrderSendInfoVo orderSendInfoVo = new OrderSendInfoVo();
             orderSendInfoVo.ExpressId = record.ExpressId;
             orderSendInfoVo.CourierNumber = record.CourierNumber;

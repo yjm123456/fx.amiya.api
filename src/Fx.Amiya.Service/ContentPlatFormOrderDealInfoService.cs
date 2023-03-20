@@ -190,10 +190,11 @@ namespace Fx.Amiya.Service
         /// <param name="keyWord">关键字</param>
         /// <param name="employeeId"></param>
         /// <param name="createBillCompanyId">开票公司id</param>
+        /// <param name="dataFrom">数据获取方：true：财务；false：其他</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, string createBillCompanyId, bool? isCreateBill, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, string createBillCompanyId, bool? isCreateBill, int pageNum, int pageSize, bool? dataFrom)
         {
             var config = await wxAppConfigService.GetCallCenterConfig();
             try
@@ -299,6 +300,10 @@ namespace Fx.Amiya.Service
                                && (d.IsToHospital == true)
                                select d;
                 }
+                if (dataFrom.HasValue && dataFrom.Value == true)
+                {
+                    config.HidePhoneNumber = false;
+                }
                 var ContentPlatFOrmOrderDealInfo = from d in dealInfo
                                                    where (string.IsNullOrEmpty(keyWord) || d.ContentPlatFormOrderId.Contains(keyWord) || d.ContentPlatFormOrder.Phone.Contains(keyWord) || d.Id.Contains(keyWord))
                                                    && (!isToHospital.HasValue || d.IsToHospital == isToHospital.Value)
@@ -320,7 +325,7 @@ namespace Fx.Amiya.Service
                                                        Id = d.Id,
                                                        ContentPlatFormOrderId = d.ContentPlatFormOrderId,
                                                        CreateDate = d.CreateDate,
-                                                       Phone = ServiceClass.GetIncompletePhone(d.ContentPlatFormOrder.Phone),
+                                                       Phone =  config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.ContentPlatFormOrder.Phone) : d.ContentPlatFormOrder.Phone,
                                                        EncryptPhone = ServiceClass.Encrypt(d.ContentPlatFormOrder.Phone, config.PhoneEncryptKey),
                                                        IsDeal = d.IsDeal,
                                                        IsOldCustomer = d.IsOldCustomer,
@@ -427,6 +432,7 @@ namespace Fx.Amiya.Service
                                                        ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
                                                        Price = d.Price,
                                                        DealDate = d.DealDate,
+                                                       CreateDate=d.CreateDate,
                                                        CheckStateText = ServiceClass.GetCheckTypeText(d.CheckState.Value),
                                                        CheckPrice = d.CheckPrice,
                                                        CheckDate = d.CheckDate,

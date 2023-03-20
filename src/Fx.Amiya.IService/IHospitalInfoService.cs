@@ -35,6 +35,13 @@ namespace Fx.Amiya.IService
         Task<FxPageInfo<HospitalCheckInfoDto>> GetCheckListWithPageAsync(string keyword, int pageNum, int pageSize, int CheckState, int submitState);
 
         /// <summary>
+        /// 啊美雅全国供应链派单指南
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<List<HospitalInfoDto>> GetAmiyaTotalSendHospitalInstructionsAsync(QueryAmiyaTotalSendHospitalInstructionsDto query);
+
+        /// <summary>
         /// 获取医院名称列表
         /// </summary>
         /// <returns></returns>
