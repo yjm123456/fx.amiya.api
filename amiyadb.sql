@@ -191,7 +191,6 @@ ENGINE=InnoDB;
 
 
 ----------------------------------------王健 2023/2/16 END-----------------------------------
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
 
@@ -209,7 +208,7 @@ CREATE TABLE `tbl_system_operation_log` (
 	`operation_by` INT(10) NULL DEFAULT '0',
 	`create_date` DATETIME NOT NULL,
 	`update_date` DATETIME NULL DEFAULT NULL,
-	`valid` BIT(1) NOT NULL DEFAULT 'b\'0\'',
+	`valid` BIT(1) NOT NULL ,
 	`delete_date` DATETIME NULL DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
@@ -272,3 +271,5 @@ CREATE TABLE `tbl_aesthetics_design_report_tags` (
 ----------------------------------------------王健2023/3/17 END-----------------------------------------------------
 
 
+
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
