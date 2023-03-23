@@ -31,6 +31,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         private IWxAppConfigService _wxAppConfigService;
         private IContentPlatFormCustomerPictureService _contentPlatFormCustomerPictureService;
         private IHttpContextAccessor _httpContextAccessor;
+        private IAmiyaPositionInfoService amiyaPositionInfoService;
         /// <summary>
         /// 内容平台订单模块
         /// </summary>
@@ -38,15 +39,18 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <param name="customerService"></param>
         /// <param name="contentPlatFormCustomerPictureService"></param>
         /// <param name="httpContextAccessor"></param>
+        /// <param name="amiyaPositionInfoService"></param>
         /// <param name="wxAppConfigService"></param>
         public ContentPlateFormOrderController(IContentPlateFormOrderService orderService,
             IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
             IHttpContextAccessor httpContextAccessor,
+            IAmiyaPositionInfoService amiyaPositionInfoService,
             ICustomerService customerService,
              IWxAppConfigService wxAppConfigService)
         {
             _orderService = orderService;
             this.customerService = customerService;
+            this.amiyaPositionInfoService = amiyaPositionInfoService;
             _wxAppConfigService = wxAppConfigService;
             _httpContextAccessor = httpContextAccessor;
             _contentPlatFormCustomerPictureService = contentPlatFormCustomerPictureService;
@@ -320,7 +324,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
             var order = await _orderService.GetByOrderIdAsync(id);
-            if (employeeId != order.BelongEmpId&& employee.IsCustomerService==true)
+            var positionInfo = await amiyaPositionInfoService.GetByIdAsync(Convert.ToInt32(employee.PositionId));
+            if (employeeId != order.BelongEmpId && employee.IsCustomerService == true && !positionInfo.IsDirector)
             {
                 throw new Exception("该订单归属客服为'" + order.BelongEmpName + "'，您暂时无法操作！");
             }

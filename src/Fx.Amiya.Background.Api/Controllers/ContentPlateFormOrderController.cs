@@ -40,12 +40,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IContentPlatformOrderSendService _contentPlatformOrderSend;
         private IAmiyaHospitalDepartmentService _departmentService;
         private IOrderService _tmallOrderService;
+        private IAmiyaPositionInfoService amiyaPositionInfoService;
         private IContentPlatFormCustomerPictureService _contentPlatFormCustomerPictureService;
         private IHospitalInfoService _hospitalInfoService;
         private IHttpContextAccessor _httpContextAccessor;
         public ContentPlateFormOrderController(IContentPlateFormOrderService orderService,
             IOrderService tmallOrderService,
             IAmiyaEmployeeService amiyaEmployeeService,
+            IAmiyaPositionInfoService amiyaPositionInfoService,
             IHospitalInfoService hospitalInfoService,
             IAmiyaHospitalDepartmentService departmentService,
             IContentPlatformOrderSendService contentPlatformOrderSend,
@@ -57,6 +59,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             _orderService = orderService;
             _tmallOrderService = tmallOrderService;
             this.customerService = customerService;
+            this.amiyaPositionInfoService = amiyaPositionInfoService;
             this.amiyaEmployeeService = amiyaEmployeeService;
             _departmentService = departmentService;
             _contentPlatformOrderSend = contentPlatformOrderSend;
@@ -639,7 +642,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
             var order = await _orderService.GetByOrderIdAsync(id);
-            if (employeeId != order.BelongEmpId && employee.IsCustomerService == true)
+            var positionInfo = await amiyaPositionInfoService.GetByIdAsync(Convert.ToInt32(employee.PositionId));
+            if (employeeId != order.BelongEmpId && employee.IsCustomerService == true && !positionInfo.IsDirector)
             {
                 throw new Exception("该订单归属客服为" + order.BelongEmpName + "，您暂时无法操作！");
             }

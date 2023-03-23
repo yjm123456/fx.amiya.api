@@ -315,6 +315,7 @@ namespace Fx.Amiya.Service
                 }
 
                 var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
+                //普通客服角色过滤其他订单信息只展示自己录单信息
                 if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
                 {
                     orders = from d in orders
