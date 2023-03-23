@@ -636,7 +636,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData<ContentPlateFormOrderVo>> GetByIdAsync(string id)
         {
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
             var order = await _orderService.GetByOrderIdAsync(id);
+            if (employeeId != order.BelongEmpId && employee.IsCustomerService == true)
+            {
+                throw new Exception("该订单归属客服为" + order.BelongEmpName + "，您暂时无法操作！");
+            }
             ContentPlateFormOrderVo orderUpdateInfo = new ContentPlateFormOrderVo();
             orderUpdateInfo.Id = order.Id;
             orderUpdateInfo.UserId = order.UserId;

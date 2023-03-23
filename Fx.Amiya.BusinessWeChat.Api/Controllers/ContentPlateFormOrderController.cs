@@ -317,7 +317,13 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData<ContentPlateFormOrderVo>> GetByIdAsync(string id)
         {
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
             var order = await _orderService.GetByOrderIdAsync(id);
+            if (employeeId != order.BelongEmpId&& employee.IsCustomerService==true)
+            {
+                throw new Exception("该订单归属客服为'" + order.BelongEmpName + "'，您暂时无法操作！");
+            }
             ContentPlateFormOrderVo orderUpdateInfo = new ContentPlateFormOrderVo();
             orderUpdateInfo.Id = order.Id;
             orderUpdateInfo.UserId = order.UserId;
@@ -401,7 +407,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.SendBy = order.SendBy;
             orderUpdateInfo.SendByName = order.SendByName;
             orderUpdateInfo.SendHospitalName = order.SendHospitalName;
-            var pictures = await _contentPlatFormCustomerPictureService.GetListAsync(orderUpdateInfo.Id,"顾客照片");
+            var pictures = await _contentPlatFormCustomerPictureService.GetListAsync(orderUpdateInfo.Id, "顾客照片");
             orderUpdateInfo.CustomerPictures = pictures.Select(z => z.CustomerPicture).ToList();
             orderUpdateInfo.IsRepeatProfundityOrder = order.IsRepeatProfundityOrder;
             orderUpdateInfo.IsCreateBill = order.IsCreateBill;
