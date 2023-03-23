@@ -158,19 +158,10 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.GetCode">
-            <summary>
-            获取code
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.AmiyaLoginAsync(System.String)">
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.AmiyaBusinessWechatAuthAsync(System.String)">
             <summary>
             通过code检索啊美雅员工信息
             </summary>
-            <param name="userName"></param>
-            <param name="password"></param>
-            <param name="userId">企业微信UserId</param>
             <param name="code">企业微信Code</param>
             <returns></returns>
         </member>
@@ -198,6 +189,13 @@
             <summary>
             刷新啊美雅登录账号token
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.HospitalBusinessWechatAuthAsync(System.String)">
+            <summary>
+            通过code检索医院员工信息
+            </summary>
+            <param name="code">企业微信Code</param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AuthController.HospitalLoginAsync(System.String,System.String)">
@@ -498,7 +496,7 @@
             订单成交情况数据接口
             </summary>
         </member>
-        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormOrderDealInfoController.GetDealInfoAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Boolean},System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormOrderDealInfoController.GetDealInfoAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Boolean},System.Int32,System.Int32,System.Nullable{System.Boolean})">
             <summary>
             获取成交情况列表
             </summary>
@@ -527,6 +525,7 @@
             <param name="keyWord">关键字</param>
             <param name="createBillCompanyId">开票公司</param>
             <param name="isCreateBill">是否开票</param>
+            <param name="dataFrom">数据获取方：true：财务；false：其他</param>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
             <returns></returns>
@@ -3236,7 +3235,12 @@
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerPerformanceDetailsVo.VisitNumRatio">
             <summary>
-            上门率
+            当月派单+历史派单当月上门率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerPerformanceDetailsVo.ThisMonthSendThisMonthVisitNumRatio">
+            <summary>
+            当月派单当月上门率
             </summary>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerPerformanceDetailsVo.VideoPerformance">
@@ -3336,7 +3340,12 @@
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerServiceSimplePerformanceVo.VisitRate">
             <summary>
-            上门率
+            当月派单+历史派单当月上门率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerServiceSimplePerformanceVo.ThisMonthSendThisMonthVisitNumRatio">
+            <summary>
+            当月派单当月上门率
             </summary>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerServiceSimplePerformanceVo.NewCustomerNum">

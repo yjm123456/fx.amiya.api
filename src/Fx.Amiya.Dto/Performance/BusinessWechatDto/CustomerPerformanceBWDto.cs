@@ -54,9 +54,13 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
         public decimal? OldCustomerPerformance { get; set; }
 
         /// <summary>
-        /// 上门率
+        /// 当月派单+历史派单当月上门率
         /// </summary>
         public decimal? VisitNumRatio { get; set; }
+        /// <summary>
+        /// 当月派单当月上门率
+        /// </summary>
+        public decimal? ThisMonthSendThisMonthVisitNumRatio { get; set; }
         public decimal DealPrice { get; set; }
         public decimal TotalServicePrice { get; set; }
         public decimal NewCustomerPrice { get; set; }

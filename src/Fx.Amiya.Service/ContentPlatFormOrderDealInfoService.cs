@@ -37,7 +37,7 @@ namespace Fx.Amiya.Service
         private IDalCompanyBaseInfo dalCompanyBaseInfo;
         private IDalLiveAnchor dalLiveAnchor;
         private IDalContentPlatformOrder dalContentPlatformOrder;
-        
+
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
             ICompanyBaseInfoService companyBaseInfoService,
@@ -325,7 +325,7 @@ namespace Fx.Amiya.Service
                                                        Id = d.Id,
                                                        ContentPlatFormOrderId = d.ContentPlatFormOrderId,
                                                        CreateDate = d.CreateDate,
-                                                       Phone =  config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.ContentPlatFormOrder.Phone) : d.ContentPlatFormOrder.Phone,
+                                                       Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.ContentPlatFormOrder.Phone) : d.ContentPlatFormOrder.Phone,
                                                        EncryptPhone = ServiceClass.Encrypt(d.ContentPlatFormOrder.Phone, config.PhoneEncryptKey),
                                                        IsDeal = d.IsDeal,
                                                        IsOldCustomer = d.IsOldCustomer,
@@ -432,7 +432,7 @@ namespace Fx.Amiya.Service
                                                        ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
                                                        Price = d.Price,
                                                        DealDate = d.DealDate,
-                                                       CreateDate=d.CreateDate,
+                                                       CreateDate = d.CreateDate,
                                                        CheckStateText = ServiceClass.GetCheckTypeText(d.CheckState.Value),
                                                        CheckPrice = d.CheckPrice,
                                                        CheckDate = d.CheckDate,
@@ -1528,16 +1528,16 @@ namespace Fx.Amiya.Service
         public async Task<List<ContentPlatFormOrderDealInfoDto>> GetSendAndDealPerformanceAsync(DateTime startDate, DateTime endDate, bool? isOldSend, List<int> liveAnchorIds)
         {
             var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
-                .Where(o => o.IsDeal == true && o.DealDate >= startDate && o.DealDate < endDate)
+                .Where(o => o.IsDeal == true && o.CreateDate >= startDate && o.CreateDate < endDate)
                 .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id))
                 .ToListAsync();
             if (isOldSend == true)
             {
-                result = result.Where(x => x.ContentPlatFormOrder.SendDate.HasValue && x.ContentPlatFormOrder.SendDate.Value.Month != x.CreateDate.Month).ToList();
+                result = result.Where(c => c.ContentPlatFormOrder.SendDate.HasValue && c.ContentPlatFormOrder.SendDate < startDate).ToList();
             }
             if (isOldSend == false)
             {
-                result = result.Where(x => x.ContentPlatFormOrder.SendDate.HasValue && x.ContentPlatFormOrder.SendDate.Value.Month == x.CreateDate.Month).ToList();
+                result = result.Where(x => x.ContentPlatFormOrder.SendDate.HasValue && x.ContentPlatFormOrder.SendDate >= startDate && x.ContentPlatFormOrder.SendDate < endDate).ToList();
             }
             var returnInfo = result.Select(
                   d =>
@@ -1959,13 +1959,13 @@ namespace Fx.Amiya.Service
             }
             var dealInfoResult = dealInfo.GroupBy(e => e.LastDealHospitalId).Select(e => new FinancialHospitalDealPriceBoardDto
             {
-                HospitalName = _dalHospitalInfo.GetAll().Where(h => h.Id == e.Key).FirstOrDefault()==null?"未知(订单未归属医院)": _dalHospitalInfo.GetAll().Where(h => h.Id == e.Key).FirstOrDefault().Name,
+                HospitalName = _dalHospitalInfo.GetAll().Where(h => h.Id == e.Key).FirstOrDefault() == null ? "未知(订单未归属医院)" : _dalHospitalInfo.GetAll().Where(h => h.Id == e.Key).FirstOrDefault().Name,
                 DealPrice = e.Sum(item => item.CheckPrice ?? 0m),
                 TotalServicePrice = e.Sum(item => item.SettlePrice ?? 0m),
                 InformationPrice = e.Sum(item => item.InformationPrice ?? 0m),
                 SystemUsePrice = e.Sum(item => item.SystemUpdatePrice ?? 0m),
                 ReturnBackPrice = e.Sum(item => item.ReturnBackPrice ?? 0m)
-            }).OrderByDescending(e=>e.DealPrice);
+            }).OrderByDescending(e => e.DealPrice);
             FxPageInfo<FinancialHospitalDealPriceBoardDto> fxPageInfo = new FxPageInfo<FinancialHospitalDealPriceBoardDto>();
             fxPageInfo.TotalCount = dealInfoResult.Count();
             fxPageInfo.List = dealInfoResult.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();

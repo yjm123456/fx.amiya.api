@@ -69,9 +69,13 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.Performance
         public decimal? OldCustomerPerformance { get; set; }
 
         /// <summary>
-        /// 上门率
+        /// 当月派单+历史派单当月上门率
         /// </summary>
         public decimal? VisitNumRatio { get; set; }
+        /// <summary>
+        /// 当月派单当月上门率
+        /// </summary>
+        public decimal? ThisMonthSendThisMonthVisitNumRatio { get; set; }
         /// <summary>
         /// 视频业绩
         /// </summary>

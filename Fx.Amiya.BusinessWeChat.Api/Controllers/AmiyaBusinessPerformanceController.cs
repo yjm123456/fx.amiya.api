@@ -256,6 +256,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             customerPerformanceVo.OldCustomerNum = selectResult.OldCustomerNum;
             customerPerformanceVo.NewOrOldCustomerRate = selectResult.NewOrOldCustomerRate;
             customerPerformanceVo.VisitRate = selectResult.VisitRate;
+            customerPerformanceVo.ThisMonthSendThisMonthVisitNumRatio = selectResult.ThisMonthSendThisMonthVisitNumRatio;
             List<CustomerServiceRankVo> CustomerServiceRankVoList = new List<CustomerServiceRankVo>();
             if (selectResult.CustomerServiceRankDtoList != null)
             {
@@ -289,6 +290,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             customerPerformanceVo.NewCustomerPerformance = selectResult.NewCustomerPerformance;
             customerPerformanceVo.OldCustomerPerformance = selectResult.OldCustomerPerformance;
             customerPerformanceVo.VisitNumRatio = selectResult.VisitNumRatio;
+            customerPerformanceVo.ThisMonthSendThisMonthVisitNumRatio = selectResult.ThisMonthSendThisMonthVisitNumRatio;
 
             customerPerformanceVo.VideoPerformance = selectResult.VideoPerformance;
             customerPerformanceVo.PicturePerformance = selectResult.PicturePerformance;

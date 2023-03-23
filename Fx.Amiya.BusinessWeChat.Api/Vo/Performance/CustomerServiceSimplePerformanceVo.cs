@@ -37,9 +37,13 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.Performance
         /// </summary>
         public string NewOrOldCustomerRate { get; set; }
         /// <summary>
-        /// 上门率
+        /// 当月派单+历史派单当月上门率
         /// </summary>
         public decimal? VisitRate { get; set; }
+        /// <summary>
+        /// 当月派单当月上门率
+        /// </summary>
+        public decimal? ThisMonthSendThisMonthVisitNumRatio { get; set; }
 
         /// <summary>
         /// 新诊人数

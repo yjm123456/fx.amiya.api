@@ -37,7 +37,7 @@ namespace Fx.Amiya.IService
         /// 获取企业微信token
         /// </summary>
         /// <returns></returns>
-        Task<OrderAppInfoDto> GetBusinessWeChatAppInfo();
+        Task<OrderAppInfoDto> GetBusinessWeChatAppInfo( byte appType);
         Task<OrderAppInfoDto> GetTikTokAppInfo(int belongLiveAnchor);
 
     }

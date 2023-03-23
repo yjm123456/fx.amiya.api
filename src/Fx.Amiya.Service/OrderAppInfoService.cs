@@ -216,9 +216,9 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task<OrderAppInfoDto> GetBusinessWeChatAppInfo()
+        public async Task<OrderAppInfoDto> GetBusinessWeChatAppInfo(byte appType)
         {
-            var appInfo = await dalOrderAppInfo.GetAll().SingleOrDefaultAsync(e => e.AppType == (byte)AppType.Other);
+            var appInfo = await dalOrderAppInfo.GetAll().SingleOrDefaultAsync(e => e.AppType == appType);
             if (appInfo == null)
                 throw new Exception("企业微信同步应用证书信息为空");
             DateTime date = DateTime.Now;

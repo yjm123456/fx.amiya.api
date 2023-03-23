@@ -37,32 +37,12 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         }
 
         /// <summary>
-        /// 获取code
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("getCode")]
-        public async Task<ResultData<string>> GetCode()
-        {
-            try
-            {
-                var res = await amiyaEmployeeService.GetCodeAsync();
-                return ResultData<string>.Success().AddData("businessWechatAuth", res);
-            }
-            catch (Exception ex)
-            {
-                return ResultData<string>.Fail(ex.Message);
-            }
-        }
-        /// <summary>
         /// 通过code检索啊美雅员工信息
         /// </summary>
-        /// <param name="userName"></param>
-        /// <param name="password"></param>
-        /// <param name="userId">企业微信UserId</param>
         /// <param name="code">企业微信Code</param>
         /// <returns></returns>
         [HttpGet("businessWechatAuth")]
-        public async Task<ResultData<AmiyaEmployeeAccountVo>> AmiyaLoginAsync(string code)
+        public async Task<ResultData<AmiyaEmployeeAccountVo>> AmiyaBusinessWechatAuthAsync(string code)
         {
             try
             {
@@ -223,6 +203,39 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
 
 
 
+        /// <summary>
+        /// 通过code检索医院员工信息
+        /// </summary>
+        /// <param name="code">企业微信Code</param>
+        /// <returns></returns>
+        [HttpGet("hospitalBusinessWechatAuth")]
+        public async Task<ResultData<AmiyaEmployeeAccountVo>> HospitalBusinessWechatAuthAsync(string code)
+        {
+            try
+            {
+                var employee = await amiyaEmployeeService.GetByCodeAsync(code);
+
+                AmiyaEmployeeAccountVo accountVo = new AmiyaEmployeeAccountVo()
+                {
+                    EmployeeId = employee.Id,
+                    EmployeeName = employee.Name,
+                    AmiyaPositionId = employee.PositionId,
+                    AmiyaPositionName = employee.PositionName,
+                    EmployeeType = EmployeeTypeConstant.AMIYA_EMPLOYEE_TYPE,
+                    IsCustomerService = employee.IsCustomerService,
+                    DepartmentId = employee.DepartmentId,
+                    DepartmentName = employee.DepartmentName,
+                    UserId = employee.UserId,
+                    Code = employee.Code
+                };
+
+                return ResultData<AmiyaEmployeeAccountVo>.Success().AddData("businessWechatAuth", accountVo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<AmiyaEmployeeAccountVo>.Fail(ex.Message);
+            }
+        }
         /// <summary>
         /// 医院员工登录
         /// </summary>

@@ -2714,9 +2714,12 @@ namespace Fx.Amiya.Service
             var empInfo = await _amiyaEmployeeService.GetByIdAsync(belongCustomerServiceId);
             dealResult.CustomerServiceName = empInfo.Name;
             dealResult.NewOrOldCustomerRate = DecimalExtension.CalculateAccounted(dealResult.NewCustomerPrice, dealResult.OldCustomerPrice);
+            var sendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.BelongEmpId == belongCustomerServiceId && x.SendDate >= startDate && x.SendDate < endDate).ToList();
+            var thisMonthVisitInfo = sendInfo.Where(x => x.IsToHospital == true).ToList();
             var distinctSendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.BelongEmpId == belongCustomerServiceId && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.SendDate >= startDate && x.SendDate < endDate).GroupBy(x => x.Phone).Select(k => k.Key.First()).ToList();
             var visitInfo = dealData.Where(x => x.IsToHospital == true && x.ToHospitalDate >= startDate && x.ToHospitalDate < endDate && x.IsOldCustomer == false && x.BelongEmpId == belongCustomerServiceId).ToList();
             dealResult.VisitRate = DecimalExtension.CalculateTargetComplete(visitInfo.Count(), distinctSendInfo.Count());
+            dealResult.ThisMonthSendThisMonthVisitNumRatio = DecimalExtension.CalculateTargetComplete(thisMonthVisitInfo.Count(), distinctSendInfo.Count());
             belongLiveAnchorId = empInfo.LiveAnchorBaseId;
             if (empInfo.IsCustomerService == true)
             {
@@ -2789,6 +2792,8 @@ namespace Fx.Amiya.Service
             foreach (var z in dealResult)
             {
                 z.CustomerServiceName = await _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(z.CustomerServiceId)).Select(e => e.Name).FirstOrDefaultAsync();
+                var sendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.BelongEmpId == z.CustomerServiceId && x.SendDate >= startDate && x.SendDate < endDate).ToList();
+                var thisMonthVisitInfo = sendInfo.Where(x => x.IsToHospital == true).ToList();
                 //根据手机号去重派单数据
                 var distinctSendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.BelongEmpId == z.CustomerServiceId && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.SendDate >= startDate && x.SendDate < endDate).GroupBy(x => x.Phone).Select(k => k.Key.First()).ToList();
                 var visitInfo = dealData.Where(x => x.IsToHospital == true && x.ToHospitalDate >= startDate && x.ToHospitalDate < endDate && x.IsOldCustomer == false && x.BelongEmpId == z.CustomerServiceId).ToList();
@@ -2803,14 +2808,11 @@ namespace Fx.Amiya.Service
 
                 z.ZeroPerformance = dealInfo.Where(x => x.ContentPlatFormOrder.AddOrderPrice == 0).Sum(k => k.Price);
                 z.HavingPricePerformance = dealInfo.Where(x => x.ContentPlatFormOrder.AddOrderPrice > 0).Sum(k => k.Price);
+                z.HavingPricePerformance += dealInfo.Where(x => x.ContentPlatFormOrder.AddOrderPrice < 0).Sum(k => k.Price);
 
-                //今年的数据
-                var history1 = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.HasValue && c.ContentPlatFormOrder.SendDate.Value.Month != DateTime.Now.Month && c.ContentPlatFormOrder.SendDate.HasValue && c.ContentPlatFormOrder.SendDate.Value.Year == DateTime.Now.Year).Sum(x => x.Price);
-                //历年的数据
-                var history2 = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.HasValue && c.ContentPlatFormOrder.SendDate.Value.Year != DateTime.Now.Year).Sum(x => x.Price);
-                z.HistorySendThisMonthDealPerformance = history1 + history2;
-                z.ThisMonthSendThisMonthDealPerformance = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.HasValue && c.ContentPlatFormOrder.SendDate.Value.Month == DateTime.Now.Month && c.ContentPlatFormOrder.SendDate.Value.Year == DateTime.Now.Year).Sum(x => x.Price);
-
+                z.HistorySendThisMonthDealPerformance = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.HasValue && c.ContentPlatFormOrder.SendDate < startDate).Sum(x => x.Price);
+                z.ThisMonthSendThisMonthDealPerformance = dealInfo.Where(c => c.ContentPlatFormOrder.SendDate.HasValue && c.ContentPlatFormOrder.SendDate >= startDate && c.ContentPlatFormOrder.SendDate < endDate).Sum(x => x.Price);
+                z.ThisMonthSendThisMonthVisitNumRatio = DecimalExtension.CalculateTargetComplete(thisMonthVisitInfo.Count(), distinctSendInfo.Count());
                 z.VisitNumRatio = DecimalExtension.CalculateTargetComplete(visitInfo.Count(), distinctSendInfo.Count());
                 z.VideoAndPictureCompare = DecimalExtension.CalculateAccounted(z.VideoPerformance, z.PicturePerformance);
                 z.IsAcompanyingCompare = DecimalExtension.CalculateAccounted(z.AcompanyingPerformance, z.NotAcompanyingPerformance);

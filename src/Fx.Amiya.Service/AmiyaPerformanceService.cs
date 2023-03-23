@@ -1527,15 +1527,21 @@ namespace Fx.Amiya.Service
             var notLiveAnchorAcompanyingPerformanceRatio = notLiveAnchorAcompanyingOrderChainRatio.Sum(o => o.Price);
             #endregion
 
-            #region 199业绩
+            #region 有效业绩
+            //199业绩
             var curHavingPricePerformance = order.Where(o => o.AddOrderPrice > 0).Sum(o => o.Price);
             var havingPriceYearOnYearr = orderYearOnYear.Where(x => x.AddOrderPrice > 0).ToList();
             var havingPricePerformanceYearOnYear = havingPriceYearOnYearr.Sum(o => o.Price);
             var havingPriceOrderChainRatio = orderChain.Where(x => x.AddOrderPrice > 0).ToList();
             var havingPricePerformanceRatio = havingPriceOrderChainRatio.Sum(o => o.Price);
+
+            //负数业绩
+            curHavingPricePerformance += order.Where(o => o.AddOrderPrice < 0).Sum(o => o.Price);
+            havingPricePerformanceYearOnYear += orderYearOnYear.Where(x => x.AddOrderPrice < 0).Sum(o => o.Price);
+            havingPricePerformanceRatio += orderChain.Where(x => x.AddOrderPrice < 0).Sum(o => o.Price);
             #endregion
 
-            #region 0元业绩
+            #region 潜在业绩
             var curNotHavePricePerformance = order.Where(o => o.AddOrderPrice == 0).Sum(o => o.Price);
             var notHavePriceYearOnYearr = orderYearOnYear.Where(x => x.AddOrderPrice == 0).ToList();
             var notHavePricePerformanceYearOnYear = notHavePriceYearOnYearr.Sum(o => o.Price);
@@ -1730,6 +1736,7 @@ namespace Fx.Amiya.Service
                 OldCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.OldCustomerPrice),
                 TotalPerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.TotalServicePrice),
                 VisitNumRatio = selectResult.VisitNumRatio,
+                ThisMonthSendThisMonthVisitNumRatio = selectResult.ThisMonthSendThisMonthVisitNumRatio,
 
                 VideoPerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.VideoPerformance),
                 PicturePerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.PicturePerformance),

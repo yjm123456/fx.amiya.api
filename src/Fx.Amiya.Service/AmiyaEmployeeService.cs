@@ -119,7 +119,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var businessInfo = await orderAppInfoService.GetBusinessWeChatAppInfo();
+                var businessInfo = await orderAppInfoService.GetBusinessWeChatAppInfo((byte)AppType.AmiyaBusinessWechat);
                 string redirecturi = "https://app.ameiyes.com/amiyabusinesswechat/#/";
                 redirecturi = HttpUtility.UrlEncode(redirecturi);
                 string url2 = $"https://open.weixin.qq.com/connect/oauth2/authorize?appid={businessInfo.ShopId}&redirect_uri={redirecturi}&response_type=code&scope=snsapi_privateinfo&state=test&agentid={businessInfo.AppSecret}#wechat_redirect";
@@ -151,7 +151,7 @@ namespace Fx.Amiya.Service
 
                 if (employee == null || employee.CodeExpireDate < DateTime.Now)
                 {
-                    var businessInfo = await orderAppInfoService.GetBusinessWeChatAppInfo();
+                    var businessInfo = await orderAppInfoService.GetBusinessWeChatAppInfo((byte)AppType.AmiyaBusinessWechat);
                     string url = $"https://qyapi.weixin.qq.com/cgi-bin/auth/getuserinfo?access_token={businessInfo.AccessToken}&code={code}";
                     var res = await HttpUtil.HTTPJsonGetAsync(url);
                     JObject requestObject = JsonConvert.DeserializeObject(res) as JObject;

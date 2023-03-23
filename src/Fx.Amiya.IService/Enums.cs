@@ -372,9 +372,13 @@ namespace Fx.Amiya.IService
         /// </summary>
         Douyin,
         /// <summary>
-        /// 其他
+        /// 啊美雅企业微信
         /// </summary>
-        Other
+        AmiyaBusinessWechat,
+        /// <summary>
+        /// 医院端企业微信
+        /// </summary>
+        HospitalBusinessWechat
     }
 
     #region 内容平台相关枚举
