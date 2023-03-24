@@ -324,8 +324,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
             var order = await _orderService.GetByOrderIdAsync(id);
-            var positionInfo = await amiyaPositionInfoService.GetByIdAsync(Convert.ToInt32(employee.PositionId));
-            if (employeeId != order.BelongEmpId && employee.IsCustomerService == true && !positionInfo.IsDirector)
+            //var positionInfo = await amiyaPositionInfoService.GetByIdAsync(Convert.ToInt32(employee.PositionId));
+            if (employeeId != order.BelongEmpId && employee.IsCustomerService == true )
             {
                 throw new Exception("该订单归属客服为'" + order.BelongEmpName + "'，您暂时无法操作！");
             }

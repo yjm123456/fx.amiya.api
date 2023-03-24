@@ -235,7 +235,7 @@
             内容平台订单模块
             </summary>
         </member>
-        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.#ctor(Fx.Amiya.IService.IContentPlateFormOrderService,Fx.Amiya.IService.IContentPlatFormCustomerPictureService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Fx.Amiya.IService.ICustomerService,Fx.Amiya.IService.IWxAppConfigService)">
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.#ctor(Fx.Amiya.IService.IContentPlateFormOrderService,Fx.Amiya.IService.IContentPlatFormCustomerPictureService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Fx.Amiya.IService.IAmiyaPositionInfoService,Fx.Amiya.IService.ICustomerService,Fx.Amiya.IService.IWxAppConfigService)">
             <summary>
             内容平台订单模块
             </summary>
@@ -243,6 +243,7 @@
             <param name="customerService"></param>
             <param name="contentPlatFormCustomerPictureService"></param>
             <param name="httpContextAccessor"></param>
+            <param name="amiyaPositionInfoService"></param>
             <param name="wxAppConfigService"></param>
         </member>
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.ContentPlateFormAddOrderAsync(Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo)">
