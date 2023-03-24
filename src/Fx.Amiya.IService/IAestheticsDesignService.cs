@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Dto.AestheticsDesign;
+using Fx.Amiya.Dto.AestheticsDesignReport;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,19 @@ namespace Fx.Amiya.IService
         /// <param name="reportId"></param>
         /// <returns></returns>
         Task<AestheticsDesignInfoDto> GetByReportIdAsync(string reportId);
-        
+        /// <summary>
+        /// 添加图片标签
+        /// </summary>
+        /// <param name="addDto"></param>
+        /// <returns></returns>
+        Task AddAestheticsDesignPictureTagAsync(AddFaceTagDto addDto);
+        /// <summary>
+        /// 修改美学设计
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <returns></returns>
+        Task UpdateAestheticsDesignAsync(UpdateAestheticsDesgnDto updateDto);
+
+
     }
 }

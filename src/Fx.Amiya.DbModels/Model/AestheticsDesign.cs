@@ -21,8 +21,20 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public string SimpleHospitalName { get; set; }
         /// <summary>
+        /// 医院id
+        /// </summary>
+        public int? HospitalId { get; set; }
+        /// <summary>
         /// 推荐医生
         /// </summary>
         public string RecommendDoctor { get; set; }
+        /// <summary>
+        /// 调整后的侧面图片
+        /// </summary>
+        public string SidePicture { get; set; }
+        /// <summary>
+        /// 调整后的正面图片
+        /// </summary>
+        public string FrontPicture { get; set; }
     }
 }

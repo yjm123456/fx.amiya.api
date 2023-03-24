@@ -198,6 +198,19 @@ namespace Fx.Amiya.Service
             }).ToList();
             return list;
         }
+        /// <summary>
+        /// 获取面部标签名称列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<BaseKeyValueDto>> GetFaceTagNameList()
+        {
+            var list = dalCustomerTagInfoService.GetAll().Where(e => e.TagCategory == (int)TagCategory.FaceTag && e.Valid == true).Select(e => new BaseKeyValueDto
+            {
+                Key = e.Id,
+                Value = e.TagName
+            }).ToList();
+            return list;
+        }
 
         public async Task<List<BaseKeyValueDto>> GetGoodsTagNameListAsync()
         {

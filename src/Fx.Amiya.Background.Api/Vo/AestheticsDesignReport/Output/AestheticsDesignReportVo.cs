@@ -10,6 +10,9 @@ namespace Fx.Amiya.Background.Api.Vo.AestheticsDesignReport.Output
     /// </summary>
     public class AestheticsDesignReportVo
     {
+        /// <summary>
+        /// 美学设计报告id
+        /// </summary>
         public string Id { get; set; }
         /// <summary>
         /// 创建时间
@@ -39,18 +42,18 @@ namespace Fx.Amiya.Background.Api.Vo.AestheticsDesignReport.Output
         /// 是否有医美经历
         /// </summary>
         public bool? HasAestheticMedicineHistory { get; set; }
-        /// <summary>
-        /// 微创调整的部位以及所用材料
-        /// </summary>
-        public string HistoryDescribe1 { get; set; }
-        /// <summary>
-        /// 整形调整的部位
-        /// </summary>
-        public string HistoryDescribe2 { get; set; }
-        /// <summary>
-        /// 皮肤做过的仪器或项目
-        /// </summary>
-        public string HistoryDescribe3 { get; set; }
+        ///// <summary>
+        ///// 微创调整的部位以及所用材料
+        ///// </summary>
+        //public string HistoryDescribe1 { get; set; }
+        ///// <summary>
+        ///// 整形调整的部位
+        ///// </summary>
+        //public string HistoryDescribe2 { get; set; }
+        ///// <summary>
+        ///// 皮肤做过的仪器或项目
+        ///// </summary>
+        //public string HistoryDescribe3 { get; set; }
         /// <summary>
         /// 是否接受手术
         /// </summary>
@@ -62,23 +65,23 @@ namespace Fx.Amiya.Background.Api.Vo.AestheticsDesignReport.Output
         /// <summary>
         /// 过敏或疾病描述
         /// </summary>
-        public string AllergyOrOtherDiseaseDescribe { get; set; }
+        //public string AllergyOrOtherDiseaseDescribe { get; set; }
         /// <summary>
         /// 变美需求
         /// </summary>
-        public string BeautyDemand { get; set; }
+        //public string BeautyDemand { get; set; }
         /// <summary>
         /// 预算
         /// </summary>
         public decimal Budget { get; set; }
         /// <summary>
-        /// 平面照片1
+        /// 正面照片
         /// </summary>
-        public string Picture1 { get; set; }
+        public string FrontPicture { get; set; }
         /// <summary>
-        /// 平面照片2
+        /// 侧面照片
         /// </summary>
-        public string Picture2 { get; set; }
+        public string SidePicture { get; set; }
         /// <summary>
         /// 美学设计报告状态
         /// </summary>

@@ -3,6 +3,7 @@ using Fx.Amiya.Domain;
 using Fx.Amiya.Domain.IRepository;
 using Fx.Amiya.Domain.UserDomain;
 using Fx.Amiya.Dto.ConsumptionVoucher;
+using Fx.Amiya.Dto.CustomerBaseInfo;
 using Fx.Amiya.Dto.UserInfo;
 using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
@@ -38,7 +39,6 @@ namespace Fx.Amiya.Service
         private IDalUserInfoUpdateRecord dalUserInfoUpdateRecord;
         private IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService;
         private ICustomerConsumptionVoucherService customerConsumptionVoucherService;
-
         public UserService(IDalUserInfo dalUserInfo,
             IWxMiniUserRepository wxMiniUserRepository,
             IUserRepository userRepository,
@@ -58,6 +58,7 @@ namespace Fx.Amiya.Service
             this.dalUserInfoUpdateRecord = dalUserInfoUpdateRecord;
             this.dockingHospitalCustomerInfoService = dockingHospitalCustomerInfoService;
             this.customerConsumptionVoucherService = customerConsumptionVoucherService;
+            
         }
         public async Task<WxMiniUserDto> AddUnauthorizedWxMiniUserAsync(UnauthorizedWxMiniUserAddDto miniUserAddDto)
         {
@@ -638,7 +639,9 @@ namespace Fx.Amiya.Service
             user.WxBindPhone = update.Phone;
             user.City = update.City;
             user.Area = update.Area;
-            user.DetailAddress = update.DetailAddress;
+            if (!string.IsNullOrEmpty(update.DetailAddress)) {
+                user.DetailAddress = update.DetailAddress;
+            }
             user.Province = update.Province;
             await dalUserInfo.UpdateAsync(user,true);
         }
@@ -657,6 +660,24 @@ namespace Fx.Amiya.Service
             else {
                 return false;
             }
+        }
+        /// <summary>
+        /// 添加更新美学设计报告时更新用户信息
+        /// </summary>
+        /// <param name="update"></param>
+        /// <returns></returns>
+        public async Task UpdateUserInfoByAestheticsDesignReportAsync(UpdateUserInfoByAestheticsDto update)
+        {
+            UpdateBirthDayCardDto updateBirthDayCardDto = new UpdateBirthDayCardDto();
+            updateBirthDayCardDto.Id = update.UserId;
+            updateBirthDayCardDto.BirthDay = update.BirthDay;
+            updateBirthDayCardDto.Name = update.Name;
+            updateBirthDayCardDto.Phone = update.Phone;
+            updateBirthDayCardDto.Province = update.Province;
+            updateBirthDayCardDto.City = update.City;
+            updateBirthDayCardDto.Area = update.Area;           
+            await this.UpdateBirthDayCardInfo(updateBirthDayCardDto);
+            
         }
 
         Dictionary<byte, string> sexDict = new Dictionary<byte, string>()

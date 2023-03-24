@@ -103,28 +103,28 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 请求类型
     /// </summary>
-    public enum RequestType { 
+    public enum RequestType {
         /// <summary>
         /// 添加数据
         /// </summary>
-        Add=0,
+        Add = 0,
         /// <summary>
         /// 删除数据
         /// </summary>
-        Delete=1,
+        Delete = 1,
         /// <summary>
         /// 更新数据
         /// </summary>
-        Update=2,
+        Update = 2,
         /// <summary>
         /// 查询数据
         /// </summary>
-        Select=3,
+        Select = 3,
         /// <summary>
         /// 导出数据
         /// </summary>
-        Export=4
-        
+        Export = 4
+
     }
 
     /// <summary>
@@ -134,11 +134,11 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 啊美雅预约系统
         /// </summary>
-        AmiyaBackground=0,
+        AmiyaBackground = 0,
         /// <summary>
         /// 啊美雅企业微信
         /// </summary>
-        AmiyaBusinessWechat=1
+        AmiyaBusinessWechat = 1
     }
 
     public enum SubmintType
@@ -156,35 +156,35 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 派单顺序
     /// </summary>
-    public enum SendOrder { 
+    public enum SendOrder {
         /// <summary>
         /// 首派
         /// </summary>
-        First=0,
+        First = 0,
         /// <summary>
         /// 次派
         /// </summary>
-        Second=1,
+        Second = 1,
         /// <summary>
         /// 查重单
         /// </summary>
-        SelectRepeatOrder=2,
+        SelectRepeatOrder = 2,
         /// <summary>
         /// 首派(微整)
         /// </summary>
-        FirstMinorAdjustment=3,
+        FirstMinorAdjustment = 3,
         /// <summary>
         /// 首派(整外)
         /// </summary>
-        FirstAdjustmentOut=4,
+        FirstAdjustmentOut = 4,
         /// <summary>
         /// 首派(新合作整外)
         /// </summary>
-        FirstNewAdjustmentOut=5,
+        FirstNewAdjustmentOut = 5,
         /// <summary>
         /// 次派(微整)
         /// </summary>
-        SecondMinorAdjustment=6,
+        SecondMinorAdjustment = 6,
 
     }
     /// <summary>
@@ -194,15 +194,15 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 已缴纳
         /// </summary>
-        Paid=0,
+        Paid = 0,
         /// <summary>
         /// 未缴纳
         /// </summary>
-        UnPaid=1,
+        UnPaid = 1,
         /// <summary>
         /// 未缴纳(走审批)
         /// </summary>
-        UnPaidAndApproval=2
+        UnPaidAndApproval = 2
     }
 
     public enum TagType
@@ -904,20 +904,39 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 面部标签
         /// </summary>
-        FaceTag=2
+        FaceTag = 2
     }
-
-    public enum AestheticsDesignReportStatus { 
+    /// <summary>
+    /// 美学设计报告状态
+    /// </summary>
+    public enum AestheticsDesignReportStatus {
         /// <summary>
         /// 已提交
         /// </summary>
-        Commit=0,
+        Commit = 0,
         /// <summary>
         /// 已设计
         /// </summary>
         Desgined
     }
-    
+    /// <summary>
+    /// 美学设计报告图片方向
+    /// </summary>
+    public enum PictureDirectionType{
+        /// <summary>
+        /// 正面图片
+        /// </summary>
+        Front=0,
+        /// <summary>
+        /// 侧面图片
+        /// </summary>
+        Side =1,
+        /// <summary>
+        /// 图片
+        /// </summary>
+        Picture=2,
+    }
+
 
     /// <summary>
     /// 财务对账单状态

@@ -369,3 +369,32 @@ ADD COLUMN `sort` INT NOT NULL DEFAULT 0 AFTER `province_id`;
 ----------------------------------------------余建明2023/3/20 END-----------------------------------------------------
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+---------------------------------------王健2023/3/21 BEGIN-----------------------------------------------
+
+----美学设计报告添加城市
+ALTER TABLE `tbl_aesthetics_design_report`
+	CHANGE COLUMN `city` `city` VARCHAR(150) NULL DEFAULT NULL  AFTER `history_describe3`;
+
+
+
+----美学设计标签添加图片方向
+ALTER TABLE `tbl_aesthetics_design_report_tags`
+	ADD COLUMN `direct_type` INT NOT NULL AFTER `tag_id`;
+
+
+---- 美学设计添加医院id
+ALTER TABLE `tbl_aesthetics_design`
+	ADD COLUMN `hospital_id` INT NOT NULL AFTER `delete_date`;
+
+----美学设计更改主键字段类型
+ALTER TABLE `tbl_aesthetics_design`
+	CHANGE COLUMN `id` `id` VARCHAR(50) NOT NULL;
+
+----- 美学设计添加调整后的图片
+ALTER TABLE `amiyadb`.`tbl_aesthetics_design` 
+ADD COLUMN `front_picture` VARCHAR(500) NULL AFTER `hospital_id`,
+ADD COLUMN `side_picture` VARCHAR(500) NULL AFTER `front_picture`;
+
+---------------------------------------王健2023/3/21 END-----------------------------------------------

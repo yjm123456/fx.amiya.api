@@ -10,7 +10,12 @@ namespace Fx.Amiya.Background.Api.Vo.AestheticsDesignReport.Input
     /// </summary>
     public class QueryAestheticsDesignReportVo:BaseQueryVo
     {
+        /// <summary>
+        /// 状态
+        /// </summary>
+        public int? Status { get; set; }
         public int PageNum { get; set; }
         public int PageSize { get; set; }
+        
     }
 }

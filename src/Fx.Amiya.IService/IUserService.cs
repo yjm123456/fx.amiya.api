@@ -108,6 +108,14 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task UpdateBirthDayCardInfo(UpdateBirthDayCardDto update);
         /// <summary>
+        /// 添加更新美学设计报告时更新用户信息
+        /// </summary>
+        /// <param name="update"></param>
+        /// <returns></returns>
+
+        Task UpdateUserInfoByAestheticsDesignReportAsync(UpdateUserInfoByAestheticsDto update);
+
+        /// <summary>
         /// 是否完成个人信息完善
         /// </summary>
         /// <param name="userId"></param>

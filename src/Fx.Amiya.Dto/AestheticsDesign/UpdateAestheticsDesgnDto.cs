@@ -6,39 +6,38 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Dto.AestheticsDesign
 {
-    public class AestheticsDesignInfoDto
+    public class UpdateAestheticsDesgnDto
     {
-        public string Id { get; set; }
         /// <summary>
-        /// 美学设计报告id
+        /// 美学设计id
         /// </summary>
-        public string AestheticsDesignReportId { get; set; }
+        public string Id { get; set; }
         /// <summary>
         /// 设计内容
         /// </summary>
         public string Design { get; set; }
         /// <summary>
-        /// 医院id
-        /// </summary>
-        public int HospitalId { get; set; }
-        /// <summary>
         /// 推荐医院简称
         /// </summary>
         public string SimpleHospitalName { get; set; }
+        /// <summary>
+        /// 医院id
+        /// </summary>
+        public int? HospitalId { get; set; }
         /// <summary>
         /// 推荐医生
         /// </summary>
         public string RecommendDoctor { get; set; }
         /// <summary>
-        /// 图片面部标签
+        /// 图片标签
         /// </summary>
-        public List<BaseKeyValueDto> PictureTags { get; set; }
+        public List<string> PictureTags { get; set; }
         /// <summary>
-        /// 调整后的侧面图片
+        /// 侧面图片标签
         /// </summary>
         public string SidePicture { get; set; }
         /// <summary>
-        /// 调整后的正面图片
+        /// 正面图片标签
         /// </summary>
         public string FrontPicture { get; set; }
     }

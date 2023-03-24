@@ -17,6 +17,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.HasKey(e => new { e.ReportId, e.TagId });
             builder.Property(e => e.ReportId).HasColumnName("report_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(e => e.TagId).HasColumnName("tag_id").HasColumnType("varchar(50)").IsRequired();
+            builder.Property(e => e.DirectType).HasColumnName("direct_type").HasColumnType("int").IsRequired();
         }
     }
 }

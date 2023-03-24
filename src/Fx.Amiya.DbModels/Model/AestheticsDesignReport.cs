@@ -62,10 +62,13 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public decimal Budget { get; set; }
         /// <summary>
-        /// 三张平面照片
+        /// 正面图片
         /// </summary>
-        public string Picture1 { get; set; }
-        public string Picture2 { get; set; }
+        public string FrontPicture { get; set; }
+        /// <summary>
+        /// 侧面图片
+        /// </summary>
+        public string SidePicture { get; set; }
         /// <summary>
         /// 状态(0:已提交,1:已设计)
         /// </summary>

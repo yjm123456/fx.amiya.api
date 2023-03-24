@@ -60,17 +60,12 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.AestheticsDesignReport.Input
         /// </summary>
         public decimal Budget { get; set; }
         /// <summary>
-        /// 平面照片
+        /// 正面图片
         /// </summary>
-        public string Picture1 { get; set; }
+        public string FrontPicture { get; set; }
         /// <summary>
-        /// 平面照片
+        /// 侧面图片
         /// </summary>
-
-        public string Picture2 { get; set; }
-        /// <summary>
-        /// 状态(0:已提交,1:已设计)
-        /// </summary>
-        public int Status { get; set; }
+        public string SidePicture { get; set; }
     }
 }

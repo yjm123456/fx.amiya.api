@@ -916,7 +916,8 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static string GetYearServiceFeeOrSecurityDepositText(int type) {
+        public static string GetYearServiceFeeOrSecurityDepositText(int type)
+        {
             string text = "";
             switch (type)
             {
@@ -928,14 +929,14 @@ namespace Fx.Amiya.Service
                     break;
                 case 2:
                     text = "未缴纳(走审批)";
-                    break;               
+                    break;
                 default:
                     text = "";
                     break;
             }
             return text;
         }
-            
+
         /// <summary>
         /// 获取退款订审核情况
         /// </summary>
@@ -1087,11 +1088,34 @@ namespace Fx.Amiya.Service
                     statusText = "已提交";
                     break;
                 case 1:
-                    statusText = "设计完成";
+                    statusText = "已设计";
                     break;
             }
             return statusText;
         }
+
+        /// <summary>
+        /// 获取美学设计图片方向
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string PictureDirectionTypeText(int type)
+        {
+            string typeText = "";
+            switch (type) {
+                case 0:
+                    typeText = "正面照片";
+                    break;
+                case 1:
+                    typeText = "侧面照片";
+                    break;
+                case 2:
+                    typeText = "图片";
+                    break;
+            }
+            return typeText;
+        }
+
         /// <summary>
         /// 获取抵用券类型
         /// </summary>

@@ -341,7 +341,30 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// 获取有效医院简称列表
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [HttpGet("simpleNameList")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetHospitalSimpleNameListAsync()
+        {
+            try
+            {
+                var hospital = from d in await hospitalInfoService.GetHospitalSimpleNameListAsync(true)
+                               select new BaseIdAndNameVo<int>
+                               {
+                                   Id = d.Id,
+                                   Name = d.Name
+                               };
 
+                return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("simpleNameList", hospital.ToList());
+            }
+            catch (Exception ex)
+            {
+                return ResultData<List<BaseIdAndNameVo<int>>>.Fail(ex.Message);
+            }
+        }
 
         /// <summary>
         /// 获取有效医院名称列表

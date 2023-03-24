@@ -1,15 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Dto.AestheticsDesignReport
+namespace Fx.Amiya.MiniProgram.Api.Vo.AestheticsDesignReport.Output
 {
-    public class AddAestheticsDesignReportDto
+    /// <summary>
+    /// 美学设计报告详细信息
+    /// </summary>
+    public class AestheticsDesignReportDetailInfoVo
     {
-        public string UserId { get; set; }
-        public string CustomerId { get; set; }
+        /// <summary>
+        /// 美学设计报告id
+        /// </summary>
+        public string Id { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime? CreateDate { get; set; }
         /// <summary>
         /// 姓名
         /// </summary>
@@ -63,12 +71,51 @@ namespace Fx.Amiya.Dto.AestheticsDesignReport
         /// </summary>
         public decimal Budget { get; set; }
         /// <summary>
-        /// 正面图片
+        /// 正面照片
         /// </summary>
         public string FrontPicture { get; set; }
         /// <summary>
-        /// 侧面图片
+        /// 侧面照片
         /// </summary>
         public string SidePicture { get; set; }
+        /// <summary>
+        /// 美学设计报告状态
+        /// </summary>
+        public int Status { get; set; }
+        /// <summary>
+        /// 状态文本
+        /// </summary>
+        public string StatusText { get; set; }
+        /// <summary>
+        /// 设计信息
+        /// </summary>
+        public DesignInfoVo Design { get; set; }
+    }
+    public class DesignInfoVo
+    {
+        /// <summary>
+        /// 设计内容
+        /// </summary>
+        public string Design { get; set; }
+        /// <summary>
+        /// 推荐医院简称
+        /// </summary>
+        public string SimpleHospitalName { get; set; }
+        /// <summary>
+        /// 推荐医生
+        /// </summary>
+        public string RecommendDoctor { get; set; }
+        /// <summary>
+        /// 图片标签
+        /// </summary>
+        public List<BaseIdAndNameVo> PictureTags { get; set; }
+        /// <summary>
+        /// 调整后的侧面图片
+        /// </summary>
+        public string SidePicture { get; set; }
+        /// <summary>
+        /// 调整后的正面图片
+        /// </summary>
+        public string FrontPicture { get; set; }
     }
 }

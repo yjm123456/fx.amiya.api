@@ -339,6 +339,29 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
+        /// <summary>
+        /// 获取医院简称列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<HospitalNameDto>> GetHospitalSimpleNameListAsync(bool? valid)
+        {
+            try
+            {
+                var hospital = from d in dalHospitalInfo.GetAll()
+                               where (valid == null || d.Valid == valid)
+                               select new HospitalNameDto
+                               {
+                                   Id = d.Id,
+                                   Name = d.SimpleName
+                               };
+
+                return await hospital.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public async Task HospitalInfoCheckAsync(HospitalInfoCheckInfoDto updateDto)
         {

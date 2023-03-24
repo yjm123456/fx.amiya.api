@@ -19,6 +19,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.CustomerId).HasColumnName("customer_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(e => e.Name).HasColumnName("name").HasColumnType("varchar(50)").IsRequired();
             builder.Property(e => e.BirthDay).HasColumnName("birth_day").HasColumnType("datetime").IsRequired();
+            builder.Property(e => e.City).HasColumnName("city").HasColumnType("varchar(150)").IsRequired(false);
             builder.Property(e => e.Phone).HasColumnName("phone").HasColumnType("varchar(50)").IsRequired();
             builder.Property(e => e.HasAestheticMedicineHistory).HasColumnName("has_aesthetic_history").HasColumnType("bit").IsRequired();
             builder.Property(e => e.HistoryDescribe1).HasColumnName("history_describe1").HasColumnType("varchar(3000)").IsRequired(false);
@@ -29,8 +30,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.AllergyOrOtherDiseaseDescribe).HasColumnName("allergy_describe").HasColumnType("varchar(3000)").IsRequired(false);
             builder.Property(e => e.BeautyDemand).HasColumnName("beauty_demand").HasColumnType("varchar(3000)").IsRequired();
             builder.Property(e => e.Budget).HasColumnName("budge").HasColumnType("decimal(10,2)").IsRequired();
-            builder.Property(e => e.Picture1).HasColumnName("pictrue1").HasColumnType("varchar(500)").IsRequired();
-            builder.Property(e => e.Picture2).HasColumnName("pictrue2").HasColumnType("varchar(500)").IsRequired();
+            builder.Property(e => e.FrontPicture).HasColumnName("pictrue1").HasColumnType("varchar(500)").IsRequired();
+            builder.Property(e => e.SidePicture).HasColumnName("pictrue2").HasColumnType("varchar(500)").IsRequired();
             builder.Property(e => e.Status).HasColumnName("status").HasColumnType("int").IsRequired();
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);

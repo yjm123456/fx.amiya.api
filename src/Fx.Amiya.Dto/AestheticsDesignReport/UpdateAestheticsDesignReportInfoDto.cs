@@ -9,7 +9,14 @@ namespace Fx.Amiya.Dto.AestheticsDesignReport
     public class UpdateAestheticsDesignReportInfoDto
     {
         public string Id { get; set; }
-
+        /// <summary>
+        /// 用户id
+        /// </summary>
+        public string UserId { get; set; }
+        /// <summary>
+        /// 客户id
+        /// </summary>
+        public string CustomerId { get; set; }
         /// <summary>
         /// 姓名
         /// </summary>
@@ -63,10 +70,12 @@ namespace Fx.Amiya.Dto.AestheticsDesignReport
         /// </summary>
         public decimal Budget { get; set; }
         /// <summary>
-        /// 三张平面照片
+        /// 正面照片
         /// </summary>
-        public string Picture1 { get; set; }
-        public string Picture2 { get; set; }
-        public string Picture3 { get; set; }
+        public string FrontPicture { get; set; }
+        /// <summary>
+        /// 侧面照片
+        /// </summary>
+        public string SidePicture { get; set; }
     }
 }

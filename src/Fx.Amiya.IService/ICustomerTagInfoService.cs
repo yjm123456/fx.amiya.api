@@ -28,6 +28,11 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<BaseKeyValueDto>> GetCustomerTagNameList();
         /// <summary>
+        /// 获取用户标签名称列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<BaseKeyValueDto>> GetFaceTagNameList();
+        /// <summary>
         /// 获取商品标签名称列表
         /// </summary>
         /// <returns></returns>

@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.AestheticsDesignReport;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.AestheticsDesignReport;
 using Fx.Common;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<AestheticsDesignReportInfoDto> GetById(string id);
+        Task<AestheticsDesignReportAndDesignInfoDto> GetByIdAsync(string id);
         /// <summary>
         /// 获取美学报告列表
         /// </summary>
@@ -30,7 +31,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<AestheticsDesignReportInfoDto>> GetListByPage(string customerId,int? designed,int pageNum,int pageSize);
+        Task<FxPageInfo<AestheticsDesignReportInfoDto>> GetListByPage(DateTime? startDate,DateTime? endDate,string keyword,string customerId,int? designed,int pageNum,int pageSize);
         /// <summary>
         /// 删除
         /// </summary>
@@ -44,11 +45,22 @@ namespace Fx.Amiya.IService
         /// <param name="updateDto"></param>
         /// <returns></returns>
         Task UpdateAsync(UpdateAestheticsDesignReportInfoDto updateDto);
+        /// <summary>
+        /// 美学设计报告状态列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<BaseKeyValueDto<int>>> GetStatusListAsync();
+        /// <summary>
+        /// 更改美学设计报告状态
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        Task UpdateStatusAsync(string id,int status);
 
 
 
 
-             
 
 
     }

@@ -210,6 +210,20 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<List<BaseIdAndNameVo>>.Success().AddData("customerTagNameList",list);
         }
         /// <summary>
+        /// 获取面部标签名称列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("faceTagNameList")]
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetFaceTagNameList()
+        {
+            var list = (await customerTagInfoService.GetFaceTagNameList()).Select(e => new BaseIdAndNameVo
+            {
+                Id = e.Key,
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("faceTagNameList", list);
+        }
+        /// <summary>
         /// 获取标签类别名称列表
         /// </summary>
         /// <returns></returns>

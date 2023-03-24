@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fx.Amiya.Dto.AestheticsDesign;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -64,13 +65,13 @@ namespace Fx.Amiya.Dto.AestheticsDesignReport
         /// </summary>
         public decimal Budget { get; set; }
         /// <summary>
-        /// 平面照片1
+        /// 正面照片
         /// </summary>
-        public string Picture1 { get; set; }
+        public string FrontPicture { get; set; }
         /// <summary>
-        /// 平面照片2
+        /// 侧面照片
         /// </summary>
-        public string Picture2 { get; set; }
+        public string SidePicture { get; set; }
         /// <summary>
         /// 美学设计报告状态
         /// </summary>
@@ -79,5 +80,6 @@ namespace Fx.Amiya.Dto.AestheticsDesignReport
         /// 状态文本
         /// </summary>
         public string StatusText { get; set; }
+        
     }
 }
