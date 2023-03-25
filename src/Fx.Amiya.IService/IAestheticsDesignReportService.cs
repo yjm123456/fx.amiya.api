@@ -31,7 +31,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<AestheticsDesignReportInfoDto>> GetListByPage(DateTime? startDate,DateTime? endDate,string keyword,string customerId,int? designed,int pageNum,int pageSize);
+        Task<FxPageInfo<AestheticsDesignReportInfoDto>> GetListByPage(DateTime? startDate,DateTime? endDate,string keyword,string customerId,int? designed,int? pageNum,int? pageSize);
         /// <summary>
         /// 删除
         /// </summary>

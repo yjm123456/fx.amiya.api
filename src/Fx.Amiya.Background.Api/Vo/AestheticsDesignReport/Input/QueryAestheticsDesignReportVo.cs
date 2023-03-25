@@ -14,8 +14,5 @@ namespace Fx.Amiya.Background.Api.Vo.AestheticsDesignReport.Input
         /// 状态
         /// </summary>
         public int? Status { get; set; }
-        public int PageNum { get; set; }
-        public int PageSize { get; set; }
-        
     }
 }

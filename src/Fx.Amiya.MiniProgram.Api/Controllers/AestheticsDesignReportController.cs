@@ -41,6 +41,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             string token = _tokenReader.GetToken();
             var sessionInfo = _sessionStorage.GetSession(token);
             string customerId = sessionInfo.FxCustomerId;
+            string userId = sessionInfo.FxUserId;
             AddAestheticsDesignReportDto addDto = new AddAestheticsDesignReportDto();
             addDto.CustomerId = customerId;
             addDto.Name = add.Name;
@@ -58,6 +59,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             addDto.Budget = add.Budget;
             addDto.FrontPicture = add.FrontPicture;
             addDto.SidePicture = add.SidePicture;
+            addDto.UserId = userId;
             await aestheticsDesignReportService.AddAestheticsDesignReportAsync(addDto);
             return ResultData.Success();
         }
@@ -116,10 +118,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 designVo.SimpleHospitalName = design.SimpleHospitalName;
                 designVo.Design = design.Design;
                 designVo.RecommendDoctor = design.RecommendDoctor;
-                designVo.PictureTags = design.PictureTags.Select(e => new BaseIdAndNameVo { 
-                    Id=e.Key,
-                    Name=e.Value
-                }).ToList();
+                designVo.PictureTags = design.PictureTags.Select(e => e.Key).ToList();
                 designVo.SidePicture = design.SidePicture;
                 designVo.FrontPicture = design.FrontPicture;
                 detailVo.Design = designVo;

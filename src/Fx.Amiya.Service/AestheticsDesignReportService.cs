@@ -2,6 +2,7 @@
 using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.AestheticsDesignReport;
 using Fx.Amiya.Dto.CustomerBaseInfo;
+using Fx.Amiya.Dto.MiniProgramSendMessage;
 using Fx.Amiya.Dto.UserInfo;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -24,8 +25,8 @@ namespace Fx.Amiya.Service
         private readonly IAestheticsDesignService aestheticsDesignService;
         private readonly ICustomerBaseInfoService customerBaseInfoService;
         private readonly IDalCustomerInfo dalCustomerInfo;
-
-        public AestheticsDesignReportService(IDalAestheticsDesignReport dalAestheticsDesignReport, IUserService userService, IUnitOfWork unitOfWork, IAestheticsDesignService aestheticsDesignService, ICustomerBaseInfoService customerBaseInfoService, IDalCustomerInfo dalCustomerInfo)
+        private readonly IMiniProgramTemplateMessageSendService miniProgramTemplateMessageSendService;
+        public AestheticsDesignReportService(IDalAestheticsDesignReport dalAestheticsDesignReport, IUserService userService, IUnitOfWork unitOfWork, IAestheticsDesignService aestheticsDesignService, ICustomerBaseInfoService customerBaseInfoService, IDalCustomerInfo dalCustomerInfo, IMiniProgramTemplateMessageSendService miniProgramTemplateMessageSendService)
         {
             this.dalAestheticsDesignReport = dalAestheticsDesignReport;
             this.userService = userService;
@@ -33,6 +34,7 @@ namespace Fx.Amiya.Service
             this.aestheticsDesignService = aestheticsDesignService;
             this.customerBaseInfoService = customerBaseInfoService;
             this.dalCustomerInfo = dalCustomerInfo;
+            this.miniProgramTemplateMessageSendService = miniProgramTemplateMessageSendService;
         }
         /// <summary>
         /// 添加美学设计报告
@@ -102,6 +104,7 @@ namespace Fx.Amiya.Service
                     updateCustomerBaseInfoDto.City = addDto.City;
                     await customerBaseInfoService.UpdateAsync(updateCustomerBaseInfoDto);
                 }
+                
                 unitOfWork.Commit();
             }
             catch (Exception ex)
@@ -172,7 +175,7 @@ namespace Fx.Amiya.Service
             return report;
         }
 
-        public async Task<FxPageInfo<AestheticsDesignReportInfoDto>> GetListByPage(DateTime? startDate, DateTime? endDate, string keyword, string customerId, int? designed, int pageNum, int pageSize)
+        public async Task<FxPageInfo<AestheticsDesignReportInfoDto>> GetListByPage(DateTime? startDate, DateTime? endDate, string keyword, string customerId, int? designed, int? pageNum, int? pageSize)
         {
             var reportList = dalAestheticsDesignReport.GetAll()
                 .Where(e => string.IsNullOrEmpty(customerId) || e.CustomerId == customerId)
@@ -206,7 +209,7 @@ namespace Fx.Amiya.Service
                 }).OrderByDescending(e=>e.CreateDate);
             FxPageInfo<AestheticsDesignReportInfoDto> fxPageInfo = new FxPageInfo<AestheticsDesignReportInfoDto>();
             fxPageInfo.TotalCount = reportList.Count();
-            fxPageInfo.List = reportList.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+            fxPageInfo.List = reportList.Skip((pageNum.Value - 1) * pageSize.Value).Take(pageSize.Value).ToList();
             return fxPageInfo;
         }
         /// <summary>

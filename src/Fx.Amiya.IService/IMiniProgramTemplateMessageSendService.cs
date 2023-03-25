@@ -30,5 +30,11 @@ namespace Fx.Amiya.IService
         /// <param name="sendGiftPresentMessage"></param>
         /// <returns></returns>
         Task SendGiftPresentMessageAsync(SendGiftPresentMessageDto sendGiftPresentMessage);
+        /// <summary>
+        /// 发送美学设计完成消息
+        /// </summary>
+        /// <param name="sendAestheticsDesignMessageDto"></param>
+        /// <returns></returns>
+        Task SendAestheticsDesignMessage(SendAestheticsDesignMessageDto sendAestheticsDesignMessageDto);
     }
 }

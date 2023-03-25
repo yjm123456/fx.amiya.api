@@ -108,7 +108,7 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.AestheticsDesignReport.Output
         /// <summary>
         /// 图片标签
         /// </summary>
-        public List<BaseIdAndNameVo> PictureTags { get; set; }
+        public List<string> PictureTags { get; set; }
         /// <summary>
         /// 调整后的侧面图片
         /// </summary>

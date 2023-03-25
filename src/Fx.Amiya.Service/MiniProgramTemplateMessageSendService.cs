@@ -25,6 +25,48 @@ namespace Fx.Amiya.Service
             this.dalWxMiniUserInfo = dalWxMiniUserInfo;
         }
         /// <summary>
+        /// 发送美学设计完成消息
+        /// </summary>
+        /// <param name="sendAestheticsDesignMessageDto"></param>
+        /// <returns></returns>
+        public async Task SendAestheticsDesignMessage(SendAestheticsDesignMessageDto sendAestheticsDesignMessageDto)
+        {
+            try
+            {
+                var customer = await customerService.GetByIdAsync(sendAestheticsDesignMessageDto.CustomerId);
+                if (customer == null) throw new Exception("用户编号错误");
+                var openId = dalWxMiniUserInfo.GetAll().Where(e => e.UserId == customer.UserId).Select(e => e.OpenId).FirstOrDefault();
+                if (string.IsNullOrEmpty(openId))
+                {
+                    return;
+                }
+                var appInfo = await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(4);
+                var requestUrl = $"https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token={appInfo.AccessToken}";
+                var messageBody = new
+                {
+                    template_id = MessageTemplateIds.ApointmentMessage,
+                    touser = openId,
+                    page = "/pages/index/index",// 点击提示信息要进入的小程序页面
+                    miniprogram_state = "trial",
+                    lang = "zh_CN",
+                    data = new
+                    {
+                        thing20 = new { value = sendAestheticsDesignMessageDto.Content },
+                        thing4 = new { value = sendAestheticsDesignMessageDto.Remark },
+                        time3 = new { value = sendAestheticsDesignMessageDto.DesignDate },
+                    }
+                };
+                string body = JsonConvert.SerializeObject(messageBody);
+                var result = HttpUtil.HTTPJsonPost(requestUrl, body);
+            }
+            catch (Exception ex)
+            {
+
+
+            }
+        }
+
+        /// <summary>
         /// 发送预约状态变更消息
         /// </summary>
         /// <param name="sendAppointmentMessageDto"></param>

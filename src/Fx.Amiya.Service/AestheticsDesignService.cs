@@ -3,6 +3,7 @@ using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.AestheticsDesign;
 using Fx.Amiya.Dto.AestheticsDesignReport;
+using Fx.Amiya.Dto.MiniProgramSendMessage;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Infrastructure.DataAccess;
@@ -23,7 +24,8 @@ namespace Fx.Amiya.Service
         private readonly IDalHospitalInfo dalHospitalInfo;
         private readonly IDalCustomerTagInfo dalCustomerTag;
         private readonly IDalAestheticsDesignReport dalAestheticsDesignReport;
-        public AestheticsDesignService(IDalAestheticsDesign dalAestheticsDesign, IDalFaceTagWithAestheticsDesignReport dalFaceTagWithAestheticsDesignReport, IUnitOfWork unitofwork, IDalHospitalInfo dalHospitalInfo, IDalCustomerTagInfo dalCustomerTag, IDalAestheticsDesignReport dalAestheticsDesignReport)
+        private readonly IMiniProgramTemplateMessageSendService miniProgramTemplateMessageSendService;
+        public AestheticsDesignService(IDalAestheticsDesign dalAestheticsDesign, IDalFaceTagWithAestheticsDesignReport dalFaceTagWithAestheticsDesignReport, IUnitOfWork unitofwork, IDalHospitalInfo dalHospitalInfo, IDalCustomerTagInfo dalCustomerTag, IDalAestheticsDesignReport dalAestheticsDesignReport, IMiniProgramTemplateMessageSendService miniProgramTemplateMessageSendService)
         {
             this.dalAestheticsDesign = dalAestheticsDesign;
             this.dalFaceTagWithAestheticsDesignReport = dalFaceTagWithAestheticsDesignReport;
@@ -31,6 +33,7 @@ namespace Fx.Amiya.Service
             this.dalHospitalInfo = dalHospitalInfo;
             this.dalCustomerTag = dalCustomerTag;
             this.dalAestheticsDesignReport = dalAestheticsDesignReport;
+            this.miniProgramTemplateMessageSendService = miniProgramTemplateMessageSendService;
         }
 
 
@@ -66,6 +69,13 @@ namespace Fx.Amiya.Service
                 if (report == null) throw new Exception("美学设计报告编号错误！");
                 report.Status = (int)AestheticsDesignReportStatus.Desgined;
                 await dalAestheticsDesignReport.UpdateAsync(report, true);
+                SendAestheticsDesignMessageDto sendMessage = new SendAestheticsDesignMessageDto();
+                sendMessage.ReportId = aestheticsDesign.AestheticsDesignReportId;
+                sendMessage.CustomerId = report.CustomerId;
+                sendMessage.Content = $"{sendMessage.ReportId}设计完成";
+                sendMessage.DesignDate = DateTime.Now.ToString("yyyy-MM-dd HH-mm");
+                sendMessage.Remark = "设计完成请点击查看";
+                await miniProgramTemplateMessageSendService.SendAestheticsDesignMessage(sendMessage);
                 unitofwork.Commit();
             }
             catch (Exception ex)
