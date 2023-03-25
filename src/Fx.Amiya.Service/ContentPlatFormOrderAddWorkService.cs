@@ -59,7 +59,7 @@ namespace Fx.Amiya.Service
                 });
             FxPageInfo<ContentPlatFormOrderAddWorkDto> fxPageInfo = new FxPageInfo<ContentPlatFormOrderAddWorkDto>();
             fxPageInfo.TotalCount = await record.CountAsync();
-            fxPageInfo.List = await record.Skip((query.PageNum - 1) * query.PageSize).Take(query.PageSize).ToListAsync();
+            fxPageInfo.List = await record.Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
             foreach (var x in fxPageInfo.List)
             {
                 if (x.BelongCustomerServiceId.HasValue)

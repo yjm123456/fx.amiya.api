@@ -24,8 +24,8 @@ namespace Fx.Amiya.Background.Api.Vo
         /// </summary>
         public string KeyWord { get; set; }
 
-        public int PageNum { get; set; }
-        public int PageSize { get; set; }
+        public int? PageNum { get; set; }
+        public int? PageSize { get; set; }
 
     }
 }

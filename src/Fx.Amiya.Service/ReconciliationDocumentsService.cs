@@ -606,13 +606,13 @@ namespace Fx.Amiya.Service
                         x.Phone = contentPlatFormOrderInfo.Phone;
                         break;
                     case (int)OrderFrom.BuyAgainOrder:
-                        var customerHospitalConsume = await customerHospitalConsumeService.GetByConsumeIdAsync(x.OrderId);
+                        var customerHospitalConsume = await customerHospitalConsumeService.GetByConsumeIdAsync(x.DealInfoId);
                         x.DealDate = customerHospitalConsume.WriteOffDate;
                         x.GoodsName = customerHospitalConsume.ItemName;
                         x.Phone = customerHospitalConsume.Phone;
                         break;
                     case (int)OrderFrom.ThirdPartyOrder:
-                        var tmallOrder = await orderService.GetByIdAsync(x.OrderId);
+                        var tmallOrder = await orderService.GetByIdInCRMAsync(x.OrderId);
                         x.DealDate = tmallOrder.WriteOffDate;
                         x.GoodsName = tmallOrder.GoodsName;
                         x.Phone = tmallOrder.Phone;
@@ -682,13 +682,13 @@ namespace Fx.Amiya.Service
                         x.Phone = contentPlatFormOrderInfo.Phone;
                         break;
                     case (int)OrderFrom.BuyAgainOrder:
-                        var customerHospitalConsume = await customerHospitalConsumeService.GetByConsumeIdAsync(x.OrderId);
+                        var customerHospitalConsume = await customerHospitalConsumeService.GetByConsumeIdAsync(x.DealInfoId);
                         x.DealDate = customerHospitalConsume.WriteOffDate;
                         x.GoodsName = customerHospitalConsume.ItemName;
                         x.Phone = customerHospitalConsume.Phone;
                         break;
                     case (int)OrderFrom.ThirdPartyOrder:
-                        var tmallOrder = await orderService.GetByIdAsync(x.OrderId);
+                        var tmallOrder = await orderService.GetByIdInCRMAsync(x.OrderId);
                         x.DealDate = tmallOrder.WriteOffDate;
                         x.GoodsName = tmallOrder.GoodsName;
                         x.Phone = tmallOrder.Phone;
