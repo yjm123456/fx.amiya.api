@@ -12,10 +12,22 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         public string RecommandDocumentId { get; set; }
         public string HospitalName { get; set; }
         public string OrderId { get; set; }
+        /// <summary>
+        /// 订单项目
+        /// </summary>
+        public string GoodsName { get; set; }
+        /// <summary>
+        /// 手机号
+        /// </summary>
+        public string Phone { get; set; }
         public string DealInfoId { get; set; }
-
+        /// <summary>
+        /// 成交时间
+        /// </summary>
+        public DateTime? DealDate { get; set; }
         public int OrderFrom { get; set; }
         public string OrderFromText { get; set; }
+
         public decimal OrderPrice { get; set; }
         /// <summary>
         /// 对账金额
@@ -24,6 +36,9 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         public bool IsOldCustomer { get; set; }
 
         public string IsOldCustomerText { get; set; }
+        public decimal InformationPrice { get; set; }
+        public decimal SystemUpdatePrice { get; set; }
+
         public decimal ReturnBackPrice { get; set; }
         public DateTime CreateDate { get; set; }
         public bool IsSettle { get; set; }

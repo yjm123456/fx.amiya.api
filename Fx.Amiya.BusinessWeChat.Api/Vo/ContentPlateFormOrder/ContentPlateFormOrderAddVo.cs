@@ -150,5 +150,14 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// 顾客照片（最多上传5张）
         /// </summary>
         public List<string> CustomerPictures { get; set; }
+        /// <summary>
+        /// 是否为辅助订单(企业微信目前写死为false)
+        /// </summary>
+        public bool IsSupportOrder { get; set; }
+
+        /// <summary>
+        /// 辅助客服（企业微信目前写死为0）
+        /// </summary>
+        public int SupportEmpId { get; set; }
     }
 }

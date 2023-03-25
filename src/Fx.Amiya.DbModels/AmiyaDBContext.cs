@@ -98,6 +98,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<ShoppingCartRegistration> ShoppingCartRegistration { get; set; }
         public virtual DbSet<AmiyaPositionPermission> AmiyaPositionPermission { get; set; }
         public virtual DbSet<ContentPlatformOrderDealInfo> ContentPlatformOrderDealInfo { get; set; }
+        public virtual DbSet<ContentPlatFormOrderAddWork> ContentPlatFormOrderAddWork { get; set; }
         public virtual DbSet<HospitalSurplusAppointment> HospitalSurplusAppointment { get; set; }
         public virtual DbSet<SendOrderUpdateRecord> SendOrderUpdateRecord { get; set; }
         public virtual DbSet<ActivityInfo> ActivityInfo { get; set; }
@@ -307,6 +308,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new OrderRemarkConfiguration());
             modelBuilder.ApplyConfiguration(new OrderWriteOffInfoConfiguration());
             modelBuilder.ApplyConfiguration(new ContentPlatformOrderConfiguration());
+            modelBuilder.ApplyConfiguration(new ContentPlatFormOrderAddWorkConfiguration());
             modelBuilder.ApplyConfiguration(new ContentPlatformOrderSendConfiguration());
             modelBuilder.ApplyConfiguration(new BillConfiguration());
             modelBuilder.ApplyConfiguration(new BillReturnBackPriceDataConfiguration());

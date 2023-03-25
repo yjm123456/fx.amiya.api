@@ -448,7 +448,7 @@ namespace Fx.Amiya.Service
             return orderInfo;
         }
 
-        public async Task<FxPageInfo<TikTokOrderDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, string keyword, int belongLiveAnchorId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<TikTokOrderDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, long? orderType, string keyword, int belongLiveAnchorId, string statusCode, int pageNum, int pageSize)
         {
             try
             {
@@ -456,6 +456,8 @@ namespace Fx.Amiya.Service
                              where (string.IsNullOrWhiteSpace(keyword) || d.Id.Contains(keyword) || d.GoodsName.Contains(keyword)
                              || d.Phone == keyword || d.AppointmentHospital.Contains(keyword))
                              && (belongLiveAnchorId == 0 || d.BelongLiveAnchorId == belongLiveAnchorId)
+                              && (!orderType.HasValue|| d.OrderType == orderType)
+                               && (string.IsNullOrWhiteSpace(statusCode) || d.StatusCode == statusCode)
                              select d;
 
                 if (startDate != null && endDate != null)

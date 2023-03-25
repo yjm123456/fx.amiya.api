@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Fx.Amiya.Dto.ContentPlatFormOrderAddWork.Input
+{
+    public class QueryContentPlatFormOrderAddWorkPageDto : BaseQueryDto
+    {
+        public int? HospitalId { get; set; }
+        public int? CheckState { get; set; }
+    }
+}

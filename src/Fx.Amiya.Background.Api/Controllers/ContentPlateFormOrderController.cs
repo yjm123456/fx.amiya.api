@@ -37,6 +37,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private ICustomerService customerService;
         private IAmiyaEmployeeService amiyaEmployeeService;
         private IWxAppConfigService _wxAppConfigService;
+        private IBindCustomerServiceService bindCustomerServiceService;
         private IContentPlatformOrderSendService _contentPlatformOrderSend;
         private IAmiyaHospitalDepartmentService _departmentService;
         private IOrderService _tmallOrderService;
@@ -47,6 +48,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         public ContentPlateFormOrderController(IContentPlateFormOrderService orderService,
             IOrderService tmallOrderService,
             IAmiyaEmployeeService amiyaEmployeeService,
+            IBindCustomerServiceService bindCustomerServiceService,
             IAmiyaPositionInfoService amiyaPositionInfoService,
             IHospitalInfoService hospitalInfoService,
             IAmiyaHospitalDepartmentService departmentService,
@@ -59,6 +61,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             _orderService = orderService;
             _tmallOrderService = tmallOrderService;
             this.customerService = customerService;
+            this.bindCustomerServiceService = bindCustomerServiceService;
             this.amiyaPositionInfoService = amiyaPositionInfoService;
             this.amiyaEmployeeService = amiyaEmployeeService;
             _departmentService = departmentService;
@@ -121,6 +124,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.LateProjectStage = addVo.LateProjectStage;
             addDto.CustomerPictures = new List<string>();
             addDto.CustomerPictures = addVo.CustomerPictures;
+            addDto.IsSupportOrder = addVo.IsSupportOrder;
+            addDto.SupportEmpId = addVo.SupportEmpId;
             await _orderService.AddContentPlateFormOrderAsync(addDto);
 
 
@@ -184,6 +189,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                     resultVo.AddOrderPrice = x.AddOrderPrice;
                     resultVo.CreateDate = x.CreateDate;
                     resultVo.CustomerName = x.CustomerName;
+                    resultVo.IsSupportOrder = x.IsSupportOrder;
+                    resultVo.SupportEmpName = x.SupportEmpName;
                     resultVo.Phone = x.Phone;
                     var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(x.EncryptPhone);
                     resultVo.City = customerBaseInfo.City;
@@ -646,7 +653,15 @@ namespace Fx.Amiya.Background.Api.Controllers
             //if (employeeId != order.BelongEmpId && employee.IsCustomerService == true && !positionInfo.IsDirector)
             if (employeeId != order.BelongEmpId && employee.IsCustomerService == true)
             {
-                throw new Exception("该订单归属客服为" + order.BelongEmpName + "，您暂时无法操作！");
+                //加上辅助客服是否与当前登陆角色相等;
+                if (employeeId != order.SupportEmpId && employee.IsCustomerService == true)
+                {
+                    var bindCustomerInfo = await bindCustomerServiceService.GetEmployeeIdByPhone(order.Phone);
+                    if (bindCustomerInfo != 0 && bindCustomerInfo != employeeId)
+                    {
+                        throw new Exception("该订单已归属到其他客服名下，您暂时无法操作！");
+                    }
+                }
             }
             ContentPlateFormOrderVo orderUpdateInfo = new ContentPlateFormOrderVo();
             orderUpdateInfo.Id = order.Id;
@@ -735,6 +750,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.IsRepeatProfundityOrder = order.IsRepeatProfundityOrder;
             orderUpdateInfo.IsCreateBill = order.IsCreateBill;
             orderUpdateInfo.CreateBillCompany = order.CreateBillCompany;
+            orderUpdateInfo.IsSupportOrder = order.IsSupportOrder;
+            orderUpdateInfo.SupportEmpName = order.SupportEmpName;
+            orderUpdateInfo.SupportEmpId = order.SupportEmpId;
             return ResultData<ContentPlateFormOrderVo>.Success().AddData("orderInfo", orderUpdateInfo);
         }
 

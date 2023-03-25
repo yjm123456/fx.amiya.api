@@ -47,6 +47,18 @@ namespace Fx.Amiya.Background.Api.Controllers
             return result;
         }
 
+        /// <summary>
+        /// 根据手机号筛选归属客服
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns>查找成功返回名称，查找失败返回“未绑定”</returns>
+        [HttpGet("getCustomerServiceNameByPhone")]
+
+        public async Task<ResultData<string>> GetBindCustomerNameByPhoneAsync(string phone)
+        {
+            var result = await bindCustomerServiceService.GetBindCustomerServiceNameByPhone(phone);
+            return ResultData<string>.Success().AddData("CustomerServiceNameByPhone", result);
+        }
 
         /// <summary>
         ///绑定客服

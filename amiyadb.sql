@@ -273,3 +273,43 @@ CREATE TABLE `tbl_aesthetics_design_report_tags` (
 
 
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+-----------------------------------------------余建明 2023/03/24 BEGIN--------------------------------------------
+
+--新增录单申请列表
+CREATE TABLE `amiyadb`.`tbl_content_pat_form_order_add_work` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_by` INT UNSIGNED NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `accept_by` INT UNSIGNED NOT NULL,
+  `phone` VARCHAR(11) NOT NULL,
+  `hospital_id` INT UNSIGNED NOT NULL,
+  `send_remark` VARCHAR(300) NULL,
+  `belong_customer_service_id` INT NULL,
+  `check_state` INT NOT NULL,
+  `check_remark` VARCHAR(300) NULL,
+  `check_date` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fkcontent_pat_form_order_add_work_createempInfo_idx` (`create_by` ASC) VISIBLE,
+  INDEX `content_pat_form_order_add_work_acceptbyempinfo_idx` (`accept_by` ASC) VISIBLE,
+  INDEX `content_pat_form_order_add_work_hospitalnfo_idx` (`hospital_id` ASC) VISIBLE,
+  CONSTRAINT `fkcontent_pat_form_order_add_work_createempInfo`
+    FOREIGN KEY (`create_by`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `content_pat_form_order_add_work_acceptbyempinfo`
+    FOREIGN KEY (`accept_by`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `content_pat_form_order_add_work_hospitalnfo`
+    FOREIGN KEY (`hospital_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+	
+-----------------------------------------------余建明 2023/03/24 END--------------------------------------------

@@ -130,6 +130,15 @@ namespace Fx.Amiya.DbModels.Model
         /// 开票公司id
         /// </summary>
         public string BelongCompany { get; set; }
+        /// <summary>
+        /// 是否为辅助订单
+        /// </summary>
+        public bool IsSupportOrder { get; set; }
+
+        /// <summary>
+        /// 辅助客服
+        /// </summary>
+        public int SupportEmpId { get; set; }
 
         public Contentplatform Contentplatform { get; set; }
         public LiveAnchor LiveAnchor { get; set; }

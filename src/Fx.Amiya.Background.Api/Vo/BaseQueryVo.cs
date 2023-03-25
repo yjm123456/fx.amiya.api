@@ -23,5 +23,9 @@ namespace Fx.Amiya.Background.Api.Vo
         /// 关键词
         /// </summary>
         public string KeyWord { get; set; }
+
+        public int PageNum { get; set; }
+        public int PageSize { get; set; }
+
     }
 }

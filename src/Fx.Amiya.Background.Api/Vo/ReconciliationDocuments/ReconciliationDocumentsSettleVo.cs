@@ -29,10 +29,25 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         [Description("订单号")]
         public string OrderId { get; set; }
         /// <summary>
+        /// 订单项目
+        /// </summary>
+        [Description("订单项目")]
+        public string GoodsName { get; set; }
+        /// <summary>
+        /// 手机号
+        /// </summary>
+        [Description("手机号")]
+        public string Phone { get; set; }
+        /// <summary>
         /// 成交编号
         /// </summary>
         [Description("成交编号")]
         public string DealInfoId { get; set; }
+        /// <summary>
+        /// 成交时间
+        /// </summary>
+        [Description("成交时间")]
+        public DateTime? DealDate { get; set; }
         /// <summary>
         /// 订单来源
         /// </summary>
@@ -55,6 +70,16 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         /// </summary>
         [Description(" 新/老客业绩")]
         public string IsOldCustomerText { get; set; }
+        /// <summary>
+        /// 信息服务费
+        /// </summary>
+        [Description("信息服务费")]
+        public decimal InformationPrice { get; set; }
+        /// <summary>
+        /// 系统使用费
+        /// </summary>
+        [Description("系统使用费")]
+        public decimal SystemUpdatePrice { get; set; }
         /// <summary>
         /// 审核服务费金额
         /// </summary>

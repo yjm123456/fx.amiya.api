@@ -214,6 +214,25 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
+        /// 根据手机号获取绑定客服
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        public async Task<string> GetBindCustomerServiceNameByPhone(string phone)
+        {
+            var bindCustomerServiceInfo = await dalBindCustomerService.GetAll().Include(x => x.CustomerServiceAmiyaEmployee).OrderByDescending(x => x.CreateDate).Where(e => e.BuyerPhone.Contains(phone)).SingleOrDefaultAsync();
+            if (bindCustomerServiceInfo != null)
+            {
+                return bindCustomerServiceInfo.CustomerServiceAmiyaEmployee.Name;
+            }
+            else
+            {
+                return "未绑定";
+            }
+
+        }
+
+        /// <summary>
         /// 小程序绑定客户时修改绑定客服的userId
         /// </summary>
         /// <param name="customerId"></param>

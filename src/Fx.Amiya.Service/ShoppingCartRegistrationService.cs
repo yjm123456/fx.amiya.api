@@ -76,7 +76,7 @@ namespace Fx.Amiya.Service
                                                    LiveAnchorId = d.LiveAnchorId,
                                                    LiveAnchorWechatNo = d.LiveAnchorWechatNo,
                                                    CustomerNickName = d.CustomerNickName,
-                                                   Phone = d.Phone,
+                                                   Phone = ServiceClass.GetIncompletePhone(d.Phone),
                                                    Price = d.Price,
                                                    ConsultationType = d.ConsultationType,
                                                    IsWriteOff = d.IsWriteOff,
@@ -479,7 +479,7 @@ namespace Fx.Amiya.Service
         /// <param name="isVideo"></param>
         /// <param name="liveAnchorId"></param>
         /// <returns></returns>
-        public async Task<List<ShoppingCartRegistrationDto>> GetDialyConsulationCardInfoByLiveAnchorId(int liveAnchorId,DateTime recordDate)
+        public async Task<List<ShoppingCartRegistrationDto>> GetDialyConsulationCardInfoByLiveAnchorId(int liveAnchorId, DateTime recordDate)
         {
             //筛选结束的月份
             DateTime endDate = recordDate.AddDays(1);
@@ -505,7 +505,7 @@ namespace Fx.Amiya.Service
         /// <param name="isVideo"></param>
         /// <param name="liveAnchorId"></param>
         /// <returns></returns>
-        public async Task<List<ShoppingCartRegistrationDto>> GetDialyAddWeChatInfoByLiveAnchorId(int liveAnchorId,DateTime recordDate)
+        public async Task<List<ShoppingCartRegistrationDto>> GetDialyAddWeChatInfoByLiveAnchorId(int liveAnchorId, DateTime recordDate)
         {
             //筛选结束的月份
             DateTime endDate = recordDate.Date.AddDays(1);
@@ -525,7 +525,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="liveAnchorId"></param>
         /// <returns></returns>
-        public async Task<List<ShoppingCartRegistrationDto>> GetDialyYellowCardRefundInfoByLiveAnchorId(int liveAnchorId,DateTime recordDate)
+        public async Task<List<ShoppingCartRegistrationDto>> GetDialyYellowCardRefundInfoByLiveAnchorId(int liveAnchorId, DateTime recordDate)
         {
             //筛选结束的月份
             DateTime endDate = recordDate.Date.AddDays(1);
@@ -545,7 +545,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="liveAnchorId"></param>
         /// <returns></returns>
-        public async Task<List<ShoppingCartRegistrationDto>> GetDialyYellowCardBadReviewInfoByLiveAnchorId(int liveAnchorId ,DateTime recordDate)
+        public async Task<List<ShoppingCartRegistrationDto>> GetDialyYellowCardBadReviewInfoByLiveAnchorId(int liveAnchorId, DateTime recordDate)
         {
             //筛选结束的月份
             DateTime endDate = DateTime.Now.Date.AddDays(1);

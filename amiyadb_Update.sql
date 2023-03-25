@@ -398,3 +398,10 @@ ADD COLUMN `front_picture` VARCHAR(500) NULL AFTER `hospital_id`,
 ADD COLUMN `side_picture` VARCHAR(500) NULL AFTER `front_picture`;
 
 ---------------------------------------王健2023/3/21 END-----------------------------------------------
+
+----------------------------------------------余建明2023/3/24 BEGIN-----------------------------------------------------
+--内容平台订单新增是否为辅助订单功能
+ALTER TABLE `amiyadb`.`tbl_content_platform_order` 
+ADD COLUMN `is_support_order` BIT(1) NOT NULL DEFAULT 0 AFTER `commission_ratio`,
+ADD COLUMN `support_emp_id` INT NOT NULL DEFAULT 0 AFTER `is_support_order`;
+----------------------------------------------余建明2023/3/24 END-----------------------------------------------------

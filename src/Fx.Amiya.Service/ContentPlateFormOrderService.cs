@@ -198,6 +198,8 @@ namespace Fx.Amiya.Service
                 order.OrderSource = input.OrderSource;
                 order.UnSendReason = input.UnSendReason;
                 order.ConsultationEmpId = input.ConsultationEmpId;
+                order.IsSupportOrder = input.IsSupportOrder;
+                order.SupportEmpId = input.SupportEmpId;
                 order.AcceptConsulting = input.AcceptConsulting;
                 order.HospitalDepartmentId = input.HospitalDepartmentId;
                 order.Phone = input.Phone;
@@ -345,6 +347,8 @@ namespace Fx.Amiya.Service
                                 AppointmentHospitalId = d.AppointmentHospitalId,
                                 AppointmentHospitalName = d.HospitalInfo.Name,
                                 GoodsId = d.GoodsId,
+                                IsSupportOrder=d.IsSupportOrder,
+                                SupportEmpId=d.SupportEmpId,
                                 ConsultationType = d.ConsultationType,
                                 GoodsName = d.AmiyaGoodsDemand.ProjectNname,
                                 GoodsDepartmentId = d.HospitalDepartmentId,
@@ -390,6 +394,11 @@ namespace Fx.Amiya.Service
                     {
                         var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.BelongEmpId);
                         x.BelongEmpName = empInfo.Name.ToString();
+                    }
+                    if (x.SupportEmpId != 0)
+                    {
+                        var empInfo = await _dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == x.SupportEmpId);
+                        x.SupportEmpName = empInfo.Name.ToString();
                     }
                     if (!string.IsNullOrEmpty(x.GoodsDepartmentId))
                     {
@@ -1287,6 +1296,13 @@ namespace Fx.Amiya.Service
             result.ConsultationType = order.ConsultationType;
             result.CommissionRatio = order.CommissionRatio;
             result.BelongMonth = order.BelongMonth;
+            result.IsSupportOrder = order.IsSupportOrder;
+            result.SupportEmpId = order.SupportEmpId;
+            if (result.SupportEmpId != 0)
+            {
+                var empInfo = await _amiyaEmployeeService.GetByIdAsync(result.SupportEmpId);
+                result.SupportEmpName = empInfo.Name;
+            }
             result.AddOrderPrice = order.AddOrderPrice;
             result.UnSendReason = order.UnSendReason;
             result.OrderTypeText = ServiceClass.GetContentPlateFormOrderTypeText((byte)order.OrderType);

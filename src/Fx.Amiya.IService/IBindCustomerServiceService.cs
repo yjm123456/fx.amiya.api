@@ -32,13 +32,25 @@ namespace Fx.Amiya.IService
         Task<MyCustomerInfoDto> GetCustomerCountByEmployeeIdAsync(int employeeId);
 
         /// <summary>
-        /// 根据手机号获取归属客服
+        /// 根据手机号获取归属客服id
         /// </summary>
         /// <param name="phone"></param>
         /// <returns></returns>
         Task<int> GetEmployeeIdByPhone(string phone);
 
+        /// <summary>
+        /// 根据手机号获取客户手机号是否有多个
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns></returns>
         Task<List<string>> GetEmployeePhoneByPhone(string phone);
+
+        /// <summary>
+        /// 根据手机号获取归属客服名称
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        Task<string> GetBindCustomerServiceNameByPhone(string phone);
         Task UpdateAsync(UpdateBindCustomerServiceDto updateDto, int employeeId);
 
         /// <summary>

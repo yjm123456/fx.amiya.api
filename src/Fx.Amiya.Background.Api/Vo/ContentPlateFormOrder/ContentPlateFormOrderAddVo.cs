@@ -150,6 +150,15 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 顾客照片（最多上传5张）
         /// </summary>
         public List<string> CustomerPictures { get; set; }
+        /// <summary>
+        /// 是否为辅助订单
+        /// </summary>
+        public bool IsSupportOrder { get; set; }
+
+        /// <summary>
+        /// 辅助客服
+        /// </summary>
+        public int SupportEmpId { get; set; }
 
     }
 }

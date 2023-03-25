@@ -266,6 +266,16 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         [Description("是否是重单深度订单")]
         public bool IsRepeatProfundityOrder { get; set; }
 
+        /// <summary>
+        /// 是否为辅助订单
+        /// </summary>
+        [Description("是否为辅助订单")]
+        public bool IsSupportOrder { get; set; }
+        /// <summary>
+        /// 辅助客服名称
+        /// </summary>
+        [Description("辅助客服名称")]
+        public string SupportEmpName { get; set; }
 
     }
 }

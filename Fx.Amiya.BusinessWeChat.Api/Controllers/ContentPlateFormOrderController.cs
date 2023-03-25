@@ -28,6 +28,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
     {
         private IContentPlateFormOrderService _orderService;
         private ICustomerService customerService;
+        private IBindCustomerServiceService bindCustomerServiceService;
         private IWxAppConfigService _wxAppConfigService;
         private IContentPlatFormCustomerPictureService _contentPlatFormCustomerPictureService;
         private IHttpContextAccessor _httpContextAccessor;
@@ -44,12 +45,14 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         public ContentPlateFormOrderController(IContentPlateFormOrderService orderService,
             IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
             IHttpContextAccessor httpContextAccessor,
+            IBindCustomerServiceService bindCustomerServiceService,
             IAmiyaPositionInfoService amiyaPositionInfoService,
             ICustomerService customerService,
              IWxAppConfigService wxAppConfigService)
         {
             _orderService = orderService;
             this.customerService = customerService;
+            this.bindCustomerServiceService = bindCustomerServiceService;
             this.amiyaPositionInfoService = amiyaPositionInfoService;
             _wxAppConfigService = wxAppConfigService;
             _httpContextAccessor = httpContextAccessor;
@@ -109,6 +112,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             addDto.LateProjectStage = addVo.LateProjectStage;
             addDto.CustomerPictures = new List<string>();
             addDto.CustomerPictures = addVo.CustomerPictures;
+            addDto.IsSupportOrder = addVo.IsSupportOrder;
+            addDto.SupportEmpId = addVo.SupportEmpId;
             await _orderService.AddContentPlateFormOrderAsync(addDto);
 
 
@@ -312,8 +317,9 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             return ResultData<FxPageInfo<UnContentPlateFormSendOrderInfoVo>>.Success().AddData("unSendOrder", pageInfo);
         }
 
+
         /// <summary>
-        /// 根据订单编号获取订单信息
+        /// 根据订单编号获取订单要修改的信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -325,9 +331,18 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             int employeeId = Convert.ToInt32(employee.Id);
             var order = await _orderService.GetByOrderIdAsync(id);
             //var positionInfo = await amiyaPositionInfoService.GetByIdAsync(Convert.ToInt32(employee.PositionId));
-            if (employeeId != order.BelongEmpId && employee.IsCustomerService == true )
+            //if (employeeId != order.BelongEmpId && employee.IsCustomerService == true && !positionInfo.IsDirector)
+            if (employeeId != order.BelongEmpId && employee.IsCustomerService == true)
             {
-                throw new Exception("该订单归属客服为'" + order.BelongEmpName + "'，您暂时无法操作！");
+                //加上辅助客服是否与当前登陆角色相等;
+                if (employeeId != order.SupportEmpId && employee.IsCustomerService == true)
+                {
+                    var bindCustomerInfo = await bindCustomerServiceService.GetEmployeeIdByPhone(order.Phone);
+                    if (bindCustomerInfo != 0 && bindCustomerInfo != employeeId)
+                    {
+                        throw new Exception("该订单已归属到其他客服名下，您暂时无法操作！");
+                    }
+                }
             }
             ContentPlateFormOrderVo orderUpdateInfo = new ContentPlateFormOrderVo();
             orderUpdateInfo.Id = order.Id;
@@ -342,7 +357,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.GoodsId = order.GoodsId;
             orderUpdateInfo.CustomerName = order.CustomerName;
             orderUpdateInfo.Phone = order.Phone;
-            orderUpdateInfo.EncryptPhone = ServiceClass.GetIncompletePhone(order.Phone);
+            orderUpdateInfo.EncryptPhone = order.EncryptPhone;
             var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
             string encryptPhone = ServiceClass.Encrypt(order.Phone, config.PhoneEncryptKey);
             var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(encryptPhone);
@@ -351,10 +366,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.Birthday = customerBaseInfo.Birthday;
             orderUpdateInfo.Age = customerBaseInfo.Age;
             orderUpdateInfo.Occupation = customerBaseInfo.Occupation;
-            orderUpdateInfo.LiveAnchorBaseWechatId = order.LiveAnchorBaseWechatId;
             orderUpdateInfo.WechatNumber = customerBaseInfo.WechatNumber;
-            orderUpdateInfo.DealPerformanceTypeText = order.DealPerformanceTypeText;
-
+            orderUpdateInfo.LiveAnchorBaseWechatId = order.LiveAnchorBaseWechatId;
             orderUpdateInfo.AppointmentDate = order.AppointmentDate;
             orderUpdateInfo.ConsultationEmpId = order.ConsultationEmpId;
             orderUpdateInfo.AppointmentHospitalId = order.AppointmentHospitalId;
@@ -381,6 +394,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.SendDate = order.SendDate;
             orderUpdateInfo.UnDealPictureUrl = order.UnDealPictureUrl;
             orderUpdateInfo.DealPictureUrl = order.DealPictureUrl;
+            orderUpdateInfo.DealPerformanceTypeText = order.DealPerformanceTypeText;
             orderUpdateInfo.UpdateDate = order.UpdateDate;
             orderUpdateInfo.DealDate = order.DealDate;
             orderUpdateInfo.DealAmount = order.DealAmount;
@@ -417,6 +431,9 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.IsRepeatProfundityOrder = order.IsRepeatProfundityOrder;
             orderUpdateInfo.IsCreateBill = order.IsCreateBill;
             orderUpdateInfo.CreateBillCompany = order.CreateBillCompany;
+            orderUpdateInfo.IsSupportOrder = order.IsSupportOrder;
+            orderUpdateInfo.SupportEmpName = order.SupportEmpName;
+            orderUpdateInfo.SupportEmpId = order.SupportEmpId;
             return ResultData<ContentPlateFormOrderVo>.Success().AddData("orderInfo", orderUpdateInfo);
         }
 

@@ -48,7 +48,7 @@ namespace Fx.Amiya.Service
                 .Where(e => (string.IsNullOrEmpty(keyword) || e.Phone.Contains(keyword) || e.OrderId.Contains(keyword)))
                 .Where(e => !isSubmitReconciliationDocuments.HasValue || e.IsSubmitReconciliationDocuments == isSubmitReconciliationDocuments.Value)
                 .Where(e => !startDate.HasValue || e.CreateDate >= startDate)
-                .Where(e => !endDate.HasValue || e.CreateDate <= endDate)
+                .Where(e => !endDate.HasValue || e.CreateDate <= endDate.Value.AddDays(1))
                 .Where(e => !orderFrom.HasValue || e.OrderFrom == orderFrom.Value)
                 .Where(e => !hospitalId.HasValue || e.SendHospital == hospitalId.Value)
                 .OrderByDescending(x => x.CreateDate)

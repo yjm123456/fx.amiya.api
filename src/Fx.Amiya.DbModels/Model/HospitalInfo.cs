@@ -62,7 +62,7 @@ namespace Fx.Amiya.DbModels.Model
         public DateTime CreateDate { get; set; }
         public int? UpdateBy { get; set; }
         public DateTime? UpdateDate { get; set; }
-        public int? CityId{get;set; }
+        public int? CityId { get; set; }
 
         public DateTime? DueTime { get; set; }
         public string ContractUrl { get; set; }
@@ -167,5 +167,7 @@ namespace Fx.Amiya.DbModels.Model
 
         public List<Bill> BillList { get; set; }
         public List<BillReturnBackPriceData> BillReturnBackPriceDataList { get; set; }
+
+        public List<ContentPlatFormOrderAddWork> ContentPlatFormOrderAddWork { get; set; }
     }
 }

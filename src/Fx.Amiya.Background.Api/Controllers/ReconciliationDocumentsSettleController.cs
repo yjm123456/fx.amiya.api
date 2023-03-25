@@ -26,7 +26,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 构造函数
         /// </summary>
         /// <param name="reconciliationDocumentsService"></param>
-        public ReconciliationDocumentsSettleController( IReconciliationDocumentsService reconciliationDocumentsService)
+        public ReconciliationDocumentsSettleController(IReconciliationDocumentsService reconciliationDocumentsService)
         {
             //this.reconciliationDocumentsSettleService = reconciliationDocumentsSettleService;
             this.reconciliationDocumentsService = reconciliationDocumentsService;
@@ -57,18 +57,23 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                     select new ReconciliationDocumentsSettleVo
                                                     {
                                                         RecommandDocumentId = d.RecommandDocumentId,
-                                                        HospitalName=d.HospitalName,
+                                                        HospitalName = d.HospitalName,
                                                         OrderId = d.OrderId,
                                                         DealInfoId = d.DealInfoId,
+                                                        DealDate = d.DealDate,
+                                                        GoodsName = d.GoodsName,
+                                                        Phone = d.Phone,
                                                         OrderFromText = d.OrderFromText,
-                                                        OrderPrice=d.OrderPrice,
-                                                        IsOldCustomerText=d.IsOldCustomerText,
+                                                        OrderPrice = d.OrderPrice,
+                                                        IsOldCustomerText = d.IsOldCustomerText,
+                                                        InformationPrice = d.InformationPrice,
+                                                        SystemUpdatePrice = d.SystemUpdatePrice,
                                                         ReturnBackPrice = d.ReturnBackPrice,
                                                         CreateDate = d.CreateDate,
                                                         IsSettle = d.IsSettle == true ? "是" : "否",
                                                         SettleDate = d.SettleDate,
                                                         RecolicationPrice = d.RecolicationPrice,
-                                                        CreateEmpName=d.CreateEmpName,
+                                                        CreateEmpName = d.CreateEmpName,
                                                         CreateByEmpName = d.CreateByEmpName,
                                                         AccountTypeText = d.AccountTypeText,
                                                         AccountPrice = d.AccountPrice,
@@ -122,15 +127,20 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                     HospitalName = d.HospitalName,
                                                     OrderId = d.OrderId,
                                                     DealInfoId = d.DealInfoId,
+                                                    DealDate = d.DealDate,
+                                                    GoodsName = d.GoodsName,
+                                                    Phone = d.Phone,
                                                     OrderFromText = d.OrderFromText,
                                                     OrderPrice = d.OrderPrice,
                                                     IsOldCustomerText = d.IsOldCustomerText,
+                                                    InformationPrice = d.InformationPrice,
+                                                    SystemUpdatePrice = d.SystemUpdatePrice,
                                                     ReturnBackPrice = d.ReturnBackPrice,
-                                                    RecolicationPrice = d.RecolicationPrice,
-                                                    CreateEmpName = d.CreateEmpName,
                                                     CreateDate = d.CreateDate,
                                                     IsSettle = d.IsSettle == true ? "是" : "否",
                                                     SettleDate = d.SettleDate,
+                                                    RecolicationPrice = d.RecolicationPrice,
+                                                    CreateEmpName = d.CreateEmpName,
                                                     CreateByEmpName = d.CreateByEmpName,
                                                     AccountTypeText = d.AccountTypeText,
                                                     AccountPrice = d.AccountPrice,

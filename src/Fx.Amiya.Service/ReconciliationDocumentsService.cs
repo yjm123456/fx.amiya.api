@@ -79,7 +79,7 @@ namespace Fx.Amiya.Service
                                               where (string.IsNullOrWhiteSpace(keyword) || d.CustomerName.Contains(keyword) || d.CustomerPhone.Contains(keyword) || d.Id.Contains(keyword))
                                              && (!startDealDate.HasValue && !endDealDate.HasValue || d.DealDate >= startDealrq && d.DealDate <= endDealrq)
                                              && (!returnBackPricePercent.HasValue || d.ReturnBackPricePercent == returnBackPricePercent.Value)
-                                             && (reconciliationState.HasValue? d.ReconciliationState == reconciliationState.Value:(d.ReconciliationState==(int)ReconciliationDocumentsStateEnum.Successful || d.ReconciliationState == (int)ReconciliationDocumentsStateEnum.ReturnBackPriceSuccessful))
+                                             && (reconciliationState.HasValue ? d.ReconciliationState == reconciliationState.Value : (d.ReconciliationState == (int)ReconciliationDocumentsStateEnum.Successful || d.ReconciliationState == (int)ReconciliationDocumentsStateEnum.ReturnBackPriceSuccessful))
                                              && (!hospitalId.HasValue || d.HospitalId == hospitalId)
                                              && (!isCreateBill.HasValue || d.IsCreateBill == isCreateBill)
                                              && (!startDate.HasValue && !endDate.HasValue || d.CreateDate >= startrq.Date && d.CreateDate < endrq.Date)
@@ -123,7 +123,7 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task<List<ReconciliationDocumentsDto>> ExportListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId,bool? isCreateBill)
+        public async Task<List<ReconciliationDocumentsDto>> ExportListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId, bool? isCreateBill)
         {
             try
             {
@@ -146,8 +146,8 @@ namespace Fx.Amiya.Service
                                               where (string.IsNullOrWhiteSpace(keyword) || d.CustomerName.Contains(keyword) || d.CustomerPhone.Contains(keyword))
                                              && (!startDealDate.HasValue && !endDealDate.HasValue || d.DealDate >= startDealrq && d.DealDate <= endDealrq)
                                              && (!returnBackPricePercent.HasValue || d.ReturnBackPricePercent == returnBackPricePercent.Value)
-                                             && (reconciliationState.HasValue? d.ReconciliationState == reconciliationState.Value:(d.ReconciliationState == (int)ReconciliationDocumentsStateEnum.Successful || d.ReconciliationState == (int)ReconciliationDocumentsStateEnum.ReturnBackPriceSuccessful))
-                                             &&(!isCreateBill.HasValue||d.IsCreateBill==isCreateBill)
+                                             && (reconciliationState.HasValue ? d.ReconciliationState == reconciliationState.Value : (d.ReconciliationState == (int)ReconciliationDocumentsStateEnum.Successful || d.ReconciliationState == (int)ReconciliationDocumentsStateEnum.ReturnBackPriceSuccessful))
+                                             && (!isCreateBill.HasValue || d.IsCreateBill == isCreateBill)
                                              && (!hospitalId.HasValue || d.HospitalId == hospitalId)
                                              && (!startDate.HasValue && !endDate.HasValue || d.CreateDate >= startrq.Date && d.CreateDate < endrq.Date)
                                              && d.Valid
@@ -592,6 +592,31 @@ namespace Fx.Amiya.Service
                 {
                     var reconciliationDocumentsInfo = await this.GetByIdAsync(x.RecommandDocumentId);
                     x.HospitalName = reconciliationDocumentsInfo.HospitalName;
+                    x.InformationPrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.ReturnBackPricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
+                    x.SystemUpdatePrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.SystemUpdatePricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
+                }
+                switch (x.OrderFrom)
+                {
+                    case (int)OrderFrom.ContentPlatFormOrder:
+
+                        var dealInfo = await contentPlatFormOrderDealInfoService.GetByIdAsync(x.DealInfoId);
+                        x.DealDate = dealInfo.DealDate;
+                        var contentPlatFormOrderInfo = await contentPlateFormOrderService.GetByOrderIdAsync(x.OrderId);
+                        x.GoodsName = contentPlatFormOrderInfo.GoodsName;
+                        x.Phone = contentPlatFormOrderInfo.Phone;
+                        break;
+                    case (int)OrderFrom.BuyAgainOrder:
+                        var customerHospitalConsume = await customerHospitalConsumeService.GetByConsumeIdAsync(x.OrderId);
+                        x.DealDate = customerHospitalConsume.WriteOffDate;
+                        x.GoodsName = customerHospitalConsume.ItemName;
+                        x.Phone = customerHospitalConsume.Phone;
+                        break;
+                    case (int)OrderFrom.ThirdPartyOrder:
+                        var tmallOrder = await orderService.GetByIdAsync(x.OrderId);
+                        x.DealDate = tmallOrder.WriteOffDate;
+                        x.GoodsName = tmallOrder.GoodsName;
+                        x.Phone = tmallOrder.Phone;
+                        break;
                 }
             }
             return fxPageInfo;
@@ -643,6 +668,31 @@ namespace Fx.Amiya.Service
                 {
                     var reconciliationDocumentsInfo = await this.GetByIdAsync(x.RecommandDocumentId);
                     x.HospitalName = reconciliationDocumentsInfo.HospitalName;
+                    x.InformationPrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.ReturnBackPricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
+                    x.SystemUpdatePrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.SystemUpdatePricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
+                }
+                switch (x.OrderFrom)
+                {
+                    case (int)OrderFrom.ContentPlatFormOrder:
+
+                        var dealInfo = await contentPlatFormOrderDealInfoService.GetByIdAsync(x.DealInfoId);
+                        x.DealDate = dealInfo.DealDate;
+                        var contentPlatFormOrderInfo = await contentPlateFormOrderService.GetByOrderIdAsync(x.OrderId);
+                        x.GoodsName = contentPlatFormOrderInfo.GoodsName;
+                        x.Phone = contentPlatFormOrderInfo.Phone;
+                        break;
+                    case (int)OrderFrom.BuyAgainOrder:
+                        var customerHospitalConsume = await customerHospitalConsumeService.GetByConsumeIdAsync(x.OrderId);
+                        x.DealDate = customerHospitalConsume.WriteOffDate;
+                        x.GoodsName = customerHospitalConsume.ItemName;
+                        x.Phone = customerHospitalConsume.Phone;
+                        break;
+                    case (int)OrderFrom.ThirdPartyOrder:
+                        var tmallOrder = await orderService.GetByIdAsync(x.OrderId);
+                        x.DealDate = tmallOrder.WriteOffDate;
+                        x.GoodsName = tmallOrder.GoodsName;
+                        x.Phone = tmallOrder.Phone;
+                        break;
                 }
             }
             return resultInfo.OrderByDescending(x => x.CreateDate).ToList();
