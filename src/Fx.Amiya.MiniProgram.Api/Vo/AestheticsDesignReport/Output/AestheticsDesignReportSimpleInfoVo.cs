@@ -29,6 +29,10 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.AestheticsDesignReport.Output
         /// <summary>
         /// 状态
         /// </summary>
+        public int Status { get; set; }
+        /// <summary>
+        /// 状态文本
+        /// </summary>
         public string StatusText { get; set; }
     }
 }

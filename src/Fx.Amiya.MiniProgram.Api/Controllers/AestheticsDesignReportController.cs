@@ -78,6 +78,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 CreateDate=e.CreateDate.Value,
                 FrontPicture=e.FrontPicture,
                 SidePicture=e.SidePicture,
+                Status=e.Status,
                 StatusText=e.StatusText
             });
             return ResultData<FxPageInfo<AestheticsDesignReportSimpleInfoVo>>.Success().AddData("list",fxPageInfo);
@@ -129,6 +130,39 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
 
             return ResultData<AestheticsDesignReportDetailInfoVo>.Success().AddData("info", detailVo);
+        }
+        /// <summary>
+        /// 修改美学设计报告
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<ResultData> UpdateAsync(UpdateAestheticsDesignReportVo updateVo) {
+            string token = _tokenReader.GetToken();
+            var sessionInfo = _sessionStorage.GetSession(token);
+            string customerId = sessionInfo.FxCustomerId;
+            string userId = sessionInfo.FxUserId;
+            UpdateAestheticsDesignReportInfoDto updateDto = new UpdateAestheticsDesignReportInfoDto();
+            updateDto.Id = updateVo.Id;
+            updateDto.UserId = userId;
+            updateDto.CustomerId = customerId;
+            updateDto.Name = updateVo.Name;
+            updateDto.BirthDay = updateVo.BirthDay;
+            updateDto.Phone = updateVo.Phone;
+            updateDto.City = updateVo.City;
+            updateDto.HasAestheticMedicineHistory = updateVo.HasAestheticMedicineHistory;
+            updateDto.HistoryDescribe1 = updateVo.HistoryDescribe1;
+            updateDto.HistoryDescribe2 = updateVo.HistoryDescribe2;
+            updateDto.HistoryDescribe3 = updateVo.HistoryDescribe3;
+            updateDto.WhetherAcceptOperation = updateVo.WhetherAcceptOperation;
+            updateDto.WhetherAllergyOrOtherDisease = updateVo.WhetherAllergyOrOtherDisease;
+            updateDto.AllergyOrOtherDiseaseDescribe = updateVo.AllergyOrOtherDiseaseDescribe;
+            updateDto.BeautyDemand = updateVo.BeautyDemand;
+            updateDto.Budget = updateVo.Budget;
+            updateDto.FrontPicture = updateVo.FrontPicture;
+            updateDto.SidePicture = updateVo.SidePicture;
+            await aestheticsDesignReportService.UpdateAsync(updateDto);
+            return ResultData.Success();
+
         }
     }
 }

@@ -209,7 +209,11 @@ namespace Fx.Amiya.Service
             fxPageInfo.List = reportList.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
             return fxPageInfo;
         }
-
+        /// <summary>
+        /// 修改美学报告
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <returns></returns>
         public async Task UpdateAsync(UpdateAestheticsDesignReportInfoDto updateDto)
         {
             try
@@ -217,6 +221,7 @@ namespace Fx.Amiya.Service
                 unitOfWork.BeginTransaction();
                 var report = dalAestheticsDesignReport.GetAll().Where(e => e.Id == updateDto.Id).SingleOrDefault();
                 if (report == null) throw new Exception("报告编号错误！");
+                if(report.Status==(int)AestheticsDesignReportStatus.Desgined) throw new Exception("已完成设计的美学报告不能修改！");
                 report.Name = updateDto.Name;
                 report.BirthDay = updateDto.BirthDay;
                 report.Phone = updateDto.Phone;
