@@ -15,5 +15,15 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderAddWork.Input
         /// 审核状态（空查询所有）
         /// </summary>
         public int? CheckState { get; set; }
+
+        /// <summary>
+        /// 提交人
+        /// </summary>
+        public int? CreateBy { get; set; }
+
+        /// <summary>
+        /// 接收人
+        /// </summary>
+        public int? AcceptBy { get; set; }
     }
 }

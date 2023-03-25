@@ -37,6 +37,8 @@ namespace Fx.Amiya.Service
                 .Where(e => !query.CheckState.HasValue || e.CheckState == query.CheckState.Value)
                 .Where(e => !query.StartDate.HasValue || e.CreateDate >= query.StartDate)
                 .Where(e => !query.EndDate.HasValue || e.CreateDate <= query.EndDate.Value.AddDays(1))
+                .Where(e => !query.CreateBy.HasValue || e.CreateBy == query.CreateBy.Value)
+                .Where(e => !query.AcceptBy.HasValue || e.AcceptBy == query.AcceptBy.Value)
                 .OrderByDescending(x => x.CreateDate)
                 .Where(e => e.Valid == true)
                 .Select(e => new ContentPlatFormOrderAddWorkDto

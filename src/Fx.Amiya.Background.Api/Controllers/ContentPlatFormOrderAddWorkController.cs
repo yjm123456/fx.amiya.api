@@ -55,6 +55,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryDto.KeyWord = query.KeyWord;
                 queryDto.HospitalId = query.HospitalId;
                 queryDto.CheckState = query.CheckState;
+                queryDto.CreateBy = query.CreateBy;
+                queryDto.AcceptBy = query.AcceptBy;
                 queryDto.PageNum = query.PageNum;
                 queryDto.PageSize = query.PageSize;
                 var q = await contentPlatFormOrderAddWorkService.GetListByPageAsync(queryDto);
@@ -73,10 +75,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       CreateDate = e.CreateDate,
                                                       BelongCustomerServiceId = e.BelongCustomerServiceId,
                                                       CheckState = e.CheckState,
-                                                      CheckStateText =e. CheckStateText,
+                                                      CheckStateText = e.CheckStateText,
                                                       CheckRemark = e.CheckRemark,
                                                       CheckDate = e.CheckDate,
-                                                      BelongCustomerServiceName=e.BelongCustomerServiceName,
+                                                      BelongCustomerServiceName = e.BelongCustomerServiceName,
                                                   };
 
                 FxPageInfo<ContentPlatFormOrderAddWorkVo> tagPageInfo = new FxPageInfo<ContentPlatFormOrderAddWorkVo>();
