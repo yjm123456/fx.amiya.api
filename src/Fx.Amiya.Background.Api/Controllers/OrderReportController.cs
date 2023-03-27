@@ -1571,21 +1571,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 客户订单应收款统计（交易完成订单）
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="customerName">客户名称</param>
-        /// <param name="appType">下单平台</param>
-        /// <param name="CheckState">审核状态</param>
-        /// <param name="isCreateBill">是否开票</param>
-        /// <param name="belongCompanyId">开票公司id</param>
-        /// <param name="ReturnBackPriceState">是否回款</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("customerOrderReceivableReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<CustomerOrderReceivableReportVo>>> GetCustomerOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? appType, int? CheckState, bool? ReturnBackPriceState, bool? isCreateBill, string belongCompanyId, string customerName)
+        public async Task<ResultData<List<CustomerOrderReceivableReportVo>>> GetCustomerOrderReceivableAsync([FromQuery] QueryCustomerOrderReceivableReportVo query)
         {
 
-            var q = await orderService.GetCustomerOrderReceivableAsync(startDate, endDate, appType, CheckState, ReturnBackPriceState, isCreateBill, belongCompanyId, customerName, true);
+            var q = await orderService.GetCustomerOrderReceivableAsync(query.StartDate, query.EndDate, query.AppType, query.CheckState, query.ReturnBackPriceState, query.IsCreateBill, query.BelongCompanyId, query.CustomerName, true);
             var res = from d in q
                       select new CustomerOrderReceivableReportVo()
                       {
@@ -1623,79 +1616,88 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 客户订单应收款统计导出（交易完成订单）
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="CheckState">审核状态</param>
-        /// <param name="appType">下单平台</param>
-        /// <param name="ReturnBackPriceState">是否回款</param>
-        /// <param name="customerName">客户名称</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("customerOrderReceivableExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> GetCustomerOrderReceivableExportAsync(DateTime? startDate, DateTime? endDate, int? appType, int? CheckState, bool? ReturnBackPriceState, bool? isCreateBill, string belongCompanyId, string customerName)
+        public async Task<FileStreamResult> GetCustomerOrderReceivableExportAsync([FromQuery] QueryCustomerOrderReceivableReportVo query)
         {
-            bool isHidePhone = true;
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            OperationAddDto operationLog = new OperationAddDto();
+            try
             {
-                isHidePhone = false;
-            }
+                bool isHidePhone = true;
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
 
-            var q = await orderService.GetCustomerOrderReceivableAsync(startDate, endDate, appType, CheckState, ReturnBackPriceState, isCreateBill, belongCompanyId, customerName, true);
-            var res = from d in q
-                      select new CustomerOrderReceivableReportVo()
-                      {
-                          Id = d.Id,
-                          GoodsName = d.GoodsName,
-                          NickName = d.NickName,
-                          EncryptPhone = d.EncryptPhone,
-                          AppointmentHospital = d.AppointmentHospital,
-                          StatusText = d.StatusText,
-                          ActuralPayment = d.ActualPayment,
-                          AccountReceivable = d.AccountReceivable,
-                          SendOrderPirce = d.SendOrderPrice,
-                          CreateDate = d.CreateDate,
-                          WriteOffDate = d.WriteOffDate,
-                          AppTypeText = d.AppTypeText,
-                          Quantity = d.Quantity,
-                          SendOrderHospital = d.SendOrderHospital,
-                          SendHospitalEmployeeName = d.SendEmployeeName,
-                          FinalConsumptionHospital = d.FinalConsumptionHospital,
-                          BelongEmployeeName = d.BenlongEmpName,
-                          CheckStateText = d.CheckStateText,
-                          CheckPrice = d.CheckPrice,
-                          IsCreateBill = d.IsCreateBill == true ? "是" : "否",
-                          BelongCompanyName = d.BelongCompanyName,
-                          CheckDate = d.CheckDate,
-                          CheckBy = d.CheckByEmpName,
-                          CheckRemark = d.CheckRemark,
-                          SettlePrice = d.SettlePrice,
-                          IsReturnBackPrice = d.IsReturnBackPrice == true ? "已回款" : "未回款",
-                          ReturnBackPrice = d.ReturnBackPrice,
-                          ReturnBackDate = d.ReturnBackDate
-                      };
-            var exportOrderWriteOff = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "客户订单应收款统计（交易完成订单）.xls");
-            return result;
+                var q = await orderService.GetCustomerOrderReceivableAsync(query.StartDate, query.EndDate, query.AppType, query.CheckState, query.ReturnBackPriceState, query.IsCreateBill, query.BelongCompanyId, query.CustomerName, isHidePhone);
+                var res = from d in q
+                          select new CustomerOrderReceivableReportVo()
+                          {
+                              Id = d.Id,
+                              GoodsName = d.GoodsName,
+                              NickName = d.NickName,
+                              EncryptPhone = d.EncryptPhone,
+                              AppointmentHospital = d.AppointmentHospital,
+                              StatusText = d.StatusText,
+                              ActuralPayment = d.ActualPayment,
+                              AccountReceivable = d.AccountReceivable,
+                              SendOrderPirce = d.SendOrderPrice,
+                              CreateDate = d.CreateDate,
+                              WriteOffDate = d.WriteOffDate,
+                              AppTypeText = d.AppTypeText,
+                              Quantity = d.Quantity,
+                              SendOrderHospital = d.SendOrderHospital,
+                              SendHospitalEmployeeName = d.SendEmployeeName,
+                              FinalConsumptionHospital = d.FinalConsumptionHospital,
+                              BelongEmployeeName = d.BenlongEmpName,
+                              CheckStateText = d.CheckStateText,
+                              CheckPrice = d.CheckPrice,
+                              IsCreateBill = d.IsCreateBill == true ? "是" : "否",
+                              BelongCompanyName = d.BelongCompanyName,
+                              CheckDate = d.CheckDate,
+                              CheckBy = d.CheckByEmpName,
+                              CheckRemark = d.CheckRemark,
+                              SettlePrice = d.SettlePrice,
+                              IsReturnBackPrice = d.IsReturnBackPrice == true ? "已回款" : "未回款",
+                              ReturnBackPrice = d.ReturnBackPrice,
+                              ReturnBackDate = d.ReturnBackDate
+                          };
+                var exportOrderWriteOff = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "客户订单应收款统计（交易完成订单）.xls");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                operationLog.Code = -1;
+                operationLog.Message = ex.Message;
+                throw new Exception(ex.Message.ToString());
+            }
+            finally
+            {
+                operationLog.Message = "";
+                operationLog.Parameters = JsonConvert.SerializeObject(query);
+                operationLog.RequestType = (int)RequestType.Export;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operatonLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
 
         /// <summary>
         /// 客户订单应收款统计（买家已付款订单）
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="customerName">客户名称</param>
-        /// <param name="CheckState">审核状态</param>
-        /// <param name="ReturnBackPriceState">是否回款</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("customerPaidOrderReceivableReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<CustomerOrderReceivableReportVo>>> GetCustomerPaidOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? CheckState, bool? ReturnBackPriceState, string customerName)
+        public async Task<ResultData<List<CustomerOrderReceivableReportVo>>> GetCustomerPaidOrderReceivableAsync([FromQuery] QueryCustomerPaidOrderReceivableReportVo query)
         {
 
-            var q = await orderService.GetCustomerPaidOrderReceivableAsync(startDate, endDate, CheckState, ReturnBackPriceState, customerName, true);
+            var q = await orderService.GetCustomerPaidOrderReceivableAsync(query.StartDate, query.EndDate, query.CheckState, query.ReturnBackPriceState, query.CustomerName, true);
             var res = from d in q
                       select new CustomerOrderReceivableReportVo()
                       {
@@ -1731,58 +1733,72 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 客户订单应收款统计导出（买家已付款订单）
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="CheckState">审核状态</param>
-        /// <param name="ReturnBackPriceState">是否回款</param>
-        /// <param name="customerName">客户名称</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("customerPaidOrderReceivableExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> GetCustomerPaidOrderReceivableExportAsync(DateTime? startDate, DateTime? endDate, int? CheckState, bool? ReturnBackPriceState, string customerName)
+        public async Task<FileStreamResult> GetCustomerPaidOrderReceivableExportAsync([FromQuery] QueryCustomerPaidOrderReceivableReportVo query)
         {
-            bool isHidePhone = true;
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            OperationAddDto operationLog = new OperationAddDto();
+            try
             {
-                isHidePhone = false;
-            }
+                bool isHidePhone = true;
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
 
-            var q = await orderService.GetCustomerPaidOrderReceivableAsync(startDate, endDate, CheckState, ReturnBackPriceState, customerName, isHidePhone);
-            var res = from d in q
-                      select new CustomerOrderReceivableReportVo()
-                      {
-                          Id = d.Id,
-                          GoodsName = d.GoodsName,
-                          NickName = d.NickName,
-                          EncryptPhone = d.EncryptPhone,
-                          AppointmentHospital = d.AppointmentHospital,
-                          StatusText = d.StatusText,
-                          ActuralPayment = d.ActualPayment,
-                          AccountReceivable = d.AccountReceivable,
-                          SendOrderPirce = d.SendOrderPrice,
-                          CreateDate = d.CreateDate,
-                          WriteOffDate = d.WriteOffDate,
-                          AppTypeText = d.AppTypeText,
-                          Quantity = d.Quantity,
-                          SendOrderHospital = d.SendOrderHospital,
-                          SendHospitalEmployeeName = d.SendEmployeeName,
-                          FinalConsumptionHospital = d.FinalConsumptionHospital,
-                          BelongEmployeeName = d.BenlongEmpName,
-                          CheckStateText = d.CheckStateText,
-                          CheckPrice = d.CheckPrice,
-                          CheckDate = d.CheckDate,
-                          CheckBy = d.CheckByEmpName,
-                          CheckRemark = d.CheckRemark,
-                          SettlePrice = d.SettlePrice,
-                          IsReturnBackPrice = d.IsReturnBackPrice == true ? "已回款" : "未回款",
-                          ReturnBackPrice = d.ReturnBackPrice,
-                          ReturnBackDate = d.ReturnBackDate
-                      };
-            var exportOrderWriteOff = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "客户订单应收款统计（买家已付款订单）.xls");
-            return result;
+                var q = await orderService.GetCustomerPaidOrderReceivableAsync(query.StartDate, query.EndDate, query.CheckState, query.ReturnBackPriceState, query.CustomerName, isHidePhone);
+                var res = from d in q
+                          select new CustomerOrderReceivableReportVo()
+                          {
+                              Id = d.Id,
+                              GoodsName = d.GoodsName,
+                              NickName = d.NickName,
+                              EncryptPhone = d.EncryptPhone,
+                              AppointmentHospital = d.AppointmentHospital,
+                              StatusText = d.StatusText,
+                              ActuralPayment = d.ActualPayment,
+                              AccountReceivable = d.AccountReceivable,
+                              SendOrderPirce = d.SendOrderPrice,
+                              CreateDate = d.CreateDate,
+                              WriteOffDate = d.WriteOffDate,
+                              AppTypeText = d.AppTypeText,
+                              Quantity = d.Quantity,
+                              SendOrderHospital = d.SendOrderHospital,
+                              SendHospitalEmployeeName = d.SendEmployeeName,
+                              FinalConsumptionHospital = d.FinalConsumptionHospital,
+                              BelongEmployeeName = d.BenlongEmpName,
+                              CheckStateText = d.CheckStateText,
+                              CheckPrice = d.CheckPrice,
+                              CheckDate = d.CheckDate,
+                              CheckBy = d.CheckByEmpName,
+                              CheckRemark = d.CheckRemark,
+                              SettlePrice = d.SettlePrice,
+                              IsReturnBackPrice = d.IsReturnBackPrice == true ? "已回款" : "未回款",
+                              ReturnBackPrice = d.ReturnBackPrice,
+                              ReturnBackDate = d.ReturnBackDate
+                          };
+                var exportOrderWriteOff = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "客户订单应收款统计（买家已付款订单）.xls");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                operationLog.Code = -1;
+                operationLog.Message = ex.Message;
+                throw new Exception(ex.Message.ToString());
+            }
+            finally
+            {
+                operationLog.Message = "";
+                operationLog.Parameters = JsonConvert.SerializeObject(query);
+                operationLog.RequestType = (int)RequestType.Export;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operatonLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
 
@@ -1790,18 +1806,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 下单平台订单报表
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="StatusCode">订单状态</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("OrderReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<OrderReportVo>>> GetTmallOrderReportAsync(DateTime? startDate, DateTime? endDate, string StatusCode)
+        public async Task<ResultData<List<OrderReportVo>>> GetTmallOrderReportAsync([FromQuery] QueryOrderReportVo query)
         {
 
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var q = await orderService.GetTmallOrderListAsync(startDate, endDate, StatusCode, employeeId, true);
+            var q = await orderService.GetTmallOrderListAsync(query.StartDate, query.EndDate, query.StatusCode, employeeId, true);
             var res = from d in q
                       select new OrderReportVo()
                       {
@@ -1829,67 +1843,74 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 下单平台订单报表导出
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="StatusCode">订单状态</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("OrderReportExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportTmallOrderReportAsync(DateTime? startDate, DateTime? endDate, string StatusCode)
+        public async Task<FileStreamResult> ExportTmallOrderReportAsync([FromQuery] QueryOrderReportVo query)
         {
-            bool isHidePhone = true;
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            OperationAddDto operationLog = new OperationAddDto();
+            try
             {
-                isHidePhone = false;
+                bool isHidePhone = true;
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
+                int employeeId = Convert.ToInt32(employee.Id);
+                var q = await orderService.GetTmallOrderListAsync(query.StartDate, query.EndDate, query.StatusCode, employeeId, isHidePhone);
+                var res = from d in q
+                          select new OrderReportVo()
+                          {
+                              Id = d.Id,
+                              AppTypeText = d.AppTypeText,
+                              CreateDate = d.CreateDate,
+                              WriteOffDate = d.WriteOffDate,
+                              OrderNatureText = d.OrderNatureText,
+                              GoodsName = d.GoodsName,
+                              IntegrationQuantity = d.IntegrationQuantity,
+                              ActualPayment = d.ActualPayment,
+                              AccountReceivable = d.AccountReceivable,
+                              Quantity = d.Quantity,
+                              StatusText = d.StatusText,
+                              LiveAnchorPlatForm = d.LiveAnchorPlatForm,
+                              LiveAnchor = d.LiveAnchorName,
+                              BelongEmpName = d.BelongEmpName,
+                              NickName = d.BuyerNick,
+                              Phone = d.Phone,
+                              AppointmentHospital = d.AppointmentHospital
+                          };
+                var exportOrderWriteOff = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "下单平台订单报表.xls");
+                return result;
             }
-            int employeeId = Convert.ToInt32(employee.Id);
-            var q = await orderService.GetTmallOrderListAsync(startDate, endDate, StatusCode, employeeId, isHidePhone);
-            var res = from d in q
-                      select new OrderReportVo()
-                      {
-                          Id = d.Id,
-                          AppTypeText = d.AppTypeText,
-                          CreateDate = d.CreateDate,
-                          WriteOffDate = d.WriteOffDate,
-                          OrderNatureText = d.OrderNatureText,
-                          GoodsName = d.GoodsName,
-                          IntegrationQuantity = d.IntegrationQuantity,
-                          ActualPayment = d.ActualPayment,
-                          AccountReceivable = d.AccountReceivable,
-                          Quantity = d.Quantity,
-                          StatusText = d.StatusText,
-                          LiveAnchorPlatForm = d.LiveAnchorPlatForm,
-                          LiveAnchor = d.LiveAnchorName,
-                          BelongEmpName = d.BelongEmpName,
-                          NickName = d.BuyerNick,
-                          Phone = d.Phone,
-                          AppointmentHospital = d.AppointmentHospital
-                      };
-            var exportOrderWriteOff = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "下单平台订单报表.xls");
-            return result;
+            catch (Exception ex)
+            {
+                operationLog.Code = -1;
+                operationLog.Message = ex.Message;
+                throw new Exception(ex.Message.ToString());
+            }
+            finally
+            {
+                operationLog.Message = "";
+                operationLog.Parameters = JsonConvert.SerializeObject(query);
+                operationLog.RequestType = (int)RequestType.Export;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operatonLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
 
         /// <summary>
         /// 客户升单报表
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="checkDateStart">审核开始时间(可空)</param>
-        /// <param name="checkDateEnd">审核结束时间(可空)</param>
-        /// <param name="hospitalId">升单医院</param>
-        /// <param name="channel">渠道</param>
-        /// <param name="customerName">客户名称</param>
-        /// <param name="CheckState">审核状态</param>
-        /// <param name="isCreateBill">是否开票</param>
-        /// <param name="belongCompanyId">开票公司id</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("customerBuyAgainReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<CustomerHospitalConsumeReportVo>>> GetCustomerBuyAgainReportAsync(int? channel, DateTime? checkDateStart, DateTime? checkDateEnd, int? CheckState, int? hospitalId, bool? isCreateBill, string belongCompanyId, DateTime startDate, DateTime endDate, string customerName)
+        public async Task<ResultData<List<CustomerHospitalConsumeReportVo>>> GetCustomerBuyAgainReportAsync([FromQuery] QueryCustomerBuyAgainReportVo query)
         {
             bool isHidePhone = true;
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
@@ -1897,7 +1918,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 isHidePhone = false;
             }
-            var q = await _customerHospitalConsumeService.GetCustomerHospitalConsuleReportAsync(channel, checkDateStart, checkDateEnd, CheckState, hospitalId, isCreateBill, belongCompanyId, customerName, startDate, endDate, isHidePhone);
+            var q = await _customerHospitalConsumeService.GetCustomerHospitalConsuleReportAsync(query.Channel, query.CheckDateStart, query.CheckDateEnd, query.CheckState, query.HospitalId, query.IsCreateBill, query.BelongCompanyId, query.CustomerName, query.StartDate.Value, query.EndDate.Value, isHidePhone);
             var res = from d in q
                       select new CustomerHospitalConsumeReportVo()
                       {
@@ -1942,86 +1963,93 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 客户升单报表导出
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="checkDateStart">审核开始时间(可空)</param>
-        /// <param name="checkDateEnd">审核结束时间(可空)</param>
-        /// <param name="channel">渠道</param>
-        /// <param name="hospitalId">升单医院</param>
-        /// <param name="customerName">客户名称</param>
-        /// <param name="CheckState">审核状态</param>
-        /// <param name="isCreateBill">是否开票</param>
-        /// <param name="belongCompanyId">开票公司id</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("customerBuyAgainReportExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportCustomerBuyAgainReportAsync(int? channel, DateTime? checkDateStart, DateTime? checkDateEnd, int? CheckState, int? hospitalId, bool? isCreateBill, string belongCompanyId, DateTime startDate, DateTime endDate, string customerName)
+        public async Task<FileStreamResult> ExportCustomerBuyAgainReportAsync([FromQuery] QueryCustomerBuyAgainReportVo query)
         {
-
-            bool isHidePhone = true;
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            OperationAddDto operationLog = new OperationAddDto();
+            try
             {
-                isHidePhone = false;
+                bool isHidePhone = true;
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
+                var q = await _customerHospitalConsumeService.GetCustomerHospitalConsuleReportAsync(query.Channel, query.CheckDateStart, query.CheckDateEnd, query.CheckState, query.HospitalId, query.IsCreateBill, query.BelongCompanyId, query.CustomerName, query.StartDate.Value, query.EndDate.Value, isHidePhone);
+                var res = from d in q
+                          select new CustomerHospitalConsumeReportVo()
+                          {
+                              CreateDate = d.CreateDate,
+                              NickName = d.NickName,
+                              ConsumeId = d.ConsumeId,
+                              Phone = d.Phone,
+                              Channel = d.ChannelType,
+                              IsAddedOrder = d.IsAddedOrder == true ? "是" : "否",
+                              OrderId = d.OrderId,
+                              WriteOffDate = d.WriteOffDate,
+                              ConsumeTypeText = d.ConsumeTypeText,
+                              ItemName = d.ItemName,
+                              IsCconsultationCard = d.IsCconsultationCard == true ? "是" : "否",
+                              HospitalName = d.HospitalName,
+                              BuyAgainTypeText = d.BuyAgainTypeText,
+                              OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
+                              Price = d.Price,
+                              IsSelfLiving = d.IsSelfLiving == true ? "是" : "否",
+                              BuyAgainTime = d.BuyAgainTime,
+                              HasBuyagainEvidence = d.HasBuyagainEvidence == true ? "是" : "否",
+                              IsCheckToHospital = d.IsCheckToHospital == true ? "是" : "否",
+                              EmployeeName = d.EmpolyeeName,
+                              PersonTime = d.PersonTime,
+                              IsReceiveAdditionalPurchase = d.IsReceiveAdditionalPurchase == true ? "是" : "否",
+                              CheckBuyAgainPrice = d.CheckBuyAgainPrice,
+                              CheckSettlePrice = d.CheckSettlePrice,
+                              CheckDate = d.CheckDate,
+                              CheckState = d.CheckState,
+                              CheckByEmpName = d.CheckByEmpName,
+                              IsCreateBill = d.IsCreateBill == true ? "是" : "否",
+                              BelongCompanyName = d.BelongCompanyName,
+                              Remark = d.Remark,
+                              CheckRemark = d.CheckRemark,
+                              LiveAnchorName = d.LiveAnchorName,
+                              IsReturnBackPrice = d.IsReturnBackPrice,
+                              ReturnBackDate = d.ReturnBackDate,
+                              ReturnBackPrice = d.ReturnBackPrice,
+                          };
+                var exportOrderWriteOff = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "客户升单报表.xls");
+                return result;
             }
-            var q = await _customerHospitalConsumeService.GetCustomerHospitalConsuleReportAsync(channel, checkDateStart, checkDateEnd, CheckState, hospitalId, isCreateBill, belongCompanyId, customerName, startDate, endDate, isHidePhone);
-            var res = from d in q
-                      select new CustomerHospitalConsumeReportVo()
-                      {
-                          CreateDate = d.CreateDate,
-                          NickName = d.NickName,
-                          ConsumeId = d.ConsumeId,
-                          Phone = d.Phone,
-                          Channel = d.ChannelType,
-                          IsAddedOrder = d.IsAddedOrder == true ? "是" : "否",
-                          OrderId = d.OrderId,
-                          WriteOffDate = d.WriteOffDate,
-                          ConsumeTypeText = d.ConsumeTypeText,
-                          ItemName = d.ItemName,
-                          IsCconsultationCard = d.IsCconsultationCard == true ? "是" : "否",
-                          HospitalName = d.HospitalName,
-                          BuyAgainTypeText = d.BuyAgainTypeText,
-                          OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
-                          Price = d.Price,
-                          IsSelfLiving = d.IsSelfLiving == true ? "是" : "否",
-                          BuyAgainTime = d.BuyAgainTime,
-                          HasBuyagainEvidence = d.HasBuyagainEvidence == true ? "是" : "否",
-                          IsCheckToHospital = d.IsCheckToHospital == true ? "是" : "否",
-                          EmployeeName = d.EmpolyeeName,
-                          PersonTime = d.PersonTime,
-                          IsReceiveAdditionalPurchase = d.IsReceiveAdditionalPurchase == true ? "是" : "否",
-                          CheckBuyAgainPrice = d.CheckBuyAgainPrice,
-                          CheckSettlePrice = d.CheckSettlePrice,
-                          CheckDate = d.CheckDate,
-                          CheckState = d.CheckState,
-                          CheckByEmpName = d.CheckByEmpName,
-                          IsCreateBill = d.IsCreateBill == true ? "是" : "否",
-                          BelongCompanyName = d.BelongCompanyName,
-                          Remark = d.Remark,
-                          CheckRemark = d.CheckRemark,
-                          LiveAnchorName = d.LiveAnchorName,
-                          IsReturnBackPrice = d.IsReturnBackPrice,
-                          ReturnBackDate = d.ReturnBackDate,
-                          ReturnBackPrice = d.ReturnBackPrice,
-                      };
-            var exportOrderWriteOff = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.ToString("yyyy年MM月dd日") + "-" + endDate.ToString("yyyy年MM月dd日") + "客户升单报表.xls");
-            return result;
+            catch (Exception ex)
+            {
+                operationLog.Code = -1;
+                operationLog.Message = ex.Message;
+                throw new Exception(ex.Message.ToString());
+            }
+            finally
+            {
+                operationLog.Message = "";
+                operationLog.Parameters = JsonConvert.SerializeObject(query);
+                operationLog.RequestType = (int)RequestType.Export;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operatonLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
         /// <summary>
         /// 主播IP运营报表
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("liveAnchorOperatingReport")]
         [FxInternalAuthorize]
-        public async Task<ResultData<List<LiveAnchorOperatingReportVo>>> GetLiveAnchorOperatingReportAsync(DateTime startDate, DateTime endDate)
+        public async Task<ResultData<List<LiveAnchorOperatingReportVo>>> GetLiveAnchorOperatingReportAsync([FromQuery] BaseQueryVo query)
         {
 
-            var q = await _liveAnchorDailyTargetService.GetByDailyAndMonthAsync(startDate, endDate);
+            var q = await _liveAnchorDailyTargetService.GetByDailyAndMonthAsync(query.StartDate.Value, query.EndDate.Value);
             var res = from d in q
                       select new LiveAnchorOperatingReportVo()
                       {
@@ -2171,164 +2199,181 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 主播IP运营报表导出
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("liveAnchorOperatingReportExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportLiveAnchorOperatingReportAsync(DateTime startDate, DateTime endDate)
+        public async Task<FileStreamResult> ExportLiveAnchorOperatingReportAsync([FromQuery] BaseQueryVo query)
         {
-            var q = await _liveAnchorDailyTargetService.GetByDailyAndMonthAsync(startDate, endDate);
+            OperationAddDto operationLog = new OperationAddDto();
+            try
+            {
+                var q = await _liveAnchorDailyTargetService.GetByDailyAndMonthAsync(query.StartDate.Value, query.EndDate.Value);
 
-            var res = from d in q
-                      select new LiveAnchorOperatingReportVo()
-                      {
-                          RecordDate = d.RecordDate,
-                          LiveAnchor = d.LiveAnchor,
+                var res = from d in q
+                          select new LiveAnchorOperatingReportVo()
+                          {
+                              RecordDate = d.RecordDate,
+                              LiveAnchor = d.LiveAnchor,
 
 
-                          TikTokOperationEmployeeName = d.TikTokOperationEmployeeName,
-                          TikTokSendNum = d.TikTokSendNum,
-                          TikTokReleaseTarget = d.TikTokReleaseTarget,
-                          TikTokCumulativeRelease = d.TikTokCumulativeRelease,
-                          TikTokReleaseCompleteRate = d.TikTokReleaseCompleteRate,
-                          TikTokFlowInvestmentNum = d.TikTokFlowInvestmentNum,
-                          TikTokFlowinvestmentTarget = d.TikTokFlowinvestmentTarget,
-                          CumulativeTikTokFlowinvestment = d.CumulativeTikTokFlowinvestment,
-                          TikTokFlowinvestmentCompleteRate = d.TikTokFlowinvestmentCompleteRate,
+                              TikTokOperationEmployeeName = d.TikTokOperationEmployeeName,
+                              TikTokSendNum = d.TikTokSendNum,
+                              TikTokReleaseTarget = d.TikTokReleaseTarget,
+                              TikTokCumulativeRelease = d.TikTokCumulativeRelease,
+                              TikTokReleaseCompleteRate = d.TikTokReleaseCompleteRate,
+                              TikTokFlowInvestmentNum = d.TikTokFlowInvestmentNum,
+                              TikTokFlowinvestmentTarget = d.TikTokFlowinvestmentTarget,
+                              CumulativeTikTokFlowinvestment = d.CumulativeTikTokFlowinvestment,
+                              TikTokFlowinvestmentCompleteRate = d.TikTokFlowinvestmentCompleteRate,
 
-                          ZhihuOperationEmployeeName = d.ZhihuOperationEmployeeName,
-                          ZhihuSendNum = d.ZhihuSendNum,
-                          ZhihuReleaseTarget = d.ZhihuReleaseTarget,
-                          ZhihuCumulativeRelease = d.ZhihuCumulativeRelease,
-                          ZhihuReleaseCompleteRate = d.ZhihuReleaseCompleteRate,
-                          ZhihuFlowInvestmentNum = d.ZhihuFlowInvestmentNum,
-                          ZhihuFlowinvestmentTarget = d.ZhihuFlowinvestmentTarget,
-                          CumulativeZhihuFlowinvestment = d.CumulativeZhihuFlowinvestment,
-                          ZhihuFlowinvestmentCompleteRate = d.ZhihuFlowinvestmentCompleteRate,
+                              ZhihuOperationEmployeeName = d.ZhihuOperationEmployeeName,
+                              ZhihuSendNum = d.ZhihuSendNum,
+                              ZhihuReleaseTarget = d.ZhihuReleaseTarget,
+                              ZhihuCumulativeRelease = d.ZhihuCumulativeRelease,
+                              ZhihuReleaseCompleteRate = d.ZhihuReleaseCompleteRate,
+                              ZhihuFlowInvestmentNum = d.ZhihuFlowInvestmentNum,
+                              ZhihuFlowinvestmentTarget = d.ZhihuFlowinvestmentTarget,
+                              CumulativeZhihuFlowinvestment = d.CumulativeZhihuFlowinvestment,
+                              ZhihuFlowinvestmentCompleteRate = d.ZhihuFlowinvestmentCompleteRate,
 
-                          XiaoHongShuOperationEmployeeName = d.XiaoHongShuOperationEmployeeName,
-                          XiaoHongShuSendNum = d.XiaoHongShuSendNum,
-                          XiaoHongShuReleaseTarget = d.XiaoHongShuReleaseTarget,
-                          XiaoHongShuCumulativeRelease = d.XiaoHongShuCumulativeRelease,
-                          XiaoHongShuReleaseCompleteRate = d.XiaoHongShuReleaseCompleteRate,
-                          XiaoHongShuFlowInvestmentNum = d.XiaoHongShuFlowInvestmentNum,
-                          XiaoHongShuFlowinvestmentTarget = d.XiaoHongShuFlowinvestmentTarget,
-                          CumulativeXiaoHongShuFlowinvestment = d.CumulativeXiaoHongShuFlowinvestment,
-                          XiaoHongShuFlowinvestmentCompleteRate = d.XiaoHongShuFlowinvestmentCompleteRate,
+                              XiaoHongShuOperationEmployeeName = d.XiaoHongShuOperationEmployeeName,
+                              XiaoHongShuSendNum = d.XiaoHongShuSendNum,
+                              XiaoHongShuReleaseTarget = d.XiaoHongShuReleaseTarget,
+                              XiaoHongShuCumulativeRelease = d.XiaoHongShuCumulativeRelease,
+                              XiaoHongShuReleaseCompleteRate = d.XiaoHongShuReleaseCompleteRate,
+                              XiaoHongShuFlowInvestmentNum = d.XiaoHongShuFlowInvestmentNum,
+                              XiaoHongShuFlowinvestmentTarget = d.XiaoHongShuFlowinvestmentTarget,
+                              CumulativeXiaoHongShuFlowinvestment = d.CumulativeXiaoHongShuFlowinvestment,
+                              XiaoHongShuFlowinvestmentCompleteRate = d.XiaoHongShuFlowinvestmentCompleteRate,
 
-                          SinaWeiBoOperationEmployeeName = d.SinaWeiBoOperationEmployeeName,
-                          SinaWeiBoSendNum = d.SinaWeiBoSendNum,
-                          SinaWeiBoReleaseTarget = d.SinaWeiBoReleaseTarget,
-                          SinaWeiBoCumulativeRelease = d.SinaWeiBoCumulativeRelease,
-                          SinaWeiBoReleaseCompleteRate = d.SinaWeiBoReleaseCompleteRate,
-                          SinaWeiBoFlowInvestmentNum = d.SinaWeiBoFlowInvestmentNum,
-                          SinaWeiBoFlowinvestmentTarget = d.SinaWeiBoFlowinvestmentTarget,
-                          CumulativeSinaWeiBoFlowinvestment = d.CumulativeSinaWeiBoFlowinvestment,
-                          SinaWeiBoFlowinvestmentCompleteRate = d.SinaWeiBoFlowinvestmentCompleteRate,
+                              SinaWeiBoOperationEmployeeName = d.SinaWeiBoOperationEmployeeName,
+                              SinaWeiBoSendNum = d.SinaWeiBoSendNum,
+                              SinaWeiBoReleaseTarget = d.SinaWeiBoReleaseTarget,
+                              SinaWeiBoCumulativeRelease = d.SinaWeiBoCumulativeRelease,
+                              SinaWeiBoReleaseCompleteRate = d.SinaWeiBoReleaseCompleteRate,
+                              SinaWeiBoFlowInvestmentNum = d.SinaWeiBoFlowInvestmentNum,
+                              SinaWeiBoFlowinvestmentTarget = d.SinaWeiBoFlowinvestmentTarget,
+                              CumulativeSinaWeiBoFlowinvestment = d.CumulativeSinaWeiBoFlowinvestment,
+                              SinaWeiBoFlowinvestmentCompleteRate = d.SinaWeiBoFlowinvestmentCompleteRate,
 
-                          VideoOperationEmployeeName = d.VideoOperationEmployeeName,
-                          VideoSendNum = d.VideoSendNum,
-                          VideoReleaseTarget = d.VideoReleaseTarget,
-                          VideoCumulativeRelease = d.CumulativeVideoRelease,
-                          VideoReleaseCompleteRate = d.VideoReleaseCompleteRate,
-                          VideoFlowInvestmentNum = d.VideoFlowInvestmentNum,
-                          VideoFlowinvestmentTarget = d.VideoFlowinvestmentTarget,
-                          CumulativeVideoFlowinvestment = d.CumulativeVideoFlowinvestment,
-                          VideoFlowinvestmentCompleteRate = d.VideoFlowinvestmentCompleteRate,
+                              VideoOperationEmployeeName = d.VideoOperationEmployeeName,
+                              VideoSendNum = d.VideoSendNum,
+                              VideoReleaseTarget = d.VideoReleaseTarget,
+                              VideoCumulativeRelease = d.CumulativeVideoRelease,
+                              VideoReleaseCompleteRate = d.VideoReleaseCompleteRate,
+                              VideoFlowInvestmentNum = d.VideoFlowInvestmentNum,
+                              VideoFlowinvestmentTarget = d.VideoFlowinvestmentTarget,
+                              CumulativeVideoFlowinvestment = d.CumulativeVideoFlowinvestment,
+                              VideoFlowinvestmentCompleteRate = d.VideoFlowinvestmentCompleteRate,
 
-                          TodaySendNum = d.TikTokSendNum + d.ZhihuSendNum + d.XiaoHongShuSendNum + d.SinaWeiBoSendNum + d.VideoSendNum,
-                          ReleaseTarget = d.ReleaseTarget,
-                          CumulativeRelease = d.CumulativeRelease,
-                          ReleaseCompleteRate = d.ReleaseCompleteRate,
-                          FlowInvestmentNum = d.TikTokFlowInvestmentNum + d.ZhihuFlowInvestmentNum + d.XiaoHongShuFlowInvestmentNum + d.SinaWeiBoFlowInvestmentNum + d.VideoFlowInvestmentNum,
-                          FlowInvestmentTarget = d.FlowInvestmentTarget,
-                          LivingRoomFlowInvestmentNum = d.LivingRoomFlowInvestmentNum,
-                          LivingRoomFlowInvestmentTarget = d.LivingRoomFlowInvestmentTarget,
-                          LivingRoomCumulativeFlowInvestment = d.LivingRoomCumulativeFlowInvestment,
-                          LivingRoomFlowInvestmentCompleteRate = d.LivingRoomFlowInvestmentCompleteRate,
-                          CumulativeFlowInvestment = d.CumulativeFlowInvestment,
-                          FlowInvestmentCompleteRate = d.FlowInvestmentCompleteRate,
-                          CluesNum = d.CluesNum,
-                          CluesNumTarget = d.CluesNumTarget,
-                          CumulativeCluesNum = d.CumulativeCluesNum,
-                          CluesCompleteRate = d.CluesCompleteRate,
-                          AddFansNum = d.AddFansNum,
-                          AddFansTarget = d.AddFansTarget,
-                          CumulativeAddFansNum = d.CumulativeAddFansNum,
-                          AddFansCompleteRate = d.AddFansCompleteRate,
-                          AddWechatNum = d.AddWechatNum,
-                          AddWechatTarget = d.AddWechatTarget,
-                          CumulativeAddWechat = d.CumulativeAddWechat,
-                          AddWechatCompleteRate = d.AddWechatCompleteRate,
-                          Consultation = d.Consultation,
-                          ConsultationTarget = d.ConsultationTarget,
-                          CumulativeConsultation = d.CumulativeConsultation,
-                          ConsultationCompleteRate = d.ConsultationCompleteRate,
-                          Consultation2 = d.Consultation2,
-                          ConsultationTarget2 = d.ConsultationTarget2,
-                          CumulativeConsultation2 = d.CumulativeConsultation2,
-                          ConsultationCompleteRate2 = d.ConsultationCompleteRate2,
-                          ConsultationCardConsumed = d.ConsultationCardConsumed,
-                          ConsultationCardConsumedTarget = d.ConsultationCardConsumedTarget,
-                          CumulativeConsultationCardConsumed = d.CumulativeConsultationCardConsumed,
-                          ConsultationCardConsumedCompleteRate = d.ConsultationCardConsumedCompleteRate,
-                          ConsultationCardConsumed2 = d.ConsultationCardConsumed2,
-                          ConsultationCardConsumedTarget2 = d.ConsultationCardConsumedTarget2,
-                          CumulativeConsultationCardConsumed2 = d.CumulativeConsultationCardConsumed2,
-                          ConsultationCardConsumedCompleteRate2 = d.ConsultationCardConsumedCompleteRate2,
-                          ActivateHistoricalConsultation = d.ActivateHistoricalConsultation,
-                          CumulativeActivateHistoricalConsultation = d.CumulativeActivateHistoricalConsultation,
-                          ActivateHistoricalConsultationTarget = d.ActivateHistoricalConsultationTarget,
-                          ActivateHistoricalConsultationCompleteRate = d.ActivateHistoricalConsultationCompleteRate,
-                          SendOrderNum = d.SendOrderNum,
-                          SendOrderTarget = d.SendOrderTarget,
-                          CumulativeSendOrder = d.CumulativeSendOrder,
-                          SendOrderCompleteRate = d.SendOrderCompleteRate,
-                          NewCustomerPerformanceCountNum = d.NewCustomerPerformanceCountNum,
-                          NewVisitNum = d.NewVisitNum,
-                          SubsequentVisitNum = d.SubsequentVisitNum,
-                          OldCustomerVisitNum = d.OldCustomerVisitNum,
-                          VisitNum = d.VisitNum,
-                          VisitTarget = d.VisitTarget,
-                          CumulativeVisit = d.CumulativeVisit,
-                          VisitCompleteRate = d.VisitCompleteRate,
-                          NewDealNum = d.NewDealNum,
-                          SubsequentDealNum = d.SubsequentDealNum,
-                          OldCustomerDealNum = d.OldCustomerDealNum,
-                          DealNum = d.DealNum,
-                          DealTarget = d.DealTarget,
-                          CumulativeDealTarget = d.CumulativeDealTarget,
-                          DealRate = d.DealRate,
-                          CargoSettlementCommission = d.CargoSettlementCommission,
-                          CargoSettlementCommissionTarget = d.CargoSettlementCommissionTarget,
-                          CumulativeCargoSettlementCommission = d.CumulativeCargoSettlementCommission,
-                          CargoSettlementCommissionCompleteRate = d.CargoSettlementCommissionCompleteRate,
-                          NewPerformanceNum = d.NewPerformanceNum,
-                          SubsequentPerformanceNum = d.SubsequentPerformanceNum,
-                          OldCustomerPerformanceNum = d.OldCustomerPerformanceNum,
-                          PerformanceNum = d.PerformanceNum,
-                          PerformanceTarget = d.PerformanceTarget,
-                          CumulativePerformance = d.CumulativePerformance,
-                          PerformanceCompleteRate = d.PerformanceCompleteRate,
-                          MinivanRefund = d.MinivanRefund,
-                          MinivanRefundTarget = d.MinivanRefundTarget,
-                          CumulativeMinivanRefund = d.CumulativeMinivanRefund,
-                          MinivanRefundCompleteRate = d.MinivanRefundCompleteRate,
-                          MiniVanBadReviews = d.MiniVanBadReviews,
-                          MiniVanBadReviewsTarget = d.MiniVanBadReviewsTarget,
-                          CumulativeMiniVanBadReviews = d.CumulativeMiniVanBadReviews,
-                          MiniVanBadReviewsCompleteRate = d.MiniVanBadReviewsCompleteRate,
-                          LivingTrackingEmployeeName = d.LivingTrackingEmployeeName,
-                          NetWorkConsultingEmployeeName = d.NetWorkConsultingEmployeeName,
-                          TikTokUpdateDate = d.TikTokUpdateDate,
-                          LivingUpdateDate = d.LivingUpdateDate,
-                          AfterLivingUpdateDate = d.AfterLivingUpdateDate
-                      };
-            var exportOrderWriteOff = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.ToString("yyyy年MM月dd日") + "-" + endDate.ToString("yyyy年MM月dd日") + "主播IP运营报表.xls");
-            return result;
+                              TodaySendNum = d.TikTokSendNum + d.ZhihuSendNum + d.XiaoHongShuSendNum + d.SinaWeiBoSendNum + d.VideoSendNum,
+                              ReleaseTarget = d.ReleaseTarget,
+                              CumulativeRelease = d.CumulativeRelease,
+                              ReleaseCompleteRate = d.ReleaseCompleteRate,
+                              FlowInvestmentNum = d.TikTokFlowInvestmentNum + d.ZhihuFlowInvestmentNum + d.XiaoHongShuFlowInvestmentNum + d.SinaWeiBoFlowInvestmentNum + d.VideoFlowInvestmentNum,
+                              FlowInvestmentTarget = d.FlowInvestmentTarget,
+                              LivingRoomFlowInvestmentNum = d.LivingRoomFlowInvestmentNum,
+                              LivingRoomFlowInvestmentTarget = d.LivingRoomFlowInvestmentTarget,
+                              LivingRoomCumulativeFlowInvestment = d.LivingRoomCumulativeFlowInvestment,
+                              LivingRoomFlowInvestmentCompleteRate = d.LivingRoomFlowInvestmentCompleteRate,
+                              CumulativeFlowInvestment = d.CumulativeFlowInvestment,
+                              FlowInvestmentCompleteRate = d.FlowInvestmentCompleteRate,
+                              CluesNum = d.CluesNum,
+                              CluesNumTarget = d.CluesNumTarget,
+                              CumulativeCluesNum = d.CumulativeCluesNum,
+                              CluesCompleteRate = d.CluesCompleteRate,
+                              AddFansNum = d.AddFansNum,
+                              AddFansTarget = d.AddFansTarget,
+                              CumulativeAddFansNum = d.CumulativeAddFansNum,
+                              AddFansCompleteRate = d.AddFansCompleteRate,
+                              AddWechatNum = d.AddWechatNum,
+                              AddWechatTarget = d.AddWechatTarget,
+                              CumulativeAddWechat = d.CumulativeAddWechat,
+                              AddWechatCompleteRate = d.AddWechatCompleteRate,
+                              Consultation = d.Consultation,
+                              ConsultationTarget = d.ConsultationTarget,
+                              CumulativeConsultation = d.CumulativeConsultation,
+                              ConsultationCompleteRate = d.ConsultationCompleteRate,
+                              Consultation2 = d.Consultation2,
+                              ConsultationTarget2 = d.ConsultationTarget2,
+                              CumulativeConsultation2 = d.CumulativeConsultation2,
+                              ConsultationCompleteRate2 = d.ConsultationCompleteRate2,
+                              ConsultationCardConsumed = d.ConsultationCardConsumed,
+                              ConsultationCardConsumedTarget = d.ConsultationCardConsumedTarget,
+                              CumulativeConsultationCardConsumed = d.CumulativeConsultationCardConsumed,
+                              ConsultationCardConsumedCompleteRate = d.ConsultationCardConsumedCompleteRate,
+                              ConsultationCardConsumed2 = d.ConsultationCardConsumed2,
+                              ConsultationCardConsumedTarget2 = d.ConsultationCardConsumedTarget2,
+                              CumulativeConsultationCardConsumed2 = d.CumulativeConsultationCardConsumed2,
+                              ConsultationCardConsumedCompleteRate2 = d.ConsultationCardConsumedCompleteRate2,
+                              ActivateHistoricalConsultation = d.ActivateHistoricalConsultation,
+                              CumulativeActivateHistoricalConsultation = d.CumulativeActivateHistoricalConsultation,
+                              ActivateHistoricalConsultationTarget = d.ActivateHistoricalConsultationTarget,
+                              ActivateHistoricalConsultationCompleteRate = d.ActivateHistoricalConsultationCompleteRate,
+                              SendOrderNum = d.SendOrderNum,
+                              SendOrderTarget = d.SendOrderTarget,
+                              CumulativeSendOrder = d.CumulativeSendOrder,
+                              SendOrderCompleteRate = d.SendOrderCompleteRate,
+                              NewCustomerPerformanceCountNum = d.NewCustomerPerformanceCountNum,
+                              NewVisitNum = d.NewVisitNum,
+                              SubsequentVisitNum = d.SubsequentVisitNum,
+                              OldCustomerVisitNum = d.OldCustomerVisitNum,
+                              VisitNum = d.VisitNum,
+                              VisitTarget = d.VisitTarget,
+                              CumulativeVisit = d.CumulativeVisit,
+                              VisitCompleteRate = d.VisitCompleteRate,
+                              NewDealNum = d.NewDealNum,
+                              SubsequentDealNum = d.SubsequentDealNum,
+                              OldCustomerDealNum = d.OldCustomerDealNum,
+                              DealNum = d.DealNum,
+                              DealTarget = d.DealTarget,
+                              CumulativeDealTarget = d.CumulativeDealTarget,
+                              DealRate = d.DealRate,
+                              CargoSettlementCommission = d.CargoSettlementCommission,
+                              CargoSettlementCommissionTarget = d.CargoSettlementCommissionTarget,
+                              CumulativeCargoSettlementCommission = d.CumulativeCargoSettlementCommission,
+                              CargoSettlementCommissionCompleteRate = d.CargoSettlementCommissionCompleteRate,
+                              NewPerformanceNum = d.NewPerformanceNum,
+                              SubsequentPerformanceNum = d.SubsequentPerformanceNum,
+                              OldCustomerPerformanceNum = d.OldCustomerPerformanceNum,
+                              PerformanceNum = d.PerformanceNum,
+                              PerformanceTarget = d.PerformanceTarget,
+                              CumulativePerformance = d.CumulativePerformance,
+                              PerformanceCompleteRate = d.PerformanceCompleteRate,
+                              MinivanRefund = d.MinivanRefund,
+                              MinivanRefundTarget = d.MinivanRefundTarget,
+                              CumulativeMinivanRefund = d.CumulativeMinivanRefund,
+                              MinivanRefundCompleteRate = d.MinivanRefundCompleteRate,
+                              MiniVanBadReviews = d.MiniVanBadReviews,
+                              MiniVanBadReviewsTarget = d.MiniVanBadReviewsTarget,
+                              CumulativeMiniVanBadReviews = d.CumulativeMiniVanBadReviews,
+                              MiniVanBadReviewsCompleteRate = d.MiniVanBadReviewsCompleteRate,
+                              LivingTrackingEmployeeName = d.LivingTrackingEmployeeName,
+                              NetWorkConsultingEmployeeName = d.NetWorkConsultingEmployeeName,
+                              TikTokUpdateDate = d.TikTokUpdateDate,
+                              LivingUpdateDate = d.LivingUpdateDate,
+                              AfterLivingUpdateDate = d.AfterLivingUpdateDate
+                          };
+                var exportOrderWriteOff = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "主播IP运营报表.xls");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                operationLog.Code = -1;
+                operationLog.Message = ex.Message;
+                throw new Exception(ex.Message.ToString());
+            }
+            finally
+            {
+                operationLog.Message = "";
+                operationLog.Parameters = JsonConvert.SerializeObject(query);
+                operationLog.RequestType = (int)RequestType.Export;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operatonLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
 

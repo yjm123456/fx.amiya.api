@@ -48,7 +48,7 @@ namespace Fx.Amiya.Service
                     HospitalName = e.HospitalInfo.Name,
                     AcceptBy = e.AcceptBy,
                     AcceptByEmpName = e.AcceptEmployee.Name,
-                    Phone = e.Phone,
+                    Phone = ServiceClass.GetIncompletePhone(e.Phone),
                     SendRemark = e.SendRemark,
                     CreateBy = e.CreateBy,
                     CreateByEmpName = e.CreateEmployee.Name,
