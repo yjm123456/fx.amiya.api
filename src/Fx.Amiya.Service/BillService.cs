@@ -484,6 +484,7 @@ namespace Fx.Amiya.Service
                 InformationPrice = g.Sum(item => item.InformationPrice) ?? 0m,
                 SystemUsePrice = g.Sum(item => item.SystemUpdatePrice) ?? 0m,
                 ReturnBackPrice = g.Sum(item => item.ReturnBackPrice) ?? 0m,
+                TotalServicePrice=g.Sum(item=>item.BillPrice)
             });
             FxPageInfo<FinancialHospitalBoardDto> fxPageInfo = new FxPageInfo<FinancialHospitalBoardDto>();
             fxPageInfo.TotalCount = await data.CountAsync();

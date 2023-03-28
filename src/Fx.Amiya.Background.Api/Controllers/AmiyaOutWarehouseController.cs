@@ -1,4 +1,6 @@
-﻿using Fx.Amiya.Background.Api.Vo.WareHouse.AmiyaWareHouse.OutWareHouse;
+﻿using Fx.Amiya.Background.Api.Vo.WareHouse.AmiyaWareHouse.Input;
+using Fx.Amiya.Background.Api.Vo.WareHouse.AmiyaWareHouse.OutWareHouse;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -6,6 +8,7 @@ using Fx.Open.Infrastructure.Web;
 using Jd.Api.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +26,7 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private IAmiyaOutWareHouseService _amiyaOutWarehouseService;
         private IHttpContextAccessor httpContextAccessor;
+        private IOperationLogService operationLogService;
 
         /// <summary>
         /// 构造函数
@@ -30,10 +34,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="amiyaOutWarehouseService"></param>
         public AmiyaOutWarehouseController(IAmiyaOutWareHouseService amiyaOutWarehouseService,
 
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, IOperationLogService operationLogService)
         {
             _amiyaOutWarehouseService = amiyaOutWarehouseService;
             this.httpContextAccessor = httpContextAccessor;
+            this.operationLogService = operationLogService;
         }
 
 
@@ -91,28 +96,50 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("AmiyaOutWareHouseExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> AmiyaOutWareHouseExportAsync(DateTime? startDate, DateTime? endDate, string keyword, string wareHouseInfoId)
+        public async Task<FileStreamResult> AmiyaOutWareHouseExportAsync([FromQuery] QueryAmiyaOutWareHouseExportVo query)
         {
-            var q = await _amiyaOutWarehouseService.ExportListAsync(startDate, endDate, keyword, wareHouseInfoId);
-            var res = from d in q
-                      select new AmiyaOutWarehouseExportVo()
-                      {
-                          GoodsName = d.GoodsName,
-                          Unit = d.Unit,
-                          WareHouseName = d.WareHouseName,
-                          SinglePrice = d.SinglePrice,
-                          Num = d.Num,
-                          AllPrice = d.AllPrice,
-                          Remark = d.Remark,
-                          Department = d.Department,
-                          UseEmployee = d.UseEmployee,
-                          CreateByEmpName = d.CreateByEmpName,
-                          CreateDate = d.CreateDate,
-                      };
-            var exportOrderWriteOff = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "出库报表.xls");
-            return result;
+            OperationAddDto operationAddDto = new OperationAddDto();
+            operationAddDto.Code = 0;
+            try
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationAddDto.OperationBy = employeeId;
+                var q = await _amiyaOutWarehouseService.ExportListAsync(query.StartDate, query.EndDate, query.Keyword, query.WareHouseInfoId);
+                var res = from d in q
+                          select new AmiyaOutWarehouseExportVo()
+                          {
+                              GoodsName = d.GoodsName,
+                              Unit = d.Unit,
+                              WareHouseName = d.WareHouseName,
+                              SinglePrice = d.SinglePrice,
+                              Num = d.Num,
+                              AllPrice = d.AllPrice,
+                              Remark = d.Remark,
+                              Department = d.Department,
+                              UseEmployee = d.UseEmployee,
+                              CreateByEmpName = d.CreateByEmpName,
+                              CreateDate = d.CreateDate,
+                          };
+                var exportOrderWriteOff = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "出库报表.xls");
+                return result;
+            }
+            catch (Exception err)
+            {
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
+            }
+            finally
+            {
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = JsonConvert.SerializeObject(query);
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
+            }
         }
     }
 }

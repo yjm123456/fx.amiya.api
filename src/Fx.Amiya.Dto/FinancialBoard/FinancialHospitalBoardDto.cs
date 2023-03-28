@@ -23,7 +23,7 @@ namespace Fx.Amiya.Dto.FinancialBoard
         /// <summary>
         /// 服务费合计
         /// </summary>
-        public decimal TotalServicePrice { get { return InformationPrice + SystemUsePrice; } }
+        public decimal TotalServicePrice { get; set; }
         /// <summary>
         /// 不含税收入
         /// </summary>
@@ -44,6 +44,10 @@ namespace Fx.Amiya.Dto.FinancialBoard
         /// 未回款金额
         /// </summary>
         public decimal UnReturnBackPrice { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public decimal BillPrice { get; set; }
 
     }
 }

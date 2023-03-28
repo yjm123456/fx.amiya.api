@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Fx.Amiya.Background.Api.Vo.Bill;
+using Fx.Amiya.Background.Api.Vo.Bill.Input;
 using Fx.Amiya.Dto.Bill;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -12,6 +14,7 @@ using Fx.Open.Infrastructure.Web;
 using Jd.Api.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
@@ -24,11 +27,13 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private IBillReturnBackPriceDataService billReturnBackPriceDataService;
         private IHttpContextAccessor _httpContextAccessor;
+        private IOperationLogService operationLogService;
 
-        public BillReturnBackPriceDataController(IHttpContextAccessor httpContextAccessor, IBillReturnBackPriceDataService billReturnBackPriceDataService)
+        public BillReturnBackPriceDataController(IHttpContextAccessor httpContextAccessor, IBillReturnBackPriceDataService billReturnBackPriceDataService, IOperationLogService operationLogService)
         {
             this.billReturnBackPriceDataService = billReturnBackPriceDataService;
             _httpContextAccessor = httpContextAccessor;
+            this.operationLogService = operationLogService;
         }
 
 
@@ -92,30 +97,52 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportBillReturnBackPriceDataList")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportBillReturnBackPriceDataListAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int? returnBackState, string companyId, string keyWord)
+        public async Task<FileStreamResult> ExportBillReturnBackPriceDataListAsync([FromQuery] QueryExportbillReturnBackPriceDataListVo query)
         {
-            var q = await billReturnBackPriceDataService.ExportListAsync(startDate, endDate, hospitalId, returnBackState, companyId, keyWord);
-            var billReturnBackPriceData = from d in q
-                                          select new BillReturnBackPriceDataVo
-                                          {
-                                              BillId = d.BillId,
-                                              HospitalName = d.HospitalName,
-                                              BillPrice = d.BillPrice,
-                                              CompanyName = d.CompanyName,
-                                              OtherPrice = d.OtherPrice,
-                                              ReturnBackStateText = d.ReturnBackStateText,
-                                              ReturnBackPrice = d.ReturnBackPrice,
-                                              ReturnBackDate = d.ReturnBackDate,
-                                              CreateDate = d.CreateDate,
-                                              Remark = d.Remark,
-                                              CreateByEmployeeName = d.CreateByEmployeeName,
-                                          };
+            OperationAddDto operationAddDto = new OperationAddDto();
+            operationAddDto.Code = 0;
+            try
+            {
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationAddDto.OperationBy = employeeId;
+                var q = await billReturnBackPriceDataService.ExportListAsync(query.StartDate, query.EndDate, query.HospitalId, query.ReturnBackState, query.CompanyId, query.KeyWord);
+                var billReturnBackPriceData = from d in q
+                                              select new BillReturnBackPriceDataVo
+                                              {
+                                                  BillId = d.BillId,
+                                                  HospitalName = d.HospitalName,
+                                                  BillPrice = d.BillPrice,
+                                                  CompanyName = d.CompanyName,
+                                                  OtherPrice = d.OtherPrice,
+                                                  ReturnBackStateText = d.ReturnBackStateText,
+                                                  ReturnBackPrice = d.ReturnBackPrice,
+                                                  ReturnBackDate = d.ReturnBackDate,
+                                                  CreateDate = d.CreateDate,
+                                                  Remark = d.Remark,
+                                                  CreateByEmployeeName = d.CreateByEmployeeName,
+                                              };
 
-            List<BillReturnBackPriceDataVo> pageInfo = new List<BillReturnBackPriceDataVo>();
-            pageInfo = billReturnBackPriceData.ToList();
-            var stream = ExportExcelHelper.ExportExcel(pageInfo);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "发票回款记录.xls");
-            return result;
+                List<BillReturnBackPriceDataVo> pageInfo = new List<BillReturnBackPriceDataVo>();
+                pageInfo = billReturnBackPriceData.ToList();
+                var stream = ExportExcelHelper.ExportExcel(pageInfo);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "发票回款记录.xls");
+                return result;
+            }
+            catch (Exception err)
+            {
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
+            }
+            finally
+            {
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = JsonConvert.SerializeObject(query);
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
+            }
         }
 
     }

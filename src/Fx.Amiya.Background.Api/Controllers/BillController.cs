@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.Bill;
+using Fx.Amiya.Background.Api.Vo.Bill.Input;
 using Fx.Amiya.Background.Api.Vo.ReconciliationDocuments;
 using Fx.Amiya.Dto.Bill;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -14,6 +16,7 @@ using Fx.Open.Infrastructure.Web;
 using Jd.Api.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
@@ -26,11 +29,13 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private IBillService billService;
         private IHttpContextAccessor _httpContextAccessor;
+        private IOperationLogService operationLogService;
 
-        public BillController(IHttpContextAccessor httpContextAccessor, IBillService billService)
+        public BillController(IHttpContextAccessor httpContextAccessor, IBillService billService, IOperationLogService operationLogService)
         {
             this.billService = billService;
             _httpContextAccessor = httpContextAccessor;
+            this.operationLogService = operationLogService;
         }
 
 
@@ -114,35 +119,57 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportBillList")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportBillListAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, bool? valid, int? billType, int? returnBackState, string companyId, string keyWord)
+        public async Task<FileStreamResult> ExportBillListAsync([FromQuery] QueryExportBillListVo query)
         {
-            var q = await billService.ExportBillListAsync(startDate, endDate, hospitalId, valid, billType, returnBackState, companyId, keyWord);
-            var bill = from d in q
-                       select new ExportBillVo
-                       {
-                           Id = d.Id,
-                           HospitalName = d.HospitalName,
-                           BillPrice = d.BillPrice,
-                           TaxRate = d.TaxRate,
-                           TaxPrice = Math.Round(d.TaxPrice, 2),
-                           NotInTaxPrice = Math.Round(d.NotInTaxPrice, 2),
-                           OtherPrice = d.OtherPrice,
-                           OtherPriceRemark = d.OtherPriceRemark,
-                           CollectionCompanyName = d.CollectionCompanyName,
-                           BelongDate = d.BelongStartTime.ToString("yyyy-MM-dd") + "  -  " + d.BelongEndTime.ToString("yyyy-MM-dd"),
-                           BillTypeText = d.BillTypeText,
-                           CreateBillReason = d.CreateBillReason,
-                           ReturnBackStateText = d.ReturnBackStateText,
-                           ReturnBackPrice = d.ReturnBackPrice,
-                           CreateDate = d.CreateDate,
-                           CreateByEmployeeName = d.CreateByEmployeeName,
-                           ValidText = d.ValidText,
-                           ReturnBackPriceDate = d.ReturnBackPriceDate
-                       };
-            var exportOrder = bill.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportOrder);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "发票.xls");
-            return result;
+            OperationAddDto operationAddDto = new OperationAddDto();
+            operationAddDto.Code = 0;
+            try
+            {
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationAddDto.OperationBy = employeeId;
+                var q = await billService.ExportBillListAsync(query.StartDate, query.EndDate, query.HospitalId, query.Valid, query.BillType, query.ReturnBackState, query.CompanyId, query.KeyWord);
+                var bill = from d in q
+                           select new ExportBillVo
+                           {
+                               Id = d.Id,
+                               HospitalName = d.HospitalName,
+                               BillPrice = d.BillPrice,
+                               TaxRate = d.TaxRate,
+                               TaxPrice = Math.Round(d.TaxPrice, 2),
+                               NotInTaxPrice = Math.Round(d.NotInTaxPrice, 2),
+                               OtherPrice = d.OtherPrice,
+                               OtherPriceRemark = d.OtherPriceRemark,
+                               CollectionCompanyName = d.CollectionCompanyName,
+                               BelongDate = d.BelongStartTime.ToString("yyyy-MM-dd") + "  -  " + d.BelongEndTime.ToString("yyyy-MM-dd"),
+                               BillTypeText = d.BillTypeText,
+                               CreateBillReason = d.CreateBillReason,
+                               ReturnBackStateText = d.ReturnBackStateText,
+                               ReturnBackPrice = d.ReturnBackPrice,
+                               CreateDate = d.CreateDate,
+                               CreateByEmployeeName = d.CreateByEmployeeName,
+                               ValidText = d.ValidText,
+                               ReturnBackPriceDate = d.ReturnBackPriceDate
+                           };
+                var exportOrder = bill.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportOrder);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "发票.xls");
+                return result;
+            }
+            catch (Exception err)
+            {
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
+            }
+            finally
+            {
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = JsonConvert.SerializeObject(query);
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
+            }
         }
 
 

@@ -1,4 +1,6 @@
 ﻿using Fx.Amiya.Background.Api.Vo.WareHouse.AmiyaWareHouse;
+using Fx.Amiya.Background.Api.Vo.WareHouse.AmiyaWareHouse.Input;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.Dto.WareHouse.WareHouseInfo;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
@@ -7,6 +9,7 @@ using Fx.Open.Infrastructure.Web;
 using Jd.Api.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +27,7 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private IAmiyaWareHouseService _amiyaWareHouseService;
         private IHttpContextAccessor httpContextAccessor;
+        private IOperationLogService operationLogService;
 
         /// <summary>
         /// 构造函数
@@ -31,10 +35,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="amiyaWareHouseService"></param>
         public AmiyaWareHouseController(IAmiyaWareHouseService amiyaWareHouseService,
 
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, IOperationLogService operationLogService)
         {
             _amiyaWareHouseService = amiyaWareHouseService;
             this.httpContextAccessor = httpContextAccessor;
+            this.operationLogService = operationLogService;
         }
 
 
@@ -277,23 +282,45 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("AmiyaWareHouseExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> AmiyaWareHouseExportAsync(string keyword, string wareHouseInfoId)
+        public async Task<FileStreamResult> AmiyaWareHouseExportAsync([FromQuery]QueryAmiyaWareHouseExportVo query)
         {
-            var q = await _amiyaWareHouseService.ExportListAsync(keyword, wareHouseInfoId);
-            var res = from d in q
-                      select new ExportAmiyaWareHouseVo()
-                      {
-                          Unit = d.Unit,
-                          GoodsName = d.GoodsName,
-                          GoodsSourceName = d.GoodsSourceName,
-                          SinglePrice = d.SinglePrice,
-                          Amount = d.Amount,
-                          TotalPrice = d.TotalPrice,
-                      };
-            var exportOrderWriteOff = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"库存报表.xls");
-            return result;
+            OperationAddDto operationAddDto = new OperationAddDto();
+            operationAddDto.Code = 0;
+            try
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationAddDto.OperationBy = employeeId;
+                var q = await _amiyaWareHouseService.ExportListAsync(query.Keyword, query.WareHouseInfoId);
+                var res = from d in q
+                          select new ExportAmiyaWareHouseVo()
+                          {
+                              Unit = d.Unit,
+                              GoodsName = d.GoodsName,
+                              GoodsSourceName = d.GoodsSourceName,
+                              SinglePrice = d.SinglePrice,
+                              Amount = d.Amount,
+                              TotalPrice = d.TotalPrice,
+                          };
+                var exportOrderWriteOff = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
+                var result = File(stream, "application/vnd.ms-excel", $"库存报表.xls");
+                return result;
+            }
+            catch (Exception err)
+            {
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
+            }
+            finally
+            {
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = JsonConvert.SerializeObject(query);
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
+            }
         }
     }
 }
