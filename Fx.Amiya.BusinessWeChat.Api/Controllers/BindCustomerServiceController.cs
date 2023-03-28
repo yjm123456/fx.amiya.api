@@ -46,6 +46,19 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
 
 
         /// <summary>
+        /// 根据手机号筛选归属客服
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns>查找成功返回名称，查找失败返回“未绑定”</returns>
+        [HttpGet("getCustomerServiceNameByPhone")]
+
+        public async Task<ResultData<string>> GetBindCustomerNameByPhoneAsync(string phone)
+        {
+            var result = await bindCustomerService.GetBindCustomerServiceNameByPhone(phone);
+            return ResultData<string>.Success().AddData("CustomerServiceNameByPhone", result);
+        }
+
+        /// <summary>
         /// 获取我的客户（放在前端缓存中）
         /// </summary>
         /// <returns></returns>

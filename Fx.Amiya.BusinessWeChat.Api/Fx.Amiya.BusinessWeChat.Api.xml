@@ -224,6 +224,13 @@
             <param name="bindCustomerService"></param>
             <param name="httpContextAccessor"></param>
         </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.BindCustomerServiceController.GetBindCustomerNameByPhoneAsync(System.String)">
+            <summary>
+            根据手机号筛选归属客服
+            </summary>
+            <param name="phone"></param>
+            <returns>查找成功返回名称，查找失败返回“未绑定”</returns>
+        </member>
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.BindCustomerServiceController.GetMyCustomerAsync">
             <summary>
             获取我的客户（放在前端缓存中）
@@ -235,7 +242,7 @@
             内容平台订单模块
             </summary>
         </member>
-        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.#ctor(Fx.Amiya.IService.IContentPlateFormOrderService,Fx.Amiya.IService.IContentPlatFormCustomerPictureService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Fx.Amiya.IService.IAmiyaPositionInfoService,Fx.Amiya.IService.ICustomerService,Fx.Amiya.IService.IWxAppConfigService)">
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.#ctor(Fx.Amiya.IService.IContentPlateFormOrderService,Fx.Amiya.IService.IContentPlatFormCustomerPictureService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Fx.Amiya.IService.IBindCustomerServiceService,Fx.Amiya.IService.IAmiyaPositionInfoService,Fx.Amiya.IService.ICustomerService,Fx.Amiya.IService.IWxAppConfigService)">
             <summary>
             内容平台订单模块
             </summary>
@@ -294,7 +301,7 @@
         </member>
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.GetByIdAsync(System.String)">
             <summary>
-            根据订单编号获取订单信息
+            根据订单编号获取订单要修改的信息
             </summary>
             <param name="id"></param>
             <returns></returns>
@@ -576,6 +583,13 @@
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.HospitalInfoController.GetHospitalNameListAsync(System.String)">
             <summary>
             获取有效医院名称列表
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.HospitalInfoController.GetHospitalSimpleNameListAsync">
+            <summary>
+            获取有效医院简称列表
             </summary>
             <param name="name"></param>
             <returns></returns>
@@ -1007,6 +1021,16 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.CustomerPictures">
             <summary>
             顾客照片（最多上传5张）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.IsSupportOrder">
+            <summary>
+            是否为辅助订单(企业微信目前写死为false)
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.SupportEmpId">
+            <summary>
+            辅助客服（企业微信目前写死为0）
             </summary>
         </member>
         <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo">
@@ -1667,6 +1691,21 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.CreateBillCompany">
             <summary>
             开票公司
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.IsSupportOrder">
+            <summary>
+            是否为辅助订单
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.SupportEmpId">
+            <summary>
+            辅助客服
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.SupportEmpName">
+            <summary>
+            辅助客服名称
             </summary>
         </member>
         <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormCustomerPictureVo">
