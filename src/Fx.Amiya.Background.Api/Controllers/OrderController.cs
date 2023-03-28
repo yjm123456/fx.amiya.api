@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder;
 using Fx.Amiya.Background.Api.Vo.Order;
+using Fx.Amiya.Background.Api.Vo.Order.Input;
 using Fx.Amiya.Background.Api.Vo.OrderCheck;
 using Fx.Amiya.Core.Dto.Integration;
 using Fx.Amiya.Core.Interfaces.Goods;
@@ -16,6 +17,7 @@ using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.Core.Interfaces.MemberCard;
 using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.Dto.Order;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IDal;
@@ -56,6 +58,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IExpressManageService _expressManageService;
         private IAmiyaGoodsDemandService _amiyaGoodsDemandService;
         private IMemberRankInfo memberRankInfoService;
+        private IOperationLogService operationLogService;
         public OrderController(IOrderService orderService,
             ISyncOrder syncOrder,
             ICustomerService customerService,
@@ -66,7 +69,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             IDalBindCustomerService dalBindCustomerService,
             IExpressManageService expressManageService,
             IAmiyaGoodsDemandService amiyaGoodsDemandService,
-             IMemberRankInfo memberRankInfoService)
+             IMemberRankInfo memberRankInfoService, IOperationLogService operationLogService)
         {
             this.orderService = orderService;
             this.syncOrder = syncOrder;
@@ -79,6 +82,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             _expressManageService = expressManageService;
             this.memberRankInfoService = memberRankInfoService;
             _amiyaGoodsDemandService = amiyaGoodsDemandService;
+            this.operationLogService = operationLogService;
         }
 
         /// <summary>
@@ -775,41 +779,63 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportTmallOrderLlist")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportOrderListAsync(DateTime? startDate, DateTime? endDate, DateTime? writeOffStartDate, DateTime? writeOffEndDate, string keyword, string statusCode, byte? appType, byte? orderNature)
+        public async Task<FileStreamResult> ExportOrderListAsync([FromQuery]QueryExportTmallOrderLlistVo query)
         {
-            bool isHidePhone = true;
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int employeeId = Convert.ToInt32(employee.Id);
-            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            OperationAddDto operationAddDto = new OperationAddDto();
+            operationAddDto.Code = 0;
+            try
             {
-                isHidePhone = false;
+                bool isHidePhone = true;
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationAddDto.OperationBy = employeeId;
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
+                var q = await orderService.ExportOrderListAsync(query.StartDate, query.EndDate, query.WriteOffStartDate, query.WriteOffEndDate, query.Keyword, query.StatusCode, query.AppType, query.OrderNature, employeeId, isHidePhone);
+                var order = from d in q
+                            select new ExportOrderVo
+                            {
+                                Id = d.Id,
+                                GoodsName = d.GoodsName,
+                                NickName = d.BuyerNick,
+                                GoodsId = d.GoodsId,
+                                Phone = d.Phone,
+                                AppointmentCity = d.AppointmentCity,
+                                AppointmentDate = d.AppointmentDate,
+                                AppointmentHospital = d.AppointmentHospital,
+                                SendOrderHospital = d.SendOrderHospital,
+                                ActualPayment = (d.ActualPayment.HasValue) ? d.ActualPayment.Value : 0,
+                                CreateDate = d.CreateDate,
+                                WriteOffDate = d.WriteOffDate,
+                                AppTypeText = d.AppTypeText,
+                                StatusText = d.StatusText,
+                                Quantity = d.Quantity,
+                                IntegrationQuantity = (d.IntegrationQuantity.HasValue) ? d.IntegrationQuantity.Value : 0,
+                                Standard = d.Standard
+                            };
+                var exportOrder = order.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportOrder);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "订单列表.xls");
+                return result;
             }
-            var q = await orderService.ExportOrderListAsync(startDate, endDate, writeOffStartDate, writeOffEndDate, keyword, statusCode, appType, orderNature, employeeId, isHidePhone);
-            var order = from d in q
-                        select new ExportOrderVo
-                        {
-                            Id = d.Id,
-                            GoodsName = d.GoodsName,
-                            NickName = d.BuyerNick,
-                            GoodsId = d.GoodsId,
-                            Phone = d.Phone,
-                            AppointmentCity = d.AppointmentCity,
-                            AppointmentDate = d.AppointmentDate,
-                            AppointmentHospital = d.AppointmentHospital,
-                            SendOrderHospital = d.SendOrderHospital,
-                            ActualPayment = (d.ActualPayment.HasValue) ? d.ActualPayment.Value : 0,
-                            CreateDate = d.CreateDate,
-                            WriteOffDate = d.WriteOffDate,
-                            AppTypeText = d.AppTypeText,
-                            StatusText = d.StatusText,
-                            Quantity = d.Quantity,
-                            IntegrationQuantity = (d.IntegrationQuantity.HasValue) ? d.IntegrationQuantity.Value : 0,
-                            Standard = d.Standard
-                        };
-            var exportOrder = order.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportOrder);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "订单列表.xls");
-            return result;
+            catch (Exception err)
+            {
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
+            }
+            finally
+            {
+                
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = JsonConvert.SerializeObject(query);
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
+            }
+
         }
 
 
@@ -1350,40 +1376,61 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportMiniProgramOrderLlist")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportMiniProgramMaterialOrderTradeListAsync(DateTime startDate, DateTime endDate, bool? isSendGoods, string keyword)
+        public async Task<FileStreamResult> ExportMiniProgramMaterialOrderTradeListAsync([FromQuery]QueryExportMiniProgramOrderLlistVo query)
         {
-            bool isHidePhone = true;
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int employeeId = Convert.ToInt32(employee.Id);
-            var q = await orderService.ExportMiniProgramMaterialOrderTradeList(startDate, endDate, employeeId, isSendGoods, keyword);
-            var order = from d in q
-                        select new ExportMiniProgramOrderTradeVo
-                        {
-                            Phone = d.Phone,
-                            CreateDate = d.CreateDate,
-                            Remark = d.Remark,
-                            StatusText = d.StatusText,
-                            Address = d.Address,
-                            BindOrderIds = d.OrderIds,
-                            GoodsCategory = d.CategoryName,
-                            Goods = d.GoodsName,
-                            Standard = d.Standard,
-                            IntergrationAccounts = d.IntergrationAccounts,
-                            TotalAmount = d.ActualPay,
-                            Quantities = d.Quantities,
-                            ReceiveName = d.ReceiveName,
-                            ReceivePhone = d.ReceivePhone,
-                            SendGoodsName = d.SendGoodsName,
-                            SendGoodsDate = d.SendGoodsDate,
-                            CourierNumber = d.CourierNumber,
-                            ExpressName = (!string.IsNullOrEmpty(d.ExpressId)) ? _expressManageService.GetByIdAsync(d.ExpressId).Result.ExpressName.ToString() : "",
-                            ExchageType = d.ExchangeType,
+            OperationAddDto operationAddDto = new OperationAddDto();
+            operationAddDto.Code = 0;
+            try
+            {
+                bool isHidePhone = true;
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationAddDto.OperationBy = employeeId;
+                var q = await orderService.ExportMiniProgramMaterialOrderTradeList(query.StartDate.Value, query.EndDate.Value, employeeId, query.IsSendGoods, query.Keyword);
+                var order = from d in q
+                            select new ExportMiniProgramOrderTradeVo
+                            {
+                                Phone = d.Phone,
+                                CreateDate = d.CreateDate,
+                                Remark = d.Remark,
+                                StatusText = d.StatusText,
+                                Address = d.Address,
+                                BindOrderIds = d.OrderIds,
+                                GoodsCategory = d.CategoryName,
+                                Goods = d.GoodsName,
+                                Standard = d.Standard,
+                                IntergrationAccounts = d.IntergrationAccounts,
+                                TotalAmount = d.ActualPay,
+                                Quantities = d.Quantities,
+                                ReceiveName = d.ReceiveName,
+                                ReceivePhone = d.ReceivePhone,
+                                SendGoodsName = d.SendGoodsName,
+                                SendGoodsDate = d.SendGoodsDate,
+                                CourierNumber = d.CourierNumber,
+                                ExpressName = (!string.IsNullOrEmpty(d.ExpressId)) ? _expressManageService.GetByIdAsync(d.ExpressId).Result.ExpressName.ToString() : "",
+                                ExchageType = d.ExchangeType,
 
-                        };
-            var exportOrder = order.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportOrder);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.ToString("yyyy年MM月dd日") + "-" + endDate.ToString("yyyy年MM月dd日") + "小程序实物订单.xls");
-            return result;
+                            };
+                var exportOrder = order.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportOrder);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "小程序实物订单.xls");
+                return result;
+            }
+            catch (Exception err)
+            {
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
+            }
+            finally
+            {
+                
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = JsonConvert.SerializeObject(query);
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
+            }
         }
 
         /// <summary>

@@ -72,7 +72,7 @@ namespace Fx.Amiya.Service
                 SendAestheticsDesignMessageDto sendMessage = new SendAestheticsDesignMessageDto();
                 sendMessage.ReportId = aestheticsDesign.AestheticsDesignReportId;
                 sendMessage.CustomerId = report.CustomerId;
-                sendMessage.Content = $"{sendMessage.ReportId}设计完成";
+                sendMessage.Content = $"编号为{sendMessage.ReportId}的美学设计报告,已设计完成,点击查看";
                 sendMessage.DesignDate = DateTime.Now.ToString("yyyy-MM-dd HH-mm");
                 sendMessage.Remark = "设计完成请点击查看";
                 await miniProgramTemplateMessageSendService.SendAestheticsDesignMessage(sendMessage);
@@ -134,7 +134,7 @@ namespace Fx.Amiya.Service
             try
             {
                 unitofwork.BeginTransaction();
-                var design = dalAestheticsDesign.GetAll().Where(e => e.Id == updateDto.Id).FirstOrDefault();
+                var design = dalAestheticsDesign.GetAll().Where(e => e.AestheticsDesignReportId == updateDto.Id).FirstOrDefault();
                 if (design == null) throw new Exception("设计编号错误！");
                 design.Design = updateDto.Design;
                 design.HospitalId = updateDto.HospitalId;

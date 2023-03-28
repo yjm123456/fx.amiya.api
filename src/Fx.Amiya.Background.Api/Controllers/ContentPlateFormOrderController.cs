@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder;
+using Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input;
 using Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend;
 using Fx.Amiya.Background.Api.Vo.Order;
 using Fx.Amiya.Background.Api.Vo.OrderCheck;
@@ -6,6 +7,7 @@ using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.CustomerInfo;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -18,6 +20,7 @@ using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +48,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IContentPlatFormCustomerPictureService _contentPlatFormCustomerPictureService;
         private IHospitalInfoService _hospitalInfoService;
         private IHttpContextAccessor _httpContextAccessor;
+        private IOperationLogService operationLogService;
         public ContentPlateFormOrderController(IContentPlateFormOrderService orderService,
             IOrderService tmallOrderService,
             IAmiyaEmployeeService amiyaEmployeeService,
@@ -56,7 +60,7 @@ namespace Fx.Amiya.Background.Api.Controllers
            ICustomerService customerService,
             IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
             IHttpContextAccessor httpContextAccessor,
-             IWxAppConfigService wxAppConfigService)
+             IWxAppConfigService wxAppConfigService, IOperationLogService operationLogService)
         {
             _orderService = orderService;
             _tmallOrderService = tmallOrderService;
@@ -70,6 +74,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             _hospitalInfoService = hospitalInfoService;
             _httpContextAccessor = httpContextAccessor;
             _contentPlatFormCustomerPictureService = contentPlatFormCustomerPictureService;
+            this.operationLogService = operationLogService;
         }
 
         /// <summary>
@@ -358,22 +363,25 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportContentPlateFormOrderLlistWithPage")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, int? appointmentHospital, int? belongEmpId, int? liveAnchorId, int? consultationEmpId, string hospitalDepartmentId, string keyword, int? orderStatus, int orderSource, string contentPlateFormId)
+        public async Task<FileStreamResult> ExportOrderListWithPageAsync([FromQuery]QueryExportContentPlateFormOrderLlistWithPage query)
         {
+            OperationAddDto operationAddDto = new OperationAddDto();
+            operationAddDto.Code = 0;
             try
             {
                 bool isHidePhone = true;
-                if (startDate.HasValue == false || endDate.HasValue == false)
+                if (query.StartDate.HasValue == false || query.EndDate.HasValue == false)
                 {
                     throw new Exception("请选择录单时间进行导出！");
                 }
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
+                operationAddDto.OperationBy = employeeId;
                 if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
                 {
                     isHidePhone = false;
                 }
-                var q = await _orderService.ExportOrderListWithPageAsync(startDate, endDate, consultationEmpId, appointmentHospital, belongEmpId, liveAnchorId, keyword, hospitalDepartmentId, orderStatus, orderSource, contentPlateFormId, employeeId, isHidePhone);
+                var q = await _orderService.ExportOrderListWithPageAsync(query.StartDate, query.EndDate, query.ConsultationEmpId, query.AppointmentHospital, query.BelongEmpId, query.LiveAnchorId, query.Keyword, query.HospitalDepartmentId, query.OrderStatus, query.OrderSource, query.ContentPlateFormId, employeeId, isHidePhone);
 
                 #region 【注释代码】
                 //var resutList = q.ToList();
@@ -546,12 +554,23 @@ namespace Fx.Amiya.Background.Api.Controllers
                 }
                 var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
                 //var stream = ExportExcelHelper.ExportExcel(contentPlatFormOrderInfoVoList);
-                var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "内容平台订单报表.xls");
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "内容平台订单报表.xls");
                 return result;
             }
-            catch (Exception ex)
+            catch (Exception err)
             {
-                throw ex;
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
+            }
+            finally
+            {
+                
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = JsonConvert.SerializeObject(query);
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
             }
         }
 

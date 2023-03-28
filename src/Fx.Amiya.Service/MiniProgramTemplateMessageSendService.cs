@@ -44,20 +44,21 @@ namespace Fx.Amiya.Service
                 var requestUrl = $"https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token={appInfo.AccessToken}";
                 var messageBody = new
                 {
-                    template_id = MessageTemplateIds.ApointmentMessage,
+                    template_id = MessageTemplateIds.AestheticsDesignCompleteMessage,
                     touser = openId,
-                    page = "/pages/index/index",// 点击提示信息要进入的小程序页面
+                    page = $"/pages/aestheticsDesignReport/aestheticsDesignReport?reportId={sendAestheticsDesignMessageDto.ReportId}&status='design'",// 点击提示信息要进入的小程序页面
                     miniprogram_state = "trial",
                     lang = "zh_CN",
                     data = new
                     {
-                        thing20 = new { value = sendAestheticsDesignMessageDto.Content },
-                        thing4 = new { value = sendAestheticsDesignMessageDto.Remark },
-                        time3 = new { value = sendAestheticsDesignMessageDto.DesignDate },
+                        thing3 = new { value = "美学设计报告" },
+                        thing6 = new { value = sendAestheticsDesignMessageDto.Remark },
+                        time2 = new { value = $"{DateTime.Now.Year}年{DateTime.Now.Month}月{DateTime.Now.Day}号 {DateTime.Now.Hour}:{DateTime.Now.Minute}" },
                     }
                 };
                 string body = JsonConvert.SerializeObject(messageBody);
                 var result = HttpUtil.HTTPJsonPost(requestUrl, body);
+                Console.WriteLine(result);
             }
             catch (Exception ex)
             {

@@ -3,6 +3,7 @@ using Fx.Amiya.Background.Api.Vo.GoodsInfo;
 using Fx.Amiya.Background.Api.Vo.HospitalInfo;
 using Fx.Amiya.Dto.GoodsDemand;
 using Fx.Amiya.Dto.HospitalInfo;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -28,17 +29,21 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IHospitalBrandApplyService hospitalBrandApplyService;
         private IOrderService _orderService;
         private ITmallGoodsSkuService tmallGoodsSkuService;
+        private IHttpContextAccessor httpContextAccessor;
+        private IOperationLogService operationLogService;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="hospitalBrandApplyService"></param>
         public HospitalBrandApplyController(IHospitalBrandApplyService hospitalBrandApplyService, IOrderService orderService,
-            ITmallGoodsSkuService tmallGoodsSkuService)
+            ITmallGoodsSkuService tmallGoodsSkuService, IHttpContextAccessor httpContextAccessor, IOperationLogService operationLogService)
         {
             this.hospitalBrandApplyService = hospitalBrandApplyService;
             _orderService = orderService;
             this.tmallGoodsSkuService = tmallGoodsSkuService;
+            this.httpContextAccessor = httpContextAccessor;
+            this.operationLogService = operationLogService;
         }
 
 
@@ -246,27 +251,50 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("Export")]
         public async Task<FileStreamResult> GetOrderBuyExportAsync(string keyWord)
         {
-            var q = await hospitalBrandApplyService.GetDetailAsync(keyWord);
-            var res = from d in q
-                      select new ExportHospitalBrandApplyAndTmallGoodsVo()
-                      {
-                          HospitalName = d.HospitalName,
-                          BusinessLicenseName = d.BusinessLicenseName,
-                          HospitalLinkMan = d.HospitalLinkMan,
-                          HospitalLinkManPhone = d.HospitalLinkManPhone,
-                          GooodsUrl = d.GooodsUrl,
-                          GoodsId = d.GoodsId,
-                          SkuName = d.SkuName,
-                          Price = d.Price,
-                          AllSaleNum = d.AllSaleNum,
-                          GoodsType = d.GoodsType,
-                          AllCount = d.AllCount,
-                          ExceededReason = d.ExceededReason
-                      };
-            var exportOrderWriteOff = res.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
-            var result = File(stream, "application/vnd.ms-excel", $"各医院品牌专区报名报表.xls");
-            return result;
+            OperationAddDto operationAddDto = new OperationAddDto();
+            operationAddDto.Code = 0;
+            try
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationAddDto.OperationBy = employeeId;
+                var q = await hospitalBrandApplyService.GetDetailAsync(keyWord);
+                var res = from d in q
+                          select new ExportHospitalBrandApplyAndTmallGoodsVo()
+                          {
+                              HospitalName = d.HospitalName,
+                              BusinessLicenseName = d.BusinessLicenseName,
+                              HospitalLinkMan = d.HospitalLinkMan,
+                              HospitalLinkManPhone = d.HospitalLinkManPhone,
+                              GooodsUrl = d.GooodsUrl,
+                              GoodsId = d.GoodsId,
+                              SkuName = d.SkuName,
+                              Price = d.Price,
+                              AllSaleNum = d.AllSaleNum,
+                              GoodsType = d.GoodsType,
+                              AllCount = d.AllCount,
+                              ExceededReason = d.ExceededReason
+                          };
+                var exportOrderWriteOff = res.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
+                var result = File(stream, "application/vnd.ms-excel", $"各医院品牌专区报名报表.xls");
+                return result;
+            }
+            catch (Exception err)
+            {
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
+            }
+            finally
+            {
+                
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = keyWord;
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
+            }
         }
 
 

@@ -1,11 +1,15 @@
 ﻿
 using Fx.Amiya.Background.Api.Vo.ReconciliationDocuments;
+using Fx.Amiya.Background.Api.Vo.ReconciliationDocuments.Input;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
 using Jd.Api.Util;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,15 +25,19 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class ReconciliationDocumentsSettleController : ControllerBase
     {
         private IReconciliationDocumentsService reconciliationDocumentsService;
+        private IOperationLogService operationLogService;
+        private IHttpContextAccessor httpContextAccessor;
         //private IRecommandDocumentSettleService reconciliationDocumentsSettleService;
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="reconciliationDocumentsService"></param>
-        public ReconciliationDocumentsSettleController(IReconciliationDocumentsService reconciliationDocumentsService)
+        public ReconciliationDocumentsSettleController(IReconciliationDocumentsService reconciliationDocumentsService, IOperationLogService operationLogService, IHttpContextAccessor httpContextAccessor)
         {
             //this.reconciliationDocumentsSettleService = reconciliationDocumentsSettleService;
             this.reconciliationDocumentsService = reconciliationDocumentsService;
+            this.operationLogService = operationLogService;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -106,52 +114,74 @@ namespace Fx.Amiya.Background.Api.Controllers
 
         [HttpGet("ExportReconciliationDocumentsDetails")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> InternalxportReconciliationDocumentsSettle(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, string keyword)
+        public async Task<FileStreamResult> InternalxportReconciliationDocumentsSettle([FromQuery] QueryExportReconciliationDocumentsDetailsVo query)
         {
-            if (!startDate.HasValue && !endDate.HasValue)
-            { throw new Exception("请选择时间进行查询"); }
-            if (startDate.HasValue && endDate.HasValue)
+            OperationAddDto operationAddDto = new OperationAddDto();
+            operationAddDto.Code = 0;
+            try
             {
-                if ((endDate.Value - startDate.Value).TotalDays > 31)
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationAddDto.OperationBy = employeeId;
+                if (!query.StartDate.HasValue && !query.EndDate.HasValue)
+                { throw new Exception("请选择时间进行查询"); }
+                if (query.StartDate.HasValue && query.EndDate.HasValue)
                 {
-                    throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
+                    if ((query.EndDate.Value - query.StartDate.Value).TotalDays > 31)
+                    {
+                        throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
+                    }
                 }
+                var res = new List<ReconciliationDocumentsSettleVo>();
+                var q = await reconciliationDocumentsService.ExportSettleListByPageAsync(query.StartDate, query.EndDate, query.IsSettle, query.AccountType, query.Keyword);
+
+                var reconciliationDocumentsSettle = from d in q
+                                                    select new ReconciliationDocumentsSettleVo
+                                                    {
+                                                        RecommandDocumentId = d.RecommandDocumentId,
+                                                        HospitalName = d.HospitalName,
+                                                        OrderId = d.OrderId,
+                                                        DealInfoId = d.DealInfoId,
+                                                        DealDate = d.DealDate,
+                                                        GoodsName = d.GoodsName,
+                                                        Phone = d.Phone,
+                                                        OrderFromText = d.OrderFromText,
+                                                        OrderPrice = d.OrderPrice,
+                                                        IsOldCustomerText = d.IsOldCustomerText,
+                                                        InformationPrice = d.InformationPrice,
+                                                        SystemUpdatePrice = d.SystemUpdatePrice,
+                                                        ReturnBackPrice = d.ReturnBackPrice,
+                                                        CreateDate = d.CreateDate,
+                                                        IsSettle = d.IsSettle == true ? "是" : "否",
+                                                        SettleDate = d.SettleDate,
+                                                        RecolicationPrice = d.RecolicationPrice,
+                                                        CreateEmpName = d.CreateEmpName,
+                                                        CreateByEmpName = d.CreateByEmpName,
+                                                        AccountTypeText = d.AccountTypeText,
+                                                        AccountPrice = d.AccountPrice,
+                                                        BelongEmpName = d.BelongEmpName,
+                                                        BelongLiveAnchor = d.BelongLiveAnchor
+                                                    };
+
+                res = reconciliationDocumentsSettle.ToList();
+                var stream = ExportExcelHelper.ExportExcel(res);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "对账单审核记录.xls");
+                return result;
             }
-            var res = new List<ReconciliationDocumentsSettleVo>();
-            var q = await reconciliationDocumentsService.ExportSettleListByPageAsync(startDate, endDate, isSettle, accountType, keyword);
-
-            var reconciliationDocumentsSettle = from d in q
-                                                select new ReconciliationDocumentsSettleVo
-                                                {
-                                                    RecommandDocumentId = d.RecommandDocumentId,
-                                                    HospitalName = d.HospitalName,
-                                                    OrderId = d.OrderId,
-                                                    DealInfoId = d.DealInfoId,
-                                                    DealDate = d.DealDate,
-                                                    GoodsName = d.GoodsName,
-                                                    Phone = d.Phone,
-                                                    OrderFromText = d.OrderFromText,
-                                                    OrderPrice = d.OrderPrice,
-                                                    IsOldCustomerText = d.IsOldCustomerText,
-                                                    InformationPrice = d.InformationPrice,
-                                                    SystemUpdatePrice = d.SystemUpdatePrice,
-                                                    ReturnBackPrice = d.ReturnBackPrice,
-                                                    CreateDate = d.CreateDate,
-                                                    IsSettle = d.IsSettle == true ? "是" : "否",
-                                                    SettleDate = d.SettleDate,
-                                                    RecolicationPrice = d.RecolicationPrice,
-                                                    CreateEmpName = d.CreateEmpName,
-                                                    CreateByEmpName = d.CreateByEmpName,
-                                                    AccountTypeText = d.AccountTypeText,
-                                                    AccountPrice = d.AccountPrice,
-                                                    BelongEmpName = d.BelongEmpName,
-                                                    BelongLiveAnchor = d.BelongLiveAnchor
-                                                };
-
-            res = reconciliationDocumentsSettle.ToList();
-            var stream = ExportExcelHelper.ExportExcel(res);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "对账单审核记录.xls");
-            return result;
+            catch (Exception err)
+            {
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
+            }
+            finally
+            {
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = JsonConvert.SerializeObject(query);
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
+            }
         }
 
     }

@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.Gift;
+using Fx.Amiya.Background.Api.Vo.Gift.Input;
 using Fx.Amiya.Background.Api.Vo.GIftCategory;
 using Fx.Amiya.Dto.Gift;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -14,6 +16,7 @@ using Fx.Open.Infrastructure.Web;
 using Jd.Api.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
@@ -26,12 +29,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IExpressManageService _expressManageService;
         private IHttpContextAccessor httpContextAccessor;
         private ICustomerBaseInfoService customerBaseInfoService;
-        public GiftController(IGiftService giftService, IHttpContextAccessor httpContextAccessor, IExpressManageService expressManageService, ICustomerBaseInfoService customerBaseInfoService)
+        private IOperationLogService operationLogService;
+        public GiftController(IGiftService giftService, IHttpContextAccessor httpContextAccessor, IExpressManageService expressManageService, ICustomerBaseInfoService customerBaseInfoService, IOperationLogService operationLogService)
         {
             this.giftService = giftService;
             this.httpContextAccessor = httpContextAccessor;
             _expressManageService = expressManageService;
             this.customerBaseInfoService = customerBaseInfoService;
+            this.operationLogService = operationLogService;
         }
         /// <summary>
         /// 获取礼品列表（分页）
@@ -228,41 +233,62 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="keyword">礼品名称、电话号</param>
         /// <returns></returns>
         [HttpGet("exportReceiveGiftList")]
-        public async Task<FileStreamResult> ExportReceiveGiftListAsync(DateTime? startDate, DateTime? endDate, bool? isSendGoods, string keyword,string categoryId)
+        public async Task<FileStreamResult> ExportReceiveGiftListAsync([FromQuery] QueryExportReceiveGiftListVo query)
         {
-            if (!startDate.HasValue)
+            OperationAddDto operationAddDto = new OperationAddDto();
+            operationAddDto.Code = 0;
+            try
             {
-                throw new Exception("请选择开始时间进行查询!");
-            }
-            if (!endDate.HasValue)
-            {
-                throw new Exception("请选择结束时间进行查询!");
-            }
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int employeeId = Convert.ToInt32(employee.Id);
-            var q = await giftService.ExportReceiveGiftListAsync(startDate, endDate, isSendGoods, employeeId, keyword,categoryId);
-            var receiveGift = from d in q
-                              select new ExportReveiveGiftVo
-                              {
-                                  GiftName = d.GiftName,
-                                  Phone = d.Phone,
-                                  Address = d.Address,
-                                  ReceiveName = d.ReceiveName,
-                                  ReceivePhone = d.ReceivePhone,
-                                  Date = d.Date,
-                                  CourierNumber = d.CourierNumber,
-                                  ExpressName = (!string.IsNullOrEmpty(d.ExpressId)) ? _expressManageService.GetByIdAsync(d.ExpressId).Result.ExpressName : "",
-                                  SendGoodsName = d.SendGoodsName,
-                                  SendGoodsDate = d.SendGoodsDate,
-                                  OrderId = d.OrderId,
-                                  ActualPayment = d.ActualPayment,
-                                  CategoryName = d.CategoryName
-                              };
+                if (!query.StartDate.HasValue)
+                {
+                    throw new Exception("请选择开始时间进行查询!");
+                }
+                if (!query.EndDate.HasValue)
+                {
+                    throw new Exception("请选择结束时间进行查询!");
+                }
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationAddDto.OperationBy = employeeId;
+                var q = await giftService.ExportReceiveGiftListAsync(query.StartDate, query.EndDate, query.IsSendGoods, employeeId, query.Keyword, query.CategoryId);
+                var receiveGift = from d in q
+                                  select new ExportReveiveGiftVo
+                                  {
+                                      GiftName = d.GiftName,
+                                      Phone = d.Phone,
+                                      Address = d.Address,
+                                      ReceiveName = d.ReceiveName,
+                                      ReceivePhone = d.ReceivePhone,
+                                      Date = d.Date,
+                                      CourierNumber = d.CourierNumber,
+                                      ExpressName = (!string.IsNullOrEmpty(d.ExpressId)) ? _expressManageService.GetByIdAsync(d.ExpressId).Result.ExpressName : "",
+                                      SendGoodsName = d.SendGoodsName,
+                                      SendGoodsDate = d.SendGoodsDate,
+                                      OrderId = d.OrderId,
+                                      ActualPayment = d.ActualPayment,
+                                      CategoryName = d.CategoryName
+                                  };
 
-            var exportOrder = receiveGift.ToList();
-            var stream = ExportExcelHelper.ExportExcel(exportOrder);
-            var result = File(stream, "application/vnd.ms-excel", $"" + startDate.Value.ToString("yyyy年MM月dd日") + "-" + endDate.Value.ToString("yyyy年MM月dd日") + "已领取礼品列表.xls");
-            return result;
+                var exportOrder = receiveGift.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportOrder);
+                var result = File(stream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "已领取礼品列表.xls");
+                return result;
+            }
+            catch (Exception err)
+            {
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
+            }
+            finally
+            {
+                
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = JsonConvert.SerializeObject(query);
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
+            }
         }
 
 

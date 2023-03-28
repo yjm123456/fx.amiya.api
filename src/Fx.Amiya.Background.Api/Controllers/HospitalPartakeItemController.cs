@@ -4,8 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Fx.Amiya.Background.Api.Vo.HospitalPartakeItem;
+using Fx.Amiya.Background.Api.Vo.HospitalPartakeItem.Input;
 using Fx.Amiya.Background.Api.Vo.ItemInfo;
 using Fx.Amiya.Dto.HospitalPartakeItem;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -14,6 +16,7 @@ using Fx.Open.Infrastructure.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using OfficeOpenXml;
 
 namespace Fx.Amiya.Background.Api.Controllers
@@ -29,8 +32,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IActivityService activityService;
         private IHospitalInfoService hospitalInfoService;
         private IItemInfoService itemInfoService;
+        private IOperationLogService operationLogService;
         public HospitalPartakeItemController(IHospitalPartakeItemService hospitalPartakeItemService,
-            IHttpContextAccessor httpContextAccessor, ICooperativeHospitalCityService cooperativeHospitalCityService, IActivityService activityService, IHospitalInfoService hospitalInfoService, IItemInfoService itemInfoService)
+            IHttpContextAccessor httpContextAccessor, ICooperativeHospitalCityService cooperativeHospitalCityService, IActivityService activityService, IHospitalInfoService hospitalInfoService, IItemInfoService itemInfoService, IOperationLogService operationLogService)
         {
             this.hospitalPartakeItemService = hospitalPartakeItemService;
             this.httpContextAccessor = httpContextAccessor;
@@ -38,6 +42,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             this.activityService = activityService;
             this.hospitalInfoService = hospitalInfoService;
             this.itemInfoService = itemInfoService;
+            this.operationLogService = operationLogService;
         }
 
 
@@ -274,62 +279,88 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportHospitalListByCity")]
         [FxInternalAuthorize]
-        public async Task<IActionResult> ExportHospitalListByCity(int? activityId, int? cityId, int? itemId)
+        public async Task<IActionResult> ExportHospitalListByCity([FromQuery]QueryExportHospitalListByCityVo query)
         {
-            //城市名称
-            string cityname = "";
-            //报价名称
-            string activityName = "";
-            //项目名称
-            string itemName = "";
-            //文件名
-            string fileName = "";
-            if (activityId != null&&cityId!=null&&itemId!=null)
+            OperationAddDto operationAddDto = new OperationAddDto();
+            operationAddDto.Code = 0;
+            try
             {
-                activityName = (await activityService.GetInfoByIdAsync(activityId.Value)).Name;
-                cityname = (await cooperativeHospitalCityService.GetByIdAsync(cityId.Value)).Name;
-                itemName = (await itemInfoService.GetByIdAsync(itemId.Value)).Name;
-                fileName = $"{activityName}列表-{cityname}-{itemName}.xlsx";
-            }
-            if (activityId==null && cityId==null && itemId==null) {
-                fileName = "所有城市全部报价列表.xlsx";
-            }
-            if (activityId != null && !(cityId!=null&& itemId!=null)) {
-                activityName = (await activityService.GetInfoByIdAsync(activityId.Value)).Name;
-                fileName = $"{activityName}列表.xlsx";
-            }
-            if (string.IsNullOrEmpty(fileName)) {
-                fileName = "项目报价导出列表.xlsx";
-            }
-            var stream = new MemoryStream();
-            var partakeHospitals = await hospitalPartakeItemService.GetHospitalListByCityAsync(activityId, cityId, itemId);                    
-            //ExcelPackage 操作excel的主要对象
-            using (ExcelPackage package = new ExcelPackage(stream))
-            {
-                // 添加worksheet
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Conversation Message");
-                //添加头
-                worksheet.Cells[1, 1].Value = "医院";
-                worksheet.Cells[1, 2].Value = "地址";
-                worksheet.Cells[1, 3].Value = "是否同意直播价";
-                worksheet.Cells[1, 4].Value = "直播价";
-                worksheet.Cells[1, 5].Value = "医院提报价格";
-
-                var rowNum = 2;
-                foreach (var item in partakeHospitals)
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationAddDto.OperationBy = employeeId;
+                //城市名称
+                string cityname = "";
+                //报价名称
+                string activityName = "";
+                //项目名称
+                string itemName = "";
+                //文件名
+                string fileName = "";
+                if (query.ActivityId != null && query.CityId != null && query.ItemId != null)
                 {
-                    worksheet.Cells["A" + rowNum].Value = item.HospitalName;
-                    worksheet.Cells["B" + rowNum].Value = item.Address;
-                    worksheet.Cells["C" + rowNum].Value = item.IsAgreeLivingPrice == true ? "是" : "否";
-                    worksheet.Cells["D" + rowNum].Value = item.LivingPrice;
-                    worksheet.Cells["E" + rowNum].Value = item.HospitalPrice;
-                    rowNum++;
+                    activityName = (await activityService.GetInfoByIdAsync(query.ActivityId.Value)).Name;
+                    cityname = (await cooperativeHospitalCityService.GetByIdAsync(query.CityId.Value)).Name;
+                    itemName = (await itemInfoService.GetByIdAsync(query.ItemId.Value)).Name;
+                    fileName = $"{activityName}列表-{cityname}-{itemName}.xlsx";
                 }
+                if (query.ActivityId == null && query.CityId == null && query.ItemId == null)
+                {
+                    fileName = "所有城市全部报价列表.xlsx";
+                }
+                if (query.ActivityId != null && !(query.CityId != null && query.ItemId != null))
+                {
+                    activityName = (await activityService.GetInfoByIdAsync(query.ActivityId.Value)).Name;
+                    fileName = $"{activityName}列表.xlsx";
+                }
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    fileName = "项目报价导出列表.xlsx";
+                }
+                var stream = new MemoryStream();
+                var partakeHospitals = await hospitalPartakeItemService.GetHospitalListByCityAsync(query.ActivityId, query.CityId, query.ItemId);
+                //ExcelPackage 操作excel的主要对象
+                using (ExcelPackage package = new ExcelPackage(stream))
+                {
+                    // 添加worksheet
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Conversation Message");
+                    //添加头
+                    worksheet.Cells[1, 1].Value = "医院";
+                    worksheet.Cells[1, 2].Value = "地址";
+                    worksheet.Cells[1, 3].Value = "是否同意直播价";
+                    worksheet.Cells[1, 4].Value = "直播价";
+                    worksheet.Cells[1, 5].Value = "医院提报价格";
 
-                package.Save();
+                    var rowNum = 2;
+                    foreach (var item in partakeHospitals)
+                    {
+                        worksheet.Cells["A" + rowNum].Value = item.HospitalName;
+                        worksheet.Cells["B" + rowNum].Value = item.Address;
+                        worksheet.Cells["C" + rowNum].Value = item.IsAgreeLivingPrice == true ? "是" : "否";
+                        worksheet.Cells["D" + rowNum].Value = item.LivingPrice;
+                        worksheet.Cells["E" + rowNum].Value = item.HospitalPrice;
+                        rowNum++;
+                    }
+
+                    package.Save();
+                }
+                stream.Position = 0;
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
-            stream.Position = 0;          
-            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            catch (Exception err)
+            {
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
+            }
+            finally
+            {
+                
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = JsonConvert.SerializeObject(query);
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
+            }
         }
 
 
@@ -343,97 +374,125 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportItemListByHospitalId")]
         [FxInternalAuthorize]
-        public async Task<IActionResult> ExportItemListByHospitalIdAsync(int? activityId, int? hospitalId)
+        public async Task<IActionResult> ExportItemListByHospitalIdAsync([FromQuery] QueryexportItemListByHospitalIdVo query)
         {
-            string hospitalName = "";
-            string activityName = "";
-            string fileName = "";
-            var stream = new MemoryStream();
-            var partakeItems = await hospitalPartakeItemService.GetItemListByHospitalIdAsync(activityId, hospitalId);
-            using (ExcelPackage package = new ExcelPackage(stream))
+            OperationAddDto operationAddDto = new OperationAddDto();
+            operationAddDto.Code = 0;
+            try
             {
-
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationAddDto.OperationBy = employeeId;
+                string hospitalName = "";
+                string activityName = "";
+                string fileName = "";
+                var stream = new MemoryStream();
+                var partakeItems = await hospitalPartakeItemService.GetItemListByHospitalIdAsync(query.ActivityId, query.HospitalId);
+                using (ExcelPackage package = new ExcelPackage(stream))
                 {
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Conversation Message");
-                    worksheet.Cells[1, 1].Value = "项目";
-                    worksheet.Cells[1, 2].Value = "简介";
-                    worksheet.Cells[1, 3].Value = "规格";
-                    worksheet.Cells[1, 4].Value = "是否限购";
-                    worksheet.Cells[1, 5].Value = "限购数量";
-                    worksheet.Cells[1, 6].Value = "是否同意直播价";
-                    worksheet.Cells[1, 7].Value = "直播价";
-                    worksheet.Cells[1, 8].Value = "医院提报价格";
-                    worksheet.Cells[1, 9].Value = "所属医院";
 
-
-                    int rowNum = 2;
-                    foreach (var item in partakeItems)
                     {
-                        worksheet.Cells["A" + rowNum].Value = item.Name;
-                        worksheet.Cells["B" + rowNum].Value = item.Description;
-                        worksheet.Cells["C" + rowNum].Value = item.Standard;
-                        worksheet.Cells["D" + rowNum].Value = item.IsLimitBuy == true ? "是" : "否";
-                        worksheet.Cells["E" + rowNum].Value = item.LimitBuyQuantity;
-                        worksheet.Cells["F" + rowNum].Value = item.IsAgreeLivingPrice == true ? "是" : "否";
-                        worksheet.Cells["G" + rowNum].Value = item.LivePrice;
-                        worksheet.Cells["H" + rowNum].Value = item.HospitalPrice;
-                        worksheet.Cells["I" + rowNum].Value = item.HosiptalName;
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Conversation Message");
+                        worksheet.Cells[1, 1].Value = "项目";
+                        worksheet.Cells[1, 2].Value = "简介";
+                        worksheet.Cells[1, 3].Value = "规格";
+                        worksheet.Cells[1, 4].Value = "是否限购";
+                        worksheet.Cells[1, 5].Value = "限购数量";
+                        worksheet.Cells[1, 6].Value = "是否同意直播价";
+                        worksheet.Cells[1, 7].Value = "直播价";
+                        worksheet.Cells[1, 8].Value = "医院提报价格";
+                        worksheet.Cells[1, 9].Value = "所属医院";
 
-                        rowNum++;
+
+                        int rowNum = 2;
+                        foreach (var item in partakeItems)
+                        {
+                            worksheet.Cells["A" + rowNum].Value = item.Name;
+                            worksheet.Cells["B" + rowNum].Value = item.Description;
+                            worksheet.Cells["C" + rowNum].Value = item.Standard;
+                            worksheet.Cells["D" + rowNum].Value = item.IsLimitBuy == true ? "是" : "否";
+                            worksheet.Cells["E" + rowNum].Value = item.LimitBuyQuantity;
+                            worksheet.Cells["F" + rowNum].Value = item.IsAgreeLivingPrice == true ? "是" : "否";
+                            worksheet.Cells["G" + rowNum].Value = item.LivePrice;
+                            worksheet.Cells["H" + rowNum].Value = item.HospitalPrice;
+                            worksheet.Cells["I" + rowNum].Value = item.HosiptalName;
+
+                            rowNum++;
+                        }
+                        package.Save();
                     }
-                    package.Save();
+
+
+                    /* ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Conversation Message");
+                     worksheet.Cells[1, 1].Value = "项目";
+                     worksheet.Cells[1, 2].Value = "简介";
+                     worksheet.Cells[1, 3].Value = "规格";
+                     worksheet.Cells[1, 4].Value = "是否限购";
+                     worksheet.Cells[1, 5].Value = "限购数量";
+                     worksheet.Cells[1, 6].Value = "是否同意直播价";
+                     worksheet.Cells[1, 7].Value = "直播价";
+                     worksheet.Cells[1, 8].Value = "医院提报价格";
+                     worksheet.Cells[1, 9].Value = "所属医院";
+
+
+                     int rowNum = 2;
+                     foreach (var item in partakeItems)
+                     {
+                         worksheet.Cells["A" + rowNum].Value = item.Name;
+                         worksheet.Cells["B" + rowNum].Value = item.Description;
+                         worksheet.Cells["C" + rowNum].Value = item.Standard;
+                         worksheet.Cells["D" + rowNum].Value = item.IsLimitBuy == true ? "是" : "否";
+                         worksheet.Cells["E" + rowNum].Value = item.LimitBuyQuantity;
+                         worksheet.Cells["F" + rowNum].Value = item.IsAgreeLivingPrice == true ? "是" : "否";
+                         worksheet.Cells["G" + rowNum].Value = item.LivePrice;
+                         worksheet.Cells["H" + rowNum].Value = item.HospitalPrice;
+                         worksheet.Cells["I" + rowNum].Value = item.HosiptalName;
+                         rowNum++;
+                     }
+                     package.Save();*/
                 }
-
-
-                /* ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Conversation Message");
-                 worksheet.Cells[1, 1].Value = "项目";
-                 worksheet.Cells[1, 2].Value = "简介";
-                 worksheet.Cells[1, 3].Value = "规格";
-                 worksheet.Cells[1, 4].Value = "是否限购";
-                 worksheet.Cells[1, 5].Value = "限购数量";
-                 worksheet.Cells[1, 6].Value = "是否同意直播价";
-                 worksheet.Cells[1, 7].Value = "直播价";
-                 worksheet.Cells[1, 8].Value = "医院提报价格";
-                 worksheet.Cells[1, 9].Value = "所属医院";
-
-
-                 int rowNum = 2;
-                 foreach (var item in partakeItems)
-                 {
-                     worksheet.Cells["A" + rowNum].Value = item.Name;
-                     worksheet.Cells["B" + rowNum].Value = item.Description;
-                     worksheet.Cells["C" + rowNum].Value = item.Standard;
-                     worksheet.Cells["D" + rowNum].Value = item.IsLimitBuy == true ? "是" : "否";
-                     worksheet.Cells["E" + rowNum].Value = item.LimitBuyQuantity;
-                     worksheet.Cells["F" + rowNum].Value = item.IsAgreeLivingPrice == true ? "是" : "否";
-                     worksheet.Cells["G" + rowNum].Value = item.LivePrice;
-                     worksheet.Cells["H" + rowNum].Value = item.HospitalPrice;
-                     worksheet.Cells["I" + rowNum].Value = item.HosiptalName;
-                     rowNum++;
-                 }
-                 package.Save();*/
+                if (query.ActivityId == null && query.HospitalId == null)
+                {
+                    fileName = "全部医院所有报价列表.xlsx";
+                }
+                if (query.ActivityId == null && query.HospitalId != null)
+                {
+                    hospitalName = (await hospitalInfoService.GetBaseByIdAsync(query.HospitalId.Value)).Name;
+                    fileName = $"{hospitalName}所有报价列表.xlsx";
+                }
+                if (query.ActivityId != null && query.HospitalId == null)
+                {
+                    activityName = (await activityService.GetInfoByIdAsync(query.ActivityId.Value)).Name;
+                    fileName = $"{activityName}列表.xlsx";
+                }
+                if (query.ActivityId != null && query.HospitalId != null)
+                {
+                    activityName = (await activityService.GetInfoByIdAsync(query.ActivityId.Value)).Name;
+                    hospitalName = (await hospitalInfoService.GetBaseByIdAsync(query.HospitalId.Value)).Name;
+                    fileName = $"{activityName}-{hospitalName}列表.xlsx";
+                }
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    fileName = "项目报价导出列表.xlsx";
+                }
+                stream.Position = 0;
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
-            if (activityId==null&&hospitalId==null) {
-                fileName = "全部医院所有报价列表.xlsx";
+            catch (Exception err)
+            {
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
             }
-            if (activityId==null&&hospitalId!=null) {
-                hospitalName = (await hospitalInfoService.GetBaseByIdAsync(hospitalId.Value)).Name;
-                fileName = $"{hospitalName}所有报价列表.xlsx";
+            finally
+            {
+                
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = JsonConvert.SerializeObject(query);
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
             }
-            if (activityId!=null&&hospitalId==null) {
-                activityName = (await activityService.GetInfoByIdAsync(activityId.Value)).Name;
-                fileName = $"{activityName}列表.xlsx";
-            }
-            if (activityId!=null&&hospitalId!=null) {
-                activityName = (await activityService.GetInfoByIdAsync(activityId.Value)).Name;
-                hospitalName = (await hospitalInfoService.GetBaseByIdAsync(hospitalId.Value)).Name;
-                fileName = $"{activityName}-{hospitalName}列表.xlsx";
-            }
-            if (string.IsNullOrEmpty(fileName)) {
-                fileName = "项目报价导出列表.xlsx";
-            }
-            stream.Position = 0;
-            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
 
 
@@ -447,57 +506,85 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportHospitalListByItemId")]
         [FxInternalAuthorize]
-        public async Task<IActionResult> ExportHospitalListByItemIdAsync(int? activityId, int? itemId)
+        public async Task<IActionResult> ExportHospitalListByItemIdAsync([FromQuery]QueryExportHospitalListByItemIdVo query)
         {
-            string activityName = "";
-            string itemName = "";
-            string fileName = "";
-            if (activityId!=null&&itemId!=null) {
-                activityName = (await activityService.GetInfoByIdAsync(activityId.Value)).Name;
-                itemName = (await itemInfoService.GetByIdAsync(itemId.Value)).Name;
-                fileName = $"{activityName}-{itemName}列表.xlsx";
-            }
-            if (activityId==null&&itemId==null) {
-                fileName = "所有报价的所有项目列表.xlsx";
-            }
-            if (activityId!=null&&itemId==null) {
-                activityName = (await activityService.GetInfoByIdAsync(activityId.Value)).Name;
-                fileName = $"{activityName}列表.xlsx";
-            }
-            if (activityId==null&&itemId!=null) {
-                itemName = (await itemInfoService.GetByIdAsync(itemId.Value)).Name;
-                fileName = $"{itemName}所有报价列表.xlsx";
-            }
-            if (string.IsNullOrEmpty(fileName)) {
-                fileName = "项目报价列表导出.xlsx";
-            }
-            var partakeHoapitals = await hospitalPartakeItemService.GetHospitalListByItemIdAsync(activityId, itemId);
-
-            
-            var stream = new MemoryStream();
-            using (ExcelPackage package = new ExcelPackage(stream))
+            OperationAddDto operationAddDto = new OperationAddDto();
+            operationAddDto.Code = 0;
+            try
             {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Conversation Message");
-                worksheet.Cells[1, 1].Value = "医院";
-                worksheet.Cells[1, 2].Value = "地址";
-                worksheet.Cells[1, 3].Value = "是否同意直播价";
-                worksheet.Cells[1, 4].Value = "直播价";
-                worksheet.Cells[1, 5].Value = "医院提报价格";
-
-                int rowNum = 2;
-                foreach (var item in partakeHoapitals)
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationAddDto.OperationBy = employeeId;
+                string activityName = "";
+                string itemName = "";
+                string fileName = "";
+                if (query.ActivityId != null && query.ItemId != null)
                 {
-                    worksheet.Cells["A" + rowNum].Value = item.HospitalName;
-                    worksheet.Cells["B" + rowNum].Value = item.Address;
-                    worksheet.Cells["C" + rowNum].Value = item.IsAgreeLivingPrice == true ? "是" : "否";
-                    worksheet.Cells["D" + rowNum].Value = item.LivingPrice;
-                    worksheet.Cells["E" + rowNum].Value = item.HospitalPrice;
-                    rowNum++;
+                    activityName = (await activityService.GetInfoByIdAsync(query.ActivityId.Value)).Name;
+                    itemName = (await itemInfoService.GetByIdAsync(query.ItemId.Value)).Name;
+                    fileName = $"{activityName}-{itemName}列表.xlsx";
                 }
-                package.Save();
+                if (query.ActivityId == null && query.ItemId == null)
+                {
+                    fileName = "所有报价的所有项目列表.xlsx";
+                }
+                if (query.ActivityId != null && query.ItemId == null)
+                {
+                    activityName = (await activityService.GetInfoByIdAsync(query.ActivityId.Value)).Name;
+                    fileName = $"{activityName}列表.xlsx";
+                }
+                if (query.ActivityId == null && query.ItemId != null)
+                {
+                    itemName = (await itemInfoService.GetByIdAsync(query.ItemId.Value)).Name;
+                    fileName = $"{itemName}所有报价列表.xlsx";
+                }
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    fileName = "项目报价列表导出.xlsx";
+                }
+                var partakeHoapitals = await hospitalPartakeItemService.GetHospitalListByItemIdAsync(query.ActivityId, query.ItemId);
+
+
+                var stream = new MemoryStream();
+                using (ExcelPackage package = new ExcelPackage(stream))
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Conversation Message");
+                    worksheet.Cells[1, 1].Value = "医院";
+                    worksheet.Cells[1, 2].Value = "地址";
+                    worksheet.Cells[1, 3].Value = "是否同意直播价";
+                    worksheet.Cells[1, 4].Value = "直播价";
+                    worksheet.Cells[1, 5].Value = "医院提报价格";
+
+                    int rowNum = 2;
+                    foreach (var item in partakeHoapitals)
+                    {
+                        worksheet.Cells["A" + rowNum].Value = item.HospitalName;
+                        worksheet.Cells["B" + rowNum].Value = item.Address;
+                        worksheet.Cells["C" + rowNum].Value = item.IsAgreeLivingPrice == true ? "是" : "否";
+                        worksheet.Cells["D" + rowNum].Value = item.LivingPrice;
+                        worksheet.Cells["E" + rowNum].Value = item.HospitalPrice;
+                        rowNum++;
+                    }
+                    package.Save();
+                }
+                stream.Position = 0;
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
-            stream.Position = 0;
-            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            catch (Exception err)
+            {
+                operationAddDto.Code = -1;
+                operationAddDto.Message = err.Message.ToString();
+                throw new Exception(err.Message.ToString());
+            }
+            finally
+            {
+                
+                operationAddDto.Message = "";
+                operationAddDto.Parameters = JsonConvert.SerializeObject(query);
+                operationAddDto.RequestType = (int)RequestType.Export;
+                operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
+            }
         }
     }
 }
