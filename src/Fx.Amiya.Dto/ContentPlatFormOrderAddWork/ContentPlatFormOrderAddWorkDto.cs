@@ -21,6 +21,10 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderAddWork
         public string AcceptByEmpName { get; set; }
 
         /// <summary>
+        /// 加密手机号
+        /// </summary>
+        public string EncryptPhone { get; set; }
+        /// <summary>
         /// 手机号
         /// </summary>
         public string Phone { get; set; }

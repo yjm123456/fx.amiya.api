@@ -1631,6 +1631,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 {
                     isHidePhone = false;
                 }
+                operationLog.OperationBy = Convert.ToInt32(employee.Id);
 
                 var q = await orderService.GetCustomerOrderReceivableAsync(query.StartDate, query.EndDate, query.AppType, query.CheckState, query.ReturnBackPriceState, query.IsCreateBill, query.BelongCompanyId, query.CustomerName, isHidePhone);
                 var res = from d in q
@@ -1749,6 +1750,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     isHidePhone = false;
                 }
 
+                operationLog.OperationBy = Convert.ToInt32(employee.Id);
                 var q = await orderService.GetCustomerPaidOrderReceivableAsync(query.StartDate, query.EndDate, query.CheckState, query.ReturnBackPriceState, query.CustomerName, isHidePhone);
                 var res = from d in q
                           select new CustomerOrderReceivableReportVo()
@@ -1859,6 +1861,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     isHidePhone = false;
                 }
                 int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
                 var q = await orderService.GetTmallOrderListAsync(query.StartDate, query.EndDate, query.StatusCode, employeeId, isHidePhone);
                 var res = from d in q
                           select new OrderReportVo()
@@ -1978,6 +1981,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 {
                     isHidePhone = false;
                 }
+                operationLog.OperationBy = Convert.ToInt32(employee.Id);
                 var q = await _customerHospitalConsumeService.GetCustomerHospitalConsuleReportAsync(query.Channel, query.CheckDateStart, query.CheckDateEnd, query.CheckState, query.HospitalId, query.IsCreateBill, query.BelongCompanyId, query.CustomerName, query.StartDate.Value, query.EndDate.Value, isHidePhone);
                 var res = from d in q
                           select new CustomerHospitalConsumeReportVo()
@@ -2210,6 +2214,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var q = await _liveAnchorDailyTargetService.GetByDailyAndMonthAsync(query.StartDate.Value, query.EndDate.Value);
 
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                operationLog.OperationBy = Convert.ToInt32(employee.Id);
                 var res = from d in q
                           select new LiveAnchorOperatingReportVo()
                           {

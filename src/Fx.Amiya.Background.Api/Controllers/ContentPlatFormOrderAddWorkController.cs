@@ -69,6 +69,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       AcceptBy = e.AcceptBy,
                                                       AcceptByEmpName = e.AcceptByEmpName,
                                                       Phone = e.Phone,
+                                                      EncryptPhone = e.EncryptPhone,
                                                       SendRemark = e.SendRemark,
                                                       CreateBy = e.CreateBy,
                                                       CreateByEmpName = e.CreateByEmpName,
