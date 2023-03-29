@@ -32,8 +32,8 @@ namespace Fx.Amiya.Dto.MiniProgramSendMessage
         /// <summary>
         /// 美学设计完成消息模板id
         /// </summary>
-        public static string AestheticsDesignCompleteMessage = "w3bUsxEikpEvrp7_MN9WGSNyc-NVGtC9zVh0k7dWEbw";
-        //public static string AestheticsDesignCompleteMessage = "xd76aOnROJDA1gZciQ3eK1ZowQo1V3w08TL96_UkeMw";
+        //public static string AestheticsDesignCompleteMessage = "w3bUsxEikpEvrp7_MN9WGSNyc-NVGtC9zVh0k7dWEbw";
+        public static string AestheticsDesignCompleteMessage = "xd76aOnROJDA1gZciQ3eK1ZowQo1V3w08TL96_UkeMw";
 
     }
 }

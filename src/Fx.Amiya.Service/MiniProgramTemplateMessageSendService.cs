@@ -51,7 +51,7 @@ namespace Fx.Amiya.Service
                     lang = "zh_CN",
                     data = new
                     {
-                        thing3 = new { value = "美学设计报告" },
+                        thing3 = new { value = sendAestheticsDesignMessageDto.Content },
                         thing6 = new { value = sendAestheticsDesignMessageDto.Remark },
                         time2 = new { value = $"{DateTime.Now.Year}年{DateTime.Now.Month}月{DateTime.Now.Day}号 {DateTime.Now.Hour}:{DateTime.Now.Minute}" },
                     }
