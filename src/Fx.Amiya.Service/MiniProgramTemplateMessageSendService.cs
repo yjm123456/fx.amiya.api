@@ -46,7 +46,7 @@ namespace Fx.Amiya.Service
                 {
                     template_id = MessageTemplateIds.AestheticsDesignCompleteMessage,
                     touser = openId,
-                    page = $"/pages/aestheticsDesignReport/aestheticsDesignReport?reportId={sendAestheticsDesignMessageDto.ReportId}&status='design'",// 点击提示信息要进入的小程序页面
+                    page = $"/pages/aestheticsDesignReport/aestheticsDesignReport?reportId={sendAestheticsDesignMessageDto.ReportId}&status=design",// 点击提示信息要进入的小程序页面
                     miniprogram_state = "formal",
                     lang = "zh_CN",
                     data = new
