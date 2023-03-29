@@ -1361,7 +1361,26 @@ namespace Fx.Amiya.Service
         {
             if (string.IsNullOrWhiteSpace(phone))
                 return "";
-            return phone.Substring(0, 3) + "****" + phone.Substring(phone.Length - 4);
+            return phone.Substring(0, 3) + "********" + phone.Substring(phone.Length - 0);
+        }
+
+        /// <summary>
+        /// 获取不完整电话，中间四位用*代替
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        public static string GetIncompleteCustomerName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return "";
+            if (name.Length > 1)
+            {
+                return name.Substring(0, 1) + "****" + name.Substring(name.Length - 0);
+            }
+            else
+            {
+                return "*";
+            }
         }
 
         public static int GetAge(DateTime? birthdayInfo)

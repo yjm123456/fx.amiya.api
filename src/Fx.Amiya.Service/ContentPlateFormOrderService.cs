@@ -282,6 +282,7 @@ namespace Fx.Amiya.Service
                 else
                 {
                     var empInfo = await _amiyaEmployeeService.GetByIdAsync(employeeId);
+                    //if (empInfo.PositionId == 19 || empInfo.PositionId == 30)
                     if (empInfo.PositionId == 19)
                     {
                         var bindLiveAnchorInfo = await employeeBindLiveAnchorService.GetByEmpIdAsync(employeeId);
@@ -340,15 +341,15 @@ namespace Fx.Amiya.Service
                                 CreateDate = d.CreateDate,
                                 BelongMonth = d.BelongMonth,
                                 AddOrderPrice = d.AddOrderPrice,
-                                CustomerName = d.CustomerName,
+                                CustomerName = ServiceClass.GetIncompleteCustomerName(d.CustomerName),
                                 Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                                 EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
                                 AppointmentDate = d.AppointmentDate,
                                 AppointmentHospitalId = d.AppointmentHospitalId,
                                 AppointmentHospitalName = d.HospitalInfo.Name,
                                 GoodsId = d.GoodsId,
-                                IsSupportOrder=d.IsSupportOrder,
-                                SupportEmpId=d.SupportEmpId,
+                                IsSupportOrder = d.IsSupportOrder,
+                                SupportEmpId = d.SupportEmpId,
                                 ConsultationType = d.ConsultationType,
                                 GoodsName = d.AmiyaGoodsDemand.ProjectNname,
                                 GoodsDepartmentId = d.HospitalDepartmentId,
@@ -500,7 +501,7 @@ namespace Fx.Amiya.Service
                                   ThumbPictureUrl = o.AmiyaGoodsDemand.ThumbPictureUrl,
                                   ConsultingContent = o.ConsultingContent,
                                   CreateDate = o.CreateDate,
-                                  CustomerName = o.CustomerName,
+                                  CustomerName = ServiceClass.GetIncompleteCustomerName(o.CustomerName),
                                   Phone = config.EnablePhoneEncrypt == true ? ServiceClass.GetIncompletePhone(o.Phone) : o.Phone,
                                   EncryptPhone = ServiceClass.Encrypt(o.Phone, config.PhoneEncryptKey),
                                   DealAmount = o.DealAmount,

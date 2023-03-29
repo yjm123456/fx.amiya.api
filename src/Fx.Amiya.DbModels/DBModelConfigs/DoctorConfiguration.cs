@@ -19,7 +19,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.DepartmentId).HasColumnName("department_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(t => t.Position).HasColumnName("position").HasColumnType("varchar(100)").IsRequired();
             builder.Property(t => t.ObtainEmploymentYear).HasColumnName("obtain_employment_year").HasColumnType("int").IsRequired();
-            builder.Property(t => t.Description).HasColumnName("description").HasColumnType("varchar(800)").IsRequired(false);
+            builder.Property(t => t.Description).HasColumnName("description").HasColumnType("varchar(8000)").IsRequired(false);
             builder.Property(t => t.HospitalId).HasColumnName("hospital_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.IsMain).HasColumnName("is_main").HasColumnType("int").IsRequired();
             builder.Property(t => t.IsLeaveOffice).HasColumnName("is_leave_office").HasColumnType("int").IsRequired().HasDefaultValue(1);
