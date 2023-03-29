@@ -519,6 +519,7 @@ namespace Fx.Amiya.Service
                 CompanyName = dalCompanyBaseInfo.GetAll().Where(e => e.Id == g.Key.CollectionCompanyId).SingleOrDefault().Name,
                 DealPrice = g.Sum(item => item.DealPrice) ?? 0m,
                 NoIncludeTaxPrice = g.Sum(item => item.NotInTaxPrice),
+                TotalServicePrice=g.Sum(item=>item.BillPrice),
                 InformationPrice = g.Sum(item => item.InformationPrice) ?? 0m,
                 SystemUsePrice = g.Sum(item => item.SystemUpdatePrice) ?? 0m,
                 ReturnBackPrice = g.Sum(item => item.ReturnBackPrice) ?? 0m,
