@@ -40,7 +40,7 @@ namespace Fx.Amiya.Service
                 {
                     return;
                 }
-                var appInfo = await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(4);
+                var appInfo = await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(192);
                 var requestUrl = $"https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token={appInfo.AccessToken}";
                 var messageBody = new
                 {
@@ -51,14 +51,13 @@ namespace Fx.Amiya.Service
                     lang = "zh_CN",
                     data = new
                     {
-                        thing3 = new { value = sendAestheticsDesignMessageDto.Content },
+                        thing3 = new { value = "您的美学设计报告已设计完成,请点击查看" },
                         thing6 = new { value = sendAestheticsDesignMessageDto.Remark },
                         time2 = new { value = $"{DateTime.Now.Year}年{DateTime.Now.Month}月{DateTime.Now.Day}号 {DateTime.Now.Hour}:{DateTime.Now.Minute}" },
                     }
                 };
                 string body = JsonConvert.SerializeObject(messageBody);
                 var result = HttpUtil.HTTPJsonPost(requestUrl, body);
-                Console.WriteLine(result);
             }
             catch (Exception ex)
             {
