@@ -368,17 +368,21 @@ namespace Fx.Amiya.IService
         /// </summary>
         WeChatOfficialAccount,
         /// <summary>
-        /// 抖音
+        /// 抖音=4
         /// </summary>
         Douyin,
         /// <summary>
-        /// 啊美雅企业微信
+        /// 啊美雅企业微信=5
         /// </summary>
         AmiyaBusinessWechat,
         /// <summary>
-        /// 医院端企业微信
+        /// 医院端企业微信=6
         /// </summary>
-        HospitalBusinessWechat
+        HospitalBusinessWechat,
+        /// <summary>
+        /// 微信视频号=7
+        /// </summary>
+        WeChatVideo,
     }
 
     #region 内容平台相关枚举
