@@ -7,6 +7,7 @@ using Fx.Amiya.Common;
 using Fx.Amiya.Core.Services;
 using Fx.Amiya.SyncOrder.TikTok;
 using Fx.Amiya.SyncOrder.Tmall;
+using Fx.Amiya.SyncOrder.WeChatVideo;
 using Fx.Amiya.SyncOrder.WeiFenXiao;
 using Fx.Authentication;
 using Fx.Authorization;
@@ -57,6 +58,7 @@ namespace Fx.Amiya.Background.Api
             services.AddFxAmiyaSyncTmallOrderService();
             services.AddFxAmiyaSyncWeiFenXiaoOrderService();
             services.AddFxAmiyaSyncTikTokOrderService();
+            services.AddFxAmiyaSyncWeChatVideoOrderService();
             FxAmiyaModulesRegister.RegisteModules(services);
 
             services.AddFxJwtTokenAuthenticationServices();

@@ -58,7 +58,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns></returns>
-        Task UpdateBindUserIdAsync(string customerId);
+        Task UpdateBindUserIdAsync(string customerId,string appid=null);
         /// <summary>
         /// 内容平台与升单成交加入成交金额
         /// </summary>

@@ -291,6 +291,9 @@ namespace Fx.Amiya.Service
                 case 5:
                     typeText = "其他";
                     break;
+                case 7:
+                    typeText = "视频号";
+                    break;
             }
             return typeText;
         }
@@ -422,6 +425,62 @@ namespace Fx.Amiya.Service
                     break;
             }
             return orderTypeText;
+        }
+
+        /// <summary>
+        /// 视频号订单状态转换
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public static string GetWechatVideoOrderStatusText(int status)
+        {
+            string statusText = "";
+            switch (status)
+            {
+                case 10:
+                    statusText = "WAIT_BUYER_PAY";
+                    break;
+
+                case 20:
+                    statusText = "WAIT_SELLER_SEND_GOODS";
+                    break;
+                case 21:
+                    statusText = "WAIT_SELLER_SEND_GOODS";
+                    break;
+                case 30:
+                    statusText = "WAIT_BUYER_CONFIRM_GOODS";
+                    break;
+                case 100:
+                    statusText = "TRADE_FINISHED";
+                    break;
+                case 200:
+                    statusText = "TRADE_CLOSED";
+                    break;
+                case 250:
+                    statusText = "TRADE_CLOSED_BY_TAOBAO";
+                    break;
+            }
+            return statusText;
+        }
+        /// <summary>
+        /// 获取视频号订单类型
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string GetWechatOrderTypeText(long type) {
+            string orderType = "";
+            switch (type) {
+                case 0L:
+                    orderType = "实物订单";
+                    break;
+                case 1L:
+                    orderType = "虚拟订单";
+                    break;
+                default:
+                    orderType = "未知类型";
+                    break;
+            }
+            return orderType;
         }
         /// <summary>
         /// 获取抖点订单类型文本
@@ -1102,7 +1161,8 @@ namespace Fx.Amiya.Service
         public static string PictureDirectionTypeText(int type)
         {
             string typeText = "";
-            switch (type) {
+            switch (type)
+            {
                 case 0:
                     typeText = "正面照片";
                     break;

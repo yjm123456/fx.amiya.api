@@ -38,7 +38,18 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<OrderAppInfoDto> GetBusinessWeChatAppInfo( byte appType);
+        /// <summary>
+        /// 获取抖店订单token
+        /// </summary>
+        /// <param name="belongLiveAnchor"></param>
+        /// <returns></returns>
         Task<OrderAppInfoDto> GetTikTokAppInfo(int belongLiveAnchor);
+        /// <summary>
+        /// 获取视频号token
+        /// </summary>
+        /// <param name="belongLiveAnchor">归属主播id</param>
+        /// <returns></returns>
+        Task<OrderAppInfoDto> GetWeChatVideoAppInfo(int belongLiveAnchor);
 
     }
 }

@@ -79,18 +79,27 @@ namespace Fx.Amiya.Service
             this.tagDetailInfoService = tagDetailInfoService;
             this.dalCustomerTagInfo = dalCustomerTagInfo;
         }
-        public async Task<string> BindCustomerAsync(string fxUserId, string phoneNumber)
+        public async Task<string> BindCustomerAsync(string fxUserId, string phoneNumber,string appId= null)
         {
             try
             {
-                var customerInfo = await dalCustomerInfo.GetAll().FirstOrDefaultAsync(t => t.Phone == phoneNumber);
+                CustomerInfo customerInfo = null;
+                if (string.IsNullOrEmpty(appId))
+                {
+                    customerInfo = await dalCustomerInfo.GetAll().FirstOrDefaultAsync(t => t.Phone == phoneNumber);
+                }
+                else {
+                    customerInfo = await dalCustomerInfo.GetAll().FirstOrDefaultAsync(t => t.Phone == phoneNumber&&t.AppId==appId );
+                }
+                
                 if (customerInfo != null)
-                    throw new Exception("此电话号码已经被注册！");
+                    throw new Exception("此电话号码已经被绑定到其他账号！");
                 customerInfo = new CustomerInfo();
                 customerInfo.Id = GuidUtil.NewGuidShortString();
                 customerInfo.CreateDate = DateTime.Now;
                 customerInfo.UserId = fxUserId;
                 customerInfo.Phone = phoneNumber;
+                customerInfo.AppId = appId;
                 await dalCustomerInfo.AddAsync(customerInfo, true);
                 return customerInfo.Id;
             }
@@ -238,12 +247,15 @@ namespace Fx.Amiya.Service
         /// <param name="customerId"></param>
         /// <param name="phone"></param>
         /// <returns></returns>
-        public async Task UpdatePhoneByIdAsync(string customerId, string phone)
+        public async Task UpdatePhoneByIdAsync(string customerId, string phone, string appId = null)
         {
             try
             {
                 unitOfWork.BeginTransaction();
                 var customer = await dalCustomerInfo.GetAll().SingleOrDefaultAsync(e => e.Id == customerId);
+                if (customer == null) throw new Exception("客户编号错误");
+                var customerPhone = await dalCustomerInfo.GetAll().SingleOrDefaultAsync(e =>e.AppId==appId&&e.Phone==phone);
+                if (customerPhone != null) throw new Exception("该手机号已绑定其他账号！");
                 customer.Phone = phone;
                 await dalCustomerInfo.UpdateAsync(customer, true);
 

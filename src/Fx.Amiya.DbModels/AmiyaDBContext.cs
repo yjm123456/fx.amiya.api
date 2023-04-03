@@ -177,6 +177,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<AestheticsDesignReport> AestheticsDesignReports { get; set; }
         public virtual DbSet<FaceTagWithAestheticsDesignReport> FaceTagWithAestheticsDesignReports { get; set; }
         public virtual DbSet<AestheticsDesign> AestheticsDesigns { get; set; }
+        public virtual DbSet<WeChatVideoOrderInfo> WeChatVideoOrderInfos { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -352,6 +353,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new AestheticsDesignReportConfiguration());
             modelBuilder.ApplyConfiguration(new AestheticsDesignConfiguration());
             modelBuilder.ApplyConfiguration(new FaceTagWithAestheticsDesignReportConfiguration());
+            modelBuilder.ApplyConfiguration(new WeChatVideoOrderInfoConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

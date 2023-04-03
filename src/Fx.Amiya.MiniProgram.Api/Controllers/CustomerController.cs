@@ -69,14 +69,15 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             {
                 var token = tokenReader.GetToken();
                 var sessionInfo = sessionStorage.GetSession(token);
-                string fxCustomerId = await customerService.BindCustomerAsync(sessionInfo.FxUserId, phoneNumber);
+                var appId = sessionInfo.AppId;
+                string fxCustomerId = await customerService.BindCustomerAsync(sessionInfo.FxUserId, phoneNumber, appId);
                 if (!string.IsNullOrEmpty(fxCustomerId))
                 {
                     sessionInfo.FxCustomerId = fxCustomerId;
                     sessionStorage.SetSession(token, sessionInfo);
                 }
 
-                await bindCustomerServiceService.UpdateBindUserIdAsync(fxCustomerId);
+                await bindCustomerServiceService.UpdateBindUserIdAsync(fxCustomerId,appId);
 
 
                 //计算积分
@@ -149,7 +150,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             var token = tokenReader.GetToken();
             var sessionInfo = sessionStorage.GetSession(token);
 
-            await customerService.UpdatePhoneByIdAsync(sessionInfo.FxCustomerId, phone);
+            await customerService.UpdatePhoneByIdAsync(sessionInfo.FxCustomerId, phone,sessionInfo.AppId);
             return ResultData.Success();
         }
 

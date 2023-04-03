@@ -10,6 +10,10 @@ namespace Fx.Amiya.DbModels.Model
         public DateTime CreateDate { get; set; }
         public string UserId { get; set; }
         public string Phone { get; set; }
+        /// <summary>
+        /// 小程序appid
+        /// </summary>
+        public string AppId { get; set; }
 
         public UserInfo UserInfo { get; set; }
 

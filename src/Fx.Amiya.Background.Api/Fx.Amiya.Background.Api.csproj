@@ -45,6 +45,7 @@
     <ProjectReference Include="..\..\..\方旋统一登录认证库\src\Fx.Authorization\Fx.Authorization.csproj" />
     <ProjectReference Include="..\..\..\方旋统一登录认证库\src\Fx.Identity.Core\Fx.Identity.Core.csproj" />
     <ProjectReference Include="..\..\Fx.Amiya.SyncOrder.TikTok\Fx.Amiya.SyncOrder.TikTok.csproj" />
+    <ProjectReference Include="..\..\Fx.Amiya.SyncOrder.WeChatVideo\Fx.Amiya.SyncOrder.WeChatVideo.csproj" />
     <ProjectReference Include="..\Core\Fx.Amiya.Core.Services\Fx.Amiya.Core.Services.csproj" />
     <ProjectReference Include="..\Fx.Amiya.Common\Fx.Amiya.Common.csproj" />
     <ProjectReference Include="..\Fx.Amiya.IService\Fx.Amiya.IService.csproj" />

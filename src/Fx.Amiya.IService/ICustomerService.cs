@@ -18,7 +18,7 @@ namespace Fx.Amiya.IService
         /// <param name="fxUserId"></param>
         /// <param name="phoneNumber"></param>
         /// <returns></returns>
-        Task<string> BindCustomerAsync(string fxUserId, string phoneNumber);
+        Task<string> BindCustomerAsync(string fxUserId, string phoneNumber,string appId=null);
 
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Fx.Amiya.IService
         /// <param name="customerId"></param>
         /// <param name="phone"></param>
         /// <returns></returns>
-        Task UpdatePhoneByIdAsync(string customerId, string phone);
+        Task UpdatePhoneByIdAsync(string customerId, string phone,string appId=null);
 
         /// <summary>
         /// 获取客户数量

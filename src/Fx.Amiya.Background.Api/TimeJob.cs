@@ -19,6 +19,8 @@ using Fx.Amiya.SyncOrder.TikTok;
 using Fx.Amiya.Dto.TikTokOrder;
 using Microsoft.Extensions.DependencyInjection;
 using Fx.Amiya.Dto.HospitalOperationIndicator;
+using Fx.Amiya.SyncOrder.WeChatVideo;
+using Fx.Amiya.Dto.WechatVideoOrder;
 
 namespace Fx.Amiya.Background.Api
 {
@@ -36,12 +38,14 @@ namespace Fx.Amiya.Background.Api
         private IBindCustomerServiceService _bindCustomerService;
         private ITikTokOrderInfoService _tikTokOrderInfoService;
         private IServiceProvider _serviceProvider;
+        private ISyncWeChatVideoOrder _syncWeChatVideoOrder;
+        private IWeChatVideoOrderService weChatVideoOrderService;
         public TimeJob(IOrderService orderService, ISyncOrder syncOrder, ISyncWeiFenXiaoOrder syncWeiFenXiaoOrder, FxAppGlobal fxAppGlobal, IBindCustomerServiceService bindCustomerService,
           IIntegrationAccount integrationAccountService,
             ICustomerService customerService,
              IMemberCard memberCardService,
              ISyncTikTokOrder syncTikTokOrder,
-             IMemberRankInfo memberRankInfoService, ITikTokOrderInfoService tokOrderInfoService, IServiceProvider serviceProvider)
+             IMemberRankInfo memberRankInfoService, ITikTokOrderInfoService tokOrderInfoService, IServiceProvider serviceProvider, ISyncWeChatVideoOrder syncWeChatVideoOrder = null, IWeChatVideoOrderService weChatVideoOrderService = null)
         {
             this.orderService = orderService;
             this.syncOrder = syncOrder;
@@ -55,6 +59,8 @@ namespace Fx.Amiya.Background.Api
             _bindCustomerService = bindCustomerService;
             _tikTokOrderInfoService = tokOrderInfoService;
             _serviceProvider = serviceProvider;
+            _syncWeChatVideoOrder = syncWeChatVideoOrder;
+            this.weChatVideoOrderService = weChatVideoOrderService;
         }
 
 
@@ -101,8 +107,12 @@ namespace Fx.Amiya.Background.Api
                     var douYinOrderResult4 = await _syncTikTokOrder.TranslateTradesSoldChangedOrders(date.AddMinutes(-15), date, 1);
                     tikTokOrderList.AddRange(douYinOrderResult4);
                 }
+
+                var wechatVideoOrderList = await _syncWeChatVideoOrder.TranslateTradesSoldChangedOrders(DateTime.Now,DateTime.Now,16);
+                
                 List<OrderInfoAddDto> amiyaOrderList = new List<OrderInfoAddDto>();
                 List<TikTokOrderAddDto> tikTokOrderAddList = new List<TikTokOrderAddDto>();
+                List<WechatVideoAddDto> wechatVideoList = new List<WechatVideoAddDto>();
                 List<ConsumptionIntegrationDto> consumptionIntegrationList = new List<ConsumptionIntegrationDto>();
                 foreach (var order in orderList)
                 {
@@ -204,8 +214,28 @@ namespace Fx.Amiya.Background.Api
                     tikTokOrder.CipherName = order.CipherName;
                     tikTokOrderAddList.Add(tikTokOrder);
                 }
+                foreach (var item in wechatVideoOrderList)
+                {
+                    WechatVideoAddDto add = new WechatVideoAddDto();
+                    add.Id = item.Id;
+                    add.GoodsName = item.GoodsName;
+                    add.GoodsId = item.GoodsId;
+                    add.Phone = item.Phone;
+                    add.StatusCode = item.StatusCode;
+                    add.ActualPayment = item.ActualPayment;
+                    add.AccountReceivable = item.AccountReceivable;
+                    add.CreateDate = item.CreateDate.Value;
+                    add.UpdateDate = item.UpdateDate;
+                    add.ThumbPicUrl = item.ThumbPicUrl;
+                    add.BuyerNick = item.BuyerNick;
+                    add.OrderType = item.OrderType;
+                    add.Quantity = item.Quantity;
+                    add.BelongLiveAnchorId = item.BelongLiveAnchorId;
+                    wechatVideoList.Add(add);
+                }
                 await orderService.AddOrderAsync(amiyaOrderList);
                 await _tikTokOrderInfoService.AddAsync(tikTokOrderAddList);
+                await weChatVideoOrderService.AddAsync(wechatVideoList);
                 foreach (var item in consumptionIntegrationList)
                 {
                     await integrationAccountService.AddByConsumptionAsync(item);

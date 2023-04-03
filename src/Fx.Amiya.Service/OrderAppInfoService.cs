@@ -323,5 +323,42 @@ namespace Fx.Amiya.Service
 
             return HmacHelper.Hmac(signPattern, appSecret);
         }
+
+        /// <summary>
+        /// 获取视频号token
+        /// </summary>
+        /// <param name="belongLiveAnchor"></param>
+        /// <returns></returns>
+        public async Task<OrderAppInfoDto> GetWeChatVideoAppInfo(int belongLiveAnchor)
+        {
+            var appInfo = await dalOrderAppInfo.GetAll().SingleOrDefaultAsync(e => e.AppType == (byte)AppType.WeChatVideo&&e.BelongLiveAnchor==belongLiveAnchor);
+            if (appInfo == null)
+                throw new Exception("视频号订单同步应用证书信息为空");
+            DateTime date = DateTime.Now;
+            if (appInfo.ExpireDate <= date)
+            {
+                string url = $"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={appInfo.AppKey}&secret={appInfo.AppSecret}";
+                var res = await HttpUtil.HTTPJsonGetAsync(url);
+                if (res.Contains("errorcode"))
+                    throw new Exception(res);
+                JObject requestObject = JsonConvert.DeserializeObject(res) as JObject;
+                string token = requestObject["access_token"].ToString();
+                double expires_in = Convert.ToDouble(requestObject["expires_in"].ToString());
+                appInfo.AccessToken = token;
+                appInfo.ExpireDate = date.AddSeconds(expires_in - 400);
+                appInfo.AuthorizeDate = date;
+                await dalOrderAppInfo.UpdateAsync(appInfo, true);
+            }
+
+            OrderAppInfoDto tmallAppInfoDto = new OrderAppInfoDto();
+            tmallAppInfoDto.Id = appInfo.Id;
+            tmallAppInfoDto.AppKey = appInfo.AppKey;
+            tmallAppInfoDto.AppSecret = appInfo.AppSecret;
+            tmallAppInfoDto.AccessToken = appInfo.AccessToken;
+            tmallAppInfoDto.AuthorizeDate = appInfo.AuthorizeDate;
+            tmallAppInfoDto.AppType = appInfo.AppType;
+            tmallAppInfoDto.ExpireDate = appInfo.ExpireDate;
+            return tmallAppInfoDto;
+        }
     }
 }

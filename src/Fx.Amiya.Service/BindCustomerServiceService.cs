@@ -51,7 +51,6 @@ namespace Fx.Amiya.Service
                 DateTime date = DateTime.Now;
                 List<BindCustomerService> bindCustomerServiceList = new List<BindCustomerService>();
                 List<string> phoneList = new List<string>();
-
                 foreach (var orderId in addDto.OrderIdList)
                 {
                     var order = await dalOrderInfo.GetAll().SingleOrDefaultAsync(e => e.Id == orderId);
@@ -237,9 +236,9 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns></returns>
-        public async Task UpdateBindUserIdAsync(string customerId)
+        public async Task UpdateBindUserIdAsync(string customerId,string appid=null)
         {
-            var customer = await dalCustomerInfo.GetAll().SingleOrDefaultAsync(e => e.Id == customerId);
+            var customer = await dalCustomerInfo.GetAll().SingleOrDefaultAsync(e => e.Id == customerId&&e.AppId==appid);
             if (customer != null)
             {
                 var bindCustomerService = await dalBindCustomerService.GetAll().SingleOrDefaultAsync(e => e.BuyerPhone == customer.Phone);

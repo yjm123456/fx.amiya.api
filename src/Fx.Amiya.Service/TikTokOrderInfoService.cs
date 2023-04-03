@@ -59,7 +59,7 @@ namespace Fx.Amiya.Service
         private ITikTokUserInfoService tikTokUserInfoService;
         private IBindCustomerServiceService _bindCustomerService;
 
-        public TikTokOrderInfoService(IDalTikTokOrderInfo dalTikTokOrderInfo, IFxSmsBasedTemplateSender smsSender, IDalBindCustomerService dalBindCustomerService, ISendOrderInfoService sendOrderInfoService, IDalAmiyaEmployee dalAmiyaEmployee, IDalOrderInfo dalOrderInfo, IWxAppConfigService wxAppConfigService, ILiveAnchorService liveAnchorService, IContentPlatformService contentPlatFormService, IUnitOfWork unitOfWork, IDalOrderTrade dalOrderTrade, IAmiyaGoodsDemandService amiyaGoodsDemandService, ICustomerService customerService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, IIntegrationAccount integrationAccountService, IBindCustomerServiceService bindCustomerServiceService, IOrderCheckPictureService orderCheckPictureService, IDalCustomerInfo dalCustomerInfo, IDalReceiveGift dalReceiveGift, IGoodsInfo goodsInfoService, IDalContentPlatformOrder dalContentPlatFormOrder, IHospitalInfoService hospitalInfoService, IDalSendGoodsRecord dalSendGoodsRecord, IOrderWriteOffInfoService orderWriteOffInfoService, IExpressManageService expressManageService, ITikTokUserInfoService tikTokUserInfoService,IBindCustomerServiceService bindCustomerService)
+        public TikTokOrderInfoService(IDalTikTokOrderInfo dalTikTokOrderInfo, IFxSmsBasedTemplateSender smsSender, IDalBindCustomerService dalBindCustomerService, ISendOrderInfoService sendOrderInfoService, IDalAmiyaEmployee dalAmiyaEmployee, IDalOrderInfo dalOrderInfo, IWxAppConfigService wxAppConfigService, ILiveAnchorService liveAnchorService, IContentPlatformService contentPlatFormService, IUnitOfWork unitOfWork, IDalOrderTrade dalOrderTrade, IAmiyaGoodsDemandService amiyaGoodsDemandService, ICustomerService customerService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, IIntegrationAccount integrationAccountService, IBindCustomerServiceService bindCustomerServiceService, IOrderCheckPictureService orderCheckPictureService, IDalCustomerInfo dalCustomerInfo, IDalReceiveGift dalReceiveGift, IGoodsInfo goodsInfoService, IDalContentPlatformOrder dalContentPlatFormOrder, IHospitalInfoService hospitalInfoService, IDalSendGoodsRecord dalSendGoodsRecord, IOrderWriteOffInfoService orderWriteOffInfoService, IExpressManageService expressManageService, ITikTokUserInfoService tikTokUserInfoService, IBindCustomerServiceService bindCustomerService)
         {
             this.dalTikTokOrderInfo = dalTikTokOrderInfo;
             _smsSender = smsSender;
@@ -134,6 +134,8 @@ namespace Fx.Amiya.Service
                 Dictionary<string, string> orderPhoneDict = new Dictionary<string, string>();
                 byte appType = 0;
                 List<TikTokOrderInfo> orderInfoList = new List<TikTokOrderInfo>();
+                //解密订单(新添加的可解密状态的订单)
+                List<TikTokOrderInfo> decryptOrderList = new List<TikTokOrderInfo>();
                 foreach (var orderItem in orderList)
                 {
                     appType = orderItem.AppType;
@@ -268,9 +270,25 @@ namespace Fx.Amiya.Service
                         await tikTokUserInfoService.AddAsync(addTikTokUserDto);
                         order.TikTokUserInfoId = addTikTokUserDto.Id;
                         orderInfoList.Add(order);
+                        var orderStatus = ServiceClass.GetTikTokOrderStatusText(order.StatusCode);
+                        if (order.StatusCode != "TRADE_CLOSED" || order.StatusCode != "REFUNDING")
+                        {
+                            decryptOrderList.Add(order);
+                        }
                     }
                 }
                 await dalTikTokOrderInfo.AddCollectionAsync(orderInfoList, true);
+                foreach (var item in decryptOrderList)
+                {
+                    if (item.StatusCode == "TRADE_CLOSED" || item.StatusCode == "REFUNDING")
+                    {
+                        continue;
+                    }
+                    try { 
+                        var decryptRes = await tikTokUserInfoService.DecryptUserInfoAsync(item.TikTokUserInfoId, item.Id, item.BelongLiveAnchorId.Value); 
+                    } catch (Exception ex) {
+                    }
+                }
                 //发送短信通知
                 SendPhoneInfo(orderPhoneDict, appType);
 
@@ -456,7 +474,7 @@ namespace Fx.Amiya.Service
                              where (string.IsNullOrWhiteSpace(keyword) || d.Id.Contains(keyword) || d.GoodsName.Contains(keyword)
                              || d.Phone == keyword || d.AppointmentHospital.Contains(keyword))
                              && (belongLiveAnchorId == 0 || d.BelongLiveAnchorId == belongLiveAnchorId)
-                              && (!orderType.HasValue|| d.OrderType == orderType)
+                              && (!orderType.HasValue || d.OrderType == orderType)
                                && (string.IsNullOrWhiteSpace(statusCode) || d.StatusCode == statusCode)
                              select d;
 
@@ -522,7 +540,7 @@ namespace Fx.Amiya.Service
                     //    x.BelongEmpName = customerService.Name;
                     //}
 
-                    if (x.BelongLiveAnchorId!=0&&x.BelongLiveAnchorId.HasValue)
+                    if (x.BelongLiveAnchorId != 0 && x.BelongLiveAnchorId.HasValue)
                     {
                         var liveAnchorInfoService = await liveAnchorService.GetByIdAsync(x.BelongLiveAnchorId.Value);
                         x.BelongLiveAnchorName = liveAnchorInfoService.Name;

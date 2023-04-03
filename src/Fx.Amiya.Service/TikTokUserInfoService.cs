@@ -73,7 +73,6 @@ namespace Fx.Amiya.Service
 
             //计算签名
             var decryptSignVal = Sign(tikTokAppInfo.AppKey, tikTokAppInfo.AppSecret, "order.batchDecrypt", timestamp, decryptParamJson);
-            Console.WriteLine("decrypt_sign_val:" + decryptSignVal);
 
             //请求路径
             var decryptRes = Fetch(tikTokAppInfo.AppKey, host, "order.batchDecrypt", timestamp, decryptParamJson, tikTokAppInfo.AccessToken, decryptSignVal);
@@ -250,9 +249,10 @@ namespace Fx.Amiya.Service
             var paramPattern = "app_key" + appKey + "method" + method + "param_json" + paramJson + "timestamp" +
                                timestamp + "v2";
             var signPattern = appSecret + paramPattern + appSecret;
-            Console.WriteLine("sign_pattern:" + signPattern);
+            
 
             return HmacHelper.Hmac(signPattern, appSecret);
         }
+        
     }
 }
