@@ -1948,6 +1948,7 @@ namespace Fx.Amiya.Service
             {
                 var order = await _dalContentPlatformOrder.GetAll().Include(x => x.LiveAnchor).Include(x => x.Contentplatform).Include(x => x.ContentPlatformOrderSendList).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 var isoldCustomer = false;
+                //取该订单的第一次成交业绩时间
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
                 var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true).FirstOrDefault();
                 if (dealCount != null)

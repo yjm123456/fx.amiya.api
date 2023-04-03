@@ -273,7 +273,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var reconciliationDocumentIdList = await dalReconciliationDocuments.GetAll().Include(x => x.HospitalInfo).Where(x => x.BillId == billId).ToListAsync();
+                var reconciliationDocumentIdList = await dalReconciliationDocuments.GetAll().Include(x => x.HospitalInfo).Where(x => x.BillId == billId || x.BillId2 == billId).ToListAsync();
                 List<ReconciliationDocumentsDto> reconciliationDocumentsDtos = new List<ReconciliationDocumentsDto>();
                 foreach (var x in reconciliationDocumentIdList)
                 {
@@ -415,6 +415,7 @@ namespace Fx.Amiya.Service
                     }
                     reconciliationDocuments.IsCreateBill = reconciliationDocumentsCreateBillDto.IsCreateBill;
                     reconciliationDocuments.BillId = reconciliationDocumentsCreateBillDto.BillId;
+                    reconciliationDocuments.BillId2 = reconciliationDocumentsCreateBillDto.BillId2;
                     await dalReconciliationDocuments.UpdateAsync(reconciliationDocuments, true);
                 }
             }
@@ -631,7 +632,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<List<RecommandDocumentSettleDto>> ExportSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, string keyword)
+        public async Task<List<RecommandDocumentSettleDto>> ExportSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, string keyword, bool isHidePhone)
         {
             if (endDate.HasValue)
             {

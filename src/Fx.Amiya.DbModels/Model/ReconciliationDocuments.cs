@@ -69,6 +69,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 票据编号
         /// </summary>
         public string BillId { get; set; }
+        /// <summary>
+        /// 票据编号2
+        /// </summary>
+        public string BillId2 { get; set; }
 
         public HospitalInfo HospitalInfo { get; set; }
 

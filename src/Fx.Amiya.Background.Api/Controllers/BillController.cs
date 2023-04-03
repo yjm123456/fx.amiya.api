@@ -194,20 +194,28 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.InformationPrice = addVo.InformationPrice;
                 addDto.SystemUpdatePrice = addVo.SystemUpdatePrice;
                 addDto.BillPrice = addVo.BillPrice;
-                addDto.TaxRate = addVo.TaxRate;
-                addDto.TaxPrice = addVo.TaxPrice;
-                addDto.NotInTaxPrice = addVo.NotInTaxPrice;
-                addDto.OtherPrice = addVo.OtherPrice;
                 addDto.CreateDate = addVo.CreateDate;
-                addDto.OtherPriceRemark = addVo.OtherPriceRemark;
-                addDto.CollectionCompanyId = addVo.CollectionCompanyId;
                 addDto.BelongStartTime = addVo.BelongStartTime;
                 addDto.BelongEndTime = addVo.BelongEndTime;
                 addDto.BillType = addVo.BillType;
                 addDto.CreateBillReason = addVo.CreateBillReason;
                 addDto.CreateBy = employeeId;
+                List<AddBillDetailsDto> detailsDto = new List<AddBillDetailsDto>();
+                foreach (var x in addVo.Details)
+                {
+                    AddBillDetailsDto addBillDetailsDto = new AddBillDetailsDto();
+                    addBillDetailsDto.TaxRate = x.TaxRate;
+                    addBillDetailsDto.TaxPrice = x.TaxPrice;
+                    addBillDetailsDto.NotInTaxPrice = x.NotInTaxPrice;
+                    addBillDetailsDto.OtherPrice = x.OtherPrice;
+                    addBillDetailsDto.OtherPriceRemark = x.OtherPriceRemark;
+                    addBillDetailsDto.CollectionCompanyId = x.CollectionCompanyId;
+                    detailsDto.Add(addBillDetailsDto);
+                }
+                addDto.Details = detailsDto;
                 addDto.ReconciliationDocumentsIdList = addVo.ReconciliationDocumentsIdList;
                 await billService.AddAsync(addDto);
+
                 return ResultData.Success();
             }
             catch (Exception ex)

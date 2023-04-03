@@ -84,9 +84,43 @@ namespace Fx.Amiya.Dto.Bill
         /// </summary>
         public int CreateBy { get; set; }
 
+        public List<AddBillDetailsDto> Details { get; set; }
+
         /// <summary>
         /// 对账单id集合
         /// </summary>
         public List<string> ReconciliationDocumentsIdList { get; set; }
+    }
+
+    /// <summary>
+    /// 票据详情
+    /// </summary>
+    public class AddBillDetailsDto
+    {
+
+        /// <summary>
+        /// 税率
+        /// </summary>
+        public decimal TaxRate { get; set; }
+        /// <summary>
+        /// 含税金额（发票金额/（（1+税率）*税率）--保留2位小数）
+        /// </summary>
+        public decimal TaxPrice { get; set; }
+        /// <summary>
+        /// 不含税金额
+        /// </summary>
+        public decimal NotInTaxPrice { get; set; }
+        /// <summary>
+        /// 其他费用
+        /// </summary>
+        public decimal? OtherPrice { get; set; }
+        /// <summary>
+        /// 费用备注
+        /// </summary>
+        public string OtherPriceRemark { get; set; }
+        /// <summary>
+        /// 收款公司id
+        /// </summary>
+        public string CollectionCompanyId { get; set; }
     }
 }

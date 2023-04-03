@@ -1421,7 +1421,7 @@ namespace Fx.Amiya.Service
         {
             if (string.IsNullOrWhiteSpace(phone))
                 return "";
-            return phone.Substring(0, 3) + "********" + phone.Substring(phone.Length - 0);
+            return phone.Substring(0, 3) + "****" + phone.Substring(phone.Length - 4);
         }
 
         /// <summary>

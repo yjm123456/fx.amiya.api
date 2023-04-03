@@ -28,6 +28,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.QuestionReason).HasColumnName("question_reason").HasColumnType("varchar(1000)").IsRequired(false);
             builder.Property(e => e.IsCreateBill).HasColumnName("is_create_bill").HasColumnType("bit(1)").IsRequired();
             builder.Property(e => e.BillId).HasColumnName("bill_id").HasColumnType("varchar(50)").IsRequired(false);
+            builder.Property(e => e.BillId2).HasColumnName("bill_id2").HasColumnType("varchar(50)").IsRequired(false);
 
             builder.Property(e => e.Remark).HasColumnName("remark").HasColumnType("varchar(1000)").IsRequired(false);
             builder.Property(e => e.ReconciliationState).HasColumnName("reconciliation_state").HasColumnType("int").IsRequired();

@@ -138,7 +138,7 @@ namespace Fx.Amiya.IService
         /// <param name="accountType"></param>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<RecommandDocumentSettleDto>> ExportSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, string keyword);
+        Task<List<RecommandDocumentSettleDto>> ExportSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, string keyword, bool isHidePhone);
         #endregion
     }
 }

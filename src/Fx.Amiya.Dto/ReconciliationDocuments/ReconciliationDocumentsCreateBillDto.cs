@@ -10,6 +10,7 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
     {
         public List<string> ReconciliationDocumentsIdList { get; set; }
         public string BillId { get; set; }
+        public string BillId2 { get; set; }
         public bool IsCreateBill { get; set; }
     }
 }

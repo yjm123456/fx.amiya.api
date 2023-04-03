@@ -105,11 +105,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 导出对账单审核记录
         /// </summary>
-        /// <param name="startDate">开始时间（不可空）</param>
-        /// <param name="endDate">结束时间（不可空）</param>
-        /// <param name="isSettle">是否回款（可空）</param>
-        /// <param name="accountType">对账单类型（可空）</param>
-        /// <param name="keyword">关键词（对账单编号，订单号，成交编号；支持模糊查询）</param>
+        /// <param name="query"></param>
         /// <returns></returns>
 
         [HttpGet("ExportReconciliationDocumentsDetails")]
@@ -120,8 +116,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             operationAddDto.Code = 0;
             try
             {
+                var isHidePhone = true;
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    isHidePhone = false;
+                }
                 operationAddDto.OperationBy = employeeId;
                 if (!query.StartDate.HasValue && !query.EndDate.HasValue)
                 { throw new Exception("请选择时间进行查询"); }
@@ -133,7 +134,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     }
                 }
                 var res = new List<ReconciliationDocumentsSettleVo>();
-                var q = await reconciliationDocumentsService.ExportSettleListByPageAsync(query.StartDate, query.EndDate, query.IsSettle, query.AccountType, query.Keyword);
+                var q = await reconciliationDocumentsService.ExportSettleListByPageAsync(query.StartDate, query.EndDate, query.IsSettle, query.AccountType, query.Keyword, isHidePhone);
 
                 var reconciliationDocumentsSettle = from d in q
                                                     select new ReconciliationDocumentsSettleVo

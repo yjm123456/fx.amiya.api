@@ -60,18 +60,18 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<BillDto>> GetListAsync(DateTime? startDate,DateTime? endDate, int? hospitalId, bool? valid, int? billType, int? returnBackState, string companyId, string keyWord, int pageNum, int pageSize)
+        public async Task<FxPageInfo<BillDto>> GetListAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, bool? valid, int? billType, int? returnBackState, string companyId, string keyWord, int pageNum, int pageSize)
         {
-            startDate = startDate.HasValue ? startDate.Value.Date:DateTime.Now.Date;
+            startDate = startDate.HasValue ? startDate.Value.Date : DateTime.Now.Date;
             endDate = endDate.HasValue ? endDate.Value.AddDays(1).Date : DateTime.Now.AddDays(1).Date;
             var bills = from d in dalBill.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.HospitalInfo).Include(x => x.CompanyBaseInfo)
-                        where (string.IsNullOrWhiteSpace(keyWord) || d.OtherPriceRemark.Contains(keyWord) || d.CreateBillReason.Contains(keyWord))
+                        where (string.IsNullOrWhiteSpace(keyWord) || d.OtherPriceRemark.Contains(keyWord) || d.CreateBillReason.Contains(keyWord) || d.Id.Contains(keyWord))
                         && (!hospitalId.HasValue || d.HospitalId == hospitalId.Value)
                         && (string.IsNullOrEmpty(companyId) || d.CollectionCompanyId == companyId)
                         && (!billType.HasValue || d.BillType == billType.Value)
                         && (!returnBackState.HasValue || d.ReturnBackState == returnBackState.Value)
                         && (!valid.HasValue || d.Valid == valid.Value)
-                        && (d.CreateDate>= startDate && d.CreateDate<endDate)
+                        && (d.CreateDate >= startDate && d.CreateDate < endDate)
                         select new BillDto
                         {
                             Id = d.Id,
@@ -173,34 +173,46 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-
-                Bill bill = new Bill();
-                bill.Id = CreateOrderIdHelper.GetBillNextNumber();
-                bill.DealPrice = addDto.DealPrice;
-                bill.InformationPrice = addDto.InformationPrice;
-                bill.SystemUpdatePrice = addDto.SystemUpdatePrice;
-                bill.HospitalId = addDto.HospitalId;
-                bill.BillPrice = addDto.BillPrice;
-                bill.TaxRate = addDto.TaxRate;
-                bill.TaxPrice = addDto.TaxPrice;
-                bill.NotInTaxPrice = addDto.NotInTaxPrice;
-                bill.OtherPrice = addDto.OtherPrice;
-                bill.OtherPriceRemark = addDto.OtherPriceRemark;
-                bill.CollectionCompanyId = addDto.CollectionCompanyId;
-                bill.BelongStartTime = addDto.BelongStartTime;
-                bill.BelongEndTime = addDto.BelongEndTime;
-                bill.BillType = addDto.BillType;
-                bill.CreateBillReason = addDto.CreateBillReason;
-                bill.ReturnBackState = (int)BillReturnBackStateTextEnum.UnReturnBack;
-                bill.CreateBy = addDto.CreateBy;
-                bill.CreateDate = addDto.CreateDate;
-                bill.Valid = true;
-                await dalBill.AddAsync(bill, true);
-                if (bill.BillType == (int)BillTypeTextEnum.BeautyClinic)
+                List<string> billIdList = new List<string>();
+                var billBaseId = CreateOrderIdHelper.GetBillNextNumber();
+                int billCount = 1;
+                foreach (var x in addDto.Details)
+                {
+                    Bill bill = new Bill();
+                    bill.Id = billBaseId + "0" + billCount;
+                    bill.DealPrice = addDto.DealPrice;
+                    bill.InformationPrice = addDto.InformationPrice;
+                    bill.SystemUpdatePrice = addDto.SystemUpdatePrice;
+                    bill.HospitalId = addDto.HospitalId;
+                    bill.BillPrice = addDto.BillPrice;
+                    bill.TaxRate = addDto.TaxRate;
+                    bill.TaxPrice = addDto.TaxPrice;
+                    bill.NotInTaxPrice = addDto.NotInTaxPrice;
+                    bill.OtherPrice = addDto.OtherPrice;
+                    bill.OtherPriceRemark = addDto.OtherPriceRemark;
+                    bill.CollectionCompanyId = addDto.CollectionCompanyId;
+                    bill.BelongStartTime = addDto.BelongStartTime;
+                    bill.BelongEndTime = addDto.BelongEndTime;
+                    bill.BillType = addDto.BillType;
+                    bill.CreateBillReason = addDto.CreateBillReason;
+                    bill.ReturnBackState = (int)BillReturnBackStateTextEnum.UnReturnBack;
+                    bill.CreateBy = addDto.CreateBy;
+                    bill.CreateDate = addDto.CreateDate;
+                    bill.Valid = true;
+                    await dalBill.AddAsync(bill, true);
+                    billIdList.Add(bill.Id);
+                    billCount++;
+                }
+                if (addDto.BillType == (int)BillTypeTextEnum.BeautyClinic)
                 {
                     //调用对账单表更新是否开票接口
                     ReconciliationDocumentsCreateBillDto reconciliationDocumentsCreateBillDto = new ReconciliationDocumentsCreateBillDto();
-                    reconciliationDocumentsCreateBillDto.BillId = bill.Id;
+                    reconciliationDocumentsCreateBillDto.BillId = billIdList[0];
+                    if (billIdList.Count > 1)
+                    {
+                        //加载第二个发票编号
+                        reconciliationDocumentsCreateBillDto.BillId2 = billIdList[1];
+                    }
                     reconciliationDocumentsCreateBillDto.ReconciliationDocumentsIdList = addDto.ReconciliationDocumentsIdList;
                     reconciliationDocumentsCreateBillDto.IsCreateBill = true;
                     await reconciliationDocumentsService.ReconciliationDocumentsCreateBillAsync(reconciliationDocumentsCreateBillDto);
@@ -484,7 +496,7 @@ namespace Fx.Amiya.Service
                 InformationPrice = g.Sum(item => item.InformationPrice) ?? 0m,
                 SystemUsePrice = g.Sum(item => item.SystemUpdatePrice) ?? 0m,
                 ReturnBackPrice = g.Sum(item => item.ReturnBackPrice) ?? 0m,
-                TotalServicePrice=g.Sum(item=>item.BillPrice)
+                TotalServicePrice = g.Sum(item => item.BillPrice)
             });
             FxPageInfo<FinancialHospitalBoardDto> fxPageInfo = new FxPageInfo<FinancialHospitalBoardDto>();
             fxPageInfo.TotalCount = await data.CountAsync();
@@ -512,14 +524,14 @@ namespace Fx.Amiya.Service
             {
                 bill = bill.Where(e => e.CollectionCompanyId == companyId);
             }
-            
+
 
             var data = bill.GroupBy(e => new { e.CollectionCompanyId }).OrderByDescending(g => g.Sum(item => item.DealPrice)).Select(g => new FinancialHospitalBoardDto
             {
                 CompanyName = dalCompanyBaseInfo.GetAll().Where(e => e.Id == g.Key.CollectionCompanyId).SingleOrDefault().Name,
                 DealPrice = g.Sum(item => item.DealPrice) ?? 0m,
                 NoIncludeTaxPrice = g.Sum(item => item.NotInTaxPrice),
-                TotalServicePrice=g.Sum(item=>item.BillPrice),
+                TotalServicePrice = g.Sum(item => item.BillPrice),
                 InformationPrice = g.Sum(item => item.InformationPrice) ?? 0m,
                 SystemUsePrice = g.Sum(item => item.SystemUpdatePrice) ?? 0m,
                 ReturnBackPrice = g.Sum(item => item.ReturnBackPrice) ?? 0m,
@@ -571,7 +583,7 @@ namespace Fx.Amiya.Service
             return billReturnBackStateTextList;
         }
 
-        
+
 
 
 
