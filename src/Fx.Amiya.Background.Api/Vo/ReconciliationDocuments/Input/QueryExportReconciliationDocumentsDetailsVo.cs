@@ -8,6 +8,10 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments.Input
     public class QueryExportReconciliationDocumentsDetailsVo : BaseQueryVo
     {
         /// <summary>
+        /// 选择医院id
+        /// </summary>
+        public int ChooseHospitalId { get; set; }
+        /// <summary>
         /// 回款状态
         /// </summary>
         public bool? IsSettle { get; set; }

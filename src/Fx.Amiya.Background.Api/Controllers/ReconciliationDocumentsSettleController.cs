@@ -24,18 +24,18 @@ namespace Fx.Amiya.Background.Api.Controllers
     [ApiController]
     public class ReconciliationDocumentsSettleController : ControllerBase
     {
-        private IReconciliationDocumentsService reconciliationDocumentsService;
+        private IBillService billService;
         private IOperationLogService operationLogService;
         private IHttpContextAccessor httpContextAccessor;
         //private IRecommandDocumentSettleService reconciliationDocumentsSettleService;
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="reconciliationDocumentsService"></param>
-        public ReconciliationDocumentsSettleController(IReconciliationDocumentsService reconciliationDocumentsService, IOperationLogService operationLogService, IHttpContextAccessor httpContextAccessor)
+        /// <param name="billService"></param>
+        public ReconciliationDocumentsSettleController(IBillService billService, IOperationLogService operationLogService, IHttpContextAccessor httpContextAccessor)
         {
             //this.reconciliationDocumentsSettleService = reconciliationDocumentsSettleService;
-            this.reconciliationDocumentsService = reconciliationDocumentsService;
+            this.billService = billService;
             this.operationLogService = operationLogService;
             this.httpContextAccessor = httpContextAccessor;
         }
@@ -49,17 +49,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="endDate">结束时间（可空）</param>
         /// <param name="isSettle">是否回款（可空）</param>
         /// <param name="accountType">对账单类型（可空）</param>
+        /// <param name="chooseHospitalId">选中医院id（0查询）维多连天美之外的</param>
         /// <param name="keyword">关键词（对账单编号，订单号，成交编号；支持模糊查询）</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<FxPageInfo<ReconciliationDocumentsSettleVo>>> GetListAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, string keyword, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ReconciliationDocumentsSettleVo>>> GetListAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, int chooseHospitalId, string keyword, int pageNum, int pageSize)
         {
             try
             {
-                var q = await reconciliationDocumentsService.GetSettleListByPageAsync(startDate, endDate, isSettle, accountType, keyword, pageNum, pageSize);
+                var q = await billService.GetSettleListByPageAsync(startDate, endDate, isSettle, accountType, chooseHospitalId, keyword, pageNum, pageSize);
 
                 var reconciliationDocumentsSettle = from d in q.List
                                                     select new ReconciliationDocumentsSettleVo
@@ -134,7 +135,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     }
                 }
                 var res = new List<ReconciliationDocumentsSettleVo>();
-                var q = await reconciliationDocumentsService.ExportSettleListByPageAsync(query.StartDate, query.EndDate, query.IsSettle, query.AccountType, query.Keyword, isHidePhone);
+                var q = await billService.ExportSettleListByPageAsync(query.StartDate, query.EndDate, query.IsSettle, query.AccountType, query.ChooseHospitalId, query.Keyword, isHidePhone);
 
                 var reconciliationDocumentsSettle = from d in q
                                                     select new ReconciliationDocumentsSettleVo

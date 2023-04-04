@@ -115,30 +115,31 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<RecommandDocumentSettleDto>> GetRecommandDocumentSettleListAsync(List<string> ids);
 
-        #region 【对账单审核记录操作】
-        /// <summary>
-        /// 分页获取审核记录数据
-        /// </summary>
-        /// <param name="startDate"></param>
-        /// <param name="endDate"></param>
-        /// <param name="isSettle"></param>
-        /// <param name="accountType"></param>
-        /// <param name="keyword"></param>
-        /// <param name="pageNum"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
-        Task<FxPageInfo<RecommandDocumentSettleDto>> GetSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, string keyword, int pageNum, int pageSize);
+        //#region 【对账单审核记录操作】
+        ///// <summary>
+        ///// 分页获取审核记录数据
+        ///// </summary>
+        ///// <param name="startDate"></param>
+        ///// <param name="endDate"></param>
+        ///// <param name="isSettle"></param>
+        ///// <param name="accountType"></param>
+        ///// <param name="chooseHospitalId">选中医院id（0查询）维多连天美之外的</param>
+        ///// <param name="keyword"></param>
+        ///// <param name="pageNum"></param>
+        ///// <param name="pageSize"></param>
+        ///// <returns></returns>
+        //Task<FxPageInfo<RecommandDocumentSettleDto>> GetSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, int chooseHospitalId, string keyword, int pageNum, int pageSize);
 
-        /// <summary>
-        /// 导出审核记录数据
-        /// </summary>
-        /// <param name="startDate"></param>
-        /// <param name="endDate"></param>
-        /// <param name="isSettle"></param>
-        /// <param name="accountType"></param>
-        /// <param name="keyword"></param>
-        /// <returns></returns>
-        Task<List<RecommandDocumentSettleDto>> ExportSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, string keyword, bool isHidePhone);
-        #endregion
+        ///// <summary>
+        ///// 导出审核记录数据
+        ///// </summary>
+        ///// <param name="startDate"></param>
+        ///// <param name="endDate"></param>
+        ///// <param name="isSettle"></param>
+        ///// <param name="accountType"></param>
+        ///// <param name="keyword"></param>
+        ///// <returns></returns>
+        //Task<List<RecommandDocumentSettleDto>> ExportSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, string keyword, bool isHidePhone);
+        //#endregion
     }
 }

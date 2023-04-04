@@ -23,15 +23,23 @@ namespace Fx.Amiya.Service
         private readonly IDalBill dalBill;
         private readonly IUnitOfWork unitOfWork;
         private IReconciliationDocumentsService reconciliationDocumentsService;
+        private IRecommandDocumentSettleService recommandDocumentSettleService;
+        private IAmiyaEmployeeService amiyaEmployeeService;
+        private IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
         private IBillReturnBackPriceDataService billReturnBackPriceDataService;
         private IOrderService orderService;
         private IContentPlateFormOrderService contentPlateFormOrderService;
         private ICustomerHospitalConsumeService customerHospitalConsumeService;
+        private ILiveAnchorService liveAnchorService;
         private readonly IDalHospitalInfo dalHospitalInfo;
         private readonly IDalCompanyBaseInfo dalCompanyBaseInfo;
         public BillService(IDalBill dalBill,
             IReconciliationDocumentsService reconciliationDocumentsService,
+            IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
+            IRecommandDocumentSettleService recommandDocumentSettleService,
+            ILiveAnchorService liveAnchorService,
             IBillReturnBackPriceDataService billReturnBackPriceDataService,
+            IAmiyaEmployeeService amiyaEmployeeService,
             IUnitOfWork unitOfWork, IOrderService orderService, IContentPlateFormOrderService contentPlateFormOrderService, ICustomerHospitalConsumeService customerHospitalConsumeService, IDalHospitalInfo dalHospitalInfo, IDalCompanyBaseInfo dalCompanyBaseInfo)
         {
             this.dalBill = dalBill;
@@ -39,7 +47,11 @@ namespace Fx.Amiya.Service
             this.reconciliationDocumentsService = reconciliationDocumentsService;
             this.billReturnBackPriceDataService = billReturnBackPriceDataService;
             this.orderService = orderService;
+            this.recommandDocumentSettleService = recommandDocumentSettleService;
+            this.liveAnchorService = liveAnchorService;
+            this.amiyaEmployeeService = amiyaEmployeeService;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
+            this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
             this.customerHospitalConsumeService = customerHospitalConsumeService;
             this.dalHospitalInfo = dalHospitalInfo;
             this.dalCompanyBaseInfo = dalCompanyBaseInfo;
@@ -468,6 +480,258 @@ namespace Fx.Amiya.Service
             }
         }
 
+
+        #region [对账单审核记录]
+        /// <summary>
+        /// 分页获取审核记录数据
+        /// </summary>
+        /// <param name="isSettle"></param>
+        /// <param name="accountType"></param>
+        /// <param name="chooseHospitalId">选中医院id（0查询）维多连天美之外的</param>
+        /// <param name="keyword"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<RecommandDocumentSettleDto>> GetSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, int chooseHospitalId, string keyword, int pageNum, int pageSize)
+        {
+            if (endDate.HasValue)
+            {
+                endDate = endDate.Value.Date.AddDays(1);
+            }
+            var record = await recommandDocumentSettleService.GetAllAsync(startDate, endDate, isSettle, accountType, keyword);
+
+            FxPageInfo<RecommandDocumentSettleDto> fxPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();
+            fxPageInfo.TotalCount = record.Count();
+            var selectResult = record.OrderByDescending(x => x.CreateDate).ToList();
+            List<RecommandDocumentSettleDto> recommandDocumentSettleDtos = new List<RecommandDocumentSettleDto>();
+            foreach (var x in selectResult)
+            {
+                RecommandDocumentSettleDto recommandDocumentSettleDto = new RecommandDocumentSettleDto();
+                recommandDocumentSettleDto.RecommandDocumentId = x.RecommandDocumentId;
+                var reconciliationDocument = await reconciliationDocumentsService.GetByIdAsync(x.RecommandDocumentId);
+                if (!string.IsNullOrEmpty(reconciliationDocument.BillId))
+                {
+                    var bill =await this.GetByIdAsync(reconciliationDocument.BillId);
+                    recommandDocumentSettleDto.IsCerateBill = true;
+                    recommandDocumentSettleDto.BelongCompany = bill.CollectionCompanyName;
+                }
+                if (!string.IsNullOrEmpty(reconciliationDocument.BillId2))
+                {
+                    var bill = await this.GetByIdAsync(reconciliationDocument.BillId2);
+                    recommandDocumentSettleDto.IsCerateBill = true;
+                    recommandDocumentSettleDto.BelongCompany2 = bill.CollectionCompanyName;
+                }
+
+                recommandDocumentSettleDto.CreateDate = x.CreateDate;
+                if (!string.IsNullOrEmpty(x.RecommandDocumentId) && x.RecommandDocumentId != "string")
+                {
+                    var reconciliationDocumentsInfo = await reconciliationDocumentsService.GetByIdAsync(x.RecommandDocumentId);
+                    //排除连天美与维多利亚医院
+                    if (chooseHospitalId == 0)
+                    {
+                        if (reconciliationDocumentsInfo.HospitalId == 16 || reconciliationDocumentsInfo.HospitalId == 37)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (reconciliationDocumentsInfo.HospitalId != chooseHospitalId)
+                        {
+                            continue;
+                        }
+                    }
+                    recommandDocumentSettleDto.HospitalName = reconciliationDocumentsInfo.HospitalName;
+                    recommandDocumentSettleDto.OrderId = x.OrderId;
+                    recommandDocumentSettleDto.DealInfoId = x.DealInfoId;
+                    recommandDocumentSettleDto.OrderFromText = x.OrderFromText;
+                    recommandDocumentSettleDto.OrderPrice = x.OrderPrice;
+                    recommandDocumentSettleDto.RecolicationPrice = x.RecolicationPrice;
+                    recommandDocumentSettleDto.IsOldCustomerText = x.IsOldCustomerText;
+                    recommandDocumentSettleDto.IsSettle = x.IsSettle;
+                    recommandDocumentSettleDto.SettleDate = x.SettleDate;
+                    recommandDocumentSettleDto.ReturnBackPrice = x.ReturnBackPrice;
+                    recommandDocumentSettleDto.AccountPrice = x.AccountPrice;
+                    recommandDocumentSettleDto.CreateByEmpName = x.CreateByEmpName;
+                    recommandDocumentSettleDto.AccountTypeText = x.AccountTypeText;
+                    recommandDocumentSettleDto.InformationPrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.ReturnBackPricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
+                    recommandDocumentSettleDto.SystemUpdatePrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.SystemUpdatePricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
+                }
+                if (x.BelongEmpId.HasValue)
+                {
+                    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
+                    recommandDocumentSettleDto.BelongEmpName = empInfo.Name;
+                }
+                if (x.CreateEmpId.HasValue)
+                {
+                    if (x.CreateEmpId.Value == 0)
+                    {
+                        recommandDocumentSettleDto.CreateEmpName = "医院创建";
+                    }
+                    else
+                    {
+                        var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CreateEmpId.Value);
+                        recommandDocumentSettleDto.CreateEmpName = empInfo.Name;
+                    }
+                }
+                if (x.BelongLiveAnchorAccount.HasValue)
+                {
+                    var liveAnchor = await liveAnchorService.GetByIdAsync(x.BelongLiveAnchorAccount.Value);
+                    recommandDocumentSettleDto.BelongLiveAnchor = liveAnchor.Name;
+                }
+                switch (x.OrderFrom)
+                {
+                    case (int)OrderFrom.ContentPlatFormOrder:
+
+                        var dealInfo = await contentPlatFormOrderDealInfoService.GetByIdAsync(x.DealInfoId);
+                        recommandDocumentSettleDto.DealDate = dealInfo.DealDate;
+                        var contentPlatFormOrderInfo = await contentPlateFormOrderService.GetByOrderIdAsync(x.OrderId);
+                        recommandDocumentSettleDto.GoodsName = contentPlatFormOrderInfo.GoodsName;
+                        recommandDocumentSettleDto.Phone = contentPlatFormOrderInfo.Phone;
+                        break;
+                    case (int)OrderFrom.BuyAgainOrder:
+                        var customerHospitalConsume = await customerHospitalConsumeService.GetByConsumeIdAsync(x.DealInfoId);
+                        recommandDocumentSettleDto.DealDate = customerHospitalConsume.WriteOffDate;
+                        recommandDocumentSettleDto.GoodsName = customerHospitalConsume.ItemName;
+                        recommandDocumentSettleDto.Phone = customerHospitalConsume.Phone;
+                        break;
+                    case (int)OrderFrom.ThirdPartyOrder:
+                        var tmallOrder = await orderService.GetByIdInCRMAsync(x.OrderId);
+                        recommandDocumentSettleDto.DealDate = tmallOrder.WriteOffDate;
+                        recommandDocumentSettleDto.GoodsName = tmallOrder.GoodsName;
+                        recommandDocumentSettleDto.Phone = tmallOrder.Phone;
+                        break;
+                }
+                recommandDocumentSettleDtos.Add(recommandDocumentSettleDto);
+            }
+            fxPageInfo.List = recommandDocumentSettleDtos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+            return fxPageInfo;
+        }
+
+        /// <summary>
+        /// 分页获取审核记录数据
+        /// </summary>
+        /// <param name="isSettle"></param>
+        /// <param name="accountType"></param>
+        /// <param name="chooseHospitalId">选中医院id（0查询）维多连天美之外的</param>
+        /// <param name="keyword"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<List<RecommandDocumentSettleDto>> ExportSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, int chooseHospitalId, string keyword, bool isHidePhone)
+        {
+            if (endDate.HasValue)
+            {
+                endDate = endDate.Value.Date.AddDays(1);
+            }
+            var record = await recommandDocumentSettleService.GetAllAsync(startDate, endDate, isSettle, accountType, keyword);
+
+            var selectResult = record.OrderByDescending(x => x.CreateDate).ToList();
+            List<RecommandDocumentSettleDto> recommandDocumentSettleDtos = new List<RecommandDocumentSettleDto>();
+            foreach (var x in selectResult)
+            {
+                RecommandDocumentSettleDto recommandDocumentSettleDto = new RecommandDocumentSettleDto();
+                recommandDocumentSettleDto.RecommandDocumentId = x.RecommandDocumentId;
+                var reconciliationDocument = await reconciliationDocumentsService.GetByIdAsync(x.RecommandDocumentId);
+                if (!string.IsNullOrEmpty(reconciliationDocument.BillId))
+                {
+                    var bill = await this.GetByIdAsync(reconciliationDocument.BillId);
+                    recommandDocumentSettleDto.IsCerateBill = true;
+                    recommandDocumentSettleDto.BelongCompany = bill.CollectionCompanyName;
+                }
+                if (!string.IsNullOrEmpty(reconciliationDocument.BillId2))
+                {
+                    var bill = await this.GetByIdAsync(reconciliationDocument.BillId2);
+                    recommandDocumentSettleDto.IsCerateBill = true;
+                    recommandDocumentSettleDto.BelongCompany2 = bill.CollectionCompanyName;
+                }
+
+                recommandDocumentSettleDto.CreateDate = x.CreateDate;
+                if (!string.IsNullOrEmpty(x.RecommandDocumentId) && x.RecommandDocumentId != "string")
+                {
+                    var reconciliationDocumentsInfo = await reconciliationDocumentsService.GetByIdAsync(x.RecommandDocumentId);
+                    //排除连天美与维多利亚医院
+                    if (chooseHospitalId == 0)
+                    {
+                        if (reconciliationDocumentsInfo.HospitalId == 16 || reconciliationDocumentsInfo.HospitalId == 37)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (reconciliationDocumentsInfo.HospitalId != chooseHospitalId)
+                        {
+                            continue;
+                        }
+                    }
+                    recommandDocumentSettleDto.HospitalName = reconciliationDocumentsInfo.HospitalName;
+                    recommandDocumentSettleDto.OrderId = x.OrderId;
+                    recommandDocumentSettleDto.DealInfoId = x.DealInfoId;
+                    recommandDocumentSettleDto.OrderFromText = x.OrderFromText;
+                    recommandDocumentSettleDto.OrderPrice = x.OrderPrice;
+                    recommandDocumentSettleDto.RecolicationPrice = x.RecolicationPrice;
+                    recommandDocumentSettleDto.IsOldCustomerText = x.IsOldCustomerText;
+                    recommandDocumentSettleDto.IsSettle = x.IsSettle;
+                    recommandDocumentSettleDto.SettleDate = x.SettleDate;
+                    recommandDocumentSettleDto.ReturnBackPrice = x.ReturnBackPrice;
+                    recommandDocumentSettleDto.AccountPrice = x.AccountPrice;
+                    recommandDocumentSettleDto.CreateByEmpName = x.CreateByEmpName;
+                    recommandDocumentSettleDto.AccountTypeText = x.AccountTypeText;
+                    recommandDocumentSettleDto.InformationPrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.ReturnBackPricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
+                    recommandDocumentSettleDto.SystemUpdatePrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.SystemUpdatePricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
+                }
+                if (x.BelongEmpId.HasValue)
+                {
+                    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
+                    recommandDocumentSettleDto.BelongEmpName = empInfo.Name;
+                }
+                if (x.CreateEmpId.HasValue)
+                {
+                    if (x.CreateEmpId.Value == 0)
+                    {
+                        recommandDocumentSettleDto.CreateEmpName = "医院创建";
+                    }
+                    else
+                    {
+                        var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CreateEmpId.Value);
+                        recommandDocumentSettleDto.CreateEmpName = empInfo.Name;
+                    }
+                }
+                if (x.BelongLiveAnchorAccount.HasValue)
+                {
+                    var liveAnchor = await liveAnchorService.GetByIdAsync(x.BelongLiveAnchorAccount.Value);
+                    recommandDocumentSettleDto.BelongLiveAnchor = liveAnchor.Name;
+                }
+                switch (x.OrderFrom)
+                {
+                    case (int)OrderFrom.ContentPlatFormOrder:
+
+                        var dealInfo = await contentPlatFormOrderDealInfoService.GetByIdAsync(x.DealInfoId);
+                        recommandDocumentSettleDto.DealDate = dealInfo.DealDate;
+                        var contentPlatFormOrderInfo = await contentPlateFormOrderService.GetByOrderIdAsync(x.OrderId);
+                        recommandDocumentSettleDto.GoodsName = contentPlatFormOrderInfo.GoodsName;
+                        recommandDocumentSettleDto.Phone = contentPlatFormOrderInfo.Phone;
+                        break;
+                    case (int)OrderFrom.BuyAgainOrder:
+                        var customerHospitalConsume = await customerHospitalConsumeService.GetByConsumeIdAsync(x.DealInfoId);
+                        recommandDocumentSettleDto.DealDate = customerHospitalConsume.WriteOffDate;
+                        recommandDocumentSettleDto.GoodsName = customerHospitalConsume.ItemName;
+                        recommandDocumentSettleDto.Phone = customerHospitalConsume.Phone;
+                        break;
+                    case (int)OrderFrom.ThirdPartyOrder:
+                        var tmallOrder = await orderService.GetByIdInCRMAsync(x.OrderId);
+                        recommandDocumentSettleDto.DealDate = tmallOrder.WriteOffDate;
+                        recommandDocumentSettleDto.GoodsName = tmallOrder.GoodsName;
+                        recommandDocumentSettleDto.Phone = tmallOrder.Phone;
+                        break;
+                }
+                recommandDocumentSettleDtos.Add(recommandDocumentSettleDto);
+            }
+            return recommandDocumentSettleDtos;
+        }
+
+        #endregion
         #region
 
         /// <summary>

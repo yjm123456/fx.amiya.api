@@ -258,6 +258,10 @@ namespace Fx.Amiya.Service
                 reconciliationDocumentsDto.TotalReconciliationDocumentsPrice = Math.Round(reconciliationDocumentsDto.ReturnBackPrice.Value + reconciliationDocumentsDto.SystemUpdatePrice.Value);
                 reconciliationDocumentsDto.Remark = reconciliationDocuments.Remark;
                 reconciliationDocumentsDto.ReconciliationState = reconciliationDocuments.ReconciliationState;
+                reconciliationDocumentsDto.IsCreateBill = reconciliationDocuments.IsCreateBill;
+                reconciliationDocumentsDto.BillId = reconciliationDocuments.BillId;
+                reconciliationDocumentsDto.BillId2 = reconciliationDocuments.BillId2;
+
                 reconciliationDocumentsDto.CreateBy = reconciliationDocuments.CreateBy;
                 return reconciliationDocumentsDto;
             }
@@ -544,162 +548,85 @@ namespace Fx.Amiya.Service
         {
             return await recommandDocumentSettleService.GetRecommandDocumentSettleAsync(ids, null);
         }
-        #region [对账单审核记录操作]
-        /// <summary>
-        /// 分页获取审核记录数据
-        /// </summary>
-        /// <param name="isSettle"></param>
-        /// <param name="accountType"></param>
-        /// <param name="keyword"></param>
-        /// <param name="pageNum"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
-        public async Task<FxPageInfo<RecommandDocumentSettleDto>> GetSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, string keyword, int pageNum, int pageSize)
-        {
-            if (endDate.HasValue)
-            {
-                endDate = endDate.Value.Date.AddDays(1);
-            }
-            var record = await recommandDocumentSettleService.GetAllAsync(startDate, endDate, isSettle, accountType, keyword);
+        //#region [对账单审核记录操作]
+       
+        ///// <summary>
+        ///// 导出审核记录数据
+        ///// </summary>
+        ///// <param name="isSettle"></param>
+        ///// <param name="accountType"></param>
+        ///// <param name="keyword"></param>
+        ///// <param name="pageNum"></param>
+        ///// <param name="pageSize"></param>
+        ///// <returns></returns>
+        //public async Task<List<RecommandDocumentSettleDto>> ExportSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, string keyword, bool isHidePhone)
+        //{
+        //    if (endDate.HasValue)
+        //    {
+        //        endDate = endDate.Value.Date.AddDays(1);
+        //    }
+        //    var record = await recommandDocumentSettleService.GetAllAsync(startDate, endDate, isSettle, accountType, keyword);
+        //    List<RecommandDocumentSettleDto> resultInfo = new List<RecommandDocumentSettleDto>();
+        //    resultInfo = record.ToList();
+        //    foreach (var x in resultInfo)
+        //    {
+        //        if (x.BelongEmpId.HasValue)
+        //        {
+        //            var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
+        //            x.BelongEmpName = empInfo.Name;
+        //        }
+        //        if (x.CreateEmpId.HasValue)
+        //        {
+        //            if (x.CreateEmpId.Value == 0)
+        //            {
+        //                x.CreateEmpName = "医院创建";
+        //            }
+        //            else
+        //            {
+        //                var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CreateEmpId.Value);
+        //                x.CreateEmpName = empInfo.Name;
+        //            }
+        //        }
+        //        if (x.BelongLiveAnchorAccount.HasValue)
+        //        {
+        //            var liveAnchor = await liveAnchorService.GetByIdAsync(x.BelongLiveAnchorAccount.Value);
+        //            x.BelongLiveAnchor = liveAnchor.Name;
+        //        }
+        //        if (!string.IsNullOrEmpty(x.RecommandDocumentId) && x.RecommandDocumentId != "string")
+        //        {
+        //            var reconciliationDocumentsInfo = await this.GetByIdAsync(x.RecommandDocumentId);
+        //            x.HospitalName = reconciliationDocumentsInfo.HospitalName;
+        //            x.InformationPrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.ReturnBackPricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
+        //            x.SystemUpdatePrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.SystemUpdatePricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
+        //        }
+        //        switch (x.OrderFrom)
+        //        {
+        //            case (int)OrderFrom.ContentPlatFormOrder:
 
-            FxPageInfo<RecommandDocumentSettleDto> fxPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();
-            fxPageInfo.TotalCount = record.Count();
-            fxPageInfo.List = record.OrderByDescending(x => x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToList(); ;
-            foreach (var x in fxPageInfo.List)
-            {
-                if (x.BelongEmpId.HasValue)
-                {
-                    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
-                    x.BelongEmpName = empInfo.Name;
-                }
-                if (x.CreateEmpId.HasValue)
-                {
-                    if (x.CreateEmpId.Value == 0)
-                    {
-                        x.CreateEmpName = "医院创建";
-                    }
-                    else
-                    {
-                        var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CreateEmpId.Value);
-                        x.CreateEmpName = empInfo.Name;
-                    }
-                }
-                if (x.BelongLiveAnchorAccount.HasValue)
-                {
-                    var liveAnchor = await liveAnchorService.GetByIdAsync(x.BelongLiveAnchorAccount.Value);
-                    x.BelongLiveAnchor = liveAnchor.Name;
-                }
-                if (!string.IsNullOrEmpty(x.RecommandDocumentId) && x.RecommandDocumentId != "string")
-                {
-                    var reconciliationDocumentsInfo = await this.GetByIdAsync(x.RecommandDocumentId);
-                    x.HospitalName = reconciliationDocumentsInfo.HospitalName;
-                    x.InformationPrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.ReturnBackPricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
-                    x.SystemUpdatePrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.SystemUpdatePricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
-                }
-                switch (x.OrderFrom)
-                {
-                    case (int)OrderFrom.ContentPlatFormOrder:
-
-                        var dealInfo = await contentPlatFormOrderDealInfoService.GetByIdAsync(x.DealInfoId);
-                        x.DealDate = dealInfo.DealDate;
-                        var contentPlatFormOrderInfo = await contentPlateFormOrderService.GetByOrderIdAsync(x.OrderId);
-                        x.GoodsName = contentPlatFormOrderInfo.GoodsName;
-                        x.Phone = contentPlatFormOrderInfo.Phone;
-                        break;
-                    case (int)OrderFrom.BuyAgainOrder:
-                        var customerHospitalConsume = await customerHospitalConsumeService.GetByConsumeIdAsync(x.DealInfoId);
-                        x.DealDate = customerHospitalConsume.WriteOffDate;
-                        x.GoodsName = customerHospitalConsume.ItemName;
-                        x.Phone = customerHospitalConsume.Phone;
-                        break;
-                    case (int)OrderFrom.ThirdPartyOrder:
-                        var tmallOrder = await orderService.GetByIdInCRMAsync(x.OrderId);
-                        x.DealDate = tmallOrder.WriteOffDate;
-                        x.GoodsName = tmallOrder.GoodsName;
-                        x.Phone = tmallOrder.Phone;
-                        break;
-                }
-            }
-            return fxPageInfo;
-        }
-
-        /// <summary>
-        /// 导出审核记录数据
-        /// </summary>
-        /// <param name="isSettle"></param>
-        /// <param name="accountType"></param>
-        /// <param name="keyword"></param>
-        /// <param name="pageNum"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
-        public async Task<List<RecommandDocumentSettleDto>> ExportSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, string keyword, bool isHidePhone)
-        {
-            if (endDate.HasValue)
-            {
-                endDate = endDate.Value.Date.AddDays(1);
-            }
-            var record = await recommandDocumentSettleService.GetAllAsync(startDate, endDate, isSettle, accountType, keyword);
-            List<RecommandDocumentSettleDto> resultInfo = new List<RecommandDocumentSettleDto>();
-            resultInfo = record.ToList();
-            foreach (var x in resultInfo)
-            {
-                if (x.BelongEmpId.HasValue)
-                {
-                    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
-                    x.BelongEmpName = empInfo.Name;
-                }
-                if (x.CreateEmpId.HasValue)
-                {
-                    if (x.CreateEmpId.Value == 0)
-                    {
-                        x.CreateEmpName = "医院创建";
-                    }
-                    else
-                    {
-                        var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CreateEmpId.Value);
-                        x.CreateEmpName = empInfo.Name;
-                    }
-                }
-                if (x.BelongLiveAnchorAccount.HasValue)
-                {
-                    var liveAnchor = await liveAnchorService.GetByIdAsync(x.BelongLiveAnchorAccount.Value);
-                    x.BelongLiveAnchor = liveAnchor.Name;
-                }
-                if (!string.IsNullOrEmpty(x.RecommandDocumentId) && x.RecommandDocumentId != "string")
-                {
-                    var reconciliationDocumentsInfo = await this.GetByIdAsync(x.RecommandDocumentId);
-                    x.HospitalName = reconciliationDocumentsInfo.HospitalName;
-                    x.InformationPrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.ReturnBackPricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
-                    x.SystemUpdatePrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.SystemUpdatePricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
-                }
-                switch (x.OrderFrom)
-                {
-                    case (int)OrderFrom.ContentPlatFormOrder:
-
-                        var dealInfo = await contentPlatFormOrderDealInfoService.GetByIdAsync(x.DealInfoId);
-                        x.DealDate = dealInfo.DealDate;
-                        var contentPlatFormOrderInfo = await contentPlateFormOrderService.GetByOrderIdAsync(x.OrderId);
-                        x.GoodsName = contentPlatFormOrderInfo.GoodsName;
-                        x.Phone = contentPlatFormOrderInfo.Phone;
-                        break;
-                    case (int)OrderFrom.BuyAgainOrder:
-                        var customerHospitalConsume = await customerHospitalConsumeService.GetByConsumeIdAsync(x.DealInfoId);
-                        x.DealDate = customerHospitalConsume.WriteOffDate;
-                        x.GoodsName = customerHospitalConsume.ItemName;
-                        x.Phone = customerHospitalConsume.Phone;
-                        break;
-                    case (int)OrderFrom.ThirdPartyOrder:
-                        var tmallOrder = await orderService.GetByIdInCRMAsync(x.OrderId);
-                        x.DealDate = tmallOrder.WriteOffDate;
-                        x.GoodsName = tmallOrder.GoodsName;
-                        x.Phone = tmallOrder.Phone;
-                        break;
-                }
-            }
-            return resultInfo.OrderByDescending(x => x.CreateDate).ToList();
-        }
+        //                var dealInfo = await contentPlatFormOrderDealInfoService.GetByIdAsync(x.DealInfoId);
+        //                x.DealDate = dealInfo.DealDate;
+        //                var contentPlatFormOrderInfo = await contentPlateFormOrderService.GetByOrderIdAsync(x.OrderId);
+        //                x.GoodsName = contentPlatFormOrderInfo.GoodsName;
+        //                x.Phone = contentPlatFormOrderInfo.Phone;
+        //                break;
+        //            case (int)OrderFrom.BuyAgainOrder:
+        //                var customerHospitalConsume = await customerHospitalConsumeService.GetByConsumeIdAsync(x.DealInfoId);
+        //                x.DealDate = customerHospitalConsume.WriteOffDate;
+        //                x.GoodsName = customerHospitalConsume.ItemName;
+        //                x.Phone = customerHospitalConsume.Phone;
+        //                break;
+        //            case (int)OrderFrom.ThirdPartyOrder:
+        //                var tmallOrder = await orderService.GetByIdInCRMAsync(x.OrderId);
+        //                x.DealDate = tmallOrder.WriteOffDate;
+        //                x.GoodsName = tmallOrder.GoodsName;
+        //                x.Phone = tmallOrder.Phone;
+        //                break;
+        //        }
+        //    }
+        //    return resultInfo.OrderByDescending(x => x.CreateDate).ToList();
+        //}
 
 
-        #endregion
+        //#endregion
     }
 }

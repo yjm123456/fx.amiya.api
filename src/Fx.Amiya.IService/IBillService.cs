@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.Bill;
 using Fx.Amiya.Dto.FinancialBoard;
+using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Dto.WareHouse.OutWareHouse;
 using Fx.Amiya.Dto.WareHouse.WareHouseInfo;
 using Fx.Common;
@@ -48,6 +49,33 @@ namespace Fx.Amiya.IService
         /// <param name="updateDto"></param>
         /// <returns></returns>
         Task ReturnBakcPriceAsync(BillReturnBackPriceDto updateDto);
+
+        /// <summary>
+        /// 对账单审核记录
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="isSettle"></param>
+        /// <param name="accountType"></param>
+        /// <param name="chooseHospitalId"></param>
+        /// <param name="keyword"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<RecommandDocumentSettleDto>> GetSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, int chooseHospitalId, string keyword, int pageNum, int pageSize);
+
+        /// <summary>
+        /// 导出对账单审核记录
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="isSettle"></param>
+        /// <param name="accountType"></param>
+        /// <param name="chooseHospitalId"></param>
+        /// <param name="keyword"></param>
+        /// <param name="isHidePhone"></param>
+        /// <returns></returns>
+        Task<List<RecommandDocumentSettleDto>> ExportSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, int chooseHospitalId, string keyword, bool isHidePhone);
 
         #region 财务看板
         /// <summary>
