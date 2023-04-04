@@ -188,21 +188,32 @@ namespace Fx.Amiya.Service
                 List<string> billIdList = new List<string>();
                 var billBaseId = CreateOrderIdHelper.GetBillNextNumber();
                 int billCount = 1;
+                if (addDto.BillPrice < addDto.Details.Sum(x => x.SeparateBillPrice))
+                {
+                    throw new Exception("开票金额不能大于发票总金额，请核对后输入");
+                }
                 foreach (var x in addDto.Details)
                 {
                     Bill bill = new Bill();
-                    bill.Id = billBaseId + "0" + billCount;
+                    if (addDto.Details.Count > 1)
+                    {
+                        bill.Id = billBaseId + "0" + billCount;
+                    }
+                    else
+                    {
+                        bill.Id = billBaseId;
+                    }
                     bill.DealPrice = addDto.DealPrice;
                     bill.InformationPrice = addDto.InformationPrice;
                     bill.SystemUpdatePrice = addDto.SystemUpdatePrice;
                     bill.HospitalId = addDto.HospitalId;
-                    bill.BillPrice = addDto.BillPrice;
-                    bill.TaxRate = addDto.TaxRate;
-                    bill.TaxPrice = addDto.TaxPrice;
-                    bill.NotInTaxPrice = addDto.NotInTaxPrice;
-                    bill.OtherPrice = addDto.OtherPrice;
-                    bill.OtherPriceRemark = addDto.OtherPriceRemark;
-                    bill.CollectionCompanyId = addDto.CollectionCompanyId;
+                    bill.BillPrice = x.SeparateBillPrice;
+                    bill.TaxRate = x.TaxRate;
+                    bill.TaxPrice = x.TaxPrice;
+                    bill.NotInTaxPrice = x.NotInTaxPrice;
+                    bill.OtherPrice = x.OtherPrice;
+                    bill.OtherPriceRemark = x.OtherPriceRemark;
+                    bill.CollectionCompanyId = x.CollectionCompanyId;
                     bill.BelongStartTime = addDto.BelongStartTime;
                     bill.BelongEndTime = addDto.BelongEndTime;
                     bill.BillType = addDto.BillType;
@@ -238,7 +249,7 @@ namespace Fx.Amiya.Service
                             UpdateCreateBillAndCompanyDto update = new UpdateCreateBillAndCompanyDto();
                             update.OrderId = item.OrderId;
                             update.IsCreateBill = true;
-                            update.CreateBillCompanyId = addDto.CollectionCompanyId;
+                            update.CreateBillCompanyId = addDto.Details[0].CollectionCompanyId;
                             await orderService.UpdateCreateBillAndBelongCompany(update);
                         }
                         if (item.OrderFrom == (int)OrderFrom.ContentPlatFormOrder)
@@ -247,7 +258,7 @@ namespace Fx.Amiya.Service
                             update.OrderId = item.OrderId;
                             update.OrderDetailInfoId = item.DealInfoId;
                             update.IsCreateBill = true;
-                            update.CreateBillCompanyId = addDto.CollectionCompanyId;
+                            update.CreateBillCompanyId = addDto.Details[0].CollectionCompanyId;
                             await contentPlateFormOrderService.UpdateCreateBillAndBelongCompany(update);
                         }
                         if (item.OrderFrom == (int)OrderFrom.BuyAgainOrder)
@@ -255,7 +266,7 @@ namespace Fx.Amiya.Service
                             UpdateCreateBillAndCompanyDto update = new UpdateCreateBillAndCompanyDto();
                             update.OrderId = item.OrderId;
                             update.IsCreateBill = true;
-                            update.CreateBillCompanyId = addDto.CollectionCompanyId;
+                            update.CreateBillCompanyId = addDto.Details[0].CollectionCompanyId;
                             await customerHospitalConsumeService.UpdateCreateBillAndBelongCompany(update);
                         }
                     }
@@ -511,7 +522,7 @@ namespace Fx.Amiya.Service
                 var reconciliationDocument = await reconciliationDocumentsService.GetByIdAsync(x.RecommandDocumentId);
                 if (!string.IsNullOrEmpty(reconciliationDocument.BillId))
                 {
-                    var bill =await this.GetByIdAsync(reconciliationDocument.BillId);
+                    var bill = await this.GetByIdAsync(reconciliationDocument.BillId);
                     recommandDocumentSettleDto.IsCerateBill = true;
                     recommandDocumentSettleDto.BelongCompany = bill.CollectionCompanyName;
                 }

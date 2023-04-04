@@ -204,6 +204,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 foreach (var x in addVo.Details)
                 {
                     AddBillDetailsDto addBillDetailsDto = new AddBillDetailsDto();
+                    addBillDetailsDto.SeparateBillPrice = x.SeparateBillPrice;
                     addBillDetailsDto.TaxRate = x.TaxRate;
                     addBillDetailsDto.TaxPrice = x.TaxPrice;
                     addBillDetailsDto.NotInTaxPrice = x.NotInTaxPrice;

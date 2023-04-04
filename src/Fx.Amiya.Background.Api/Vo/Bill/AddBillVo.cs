@@ -31,7 +31,7 @@ namespace Fx.Amiya.Background.Api.Vo.Bill
         public decimal? SystemUpdatePrice { get; set; }
 
         /// <summary>
-        /// 发票金额
+        /// 总发票金额
         /// </summary>
         public decimal BillPrice { get; set; }
 
@@ -72,7 +72,11 @@ namespace Fx.Amiya.Background.Api.Vo.Bill
     /// </summary>
     public class AddBillDetailsVo
     {
+        /// <summary>
+        /// 发票金额
+        /// </summary>
 
+        public decimal SeparateBillPrice { get; set; }
         /// <summary>
         /// 税率
         /// </summary>

@@ -23,6 +23,24 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         /// </summary>
         [Description("医院")]
         public string HospitalName { get; set; }
+
+        /// <summary>
+        /// 是否开票
+        /// </summary>
+        [Description("是否开票")]
+        public string IsCerateBill { get; set; }
+
+        /// <summary>
+        /// 收款公司
+        /// </summary>
+        [Description("收款公司")]
+        public string BelongCompany { get; set; }
+        /// <summary>
+        /// 收款公司
+        /// </summary>
+
+        [Description("收款公司")]
+        public string BelongCompany2 { get; set; }
         /// <summary>
         /// 订单号
         /// </summary>
