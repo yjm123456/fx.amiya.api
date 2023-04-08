@@ -38,8 +38,8 @@ namespace Fx.Amiya.Service
         private IOrderService orderService;
         private IDalLiveAnchor dalLiveAnchor;
         private IDalCustomerInfo dalCustomerInfo;
-
-        public WeChatVideoOrderService(IDalWeChatVideoOrderInfo dalWeChatVideoOrderInfo, IFxSmsBasedTemplateSender smsSender, IDalAmiyaEmployee dalAmiyaEmployee, IDalBindCustomerService dalBindCustomerService, IIntegrationAccount integrationAccountService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, IBindCustomerServiceService bindCustomerService, ICustomerService customerService, IOrderService orderService, IDalLiveAnchor dalLiveAnchor, IDalCustomerInfo dalCustomerInfo)
+        private IWxAppConfigService _wxAppConfigService;
+        public WeChatVideoOrderService(IDalWeChatVideoOrderInfo dalWeChatVideoOrderInfo, IFxSmsBasedTemplateSender smsSender, IDalAmiyaEmployee dalAmiyaEmployee, IDalBindCustomerService dalBindCustomerService, IIntegrationAccount integrationAccountService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, IBindCustomerServiceService bindCustomerService, ICustomerService customerService, IOrderService orderService, IDalLiveAnchor dalLiveAnchor, IDalCustomerInfo dalCustomerInfo, IWxAppConfigService wxAppConfigService)
         {
             this.dalWeChatVideoOrderInfo = dalWeChatVideoOrderInfo;
             _smsSender = smsSender;
@@ -53,6 +53,7 @@ namespace Fx.Amiya.Service
             this.orderService = orderService;
             this.dalLiveAnchor = dalLiveAnchor;
             this.dalCustomerInfo = dalCustomerInfo;
+            _wxAppConfigService = wxAppConfigService;
         }
 
         /// <summary>
@@ -180,7 +181,7 @@ namespace Fx.Amiya.Service
                             await orderService.UpdateOrderBelongEmpIdAsync(updateOrderBelongEmpIdDto);
                             addBindCustomerServiceDto.OrderIdList = orderIdList;
                             //添加客服绑定关系
-                            var user = await dalCustomerInfo.GetAll().SingleOrDefaultAsync(e => e.Phone == order.Phone);
+                            var user = await dalCustomerInfo.GetAll().FirstOrDefaultAsync(e => e.Phone == order.Phone);
                             BindCustomerService bindCustomerService = new BindCustomerService();
                             bindCustomerService.CustomerServiceId = 188;
                             bindCustomerService.BuyerPhone = order.Phone;
@@ -313,20 +314,21 @@ namespace Fx.Amiya.Service
 
         public async Task<FxPageInfo<WechatVideoOrderInfoDto>> GetListByPageAsync(string keyWord,DateTime? startDate, DateTime? endDate, int? belongLiveAnchorId, string status, int? orderType, int pageSize, int pageNum)
         {
-            startDate = startDate == null ? DateTime.Now.Date:startDate.Value.Date;
-            endDate = endDate == null ? DateTime.Now.AddDays(1).Date : endDate.Value.AddDays(1).Date;
-            var order= dalWeChatVideoOrderInfo.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate)
+            var config = await _wxAppConfigService.GetCallCenterConfig();
+            var order= dalWeChatVideoOrderInfo.GetAll().Where(e => !startDate.HasValue|| e.CreateDate >= startDate.Value.Date)
+                .Where(e => !endDate.HasValue || e.CreateDate <= endDate.Value.AddDays(1).Date)
                 .Where(e => !belongLiveAnchorId.HasValue || e.BelongLiveAnchorId == belongLiveAnchorId)
                 .Where(e => string.IsNullOrEmpty(status) || e.StatusCode == status)
                 .Where(e => !orderType.HasValue || e.OrderType == orderType)
-                .Where(e=>string.IsNullOrEmpty(keyWord)||(e.Phone.Contains(keyWord)||e.GoodsName.Contains(keyWord)));
+                .Where(e=>string.IsNullOrEmpty(keyWord)||(e.Phone.Contains(keyWord)||e.GoodsName.Contains(keyWord))||e.Id.Contains(keyWord)).OrderByDescending
+                (e=>e.CreateDate);
             FxPageInfo<WechatVideoOrderInfoDto> fxPageInfo = new FxPageInfo<WechatVideoOrderInfoDto>();
             fxPageInfo.TotalCount =await order.CountAsync();
             fxPageInfo.List = order.Skip((pageNum - 1) * pageSize).Take(pageSize).Select(e => new WechatVideoOrderInfoDto {
                 Id = e.Id,
                 GoodsName = e.GoodsName,
                 GoodsId = e.GoodsId,
-                Phone = e.Phone,
+                Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(e.Phone) : e.Phone,
                 StatusCode = e.StatusCode,
                 StatusCodeText = ServiceClass.GetOrderStatusText(e.StatusCode),
                 ActualPayment = e.ActualPayment,

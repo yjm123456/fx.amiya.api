@@ -170,7 +170,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<BindCustomerInfoDto> GetByPhoneAsync(string phone)
         {
-            var customer = await dalCustomerInfo.GetAll().Include(e => e.UserInfo).SingleOrDefaultAsync(e => e.Phone == phone);
+            var customer = await dalCustomerInfo.GetAll().Include(e => e.UserInfo).FirstOrDefaultAsync(e => e.Phone == phone);
             if (customer == null)
                 return new BindCustomerInfoDto();
 

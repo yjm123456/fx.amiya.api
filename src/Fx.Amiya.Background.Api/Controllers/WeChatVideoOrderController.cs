@@ -48,8 +48,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 StatusCodeText = e.StatusCodeText,
                 ActualPayment = e.ActualPayment,
                 AccountReceivable = e.AccountReceivable,
-                CreateDate = e.CreateDate,
-                UpdateDate = e.UpdateDate,
+                CreateDate = e.CreateDate.ToString("s"),
+                UpdateDate = e.UpdateDate?.ToString("s"),
                 ThumbPicUrl = e.ThumbPicUrl,
                 BuyerNick = e.BuyerNick,
                 OrderType = e.OrderType,
@@ -102,8 +102,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             weChatVideoOrderInfoVo.StatusCode = order.StatusCode;
             weChatVideoOrderInfoVo.ActualPayment = order.ActualPayment;
             weChatVideoOrderInfoVo.AccountReceivable = order.AccountReceivable;
-            weChatVideoOrderInfoVo.CreateDate = order.CreateDate.Value;
-            weChatVideoOrderInfoVo.UpdateDate = order.UpdateDate.Value;
+            weChatVideoOrderInfoVo.CreateDate = order.CreateDate.Value.ToString("s");
+            weChatVideoOrderInfoVo.UpdateDate = order.UpdateDate.Value.ToString("s");
             weChatVideoOrderInfoVo.ThumbPicUrl = order.ThumbPicUrl;
             weChatVideoOrderInfoVo.BuyerNick = order.BuyerNick;
             weChatVideoOrderInfoVo.OrderType = order.OrderType;

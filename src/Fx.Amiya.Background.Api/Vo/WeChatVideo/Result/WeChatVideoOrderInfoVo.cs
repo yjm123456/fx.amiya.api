@@ -17,7 +17,7 @@ namespace Fx.Amiya.Background.Api.Vo.WeChatVideo
         /// </summary>
         public string GoodsId { get; set; }
         /// <summary>
-        /// 收假后
+        /// 手机号
         /// </summary>
         public string Phone { get; set; }
         /// <summary>
@@ -36,9 +36,14 @@ namespace Fx.Amiya.Background.Api.Vo.WeChatVideo
         /// 应收款（优惠后实际价格，财务用）
         /// </summary>
         public decimal? AccountReceivable { get; set; }
-
-        public DateTime CreateDate { get; set; }
-        public DateTime? UpdateDate { get; set; }
+        /// <summary>
+        /// 下单时间
+        /// </summary>
+        public string CreateDate { get; set; }
+        /// <summary>
+        /// 更新时间
+        /// </summary>
+        public string? UpdateDate { get; set; }
         /// <summary>
         /// 商品图片
         /// </summary>

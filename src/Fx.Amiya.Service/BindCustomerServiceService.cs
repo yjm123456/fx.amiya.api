@@ -53,7 +53,7 @@ namespace Fx.Amiya.Service
                 List<string> phoneList = new List<string>();
                 foreach (var orderId in addDto.OrderIdList)
                 {
-                    var order = await dalOrderInfo.GetAll().SingleOrDefaultAsync(e => e.Id == orderId);
+                    var order = await dalOrderInfo.GetAll().FirstOrDefaultAsync(e => e.Id == orderId);
                     if (order != null)
                     {
                         int bindCount = await dalBindCustomerService.GetAll().CountAsync(e => e.BuyerPhone == order.Phone);
@@ -61,7 +61,7 @@ namespace Fx.Amiya.Service
                         {
                             phoneList.Add(order.Phone);
 
-                            var user = await dalCustomerInfo.GetAll().SingleOrDefaultAsync(e => e.Phone == order.Phone);
+                            var user = await dalCustomerInfo.GetAll().FirstOrDefaultAsync(e => e.Phone == order.Phone);
                             BindCustomerService bindCustomerService = new BindCustomerService();
                             bindCustomerService.CustomerServiceId = addDto.CustomerServiceId;
                             bindCustomerService.BuyerPhone = order.Phone;
@@ -339,7 +339,7 @@ namespace Fx.Amiya.Service
             foreach (var encryptPhone in encryptPhoneList)
             {
                 string phone = ServiceClass.Decrypto(encryptPhone, config.PhoneEncryptKey);
-                var customer = await dalCustomerInfo.GetAll().SingleOrDefaultAsync(e => e.Phone == phone);
+                var customer = await dalCustomerInfo.GetAll().FirstOrDefaultAsync(e => e.Phone == phone);
 
                 var bindCustomerServiceInfo = await dalBindCustomerService.GetAll().SingleOrDefaultAsync(e => e.BuyerPhone == phone);
                 if (bindCustomerServiceInfo != null)
