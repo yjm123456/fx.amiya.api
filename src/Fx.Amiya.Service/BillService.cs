@@ -512,7 +512,6 @@ namespace Fx.Amiya.Service
             var record = await recommandDocumentSettleService.GetAllAsync(startDate, endDate, isSettle, accountType, keyword);
 
             FxPageInfo<RecommandDocumentSettleDto> fxPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();
-            fxPageInfo.TotalCount = record.Count();
             var selectResult = record.OrderByDescending(x => x.CreateDate).ToList();
             List<RecommandDocumentSettleDto> recommandDocumentSettleDtos = new List<RecommandDocumentSettleDto>();
             foreach (var x in selectResult)
@@ -616,6 +615,7 @@ namespace Fx.Amiya.Service
                 recommandDocumentSettleDtos.Add(recommandDocumentSettleDto);
             }
             fxPageInfo.List = recommandDocumentSettleDtos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+            fxPageInfo.TotalCount = recommandDocumentSettleDtos.Count();
             return fxPageInfo;
         }
 

@@ -282,8 +282,8 @@ namespace Fx.Amiya.Service
                 else
                 {
                     var empInfo = await _amiyaEmployeeService.GetByIdAsync(employeeId);
-                    //if (empInfo.PositionId == 19 || empInfo.PositionId == 30)
-                    if (empInfo.PositionId == 19)
+                    if (empInfo.PositionId == 19 || empInfo.PositionId == 30)
+                    //if (empInfo.PositionId == 19)
                     {
                         var bindLiveAnchorInfo = await employeeBindLiveAnchorService.GetByEmpIdAsync(employeeId);
                         foreach (var x in bindLiveAnchorInfo)
@@ -322,7 +322,7 @@ namespace Fx.Amiya.Service
                 if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
                 {
                     orders = from d in orders
-                             where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.Phone) > 0
+                             where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.Phone) > 0 || d.SupportEmpId == employeeId
                              select d;
                 }
                 var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();

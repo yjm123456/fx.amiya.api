@@ -104,7 +104,7 @@ namespace Fx.Amiya.Service
                     updateCustomerBaseInfoDto.City = addDto.City;
                     await customerBaseInfoService.UpdateAsync(updateCustomerBaseInfoDto);
                 }
-                
+
                 unitOfWork.Commit();
             }
             catch (Exception ex)
@@ -119,13 +119,13 @@ namespace Fx.Amiya.Service
         /// <param name="id"></param>
         /// <param name="customerId"></param>
         /// <returns></returns>
-        public async Task DeleteAsync(string id,string customerId)
+        public async Task DeleteAsync(string id, string customerId)
         {
-            var report= dalAestheticsDesignReport.GetAll().Where(e => e.Id == id && e.CustomerId == customerId).SingleOrDefault();
+            var report = dalAestheticsDesignReport.GetAll().Where(e => e.Id == id && e.CustomerId == customerId).SingleOrDefault();
             if (report == null)
                 throw new Exception("报告编号错误！");
             report.Valid = false;
-            await dalAestheticsDesignReport.UpdateAsync(report,true);
+            await dalAestheticsDesignReport.UpdateAsync(report, true);
         }
         /// <summary>
         /// 根据id获取美学设计报告信息
@@ -134,34 +134,35 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<AestheticsDesignReportAndDesignInfoDto> GetByIdAsync(string id)
         {
-            var report= dalAestheticsDesignReport.GetAll().Where(e => e.Id == id).Select(e=>new AestheticsDesignReportAndDesignInfoDto
+            var report = dalAestheticsDesignReport.GetAll().Where(e => e.Id == id).Select(e => new AestheticsDesignReportAndDesignInfoDto
             {
-                Id=e.Id,
-                CreateDate=e.CreateDate,
-                CustomerId=e.CustomerId,
-                Name=e.Name,
-                BirthDay=e.BirthDay,
-                Phone=e.Phone,
-                City=e.City,
-                HasAestheticMedicineHistory=e.HasAestheticMedicineHistory,
-                HistoryDescribe1=e.HistoryDescribe1,
+                Id = e.Id,
+                CreateDate = e.CreateDate,
+                CustomerId = e.CustomerId,
+                Name = e.Name,
+                BirthDay = e.BirthDay,
+                Phone = e.Phone,
+                City = e.City,
+                HasAestheticMedicineHistory = e.HasAestheticMedicineHistory,
+                HistoryDescribe1 = e.HistoryDescribe1,
                 HistoryDescribe2 = e.HistoryDescribe2,
                 HistoryDescribe3 = e.HistoryDescribe3,
-                WhetherAcceptOperation =e.WhetherAcceptOperation,
-                WhetherAllergyOrOtherDisease=e.WhetherAllergyOrOtherDisease,
-                AllergyOrOtherDiseaseDescribe=e.AllergyOrOtherDiseaseDescribe,
-                BeautyDemand=e.BeautyDemand,
-                Budget=e.Budget,
-                FrontPicture=e.FrontPicture,
-                SidePicture=e.SidePicture,
-                Status=e.Status,
-                StatusText=ServiceClass.GetAestheticsDesignReportStatus(e.Status),
+                WhetherAcceptOperation = e.WhetherAcceptOperation,
+                WhetherAllergyOrOtherDisease = e.WhetherAllergyOrOtherDisease,
+                AllergyOrOtherDiseaseDescribe = e.AllergyOrOtherDiseaseDescribe,
+                BeautyDemand = e.BeautyDemand,
+                Budget = e.Budget,
+                FrontPicture = e.FrontPicture,
+                SidePicture = e.SidePicture,
+                Status = e.Status,
+                StatusText = ServiceClass.GetAestheticsDesignReportStatus(e.Status),
             }).SingleOrDefault();
             if (report == null)
                 throw new Exception("报告编号错误");
-            var design =await aestheticsDesignService.GetByReportIdAsync(report.Id);
+            var design = await aestheticsDesignService.GetByReportIdAsync(report.Id);
             DesignInfo designInfo = new DesignInfo();
-            if (design!=null) {
+            if (design != null)
+            {
                 designInfo.Id = design.Id;
                 designInfo.AestheticsDesignReportId = design.AestheticsDesignReportId;
                 designInfo.Design = design.Design;
@@ -180,9 +181,9 @@ namespace Fx.Amiya.Service
             var reportList = dalAestheticsDesignReport.GetAll()
                 .Where(e => string.IsNullOrEmpty(customerId) || e.CustomerId == customerId)
                 .Where(e => !designed.HasValue || e.Status == designed)
-                .Where(e=>!startDate.HasValue||e.CreateDate>=startDate.Value.Date)
-                .Where(e=>!endDate.HasValue||e.CreateDate<endDate.Value.Date.AddDays(1))
-                .Where(e=>string.IsNullOrEmpty(keyword)||e.Name.Contains(keyword))
+                .Where(e => !startDate.HasValue || e.CreateDate >= startDate.Value.Date)
+                .Where(e => !endDate.HasValue || e.CreateDate < endDate.Value.Date.AddDays(1))
+                .Where(e => string.IsNullOrEmpty(keyword) || e.Name.Contains(keyword))
                 .Where(e => string.IsNullOrEmpty(keyword) || e.Phone.Contains(keyword))
                 .Select(e => new AestheticsDesignReportInfoDto
                 {
@@ -191,7 +192,7 @@ namespace Fx.Amiya.Service
                     CustomerId = e.CustomerId ?? "",
                     Name = e.Name,
                     BirthDay = e.BirthDay,
-                    Phone = e.Phone ?? "",
+                    Phone = !string.IsNullOrEmpty(e.Phone) ? ServiceClass.GetIncompletePhone(e.Phone) : "",
                     City = e.City,
                     HasAestheticMedicineHistory = e.HasAestheticMedicineHistory,
                     HistoryDescribe1 = e.HistoryDescribe1 ?? "",
@@ -206,7 +207,7 @@ namespace Fx.Amiya.Service
                     SidePicture = e.SidePicture ?? "",
                     Status = e.Status,
                     StatusText = ServiceClass.GetAestheticsDesignReportStatus(e.Status)
-                }).OrderByDescending(e=>e.CreateDate);
+                }).OrderByDescending(e => e.CreateDate);
             FxPageInfo<AestheticsDesignReportInfoDto> fxPageInfo = new FxPageInfo<AestheticsDesignReportInfoDto>();
             fxPageInfo.TotalCount = reportList.Count();
             fxPageInfo.List = reportList.Skip((pageNum.Value - 1) * pageSize.Value).Take(pageSize.Value).ToList();
@@ -224,7 +225,7 @@ namespace Fx.Amiya.Service
                 unitOfWork.BeginTransaction();
                 var report = dalAestheticsDesignReport.GetAll().Where(e => e.Id == updateDto.Id).SingleOrDefault();
                 if (report == null) throw new Exception("报告编号错误！");
-                if(report.Status==(int)AestheticsDesignReportStatus.Desgined) throw new Exception("已完成设计的美学报告不能修改！");
+                if (report.Status == (int)AestheticsDesignReportStatus.Desgined) throw new Exception("已完成设计的美学报告不能修改！");
                 report.Name = updateDto.Name;
                 report.BirthDay = updateDto.BirthDay;
                 report.Phone = updateDto.Phone;

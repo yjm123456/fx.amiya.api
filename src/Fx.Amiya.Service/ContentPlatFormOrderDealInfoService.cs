@@ -503,7 +503,7 @@ namespace Fx.Amiya.Service
                 {
 
                     dealInfo = from d in dealInfo
-                               where d.CreateBy != 61 && d.CreateBy != 80
+                               where d.CreateBy != 61 && d.CreateBy != 80 && d.CreateBy != 215 && d.CreateBy != 202
                                select d;
                 }
                 if (startDate != null && endDate != null)

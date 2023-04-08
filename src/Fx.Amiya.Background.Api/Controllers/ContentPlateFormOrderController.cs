@@ -668,9 +668,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
             var order = await _orderService.GetByOrderIdAsync(id);
-            //var positionInfo = await amiyaPositionInfoService.GetByIdAsync(Convert.ToInt32(employee.PositionId));
-            //if (employeeId != order.BelongEmpId && employee.IsCustomerService == true && !positionInfo.IsDirector)
-            if (employeeId != order.BelongEmpId && employee.IsCustomerService == true)
+            var positionInfo = await amiyaPositionInfoService.GetByIdAsync(Convert.ToInt32(employee.PositionId));
+            if (employeeId != order.BelongEmpId && employee.IsCustomerService == true && !positionInfo.IsDirector)
+            //if (employeeId != order.BelongEmpId && employee.IsCustomerService == true)
             {
                 //加上辅助客服是否与当前登陆角色相等;
                 if (employeeId != order.SupportEmpId && employee.IsCustomerService == true)

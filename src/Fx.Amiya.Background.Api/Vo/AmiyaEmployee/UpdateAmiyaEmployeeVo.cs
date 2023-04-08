@@ -57,7 +57,7 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaEmployee
         public string LiveAnchorBaseId { get; set; }
 
         /// <summary>
-        /// 当为客服/运营咨询情况下上传绑定主播ID
+        /// 当为行政客服/运营咨询情况下上传绑定主播ID
         /// </summary>
         public List<int> LiveAnchorIds { get; set; }
         

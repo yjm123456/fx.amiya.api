@@ -327,7 +327,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             List<HospitalPerformanceVo> hospitalPerformanceVo = new List<HospitalPerformanceVo>();
             var hospitalPerformanceDatasResult = await hospitalPerformanceService.GetHospitalPerformanceBymonthBWAsync(year, month);
             var hospitalPerformanceDatasDecending = hospitalPerformanceDatasResult.OrderByDescending(x => x.TotalAchievement).ToList();
-            var hospitalPerformanceDatas = hospitalPerformanceDatasDecending.Take(10).ToList();
+            var hospitalPerformanceDatas = hospitalPerformanceDatasDecending.Take(20).ToList();
             var totalAchievement = hospitalPerformanceDatasDecending.Sum(x => x.TotalAchievement);
             foreach (var x in hospitalPerformanceDatas)
             {
