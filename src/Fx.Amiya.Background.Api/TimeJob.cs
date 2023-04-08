@@ -108,7 +108,7 @@ namespace Fx.Amiya.Background.Api
                     tikTokOrderList.AddRange(douYinOrderResult4);
                 }
 
-                var wechatVideoOrderList = await _syncWeChatVideoOrder.TranslateTradesSoldChangedOrders(DateTime.Now,DateTime.Now,16);
+                var wechatVideoOrderList = await _syncWeChatVideoOrder.TranslateTradesSoldChangedOrders(DateTime.Now,DateTime.Now,10);
                 
                 List<OrderInfoAddDto> amiyaOrderList = new List<OrderInfoAddDto>();
                 List<TikTokOrderAddDto> tikTokOrderAddList = new List<TikTokOrderAddDto>();
