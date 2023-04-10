@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.BindCustomerService;
+using Fx.Amiya.Background.Api.Vo.CustomerInfo;
 using Fx.Amiya.Dto.BindCustomerService;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IService;
 using Fx.Amiya.Service;
 using Fx.Authorization.Attributes;
+using Fx.Common;
 using Fx.Open.Infrastructure.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +61,61 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var result = await bindCustomerServiceService.GetBindCustomerServiceNameByPhone(phone);
             return ResultData<string>.Success().AddData("CustomerServiceNameByPhone", result);
+        }
+
+        /// <summary>
+        /// 获取客户池客服下的手机号（分页）
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getPublicPoolPhone")]
+
+        public async Task<ResultData<FxPageInfo<BindCustomerInfoVo>>> GetPublicPoolPhoneAsync([FromQuery] BaseQueryVo query)
+        {
+            try
+            {
+                var q = await bindCustomerServiceService.GetPublicPoolPhoneAsync(query.StartDate, query.EndDate, query.KeyWord, query.PageNum.Value, query.PageSize.Value);
+                var billReturnBackPriceData = from d in q.List
+                                              select new BindCustomerInfoVo
+                                              {
+                                                  Id = d.Id.ToString(),
+                                                  CustomerServiceId = d.CustomerServiceId,
+                                                  CustomerServiceName = d.CustomerServiceName,
+                                                  Phone = d.BuyerPhone,
+                                                  EncryptPhone = d.EncryptPhone,
+                                                  FirstProjectDemand = d.FirstProjectDemand,
+                                                  CreateDate = d.CreateDate,
+                                                  NewContentPlatForm = d.NewContentPlatForm,
+                                              };
+
+                FxPageInfo<BindCustomerInfoVo> pageInfo = new FxPageInfo<BindCustomerInfoVo>();
+                pageInfo.TotalCount = q.TotalCount;
+                pageInfo.List = billReturnBackPriceData;
+
+                return ResultData<FxPageInfo<BindCustomerInfoVo>>.Success().AddData("getPublicPoolPhone", pageInfo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<FxPageInfo<BindCustomerInfoVo>>.Fail(ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// 改绑公共池客户
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut("updatePublicPoolPhone")]
+        public async Task<ResultData> updatePublicPoolPhoneAsync(UpdateBindCustomerServiceVo updateVo)
+        {
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
+            updateDto.CustomerServiceId = updateVo.CustomerServiceId;
+            updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
+            await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
+            return ResultData.Success();
         }
 
         /// <summary>

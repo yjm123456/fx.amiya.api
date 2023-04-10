@@ -15,6 +15,14 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerInfo
         /// 电话
         /// </summary>
         public string Phone { get; set; }
+        /// <summary>
+        /// 首次项目需求
+        /// </summary>
+        public string FirstProjectDemand { get; set; }
+        /// <summary>
+        /// 最新消费渠道
+        /// </summary>
+        public string NewContentPlatForm { get; set; }
 
         /// <summary>
         /// 加密电话

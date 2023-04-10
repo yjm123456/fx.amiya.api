@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Dto.BindCustomerService;
 using Fx.Amiya.Dto.WxAppConfig;
+using Fx.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,6 +23,14 @@ namespace Fx.Amiya.IService
         /// <param name="phone"></param>
         /// <returns></returns>
         Task<BindCustomerServiceDto> GetEmployeeDetailsByPhoneAsync(string phone);
+
+        /// <summary>
+        /// 获取客户池客服下的手机号（分页）
+        /// </summary>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<BindCustomerServiceDto>> GetPublicPoolPhoneAsync(DateTime? startDate, DateTime? endDate, string keyWord, int pageNum, int pageSize);
         Task<BindCustomerServiceDto> GetByIdAsync(int id);
 
         /// <summary>

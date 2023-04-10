@@ -13,7 +13,7 @@ namespace Fx.Amiya.Background.Api.Vo.BindCustomerService
         public int CustomerServiceId { get; set; }
 
         /// <summary>
-        /// 订单号
+        /// 加密手机号
         /// </summary>
         public List<string> EncryptPhoneList { get; set; }
 

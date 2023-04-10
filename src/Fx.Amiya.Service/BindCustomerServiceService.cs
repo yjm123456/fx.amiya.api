@@ -12,6 +12,7 @@ using System.Linq;
 using Fx.Infrastructure.Utils;
 using Fx.Amiya.Dto.WxAppConfig;
 using Newtonsoft.Json;
+using Fx.Common;
 
 namespace Fx.Amiya.Service
 {
@@ -134,6 +135,38 @@ namespace Fx.Amiya.Service
 
         }
 
+        /// <summary>
+        /// 获取客户池客服下的手机号（分页）
+        /// </summary>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<BindCustomerServiceDto>> GetPublicPoolPhoneAsync(DateTime? startDate, DateTime? endDate, string keyWord, int pageNum, int pageSize)
+        {
+            var config = await GetCallCenterConfig();
+            var bindCustomerServiceInfoResult = from d in dalBindCustomerService.GetAll()
+                                                where (d.CustomerServiceId == 188)
+                                                where (string.IsNullOrEmpty(keyWord) || d.BuyerPhone.Contains(keyWord))
+                                                where (!startDate.HasValue || d.CreateDate > startDate.Value)
+                                                where (!endDate.HasValue || d.CreateDate < endDate.Value.AddDays(1))
+
+                                                select new BindCustomerServiceDto
+                                                {
+                                                    Id = d.Id,
+                                                    CustomerServiceId = d.CustomerServiceId,
+                                                    CustomerServiceName = d.CustomerServiceAmiyaEmployee.Name,
+                                                    BuyerPhone = ServiceClass.GetIncompletePhone(d.BuyerPhone),
+                                                    EncryptPhone = ServiceClass.Encrypt(d.BuyerPhone, config.PhoneEncryptKey),
+                                                    FirstProjectDemand = d.FirstProjectDemand,
+                                                    CreateDate = d.CreateDate,
+                                                    NewContentPlatForm = d.NewContentPlatForm,
+                                                };
+            FxPageInfo<BindCustomerServiceDto> result = new FxPageInfo<BindCustomerServiceDto>();
+            result.TotalCount = await bindCustomerServiceInfoResult.CountAsync();
+            result.List = await bindCustomerServiceInfoResult.OrderByDescending(z => z.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+            return result;
+        }
+
         public async Task<BindCustomerServiceDto> GetByIdAsync(int id)
         {
             try
@@ -236,9 +269,9 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns></returns>
-        public async Task UpdateBindUserIdAsync(string customerId,string appid=null)
+        public async Task UpdateBindUserIdAsync(string customerId, string appid = null)
         {
-            var customer = await dalCustomerInfo.GetAll().SingleOrDefaultAsync(e => e.Id == customerId&&e.AppId==appid);
+            var customer = await dalCustomerInfo.GetAll().SingleOrDefaultAsync(e => e.Id == customerId && e.AppId == appid);
             if (customer != null)
             {
                 var bindCustomerService = await dalBindCustomerService.GetAll().SingleOrDefaultAsync(e => e.BuyerPhone == customer.Phone);
@@ -346,8 +379,8 @@ namespace Fx.Amiya.Service
                 {
                     bindCustomerServiceInfo.CustomerServiceId = updateDto.CustomerServiceId;
                     bindCustomerServiceInfo.UserId = customer?.UserId;
-                    bindCustomerServiceInfo.CreateDate = date;
-                    bindCustomerServiceInfo.CreateBy = employeeId;
+                    //bindCustomerServiceInfo.CreateDate = date;
+                    //bindCustomerServiceInfo.CreateBy = employeeId;
                     await dalBindCustomerService.UpdateAsync(bindCustomerServiceInfo, true);
                 }
                 else

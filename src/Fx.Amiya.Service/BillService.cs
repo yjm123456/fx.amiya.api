@@ -601,7 +601,7 @@ namespace Fx.Amiya.Service
                         break;
                     case (int)OrderFrom.BuyAgainOrder:
                         var customerHospitalConsume = await customerHospitalConsumeService.GetByConsumeIdAsync(x.DealInfoId);
-                        recommandDocumentSettleDto.DealDate = customerHospitalConsume.WriteOffDate;
+                        recommandDocumentSettleDto.DealDate = customerHospitalConsume.BuyAgainTime;
                         recommandDocumentSettleDto.GoodsName = customerHospitalConsume.ItemName;
                         recommandDocumentSettleDto.Phone = customerHospitalConsume.Phone;
                         break;
@@ -726,7 +726,7 @@ namespace Fx.Amiya.Service
                         break;
                     case (int)OrderFrom.BuyAgainOrder:
                         var customerHospitalConsume = await customerHospitalConsumeService.GetByConsumeIdAsync(x.DealInfoId);
-                        recommandDocumentSettleDto.DealDate = customerHospitalConsume.WriteOffDate;
+                        recommandDocumentSettleDto.DealDate = customerHospitalConsume.BuyAgainTime;
                         recommandDocumentSettleDto.GoodsName = customerHospitalConsume.ItemName;
                         recommandDocumentSettleDto.Phone = customerHospitalConsume.Phone;
                         break;

@@ -1,4 +1,5 @@
 ﻿-----------------------------------------------余建明 2023/04/03 BEGIN--------------------------------------------
+--对账单列表新增发票编号
 ALTER TABLE `amiyadb`.`tbl_reconciliation_documents` 
 ADD COLUMN `bill_id2` VARCHAR(50) NULL AFTER `create_by`;
 

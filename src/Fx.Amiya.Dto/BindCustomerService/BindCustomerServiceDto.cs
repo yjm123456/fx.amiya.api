@@ -10,6 +10,7 @@ namespace Fx.Amiya.Dto.BindCustomerService
         public int CustomerServiceId { get; set; }
         public string CustomerServiceName { get; set; }
         public string BuyerPhone { get; set; }
+        public string EncryptPhone { get; set; }
         public string UserId { get; set; }
         public int CreateBy { get; set; }
         public DateTime CreateDate { get; set; }
