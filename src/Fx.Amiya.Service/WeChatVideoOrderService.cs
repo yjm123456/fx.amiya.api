@@ -167,50 +167,11 @@ namespace Fx.Amiya.Service
                         var orderStatus = ServiceClass.GetTikTokOrderStatusText(order.StatusCode);
                         var bindCustomerId =await _bindCustomerService.GetEmployeeIdByPhone(orderItem.Phone);
 
-                        if (bindCustomerId == 0)
-                        {
-                            order.BelongEmpId = 188;
-                            await dalWeChatVideoOrderInfo.AddAsync(order, true);
-                            AddBindCustomerServiceDto addBindCustomerServiceDto = new AddBindCustomerServiceDto();
-                            addBindCustomerServiceDto.CustomerServiceId = 188;
-                            var orderIdList = await orderService.GetOrderIdListByPhone(orderItem.Phone);
-                            UpdateBelongEmpInfoOrderDto updateOrderBelongEmpIdDto = new UpdateBelongEmpInfoOrderDto();
-                            updateOrderBelongEmpIdDto.OrderId = orderIdList;
-                            updateOrderBelongEmpIdDto.BelongEmpId = addBindCustomerServiceDto.CustomerServiceId;
-                            //修改订单归属客服
-                            await orderService.UpdateOrderBelongEmpIdAsync(updateOrderBelongEmpIdDto);
-                            addBindCustomerServiceDto.OrderIdList = orderIdList;
-                            //添加客服绑定关系
-                            var user = await dalCustomerInfo.GetAll().FirstOrDefaultAsync(e => e.Phone == order.Phone);
-                            BindCustomerService bindCustomerService = new BindCustomerService();
-                            bindCustomerService.CustomerServiceId = 188;
-                            bindCustomerService.BuyerPhone = order.Phone;
-                            bindCustomerService.UserId = user?.UserId;
-                            bindCustomerService.CreateBy = 188;
-                            bindCustomerService.CreateDate = DateTime.Now;
-                            string department = "";
-                            bindCustomerService.FirstProjectDemand = department + order.GoodsName;
-                            bindCustomerService.FirstConsumptionDate = order.CreateDate;
-                            bindCustomerService.NewConsumptionDate = order.CreateDate;
-                            bindCustomerService.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
-                            bindCustomerService.NewContentPlatForm = ServiceClass.GetAppTypeText(7);
-                            if (order.StatusCode == "TRADE_FINISHED")
-                            {
-                                bindCustomerService.AllPrice = order.ActualPayment;
-                            }
-                            else
-                            {
-                                bindCustomerService.AllPrice = 0.00M;
-                            }
-                            bindCustomerService.AllOrderCount = 1;
-                            await dalBindCustomerService.AddAsync(bindCustomerService,true);
-                            bindCustomerId = 188;
+                        if (bindCustomerId!=0) {
+                            order.BelongEmpId = bindCustomerId;
                         }
-                        else {
-                            order.BelongEmpId =bindCustomerId;
-                            await dalWeChatVideoOrderInfo.AddAsync(order, true);
-                        }
-                       
+                        await dalWeChatVideoOrderInfo.AddAsync(order, true);
+
                     }
                 }
                
@@ -254,6 +215,7 @@ namespace Fx.Amiya.Service
             var bindCustomerInfos = from z in dalBindCustomerService.GetAll()
                                     where z.BuyerPhone == Phone
                                     select z;
+
             var bindCustmerInfo = bindCustomerInfos.FirstOrDefault();
             if (bindCustmerInfo != null)
             {

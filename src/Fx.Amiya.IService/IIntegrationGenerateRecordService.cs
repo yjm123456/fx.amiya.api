@@ -23,5 +23,15 @@ namespace Fx.Amiya.IService
         /// <param name="customerId"></param>
         /// <returns></returns>
         Task EditIntegrationRecordAsync(EditIntegrationgenerationDto editIntegrationgenerationDto);
+        /// <summary>
+        /// 导出积分发放记录
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<List<IntegrationgenerationRecordDto>> ExportIntegrationgenerationRecordAsync(string keyword, DateTime? startDate, DateTime? endDate);
     }
 }

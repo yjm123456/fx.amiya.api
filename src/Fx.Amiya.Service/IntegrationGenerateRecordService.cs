@@ -78,5 +78,45 @@ namespace Fx.Amiya.Service
             }
             return fxPageInfo;
         }
+        /// <summary>
+        /// 导出积分发放记录
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<List<IntegrationgenerationRecordDto>> ExportIntegrationgenerationRecordAsync(string keyword, DateTime? startDate, DateTime? endDate)
+        {
+            startDate = startDate.HasValue ? startDate.Value.Date : DateTime.Now.Date;
+            endDate = endDate.HasValue ? endDate.Value.AddDays(1).Date : DateTime.Now.AddDays(1).Date;
+            var record = from d in dalIntegrationGenerateRecord.GetAll()
+                         join c in dalCustomerInfo.GetAll()
+                         on d.CustomerId equals c.Id
+                         where (string.IsNullOrEmpty(keyword) || c.Phone.Contains(keyword)) && (d.Date >= startDate && d.Date < endDate)
+                         orderby d.Date descending
+                         select new IntegrationgenerationRecordDto
+                         {
+                             Id = d.Id,
+                             CustomerId = d.CustomerId,
+                             Phone = ServiceClass.GetIncompletePhone(c.Phone),
+                             CreateDate = d.Date,
+                             TypeText = ServiceClass.GetIntegrationTypeText(d.Type),
+                             Quantity = d.Quantity,
+                             OrderId = d.OrderId,
+                             ConsumptionAmount = d.AmountOfConsumption,
+                             Percent = d.Percents,
+                             StockQuantity = d.StockQuantity,
+                             HandleBy = d.HandleBy.ToString()
+                         };
+            var recordList = record.ToList();
+            foreach (var item in recordList)
+            {
+                item.HandleBy = string.IsNullOrEmpty(item.HandleBy) ? "系统发放" : dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(item.HandleBy)).FirstOrDefault()?.Name;
+                item.AccountBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(item.CustomerId);
+            }
+            return recordList;
+        }
     }
 }

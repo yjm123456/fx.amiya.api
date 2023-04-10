@@ -27,16 +27,18 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private ICustomerConsumptionCredentialsService customerConsumptionCredentialsService;
         private IHttpContextAccessor _httpContextAccessor;
+        private ICustomerService customerService;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="customerConsumptionCredentialsService"></param>
         public CustomerConsumptionCredentialsController(ICustomerConsumptionCredentialsService customerConsumptionCredentialsService,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, ICustomerService customerService)
         {
             this.customerConsumptionCredentialsService = customerConsumptionCredentialsService;
             _httpContextAccessor = httpContextAccessor;
+            this.customerService = customerService;
         }
 
 
@@ -117,6 +119,36 @@ namespace Fx.Amiya.Background.Api.Controllers
             catch (Exception ex)
             {
                 return ResultData.Fail(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 添加消费凭证
+        /// </summary>
+        /// <param name="addVo"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ResultData<int>> AddAsync(AddCustomerConsumptionCredentialsVo addVo)
+        {
+            try
+            {
+                var customerInfo =await customerService.GetByPhoneAsync(addVo.BindPhone);
+                if (customerInfo == null) throw new Exception("该手机号未绑定小程序！");
+                AddCustomerConsumptionCredentialsDto addDto = new AddCustomerConsumptionCredentialsDto();
+                addDto.CustomerId = customerInfo.Id;
+                addDto.CustomerName = addVo.CustomerName;
+                addDto.ToHospitalPhone = addVo.ToHospitalPhone;
+                addDto.ConsumeDate = addVo.ConsumeDate;
+                addDto.PayVoucherPicture1 = addVo.PayVoucherPicture1;
+                addDto.PayVoucherPicture2 = addVo.PayVoucherPicture2;
+                addDto.PayVoucherPicture3 = addVo.PayVoucherPicture3;
+                addDto.PayVoucherPicture4 = addVo.PayVoucherPicture4;
+                addDto.PayVoucherPicture5 = addVo.PayVoucherPicture5;
+                await customerConsumptionCredentialsService.AddAsync(addDto);
+                return ResultData<int>.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData<int>.Fail(ex.Message);
             }
         }
 
