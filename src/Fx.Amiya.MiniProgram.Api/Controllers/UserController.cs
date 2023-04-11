@@ -111,12 +111,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     var sessionInfo = await WxMiniBaseApi.GetCode2SessionAsync(loginVo.Code, appInfo.WxAppId, appInfo.WxAppSecret);
 
                     if (sessionInfo.ErrCode == 0)
-                    {
-                        //if (string.IsNullOrEmpty(sessionInfo.UnionId))
-                        //{
-                        //    return ResultData<string>.Fail(-2, "unionid获取不到！");
-                        //}
-
+                    {                    
                         //添加用户，如果已经存在，则不会添加
                         var wxMiniUserInfo = await userService.AddUnauthorizedWxMiniUserAsync(new UnauthorizedWxMiniUserAddDto()
                         {
