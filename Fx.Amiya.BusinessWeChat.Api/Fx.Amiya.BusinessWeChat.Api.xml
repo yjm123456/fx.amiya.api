@@ -1498,6 +1498,16 @@
             录单时间
             </summary>
         </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.NetWorkConsulationName">
+            <summary>
+            医院网咨人员
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.SceneConsulationName">
+            <summary>
+            医院现场咨询人员
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.SendDate">
             <summary>
             派单时间
