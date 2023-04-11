@@ -132,7 +132,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 var customerInfo =await customerService.GetByPhoneAsync(addVo.BindPhone);
-                if (customerInfo == null) throw new Exception("该手机号未绑定小程序！");
+                if (string.IsNullOrEmpty(customerInfo.Phone)) throw new Exception("该手机号未绑定小程序！");
                 AddCustomerConsumptionCredentialsDto addDto = new AddCustomerConsumptionCredentialsDto();
                 addDto.CustomerId = customerInfo.Id;
                 addDto.CustomerName = addVo.CustomerName;

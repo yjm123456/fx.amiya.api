@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials.Input;
 using Fx.Amiya.Background.Api.Vo.IntegrationGenerateRecord;
+using Fx.Amiya.Background.Api.Vo.IntegrationGenerateRecord.Result;
 using Fx.Amiya.Core.Dto.Integration;
 using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.Dto.Integration;
@@ -90,10 +91,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 operationAddDto.OperationBy = employeeId;
                 var record = await integrationGenerateRecordService.ExportIntegrationgenerationRecordAsync(query.Keyword, query.StartDate, query.EndDate);
                 
-                var exportRecord = record.Select(e => new IntegrationGenerateRecordListVo
+                var exportRecord = record.Select(e => new IntegrationGenerateRecordExportVo
                 {
-                    Id = e.Id,
-                    CustomerId = e.CustomerId,
                     Phone = e.Phone,
                     CreateDate = e.CreateDate,
                     TypeText = e.TypeText,
