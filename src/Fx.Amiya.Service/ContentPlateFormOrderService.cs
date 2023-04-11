@@ -747,7 +747,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task HospitalConfirmOrderAsync(string orderId, int hospitalempId, int hospitalId)
+        public async Task HospitalConfirmOrderAsync(string orderId, int hospitalempId, int hospitalId, string netWorkConsulationName, string sceneConsulationName)
         {
             unitOfWork.BeginTransaction();
             try
@@ -759,6 +759,8 @@ namespace Fx.Amiya.Service
                 }
                 order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.ConfirmOrder);
                 order.UpdateDate = DateTime.Now;
+                order.NetWorkConsulationName = netWorkConsulationName;
+                order.SceneConsulationName = sceneConsulationName;
                 await _dalContentPlatformOrder.UpdateAsync(order, true);
                 AddHospitalBindCustomerServiceDto addHospitalBindCustomerServiceDto = new AddHospitalBindCustomerServiceDto();
                 addHospitalBindCustomerServiceDto.HospitalEmployeeId = hospitalempId;
@@ -1358,6 +1360,8 @@ namespace Fx.Amiya.Service
             }
             result.SettlePrice = order.SettlePrice;
             result.OrderSource = order.OrderSource;
+            result.SceneConsulationName = order.SceneConsulationName;
+            result.NetWorkConsulationName = order.NetWorkConsulationName;
             if (order.ContentPlatformOrderSendList != null)
             {
                 var sendHospital = order.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault();
@@ -2259,7 +2263,8 @@ namespace Fx.Amiya.Service
                     //重单可深度
                     order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.RepeatOrderProfundity);
                     order.IsRepeatProfundityOrder = true;
-
+                    order.NetWorkConsulationName = input.NetWorkConsulationName;
+                    order.SceneConsulationName = input.SceneConsulationName;
                     //绑定
                     AddHospitalBindCustomerServiceDto addHospitalBindCustomerServiceDto = new AddHospitalBindCustomerServiceDto();
                     addHospitalBindCustomerServiceDto.HospitalEmployeeId = hospitalEmployeeId;

@@ -363,7 +363,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportContentPlateFormOrderLlistWithPage")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> ExportOrderListWithPageAsync([FromQuery]QueryExportContentPlateFormOrderLlistWithPage query)
+        public async Task<FileStreamResult> ExportOrderListWithPageAsync([FromQuery] QueryExportContentPlateFormOrderLlistWithPage query)
         {
             OperationAddDto operationAddDto = new OperationAddDto();
             operationAddDto.Code = 0;
@@ -565,7 +565,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationAddDto.Message = "";
                 operationAddDto.Parameters = JsonConvert.SerializeObject(query);
                 operationAddDto.RequestType = (int)RequestType.Export;
@@ -729,6 +729,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.AcceptConsulting = order.AcceptConsulting;
             orderUpdateInfo.UnSendReason = order.UnSendReason;
             orderUpdateInfo.CreateDate = order.CreateDate;
+            orderUpdateInfo.NetWorkConsulationName = order.NetWorkConsulationName;
+            orderUpdateInfo.SceneConsulationName = order.SceneConsulationName;
             orderUpdateInfo.SendDate = order.SendDate;
             orderUpdateInfo.UnDealPictureUrl = order.UnDealPictureUrl;
             orderUpdateInfo.DealPictureUrl = order.DealPictureUrl;
@@ -1024,15 +1026,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 医院接单
         /// </summary>
         /// <param name="orderId">订单号</param>
+        /// <param name="netWorkConsulationName">医院网咨人员</param>
+        /// <param name="sceneConsulationName">医院现场咨询人员</param>
         /// <returns></returns>
         [HttpGet("contentPlateFormOrderConfirm")]
         [FxTenantAuthorize]
-        public async Task<ResultData> RepeateOrderAsync(string orderId)
+        public async Task<ResultData> RepeateOrderAsync(string orderId, string netWorkConsulationName, string sceneConsulationName)
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalempId = Convert.ToInt32(employee.Id);
             int hospitalId = Convert.ToInt32(employee.HospitalId);
-            await _orderService.HospitalConfirmOrderAsync(orderId, hospitalempId, hospitalId);
+            await _orderService.HospitalConfirmOrderAsync(orderId, hospitalempId, hospitalId, netWorkConsulationName, sceneConsulationName);
             return ResultData.Success();
         }
         /// <summary>
@@ -1053,6 +1057,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.RepeatePictureUrl = updateVo.RepeatePictureUrl;
             updateDto.ToHospitalDate = updateVo.ToHospitalDate;
             updateDto.IsProfundity = updateVo.IsProfundity;
+            updateDto.SceneConsulationName = updateVo.SceneConsulationName;
+            updateDto.NetWorkConsulationName = updateVo.NetWorkConsulationName;
             await _orderService.RepeateContentPlateFormOrderAsync(updateDto, hospitalempId, hospitalId);
             return ResultData.Success();
         }

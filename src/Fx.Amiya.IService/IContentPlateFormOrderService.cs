@@ -154,7 +154,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="orderId"></param>
         /// <returns></returns>
-        Task HospitalConfirmOrderAsync(string orderId, int hospitalEmpId, int hospitalId);
+        Task HospitalConfirmOrderAsync(string orderId, int hospitalEmpId, int hospitalId, string netWorkConsulationName, string sceneConsulationName);
         /// <summary>
         ///  医院重单退回
         /// </summary>

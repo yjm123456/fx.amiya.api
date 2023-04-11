@@ -19,6 +19,14 @@ namespace Fx.Amiya.DbModels.Model
         public DateTime? UpdateDate { get; set; }
 
         public DateTime? SendDate { get; set; }
+        /// <summary>
+        /// 医院网咨人员
+        /// </summary>
+        public string NetWorkConsulationName { get; set; }
+        /// <summary>
+        /// 医院现场咨询人员
+        /// </summary>
+        public string SceneConsulationName { get; set; }
         public string GoodsId { get; set; }
         /// <summary>
         /// 医院科室id

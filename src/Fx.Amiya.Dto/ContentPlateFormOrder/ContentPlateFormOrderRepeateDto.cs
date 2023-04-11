@@ -27,5 +27,13 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 是否可深度
         /// </summary>
         public bool IsProfundity { get; set; }
+        /// <summary>
+        /// 医院网咨人员(可深度时填写）
+        /// </summary>
+        public string NetWorkConsulationName { get; set; }
+        /// <summary>
+        /// 医院现场咨询人员(可深度时填写）
+        /// </summary>
+        public string SceneConsulationName { get; set; }
     }
 }

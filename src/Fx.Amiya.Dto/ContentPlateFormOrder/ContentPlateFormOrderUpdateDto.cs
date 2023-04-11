@@ -237,6 +237,14 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// </summary>
         public string OrderSourceText { get; set; }
         /// <summary>
+        /// 医院网咨人员
+        /// </summary>
+        public string NetWorkConsulationName { get; set; }
+        /// <summary>
+        /// 医院现场咨询人员
+        /// </summary>
+        public string SceneConsulationName { get; set; }
+        /// <summary>
         /// 订单状态
         /// </summary>
         public int OrderStatus { get; set; }

@@ -208,6 +208,14 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 录单时间
         /// </summary>
         public DateTime CreateDate { get; set; }
+        /// <summary>
+        /// 医院网咨人员
+        /// </summary>
+        public string NetWorkConsulationName { get; set; }
+        /// <summary>
+        /// 医院现场咨询人员
+        /// </summary>
+        public string SceneConsulationName { get; set; }
 
         /// <summary>
         /// 派单时间

@@ -391,6 +391,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.AcceptConsulting = order.AcceptConsulting;
             orderUpdateInfo.UnSendReason = order.UnSendReason;
             orderUpdateInfo.CreateDate = order.CreateDate;
+            orderUpdateInfo.NetWorkConsulationName = order.NetWorkConsulationName;
+            orderUpdateInfo.SceneConsulationName = order.SceneConsulationName;
             orderUpdateInfo.SendDate = order.SendDate;
             orderUpdateInfo.UnDealPictureUrl = order.UnDealPictureUrl;
             orderUpdateInfo.DealPictureUrl = order.DealPictureUrl;

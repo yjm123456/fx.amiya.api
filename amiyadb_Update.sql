@@ -13,3 +13,10 @@ ALTER TABLE `tbl_customer_info`
 	ADD COLUMN `app_id` VARCHAR(50) NULL DEFAULT NULL AFTER `phone`;
 -----------------------------------------------王健 2023/04/03 END--------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+-----------------------------------------------余建明 2023/04/11 BEGIN--------------------------------------------
+--内容平台订单列表新增医院网咨与医院现场咨询人员名称登记
+ALTER TABLE `amiyadb`.`tbl_content_platform_order` 
+ADD COLUMN `network_consulation_name` VARCHAR(45) NULL AFTER `send_date`,
+ADD COLUMN `scene_consulation_name` VARCHAR(45) NULL AFTER `network_consulation_name`;
+-----------------------------------------------余建明 2023/04/11 END--------------------------------------------
