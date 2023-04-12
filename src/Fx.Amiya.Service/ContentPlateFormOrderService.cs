@@ -322,7 +322,7 @@ namespace Fx.Amiya.Service
                 if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
                 {
                     orders = from d in orders
-                             where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.Phone) > 0 || d.SupportEmpId == employeeId
+                             where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.Phone) > 0 || d.SupportEmpId == employeeId || d.BelongEmpId == employeeId
                              select d;
                 }
                 var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
