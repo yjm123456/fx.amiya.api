@@ -15,7 +15,11 @@ namespace Fx.Amiya.IService
         Task<FxPageInfo<ContentPlatFormOrderAddWorkDto>> GetListByPageAsync(QueryContentPlatFormOrderAddWorkPageDto query);
         Task AddAsync(AddContentPlatFormOrderAddWorkDto addDto);
         Task<ContentPlatFormOrderAddWorkDto> GetByIdAsync(string id);
+
+        Task<ContentPlatFormOrderAddWorkDto> GetByPhoneAsync(string phone);
         Task UpdateAsync(UpdateContentPlatFormOrderAddWorkDto updateContentPlatFormOrderAddWorkDto);
+
+        Task UpdateAcceptByAsync(UpdateAcceptByDto updateAcceptByDto);
         /// <summary>
         /// 审核录单申请工单
         /// </summary>

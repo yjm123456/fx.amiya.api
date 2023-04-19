@@ -425,7 +425,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getEmployeeByPositionId")]
-        public async Task<ResultData<List<AmiyaEmployeeNameVo>>> GetemployeeByPositionIdAsync(int positionId)
+        public async Task<ResultData<List<AmiyaEmployeeNameVo>>> GetemployeeByPositionIdAsync(int? positionId)
         {
             var employee = from d in await employeeService.GetemployeeByPositionIdAsync(positionId)
                            select new AmiyaEmployeeNameVo

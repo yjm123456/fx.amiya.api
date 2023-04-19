@@ -22,6 +22,7 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         public string LiveAnchorWechatNo { get; set; }
         public string CustomerNickName { get; set; }
         public string Phone { get; set; }
+        public string SubPhone { get; set; }
         public decimal Price { get; set; }
         public int ConsultationType { get; set; }
         public string ConsultationTypeText { get; set; }
@@ -33,6 +34,8 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         public string Remark { get; set; }
         public int CreateBy { get; set; }
         public string CreateByName { get; set; }
+        public int? AssignEmpId { get; set; }
+        public string AssignEmpName { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? RefundDate { get; set; }
         public string RefundReason { get; set; }

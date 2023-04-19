@@ -184,7 +184,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="positionId"></param>
         /// <returns></returns>
-        Task<List<AmiyaEmployeeNameDto>> GetemployeeByPositionIdAsync(int positionId);
+        Task<List<AmiyaEmployeeNameDto>> GetemployeeByPositionIdAsync(int? positionId);
 
     }
 }

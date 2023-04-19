@@ -20,3 +20,14 @@ ADD COLUMN `network_consulation_name` VARCHAR(45) NULL AFTER `send_date`,
 ADD COLUMN `scene_consulation_name` VARCHAR(45) NULL AFTER `network_consulation_name`;
 -----------------------------------------------余建明 2023/04/11 END--------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+-----------------------------------------------余建明 2023/04/13 BEGIN--------------------------------------------
+--小黄车订单列表新增指派人
+ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
+ADD COLUMN `assign_emp_id` INT NULL AFTER `is_send_order`;
+ADD COLUMN `sub_phone` VARCHAR(45) NULL AFTER `phone`;
+--同步小黄车订单列表创建人为指派人
+update  amiyadb.tbl_shopping_cart_registration set assign_emp_id=create_by
+-----------------------------------------------余建明 2023/04/13 END--------------------------------------------
+

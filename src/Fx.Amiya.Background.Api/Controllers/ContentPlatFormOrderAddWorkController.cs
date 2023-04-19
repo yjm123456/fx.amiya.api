@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderAddWork;
 using Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderAddWork.Input;
 using Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderAddWork.Result;
-using Fx.Amiya.Background.Api.Vo.ReconciliationDocuments;
 using Fx.Amiya.Dto.ContentPlatFormOrderAddWork;
 using Fx.Amiya.Dto.ContentPlatFormOrderAddWork.Input;
 using Fx.Amiya.IService;
@@ -158,6 +156,40 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
 
+        /// <summary>
+        /// 根据录单申请手机号获取录单申请信息
+        /// </summary>
+        /// <param name="phone">手机号</param>
+        /// <returns></returns>
+        [HttpGet("byPhone/{phone}")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<ContentPlatFormOrderAddWorkVo>> GetByPhoneAsync(string phone)
+        {
+            try
+            {
+                var selectResult = await contentPlatFormOrderAddWorkService.GetByPhoneAsync(phone);
+                ContentPlatFormOrderAddWorkVo result = new ContentPlatFormOrderAddWorkVo();
+                result.Id = selectResult.Id;
+                result.HospitalId = selectResult.HospitalId;
+                result.AcceptBy = selectResult.AcceptBy;
+                result.Phone = selectResult.Phone;
+                result.SendRemark = selectResult.SendRemark;
+                result.CreateBy = selectResult.CreateBy;
+                result.CreateDate = selectResult.CreateDate;
+                result.BelongCustomerServiceId = selectResult.BelongCustomerServiceId;
+                result.CheckState = selectResult.CheckState;
+                result.CheckStateText = selectResult.CheckStateText;
+                result.CheckRemark = selectResult.CheckRemark;
+                result.CheckDate = selectResult.CheckDate;
+                return ResultData<ContentPlatFormOrderAddWorkVo>.Success().AddData("contentPlatFormOrderAddWork", result);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<ContentPlatFormOrderAddWorkVo>.Fail(ex.Message);
+            }
+        }
+
+
 
         /// <summary>
         /// 修改录单申请信息
@@ -186,6 +218,30 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+
+        /// <summary>
+        /// 转移录单申请信息
+        /// </summary>
+        /// <param name="updateAcceptByVo"></param>
+        /// <returns></returns>
+        [HttpPut("updateAcceptBy")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> UpdateAcceptByAsync(UpdateAcceptByVo updateAcceptByVo)
+        {
+            try
+            {
+                UpdateAcceptByDto updateDto = new UpdateAcceptByDto();
+                updateDto.Id = updateAcceptByVo.Id;
+                updateDto.AcceptBy = updateAcceptByVo.AcceptBy;
+
+                await contentPlatFormOrderAddWorkService.UpdateAcceptByAsync(updateDto);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
 
         /// <summary>
         /// 审核录单申请信息

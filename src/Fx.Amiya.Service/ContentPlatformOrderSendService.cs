@@ -687,7 +687,6 @@ namespace Fx.Amiya.Service
             return pageInfo;
         }
 
-
         /// <summary>
         /// 内容平台已派单报表
         /// </summary>
@@ -890,7 +889,7 @@ namespace Fx.Amiya.Service
                          {
                              OrderId = d.ContentPlatformOrderId,
                              SendHospitalId = d.HospitalId,
-                             ThumbPictureUrl=d.HospitalInfo.ThumbPicUrl,
+                             ThumbPictureUrl = d.HospitalInfo.ThumbPicUrl,
                              SendHospital = d.HospitalInfo.Name,
                              City = d.HospitalInfo.CooperativeHospitalCity.Name,
                              SendDate = d.SendDate,

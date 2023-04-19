@@ -31,6 +31,11 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// 客户手机号
         /// </summary>
         public string Phone { get; set; }
+
+        /// <summary>
+        /// 辅助号码
+        /// </summary>
+        public string SubPhone { get; set; }
         /// <summary>
         /// 下单金额
         /// </summary>
@@ -93,9 +98,9 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// </summary>
         public string ReContent { get; set; }
         /// <summary>
-        /// 接诊人员
+        /// 指派人员
         /// </summary>
-        public int AdmissionId { get; set; }
+        public int? AssignEmpId { get; set; }
         /// <summary>
         /// 是否差评
         /// </summary>

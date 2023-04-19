@@ -16,6 +16,7 @@ namespace Fx.Amiya.DbModels.Model
         public string LiveAnchorWechatNo { get; set; }
         public string CustomerNickName { get; set; }
         public string Phone { get; set; }
+        public string SubPhone { get; set; }
         public decimal Price { get; set; }
         public int ConsultationType { get; set; }
         public bool IsAddWeChat { get; set; }
@@ -26,6 +27,7 @@ namespace Fx.Amiya.DbModels.Model
         public bool IsReturnBackPrice { get; set; }
         public string Remark { get; set; }
         public int CreateBy { get; set; }
+        public int? AssignEmpId { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? RefundDate { get; set; }
         public string RefundReason { get; set; }

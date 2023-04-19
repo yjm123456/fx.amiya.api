@@ -21,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Fx.Amiya.Dto.HospitalOperationIndicator;
 using Fx.Amiya.SyncOrder.WeChatVideo;
 using Fx.Amiya.Dto.WechatVideoOrder;
+using Fx.Amiya.Dto.MessageNotice.Input;
 
 namespace Fx.Amiya.Background.Api
 {
@@ -33,6 +34,8 @@ namespace Fx.Amiya.Background.Api
         private FxAppGlobal _fxAppGlobal;
         private IIntegrationAccount integrationAccountService;
         private ICustomerService customerService;
+        private IMessageNoticeService messageNoticeService;
+        private ICustomerAppointmentScheduleService customerAppointmentScheduleService;
         private IMemberCard memberCardService;
         private IMemberRankInfo memberRankInfoService;
         private IBindCustomerServiceService _bindCustomerService;
@@ -45,11 +48,15 @@ namespace Fx.Amiya.Background.Api
             ICustomerService customerService,
              IMemberCard memberCardService,
              ISyncTikTokOrder syncTikTokOrder,
+             ICustomerAppointmentScheduleService customerAppointmentScheduleService,
+             IMessageNoticeService messageNoticeService,
              IMemberRankInfo memberRankInfoService, ITikTokOrderInfoService tokOrderInfoService, IServiceProvider serviceProvider, ISyncWeChatVideoOrder syncWeChatVideoOrder = null, IWeChatVideoOrderService weChatVideoOrderService = null)
         {
             this.orderService = orderService;
             this.syncOrder = syncOrder;
             _fxAppGlobal = fxAppGlobal;
+            this.messageNoticeService = messageNoticeService;
+            this.customerAppointmentScheduleService = customerAppointmentScheduleService;
             _syncWeiFenXiaoOrder = syncWeiFenXiaoOrder;
             this.integrationAccountService = integrationAccountService;
             this.customerService = customerService;
@@ -68,7 +75,7 @@ namespace Fx.Amiya.Background.Api
         /// Begin:开始时间，Interval：隔多长时间执行一次（单位毫秒），SkipWhileExecuting：是否等待上个任务执行完再开始执行
         /// </summary>
         /// <returns></returns>
-        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 5, SkipWhileExecuting = true)]
+        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 60 * 24 + 60 * 1000, SkipWhileExecuting = true)]
         public async Task Run()
         {
             try
@@ -108,8 +115,8 @@ namespace Fx.Amiya.Background.Api
                     tikTokOrderList.AddRange(douYinOrderResult4);
                 }
 
-                var wechatVideoOrderList = await _syncWeChatVideoOrder.TranslateTradesSoldChangedOrders(DateTime.Now,DateTime.Now,10);
-                
+                var wechatVideoOrderList = await _syncWeChatVideoOrder.TranslateTradesSoldChangedOrders(DateTime.Now, DateTime.Now, 10);
+
                 List<OrderInfoAddDto> amiyaOrderList = new List<OrderInfoAddDto>();
                 List<TikTokOrderAddDto> tikTokOrderAddList = new List<TikTokOrderAddDto>();
                 List<WechatVideoAddDto> wechatVideoList = new List<WechatVideoAddDto>();
@@ -249,38 +256,201 @@ namespace Fx.Amiya.Background.Api
             }
 
         }
+        ///// <summary>
+        ///// 修改运营指标提报/批注状态(一天运行一次)【运营指标板块线上暂未使用】
+        ///// </summary>
+        ///// <returns></returns>
+        //[Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 60 * 24 + 60 * 1000, SkipWhileExecuting = true)]
+        //public async Task HandleOperationIndicatorAsync()
+        //{
+        //    using (var scope = _serviceProvider.CreateScope())
+        //    {
+        //        var hospitalOperationIndicator = scope.ServiceProvider.GetService<IHospitalOperationIndicatorService>();
+        //        var indicatorSendToHospital = scope.ServiceProvider.GetService<IIndicatorSendHospitalService>();
+        //        var indicatorList = await hospitalOperationIndicator.GetUnSumbitAndUnRemarkIndicatorAsync();
+        //        var expireIndicatorList = await hospitalOperationIndicator.GetUnValidIndicatorAsync();
+        //        foreach (var indicator in indicatorList)
+        //        {
+        //            var status = await indicatorSendToHospital.SubmitAndRemarkStatusAsync(indicator.Id);
+        //            UpdateSubmitAndRemarkStatus update = new UpdateSubmitAndRemarkStatus();
+        //            if (status.RemarkStatus == true)
+        //            {
+        //                update.RemarkStatus = true;
+        //            }
+        //            if (status.SumbitStatus == true)
+        //            {
+        //                update.SubmitStatus = true;
+        //            }
+        //            update.Id = indicator.Id;
+        //            await hospitalOperationIndicator.UpdateRemarkAndSubmitStatusAsync(update);
+        //        }
+        //        foreach (var item in expireIndicatorList)
+        //        {
+        //            await hospitalOperationIndicator.DeleteAsync(item.Id);
+        //        }
+        //    }
+        //}
+
         /// <summary>
-        /// 修改运营指标提报/批注状态(一天运行一次)
+        /// 新增消息通知(一天运行一次)
         /// </summary>
         /// <returns></returns>
         [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 60 * 24 + 60 * 1000, SkipWhileExecuting = true)]
-        public async Task HandleOperationIndicatorAsync()
+        public async Task OrderMessageNotice()
         {
             using (var scope = _serviceProvider.CreateScope())
             {
-                var hospitalOperationIndicator = scope.ServiceProvider.GetService<IHospitalOperationIndicatorService>();
-                var indicatorSendToHospital = scope.ServiceProvider.GetService<IIndicatorSendHospitalService>();
-                var indicatorList = await hospitalOperationIndicator.GetUnSumbitAndUnRemarkIndicatorAsync();
-                var expireIndicatorList = await hospitalOperationIndicator.GetUnValidIndicatorAsync();
-                foreach (var indicator in indicatorList)
+                var contentPlateFormOrderService = scope.ServiceProvider.GetService<IContentPlateFormOrderService>();
+                #region 【派单通知】
+                #region【七日派单通知】
+                int sevenDay = 7;
+                var sendOrderSevenDay = await contentPlateFormOrderService.GetSendOrderByDateList(sevenDay);
+                foreach (var sevendaysendDateOrder in sendOrderSevenDay)
                 {
-                    var status = await indicatorSendToHospital.SubmitAndRemarkStatusAsync(indicator.Id);
-                    UpdateSubmitAndRemarkStatus update = new UpdateSubmitAndRemarkStatus();
-                    if (status.RemarkStatus == true)
+                    AddMessageNoticeDto addMessageNoticeDto = new AddMessageNoticeDto();
+                    if (sevendaysendDateOrder.IsSupportOrder == true)
                     {
-                        update.RemarkStatus = true;
+                        addMessageNoticeDto.AcceptBy = sevendaysendDateOrder.SupportEmpId;
                     }
-                    if (status.SumbitStatus == true)
+                    else
                     {
-                        update.SubmitStatus = true;
+                        addMessageNoticeDto.AcceptBy = sevendaysendDateOrder.BelongEmpId.Value;
                     }
-                    update.Id = indicator.Id;
-                    await hospitalOperationIndicator.UpdateRemarkAndSubmitStatusAsync(update);
+                    addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
+                    addMessageNoticeDto.NoticeContent = "您的订单：" + sevendaysendDateOrder.Id + " 已派单超过" + sevenDay + "日，请及时跟进";
+                    await messageNoticeService.AddAsync(addMessageNoticeDto);
                 }
-                foreach (var item in expireIndicatorList)
+                #endregion
+                #region【十五日派单通知】
+                int fifteenDays = 15;
+                var sendOrderFifteenDay = await contentPlateFormOrderService.GetSendOrderByDateList(fifteenDays);
+                foreach (var fifTeendaysendDateOrder in sendOrderFifteenDay)
                 {
-                    await hospitalOperationIndicator.DeleteAsync(item.Id);
+                    AddMessageNoticeDto addMessageNoticeDto = new AddMessageNoticeDto();
+                    if (fifTeendaysendDateOrder.IsSupportOrder == true)
+                    {
+                        addMessageNoticeDto.AcceptBy = fifTeendaysendDateOrder.SupportEmpId;
+                    }
+                    else
+                    {
+                        addMessageNoticeDto.AcceptBy = fifTeendaysendDateOrder.BelongEmpId.Value;
+                    }
+                    addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
+                    addMessageNoticeDto.NoticeContent = "您的订单：" + fifTeendaysendDateOrder.Id + " 已派单超过" + fifteenDays + "日，请及时跟进";
+                    await messageNoticeService.AddAsync(addMessageNoticeDto);
                 }
+                #endregion
+                #region【三十日派单通知】
+                int thirtyDays = 30;
+                var sendOrderThirtyDay = await contentPlateFormOrderService.GetSendOrderByDateList(thirtyDays);
+                foreach (var ThirtydaysendDateOrder in sendOrderThirtyDay)
+                {
+                    AddMessageNoticeDto addMessageNoticeDto = new AddMessageNoticeDto();
+                    if (ThirtydaysendDateOrder.IsSupportOrder == true)
+                    {
+                        addMessageNoticeDto.AcceptBy = ThirtydaysendDateOrder.SupportEmpId;
+                    }
+                    else
+                    {
+                        addMessageNoticeDto.AcceptBy = ThirtydaysendDateOrder.BelongEmpId.Value;
+                    }
+                    addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
+                    addMessageNoticeDto.NoticeContent = "您的订单：" + ThirtydaysendDateOrder.Id + " 已派单超过" + thirtyDays + "日，请及时跟进";
+                    await messageNoticeService.AddAsync(addMessageNoticeDto);
+                }
+                #endregion
+                #endregion
+
+                #region 【成交通知】
+                #region【三十日成交通知】
+                int thirtyDaysDeal = 30;
+                var dealOrderThirtyDay = await contentPlateFormOrderService.GetOrderDealByDateList(thirtyDaysDeal);
+                foreach (var ThirtydaydealDateOrder in dealOrderThirtyDay)
+                {
+                    AddMessageNoticeDto addMessageNoticeDto = new AddMessageNoticeDto();
+                    if (ThirtydaydealDateOrder.IsSupportOrder == true)
+                    {
+                        addMessageNoticeDto.AcceptBy = ThirtydaydealDateOrder.SupportEmpId;
+                    }
+                    else
+                    {
+                        addMessageNoticeDto.AcceptBy = ThirtydaydealDateOrder.BelongEmpId.Value;
+                    }
+                    addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
+                    addMessageNoticeDto.NoticeContent = "您的订单：" + ThirtydaydealDateOrder.Id + " 已成交超过" + thirtyDaysDeal + "日，请及时跟进";
+                    await messageNoticeService.AddAsync(addMessageNoticeDto);
+                }
+                #endregion
+                #region【四十五日成交通知】
+                int fourtyFiveDaysDeal = 45;
+                var dealOrderFourtyFiveDay = await contentPlateFormOrderService.GetOrderDealByDateList(fourtyFiveDaysDeal);
+                foreach (var FourtyFivedaydealDateOrder in dealOrderFourtyFiveDay)
+                {
+                    AddMessageNoticeDto addMessageNoticeDto = new AddMessageNoticeDto();
+                    if (FourtyFivedaydealDateOrder.IsSupportOrder == true)
+                    {
+                        addMessageNoticeDto.AcceptBy = FourtyFivedaydealDateOrder.SupportEmpId;
+                    }
+                    else
+                    {
+                        addMessageNoticeDto.AcceptBy = FourtyFivedaydealDateOrder.BelongEmpId.Value;
+                    }
+                    addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
+                    addMessageNoticeDto.NoticeContent = "您的订单：" + FourtyFivedaydealDateOrder.Id + " 已成交超过" + fourtyFiveDaysDeal + "日，请及时跟进";
+                    await messageNoticeService.AddAsync(addMessageNoticeDto);
+                }
+                #endregion
+                #region【六十日成交通知】
+                int sixtyFiveDaysDeal = 60;
+                var dealOrderSixtyDay = await contentPlateFormOrderService.GetOrderDealByDateList(sixtyFiveDaysDeal);
+                foreach (var SixtydaydealDateOrder in dealOrderSixtyDay)
+                {
+                    AddMessageNoticeDto addMessageNoticeDto = new AddMessageNoticeDto();
+                    if (SixtydaydealDateOrder.IsSupportOrder == true)
+                    {
+                        addMessageNoticeDto.AcceptBy = SixtydaydealDateOrder.SupportEmpId;
+                    }
+                    else
+                    {
+                        addMessageNoticeDto.AcceptBy = SixtydaydealDateOrder.BelongEmpId.Value;
+                    }
+                    addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
+                    addMessageNoticeDto.NoticeContent = "您的订单：" + SixtydaydealDateOrder.Id + " 已成交超过" + sixtyFiveDaysDeal + "日，请及时跟进";
+                    await messageNoticeService.AddAsync(addMessageNoticeDto);
+                }
+                #endregion
+                #region【九十日成交通知】
+                int ninetyFiveDaysDeal = 90;
+                var dealOrderNinetyDay = await contentPlateFormOrderService.GetOrderDealByDateList(ninetyFiveDaysDeal);
+                foreach (var NinetydaydealDateOrder in dealOrderNinetyDay)
+                {
+                    AddMessageNoticeDto addMessageNoticeDto = new AddMessageNoticeDto();
+                    if (NinetydaydealDateOrder.IsSupportOrder == true)
+                    {
+                        addMessageNoticeDto.AcceptBy = NinetydaydealDateOrder.SupportEmpId;
+                    }
+                    else
+                    {
+                        addMessageNoticeDto.AcceptBy = NinetydaydealDateOrder.BelongEmpId.Value;
+                    }
+                    addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
+                    addMessageNoticeDto.NoticeContent = "您的订单：" + NinetydaydealDateOrder.Id + " 已成交超过" + ninetyFiveDaysDeal + "日，请及时跟进";
+                    await messageNoticeService.AddAsync(addMessageNoticeDto);
+                }
+                #endregion
+                #endregion
+
+                #region【重要日程通知】
+                var todayCustomerAppointmentSchedule = await customerAppointmentScheduleService.GetTodayImportantScheduleAsync();
+                foreach (var todayCustomerAppointScheduleInfo in todayCustomerAppointmentSchedule)
+                {
+                    AddMessageNoticeDto addMessageNoticeDto = new AddMessageNoticeDto();
+                    addMessageNoticeDto.AcceptBy = todayCustomerAppointScheduleInfo.CreateBy;
+                    addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.ScheduleNotice;
+                    addMessageNoticeDto.NoticeContent = "您今日有'" + todayCustomerAppointScheduleInfo.AppointmentTypeText + "'待处理，客户昵称：" + todayCustomerAppointScheduleInfo.CustomerName + ",联系方式：" + todayCustomerAppointScheduleInfo.Phone + "，请到客户预约日程中处理！";
+                    await messageNoticeService.AddAsync(addMessageNoticeDto);
+                }
+                #endregion
             }
         }
 

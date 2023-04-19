@@ -291,7 +291,7 @@ namespace Fx.Amiya.Service
                     DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name,
                     LiveAnchorBaseId = employee.LiveAnchorBaseId,
                     LiveAnchorBaseName = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == employee.LiveAnchorBaseId).FirstOrDefault()?.LiveAnchorName
-            };
+                };
                 if (employeeDto.IsCustomerService == true || employeeDto.PositionId == 19)
                 {
                     employeeDto.LiveAnchorIds = new List<int>();
@@ -719,11 +719,11 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <returns></returns>
 
-        public async Task<List<AmiyaEmployeeNameDto>> GetemployeeByPositionIdAsync(int positionId)
+        public async Task<List<AmiyaEmployeeNameDto>> GetemployeeByPositionIdAsync(int? positionId)
         {
             var employee = from d in dalAmiyaEmployee.GetAll()
                            where d.Valid
-                           && d.AmiyaPositionInfo.Id == positionId
+                           && (!positionId.HasValue || d.AmiyaPositionInfo.Id == positionId)
                            select new AmiyaEmployeeNameDto
                            {
                                Id = d.Id,

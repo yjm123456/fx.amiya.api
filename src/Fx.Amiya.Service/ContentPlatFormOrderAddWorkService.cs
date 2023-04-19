@@ -49,7 +49,7 @@ namespace Fx.Amiya.Service
                     AcceptBy = e.AcceptBy,
                     AcceptByEmpName = e.AcceptEmployee.Name,
                     EncryptPhone = ServiceClass.GetIncompletePhone(e.Phone),
-                    Phone=e.Phone,
+                    Phone = e.Phone,
                     SendRemark = e.SendRemark,
                     CreateBy = e.CreateBy,
                     CreateByEmpName = e.CreateEmployee.Name,
@@ -113,6 +113,30 @@ namespace Fx.Amiya.Service
             result.CheckDate = selectResult.CheckDate;
             return result;
         }
+
+
+        public async Task<ContentPlatFormOrderAddWorkDto> GetByPhoneAsync(string phone)
+        {
+            var selectResult = await _dalContentPlatFormOrderAddWork.GetAll().Where(x => x.Phone == phone).OrderByDescending(x => x.CreateDate).FirstOrDefaultAsync();
+            if (selectResult == null)
+            {
+                return new ContentPlatFormOrderAddWorkDto();
+            }
+            ContentPlatFormOrderAddWorkDto result = new ContentPlatFormOrderAddWorkDto();
+            result.Id = selectResult.Id;
+            result.HospitalId = selectResult.HospitalId;
+            result.AcceptBy = selectResult.AcceptBy;
+            result.Phone = selectResult.Phone;
+            result.SendRemark = selectResult.SendRemark;
+            result.CreateBy = selectResult.CreateBy;
+            result.CreateDate = selectResult.CreateDate;
+            result.BelongCustomerServiceId = selectResult.BelongCustomerServiceId;
+            result.CheckState = selectResult.CheckState;
+            result.CheckStateText = ServiceClass.GetCheckTypeText(selectResult.CheckState);
+            result.CheckRemark = selectResult.CheckRemark;
+            result.CheckDate = selectResult.CheckDate;
+            return result;
+        }
         public async Task UpdateAsync(UpdateContentPlatFormOrderAddWorkDto updateContentPlatFormOrderAddWorkDto)
         {
             var result = await _dalContentPlatFormOrderAddWork.GetAll().Where(x => x.Id == updateContentPlatFormOrderAddWorkDto.Id).FirstOrDefaultAsync();
@@ -124,6 +148,22 @@ namespace Fx.Amiya.Service
             result.Phone = updateContentPlatFormOrderAddWorkDto.Phone;
             result.HospitalId = updateContentPlatFormOrderAddWorkDto.HospitalId;
             result.SendRemark = updateContentPlatFormOrderAddWorkDto.SendRemark;
+            result.UpdateDate = DateTime.Now;
+            await _dalContentPlatFormOrderAddWork.UpdateAsync(result, true);
+        }
+        /// <summary>
+        /// 审核录单申请工单
+        /// </summary>
+        /// <param name="updateContentPlatFormOrderAddWorkDto"></param>
+        /// <returns></returns>
+        public async Task UpdateAcceptByAsync(UpdateAcceptByDto updateAcceptByDto)
+        {
+            var result = await _dalContentPlatFormOrderAddWork.GetAll().Where(x => x.Id == updateAcceptByDto.Id).FirstOrDefaultAsync();
+            if (result == null)
+            {
+                throw new Exception("未找到录单申请列表数据，请重新获取！");
+            }
+            result.AcceptBy = updateAcceptByDto.AcceptBy;
             result.UpdateDate = DateTime.Now;
             await _dalContentPlatFormOrderAddWork.UpdateAsync(result, true);
         }
@@ -145,6 +185,7 @@ namespace Fx.Amiya.Service
             result.CheckRemark = updateContentPlatFormOrderAddWorkDto.CheckRemark;
             result.CheckState = updateContentPlatFormOrderAddWorkDto.CheckState;
             result.CheckDate = DateTime.Now;
+            result.UpdateDate = DateTime.Now;
             await _dalContentPlatFormOrderAddWork.UpdateAsync(result, true);
         }
 

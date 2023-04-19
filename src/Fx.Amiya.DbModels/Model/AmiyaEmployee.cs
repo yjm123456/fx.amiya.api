@@ -78,5 +78,8 @@ namespace Fx.Amiya.DbModels.Model
 
         public List<ContentPlatFormOrderAddWork> ContentPlatFormOrderAddWorkCreateBy { get; set; }
         public List<ContentPlatFormOrderAddWork> ContentPlatFormOrderAddWorkAcceptBy { get; set; }
+
+        public List<CustomerAppointmentSchedule> CustomerAppointmentScheduleList { get; set; }
+        public List<MessageNotice> MessageNoticeList { get; set; }
     }
 }

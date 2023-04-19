@@ -92,6 +92,19 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<UnSendContentPlatFormOrderInfoDto>> GetUnSendOrderReportListAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int employeeId, int statusCode, string contentPlatFormId, bool isHidePhone);
         Task UpdateOrderBelongEmpIdAsync(UpdateBelongEmpInfoOrderDto input);
+        /// <summary>
+        /// 获取内容平台订单已派单七/十五/三十日信息列表
+        /// </summary>
+        /// <param name="days"></param>
+        /// <returns></returns>
+        Task<List<ContentPlatFormOrderInfoDto>> GetSendOrderByDateList(int days);
+
+        /// <summary>
+        /// 获取内容平台订单已成交三十/四十五/六十/九十日信息列表
+        /// </summary>
+        /// <param name="days"></param>
+        /// <returns></returns>
+        Task<List<ContentPlatFormOrderInfoDto>> GetOrderDealByDateList(int days);
 
         /// <summary>
         /// 导出内容平台订单列表

@@ -1259,7 +1259,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                              select new ContentPlateFormOrderTypeVo
                              {
                                  OrderType = d.OrderType,
-                                 OrderTypeText = d.OrderTypeText = d.OrderTypeText
+                                 OrderTypeText = d.OrderTypeText 
                              };
             return ResultData<List<ContentPlateFormOrderTypeVo>>.Success().AddData("orderConsultationTypes", orderTypes.ToList());
         }
@@ -1276,7 +1276,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                              select new ContentPlateFormOrderTypeVo
                              {
                                  OrderType = d.OrderType,
-                                 OrderTypeText = d.OrderTypeText = d.OrderTypeText
+                                 OrderTypeText = d.OrderTypeText
                              };
             return ResultData<List<ContentPlateFormOrderTypeVo>>.Success().AddData("orderTypes", orderTypes.ToList());
         }
@@ -1323,7 +1323,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                select new ContentPlateFormOrderSourceVo
                                {
                                    OrderSource = d.OrderSource,
-                                   OrderSourceText = d.OrderSourceText = d.OrderSourceText
+                                   OrderSourceText = d.OrderSourceText
                                };
             return ResultData<List<ContentPlateFormOrderSourceVo>>.Success().AddData("orderSources", orderSources.ToList());
         }
@@ -1340,7 +1340,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                              select new ContentPlateFormOrderTypeVo
                              {
                                  OrderType = d.OrderType,
-                                 OrderTypeText = d.OrderTypeText = d.OrderTypeText
+                                 OrderTypeText = d.OrderTypeText 
                              };
             return ResultData<List<ContentPlateFormOrderTypeVo>>.Success().AddData("orderTypes", orderTypes.ToList());
         }

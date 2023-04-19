@@ -123,6 +123,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaEmployeeController.GetemployeeByPositionIdAsync(System.Nullable{System.Int32})">
+            <summary>
+            根据职位id获取人员(非客服)
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaGoodsDemandController">
             <summary>
             商品需求数据板块接口
@@ -217,7 +223,7 @@
             绑定客服板块数据接口
             </summary>
         </member>
-        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.BindCustomerServiceController.#ctor(Fx.Amiya.IService.IBindCustomerServiceService,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.BindCustomerServiceController.#ctor(Fx.Amiya.IService.IBindCustomerServiceService,Fx.Amiya.IService.IContentPlateFormOrderService,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
             <summary>
             构造函数
             </summary>
@@ -235,6 +241,27 @@
             <summary>
             获取我的客户（放在前端缓存中）
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.BindCustomerServiceController.GetPublicPoolPhoneAsync(Fx.Amiya.BusinessWechat.Api.Vo.BaseQueryVo)">
+            <summary>
+            获取客户池客服下的手机号（分页）
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.BindCustomerServiceController.updatePublicPoolPhoneAsync(Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService.UpdateBindCustomerServiceVo)">
+            <summary>
+            改绑公共池客户
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.BindCustomerServiceController.ContentPlatFormOrderListBindCustomerUpdateAsync(Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService.UpdateBindCustomerServiceVo)">
+            <summary>
+            内容平台修改绑定客服
+            </summary>
+            <param name="updateVo"></param>
             <returns></returns>
         </member>
         <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController">
@@ -360,6 +387,19 @@
             删除订单
             </summary>
             <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.GetBindCustomerServieContentPlatformOrdersAsync(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.Int32,System.Int32)">
+            <summary>
+            获取已绑定客服的内容平台订单列表
+            </summary>
+            <param name="keyword"></param>
+            <param name="customerServiceId"></param>
+            <param name="liveAnchorId"></param>
+            <param name="startDate"></param>
+            <param name="endDate"></param>
+            <param name="pageNum"></param>
+            <param name="pageSize"></param>
             <returns></returns>
         </member>
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.GetOrderConsultationTypeList">
@@ -703,6 +743,26 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Vo.BaseQueryVo">
+            <summary>
+            查询基础类
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.BaseQueryVo.StartDate">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.BaseQueryVo.EndDate">
+            <summary>
+            结束时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.BaseQueryVo.KeyWord">
+            <summary>
+            关键词
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.Login.AmiyaEmployeeAccountVo.ReadDataCenter">
             <summary>
             读取数据中心
@@ -717,6 +777,67 @@
             <summary>
             员工类型
             </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Controllers.ContentPlatFormOrderAddWorkController">
+            <summary>
+            录单申请
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWeChat.Api.Controllers.ContentPlatFormOrderAddWorkController.GetListWithPageAsync(Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.QueryContentPlatFormOrderAddWorkVo)">
+            <summary>
+            分页查询
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWeChat.Api.Controllers.ContentPlatFormOrderAddWorkController.AddAsync(Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.AddContentPlatFormOrderAddWorkVo)">
+            <summary>
+            添加录单申请
+            </summary>
+            <param name="addVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWeChat.Api.Controllers.ContentPlatFormOrderAddWorkController.GetByIdAsync(System.String)">
+            <summary>
+            根据录单申请编号获取录单申请信息
+            </summary>
+            <param name="id">录单申请编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWeChat.Api.Controllers.ContentPlatFormOrderAddWorkController.GetByPhoneAsync(System.String)">
+            <summary>
+            根据录单申请手机号获取录单申请信息
+            </summary>
+            <param name="phone">手机号</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWeChat.Api.Controllers.ContentPlatFormOrderAddWorkController.UpdateAsync(Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.UpdateContentPlatFormOrderAddWorkVo)">
+            <summary>
+            修改录单申请信息
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWeChat.Api.Controllers.ContentPlatFormOrderAddWorkController.UpdateAcceptByAsync(Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.UpdateAcceptByVo)">
+            <summary>
+            转移录单申请信息
+            </summary>
+            <param name="updateAcceptByVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWeChat.Api.Controllers.ContentPlatFormOrderAddWorkController.CheckAsync(Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.CheckContentPlatFormOrderAddWorkVo)">
+            <summary>
+            审核录单申请信息
+            </summary>
+            <param name="checkVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWeChat.Api.Controllers.ContentPlatFormOrderAddWorkController.DeleteAsync(System.String)">
+            <summary>
+            作废录单申请
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.AmiyaEmployeeVo.Id">
             <summary>
@@ -848,6 +969,36 @@
             名称
             </summary>
         </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService.BindCustomerInfoVo.CreateDate">
+            <summary>
+            建档时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService.BindCustomerInfoVo.Phone">
+            <summary>
+            电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService.BindCustomerInfoVo.FirstProjectDemand">
+            <summary>
+            首次项目需求
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService.BindCustomerInfoVo.NewContentPlatForm">
+            <summary>
+            最新消费渠道
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService.BindCustomerInfoVo.EncryptPhone">
+            <summary>
+            加密电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService.BindCustomerInfoVo.CustomerServiceName">
+            <summary>
+            绑定客服名称
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService.MyCustomerInfoVo">
             <summary>
             "我的客户"基础类
@@ -866,6 +1017,61 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService.MyCustomerInfoVo.TodayInsertCount">
             <summary>
             今日新增
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService.UpdateBindCustomerServiceVo.CustomerServiceId">
+            <summary>
+            客服编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService.UpdateBindCustomerServiceVo.EncryptPhoneList">
+            <summary>
+            加密手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.BindCustomerServiceContentPlatformOrderVo.Id">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.BindCustomerServiceContentPlatformOrderVo.CreateDate">
+            <summary>
+            下单时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.BindCustomerServiceContentPlatformOrderVo.GoodsName">
+            <summary>
+            项目名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.BindCustomerServiceContentPlatformOrderVo.ThumbPictureUrl">
+            <summary>
+            项目图片
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.BindCustomerServiceContentPlatformOrderVo.CustomerName">
+            <summary>
+            客户昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.BindCustomerServiceContentPlatformOrderVo.EncryptPhone">
+            <summary>
+            加密电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.BindCustomerServiceContentPlatformOrderVo.Phone">
+            <summary>
+            电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.BindCustomerServiceContentPlatformOrderVo.AppointmentHospitalName">
+            <summary>
+            预约医院
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.BindCustomerServiceContentPlatformOrderVo.CustomerServiceName">
+            <summary>
+            绑定客服名称
             </summary>
         </member>
         <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.CloseRepeatProfundityOrderVo">
@@ -2376,6 +2582,136 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.InvitationDocuments">
             <summary>
             邀约凭证图片
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.AddContentPlatFormOrderAddWorkVo.AcceptBy">
+            <summary>
+            接收人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.AddContentPlatFormOrderAddWorkVo.Phone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.AddContentPlatFormOrderAddWorkVo.HospitalId">
+            <summary>
+            医院编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.AddContentPlatFormOrderAddWorkVo.SendRemark">
+            <summary>
+            申请理由
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.CheckContentPlatFormOrderAddWorkVo.BelongCustomerServiceId">
+            <summary>
+            归属客服id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.CheckContentPlatFormOrderAddWorkVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.CheckContentPlatFormOrderAddWorkVo.CheckRemark">
+            <summary>
+            审核备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.CheckContentPlatFormOrderAddWorkVo.CheckState">
+            <summary>
+            审核状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.ContentPlatFormOrderAddWorkVo.CreateBy">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.ContentPlatFormOrderAddWorkVo.AcceptBy">
+            <summary>
+            接收人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.ContentPlatFormOrderAddWorkVo.Phone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.ContentPlatFormOrderAddWorkVo.EncryptPhone">
+            <summary>
+            加密手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.ContentPlatFormOrderAddWorkVo.HospitalId">
+            <summary>
+            医院编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.ContentPlatFormOrderAddWorkVo.SendRemark">
+            <summary>
+            申请理由
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.ContentPlatFormOrderAddWorkVo.BelongCustomerServiceId">
+            <summary>
+            归属客服
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.ContentPlatFormOrderAddWorkVo.CheckState">
+            <summary>
+            审核状态
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.ContentPlatFormOrderAddWorkVo.CheckRemark">
+            <summary>
+            审核备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.ContentPlatFormOrderAddWorkVo.CheckDate">
+            <summary>
+            审核时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.QueryContentPlatFormOrderAddWorkVo.HospitalId">
+            <summary>
+            医院id（空查询所有）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.QueryContentPlatFormOrderAddWorkVo.CheckState">
+            <summary>
+            审核状态（空查询所有）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.QueryContentPlatFormOrderAddWorkVo.CreateBy">
+            <summary>
+            提交人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.QueryContentPlatFormOrderAddWorkVo.AcceptBy">
+            <summary>
+            接收人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.UpdateContentPlatFormOrderAddWorkVo.AcceptBy">
+            <summary>
+            接收人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.UpdateContentPlatFormOrderAddWorkVo.Phone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.UpdateContentPlatFormOrderAddWorkVo.HospitalId">
+            <summary>
+            医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.UpdateContentPlatFormOrderAddWorkVo.SendRemark">
+            <summary>
+            申请理由
             </summary>
         </member>
         <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.AddContentPlatFormSendOrderInfoVo">

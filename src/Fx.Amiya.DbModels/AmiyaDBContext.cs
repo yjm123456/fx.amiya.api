@@ -19,9 +19,11 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<WxMiniUserInfo> WxMiniUserInfo { get; set; }
         public virtual DbSet<Bill> Bill { get; set; }
         public virtual DbSet<BillReturnBackPriceData> BillReturnBackPriceData { get; set; }
+        public virtual DbSet<CustomerAppointmentSchedule> CustomerAppointmentSchedule { get; set; }
         public virtual DbSet<AmiyaWareHouse> AmiyaWareHouse { get; set; }
         public virtual DbSet<ShootingAndClip> ShootingAndClip { get; set; }
         public virtual DbSet<AmiyaLessonApply> AmiyaLessonApply { get; set; }
+        public virtual DbSet<MessageNotice> MessageNotice { get; set; }
         public virtual DbSet<AmiyaInWarehouse> AmiyaInWarehouse { get; set; }
         public virtual DbSet<GreatHospitalDataWrite> GreatHospitalDataWrite { get; set; }
         public virtual DbSet<UnCheckOrder> UnCheckOrder { get; set; }
@@ -223,6 +225,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new TagInfoConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalTagDetailConfiguration());
             modelBuilder.ApplyConfiguration(new GoodsShopCarConfiguration());
+            modelBuilder.ApplyConfiguration(new CustomerAppointmentScheduleConfiguration());
             modelBuilder.ApplyConfiguration(new GoodsHospitalPriceConfiguration());
             modelBuilder.ApplyConfiguration(new GoodsStandardsPriceConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalAppointmentNumerConfiguration());
@@ -276,6 +279,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new BeautyDiaryBannerImageConfiguration());
             modelBuilder.ApplyConfiguration(new BeautyDiaryManageConfiguration());
             modelBuilder.ApplyConfiguration(new BeautyDiaryTagDetailConfiguration());
+            modelBuilder.ApplyConfiguration(new MessageNoticeConfiguration());
             modelBuilder.ApplyConfiguration(new NoticeConfigConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerConsumptionCredentialsConfiguration());
             modelBuilder.ApplyConfiguration(new SendOrderInfoConfiguration());

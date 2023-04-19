@@ -163,5 +163,21 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                            };
             return ResultData<List<BaseKeyAndValueVo>>.Success().AddData("employee", employee.ToList());
         }
+
+        /// <summary>
+        /// 根据职位id获取人员(非客服)
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getEmployeeByPositionId")]
+        public async Task<ResultData<List<BaseKeyAndValueVo>>> GetemployeeByPositionIdAsync(int? positionId)
+        {
+            var employee = from d in await employeeService.GetemployeeByPositionIdAsync(positionId)
+                           select new BaseKeyAndValueVo
+                           {
+                               Id = d.Id.ToString(),
+                               Name = d.Name
+                           };
+            return ResultData<List<BaseKeyAndValueVo>>.Success().AddData("employee", employee.ToList());
+        }
     }
 }

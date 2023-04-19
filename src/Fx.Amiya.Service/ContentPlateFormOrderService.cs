@@ -133,7 +133,6 @@ namespace Fx.Amiya.Service
                 {
                     throw new Exception("该订单没有手机号，不能绑定客服");
                 }
-
                 var bind = await _dalBindCustomerService.GetAll()
                   .Include(e => e.CustomerServiceAmiyaEmployee)
                   .FirstOrDefaultAsync(e => e.BuyerPhone == input.Phone);
@@ -524,6 +523,65 @@ namespace Fx.Amiya.Service
             return pageInfo;
         }
 
+
+        /// <summary>
+        /// 获取内容平台订单已派单七/十五/三十日信息列表
+        /// </summary>
+        /// <param name="days"></param>
+        /// <returns></returns>
+        public async Task<List<ContentPlatFormOrderInfoDto>> GetSendOrderByDateList(int days)
+        {
+            List<ContentPlatFormOrderInfoDto> result = new List<ContentPlatFormOrderInfoDto>();
+            var orders = _dalContentPlatformOrder.GetAll();
+            DateTime startrq = DateTime.Now.Date.AddDays(-days + 1);
+            DateTime endrq = DateTime.Now.Date.AddDays(-days);
+            orders = from d in orders
+                     where (d.OrderStatus == (int)ContentPlateFormOrderStatus.SendOrder || d.OrderStatus == (int)ContentPlateFormOrderStatus.ConfirmOrder)
+                     where (d.SendDate.Value >= startrq && d.SendDate.Value < endrq)
+                     select d;
+            var contentPlatformOrders = from d in orders
+                                        select new ContentPlatFormOrderInfoDto
+                                        {
+                                            Id = d.Id,
+                                            IsSupportOrder = d.IsSupportOrder,
+                                            BelongEmpId = d.BelongEmpId,
+                                            SupportEmpId = d.SupportEmpId,
+
+                                        };
+            result = contentPlatformOrders.ToList();
+            return result;
+        }
+
+
+
+        /// <summary>
+        /// 获取内容平台订单已成交三十/四十五/六十/九十日信息列表
+        /// </summary>
+        /// <param name="days"></param>
+        /// <returns></returns>
+        public async Task<List<ContentPlatFormOrderInfoDto>> GetOrderDealByDateList(int days)
+        {
+            List<ContentPlatFormOrderInfoDto> result = new List<ContentPlatFormOrderInfoDto>();
+            var orders = _dalContentPlatformOrder.GetAll();
+            DateTime startrq = DateTime.Now.Date.AddDays(-days + 1);
+            DateTime endrq = DateTime.Now.Date.AddDays(-days);
+            orders = from d in orders
+                     where (d.IsOldCustomer == false)
+                     where (d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
+                     where (d.DealDate.Value >= startrq && d.DealDate.Value < endrq)
+                     select d;
+            var contentPlatformOrders = from d in orders
+                                        select new ContentPlatFormOrderInfoDto
+                                        {
+                                            Id = d.Id,
+                                            IsSupportOrder = d.IsSupportOrder,
+                                            BelongEmpId = d.BelongEmpId,
+                                            SupportEmpId = d.SupportEmpId,
+
+                                        };
+            result = contentPlatformOrders.ToList();
+            return result;
+        }
 
         /// <summary>
         /// 获取未派单订单报表

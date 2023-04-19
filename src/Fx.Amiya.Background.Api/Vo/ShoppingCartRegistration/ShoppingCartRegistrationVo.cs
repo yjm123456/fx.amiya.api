@@ -46,6 +46,10 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// </summary>
         public string Phone { get; set; }
         /// <summary>
+        /// 辅助手机号
+        /// </summary>
+        public string SubPhone { get; set; }
+        /// <summary>
         /// 下单金额
         /// </summary>
         public decimal Price { get; set; }
@@ -87,13 +91,21 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// </summary>
         public string Remark { get; set; }
         /// <summary>
-        /// 接诊人员id
+        /// 创建人员id
         /// </summary>
         public int CreateByEmpId { get; set; }
         /// <summary>
-        /// 接诊人员
+        /// 创建人员
         /// </summary>
         public string CreateBy { get; set; }
+        /// <summary>
+        /// 指派接诊人员id
+        /// </summary>
+        public int? AssignEmpId { get; set; }
+        /// <summary>
+        /// 指派接诊人员
+        /// </summary>
+        public string AssignEmpName { get; set; }
         /// <summary>
         /// 创建日期
         /// </summary>

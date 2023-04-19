@@ -19,6 +19,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.LiveAnchorWechatNo).HasColumnName("live_anchor_wechat_no").HasColumnType("varchar(100)").IsRequired(false);
             builder.Property(t => t.CustomerNickName).HasColumnName("customer_nick_name").HasColumnType("varchar(200)").IsRequired(false);
             builder.Property(t => t.Phone).HasColumnName("phone").HasColumnType("varchar(11)").IsRequired();
+            builder.Property(t => t.SubPhone).HasColumnName("sub_phone").HasColumnType("varchar(45)").IsRequired(false);
             builder.Property(t => t.Price).HasColumnName("price").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.ConsultationType).HasColumnName("consultation_type").HasColumnType("int").IsRequired();
             builder.Property(t => t.IsAddWeChat).HasColumnName("is_add_wechat").HasColumnType("bit").IsRequired();
@@ -29,6 +30,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.Remark).HasColumnName("remark").HasColumnType("varchar(300)").IsRequired(false);
             builder.Property(t => t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.Property(t => t.CreateBy).HasColumnName("create_by").HasColumnType("int").IsRequired();
+            builder.Property(t => t.AssignEmpId).HasColumnName("assign_emp_id").HasColumnType("int").IsRequired(false);
             builder.Property(t => t.RefundDate).HasColumnName("refund_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(t => t.RefundReason).HasColumnName("refund_reason").HasColumnType("varchar(500)").IsRequired(false);
             builder.Property(t => t.BadReviewDate).HasColumnName("badreview_date").HasColumnType("datetime").IsRequired(false);

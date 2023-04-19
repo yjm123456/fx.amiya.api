@@ -103,7 +103,8 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 请求类型
     /// </summary>
-    public enum RequestType {
+    public enum RequestType
+    {
         /// <summary>
         /// 添加数据
         /// </summary>
@@ -130,7 +131,8 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 请求来源
     /// </summary>
-    public enum RequestSource {
+    public enum RequestSource
+    {
         /// <summary>
         /// 啊美雅预约系统
         /// </summary>
@@ -156,7 +158,8 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 派单顺序
     /// </summary>
-    public enum SendOrder {
+    public enum SendOrder
+    {
         /// <summary>
         /// 首派
         /// </summary>
@@ -190,7 +193,8 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 年服务费和保证金缴纳状态
     /// </summary>
-    public enum YearServiceFeeOrSecurityDeposit {
+    public enum YearServiceFeeOrSecurityDeposit
+    {
         /// <summary>
         /// 已缴纳
         /// </summary>
@@ -807,7 +811,25 @@ namespace Fx.Amiya.IService
         Success = 2
     }
 
-
+    public enum AppointmentType
+    {
+        /// <summary>
+        /// 其他
+        /// </summary>
+        Other = 0,
+        /// <summary>
+        /// 视频设计预约
+        /// </summary>
+        VideoAppointment = 1,
+        /// <summary>
+        /// 到院接诊预约
+        /// </summary>
+        ToHospitalAppointment = 2,
+        /// <summary>
+        /// 未知
+        /// </summary>
+        Unknow = 3
+    }
 
     public enum ShoppingCartConsultationType
     {
@@ -913,7 +935,8 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 美学设计报告状态
     /// </summary>
-    public enum AestheticsDesignReportStatus {
+    public enum AestheticsDesignReportStatus
+    {
         /// <summary>
         /// 已提交
         /// </summary>
@@ -926,19 +949,20 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 美学设计报告图片方向
     /// </summary>
-    public enum PictureDirectionType{
+    public enum PictureDirectionType
+    {
         /// <summary>
         /// 正面图片
         /// </summary>
-        Front=0,
+        Front = 0,
         /// <summary>
         /// 侧面图片
         /// </summary>
-        Side =1,
+        Side = 1,
         /// <summary>
         /// 图片
         /// </summary>
-        Picture=2,
+        Picture = 2,
     }
 
 
@@ -1001,5 +1025,25 @@ namespace Fx.Amiya.IService
         /// 已回款
         /// </summary>
         ReturnBackSuccessful = 2,
+    }
+
+    public enum MessageNoticeMessageTextEnum
+    {
+        /// <summary>
+        /// 订单通知
+        /// </summary>
+        OrderNotice = 1,
+        /// <summary>
+        /// 日程通知
+        /// </summary>
+        ScheduleNotice = 2,
+        /// <summary>
+        /// 操作通知
+        /// </summary>
+        OperationNotice = 3,
+        /// <summary>
+        /// 其他通知
+        /// </summary>
+        OhterNotice = 4,
     }
 }

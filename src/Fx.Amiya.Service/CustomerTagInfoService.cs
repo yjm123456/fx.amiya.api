@@ -22,22 +22,10 @@ namespace Fx.Amiya.Service
     public class CustomerTagInfoService : ICustomerTagInfoService
     {
         private IDalCustomerTagInfo dalCustomerTagInfoService;
-        private IInventoryListService inventoryListService;
-        private IUnitOfWork unitOfWork;
-        private IAmiyaOutWareHouseService amiyaOutWareHouseService;
-        private IAmiyaInWareHouseService amiyaInWareHouseService;
         private IDalTagDetailInfo dalTagDetailInfo;
-        public CustomerTagInfoService(IDalCustomerTagInfo dalCustomerTagInfoService,
-            IInventoryListService inventoryListService,
-            IAmiyaInWareHouseService inWareHouseService,
-            IAmiyaOutWareHouseService amiyaOutWareHouseService,
-            IUnitOfWork unitofWork, IDalTagDetailInfo dalTagDetailInfo)
+        public CustomerTagInfoService(IDalCustomerTagInfo dalCustomerTagInfoService, IDalTagDetailInfo dalTagDetailInfo)
         {
             this.dalCustomerTagInfoService = dalCustomerTagInfoService;
-            this.inventoryListService = inventoryListService;
-            this.amiyaOutWareHouseService = amiyaOutWareHouseService;
-            this.amiyaInWareHouseService = inWareHouseService;
-            this.unitOfWork = unitofWork;
             this.dalTagDetailInfo = dalTagDetailInfo;
         }
 

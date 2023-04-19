@@ -467,9 +467,11 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static string GetWechatOrderTypeText(long type) {
+        public static string GetWechatOrderTypeText(long type)
+        {
             string orderType = "";
-            switch (type) {
+            switch (type)
+            {
                 case 0L:
                     orderType = "实物订单";
                     break;
@@ -1225,6 +1227,33 @@ namespace Fx.Amiya.Service
             }
             return statusText;
         }
+
+
+        /// <summary>
+        /// 获取预约类型
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public static string GetAppointmentTypeText(int type)
+        {
+            var statusText = "";
+            switch (type)
+            {
+                case 0:
+                    statusText = "其他";
+                    break;
+                case 1:
+                    statusText = "视频设计预约";
+                    break;
+                case 2:
+                    statusText = "到院接诊预约";
+                    break;
+                default:
+                    statusText = "未知";
+                    break;
+            }
+            return statusText;
+        }
         /// <summary>
         /// 获取抵用券类型
         /// </summary>
@@ -1384,6 +1413,37 @@ namespace Fx.Amiya.Service
             return inventoryStateText;
         }
 
+
+        /// <summary>
+        /// 获取消息通知类型
+        /// </summary>
+        /// <param name="consulationType"></param>
+        /// <returns></returns>
+        public static string GetNoticeTypeText(int noticeType)
+        {
+            string inventoryStateText = "";
+            switch (noticeType)
+            {
+                case 1:
+                    inventoryStateText = "订单通知";
+                    break;
+
+                case 2:
+                    inventoryStateText = "日程通知";
+                    break;
+
+                case 3:
+                    inventoryStateText = "操作通知";
+                    break;
+
+                case 4:
+                    inventoryStateText = "其他通知";
+                    break;
+
+            }
+            return inventoryStateText;
+        }
+
         /// <summary>
         /// 加密
         /// </summary>
@@ -1421,6 +1481,10 @@ namespace Fx.Amiya.Service
         {
             if (string.IsNullOrWhiteSpace(phone))
                 return "";
+            if (phone.Length != 11)
+            {
+                return phone;
+            }
             return phone.Substring(0, 3) + "****" + phone.Substring(phone.Length - 4);
         }
 

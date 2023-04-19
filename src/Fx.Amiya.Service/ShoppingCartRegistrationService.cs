@@ -43,12 +43,12 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? admissionId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? emergencyLevel, bool? isBadReview)
+        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? emergencyLevel, bool? isBadReview)
         {
             try
             {
                 var shoppingCartRegistration = from d in dalShoppingCartRegistration.GetAll()
-                                               where (keyword == null || d.Phone.Contains(keyword) || d.CustomerNickName.Contains(keyword) || d.LiveAnchorWechatNo.Contains(keyword))
+                                               where (keyword == null || d.Phone.Contains(keyword) || d.SubPhone.Contains(keyword) || d.CustomerNickName.Contains(keyword) || d.LiveAnchorWechatNo.Contains(keyword))
                                                && ((!startDate.HasValue && !endDate.HasValue) || d.RecordDate >= startDate.Value.Date && d.RecordDate < endDate.Value.AddDays(1).Date)
                                                && (string.IsNullOrEmpty(contentPlatFormId) || d.ContentPlatFormId == contentPlatFormId)
                                                && (!isAddWechat.HasValue || d.IsAddWeChat == isAddWechat)
@@ -57,7 +57,7 @@ namespace Fx.Amiya.Service
                                                && (!isCreateOrder.HasValue || d.IsCreateOrder == isCreateOrder)
                                                && (!isConsultation.HasValue || d.IsConsultation == isConsultation)
                                                && (!isReturnBackPrice.HasValue || d.IsReturnBackPrice == isReturnBackPrice)
-                                               && (!admissionId.HasValue || d.CreateBy == admissionId)
+                                               && (!assignEmpId.HasValue || d.AssignEmpId == assignEmpId)
                                                && (!minPrice.HasValue || d.Price >= minPrice)
                                                && (!maxPrice.HasValue || d.Price <= maxPrice)
                                                && (!LiveAnchorId.HasValue || d.LiveAnchorId == LiveAnchorId)
@@ -77,6 +77,7 @@ namespace Fx.Amiya.Service
                                                    LiveAnchorWechatNo = d.LiveAnchorWechatNo,
                                                    CustomerNickName = d.CustomerNickName,
                                                    Phone = ServiceClass.GetIncompletePhone(d.Phone),
+                                                   SubPhone = string.IsNullOrEmpty(d.SubPhone) ? "" : ServiceClass.GetIncompletePhone(d.SubPhone),
                                                    Price = d.Price,
                                                    ConsultationType = d.ConsultationType,
                                                    IsWriteOff = d.IsWriteOff,
@@ -88,6 +89,7 @@ namespace Fx.Amiya.Service
                                                    IsReturnBackPrice = d.IsReturnBackPrice,
                                                    Remark = d.Remark,
                                                    CreateBy = d.CreateBy,
+                                                   AssignEmpId = d.AssignEmpId,
                                                    CreateDate = d.CreateDate,
                                                    IsReContent = d.IsReContent,
                                                    ReContent = d.ReContent,
@@ -101,10 +103,10 @@ namespace Fx.Amiya.Service
 
                                                };
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
-                if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
+                if (!employee.AmiyaPositionInfo.IsDirector)
                 {
                     shoppingCartRegistration = from d in shoppingCartRegistration
-                                               where d.CreateBy == employeeId
+                                               where d.CreateBy == employeeId || d.AssignEmpId == employeeId
                                                select d;
                 }
                 FxPageInfo<ShoppingCartRegistrationDto> shoppingCartRegistrationPageInfo = new FxPageInfo<ShoppingCartRegistrationDto>();
@@ -118,6 +120,11 @@ namespace Fx.Amiya.Service
                     x.LiveAnchorName = liveAnchorInfo.Name;
                     var empInfo = await _amiyaEmployeeService.GetByIdAsync(x.CreateBy);
                     x.CreateByName = empInfo.Name;
+                    if (x.AssignEmpId.HasValue)
+                    {
+                        var assignEmpInfo = await _amiyaEmployeeService.GetByIdAsync(x.AssignEmpId.Value);
+                        x.AssignEmpName = assignEmpInfo.Name;
+                    }
                 }
                 return shoppingCartRegistrationPageInfo;
             }
@@ -173,6 +180,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.LiveAnchorWechatNo = addDto.LiveAnchorWechatNo;
                 shoppingCartRegistration.CustomerNickName = addDto.CustomerNickName;
                 shoppingCartRegistration.Phone = addDto.Phone;
+                shoppingCartRegistration.SubPhone = addDto.SubPhone;
                 shoppingCartRegistration.IsAddWeChat = addDto.IsAddWeChat;
                 shoppingCartRegistration.Price = addDto.Price;
                 shoppingCartRegistration.ConsultationType = addDto.ConsultationType;
@@ -182,6 +190,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.IsReturnBackPrice = addDto.IsReturnBackPrice;
                 shoppingCartRegistration.Remark = addDto.Remark;
                 shoppingCartRegistration.CreateBy = addDto.CreateBy;
+                shoppingCartRegistration.AssignEmpId = addDto.AssignEmpId;
                 shoppingCartRegistration.CreateDate = DateTime.Now;
                 shoppingCartRegistration.BadReviewContent = addDto.BadReviewContent;
                 shoppingCartRegistration.BadReviewDate = addDto.BadReviewDate;
@@ -226,6 +235,7 @@ namespace Fx.Amiya.Service
                 //shoppingCartRegistrationDto.LiveAnchorWeChatId = wechatResult.Id;
                 shoppingCartRegistrationDto.CustomerNickName = shoppingCartRegistration.CustomerNickName;
                 shoppingCartRegistrationDto.Phone = shoppingCartRegistration.Phone;
+                shoppingCartRegistrationDto.SubPhone = shoppingCartRegistration.SubPhone;
                 shoppingCartRegistrationDto.Price = shoppingCartRegistration.Price;
                 shoppingCartRegistrationDto.IsAddWeChat = shoppingCartRegistration.IsAddWeChat;
                 shoppingCartRegistrationDto.ConsultationType = shoppingCartRegistration.ConsultationType;
@@ -235,6 +245,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.IsReturnBackPrice = shoppingCartRegistration.IsReturnBackPrice;
                 shoppingCartRegistrationDto.Remark = shoppingCartRegistration.Remark;
                 shoppingCartRegistrationDto.CreateBy = shoppingCartRegistration.CreateBy;
+                shoppingCartRegistrationDto.AssignEmpId = shoppingCartRegistration.AssignEmpId;
                 shoppingCartRegistrationDto.IsCreateOrder = shoppingCartRegistration.IsCreateOrder;
                 shoppingCartRegistrationDto.IsSendOrder = shoppingCartRegistration.IsSendOrder;
                 shoppingCartRegistrationDto.CreateDate = shoppingCartRegistration.CreateDate;
@@ -261,7 +272,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().FirstOrDefaultAsync(e => e.Phone == phone);
+                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().FirstOrDefaultAsync(e => e.Phone == phone || e.SubPhone == phone);
                 if (shoppingCartRegistration == null)
                 {
                     return new ShoppingCartRegistrationDto();
@@ -275,6 +286,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.LiveAnchorWechatNo = shoppingCartRegistration.LiveAnchorWechatNo;
                 shoppingCartRegistrationDto.CustomerNickName = shoppingCartRegistration.CustomerNickName;
                 shoppingCartRegistrationDto.Phone = shoppingCartRegistration.Phone;
+                shoppingCartRegistrationDto.SubPhone = shoppingCartRegistration.SubPhone;
                 shoppingCartRegistrationDto.Price = shoppingCartRegistration.Price;
                 shoppingCartRegistrationDto.IsCreateOrder = shoppingCartRegistration.IsCreateOrder;
                 shoppingCartRegistrationDto.IsSendOrder = shoppingCartRegistration.IsSendOrder;
@@ -286,6 +298,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.IsReturnBackPrice = shoppingCartRegistration.IsReturnBackPrice;
                 shoppingCartRegistrationDto.Remark = shoppingCartRegistration.Remark;
                 shoppingCartRegistrationDto.CreateBy = shoppingCartRegistration.CreateBy;
+                shoppingCartRegistrationDto.AssignEmpId = shoppingCartRegistration.AssignEmpId;
                 shoppingCartRegistrationDto.CreateDate = shoppingCartRegistration.CreateDate;
                 shoppingCartRegistrationDto.IsReContent = shoppingCartRegistration.IsReContent;
                 shoppingCartRegistrationDto.ReContent = shoppingCartRegistration.ReContent;
@@ -347,6 +360,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.LiveAnchorWechatNo = updateDto.LiveAnchorWechatNo;
                 shoppingCartRegistration.CustomerNickName = updateDto.CustomerNickName;
                 shoppingCartRegistration.Phone = updateDto.Phone;
+                shoppingCartRegistration.SubPhone = updateDto.SubPhone;
                 shoppingCartRegistration.Price = updateDto.Price;
                 shoppingCartRegistration.IsAddWeChat = updateDto.IsAddWeChat;
                 shoppingCartRegistration.ConsultationType = updateDto.ConsultationType;
@@ -363,10 +377,29 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.BadReviewContent = updateDto.BadReviewContent;
                 shoppingCartRegistration.BadReviewReason = updateDto.BadReviewReason;
                 shoppingCartRegistration.IsBadReview = updateDto.IsBadReview;
-                shoppingCartRegistration.CreateBy = updateDto.CreateBy;
+                shoppingCartRegistration.AssignEmpId = updateDto.AssignEmpId;
                 shoppingCartRegistration.IsCreateOrder = updateDto.IsCreateOrder;
                 shoppingCartRegistration.IsSendOrder = updateDto.IsSendOrder;
                 shoppingCartRegistration.EmergencyLevel = updateDto.EmergencyLevel;
+                await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
+                // unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                // unitOfWork.RollBack();
+                throw ex;
+            }
+        }
+
+        public async Task AssignAsync(string id, int assignBy)
+        {
+            //   unitOfWork.BeginTransaction();
+            try
+            {
+                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().SingleOrDefaultAsync(e => e.Id == id);
+                if (shoppingCartRegistration == null)
+                    throw new Exception("小黄车登记编号错误！");
+                shoppingCartRegistration.AssignEmpId = assignBy;
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
                 // unitOfWork.Commit();
             }
@@ -387,7 +420,7 @@ namespace Fx.Amiya.Service
             //   unitOfWork.BeginTransaction();
             try
             {
-                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().Where(e => e.Phone == phone).ToListAsync();
+                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().Where(e => e.Phone == phone || e.SubPhone == phone).ToListAsync();
                 if (shoppingCartRegistration.Count > 0)
                 {
                     foreach (var x in shoppingCartRegistration)
@@ -419,7 +452,7 @@ namespace Fx.Amiya.Service
             //   unitOfWork.BeginTransaction();
             try
             {
-                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().Where(e => e.Phone == phone).ToListAsync();
+                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().Where(e => e.Phone == phone || e.SubPhone == phone).ToListAsync();
                 if (shoppingCartRegistration.Count > 0)
                 {
                     foreach (var x in shoppingCartRegistration)
@@ -567,7 +600,7 @@ namespace Fx.Amiya.Service
             try
             {
                 var shoppingCartRegistration = from d in dalShoppingCartRegistration.GetAll().Include(x => x.Contentplatform).Include(x => x.LiveAnchor).Include(x => x.AmiyaEmployee)
-                                               where (keyword == null || d.Phone.Contains(keyword) || d.CustomerNickName.Contains(keyword))
+                                               where (keyword == null || d.Phone.Contains(keyword) || d.SubPhone.Contains(keyword) || d.CustomerNickName.Contains(keyword))
                                                && ((!startDate.HasValue && !endDate.HasValue) || d.RecordDate >= startDate.Value.Date && d.RecordDate < endDate.Value.AddDays(1).Date)
                                                && (string.IsNullOrEmpty(contentPlatFormId) || d.ContentPlatFormId == contentPlatFormId)
                                                && (!LiveAnchorId.HasValue || d.LiveAnchorId == LiveAnchorId) && (!isAddWechat.HasValue || d.IsAddWeChat == isAddWechat)
@@ -591,6 +624,7 @@ namespace Fx.Amiya.Service
                                                    LiveAnchorWechatNo = d.LiveAnchorWechatNo,
                                                    CustomerNickName = d.CustomerNickName,
                                                    Phone = isHidePhone == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
+                                                   SubPhone = isHidePhone == true ? (string.IsNullOrEmpty(d.SubPhone) ? "" : ServiceClass.GetIncompletePhone(d.SubPhone)) : d.SubPhone,
                                                    Price = d.Price,
                                                    ConsultationType = d.ConsultationType,
                                                    IsWriteOff = d.IsWriteOff,
@@ -604,10 +638,10 @@ namespace Fx.Amiya.Service
                                                    ConsultationTypeText = ServiceClass.GetConsulationTypeText(d.ConsultationType)
                                                };
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
-                if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
+                if (!employee.AmiyaPositionInfo.IsDirector)
                 {
                     shoppingCartRegistration = from d in shoppingCartRegistration
-                                               where d.CreateBy == employeeId
+                                               where (d.CreateBy == employeeId || d.AssignEmpId == employeeId)
                                                select d;
                 }
                 List<ShoppingCartRegistrationDto> shoppingCartRegistrationPageInfo = new List<ShoppingCartRegistrationDto>();

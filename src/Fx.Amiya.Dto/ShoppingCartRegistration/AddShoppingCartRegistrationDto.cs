@@ -14,6 +14,10 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         public string LiveAnchorWechatNo { get; set; }
         public string CustomerNickName { get; set; }
         public string Phone { get; set; }
+        /// <summary>
+        /// 辅助号码
+        /// </summary>
+        public string SubPhone { get; set; }
         public decimal Price { get; set; }
         public int ConsultationType { get; set; }
         public bool IsAddWeChat { get; set; }
@@ -26,6 +30,7 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         public bool IsCreateOrder { get; set; }
         public bool IsSendOrder { get; set; }
         public int CreateBy { get; set; }
+        public int? AssignEmpId { get; set; }
         /// <summary>
         /// 退款时间
         /// </summary>

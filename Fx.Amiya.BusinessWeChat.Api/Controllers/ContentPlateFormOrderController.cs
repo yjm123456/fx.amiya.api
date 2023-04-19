@@ -664,7 +664,40 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             await _orderService.DeleteOrderAsync(id);
             return ResultData.Success();
         }
-
+        /// <summary>
+        /// 获取已绑定客服的内容平台订单列表
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="customerServiceId"></param>
+        /// <param name="liveAnchorId"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("bindCustomerServieOrders")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<FxPageInfo<BindCustomerServiceContentPlatformOrderVo>>> GetBindCustomerServieContentPlatformOrdersAsync(int? customerServiceId, int? liveAnchorId, DateTime? startDate, DateTime? endDate, string keyword, int pageNum, int pageSize)
+        {
+            var orders = await _orderService.GetBindCustomerServieContentPlatformOrdersAsync(customerServiceId, liveAnchorId, startDate, endDate, keyword, pageNum, pageSize);
+            var contentPlatformOrders = from d in orders.List
+                                        select new BindCustomerServiceContentPlatformOrderVo
+                                        {
+                                            Id = d.Id,
+                                            CreateDate = d.CreateDate,
+                                            GoodsName = d.GoodsName,
+                                            ThumbPictureUrl = d.ThumbPictureUrl,
+                                            CustomerName = d.CustomerName,
+                                            AppointmentHospitalName = d.AppointmentHospitalName,
+                                            EncryptPhone = d.EncryptPhone,
+                                            Phone = d.Phone,
+                                            CustomerServiceName = d.CustomerServiceName,
+                                        };
+            FxPageInfo<BindCustomerServiceContentPlatformOrderVo> pageInfo = new FxPageInfo<BindCustomerServiceContentPlatformOrderVo>();
+            pageInfo.TotalCount = orders.TotalCount;
+            pageInfo.List = contentPlatformOrders;
+            return ResultData<FxPageInfo<BindCustomerServiceContentPlatformOrderVo>>.Success().AddData("orders", pageInfo);
+        }
 
         #region 枚举下拉框
 
