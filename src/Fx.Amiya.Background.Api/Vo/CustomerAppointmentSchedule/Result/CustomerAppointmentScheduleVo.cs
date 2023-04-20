@@ -5,8 +5,17 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Background.Api.Vo.CustomerAppointmentSchedule.Result
 {
+    public class CustomerAppointmentScheduleByCalendarVo
+    {
+        /// <summary>
+        /// 日期
+        /// </summary>
+        public int Date { get; set; }
+        public List<CustomerAppointmentScheduleVo> ccstomerAppointmentScheduleDetailsVos { get; set; }
+    }
     public class CustomerAppointmentScheduleVo : BaseVo
     {
+
         /// <summary>
         /// 创建人id
         /// </summary>

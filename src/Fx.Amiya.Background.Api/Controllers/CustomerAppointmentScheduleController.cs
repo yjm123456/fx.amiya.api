@@ -100,7 +100,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("listByCalendar")]
-        public async Task<ResultData<List<CustomerAppointmentScheduleVo>>> GetListByCalendarAsync([FromQuery] BaseQueryVo query)
+        public async Task<ResultData<List<CustomerAppointmentScheduleByCalendarVo>>> GetListByCalendarAsync([FromQuery] BaseQueryVo query)
         {
             try
             {
@@ -134,12 +134,21 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 List<CustomerAppointmentScheduleVo> customerAppointmentSchedulePageInfo = new List<CustomerAppointmentScheduleVo>();
                 customerAppointmentSchedulePageInfo = customerAppointmentSchedule.ToList();
+                var messageDate = customerAppointmentSchedulePageInfo.GroupBy(x => x.Date).Select(x => x.Key);
 
-                return ResultData<List<CustomerAppointmentScheduleVo>>.Success().AddData("customerAppointmentScheduleInfo", customerAppointmentSchedulePageInfo);
+                List<CustomerAppointmentScheduleByCalendarVo> customerAppointmentScheduleVos = new List<CustomerAppointmentScheduleByCalendarVo>();
+                foreach (var x in messageDate)
+                {
+                    CustomerAppointmentScheduleByCalendarVo customerAppointmentScheduleVo = new CustomerAppointmentScheduleByCalendarVo();
+                    customerAppointmentScheduleVo.Date = x;
+                    customerAppointmentScheduleVo.ccstomerAppointmentScheduleDetailsVos = customerAppointmentSchedulePageInfo.Where(z => z.Date == x).ToList();
+                    customerAppointmentScheduleVos.Add(customerAppointmentScheduleVo);
+                }
+                return ResultData<List<CustomerAppointmentScheduleByCalendarVo>>.Success().AddData("customerAppointmentScheduleInfo", customerAppointmentScheduleVos);
             }
             catch (Exception ex)
             {
-                return ResultData<List<CustomerAppointmentScheduleVo>>.Fail(ex.Message);
+                return ResultData<List<CustomerAppointmentScheduleByCalendarVo>>.Fail(ex.Message);
             }
         }
 
