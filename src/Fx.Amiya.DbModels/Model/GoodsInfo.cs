@@ -129,7 +129,14 @@ namespace Fx.Amiya.DbModels.Model
         /// 排序
         /// </summary>
         public int Sort { get; set; }
-
+        /// <summary>
+        /// 归属小程序
+        /// </summary>
+        public string AppId { get; set; }
+        /// <summary>
+        /// 是否是热门商品
+        /// </summary>
+        public bool IsHot { get; set; }
         public List<GoodsShopCar> GoodsShopCars { get; set; }
 
         public List<GoodsMemberRankPrice> GoodsMemberRankPrice { get; set; }

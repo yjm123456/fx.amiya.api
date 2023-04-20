@@ -26,6 +26,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 项目名称
         /// </summary>
         public string ItemInfoName { get; set; }
+        /// <summary>
+        /// 预约叫车地址
+        /// </summary>
+        public string Address { get; set; }
 
         public CustomerInfo CustomerInfo { get; set; }
         public HospitalInfo HospitalInfo { get; set; }

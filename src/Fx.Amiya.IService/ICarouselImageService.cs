@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.CarouselImage;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.CarouselImage;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,7 +13,7 @@ namespace Fx.Amiya.IService
         /// 获取轮播图列表
         /// </summary>
         /// <returns></returns>
-        Task<List<HomepageCarouselImageDto>> GetListAsync();
+        Task<List<HomepageCarouselImageDto>> GetListAsync(string appid=null);
 
 
         /// <summary>
@@ -45,5 +46,12 @@ namespace Fx.Amiya.IService
         /// <param name="id"></param>
         /// <returns></returns>
         Task DeletaAsync(int id);
+        /// <summary>
+        /// 获取小程序名称列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<BaseKeyValueDto>> GetMiniprogramNameListAsync();
+        
+
     }
 }

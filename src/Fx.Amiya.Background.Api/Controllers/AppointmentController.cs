@@ -83,6 +83,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                       AppointArea=d.AppointArea,
                                       Remark = d.Remark,
                                       EmpolyeeName=d.EmpolyeeName,
+                                      Address=d.Address
                                   };
 
                 FxPageInfo<AppointmentInfoVo> appointmentPageInfo = new FxPageInfo<AppointmentInfoVo>();
@@ -162,6 +163,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             appointmentInfo.ItemName = appointment.ItemInfoName;
             appointmentInfo.Phone = appointment.Phone;
             appointmentInfo.AppointArea = appointment.AppointArea;
+            appointmentInfo.HospitalId = appointment.HospitalInfo.HospitalId;
             return ResultData<AppointmentInfoVo>.Success().AddData("appointment", appointmentInfo);
         }
 
@@ -202,6 +204,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             inputDto.ItemName = input.ItemName;
             inputDto.Phone = input.Phone;
             inputDto.AppointArea = input.AppointArea;
+            inputDto.Address = input.Address;
+            inputDto.HospitalId = input.HospitalId;
             await appointmentService.UpdateAppointmentInfo(inputDto);
             return ResultData.Success();
         }

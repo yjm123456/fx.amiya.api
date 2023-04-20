@@ -17,12 +17,23 @@ namespace Fx.Amiya.Core.Interfaces.Goods
         /// <param name="keyword"></param>
         /// <param name="categoryId">商品分类编号</param>
         /// <param name="valid"></param>
+        /// <param name="appId">小程序appid</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<GoodsInfoForListDto>> GetListAsync(string keyword,int?exchangeType, int? categoryId, bool? valid, int pageNum, int pageSize);
-
-
+        Task<FxPageInfo<GoodsInfoForListDto>> GetListAsync(string keyword,int?exchangeType, int? categoryId, bool? valid,string appId, int pageNum, int pageSize);
+        /// <summary>
+        /// 小程序获取所有商品列表
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="categoryId">商品分类编号</param>
+        /// <param name="valid"></param>
+        /// <param name="appId">小程序appid</param>
+        /// <param name="isHot">是否是热门商品</param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<GoodsInfoForListDto>> GetMiniprogramGoodsListAsync(string keyword, int? exchangeType, int? categoryId, bool? valid, string appId,bool? isHot,int sort, int pageNum, int pageSize);
 
 
         /// <summary>
@@ -101,10 +112,10 @@ namespace Fx.Amiya.Core.Interfaces.Goods
         /// <returns></returns>
         List<ExchangeTypeDto> GetExchangeTypeList();
         /// <summary>
-        /// 以销量排序获取首页展示商品
+        /// 获取热门商品
         /// </summary>
         /// <returns></returns>
-        Task<FxPageInfo<GoodsInfoForListDto>> GetLikeListAsync(bool? valid, int pageNum, int pageSize);
+        Task<FxPageInfo<GoodsInfoForListDto>> GetHotGoodsListAsync(bool? valid,string appId, int pageNum, int pageSize);
         Task<FxPageInfo<GoodsInfoForListDto>> GetIntegraListAsync(bool? valid, int pageNum, int pageSize);
         /// <summary>
         /// 根据简码获取美肤卡信息

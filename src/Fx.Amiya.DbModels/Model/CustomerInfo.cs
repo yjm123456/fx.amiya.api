@@ -14,6 +14,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 小程序appid
         /// </summary>
         public string AppId { get; set; }
+        /// <summary>
+        /// 中间小程序appid(用于确定归属主播)
+        /// </summary>
+        public string AssisteAppId { get; set; }
 
         public UserInfo UserInfo { get; set; }
 

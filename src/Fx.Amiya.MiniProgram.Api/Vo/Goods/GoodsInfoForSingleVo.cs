@@ -88,7 +88,7 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Goods
         /// <summary>
         /// 商品分类编号
         /// </summary>
-        public int CategoryId { get; set; }
+        public List<int> CategoryIds { get; set; }
 
 
         /// <summary>

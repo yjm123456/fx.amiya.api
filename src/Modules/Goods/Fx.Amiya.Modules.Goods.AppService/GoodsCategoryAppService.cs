@@ -1,10 +1,14 @@
 ﻿using Fx.Amiya.Core.Dto.Goods;
 using Fx.Amiya.Core.Infrastructure;
 using Fx.Amiya.Core.Interfaces.Goods;
+using Fx.Amiya.Dal;
+using Fx.Amiya.IDal;
+using Fx.Amiya.IService;
 using Fx.Amiya.Modules.Goods.DbModel;
 using Fx.Amiya.Modules.Goods.Domin;
 using Fx.Amiya.Modules.Goods.Domin.IRepository;
 using Fx.Amiya.Modules.Goods.Infrastructure.Repositories;
+using Fx.Amiya.Service;
 using Fx.Common;
 using System;
 using System.Collections.Generic;
@@ -18,11 +22,15 @@ namespace Fx.Amiya.Modules.Goods.AppService
     {
         private IGoodsCategoryRepository _goodsCategoryRepository;
         private IFreeSql<GoodsFlag> freeSql;
+        private readonly IDalMiniprogram dalMiniprogram;
+        private readonly IMiniprogramService miniprogramService;
         public GoodsCategoryAppService(IGoodsCategoryRepository goodsCategoryRepository,
-            IFreeSql<GoodsFlag> freeSql)
+            IFreeSql<GoodsFlag> freeSql, IMiniprogramService miniprogramService, IDalMiniprogram dalMiniprogram)
         {
             _goodsCategoryRepository = goodsCategoryRepository;
             this.freeSql = freeSql;
+            this.miniprogramService = miniprogramService;
+            this.dalMiniprogram = dalMiniprogram;
         }
         public async Task AddAsync(GoodsCategoryAddDto goodsCategoryAdd)
         {
@@ -36,7 +44,10 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 CreateBy = goodsCategoryAdd.CreateBy,
                 CreateDate = DateTime.Now,
                 Sort = maxSort + 1,
-                CategoryImg = goodsCategoryAdd.CategoryImg
+                CategoryImg = goodsCategoryAdd.CategoryImg,
+                IsHot=goodsCategoryAdd.IsHot,
+                AppId=goodsCategoryAdd.AppId,
+                IsBrand=goodsCategoryAdd.IsBrand
             };
             await _goodsCategoryRepository.AddAsync(goodsCategory);
         }
@@ -68,7 +79,11 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 ShowDirectionTypeName = showDirectionTypeDict[((ShowDirectionType)goodsCategory.ShowDirectionType)],
                 UpdateDate = goodsCategory.UpdateDate,
                 UpdateBy = goodsCategory.UpdateBy,
-                CategoryImg=goodsCategory.CategoryImg
+                CategoryImg = goodsCategory.CategoryImg,
+                IsHot = goodsCategory.IsHot,
+                AppId = goodsCategory.AppId,
+                MiniprogramName = dalMiniprogram.GetAll().Where(e => e.AppId == goodsCategory.AppId).FirstOrDefault()?.Name ?? "共享分类",
+                IsBrand=goodsCategory.IsBrand
             };
             return category;
         }
@@ -93,7 +108,11 @@ namespace Fx.Amiya.Modules.Goods.AppService
                                 UpdateDate = d.UpdateDate,
                                 UpdateBy = d.UpdateBy,
                                 Sort = d.Sort,
-                                CategoryImg=d.CategoryImg
+                                CategoryImg = d.CategoryImg,
+                                AppId = d.AppId,
+                                IsHot = d.IsHot,
+                                MiniprogramName = dalMiniprogram.GetAll().Where(e=>e.AppId== d.AppId).FirstOrDefault()?.Name ?? "共享分类",
+                                IsBrand=d.IsBrand
                             };
             FxPageInfo<GoodsCategoryDto> categoryPageInfo = new FxPageInfo<GoodsCategoryDto>();
             categoryPageInfo.TotalCount = (int)await goodsCategorys.CountAsync();
@@ -103,13 +122,23 @@ namespace Fx.Amiya.Modules.Goods.AppService
 
 
 
-        public async Task<List<GoodsCategoryNameDto>> GetCategoryNameListAsync(bool? valid)
+        public async Task<List<GoodsCategoryNameDto>> GetCategoryNameListAsync(bool? valid,string appId=null)
         {
-            var goodsCategorys = await freeSql.Select<GoodsCategoryDbModel>()
-                .Where(e => valid == null || e.Valid == valid).OrderByDescending(z => z.Sort)
-                .ToListAsync();
+            var goodsCategorys =freeSql.Select<GoodsCategoryDbModel>()
+                .Where(e => valid == null || e.Valid == valid)
+                .OrderByDescending(z => z.Sort);
+            if (!string.IsNullOrEmpty(appId)) {
+                var appInfo =await miniprogramService.GetMiniprogramInfoByAppIdAsync(appId);
+                if (appInfo.IsMain) {
+                    goodsCategorys = goodsCategorys.Where(e => e.AppId == appId || string.IsNullOrEmpty(e.AppId));
+                }
 
-            var categorys = from d in goodsCategorys
+                if (!appInfo.IsMain) {
+                    goodsCategorys = goodsCategorys.Where(e => e.AppId == appId || string.IsNullOrEmpty(e.AppId) || e.AppId == appInfo.BelongMiniprogramAppId);
+                }
+            }
+
+            var categorys = from d in goodsCategorys.ToList()
                             select new GoodsCategoryNameDto
                             {
                                 Id = d.Id,
@@ -120,6 +149,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
             return categorys.ToList();
         }
 
+        
 
         public async Task UpdateAsync(GoodsCategoryUpdateDto goodsCategoryUpdate)
         {
@@ -135,7 +165,10 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 UpdateBy = goodsCategoryUpdate.UpdateBy,
                 UpdateDate = DateTime.Now,
                 Sort = goodsCategoryInfo.Sort,
-                CategoryImg=goodsCategoryUpdate.CategoryImg
+                CategoryImg=goodsCategoryUpdate.CategoryImg,
+                IsBrand=goodsCategoryUpdate.IsBrand,
+                IsHot=goodsCategoryUpdate.IsHot,
+                AppId= goodsCategoryUpdate.AppId
             };
             await _goodsCategoryRepository.UpdateAsync(goodsCategory);
 
@@ -156,6 +189,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 changeGoodsCategoryInfo.UpdateBy = goodsCategoryMove.UpdateBy;
                 changeGoodsCategoryInfo.UpdateDate = DateTime.Now;
                 changeGoodsCategoryInfo.Sort = changeSort;
+
                 List<GoodsCategory> addGoodsCategoryList = new List<GoodsCategory>();
                 addGoodsCategoryList.Add(goodsCategoryInfo);
                 addGoodsCategoryList.Add(changeGoodsCategoryInfo);
@@ -203,6 +237,45 @@ namespace Fx.Amiya.Modules.Goods.AppService
         {
             var category = _goodsCategoryRepository.GetGoodsCategoryBySimpleCode(code);
             return null;
+        }
+        /// <summary>
+        /// 根据appid获取指定数量的热门分类
+        /// </summary>
+        /// <param name="valid"></param>
+        /// <param name="count"></param>
+        /// <param name="isBrand">是否是品牌分类</param>
+        /// <param name="appId"></param>
+        /// <returns></returns>
+        public async Task<List<GoodsCategoryNameDto>> GetHotCategoryNameListAsync(bool? valid, int count,bool isBrand, string appId = null)
+        {
+            var goodsCategorys = freeSql.Select<GoodsCategoryDbModel>()
+                .Where(e => valid == null || e.Valid == valid)
+                .Where(e=>e.IsHot==true)
+                .Where(e=>e.IsBrand==isBrand)
+                .OrderByDescending(z => z.Sort);
+            if (!string.IsNullOrEmpty(appId))
+            {
+                var appInfo = await miniprogramService.GetMiniprogramInfoByAppIdAsync(appId);
+                if (appInfo.IsMain)
+                {
+                    goodsCategorys = goodsCategorys.Where(e => e.AppId == appId || string.IsNullOrEmpty(e.AppId));
+                }
+
+                if (!appInfo.IsMain)
+                {
+                    goodsCategorys = goodsCategorys.Where(e => e.AppId == appId || string.IsNullOrEmpty(e.AppId) || e.AppId == appInfo.BelongMiniprogramAppId);
+                }
+            }
+
+            var categorys = from d in goodsCategorys.Skip(0).Take(count).ToList()
+                            select new GoodsCategoryNameDto
+                            {
+                                Id = d.Id,
+                                Name = d.Name,
+                                ShowDirectionType = d.ShowDirectionType.Value,
+                                CategoryImg = d.CategoryImg
+                            };
+            return categorys.ToList();
         }
 
         Dictionary<ShowDirectionType, string> showDirectionTypeDict = new Dictionary<ShowDirectionType, string>()

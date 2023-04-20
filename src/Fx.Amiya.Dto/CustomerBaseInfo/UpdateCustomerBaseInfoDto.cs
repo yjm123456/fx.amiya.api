@@ -96,5 +96,9 @@ namespace Fx.Amiya.Dto.CustomerBaseInfo
         /// 标签id集合
         /// </summary>
         public List<string> TagIds { get; set; }
+        /// <summary>
+        /// 客户id
+        /// </summary>
+        public string CustomerId { get; set; }
     }
 }

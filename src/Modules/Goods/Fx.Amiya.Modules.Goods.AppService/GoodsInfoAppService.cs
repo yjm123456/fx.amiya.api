@@ -6,11 +6,13 @@ using Fx.Amiya.Core.Interfaces.GoodsHospitalPrice;
 using Fx.Amiya.Dto.GoodsStandardsPrice;
 using Fx.Amiya.Dto.MemberRankPrice;
 using Fx.Amiya.Dto.TagDetailInfo;
+using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Amiya.Modules.Goods.DbModel;
 using Fx.Amiya.Modules.Goods.Domin;
 using Fx.Amiya.Modules.Goods.Domin.IRepository;
 using Fx.Amiya.Modules.Goods.Infrastructure.Repositories;
+using Fx.Amiya.Service;
 using Fx.Common;
 using Fx.Infrastructure.DataAccess;
 using System;
@@ -31,13 +33,14 @@ namespace Fx.Amiya.Modules.Goods.AppService
         private readonly IGoodsMemberRankPriceService goodsMemberRankPriceService;
         private readonly IGoodsConsumptionVoucherService goodsConsumptionVoucherService;
         private readonly ITagDetailInfoService tagDetailInfoService;
-
+        private readonly IDalMiniprogram dalMiniprogram;
+        private readonly IMiniprogramService miniprogramService;
         public GoodsInfoAppService(IFreeSql<GoodsFlag> freeSql,
             IGoodsInfoRepository goodsInfoRepository,
             IUnitOfWork unitOfWork,
             IGoodsHospitalsPrice goodsHospitalsPrice, IGoodsMemberRankPriceService goodsMemberRankPriceService,
             IGoodsStandardsPriceService goodsStandardsPriceService,
-            IGoodsConsumptionVoucherService goodsConsumptionVoucherService, ITagDetailInfoService tagDetailInfoService)
+            IGoodsConsumptionVoucherService goodsConsumptionVoucherService, ITagDetailInfoService tagDetailInfoService, IDalMiniprogram dalMiniprogram, IMiniprogramService miniprogramService)
         {
             this.freeSql = freeSql;
             _goodsInfoRepository = goodsInfoRepository;
@@ -47,6 +50,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
             this.goodsMemberRankPriceService = goodsMemberRankPriceService;
             this.goodsConsumptionVoucherService = goodsConsumptionVoucherService;
             this.tagDetailInfoService = tagDetailInfoService;
+            this.dalMiniprogram = dalMiniprogram;
+            this.miniprogramService = miniprogramService;
         }
         public async Task AddAsync(GoodsInfoAddDto goodsInfoAdd)
         {
@@ -75,7 +80,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 goodsInfo.CreateDate = date;
                 goodsInfo.CreateBy = goodsInfoAdd.CreateBy;
                 goodsInfo.Version = 0;
-                goodsInfo.CategoryId = goodsInfoAdd.CategoryId;
+                goodsInfo.CategoryId = goodsInfoAdd.CategoryIds.First();
                 goodsInfo.DetailsDescription = goodsInfoAdd.DetailsDescription;
                 goodsInfo.MaxShowPrice = goodsInfoAdd.MaxShowPrice;
                 goodsInfo.MinShowPrice = goodsInfoAdd.MinShowPrice;
@@ -83,6 +88,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 goodsInfo.ShowSaleCount = goodsInfoAdd.ShowSaleCount;
                 goodsInfo.SaleCount = 0;
                 goodsInfo.Sort = goodsInfoAdd.Sort;
+                goodsInfo.AppId = goodsInfoAdd.AppId;
+                goodsInfo.IsHot = goodsInfoAdd.IsHot;
                 goodsInfo.GoodsDetail = new GoodsDetail()
                 {
                     GoodsDetailHtml = goodsInfoAdd.GoodsDetailHtml,
@@ -98,6 +105,17 @@ namespace Fx.Amiya.Modules.Goods.AppService
                                                          PicUrl = d.PicUrl,
                                                          DisplayIndex = d.DisplayIndex
                                                      }).ToList();
+                freeSql.Delete<CategoryToGoodsDbModel>().Where(e=>e.GoodsId== goodsInfo.Id);
+                //添加类别
+                foreach (var item in goodsInfoAdd.CategoryIds)
+                {
+                    freeSql.Insert<CategoryToGoodsDbModel>(new CategoryToGoodsDbModel
+                    {
+                        Id = Guid.NewGuid().ToString().Replace("-", ""),
+                        CategoryId = item,
+                        GoodsId = goodsInfo.Id
+                    }).ExecuteAffrows();
+                }
 
                 foreach (var x in goodsInfoAdd.GoodsHospitalsAPrice)
                 {
@@ -118,6 +136,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     goodsStandardsPrice.StandardsImg = x.StandardsImg;
                     await goodsStandardsPriceService.AddAsync(goodsStandardsPrice);
                 }
+
                 await _goodsInfoRepository.AddAsync(goodsInfo);
                 //添加会员价格
                 foreach (var item in goodsInfoAdd.GoodsMemberRankPrice)
@@ -227,8 +246,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     GoodsTypeName = goodsTypeDict[goodsInfo.GoodsType],
                     IsLimitBuy = goodsInfo.IsLimitBuy,
                     LimitBuyQuantity = goodsInfo.LimitBuyQuantity,
-                    CategoryId = goodsInfo.CategoryId,
-                    CategoryName = goodsInfo.CategoryName,
+                    CategoryIds = goodsInfo.CategoryIds,
+                    
                     CreateBy = goodsInfo.CreateBy,
                     CreateDate = goodsInfo.CreateDate,
                     UpdateBy = goodsInfo.UpdateBy,
@@ -239,12 +258,14 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     MaxShowPrice = goodsInfo.MaxShowPrice,
                     MinShowPrice = goodsInfo.MinShowPrice,
                     ShowSaleCount = goodsInfo.ShowSaleCount,
-                    Sort=goodsInfo.Sort,
+                    Sort = goodsInfo.Sort,
+                    AppId = goodsInfo.AppId,
+                    IsHot = goodsInfo.IsHot,
                     VisitCount = goodsInfo.VisitCount,
                     GoodsHospitalPrice = goodsHospitalPriceList,
                     GoodsStandardsPrice = goodsStandardsPrice,
                     GoodsMemberRankPrice = goodsMemberrankPrice,
-                    Tags=goodsTag,
+                    Tags = goodsTag,
                     CarouselImageUrls = (from d in goodsInfo.GoodsInfoCarouselImages
                                          select new GoodsInfoCarouselImageDto
                                          {
@@ -265,16 +286,20 @@ namespace Fx.Amiya.Modules.Goods.AppService
             }
         }
 
-        public async Task<FxPageInfo<GoodsInfoForListDto>> GetListAsync(string keyword, int? exchangeType, int? categoryId, bool? valid, int pageNum, int pageSize)
+        public async Task<FxPageInfo<GoodsInfoForListDto>> GetListAsync(string keyword, int? exchangeType, int? categoryId, bool? valid, string appId, int pageNum, int pageSize)
         {
             var goodsInfos = freeSql.Select<GoodsInfoDbModel>()
-                .Include(e => e.GoodsCategory)
                 .IncludeMany(e => e.GoodsMemberRankPriceList)
                 .Where(e => string.IsNullOrWhiteSpace(keyword) || e.Name.Contains(keyword) || e.SimpleCode.Contains(keyword) || e.Description.Contains(keyword))
                 .Where(e => exchangeType == null || e.ExchangeType == exchangeType)
-                .Where(e => categoryId == null || e.CategoryId == categoryId)
-                .Where(e => valid == null || e.Valid == valid).OrderByDescending(e=>e.Sort);
-                
+                .Where(e => valid == null || e.Valid == valid)
+                .Where(e => string.IsNullOrEmpty(appId) || e.AppId == appId)
+                .OrderByDescending(e => e.Sort);
+            if (categoryId.HasValue) {
+                var goodsIdList = freeSql.Select<CategoryToGoodsDbModel>().Where(e => e.CategoryId == categoryId).ToList(e => e.GoodsId);
+                goodsInfos = goodsInfos.Where(e => goodsIdList.Contains(e.Id));
+            }
+
             var goodsInfoList = from d in await goodsInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync()
                                 select new GoodsInfoForListDto
                                 {
@@ -293,11 +318,10 @@ namespace Fx.Amiya.Modules.Goods.AppService
                                     ThumbPicUrl = d.ThumbPicUrl,
                                     IsMaterial = d.IsMaterial,
                                     GoodsType = d.GoodsType,
+                                    CategoryIds=freeSql.Select<CategoryToGoodsDbModel>().Where(e=>e.GoodsId==d.Id).ToList(e=>e.CategoryId),
                                     GoodsTypeName = goodsTypeDict[d.GoodsType],
                                     IsLimitBuy = d.IsLimitBuy,
                                     LimitBuyQuantity = d.LimitBuyQuantity,
-                                    CategoryId = d.CategoryId,
-                                    CategoryName = d.GoodsCategory.Name,
                                     GoodsDetailId = d.GoodsDetailId,
                                     CreateBy = d.CreateBy,
                                     CreateDate = d.CreateDate,
@@ -309,7 +333,11 @@ namespace Fx.Amiya.Modules.Goods.AppService
                                     VisitCount = d.VisitCount,
                                     ShowSaleCount = d.ShowSaleCount,
                                     IsMember = d.GoodsMemberRankPriceList.Any(),
-                                    Sort=d.Sort
+                                    Sort = d.Sort,
+                                    AppId = d.AppId,
+                                    MiniprogramName = dalMiniprogram.GetAll().Where(e => e.AppId == d.AppId).FirstOrDefault()?.Name ?? "共享分类",
+                                    IsHot = d.IsHot,
+                                    
                                 };
 
             FxPageInfo<GoodsInfoForListDto> goodsPageInfo = new FxPageInfo<GoodsInfoForListDto>();
@@ -317,15 +345,53 @@ namespace Fx.Amiya.Modules.Goods.AppService
             goodsPageInfo.List = goodsInfoList;
             return goodsPageInfo;
         }
-
-        public async Task<FxPageInfo<GoodsInfoForListDto>> GetLikeListAsync(bool? valid, int pageNum, int pageSize)
+        /// <summary>
+        /// 小程序获取商品列表
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="exchangeType"></param>
+        /// <param name="categoryId"></param>
+        /// <param name="valid"></param>
+        /// <param name="appId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<GoodsInfoForListDto>> GetMiniprogramGoodsListAsync(string keyword, int? exchangeType, int? categoryId, bool? valid, string appId, bool? isHot, int sort, int pageNum, int pageSize)
         {
+            var goodsIds = freeSql.Select<CategoryToGoodsDbModel>().Where(e => e.CategoryId == categoryId).ToList(e=>e.GoodsId);
             var goodsInfos = freeSql.Select<GoodsInfoDbModel>()
-                .Include(e => e.GoodsCategory)
                 .IncludeMany(e => e.GoodsMemberRankPriceList)
+                .Where(e => string.IsNullOrWhiteSpace(keyword) || e.Name.Contains(keyword) || e.SimpleCode.Contains(keyword) || e.Description.Contains(keyword))
+                .Where(e => exchangeType == null || e.ExchangeType == exchangeType)
                 .Where(e => valid == null || e.Valid == valid)
-                .Where(e => e.ExchangeType == 1)
-                .OrderByDescending(e => e.SaleCount);
+                .Where(e=>goodsIds.Contains(e.Id))
+                .Where(e => !isHot.HasValue || e.IsHot == isHot);
+            if (sort == 0)
+            {
+                goodsInfos = goodsInfos.OrderByDescending(e => e.Sort);
+            }
+            if (sort == 1)
+            {
+                goodsInfos = goodsInfos.OrderByDescending(e => e.SaleCount);
+            }
+            if (sort == 2)
+            {
+                goodsInfos = goodsInfos.OrderByDescending(e => e.SalePrice);
+            }
+            if (!string.IsNullOrEmpty(appId))
+            {
+                var appInfo = await miniprogramService.GetMiniprogramInfoByAppIdAsync(appId);
+                if (appInfo.IsMain)
+                {
+                    goodsInfos = goodsInfos.Where(e => e.AppId == appId || string.IsNullOrEmpty(e.AppId));
+                }
+
+                if (!appInfo.IsMain)
+                {
+                    goodsInfos = goodsInfos.Where(e => e.AppId == appId || string.IsNullOrEmpty(e.AppId) || e.AppId == appInfo.BelongMiniprogramAppId);
+                }
+            }
+
             var goodsInfoList = from d in await goodsInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync()
                                 select new GoodsInfoForListDto
                                 {
@@ -347,8 +413,78 @@ namespace Fx.Amiya.Modules.Goods.AppService
                                     GoodsTypeName = goodsTypeDict[d.GoodsType],
                                     IsLimitBuy = d.IsLimitBuy,
                                     LimitBuyQuantity = d.LimitBuyQuantity,
-                                    CategoryId = d.CategoryId,
-                                    CategoryName = d.GoodsCategory.Name,
+                                    CategoryIds =freeSql.Select<CategoryToGoodsDbModel>().Where(e=>e.GoodsId== d.Id).ToList(e=>e.CategoryId),
+                                    GoodsDetailId = d.GoodsDetailId,
+                                    CreateBy = d.CreateBy,
+                                    CreateDate = d.CreateDate,
+                                    UpdateBy = d.UpdateBy,
+                                    UpdatedDate = d.UpdatedDate,
+                                    DetailsDescription = d.DetailsDescription,
+                                    MinShowPrice = d.MinShowPrice,
+                                    MaxShowPrice = d.MaxShowPrice,
+                                    VisitCount = d.VisitCount,
+                                    ShowSaleCount = d.ShowSaleCount,
+                                    IsMember = d.GoodsMemberRankPriceList.Any(),
+                                    Sort = d.Sort,
+                                    AppId = d.AppId,
+                                    MiniprogramName = dalMiniprogram.GetAll().Where(e=>e.AppId== d.AppId).FirstOrDefault()?.Name ?? "共享分类",
+                                    IsHot = d.IsHot
+                                };
+
+            FxPageInfo<GoodsInfoForListDto> goodsPageInfo = new FxPageInfo<GoodsInfoForListDto>();
+            goodsPageInfo.TotalCount = (int)await goodsInfos.CountAsync();
+            goodsPageInfo.List = goodsInfoList;
+            return goodsPageInfo;
+        }
+        /// <summary>
+        /// 获取热门商品
+        /// </summary>
+        /// <param name="valid"></param>
+        /// <param name="appId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<GoodsInfoForListDto>> GetHotGoodsListAsync(bool? valid, string appId, int pageNum, int pageSize)
+        {
+            var goodsInfos = freeSql.Select<GoodsInfoDbModel>()
+                .IncludeMany(e => e.GoodsMemberRankPriceList)
+                .Where(e => valid == null || e.Valid == valid)
+                .Where(e => e.IsHot == true)
+                .OrderByDescending(e => e.Sort);
+            if (!string.IsNullOrEmpty(appId))
+            {
+                var appInfo = await miniprogramService.GetMiniprogramInfoByAppIdAsync(appId);
+                if (appInfo.IsMain)
+                {
+                    goodsInfos = goodsInfos.Where(e => e.AppId == appId || string.IsNullOrEmpty(e.AppId));
+                }
+
+                if (!appInfo.IsMain)
+                {
+                    goodsInfos = goodsInfos.Where(e => e.AppId == appId || string.IsNullOrEmpty(e.AppId) || e.AppId == appInfo.BelongMiniprogramAppId);
+                }
+            }
+            var goodsInfoList = from d in await goodsInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync()
+                                select new GoodsInfoForListDto
+                                {
+                                    Id = d.Id,
+                                    Name = d.Name,
+                                    SimpleCode = d.SimpleCode,
+                                    Description = d.Description,
+                                    Standard = d.Standard,
+                                    Unit = d.Unit,
+                                    SalePrice = d.SalePrice,
+                                    InventoryQuantity = d.InventoryQuantity,
+                                    Valid = d.Valid,
+                                    ExchangeType = (ExchangeType)d.ExchangeType,
+                                    ExchangeTypeText = exchangeTypeDict[((ExchangeType)d.ExchangeType)],
+                                    IntegrationQuantity = d.IntegrationQuantity,
+                                    ThumbPicUrl = d.ThumbPicUrl,
+                                    IsMaterial = d.IsMaterial,
+                                    GoodsType = d.GoodsType,
+                                    GoodsTypeName = goodsTypeDict[d.GoodsType],
+                                    IsLimitBuy = d.IsLimitBuy,
+                                    LimitBuyQuantity = d.LimitBuyQuantity,
                                     GoodsDetailId = d.GoodsDetailId,
                                     CreateBy = d.CreateBy,
                                     CreateDate = d.CreateDate,
@@ -392,7 +528,6 @@ namespace Fx.Amiya.Modules.Goods.AppService
             goodsInfo.GoodsType = goodsInfoUpdate.GoodsType;
             goodsInfo.IsLimitBuy = goodsInfoUpdate.IsLimitBuy;
             goodsInfo.LimitBuyQuantity = goodsInfoUpdate.LimitBuyQuantity;
-            goodsInfo.CategoryId = goodsInfoUpdate.CategoryId;
             goodsInfo.UpdateBy = goodsInfoUpdate.UpdateBy;
             goodsInfo.DetailsDescription = goodsInfoUpdate.DetailsDescription;
             goodsInfo.MaxShowPrice = goodsInfoUpdate.MaxShowPrice;
@@ -401,6 +536,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
             goodsInfo.ShowSaleCount = goodsInfoUpdate.ShowSaleCount;
             goodsInfo.UpdatedDate = date;
             goodsInfo.Sort = goodsInfoUpdate.Sort;
+            goodsInfo.IsHot = goodsInfoUpdate.IsHot;
+            goodsInfo.AppId = goodsInfoUpdate.AppId;
             goodsInfo.GoodsDetail = new GoodsDetail()
             {
                 Id = goodsInfoUpdate.GoodsDetailId,
@@ -414,6 +551,18 @@ namespace Fx.Amiya.Modules.Goods.AppService
                                                      DisplayIndex = d.DisplayIndex,
                                                      GoodsInfoId = d.GoodsInfoId
                                                  }).ToList();
+            //移除分类
+           freeSql.Delete<CategoryToGoodsDbModel>().Where(e => e.GoodsId == goodsInfo.Id);
+            //添加分类
+            foreach (var item in goodsInfoUpdate.CategoryIds) {
+                freeSql.Insert<CategoryToGoodsDbModel>(new CategoryToGoodsDbModel
+                {
+                    Id = Guid.NewGuid().ToString().Replace("-", ""),
+                    CategoryId = item,
+                    GoodsId = goodsInfo.Id
+                }).ExecuteAffrows();
+            }
+
             //移除规格价格
             await goodsStandardsPriceService.DeleteByGoodsId(goodsInfoUpdate.Id);
             //新增门店医院价格
@@ -459,9 +608,10 @@ namespace Fx.Amiya.Modules.Goods.AppService
             //新增标签
             foreach (var item in goodsInfoUpdate.GoodsTags)
             {
-                AddTagDetailInfoDto addTagDetailInfoDto=new AddTagDetailInfoDto { 
-                    Id=item.GoodsId,
-                    TagId=item.TagId
+                AddTagDetailInfoDto addTagDetailInfoDto = new AddTagDetailInfoDto
+                {
+                    Id = item.GoodsId,
+                    TagId = item.TagId
                 };
                 await tagDetailInfoService.AddTagDetailInfoAsync(addTagDetailInfoDto);
             }
@@ -561,7 +711,6 @@ namespace Fx.Amiya.Modules.Goods.AppService
         public async Task<FxPageInfo<GoodsInfoForListDto>> GetIntegraListAsync(bool? valid, int pageNum, int pageSize)
         {
             var goodsInfos = freeSql.Select<GoodsInfoDbModel>()
-                .Include(e => e.GoodsCategory)
                 .Where(e => e.GoodsCategory.ShowDirectionType == 0 && e.GoodsCategory.Valid == valid)
                 .Where(e => valid == null || e.Valid == valid)
                 .Where(e => e.ExchangeType == 0)
@@ -588,8 +737,6 @@ namespace Fx.Amiya.Modules.Goods.AppService
                                     GoodsTypeName = goodsTypeDict[d.GoodsType],
                                     IsLimitBuy = d.IsLimitBuy,
                                     LimitBuyQuantity = d.LimitBuyQuantity,
-                                    CategoryId = d.CategoryId,
-                                    CategoryName = d.GoodsCategory.Name,
                                     GoodsDetailId = d.GoodsDetailId,
                                     CreateBy = d.CreateBy,
                                     CreateDate = d.CreateDate,
@@ -655,7 +802,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                     GoodsTypeName = goodsTypeDict[goodsInfo.GoodsType],
                     IsLimitBuy = goodsInfo.IsLimitBuy,
                     LimitBuyQuantity = goodsInfo.LimitBuyQuantity,
-                    CategoryId = goodsInfo.CategoryId,
+                    CategoryIds = goodsInfo.CategoryIds,
                     CategoryName = goodsInfo.CategoryName,
                     CreateBy = goodsInfo.CreateBy,
                     CreateDate = goodsInfo.CreateDate,

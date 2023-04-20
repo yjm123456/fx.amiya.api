@@ -76,7 +76,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                                      UpdateBy = d.UpdateBy,
                                      UpdateName = ue?.Name,
                                      Sort=d.Sort,
-                                     CategoryImg=d.CategoryImg
+                                     IsHot=d.IsHot,
+                                     MiniprogramName=d.MiniprogramName,
+                                     AppId=d.AppId,
+                                     CategoryImg=d.CategoryImg,
+                                     IsBrand=d.IsBrand
                                  };
             FxPageInfo<GoodsCategoryVo> categoryPageInfo = new FxPageInfo<GoodsCategoryVo>();
             categoryPageInfo.TotalCount = q.TotalCount;
@@ -110,6 +114,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             category.UpdateDate = goodsCategory.UpdateDate;
             category.UpdateName = "";
             category.CategoryImg = goodsCategory.CategoryImg;
+            category.AppId = goodsCategory.AppId;
+            category.IsHot = goodsCategory.IsHot;
+            category.MiniprogramName = goodsCategory.MiniprogramName;
+            category.IsBrand = goodsCategory.IsBrand;
             return ResultData<GoodsCategoryVo>.Success().AddData("goodsCategory", category);
         }
 
@@ -168,7 +176,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 SimpleCode = goodsCategoryAdd.SimpleCode,
                 ShowDirectionType=goodsCategoryAdd.ShowDirectionType,
                 CreateBy = employeeId,
-                CategoryImg=goodsCategoryAdd.CategoryImg
+                CategoryImg=goodsCategoryAdd.CategoryImg,
+                IsHot=goodsCategoryAdd.IsHot,
+                AppId=goodsCategoryAdd.AppId,
+                IsBrand=goodsCategoryAdd.IsBrand
             };
 
             await goodsCategoryService.AddAsync(category);
@@ -195,7 +206,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 SimpleCode = goodsCategoryUpdate.SimpleCode,
                 Valid = goodsCategoryUpdate.Valid,
                 UpdateBy = employeeId,
-                CategoryImg=goodsCategoryUpdate.CategoryImg
+                CategoryImg=goodsCategoryUpdate.CategoryImg,
+                IsHot=goodsCategoryUpdate.IsHot,
+                AppId=goodsCategoryUpdate.AppId,
+                IsBrand=goodsCategoryUpdate.IsBrand
             };
             await goodsCategoryService.UpdateAsync(goodsCategoryUpdateDto);
             return ResultData.Success();

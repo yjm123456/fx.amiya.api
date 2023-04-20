@@ -20,12 +20,12 @@ namespace Fx.Amiya.Service
     public class HuiShouQianPaymentService : IHuiShouQianPaymentService
     {
         private readonly IDalOrderRefund dalOrderRefund;
-        
+        private readonly IDalCustomerInfo dalCustomerInfo;
 
-        public HuiShouQianPaymentService(IDalOrderRefund dalOrderRefund)
+        public HuiShouQianPaymentService(IDalOrderRefund dalOrderRefund, IDalCustomerInfo dalCustomerInfo)
         {
             this.dalOrderRefund = dalOrderRefund;
-            
+            this.dalCustomerInfo = dalCustomerInfo;
         }
 
         public bool CheckHSQCommonParams(HuiShouQianCommonInfo huiShouQianCommonInfo, out string errmsg)
@@ -114,10 +114,10 @@ namespace Fx.Amiya.Service
         /// 创建慧收钱支付订单
         /// </summary>
         /// <returns></returns>
-        public async Task<HuiShouQianOrderResult> CreateHuiShouQianOrder(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo, string openId)
+        public async Task<HuiShouQianOrderResult> CreateHuiShouQianOrder(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo, string openId,string customerId)
         {
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
-            var commonParam = BuildCommonParam(huiShouQianPayRequestInfo, openId);
+            var commonParam = BuildCommonParam(huiShouQianPayRequestInfo, openId,customerId);
             return PostData(huiShouQianPackageInfo.OrderUrl + "?" + commonParam, "");
 
         }
@@ -222,14 +222,17 @@ namespace Fx.Amiya.Service
         /// 创建公共请求参数
         /// </summary>
         /// <returns></returns>
-        private string BuildCommonParam(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo, string openId)
+        private string BuildCommonParam(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo, string openId,string customerId)
         {
+            var customerInfo = dalCustomerInfo.GetAll().Where(e => e.Id == customerId).SingleOrDefault();
+            if (customerInfo == null) throw new Exception("用户编号错误！");
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
             HuiShouQianCommonInfo huiShouQianCommonInfo = new HuiShouQianCommonInfo();
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             HuiShouQianMemoInfo huiShouQianMemoInfo = new HuiShouQianMemoInfo();
             huiShouQianMemoInfo.openid = openId;
+            huiShouQianMemoInfo.appid = customerInfo.AppId;
             string memoContent = JsonConvert.SerializeObject(huiShouQianMemoInfo, serializerSettings);
             huiShouQianPayRequestInfo.Memo = huiShouQianMemoInfo;
             string signContent = JsonConvert.SerializeObject(huiShouQianPayRequestInfo, serializerSettings);

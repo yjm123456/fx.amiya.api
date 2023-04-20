@@ -19,9 +19,9 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         public string Name { get; set; }
 
         /// <summary>
-        /// 分类编号
+        /// 分类编号列表
         /// </summary>
-        public int CategoryId { get; set; }
+        public List<int> CategoryIds { get; set; }
 
         /// <summary>
         /// 简码
@@ -137,6 +137,14 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         /// 排序
         /// </summary>
         public int Sort { get; set; }
+        /// <summary>
+        /// 归属小程序appId
+        /// </summary>
+        public string AppId { get; set; }
+        /// <summary>
+        /// 是否是热门商品
+        /// </summary>
+        public bool IsHot { get; set; }
 
         public List<GoodsInfoCarouselImageAddVo> CarouselImageUrls { get; set; }
         /// <summary>

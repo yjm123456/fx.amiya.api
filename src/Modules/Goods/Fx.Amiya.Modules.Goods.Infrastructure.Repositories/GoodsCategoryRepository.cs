@@ -29,7 +29,10 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                 CreateDate = entity.CreateDate,
                 CreateBy = entity.CreateBy,
                 Sort = entity.Sort,
-                CategoryImg=entity.CategoryImg
+                IsHot=entity.IsHot,
+                AppId=entity.AppId,
+                CategoryImg=entity.CategoryImg,
+                IsBrand=entity.IsBrand
             };
 
             entity.Id = (int)await freeSql.Insert<GoodsCategoryDbModel>().AppendData(goodsCategoryDbModel).ExecuteIdentityAsync();
@@ -53,7 +56,10 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                 UpdateDate = goodsCategory.UpdateDate,
                 UpdateBy = goodsCategory.UpdateBy,
                 Sort = goodsCategory.Sort,
-                CategoryImg=goodsCategory.CategoryImg
+                IsHot=goodsCategory.IsHot,
+                AppId=goodsCategory.AppId,
+                CategoryImg=goodsCategory.CategoryImg,
+                IsBrand=goodsCategory.IsBrand
             };
             return category;
         }
@@ -87,6 +93,10 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                     category.UpdateBy = categoryModel.UpdateBy;
                     category.CategoryImg = categoryModel.CategoryImg;
                     category.Sort = categoryModel.Sort;
+                    category.AppId = categoryModel.AppId;
+                    category.IsHot = categoryModel.IsHot;
+                    category.IsBrand = categoryModel.IsBrand;
+                    
                 }
                 else{
                     var nearRow = goodsCategoryList[ExistRow - 1];
@@ -101,6 +111,9 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                     category.UpdateBy = nearRow.UpdateBy;
                     category.CategoryImg = nearRow.CategoryImg;
                     category.Sort = nearRow.Sort;
+                    category.AppId = nearRow.AppId;
+                    category.IsHot = nearRow.IsHot;
+                    category.IsBrand = nearRow.IsBrand;
                 }
             }
             else {
@@ -118,6 +131,9 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                     category.UpdateBy = categoryModel.UpdateBy;
                     category.CategoryImg = categoryModel.CategoryImg;
                     category.Sort = categoryModel.Sort;
+                    category.AppId = categoryModel.AppId;
+                    category.IsHot = categoryModel.IsHot;
+                    category.IsBrand = categoryModel.IsBrand;
                 }
                 else{
                     var nearRow = goodsCategoryList[ExistRow + 1];
@@ -132,6 +148,9 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                     category.UpdateBy = nearRow.UpdateBy;
                     category.CategoryImg = nearRow.CategoryImg;
                     category.Sort = nearRow.Sort;
+                    category.AppId = nearRow.AppId;
+                    category.IsHot = nearRow.IsHot;
+                    category.IsBrand = nearRow.IsBrand;
                 }
             }
             return category;
@@ -176,6 +195,9 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                  .Set(e => e.UpdateDate, entity.UpdateDate)
                  .Set(e => e.Sort, entity.Sort)
                  .Set(e=>e.CategoryImg,entity.CategoryImg)
+                 .Set(e=>e.IsHot,entity.IsHot)
+                 .Set(e=>e.AppId,entity.AppId)
+                 .Set(e=>e.IsBrand,entity.IsBrand)
                  .Where(e => e.Id == entity.Id)
                  .ExecuteAffrowsAsync();
         }

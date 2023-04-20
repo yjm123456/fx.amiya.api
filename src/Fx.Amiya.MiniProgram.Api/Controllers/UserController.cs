@@ -86,8 +86,16 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             return ResultData<string>.Success().AddData("appIds", appInfo?.WxAppId);
         }
 
-
-
+        /// <summary>
+        /// 获取最近一次登录的appid
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("lastLoginAppId")]
+        public async Task<ResultData<string>> GetLastTimeLoginAppId() {
+            var sessionInfo = sessionStorage.GetSession(tokenReader.GetToken());
+            var appId = await userService.GetLastLoginAppIdAsync(sessionInfo.FxUserId);
+            return ResultData<string>.Success().AddData("appId", appId);
+        }
 
 
         /// <summary>
@@ -111,7 +119,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     var sessionInfo = await WxMiniBaseApi.GetCode2SessionAsync(loginVo.Code, appInfo.WxAppId, appInfo.WxAppSecret);
 
                     if (sessionInfo.ErrCode == 0)
-                    {                    
+                    {
                         //添加用户，如果已经存在，则不会添加
                         var wxMiniUserInfo = await userService.AddUnauthorizedWxMiniUserAsync(new UnauthorizedWxMiniUserAddDto()
                         {
@@ -148,6 +156,17 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 }
             }
 
+        }
+
+        /// <summary>
+        /// 添加最近一次登录的中间跳转appid(只记录中间appid)
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("recordAppId/{appId}")]
+        public async Task<ResultData> RecordLastLoginAppId(string appId) {
+            var sessionInfo = sessionStorage.GetSession(tokenReader.GetToken());
+            await userService.RecordLastLoginAppIdAsync(appId, sessionInfo.FxUserId);
+            return ResultData.Success();
         }
 
 

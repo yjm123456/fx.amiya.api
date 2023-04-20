@@ -88,7 +88,7 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         /// <summary>
         /// 商品分类编号
         /// </summary>
-        public int CategoryId { get; set; }
+        public List<int> CategoryIds { get; set; }
 
         /// <summary>
         /// 商品分类名称
@@ -129,6 +129,18 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         /// 序号
         /// </summary>
         public int Sort { get; set; }
+        /// <summary>
+        /// 归属小程序appid
+        /// </summary>
+        public string  AppId{ get; set; }
+        /// <summary>
+        /// 归属小程序名称
+        /// </summary>
+        public string MiniprogramName { get; set; }
+        /// <summary>
+        /// 是否是热门商品
+        /// </summary>
+        public bool IsHot { get; set; }
 
     }
 }

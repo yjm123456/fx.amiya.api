@@ -79,14 +79,14 @@ namespace Fx.Amiya.Service
             this.tagDetailInfoService = tagDetailInfoService;
             this.dalCustomerTagInfo = dalCustomerTagInfo;
         }
-        public async Task<string> BindCustomerAsync(string fxUserId, string phoneNumber,string appId= null)
+        public async Task<string> BindCustomerAsync(string fxUserId, string phoneNumber,string appId)
         {
             try
             {
                 CustomerInfo customerInfo = null;
                 if (string.IsNullOrEmpty(appId))
                 {
-                    customerInfo = await dalCustomerInfo.GetAll().FirstOrDefaultAsync(t => t.Phone == phoneNumber);
+                    throw new Exception("小程序id错误！");
                 }
                 else {
                     customerInfo = await dalCustomerInfo.GetAll().FirstOrDefaultAsync(t => t.Phone == phoneNumber&&t.AppId==appId );
@@ -153,7 +153,7 @@ namespace Fx.Amiya.Service
                 customerInfoDto.City = customer.UserInfo.City;
                 customerInfoDto.NickName = customer.UserInfo.NickName;
                 customerInfoDto.Avatar = customer.UserInfo.Avatar;
-
+                customerInfoDto.AssisteAppId = customer.AssisteAppId;
                 return customerInfoDto;
             }
             catch (Exception ex)
@@ -1016,7 +1016,7 @@ namespace Fx.Amiya.Service
         {
             var config = await GetCallCenterConfig();
             string phone = ServiceClass.Decrypto(encryptPhone, config.PhoneEncryptKey);
-            var customerInfo = await dalCustomerInfo.GetAll().SingleOrDefaultAsync(e => e.Phone == phone);
+            var customerInfo = await dalCustomerInfo.GetAll().FirstOrDefaultAsync(e => e.Phone == phone);
             return customerInfo?.Id;
         }
 

@@ -11,5 +11,10 @@ namespace Fx.Amiya.Dto.CarouselImage
         public byte DisplayIndex { get; set; }
         public string LinkUrl { get; set; }
         public DateTime CreateDate { get; set; }
+        /// <summary>
+        /// 归属小程序appid
+        /// </summary>
+        public string AppId { get; set; }
+        public string AppName { get; set; }
     }
 }

@@ -88,5 +88,9 @@ namespace Fx.Amiya.Background.Api.Vo.Appointment
         /// 客服名称
         /// </summary>
         public string EmpolyeeName { get; set; }
+        /// <summary>
+        /// 叫车地址
+        /// </summary>
+        public string Address { get; set; }
     }
 }

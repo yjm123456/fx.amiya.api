@@ -206,7 +206,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 huiShouQianPayRequestInfo.GoodsInfo = "充值";
                 huiShouQianPayRequestInfo.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
                 huiShouQianPayRequestInfo.Extend = "RECHARGE";              
-                var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId);
+                var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId, customerId);
                 if (result.Success == false) throw new Exception("下单失败,请重新下单");
                 PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
                 payRequestInfo.appId = result.PayParam.AppId;

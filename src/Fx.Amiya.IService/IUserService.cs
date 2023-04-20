@@ -121,5 +121,20 @@ namespace Fx.Amiya.IService
         /// <param name="userId"></param>
         /// <returns></returns>
         Task<bool> IsCompleteUserInfo(string userId);
+        /// <summary>
+        /// 用户绑定appid
+        /// </summary>
+        /// <returns></returns>
+        Task<int?> BindUserBelongAppIdAsync(string userid,string customerId);
+        /// <summary>
+        /// 获取用户最近一次登录的appid
+        /// </summary>
+        /// <returns></returns>
+        Task<string> GetLastLoginAppIdAsync(string userId);
+        /// <summary>
+        /// 记录最近一次登录的appid(如果用户已经绑定了appid则不记录)
+        /// </summary>
+        /// <returns></returns>
+        Task RecordLastLoginAppIdAsync(string appId,string userId);
     }
 }

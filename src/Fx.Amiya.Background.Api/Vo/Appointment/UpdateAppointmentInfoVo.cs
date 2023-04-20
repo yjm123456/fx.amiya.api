@@ -50,7 +50,14 @@ namespace Fx.Amiya.Background.Api.Vo.Appointment
         /// </summary>
         [Required]
         public string Phone { get; set; }
-        
+        /// <summary>
+        /// 预约叫车地址
+        /// </summary>
+        public string Address { get; set; }
+        /// <summary>
+        /// 预约医院id
+        /// </summary>
+        public int HospitalId { get; set; }
 
     }
 }

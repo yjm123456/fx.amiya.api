@@ -76,7 +76,7 @@ namespace Fx.Amiya.Service
             try
             {
                 var messageNoticeService = from d in dalMessageNoticeService.GetAll().Include(x => x.AmiyaEmployeeInfo)
-                                           where (d.AcceptBy == employeeId)
+                                           where (d.AcceptBy == employeeId && d.IsRead == false)
                                            && (d.Valid == true)
                                            select d;
                 int result = await messageNoticeService.CountAsync();

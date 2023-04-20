@@ -11,5 +11,9 @@ namespace Fx.Amiya.Dto.UserInfo
         public string OpenId { get; set; }
         public string UnionId { get; set; }
         public string AppId { get; set; }
+        /// <summary>
+        /// 中转小程序appid
+        /// </summary>
+        public string AssisteAppId { get; set; }
     }
 }

@@ -50,6 +50,10 @@ namespace Fx.Amiya.Dto.Order
         /// 交易类型：0=积分,1三方支付,2余额支付
         /// </summary>
         public byte? ExchangeType { get; set; }
+        /// <summary>
+        /// 归属主播id
+        /// </summary>
+        public int BelongLiveAnchorId { get; set; }
 
         /// <summary>
         /// 归属客服

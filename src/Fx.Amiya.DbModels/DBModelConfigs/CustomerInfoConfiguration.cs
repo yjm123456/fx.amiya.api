@@ -17,6 +17,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.Property(t => t.UserId).HasColumnName("user_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(t => t.AppId).HasColumnName("app_id").HasColumnType("varchar(50)").IsRequired(false);
+            builder.Property(t => t.AssisteAppId).HasColumnName("assiste_app_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(t => t.Phone).HasColumnName("phone").HasColumnType("varchar(20)").IsRequired();
             builder.HasOne(t => t.UserInfo).WithOne(t => t.CustomerInfo).HasForeignKey<CustomerInfo>(t => t.UserId);
         }

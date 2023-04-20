@@ -136,10 +136,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 addDto.CreateDate = DateTime.Now;
                 addDto.Phone = addVo.Phone;
                 addDto.Remark = addVo.Remark;
-                addDto.HospitalId = 192;
+                addDto.HospitalId = addVo.HospitalId;
                 addDto.AppointArea = addVo.AppointArea;
                 addDto.ItemInfoName = addVo.ItemInfoName;
-
+                addDto.Address = addVo.Address;
                 int appointmentId = await appointmentService.AddAsync(addDto, customerId);
                 return ResultData<int>.Success().AddData("appointmentId", appointmentId);
             }
@@ -237,7 +237,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         Latitude = appointment.HospitalInfo.Latitude,
                         HospitalPhone = appointment.HospitalInfo.HospitalPhone,
                         Address = appointment.HospitalInfo.Address
-                    }
+                    },
+                    Address= appointment.Address,
+                    HospitalId=appointment.HospitalInfo.HospitalId
                 };
 
                 return ResultData<WxAppointmentInfoVo>.Success().AddData("appointmentInfo", appointmentInfo);

@@ -48,5 +48,13 @@ namespace Fx.Amiya.Dto.Appointment
         /// 预约地区
         /// </summary>
         public string AppointArea { get; set; }
+        /// <summary>
+        /// 预约叫车地址
+        /// </summary>
+        public string Address { get; set; }
+        /// <summary>
+        /// 预约医院id
+        /// </summary>
+        public int HospitalId { get; set; }
     }
 }

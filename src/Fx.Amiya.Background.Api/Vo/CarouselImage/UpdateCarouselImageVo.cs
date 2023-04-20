@@ -11,5 +11,9 @@ namespace Fx.Amiya.Background.Api.Vo.CarouselImage
         public string PicUrl { get; set; }
         public string LinkUrl { get; set; }
         public byte DisplayIndex { get; set; }
+        /// <summary>
+        /// 归属小程序appId
+        /// </summary>
+        public string AppId { get; set; }
     }
 }

@@ -43,7 +43,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.SaleCount).HasColumnName("sale_count").HasColumnType("int");
             builder.Property(t => t.ShowSaleCount).HasColumnName("show_sale_count").HasColumnType("int");
             builder.Property(t => t.Sort).HasColumnName("sort").HasColumnType("int").IsRequired().HasDefaultValue(0);
-
+            builder.Property(t => t.AppId).HasColumnName("appid").HasColumnType("varchar(100)").IsRequired(false);
+            builder.Property(t => t.IsHot).HasColumnName("ishot").HasColumnType("bit").IsRequired();
         }
     }
 }

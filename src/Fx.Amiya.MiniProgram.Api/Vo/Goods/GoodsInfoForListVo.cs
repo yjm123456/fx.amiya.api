@@ -84,6 +84,10 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Goods
         /// 是否是会员优惠商品
         /// </summary>
         public bool isMember { get; set; }
+        /// <summary>
+        /// 商品单位
+        /// </summary>
+        public string Unit { get; set; }
 
     }
 }

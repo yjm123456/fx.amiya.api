@@ -38,6 +38,7 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                 Name = entity.Name,
                 SimpleCode = entity.SimpleCode,
                 Description = entity.Description,
+                CategoryId=entity.CategoryId,
                 Standard = entity.Standard,
                 Unit = entity.Unit,
                 SalePrice = entity.SalePrice,
@@ -50,7 +51,6 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                 GoodsType = entity.GoodsType,
                 IsLimitBuy = entity.IsLimitBuy,
                 LimitBuyQuantity = entity.LimitBuyQuantity,
-                CategoryId = entity.CategoryId,
                 GoodsDetailId = detailId,
                 CreateBy = entity.CreateBy,
                 CreateDate = entity.CreateDate,
@@ -61,7 +61,9 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                 VisitCount = entity.VisitCount,
                 ShowSaleCount = entity.ShowSaleCount,
                 SaleCount = 0,
-                Sort=entity.Sort
+                Sort=entity.Sort,
+                IsHot=entity.IsHot,
+                AppId=entity.AppId
         };
         await freeSql.Insert<GoodsInfoDbModel>().AppendData(goodsInfo).ExecuteAffrowsAsync();
 
@@ -84,7 +86,6 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
     public async Task<GoodsInfo> GetByIdAsync(string id)
     {
         var goodsInfo = await freeSql.Select<GoodsInfoDbModel>()
-            .Include(e => e.GoodsCategory)
             .Include(e => e.GoodsDetail)
             .IncludeMany(e => e.GoodsInfoCarouselImageList)
             .Where(e => e.Id == id).FirstAsync();
@@ -110,8 +111,7 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
             GoodsType = goodsInfo.GoodsType,
             IsLimitBuy = goodsInfo.IsLimitBuy,
             LimitBuyQuantity = goodsInfo.LimitBuyQuantity,
-            CategoryId = goodsInfo.CategoryId,
-            CategoryName = goodsInfo.GoodsCategory.Name,
+            CategoryIds = freeSql.Select<CategoryToGoodsDbModel>().Where(e=>e.GoodsId==goodsInfo.Id).ToList(e=>e.CategoryId),
             CreateBy = goodsInfo.CreateBy,
             CreateDate = goodsInfo.CreateDate,
             UpdateBy = goodsInfo.UpdateBy,
@@ -123,6 +123,8 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
             ShowSaleCount = goodsInfo.ShowSaleCount,
             VisitCount = goodsInfo.VisitCount,
             Sort=goodsInfo.Sort,
+            AppId=goodsInfo.AppId,
+            IsHot=goodsInfo.IsHot,
             GoodsDetail = goodsInfo.GoodsDetailId == null ? null : new GoodsDetail()
             {
                 Id = (int)goodsInfo.GoodsDetailId,
@@ -146,7 +148,6 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
         {
             var goodsInfo = await freeSql.Select<GoodsInfoDbModel>()
             .Include(e => e.GoodsDetail)
-            .Include(e=>e.GoodsCategory)
             .IncludeMany(e=>e.GoodsInfoCarouselImageList)
             .Where(e => e.SimpleCode == code).FirstAsync();
             if (goodsInfo == null)
@@ -171,8 +172,7 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                 GoodsType = goodsInfo.GoodsType,
                 IsLimitBuy = goodsInfo.IsLimitBuy,
                 LimitBuyQuantity = goodsInfo.LimitBuyQuantity,
-                CategoryId = goodsInfo.CategoryId,
-                CategoryName = goodsInfo.GoodsCategory.Name,
+                CategoryIds = freeSql.Select<CategoryToGoodsDbModel>().Where(e=>e.GoodsId== goodsInfo.Id).ToList(e=>e.CategoryId),
                 CreateBy = goodsInfo.CreateBy,
                 CreateDate = goodsInfo.CreateDate,
                 UpdateBy = goodsInfo.UpdateBy,
@@ -289,7 +289,6 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
             .Set(e => e.GoodsType, entity.GoodsType)
             .Set(e => e.IsLimitBuy, entity.IsLimitBuy)
             .Set(e => e.LimitBuyQuantity, entity.LimitBuyQuantity)
-            .Set(e => e.CategoryId, entity.CategoryId)
             .Set(e => e.UpdatedDate, entity.UpdatedDate)
             .Set(e => e.UpdateBy, entity.UpdateBy)
             .Set(e => e.DetailsDescription, entity.DetailsDescription)
@@ -299,6 +298,8 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
             .Set(e => e.VisitCount, entity.VisitCount)
             .Set(e => e.GoodsDetailId, detailId)
             .Set(e=>e.Sort,entity.Sort)
+            .Set(e=>e.AppId,entity.AppId)
+            .Set(e=>e.IsHot,entity.IsHot)
             .Where(e => e.Id == entity.Id)
             .ExecuteAffrowsAsync();
 

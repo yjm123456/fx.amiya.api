@@ -28,7 +28,9 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                 entity.Property(t => t.UpdateDate).HasColumnName("update_date").HasColumnType("datetime");
                 entity.Property(t => t.Sort).HasColumnName("sort").HasColumnType("int");
                 entity.Property(t => t.CategoryImg).HasColumnName("category_img").HasColumnType("varchar(200)");
-
+                entity.Property(t => t.AppId).HasColumnName("appid").HasColumnType("varchar(100)");
+                entity.Property(t => t.IsHot).HasColumnName("ishot").HasColumnType("bit").IsRequired();
+                entity.Property(t => t.IsBrand).HasColumnName("isbrand").HasColumnType("bit").IsRequired();
             });
             freeSql.CodeFirst.Entity<GoodsDetailDbModel>(entity =>
             {
@@ -76,6 +78,8 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                 entity.Property(t => t.SaleCount).HasColumnName("sale_count").HasColumnType("int");
                 entity.Property(t => t.ShowSaleCount).HasColumnName("show_sale_count").HasColumnType("int");
                 entity.Property(t => t.Sort).HasColumnName("sort").HasColumnType("int");
+                entity.Property(t => t.AppId).HasColumnName("appid").HasColumnType("varchar(100)");
+                entity.Property(t => t.IsHot).HasColumnName("ishot").HasColumnType("bit").IsRequired();
 
                 entity.HasOne(t => t.GoodsCategory).WithMany(t => t.GoodsInfoList).HasForeignKey(t => t.CategoryId);
                 entity.HasOne(t => t.GoodsDetail).WithMany(t => t.GoodsInfoList).HasForeignKey(t => t.GoodsDetailId);
@@ -104,6 +108,14 @@ namespace Fx.Amiya.Modules.Goods.Infrastructure.Repositories
                 entity.Property(t => t.MemberRankId).HasColumnName("member_rank_id").HasColumnType("tinyint").IsRequired();
                 entity.Property(t => t.Price).HasColumnName("price").HasColumnType("decimal(12,2)").IsRequired();
                 entity.HasOne(t => t.GoodsInfo).WithMany(e => e.GoodsMemberRankPriceList).HasForeignKey(e => e.GoodsId);
+            });
+            freeSql.CodeFirst.Entity<CategoryToGoodsDbModel>(entity =>
+            {
+                entity.ToTable("tbl_category_to_goods");
+                entity.HasKey(t => t.Id);
+                entity.Property(t => t.Id).HasColumnName("id").HasColumnType("varchar(50)").IsRequired();
+                entity.Property(t => t.GoodsId).HasColumnName("goods_id").HasColumnType("varchar(50)").IsRequired();
+                entity.Property(t => t.CategoryId).HasColumnName("category_id").HasColumnType("int").IsRequired();
             });
 
         }

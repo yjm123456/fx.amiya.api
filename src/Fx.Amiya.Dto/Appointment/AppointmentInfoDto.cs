@@ -30,6 +30,10 @@ namespace Fx.Amiya.Dto.Appointment
         public string Remark { get; set; }
 
         public string EmpolyeeName{ get; set; }
+        /// <summary>
+        /// 预约叫车地址
+        /// </summary>
+        public string Address { get; set; }
 
     }
 }

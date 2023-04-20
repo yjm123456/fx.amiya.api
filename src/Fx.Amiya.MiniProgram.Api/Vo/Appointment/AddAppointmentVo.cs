@@ -57,5 +57,9 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Appointment
         /// 项目名称
         /// </summary>
         public string ItemInfoName{ get; set; }
+        /// <summary>
+        /// 预约叫车地址
+        /// </summary>
+        public string Address { get; set; }
     }
 }

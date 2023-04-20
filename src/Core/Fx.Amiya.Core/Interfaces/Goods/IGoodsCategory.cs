@@ -32,8 +32,16 @@ namespace Fx.Amiya.Core.Interfaces.Goods
         /// </summary>
         /// <param name="valid">是否有效，null：全部</param>
         /// <returns></returns>
-        Task<List<GoodsCategoryNameDto>> GetCategoryNameListAsync(bool? valid);
-
+        Task<List<GoodsCategoryNameDto>> GetCategoryNameListAsync(bool? valid,string appId=null);
+        /// <summary>
+        /// 获取知道数量的热门分类
+        /// </summary>
+        /// <param name="valid">是否有效</param>
+        /// <param name="count">数量</param>
+        /// <param name="isBrand">是否是品牌分类</param>
+        /// <param name="appId">小程序appid</param>
+        /// <returns></returns>
+        Task<List<GoodsCategoryNameDto>> GetHotCategoryNameListAsync(bool? valid,int count,bool isBrand,string appId=null);
 
         /// <summary>
         /// 添加商品分类

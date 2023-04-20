@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Core.Dto.Goods;
+using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Domain;
 using Fx.Amiya.Domain.IRepository;
 using Fx.Amiya.Domain.UserDomain;
@@ -39,6 +40,8 @@ namespace Fx.Amiya.Service
         private IDalUserInfoUpdateRecord dalUserInfoUpdateRecord;
         private IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService;
         private ICustomerConsumptionVoucherService customerConsumptionVoucherService;
+        private IDalUserLastTimeLoginAppId dalUserLastTimeLoginAppId;
+        private IMiniprogramService miniprogramService;
         public UserService(IDalUserInfo dalUserInfo,
             IWxMiniUserRepository wxMiniUserRepository,
             IUserRepository userRepository,
@@ -46,7 +49,7 @@ namespace Fx.Amiya.Service
             IWxMpUserRepository wxMpUserRepository,
             IDalConfig dalConfig,
             IDalCustomerInfo dalCustomerInfo,
-            IDalUserInfoUpdateRecord dalUserInfoUpdateRecord, IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService, ICustomerConsumptionVoucherService customerConsumptionVoucherService)
+            IDalUserInfoUpdateRecord dalUserInfoUpdateRecord, IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IDalUserLastTimeLoginAppId dalUserLastTimeLoginAppId, IMiniprogramService miniprogramService)
         {
             this.dalUserInfo = dalUserInfo;
             this.wxMiniUserRepository = wxMiniUserRepository;
@@ -58,7 +61,8 @@ namespace Fx.Amiya.Service
             this.dalUserInfoUpdateRecord = dalUserInfoUpdateRecord;
             this.dockingHospitalCustomerInfoService = dockingHospitalCustomerInfoService;
             this.customerConsumptionVoucherService = customerConsumptionVoucherService;
-            
+            this.dalUserLastTimeLoginAppId = dalUserLastTimeLoginAppId;
+            this.miniprogramService = miniprogramService;
         }
         public async Task<WxMiniUserDto> AddUnauthorizedWxMiniUserAsync(UnauthorizedWxMiniUserAddDto miniUserAddDto)
         {
@@ -88,7 +92,26 @@ namespace Fx.Amiya.Service
                     );
                     await wxMiniUserRepository.AddAsync(wxMiniUser);
                 }
-
+                //如果用户未绑定手机号且使用中间小程序跳转则记录本次登录的appid
+                if (string.IsNullOrEmpty(wxMiniUser.FxUser.CustomerId) && !string.IsNullOrEmpty(miniUserAddDto.AssisteAppId))
+                {
+                    var record = dalUserLastTimeLoginAppId.GetAll().Where(e => e.UserId == wxMiniUser.FxUser.Id).SingleOrDefault();
+                    if (record != null)
+                    {
+                        record.AppId = miniUserAddDto.AssisteAppId;
+                        record.UpdateDate = DateTime.Now;
+                        await dalUserLastTimeLoginAppId.UpdateAsync(record, true);
+                    }
+                    else
+                    {
+                        UserLastTimeLoginAppId userLastTimeLoginAppId = new UserLastTimeLoginAppId();
+                        userLastTimeLoginAppId.Id = Guid.NewGuid().ToString().Replace("-", "");
+                        userLastTimeLoginAppId.CreateDate = DateTime.Now;
+                        userLastTimeLoginAppId.AppId = miniUserAddDto.AssisteAppId;
+                        userLastTimeLoginAppId.Valid = true;
+                        await dalUserLastTimeLoginAppId.AddAsync(userLastTimeLoginAppId, true);
+                    }
+                }
 
                 return new WxMiniUserDto()
                 {
@@ -140,7 +163,8 @@ namespace Fx.Amiya.Service
 
         public async Task<bool> UpdateUserInfo(UserInfoEditDto userInfoEditDto)
         {
-            try {
+            try
+            {
                 var userInfo = dalUserInfo.GetAll().SingleOrDefault(e => e.Id == userInfoEditDto.Id);
                 if (userInfo != null)
                 {
@@ -154,7 +178,8 @@ namespace Fx.Amiya.Service
                     userInfo.PersonalSignature = userInfoEditDto.PersonalSignature;
                     userInfo.WxBindPhone = userInfoEditDto.Phone;
                     userInfo.DetailAddress = userInfoEditDto.DetailAdress;
-                    if (!string.IsNullOrEmpty(userInfoEditDto.Avatar)) {
+                    if (!string.IsNullOrEmpty(userInfoEditDto.Avatar))
+                    {
                         userInfo.Avatar = userInfoEditDto.Avatar;
                     }
                     await dalUserInfo.UpdateAsync(userInfo, true);
@@ -162,7 +187,8 @@ namespace Fx.Amiya.Service
                 }
                 return false;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 throw ex;
             }
         }
@@ -235,7 +261,7 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
-   
+
         private async Task<CallCenterConfigDto> GetCallCenterConfig()
         {
             var config = await dalConfig.GetAll().SingleOrDefaultAsync();
@@ -396,13 +422,13 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<string> GetUserQrCode(string userId,string avatar)
+        public async Task<string> GetUserQrCode(string userId, string avatar)
         {
-            var appInfo =await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(192);
+            var appInfo = await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(192);
             var requestUrl = $"https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token={appInfo.AccessToken}";
-            var data = new { scene = userId, page = "pages/index/index", width =640, env_version= "release" };
+            var data = new { scene = userId, page = "pages/index/index", width = 640, env_version = "release" };
             var res = await HttpUtil.HttpJsonPostForOriginStreamAsync(requestUrl, JsonConvert.SerializeObject(data));
-            var str = WxQrCodeDemo(res,avatar);
+            var str = WxQrCodeDemo(res, avatar);
             string result = Convert.ToBase64String(str);
             return result;
         }
@@ -425,13 +451,13 @@ namespace Fx.Amiya.Service
                 rec.Width = 10;
                 rec.Height = 10;
                 bitmap.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
-                
+
             }
             mImage.Dispose();
             Image regionImage = Image.FromStream(memoryStream);//模板文件
             Image addImg = Image.FromStream(GetBytesFromUrl(storeLogo));//需要拼接进去的图片
             Image lastImg = CombinImage(regionImage, addImg, 280);//拼接图片（设置固定的135px-可根据需要改）
-            Bitmap lastmap = new Bitmap(lastImg);            
+            Bitmap lastmap = new Bitmap(lastImg);
             var imgBytes = BitmapToBytes(lastmap);
             addImg.Dispose();
             lastmap.Dispose();
@@ -445,7 +471,7 @@ namespace Fx.Amiya.Service
             byte[] b;
             HttpWebRequest myReq = (HttpWebRequest)WebRequest.Create(url);
             WebResponse myResp = myReq.GetResponse();
-            Stream stream = myResp.GetResponseStream();                      
+            Stream stream = myResp.GetResponseStream();
             return stream;
 
         }
@@ -526,7 +552,7 @@ namespace Fx.Amiya.Service
         private Image CombinImage(Image imgBack, Image img, int r)
         {
             Bitmap imgMap = new Bitmap(img);
-            double smallTimes = imgMap.Width/(double)r;//缩小图片倍数
+            double smallTimes = imgMap.Width / (double)r;//缩小图片倍数
             img = GetSmall(imgMap, smallTimes);//进行图片缩小
             if ((img.Width < r || img.Height < r))
             {
@@ -577,18 +603,18 @@ namespace Fx.Amiya.Service
         /// <param name="superiorId">上级id</param>
         /// <param name="customerId">customerId</param>
         /// <returns></returns>
-        public async Task<bool> AddSuperiorAsync(string userId, string superiorId,string customerId)
+        public async Task<bool> AddSuperiorAsync(string userId, string superiorId, string customerId)
         {
             if (userId.Equals(superiorId, StringComparison.OrdinalIgnoreCase)) return false;
-            var userInfo =await dalUserInfo.GetAll().Where(e=>e.Id==userId).SingleOrDefaultAsync();
-            var isSubordinate=await this.IsSubordinate(userId,superiorId);
+            var userInfo = await dalUserInfo.GetAll().Where(e => e.Id == userId).SingleOrDefaultAsync();
+            var isSubordinate = await this.IsSubordinate(userId, superiorId);
             if (isSubordinate) throw new Exception("上级用户不能是下级");
             if (userInfo == null) throw new Exception("用户不存在");
             if (userInfo.SuperiorId != null) throw new Exception("已绑定其他用户");
-            var superiorInfo = dalUserInfo.GetAll().Where(e=>e.Id==superiorId);
+            var superiorInfo = dalUserInfo.GetAll().Where(e => e.Id == superiorId);
             if (superiorId == null) throw new Exception("用户不存在");
             userInfo.SuperiorId = superiorId;
-            await dalUserInfo.UpdateAsync(userInfo,true);
+            await dalUserInfo.UpdateAsync(userInfo, true);
             var customerInfo = dalCustomerInfo.GetAll().Where(e => e.UserId == superiorId).SingleOrDefault();
             if (customerInfo == null) throw new Exception("上级用户不存在");
             //上级赠送抵用券
@@ -603,13 +629,14 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<SubordinateUserDto>> GetSubordinateUserListAsync(string userId, int pageNum, int pageSize)
         {
             FxPageInfo<SubordinateUserDto> fxPageInfo = new FxPageInfo<SubordinateUserDto>();
-            var list= dalUserInfo.GetAll().Where(e=>e.SuperiorId==userId).Include(e=>e.CustomerInfo).Select(e=>new SubordinateUserDto { 
-                NickName=e.NickName,
-                AvatarUrl=e.Avatar,
-                CreateDate=e.CreateDate,
-                CustomerId=e.CustomerInfo.Id
+            var list = dalUserInfo.GetAll().Where(e => e.SuperiorId == userId).Include(e => e.CustomerInfo).Select(e => new SubordinateUserDto
+            {
+                NickName = e.NickName,
+                AvatarUrl = e.Avatar,
+                CreateDate = e.CreateDate,
+                CustomerId = e.CustomerInfo.Id
             });
-            fxPageInfo.TotalCount =await list.CountAsync();
+            fxPageInfo.TotalCount = await list.CountAsync();
             fxPageInfo.List = list.Skip((pageNum - 1) * pageSize).Take(pageSize);
             return fxPageInfo;
         }
@@ -621,7 +648,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<bool> IsSubordinate(string userId, string subordinateUserId)
         {
-            var user= await dalUserInfo.GetAll().Where(e=>e.SuperiorId==userId&&e.Id==subordinateUserId).FirstOrDefaultAsync();
+            var user = await dalUserInfo.GetAll().Where(e => e.SuperiorId == userId && e.Id == subordinateUserId).FirstOrDefaultAsync();
             if (user == null) return false;
             return true;
         }
@@ -639,11 +666,12 @@ namespace Fx.Amiya.Service
             user.WxBindPhone = update.Phone;
             user.City = update.City;
             user.Area = update.Area;
-            if (!string.IsNullOrEmpty(update.DetailAddress)) {
+            if (!string.IsNullOrEmpty(update.DetailAddress))
+            {
                 user.DetailAddress = update.DetailAddress;
             }
             user.Province = update.Province;
-            await dalUserInfo.UpdateAsync(user,true);
+            await dalUserInfo.UpdateAsync(user, true);
         }
         /// <summary>
         /// 是否完成个人信息完善
@@ -652,12 +680,13 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<bool> IsCompleteUserInfo(string userId)
         {
-            var user= dalUserInfo.GetAll().Where(e => e.Id == userId && (string.IsNullOrEmpty(e.Province) || string.IsNullOrEmpty(e.City) || string.IsNullOrEmpty(e.Area) || string.IsNullOrEmpty(e.WxBindPhone) || e.BirthDay == null || string.IsNullOrEmpty(e.Name) || string.IsNullOrEmpty(e.DetailAddress))).FirstOrDefault();
+            var user = dalUserInfo.GetAll().Where(e => e.Id == userId && (string.IsNullOrEmpty(e.Province) || string.IsNullOrEmpty(e.City) || string.IsNullOrEmpty(e.Area) || string.IsNullOrEmpty(e.WxBindPhone) || e.BirthDay == null || string.IsNullOrEmpty(e.Name) || string.IsNullOrEmpty(e.DetailAddress))).FirstOrDefault();
             if (user == null)
             {
                 return true;
             }
-            else {
+            else
+            {
                 return false;
             }
         }
@@ -675,9 +704,121 @@ namespace Fx.Amiya.Service
             updateBirthDayCardDto.Phone = update.Phone;
             updateBirthDayCardDto.Province = update.Province;
             updateBirthDayCardDto.City = update.City;
-            updateBirthDayCardDto.Area = update.Area;           
+            updateBirthDayCardDto.Area = update.Area;
             await this.UpdateBirthDayCardInfo(updateBirthDayCardDto);
+
+        }
+        /// <summary>
+        /// 用户绑定小程序用于确定用户归属于那个小程序
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public async Task<int?> BindUserBelongAppIdAsync(string userid, string customerId)
+        {
+            var customerInfo = await dalCustomerInfo.GetAll().Where(e => e.Id == customerId).SingleOrDefaultAsync();
+            if (customerInfo == null) throw new Exception("客户编号错误！");
+            int? liveAnchorId = null;
+            if (!string.IsNullOrEmpty(customerInfo.AssisteAppId)) {
+                liveAnchorId =(await miniprogramService.GetMiniprogramInfoByAppIdAsync(customerInfo.AssisteAppId)).BelongLiveAnchorId;
+                return liveAnchorId;
+            }
+            var appId = await dalUserLastTimeLoginAppId.GetAll().Where(e => e.UserId == userid).Select(e => e.AppId).SingleOrDefaultAsync();                      
+            if (string.IsNullOrEmpty(appId))
+            {
+                customerInfo.AssisteAppId = customerInfo.AppId;
+                await dalCustomerInfo.UpdateAsync(customerInfo, true);
+            }
+            else
+            {
+                customerInfo.AssisteAppId = appId;
+                await dalCustomerInfo.UpdateAsync(customerInfo, true);
+                liveAnchorId = (await miniprogramService.GetMiniprogramInfoByAppIdAsync(appId)).BelongLiveAnchorId;
+            }
+            return liveAnchorId;
+
+        }
+        /// <summary>
+        /// 获取用户最近一次登录的appid
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> GetLastLoginAppIdAsync(string userId)
+        {
+            var appId = "";
+            var record=await dalUserLastTimeLoginAppId.GetAll().Where(e=>e.UserId==userId).SingleOrDefaultAsync();
+            if (record != null) {
+                appId = record.AppId;
+            }
+            return appId;
+
+        }
+        /// <summary>
+        /// 记录最近一次登录的appid(如果用户已经绑定了appid则不记录)
+        /// </summary>
+        /// <returns></returns>
+        public async Task RecordLastLoginAppIdAsync(string appId, string userId)
+        {
+            var customer=dalCustomerInfo.GetAll().Where(e => e.UserId == userId).SingleOrDefault();
+            if (customer == null)
+            {
+                var record = dalUserLastTimeLoginAppId.GetAll().Where(e => e.UserId == userId).SingleOrDefault();
+                if (record != null)
+                {
+                    record.AppId = appId;
+                    record.UpdateDate = DateTime.Now;
+                    await dalUserLastTimeLoginAppId.UpdateAsync(record, true);
+                }
+                else
+                {
+                    UserLastTimeLoginAppId userLastTimeLoginAppId = new UserLastTimeLoginAppId();
+                    userLastTimeLoginAppId.Id = Guid.NewGuid().ToString().Replace("-", "");
+                    userLastTimeLoginAppId.CreateDate = DateTime.Now;
+                    userLastTimeLoginAppId.AppId = appId;
+                    userLastTimeLoginAppId.Valid = true;
+                    await dalUserLastTimeLoginAppId.AddAsync(userLastTimeLoginAppId, true);
+                }
+            }
+            else {
+                if (string.IsNullOrEmpty(customer.AssisteAppId)) {
+                    var record = dalUserLastTimeLoginAppId.GetAll().Where(e => e.UserId == userId).SingleOrDefault();
+                    if (record != null)
+                    {
+                        record.AppId = appId;
+                        record.UpdateDate = DateTime.Now;
+                        await dalUserLastTimeLoginAppId.UpdateAsync(record, true);
+                    }
+                    else
+                    {
+                        UserLastTimeLoginAppId userLastTimeLoginAppId = new UserLastTimeLoginAppId();
+                        userLastTimeLoginAppId.Id = Guid.NewGuid().ToString().Replace("-", "");
+                        userLastTimeLoginAppId.CreateDate = DateTime.Now;
+                        userLastTimeLoginAppId.AppId = appId;
+                        userLastTimeLoginAppId.Valid = true;
+                        await dalUserLastTimeLoginAppId.AddAsync(userLastTimeLoginAppId, true);
+                    }
+                }
+            }
             
+            //如果用户未绑定手机号且使用中间小程序跳转则记录本次登录的appid
+            //if (string.IsNullOrEmpty(customer.) && !string.IsNullOrEmpty(customer.AssisteAppId))
+            //{
+            //    var record = dalUserLastTimeLoginAppId.GetAll().Where(e => e.UserId == wxMiniUser.FxUser.Id).SingleOrDefault();
+            //    if (record != null)
+            //    {
+            //        record.AppId = miniUserAddDto.AssisteAppId;
+            //        record.UpdateDate = DateTime.Now;
+            //        await dalUserLastTimeLoginAppId.UpdateAsync(record, true);
+            //    }
+            //    else
+            //    {
+            //        UserLastTimeLoginAppId userLastTimeLoginAppId = new UserLastTimeLoginAppId();
+            //        userLastTimeLoginAppId.Id = Guid.NewGuid().ToString().Replace("-", "");
+            //        userLastTimeLoginAppId.CreateDate = DateTime.Now;
+            //        userLastTimeLoginAppId.AppId = miniUserAddDto.AssisteAppId;
+            //        userLastTimeLoginAppId.Valid = true;
+            //        await dalUserLastTimeLoginAppId.AddAsync(userLastTimeLoginAppId, true);
+            //    }
+            //}
+
         }
 
         Dictionary<byte, string> sexDict = new Dictionary<byte, string>()

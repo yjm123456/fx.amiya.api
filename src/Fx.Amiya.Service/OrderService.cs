@@ -91,7 +91,7 @@ namespace Fx.Amiya.Service
         private IDalLiveAnchor dalLiveAnchor;
         private IGoodsInfoService goodsInfoService2;
         private IHuiShouQianPaymentService huiShouQianPaymentService;
-
+        private IUserService userService;
         public OrderService(
             IDalContentPlatformOrder dalContentPlatFormOrder,
             IDalOrderInfo dalOrderInfo,
@@ -122,7 +122,7 @@ namespace Fx.Amiya.Service
             IExpressManageService expressManageService,
             IFxSmsBasedTemplateSender smsSender,
              IMemberRankInfo memberRankInfoService,
-            IIntegrationAccount integrationAccountService, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor, IGoodsInfoService goodsInfoService2, IHuiShouQianPaymentService huiShouQianPaymentService)
+            IIntegrationAccount integrationAccountService, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor, IGoodsInfoService goodsInfoService2, IHuiShouQianPaymentService huiShouQianPaymentService, IUserService userService)
         {
             this.dalOrderInfo = dalOrderInfo;
             this.dalCustomerInfo = dalCustomerInfo;
@@ -160,6 +160,7 @@ namespace Fx.Amiya.Service
             this.dalLiveAnchor = dalLiveAnchor;
             this.goodsInfoService2 = goodsInfoService2;
             this.huiShouQianPaymentService = huiShouQianPaymentService;
+            this.userService = userService;
         }
         //WxPayAccount _payAccount = new WxPayAccount("wx695942e4818de445", "0b2e89d17e84a947244569d0ec63b816", "1611476157", "asdfg67890asdfg67890asdfg67890as", false, "", "");
         WxPayAccount _payAccount = new WxPayAccount("wx695942e4818de445", "0b2e89d17e84a947244569d0ec63b816", "1632393371", "Amy20202020202020202020202020202", false, "", "");
@@ -1040,11 +1041,13 @@ namespace Fx.Amiya.Service
                             order.Parts = orderItem.Part;
                         }
                         order.Quantity = orderItem.Quantity;
+                        order.LiveAnchorId = orderItem.LiveAnchorId;
                         order.IntegrationQuantity = orderItem.IntegrationQuantity;
                         order.ExchangeType = orderItem.ExchangeType;
                         order.TradeId = orderItem.TradeId;
                         order.WriteOffCode = "";
                         order.AlreadyWriteOffAmount = 0;
+                        order.LiveAnchorId = orderItem.LiveAnchorId;
                         order.BelongEmpId = orderItem.BelongEmpId;
                         order.IsUseCoupon = orderItem.IsUseCoupon;
                         order.CouponId = orderItem.CouponId;
@@ -1255,6 +1258,7 @@ namespace Fx.Amiya.Service
                 order.IsUseCoupon = addOrder.IsUseCoupon;
                 order.CouponId = addOrder.CouponId;
                 order.DeductMoney = addOrder.DeductMoney;
+                order.LiveAnchorId = addOrder.BelongLiveAnchorId;
                 orderInfoList.Add(order);
                 await dalOrderInfo.AddCollectionAsync(orderInfoList, true);
                 //发送短信通知
@@ -5293,6 +5297,9 @@ namespace Fx.Amiya.Service
             try
             {
                 unitOfWork.BeginTransaction();
+                var customerInfo =await dalCustomerInfo.GetAll().Where(e => e.Id == customerId).SingleOrDefaultAsync();
+                //绑定主播
+                var belongAnchorId =await userService.BindUserBelongAppIdAsync(customerInfo.UserId,customerInfo.Id);
                 //计算全局抵用券折扣价格
                 if (voucher != null && !voucher.IsSpecifyProduct)
                 {
@@ -5324,6 +5331,7 @@ namespace Fx.Amiya.Service
                 {
                     item.TradeId = orderTradeAdd.Id;
                     item.ActualPayment = (item.ActualPayment - item.DeductMoney <= 0) ? 0.01m : (item.ActualPayment - item.DeductMoney);
+                    item.BelongLiveAnchorId = belongAnchorId.HasValue? belongAnchorId.Value:0;
                 }
                 orderTradeAdd.OrderInfoAddList = moneyOrPointOrderList;
 
@@ -5337,7 +5345,7 @@ namespace Fx.Amiya.Service
                 huiShouQianPayRequestInfo.GoodsInfo = "商品付款";
                 huiShouQianPayRequestInfo.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
                 huiShouQianPayRequestInfo.Extend = orderTradeAdd.Id;
-                var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId);
+                var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId,customerId);
                 if (result.Success == false) throw new Exception("下单失败,请重新下单！");
                 //交易信息添加支付交易订单号
                 await this.TradeAddTransNoAsync(orderTradeAdd.Id, huiShouQianPayRequestInfo.TransNo);
@@ -5526,6 +5534,8 @@ namespace Fx.Amiya.Service
 
         public async Task<string> CreateIntegralVirtualOrderAsync(CreateIntegralVirtualOrderDto virtualOrder)
         {
+            var customerInfo =await customerService.GetByIdAsync(virtualOrder.CustomerId);
+            var belongLiveAnchorId =await userService.BindUserBelongAppIdAsync(customerInfo.UserId, customerInfo.Id);
             if (virtualOrder.Quantity <= 0) throw new Exception("购买数量错误！");
             var goodsInfo = await _goodsInfoService.GetByIdAsync(virtualOrder.GoodsId);
             if (goodsInfo.InventoryQuantity < virtualOrder.Quantity) throw new Exception("库存不足！");
@@ -5566,6 +5576,7 @@ namespace Fx.Amiya.Service
             addOrder.Description = goodsInfo.Description;
             addOrder.Standard = goodsInfo.Standard;
             addOrder.ExchangeType = (byte)ExchangeType.Integration;
+            addOrder.BelongLiveAnchorId = belongLiveAnchorId.HasValue? belongLiveAnchorId.Value:0;
             if (bindCustomerId != 0)
             {
                 addOrder.BelongEmpId = bindCustomerId;

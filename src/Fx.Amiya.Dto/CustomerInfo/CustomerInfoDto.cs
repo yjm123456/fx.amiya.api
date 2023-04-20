@@ -17,7 +17,7 @@ namespace Fx.Amiya.Dto.CustomerInfo
         public string Avatar { get; set; }
         public string Name { get; set; }
         public string Sex { get; set; }
-
+        public string AssisteAppId { get; set; }
         public int? CustomerServiceId { get; set; }
         public string CustomerServiceName { get; set; }
     }

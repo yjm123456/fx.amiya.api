@@ -434,9 +434,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             var sessionInfo = sessionStorage.GetSession(token);
             string customerId = sessionInfo.FxCustomerId;
             string appId = sessionInfo.AppId;
+            string userId = sessionInfo.FxUserId;
             //积分余额
             decimal integrationBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(customerId);
             var customerInfo = await customerService.GetByIdAsync(customerId);
+            if (customerInfo == null) throw new Exception("下单前请先绑定手机号");
             string phone = await customerService.GetPhoneByCustomerIdAsync(customerId);
             var miniUserInfo = await _wxMiniUserRepository.GetByUserIdAsync(customerInfo.UserId);
             string OpenId = miniUserInfo.OpenId;
@@ -456,6 +458,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 if (voucher == null) throw new Exception("没有此抵用券信息");
                 if (voucher.IsUsed) throw new Exception("该抵用券已被使用");
             }
+            
+            //获取用户绑定的主播id
+            var belongLiveAnchorId =await userService.BindUserBelongAppIdAsync(userId,customerId);
+            
             //商品下单
             foreach (var item in orderAdd.OrderItemList)
             {
@@ -682,6 +688,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     bindCustomerId = 188;
                 }
                 amiyaOrder.BelongEmpId = bindCustomerId;
+                if (belongLiveAnchorId.HasValue) {
+                    amiyaOrder.LiveAnchorId = belongLiveAnchorId.HasValue? belongLiveAnchorId.Value:0;
+                }
                 amiyaOrderList.Add(amiyaOrder);
             }
             if (amiyaOrderList.Sum(e => e.IntegrationQuantity) > integrationBalance)
@@ -811,7 +820,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     huiShouQianPayRequestInfo.GoodsInfo = "商品付款";
                     huiShouQianPayRequestInfo.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
                     huiShouQianPayRequestInfo.Extend = tradeId;
-                    var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId);
+                    var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId, customerId);
                     if (result.Success == false) throw new Exception("下单失败,请重新下单");
 
                     //交易信息添加支付交易订单号
@@ -979,7 +988,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             huiShouQianPayRequestInfo.GoodsInfo = "商品付款";
             huiShouQianPayRequestInfo.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
             huiShouQianPayRequestInfo.Extend = tradeId;
-            var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId);
+            var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId, customerId);
             if (result.Success == false) throw new Exception("下单失败,请重新下单");
 
             //交易信息添加支付交易订单号
@@ -1014,6 +1023,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 var token = tokenReader.GetToken();
                 var sessionInfo = sessionStorage.GetSession(token);
                 string customerId = sessionInfo.FxCustomerId;
+                string userId = sessionInfo.FxUserId;
+                if (string.IsNullOrEmpty(customerId)) throw new Exception("请先绑定手机号！");
+                var belongLiveAnchorId = await userService.BindUserBelongAppIdAsync(userId,customerId);
                 //积分余额
                 decimal integrationBalance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(customerId);
                 var customerInfo = await customerService.GetByIdAsync(customerId);
@@ -1100,6 +1112,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     amiyaOrder.OrderType = goodsInfo.IsMaterial == true ? (byte)OrderType.MaterialOrder : (byte)OrderType.VirtualOrder;
                     amiyaOrder.Phone = phone;
                     amiyaOrder.TradeId = phone;
+                    amiyaOrder.LiveAnchorId = belongLiveAnchorId.HasValue? belongLiveAnchorId.Value:0;
                     int bindCustomerId;
                     bindCustomerId = await _bindCustomerService.GetEmployeeIdByPhone(phone);
                     if (bindCustomerId == 0)
@@ -1168,7 +1181,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 huiShouQianPayRequestInfo.GoodsInfo = "商品付款";
                 huiShouQianPayRequestInfo.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
                 huiShouQianPayRequestInfo.Extend = tradeId;
-                var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId);
+                var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId, customerId);
 
                 if (result.Success == false) throw new Exception("下单失败,请重新下单");
                 //交易信息添加支付交易订单号
@@ -1726,16 +1739,16 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 #endregion
 
                 #region 成长值奖励
-                foreach (var item in orderTrade.OrderInfoList)
-                {
-                    if (item.ExchangeType != 0 && item.ExchangeType != null)
-                    {
-                        if (item.ActualPayment.HasValue && item.ActualPayment.Value >= 1)
-                        {
-                            await taskService.CompleteShopOrderTaskAsync(customerId, item.ActualPayment.Value, item.Id);
-                        }
-                    }
-                }
+                //foreach (var item in orderTrade.OrderInfoList)
+                //{
+                //    if (item.ExchangeType != 0 && item.ExchangeType != null)
+                //    {
+                //        if (item.ActualPayment.HasValue && item.ActualPayment.Value >= 1)
+                //        {
+                //            await taskService.CompleteShopOrderTaskAsync(customerId, item.ActualPayment.Value, item.Id);
+                //        }
+                //    }
+                //}
                 #endregion
 
                 unitOfWork.Commit();

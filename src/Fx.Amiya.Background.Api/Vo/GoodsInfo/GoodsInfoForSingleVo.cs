@@ -91,7 +91,7 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         /// <summary>
         /// 商品分类编号
         /// </summary>
-        public int CategoryId { get; set; }
+        public List<int> CategoryIds { get; set; }
 
         /// <summary>
         /// 商品分类名称
@@ -160,5 +160,13 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
         /// 浏览量
         /// </summary>
         public int VisitCount { get; set; }
+        /// <summary>
+        /// 归属小程序appid
+        /// </summary>
+        public string AppId { get; set; }
+        /// <summary>
+        /// 是否是热门商品
+        /// </summary>
+        public bool IsHot { get; set; }
     }
 }

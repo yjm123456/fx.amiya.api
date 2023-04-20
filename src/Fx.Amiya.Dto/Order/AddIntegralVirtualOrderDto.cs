@@ -59,6 +59,10 @@ namespace Fx.Amiya.Dto.Order
         /// 归属客服
         /// </summary>
         public int BelongEmpId { get; set; }
+        /// <summary>
+        /// 归属主播id
+        /// </summary>
+        public int BelongLiveAnchorId { get; set; }
 
         public string TradeId { get; set; }
         /// <summary>

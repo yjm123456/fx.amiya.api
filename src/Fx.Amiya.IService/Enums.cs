@@ -727,7 +727,72 @@ namespace Fx.Amiya.IService
         /// </summary>
         ContentPlatformOrder
     }
+    /// <summary>
+    /// 小程序名称
+    /// </summary>
+    public enum MiniprogramName {
+        /// <summary>
+        /// 上合未来
+        /// </summary>
+        ShangHeWeiLai = 0,
+        /// <summary>
+        /// 啊美雅美容
+        /// </summary>
+        AmeiyaMR = 1,
+        /// <summary>
+        /// 刀刀气质美学
+        /// </summary>
+        DaoDaoQZMX = 2,
+        /// <summary>
+        /// 吉娜气质美学
+        /// </summary>
+        JiNaQZMX = 3
+    }
+    /// <summary>
+    /// 小程序类型
+    /// </summary>
+    public enum MiniprogramType { 
+        /// <summary>
+        /// 上合未来
+        /// </summary>
+        ShangHeWeiLai=0,
+        /// <summary>
+        /// 啊美雅美容
+        /// </summary>
+        AmeiyaMR=1,
+        /// <summary>
+        /// 刀刀气质美学
+        /// </summary>
+        DaoDaoQZMX=2,
+        /// <summary>
+        /// 吉娜气质美学
+        /// </summary>
+        JiNaQZMX=3
 
+    }
+
+    /// <summary>
+    /// 小程序首页展示的标签
+    /// </summary>
+    public enum MiniprogramIndexTag {
+        /// <summary>
+        /// 美妆
+        /// </summary>
+        Cosmetics=0,
+        /// <summary>
+        /// 护肤
+        /// </summary>
+        SkinCare=1,
+        /// <summary>
+        /// 饰品
+        /// </summary>
+        Jewelry=2,
+        /// <summary>
+        /// 生活
+        /// </summary>
+        Life
+    }
+    
 
     /// <summary>
     /// 追踪回访提报状态

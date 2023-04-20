@@ -24,5 +24,15 @@ namespace Fx.Amiya.IService
         /// <param name="ids"></param>
         /// <returns></returns>
         Task<List<GoodsOrderInfoDto>> GetGoodListByIdsAsync(List<string> ids);
+        /// <summary>
+        /// 根据标签获取商品信息
+        /// </summary>
+        /// <param name="tagId">标签id</param>
+        /// <param name="appId">归属小程序appid</param>
+        /// <param name="sort">排序(0,序号排序,1价格排序,2销量排序)</param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<SimpleGoodsInfoDto>> TagSearchAsync(string tagId,string appId, int sort, int pageNum, int pageSize);
     }
 }

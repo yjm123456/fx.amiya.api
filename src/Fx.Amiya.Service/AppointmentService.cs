@@ -138,7 +138,8 @@ namespace Fx.Amiya.Service
                                           HospitalId = d.HospitalId,
                                           HospitalName = d.HospitalInfo.Name,
                                           Remark = d.Remark,
-                                          AppointArea=d.AppointArea
+                                          AppointArea=d.AppointArea,
+                                          Address=d.Address
                                       };
 
                 FxPageInfo<AppointmentInfoDto> appointmentPageInfo = new FxPageInfo<AppointmentInfoDto>(); ;
@@ -407,7 +408,7 @@ namespace Fx.Amiya.Service
                 appointmentInfo.HospitalId = addDto.HospitalId;
                 appointmentInfo.AppointArea = addDto.AppointArea;
                 appointmentInfo.ItemInfoName = addDto.ItemInfoName;
-
+                appointmentInfo.Address = addDto.Address;
                 await dalAppointmentInfo.AddAsync(appointmentInfo, true);
 
                 unitOfWork.Commit();
@@ -558,7 +559,8 @@ namespace Fx.Amiya.Service
                         Latitude = appointment.HospitalInfo.Latitude,
                         HospitalPhone = appointment.HospitalInfo.Phone,
                         Address = appointment.HospitalInfo.Address
-                    }
+                    },
+                    Address= appointment.Address
                 };
 
                 return appointmentInfo;
@@ -709,6 +711,8 @@ namespace Fx.Amiya.Service
             appointment.ItemInfoName = input.ItemName;
             appointment.Phone = input.Phone;
             appointment.AppointArea = input.AppointArea;
+            appointment.HospitalId = input.HospitalId;
+            appointment.Address = input.Address;
             await dalAppointmentInfo.UpdateAsync(appointment, false);
 
             await unitOfWork.SaveChangesAsync();

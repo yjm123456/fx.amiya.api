@@ -14,5 +14,12 @@ namespace Fx.Amiya.IService
         Task<CustomerBaseInfoDto> GetByPhoneAsync(string phone);
         Task UpdateAsync(UpdateCustomerBaseInfoDto updateDto);
         Task UpdateState(int state, string phone);
+        Task<CustomerBaseInfoDto> GetByCustomerIdAsync(string customerId);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <returns></returns>
+        Task UpdateByCustomerIdAsync(UpdateCustomerBaseInfoDto updateDto);
     }
 }

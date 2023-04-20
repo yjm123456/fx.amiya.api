@@ -611,7 +611,54 @@ namespace Fx.Amiya.Background.Api.Controllers
             customerSimpleInfoVo.TagList = customer.TagList.Select(e => new BaseIdAndNameVo { Id = e.Id, Name = e.Name }).ToList();
             return ResultData<CustomerBaseDetailInfoVo>.Success().AddData("customer", customerSimpleInfoVo);
         }
-
+        /// <summary>
+        /// 根据客户id查询客户资料
+        /// </summary>
+        /// <param name="customerId">客户id</param>
+        /// <returns></returns>
+        [HttpGet("getBaseAndBindCustomerInfoByCustomerId")]
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData<CustomerBaseDetailInfoVo>> GetBaseAndBindCustomerInfoByCustomerIdAsync(string customerId)
+        {
+            var customer = await customerBaseInfoService.GetByCustomerIdAsync(customerId);
+            CustomerBaseDetailInfoVo customerSimpleInfoVo = new CustomerBaseDetailInfoVo();
+            customerSimpleInfoVo.Id = customer.Id;
+            customerSimpleInfoVo.BindCustomerServiceId = customer.BindCustomerServiceId;
+            customerSimpleInfoVo.Avatar = customer.Avatar;
+            customerSimpleInfoVo.Name = customer.Name;
+            customerSimpleInfoVo.MemberCardNo = customer.MemberCardNo;
+            customerSimpleInfoVo.MemberRankName = customer.MemberRankName;
+            customerSimpleInfoVo.CreateDate = customer.CreateDate;
+            customerSimpleInfoVo.AllPrice = customer.AllPrice;
+            customerSimpleInfoVo.RealName = customer.RealName;
+            customerSimpleInfoVo.Sex = customer.Sex;
+            customerSimpleInfoVo.Phone = customer.Phone;
+            customerSimpleInfoVo.Birthday = customer.Birthday;
+            customerSimpleInfoVo.Age = customer.Age;
+            customerSimpleInfoVo.Occupation = customer.Occupation;
+            customerSimpleInfoVo.FirstProjectDemand = customer.FirstProjectDemand;
+            customerSimpleInfoVo.NewConsumptionContentPlatform = customer.NewConsumptionContentPlatform;
+            customerSimpleInfoVo.PersonalWechat = customer.PersonalWechat;
+            customerSimpleInfoVo.BusinessWeChat = customer.BusinessWeChat;
+            customerSimpleInfoVo.WechatMiniProgram = customer.WechatMiniProgram;
+            customerSimpleInfoVo.OfficialAccounts = customer.OfficialAccounts;
+            customerSimpleInfoVo.BelongCustomerService = customer.BelongCustomerService;
+            customerSimpleInfoVo.NewContentPlatForm = customer.NewContentPlatform;
+            customerSimpleInfoVo.OtherPhone = customer.OtherPhone;
+            customerSimpleInfoVo.DetailAddress = customer.DetailAddress;
+            customerSimpleInfoVo.IsSendNote = customer.IsSendNote;
+            customerSimpleInfoVo.IsCall = customer.IsCall;
+            customerSimpleInfoVo.IsSendWeChat = customer.IsSendWeChat;
+            customerSimpleInfoVo.UnTrackReason = customer.UnTrackReason;
+            customerSimpleInfoVo.ConsumptionLevel = customer.ConsumptionLevel;
+            customerSimpleInfoVo.CustomerState = customer.CustomerState;
+            customerSimpleInfoVo.CustomerRequirement = customer.CustomerRequirement;
+            customerSimpleInfoVo.WechatNumber = customer.WechatNumber;
+            customerSimpleInfoVo.City = customer.City;
+            customerSimpleInfoVo.Remark = customer.Remark;
+            customerSimpleInfoVo.TagList = customer.TagList.Select(e => new BaseIdAndNameVo { Id = e.Id, Name = e.Name }).ToList();
+            return ResultData<CustomerBaseDetailInfoVo>.Success().AddData("customer", customerSimpleInfoVo);
+        }
 
 
 
@@ -730,6 +777,41 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData.Success();
         }
 
+        /// <summary>
+        /// 根据customerId编辑客户基础信息
+        /// </summary>
+        /// <param name="editVo"></param>
+        /// <returns></returns>
+        [HttpPut("updateByCustomerId")]
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData> EditByCustomerIdAsync(UpdateCustomerBaseInfoVo editVo)
+        {
+            UpdateCustomerBaseInfoDto editDto = new UpdateCustomerBaseInfoDto();
+            editDto.Id = editVo.Id;
+            editDto.PersonalWechat = editVo.PersonalWechat;
+            editDto.Name = editVo.Name;
+            editDto.Phone = editVo.Phone;
+            editDto.BusinessWeChat = editVo.BusinessWeChat;
+            editDto.WechatMiniProgram = editVo.WechatMiniProgram;
+            editDto.OfficialAccounts = editVo.OfficialAccounts;
+            editDto.RealName = editVo.RealName;
+            editDto.WechatNumber = editVo.WechatNumber;
+            editDto.Sex = editVo.Sex;
+            editDto.Birthday = editVo.Birthday;
+            editDto.City = editVo.City;
+            editDto.Occupation = editVo.Occupation;
+            editDto.OtherPhone = editVo.OtherPhone;
+            editDto.DetailAddress = editVo.DetailAddress;
+            editDto.IsSendNote = editVo.IsSendNote;
+            editDto.IsCall = editVo.IsCall;
+            editDto.IsSendWeChat = editVo.IsSendWeChat;
+            editDto.UnTrackReason = editVo.UnTrackReason;
+            editDto.Remark = editVo.Remark;
+            editDto.TagIds = editVo.TagIds;
+            editDto.CustomerId = editVo.CustomerId;
+            await customerBaseInfoService.UpdateByCustomerIdAsync(editDto);
+            return ResultData.Success();
+        }
 
         /// <summary>
         /// 根据加密电话号获取客户基础信息

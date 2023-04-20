@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.CarouselImage;
 using Fx.Amiya.Dto.CarouselImage;
 using Fx.Amiya.IService;
@@ -19,10 +20,11 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
 
         private ICarouselImageService carouselImageService;
-
-        public CarouselImageController(ICarouselImageService carouselImageService)
+        private IMiniprogramService miniprogramService;
+        public CarouselImageController(ICarouselImageService carouselImageService, IMiniprogramService miniprogramService)
         {
             this.carouselImageService = carouselImageService;
+            this.miniprogramService = miniprogramService;
         }
 
 
@@ -43,7 +45,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                             PicUrl = d.PicUrl,
                             DisplayIndex = d.DisplayIndex,
                             LinkUrl=d.LinkUrl,
-                            CreateDate = d.CreateDate
+                            CreateDate = d.CreateDate,
+                            AppId=d.AppId,
+                            AppName=d.AppName
                         };
                 return ResultData<List<HomepageCarouselImageVo>>.Success().AddData("carouselImageList", q.ToList());
             }
@@ -68,6 +72,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 AddCarouselImageDto addDto = new AddCarouselImageDto();
                 addDto.PicUrl = addVo.PicUrl;
                 addDto.LinkUrl = addVo.LinkUrl;
+                addDto.AppId = addVo.AppId;
                 await carouselImageService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -95,7 +100,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 carouselImageVo.LinkUrl = carouselImage.LinkUrl;
                 carouselImageVo.CreateDate = carouselImage.CreateDate;
                 carouselImageVo.Id = carouselImage.Id;
-
+                carouselImageVo.AppId = carouselImage.AppId;
+                carouselImageVo.AppName = carouselImage.AppName;
                 return ResultData<HomepageCarouselImageVo>.Success().AddData("carouselImageInfo", carouselImageVo);
             }
             catch (Exception ex)
@@ -121,6 +127,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.PicUrl = updateVo.PicUrl;
                 updateDto.DisplayIndex = updateVo.DisplayIndex;
                 updateDto.LinkUrl = updateVo.LinkUrl;
+                updateDto.AppId = updateVo.AppId;
                 await carouselImageService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -149,6 +156,21 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 return ResultData.Fail(ex.Message);
             }
+        }
+        /// <summary>
+        /// 获取小程序名称列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("miniprogramNameList")]
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetMiniprogramNameList()
+        {
+            var nameList = await miniprogramService.GetMiniProgramNameListAsync();
+            var result = nameList.Select(e => new BaseIdAndNameVo
+            {
+                Id = e.Key,
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("nameList", result);
         }
     }
 }

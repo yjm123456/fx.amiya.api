@@ -102,6 +102,7 @@ namespace Fx.Amiya.Service
                     updateCustomerBaseInfoDto.UnTrackReason = baseInfo.UnTrackReason;
                     updateCustomerBaseInfoDto.Remark = baseInfo.Remark;
                     updateCustomerBaseInfoDto.City = addDto.City;
+                    updateCustomerBaseInfoDto.CustomerId = addDto.CustomerId;
                     await customerBaseInfoService.UpdateAsync(updateCustomerBaseInfoDto);
                 }
 
@@ -277,6 +278,7 @@ namespace Fx.Amiya.Service
                     updateCustomerBaseInfoDto.UnTrackReason = baseInfo.UnTrackReason;
                     updateCustomerBaseInfoDto.Remark = baseInfo.Remark;
                     updateCustomerBaseInfoDto.City = updateDto.City;
+                    updateCustomerBaseInfoDto.CustomerId = updateDto.CustomerId;
                     await customerBaseInfoService.UpdateAsync(updateCustomerBaseInfoDto);
                 }
                 unitOfWork.Commit();

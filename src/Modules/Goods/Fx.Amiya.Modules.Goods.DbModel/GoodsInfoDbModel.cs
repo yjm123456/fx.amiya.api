@@ -67,6 +67,14 @@ namespace Fx.Amiya.Modules.Goods.DbModel
         /// 排序
         /// </summary>
         public int Sort { get; set; }
+        /// <summary>
+        /// 归属小程序(为空时表示在所有小程序都显示)
+        /// </summary>
+        public string AppId { get; set; }
+        /// <summary>
+        /// 是否是热门商品
+        /// </summary>
+        public bool IsHot { get; set; }
         public GoodsCategoryDbModel GoodsCategory { get; set; }
         public GoodsDetailDbModel GoodsDetail { get; set; }
         public List<GoodsInfoCarouselImageDbModel> GoodsInfoCarouselImageList { get; set; }

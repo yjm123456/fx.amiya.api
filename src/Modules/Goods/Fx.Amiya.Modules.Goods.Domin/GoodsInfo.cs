@@ -111,11 +111,15 @@ namespace Fx.Amiya.Modules.Goods.Domin
         /// </summary>
         public int? LimitBuyQuantity { get; set; }
 
-
         /// <summary>
         /// 商品分类编号
         /// </summary>
         public int CategoryId { get; set; }
+
+        /// <summary>
+        /// 商品分类编号集合
+        /// </summary>
+        public List<int> CategoryIds { get; set; }
         public string CategoryName { get; set; }
 
 
@@ -128,7 +132,18 @@ namespace Fx.Amiya.Modules.Goods.Domin
         /// 排序
         /// </summary>
         public int Sort { get; set; }
-
+        /// <summary>
+        /// 归属小程序appid
+        /// </summary>
+        public string AppId { get; set; }
+        /// <summary>
+        /// 归属小程序名称
+        /// </summary>
+        public string MiniprogramName { get; set; }
+        /// <summary>
+        /// 是否是热门商品
+        /// </summary>
+        public bool IsHot { get; set; }
         public GoodsDetail GoodsDetail { get; set; }
         public List<GoodsInfoCarouselImage> GoodsInfoCarouselImages { get; set; }
 

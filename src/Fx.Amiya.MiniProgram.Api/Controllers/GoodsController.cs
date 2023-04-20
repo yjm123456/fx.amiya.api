@@ -40,11 +40,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <summary>
         /// 根据展示方向获取商品分类列表
         /// </summary>
+        /// <param name="showDirectionType">展示方向</param>
+        /// <param name="appId">归属小程序appid</param>
         /// <returns></returns>
         [HttpGet("categoryList")]
-        public async Task<ResultData<List<GoodsCategoryVo>>> GetGoodsCategoryListAsync(int showDirectionType)
+        public async Task<ResultData<List<GoodsCategoryVo>>> GetGoodsCategoryListAsync(int showDirectionType,string appId)
         {
-            var goodsCategorys = from d in await goodsCategoryService.GetCategoryNameListAsync(true)
+            var goodsCategorys = from d in await goodsCategoryService.GetCategoryNameListAsync(true,appId)
                                  select new GoodsCategoryVo
                                  {
                                      Id = d.Id,
@@ -56,7 +58,44 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
             return ResultData<List<GoodsCategoryVo>>.Success().AddData("goodsCategorys", goodsCategorys.Where(z => z.ShowDirectionType == showDirectionType).ToList());
         }
-
+        /// <summary>
+        /// 获取热门品牌列表
+        /// </summary>
+        /// <param name="showDirectionType">展示方向</param>
+        /// <param name="appId">归属小程序appid</param>
+        /// <returns></returns>
+        [HttpGet("hotCategoryList")]
+        public async Task<ResultData<List<GoodsCategoryVo>>> GetHotGoodsCategoryListAsync(int showDirectionType, string appId)
+        {
+            var goodsCategorys = from d in await goodsCategoryService.GetHotCategoryNameListAsync(true,4,true, appId)
+                                 select new GoodsCategoryVo
+                                 {
+                                     Id = d.Id,
+                                     Name = d.Name,
+                                     ShowDirectionType = d.ShowDirectionType.Value,
+                                     CategoryImg = d.CategoryImg
+                                 };
+            return ResultData<List<GoodsCategoryVo>>.Success().AddData("hotGoodsCategorys", goodsCategorys.Where(z => z.ShowDirectionType == showDirectionType).ToList());
+        }
+        /// <summary>
+        /// 获取热门分类列表
+        /// </summary>
+        /// <param name="showDirectionType">展示方向</param>
+        /// <param name="appId">归属小程序appid</param>
+        /// <returns></returns>
+        [HttpGet("hotNotBrandCategoryList")]
+        public async Task<ResultData<List<GoodsCategoryVo>>> GetNotBrandCategoryListAsync(int showDirectionType, string appId)
+        {
+            var goodsCategorys = from d in await goodsCategoryService.GetHotCategoryNameListAsync(true, 4, false, appId)
+                                 select new GoodsCategoryVo
+                                 {
+                                     Id = d.Id,
+                                     Name = d.Name,
+                                     ShowDirectionType = d.ShowDirectionType.Value,
+                                     CategoryImg = d.CategoryImg
+                                 };
+            return ResultData<List<GoodsCategoryVo>>.Success().AddData("hotGoodsCategorys", goodsCategorys.Where(z => z.ShowDirectionType == showDirectionType).ToList());
+        }
         /// <summary>
         /// 获取所有商品分类
         /// </summary>
@@ -84,14 +123,17 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <param name="keyword"></param>
         /// <param name="exchangeType">交易方式（0积分支付，1三方支付，2线下支付）</param>
         /// <param name="categoryId"></param>
+        /// <param name="appId">归属小程序</param>
+        /// <param name="isHot">是否是热门商品</param>
+        /// <param name="sort">排序方式(默认0:按序号排序,1:销量排序,2价格排序)</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("infoList")]
-        public async Task<ResultData<FxPageInfo<GoodsInfoForListVo>>> GetGoodsInfoListAsync(string keyword, int? exchangeType, int? categoryId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<GoodsInfoForListVo>>> GetGoodsInfoListAsync(string keyword, int? exchangeType, int? categoryId,string appId,bool? isHot,int sort, int pageNum, int pageSize)
         {
 
-            var q = await goodsInfoService.GetListAsync(keyword, exchangeType, categoryId, true, pageNum, pageSize);
+            var q = await goodsInfoService.GetMiniprogramGoodsListAsync(keyword, exchangeType, categoryId, true,appId,isHot,sort, pageNum, pageSize);
             var goodsInfos = from d in q.List
                              select new GoodsInfoForListVo
                              {
@@ -151,7 +193,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 GoodsType = goodsInfo.GoodsType,
                 IsLimitBuy = goodsInfo.IsLimitBuy,
                 LimitBuyQuantity = goodsInfo.LimitBuyQuantity,
-                CategoryId = goodsInfo.CategoryId,
+                CategoryIds = goodsInfo.CategoryIds,
                 GoodsDetailId = goodsInfo.GoodsDetailId,
                 GoodsDetailHtml = goodsInfo.GoodsDetailHtml,
                 DetailsDescription = goodsInfo.DetailsDescription,
@@ -226,7 +268,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 GoodsType = goodsInfo.GoodsType,
                 IsLimitBuy = goodsInfo.IsLimitBuy,
                 LimitBuyQuantity = goodsInfo.LimitBuyQuantity,
-                CategoryId = goodsInfo.CategoryId,
+                CategoryIds = goodsInfo.CategoryIds,
                 GoodsDetailId = goodsInfo.GoodsDetailId,
                 DetailsDescription = goodsInfo.DetailsDescription,
                 MaxShowPrice = goodsInfo.MaxShowPrice,
@@ -256,7 +298,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
             return ResultData<GoodsInfoForSingleVo>.Success().AddData("goodsInfo", goods);
         }
-
+        
         /// <summary>
         /// 根据商品编号获取同商品组的所有商品列表
         /// </summary>
@@ -286,16 +328,16 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             return ResultData<List<GoodsInfoSimpleVo>>.Success().AddData("goodsInfos", goodsInfos.ToList());
         }
         /// <summary>
-        /// 首页商品列表
+        /// 首页热门商品列表
         /// </summary>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        [HttpGet("likeInfoList")]
-        public async Task<ResultData<FxPageInfo<GoodsInfoForListVo>>> GetLikeGoodsInfoListAsync(int pageNum, int pageSize)
+        [HttpGet("hotGoodsList")]
+        public async Task<ResultData<FxPageInfo<GoodsInfoForListVo>>> GetHotGoodsInfoListAsync(string appId,int pageNum, int pageSize)
         {
 
-            var q = await goodsInfoService.GetLikeListAsync(true, pageNum, pageSize);
+            var q = await goodsInfoService.GetHotGoodsListAsync(true,appId, pageNum, pageSize);
             var goodsInfos = from d in q.List
                              select new GoodsInfoForListVo
                              {
@@ -314,7 +356,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                  MinShowPrice = d.MinShowPrice,
                                  ShowSaleCount = d.ShowSaleCount,
                                  VisitCount = d.VisitCount,
-                                 isMember=d.IsMember
+                                 isMember=d.IsMember,
+                                 Unit=d.Unit
                              };
             FxPageInfo<GoodsInfoForListVo> goodsPageInfo = new FxPageInfo<GoodsInfoForListVo>();
             goodsPageInfo.TotalCount = q.TotalCount;
@@ -386,8 +429,32 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 MaxPrice = e.MaxPrice
             }).ToList();
             return ResultData<FxPageInfo<SearchGoodsResultVo>>.Success().AddData("searchResult", fxPageInfo);
-
         }
+        /// <summary>
+        /// 根据标签获取商品
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        [HttpGet("tagGoodsList")]
+        public async Task<ResultData<FxPageInfo<SearchGoodsResultVo>>> SearchAsync(string tagId, string appId, int sort, int pageNum, int pageSize)
+        {
+            var searchResult = await goodsInfoService1.TagSearchAsync(tagId, appId, sort, pageNum, pageSize);
+            FxPageInfo<SearchGoodsResultVo> fxPageInfo = new FxPageInfo<SearchGoodsResultVo>();
+            fxPageInfo.TotalCount = searchResult.TotalCount;
+            fxPageInfo.List = searchResult.List.Select(e => new SearchGoodsResultVo
+            {
+                GoodsId = e.GoodsId,
+                ExchageType = e.ExchageType,
+                Price = e.Price,
+                IntegralPrice = e.IntegralPrice,
+                GoodsPicture = e.GoodsPicture,
+                GoodsName = e.GoodsName,
+                MaxPrice = e.MaxPrice
+            }).ToList();
+            return ResultData<FxPageInfo<SearchGoodsResultVo>>.Success().AddData("list", fxPageInfo);
+        }
+
 
     }
 }

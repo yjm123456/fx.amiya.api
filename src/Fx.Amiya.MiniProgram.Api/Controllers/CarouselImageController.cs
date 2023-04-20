@@ -24,12 +24,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// 获取轮播图列表
         /// </summary>
         /// <returns></returns>
-       [HttpGet("list")]
-        public async Task<ResultData<List<HomepageCarouselImageVo>>> GetListAsync()
+       [HttpGet("list/{appid}")]
+        public async Task<ResultData<List<HomepageCarouselImageVo>>> GetListAsync(string appid)
         {
             try
             {
-                var carouselImage = from d in await carouselImageService.GetListAsync()
+
+                var carouselImage = from d in await carouselImageService.GetListAsync(appid)
                                     select new HomepageCarouselImageVo
                                     {
                                         Id = d.Id,

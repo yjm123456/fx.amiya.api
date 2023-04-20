@@ -32,7 +32,7 @@ namespace Fx.Amiya.IService
         /// 创建慧收钱支付订单
         /// </summary>
         /// <returns></returns>
-        Task<HuiShouQianOrderResult> CreateHuiShouQianOrder(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo,string openId);
+        Task<HuiShouQianOrderResult> CreateHuiShouQianOrder(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo,string openId,string customerId);
         /// <summary>
         /// 创建慧收钱退款订单
         /// </summary>

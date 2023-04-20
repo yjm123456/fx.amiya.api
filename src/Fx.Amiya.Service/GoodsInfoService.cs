@@ -22,7 +22,8 @@ namespace Fx.Amiya.Service
         private readonly IDalGoodsConsumptionVoucher dalGoodsConsumptionVoucher;
         private readonly IGoodsStandardsPriceService goodsStandardsPriceService;
         private readonly IGoodsConsumptionVoucherService goodsConsumptionVoucherService;
-        public GoodsInfoService(IDalGoodsInfo dalGoodsInfo, IDalCustomerTagInfo dalCustomerTagInfo, IDalTagDetailInfo dalTagDetailInfo, IGoodsCategory goodsCategory, IDalGoodsStandardsPrice dalGoodsStandardsPrice, IDalGoodsConsumptionVoucher dalGoodsConsumptionVoucher, IGoodsStandardsPriceService goodsStandardsPriceService, IGoodsConsumptionVoucherService goodsConsumptionVoucherService)
+        private readonly IMiniprogramService miniprogramService;
+        public GoodsInfoService(IDalGoodsInfo dalGoodsInfo, IDalCustomerTagInfo dalCustomerTagInfo, IDalTagDetailInfo dalTagDetailInfo, IGoodsCategory goodsCategory, IDalGoodsStandardsPrice dalGoodsStandardsPrice, IDalGoodsConsumptionVoucher dalGoodsConsumptionVoucher, IGoodsStandardsPriceService goodsStandardsPriceService, IGoodsConsumptionVoucherService goodsConsumptionVoucherService, IMiniprogramService miniprogramService)
         {
             this.dalGoodsInfo = dalGoodsInfo;
             this.dalCustomerTagInfo = dalCustomerTagInfo;
@@ -32,6 +33,7 @@ namespace Fx.Amiya.Service
             this.dalGoodsConsumptionVoucher = dalGoodsConsumptionVoucher;
             this.goodsStandardsPriceService = goodsStandardsPriceService;
             this.goodsConsumptionVoucherService = goodsConsumptionVoucherService;
+            this.miniprogramService = miniprogramService;
         }
 
         public async Task<List<GoodsOrderInfoDto>> GetGoodListByIdsAsync(List<string> ids)
@@ -105,6 +107,61 @@ namespace Fx.Amiya.Service
                 goodsList = goodsList.OrderByDescending(e => e.g.Sort);
             }
 
+            FxPageInfo<SimpleGoodsInfoDto> fxPageInfo = new FxPageInfo<SimpleGoodsInfoDto>();
+            fxPageInfo.TotalCount = goodsList.Count();
+            fxPageInfo.List = goodsList.Skip((pageNum - 1) * pageSize).Take(pageSize).Select(e => new SimpleGoodsInfoDto
+            {
+                GoodsId = e.g.Id,
+                ExchageType = e.g.ExchangeType,
+                Price = e.g.SalePrice,
+                IntegralPrice = e.g.IntegrationQuantity,
+                GoodsPicture = e.g.ThumbPicUrl,
+                GoodsName = e.g.Name,
+                MaxPrice = e.g.MaxShowPrice
+            }).ToList();
+            return fxPageInfo;
+        }
+        /// <summary>
+        /// 根据标签获取商品信息
+        /// </summary>
+        /// <param name="tagId">标签id</param>
+        /// <param name="sort">排序(0,序号排序,1价格排序,2销量排序)</param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<SimpleGoodsInfoDto>> TagSearchAsync(string tagId, string appId, int sort, int pageNum, int pageSize)
+        {
+            var goodsList = from g in dalGoodsInfo.GetAll()
+                            where g.Valid == true 
+                            join t in dalTagDetailInfo.GetAll()
+                            on g.Id equals t.CustomerGoodsId into gt
+                            from goods in gt.DefaultIfEmpty()
+                            where goods.TagId==tagId
+                            select new { g };
+            if (!string.IsNullOrEmpty(appId))
+            {
+                var appInfo = await miniprogramService.GetMiniprogramInfoByAppIdAsync(appId);
+                if (appInfo.IsMain)
+                {
+                    goodsList = goodsList.Where(e => e.g.AppId == appId || string.IsNullOrEmpty(e.g.AppId));
+                }
+
+                if (!appInfo.IsMain)
+                {
+                    goodsList = goodsList.Where(e => e.g.AppId == appId || string.IsNullOrEmpty(e.g.AppId) || e.g.AppId == appInfo.BelongMiniprogramAppId);
+                }
+
+       
+            }
+            if (sort==0) {
+                goodsList = goodsList.OrderByDescending(e => e.g.Sort);
+            }
+            if (sort==1) {
+                goodsList = goodsList.OrderByDescending(e => e.g.SalePrice);
+            }
+            if (sort==2) {
+                goodsList = goodsList.OrderByDescending(e => e.g.SaleCount);
+            }            
             FxPageInfo<SimpleGoodsInfoDto> fxPageInfo = new FxPageInfo<SimpleGoodsInfoDto>();
             fxPageInfo.TotalCount = goodsList.Count();
             fxPageInfo.List = goodsList.Skip((pageNum - 1) * pageSize).Take(pageSize).Select(e => new SimpleGoodsInfoDto

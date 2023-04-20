@@ -79,24 +79,24 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
                 await bindCustomerServiceService.UpdateBindUserIdAsync(fxCustomerId,appId);
 
-
+                #region 赠送积分(注释)
                 //计算积分
-                var orders = await orderService.GetTradeFinishOrderListByCustomerIdAsync(fxCustomerId);
-                foreach (var order in orders.ToList())
-                {
-                    var memberRank = await memberRankInfoService.GetMinGeneratePercentMemberRankInfoAsync();
-                    ConsumptionIntegrationDto consumptionIntegration = new ConsumptionIntegrationDto();
-                    consumptionIntegration.CustomerId = order.CustomerId;
-                    consumptionIntegration.OrderId = order.Id;
-                    consumptionIntegration.AmountOfConsumption = order.ActualPayment;
-                    consumptionIntegration.Date = DateTime.Now;
-                    consumptionIntegration.Quantity = Math.Floor(memberRank.GenerateIntegrationPercent * order.ActualPayment);
-                    consumptionIntegration.Percent = memberRank.GenerateIntegrationPercent;
+                //var orders = await orderService.GetTradeFinishOrderListByCustomerIdAsync(fxCustomerId);
+                //foreach (var order in orders.ToList())
+                //{
+                //    var memberRank = await memberRankInfoService.GetMinGeneratePercentMemberRankInfoAsync();
+                //    ConsumptionIntegrationDto consumptionIntegration = new ConsumptionIntegrationDto();
+                //    consumptionIntegration.CustomerId = order.CustomerId;
+                //    consumptionIntegration.OrderId = order.Id;
+                //    consumptionIntegration.AmountOfConsumption = order.ActualPayment;
+                //    consumptionIntegration.Date = DateTime.Now;
+                //    consumptionIntegration.Quantity = Math.Floor(memberRank.GenerateIntegrationPercent * order.ActualPayment);
+                //    consumptionIntegration.Percent = memberRank.GenerateIntegrationPercent;
 
-                    if (consumptionIntegration.Quantity > 0)
-                        await integrationAccountService.AddByConsumptionAsync(consumptionIntegration);
-                }
-
+                //    if (consumptionIntegration.Quantity > 0)
+                //        await integrationAccountService.AddByConsumptionAsync(consumptionIntegration);
+                //}
+                #endregion
                 //初始化成长值账号
                 await growthPointsAccountService.AddAsync(new CreateGrowthPointsAccountDto {CustomerId= fxCustomerId,Balance=0});
 
@@ -154,7 +154,20 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             return ResultData.Success();
         }
 
-
+        /// <summary>
+        /// 获取用户绑定的appid
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("isBind")]
+        public async Task<ResultData<string>> GetCustomerBindAppId() {
+            string assisteId = "";
+            var token = tokenReader.GetToken();
+            var sessionInfo = sessionStorage.GetSession(token);
+            if (!string.IsNullOrEmpty(sessionInfo.FxCustomerId)) {
+                assisteId= (await customerService.GetByIdAsync(sessionInfo.FxCustomerId)).AssisteAppId; 
+            }
+            return ResultData<string>.Success().AddData("assisteAppId",assisteId);
+        }
         /// <summary>
         /// 解密手机号
         /// </summary>

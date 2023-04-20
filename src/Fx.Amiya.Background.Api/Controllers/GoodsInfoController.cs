@@ -50,13 +50,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="categoryId">商品分类编号</param>
         /// <param name="valid"></param>
         /// <param name="exchangeType">交易方式（0积分支付，1三方支付，2线下支付）</param>
+        /// <param name="appId">小程序appid</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
-        public async Task<ResultData<FxPageInfo<GoodsInfoForListVo>>> GetListAsync(string keyword, int? exchangeType, int? categoryId, bool? valid, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<GoodsInfoForListVo>>> GetListAsync(string keyword, int? exchangeType, int? categoryId, bool? valid,string appId, int pageNum, int pageSize)
         {
-            var q = await goodsInfoService.GetListAsync(keyword, exchangeType, categoryId, valid, pageNum, pageSize);
+            var q = await goodsInfoService.GetListAsync(keyword, exchangeType, categoryId, valid,appId, pageNum, pageSize);
 
             var goodsInfos = from d in q.List
                              select new GoodsInfoForListVo
@@ -79,7 +80,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                  GoodsTypeName = d.GoodsTypeName,
                                  IsLimitBuy = d.IsLimitBuy,
                                  LimitBuyQuantity = d.LimitBuyQuantity,
-                                 CategoryId = d.CategoryId,
+                                 CategoryIds = d.CategoryIds,
                                  CategoryName = d.CategoryName,
                                  GoodsDetailId = d.GoodsDetailId,
                                  CreateBy = d.CreateBy,
@@ -91,7 +92,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                  MinShowPrice = d.MinShowPrice,
                                  ShowSaleCount = d.ShowSaleCount,
                                  VisitCount = d.VisitCount,
-                                 Sort=d.Sort
+                                 Sort=d.Sort,
+                                 MiniprogramName=d.MiniprogramName,
+                                 AppId=d.AppId,
+                                 IsHot=d.IsHot
                              };
             FxPageInfo<GoodsInfoForListVo> goodsPageInfo = new FxPageInfo<GoodsInfoForListVo>();
             goodsPageInfo.TotalCount = q.TotalCount;
@@ -164,8 +168,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 GoodsTypeName = goodsInfo.GoodsTypeName,
                 IsLimitBuy = goodsInfo.IsLimitBuy,
                 LimitBuyQuantity = goodsInfo.LimitBuyQuantity,
-                CategoryId = goodsInfo.CategoryId,
-                CategoryName = goodsInfo.CategoryName,
+                CategoryIds = goodsInfo.CategoryIds,
                 CreateBy = goodsInfo.CreateBy,
                 CreateDate = goodsInfo.CreateDate,
                 UpdateBy = goodsInfo.UpdateBy,
@@ -181,6 +184,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 GoodsStandardPrice = goodsStandardsPriceVoList,
                 GoodsTags=goodsTagList,
                 Sort = goodsInfo.Sort,
+                AppId=goodsInfo.AppId,
+                IsHot=goodsInfo.IsHot,
                 GoodsMemberRankPrices = goodsInfo.GoodsMemberRankPrice.Select(e => new GoodsMemberRankPriceVo
                 {
                     MemberRankId = e.MemberRankId,
@@ -231,7 +236,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             goodsInfo.GoodsType = (byte)GoodsType.General;
             goodsInfo.IsLimitBuy = goodsInfoAdd.IsLimitBuy;
             goodsInfo.LimitBuyQuantity = goodsInfoAdd.LimitBuyQuantity;
-            goodsInfo.CategoryId = goodsInfoAdd.CategoryId;
+            goodsInfo.CategoryIds = goodsInfoAdd.CategoryIds;
             goodsInfo.CreateBy = employeeId;
             goodsInfo.GoodsDetailHtml = goodsInfoAdd.GoodsDetailHtml;
             goodsInfo.DetailsDescription = goodsInfoAdd.DetailsDescription;
@@ -240,6 +245,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             goodsInfo.VisitCount = goodsInfoAdd.VisitCount;
             goodsInfo.ShowSaleCount = goodsInfoAdd.ShowSaleCount;
             goodsInfo.Sort = goodsInfoAdd.Sort;
+            goodsInfo.AppId = goodsInfoAdd.AppId;
+            goodsInfo.IsHot = goodsInfoAdd.IsHot;
             goodsInfo.GoodsHospitalsAPrice = (from d in goodsInfoAdd.AddGoodsHospitalPrice
                                               select new GoodsHospitalPriceAddDto
                                               {
@@ -310,7 +317,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             goodsInfo.GoodsType = (byte)GoodsType.General;
             goodsInfo.IsLimitBuy = goodsInfoUpdate.IsLimitBuy;
             goodsInfo.LimitBuyQuantity = goodsInfoUpdate.LimitBuyQuantity;
-            goodsInfo.CategoryId = goodsInfoUpdate.CategoryId;
+            goodsInfo.CategoryIds = goodsInfoUpdate.CategoryIds;
             goodsInfo.UpdateBy = employeeId;
             goodsInfo.GoodsDetailId = goodsInfoUpdate.GoodsDetailId;
             goodsInfo.GoodsDetailHtml = goodsInfoUpdate.GoodsDetailHtml;
@@ -320,6 +327,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             goodsInfo.VisitCount = goodsInfoUpdate.VisitCount;
             goodsInfo.ShowSaleCount = goodsInfoUpdate.ShowSaleCount;
             goodsInfo.Sort = goodsInfoUpdate.Sort;
+            goodsInfo.AppId = goodsInfoUpdate.AppId;
+            goodsInfo.IsHot = goodsInfoUpdate.IsHot;
             goodsInfo.GoodsTags = (from d in goodsInfoUpdate.UpdateGoodTag
                                    select new GoodsTagDto { 
                                     GoodsId= goodsInfoUpdate.Id,

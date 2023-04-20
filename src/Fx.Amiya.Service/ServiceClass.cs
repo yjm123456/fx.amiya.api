@@ -569,7 +569,155 @@ namespace Fx.Amiya.Service
             }
             return orderTypeText;
         }
-
+        /// <summary>
+        /// 获取小程序名称
+        /// </summary>
+        public static string GetMiniprogramNameText(int miniprogram) {
+            string miniprogramName = "";
+            switch (miniprogram) {
+                case 0:
+                    miniprogramName = "上合未来";
+                    break;
+                case 1:
+                    miniprogramName = "啊美雅美容";
+                    break;
+                case 2:
+                    miniprogramName = "刀刀气质美学";
+                    break;
+                case 3:
+                    miniprogramName = "吉娜气质美学";
+                    break;
+                default:
+                    miniprogramName = "其他";
+                    break;
+            }
+            return miniprogramName;
+        }
+        /// <summary>
+        /// 获取小程序appId
+        /// </summary>
+        public static string GetMiniprogramAppId(int miniprogram)
+        {
+            string miniprogramAppId = "";
+            switch (miniprogram)
+            {
+                case 0:
+                    miniprogramAppId = "wx695942e4818de445";
+                    break;
+                case 1:
+                    miniprogramAppId = "wx8747b7f34c0047eb";
+                    break;
+                case 2:
+                    miniprogramAppId = "ddjz";
+                    break;
+                case 3:
+                    miniprogramAppId = "jnqz";
+                    break;
+                default:
+                    miniprogramAppId = "";
+                    break;
+            }
+            return miniprogramAppId;
+        }
+        /// <summary>
+        /// 根据appid获取小程序名称
+        /// </summary>
+        /// <param name="appid"></param>
+        /// <returns></returns>
+        public static string GetMiniprogramNameByAppId(string appid) {
+            string miniprogramName = "";
+            switch (appid) {
+                case "wx695942e4818de445":
+                    miniprogramName = "上合未来";
+                    break;
+                case "wx8747b7f34c0047eb":
+                    miniprogramName = "啊美雅美容";
+                    break;
+                case "ddqz":
+                    miniprogramName = "刀刀气质美学";
+                    break;
+                case "jnqz":
+                    miniprogramName = "吉娜气质美学";
+                    break;
+                default:
+                    miniprogramName = "共享商品";
+                    break;
+            }
+            return miniprogramName;
+        }
+        /// <summary>
+        /// 根据appid获取小程序类型
+        /// </summary>
+        /// <param name="appid"></param>
+        /// <returns></returns>
+        public static int? GetMiniprogramTypeByAppId(string appid)
+        {
+            int? miniprogramType = null;
+            switch (appid)
+            {
+                case "wx695942e4818de445":
+                    miniprogramType = 0;
+                    break;
+                case "wx8747b7f34c0047eb":
+                    miniprogramType = 1;
+                    break;
+                case "ddqz":
+                    miniprogramType = 2;
+                    break;
+                case "jnqz":
+                    miniprogramType = 3;
+                    break;
+                default:
+                    miniprogramType = null;
+                    break;
+            }
+            return miniprogramType;
+        }
+        /// <summary>
+        /// 根据appid获取绑定的主播
+        /// </summary>
+        /// <param name="appid"></param>
+        /// <returns></returns>
+        public static int? GetLiveAnchorIdByAppId(string appid)
+        {
+            int? liveAnchorId = null;
+            switch (appid)
+            {
+                case "ddqz":
+                    liveAnchorId = 1;
+                    break;
+                case "jnqz":
+                    liveAnchorId = 16;
+                    break;
+                default:
+                    liveAnchorId = null;
+                    break;
+            }
+            return liveAnchorId;
+        }
+        /// <summary>
+        /// 获取标签id
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <returns></returns>
+        public static string GetTagId(int tag) {
+            string tagId = "";
+            switch (tag) {
+                case 0:
+                    tagId = "mzid";
+                    break;
+                case 1:
+                    tagId = "hfid";
+                    break;
+                case 2:
+                    tagId = "8dd5b4e7-ab20-42c9-9371-18349cd047df";
+                    break;
+                case 3:
+                    tagId = "shid";
+                    break;
+            }
+            return tagId;
+        }
         public static string GetOrderFromText(int orderFrom)
         {
             string orderTypeText = "";
