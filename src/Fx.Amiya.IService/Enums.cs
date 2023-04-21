@@ -878,10 +878,10 @@ namespace Fx.Amiya.IService
 
     public enum AppointmentType
     {
-        /// <summary>
-        /// 其他
-        /// </summary>
-        Other = 0,
+        ///// <summary>
+        ///// 其他
+        ///// </summary>
+        //Other = 0,
         /// <summary>
         /// 视频设计预约
         /// </summary>
@@ -890,10 +890,10 @@ namespace Fx.Amiya.IService
         /// 到院接诊预约
         /// </summary>
         ToHospitalAppointment = 2,
-        /// <summary>
-        /// 未知
-        /// </summary>
-        Unknow = 3
+        ///// <summary>
+        ///// 未知
+        ///// </summary>
+        //Unknow = 3
     }
 
     public enum ShoppingCartConsultationType

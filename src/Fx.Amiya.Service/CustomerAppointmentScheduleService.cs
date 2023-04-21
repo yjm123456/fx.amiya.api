@@ -21,11 +21,13 @@ namespace Fx.Amiya.Service
         private IInventoryListService inventoryListService;
         private IUnitOfWork unitOfWork;
         private IAmiyaOutWareHouseService amiyaOutWareHouseService;
+        private IDalAmiyaEmployee _dalAmiyaEmployee;
         private IAmiyaInWareHouseService amiyaInWareHouseService;
         private IDalTagDetailInfo dalTagDetailInfo;
         public CustomerAppointmentScheduleService(IDalCustomerAppointmentSchedule dalCustomerAppointmentScheduleService,
             IInventoryListService inventoryListService,
             IAmiyaInWareHouseService inWareHouseService,
+           IDalAmiyaEmployee dalAmiyaEmployee,
             IAmiyaOutWareHouseService amiyaOutWareHouseService,
             IUnitOfWork unitofWork, IDalTagDetailInfo dalTagDetailInfo)
         {
@@ -33,6 +35,7 @@ namespace Fx.Amiya.Service
             this.inventoryListService = inventoryListService;
             this.amiyaOutWareHouseService = amiyaOutWareHouseService;
             this.amiyaInWareHouseService = inWareHouseService;
+            _dalAmiyaEmployee = dalAmiyaEmployee;
             this.unitOfWork = unitofWork;
             this.dalTagDetailInfo = dalTagDetailInfo;
         }
@@ -43,13 +46,21 @@ namespace Fx.Amiya.Service
         {
             try
             {
+                bool selectByCreateEmpInfo = false;
+                var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == query.CreateBy);
+                //非管理员角色只能看到自己的数据
+                if (!employee.AmiyaPositionInfo.IsDirector)
+                {
+                    selectByCreateEmpInfo = true;
+                }
                 var customerAppointmentScheduleService = from d in dalCustomerAppointmentScheduleService.GetAll().Include(x => x.AmiyaEmployeeInfo).OrderByDescending(x => x.AppointmentDate).ThenByDescending(x => x.ImportantType)
                                                          where (query.KeyWord == null || d.Phone.Contains(query.KeyWord) || d.CustomerName.Contains(query.KeyWord))
+                                                         && (selectByCreateEmpInfo == false || d.CreateBy == query.CreateBy)
                                                          && (!query.ImportantType.HasValue || d.ImportantType == query.ImportantType.Value)
                                                          && (!query.AppointmentType.HasValue || d.AppointmentType == query.AppointmentType.Value)
                                                          && (!query.IsFinish.HasValue || d.IsFinish == query.IsFinish.Value)
                                                          && (!query.StartDate.HasValue || d.AppointmentDate >= query.StartDate.Value)
-                                                         && (!query.EndDate.HasValue || d.AppointmentDate <= query.EndDate.Value.AddDays(1))
+                                                         && (!query.EndDate.HasValue || d.AppointmentDate <= query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
                                                          && (d.Valid == true)
                                                          select new CustomerAppointmentScheduleDto
                                                          {
@@ -75,7 +86,7 @@ namespace Fx.Amiya.Service
                 customerAppointmentScheduleServicePageInfo.List = new List<CustomerAppointmentScheduleDto>();
                 if (customerAppointmentScheduleServicePageInfo.TotalCount > 0)
                 {
-                    customerAppointmentScheduleServicePageInfo.List= await customerAppointmentScheduleService.Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
+                    customerAppointmentScheduleServicePageInfo.List = await customerAppointmentScheduleService.Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
                 }
                 return customerAppointmentScheduleServicePageInfo;
             }
@@ -89,9 +100,11 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var customerAppointmentScheduleService = from d in dalCustomerAppointmentScheduleService.GetAll().Include(x => x.AmiyaEmployeeInfo).OrderByDescending(x => x.AppointmentDate)
-                                                         where (d.AppointmentDate >= DateTime.Now)
-                                                         && (d.AppointmentDate <= DateTime.Now.AddDays(1))
+                DateTime startDate = DateTime.Now.Date;
+                DateTime endDate = DateTime.Now.Date.AddDays(1).AddMilliseconds(-1);
+                var customerAppointmentScheduleService = from d in dalCustomerAppointmentScheduleService.GetAll()
+                                                         where (d.AppointmentDate >= startDate)
+                                                         && (d.AppointmentDate <= endDate)
                                                          && (d.ImportantType == (int)EmergencyLevel.Important)
                                                          && (d.Valid == true)
                                                          && (d.IsFinish == false)
@@ -116,9 +129,17 @@ namespace Fx.Amiya.Service
         {
             try
             {
+                bool selectByCreateEmpInfo = false;
+                var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == query.CreateBy);
+                //非管理员角色只能看到自己的数据
+                if (!employee.AmiyaPositionInfo.IsDirector)
+                {
+                    selectByCreateEmpInfo = true;
+                }
                 var customerAppointmentScheduleService = from d in dalCustomerAppointmentScheduleService.GetAll().Include(x => x.AmiyaEmployeeInfo).OrderBy(x => x.AppointmentDate).ThenByDescending(x => x.ImportantType)
                                                          where (!query.StartDate.HasValue || d.AppointmentDate >= query.StartDate.Value)
                                                          && (!query.EndDate.HasValue || d.AppointmentDate <= query.EndDate.Value.AddDays(1))
+                                                         && (selectByCreateEmpInfo == false || d.CreateBy == query.CreateBy)
                                                          && (d.Valid == true)
                                                          select new CustomerAppointmentScheduleDto
                                                          {
@@ -139,6 +160,8 @@ namespace Fx.Amiya.Service
                                                              Remark = d.Remark,
                                                              CreateByEmpName = d.AmiyaEmployeeInfo.Name,
                                                          };
+
+
                 List<CustomerAppointmentScheduleDto> customerAppointmentScheduleServicePageInfo = new List<CustomerAppointmentScheduleDto>();
                 customerAppointmentScheduleServicePageInfo = await customerAppointmentScheduleService.ToListAsync();
                 return customerAppointmentScheduleServicePageInfo;

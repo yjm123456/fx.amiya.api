@@ -291,10 +291,10 @@ namespace Fx.Amiya.Service
                     reconciliationDocumentsDto.DealDate = x.DealDate;
                     reconciliationDocumentsDto.TotalDealPrice = x.TotalDealPrice;
                     reconciliationDocumentsDto.ReturnBackPricePercent = x.ReturnBackPricePercent;
-                    reconciliationDocumentsDto.ReturnBackPrice = Math.Round(x.TotalDealPrice.Value * x.ReturnBackPricePercent.Value / 100, 2);
+                    reconciliationDocumentsDto.ReturnBackPrice = Math.Round(x.TotalDealPrice.Value * x.ReturnBackPricePercent.Value / 100, 2,MidpointRounding.AwayFromZero);
                     reconciliationDocumentsDto.SystemUpdatePricePercent = x.SystemUpdatePricePercent;
-                    reconciliationDocumentsDto.SystemUpdatePrice = Math.Round(x.TotalDealPrice.Value * x.SystemUpdatePricePercent.Value / 100, 2);
-                    reconciliationDocumentsDto.TotalReconciliationDocumentsPrice = Math.Round(reconciliationDocumentsDto.ReturnBackPrice.Value + reconciliationDocumentsDto.SystemUpdatePrice.Value);
+                    reconciliationDocumentsDto.SystemUpdatePrice = Math.Round(x.TotalDealPrice.Value * x.SystemUpdatePricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
+                    reconciliationDocumentsDto.TotalReconciliationDocumentsPrice = Math.Round(reconciliationDocumentsDto.ReturnBackPrice.Value + reconciliationDocumentsDto.SystemUpdatePrice.Value, 2, MidpointRounding.AwayFromZero);
                     reconciliationDocumentsDto.Remark = x.Remark;
                     reconciliationDocumentsDto.ReconciliationState = x.ReconciliationState;
                     reconciliationDocumentsDto.CreateBy = x.CreateBy;

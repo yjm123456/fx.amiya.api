@@ -1387,9 +1387,9 @@ namespace Fx.Amiya.Service
             var statusText = "";
             switch (type)
             {
-                case 0:
-                    statusText = "其他";
-                    break;
+                //case 0:
+                //    statusText = "其他";
+                //    break;
                 case 1:
                     statusText = "视频设计预约";
                     break;

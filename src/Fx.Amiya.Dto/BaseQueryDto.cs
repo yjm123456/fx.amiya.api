@@ -8,6 +8,7 @@ namespace Fx.Amiya.Dto
 {
     public class BaseQueryDto
     {
+        public int CreateBy { get; set; }
         public int? PageNum { get; set; }
         public int? PageSize { get; set; }
 

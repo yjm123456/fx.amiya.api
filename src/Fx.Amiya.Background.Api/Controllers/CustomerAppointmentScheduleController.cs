@@ -50,10 +50,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
                 QueryCustomerAppointSchedulePageListDto queryCustomerAppointSchedulePageListDto = new QueryCustomerAppointSchedulePageListDto();
                 queryCustomerAppointSchedulePageListDto.ImportantType = query.ImportantType;
                 queryCustomerAppointSchedulePageListDto.IsFinish = query.IsFinish;
                 queryCustomerAppointSchedulePageListDto.KeyWord = query.KeyWord;
+                queryCustomerAppointSchedulePageListDto.CreateBy = employeeId;
                 queryCustomerAppointSchedulePageListDto.AppointmentType = query.AppointmentType;
                 queryCustomerAppointSchedulePageListDto.StartDate = query.StartDate;
                 queryCustomerAppointSchedulePageListDto.EndDate = query.EndDate;
@@ -104,9 +107,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
                 QueryCustomerAppointSchedulePageListDto queryCustomerAppointSchedulePageListDto = new QueryCustomerAppointSchedulePageListDto();
                 queryCustomerAppointSchedulePageListDto.StartDate = query.StartDate;
                 queryCustomerAppointSchedulePageListDto.EndDate = query.EndDate;
+                queryCustomerAppointSchedulePageListDto.CreateBy = employeeId;
                 var q = await customerAppointmentScheduleService.GetListByCalendarAsync(queryCustomerAppointSchedulePageListDto);
 
                 var customerAppointmentSchedule = from d in q

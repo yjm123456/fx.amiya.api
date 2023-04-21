@@ -533,8 +533,8 @@ namespace Fx.Amiya.Service
         {
             List<ContentPlatFormOrderInfoDto> result = new List<ContentPlatFormOrderInfoDto>();
             var orders = _dalContentPlatformOrder.GetAll();
-            DateTime startrq = DateTime.Now.Date.AddDays(-days + 1);
-            DateTime endrq = DateTime.Now.Date.AddDays(-days);
+            DateTime startrq = DateTime.Now.Date.AddDays(-days);
+            DateTime endrq = DateTime.Now.Date.AddDays(-days + 1);
             orders = from d in orders
                      where (d.OrderStatus == (int)ContentPlateFormOrderStatus.SendOrder || d.OrderStatus == (int)ContentPlateFormOrderStatus.ConfirmOrder)
                      where (d.SendDate.Value >= startrq && d.SendDate.Value < endrq)
@@ -563,8 +563,8 @@ namespace Fx.Amiya.Service
         {
             List<ContentPlatFormOrderInfoDto> result = new List<ContentPlatFormOrderInfoDto>();
             var orders = _dalContentPlatformOrder.GetAll();
-            DateTime startrq = DateTime.Now.Date.AddDays(-days + 1);
-            DateTime endrq = DateTime.Now.Date.AddDays(-days);
+            DateTime startrq = DateTime.Now.Date.AddDays(-days );
+            DateTime endrq = DateTime.Now.Date.AddDays(-days + 1);
             orders = from d in orders
                      where (d.IsOldCustomer == false)
                      where (d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
