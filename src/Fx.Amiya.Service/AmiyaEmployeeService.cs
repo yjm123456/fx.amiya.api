@@ -64,6 +64,7 @@ namespace Fx.Amiya.Service
                 employeeDto.PositionId = employee.AmiyaPositionId;
                 employeeDto.PositionName = employee.AmiyaPositionInfo.Name;
                 employeeDto.IsCustomerService = employee.IsCustomerService;
+                employeeDto.IsDirector = employee.AmiyaPositionInfo.IsDirector;
                 employeeDto.DepartmentId = employee.AmiyaPositionInfo.DepartmentId;
                 employeeDto.DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name;
                 employeeDto.UserId = employee.UserId;
@@ -100,6 +101,7 @@ namespace Fx.Amiya.Service
                 employeeDto.UserName = employee.UserName;
                 employeeDto.Password = employee.Password;
                 employeeDto.Valid = employee.Valid;
+                employeeDto.IsDirector = employee.AmiyaPositionInfo.IsDirector;
                 employeeDto.PositionId = employee.AmiyaPositionId;
                 employeeDto.PositionName = employee.AmiyaPositionInfo.Name;
                 employeeDto.IsCustomerService = employee.IsCustomerService;

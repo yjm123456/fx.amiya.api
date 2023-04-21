@@ -17,6 +17,7 @@ namespace Fx.Amiya.Dto.AmiyaEmployee
         public bool Valid { get; set; }
         public string Email { get; set; }
         public bool IsCustomerService { get; set; }
+        public bool IsDirector { get; set; }
         public int DepartmentId { get; set; }
         public string DepartmentName { get; set; }
         public string UserId { get; set; }

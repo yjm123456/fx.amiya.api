@@ -16,6 +16,7 @@ namespace Fx.Amiya.Background.Api.Vo.Login
         public string AmiyaPositionName { get; set; }
         public string EmployeeType { get; set; }
         public bool IsCustomerService { get; set; }
+        public bool IsDirector { get; set; }
         public string Token { get; set; }
 
         public string RefreshToken { get; set; }

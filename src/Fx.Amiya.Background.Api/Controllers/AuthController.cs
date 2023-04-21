@@ -67,9 +67,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                     AmiyaPositionName = employee.PositionName,
                     EmployeeType = EmployeeTypeConstant.AMIYA_EMPLOYEE_TYPE,
                     IsCustomerService = employee.IsCustomerService,
+                    IsDirector=employee.IsDirector,
                     Token = identity.BuildJwtToken(jwtConfig.Key, jwtConfig.ExpireInSeconds / 60),
                     RefreshToken = identity.BuildRefreshToken(jwtConfig.Key, jwtConfig.RefreshTokenExpireInSeconds / 60),
                     DepartmentId = employee.DepartmentId,
+
                     DepartmentName = employee.DepartmentName,
                     ReadDataCenter = employee.ReadDataCenter
                 };
