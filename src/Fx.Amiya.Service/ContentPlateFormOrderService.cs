@@ -563,7 +563,7 @@ namespace Fx.Amiya.Service
         {
             List<ContentPlatFormOrderInfoDto> result = new List<ContentPlatFormOrderInfoDto>();
             var orders = _dalContentPlatformOrder.GetAll();
-            DateTime startrq = DateTime.Now.Date.AddDays(-days );
+            DateTime startrq = DateTime.Now.Date.AddDays(-days);
             DateTime endrq = DateTime.Now.Date.AddDays(-days + 1);
             orders = from d in orders
                      where (d.IsOldCustomer == false)
@@ -2799,7 +2799,7 @@ namespace Fx.Amiya.Service
             var sendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.BelongEmpId == belongCustomerServiceId && x.SendDate >= startDate && x.SendDate < endDate).ToList();
             var thisMonthVisitInfo = sendInfo.Where(x => x.IsToHospital == true).ToList();
             var distinctSendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.BelongEmpId == belongCustomerServiceId && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.SendDate >= startDate && x.SendDate < endDate).GroupBy(x => x.Phone).Select(k => k.Key.First()).ToList();
-            var visitInfo = dealData.Where(x => x.IsToHospital == true && x.ToHospitalDate >= startDate && x.ToHospitalDate < endDate && x.IsOldCustomer == false && x.BelongEmpId == belongCustomerServiceId).ToList();
+            var visitInfo = dealData.Where(x => x.IsToHospital == true && x.ContentPlatformOrderDealInfoList.OrderByDescending(k => k.CreateDate).FirstOrDefault().CreateDate >= startDate && x.ContentPlatformOrderDealInfoList.OrderByDescending(k => k.CreateDate).FirstOrDefault().CreateDate < endDate && x.IsOldCustomer == false && x.BelongEmpId == belongCustomerServiceId).ToList();
             dealResult.VisitRate = DecimalExtension.CalculateTargetComplete(visitInfo.Count(), distinctSendInfo.Count());
             dealResult.ThisMonthSendThisMonthVisitNumRatio = DecimalExtension.CalculateTargetComplete(thisMonthVisitInfo.Count(), distinctSendInfo.Count());
             belongLiveAnchorId = empInfo.LiveAnchorBaseId;
@@ -2878,7 +2878,7 @@ namespace Fx.Amiya.Service
                 var thisMonthVisitInfo = sendInfo.Where(x => x.IsToHospital == true).ToList();
                 //根据手机号去重派单数据
                 var distinctSendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.BelongEmpId == z.CustomerServiceId && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.SendDate >= startDate && x.SendDate < endDate).GroupBy(x => x.Phone).Select(k => k.Key.First()).ToList();
-                var visitInfo = dealData.Where(x => x.IsToHospital == true && x.ToHospitalDate >= startDate && x.ToHospitalDate < endDate && x.IsOldCustomer == false && x.BelongEmpId == z.CustomerServiceId).ToList();
+                var visitInfo = dealData.Where(x => x.IsToHospital == true && x.ContentPlatformOrderDealInfoList.OrderByDescending(k => k.CreateDate).FirstOrDefault().CreateDate >= startDate && x.ContentPlatformOrderDealInfoList.OrderByDescending(k => k.CreateDate).FirstOrDefault().CreateDate < endDate && x.IsOldCustomer == false && x.BelongEmpId == z.CustomerServiceId).ToList();
 
                 var dealInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder)
                     .SelectMany(x => x.ContentPlatformOrderDealInfoList).Include(x => x.ContentPlatFormOrder)
