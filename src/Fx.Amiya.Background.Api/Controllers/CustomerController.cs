@@ -157,7 +157,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 Sex = d.Sex,
                                 MemberRank = m?.MemberRankName,
                                 MemberCardNum = m?.MemberCardNum,
-                                IntegrationBalance = i == null ? 0m : i.Balance
+                                IntegrationBalance = i == null ? 0m : i.Balance,
+                                AppName=d.AppName
                             };
             FxPageInfo<CustomerInfoVo> customerPageInfo = new FxPageInfo<CustomerInfoVo>();
             customerPageInfo.TotalCount = customerPage.TotalCount;

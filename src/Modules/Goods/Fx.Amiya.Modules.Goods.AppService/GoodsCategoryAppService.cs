@@ -246,11 +246,11 @@ namespace Fx.Amiya.Modules.Goods.AppService
         /// <param name="isBrand">是否是品牌分类</param>
         /// <param name="appId"></param>
         /// <returns></returns>
-        public async Task<List<GoodsCategoryNameDto>> GetHotCategoryNameListAsync(bool? valid, int count,bool isBrand, string appId = null)
+        public async Task<List<GoodsCategoryNameDto>> GetHotCategoryNameListAsync(bool? valid, int count,bool isBrand,bool isHot, string appId = null)
         {
             var goodsCategorys = freeSql.Select<GoodsCategoryDbModel>()
                 .Where(e => valid == null || e.Valid == valid)
-                .Where(e=>e.IsHot==true)
+                .Where(e=>e.IsHot==isHot)
                 .Where(e=>e.IsBrand==isBrand)
                 .OrderByDescending(z => z.Sort);
             if (!string.IsNullOrEmpty(appId))

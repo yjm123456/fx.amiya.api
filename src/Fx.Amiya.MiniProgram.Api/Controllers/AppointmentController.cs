@@ -189,7 +189,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                           Longitude = d.HospitalInfo.Longitude,
                                           Latitude = d.HospitalInfo.Latitude,
                                           HospitalPhone = d.HospitalInfo.HospitalPhone,
-                                      }
+                                      },
+                                      Address=d.Address
                                   };
                 FxPageInfo<WxAppointmentInfoVo> orderWriteOffInfo = new FxPageInfo<WxAppointmentInfoVo>();
                 orderWriteOffInfo.TotalCount = q.TotalCount;

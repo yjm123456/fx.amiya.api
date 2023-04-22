@@ -67,7 +67,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         [HttpGet("hotCategoryList")]
         public async Task<ResultData<List<GoodsCategoryVo>>> GetHotGoodsCategoryListAsync(int showDirectionType, string appId)
         {
-            var goodsCategorys = from d in await goodsCategoryService.GetHotCategoryNameListAsync(true,4,true, appId)
+            var goodsCategorys = from d in await goodsCategoryService.GetHotCategoryNameListAsync(true,4,true,true, appId)
                                  select new GoodsCategoryVo
                                  {
                                      Id = d.Id,
@@ -75,7 +75,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                      ShowDirectionType = d.ShowDirectionType.Value,
                                      CategoryImg = d.CategoryImg
                                  };
-            return ResultData<List<GoodsCategoryVo>>.Success().AddData("hotGoodsCategorys", goodsCategorys.Where(z => z.ShowDirectionType == showDirectionType).ToList());
+            return ResultData<List<GoodsCategoryVo>>.Success().AddData("hotGoodsCategorys", goodsCategorys.ToList());
         }
         /// <summary>
         /// 获取热门分类列表
@@ -86,7 +86,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         [HttpGet("hotNotBrandCategoryList")]
         public async Task<ResultData<List<GoodsCategoryVo>>> GetNotBrandCategoryListAsync(int showDirectionType, string appId)
         {
-            var goodsCategorys = from d in await goodsCategoryService.GetHotCategoryNameListAsync(true, 4, false, appId)
+            var goodsCategorys = from d in await goodsCategoryService.GetHotCategoryNameListAsync(true, 4, false,true, appId)
                                  select new GoodsCategoryVo
                                  {
                                      Id = d.Id,
@@ -94,7 +94,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                      ShowDirectionType = d.ShowDirectionType.Value,
                                      CategoryImg = d.CategoryImg
                                  };
-            return ResultData<List<GoodsCategoryVo>>.Success().AddData("hotGoodsCategorys", goodsCategorys.Where(z => z.ShowDirectionType == showDirectionType).ToList());
+            return ResultData<List<GoodsCategoryVo>>.Success().AddData("hotGoodsCategorys", goodsCategorys.ToList());
         }
         /// <summary>
         /// 获取所有商品分类

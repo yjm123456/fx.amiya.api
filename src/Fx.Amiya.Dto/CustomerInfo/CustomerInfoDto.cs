@@ -20,5 +20,6 @@ namespace Fx.Amiya.Dto.CustomerInfo
         public string AssisteAppId { get; set; }
         public int? CustomerServiceId { get; set; }
         public string CustomerServiceName { get; set; }
+        public string AppName { get; set; }
     }
 }

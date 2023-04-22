@@ -319,6 +319,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                                     IsMaterial = d.IsMaterial,
                                     GoodsType = d.GoodsType,
                                     CategoryIds=freeSql.Select<CategoryToGoodsDbModel>().Where(e=>e.GoodsId==d.Id).ToList(e=>e.CategoryId),
+                                    CategoryName= string.Join(",",freeSql.Select<GoodsCategoryDbModel>().Where(e => (freeSql.Select<CategoryToGoodsDbModel>().Where(e => e.GoodsId == d.Id).ToList(e => e.CategoryId)).Contains(e.Id)).ToList(e => e.Name)),
                                     GoodsTypeName = goodsTypeDict[d.GoodsType],
                                     IsLimitBuy = d.IsLimitBuy,
                                     LimitBuyQuantity = d.LimitBuyQuantity,
@@ -552,7 +553,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                                                      GoodsInfoId = d.GoodsInfoId
                                                  }).ToList();
             //移除分类
-           freeSql.Delete<CategoryToGoodsDbModel>().Where(e => e.GoodsId == goodsInfo.Id);
+           var rows= freeSql.Delete<CategoryToGoodsDbModel>().Where(e => e.GoodsId == goodsInfo.Id).ExecuteAffrows();
             //添加分类
             foreach (var item in goodsInfoUpdate.CategoryIds) {
                 freeSql.Insert<CategoryToGoodsDbModel>(new CategoryToGoodsDbModel

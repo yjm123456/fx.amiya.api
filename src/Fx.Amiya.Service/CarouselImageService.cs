@@ -137,6 +137,7 @@ namespace Fx.Amiya.Service
                 carouselImage.PicUrl = updateDto.PicUrl;
                 carouselImage.DisplayIndex = updateDto.DisplayIndex;
                 carouselImage.AppId = updateDto.AppId;
+                carouselImage.LinkUrl = updateDto.LinkUrl;
                 await dalHomepageCarouselImage.UpdateAsync(carouselImage, true);
             }
             catch (Exception ex)

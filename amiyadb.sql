@@ -81,3 +81,46 @@ CREATE TABLE `amiyadb`.`tbl_customer_appointment_schedule` (
     ON UPDATE NO ACTION);
 
 -----------------------------------------------余建明 2023/04/13 END--------------------------------------------
+
+
+----------------------------------------------王健 2023/04/20 BEGIN--------------------------------
+
+------记录用户最近一次登录的appid
+CREATE TABLE `tbl_user_lasttime_loginappid` (
+	`id` VARCHAR(50) NOT NULL,
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT(1) NOT NULL DEFAULT 0,
+	`delete_date` DATETIME NULL DEFAULT NULL,
+	`user_id` VARCHAR(100) NOT NULL,
+	`app_id` VARCHAR(50) NOT NULL,
+	PRIMARY KEY (`id`) USING BTREE
+);
+
+
+--商品分类
+CREATE TABLE `tbl_category_to_goods` (
+	`id` VARCHAR(50) NOT NULL DEFAULT '',
+	`goods_id` VARCHAR(50) NOT NULL DEFAULT '',
+	`category_id` INT NOT NULL DEFAULT 0
+);
+
+
+---小程序信息
+
+CREATE TABLE `tbl_miniprogram` (
+	`id` VARCHAR(100) NOT NULL,
+	`name` VARCHAR(100) NOT NULL,
+	`appid` VARCHAR(100) NOT NULL,
+	`is_main` BIT(1) NOT NULL,
+	`belong_live_anchor_id` INT(10) NULL DEFAULT 0,
+	`belong_appId` VARCHAR(100) NULL DEFAULT NULL,
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT(1) NOT NULL,
+	`delete_date` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+);
+
+
+----------------------------------------------王健 2023/04/20 END--------------------------------

@@ -64,5 +64,6 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerInfo
         public decimal? IntegrationBalance { get; set; }
         public string Name { get; set; }
         public string Sex { get; set; }
+        public string AppName { get; set; }
     }
 }

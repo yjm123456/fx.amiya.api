@@ -92,26 +92,7 @@ namespace Fx.Amiya.Service
                     );
                     await wxMiniUserRepository.AddAsync(wxMiniUser);
                 }
-                //如果用户未绑定手机号且使用中间小程序跳转则记录本次登录的appid
-                if (string.IsNullOrEmpty(wxMiniUser.FxUser.CustomerId) && !string.IsNullOrEmpty(miniUserAddDto.AssisteAppId))
-                {
-                    var record = dalUserLastTimeLoginAppId.GetAll().Where(e => e.UserId == wxMiniUser.FxUser.Id).SingleOrDefault();
-                    if (record != null)
-                    {
-                        record.AppId = miniUserAddDto.AssisteAppId;
-                        record.UpdateDate = DateTime.Now;
-                        await dalUserLastTimeLoginAppId.UpdateAsync(record, true);
-                    }
-                    else
-                    {
-                        UserLastTimeLoginAppId userLastTimeLoginAppId = new UserLastTimeLoginAppId();
-                        userLastTimeLoginAppId.Id = Guid.NewGuid().ToString().Replace("-", "");
-                        userLastTimeLoginAppId.CreateDate = DateTime.Now;
-                        userLastTimeLoginAppId.AppId = miniUserAddDto.AssisteAppId;
-                        userLastTimeLoginAppId.Valid = true;
-                        await dalUserLastTimeLoginAppId.AddAsync(userLastTimeLoginAppId, true);
-                    }
-                }
+                
 
                 return new WxMiniUserDto()
                 {

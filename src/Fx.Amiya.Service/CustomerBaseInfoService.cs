@@ -32,6 +32,7 @@ namespace Fx.Amiya.Service
         private IConsumptionLevelService consumptionLevelService;
         private IDalCustomerTagInfo dalCustomerTagInfo;
         private IDalTagDetailInfo dalTagDetailInfo;
+        private IMiniprogramService miniprogramService;
 
         private ITagDetailInfoService tagDetailInfoService;
         public CustomerBaseInfoService(IDalCustomerBaseInfo dalCustomerBaseInfo,
@@ -41,7 +42,7 @@ namespace Fx.Amiya.Service
             IMemberCardHandleService memberCardHandleService,
             IUserService userService,
             IUnitOfWork unitofWork,
-            IWxAppConfigService wxAppConfigService, IDalCustomerTagInfo dalCustomerTagInfo, IDalTagDetailInfo dalTagDetailInfo, ITagDetailInfoService tagDetailInfoService)
+            IWxAppConfigService wxAppConfigService, IDalCustomerTagInfo dalCustomerTagInfo, IDalTagDetailInfo dalTagDetailInfo, ITagDetailInfoService tagDetailInfoService, IMiniprogramService miniprogramService)
         {
             this.dalCustomerBaseInfo = dalCustomerBaseInfo;
             this.dalCustomerInfo = dalCustomerInfo;
@@ -55,6 +56,7 @@ namespace Fx.Amiya.Service
             this.dalTagDetailInfo = dalTagDetailInfo;
 
             this.tagDetailInfoService = tagDetailInfoService;
+            this.miniprogramService = miniprogramService;
         }
 
 

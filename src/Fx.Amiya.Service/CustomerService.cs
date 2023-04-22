@@ -42,6 +42,7 @@ namespace Fx.Amiya.Service
         private IDalTagDetailInfo dalTagDetailInfo;
         private ITagDetailInfoService tagDetailInfoService;
         private IDalCustomerTagInfo dalCustomerTagInfo;
+        private IDalMiniprogram dalMiniprogram;
         public CustomerService(IDalCustomerInfo dalCustomerInfo,
             IDalUserInfo dalUserInfo,
             IDalBindCustomerService dalBindCustomerService,
@@ -57,7 +58,7 @@ namespace Fx.Amiya.Service
             IDalCustomerBaseInfo dalCustomerBaseInfo,
             IDalSendOrderInfo dalSendOrderInfo,
             IConsumptionLevelService consumptionLevelService,
-            IDalTrackRecord dalTrackRecord, IDalTagDetailInfo dalTagDetailInfo, ITagDetailInfoService tagDetailInfoService, IDalCustomerTagInfo dalCustomerTagInfo)
+            IDalTrackRecord dalTrackRecord, IDalTagDetailInfo dalTagDetailInfo, ITagDetailInfoService tagDetailInfoService, IDalCustomerTagInfo dalCustomerTagInfo, IDalMiniprogram dalMiniprogram)
         {
             this.dalCustomerInfo = dalCustomerInfo;
             this.dalUserInfo = dalUserInfo;
@@ -78,6 +79,7 @@ namespace Fx.Amiya.Service
             this.dalTagDetailInfo = dalTagDetailInfo;
             this.tagDetailInfoService = tagDetailInfoService;
             this.dalCustomerTagInfo = dalCustomerTagInfo;
+            this.dalMiniprogram = dalMiniprogram;
         }
         public async Task<string> BindCustomerAsync(string fxUserId, string phoneNumber,string appId)
         {
@@ -416,8 +418,8 @@ namespace Fx.Amiya.Service
                                     Name = b.Name,
                                     Sex = b.Sex,
                                     CustomerServiceId = bcs.CustomerServiceId,
-                                    CustomerServiceName = bcs.CustomerServiceAmiyaEmployee.Name
-
+                                    CustomerServiceName = bcs.CustomerServiceAmiyaEmployee.Name,
+                                    AppName=dalMiniprogram.GetAll().Where(e=>e.AppId==c.AppId).FirstOrDefault().Name ??""
                                 };
 
                 int pageNum = customerSearchParam.PageNum;

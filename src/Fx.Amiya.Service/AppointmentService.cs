@@ -504,7 +504,8 @@ namespace Fx.Amiya.Service
                                 Latitude = d.HospitalInfo.Latitude,
                                 HospitalPhone = d.HospitalInfo.Phone,
                                 ThumbPicture = d.HospitalInfo.ThumbPicUrl
-                            }
+                            },
+                            Address=d.Address
                         };
                 FxPageInfo<WxAppointmentInfoDto> appointmentPageInfo = new FxPageInfo<WxAppointmentInfoDto>();
                 appointmentPageInfo.TotalCount = await q.CountAsync();

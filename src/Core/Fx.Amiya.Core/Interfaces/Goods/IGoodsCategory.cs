@@ -41,7 +41,7 @@ namespace Fx.Amiya.Core.Interfaces.Goods
         /// <param name="isBrand">是否是品牌分类</param>
         /// <param name="appId">小程序appid</param>
         /// <returns></returns>
-        Task<List<GoodsCategoryNameDto>> GetHotCategoryNameListAsync(bool? valid,int count,bool isBrand,string appId=null);
+        Task<List<GoodsCategoryNameDto>> GetHotCategoryNameListAsync(bool? valid,int count,bool isBrand,bool isHot,string appId=null);
 
         /// <summary>
         /// 添加商品分类

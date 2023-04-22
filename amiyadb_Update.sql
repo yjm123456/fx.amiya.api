@@ -31,3 +31,40 @@ ADD COLUMN `sub_phone` VARCHAR(45) NULL AFTER `phone`;
 update  amiyadb.tbl_shopping_cart_registration set assign_emp_id=create_by
 -----------------------------------------------余建明 2023/04/13 END--------------------------------------------
 
+-----------------------------------------------王健 2023/04/20 BEGIN--------------------------------------------
+
+--轮播图添加归属小程序
+
+ALTER TABLE `tbl_homepage_carousel_image`
+	ADD COLUMN `appid` VARCHAR(100) NULL DEFAULT NULL AFTER `link_url`;
+
+
+--商品添加归属小程序
+ALTER TABLE `tbl_goods_info`
+	ADD COLUMN `appid` VARCHAR(100) NULL DEFAULT NULL AFTER `sort`;
+
+
+--商品添加是否热门
+ALTER TABLE `tbl_goods_info`
+	ADD COLUMN `ishot` BIT NOT NULL AFTER `appid`;
+
+--商品分类添加归属小程序和是否热门
+ALTER TABLE `tbl_goods_category`
+	ADD COLUMN `appid` VARCHAR(100) NULL DEFAULT NULL AFTER `category_img`,
+	ADD COLUMN `ishot` BIT NOT NULL AFTER `appid`;
+
+---客户信息添加跳转appid
+ALTER TABLE `tbl_customer_info`
+	ADD COLUMN `assiste_app_id` VARCHAR(50) NULL DEFAULT NULL AFTER `app_id`;
+
+----预约添加叫车地址
+ALTER TABLE `tbl_appointment_info`
+	ADD COLUMN `address` VARCHAR(500) NULL DEFAULT NULL AFTER `appoint_area`;
+
+
+
+---商品分类添加是否是品牌分类
+ALTER TABLE `tbl_goods_category`
+	ADD COLUMN `isbrand` BIT NOT NULL AFTER `ishot`;
+
+-----------------------------------------------王健 2023/04/20 END--------------------------------------------
