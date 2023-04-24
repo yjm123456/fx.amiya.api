@@ -16,10 +16,11 @@ namespace Fx.Amiya.DbModels.Model
 
         public string LiveAnchorBaseId { get; set; }
 
+
         public List<LiveRequirementInfo> LiveRequirementInfoList { get; set; }
         public List<ContentPlatformOrder> ContentPlatformOrderList { get; set; }
 
-        public List<LiveAnchorMonthlyTarget> liveAnchorMonthlyTargets { get; set; }
+        public List<LiveAnchorMonthlyTargetBeforeLiving> LiveAnchorMonthlyTargetBeforeLivings { get; set; }
 
         public List<LiveAnchorWeChatInfo> LiveAnchorWeChatInfo { get; set; }
 
