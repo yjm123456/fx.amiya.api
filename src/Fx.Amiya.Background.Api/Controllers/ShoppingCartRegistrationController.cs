@@ -329,6 +329,28 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
         /// <summary>
+        /// 批量指派小黄车登记信息
+        /// </summary>
+        /// <param name="assignVo"></param>
+        /// <returns></returns>
+        [HttpPut("assignList")]
+        public async Task<ResultData> AssignListAsync(AssignListVo assignVo)
+        {
+            try
+            {
+                foreach (var x in assignVo.IdList)
+                {
+                    await shoppingCartRegistrationService.AssignAsync(x, assignVo.AssignBy);
+                }
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+
+        /// <summary>
         /// 输出紧急程度列表
         /// </summary>
         /// <returns></returns>

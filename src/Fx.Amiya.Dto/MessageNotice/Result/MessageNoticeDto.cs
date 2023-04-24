@@ -34,6 +34,11 @@ namespace Fx.Amiya.Dto.MessageNotice.Result
         public string NoticeTypeText { get; set; }
 
         /// <summary>
+        /// 订单号
+        /// </summary>
+        public string OrderId { get; set; }
+
+        /// <summary>
         /// 通知内容
         /// </summary>
         public string NoticeContent { get; set; }

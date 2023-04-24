@@ -12,5 +12,9 @@ namespace Fx.Amiya.Dto.MessageNotice.Input
         /// 用户
         /// </summary>
         public int? AcceptBy { get; set; }
+        /// <summary>
+        /// 通知类型
+        /// </summary>
+        public int? NoticeType { get; set; }
     }
 }

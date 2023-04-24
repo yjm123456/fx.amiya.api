@@ -14,4 +14,14 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// </summary>
         public int AssignBy { get; set; }
     }
+    public class AssignListVo
+    {
+
+        public List<string> IdList { get; set; }
+
+        /// <summary>
+        /// 指派人
+        /// </summary>
+        public int AssignBy { get; set; }
+    }
 }

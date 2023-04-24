@@ -66,11 +66,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("list")]
-        public async Task<ResultData<List<MessageNoticeVo>>> GetListWithPageAsync([FromQuery] QueryMessageNoticeListVo query)
+        public async Task<ResultData<MessageNoticeVo>> GetListWithPageAsync([FromQuery] QueryMessageNoticeListVo query)
         {
             try
             {
                 QueryMessageNoticeDto queryCustomerAppointSchedulePageListDto = new QueryMessageNoticeDto();
+                queryCustomerAppointSchedulePageListDto.NoticeType = query.NoticeType;
                 queryCustomerAppointSchedulePageListDto.AcceptBy = query.AcceptBy;
                 queryCustomerAppointSchedulePageListDto.StartDate = query.StartDate;
                 queryCustomerAppointSchedulePageListDto.EndDate = query.EndDate;
@@ -86,6 +87,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                         UpdateDate = d.UpdateDate,
                                         DeleteDate = d.DeleteDate,
                                         Valid = d.Valid,
+                                        OrderId = d.OrderId,
                                         IsRead = d.IsRead,
                                         NoticeType = d.NoticeType,
                                         NoticeTypeText = d.NoticeTypeText,
@@ -95,21 +97,25 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 List<MessageNoticeDetails> messageNoticePageInfo = new List<MessageNoticeDetails>();
                 messageNoticePageInfo = messageNotice.ToList();
+                MessageNoticeVo returnResult = new MessageNoticeVo();
+                returnResult.ReadCount = messageNoticePageInfo.Where(x => x.IsRead == true).Count();
+                returnResult.UnReadCount = messageNoticePageInfo.Where(x => x.IsRead == false).Count();
                 var messageDate = messageNoticePageInfo.GroupBy(x => x.CreateDateNotInHour).Select(x => x.Key);
 
-                List<MessageNoticeVo> messageNoticeVos = new List<MessageNoticeVo>();
+                List<MessageReturnVo> messageNoticeVos = new List<MessageReturnVo>();
                 foreach (var x in messageDate)
                 {
-                    MessageNoticeVo messageNoticeVo = new MessageNoticeVo();
+                    MessageReturnVo messageNoticeVo = new MessageReturnVo();
                     messageNoticeVo.CreateDate = x;
                     messageNoticeVo.Details = messageNoticePageInfo.Where(z => z.CreateDateNotInHour == x).ToList();
                     messageNoticeVos.Add(messageNoticeVo);
                 }
-                return ResultData<List<MessageNoticeVo>>.Success().AddData("messageNoticeInfo", messageNoticeVos);
+                returnResult.MessageReturnVos = messageNoticeVos;
+                return ResultData<MessageNoticeVo>.Success().AddData("messageNoticeInfo", returnResult);
             }
             catch (Exception ex)
             {
-                return ResultData<List<MessageNoticeVo>>.Fail(ex.Message);
+                return ResultData<MessageNoticeVo>.Fail(ex.Message);
             }
         }
 
@@ -137,5 +143,25 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+
+        #region 枚举下拉框
+
+        /// <summary>
+        /// 获取通知类型
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getMessageNoticeTypeList")]
+        [FxInternalAuthorize]
+        public ResultData<List<BaseIdAndNameVo>> GetMessageNoticeTypeList()
+        {
+            var orderTypes = from d in messageNoticeService.GetMessageNoticeTypeList()
+                             select new BaseIdAndNameVo
+                             {
+                                 Id = d.Id,
+                                 Name = d.Name
+                             };
+            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("appointmentTypeList", orderTypes.ToList());
+        }
+        #endregion
     }
 }

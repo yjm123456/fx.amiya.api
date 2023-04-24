@@ -7,6 +7,12 @@ namespace Fx.Amiya.Background.Api.Vo.MessageNotice.Result
 {
     public class MessageNoticeVo
     {
+
+        public int ReadCount { get; set; }
+        public int UnReadCount { get; set; }
+        public List<MessageReturnVo> MessageReturnVos { get; set; }
+    }
+    public class MessageReturnVo {
         public DateTime CreateDate { get; set; }
         public List<MessageNoticeDetails> Details { get; set; }
     }
@@ -37,6 +43,10 @@ namespace Fx.Amiya.Background.Api.Vo.MessageNotice.Result
         /// 通知类型文本
         /// </summary>
         public string NoticeTypeText { get; set; }
+        /// <summary>
+        /// 订单号，通知类型为订单通知时展示
+        /// </summary>
+        public string OrderId { get; set; }
 
         /// <summary>
         /// 通知内容

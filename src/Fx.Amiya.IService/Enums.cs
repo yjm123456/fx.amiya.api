@@ -1107,8 +1107,8 @@ namespace Fx.Amiya.IService
         /// </summary>
         OperationNotice = 3,
         /// <summary>
-        /// 其他通知
+        /// 分诊通知
         /// </summary>
-        OhterNotice = 4,
+        DistributeInterviewNotice = 4,
     }
 }

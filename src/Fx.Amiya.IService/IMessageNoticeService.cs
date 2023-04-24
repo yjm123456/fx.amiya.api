@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.CustomerAppointmentSchedule.Input;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.CustomerAppointmentSchedule.Input;
 using Fx.Amiya.Dto.CustomerAppointmentSchedule.Result;
 using Fx.Amiya.Dto.MessageNotice.Input;
 using Fx.Amiya.Dto.MessageNotice.Result;
@@ -19,5 +20,6 @@ namespace Fx.Amiya.IService
         Task<int> GetMyUnReadAsync(int employeeId);
         Task AddAsync(AddMessageNoticeDto addDto);
         Task UpdateToReadAsync(UpdateMessageNoticeToReadDto updateDto);
+        List<BaseIdAndNameDto> GetMessageNoticeTypeList();
     }
 }

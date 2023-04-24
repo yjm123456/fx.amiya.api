@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Fx.Infrastructure.DataAccess;
 using Fx.Amiya.Dto.MessageNotice.Result;
 using Fx.Amiya.Dto.MessageNotice.Input;
+using Fx.Amiya.Dto;
 
 namespace Fx.Amiya.Service
 {
@@ -44,6 +45,7 @@ namespace Fx.Amiya.Service
             {
                 var messageNoticeService = from d in dalMessageNoticeService.GetAll().Include(x => x.AmiyaEmployeeInfo)
                                            where (!query.AcceptBy.HasValue || d.AcceptBy == query.AcceptBy.Value)
+                                           where (!query.NoticeType.HasValue || d.NoticeType == query.NoticeType.Value)
                                            && (!query.StartDate.HasValue || d.CreateDate >= query.StartDate.Value)
                                            && (!query.EndDate.HasValue || d.CreateDate <= query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
                                            && (d.Valid == true)
@@ -57,6 +59,7 @@ namespace Fx.Amiya.Service
                                                Valid = d.Valid,
                                                IsRead = d.IsRead,
                                                NoticeType = d.NoticeType,
+                                               OrderId = d.NoticeType == (int)MessageNoticeMessageTextEnum.OrderNotice ? d.NoticeContent.Substring(5, 16) : "",
                                                NoticeTypeText = ServiceClass.GetNoticeTypeText(d.NoticeType),
                                                NoticeContent = d.NoticeContent,
                                                AcceptByEmpName = d.AmiyaEmployeeInfo.Name,
@@ -134,5 +137,18 @@ namespace Fx.Amiya.Service
             }
         }
 
+        public List<BaseIdAndNameDto> GetMessageNoticeTypeList()
+        {
+            var appointmentTypes = Enum.GetValues(typeof(MessageNoticeMessageTextEnum));
+            List<BaseIdAndNameDto> appointmentTypeList = new List<BaseIdAndNameDto>();
+            foreach (var item in appointmentTypes)
+            {
+                BaseIdAndNameDto appointmentType = new BaseIdAndNameDto();
+                appointmentType.Id = Convert.ToInt32(item).ToString();
+                appointmentType.Name = ServiceClass.GetNoticeTypeText(Convert.ToByte(item));
+                appointmentTypeList.Add(appointmentType);
+            }
+            return appointmentTypeList;
+        }
     }
 }

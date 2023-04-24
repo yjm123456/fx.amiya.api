@@ -1585,7 +1585,7 @@ namespace Fx.Amiya.Service
                     break;
 
                 case 4:
-                    inventoryStateText = "其他通知";
+                    inventoryStateText = "分诊通知";
                     break;
 
             }

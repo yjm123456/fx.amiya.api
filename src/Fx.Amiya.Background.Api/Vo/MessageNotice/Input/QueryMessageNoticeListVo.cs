@@ -11,5 +11,10 @@ namespace Fx.Amiya.Background.Api.Vo.MessageNotice.Input
         /// 用户
         /// </summary>
         public int? AcceptBy { get; set; }
+
+        /// <summary>
+        /// 通知类型
+        /// </summary>
+        public int? NoticeType { get; set; }
     }
 }

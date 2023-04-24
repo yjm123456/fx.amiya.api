@@ -327,7 +327,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             List<HospitalPerformanceVo> hospitalPerformanceVo = new List<HospitalPerformanceVo>();
             var hospitalPerformanceDatasResult = await hospitalPerformanceService.GetHospitalPerformanceBymonthBWAsync(year, month);
             var hospitalPerformanceDatasDecending = hospitalPerformanceDatasResult.OrderByDescending(x => x.TotalAchievement).ToList();
-            var hospitalPerformanceDatas = hospitalPerformanceDatasDecending.Take(20).ToList();
+            var hospitalPerformanceDatas = hospitalPerformanceDatasDecending.ToList();
+            // var hospitalPerformanceDatas = hospitalPerformanceDatasDecending.Take(20).ToList();
             var totalAchievement = hospitalPerformanceDatasDecending.Sum(x => x.TotalAchievement);
             foreach (var x in hospitalPerformanceDatas)
             {
@@ -342,16 +343,16 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 hospitalPerformanceVo.Add(hospitalOperatingDataVo);
             }
 
-            //加入其他累计
-            HospitalPerformanceVo otherHospitalOperatingDataVo = new HospitalPerformanceVo();
-            otherHospitalOperatingDataVo.HospitalName = "其他";
-            otherHospitalOperatingDataVo.HospitalLogo = "";
-            otherHospitalOperatingDataVo.NewCustomerAchievement = DecimalExtension.ChangePriceToTenThousand(hospitalPerformanceDatasDecending.Sum(x => x.NewCustomerAchievement) - hospitalPerformanceDatas.Sum(x => x.NewCustomerAchievement));
-            otherHospitalOperatingDataVo.OldCustomerAchievement = DecimalExtension.ChangePriceToTenThousand(hospitalPerformanceDatasDecending.Sum(x => x.OldCustomerAchievement) - hospitalPerformanceDatas.Sum(x => x.OldCustomerAchievement));
-            otherHospitalOperatingDataVo.TotalAchievement = DecimalExtension.ChangePriceToTenThousand(hospitalPerformanceDatasDecending.Sum(x => x.TotalAchievement) - hospitalPerformanceDatas.Sum(x => x.TotalAchievement));
-            otherHospitalOperatingDataVo.NewOrOldCustomerRate = DecimalExtension.CalculateAccounted(otherHospitalOperatingDataVo.NewCustomerAchievement, otherHospitalOperatingDataVo.OldCustomerAchievement);
-            otherHospitalOperatingDataVo.TotalAchievementRatio = DecimalExtension.CalculateTargetComplete(otherHospitalOperatingDataVo.TotalAchievement, DecimalExtension.ChangePriceToTenThousand(totalAchievement));
-            hospitalPerformanceVo.Add(otherHospitalOperatingDataVo);
+            ////加入其他累计
+            //HospitalPerformanceVo otherHospitalOperatingDataVo = new HospitalPerformanceVo();
+            //otherHospitalOperatingDataVo.HospitalName = "其他";
+            //otherHospitalOperatingDataVo.HospitalLogo = "";
+            //otherHospitalOperatingDataVo.NewCustomerAchievement = DecimalExtension.ChangePriceToTenThousand(hospitalPerformanceDatasDecending.Sum(x => x.NewCustomerAchievement) - hospitalPerformanceDatas.Sum(x => x.NewCustomerAchievement));
+            //otherHospitalOperatingDataVo.OldCustomerAchievement = DecimalExtension.ChangePriceToTenThousand(hospitalPerformanceDatasDecending.Sum(x => x.OldCustomerAchievement) - hospitalPerformanceDatas.Sum(x => x.OldCustomerAchievement));
+            //otherHospitalOperatingDataVo.TotalAchievement = DecimalExtension.ChangePriceToTenThousand(hospitalPerformanceDatasDecending.Sum(x => x.TotalAchievement) - hospitalPerformanceDatas.Sum(x => x.TotalAchievement));
+            //otherHospitalOperatingDataVo.NewOrOldCustomerRate = DecimalExtension.CalculateAccounted(otherHospitalOperatingDataVo.NewCustomerAchievement, otherHospitalOperatingDataVo.OldCustomerAchievement);
+            //otherHospitalOperatingDataVo.TotalAchievementRatio = DecimalExtension.CalculateTargetComplete(otherHospitalOperatingDataVo.TotalAchievement, DecimalExtension.ChangePriceToTenThousand(totalAchievement));
+            //hospitalPerformanceVo.Add(otherHospitalOperatingDataVo);
             return ResultData<List<HospitalPerformanceVo>>.Success().AddData("performance", hospitalPerformanceVo);
         }
         #endregion

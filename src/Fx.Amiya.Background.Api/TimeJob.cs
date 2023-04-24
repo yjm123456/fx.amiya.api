@@ -318,7 +318,7 @@ namespace Fx.Amiya.Background.Api
                         addMessageNoticeDto.AcceptBy = sevendaysendDateOrder.BelongEmpId.Value;
                     }
                     addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
-                    addMessageNoticeDto.NoticeContent = "您的订单：" + sevendaysendDateOrder.Id + " 已派单超过" + sevenDay + "日，请及时跟进";
+                    addMessageNoticeDto.NoticeContent = "您的订单：" + sevendaysendDateOrder.Id + " 已派单超过" + sevenDay + "日，请及时跟进~";
                     await messageNoticeService.AddAsync(addMessageNoticeDto);
                 }
                 #endregion
@@ -337,7 +337,7 @@ namespace Fx.Amiya.Background.Api
                         addMessageNoticeDto.AcceptBy = fifTeendaysendDateOrder.BelongEmpId.Value;
                     }
                     addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
-                    addMessageNoticeDto.NoticeContent = "您的订单：" + fifTeendaysendDateOrder.Id + " 已派单超过" + fifteenDays + "日，请及时跟进";
+                    addMessageNoticeDto.NoticeContent = "您的订单：" + fifTeendaysendDateOrder.Id + " 已派单超过" + fifteenDays + "日，请及时跟进~";
                     await messageNoticeService.AddAsync(addMessageNoticeDto);
                 }
                 #endregion
@@ -356,7 +356,7 @@ namespace Fx.Amiya.Background.Api
                         addMessageNoticeDto.AcceptBy = ThirtydaysendDateOrder.BelongEmpId.Value;
                     }
                     addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
-                    addMessageNoticeDto.NoticeContent = "您的订单：" + ThirtydaysendDateOrder.Id + " 已派单超过" + thirtyDays + "日，请及时跟进";
+                    addMessageNoticeDto.NoticeContent = "您的订单：" + ThirtydaysendDateOrder.Id + " 已派单超过" + thirtyDays + "日，请及时跟进~";
                     await messageNoticeService.AddAsync(addMessageNoticeDto);
                 }
                 #endregion
@@ -379,7 +379,7 @@ namespace Fx.Amiya.Background.Api
                         addMessageNoticeDto.AcceptBy = ThirtydaydealDateOrder.BelongEmpId.Value;
                     }
                     addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
-                    addMessageNoticeDto.NoticeContent = "您的订单：" + ThirtydaydealDateOrder.Id + " 已成交超过" + thirtyDaysDeal + "日，请及时跟进";
+                    addMessageNoticeDto.NoticeContent = "您的订单：" + ThirtydaydealDateOrder.Id + " 已成交超过" + thirtyDaysDeal + "日，请及时跟进~";
                     await messageNoticeService.AddAsync(addMessageNoticeDto);
                 }
                 #endregion
@@ -398,7 +398,7 @@ namespace Fx.Amiya.Background.Api
                         addMessageNoticeDto.AcceptBy = FourtyFivedaydealDateOrder.BelongEmpId.Value;
                     }
                     addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
-                    addMessageNoticeDto.NoticeContent = "您的订单：" + FourtyFivedaydealDateOrder.Id + " 已成交超过" + fourtyFiveDaysDeal + "日，请及时跟进";
+                    addMessageNoticeDto.NoticeContent = "您的订单：" + FourtyFivedaydealDateOrder.Id + " 已成交超过" + fourtyFiveDaysDeal + "日，请及时跟进~";
                     await messageNoticeService.AddAsync(addMessageNoticeDto);
                 }
                 #endregion
@@ -417,7 +417,7 @@ namespace Fx.Amiya.Background.Api
                         addMessageNoticeDto.AcceptBy = SixtydaydealDateOrder.BelongEmpId.Value;
                     }
                     addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
-                    addMessageNoticeDto.NoticeContent = "您的订单：" + SixtydaydealDateOrder.Id + " 已成交超过" + sixtyFiveDaysDeal + "日，请及时跟进";
+                    addMessageNoticeDto.NoticeContent = "您的订单：" + SixtydaydealDateOrder.Id + " 已成交超过" + sixtyFiveDaysDeal + "日，请及时跟进~";
                     await messageNoticeService.AddAsync(addMessageNoticeDto);
                 }
                 #endregion
@@ -436,7 +436,7 @@ namespace Fx.Amiya.Background.Api
                         addMessageNoticeDto.AcceptBy = NinetydaydealDateOrder.BelongEmpId.Value;
                     }
                     addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
-                    addMessageNoticeDto.NoticeContent = "您的订单：" + NinetydaydealDateOrder.Id + " 已成交超过" + ninetyFiveDaysDeal + "日，请及时跟进";
+                    addMessageNoticeDto.NoticeContent = "您的订单：" + NinetydaydealDateOrder.Id + " 已成交超过" + ninetyFiveDaysDeal + "日，请及时跟进~";
                     await messageNoticeService.AddAsync(addMessageNoticeDto);
                 }
                 #endregion
@@ -449,7 +449,7 @@ namespace Fx.Amiya.Background.Api
                     AddMessageNoticeDto addMessageNoticeDto = new AddMessageNoticeDto();
                     addMessageNoticeDto.AcceptBy = todayCustomerAppointScheduleInfo.CreateBy;
                     addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.ScheduleNotice;
-                    addMessageNoticeDto.NoticeContent = "您今日有'" + todayCustomerAppointScheduleInfo.AppointmentTypeText + "'待处理，客户昵称：" + todayCustomerAppointScheduleInfo.CustomerName + ",联系方式：" + todayCustomerAppointScheduleInfo.Phone + "，请到客户预约日程中处理！";
+                    addMessageNoticeDto.NoticeContent = "您今日有'" + todayCustomerAppointScheduleInfo.AppointmentTypeText + "'待处理，客户昵称：" + todayCustomerAppointScheduleInfo.CustomerName + ",联系方式：" + todayCustomerAppointScheduleInfo.Phone + "，请到客户预约日程中处理~";
                     await messageNoticeService.AddAsync(addMessageNoticeDto);
                 }
                 #endregion

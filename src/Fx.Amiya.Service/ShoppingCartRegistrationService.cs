@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Fx.Infrastructure.DataAccess;
 using jos_sdk_net.Util;
 using Fx.Amiya.Dto.Performance;
+using Fx.Amiya.Dto.MessageNotice.Input;
 
 namespace Fx.Amiya.Service
 {
@@ -20,12 +21,14 @@ namespace Fx.Amiya.Service
         private IDalShoppingCartRegistration dalShoppingCartRegistration;
         private IContentPlatformService _contentPlatformService;
         private ILiveAnchorWeChatInfoService _liveAnchorWeChatInfoService;
+        private IMessageNoticeService messageNoticeService;
         private ILiveAnchorService _liveAnchorService;
         private IUnitOfWork unitOfWork;
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private IDalAmiyaEmployee dalAmiyaEmployee;
         public ShoppingCartRegistrationService(IDalShoppingCartRegistration dalShoppingCartRegistration,
             IContentPlatformService contentPlatformService,
+             IMessageNoticeService messageNoticeService,
             IAmiyaEmployeeService amiyaEmployeeService,
             IUnitOfWork unitOfWork,
             ILiveAnchorService liveAnchorService,
@@ -35,6 +38,7 @@ namespace Fx.Amiya.Service
             this.dalShoppingCartRegistration = dalShoppingCartRegistration;
             _contentPlatformService = contentPlatformService;
             _liveAnchorService = liveAnchorService;
+            this.messageNoticeService = messageNoticeService;
             this.unitOfWork = unitOfWork;
             _liveAnchorWeChatInfoService = liveAnchorWeChatInfoService;
             _amiyaEmployeeService = amiyaEmployeeService;
@@ -57,7 +61,8 @@ namespace Fx.Amiya.Service
                                                && (!isCreateOrder.HasValue || d.IsCreateOrder == isCreateOrder)
                                                && (!isConsultation.HasValue || d.IsConsultation == isConsultation)
                                                && (!isReturnBackPrice.HasValue || d.IsReturnBackPrice == isReturnBackPrice)
-                                               && (!assignEmpId.HasValue || d.AssignEmpId == assignEmpId)
+                                               && (assignEmpId.HasValue || d.AssignEmpId == null)
+                                               && (assignEmpId == 0 || d.AssignEmpId == assignEmpId)
                                                && (!minPrice.HasValue || d.Price >= minPrice)
                                                && (!maxPrice.HasValue || d.Price <= maxPrice)
                                                && (!LiveAnchorId.HasValue || d.LiveAnchorId == LiveAnchorId)
@@ -393,7 +398,7 @@ namespace Fx.Amiya.Service
 
         public async Task AssignAsync(string id, int assignBy)
         {
-            //   unitOfWork.BeginTransaction();
+            unitOfWork.BeginTransaction();
             try
             {
                 var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().SingleOrDefaultAsync(e => e.Id == id);
@@ -401,11 +406,19 @@ namespace Fx.Amiya.Service
                     throw new Exception("小黄车登记编号错误！");
                 shoppingCartRegistration.AssignEmpId = assignBy;
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
-                // unitOfWork.Commit();
+
+                //动消息添加提示内容
+                AddMessageNoticeDto addMessageNoticeDto = new AddMessageNoticeDto();
+                addMessageNoticeDto.AcceptBy = assignBy;
+                addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.DistributeInterviewNotice;
+                addMessageNoticeDto.NoticeContent = "您收到了新的分诊订单，请及时跟进~";
+                await messageNoticeService.AddAsync(addMessageNoticeDto);
+
+                unitOfWork.Commit();
             }
             catch (Exception ex)
             {
-                // unitOfWork.RollBack();
+                unitOfWork.RollBack();
                 throw ex;
             }
         }
