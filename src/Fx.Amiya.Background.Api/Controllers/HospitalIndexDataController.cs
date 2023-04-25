@@ -51,7 +51,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 ProcessStatus="未处理",
                 Item = e.Item,
                 UserInfo = e.UserInfo,
-                LastFollowContent = e.LastFollowContent
+                LastFollowContent = e.LastFollowContent,
+                SendOrderAssistantName=e.SendOrderAssistantName,
+                SendOrderLiveAnchorNAme=e.SendOrderLiveAnchorNAme,
+                SendOrderDate=e.SendOrderDate
             }).ToList();
             return ResultData<List<HospitalCurrentDayNotRepeatedSendOrderVo>>.Success().AddData("todayNoRepeatedSendOrder", todayList);
         }

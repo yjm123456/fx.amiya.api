@@ -37,5 +37,17 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 最后跟进内容
         /// </summary>
         public string LastFollowContent { get; set; }
+        /// <summary>
+        /// 派单主播名称
+        /// </summary>
+        public string SendOrderLiveAnchorNAme { get; set; }
+        /// <summary>
+        /// 派单助理名称
+        /// </summary>
+        public string SendOrderAssistantName { get; set; }
+        /// <summary>
+        /// 派单时间
+        /// </summary>
+        public DateTime SendOrderDate { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
+using Fx.Amiya.Dto.HospitalBoard;
 using Fx.Amiya.Dto.OrderRemark;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.SendOrderInfo;
@@ -1018,7 +1019,10 @@ namespace Fx.Amiya.Service
                                 OrderStatusText = ServiceClass.GetContentPlateFormOrderStatusText((byte)d.ContentPlatformOrder.OrderStatus),
                                 Item = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.AmiyaGoodsDemand.ProjectNname : "****",
                                 UserInfo = d.ContentPlatformOrder.CustomerName + " - " + (d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? (p != null ? d.ContentPlatformOrder.Phone : config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone) : d.ContentPlatformOrder.Phone) : ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone)),
-                                LastFollowContent = "****"
+                                LastFollowContent = "****",
+                                SendOrderDate=d.SendDate,
+                                SendOrderLiveAnchorNAme=d.ContentPlatformOrder.LiveAnchor.Name,
+                                SendOrderAssistantName=d.AmiyaEmployee.Name
                             };
             fxPageInfo.TotalCount = await sendOrder.CountAsync();
             fxPageInfo.List = sendOrder.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
@@ -1026,6 +1030,11 @@ namespace Fx.Amiya.Service
         }
 
 
+
+
+
+       
+        
 
         #endregion
 

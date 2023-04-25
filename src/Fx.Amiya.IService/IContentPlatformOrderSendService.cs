@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
+using Fx.Amiya.Dto.HospitalBoard;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.SendOrderInfo;
 using Fx.Common;
@@ -216,5 +217,6 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<decimal> GetTotalSendCount();
+        
     }
 }

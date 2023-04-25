@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.FinancialBoard;
+using Fx.Amiya.Dto.HospitalBoard;
 using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.TmallOrder;
@@ -409,6 +410,63 @@ namespace Fx.Amiya.IService
         Task<List<LiveAnchorBoardDataDto>> GetLiveAnchorPriceByLiveAnchorIdAsync(DateTime? startDate, DateTime? endDate, List<int> liveAnchorIds);
         #endregion
 
+        #region 医院看板
 
+        /// <summary>
+        /// 获取机构段订单看板数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        Task<OrderBaseDto> GetOrderDataByMonthAsync(DateTime startDate,DateTime endDate,int hospitalId);
+        /// <summary>
+        /// 获取机构端运营看板数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<OperaBaseDto> GetOperateDataByMonthAsync(DateTime startDate, DateTime endDate, int hospitalId);
+        /// <summary>
+        /// 获取机构端成交看板数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<DealPerformanceDataDto> GetDealDataAsync(DateTime startDate, DateTime endDate, int hospitalId);
+        /// <summary>
+        /// 获取机构端成交看板科室排名数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<List<OperateDepartmentRankDto>> GetDealDepartmentDataAsync(DateTime startDate, DateTime endDate, int hospitalId);
+        /// <summary>
+        /// 获取机构端成交看板邀约排名数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<List<OperateConsultantRankDataDto>> GetDealConsultantDataAsync(DateTime startDate,DateTime endDate,int hospitalId);
+        /// <summary>
+        /// 获取机构端成交看板接诊排名数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+
+        Task<List<OperateConsultantRankDataDto>> GetDealSceneConsultantDataAsync(DateTime startDate, DateTime endDate, int hospitalId);
+        /// <summary>
+        /// 获取机构排名
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        Task<List<RankDataDto>> GetRankDataAsync(DateTime startDate, DateTime endDate);
+        #endregion
     }
 }
