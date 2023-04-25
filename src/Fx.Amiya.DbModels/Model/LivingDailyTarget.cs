@@ -20,7 +20,7 @@ namespace Fx.Amiya.DbModels.Model
 
         public DateTime RecordDate { get; set; }
 
-        public LiveAnchorMonthlyTarget LiveAnchorMonthlyTarget { get; set; }
+        public LiveAnchorMonthlyTargetLiving LiveAnchorMonthlyTargetLiving { get; set; }
 
         public AmiyaEmployee AmiyaEmployee { get; set; }
     }

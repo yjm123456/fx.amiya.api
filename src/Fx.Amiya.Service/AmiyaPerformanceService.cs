@@ -20,6 +20,8 @@ namespace Fx.Amiya.Service
     public class AmiyaPerformanceService : IAmiyaPerformanceService
     {
         private readonly ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService;
+        private readonly ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService;
+        private readonly ILiveAnchorMonthlyTargetAfterLivingService liveAnchorMonthlyTargetAfterLivingService;
         private readonly IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
         private readonly ILiveAnchorBaseInfoService liveAnchorBaseInfoService;
         private readonly ILiveAnchorService liveAnchorService;
@@ -31,6 +33,8 @@ namespace Fx.Amiya.Service
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
             ILiveAnchorService liveAnchorService,
             ILiveAnchorBaseInfoService liveAnchorBaseInfoService,
+            ILiveAnchorMonthlyTargetAfterLivingService liveanchorMonthlyTargetAfterLivingService,
+            ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService,
             IShoppingCartRegistrationService shoppingCartRegistrationService,
             IAmiyaEmployeeService amiyaEmployeeService,
             IContentPlateFormOrderService contentPlateFormOrderService)
@@ -38,6 +42,8 @@ namespace Fx.Amiya.Service
             this.liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
             this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
             this.liveAnchorBaseInfoService = liveAnchorBaseInfoService;
+            this.liveAnchorMonthlyTargetAfterLivingService = liveanchorMonthlyTargetAfterLivingService;
+            this.liveAnchorMonthlyTargetLivingService = liveAnchorMonthlyTargetLivingService;
             this.liveAnchorService = liveAnchorService;
             this.shoppingCartRegistrationService = shoppingCartRegistrationService;
             this.amiyaEmployeeService = amiyaEmployeeService;
@@ -113,41 +119,42 @@ namespace Fx.Amiya.Service
 
             #region 带货业绩
             List<int> LiveAnchorInfo = new List<int>();
-            var target = await liveAnchorMonthlyTargetService.GetPerformance(year, month, LiveAnchorInfo);
-            var commercePerformanceYearOnYear = await liveAnchorMonthlyTargetService.GetPerformance(year - 1, month, LiveAnchorInfo);
+            var livingTarget = await liveAnchorMonthlyTargetLivingService.GetPerformance(year, month, LiveAnchorInfo);
+            var afterLivingTarget = await liveAnchorMonthlyTargetAfterLivingService.GetPerformance(year, month, LiveAnchorInfo);
+            var commercePerformanceYearOnYearLiving = await liveAnchorMonthlyTargetLivingService.GetPerformance(year - 1, month, LiveAnchorInfo);
             LiveAnchorMonthTargetPerformanceDto liveAnchorMonthTargetPerformanceDto = new LiveAnchorMonthTargetPerformanceDto();
             if (month == 1)
             {
-                liveAnchorMonthTargetPerformanceDto = await liveAnchorMonthlyTargetService.GetPerformance(year - 1, 12, LiveAnchorInfo);
+                liveAnchorMonthTargetPerformanceDto = await liveAnchorMonthlyTargetLivingService.GetPerformance(year - 1, 12, LiveAnchorInfo);
             }
             else
             {
-                liveAnchorMonthTargetPerformanceDto = await liveAnchorMonthlyTargetService.GetPerformance(year, month - 1, LiveAnchorInfo);
+                liveAnchorMonthTargetPerformanceDto = await liveAnchorMonthlyTargetLivingService.GetPerformance(year, month - 1, LiveAnchorInfo);
             }
             #endregion
 
 
             MonthPerformanceRatioDto monthPerformanceRatioDto = new MonthPerformanceRatioDto
             {
-                CueerntMonthTotalPerformance = curTotalPerformance + target.CommerceCompletePerformance,
+                CueerntMonthTotalPerformance = curTotalPerformance + livingTarget.CommerceCompletePerformance,
                 CurrentMonthNewCustomerPerformance = curNewCustomer,
                 CurrentMonthOldCustomerPerformance = curOldCustomer,
-                CurrentMonthCommercePerformance = target.CommerceCompletePerformance,
-                TotalPerformanceYearOnYear = CalculateYearOnYear(curTotalPerformance + target.CommerceCompletePerformance, totalPerformanceYearOnYear + commercePerformanceYearOnYear.CommerceCompletePerformance),
-                TotalPerformanceChainratio = CalculateChainratio(curTotalPerformance + target.CommerceCompletePerformance, totalPerformanceChainRatio + liveAnchorMonthTargetPerformanceDto.CommerceCompletePerformance),
-                TotalPerformanceTargetComplete = CalculateTargetComplete(curTotalPerformance + target.CommerceCompletePerformance, target.CommercePerformanceTarget + target.TotalPerformanceTarget),
+                CurrentMonthCommercePerformance = livingTarget.CommerceCompletePerformance,
+                TotalPerformanceYearOnYear = CalculateYearOnYear(curTotalPerformance + livingTarget.CommerceCompletePerformance, totalPerformanceYearOnYear + commercePerformanceYearOnYearLiving.CommerceCompletePerformance),
+                TotalPerformanceChainratio = CalculateChainratio(curTotalPerformance + livingTarget.CommerceCompletePerformance, totalPerformanceChainRatio + liveAnchorMonthTargetPerformanceDto.CommerceCompletePerformance),
+                TotalPerformanceTargetComplete = CalculateTargetComplete(curTotalPerformance + afterLivingTarget.CommerceCompletePerformance, livingTarget.CommercePerformanceTarget + afterLivingTarget.TotalPerformanceTarget),
                 NewCustomerPerformanceYearOnYear = CalculateYearOnYear(curNewCustomer, newPerformanceYearOnYear),
                 NewCustomerPerformanceChainRatio = CalculateChainratio(curNewCustomer, newPerformanceChainRatio),
-                NewCustomerPerformanceTargetComplete = CalculateTargetComplete(curNewCustomer, target.NewCustomerPerformanceTarget),
+                NewCustomerPerformanceTargetComplete = CalculateTargetComplete(curNewCustomer, afterLivingTarget.NewCustomerPerformanceTarget),
                 OldCustomerPerformanceYearOnYear = CalculateYearOnYear(curOldCustomer, oldPerformanceYearOnYear),
                 OldCustomerPerformanceChainRatio = CalculateChainratio(curOldCustomer, oldPerformanceRatio),
-                OldCustomerTargetComplete = CalculateTargetComplete(curOldCustomer, target.OldCustomerPerformanceTarget),
-                CommercePerformanceYearOnYear = CalculateYearOnYear(target.CommerceCompletePerformance, commercePerformanceYearOnYear.CommerceCompletePerformance),
-                CommercePerformanceChainRatio = CalculateChainratio(target.CommerceCompletePerformance, liveAnchorMonthTargetPerformanceDto.CommerceCompletePerformance),
-                CommercePerformanceTargetComplete = CalculateTargetComplete(target.CommerceCompletePerformance, target.CommercePerformanceTarget),
-                NewCustomerPerformanceRatio = CalculateTargetComplete(curNewCustomer, curTotalPerformance + target.CommerceCompletePerformance),
-                OldCustomerPerformanceRatio = CalculateTargetComplete(curOldCustomer, curTotalPerformance + target.CommerceCompletePerformance),
-                CommercePerformanceRatio = CalculateTargetComplete(target.CommerceCompletePerformance, curTotalPerformance + target.CommerceCompletePerformance)
+                OldCustomerTargetComplete = CalculateTargetComplete(curOldCustomer, afterLivingTarget.OldCustomerPerformanceTarget),
+                CommercePerformanceYearOnYear = CalculateYearOnYear(livingTarget.CommerceCompletePerformance, commercePerformanceYearOnYearLiving.CommerceCompletePerformance),
+                CommercePerformanceChainRatio = CalculateChainratio(livingTarget.CommerceCompletePerformance, liveAnchorMonthTargetPerformanceDto.CommerceCompletePerformance),
+                CommercePerformanceTargetComplete = CalculateTargetComplete(livingTarget.CommerceCompletePerformance, livingTarget.CommercePerformanceTarget),
+                NewCustomerPerformanceRatio = CalculateTargetComplete(curNewCustomer, curTotalPerformance + livingTarget.CommerceCompletePerformance),
+                OldCustomerPerformanceRatio = CalculateTargetComplete(curOldCustomer, curTotalPerformance + livingTarget.CommerceCompletePerformance),
+                CommercePerformanceRatio = CalculateTargetComplete(livingTarget.CommerceCompletePerformance, curTotalPerformance + livingTarget.CommerceCompletePerformance)
             };
 
 
@@ -232,7 +239,7 @@ namespace Fx.Amiya.Service
             #region 【刀刀组业绩】
             var liveAnchorDaoDaoBaseInfo = await liveAnchorBaseInfoService.GetByNameAsync("刀刀");
 
-            var groupDaoDaoPerformance = await liveAnchorMonthlyTargetService.GetLiveAnchorBaseIdPerformance(year, month, liveAnchorDaoDaoBaseInfo.Id);
+            var groupDaoDaoPerformance = await liveAnchorMonthlyTargetAfterLivingService.GetLiveAnchorBaseIdPerformance(year, month, liveAnchorDaoDaoBaseInfo.Id);
             var LiveAnchorDaoDaoInfo = await this.GetLiveAnchorIdsByNameAsync("刀刀");
 
             var groupDaoDaoOrderDealPerformance = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year, month, null, LiveAnchorDaoDaoInfo);
@@ -260,7 +267,7 @@ namespace Fx.Amiya.Service
             #region 【吉娜组业绩】
             var liveAnchorJinaBaseInfo = await liveAnchorBaseInfoService.GetByNameAsync("吉娜");
 
-            var groupJinaPerformance = await liveAnchorMonthlyTargetService.GetLiveAnchorBaseIdPerformance(year, month, liveAnchorJinaBaseInfo.Id);
+            var groupJinaPerformance = await liveAnchorMonthlyTargetAfterLivingService.GetLiveAnchorBaseIdPerformance(year, month, liveAnchorJinaBaseInfo.Id);
             var LiveAnchorJinaInfo = await this.GetLiveAnchorIdsByNameAsync("吉娜");
 
             var groupJinaOrderDealPerformance = await contentPlatFormOrderDealInfoService.GetPerformanceByYearAndMonth(year, month, null, LiveAnchorJinaInfo);
@@ -371,41 +378,42 @@ namespace Fx.Amiya.Service
 
 
             #region 带货业绩
-            var target = await liveAnchorMonthlyTargetService.GetPerformance(year, month, LiveAnchorInfo);
-            var commercePerformanceYearOnYear = await liveAnchorMonthlyTargetService.GetPerformance(year - 1, month, LiveAnchorInfo);
+            var targetLiving = await liveAnchorMonthlyTargetLivingService.GetPerformance(year, month, LiveAnchorInfo);
+            var targetAfterLiving = await liveAnchorMonthlyTargetAfterLivingService.GetPerformance(year, month, LiveAnchorInfo);
+            var commercePerformanceYearOnYear = await liveAnchorMonthlyTargetLivingService.GetPerformance(year - 1, month, LiveAnchorInfo);
             LiveAnchorMonthTargetPerformanceDto liveAnchorMonthTargetPerformanceDto = new LiveAnchorMonthTargetPerformanceDto();
             if (month == 1)
             {
-                liveAnchorMonthTargetPerformanceDto = await liveAnchorMonthlyTargetService.GetPerformance(year - 1, 12, LiveAnchorInfo);
+                liveAnchorMonthTargetPerformanceDto = await liveAnchorMonthlyTargetLivingService.GetPerformance(year - 1, 12, LiveAnchorInfo);
             }
             else
             {
-                liveAnchorMonthTargetPerformanceDto = await liveAnchorMonthlyTargetService.GetPerformance(year, month - 1, LiveAnchorInfo);
+                liveAnchorMonthTargetPerformanceDto = await liveAnchorMonthlyTargetLivingService.GetPerformance(year, month - 1, LiveAnchorInfo);
             }
             #endregion
 
 
             MonthPerformanceRatioDto monthPerformanceRatioDto = new MonthPerformanceRatioDto
             {
-                CueerntMonthTotalPerformance = curTotalPerformance + target.CommerceCompletePerformance,
+                CueerntMonthTotalPerformance = curTotalPerformance + targetLiving.CommerceCompletePerformance,
                 CurrentMonthNewCustomerPerformance = curNewCustomer,
                 CurrentMonthOldCustomerPerformance = curOldCustomer,
-                CurrentMonthCommercePerformance = target.CommerceCompletePerformance,
-                TotalPerformanceYearOnYear = CalculateYearOnYear(curTotalPerformance + target.CommerceCompletePerformance, totalPerformanceYearOnYear + commercePerformanceYearOnYear.CommerceCompletePerformance),
-                TotalPerformanceChainratio = CalculateChainratio(curTotalPerformance + target.CommerceCompletePerformance, totalPerformanceChainRatio + liveAnchorMonthTargetPerformanceDto.CommerceCompletePerformance),
-                TotalPerformanceTargetComplete = CalculateTargetComplete(curTotalPerformance + target.CommerceCompletePerformance, target.CommercePerformanceTarget + target.TotalPerformanceTarget),
+                CurrentMonthCommercePerformance = targetLiving.CommerceCompletePerformance,
+                TotalPerformanceYearOnYear = CalculateYearOnYear(curTotalPerformance + targetLiving.CommerceCompletePerformance, totalPerformanceYearOnYear + commercePerformanceYearOnYear.CommerceCompletePerformance),
+                TotalPerformanceChainratio = CalculateChainratio(curTotalPerformance + targetLiving.CommerceCompletePerformance, totalPerformanceChainRatio + liveAnchorMonthTargetPerformanceDto.CommerceCompletePerformance),
+                TotalPerformanceTargetComplete = CalculateTargetComplete(curTotalPerformance + targetLiving.CommerceCompletePerformance, targetLiving.CommercePerformanceTarget + targetAfterLiving.TotalPerformanceTarget),
                 NewCustomerPerformanceYearOnYear = CalculateYearOnYear(curNewCustomer, newPerformanceYearOnYear),
                 NewCustomerPerformanceChainRatio = CalculateChainratio(curNewCustomer, newPerformanceChainRatio),
-                NewCustomerPerformanceTargetComplete = CalculateTargetComplete(curNewCustomer, target.NewCustomerPerformanceTarget),
+                NewCustomerPerformanceTargetComplete = CalculateTargetComplete(curNewCustomer, targetAfterLiving.NewCustomerPerformanceTarget),
                 OldCustomerPerformanceYearOnYear = CalculateYearOnYear(curOldCustomer, oldPerformanceYearOnYear),
                 OldCustomerPerformanceChainRatio = CalculateChainratio(curOldCustomer, oldPerformanceRatio),
-                OldCustomerTargetComplete = CalculateTargetComplete(curOldCustomer, target.OldCustomerPerformanceTarget),
-                CommercePerformanceYearOnYear = CalculateYearOnYear(target.CommerceCompletePerformance, commercePerformanceYearOnYear.CommerceCompletePerformance),
-                CommercePerformanceChainRatio = CalculateChainratio(target.CommerceCompletePerformance, liveAnchorMonthTargetPerformanceDto.CommerceCompletePerformance),
-                CommercePerformanceTargetComplete = CalculateTargetComplete(target.CommerceCompletePerformance, target.CommercePerformanceTarget),
-                NewCustomerPerformanceRatio = CalculateTargetComplete(curNewCustomer, curTotalPerformance + target.CommerceCompletePerformance),
-                OldCustomerPerformanceRatio = CalculateTargetComplete(curOldCustomer, curTotalPerformance + target.CommerceCompletePerformance),
-                CommercePerformanceRatio = CalculateTargetComplete(target.CommerceCompletePerformance, curTotalPerformance + target.CommerceCompletePerformance)
+                OldCustomerTargetComplete = CalculateTargetComplete(curOldCustomer, targetAfterLiving.OldCustomerPerformanceTarget),
+                CommercePerformanceYearOnYear = CalculateYearOnYear(targetLiving.CommerceCompletePerformance, commercePerformanceYearOnYear.CommerceCompletePerformance),
+                CommercePerformanceChainRatio = CalculateChainratio(targetLiving.CommerceCompletePerformance, liveAnchorMonthTargetPerformanceDto.CommerceCompletePerformance),
+                CommercePerformanceTargetComplete = CalculateTargetComplete(targetLiving.CommerceCompletePerformance, targetLiving.CommercePerformanceTarget),
+                NewCustomerPerformanceRatio = CalculateTargetComplete(curNewCustomer, curTotalPerformance + targetLiving.CommerceCompletePerformance),
+                OldCustomerPerformanceRatio = CalculateTargetComplete(curOldCustomer, curTotalPerformance + targetLiving.CommerceCompletePerformance),
+                CommercePerformanceRatio = CalculateTargetComplete(targetLiving.CommerceCompletePerformance, curTotalPerformance + targetLiving.CommerceCompletePerformance)
             };
 
 
@@ -654,7 +662,8 @@ namespace Fx.Amiya.Service
         {
             BaseBusinessPerformanceDto baseBusinessPerformanceDto = new BaseBusinessPerformanceDto();
             var LiveAnchorInfo = await this.GetLiveAnchorIdsByNameAsync(liveAnchorName);
-            var groupPerformanceTarget = await liveAnchorMonthlyTargetService.GetBasePerformanceTargetAsync(year, month, LiveAnchorInfo);
+            var groupPerformanceTargetLiving = await liveAnchorMonthlyTargetLivingService.GetBasePerformanceTargetAsync(year, month, LiveAnchorInfo);
+            var groupPerformanceTarget = await liveAnchorMonthlyTargetAfterLivingService.GetBasePerformanceTargetAsync(year, month, LiveAnchorInfo);
 
             var baseBusinessPerformance = await shoppingCartRegistrationService.GetBaseBusinessPerformanceByLiveAnchorNameAsync(year, month, null, null, LiveAnchorInfo);
 
@@ -705,7 +714,7 @@ namespace Fx.Amiya.Service
             var lastYearTotalConsulationCardPerformance = lastYearConsulationCardPerformance.Count();
             baseBusinessPerformanceDto.ConsulationCardNumYearOnYear = CalculateYearOnYear(baseBusinessPerformanceDto.ConsulationCardNum.Value, lastYearTotalConsulationCardPerformance);
             //目标达成
-            baseBusinessPerformanceDto.ConsulationCardNumTargetComplete = CalculateTargetComplete(baseBusinessPerformanceDto.ConsulationCardNum.Value, groupPerformanceTarget.ConsulationCardTarget);
+            baseBusinessPerformanceDto.ConsulationCardNumTargetComplete = CalculateTargetComplete(baseBusinessPerformanceDto.ConsulationCardNum.Value, groupPerformanceTargetLiving.ConsulationCardTarget);
 
             #endregion
 
@@ -838,7 +847,7 @@ namespace Fx.Amiya.Service
             SendAndDealPerformanceByLiveAnchorDto sendAndDealPerformanceDto = new SendAndDealPerformanceByLiveAnchorDto();
             //获取各个平台的主播ID
             var LiveAnchorInfo = await this.GetLiveAnchorIdsByNameAsync(liveAnchorName);
-            var groupPerformanceTarget = await liveAnchorMonthlyTargetService.GetSendOrDealTargetAsync(year, month, LiveAnchorInfo);
+            var groupPerformanceTarget = await liveAnchorMonthlyTargetAfterLivingService.GetSendOrDealTargetAsync(year, month, LiveAnchorInfo);
             //获取总体数据
             var liveAnchorSendOrderNum = await contentPlateFormOrderService.GetSendOrDealPerformanceByLiveAnchorAsync(LiveAnchorInfo);
 
@@ -1151,8 +1160,8 @@ namespace Fx.Amiya.Service
 
             GroupTargetCompleteRateDto baseBusinessPerformanceDto = new GroupTargetCompleteRateDto();
             var LiveAnchorInfo = await this.GetLiveAnchorIdsByNameAsync(liveAnchorName);
-            var groupPerformanceTarget = await liveAnchorMonthlyTargetService.GetBasePerformanceTargetAsync(year, month, LiveAnchorInfo);
-            var groupSendOrDealTarget = await liveAnchorMonthlyTargetService.GetSendOrDealTargetAsync(year, month, LiveAnchorInfo);
+            var groupPerformanceTarget = await liveAnchorMonthlyTargetAfterLivingService.GetBasePerformanceTargetAsync(year, month, LiveAnchorInfo);
+            var groupSendOrDealTarget = await liveAnchorMonthlyTargetAfterLivingService.GetSendOrDealTargetAsync(year, month, LiveAnchorInfo);
             //获取总体数据
             var liveAnchorSendOrderNum = await contentPlateFormOrderService.GetSendOrDealPerformanceByLiveAnchorAsync(LiveAnchorInfo);
             var baseBusinessPerformance = await shoppingCartRegistrationService.GetBaseBusinessPerformanceByLiveAnchorNameAsync(year, month, null, null, LiveAnchorInfo);
@@ -1367,9 +1376,9 @@ namespace Fx.Amiya.Service
             //获取合作达人主播ID
             var OtherLiveAnchorInfo = await this.GetLiveAnchorIdsByBaseIdAndIsSelfLiveAnchorAsync("", false);
             //获取自播达人目标
-            var selfLiveAnchortarget = await liveAnchorMonthlyTargetService.GetPerformance(year, month, SelfLiveAnchorInfo);
+            var selfLiveAnchortarget = await liveAnchorMonthlyTargetAfterLivingService.GetPerformance(year, month, SelfLiveAnchorInfo);
             //获取合作达人目标
-            var otherLiveAnchortarget = await liveAnchorMonthlyTargetService.GetPerformance(year, month, OtherLiveAnchorInfo);
+            var otherLiveAnchortarget = await liveAnchorMonthlyTargetAfterLivingService.GetPerformance(year, month, OtherLiveAnchorInfo);
 
             #region 自播达人业绩
             //总业绩
@@ -1397,9 +1406,9 @@ namespace Fx.Amiya.Service
 
             #region 带货业绩
             List<int> LiveAnchorInfo = new List<int>();
-            var target = await liveAnchorMonthlyTargetService.GetPerformance(year, month, LiveAnchorInfo);
-            var commercePerformanceYearOnYear = await liveAnchorMonthlyTargetService.GetPerformance(sequentialDate.LastYearThisMonthStartDate.Year, sequentialDate.LastYearThisMonthEndDate.Month, LiveAnchorInfo);
-            var commercePerformanceChainRatio = await liveAnchorMonthlyTargetService.GetPerformance(sequentialDate.LastMonthStartDate.Year, sequentialDate.LastMonthEndDate.Month, LiveAnchorInfo);
+            var target = await liveAnchorMonthlyTargetLivingService.GetPerformance(year, month, LiveAnchorInfo);
+            var commercePerformanceYearOnYear = await liveAnchorMonthlyTargetLivingService.GetPerformance(sequentialDate.LastYearThisMonthStartDate.Year, sequentialDate.LastYearThisMonthEndDate.Month, LiveAnchorInfo);
+            var commercePerformanceChainRatio = await liveAnchorMonthlyTargetLivingService.GetPerformance(sequentialDate.LastMonthStartDate.Year, sequentialDate.LastMonthEndDate.Month, LiveAnchorInfo);
             #endregion
 
             #region 其他业绩(todo;)
@@ -1465,7 +1474,7 @@ namespace Fx.Amiya.Service
             //获取各个平台的主播ID
             var LiveAnchorInfo = await this.GetLiveAnchorIdsByBaseIdAndIsSelfLiveAnchorAsync(liveAnchorBaseId, isSelfLiveAnchor);
             //获取目标
-            var target = await liveAnchorMonthlyTargetService.GetPerformance(year, month, LiveAnchorInfo);
+            var target = await liveAnchorMonthlyTargetAfterLivingService.GetPerformance(year, month, LiveAnchorInfo);
 
             #region 总业绩
             //总业绩
@@ -1802,7 +1811,7 @@ namespace Fx.Amiya.Service
         public async Task<List<PerformanceInfoByDateDto>> GetLiveAnchorCommercePerformanceByLiveAnchorIdAsync(int year, int month, string liveAnchorName)
         {
             var LiveAnchorInfo = await this.GetLiveAnchorIdsByNameAsync(liveAnchorName);
-            var brokenLine = await liveAnchorMonthlyTargetService.GetLiveAnchorCommercePerformance(year, month, LiveAnchorInfo);
+            var brokenLine = await liveAnchorMonthlyTargetLivingService.GetLiveAnchorCommercePerformance(year, month, LiveAnchorInfo);
             return BreakLineClassUtil<PerformanceInfoByDateDto>.Convert(month, brokenLine);
         }
 

@@ -78,6 +78,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<LiveAnchorMonthlyTarget> LiveAnchorMonthlyTarget { get; set; }
         public virtual DbSet<LiveAnchorMonthlyTargetBeforeLiving> LiveAnchorMonthlyTargetBeforeLiving { get; set; }
         public virtual DbSet<LiveAnchorMonthlyTargetLiving> LiveAnchorMonthlyTargetLiving { get; set; }
+        public virtual DbSet<LiveAnchorMonthlyTargetAfterLiving> LiveAnchorMonthlyTargetAfterLiving { get; set; }
         public virtual DbSet<LiveAnchorDailyTarget> LiveAnchorDailyTarget { get; set; }
         public virtual DbSet<ModuleCategory> ModuleCategory { get; set; }
         public virtual DbSet<HospitalDoctorOperationData> HospitalDoctorOperationData { get; set; }
@@ -211,6 +212,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new LiveAnchorMonthlyTargetConfiguration());
             modelBuilder.ApplyConfiguration(new LiveAnchorMonthlyTargetBeforeLivingConfiguration());
             modelBuilder.ApplyConfiguration(new LiveAnchorMonthlyTargetLivingConfiguration());
+            modelBuilder.ApplyConfiguration(new LiveAnchorMonthlyTargetAfterLivingConfiguration());
             modelBuilder.ApplyConfiguration(new TrackReportedConfiguration());
             modelBuilder.ApplyConfiguration(new LiveAnchorDailyTargetConfiguration());
             modelBuilder.ApplyConfiguration(new OrderCheckPictureConfiguration());

@@ -107,7 +107,7 @@ namespace Fx.Amiya.DbModels.Model
         public int MiniVanBadReviews { get; set; }
         public DateTime RecordDate { get; set; }
 
-        public LiveAnchorMonthlyTarget LiveAnchorMonthlyTarget { get; set; }
+        public LiveAnchorMonthlyTargetAfterLiving LiveAnchorMonthlyTargetAfterLiving { get; set; }
 
         public AmiyaEmployee AmiyaEmployee { get; set; }
     }

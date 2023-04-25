@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Fx.Amiya.DbModels.Model
 {
-   public class LiveAnchor
+    public class LiveAnchor
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -23,6 +23,8 @@ namespace Fx.Amiya.DbModels.Model
         public List<LiveAnchorMonthlyTarget> LiveAnchorMonthlyTargets { get; set; }
         public List<LiveAnchorMonthlyTargetBeforeLiving> LiveAnchorMonthlyTargetBeforeLivings { get; set; }
         public List<LiveAnchorMonthlyTargetLiving> LiveAnchorMonthlyTargetLivings { get; set; }
+
+        public List<LiveAnchorMonthlyTargetAfterLiving> LiveAnchorMonthlyTargetAfterLivings { get; set; }
 
         public List<LiveAnchorWeChatInfo> LiveAnchorWeChatInfo { get; set; }
 

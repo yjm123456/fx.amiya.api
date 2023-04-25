@@ -67,7 +67,7 @@ namespace Fx.Amiya.Service
                                                   MonthlyTargetName = d.MonthlyTargetName,
                                                   LiveAnchorId = d.LiveAnchorId,
                                                   LiveAnchorName = d.LiveAnchor.Name,
-
+                                                  ContentPlatFormId=d.LiveAnchor.ContentPlateFormId,
                                                   LivingRoomCumulativeFlowInvestment = d.LivingRoomCumulativeFlowInvestment,
                                                   LivingRoomFlowInvestmentTarget = d.LivingRoomFlowInvestmentTarget,
                                                   LivingRoomFlowInvestmentCompleteRate = d.LivingRoomFlowInvestmentCompleteRate,
@@ -314,6 +314,28 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
+        /// 获取业绩目标
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorIds">各个平台的主播ID集合</param>
+        /// <returns></returns>
+        public async Task<LiveAnchorMonthTargetPerformanceDto> GetPerformance(int year, int month, List<int> liveAnchorIds)
+        {
+            var performance = dalLiveAnchorMonthlyTargetLiving.GetAll().Where(t => t.Year == year && t.Month == month)
+                .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.LiveAnchorId));
+            LiveAnchorMonthTargetPerformanceDto performanceInfoDto = new LiveAnchorMonthTargetPerformanceDto
+            {
+                CommercePerformanceTarget = await performance.SumAsync(t => t.CargoSettlementCommissionTarget),
+                CommerceCompletePerformance = await performance.SumAsync(t => t.CumulativeCargoSettlementCommission),
+
+            };
+            return performanceInfoDto;
+        }
+
+
+
+        /// <summary>
         /// 获取带货业绩
         /// </summary>
         /// <param name="year"></param>
@@ -331,6 +353,24 @@ namespace Fx.Amiya.Service
                     PerfomancePrice = o.Sum(o => o.CumulativeCargoSettlementCommission)
                 }).ToList();
             return list;
+        }
+        /// <summary>
+        /// 基础经营看板的面诊卡下单业绩
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorIds">各个平台的主播ID集合</param>
+        /// <returns></returns>
+        public async Task<LiveAnchorBaseBusinessMonthTargetPerformanceDto> GetBasePerformanceTargetAsync(int year, int month, List<int> liveAnchorIds)
+        {
+            var performance = dalLiveAnchorMonthlyTargetLiving.GetAll().Where(t => t.Year == year && t.Month == month)
+                .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.LiveAnchorId));
+            LiveAnchorBaseBusinessMonthTargetPerformanceDto performanceInfoDto = new LiveAnchorBaseBusinessMonthTargetPerformanceDto
+            {
+                ConsulationCardTarget = await performance.SumAsync(t => t.ConsultationTarget + t.ConsultationTarget2),
+
+            };
+            return performanceInfoDto;
         }
 
 

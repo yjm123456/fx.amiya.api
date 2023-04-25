@@ -24,7 +24,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();
             builder.Property(e => e.DeleteDate).HasColumnName("delete_date").HasColumnType("datetime").IsRequired(false);
-            builder.HasOne(e => e.LiveAnchorMonthlyTarget).WithMany(e => e.livingDailyTarget).HasForeignKey(e => e.LiveAnchorMonthlyTargetId);
+            builder.HasOne(e => e.LiveAnchorMonthlyTargetLiving).WithMany(e => e.livingDailyTarget).HasForeignKey(e => e.LiveAnchorMonthlyTargetId);
             builder.HasOne(e => e.AmiyaEmployee).WithMany(e => e.livingDailyTarget).HasForeignKey(e => e.OperationEmpId);
         }
     }

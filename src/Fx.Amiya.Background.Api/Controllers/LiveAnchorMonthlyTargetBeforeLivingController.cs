@@ -64,7 +64,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                   MonthlyTargetName = d.MonthlyTargetName,
                                                   LiveAnchorId = d.LiveAnchorId,
                                                   LiveAnchorName = d.LiveAnchorName,
-
+                                                  ContentPlatFormId=d.ContentPlatFormId,
 
                                                   ZhihuReleaseTarget = d.ZhihuReleaseTarget,
                                                   CumulativeZhihuRelease = d.CumulativeZhihuRelease,

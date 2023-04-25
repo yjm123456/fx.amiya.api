@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Fx.Amiya.DbModels.Model
 {
     /// <summary>
-    /// 主播月度运营目标情况
+    /// 主播月度运营目标情况-直播前
     /// </summary>
     public class LiveAnchorMonthlyTargetBeforeLiving
     {

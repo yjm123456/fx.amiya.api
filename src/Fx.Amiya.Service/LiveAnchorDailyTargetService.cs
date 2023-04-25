@@ -20,6 +20,7 @@ namespace Fx.Amiya.Service
         private IDalLiveAnchorDailyTarget dalLiveAnchorDailyTarget;
         private ILiveAnchorMonthlyTargetBeforeLivingService _liveAnchorMonthlyTargetService;
         private IDalBeforeLivingTikTokDailyTarget _beforeLivingTikTokDailyTraget;
+        private ILiveAnchorMonthlyTargetLivingService _liveAnchorMonthlyTargetLivingService;
         private IDalBeforeLivingXiaoHongShuDailyTarget _beforeLivingXiaoHongShuDailyTraget;
         private IDalBeforeLivingZhiHuDailyTarget _beforeLivingZhiHuDailyTraget;
         private IDalBeforeLivingVideoDailyTarget _beforeLivingVideoDailyTraget;
@@ -33,6 +34,7 @@ namespace Fx.Amiya.Service
         public LiveAnchorDailyTargetService(IDalLiveAnchorDailyTarget dalLiveAnchorDailyTarget,
             IUnitOfWork unitOfWork,
             IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
+            ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService,
             IDalBeforeLivingTikTokDailyTarget beforeLivingTikTokDailyTraget,
             IDalBeforeLivingXiaoHongShuDailyTarget beforeLivingXiaoHongShuDailyTraget,
             IDalBeforeLivingZhiHuDailyTarget beforeLivingZhiHuDailyTraget,
@@ -44,6 +46,7 @@ namespace Fx.Amiya.Service
             IAmiyaEmployeeService amiyaEmployeeService)
         {
             this.unitOfWork = unitOfWork;
+            _liveAnchorMonthlyTargetLivingService = liveAnchorMonthlyTargetLivingService;
             this.dalLiveAnchorDailyTarget = dalLiveAnchorDailyTarget;
             _liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
             _amiyaEmployeeService = amiyaEmployeeService;
@@ -186,15 +189,15 @@ namespace Fx.Amiya.Service
                                          };
                 var sinaWeiBoDailyInfoList = await sinaWeiBoDailyInfo.ToListAsync();
 
-                var livingDailyInfo = from d in _livingDailyTarget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                var livingDailyInfo = from d in _livingDailyTarget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTargetLiving)
                                       where d.RecordDate >= startDate && d.RecordDate < endDate
-                                      && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                      && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTargetLiving.LiveAnchorId))
                                       && d.Valid
                                       select new LivingDailyTargetDto
                                       {
                                           Id = d.Id,
                                           LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
-                                          LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                          LiveAnchor = d.LiveAnchorMonthlyTargetLiving.LiveAnchor.Name,
                                           CreateDate = d.CreateDate,
                                           UpdateDate = d.UpdateDate,
                                           RecordDate = d.RecordDate,
@@ -208,15 +211,15 @@ namespace Fx.Amiya.Service
 
                 var livingDailyInfoList = await livingDailyInfo.ToListAsync();
 
-                var afterLivingDailyInfo = from d in _afterLivingDailyTarget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                var afterLivingDailyInfo = from d in _afterLivingDailyTarget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTargetAfterLiving)
                                            where d.RecordDate >= startDate && d.RecordDate < endDate
-                                           && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                           && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTargetAfterLiving.LiveAnchorId))
                                            && d.Valid
                                            select new AfterLivingDailyTargetDto
                                            {
                                                Id = d.Id,
                                                LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
-                                               LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                               LiveAnchor = d.LiveAnchorMonthlyTargetAfterLiving.LiveAnchor.Name,
                                                CreateDate = d.CreateDate,
                                                UpdateDate = d.UpdateDate,
                                                RecordDate = d.RecordDate,
@@ -611,15 +614,15 @@ namespace Fx.Amiya.Service
                 }
                 endDate = endDate.AddDays(1);
                 #region 【数据获取】
-                var tikTokDailyInfo = from d in _livingDailyTarget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                var tikTokDailyInfo = from d in _livingDailyTarget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTargetLiving)
                                       where d.RecordDate >= startDate && d.RecordDate < endDate
-                                      && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                      && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTargetLiving.LiveAnchorId))
                                       && d.Valid
                                       select new LivingDailyTargetDto
                                       {
                                           Id = d.Id,
                                           LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
-                                          LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                          LiveAnchor = d.LiveAnchorMonthlyTargetLiving.LiveAnchor.Name,
                                           CreateDate = d.CreateDate,
                                           UpdateDate = d.UpdateDate,
                                           RecordDate = d.RecordDate,
@@ -680,15 +683,15 @@ namespace Fx.Amiya.Service
                 }
                 endDate = endDate.AddDays(1);
                 #region 【数据获取】
-                var tikTokDailyInfo = from d in _afterLivingDailyTarget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget)
+                var tikTokDailyInfo = from d in _afterLivingDailyTarget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTargetAfterLiving)
                                       where d.RecordDate >= startDate && d.RecordDate < endDate
-                                      && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTarget.LiveAnchorId))
+                                      && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorMonthlyTargetAfterLiving.LiveAnchorId))
                                       && d.Valid
                                       select new AfterLivingDailyTargetDto
                                       {
                                           Id = d.Id,
                                           LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
-                                          LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                          LiveAnchor = d.LiveAnchorMonthlyTargetAfterLiving.LiveAnchor.Name,
                                           CreateDate = d.CreateDate,
                                           UpdateDate = d.UpdateDate,
                                           RecordDate = d.RecordDate,
@@ -838,14 +841,14 @@ namespace Fx.Amiya.Service
                 if (type == 6)
                 {
 
-                    var liveAnchorDailyTarget = await _livingDailyTarget.GetAll().Include(x => x.LiveAnchorMonthlyTarget).SingleOrDefaultAsync(e => e.Id == id);
+                    var liveAnchorDailyTarget = await _livingDailyTarget.GetAll().Include(x => x.LiveAnchorMonthlyTargetLiving).SingleOrDefaultAsync(e => e.Id == id);
                     if (liveAnchorDailyTarget == null)
                     {
                         throw new Exception("直播中日运营目标情况编号错误！");
                     }
                     liveAnchorDailyTargetDto.Id = liveAnchorDailyTarget.Id;
                     liveAnchorDailyTargetDto.LiveanchorMonthlyTargetId = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
-                    liveAnchorDailyTargetDto.LiveAnchorId = liveAnchorDailyTarget.LiveAnchorMonthlyTarget.LiveAnchorId;
+                    liveAnchorDailyTargetDto.LiveAnchorId = liveAnchorDailyTarget.LiveAnchorMonthlyTargetLiving.LiveAnchorId;
                     liveAnchorDailyTargetDto.LivingTrackingEmployeeId = liveAnchorDailyTarget.OperationEmpId;
                     liveAnchorDailyTargetDto.LivingRoomFlowInvestmentNum = liveAnchorDailyTarget.LivingRoomFlowInvestmentNum;
                     liveAnchorDailyTargetDto.Consultation = liveAnchorDailyTarget.Consultation;
@@ -857,7 +860,7 @@ namespace Fx.Amiya.Service
                 if (type == 7)
                 {
 
-                    var liveAnchorDailyTarget = await _afterLivingDailyTarget.GetAll().Include(x => x.LiveAnchorMonthlyTarget).SingleOrDefaultAsync(e => e.Id == id);
+                    var liveAnchorDailyTarget = await _afterLivingDailyTarget.GetAll().Include(x => x.LiveAnchorMonthlyTargetAfterLiving).SingleOrDefaultAsync(e => e.Id == id);
                     if (liveAnchorDailyTarget == null)
                     {
                         throw new Exception("直播后日运营目标情况编号错误！");
@@ -865,7 +868,7 @@ namespace Fx.Amiya.Service
 
                     liveAnchorDailyTargetDto.Id = liveAnchorDailyTarget.Id;
                     liveAnchorDailyTargetDto.LiveanchorMonthlyTargetId = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
-                    liveAnchorDailyTargetDto.LiveAnchorId = liveAnchorDailyTarget.LiveAnchorMonthlyTarget.LiveAnchorId;
+                    liveAnchorDailyTargetDto.LiveAnchorId = liveAnchorDailyTarget.LiveAnchorMonthlyTargetAfterLiving.LiveAnchorId;
                     liveAnchorDailyTargetDto.NetWorkConsultingEmployeeId = liveAnchorDailyTarget.OperationEmpId;
                     liveAnchorDailyTargetDto.RecordDate = liveAnchorDailyTarget.RecordDate;
                     liveAnchorDailyTargetDto.AddWechatNum = liveAnchorDailyTarget.AddWechatNum;
@@ -1752,90 +1755,90 @@ namespace Fx.Amiya.Service
         }
         public async Task LivingAddAsync(LivingAddLiveAnchorDailyTargetDto addDto)
         {
-            //    unitOfWork.BeginTransaction();
-            //    try
-            //    {
+                unitOfWork.BeginTransaction();
+                try
+                {
 
-            //        LivingDailyTarget liveAnchorDailyTarget = new LivingDailyTarget();
-            //        liveAnchorDailyTarget.Id = Guid.NewGuid().ToString();
-            //        liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
-            //        liveAnchorDailyTarget.OperationEmpId = addDto.LivingTrackingEmployeeId;
-            //        liveAnchorDailyTarget.LivingRoomFlowInvestmentNum = addDto.LivingRoomFlowInvestmentNum;
-            //        liveAnchorDailyTarget.Consultation = addDto.Consultation;
-            //        liveAnchorDailyTarget.Consultation2 = addDto.Consultation2;
-            //        liveAnchorDailyTarget.CargoSettlementCommission = addDto.CargoSettlementCommission;
-            //        liveAnchorDailyTarget.CreateDate = DateTime.Now;
-            //        liveAnchorDailyTarget.Valid = true;
-            //        liveAnchorDailyTarget.UpdateDate = DateTime.Now;
-            //        liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
-            //        await _livingDailyTarget.AddAsync(liveAnchorDailyTarget, true);
+                    LivingDailyTarget liveAnchorDailyTarget = new LivingDailyTarget();
+                    liveAnchorDailyTarget.Id = Guid.NewGuid().ToString();
+                    liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
+                    liveAnchorDailyTarget.OperationEmpId = addDto.LivingTrackingEmployeeId;
+                    liveAnchorDailyTarget.LivingRoomFlowInvestmentNum = addDto.LivingRoomFlowInvestmentNum;
+                    liveAnchorDailyTarget.Consultation = addDto.Consultation;
+                    liveAnchorDailyTarget.Consultation2 = addDto.Consultation2;
+                    liveAnchorDailyTarget.CargoSettlementCommission = addDto.CargoSettlementCommission;
+                    liveAnchorDailyTarget.CreateDate = DateTime.Now;
+                    liveAnchorDailyTarget.Valid = true;
+                    liveAnchorDailyTarget.UpdateDate = DateTime.Now;
+                    liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
+                    await _livingDailyTarget.AddAsync(liveAnchorDailyTarget, true);
 
-            //        UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
-            //        editLiveAnchorMonthlyTarget.Id = addDto.LiveanchorMonthlyTargetId;
-            //        editLiveAnchorMonthlyTarget.LivingRoomCumulativeFlowInvestment = addDto.LivingRoomFlowInvestmentNum;
-            //        editLiveAnchorMonthlyTarget.CumulativeConsultation = addDto.Consultation;
-            //        editLiveAnchorMonthlyTarget.CumulativeConsultation2 = addDto.Consultation2;
-            //        editLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = addDto.CargoSettlementCommission;
-            //        await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
-            //        unitOfWork.Commit();
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        unitOfWork.RollBack();
-            //        throw ex;
-            //    }
+                    UpdateLiveAnchorMonthlyLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyLivingTargetRateAndNumDto();
+                    editLiveAnchorMonthlyTarget.Id = addDto.LiveanchorMonthlyTargetId;
+                    editLiveAnchorMonthlyTarget.LivingRoomCumulativeFlowInvestment = addDto.LivingRoomFlowInvestmentNum;
+                    editLiveAnchorMonthlyTarget.CumulativeConsultation = addDto.Consultation;
+                    editLiveAnchorMonthlyTarget.CumulativeConsultation2 = addDto.Consultation2;
+                    editLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = addDto.CargoSettlementCommission;
+                    await _liveAnchorMonthlyTargetLivingService.EditAsync(editLiveAnchorMonthlyTarget);
+                    unitOfWork.Commit();
+                }
+                catch (Exception ex)
+                {
+                    unitOfWork.RollBack();
+                    throw ex;
+                }
         }
 
         public async Task LivingUpdateAsync(LivingUpdateLiveAnchorDailyTargetDto updateDto)
         {
-            //    unitOfWork.BeginTransaction();
-            //    try
-            //    {
-            //        var liveAnchorDailyTarget = await _livingDailyTarget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
-            //        if (updateDto.Id != liveAnchorDailyTarget.Id)
-            //        {
-            //            unitOfWork.RollBack();
-            //            throw new Exception("修改内容与当前数据编号不一致，请重新操作！");
-            //        }
-            //        if (liveAnchorDailyTarget == null)
-            //        {
-            //            unitOfWork.RollBack();
-            //            throw new Exception("主播日运营目标情况编号错误！");
-            //        }
-            //        //先扣除原有的
-            //        UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
-            //        editLiveAnchorMonthlyTarget.Id = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
-            //        editLiveAnchorMonthlyTarget.LivingRoomCumulativeFlowInvestment = -liveAnchorDailyTarget.LivingRoomFlowInvestmentNum;
-            //        editLiveAnchorMonthlyTarget.CumulativeConsultation = -liveAnchorDailyTarget.Consultation;
-            //        editLiveAnchorMonthlyTarget.CumulativeConsultation2 = -liveAnchorDailyTarget.Consultation2;
-            //        editLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = -liveAnchorDailyTarget.CargoSettlementCommission;
-            //        await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
+            unitOfWork.BeginTransaction();
+            try
+            {
+                var liveAnchorDailyTarget = await _livingDailyTarget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                if (updateDto.Id != liveAnchorDailyTarget.Id)
+                {
+                    unitOfWork.RollBack();
+                    throw new Exception("修改内容与当前数据编号不一致，请重新操作！");
+                }
+                if (liveAnchorDailyTarget == null)
+                {
+                    unitOfWork.RollBack();
+                    throw new Exception("主播日运营目标情况编号错误！");
+                }
+                //先扣除原有的
+                UpdateLiveAnchorMonthlyLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyLivingTargetRateAndNumDto();
+                editLiveAnchorMonthlyTarget.Id = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
+                editLiveAnchorMonthlyTarget.LivingRoomCumulativeFlowInvestment = -liveAnchorDailyTarget.LivingRoomFlowInvestmentNum;
+                editLiveAnchorMonthlyTarget.CumulativeConsultation = -liveAnchorDailyTarget.Consultation;
+                editLiveAnchorMonthlyTarget.CumulativeConsultation2 = -liveAnchorDailyTarget.Consultation2;
+                editLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = -liveAnchorDailyTarget.CargoSettlementCommission;
+                await _liveAnchorMonthlyTargetLivingService.EditAsync(editLiveAnchorMonthlyTarget);
 
-            //        liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
-            //        liveAnchorDailyTarget.OperationEmpId = updateDto.LivingTrackingEmployeeId;
-            //        liveAnchorDailyTarget.LivingRoomFlowInvestmentNum = updateDto.LivingRoomFlowInvestmentNum;
-            //        liveAnchorDailyTarget.Consultation = updateDto.Consultation;
-            //        liveAnchorDailyTarget.Consultation2 = updateDto.Consultation2;
-            //        liveAnchorDailyTarget.CargoSettlementCommission = updateDto.CargoSettlementCommission;
-            //        liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
-            //        liveAnchorDailyTarget.UpdateDate = DateTime.Now;
-            //        await _livingDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = updateDto.LivingTrackingEmployeeId;
+                liveAnchorDailyTarget.LivingRoomFlowInvestmentNum = updateDto.LivingRoomFlowInvestmentNum;
+                liveAnchorDailyTarget.Consultation = updateDto.Consultation;
+                liveAnchorDailyTarget.Consultation2 = updateDto.Consultation2;
+                liveAnchorDailyTarget.CargoSettlementCommission = updateDto.CargoSettlementCommission;
+                liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
+                liveAnchorDailyTarget.UpdateDate = DateTime.Now;
+                await _livingDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
 
-            //        //添加修改后的
-            //        UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
-            //        lasteditLiveAnchorMonthlyTarget.Id = updateDto.LiveanchorMonthlyTargetId;
-            //        lasteditLiveAnchorMonthlyTarget.LivingRoomCumulativeFlowInvestment = updateDto.LivingRoomFlowInvestmentNum;
-            //        lasteditLiveAnchorMonthlyTarget.CumulativeConsultation = updateDto.Consultation;
-            //        lasteditLiveAnchorMonthlyTarget.CumulativeConsultation2 = updateDto.Consultation2;
-            //        lasteditLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = updateDto.CargoSettlementCommission;
-            //        await _liveAnchorMonthlyTargetService.EditAsync(lasteditLiveAnchorMonthlyTarget);
-            //        unitOfWork.Commit();
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        unitOfWork.RollBack();
-            //        throw ex;
-            //    }
+                //添加修改后的
+                UpdateLiveAnchorMonthlyLivingTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyLivingTargetRateAndNumDto();
+                lasteditLiveAnchorMonthlyTarget.Id = updateDto.LiveanchorMonthlyTargetId;
+                lasteditLiveAnchorMonthlyTarget.LivingRoomCumulativeFlowInvestment = updateDto.LivingRoomFlowInvestmentNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativeConsultation = updateDto.Consultation;
+                lasteditLiveAnchorMonthlyTarget.CumulativeConsultation2 = updateDto.Consultation2;
+                lasteditLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = updateDto.CargoSettlementCommission;
+                await _liveAnchorMonthlyTargetLivingService.EditAsync(lasteditLiveAnchorMonthlyTarget);
+                unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex;
+            }
         }
         #endregion
 
@@ -2238,48 +2241,48 @@ namespace Fx.Amiya.Service
                                          };
                 var sinaWeiBoDailyInfoList = await sinaWeiBoDailyInfo.ToListAsync();
 
-                var livingDailyInfo = from d in _livingDailyTarget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget).ThenInclude(x => x.LiveAnchor)
+                var livingDailyInfo = from d in _livingDailyTarget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTargetLiving).ThenInclude(x => x.LiveAnchor)
                                       where d.RecordDate >= startDate && d.RecordDate < endDate
                                       && d.Valid
                                       select new LivingDailyTargetDto
                                       {
                                           Id = d.Id,
                                           LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
-                                          LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                          LiveAnchor = d.LiveAnchorMonthlyTargetLiving.LiveAnchor.Name,
                                           CreateDate = d.CreateDate,
                                           UpdateDate = d.UpdateDate,
                                           RecordDate = d.RecordDate,
                                           OperationEmpId = d.OperationEmpId,
                                           OperationEmpName = d.AmiyaEmployee.Name,
                                           LivingRoomFlowInvestmentNum = d.LivingRoomFlowInvestmentNum,
-                                          LivingRoomFlowInvestmentTarget = d.LiveAnchorMonthlyTarget.LivingRoomFlowInvestmentTarget,
-                                          LivingRoomCumulativeFlowInvestment = d.LiveAnchorMonthlyTarget.LivingRoomCumulativeFlowInvestment,
-                                          LivingRoomFlowInvestmentCompleteRate = d.LiveAnchorMonthlyTarget.LivingRoomFlowInvestmentCompleteRate.ToString() + "%",
+                                          LivingRoomFlowInvestmentTarget = d.LiveAnchorMonthlyTargetLiving.LivingRoomFlowInvestmentTarget,
+                                          LivingRoomCumulativeFlowInvestment = d.LiveAnchorMonthlyTargetLiving.LivingRoomCumulativeFlowInvestment,
+                                          LivingRoomFlowInvestmentCompleteRate = d.LiveAnchorMonthlyTargetLiving.LivingRoomFlowInvestmentCompleteRate.ToString() + "%",
 
                                           CargoSettlementCommission = d.CargoSettlementCommission,
-                                          CargoSettlementCommissionTarget = d.LiveAnchorMonthlyTarget.CargoSettlementCommissionTarget,
-                                          CumulativeCargoSettlementCommission = d.LiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission,
-                                          CargoSettlementCommissionCompleteRate = d.LiveAnchorMonthlyTarget.CargoSettlementCommissionCompleteRate.ToString() + "%",
+                                          CargoSettlementCommissionTarget = d.LiveAnchorMonthlyTargetLiving.CargoSettlementCommissionTarget,
+                                          CumulativeCargoSettlementCommission = d.LiveAnchorMonthlyTargetLiving.CumulativeCargoSettlementCommission,
+                                          CargoSettlementCommissionCompleteRate = d.LiveAnchorMonthlyTargetLiving.CargoSettlementCommissionCompleteRate.ToString() + "%",
                                           Consultation = d.Consultation,
-                                          ConsultationTarget = d.LiveAnchorMonthlyTarget.ConsultationTarget,
-                                          CumulativeConsultation = d.LiveAnchorMonthlyTarget.CumulativeConsultation,
-                                          ConsultationCompleteRate = d.LiveAnchorMonthlyTarget.ConsultationCompleteRate.ToString() + "%",
+                                          ConsultationTarget = d.LiveAnchorMonthlyTargetLiving.ConsultationTarget,
+                                          CumulativeConsultation = d.LiveAnchorMonthlyTargetLiving.CumulativeConsultation,
+                                          ConsultationCompleteRate = d.LiveAnchorMonthlyTargetLiving.ConsultationCompleteRate.ToString() + "%",
                                           Consultation2 = d.Consultation2,
-                                          ConsultationTarget2 = d.LiveAnchorMonthlyTarget.ConsultationTarget2,
-                                          CumulativeConsultation2 = d.LiveAnchorMonthlyTarget.CumulativeConsultation2,
-                                          ConsultationCompleteRate2 = d.LiveAnchorMonthlyTarget.ConsultationCompleteRate2.ToString() + "%",
+                                          ConsultationTarget2 = d.LiveAnchorMonthlyTargetLiving.ConsultationTarget2,
+                                          CumulativeConsultation2 = d.LiveAnchorMonthlyTargetLiving.CumulativeConsultation2,
+                                          ConsultationCompleteRate2 = d.LiveAnchorMonthlyTargetLiving.ConsultationCompleteRate2.ToString() + "%",
                                       };
 
                 var livingDailyInfoList = await livingDailyInfo.ToListAsync();
 
-                var afterLivingDailyInfo = from d in _afterLivingDailyTarget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTarget).ThenInclude(x => x.LiveAnchor)
+                var afterLivingDailyInfo = from d in _afterLivingDailyTarget.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.LiveAnchorMonthlyTargetAfterLiving).ThenInclude(x => x.LiveAnchor)
                                            where d.RecordDate >= startDate && d.RecordDate < endDate
                                            && d.Valid
                                            select new AfterLivingDailyTargetDto
                                            {
                                                Id = d.Id,
                                                LiveAnchorMonthlyTargetId = d.LiveAnchorMonthlyTargetId,
-                                               LiveAnchor = d.LiveAnchorMonthlyTarget.LiveAnchor.Name,
+                                               LiveAnchor = d.LiveAnchorMonthlyTargetAfterLiving.LiveAnchor.Name,
                                                CreateDate = d.CreateDate,
                                                UpdateDate = d.UpdateDate,
                                                RecordDate = d.RecordDate,
@@ -2287,62 +2290,62 @@ namespace Fx.Amiya.Service
                                                OperationEmpName = d.AmiyaEmployee.Name,
 
                                                AddWechatNum = d.AddWechatNum,
-                                               AddWechatTarget = d.LiveAnchorMonthlyTarget.AddWechatTarget,
-                                               CumulativeAddWechat = d.LiveAnchorMonthlyTarget.CumulativeAddWechat,
-                                               AddWechatCompleteRate = d.LiveAnchorMonthlyTarget.AddWechatCompleteRate.ToString() + "%",
+                                               AddWechatTarget = d.LiveAnchorMonthlyTargetAfterLiving.AddWechatTarget,
+                                               CumulativeAddWechat = d.LiveAnchorMonthlyTargetAfterLiving.CumulativeAddWechat,
+                                               AddWechatCompleteRate = d.LiveAnchorMonthlyTargetAfterLiving.AddWechatCompleteRate.ToString() + "%",
 
                                                ConsultationCardConsumed = d.ConsultationCardConsumed,
-                                               ConsultationCardConsumedTarget = d.LiveAnchorMonthlyTarget.ConsultationCardConsumedTarget,
-                                               CumulativeConsultationCardConsumed = d.LiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed,
-                                               ConsultationCardConsumedCompleteRate = d.LiveAnchorMonthlyTarget.ConsultationCardConsumedCompleteRate.ToString() + "%",
+                                               ConsultationCardConsumedTarget = d.LiveAnchorMonthlyTargetAfterLiving.ConsultationCardConsumedTarget,
+                                               CumulativeConsultationCardConsumed = d.LiveAnchorMonthlyTargetAfterLiving.CumulativeConsultationCardConsumed,
+                                               ConsultationCardConsumedCompleteRate = d.LiveAnchorMonthlyTargetAfterLiving.ConsultationCardConsumedCompleteRate.ToString() + "%",
 
                                                ConsultationCardConsumed2 = d.ConsultationCardConsumed2,
-                                               ConsultationCardConsumedTarget2 = d.LiveAnchorMonthlyTarget.ConsultationCardConsumedTarget2,
-                                               CumulativeConsultationCardConsumed2 = d.LiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed2,
-                                               ConsultationCardConsumedCompleteRate2 = d.LiveAnchorMonthlyTarget.ConsultationCardConsumedCompleteRate2.ToString() + "%",
+                                               ConsultationCardConsumedTarget2 = d.LiveAnchorMonthlyTargetAfterLiving.ConsultationCardConsumedTarget2,
+                                               CumulativeConsultationCardConsumed2 = d.LiveAnchorMonthlyTargetAfterLiving.CumulativeConsultationCardConsumed2,
+                                               ConsultationCardConsumedCompleteRate2 = d.LiveAnchorMonthlyTargetAfterLiving.ConsultationCardConsumedCompleteRate2.ToString() + "%",
 
                                                ActivateHistoricalConsultation = d.ActivateHistoricalConsultation,
-                                               ActivateHistoricalConsultationTarget = d.LiveAnchorMonthlyTarget.ActivateHistoricalConsultationTarget,
-                                               CumulativeActivateHistoricalConsultation = d.LiveAnchorMonthlyTarget.CumulativeActivateHistoricalConsultation,
-                                               ActivateHistoricalConsultationCompleteRate = d.LiveAnchorMonthlyTarget.ActivateHistoricalConsultationCompleteRate.ToString() + "%",
+                                               ActivateHistoricalConsultationTarget = d.LiveAnchorMonthlyTargetAfterLiving.ActivateHistoricalConsultationTarget,
+                                               CumulativeActivateHistoricalConsultation = d.LiveAnchorMonthlyTargetAfterLiving.CumulativeActivateHistoricalConsultation,
+                                               ActivateHistoricalConsultationCompleteRate = d.LiveAnchorMonthlyTargetAfterLiving.ActivateHistoricalConsultationCompleteRate.ToString() + "%",
 
                                                SendOrderNum = d.SendOrderNum,
-                                               SendOrderTarget = d.LiveAnchorMonthlyTarget.SendOrderTarget,
-                                               CumulativeSendOrder = d.LiveAnchorMonthlyTarget.CumulativeSendOrder,
-                                               SendOrderCompleteRate = d.LiveAnchorMonthlyTarget.SendOrderCompleteRate.ToString() + "%",
+                                               SendOrderTarget = d.LiveAnchorMonthlyTargetAfterLiving.SendOrderTarget,
+                                               CumulativeSendOrder = d.LiveAnchorMonthlyTargetAfterLiving.CumulativeSendOrder,
+                                               SendOrderCompleteRate = d.LiveAnchorMonthlyTargetAfterLiving.SendOrderCompleteRate.ToString() + "%",
 
                                                NewVisitNum = d.NewVisitNum,
                                                SubsequentVisitNum = d.SubsequentVisitNum,
                                                OldCustomerVisitNum = d.OldCustomerVisitNum,
                                                VisitNum = d.VisitNum,
-                                               VisitTarget = d.LiveAnchorMonthlyTarget.VisitTarget,
-                                               CumulativeVisit = d.LiveAnchorMonthlyTarget.CumulativeVisit,
-                                               VisitCompleteRate = d.LiveAnchorMonthlyTarget.VisitCompleteRate.ToString() + "%",
+                                               VisitTarget = d.LiveAnchorMonthlyTargetAfterLiving.VisitTarget,
+                                               CumulativeVisit = d.LiveAnchorMonthlyTargetAfterLiving.CumulativeVisit,
+                                               VisitCompleteRate = d.LiveAnchorMonthlyTargetAfterLiving.VisitCompleteRate.ToString() + "%",
 
                                                NewDealNum = d.NewDealNum,
                                                SubsequentDealNum = d.SubsequentDealNum,
                                                OldCustomerDealNum = d.OldCustomerDealNum,
                                                DealNum = d.DealNum,
-                                               DealTarget = d.LiveAnchorMonthlyTarget.DealTarget,
-                                               CumulativeDealTarget = d.LiveAnchorMonthlyTarget.CumulativeDealTarget,
-                                               DealRate = d.LiveAnchorMonthlyTarget.DealRate.ToString() + "%",
+                                               DealTarget = d.LiveAnchorMonthlyTargetAfterLiving.DealTarget,
+                                               CumulativeDealTarget = d.LiveAnchorMonthlyTargetAfterLiving.CumulativeDealTarget,
+                                               DealRate = d.LiveAnchorMonthlyTargetAfterLiving.DealRate.ToString() + "%",
 
                                                NewPerformanceNum = d.NewPerformanceNum,
                                                SubsequentPerformanceNum = d.SubsequentPerformanceNum,
                                                NewCustomerPerformanceCountNum = d.NewCustomerPerformanceCountNum,
                                                OldCustomerPerformanceNum = d.OldCustomerPerformanceNum,
                                                PerformanceNum = d.PerformanceNum,
-                                               PerformanceTarget = d.LiveAnchorMonthlyTarget.PerformanceTarget,
-                                               CumulativePerformance = d.LiveAnchorMonthlyTarget.CumulativePerformance,
-                                               PerformanceCompleteRate = d.LiveAnchorMonthlyTarget.PerformanceCompleteRate.ToString() + "%",
+                                               PerformanceTarget = d.LiveAnchorMonthlyTargetAfterLiving.PerformanceTarget,
+                                               CumulativePerformance = d.LiveAnchorMonthlyTargetAfterLiving.CumulativePerformance,
+                                               PerformanceCompleteRate = d.LiveAnchorMonthlyTargetAfterLiving.PerformanceCompleteRate.ToString() + "%",
                                                MinivanRefund = d.MinivanRefund,
-                                               MinivanRefundTarget = d.LiveAnchorMonthlyTarget.MinivanRefundTarget,
-                                               CumulativeMinivanRefund = d.LiveAnchorMonthlyTarget.CumulativeMinivanRefund,
-                                               MinivanRefundCompleteRate = d.LiveAnchorMonthlyTarget.MinivanRefundCompleteRate.ToString() + "%",
+                                               MinivanRefundTarget = d.LiveAnchorMonthlyTargetAfterLiving.MinivanRefundTarget,
+                                               CumulativeMinivanRefund = d.LiveAnchorMonthlyTargetAfterLiving.CumulativeMinivanRefund,
+                                               MinivanRefundCompleteRate = d.LiveAnchorMonthlyTargetAfterLiving.MinivanRefundCompleteRate.ToString() + "%",
                                                MiniVanBadReviews = d.MiniVanBadReviews,
-                                               MiniVanBadReviewsTarget = d.LiveAnchorMonthlyTarget.MiniVanBadReviewsTarget,
-                                               CumulativeMiniVanBadReviews = d.LiveAnchorMonthlyTarget.CumulativeMiniVanBadReviews,
-                                               MiniVanBadReviewsCompleteRate = d.LiveAnchorMonthlyTarget.MiniVanBadReviewsCompleteRate.ToString() + "%",
+                                               MiniVanBadReviewsTarget = d.LiveAnchorMonthlyTargetAfterLiving.MiniVanBadReviewsTarget,
+                                               CumulativeMiniVanBadReviews = d.LiveAnchorMonthlyTargetAfterLiving.CumulativeMiniVanBadReviews,
+                                               MiniVanBadReviewsCompleteRate = d.LiveAnchorMonthlyTargetAfterLiving.MiniVanBadReviewsCompleteRate.ToString() + "%",
                                            };
 
                 var afterLivingDailyInfoList = await afterLivingDailyInfo.ToListAsync();

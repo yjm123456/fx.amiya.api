@@ -19,5 +19,14 @@ namespace Fx.Amiya.IService
         Task EditAsync(UpdateLiveAnchorMonthlyLivingTargetRateAndNumDto editDto);
         Task DeleteAsync(string id);
 
+        Task<LiveAnchorMonthTargetPerformanceDto> GetPerformance(int year, int month, List<int> liveAnchorIds);
+
+        /// <summary>
+        /// 按月获取主播带货业绩
+        /// </summary>
+        /// <returns></returns>
+        Task<List<PerformanceInfoByDateDto>> GetLiveAnchorCommercePerformance(int year, int month, List<int> liveAnchorIds);
+
+        Task<LiveAnchorBaseBusinessMonthTargetPerformanceDto> GetBasePerformanceTargetAsync(int year, int month, List<int> liveAnchorIds);
     }
 }

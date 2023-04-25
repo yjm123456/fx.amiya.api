@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.DbModels.Model
+namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.Living
 {
-    /// <summary>
-    /// 主播月度运营目标情况-直播中
-    /// </summary>
-    public class LiveAnchorMonthlyTargetLiving
+    public class LiveAnchorMonthlyTargetLivingVo
     {
         /// <summary>
         /// 编号
@@ -33,6 +29,20 @@ namespace Fx.Amiya.DbModels.Model
         /// 主播ID
         /// </summary>
         public int LiveAnchorId { get; set; }
+        /// <summary>
+        /// 主播名称
+        /// </summary>
+        public string LiveAnchorName { get; set; }
+        /// <summary>
+        /// 创建日期
+        /// </summary>
+        public DateTime CreateDate { get; set; }
+
+        /// <summary>
+        /// 主播归属平台id
+        /// </summary>
+        public string ContentPlatFormId { get; set; }
+
 
         /// <summary>
         /// 直播间投流目标
@@ -48,7 +58,6 @@ namespace Fx.Amiya.DbModels.Model
         /// 直播间投流完成率
         /// </summary>
         public decimal LivingRoomFlowInvestmentCompleteRate { get; set; }
-
 
         /// <summary>
         /// 99面诊卡目标
@@ -80,7 +89,6 @@ namespace Fx.Amiya.DbModels.Model
         /// 199面诊卡完成率
         /// </summary>
         public decimal ConsultationCompleteRate2 { get; set; }
-
         /// <summary>
         /// 带货结算佣金目标
         /// </summary>
@@ -95,13 +103,5 @@ namespace Fx.Amiya.DbModels.Model
         /// 带货结算佣金完成率
         /// </summary>
         public decimal CargoSettlementCommissionCompleteRate { get; set; }
-
-        /// <summary>
-        /// 创建日期
-        /// </summary>
-        public DateTime CreateDate { get; set; }
-
-        public LiveAnchor LiveAnchor { get; set; }
-        public List<LivingDailyTarget> livingDailyTarget { get; set; }
     }
 }

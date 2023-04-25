@@ -56,61 +56,62 @@ namespace Fx.Amiya.Service
                     }
                 }
                 var liveAnchorMonthlyTargetBeforeLiving = from d in dalLiveAnchorMonthlyTargetBeforeLiving.GetAll().Include(e => e.LiveAnchor)
-                                              where (d.Year == Year)
-                                              && (d.Month == Month)
-                                              && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorId))
-                                              select new LiveAnchorMonthlyTargetBeforeLivingDto
-                                              {
-                                                  Id = d.Id,
-                                                  Year = d.Year,
-                                                  Month = d.Month,
-                                                  MonthlyTargetName = d.MonthlyTargetName,
-                                                  LiveAnchorId = d.LiveAnchorId,
-                                                  LiveAnchorName = d.LiveAnchor.Name,
+                                                          where (d.Year == Year)
+                                                          && (d.Month == Month)
+                                                          && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorId))
+                                                          select new LiveAnchorMonthlyTargetBeforeLivingDto
+                                                          {
+                                                              Id = d.Id,
+                                                              Year = d.Year,
+                                                              Month = d.Month,
+                                                              MonthlyTargetName = d.MonthlyTargetName,
+                                                              LiveAnchorId = d.LiveAnchorId,
+                                                              LiveAnchorName = d.LiveAnchor.Name,
+                                                              ContentPlatFormId = d.LiveAnchor.ContentPlateFormId,
 
-                                                  ZhihuReleaseTarget = d.ZhihuReleaseTarget,
-                                                  CumulativeZhihuRelease = d.CumulativeZhihuRelease,
-                                                  ZhihuReleaseCompleteRate = d.ZhihuReleaseCompleteRate,
-                                                  ZhihuFlowinvestmentTarget = d.ZhihuFlowinvestmentTarget,
-                                                  CumulativeZhihuFlowinvestment = d.CumulativeZhihuFlowinvestment,
-                                                  ZhihuFlowinvestmentCompleteRate = d.ZhihuFlowinvestmentCompleteRate,
+                                                              ZhihuReleaseTarget = d.ZhihuReleaseTarget,
+                                                              CumulativeZhihuRelease = d.CumulativeZhihuRelease,
+                                                              ZhihuReleaseCompleteRate = d.ZhihuReleaseCompleteRate,
+                                                              ZhihuFlowinvestmentTarget = d.ZhihuFlowinvestmentTarget,
+                                                              CumulativeZhihuFlowinvestment = d.CumulativeZhihuFlowinvestment,
+                                                              ZhihuFlowinvestmentCompleteRate = d.ZhihuFlowinvestmentCompleteRate,
 
-                                                  VideoReleaseTarget = d.VideoReleaseTarget,
-                                                  CumulativeVideoRelease = d.CumulativeVideoRelease,
-                                                  VideoReleaseCompleteRate = d.VideoReleaseCompleteRate,
-                                                  VideoFlowinvestmentTarget = d.VideoFlowinvestmentTarget,
-                                                  CumulativeVideoFlowinvestment = d.CumulativeVideoFlowinvestment,
-                                                  VideoFlowinvestmentCompleteRate = d.VideoFlowinvestmentCompleteRate,
+                                                              VideoReleaseTarget = d.VideoReleaseTarget,
+                                                              CumulativeVideoRelease = d.CumulativeVideoRelease,
+                                                              VideoReleaseCompleteRate = d.VideoReleaseCompleteRate,
+                                                              VideoFlowinvestmentTarget = d.VideoFlowinvestmentTarget,
+                                                              CumulativeVideoFlowinvestment = d.CumulativeVideoFlowinvestment,
+                                                              VideoFlowinvestmentCompleteRate = d.VideoFlowinvestmentCompleteRate,
 
-                                                  TikTokReleaseTarget = d.TikTokReleaseTarget,
-                                                  CumulativeTikTokRelease = d.CumulativeTikTokRelease,
-                                                  TikTokReleaseCompleteRate = d.TikTokReleaseCompleteRate,
-                                                  TikTokFlowinvestmentTarget = d.TikTokFlowinvestmentTarget,
-                                                  CumulativeTikTokFlowinvestment = d.CumulativeTikTokFlowinvestment,
-                                                  TikTokFlowinvestmentCompleteRate = d.TikTokFlowinvestmentCompleteRate,
+                                                              TikTokReleaseTarget = d.TikTokReleaseTarget,
+                                                              CumulativeTikTokRelease = d.CumulativeTikTokRelease,
+                                                              TikTokReleaseCompleteRate = d.TikTokReleaseCompleteRate,
+                                                              TikTokFlowinvestmentTarget = d.TikTokFlowinvestmentTarget,
+                                                              CumulativeTikTokFlowinvestment = d.CumulativeTikTokFlowinvestment,
+                                                              TikTokFlowinvestmentCompleteRate = d.TikTokFlowinvestmentCompleteRate,
 
-                                                  XiaoHongShuReleaseTarget = d.XiaoHongShuReleaseTarget,
-                                                  CumulativeXiaoHongShuRelease = d.CumulativeXiaoHongShuRelease,
-                                                  XiaoHongShuReleaseCompleteRate = d.XiaoHongShuReleaseCompleteRate,
-                                                  XiaoHongShuFlowinvestmentTarget = d.XiaoHongShuFlowinvestmentTarget,
-                                                  CumulativeXiaoHongShuFlowinvestment = d.CumulativeXiaoHongShuFlowinvestment,
-                                                  XiaoHongShuFlowinvestmentCompleteRate = d.XiaoHongShuFlowinvestmentCompleteRate,
+                                                              XiaoHongShuReleaseTarget = d.XiaoHongShuReleaseTarget,
+                                                              CumulativeXiaoHongShuRelease = d.CumulativeXiaoHongShuRelease,
+                                                              XiaoHongShuReleaseCompleteRate = d.XiaoHongShuReleaseCompleteRate,
+                                                              XiaoHongShuFlowinvestmentTarget = d.XiaoHongShuFlowinvestmentTarget,
+                                                              CumulativeXiaoHongShuFlowinvestment = d.CumulativeXiaoHongShuFlowinvestment,
+                                                              XiaoHongShuFlowinvestmentCompleteRate = d.XiaoHongShuFlowinvestmentCompleteRate,
 
-                                                  SinaWeiBoReleaseTarget = d.SinaWeiBoReleaseTarget,
-                                                  CumulativeSinaWeiBoRelease = d.CumulativeSinaWeiBoRelease,
-                                                  SinaWeiBoReleaseCompleteRate = d.SinaWeiBoReleaseCompleteRate,
-                                                  SinaWeiBoFlowinvestmentTarget = d.SinaWeiBoFlowinvestmentTarget,
-                                                  CumulativeSinaWeiBoFlowinvestment = d.CumulativeSinaWeiBoFlowinvestment,
-                                                  SinaWeiBoFlowinvestmentCompleteRate = d.SinaWeiBoFlowinvestmentCompleteRate,
+                                                              SinaWeiBoReleaseTarget = d.SinaWeiBoReleaseTarget,
+                                                              CumulativeSinaWeiBoRelease = d.CumulativeSinaWeiBoRelease,
+                                                              SinaWeiBoReleaseCompleteRate = d.SinaWeiBoReleaseCompleteRate,
+                                                              SinaWeiBoFlowinvestmentTarget = d.SinaWeiBoFlowinvestmentTarget,
+                                                              CumulativeSinaWeiBoFlowinvestment = d.CumulativeSinaWeiBoFlowinvestment,
+                                                              SinaWeiBoFlowinvestmentCompleteRate = d.SinaWeiBoFlowinvestmentCompleteRate,
 
-                                                  ReleaseTarget = d.ReleaseTarget,
-                                                  CumulativeRelease = d.CumulativeRelease,
-                                                  ReleaseCompleteRate = d.ReleaseCompleteRate,
-                                                  FlowInvestmentTarget = d.FlowInvestmentTarget,
-                                                  CumulativeFlowInvestment = d.CumulativeFlowInvestment,
-                                                  FlowInvestmentCompleteRate = d.FlowInvestmentCompleteRate,
-                                                  CreateDate = d.CreateDate,
-                                              };
+                                                              ReleaseTarget = d.ReleaseTarget,
+                                                              CumulativeRelease = d.CumulativeRelease,
+                                                              ReleaseCompleteRate = d.ReleaseCompleteRate,
+                                                              FlowInvestmentTarget = d.FlowInvestmentTarget,
+                                                              CumulativeFlowInvestment = d.CumulativeFlowInvestment,
+                                                              FlowInvestmentCompleteRate = d.FlowInvestmentCompleteRate,
+                                                              CreateDate = d.CreateDate,
+                                                          };
 
                 FxPageInfo<LiveAnchorMonthlyTargetBeforeLivingDto> liveAnchorMonthlyTargetBeforeLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetBeforeLivingDto>();
                 liveAnchorMonthlyTargetBeforeLivingPageInfo.TotalCount = await liveAnchorMonthlyTargetBeforeLiving.CountAsync();
@@ -195,12 +196,12 @@ namespace Fx.Amiya.Service
             try
             {
                 var liveAnchorMonthlyTargetBeforeLiving = from d in dalLiveAnchorMonthlyTargetBeforeLiving.GetAll()
-                                              where (d.Year == year && d.Month == month)
-                                              select new LiveAnchorMonthlyTargetKeyAndValueDto
-                                              {
-                                                  Id = d.Id,
-                                                  Name = d.MonthlyTargetName
-                                              };
+                                                          where (d.Year == year && d.Month == month)
+                                                          select new LiveAnchorMonthlyTargetKeyAndValueDto
+                                                          {
+                                                              Id = d.Id,
+                                                              Name = d.MonthlyTargetName
+                                                          };
                 return liveAnchorMonthlyTargetBeforeLiving.ToList();
             }
             catch (Exception ex)
