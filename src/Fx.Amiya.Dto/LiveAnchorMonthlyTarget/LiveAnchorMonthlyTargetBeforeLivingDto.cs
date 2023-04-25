@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.DbModels.Model
+namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
 {
-    /// <summary>
-    /// 主播月度运营目标情况
-    /// </summary>
-    public class LiveAnchorMonthlyTargetBeforeLiving
+    public class LiveAnchorMonthlyTargetBeforeLivingDto
     {
+
         /// <summary>
         /// 编号
         /// </summary>
@@ -38,6 +36,11 @@ namespace Fx.Amiya.DbModels.Model
         /// 主播ID
         /// </summary>
         public int LiveAnchorId { get; set; }
+
+        /// <summary>
+        /// 主播名称
+        /// </summary>
+        public string LiveAnchorName { get; set; }
 
         /// <summary>
         /// 抖音发布目标
@@ -214,12 +217,9 @@ namespace Fx.Amiya.DbModels.Model
         /// 投流完成率
         /// </summary>
         public decimal FlowInvestmentCompleteRate { get; set; }
-        public LiveAnchor LiveAnchor { get; set; }
-
-        public List<BeforeLivingTikTokDailyTarget> beforeLivingTikTokDailyTragets { get; set; }
-        public List<BeforeLivingXiaoHongShuDailyTarget> beforeLivingXiaoHongShuDailyTraget { get; set; }
-        public List<BeforeLivingZhiHuDailyTarget> beforeLivingZhiHuDailyTraget { get; set; }
-        public List<BeforeLivingVideoDailyTarget> beforeLivingVideoDailyTarget { get; set; }
-        public List<BeforeLivingSinaWeiBoDailyTarget> beforeLivingSinaWeiBoDailyTarget { get; set; }
+        /// <summary>
+        /// 主播归属平台id
+        /// </summary>
+        public string ContentPlatFormId { get; set; }
     }
 }

@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.DbModels.Model
+namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.BeforeLiving
 {
-    /// <summary>
-    /// 主播月度运营目标情况
-    /// </summary>
-    public class LiveAnchorMonthlyTargetBeforeLiving
+    public class LiveAnchorMonthlyTargetBeforeLivingVo
     {
         /// <summary>
         /// 编号
@@ -25,11 +21,6 @@ namespace Fx.Amiya.DbModels.Model
         public int Month { get; set; }
 
         /// <summary>
-        /// 创建日期
-        /// </summary>
-        public DateTime CreateDate { get; set; }
-
-        /// <summary>
         /// 经营目标名称
         /// </summary>
         public string MonthlyTargetName { get; set; }
@@ -38,6 +29,16 @@ namespace Fx.Amiya.DbModels.Model
         /// 主播ID
         /// </summary>
         public int LiveAnchorId { get; set; }
+        /// <summary>
+        /// 主播名称
+        /// </summary>
+        public string LiveAnchorName { get; set; }
+
+        /// <summary>
+        /// 主播归属平台id
+        /// </summary>
+        public string ContentPlatFormId { get; set; }
+
 
         /// <summary>
         /// 抖音发布目标
@@ -83,6 +84,7 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public decimal ZhihuReleaseCompleteRate { get; set; }
 
+
         /// <summary>
         /// 知乎投流费用目标
         /// </summary>
@@ -96,6 +98,34 @@ namespace Fx.Amiya.DbModels.Model
         /// 知乎投流费用完成率
         /// </summary>
         public decimal ZhihuFlowinvestmentCompleteRate { get; set; }
+
+        /// <summary>
+        /// 视频号发布目标
+        /// </summary>
+        public int VideoReleaseTarget { get; set; }
+
+        /// <summary>
+        /// 月累计视频号发布条数
+        /// </summary>
+        public int CumulativeVideoRelease { get; set; }
+
+        /// <summary>
+        /// 视频号发布目标完成率
+        /// </summary>
+        public decimal VideoReleaseCompleteRate { get; set; }
+        /// <summary>
+        /// 视频号投流费用目标
+        /// </summary>
+        public decimal VideoFlowinvestmentTarget { get; set; }
+        /// <summary>
+        /// 累计视频号投流费用
+        /// </summary>
+
+        public decimal CumulativeVideoFlowinvestment { get; set; }
+        /// <summary>
+        /// 视频号投流费用完成率
+        /// </summary>
+        public decimal VideoFlowinvestmentCompleteRate { get; set; }
 
 
         /// <summary>
@@ -155,36 +185,6 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public decimal SinaWeiBoFlowinvestmentCompleteRate { get; set; }
 
-
-
-        /// <summary>
-        /// 视频号发布目标
-        /// </summary>
-        public int VideoReleaseTarget { get; set; }
-
-        /// <summary>
-        /// 月累计视频号发布条数
-        /// </summary>
-        public int CumulativeVideoRelease { get; set; }
-
-        /// <summary>
-        /// 视频号发布目标完成率
-        /// </summary>
-        public decimal VideoReleaseCompleteRate { get; set; }
-        /// <summary>
-        /// 视频号投流费用目标
-        /// </summary>
-        public decimal VideoFlowinvestmentTarget { get; set; }
-        /// <summary>
-        /// 累计视频号投流费用
-        /// </summary>
-
-        public decimal CumulativeVideoFlowinvestment { get; set; }
-        /// <summary>
-        /// 视频号投流费用完成率
-        /// </summary>
-        public decimal VideoFlowinvestmentCompleteRate { get; set; }
-
         /// <summary>
         /// 月发布目标
         /// </summary>
@@ -211,15 +211,12 @@ namespace Fx.Amiya.DbModels.Model
         public decimal CumulativeFlowInvestment { get; set; }
 
         /// <summary>
-        /// 投流完成率
+        /// 运营渠道投流完成率
         /// </summary>
         public decimal FlowInvestmentCompleteRate { get; set; }
-        public LiveAnchor LiveAnchor { get; set; }
-
-        public List<BeforeLivingTikTokDailyTarget> beforeLivingTikTokDailyTragets { get; set; }
-        public List<BeforeLivingXiaoHongShuDailyTarget> beforeLivingXiaoHongShuDailyTraget { get; set; }
-        public List<BeforeLivingZhiHuDailyTarget> beforeLivingZhiHuDailyTraget { get; set; }
-        public List<BeforeLivingVideoDailyTarget> beforeLivingVideoDailyTarget { get; set; }
-        public List<BeforeLivingSinaWeiBoDailyTarget> beforeLivingSinaWeiBoDailyTarget { get; set; }
+        /// <summary>
+        /// 创建日期
+        /// </summary>
+        public DateTime CreateDate { get; set; }
     }
 }

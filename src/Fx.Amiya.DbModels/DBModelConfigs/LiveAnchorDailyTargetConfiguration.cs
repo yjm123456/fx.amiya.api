@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fx.Amiya.DbModels.DBModelConfigs
 {
-    public class LiveAnchorDailyTargetConfiguration : IEntityTypeConfiguration<AfterLiveAnchorDailyTarget>
+    public class LiveAnchorDailyTargetConfiguration : IEntityTypeConfiguration<LiveAnchorDailyTarget>
     {
-        public void Configure(EntityTypeBuilder<AfterLiveAnchorDailyTarget> builder)
+        public void Configure(EntityTypeBuilder<LiveAnchorDailyTarget> builder)
         {
             builder.ToTable("tbl_liveanchor_daily_target");
             builder.Property(t => t.Id).HasColumnName("id").HasColumnType("varchar(50)").IsRequired();
