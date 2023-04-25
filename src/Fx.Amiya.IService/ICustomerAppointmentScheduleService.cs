@@ -23,6 +23,13 @@ namespace Fx.Amiya.IService
         Task DeleteAsync(string id);
 
         List<BaseIdAndNameDto> GetAppointmentTypeList();
+        /// <summary>
+        /// 完成客户预约日程
+        /// </summary>
+        /// <param name="phone">手机号</param>
+        /// <param name="type">预约类型</param>
+        /// <returns></returns>
+        Task UpdateAppointmentCompleteStatusAsync(string phone,int type);
 
 
     }

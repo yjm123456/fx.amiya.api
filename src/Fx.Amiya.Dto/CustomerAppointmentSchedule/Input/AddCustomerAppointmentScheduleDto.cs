@@ -45,6 +45,14 @@ namespace Fx.Amiya.Dto.CustomerAppointmentSchedule.Input
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+        /// <summary>
+        /// 接诊咨询
+        /// </summary>
+        public string Consultation { get; set; }
+        /// <summary>
+        /// 预约医院
+        /// </summary>
+        public int? AppointmentHospitalId { get; set; }
 
     }
 }

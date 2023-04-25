@@ -63,6 +63,7 @@ namespace Fx.Amiya.Service
         private IDalCompanyBaseInfo dalCompanyBaseInfo;
         private IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment;
         private IDalHospitalInfo dalHospitalInfo;
+        private ICustomerAppointmentScheduleService customerAppointmentScheduleService;
 
         public ContentPlateFormOrderService(
            IDalContentPlatformOrder dalContentPlatformOrder,
@@ -89,7 +90,7 @@ namespace Fx.Amiya.Service
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDalService,
              IDalBindCustomerService dalBindCustomerService,
              IDalConfig dalConfig,
-             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment, IDalHospitalInfo dalHospitalInfo)
+             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment, IDalHospitalInfo dalHospitalInfo, ICustomerAppointmentScheduleService customerAppointmentScheduleService)
         {
             _dalContentPlatformOrder = dalContentPlatformOrder;
             this.unitOfWork = unitOfWork;
@@ -121,6 +122,7 @@ namespace Fx.Amiya.Service
             this.dalCompanyBaseInfo = dalCompanyBaseInfo;
             this.dalAmiyaHospitalDepartment = dalAmiyaHospitalDepartment;
             this.dalHospitalInfo = dalHospitalInfo;
+            this.customerAppointmentScheduleService = customerAppointmentScheduleService;
         }
 
         /// <summary>
@@ -730,6 +732,8 @@ namespace Fx.Amiya.Service
                     await hospitalCustomerInfoService.AddAsync(addSendHospitalCustomerInfoDto);
 
                 }
+                //完成视频预约到诊
+                await customerAppointmentScheduleService.UpdateAppointmentCompleteStatusAsync(phone, (int)AppointmentType.VideoAppointment);
                 unitOfWork.Commit();
             }
             catch (Exception ex)
@@ -2019,6 +2023,7 @@ namespace Fx.Amiya.Service
                 //取该订单的第一次成交业绩时间
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
                 var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true).FirstOrDefault();
+                
                 if (dealCount != null)
                 //if (order.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
                 {
@@ -2036,6 +2041,11 @@ namespace Fx.Amiya.Service
                 if (order == null)
                 {
                     throw new Exception("未找到该订单的相关信息！");
+                }
+                //如果到院完成到院接诊预约
+                if (input.IsToHospital)
+                {
+                    await customerAppointmentScheduleService.UpdateAppointmentCompleteStatusAsync(order.Phone,(int)AppointmentType.ToHospitalAppointment);
                 }
                 if (input.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
                 {

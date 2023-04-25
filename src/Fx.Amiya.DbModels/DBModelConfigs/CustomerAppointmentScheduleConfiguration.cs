@@ -25,6 +25,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.IsFinish).HasColumnName("is_finish").HasColumnType("bit").IsRequired();
             builder.Property(e => e.ImportantType).HasColumnName("important_type").HasColumnType("int").IsRequired();
             builder.Property(e => e.Remark).HasColumnName("remark").HasColumnType("varchar(300)").IsRequired(false);
+            builder.Property(e => e.AppointmentHospitalId).HasColumnName("appointment_hospital_id").HasColumnType("int").IsRequired(false);
+            builder.Property(e => e.Consultation).HasColumnName("consultation").HasColumnType("varchar(50)").IsRequired(false);
             builder.HasOne(t => t.AmiyaEmployeeInfo).WithMany(t => t.CustomerAppointmentScheduleList).HasForeignKey(t => t.CreateBy);
 
         }

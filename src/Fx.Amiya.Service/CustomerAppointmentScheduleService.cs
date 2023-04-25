@@ -24,12 +24,13 @@ namespace Fx.Amiya.Service
         private IDalAmiyaEmployee _dalAmiyaEmployee;
         private IAmiyaInWareHouseService amiyaInWareHouseService;
         private IDalTagDetailInfo dalTagDetailInfo;
+        private IDalHospitalInfo dalHospitalInfo;
         public CustomerAppointmentScheduleService(IDalCustomerAppointmentSchedule dalCustomerAppointmentScheduleService,
             IInventoryListService inventoryListService,
             IAmiyaInWareHouseService inWareHouseService,
            IDalAmiyaEmployee dalAmiyaEmployee,
             IAmiyaOutWareHouseService amiyaOutWareHouseService,
-            IUnitOfWork unitofWork, IDalTagDetailInfo dalTagDetailInfo)
+            IUnitOfWork unitofWork, IDalTagDetailInfo dalTagDetailInfo, IDalHospitalInfo dalHospitalInfo)
         {
             this.dalCustomerAppointmentScheduleService = dalCustomerAppointmentScheduleService;
             this.inventoryListService = inventoryListService;
@@ -38,6 +39,7 @@ namespace Fx.Amiya.Service
             _dalAmiyaEmployee = dalAmiyaEmployee;
             this.unitOfWork = unitofWork;
             this.dalTagDetailInfo = dalTagDetailInfo;
+            this.dalHospitalInfo = dalHospitalInfo;
         }
 
 
@@ -80,6 +82,9 @@ namespace Fx.Amiya.Service
                                                              ImportantTypeText = ServiceClass.GetShopCartRegisterEmergencyLevelText(d.ImportantType),
                                                              Remark = d.Remark,
                                                              CreateByEmpName = d.AmiyaEmployeeInfo.Name,
+                                                             AppointmentHospitalId = d.AppointmentHospitalId,
+                                                             AppointmentHospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == d.AppointmentHospitalId).Select(e=>e.Name).SingleOrDefault() ?? "",
+                                                             Consultation=d.Consultation
                                                          };
                 FxPageInfo<CustomerAppointmentScheduleDto> customerAppointmentScheduleServicePageInfo = new FxPageInfo<CustomerAppointmentScheduleDto>();
                 customerAppointmentScheduleServicePageInfo.TotalCount = await customerAppointmentScheduleService.CountAsync();
@@ -115,6 +120,8 @@ namespace Fx.Amiya.Service
                                                              CustomerName = d.CustomerName,
                                                              Phone = ServiceClass.GetIncompletePhone(d.Phone),
                                                              AppointmentTypeText = ServiceClass.GetAppointmentTypeText(d.AppointmentType),
+                                                             AppointmentHospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == d.AppointmentHospitalId).Select(e => e.Name).SingleOrDefault() ?? "",
+                                                             Consultation=d.Consultation
                                                          };
                 List<CustomerAppointmentScheduleDto> customerAppointmentScheduleServicePageInfo = new List<CustomerAppointmentScheduleDto>();
                 customerAppointmentScheduleServicePageInfo = await customerAppointmentScheduleService.ToListAsync();
@@ -159,6 +166,8 @@ namespace Fx.Amiya.Service
                                                              ImportantTypeText = ServiceClass.GetShopCartRegisterEmergencyLevelText(d.ImportantType),
                                                              Remark = d.Remark,
                                                              CreateByEmpName = d.AmiyaEmployeeInfo.Name,
+                                                             AppointmentHospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == d.AppointmentHospitalId).Select(e => e.Name).SingleOrDefault() ?? "",
+                                                             Consultation=d.Consultation
                                                          };
 
 
@@ -189,6 +198,8 @@ namespace Fx.Amiya.Service
                 customerAppointmentScheduleService.Valid = true;
                 customerAppointmentScheduleService.CreateDate = DateTime.Now;
                 customerAppointmentScheduleService.CreateBy = addDto.CreateBy;
+                customerAppointmentScheduleService.AppointmentHospitalId = addDto.AppointmentHospitalId;
+                customerAppointmentScheduleService.Consultation = addDto.Consultation;
 
                 await dalCustomerAppointmentScheduleService.AddAsync(customerAppointmentScheduleService, true);
 
@@ -220,6 +231,9 @@ namespace Fx.Amiya.Service
                 customerAppointmentScheduleServiceDto.Remark = customerAppointmentScheduleService.Remark;
                 customerAppointmentScheduleServiceDto.Valid = customerAppointmentScheduleService.Valid;
                 customerAppointmentScheduleServiceDto.CreateDate = customerAppointmentScheduleService.CreateDate;
+                customerAppointmentScheduleServiceDto.AppointmentHospitalId = customerAppointmentScheduleService.AppointmentHospitalId;
+                customerAppointmentScheduleServiceDto.Consultation = customerAppointmentScheduleService.Consultation;
+                customerAppointmentScheduleServiceDto.AppointmentHospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == customerAppointmentScheduleService.AppointmentHospitalId).Select(e => e.Name).SingleOrDefault() ?? "";
 
                 return customerAppointmentScheduleServiceDto;
             }
@@ -246,6 +260,8 @@ namespace Fx.Amiya.Service
                 customerAppointmentScheduleService.ImportantType = updateDto.ImportantType;
                 customerAppointmentScheduleService.Remark = updateDto.Remark;
                 customerAppointmentScheduleService.UpdateDate = DateTime.Now;
+                customerAppointmentScheduleService.AppointmentHospitalId = updateDto.AppointmentHospitalId;
+                customerAppointmentScheduleService.Consultation = updateDto.Consultation;
                 await dalCustomerAppointmentScheduleService.UpdateAsync(customerAppointmentScheduleService, true);
 
 
@@ -286,6 +302,22 @@ namespace Fx.Amiya.Service
                 appointmentTypeList.Add(appointmentType);
             }
             return appointmentTypeList;
+        }
+        /// <summary>
+        /// 完成客户预约日程
+        /// </summary>
+        /// <param name="phone">手机号</param>
+        /// <param name="type">预约类型</param>
+        /// <returns></returns>
+        public async Task UpdateAppointmentCompleteStatusAsync(string phone, int type)
+        {
+            var list= dalCustomerAppointmentScheduleService.GetAll().Where(e => e.Phone == phone && e.AppointmentType == type).ToList();
+            foreach (var item in list)
+            {
+                item.IsFinish = true;
+                dalCustomerAppointmentScheduleService.Update(item, true);
+            }
+
         }
     }
 }

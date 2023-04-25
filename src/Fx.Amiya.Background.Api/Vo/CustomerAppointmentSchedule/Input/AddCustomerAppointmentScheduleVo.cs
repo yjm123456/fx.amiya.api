@@ -39,5 +39,15 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerAppointmentSchedule.Input
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+        /// <summary>
+        /// 预约医院id
+        /// </summary>
+        public int? AppointmentHospitalId { get; set; }
+        
+        /// <summary>
+        /// 接诊咨询
+        /// </summary>
+        public string Consultation { get; set; }
+
     }
 }

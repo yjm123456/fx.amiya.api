@@ -83,6 +83,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       ImportantTypeText = d.ImportantTypeText,
                                                       Remark = d.Remark,
                                                       CreateByEmpName = d.CreateByEmpName,
+                                                      AppointmentHospitalId=d.AppointmentHospitalId,
+                                                      AppointmentHospitalName=d.AppointmentHospitalName,
+                                                      Consultation=d.Consultation
                                                   };
 
                 FxPageInfo<CustomerAppointmentScheduleVo> customerAppointmentSchedulePageInfo = new FxPageInfo<CustomerAppointmentScheduleVo>();
@@ -136,6 +139,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       ImportantTypeText = d.ImportantTypeText,
                                                       Remark = d.Remark,
                                                       CreateByEmpName = d.CreateByEmpName,
+                                                      AppointmentHospitalId=d.AppointmentHospitalId,
+                                                      AppointmentHospitalName=d.AppointmentHospitalName,
+                                                      Consultation=d.Consultation
+
                                                   };
 
                 List<CustomerAppointmentScheduleVo> customerAppointmentSchedulePageInfo = new List<CustomerAppointmentScheduleVo>();
@@ -179,6 +186,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.IsFinish = addVo.IsFinish;
                 addDto.ImportantType = addVo.ImportantType;
                 addDto.Remark = addVo.Remark;
+                addDto.AppointmentHospitalId = addVo.AppointmentHospitalId;
+                addDto.Consultation = addVo.Consultation;
                 await customerAppointmentScheduleService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -212,6 +221,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 customerAppointmentScheduleVo.Remark = customerAppointmentSchedule.Remark;
                 customerAppointmentScheduleVo.Valid = customerAppointmentSchedule.Valid;
                 customerAppointmentScheduleVo.CreateDate = customerAppointmentSchedule.CreateDate;
+                customerAppointmentScheduleVo.AppointmentHospitalId = customerAppointmentSchedule.AppointmentHospitalId;
+                customerAppointmentScheduleVo.AppointmentHospitalName = customerAppointmentSchedule.AppointmentHospitalName;
+                customerAppointmentScheduleVo.Consultation = customerAppointmentSchedule.Consultation;
                 return ResultData<CustomerAppointmentScheduleVo>.Success().AddData("customerAppointmentScheduleInfo", customerAppointmentScheduleVo);
             }
             catch (Exception ex)
@@ -240,6 +252,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.IsFinish = updateVo.IsFinish;
                 updateDto.ImportantType = updateVo.ImportantType;
                 updateDto.Remark = updateVo.Remark;
+                updateDto.AppointmentHospitalId = updateVo.AppointmentHospitalId;
+                updateDto.Consultation = updateVo.Consultation;
                 await customerAppointmentScheduleService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

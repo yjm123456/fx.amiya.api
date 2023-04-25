@@ -251,16 +251,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 根据小黄车登记手机号获取小黄车登记信息
         /// </summary>
-        /// <param name="encryptPhone"></param>
+        /// <param name="phone"></param>
         /// <returns></returns>
-        [HttpGet("byEncryptPhone/{encryptPhone}")]
-        public async Task<ResultData<ShoppingCartRegistrationVo>> GetByPhoneAsync(string encryptPhone)
+        [HttpGet("byPhone/{phone}")]
+        public async Task<ResultData<ShoppingCartRegistrationVo>> GetByPhoneAsync(string phone)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var shoppingCartRegistration = await shoppingCartRegistrationService.GetByEncryptPhoneAsync(encryptPhone, employeeId);
+                var shoppingCartRegistration = await shoppingCartRegistrationService.GetByPhoneAsync(phone, employeeId);
                 ShoppingCartRegistrationVo shoppingCartRegistrationVo = new ShoppingCartRegistrationVo();
                 shoppingCartRegistrationVo.Id = shoppingCartRegistration.Id;
                 shoppingCartRegistrationVo.RecordDate = shoppingCartRegistration.RecordDate;
