@@ -13,6 +13,8 @@ using Fx.Infrastructure.DataAccess;
 using jos_sdk_net.Util;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.MessageNotice.Input;
+using Fx.Amiya.Dto.WxAppConfig;
+using Newtonsoft.Json;
 
 namespace Fx.Amiya.Service
 {
@@ -24,6 +26,7 @@ namespace Fx.Amiya.Service
         private IMessageNoticeService messageNoticeService;
         private ILiveAnchorService _liveAnchorService;
         private IUnitOfWork unitOfWork;
+        private IDalConfig dalConfig;
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private IDalAmiyaEmployee dalAmiyaEmployee;
         public ShoppingCartRegistrationService(IDalShoppingCartRegistration dalShoppingCartRegistration,
@@ -33,12 +36,14 @@ namespace Fx.Amiya.Service
             IUnitOfWork unitOfWork,
             ILiveAnchorService liveAnchorService,
              ILiveAnchorWeChatInfoService liveAnchorWeChatInfoService,
+            IDalConfig dalConfig,
             IDalAmiyaEmployee dalAmiyaEmployee)
         {
             this.dalShoppingCartRegistration = dalShoppingCartRegistration;
             _contentPlatformService = contentPlatformService;
             _liveAnchorService = liveAnchorService;
             this.messageNoticeService = messageNoticeService;
+            this.dalConfig = dalConfig;
             this.unitOfWork = unitOfWork;
             _liveAnchorWeChatInfoService = liveAnchorWeChatInfoService;
             _amiyaEmployeeService = amiyaEmployeeService;
@@ -224,6 +229,63 @@ namespace Fx.Amiya.Service
             try
             {
                 var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().SingleOrDefaultAsync(e => e.Id == id);
+                if (shoppingCartRegistration == null)
+                {
+                    return new ShoppingCartRegistrationDto();
+                }
+
+                ShoppingCartRegistrationDto shoppingCartRegistrationDto = new ShoppingCartRegistrationDto();
+                shoppingCartRegistrationDto.Id = shoppingCartRegistration.Id;
+                shoppingCartRegistrationDto.RecordDate = shoppingCartRegistration.RecordDate;
+                shoppingCartRegistrationDto.ContentPlatFormId = shoppingCartRegistration.ContentPlatFormId;
+                shoppingCartRegistrationDto.LiveAnchorId = shoppingCartRegistration.LiveAnchorId;
+                shoppingCartRegistrationDto.LiveAnchorWechatNo = shoppingCartRegistration.LiveAnchorWechatNo;
+                //var wechatInfo = await _liveAnchorWeChatInfoService.GetValidAsync();
+                //var wechatResult = wechatInfo.FirstOrDefault(x => x.LiveAnchorId == shoppingCartRegistration.LiveAnchorId && x.WeChatNo == shoppingCartRegistration.LiveAnchorWechatNo);
+                //shoppingCartRegistrationDto.LiveAnchorWeChatId = wechatResult.Id;
+                shoppingCartRegistrationDto.CustomerNickName = shoppingCartRegistration.CustomerNickName;
+                shoppingCartRegistrationDto.Phone = shoppingCartRegistration.Phone;
+                shoppingCartRegistrationDto.SubPhone = shoppingCartRegistration.SubPhone;
+                shoppingCartRegistrationDto.Price = shoppingCartRegistration.Price;
+                shoppingCartRegistrationDto.IsAddWeChat = shoppingCartRegistration.IsAddWeChat;
+                shoppingCartRegistrationDto.ConsultationType = shoppingCartRegistration.ConsultationType;
+                shoppingCartRegistrationDto.IsWriteOff = shoppingCartRegistration.IsWriteOff;
+                shoppingCartRegistrationDto.IsConsultation = shoppingCartRegistration.IsConsultation;
+                shoppingCartRegistrationDto.ConsultationDate = shoppingCartRegistration.ConsultationDate;
+                shoppingCartRegistrationDto.IsReturnBackPrice = shoppingCartRegistration.IsReturnBackPrice;
+                shoppingCartRegistrationDto.Remark = shoppingCartRegistration.Remark;
+                shoppingCartRegistrationDto.CreateBy = shoppingCartRegistration.CreateBy;
+                shoppingCartRegistrationDto.AssignEmpId = shoppingCartRegistration.AssignEmpId;
+                shoppingCartRegistrationDto.IsCreateOrder = shoppingCartRegistration.IsCreateOrder;
+                shoppingCartRegistrationDto.IsSendOrder = shoppingCartRegistration.IsSendOrder;
+                shoppingCartRegistrationDto.CreateDate = shoppingCartRegistration.CreateDate;
+                shoppingCartRegistrationDto.IsReContent = shoppingCartRegistration.IsReContent;
+                shoppingCartRegistrationDto.ReContent = shoppingCartRegistration.ReContent;
+                shoppingCartRegistrationDto.RefundDate = shoppingCartRegistration.RefundDate;
+                shoppingCartRegistrationDto.RefundReason = shoppingCartRegistration.RefundReason;
+                shoppingCartRegistrationDto.BadReviewDate = shoppingCartRegistration.BadReviewDate;
+                shoppingCartRegistrationDto.BadReviewContent = shoppingCartRegistration.BadReviewContent;
+                shoppingCartRegistrationDto.BadReviewReason = shoppingCartRegistration.BadReviewReason;
+                shoppingCartRegistrationDto.IsBadReview = shoppingCartRegistration.IsBadReview;
+                shoppingCartRegistrationDto.EmergencyLevel = shoppingCartRegistration.EmergencyLevel;
+
+                return shoppingCartRegistrationDto;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public async Task<ShoppingCartRegistrationDto> GetByEncryptPhoneAsync(string encryptPhone)
+        {
+            try
+            {
+                var config = await GetCallCenterConfig();
+                string phone = ServiceClass.Decrypto(encryptPhone, config.PhoneEncryptKey);
+                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().Where(e => e.Phone == phone || e.SubPhone == phone).OrderByDescending(k => k.CreateDate).SingleOrDefaultAsync();
                 if (shoppingCartRegistration == null)
                 {
                     return new ShoppingCartRegistrationDto();
@@ -945,5 +1007,13 @@ namespace Fx.Amiya.Service
             return returnResult;
         }
         #endregion
+
+
+        private async Task<CallCenterConfigDto> GetCallCenterConfig()
+        {
+            var config = await dalConfig.GetAll().SingleOrDefaultAsync();
+            return JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig;
+        }
+
     }
 }

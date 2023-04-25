@@ -249,6 +249,58 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
+        /// 根据小黄车登记手机号获取小黄车登记信息
+        /// </summary>
+        /// <param name="encryptPhone"></param>
+        /// <returns></returns>
+        [HttpGet("byEncryptPhone/{encryptPhone}")]
+        public async Task<ResultData<ShoppingCartRegistrationVo>> GetByPhoneAsync(string encryptPhone)
+        {
+            try
+            {
+                var shoppingCartRegistration = await shoppingCartRegistrationService.GetByEncryptPhoneAsync(encryptPhone);
+                ShoppingCartRegistrationVo shoppingCartRegistrationVo = new ShoppingCartRegistrationVo();
+                shoppingCartRegistrationVo.Id = shoppingCartRegistration.Id;
+                shoppingCartRegistrationVo.RecordDate = shoppingCartRegistration.RecordDate;
+                shoppingCartRegistrationVo.ContentPlatFormId = shoppingCartRegistration.ContentPlatFormId;
+                shoppingCartRegistrationVo.LiveAnchorId = shoppingCartRegistration.LiveAnchorId;
+                shoppingCartRegistrationVo.LiveAnchorWechatNo = shoppingCartRegistration.LiveAnchorWechatNo;
+                shoppingCartRegistrationVo.LiveAnchorWeChatId = shoppingCartRegistration.LiveAnchorWeChatId;
+                shoppingCartRegistrationVo.CustomerNickName = shoppingCartRegistration.CustomerNickName;
+                shoppingCartRegistrationVo.Phone = shoppingCartRegistration.Phone;
+                shoppingCartRegistrationVo.SubPhone = shoppingCartRegistration.SubPhone;
+                shoppingCartRegistrationVo.IsAddWeChat = shoppingCartRegistration.IsAddWeChat;
+                shoppingCartRegistrationVo.Price = shoppingCartRegistration.Price;
+                shoppingCartRegistrationVo.ConsultationType = shoppingCartRegistration.ConsultationType;
+                shoppingCartRegistrationVo.IsWriteOff = shoppingCartRegistration.IsWriteOff;
+                shoppingCartRegistrationVo.IsConsultation = shoppingCartRegistration.IsConsultation;
+                shoppingCartRegistrationVo.ConsultationDate = shoppingCartRegistration.ConsultationDate;
+                shoppingCartRegistrationVo.IsReturnBackPrice = shoppingCartRegistration.IsReturnBackPrice;
+                shoppingCartRegistrationVo.Remark = shoppingCartRegistration.Remark;
+                shoppingCartRegistrationVo.CreateByEmpId = shoppingCartRegistration.CreateBy;
+                shoppingCartRegistrationVo.AssignEmpId = shoppingCartRegistration.AssignEmpId;
+                shoppingCartRegistrationVo.CreateDate = shoppingCartRegistration.CreateDate;
+                shoppingCartRegistrationVo.ReContent = shoppingCartRegistration.ReContent;
+                shoppingCartRegistrationVo.IsSendOrder = shoppingCartRegistration.IsSendOrder;
+                shoppingCartRegistrationVo.IsCreateOrder = shoppingCartRegistration.IsCreateOrder;
+                shoppingCartRegistrationVo.RefundDate = shoppingCartRegistration.RefundDate;
+                shoppingCartRegistrationVo.RefundReason = shoppingCartRegistration.RefundReason;
+                shoppingCartRegistrationVo.BadReviewContent = shoppingCartRegistration.BadReviewContent;
+                shoppingCartRegistrationVo.BadReviewDate = shoppingCartRegistration.BadReviewDate;
+                shoppingCartRegistrationVo.BadReviewReason = shoppingCartRegistration.BadReviewReason;
+                shoppingCartRegistrationVo.IsReContent = shoppingCartRegistration.IsReContent;
+                shoppingCartRegistrationVo.IsBadReview = shoppingCartRegistration.IsBadReview;
+                shoppingCartRegistrationVo.EmergencyLevel = shoppingCartRegistration.EmergencyLevel;
+                shoppingCartRegistrationVo.EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(shoppingCartRegistration.EmergencyLevel);
+                return ResultData<ShoppingCartRegistrationVo>.Success().AddData("shoppingCartRegistrationInfo", shoppingCartRegistrationVo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<ShoppingCartRegistrationVo>.Fail(ex.Message);
+            }
+        }
+
+        /// <summary>
         /// 修改小黄车登记信息
         /// </summary>
         /// <param name="updateVo"></param>
