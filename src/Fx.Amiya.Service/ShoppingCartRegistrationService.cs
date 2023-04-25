@@ -279,13 +279,13 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task<ShoppingCartRegistrationDto> GetByEncryptPhoneAsync(string encryptPhone)
+        public async Task<ShoppingCartRegistrationDto> GetByEncryptPhoneAsync(string encryptPhone, int createBy)
         {
             try
             {
                 var config = await GetCallCenterConfig();
                 string phone = ServiceClass.Decrypto(encryptPhone, config.PhoneEncryptKey);
-                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().Where(e => e.Phone == phone || e.SubPhone == phone).OrderByDescending(k => k.CreateDate).SingleOrDefaultAsync();
+                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().Where(k => k.CreateBy == createBy || k.AssignEmpId == createBy).Where(e => e.Phone == phone || e.SubPhone == phone).OrderByDescending(k => k.CreateDate).SingleOrDefaultAsync();
                 if (shoppingCartRegistration == null)
                 {
                     return new ShoppingCartRegistrationDto();

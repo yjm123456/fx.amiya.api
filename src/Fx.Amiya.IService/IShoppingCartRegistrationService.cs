@@ -14,7 +14,7 @@ namespace Fx.Amiya.IService
         Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? AdmissionId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? emergencyLevel, bool? isBadReview);
         Task AddAsync(AddShoppingCartRegistrationDto addDto);
         Task<ShoppingCartRegistrationDto> GetByIdAsync(string id);
-        Task<ShoppingCartRegistrationDto> GetByEncryptPhoneAsync(string encryptPhone);
+        Task<ShoppingCartRegistrationDto> GetByEncryptPhoneAsync(string encryptPhone, int createBy);
         Task<ShoppingCartRegistrationDto> GetByPhoneAsync(string phone);
         Task UpdateAsync(UpdateShoppingCartRegistrationDto updateDto);
 
@@ -44,28 +44,28 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="liveAnchorId"></param>
         /// <returns></returns>
-        Task<List<ShoppingCartRegistrationDto>> GetDialyConsulationCardInfoByLiveAnchorId(int liveAnchorId,DateTime recordDate);
+        Task<List<ShoppingCartRegistrationDto>> GetDialyConsulationCardInfoByLiveAnchorId(int liveAnchorId, DateTime recordDate);
 
         /// <summary>
         /// 根据主播ID获取当日加v派单情况
         /// </summary>
         /// <param name="liveAnchorId"></param>
         /// <returns></returns>
-        Task<List<ShoppingCartRegistrationDto>> GetDialyAddWeChatInfoByLiveAnchorId(int liveAnchorId,DateTime recordDate);
+        Task<List<ShoppingCartRegistrationDto>> GetDialyAddWeChatInfoByLiveAnchorId(int liveAnchorId, DateTime recordDate);
 
         /// <summary>
         /// 根据条件获取今日小黄车退款量
         /// </summary>
         /// <param name="liveAnchorId"></param>
         /// <returns></returns>
-        Task<List<ShoppingCartRegistrationDto>> GetDialyYellowCardRefundInfoByLiveAnchorId(int liveAnchorId,DateTime recordDate);
+        Task<List<ShoppingCartRegistrationDto>> GetDialyYellowCardRefundInfoByLiveAnchorId(int liveAnchorId, DateTime recordDate);
 
         /// <summary>
         /// 根据条件获取今日小黄车差评量
         /// </summary>
         /// <param name="liveAnchorId"></param>
         /// <returns></returns>
-        Task<List<ShoppingCartRegistrationDto>> GetDialyYellowCardBadReviewInfoByLiveAnchorId(int liveAnchorId,DateTime recordDate);
+        Task<List<ShoppingCartRegistrationDto>> GetDialyYellowCardBadReviewInfoByLiveAnchorId(int liveAnchorId, DateTime recordDate);
 
         #endregion
 

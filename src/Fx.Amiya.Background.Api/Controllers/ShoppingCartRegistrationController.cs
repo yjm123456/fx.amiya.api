@@ -258,7 +258,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var shoppingCartRegistration = await shoppingCartRegistrationService.GetByEncryptPhoneAsync(encryptPhone);
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                var shoppingCartRegistration = await shoppingCartRegistrationService.GetByEncryptPhoneAsync(encryptPhone, employeeId);
                 ShoppingCartRegistrationVo shoppingCartRegistrationVo = new ShoppingCartRegistrationVo();
                 shoppingCartRegistrationVo.Id = shoppingCartRegistration.Id;
                 shoppingCartRegistrationVo.RecordDate = shoppingCartRegistration.RecordDate;
