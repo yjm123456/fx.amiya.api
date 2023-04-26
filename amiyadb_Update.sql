@@ -82,3 +82,15 @@ ALTER TABLE `tbl_customer_appointment_schedule`
 
 
 -------------------------------------------------王健 2023/04/25 END---------------------------------------------
+
+
+-----------------------------------------------余建明 2023/04/26 BEGIN--------------------------------------------
+--直播中日数据表切换主外键
+ALTER TABLE `amiyadb`.`tbl_living_daily_target` 
+ADD CONSTRAINT `fk_living_daily_target_livingmonthlytarget`
+  FOREIGN KEY (`live_anchor_monthly_target_id`)
+  REFERENCES `amiyadb`.`tbl_liveanchor_monthly_target_living` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+  
+-----------------------------------------------余建明 2023/04/26 END--------------------------------------------

@@ -102,6 +102,6 @@ namespace Fx.Amiya.DbModels.Model
         public DateTime CreateDate { get; set; }
 
         public LiveAnchor LiveAnchor { get; set; }
-        public List<LivingDailyTarget> livingDailyTarget { get; set; }
+        public List<LivingDailyTarget> LivingDailyTargets { get; set; }
     }
 }
