@@ -3316,6 +3316,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<OperaBaseDto> GetOperateDataByMonthAsync(DateTime startDate, DateTime endDate, int hospitalId)
         {
+            var sendCount = dalContentPlatformOrderSend.GetAll().Include(e => e.ContentPlatformOrder).Where(e => e.SendDate >= startDate && e.SendDate < endDate && e.HospitalId == hospitalId).ToList();
             var dealData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList);
                 
             var dealResult = dealData
@@ -3325,7 +3326,7 @@ namespace Fx.Amiya.Service
                 .ToList();
             var sendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.LastDealHospitalId==hospitalId && x.SendDate >= startDate && x.SendDate < endDate).ToList();
             //根据手机号去重派单数据
-            var distinctSendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.LastDealHospitalId==hospitalId && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.SendDate >= startDate && x.SendDate < endDate).GroupBy(x => x.Phone).Select(k => k.Key.First()).ToList();
+            //var distinctSendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.LastDealHospitalId==hospitalId && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.SendDate >= startDate && x.SendDate < endDate).GroupBy(x => x.Phone).Select(k => k.Key.First()).ToList();
             var visitInfo = dealData.Where(x => x.IsToHospital == true && x.ContentPlatformOrderDealInfoList.OrderByDescending(k => k.CreateDate).FirstOrDefault().CreateDate >= startDate && x.ContentPlatformOrderDealInfoList.OrderByDescending(k => k.CreateDate).FirstOrDefault().CreateDate < endDate  && x.LastDealHospitalId == hospitalId).ToList();
 
             OperaBaseDto operateBaseDataDto = new OperaBaseDto();
@@ -3334,8 +3335,8 @@ namespace Fx.Amiya.Service
             operateBaseDataDto.OldCustomerToHospitalCount= dealResult.Where(e => e.IsOldCustomer == true && e.IsToHospital == true).Count();
             operateBaseDataDto.OldCustomerDealCount= dealResult.Where(e => e.IsOldCustomer == true && e.IsDeal == true).Count();
 
-            operateBaseDataDto.NewCustomerToHospitalRatio = DecimalExtension.CalculateTargetComplete(visitInfo.Where(e=>e.IsOldCustomer==false).Count(),distinctSendInfo.Count());
-            operateBaseDataDto.NewCustomerDealRation = DecimalExtension.CalculateTargetComplete(operateBaseDataDto.NewCustomerDealCount, visitInfo.Where(e => e.IsOldCustomer == false).Count());
+            operateBaseDataDto.NewCustomerToHospitalRatio = DecimalExtension.CalculateTargetComplete(visitInfo.Where(e=>e.IsOldCustomer==false).Count(), sendCount.Count());
+            operateBaseDataDto.NewCustomerDealRation = DecimalExtension.CalculateTargetComplete(operateBaseDataDto.NewCustomerDealCount, dealResult.Where(e => e.IsOldCustomer == false).Count());
             operateBaseDataDto.OldCustomerRepurchaseRatio = DecimalExtension.CalculateTargetComplete(dealResult.Where(e=>e.IsOldCustomer==true).GroupBy(e=>e.ContentPlatFormOrderId).Where(e=>e.Count()>1).Count(),dealResult.Count());
             operateBaseDataDto.OldCustomerDealRation = DecimalExtension.CalculateTargetComplete(operateBaseDataDto.OldCustomerDealCount, dealResult.Where(e=>e.IsOldCustomer==true).Count());
             return operateBaseDataDto;

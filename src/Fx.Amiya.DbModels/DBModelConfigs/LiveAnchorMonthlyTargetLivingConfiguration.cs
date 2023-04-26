@@ -39,7 +39,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
 
             builder.Property(t => t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
 
-
+            
             builder.HasOne(e => e.LiveAnchor).WithMany(e => e.LiveAnchorMonthlyTargetLivings).HasForeignKey(e => e.LiveAnchorId);
         }
     }
