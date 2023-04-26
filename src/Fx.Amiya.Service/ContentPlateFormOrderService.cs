@@ -64,6 +64,7 @@ namespace Fx.Amiya.Service
         private IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment;
         private IDalHospitalInfo dalHospitalInfo;
         private ICustomerAppointmentScheduleService customerAppointmentScheduleService;
+        private IDalContentPlatformOrderSend dalContentPlatformOrderSend;
 
         public ContentPlateFormOrderService(
            IDalContentPlatformOrder dalContentPlatformOrder,
@@ -90,7 +91,7 @@ namespace Fx.Amiya.Service
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDalService,
              IDalBindCustomerService dalBindCustomerService,
              IDalConfig dalConfig,
-             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment, IDalHospitalInfo dalHospitalInfo, ICustomerAppointmentScheduleService customerAppointmentScheduleService)
+             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment, IDalHospitalInfo dalHospitalInfo, ICustomerAppointmentScheduleService customerAppointmentScheduleService, IDalContentPlatformOrderSend dalContentPlatformOrderSend)
         {
             _dalContentPlatformOrder = dalContentPlatformOrder;
             this.unitOfWork = unitOfWork;
@@ -123,6 +124,7 @@ namespace Fx.Amiya.Service
             this.dalAmiyaHospitalDepartment = dalAmiyaHospitalDepartment;
             this.dalHospitalInfo = dalHospitalInfo;
             this.customerAppointmentScheduleService = customerAppointmentScheduleService;
+            this.dalContentPlatformOrderSend = dalContentPlatformOrderSend;
         }
 
         /// <summary>
@@ -3281,24 +3283,27 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<OrderBaseDto> GetOrderDataByMonthAsync(DateTime startDate, DateTime endDate,int hospitalId)
         {
+            var sendCount = dalContentPlatformOrderSend.GetAll().Include(e=>e.ContentPlatformOrder).Where(e => e.SendDate >= startDate && e.SendDate < endDate&&e.HospitalId==hospitalId).ToList();
+            
             var dealData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
                 .Where(e => e.LastDealHospitalId == hospitalId)
                 .Where(e => e.SendDate >= startDate && e.SendDate < endDate);
             var dealResult = dealData
                 .SelectMany(e => e.ContentPlatformOrderDealInfoList).ToList();
+            var ss = sendCount.Where(x => x.ContentPlatformOrder.OrderStatus==(int)ContentPlateFormOrderStatus.SendOrder);
             var dealDataSendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.LastDealHospitalId == hospitalId).ToList();
             OrderBaseDto orderData = new OrderBaseDto();
-            orderData.SendOrderCount = dealDataSendInfo.Count();
+            orderData.SendOrderCount = sendCount.Count();
 
-            orderData.ProcessedOrderCount = dealDataSendInfo.Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.SendOrder).Count();
+            orderData.ProcessedOrderCount = sendCount.Where(x => x.ContentPlatformOrder.OrderStatus > (int)ContentPlateFormOrderStatus.SendOrder).Count();
 
-            orderData.UntreatedOrderCount = dealDataSendInfo.Where(e => e.OrderStatus == (int)ContentPlateFormOrderStatus.SendOrder).Count();
+            orderData.UntreatedOrderCount = sendCount.Where(x => x.ContentPlatformOrder.OrderStatus == (int)ContentPlateFormOrderStatus.SendOrder).Count();
 
-            orderData.SendOrderNotToHospitalCount = dealDataSendInfo.Where(e => e.IsToHospital == false).Count();
+            orderData.SendOrderNotToHospitalCount = sendCount.Where(x=>x.ContentPlatformOrder.IsToHospital==false).Count();
 
             orderData.ToHospitalNoDealCount = dealResult.Where(e => e.IsToHospital == true && e.IsDeal == false).Count();
 
-            orderData.DealNoRepurchaseCount = dealResult.Where(e => e.IsDeal == true).GroupBy(e => e.ContentPlatFormOrderId).Where(e => e.Count() > 1).Count();
+            orderData.DealNoRepurchaseCount = dealResult.Where(e => e.IsDeal == true).GroupBy(e => e.ContentPlatFormOrderId).Where(e => e.Count() == 1).Count();
 
             return orderData;
         }
@@ -3490,7 +3495,7 @@ namespace Fx.Amiya.Service
                 }
                 ).ToList();
 
-            var dealData = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate).GroupBy(e => e.LastDealHospitalId).Select(
+            var dealData = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate&&e.LastDealHospitalId!=null).GroupBy(e => e.LastDealHospitalId).Select(
                 e=>new { 
                     Name=dalHospitalInfo.GetAll().Where(h=>h.Id== e.Key).FirstOrDefault().Name,
                     HospitalId=e.Key,
