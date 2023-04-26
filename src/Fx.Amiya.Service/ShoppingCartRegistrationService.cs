@@ -283,7 +283,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var shoppingCartRegistration =dalShoppingCartRegistration.GetAll().Where(k => k.CreateBy == createBy || k.AssignEmpId == createBy).Where(e => e.Phone == phone || e.SubPhone == phone).OrderByDescending(k => k.CreateDate).FirstOrDefault();
+                var shoppingCartRegistration = dalShoppingCartRegistration.GetAll().Where(k => k.CreateBy == createBy || k.AssignEmpId == createBy).Where(e => e.Phone == phone || e.SubPhone == phone).OrderByDescending(k => k.CreateDate).FirstOrDefault();
                 if (shoppingCartRegistration == null)
                 {
                     return new ShoppingCartRegistrationDto();
@@ -304,6 +304,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.Price = shoppingCartRegistration.Price;
                 shoppingCartRegistrationDto.IsAddWeChat = shoppingCartRegistration.IsAddWeChat;
                 shoppingCartRegistrationDto.ConsultationType = shoppingCartRegistration.ConsultationType;
+                shoppingCartRegistrationDto.ConsultationTypeText = ServiceClass.GetConsulationTypeText(shoppingCartRegistration.ConsultationType);
                 shoppingCartRegistrationDto.IsWriteOff = shoppingCartRegistration.IsWriteOff;
                 shoppingCartRegistrationDto.IsConsultation = shoppingCartRegistration.IsConsultation;
                 shoppingCartRegistrationDto.ConsultationDate = shoppingCartRegistration.ConsultationDate;

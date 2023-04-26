@@ -274,6 +274,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.IsAddWeChat = shoppingCartRegistration.IsAddWeChat;
                 shoppingCartRegistrationVo.Price = shoppingCartRegistration.Price;
                 shoppingCartRegistrationVo.ConsultationType = shoppingCartRegistration.ConsultationType;
+                shoppingCartRegistrationVo.ConsultationTypeText = shoppingCartRegistration.ConsultationTypeText;
                 shoppingCartRegistrationVo.IsWriteOff = shoppingCartRegistration.IsWriteOff;
                 shoppingCartRegistrationVo.IsConsultation = shoppingCartRegistration.IsConsultation;
                 shoppingCartRegistrationVo.ConsultationDate = shoppingCartRegistration.ConsultationDate;

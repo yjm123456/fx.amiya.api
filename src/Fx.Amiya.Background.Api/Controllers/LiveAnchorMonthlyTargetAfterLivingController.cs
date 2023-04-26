@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace Fx.Amiya.Background.Api.Controllers
 {
     /// <summary>
-    /// 直播中主播月度运营目标情况数据接口
+    /// 直播后主播月度运营目标情况数据接口
     /// </summary>
     [Route("[controller]")]
     [ApiController]
@@ -38,7 +38,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
         /// <summary>
-        /// 获取直播中主播月度运营目标情况
+        /// 获取直播后主播月度运营目标情况
         /// </summary>
         /// <param name="year"></param>
         /// <param name="month"></param>
@@ -168,7 +168,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 添加直播中主播月度运营目标情况
+        /// 添加直播后主播月度运营目标情况
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
@@ -213,7 +213,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 根据id获取直播中主播月度运营目标情况
+        /// 根据id获取直播后主播月度运营目标情况
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -305,7 +305,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 修改直播中主播月度运营目标情况
+        /// 修改直播后主播月度运营目标情况
         /// </summary>
         /// <param name="updateVo"></param>
         /// <returns></returns>
@@ -350,7 +350,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 删除直播中主播月度运营目标情况
+        /// 删除直播后主播月度运营目标情况
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
