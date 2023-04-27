@@ -67,7 +67,6 @@ ALTER TABLE `tbl_goods_category`
 	ADD COLUMN `isbrand` BIT NOT NULL AFTER `ishot`;
 
 -----------------------------------------------王健 2023/04/20 END--------------------------------------------
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
 
@@ -85,6 +84,69 @@ ALTER TABLE `tbl_customer_appointment_schedule`
 
 
 -----------------------------------------------余建明 2023/04/26 BEGIN--------------------------------------------
+
+--直播前数据切换主外键-抖音
+ALTER TABLE `amiyadb`.`tbl_beforeliving_tiktok_daily_target` 
+DROP FOREIGN KEY `fk_tiktok_monthly_target`;
+ALTER TABLE `amiyadb`.`tbl_beforeliving_tiktok_daily_target` 
+ADD INDEX `fk_tiktok_monthly_target_idx` (`live_anchor_monthly_target_id` ASC) VISIBLE,
+DROP INDEX `fk_tiktok_monthly_target_idx` ;
+;
+ALTER TABLE `amiyadb`.`tbl_beforeliving_tiktok_daily_target` 
+ADD CONSTRAINT `fk_tiktok_monthly_target`
+  FOREIGN KEY (`live_anchor_monthly_target_id`)
+  REFERENCES `amiyadb`.`tbl_liveanchor_monthly_target_before_living` (`id`);
+  
+--直播前数据切换主外键-小红书
+  ALTER TABLE `amiyadb`.`tbl_beforeliving_xiaohongshu_daily_target` 
+ADD INDEX `fk_xiaohongshu_monthlytarget_idx` (`live_anchor_monthly_target_id` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`tbl_beforeliving_xiaohongshu_daily_target` 
+ADD CONSTRAINT `fk_xiaohongshu_monthlytarget`
+  FOREIGN KEY (`live_anchor_monthly_target_id`)
+  REFERENCES `amiyadb`.`tbl_liveanchor_monthly_target_before_living` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+  
+--直播前数据切换主外键-知乎
+  ALTER TABLE `amiyadb`.`tbl_beforeliving_zhihu_daily_target` 
+DROP FOREIGN KEY `fk_zhihu_monthly_target`;
+ALTER TABLE `amiyadb`.`tbl_beforeliving_zhihu_daily_target` 
+ADD INDEX `fk_zhihu_monthly_target_idx` (`live_anchor_monthly_target_id` ASC) VISIBLE,
+DROP INDEX `fk_zhihu_monthly_target_idx` ;
+;
+ALTER TABLE `amiyadb`.`tbl_beforeliving_zhihu_daily_target` 
+ADD CONSTRAINT `fk_zhihu_monthly_target`
+  FOREIGN KEY (`live_anchor_monthly_target_id`)
+  REFERENCES `amiyadb`.`tbl_liveanchor_monthly_target_before_living` (`id`);
+  
+--直播前数据切换主外键-微博
+  ALTER TABLE `amiyadb`.`tbl_beforeliving_sina_weibo_daily_target` 
+DROP FOREIGN KEY `fk_sina_weibo_monthly_target`;
+ALTER TABLE `amiyadb`.`tbl_beforeliving_sina_weibo_daily_target` 
+ADD INDEX `fk_sina_weibo_monthly_target_idx` (`live_anchor_monthly_target_id` ASC) VISIBLE,
+DROP INDEX `fk_sina_weibo_monthly_target_idx` ;
+;
+ALTER TABLE `amiyadb`.`tbl_beforeliving_sina_weibo_daily_target` 
+ADD CONSTRAINT `fk_sina_weibo_monthly_target`
+  FOREIGN KEY (`live_anchor_monthly_target_id`)
+  REFERENCES `amiyadb`.`tbl_liveanchor_monthly_target_before_living` (`id`);
+  
+--直播前数据切换主外键-视频号
+  ALTER TABLE `amiyadb`.`tbl_beforeliving_video_daily_target` 
+DROP FOREIGN KEY `fk_video_monthly_target`;
+ALTER TABLE `amiyadb`.`tbl_beforeliving_video_daily_target` 
+ADD INDEX `fk_video_monthly_target_idx` (`live_anchor_monthly_target_id` ASC) VISIBLE,
+DROP INDEX `fk_video_monthly_target_idx` ;
+;
+ALTER TABLE `amiyadb`.`tbl_beforeliving_video_daily_target` 
+ADD CONSTRAINT `fk_video_monthly_target`
+  FOREIGN KEY (`live_anchor_monthly_target_id`)
+  REFERENCES `amiyadb`.`tbl_liveanchor_monthly_target_before_living` (`id`);
+
+
+
+
 --直播中日数据表切换主外键
 ALTER TABLE `amiyadb`.`tbl_living_daily_target` 
 ADD CONSTRAINT `fk_living_daily_target_livingmonthlytarget`
@@ -92,5 +154,21 @@ ADD CONSTRAINT `fk_living_daily_target_livingmonthlytarget`
   REFERENCES `amiyadb`.`tbl_liveanchor_monthly_target_living` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
+
+
+  
+--直播后日数据表切换主外键
+  ALTER TABLE `amiyadb`.`tbl_after_living_daily_target` 
+DROP FOREIGN KEY `fk_after_living_monthly_target`;
+ALTER TABLE `amiyadb`.`tbl_after_living_daily_target` 
+ADD INDEX `fk_after_living_monthly_target_idx` (`live_anchor_monthly_target_id` ASC) VISIBLE,
+DROP INDEX `fk_after_living_monthly_target_idx` ;
+;
+ALTER TABLE `amiyadb`.`tbl_after_living_daily_target` 
+ADD CONSTRAINT `fk_after_living_monthly_target`
+  FOREIGN KEY (`live_anchor_monthly_target_id`)
+  REFERENCES `amiyadb`.`tbl_liveanchor_monthly_target_after_living` (`id`);
+
   
 -----------------------------------------------余建明 2023/04/26 END--------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上

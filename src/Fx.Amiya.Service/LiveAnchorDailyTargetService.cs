@@ -21,6 +21,7 @@ namespace Fx.Amiya.Service
         private ILiveAnchorMonthlyTargetBeforeLivingService _liveAnchorMonthlyTargetService;
         private IDalBeforeLivingTikTokDailyTarget _beforeLivingTikTokDailyTraget;
         private ILiveAnchorMonthlyTargetLivingService _liveAnchorMonthlyTargetLivingService;
+        private ILiveAnchorMonthlyTargetAfterLivingService _liveAnchorMonthlyTargetAfterLivingService;
         private IDalBeforeLivingXiaoHongShuDailyTarget _beforeLivingXiaoHongShuDailyTraget;
         private IDalBeforeLivingZhiHuDailyTarget _beforeLivingZhiHuDailyTraget;
         private IDalBeforeLivingVideoDailyTarget _beforeLivingVideoDailyTraget;
@@ -36,6 +37,7 @@ namespace Fx.Amiya.Service
             IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
             ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService,
             IDalBeforeLivingTikTokDailyTarget beforeLivingTikTokDailyTraget,
+            ILiveAnchorMonthlyTargetAfterLivingService liveAnchorMonthlyTargetAfterLivingService,
             IDalBeforeLivingXiaoHongShuDailyTarget beforeLivingXiaoHongShuDailyTraget,
             IDalBeforeLivingZhiHuDailyTarget beforeLivingZhiHuDailyTraget,
             IDalBeforeLivingVideoDailyTarget beforeLivingVideoDailyTraget,
@@ -49,6 +51,7 @@ namespace Fx.Amiya.Service
             _liveAnchorMonthlyTargetLivingService = liveAnchorMonthlyTargetLivingService;
             this.dalLiveAnchorDailyTarget = dalLiveAnchorDailyTarget;
             _liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
+            _liveAnchorMonthlyTargetAfterLivingService = liveAnchorMonthlyTargetAfterLivingService;
             _amiyaEmployeeService = amiyaEmployeeService;
             _beforeLivingTikTokDailyTraget = beforeLivingTikTokDailyTraget;
             _beforeLivingXiaoHongShuDailyTraget = beforeLivingXiaoHongShuDailyTraget;
@@ -1862,172 +1865,172 @@ namespace Fx.Amiya.Service
         }
         public async Task AfterLivingAddAsync(AfterLivingAddLiveAnchorDailyTargetDto addDto)
         {
-            //    unitOfWork.BeginTransaction();
-            //    try
-            //    {
+            unitOfWork.BeginTransaction();
+            try
+            {
 
-            //        AfterLivingDailyTarget liveAnchorDailyTarget = new AfterLivingDailyTarget();
-            //        liveAnchorDailyTarget.Id = Guid.NewGuid().ToString();
-            //        liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
-            //        liveAnchorDailyTarget.OperationEmpId = addDto.NetWorkConsultingEmployeeId;
+                AfterLivingDailyTarget liveAnchorDailyTarget = new AfterLivingDailyTarget();
+                liveAnchorDailyTarget.Id = Guid.NewGuid().ToString();
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = addDto.NetWorkConsultingEmployeeId;
 
-            //        liveAnchorDailyTarget.ConsultationCardConsumed = addDto.ConsultationCardConsumed;
-            //        liveAnchorDailyTarget.ConsultationCardConsumed2 = addDto.ConsultationCardConsumed2;
-            //        liveAnchorDailyTarget.ActivateHistoricalConsultation = addDto.ActivateHistoricalConsultation;
-            //        liveAnchorDailyTarget.AddWechatNum = addDto.AddWechatNum;
-            //        liveAnchorDailyTarget.SendOrderNum = addDto.SendOrderNum;
-            //        liveAnchorDailyTarget.NewVisitNum = addDto.NewVisitNum;
-            //        liveAnchorDailyTarget.SubsequentVisitNum = addDto.SubsequentVisitNum;
-            //        liveAnchorDailyTarget.OldCustomerVisitNum = addDto.OldCustomerVisitNum;
-            //        liveAnchorDailyTarget.VisitNum = addDto.VisitNum;
-            //        liveAnchorDailyTarget.NewDealNum = addDto.NewDealNum;
-            //        liveAnchorDailyTarget.SubsequentDealNum = addDto.SubsequentDealNum;
-            //        liveAnchorDailyTarget.OldCustomerDealNum = addDto.OldCustomerDealNum;
-            //        liveAnchorDailyTarget.DealNum = addDto.DealNum;
-            //        liveAnchorDailyTarget.NewPerformanceNum = addDto.NewPerformanceNum;
-            //        liveAnchorDailyTarget.SubsequentPerformanceNum = addDto.SubsequentPerformanceNum;
-            //        liveAnchorDailyTarget.NewCustomerPerformanceCountNum = addDto.NewCustomerPerformanceCountNum;
-            //        liveAnchorDailyTarget.OldCustomerPerformanceNum = addDto.OldCustomerPerformanceNum;
-            //        liveAnchorDailyTarget.PerformanceNum = addDto.PerformanceNum;
-            //        liveAnchorDailyTarget.MinivanRefund = addDto.MinivanRefund;
-            //        liveAnchorDailyTarget.MiniVanBadReviews = addDto.MiniVanBadReviews;
-            //        liveAnchorDailyTarget.CreateDate = DateTime.Now;
-            //        liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
-            //        liveAnchorDailyTarget.UpdateDate = DateTime.Now;
-            //        liveAnchorDailyTarget.Valid = true;
-            //        await _afterLivingDailyTarget.AddAsync(liveAnchorDailyTarget, true);
+                liveAnchorDailyTarget.ConsultationCardConsumed = addDto.ConsultationCardConsumed;
+                liveAnchorDailyTarget.ConsultationCardConsumed2 = addDto.ConsultationCardConsumed2;
+                liveAnchorDailyTarget.ActivateHistoricalConsultation = addDto.ActivateHistoricalConsultation;
+                liveAnchorDailyTarget.AddWechatNum = addDto.AddWechatNum;
+                liveAnchorDailyTarget.SendOrderNum = addDto.SendOrderNum;
+                liveAnchorDailyTarget.NewVisitNum = addDto.NewVisitNum;
+                liveAnchorDailyTarget.SubsequentVisitNum = addDto.SubsequentVisitNum;
+                liveAnchorDailyTarget.OldCustomerVisitNum = addDto.OldCustomerVisitNum;
+                liveAnchorDailyTarget.VisitNum = addDto.VisitNum;
+                liveAnchorDailyTarget.NewDealNum = addDto.NewDealNum;
+                liveAnchorDailyTarget.SubsequentDealNum = addDto.SubsequentDealNum;
+                liveAnchorDailyTarget.OldCustomerDealNum = addDto.OldCustomerDealNum;
+                liveAnchorDailyTarget.DealNum = addDto.DealNum;
+                liveAnchorDailyTarget.NewPerformanceNum = addDto.NewPerformanceNum;
+                liveAnchorDailyTarget.SubsequentPerformanceNum = addDto.SubsequentPerformanceNum;
+                liveAnchorDailyTarget.NewCustomerPerformanceCountNum = addDto.NewCustomerPerformanceCountNum;
+                liveAnchorDailyTarget.OldCustomerPerformanceNum = addDto.OldCustomerPerformanceNum;
+                liveAnchorDailyTarget.PerformanceNum = addDto.PerformanceNum;
+                liveAnchorDailyTarget.MinivanRefund = addDto.MinivanRefund;
+                liveAnchorDailyTarget.MiniVanBadReviews = addDto.MiniVanBadReviews;
+                liveAnchorDailyTarget.CreateDate = DateTime.Now;
+                liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
+                liveAnchorDailyTarget.UpdateDate = DateTime.Now;
+                liveAnchorDailyTarget.Valid = true;
+                await _afterLivingDailyTarget.AddAsync(liveAnchorDailyTarget, true);
 
-            //        UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
-            //        editLiveAnchorMonthlyTarget.Id = addDto.LiveanchorMonthlyTargetId;
-            //        editLiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed = addDto.ConsultationCardConsumed;
-            //        editLiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed2 = addDto.ConsultationCardConsumed2;
-            //        editLiveAnchorMonthlyTarget.CumulativeActivateHistoricalConsultation = addDto.ActivateHistoricalConsultation;
-            //        editLiveAnchorMonthlyTarget.CumulativeAddWechat = addDto.AddWechatNum;
-            //        editLiveAnchorMonthlyTarget.CumulativeSendOrder = addDto.SendOrderNum;
-            //        editLiveAnchorMonthlyTarget.CumulativeNewCustomerVisit = addDto.NewVisitNum;
-            //        editLiveAnchorMonthlyTarget.CumulativeNewCustomerVisit += addDto.SubsequentVisitNum;
-            //        editLiveAnchorMonthlyTarget.CumulativeOldCustomerVisit = addDto.OldCustomerVisitNum;
-            //        editLiveAnchorMonthlyTarget.CumulativeVisit = addDto.VisitNum;
-            //        editLiveAnchorMonthlyTarget.CumulativeNewCustomerDealTarget = addDto.NewDealNum;
-            //        editLiveAnchorMonthlyTarget.CumulativeNewCustomerDealTarget += addDto.SubsequentDealNum;
-            //        editLiveAnchorMonthlyTarget.CumulativeOldCustomerDealTarget = addDto.OldCustomerDealNum;
-            //        editLiveAnchorMonthlyTarget.CumulativeDealTarget = addDto.DealNum;
-            //        editLiveAnchorMonthlyTarget.CumulativeNewCustomerPerformance = addDto.NewPerformanceNum;
-            //        editLiveAnchorMonthlyTarget.CumulativeSubsequentPerformance = addDto.SubsequentPerformanceNum;
-            //        editLiveAnchorMonthlyTarget.CumulativeOldCustomerPerformance = addDto.OldCustomerPerformanceNum;
-            //        editLiveAnchorMonthlyTarget.CumulativePerformance = addDto.PerformanceNum;
-            //        editLiveAnchorMonthlyTarget.CumulativeMinivanRefund = addDto.MinivanRefund;
-            //        editLiveAnchorMonthlyTarget.CumulativeMiniVanBadReviews = addDto.MiniVanBadReviews;
-            //        await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
-            //        unitOfWork.Commit();
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        unitOfWork.RollBack();
-            //        throw ex;
-            //    }
+                UpdateLiveAnchorMonthlyAfterLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyAfterLivingTargetRateAndNumDto();
+                editLiveAnchorMonthlyTarget.Id = addDto.LiveanchorMonthlyTargetId;
+                editLiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed = addDto.ConsultationCardConsumed;
+                editLiveAnchorMonthlyTarget.CumulativeConsultationCardConsumed2 = addDto.ConsultationCardConsumed2;
+                editLiveAnchorMonthlyTarget.CumulativeActivateHistoricalConsultation = addDto.ActivateHistoricalConsultation;
+                editLiveAnchorMonthlyTarget.CumulativeAddWechat = addDto.AddWechatNum;
+                editLiveAnchorMonthlyTarget.CumulativeSendOrder = addDto.SendOrderNum;
+                editLiveAnchorMonthlyTarget.CumulativeNewCustomerVisit = addDto.NewVisitNum;
+                editLiveAnchorMonthlyTarget.CumulativeNewCustomerVisit += addDto.SubsequentVisitNum;
+                editLiveAnchorMonthlyTarget.CumulativeOldCustomerVisit = addDto.OldCustomerVisitNum;
+                editLiveAnchorMonthlyTarget.CumulativeVisit = addDto.VisitNum;
+                editLiveAnchorMonthlyTarget.CumulativeNewCustomerDealTarget = addDto.NewDealNum;
+                editLiveAnchorMonthlyTarget.CumulativeNewCustomerDealTarget += addDto.SubsequentDealNum;
+                editLiveAnchorMonthlyTarget.CumulativeOldCustomerDealTarget = addDto.OldCustomerDealNum;
+                editLiveAnchorMonthlyTarget.CumulativeDealTarget = addDto.DealNum;
+                editLiveAnchorMonthlyTarget.CumulativeNewCustomerPerformance = addDto.NewPerformanceNum;
+                editLiveAnchorMonthlyTarget.CumulativeSubsequentPerformance = addDto.SubsequentPerformanceNum;
+                editLiveAnchorMonthlyTarget.CumulativeOldCustomerPerformance = addDto.OldCustomerPerformanceNum;
+                editLiveAnchorMonthlyTarget.CumulativePerformance = addDto.PerformanceNum;
+                editLiveAnchorMonthlyTarget.CumulativeMinivanRefund = addDto.MinivanRefund;
+                editLiveAnchorMonthlyTarget.CumulativeMiniVanBadReviews = addDto.MiniVanBadReviews;
+                await _liveAnchorMonthlyTargetAfterLivingService.EditAsync(editLiveAnchorMonthlyTarget);
+                unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex;
+            }
         }
 
         public async Task AfterLivingUpdateAsync(AfterLivingUpdateLiveAnchorDailyTargetDto updateDto)
         {
-            //    unitOfWork.BeginTransaction();
-            //    try
-            //    {
-            //        var liveAnchorDailyTarget = await _afterLivingDailyTarget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
-            //        if (updateDto.Id != liveAnchorDailyTarget.Id)
-            //        {
-            //            unitOfWork.RollBack();
-            //            throw new Exception("修改内容与当前数据编号不一致，请重新操作！");
-            //        }
-            //        if (liveAnchorDailyTarget == null)
-            //        {
-            //            unitOfWork.RollBack();
-            //            throw new Exception("主播日运营目标情况编号错误！");
-            //        }
-            //        //先扣除原有的
-            //        UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto editLiveAnchorMonthlyTargetDel = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
-            //        editLiveAnchorMonthlyTargetDel.Id = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeConsultationCardConsumed = -liveAnchorDailyTarget.ConsultationCardConsumed;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeConsultationCardConsumed2 = -liveAnchorDailyTarget.ConsultationCardConsumed2;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeActivateHistoricalConsultation = -liveAnchorDailyTarget.ActivateHistoricalConsultation;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeAddWechat = -liveAnchorDailyTarget.AddWechatNum;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeSendOrder = -liveAnchorDailyTarget.SendOrderNum;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeNewCustomerVisit = -liveAnchorDailyTarget.NewVisitNum;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeNewCustomerVisit -= liveAnchorDailyTarget.SubsequentVisitNum;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeOldCustomerVisit = -liveAnchorDailyTarget.OldCustomerVisitNum;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeVisit = -liveAnchorDailyTarget.VisitNum;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeNewCustomerDealTarget = -liveAnchorDailyTarget.NewDealNum;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeNewCustomerDealTarget -= liveAnchorDailyTarget.SubsequentDealNum;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeOldCustomerDealTarget = -liveAnchorDailyTarget.OldCustomerDealNum;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeDealTarget = -liveAnchorDailyTarget.DealNum;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeNewCustomerPerformance = -liveAnchorDailyTarget.NewPerformanceNum;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeSubsequentPerformance = -liveAnchorDailyTarget.SubsequentPerformanceNum;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeOldCustomerPerformance = -liveAnchorDailyTarget.OldCustomerPerformanceNum;
-            //        editLiveAnchorMonthlyTargetDel.CumulativePerformance = -liveAnchorDailyTarget.PerformanceNum;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeMinivanRefund = -liveAnchorDailyTarget.MinivanRefund;
-            //        editLiveAnchorMonthlyTargetDel.CumulativeMiniVanBadReviews = -liveAnchorDailyTarget.MiniVanBadReviews;
-            //        await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTargetDel);
+            unitOfWork.BeginTransaction();
+            try
+            {
+                var liveAnchorDailyTarget = await _afterLivingDailyTarget.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                if (updateDto.Id != liveAnchorDailyTarget.Id)
+                {
+                    unitOfWork.RollBack();
+                    throw new Exception("修改内容与当前数据编号不一致，请重新操作！");
+                }
+                if (liveAnchorDailyTarget == null)
+                {
+                    unitOfWork.RollBack();
+                    throw new Exception("主播日运营目标情况编号错误！");
+                }
+                //先扣除原有的
+                UpdateLiveAnchorMonthlyAfterLivingTargetRateAndNumDto editLiveAnchorMonthlyTargetDel = new UpdateLiveAnchorMonthlyAfterLivingTargetRateAndNumDto();
+                editLiveAnchorMonthlyTargetDel.Id = liveAnchorDailyTarget.LiveAnchorMonthlyTargetId;
+                editLiveAnchorMonthlyTargetDel.CumulativeConsultationCardConsumed = -liveAnchorDailyTarget.ConsultationCardConsumed;
+                editLiveAnchorMonthlyTargetDel.CumulativeConsultationCardConsumed2 = -liveAnchorDailyTarget.ConsultationCardConsumed2;
+                editLiveAnchorMonthlyTargetDel.CumulativeActivateHistoricalConsultation = -liveAnchorDailyTarget.ActivateHistoricalConsultation;
+                editLiveAnchorMonthlyTargetDel.CumulativeAddWechat = -liveAnchorDailyTarget.AddWechatNum;
+                editLiveAnchorMonthlyTargetDel.CumulativeSendOrder = -liveAnchorDailyTarget.SendOrderNum;
+                editLiveAnchorMonthlyTargetDel.CumulativeNewCustomerVisit = -liveAnchorDailyTarget.NewVisitNum;
+                editLiveAnchorMonthlyTargetDel.CumulativeNewCustomerVisit -= liveAnchorDailyTarget.SubsequentVisitNum;
+                editLiveAnchorMonthlyTargetDel.CumulativeOldCustomerVisit = -liveAnchorDailyTarget.OldCustomerVisitNum;
+                editLiveAnchorMonthlyTargetDel.CumulativeVisit = -liveAnchorDailyTarget.VisitNum;
+                editLiveAnchorMonthlyTargetDel.CumulativeNewCustomerDealTarget = -liveAnchorDailyTarget.NewDealNum;
+                editLiveAnchorMonthlyTargetDel.CumulativeNewCustomerDealTarget -= liveAnchorDailyTarget.SubsequentDealNum;
+                editLiveAnchorMonthlyTargetDel.CumulativeOldCustomerDealTarget = -liveAnchorDailyTarget.OldCustomerDealNum;
+                editLiveAnchorMonthlyTargetDel.CumulativeDealTarget = -liveAnchorDailyTarget.DealNum;
+                editLiveAnchorMonthlyTargetDel.CumulativeNewCustomerPerformance = -liveAnchorDailyTarget.NewPerformanceNum;
+                editLiveAnchorMonthlyTargetDel.CumulativeSubsequentPerformance = -liveAnchorDailyTarget.SubsequentPerformanceNum;
+                editLiveAnchorMonthlyTargetDel.CumulativeOldCustomerPerformance = -liveAnchorDailyTarget.OldCustomerPerformanceNum;
+                editLiveAnchorMonthlyTargetDel.CumulativePerformance = -liveAnchorDailyTarget.PerformanceNum;
+                editLiveAnchorMonthlyTargetDel.CumulativeMinivanRefund = -liveAnchorDailyTarget.MinivanRefund;
+                editLiveAnchorMonthlyTargetDel.CumulativeMiniVanBadReviews = -liveAnchorDailyTarget.MiniVanBadReviews;
+                await _liveAnchorMonthlyTargetAfterLivingService.EditAsync(editLiveAnchorMonthlyTargetDel);
 
-            //        liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
-            //        liveAnchorDailyTarget.OperationEmpId = updateDto.NetWorkConsultingEmployeeId;
-            //        liveAnchorDailyTarget.ConsultationCardConsumed = updateDto.ConsultationCardConsumed;
-            //        liveAnchorDailyTarget.ConsultationCardConsumed2 = updateDto.ConsultationCardConsumed2;
-            //        liveAnchorDailyTarget.ActivateHistoricalConsultation = updateDto.ActivateHistoricalConsultation;
-            //        liveAnchorDailyTarget.AddWechatNum = updateDto.AddWechatNum;
-            //        liveAnchorDailyTarget.SendOrderNum = updateDto.SendOrderNum;
-            //        liveAnchorDailyTarget.NewVisitNum = updateDto.NewVisitNum;
-            //        liveAnchorDailyTarget.SubsequentVisitNum = updateDto.SubsequentVisitNum;
-            //        liveAnchorDailyTarget.OldCustomerVisitNum = updateDto.OldCustomerVisitNum;
-            //        liveAnchorDailyTarget.VisitNum = updateDto.VisitNum;
-            //        liveAnchorDailyTarget.NewDealNum = updateDto.NewDealNum;
-            //        liveAnchorDailyTarget.SubsequentDealNum = updateDto.SubsequentDealNum;
-            //        liveAnchorDailyTarget.OldCustomerDealNum = updateDto.OldCustomerDealNum;
-            //        liveAnchorDailyTarget.DealNum = updateDto.DealNum;
-            //        liveAnchorDailyTarget.NewPerformanceNum = updateDto.NewPerformanceNum;
-            //        liveAnchorDailyTarget.SubsequentPerformanceNum = updateDto.SubsequentPerformanceNum;
-            //        liveAnchorDailyTarget.OldCustomerPerformanceNum = updateDto.OldCustomerPerformanceNum;
-            //        liveAnchorDailyTarget.NewCustomerPerformanceCountNum = updateDto.NewCustomerPerformanceCountNum;
-            //        liveAnchorDailyTarget.PerformanceNum = updateDto.PerformanceNum;
-            //        liveAnchorDailyTarget.MinivanRefund = updateDto.MinivanRefund;
-            //        liveAnchorDailyTarget.MiniVanBadReviews = updateDto.MiniVanBadReviews;
-            //        liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
-            //        liveAnchorDailyTarget.UpdateDate = updateDto.AfterLivingUpdateDate;
-            //        await _afterLivingDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = updateDto.NetWorkConsultingEmployeeId;
+                liveAnchorDailyTarget.ConsultationCardConsumed = updateDto.ConsultationCardConsumed;
+                liveAnchorDailyTarget.ConsultationCardConsumed2 = updateDto.ConsultationCardConsumed2;
+                liveAnchorDailyTarget.ActivateHistoricalConsultation = updateDto.ActivateHistoricalConsultation;
+                liveAnchorDailyTarget.AddWechatNum = updateDto.AddWechatNum;
+                liveAnchorDailyTarget.SendOrderNum = updateDto.SendOrderNum;
+                liveAnchorDailyTarget.NewVisitNum = updateDto.NewVisitNum;
+                liveAnchorDailyTarget.SubsequentVisitNum = updateDto.SubsequentVisitNum;
+                liveAnchorDailyTarget.OldCustomerVisitNum = updateDto.OldCustomerVisitNum;
+                liveAnchorDailyTarget.VisitNum = updateDto.VisitNum;
+                liveAnchorDailyTarget.NewDealNum = updateDto.NewDealNum;
+                liveAnchorDailyTarget.SubsequentDealNum = updateDto.SubsequentDealNum;
+                liveAnchorDailyTarget.OldCustomerDealNum = updateDto.OldCustomerDealNum;
+                liveAnchorDailyTarget.DealNum = updateDto.DealNum;
+                liveAnchorDailyTarget.NewPerformanceNum = updateDto.NewPerformanceNum;
+                liveAnchorDailyTarget.SubsequentPerformanceNum = updateDto.SubsequentPerformanceNum;
+                liveAnchorDailyTarget.OldCustomerPerformanceNum = updateDto.OldCustomerPerformanceNum;
+                liveAnchorDailyTarget.NewCustomerPerformanceCountNum = updateDto.NewCustomerPerformanceCountNum;
+                liveAnchorDailyTarget.PerformanceNum = updateDto.PerformanceNum;
+                liveAnchorDailyTarget.MinivanRefund = updateDto.MinivanRefund;
+                liveAnchorDailyTarget.MiniVanBadReviews = updateDto.MiniVanBadReviews;
+                liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
+                liveAnchorDailyTarget.UpdateDate = updateDto.AfterLivingUpdateDate;
+                await _afterLivingDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
 
-            //        //添加修改后的
-            //        UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto editLiveAnchorMonthlyTargetAdd = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
-            //        editLiveAnchorMonthlyTargetAdd.Id = updateDto.LiveanchorMonthlyTargetId;
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeConsultationCardConsumed = updateDto.ConsultationCardConsumed;
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeConsultationCardConsumed2 = updateDto.ConsultationCardConsumed2;
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeActivateHistoricalConsultation = updateDto.ActivateHistoricalConsultation;
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeAddWechat = updateDto.AddWechatNum;
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeSendOrder = updateDto.SendOrderNum;
+                //添加修改后的
+                UpdateLiveAnchorMonthlyAfterLivingTargetRateAndNumDto editLiveAnchorMonthlyTargetAdd = new UpdateLiveAnchorMonthlyAfterLivingTargetRateAndNumDto();
+                editLiveAnchorMonthlyTargetAdd.Id = updateDto.LiveanchorMonthlyTargetId;
+                editLiveAnchorMonthlyTargetAdd.CumulativeConsultationCardConsumed = updateDto.ConsultationCardConsumed;
+                editLiveAnchorMonthlyTargetAdd.CumulativeConsultationCardConsumed2 = updateDto.ConsultationCardConsumed2;
+                editLiveAnchorMonthlyTargetAdd.CumulativeActivateHistoricalConsultation = updateDto.ActivateHistoricalConsultation;
+                editLiveAnchorMonthlyTargetAdd.CumulativeAddWechat = updateDto.AddWechatNum;
+                editLiveAnchorMonthlyTargetAdd.CumulativeSendOrder = updateDto.SendOrderNum;
 
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeNewCustomerVisit = updateDto.NewVisitNum;
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeNewCustomerVisit += updateDto.SubsequentVisitNum;
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeOldCustomerVisit = updateDto.OldCustomerVisitNum;
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeVisit = updateDto.VisitNum;
+                editLiveAnchorMonthlyTargetAdd.CumulativeNewCustomerVisit = updateDto.NewVisitNum;
+                editLiveAnchorMonthlyTargetAdd.CumulativeNewCustomerVisit += updateDto.SubsequentVisitNum;
+                editLiveAnchorMonthlyTargetAdd.CumulativeOldCustomerVisit = updateDto.OldCustomerVisitNum;
+                editLiveAnchorMonthlyTargetAdd.CumulativeVisit = updateDto.VisitNum;
 
 
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeNewCustomerDealTarget = updateDto.NewDealNum;
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeNewCustomerDealTarget += updateDto.SubsequentDealNum;
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeOldCustomerDealTarget = updateDto.OldCustomerDealNum;
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeDealTarget = updateDto.DealNum;
+                editLiveAnchorMonthlyTargetAdd.CumulativeNewCustomerDealTarget = updateDto.NewDealNum;
+                editLiveAnchorMonthlyTargetAdd.CumulativeNewCustomerDealTarget += updateDto.SubsequentDealNum;
+                editLiveAnchorMonthlyTargetAdd.CumulativeOldCustomerDealTarget = updateDto.OldCustomerDealNum;
+                editLiveAnchorMonthlyTargetAdd.CumulativeDealTarget = updateDto.DealNum;
 
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeNewCustomerPerformance = updateDto.NewPerformanceNum;
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeSubsequentPerformance = updateDto.SubsequentPerformanceNum;
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeOldCustomerPerformance = updateDto.OldCustomerPerformanceNum;
-            //        editLiveAnchorMonthlyTargetAdd.CumulativePerformance = updateDto.PerformanceNum;
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeMinivanRefund = updateDto.MinivanRefund;
-            //        editLiveAnchorMonthlyTargetAdd.CumulativeMiniVanBadReviews = updateDto.MiniVanBadReviews;
-            //        await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTargetAdd);
-            //        unitOfWork.Commit();
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        unitOfWork.RollBack();
-            //        throw ex;
-            //    }
+                editLiveAnchorMonthlyTargetAdd.CumulativeNewCustomerPerformance = updateDto.NewPerformanceNum;
+                editLiveAnchorMonthlyTargetAdd.CumulativeSubsequentPerformance = updateDto.SubsequentPerformanceNum;
+                editLiveAnchorMonthlyTargetAdd.CumulativeOldCustomerPerformance = updateDto.OldCustomerPerformanceNum;
+                editLiveAnchorMonthlyTargetAdd.CumulativePerformance = updateDto.PerformanceNum;
+                editLiveAnchorMonthlyTargetAdd.CumulativeMinivanRefund = updateDto.MinivanRefund;
+                editLiveAnchorMonthlyTargetAdd.CumulativeMiniVanBadReviews = updateDto.MiniVanBadReviews;
+                await _liveAnchorMonthlyTargetAfterLivingService.EditAsync(editLiveAnchorMonthlyTargetAdd);
+                unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex;
+            }
         }
         #endregion
 
