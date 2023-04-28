@@ -83,8 +83,8 @@ namespace Fx.Amiya.Service
                                                              Remark = d.Remark,
                                                              CreateByEmpName = d.AmiyaEmployeeInfo.Name,
                                                              AppointmentHospitalId = d.AppointmentHospitalId,
-                                                             AppointmentHospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == d.AppointmentHospitalId).Select(e=>e.Name).SingleOrDefault() ?? "",
-                                                             Consultation=d.Consultation
+                                                             AppointmentHospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == d.AppointmentHospitalId).Select(e => e.Name).SingleOrDefault() ?? "",
+                                                             Consultation = d.Consultation
                                                          };
                 FxPageInfo<CustomerAppointmentScheduleDto> customerAppointmentScheduleServicePageInfo = new FxPageInfo<CustomerAppointmentScheduleDto>();
                 customerAppointmentScheduleServicePageInfo.TotalCount = await customerAppointmentScheduleService.CountAsync();
@@ -121,7 +121,7 @@ namespace Fx.Amiya.Service
                                                              Phone = ServiceClass.GetIncompletePhone(d.Phone),
                                                              AppointmentTypeText = ServiceClass.GetAppointmentTypeText(d.AppointmentType),
                                                              AppointmentHospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == d.AppointmentHospitalId).Select(e => e.Name).SingleOrDefault() ?? "",
-                                                             Consultation=d.Consultation
+                                                             Consultation = d.Consultation
                                                          };
                 List<CustomerAppointmentScheduleDto> customerAppointmentScheduleServicePageInfo = new List<CustomerAppointmentScheduleDto>();
                 customerAppointmentScheduleServicePageInfo = await customerAppointmentScheduleService.ToListAsync();
@@ -145,7 +145,7 @@ namespace Fx.Amiya.Service
                 }
                 var customerAppointmentScheduleService = from d in dalCustomerAppointmentScheduleService.GetAll().Include(x => x.AmiyaEmployeeInfo).OrderBy(x => x.AppointmentDate).ThenByDescending(x => x.ImportantType)
                                                          where (!query.StartDate.HasValue || d.AppointmentDate >= query.StartDate.Value)
-                                                         && (!query.EndDate.HasValue || d.AppointmentDate <= query.EndDate.Value.AddDays(1))
+                                                         && (!query.EndDate.HasValue || d.AppointmentDate <= query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
                                                          && (selectByCreateEmpInfo == false || d.CreateBy == query.CreateBy)
                                                          && (d.Valid == true)
                                                          select new CustomerAppointmentScheduleDto
@@ -167,7 +167,7 @@ namespace Fx.Amiya.Service
                                                              Remark = d.Remark,
                                                              CreateByEmpName = d.AmiyaEmployeeInfo.Name,
                                                              AppointmentHospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == d.AppointmentHospitalId).Select(e => e.Name).SingleOrDefault() ?? "",
-                                                             Consultation=d.Consultation
+                                                             Consultation = d.Consultation
                                                          };
 
 
@@ -311,7 +311,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task UpdateAppointmentCompleteStatusAsync(string phone, int type)
         {
-            var list= dalCustomerAppointmentScheduleService.GetAll().Where(e => e.Phone == phone && e.AppointmentType == type).ToList();
+            var list = dalCustomerAppointmentScheduleService.GetAll().Where(e => e.Phone == phone && e.AppointmentType == type).ToList();
             foreach (var item in list)
             {
                 item.IsFinish = true;
