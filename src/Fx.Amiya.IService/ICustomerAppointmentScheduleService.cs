@@ -15,6 +15,15 @@ namespace Fx.Amiya.IService
     public interface ICustomerAppointmentScheduleService
     {
         Task<FxPageInfo<CustomerAppointmentScheduleDto>> GetListWithPageAsync(QueryCustomerAppointSchedulePageListDto query);
+        /// <summary>
+        /// 分页获取主播预约日程
+        /// </summary>
+        /// <param name="baseLiveAnchorId"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="type">预约类型</param>
+        /// <returns></returns>
+        Task<FxPageInfo<CustomerAppointmentScheduleDto>> GetListWithPageByBaseLiveAnchorAsync(string liveAnchorId,int pageSize,int pageNum,int type);
         Task<List<CustomerAppointmentScheduleDto>> GetTodayImportantScheduleAsync();
         Task<List<CustomerAppointmentScheduleDto>> GetListByCalendarAsync(QueryCustomerAppointSchedulePageListDto query);
         Task AddAsync(AddCustomerAppointmentScheduleDto addDto);
@@ -32,7 +41,13 @@ namespace Fx.Amiya.IService
         /// <param name="type">预约类型</param>
         /// <returns></returns>
         Task UpdateAppointmentCompleteStatusAsync(string phone,int type);
-
+        /// <summary>
+        /// 预约日程指派主播
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="AssignBy"></param>
+        /// <returns></returns>
+        Task AssignAsync(string id,string AssignBy);
 
     }
 }

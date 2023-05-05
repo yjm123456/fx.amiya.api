@@ -52,6 +52,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 接诊咨询
         /// </summary>
         public string Consultation { get; set; }
+        /// <summary>
+        /// 指派主播id
+        /// </summary>
+        public string AssignLiveanchorId{ get; set; }
 
         public AmiyaEmployee AmiyaEmployeeInfo { get; set; }
     }

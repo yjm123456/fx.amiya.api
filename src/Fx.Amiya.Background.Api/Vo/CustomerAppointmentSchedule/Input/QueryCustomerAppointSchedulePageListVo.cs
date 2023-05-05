@@ -20,6 +20,10 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerAppointmentSchedule.Input
         /// 预约类型
         /// </summary>
         public int? AppointmentType { get; set; }
+        /// <summary>
+        /// 指派主播id(查询全部传空,未指派传0)
+        /// </summary>
+        public string AssignLiveanchorId { get; set; }
 
     }
 }

@@ -48,6 +48,10 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerAppointmentSchedule.Input
         /// 接诊咨询
         /// </summary>
         public string Consultation { get; set; }
+        /// <summary>
+        /// 指派主播id
+        /// </summary>
+        public string AssignLiveanchorId { get; set; }
 
     }
 }

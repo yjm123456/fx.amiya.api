@@ -70,5 +70,13 @@ namespace Fx.Amiya.Dto.CustomerAppointmentSchedule.Result
         /// 接诊咨询
         /// </summary>
         public string Consultation { get; set; }
+        /// <summary>
+        /// 指派主播id
+        /// </summary>
+        public string AssignLiveanchorId { get; set; }
+        /// <summary>
+        /// 指派主播名称
+        /// </summary>
+        public string AssignLiveanchorName { get; set; }
     }
 }

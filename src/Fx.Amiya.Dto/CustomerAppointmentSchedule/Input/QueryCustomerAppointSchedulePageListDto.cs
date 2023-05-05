@@ -20,6 +20,10 @@ namespace Fx.Amiya.Dto.CustomerAppointmentSchedule.Input
         /// 预约类型
         /// </summary>
         public int? AppointmentType { get; set; }
+        /// <summary>
+        /// 指派主播id
+        /// </summary>
+        public string AssignLiveanchorId { get; set; }
 
     }
 }

@@ -50,5 +50,13 @@ namespace Fx.Amiya.Dto.CustomerAppointmentSchedule.Input
         /// 预约医院
         /// </summary>
         public int? AppointmentHospitalId { get; set; }
+        /// <summary>
+        /// 指派主播id
+        /// </summary>
+        public string AssignLiveanchorId { get; set; }
+        /// <summary>
+        /// 指派主播名称
+        /// </summary>
+        public string AssignLiveanchorName { get; set; }
     }
 }

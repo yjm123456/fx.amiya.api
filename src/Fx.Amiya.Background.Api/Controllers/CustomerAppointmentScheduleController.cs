@@ -62,6 +62,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryCustomerAppointSchedulePageListDto.EndDate = query.EndDate;
                 queryCustomerAppointSchedulePageListDto.PageNum = query.PageNum;
                 queryCustomerAppointSchedulePageListDto.PageSize = query.PageSize;
+                queryCustomerAppointSchedulePageListDto.AssignLiveanchorId = query.AssignLiveanchorId;
                 var q = await customerAppointmentScheduleService.GetListWithPageAsync(queryCustomerAppointSchedulePageListDto);
 
                 var customerAppointmentSchedule = from d in q.List
@@ -83,9 +84,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       ImportantTypeText = d.ImportantTypeText,
                                                       Remark = d.Remark,
                                                       CreateByEmpName = d.CreateByEmpName,
-                                                      AppointmentHospitalId = d.AppointmentHospitalId,
-                                                      AppointmentHospitalName = d.AppointmentHospitalName,
-                                                      Consultation = d.Consultation
+                                                      AppointmentHospitalId=d.AppointmentHospitalId,
+                                                      AppointmentHospitalName=d.AppointmentHospitalName,
+                                                      Consultation=d.Consultation,
+                                                      AssignLiveanchorId=d.AssignLiveanchorId,
+                                                      AssignLiveanchorName=d.AssignLiveanchorName
                                                   };
 
                 FxPageInfo<CustomerAppointmentScheduleVo> customerAppointmentSchedulePageInfo = new FxPageInfo<CustomerAppointmentScheduleVo>();
@@ -139,10 +142,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       ImportantTypeText = d.ImportantTypeText,
                                                       Remark = d.Remark,
                                                       CreateByEmpName = d.CreateByEmpName,
-                                                      AppointmentHospitalId = d.AppointmentHospitalId,
-                                                      AppointmentHospitalName = d.AppointmentHospitalName,
-                                                      Consultation = d.Consultation
-
+                                                      AppointmentHospitalId=d.AppointmentHospitalId,
+                                                      AppointmentHospitalName=d.AppointmentHospitalName,
+                                                      Consultation=d.Consultation,
+                                                      AssignLiveanchorId=d.AssignLiveanchorId,
+                                                      AssignLiveanchorName=d.AssignLiveanchorName
                                                   };
 
                 List<CustomerAppointmentScheduleVo> customerAppointmentSchedulePageInfo = new List<CustomerAppointmentScheduleVo>();
@@ -188,6 +192,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.Remark = addVo.Remark;
                 addDto.AppointmentHospitalId = addVo.AppointmentHospitalId;
                 addDto.Consultation = addVo.Consultation;
+                addDto.AssignLiveanchorId = addVo.AssignLiveanchorId;
                 await customerAppointmentScheduleService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -224,6 +229,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 customerAppointmentScheduleVo.AppointmentHospitalId = customerAppointmentSchedule.AppointmentHospitalId;
                 customerAppointmentScheduleVo.AppointmentHospitalName = customerAppointmentSchedule.AppointmentHospitalName;
                 customerAppointmentScheduleVo.Consultation = customerAppointmentSchedule.Consultation;
+                customerAppointmentScheduleVo.AssignLiveanchorId = customerAppointmentSchedule.AssignLiveanchorId;
+                customerAppointmentScheduleVo.AssignLiveanchorName = customerAppointmentSchedule.AssignLiveanchorName;
                 return ResultData<CustomerAppointmentScheduleVo>.Success().AddData("customerAppointmentScheduleInfo", customerAppointmentScheduleVo);
             }
             catch (Exception ex)
@@ -288,6 +295,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.Remark = updateVo.Remark;
                 updateDto.AppointmentHospitalId = updateVo.AppointmentHospitalId;
                 updateDto.Consultation = updateVo.Consultation;
+                updateDto.AssignLiveanchorId = updateVo.AssignLiveanchorId;
                 await customerAppointmentScheduleService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -318,6 +326,48 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// 指派主播
+        /// </summary>
+        /// <param name="assignVo"></param>
+        /// <returns></returns>
+        [HttpPut("assign")]
+        public async Task<ResultData> AssignAsync(AssignLiveAnchorVo assignVo)
+        {
+            try
+            {
+                await customerAppointmentScheduleService.AssignAsync(assignVo.Id, assignVo.AssignBy);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 批量指派主播
+        /// </summary>
+        /// <param name="assignVo"></param>
+        /// <returns></returns>
+        [HttpPut("assignList")]
+        public async Task<ResultData> AssignListAsync(AssignLiveAnchorListVo assignVo)
+        {
+            try
+            {
+                foreach (var x in assignVo.IdList)
+                {
+                    await customerAppointmentScheduleService.AssignAsync(x, assignVo.AssignBy);
+                }
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+        
+        
 
         #region 枚举下拉框
 
