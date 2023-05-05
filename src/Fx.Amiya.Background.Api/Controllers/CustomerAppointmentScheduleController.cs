@@ -83,9 +83,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       ImportantTypeText = d.ImportantTypeText,
                                                       Remark = d.Remark,
                                                       CreateByEmpName = d.CreateByEmpName,
-                                                      AppointmentHospitalId=d.AppointmentHospitalId,
-                                                      AppointmentHospitalName=d.AppointmentHospitalName,
-                                                      Consultation=d.Consultation
+                                                      AppointmentHospitalId = d.AppointmentHospitalId,
+                                                      AppointmentHospitalName = d.AppointmentHospitalName,
+                                                      Consultation = d.Consultation
                                                   };
 
                 FxPageInfo<CustomerAppointmentScheduleVo> customerAppointmentSchedulePageInfo = new FxPageInfo<CustomerAppointmentScheduleVo>();
@@ -139,9 +139,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       ImportantTypeText = d.ImportantTypeText,
                                                       Remark = d.Remark,
                                                       CreateByEmpName = d.CreateByEmpName,
-                                                      AppointmentHospitalId=d.AppointmentHospitalId,
-                                                      AppointmentHospitalName=d.AppointmentHospitalName,
-                                                      Consultation=d.Consultation
+                                                      AppointmentHospitalId = d.AppointmentHospitalId,
+                                                      AppointmentHospitalName = d.AppointmentHospitalName,
+                                                      Consultation = d.Consultation
 
                                                   };
 
@@ -210,6 +210,40 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 var customerAppointmentSchedule = await customerAppointmentScheduleService.GetByIdAsync(id);
+                CustomerAppointmentScheduleVo customerAppointmentScheduleVo = new CustomerAppointmentScheduleVo();
+                customerAppointmentScheduleVo.Id = customerAppointmentSchedule.Id;
+                customerAppointmentScheduleVo.CustomerName = customerAppointmentSchedule.CustomerName;
+                customerAppointmentScheduleVo.Phone = customerAppointmentSchedule.Phone;
+                customerAppointmentScheduleVo.AppointmentType = customerAppointmentSchedule.AppointmentType;
+                customerAppointmentScheduleVo.AppointmentDate = customerAppointmentSchedule.AppointmentDate;
+                customerAppointmentScheduleVo.IsFinish = customerAppointmentSchedule.IsFinish;
+                customerAppointmentScheduleVo.ImportantType = customerAppointmentSchedule.ImportantType;
+                customerAppointmentScheduleVo.Remark = customerAppointmentSchedule.Remark;
+                customerAppointmentScheduleVo.Valid = customerAppointmentSchedule.Valid;
+                customerAppointmentScheduleVo.CreateDate = customerAppointmentSchedule.CreateDate;
+                customerAppointmentScheduleVo.AppointmentHospitalId = customerAppointmentSchedule.AppointmentHospitalId;
+                customerAppointmentScheduleVo.AppointmentHospitalName = customerAppointmentSchedule.AppointmentHospitalName;
+                customerAppointmentScheduleVo.Consultation = customerAppointmentSchedule.Consultation;
+                return ResultData<CustomerAppointmentScheduleVo>.Success().AddData("customerAppointmentScheduleInfo", customerAppointmentScheduleVo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<CustomerAppointmentScheduleVo>.Fail(ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// 根据客户手机号获取客户预约日程信息（单条）
+        /// </summary>
+        /// <param name="encryptPhone"></param>
+        /// <returns></returns>
+        [HttpGet("byEncryptPhone/{encryptPhone}")]
+        public async Task<ResultData<CustomerAppointmentScheduleVo>> GetByEncryptPhoneAsync(string encryptPhone)
+        {
+            try
+            {
+                var customerAppointmentSchedule = await customerAppointmentScheduleService.GetByEncryptPhoneAsync(encryptPhone);
                 CustomerAppointmentScheduleVo customerAppointmentScheduleVo = new CustomerAppointmentScheduleVo();
                 customerAppointmentScheduleVo.Id = customerAppointmentSchedule.Id;
                 customerAppointmentScheduleVo.CustomerName = customerAppointmentSchedule.CustomerName;

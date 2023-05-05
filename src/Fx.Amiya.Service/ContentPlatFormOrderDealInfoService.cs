@@ -205,7 +205,7 @@ namespace Fx.Amiya.Service
                 if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
                 {
                     dealInfo = from d in dealInfo
-                               where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0
+                               where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0 || d.ContentPlatFormOrder.SupportEmpId == employeeId || d.ContentPlatFormOrder.BelongEmpId == employeeId
                                select d;
                 }
                 //财务录入数据只有管理员研发财务和CMO能看到
@@ -583,7 +583,7 @@ namespace Fx.Amiya.Service
                                                    && (!CheckState.HasValue || d.CheckState == CheckState.Value)
                                                    && (!isReturnBakcPrice.HasValue || d.IsReturnBackPrice == isReturnBakcPrice.Value)
                                                    && (!consultationType.HasValue || d.ContentPlatFormOrder.ConsultationType == consultationType.Value)
-                                                   && (!customerServiceId.HasValue || d.ContentPlatFormOrder.BelongEmpId == customerServiceId)
+                                                   && (!customerServiceId.HasValue || d.ContentPlatFormOrder.BelongEmpId == customerServiceId || d.ContentPlatFormOrder.SupportEmpId == customerServiceId)
                                                    && (!minAddOrderPrice.HasValue || d.ContentPlatFormOrder.AddOrderPrice >= minAddOrderPrice)
                                                    && (!maxAddOrderPrice.HasValue || d.ContentPlatFormOrder.AddOrderPrice <= maxAddOrderPrice)
                                                    select new ContentPlatFormOrderDealInfoDto

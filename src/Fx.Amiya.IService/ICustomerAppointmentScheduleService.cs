@@ -19,6 +19,8 @@ namespace Fx.Amiya.IService
         Task<List<CustomerAppointmentScheduleDto>> GetListByCalendarAsync(QueryCustomerAppointSchedulePageListDto query);
         Task AddAsync(AddCustomerAppointmentScheduleDto addDto);
         Task<CustomerAppointmentScheduleDto> GetByIdAsync(string id);
+
+        Task<CustomerAppointmentScheduleDto> GetByEncryptPhoneAsync(string encryptPhone);
         Task UpdateAsync(UpdateCustomerAppointmentScheduleDto updateDto);
         Task DeleteAsync(string id);
 

@@ -24,10 +24,12 @@ namespace Fx.Amiya.Service
         private IDalAmiyaEmployee _dalAmiyaEmployee;
         private IAmiyaInWareHouseService amiyaInWareHouseService;
         private IDalTagDetailInfo dalTagDetailInfo;
+        private IWxAppConfigService _wxAppConfigService;
         private IDalHospitalInfo dalHospitalInfo;
         public CustomerAppointmentScheduleService(IDalCustomerAppointmentSchedule dalCustomerAppointmentScheduleService,
             IInventoryListService inventoryListService,
             IAmiyaInWareHouseService inWareHouseService,
+             IWxAppConfigService wxAppConfigService,
            IDalAmiyaEmployee dalAmiyaEmployee,
             IAmiyaOutWareHouseService amiyaOutWareHouseService,
             IUnitOfWork unitofWork, IDalTagDetailInfo dalTagDetailInfo, IDalHospitalInfo dalHospitalInfo)
@@ -37,6 +39,7 @@ namespace Fx.Amiya.Service
             this.amiyaOutWareHouseService = amiyaOutWareHouseService;
             this.amiyaInWareHouseService = inWareHouseService;
             _dalAmiyaEmployee = dalAmiyaEmployee;
+            _wxAppConfigService = wxAppConfigService;
             this.unitOfWork = unitofWork;
             this.dalTagDetailInfo = dalTagDetailInfo;
             this.dalHospitalInfo = dalHospitalInfo;
@@ -243,6 +246,45 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
+
+
+        public async Task<CustomerAppointmentScheduleDto> GetByEncryptPhoneAsync(string encryptPhone)
+        {
+            try
+            {
+                var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
+
+                string phone = ServiceClass.Decrypto(encryptPhone, config.PhoneEncryptKey);
+                var customerAppointmentScheduleService = await dalCustomerAppointmentScheduleService.GetAll().FirstOrDefaultAsync(e => e.Phone == phone);
+                if (customerAppointmentScheduleService == null)
+                {
+                    return new CustomerAppointmentScheduleDto();
+                }
+
+                CustomerAppointmentScheduleDto customerAppointmentScheduleServiceDto = new CustomerAppointmentScheduleDto();
+                customerAppointmentScheduleServiceDto.Id = customerAppointmentScheduleService.Id;
+                customerAppointmentScheduleServiceDto.CustomerName = customerAppointmentScheduleService.CustomerName;
+                customerAppointmentScheduleServiceDto.Phone = customerAppointmentScheduleService.Phone;
+                customerAppointmentScheduleServiceDto.AppointmentType = customerAppointmentScheduleService.AppointmentType;
+                customerAppointmentScheduleServiceDto.AppointmentDate = customerAppointmentScheduleService.AppointmentDate;
+                customerAppointmentScheduleServiceDto.IsFinish = customerAppointmentScheduleService.IsFinish;
+                customerAppointmentScheduleServiceDto.ImportantType = customerAppointmentScheduleService.ImportantType;
+                customerAppointmentScheduleServiceDto.Remark = customerAppointmentScheduleService.Remark;
+                customerAppointmentScheduleServiceDto.Valid = customerAppointmentScheduleService.Valid;
+                customerAppointmentScheduleServiceDto.CreateDate = customerAppointmentScheduleService.CreateDate;
+                customerAppointmentScheduleServiceDto.AppointmentHospitalId = customerAppointmentScheduleService.AppointmentHospitalId;
+                customerAppointmentScheduleServiceDto.Consultation = customerAppointmentScheduleService.Consultation;
+                customerAppointmentScheduleServiceDto.AppointmentHospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == customerAppointmentScheduleService.AppointmentHospitalId).Select(e => e.Name).SingleOrDefault() ?? "";
+
+                return customerAppointmentScheduleServiceDto;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
 
         public async Task UpdateAsync(UpdateCustomerAppointmentScheduleDto updateDto)
         {
