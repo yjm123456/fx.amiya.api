@@ -245,7 +245,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="encryptPhone"></param>
         /// <returns></returns>
-        [HttpGet("byEncryptPhone/{encryptPhone}")]
+        [HttpGet("byEncryptPhone")]
         public async Task<ResultData<CustomerAppointmentScheduleVo>> GetByEncryptPhoneAsync(string encryptPhone)
         {
             try
