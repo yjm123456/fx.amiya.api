@@ -16,7 +16,7 @@ namespace Fx.Amiya.IService
         Task AddAsync(AddContentPlatFormOrderAddWorkDto addDto);
         Task<ContentPlatFormOrderAddWorkDto> GetByIdAsync(string id);
 
-        Task<ContentPlatFormOrderAddWorkDto> GetByPhoneAsync(string phone);
+        Task<ContentPlatFormOrderAddWorkDto> GetByPhoneAsync(string phone, int empId);
         Task UpdateAsync(UpdateContentPlatFormOrderAddWorkDto updateContentPlatFormOrderAddWorkDto);
 
         Task UpdateAcceptByAsync(UpdateAcceptByDto updateAcceptByDto);

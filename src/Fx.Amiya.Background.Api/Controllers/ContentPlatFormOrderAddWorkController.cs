@@ -167,7 +167,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var selectResult = await contentPlatFormOrderAddWorkService.GetByPhoneAsync(phone);
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                var selectResult = await contentPlatFormOrderAddWorkService.GetByPhoneAsync(phone,employeeId);
                 ContentPlatFormOrderAddWorkVo result = new ContentPlatFormOrderAddWorkVo();
                 result.Id = selectResult.Id;
                 result.HospitalId = selectResult.HospitalId;

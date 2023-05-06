@@ -112,13 +112,13 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task UpdateIsRerturnBackAsync(string Id)
+        public async Task UpdateIsRerturnBackAsync(string Id,DateTime returnBackDate)
         {
             var result = await _dalRecommandDocumentSettle.GetAll().Where(x => x.Id == Id).FirstOrDefaultAsync();
             if (result != null)
             {
                 result.IsSettle = true;
-                result.SettleDate = DateTime.Now;
+                result.SettleDate = returnBackDate;
                 await _dalRecommandDocumentSettle.UpdateAsync(result, true);
             }
         }

@@ -291,7 +291,7 @@ namespace Fx.Amiya.Service
                     reconciliationDocumentsDto.DealDate = x.DealDate;
                     reconciliationDocumentsDto.TotalDealPrice = x.TotalDealPrice;
                     reconciliationDocumentsDto.ReturnBackPricePercent = x.ReturnBackPricePercent;
-                    reconciliationDocumentsDto.ReturnBackPrice = Math.Round(x.TotalDealPrice.Value * x.ReturnBackPricePercent.Value / 100, 2,MidpointRounding.AwayFromZero);
+                    reconciliationDocumentsDto.ReturnBackPrice = Math.Round(x.TotalDealPrice.Value * x.ReturnBackPricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
                     reconciliationDocumentsDto.SystemUpdatePricePercent = x.SystemUpdatePricePercent;
                     reconciliationDocumentsDto.SystemUpdatePrice = Math.Round(x.TotalDealPrice.Value * x.SystemUpdatePricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
                     reconciliationDocumentsDto.TotalReconciliationDocumentsPrice = Math.Round(reconciliationDocumentsDto.ReturnBackPrice.Value + reconciliationDocumentsDto.SystemUpdatePrice.Value, 2, MidpointRounding.AwayFromZero);
@@ -500,8 +500,8 @@ namespace Fx.Amiya.Service
 
                     }
 
-                    //对账单回款记录表更新“已回款”
-                    await recommandDocumentSettleService.UpdateIsRerturnBackAsync(k.Id);
+                    //对账单审核记录表更新“已回款”
+                    await recommandDocumentSettleService.UpdateIsRerturnBackAsync(k.Id, reconciliationDocumentsReturnBackPriceDto.ReturnBackDate);
                 }
 
                 //_unitOfWork.Commit();
@@ -549,7 +549,7 @@ namespace Fx.Amiya.Service
             return await recommandDocumentSettleService.GetRecommandDocumentSettleAsync(ids, null);
         }
         //#region [对账单审核记录操作]
-       
+
         ///// <summary>
         ///// 导出审核记录数据
         ///// </summary>

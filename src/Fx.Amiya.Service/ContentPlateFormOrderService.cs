@@ -2828,9 +2828,11 @@ namespace Fx.Amiya.Service
             belongLiveAnchorId = empInfo.LiveAnchorBaseId;
             if (empInfo.IsCustomerService == true)
             {
-
-                var employeeInfos = await _amiyaEmployeeService.GetByLiveAnchorBaseIdAsync(belongLiveAnchorId);
-                var amiyaEmployeeIds = employeeInfos.Select(x => x.Id).ToList();
+                //根据主播分组排名
+                // var employeeInfos = await _amiyaEmployeeService.GetByLiveAnchorBaseIdAsync(belongLiveAnchorId);
+                //var amiyaEmployeeIds = employeeInfos.Select(x => x.Id).ToList();
+                //全部排名
+                var amiyaEmployeeIds = new List<int>();
 
                 var rankResult = await this.GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(startDate, endDate, amiyaEmployeeIds);
                 List<CustomerServiceRankDto> CustomerServiceRankDtoList = new List<CustomerServiceRankDto>();
@@ -2839,10 +2841,14 @@ namespace Fx.Amiya.Service
                 foreach (var x in rankResult)
                 {
                     CustomerServiceRankDto customerServiceRankDto = new CustomerServiceRankDto();
+                    customerServiceRankDto.TotalAchievement = DecimalExtension.ChangePriceToTenThousand(x.TotalServicePrice);
+                    if (customerServiceRankDto.TotalAchievement <= 0.00M)
+                    {
+                        continue;
+                    }
                     customerServiceRankDto.RankId = rank;
                     customerServiceRankDto.CustomerServiceId = x.CustomerServiceId;
                     customerServiceRankDto.CustomerServiceName = x.CustomerServiceName;
-                    customerServiceRankDto.TotalAchievement = DecimalExtension.ChangePriceToTenThousand(x.TotalServicePrice);
 
                     if (hasRank == false)
                     {
@@ -3327,19 +3333,19 @@ namespace Fx.Amiya.Service
             var oldCustomerDealCount = dalContentPlatformOrderSend.GetAll().Where(e => e.SendDate >= startDate && e.SendDate < endDate && e.HospitalId == hospitalId)
                 .Include(e => e.ContentPlatformOrder).ThenInclude(e => e.ContentPlatformOrderDealInfoList).Where(e => e.ContentPlatformOrder.IsOldCustomer == true && e.ContentPlatformOrder.ContentPlatformOrderDealInfoList.Where(e => e.IsDeal == true).Count() > 0).Count();
 
-            var dealData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList).Where(e => e.LastDealHospitalId == hospitalId&& e.SendDate >= startDate && e.SendDate < endDate);
-                
-            var visitInfo = dealData.Where(x => x.IsToHospital == true && x.ContentPlatformOrderDealInfoList.OrderByDescending(k => k.CreateDate).FirstOrDefault().CreateDate >= startDate && x.ContentPlatformOrderDealInfoList.OrderByDescending(k => k.CreateDate).FirstOrDefault().CreateDate < endDate  && x.LastDealHospitalId == hospitalId).ToList();
+            var dealData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList).Where(e => e.LastDealHospitalId == hospitalId && e.SendDate >= startDate && e.SendDate < endDate);
+
+            var visitInfo = dealData.Where(x => x.IsToHospital == true && x.ContentPlatformOrderDealInfoList.OrderByDescending(k => k.CreateDate).FirstOrDefault().CreateDate >= startDate && x.ContentPlatformOrderDealInfoList.OrderByDescending(k => k.CreateDate).FirstOrDefault().CreateDate < endDate && x.LastDealHospitalId == hospitalId).ToList();
 
             OperaBaseDto operateBaseDataDto = new OperaBaseDto();
             operateBaseDataDto.NewCustomerToHospitalCount = newCustomerToHospitalCount;
             operateBaseDataDto.NewCustomerDealCount = newCustomerDealCount;
-            operateBaseDataDto.OldCustomerToHospitalCount= oldCustomerToHospitalCount;
-            operateBaseDataDto.OldCustomerDealCount= oldCustomerDealCount;
+            operateBaseDataDto.OldCustomerToHospitalCount = oldCustomerToHospitalCount;
+            operateBaseDataDto.OldCustomerDealCount = oldCustomerDealCount;
 
             operateBaseDataDto.NewCustomerToHospitalRatio = DecimalExtension.CalculateTargetComplete(operateBaseDataDto.NewCustomerToHospitalCount, sendCount.Count());
-            operateBaseDataDto.NewCustomerDealRation = DecimalExtension.CalculateTargetComplete(operateBaseDataDto.NewCustomerDealCount, sendCount.Where(e=>e.ContentPlatformOrder.IsOldCustomer==false).Count());
-            operateBaseDataDto.OldCustomerRepurchaseRatio = DecimalExtension.CalculateTargetComplete(dealData.Where(e=>e.IsOldCustomer==true).Count(), sendCount.Count());
+            operateBaseDataDto.NewCustomerDealRation = DecimalExtension.CalculateTargetComplete(operateBaseDataDto.NewCustomerDealCount, sendCount.Where(e => e.ContentPlatformOrder.IsOldCustomer == false).Count());
+            operateBaseDataDto.OldCustomerRepurchaseRatio = DecimalExtension.CalculateTargetComplete(dealData.Where(e => e.IsOldCustomer == true).Count(), sendCount.Count());
             operateBaseDataDto.OldCustomerDealRation = DecimalExtension.CalculateTargetComplete(operateBaseDataDto.OldCustomerDealCount, sendCount.Where(e => e.ContentPlatformOrder.IsOldCustomer == true).Count());
             return operateBaseDataDto;
         }

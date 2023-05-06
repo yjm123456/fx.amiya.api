@@ -115,9 +115,9 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task<ContentPlatFormOrderAddWorkDto> GetByPhoneAsync(string phone)
+        public async Task<ContentPlatFormOrderAddWorkDto> GetByPhoneAsync(string phone, int empId)
         {
-            var selectResult = await _dalContentPlatFormOrderAddWork.GetAll().Where(x => x.Phone == phone && x.Valid == true).OrderByDescending(x => x.CreateDate).FirstOrDefaultAsync();
+            var selectResult = await _dalContentPlatFormOrderAddWork.GetAll().Where(x => x.Phone == phone && x.CreateBy == empId && x.Valid == true).OrderByDescending(x => x.CreateDate).FirstOrDefaultAsync();
             if (selectResult == null)
             {
                 return new ContentPlatFormOrderAddWorkDto();

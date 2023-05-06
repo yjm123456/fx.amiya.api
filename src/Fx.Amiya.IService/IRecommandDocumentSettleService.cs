@@ -39,6 +39,6 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        Task UpdateIsRerturnBackAsync(string Id);
+        Task UpdateIsRerturnBackAsync(string Id, DateTime returnBackDate);
     }
 }
