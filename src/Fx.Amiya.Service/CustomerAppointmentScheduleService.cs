@@ -386,7 +386,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<FxPageInfo<CustomerAppointmentScheduleDto>> GetListWithPageByBaseLiveAnchorAsync(string liveAnchorId, int pageSize, int pageNum,int type)
         {
-            var liveAnchorAppointments = dalCustomerAppointmentScheduleService.GetAll().Where(e => e.AssignLiveanchorId == liveAnchorId && e.AppointmentType == type&&e.Valid==true).OrderByDescending(e=>e.AppointmentDate);
+            var liveAnchorAppointments = dalCustomerAppointmentScheduleService.GetAll().Where(e => e.AssignLiveanchorId == liveAnchorId && e.AppointmentType == type&&e.Valid==true&&e.IsFinish==false).OrderByDescending(e=>e.AppointmentDate);
             FxPageInfo<CustomerAppointmentScheduleDto> fxPageInfo = new FxPageInfo<CustomerAppointmentScheduleDto>();
             fxPageInfo.TotalCount = liveAnchorAppointments.Count();
             fxPageInfo.List = liveAnchorAppointments.Select(d=>new CustomerAppointmentScheduleDto {
