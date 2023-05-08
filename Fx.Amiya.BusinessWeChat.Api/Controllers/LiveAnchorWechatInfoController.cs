@@ -51,11 +51,11 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         public async Task<ResultData<List<BaseKeyAndValueVo>>> GetValidListAsync()
         {
             var liveAnchorWechatInfos = from d in await liveAnchorWechatInfoService.GetValidAsync()
-                              select new BaseKeyAndValueVo
-                              {
-                                  Id = d.Id.ToString(),
-                                  Name = d.WeChatNo,
-                              };
+                                        select new BaseKeyAndValueVo
+                                        {
+                                            Id = d.Id.ToString(),
+                                            Name = d.WeChatNo,
+                                        };
             return ResultData<List<BaseKeyAndValueVo>>.Success().AddData("liveAnchorWechatInfos", liveAnchorWechatInfos.ToList());
         }
 
@@ -66,7 +66,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <param name="liveanchorId">主播id</param>
         /// <returns></returns>
         [HttpGet("validListByLiveAnchorId")]
-        public async Task<ResultData<List<BaseKeyAndValueVo>>> GetValidListByLiveAnchorIdAsync(int liveanchorId)
+        public async Task<ResultData<List<BaseKeyAndValueVo>>> GetValidListByLiveAnchorIdAsync(int? liveanchorId)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
@@ -74,7 +74,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                                         select new BaseKeyAndValueVo
                                         {
                                             Id = d.Id,
-                                            Name=d.WeChatNo
+                                            Name = d.WeChatNo
                                         };
             return ResultData<List<BaseKeyAndValueVo>>.Success().AddData("liveAnchorWechatInfos", liveAnchorWechatInfos.ToList());
         }

@@ -708,7 +708,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.LiveAnchorWechatInfoController.GetValidListByLiveAnchorIdAsync(System.Int32)">
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.LiveAnchorWechatInfoController.GetValidListByLiveAnchorIdAsync(System.Nullable{System.Int32})">
             <summary>
              根据主播获取有效的主播微信账号列表
             </summary>
@@ -837,6 +837,18 @@
             作废录单申请
             </summary>
             <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Controllers.CustomerAppointmentScheduleController">
+            <summary>
+            预约日程
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWeChat.Api.Controllers.CustomerAppointmentScheduleController.GetListWithPageAsync(Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.Input.QueryLiveAnchorToHospitalLiveAnchorVo)">
+            <summary>
+            主播获取客户预约日程信息列表（分页）
+            </summary>
+            <param name="query"></param>
             <returns></returns>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.AmiyaEmployeeVo.Id">
@@ -3147,6 +3159,101 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.UpdateContentPlatFormSendOrderInfoVo.Remark">
             <summary>
             备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.Input.QueryLiveAnchorToHospitalLiveAnchorVo.LiveAnchorId">
+            <summary>
+            主播id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.Input.QueryLiveAnchorToHospitalLiveAnchorVo.AppointmentType">
+            <summary>
+            预约类型(1:视频设计预约,2:到院接诊预约)
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo">
+            <summary>
+            客户预约日程
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.CreateBy">
+            <summary>
+            创建人id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.CreateByEmpName">
+            <summary>
+            创建人名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.CustomerName">
+            <summary>
+            客户昵称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.Phone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.AppointmentType">
+            <summary>
+            预约类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.AppointmentTypeText">
+            <summary>
+            预约类型文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.AppointmentDate">
+            <summary>
+            预约时间
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.Date">
+            <summary>
+            当日日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.Week">
+            <summary>
+            当日星期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.IsFinish">
+            <summary>
+            是否完成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.ImportantType">
+            <summary>
+            重要程度
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.ImportantTypeText">
+            <summary>
+            重要程度文本
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.AppointmentHospitalId">
+            <summary>
+            预约医院id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.AppointmentHospitalName">
+            <summary>
+            预约医院名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.Consultation">
+            <summary>
+            接诊咨询
             </summary>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Id">

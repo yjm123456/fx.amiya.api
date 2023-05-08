@@ -38,11 +38,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<LiveAnchorWechatInfoIdAndNameVo>>> GetValidListAsync()
         {
             var liveAnchorWechatInfos = from d in await liveAnchorWechatInfoService.GetValidAsync()
-                              select new LiveAnchorWechatInfoIdAndNameVo
-                              {
-                                  Id = d.Id,
-                                  Name =d.WeChatNo,
-                              };
+                                        select new LiveAnchorWechatInfoIdAndNameVo
+                                        {
+                                            Id = d.Id,
+                                            Name = d.WeChatNo,
+                                        };
             return ResultData<List<LiveAnchorWechatInfoIdAndNameVo>>.Success().AddData("liveAnchorWechatInfos", liveAnchorWechatInfos.ToList());
         }
 
@@ -52,22 +52,22 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="liveanchorId">主播id</param>
         /// <returns></returns>
         [HttpGet("validList")]
-        public async Task<ResultData<List<LiveAnchorWechatInfoVo>>> GetValidListAsync(int liveanchorId)
+        public async Task<ResultData<List<LiveAnchorWechatInfoVo>>> GetValidListAsync(int? liveanchorId)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
             var liveAnchorWechatInfos = from d in await liveAnchorWechatInfoService.GetValidListByLiveAnchorIdAsync(liveanchorId, employeeId)
-                              select new LiveAnchorWechatInfoVo
-                              {
-                                  Id = d.Id,
-                                  LiveAnchorId = d.LiveAnchorId,
-                                  LiveAnchorName = d.LiveAnchorName,
-                                  ContentPlatFormName = d.ContentPlatFormName,
-                                  WeChatNo = d.WeChatNo,
-                                  NickName = d.NickName,
-                                  Remark = d.Remark,
-                                  Valid = d.Valid
-                              };
+                                        select new LiveAnchorWechatInfoVo
+                                        {
+                                            Id = d.Id,
+                                            LiveAnchorId = d.LiveAnchorId,
+                                            LiveAnchorName = d.LiveAnchorName,
+                                            ContentPlatFormName = d.ContentPlatFormName,
+                                            WeChatNo = d.WeChatNo,
+                                            NickName = d.NickName,
+                                            Remark = d.Remark,
+                                            Valid = d.Valid
+                                        };
             return ResultData<List<LiveAnchorWechatInfoVo>>.Success().AddData("liveAnchorWechatInfos", liveAnchorWechatInfos.ToList());
         }
 
@@ -81,23 +81,23 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
-        public async Task<ResultData<FxPageInfo<LiveAnchorWechatInfoVo>>> GetListAsync(string keyword, int? liveAnchorId,  bool valid, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<LiveAnchorWechatInfoVo>>> GetListAsync(string keyword, int? liveAnchorId, bool valid, int pageNum, int pageSize)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var q = await liveAnchorWechatInfoService.GetListAsync(keyword, liveAnchorId,employeeId,valid, pageNum, pageSize);
+            var q = await liveAnchorWechatInfoService.GetListAsync(keyword, liveAnchorId, employeeId, valid, pageNum, pageSize);
             var liveAnchorWechatInfos = from d in q.List
-                              select new LiveAnchorWechatInfoVo
-                              {
-                                  Id = d.Id,
-                                  LiveAnchorId = d.LiveAnchorId,
-                                  LiveAnchorName = d.LiveAnchorName,
-                                  ContentPlatFormName = d.ContentPlatFormName,
-                                  WeChatNo = d.WeChatNo,
-                                  NickName = d.NickName,
-                                  Remark = d.Remark,
-                                  Valid = d.Valid
-                              };
+                                        select new LiveAnchorWechatInfoVo
+                                        {
+                                            Id = d.Id,
+                                            LiveAnchorId = d.LiveAnchorId,
+                                            LiveAnchorName = d.LiveAnchorName,
+                                            ContentPlatFormName = d.ContentPlatFormName,
+                                            WeChatNo = d.WeChatNo,
+                                            NickName = d.NickName,
+                                            Remark = d.Remark,
+                                            Valid = d.Valid
+                                        };
             FxPageInfo<LiveAnchorWechatInfoVo> liveAnchorWechatInfoPageInfo = new FxPageInfo<LiveAnchorWechatInfoVo>();
             liveAnchorWechatInfoPageInfo.TotalCount = q.TotalCount;
             liveAnchorWechatInfoPageInfo.List = liveAnchorWechatInfos;
