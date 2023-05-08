@@ -288,6 +288,7 @@ namespace Fx.Amiya.Service
                     Email = (employee.Email == "0") ? "" : employee.Email,
                     PositionId = employee.AmiyaPositionId,
                     PositionName = employee.AmiyaPositionInfo.Name,
+                    IsDirector=employee.AmiyaPositionInfo.IsDirector,
                     IsCustomerService = employee.IsCustomerService,
                     DepartmentId = employee.AmiyaPositionInfo.DepartmentId,
                     DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name,

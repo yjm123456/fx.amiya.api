@@ -332,6 +332,7 @@ namespace Fx.Amiya.Service
                 {
                     orders = from d in orders
                              where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.Phone) > 0 || d.SupportEmpId == employeeId || d.BelongEmpId == employeeId
+                             where (d.IsSupportOrder == false || d.SupportEmpId == employeeId)
                              select d;
                 }
                 var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
@@ -493,11 +494,18 @@ namespace Fx.Amiya.Service
                          where o.CreateDate >= startrq && o.CreateDate <= endrq
                          select o;
             }
+            var employee = await _amiyaEmployeeService.GetByIdAsync(employeeId);
+            if (employee.IsCustomerService && !employee.IsDirector)
+            {
+                orders = from d in orders
+                         where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.Phone) > 0 || d.SupportEmpId == employeeId || d.BelongEmpId == employeeId
+                         where (d.IsSupportOrder == false || d.SupportEmpId == employeeId)
+                         select d;
+            }
             var unSendOrder = from o in orders
                               join b in _dalBindCustomerService.GetAll() on o.Phone equals b.BuyerPhone
                               where o.ContentPlatformOrderSendList.Count(e => e.ContentPlatformOrderId == o.Id) == 0
                               && (keyword == null || o.Id == keyword || o.Phone == keyword || o.AmiyaGoodsDemand.ProjectNname.Contains(keyword) || o.HospitalInfo.Name.Contains(keyword))
-                              && (employeeId == -1 || b.CustomerServiceId == employeeId)
                               && (orderSource == -1 || o.OrderSource == orderSource)
                               && (!liveAnchorId.HasValue || o.LiveAnchorId == liveAnchorId.Value)
                               orderby b.CreateDate descending
@@ -943,7 +951,8 @@ namespace Fx.Amiya.Service
                 if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
                 {
                     orders = from d in orders
-                             where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.Phone) > 0
+                             where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.Phone) > 0 || d.SupportEmpId == employeeId || d.BelongEmpId == employeeId
+                             where (d.IsSupportOrder == false || d.SupportEmpId == employeeId)
                              select d;
                 }
 
@@ -2030,7 +2039,7 @@ namespace Fx.Amiya.Service
                 var orderIsOldCustomer = false;
                 //取该订单的第一次成交业绩时间
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
-                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true&&x.ConsultationType==(int)ConsumptionType.Deal).FirstOrDefault();
+                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true && x.ConsultationType == (int)ConsumptionType.Deal).FirstOrDefault();
 
                 if (dealCount != null)
                 //if (order.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
@@ -2251,16 +2260,17 @@ namespace Fx.Amiya.Service
                 }
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
                 //最近一次非定金成交且id和当前要修改的id不同
-                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true & x.Id != input.DealId&&x.ConsumptionType!=(int)ConsumptionType.Deposit).FirstOrDefault();
-                
+                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true & x.Id != input.DealId && x.ConsumptionType != (int)ConsumptionType.Deposit).FirstOrDefault();
+
                 //如果有
                 if (dealCount != null)
                 {
-                    
+
                     if (dealCount.DealDate > input.DealDate)
                     {
                         //修改后成交且为成交消费,更新最近一次成交消费和区间内的定金消费为老客消费,主订单修改为老客订单
-                        if (input.ConsumptionType == (int)ConsumptionType.Deal && input.IsFinish == true) {
+                        if (input.ConsumptionType == (int)ConsumptionType.Deal && input.IsFinish == true)
+                        {
                             UpdateContentPlatFormOrderDealInfoDto updateContentPlatFormOrderDealInfoDto = new UpdateContentPlatFormOrderDealInfoDto();
                             updateContentPlatFormOrderDealInfoDto.Id = dealCount.Id;
                             await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, true);
@@ -2272,7 +2282,8 @@ namespace Fx.Amiya.Service
                             orderIsOldCustomer = true;
                         }
                         //修改后未成交且为成交消费,修改最近一次消费为新客消费区间内的定金消费为新客消费,如果修改后非定金成交数据大于1则主订单为老客否则为新客
-                        if (input.ConsumptionType == (int)ConsumptionType.Deal && input.IsFinish == false) {
+                        if (input.ConsumptionType == (int)ConsumptionType.Deal && input.IsFinish == false)
+                        {
                             await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, false);
                             var depositInfo = orderDealInfoList.Where(x => x.DealDate >= input.DealDate && x.DealDate < dealCount.DealDate && x.ConsumptionType == (int)ConsumptionType.Deposit);
                             foreach (var item in depositInfo)
@@ -2280,12 +2291,13 @@ namespace Fx.Amiya.Service
                                 await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(item.Id, false);
                             }
                             var dealinfo = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
-                           
+
                             if (dealinfo.Where(x => x.IsDeal == true && x.ConsumptionType != (int)ConsumptionType.Deposit).Count() > 1)
                             {
                                 orderIsOldCustomer = true;
                             }
-                            else {
+                            else
+                            {
                                 orderIsOldCustomer = false;
                             }
                         }
@@ -2295,7 +2307,7 @@ namespace Fx.Amiya.Service
                             UpdateContentPlatFormOrderDealInfoDto updateContentPlatFormOrderDealInfoDto = new UpdateContentPlatFormOrderDealInfoDto();
                             updateContentPlatFormOrderDealInfoDto.Id = dealCount.Id;
                             await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, false);
-                            var depositInfo = orderDealInfoList.Where(x => x.DealDate > input.DealDate && x.DealDate < dealCount.DealDate&&x.ConsumptionType==(int)ConsumptionType.Deposit);
+                            var depositInfo = orderDealInfoList.Where(x => x.DealDate > input.DealDate && x.DealDate < dealCount.DealDate && x.ConsumptionType == (int)ConsumptionType.Deposit);
                             foreach (var item in depositInfo)
                             {
                                 await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(item.Id, false);
@@ -2363,7 +2375,7 @@ namespace Fx.Amiya.Service
                     order.UnDealReason = "";
                     order.UnDealPictureUrl = "";
                     order.DealDate = input.DealDate;
-                    
+
 
                 }
                 else

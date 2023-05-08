@@ -581,10 +581,9 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<FxPageInfo<SendContentPlatformOrderDto>> GetSendOrderList(int? liveAnchorId, int? consultationEmpId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string keyword, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int employeeId, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int pageNum, int pageSize)
         {
-            var orders = _dalContentPlatformOrderSend.GetAll()
+            var orders = _dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder)
                        .Where(e => string.IsNullOrWhiteSpace(keyword) || e.ContentPlatformOrderId == keyword || e.ContentPlatformOrder.Phone.Contains(keyword) || e.ContentPlatformOrder.LiveAnchorWeChatNo.Contains(keyword))
                        .Where(e => hospitalId == 0 || e.HospitalId == hospitalId)
-                       .Where(e => employeeId == -1 || e.ContentPlatformOrder.BelongEmpId == employeeId)
                        .Where(e => orderSource == -1 || e.ContentPlatformOrder.OrderSource == orderSource)
                        .Where(e => !IsToHospital.HasValue || e.ContentPlatformOrder.IsToHospital == IsToHospital.Value)
                        .Where(e => !belongMonth.HasValue || e.ContentPlatformOrder.BelongMonth == belongMonth.Value)
@@ -599,6 +598,7 @@ namespace Fx.Amiya.Service
                        .Where(e => !liveAnchorId.HasValue || e.ContentPlatformOrder.LiveAnchorId == liveAnchorId.Value)
                        .Where(e => orderStatus == null || (orderStatus != null && orderStatus == (int)ContentPlateFormOrderStatus.RepeatOrderProfundity ? e.ContentPlatformOrder.IsRepeatProfundityOrder == true : e.ContentPlatformOrder.OrderStatus == orderStatus))
                        .Where(e => string.IsNullOrWhiteSpace(contentPlatFormId) || e.ContentPlatformOrder.ContentPlateformId == contentPlatFormId);
+
             if (startDate != null && endDate != null)
             {
                 DateTime startrq = ((DateTime)startDate).Date;
@@ -613,6 +613,16 @@ namespace Fx.Amiya.Service
                 DateTime endrq = ((DateTime)toHospitalEndDate).Date.AddDays(1);
                 orders = from d in orders
                          where (d.ContentPlatformOrder.ToHospitalDate >= startrq && d.ContentPlatformOrder.ToHospitalDate < endrq)
+                         select d;
+            }
+
+            var employee = await _amiyaEmployeeService.GetByIdAsync(employeeId);
+            //普通客服角色过滤其他订单信息只展示自己录单信息
+            if (employee.IsCustomerService && !employee.IsDirector)
+            {
+                orders = from d in orders
+                         where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatformOrder.Phone) > 0 || d.ContentPlatformOrder.SupportEmpId == employeeId || d.ContentPlatformOrder.BelongEmpId == employeeId
+                         where (d.ContentPlatformOrder.IsSupportOrder == false || d.ContentPlatformOrder.SupportEmpId == employeeId)
                          select d;
             }
             var orderCount = await orders.CountAsync();
@@ -1020,9 +1030,9 @@ namespace Fx.Amiya.Service
                                 Item = d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.AmiyaGoodsDemand.ProjectNname : "****",
                                 UserInfo = d.ContentPlatformOrder.CustomerName + " - " + (d.ContentPlatformOrder.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.ContentPlatformOrder.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? (p != null ? d.ContentPlatformOrder.Phone : config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone) : d.ContentPlatformOrder.Phone) : ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone)),
                                 LastFollowContent = "****",
-                                SendOrderDate=d.SendDate,
-                                SendOrderLiveAnchorNAme=d.ContentPlatformOrder.LiveAnchor.Name,
-                                SendOrderAssistantName=d.AmiyaEmployee.Name
+                                SendOrderDate = d.SendDate,
+                                SendOrderLiveAnchorNAme = d.ContentPlatformOrder.LiveAnchor.Name,
+                                SendOrderAssistantName = d.AmiyaEmployee.Name
                             };
             fxPageInfo.TotalCount = await sendOrder.CountAsync();
             fxPageInfo.List = sendOrder.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
@@ -1033,8 +1043,8 @@ namespace Fx.Amiya.Service
 
 
 
-       
-        
+
+
 
         #endregion
 

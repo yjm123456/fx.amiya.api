@@ -194,7 +194,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, string createBillCompanyId, bool? isCreateBill, int pageNum, int pageSize, bool? dataFrom,int? consumptionType)
+        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, string createBillCompanyId, bool? isCreateBill, int pageNum, int pageSize, bool? dataFrom, int? consumptionType)
         {
             var config = await wxAppConfigService.GetCallCenterConfig();
             try
@@ -202,11 +202,13 @@ namespace Fx.Amiya.Service
                 var dealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(z => z.ContentPlatformOrderSendList) select d;
 
                 var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
+                //普通客服角色过滤其他订单信息只展示自己录单信息
                 if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
                 {
                     dealInfo = from d in dealInfo
-                               where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0 || d.ContentPlatFormOrder.SupportEmpId == employeeId || d.ContentPlatFormOrder.BelongEmpId == employeeId
-                               select d;
+                             where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0 || d.ContentPlatFormOrder.SupportEmpId == employeeId || d.ContentPlatFormOrder.BelongEmpId == employeeId
+                             where (d.ContentPlatFormOrder.IsSupportOrder == false || d.ContentPlatFormOrder.SupportEmpId == employeeId)
+                             select d;
                 }
                 //财务录入数据只有管理员研发财务和CMO能看到
                 if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16 && employee.AmiyaPositionInfo.Id != 29)
@@ -223,7 +225,8 @@ namespace Fx.Amiya.Service
                                where (d.CreateDate >= startrq)
                                select d;
                 }
-                if (consumptionType!=null) {
+                if (consumptionType != null)
+                {
                     dealInfo = from d in dealInfo
                                where (d.ConsumptionType == consumptionType)
                                select d;
@@ -320,7 +323,6 @@ namespace Fx.Amiya.Service
                                                    && (!CheckState.HasValue || d.CheckState == CheckState.Value)
                                                    && (!isReturnBakcPrice.HasValue || d.IsReturnBackPrice == isReturnBakcPrice.Value)
                                                    //&& (!customerServiceId.HasValue || d.CreateBy == customerServiceId) 
-                                                   && (!customerServiceId.HasValue || d.ContentPlatFormOrder.BelongEmpId == customerServiceId)
                                                    && (!customerServiceId.HasValue || d.ContentPlatFormOrder.BelongEmpId == customerServiceId)
                                                    && (!consultationType.HasValue || d.ContentPlatFormOrder.ConsultationType == consultationType)
                                                    && (!minAddOrderPrice.HasValue || d.ContentPlatFormOrder.AddOrderPrice >= minAddOrderPrice)
@@ -492,20 +494,23 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord, int employeeId, bool hidePhone,int? consumptionType)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord, int employeeId, bool hidePhone, int? consumptionType)
         {
             try
             {
                 var dealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder) select d;
 
                 var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
-
+                //普通客服角色过滤其他订单信息只展示自己录单信息
                 if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
                 {
                     dealInfo = from d in dealInfo
                                where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0 || d.ContentPlatFormOrder.SupportEmpId == employeeId || d.ContentPlatFormOrder.BelongEmpId == employeeId
+                               where (d.ContentPlatFormOrder.IsSupportOrder == false || d.ContentPlatFormOrder.SupportEmpId == employeeId)
                                select d;
                 }
+
+
                 //财务录入数据只有管理员研发财务和CMO能看到
                 if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16 && employee.AmiyaPositionInfo.Id != 29)
                 {
@@ -565,9 +570,10 @@ namespace Fx.Amiya.Service
                                && (string.IsNullOrEmpty(belongCompanyId) || d.BelongCompany == belongCompanyId)
                                select d;
                 }
-                if (consumptionType.HasValue) {
+                if (consumptionType.HasValue)
+                {
                     dealInfo = from d in dealInfo
-                               where (d.ConsumptionType==consumptionType)
+                               where (d.ConsumptionType == consumptionType)
                                select d;
                 }
                 if (CheckState == (int)CheckType.CheckedSuccess)
@@ -798,7 +804,8 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.SettlePrice = 0.00M;
                 ContentPlatFOrmOrderDealInfo.DealPerformanceType = addDto.DealPerformanceType;
                 ContentPlatFOrmOrderDealInfo.IsRepeatProfundityOrder = addDto.IsRepeatProfundityOrder;
-                if (ContentPlatFOrmOrderDealInfo.IsDeal) {
+                if (ContentPlatFOrmOrderDealInfo.IsDeal)
+                {
                     ContentPlatFOrmOrderDealInfo.ConsumptionType = addDto.ConsumptionType;
                 }
                 await dalContentPlatFormOrderDealInfo.AddAsync(ContentPlatFOrmOrderDealInfo, true);
@@ -2030,7 +2037,7 @@ namespace Fx.Amiya.Service
             return orderTypeList;
         }
 
-        
+
 
         #endregion
     }
