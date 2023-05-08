@@ -2039,7 +2039,7 @@ namespace Fx.Amiya.Service
                 var orderIsOldCustomer = false;
                 //取该订单的第一次成交业绩时间
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
-                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true && x.ConsultationType == (int)ConsumptionType.Deal).FirstOrDefault();
+                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true&&x.ConsumptionType!=(int)ConsumptionType.Deposit).FirstOrDefault();
 
                 if (dealCount != null)
                 //if (order.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)

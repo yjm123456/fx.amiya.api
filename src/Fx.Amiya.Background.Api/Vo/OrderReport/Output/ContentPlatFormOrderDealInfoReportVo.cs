@@ -136,17 +136,17 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport.OutPut
         /// </summary>
         [Description("成交时间")]
         public DateTime? DealDate { get; set; }
-        /// <summary>
-        /// 消费类型
-        /// </summary>
-        [Description("消费类型")]
-        public string ConsumptionTypeText { get; set; }
+        
         /// <summary>
         /// 三方订单号
         /// </summary>
         [Description("三方订单号")]
         public string OtherOrderId { get; set; }
-
+        /// <summary>
+        /// 消费类型
+        /// </summary>
+        [Description("消费类型")]
+        public string ConsumptionTypeText { get; set; }
         /// <summary>
         /// 新老客业绩
         /// </summary>
