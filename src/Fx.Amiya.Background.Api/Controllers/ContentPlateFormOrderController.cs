@@ -1175,6 +1175,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.DealDate = updateVo.DealDate;
             updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
             updateDto.EmpId = Convert.ToInt32(employee.Id);
+            updateDto.ConsumptionType = updateVo.ConsumptionType;
             updateDto.InvitationDocuments = updateVo.InvitationDocuments;
             await _orderService.FinishContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
@@ -1210,6 +1211,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.IsAcompanying = updateVo.IsAcompanying;
             updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
             updateDto.InvitationDocuments = updateVo.InvitationDocuments;
+            updateDto.ConsumptionType = updateVo.ConsumptionType;
             await _orderService.UpdateFinishContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
         }
@@ -1239,6 +1241,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.IsAcompanying = updateVo.IsAcompanying;
             updateDto.DealPerformanceType = (int)ContentPlateFormOrderDealPerformanceType.HospitalDeclaration;
             updateDto.InvitationDocuments = updateVo.InvitationDocuments;
+            updateDto.ConsumptionType = updateVo.ConsumptionType;
             updateDto.EmpId = 0;
             await _orderService.FinishContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();

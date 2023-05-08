@@ -68,5 +68,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 三方订单号
         /// </summary>
         public string OtherAppOrderId { get; set; }
+        /// <summary>
+        /// 消费类型
+        /// </summary>
+        public int? ConsumptionType { get; set; }
     }
 }

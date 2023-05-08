@@ -21,7 +21,7 @@ namespace Fx.Amiya.Background.Api.Controllers
     /// </summary>
     [Route("[controller]")]
     [ApiController]
-    [FxInternalAuthorize]
+    
     public class ContentPlatFormOrderDealInfoController : ControllerBase
     {
         private IContentPlatFormOrderDealInfoService _contentPlatFormOrderDealInfoService;
@@ -69,17 +69,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="createBillCompanyId">开票公司</param>
         /// <param name="isCreateBill">是否开票</param>
         /// <param name="dataFrom">数据获取方：true：财务；false：其他</param>
+        /// <param name="consumptionType">消费类型</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("contentPlatFormOrderDealInfo")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderDealInfoVo>>> GetDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord,string createBillCompanyId,bool? isCreateBill, int pageNum, int pageSize,bool? dataFrom)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderDealInfoVo>>> GetDealInfo(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord,string createBillCompanyId,bool? isCreateBill, int pageNum, int pageSize,bool? dataFrom,int? consumptionType)
         {
 
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderListWithPageAsync(startDate, endDate, sendStartDate, sendEndDate, consultationType, minAddOrderPrice, maxAddOrderPrice, isToHospital, tohospitalStartDate, toHospitalEndDate, dealStartDate, dealEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId,createBillCompanyId,isCreateBill, pageNum, pageSize,dataFrom);
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderListWithPageAsync(startDate, endDate, sendStartDate, sendEndDate, consultationType, minAddOrderPrice, maxAddOrderPrice, isToHospital, tohospitalStartDate, toHospitalEndDate, dealStartDate, dealEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId,createBillCompanyId,isCreateBill, pageNum, pageSize,dataFrom,consumptionType);
 
             var contentPlatformOrders = from d in result.List
                                         select new ContentPlatFormOrderDealInfoVo
@@ -128,8 +129,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             ReconciliationDocumentsId = d.ReconciliationDocumentsId,
                                             IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
                                             IsCreateBill=d.IsCreateBill,
-                                            CreatBillCompany=d.BelongCompany
-                                            
+                                            CreatBillCompany=d.BelongCompany,
+                                            ConsumptionType=d.ConsumptionType,
+                                            ConsumptionTypeText=d.ConsumptionTypeText
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;
@@ -178,7 +180,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             DealHospital = d.LastDealHospital,
                                             CheckByEmpName = d.CheckByEmpName,
                                             CreateDate=d.CreateDate,
-                                            IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
+                                            IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
+                                            ConsumptionTypeText=d.ConsumptionTypeText
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;
@@ -191,6 +194,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [FxInternalAuthorize]
         [HttpGet("byId/{id}")]
 
         public async Task<ResultData<ContentPlatFormOrderDealInfoVo>> GetByIdAsync(string id)
@@ -217,6 +221,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 contentPlatFormOrderDealInfoVo.DealDate = contentPlatFormOrderDealInfo.DealDate;
                 contentPlatFormOrderDealInfoVo.OtherOrderId = contentPlatFormOrderDealInfo.OtherAppOrderId;
                 contentPlatFormOrderDealInfoVo.InvitationDocuments = contentPlatFormOrderDealInfo.InvitationDocuments;
+                contentPlatFormOrderDealInfoVo.ConsumptionType = contentPlatFormOrderDealInfo.ConsumptionType;
+
+
                 return ResultData<ContentPlatFormOrderDealInfoVo>.Success().AddData("contentPlatFormOrderDealInfoInfo", contentPlatFormOrderDealInfoVo);
             }
             catch (Exception ex)
@@ -231,6 +238,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="updateVo"></param>
         /// <returns></returns>
+        [FxInternalAuthorize]
         [HttpPut("update")]
 
         public async Task<ResultData> UpdateAsync(UpdateContentPlatFormOrderDealInfoVo updateVo)
@@ -251,6 +259,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.DealDate = updateVo.DealDate;
                 updateDto.OtherAppOrderId = updateVo.OtherAppOrderId;
                 updateDto.DealPerformanceType = updateVo.DealPerformanceType;
+                updateDto.ConsumptionType = updateVo.ConsumptionType;
                 await _contentPlatFormOrderDealInfoService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -276,6 +285,24 @@ namespace Fx.Amiya.Background.Api.Controllers
                                  Name = d.Name
                              };
             return ResultData<List<BaseIdAndNameVo>>.Success().AddData("contentPlateFormOrderDealPerformanceType", orderTypes.ToList());
+        }
+
+        /// <summary>
+        /// 消费类型列表
+        /// </summary>
+        /// <returns></returns>
+        [FxInternalOrTenantAuthroize]
+        [HttpGet("typeList")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetStatusListAsync()
+        {
+            var nameList = await _contentPlatFormOrderDealInfoService.GetConsumptionTypeAsync();
+            var result = nameList.Select(e => new BaseIdAndNameVo<int>
+            {
+                Id = e.Key,
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("typeList", result);
+
         }
         #endregion
     }

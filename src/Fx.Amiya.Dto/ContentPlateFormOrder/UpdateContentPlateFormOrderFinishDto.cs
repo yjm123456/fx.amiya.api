@@ -91,6 +91,14 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 业绩类型
         /// </summary>
         public int DealPerformanceType { get; set; }
+        /// <summary>
+        /// 消费类型
+        /// </summary>
+        public int? ConsumptionType { get; set; }
+        /// <summary>
+        /// 消费类型文本
+        /// </summary>
+        public string ConsumptionTypeText { get; set; }
 
     }
 }

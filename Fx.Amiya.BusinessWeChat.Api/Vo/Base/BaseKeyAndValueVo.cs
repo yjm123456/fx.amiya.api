@@ -19,4 +19,15 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.Base
         /// </summary>
         public string Name { get; set; }
     }
+    public class BaseKeyAndValueVo<T>
+    {
+        /// <summary>
+        /// 编号
+        /// </summary>
+        public T Id { get; set; }
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string Name { get; set; }
+    }
 }

@@ -46,6 +46,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.IsRepeatProfundityOrder).HasColumnName("is_repeat_profundity_order").HasColumnType("bit").IsRequired();
             builder.Property(e => e.IsCreateBill).HasColumnName("is_create_bill").HasColumnType("bit").IsRequired();
             builder.Property(e => e.BelongCompany).HasColumnName("belong_company").HasColumnType("varchar(50)").IsRequired(false);
+            builder.Property(e => e.ConsumptionType).HasColumnName("consumption_type").HasColumnType("int").IsRequired(false);
 
             builder.HasOne(t => t.ContentPlatFormOrder).WithMany(t => t.ContentPlatformOrderDealInfoList).HasForeignKey(t => t.ContentPlatFormOrderId);
             

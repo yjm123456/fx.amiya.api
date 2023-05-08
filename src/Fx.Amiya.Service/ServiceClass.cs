@@ -718,6 +718,29 @@ namespace Fx.Amiya.Service
             }
             return tagId;
         }
+
+        /// <summary>
+        /// 获取成交情况消费类型
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string GetConsumptionTypeText(int? type) {
+            string consumptionType = "";
+            switch (type) {
+                case 0:
+                    consumptionType = "定金消费";
+                    break;
+                case 1:
+                    consumptionType = "成交消费";
+                    break;
+                default:
+                    consumptionType = "未知";
+                    break;
+            }
+            return consumptionType;
+
+        }
+
         public static string GetOrderFromText(int orderFrom)
         {
             string orderTypeText = "";

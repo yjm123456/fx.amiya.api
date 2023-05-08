@@ -2027,22 +2027,99 @@ namespace Fx.Amiya.Service
             {
                 var order = await _dalContentPlatformOrder.GetAll().Include(x => x.LiveAnchor).Include(x => x.Contentplatform).Include(x => x.ContentPlatformOrderSendList).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 var isoldCustomer = false;
+                var orderIsOldCustomer = false;
                 //取该订单的第一次成交业绩时间
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
-                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true).FirstOrDefault();
+                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true&&x.ConsultationType==(int)ConsumptionType.Deal).FirstOrDefault();
 
                 if (dealCount != null)
                 //if (order.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
                 {
                     if (dealCount.DealDate > input.DealDate)
                     {
-                        UpdateContentPlatFormOrderDealInfoDto updateContentPlatFormOrderDealInfoDto = new UpdateContentPlatFormOrderDealInfoDto();
-                        updateContentPlatFormOrderDealInfoDto.Id = dealCount.Id;
-                        await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, true);
+                        //修改后成交且为成交消费,更新最近一次成交消费和区间内的定金消费为老客消费,主订单修改为老客订单
+                        if (input.ConsumptionType == (int)ConsumptionType.Deal && input.IsFinish == true)
+                        {
+                            UpdateContentPlatFormOrderDealInfoDto updateContentPlatFormOrderDealInfoDto = new UpdateContentPlatFormOrderDealInfoDto();
+                            updateContentPlatFormOrderDealInfoDto.Id = dealCount.Id;
+                            await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, true);
+                            var depositInfo = orderDealInfoList.Where(x => x.DealDate >= input.DealDate && x.DealDate < dealCount.DealDate && x.ConsumptionType == (int)ConsumptionType.Deposit);
+                            foreach (var item in depositInfo)
+                            {
+                                await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(item.Id, true);
+                            }
+                            orderIsOldCustomer = true;
+                        }
+                        //修改后未成交且为成交消费,修改最近一次消费为新客消费区间内的定金消费为新客消费,如果修改后非定金成交数据大于1则主订单为老客否则为新客
+                        if (input.ConsumptionType == (int)ConsumptionType.Deal && input.IsFinish == false)
+                        {
+                            await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, false);
+                            var depositInfo = orderDealInfoList.Where(x => x.DealDate >= input.DealDate && x.DealDate < dealCount.DealDate && x.ConsumptionType == (int)ConsumptionType.Deposit);
+                            foreach (var item in depositInfo)
+                            {
+                                await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(item.Id, false);
+                            }
+                            var dealinfo = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
+
+                            if (dealinfo.Where(x => x.IsDeal == true && x.ConsumptionType != (int)ConsumptionType.Deposit).Count() > 1)
+                            {
+                                orderIsOldCustomer = true;
+                            }
+                            else
+                            {
+                                orderIsOldCustomer = false;
+                            }
+                        }
+                        //修改后成交且为定金消费,修改最近一次消费为新客消费区间内的定金消费为新客消费,如果修改后非定金成交数据大于1则主订单为老客否则为新客
+                        if (input.ConsumptionType == (int)ConsumptionType.Deposit && input.IsFinish == true)
+                        {
+                            UpdateContentPlatFormOrderDealInfoDto updateContentPlatFormOrderDealInfoDto = new UpdateContentPlatFormOrderDealInfoDto();
+                            updateContentPlatFormOrderDealInfoDto.Id = dealCount.Id;
+                            await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, false);
+                            var depositInfo = orderDealInfoList.Where(x => x.DealDate > input.DealDate && x.DealDate < dealCount.DealDate && x.ConsumptionType == (int)ConsumptionType.Deposit);
+                            foreach (var item in depositInfo)
+                            {
+                                await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(item.Id, false);
+                            }
+                            var dealinfo = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
+                            if (dealinfo.Where(x => x.IsDeal == true && x.ConsumptionType != (int)ConsumptionType.Deposit).Count() > 1)
+                            {
+                                orderIsOldCustomer = true;
+                            }
+                            else
+                            {
+                                orderIsOldCustomer = false;
+                            }
+                        }
+                        //修改后未成交且为定金消费,修改最近一次消费为新客消费区间内的定金消费为新客消费,如果修改后非定金成交数据大于1则主订单为老客否则为新客
+                        if (input.ConsumptionType == (int)ConsumptionType.Deposit && input.IsFinish == false)
+                        {
+                            UpdateContentPlatFormOrderDealInfoDto updateContentPlatFormOrderDealInfoDto = new UpdateContentPlatFormOrderDealInfoDto();
+                            updateContentPlatFormOrderDealInfoDto.Id = dealCount.Id;
+                            await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, false);
+                            var depositInfo = orderDealInfoList.Where(x => x.DealDate >= input.DealDate && x.DealDate < dealCount.DealDate);
+                            foreach (var item in depositInfo)
+                            {
+                                await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(item.Id, false);
+                            }
+                            var dealinfo = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
+                            if (dealinfo.Where(x => x.IsDeal == true && x.ConsumptionType != (int)ConsumptionType.Deposit).Count() > 1)
+                            {
+                                orderIsOldCustomer = true;
+                            }
+                            else
+                            {
+                                orderIsOldCustomer = false;
+                            }
+                        }
+                        //UpdateContentPlatFormOrderDealInfoDto updateContentPlatFormOrderDealInfoDto = new UpdateContentPlatFormOrderDealInfoDto();
+                        //updateContentPlatFormOrderDealInfoDto.Id = dealCount.Id;
+                        //await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, true);
                     }
                     else
                     {
                         isoldCustomer = true;
+                        orderIsOldCustomer = true;
                     }
                 }
                 if (order == null)
@@ -2077,7 +2154,6 @@ namespace Fx.Amiya.Service
                     order.UnDealPictureUrl = "";
                     order.DealDate = input.DealDate;
                     order.DealPerformanceType = input.DealPerformanceType;
-
                 }
                 else
                 {
@@ -2090,7 +2166,7 @@ namespace Fx.Amiya.Service
                     order.DealPictureUrl = "";
                 }
                 order.LastDealHospitalId = input.LastDealHospitalId;
-                order.IsOldCustomer = isoldCustomer;
+                order.IsOldCustomer = orderIsOldCustomer;
                 order.IsAcompanying = input.IsAcompanying;
                 order.ToHospitalType = input.ToHospitalType;
                 order.OtherContentPlatFormOrderId = input.OtherContentPlatFormOrderId;
@@ -2122,6 +2198,7 @@ namespace Fx.Amiya.Service
                     orderDealDto.CommissionRatio = input.CommissionRatio;
                     orderDealDto.Remark = input.LastProjectStage;
                     orderDealDto.DealPerformanceType = input.DealPerformanceType;
+                    orderDealDto.ConsumptionType = input.ConsumptionType;
                 }
                 else
                 {
@@ -2167,23 +2244,98 @@ namespace Fx.Amiya.Service
             {
                 var order = await _dalContentPlatformOrder.GetAll().Include(x => x.LiveAnchor).Include(x => x.Contentplatform).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 var isoldCustomer = false;
+                var orderIsOldCustomer = false;
                 if (order.CheckState == (int)CheckType.CheckedSuccess)
                 {
                     throw new Exception("该订单已审核，无法编辑！");
                 }
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
-                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true & x.Id != input.DealId).FirstOrDefault();
+                //最近一次非定金成交且id和当前要修改的id不同
+                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true & x.Id != input.DealId&&x.ConsumptionType!=(int)ConsumptionType.Deposit).FirstOrDefault();
+                
+                //如果有
                 if (dealCount != null)
                 {
+                    
                     if (dealCount.DealDate > input.DealDate)
                     {
-                        UpdateContentPlatFormOrderDealInfoDto updateContentPlatFormOrderDealInfoDto = new UpdateContentPlatFormOrderDealInfoDto();
-                        updateContentPlatFormOrderDealInfoDto.Id = dealCount.Id;
-                        await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, true);
+                        //修改后成交且为成交消费,更新最近一次成交消费和区间内的定金消费为老客消费,主订单修改为老客订单
+                        if (input.ConsumptionType == (int)ConsumptionType.Deal && input.IsFinish == true) {
+                            UpdateContentPlatFormOrderDealInfoDto updateContentPlatFormOrderDealInfoDto = new UpdateContentPlatFormOrderDealInfoDto();
+                            updateContentPlatFormOrderDealInfoDto.Id = dealCount.Id;
+                            await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, true);
+                            var depositInfo = orderDealInfoList.Where(x => x.DealDate >= input.DealDate && x.DealDate < dealCount.DealDate && x.ConsumptionType == (int)ConsumptionType.Deposit);
+                            foreach (var item in depositInfo)
+                            {
+                                await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(item.Id, true);
+                            }
+                            orderIsOldCustomer = true;
+                        }
+                        //修改后未成交且为成交消费,修改最近一次消费为新客消费区间内的定金消费为新客消费,如果修改后非定金成交数据大于1则主订单为老客否则为新客
+                        if (input.ConsumptionType == (int)ConsumptionType.Deal && input.IsFinish == false) {
+                            await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, false);
+                            var depositInfo = orderDealInfoList.Where(x => x.DealDate >= input.DealDate && x.DealDate < dealCount.DealDate && x.ConsumptionType == (int)ConsumptionType.Deposit);
+                            foreach (var item in depositInfo)
+                            {
+                                await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(item.Id, false);
+                            }
+                            var dealinfo = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
+                           
+                            if (dealinfo.Where(x => x.IsDeal == true && x.ConsumptionType != (int)ConsumptionType.Deposit).Count() > 1)
+                            {
+                                orderIsOldCustomer = true;
+                            }
+                            else {
+                                orderIsOldCustomer = false;
+                            }
+                        }
+                        //修改后成交且为定金消费,修改最近一次消费为新客消费区间内的定金消费为新客消费,如果修改后非定金成交数据大于1则主订单为老客否则为新客
+                        if (input.ConsumptionType == (int)ConsumptionType.Deposit && input.IsFinish == true)
+                        {
+                            UpdateContentPlatFormOrderDealInfoDto updateContentPlatFormOrderDealInfoDto = new UpdateContentPlatFormOrderDealInfoDto();
+                            updateContentPlatFormOrderDealInfoDto.Id = dealCount.Id;
+                            await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, false);
+                            var depositInfo = orderDealInfoList.Where(x => x.DealDate > input.DealDate && x.DealDate < dealCount.DealDate&&x.ConsumptionType==(int)ConsumptionType.Deposit);
+                            foreach (var item in depositInfo)
+                            {
+                                await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(item.Id, false);
+                            }
+                            var dealinfo = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
+                            if (dealinfo.Where(x => x.IsDeal == true && x.ConsumptionType != (int)ConsumptionType.Deposit).Count() > 1)
+                            {
+                                orderIsOldCustomer = true;
+                            }
+                            else
+                            {
+                                orderIsOldCustomer = false;
+                            }
+                        }
+                        //修改后未成交且为定金消费,修改最近一次消费为新客消费区间内的定金消费为新客消费,如果修改后非定金成交数据大于1则主订单为老客否则为新客
+                        if (input.ConsumptionType == (int)ConsumptionType.Deposit && input.IsFinish == false)
+                        {
+                            UpdateContentPlatFormOrderDealInfoDto updateContentPlatFormOrderDealInfoDto = new UpdateContentPlatFormOrderDealInfoDto();
+                            updateContentPlatFormOrderDealInfoDto.Id = dealCount.Id;
+                            await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, false);
+                            var depositInfo = orderDealInfoList.Where(x => x.DealDate >= input.DealDate && x.DealDate < dealCount.DealDate);
+                            foreach (var item in depositInfo)
+                            {
+                                await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(item.Id, false);
+                            }
+                            var dealinfo = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
+                            if (dealinfo.Where(x => x.IsDeal == true && x.ConsumptionType != (int)ConsumptionType.Deposit).Count() > 1)
+                            {
+                                orderIsOldCustomer = true;
+                            }
+                            else
+                            {
+                                orderIsOldCustomer = false;
+                            }
+                        }
 
                     }
                     else
                     {
+                        orderIsOldCustomer = true;
                         isoldCustomer = true;
                     }
                 }
@@ -2211,6 +2363,7 @@ namespace Fx.Amiya.Service
                     order.UnDealReason = "";
                     order.UnDealPictureUrl = "";
                     order.DealDate = input.DealDate;
+                    
 
                 }
                 else
@@ -2228,7 +2381,7 @@ namespace Fx.Amiya.Service
                     order.CheckState = (int)CheckType.Checking;
                 }
                 order.LastDealHospitalId = input.LastDealHospitalId;
-                order.IsOldCustomer = isoldCustomer;
+                order.IsOldCustomer = orderIsOldCustomer;
                 order.IsAcompanying = input.IsAcompanying;
                 order.OtherContentPlatFormOrderId = input.OtherContentPlatFormOrderId;
                 order.UpdateDate = DateTime.Now;
@@ -2255,6 +2408,7 @@ namespace Fx.Amiya.Service
                     orderDealDto.Price = input.DealAmount.Value;
                     orderDealDto.Remark = input.LastProjectStage;
                     orderDealDto.DealDate = input.DealDate;
+                    orderDealDto.ConsumptionType = input.ConsumptionType;
                 }
                 else
                 {

@@ -228,5 +228,13 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 开票公司
         /// </summary>
         public string CreatBillCompany { get; set; }
+        /// <summary>
+        /// 消费类型
+        /// </summary>
+        public int? ConsumptionType { get; set; }
+        /// <summary>
+        /// 消费类型文本
+        /// </summary>
+        public string ConsumptionTypeText { get; set; }
     }
 }

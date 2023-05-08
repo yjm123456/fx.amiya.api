@@ -616,6 +616,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             updateDto.DealPerformanceType = updateVo.DealPerformanceType;
             updateDto.EmpId = Convert.ToInt32(employee.Id);
             updateDto.InvitationDocuments = updateVo.InvitationDocuments;
+            updateDto.ConsumptionType = updateVo.ConsumptionType;
             await _orderService.FinishContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
         }
@@ -648,6 +649,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             updateDto.IsAcompanying = updateVo.IsAcompanying;
             updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
             updateDto.InvitationDocuments = updateVo.InvitationDocuments;
+            updateDto.ConsumptionType = updateVo.ConsumptionType;
             await _orderService.UpdateFinishContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
         }

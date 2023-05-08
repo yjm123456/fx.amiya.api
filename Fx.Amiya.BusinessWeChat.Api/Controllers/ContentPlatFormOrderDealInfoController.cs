@@ -65,16 +65,17 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <param name="createBillCompanyId">开票公司</param>
         /// <param name="isCreateBill">是否开票</param>
         /// <param name="dataFrom">数据获取方：true：财务；false：其他</param>
+        /// <param name="consumptionType">消费类型</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("contentPlatFormOrderDealInfo")]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderDealInfoVo>>> GetDealInfoAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, string createBillCompanyId, bool? isCreateBill, int pageNum, int pageSize, bool? dataFrom)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderDealInfoVo>>> GetDealInfoAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, string createBillCompanyId, bool? isCreateBill, int pageNum, int pageSize, bool? dataFrom,int? consumptionType)
         {
 
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderListWithPageAsync(startDate, endDate, sendStartDate, sendEndDate, consultationType, minAddOrderPrice, maxAddOrderPrice, isToHospital, tohospitalStartDate, toHospitalEndDate, dealStartDate, dealEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, createBillCompanyId, isCreateBill, pageNum, pageSize,dataFrom);
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderListWithPageAsync(startDate, endDate, sendStartDate, sendEndDate, consultationType, minAddOrderPrice, maxAddOrderPrice, isToHospital, tohospitalStartDate, toHospitalEndDate, dealStartDate, dealEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, createBillCompanyId, isCreateBill, pageNum, pageSize,dataFrom,consumptionType);
 
             var contentPlatformOrders = from d in result.List
                                         select new ContentPlatFormOrderDealInfoVo
@@ -123,8 +124,9 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                                             ReconciliationDocumentsId = d.ReconciliationDocumentsId,
                                             IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
                                             IsCreateBill = d.IsCreateBill,
-                                            CreatBillCompany = d.BelongCompany
-
+                                            CreatBillCompany = d.BelongCompany,
+                                            ConsumptionType=d.ConsumptionType,
+                                            ConsumptionTypeText=d.ConsumptionTypeText
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;
@@ -192,6 +194,22 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                                  Name = d.Name
                              };
             return ResultData<List<BaseKeyAndValueVo>>.Success().AddData("contentPlateFormOrderDealPerformanceType", orderTypes.ToList());
+        }
+        /// <summary>
+        /// 消费类型列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("typeList")]
+        public async Task<ResultData<List<BaseKeyAndValueVo<int>>>> GetStatusListAsync()
+        {
+            var nameList = await _contentPlatFormOrderDealInfoService.GetConsumptionTypeAsync();
+            var result = nameList.Select(e => new BaseKeyAndValueVo<int>
+            {
+                Id = e.Key,
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseKeyAndValueVo<int>>>.Success().AddData("typeList", result);
+
         }
         #endregion
     }

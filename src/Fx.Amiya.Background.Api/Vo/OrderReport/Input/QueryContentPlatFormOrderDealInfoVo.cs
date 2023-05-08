@@ -98,5 +98,9 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport.Input
         /// 开票公司
         /// </summary>
         public string BelongCompanyId { get; set; }
+        /// <summary>
+        /// 消费类型
+        /// </summary>
+        public int? ConsumptionType { get; set; }
     }
 }

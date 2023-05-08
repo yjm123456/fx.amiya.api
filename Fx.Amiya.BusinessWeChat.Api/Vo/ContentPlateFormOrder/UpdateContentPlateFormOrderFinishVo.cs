@@ -93,5 +93,9 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// 邀约凭证图片
         /// </summary>
         public List<string> InvitationDocuments { get; set; }
+        /// <summary>
+        /// 消费类型
+        /// </summary>
+        public int? ConsumptionType { get; set; }
     }
 }

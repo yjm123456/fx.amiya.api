@@ -134,6 +134,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 开票公司id
         /// </summary>
         public string BelongCompany { get; set; }
+        /// <summary>
+        /// 消费类型
+        /// </summary>
+        public int? ConsumptionType { get; set; }
 
         public ContentPlatformOrder ContentPlatFormOrder { get; set; }
     }

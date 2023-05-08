@@ -259,5 +259,13 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 是否是重单可深度订单
         /// </summary>
         public bool IsRepeatProfundityOrder { get; set; }
+        /// <summary>
+        /// 消费类型
+        /// </summary>
+        public int? ConsumptionType { get; set; }
+        /// <summary>
+        /// 消费类型文本
+        /// </summary>
+        public string ConsumptionTypeText { get; set; }
     }
 }

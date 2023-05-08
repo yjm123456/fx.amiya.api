@@ -141,5 +141,13 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 对账单id
         /// </summary>
         public string ReconciliationDocumentsId { get; set; }
+        /// <summary>
+        /// 消费类型
+        /// </summary>
+        public int? ConsumptionType { get; set; }
+        /// <summary>
+        /// 消费类型文本
+        /// </summary>
+        public string ConsumptionTypeText { get; set; }
     }
 }

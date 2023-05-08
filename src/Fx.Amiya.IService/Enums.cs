@@ -751,23 +751,23 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 小程序类型
     /// </summary>
-    public enum MiniprogramType { 
+    public enum MiniprogramType {
         /// <summary>
         /// 上合未来
         /// </summary>
-        ShangHeWeiLai=0,
+        ShangHeWeiLai = 0,
         /// <summary>
         /// 啊美雅美容
         /// </summary>
-        AmeiyaMR=1,
+        AmeiyaMR = 1,
         /// <summary>
         /// 刀刀气质美学
         /// </summary>
-        DaoDaoQZMX=2,
+        DaoDaoQZMX = 2,
         /// <summary>
         /// 吉娜气质美学
         /// </summary>
-        JiNaQZMX=3
+        JiNaQZMX = 3
 
     }
 
@@ -778,21 +778,21 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 美妆
         /// </summary>
-        Cosmetics=0,
+        Cosmetics = 0,
         /// <summary>
         /// 护肤
         /// </summary>
-        SkinCare=1,
+        SkinCare = 1,
         /// <summary>
         /// 饰品
         /// </summary>
-        Jewelry=2,
+        Jewelry = 2,
         /// <summary>
         /// 生活
         /// </summary>
         Life
     }
-    
+
 
     /// <summary>
     /// 追踪回访提报状态
@@ -894,6 +894,20 @@ namespace Fx.Amiya.IService
         ///// 未知
         ///// </summary>
         //Unknow = 3
+    }
+    /// <summary>
+    /// 成交情况消费类型
+    /// </summary>
+    public enum ConsumptionType{
+        /// <summary>
+        /// 定金消费
+        /// </summary>
+        Deposit=0,
+        /// <summary>
+        /// 成交消费
+        /// </summary>
+        Deal=1
+
     }
 
     public enum ShoppingCartConsultationType

@@ -194,7 +194,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, string createBillCompanyId, bool? isCreateBill, int pageNum, int pageSize, bool? dataFrom)
+        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, string createBillCompanyId, bool? isCreateBill, int pageNum, int pageSize, bool? dataFrom,int? consumptionType)
         {
             var config = await wxAppConfigService.GetCallCenterConfig();
             try
@@ -221,6 +221,11 @@ namespace Fx.Amiya.Service
                     DateTime startrq = ((DateTime)startDate).Date;
                     dealInfo = from d in dealInfo
                                where (d.CreateDate >= startrq)
+                               select d;
+                }
+                if (consumptionType!=null) {
+                    dealInfo = from d in dealInfo
+                               where (d.ConsumptionType == consumptionType)
                                select d;
                 }
                 if (endDate != null)
@@ -363,7 +368,9 @@ namespace Fx.Amiya.Service
                                                        ReconciliationDocumentsId = d.ReconciliationDocumentsId,
                                                        IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
                                                        IsCreateBill = d.IsCreateBill,
-                                                       BelongCompany = d.BelongCompany
+                                                       BelongCompany = d.BelongCompany,
+                                                       ConsumptionType = d.ConsumptionType,
+                                                       ConsumptionTypeText = ServiceClass.GetConsumptionTypeText(d.ConsumptionType)
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -448,7 +455,8 @@ namespace Fx.Amiya.Service
                                                        CreateBy = d.CreateBy,
                                                        ReturnBackPrice = d.ReturnBackPrice,
                                                        LiveAnchorName = d.ContentPlatFormOrder.LiveAnchor.Name,
-                                                       IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
+                                                       IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
+                                                       ConsumptionTypeText = ServiceClass.GetConsumptionTypeText(d.ConsumptionType)
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -484,7 +492,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord, int employeeId, bool hidePhone)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord, int employeeId, bool hidePhone,int? consumptionType)
         {
             try
             {
@@ -557,7 +565,11 @@ namespace Fx.Amiya.Service
                                && (string.IsNullOrEmpty(belongCompanyId) || d.BelongCompany == belongCompanyId)
                                select d;
                 }
-
+                if (consumptionType.HasValue) {
+                    dealInfo = from d in dealInfo
+                               where (d.ConsumptionType==consumptionType)
+                               select d;
+                }
                 if (CheckState == (int)CheckType.CheckedSuccess)
                 {
                     if (!checkStartDate.HasValue && !checkEndDate.HasValue)
@@ -632,7 +644,9 @@ namespace Fx.Amiya.Service
                                                        ReturnBackPrice = d.ReturnBackPrice,
                                                        CreateBy = d.ContentPlatFormOrder.BelongEmpId.HasValue ? d.ContentPlatFormOrder.BelongEmpId.Value : -1,
                                                        ReconciliationDocumentsId = d.ReconciliationDocumentsId,
-                                                       IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
+                                                       IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
+                                                       ConsumptionType = d.ConsumptionType,
+                                                       ConsumptionTypeText = ServiceClass.GetConsumptionTypeText(d.ConsumptionType)
                                                    };
 
                 List<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new List<ContentPlatFormOrderDealInfoDto>();
@@ -724,7 +738,9 @@ namespace Fx.Amiya.Service
                                                        ReturnBackPrice = d.ReturnBackPrice,
                                                        CreateBy = d.CreateBy,
                                                        ReconciliationDocumentsId = d.ReconciliationDocumentsId,
-                                                       IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
+                                                       IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
+                                                       ConsumptionType = d.ConsumptionType,
+                                                       ConsumptionTypeText = ServiceClass.GetConsumptionTypeText(d.ConsumptionType)
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -782,6 +798,9 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.SettlePrice = 0.00M;
                 ContentPlatFOrmOrderDealInfo.DealPerformanceType = addDto.DealPerformanceType;
                 ContentPlatFOrmOrderDealInfo.IsRepeatProfundityOrder = addDto.IsRepeatProfundityOrder;
+                if (ContentPlatFOrmOrderDealInfo.IsDeal) {
+                    ContentPlatFOrmOrderDealInfo.ConsumptionType = addDto.ConsumptionType;
+                }
                 await dalContentPlatFormOrderDealInfo.AddAsync(ContentPlatFOrmOrderDealInfo, true);
 
                 //添加邀约凭证图片
@@ -844,6 +863,8 @@ namespace Fx.Amiya.Service
                 contentPlatFOrmOrderDealInfoDto.ReturnBackPrice = ContentPlatFOrmOrderDealInfo.ReturnBackPrice;
                 contentPlatFOrmOrderDealInfoDto.CreateBy = ContentPlatFOrmOrderDealInfo.CreateBy;
                 contentPlatFOrmOrderDealInfoDto.ReconciliationDocumentsId = ContentPlatFOrmOrderDealInfo.ReconciliationDocumentsId;
+                contentPlatFOrmOrderDealInfoDto.ConsumptionType = ContentPlatFOrmOrderDealInfo.ConsumptionType;
+                contentPlatFOrmOrderDealInfoDto.ConsultationTypeText = ServiceClass.GetConsumptionTypeText(ContentPlatFOrmOrderDealInfo.ConsumptionType);
                 var InvitationDocuments = await _contentPlatFormCustomerPictureService.GetListWithPageAsync(null, ContentPlatFOrmOrderDealInfo.Id, "邀约凭证", 1, 5);
                 contentPlatFOrmOrderDealInfoDto.InvitationDocuments = new List<string>();
                 foreach (var x in InvitationDocuments.List)
@@ -858,7 +879,23 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
-
+        /// <summary>
+        /// 获取消费类型名称列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<BaseKeyValueDto<int>>> GetConsumptionTypeAsync()
+        {
+            var showDirectionTypes = Enum.GetValues(typeof(ConsumptionType));
+            List<BaseKeyValueDto<int>> requestTypeList = new List<BaseKeyValueDto<int>>();
+            foreach (var item in showDirectionTypes)
+            {
+                BaseKeyValueDto<int> requestType = new BaseKeyValueDto<int>();
+                requestType.Key = Convert.ToInt32(item);
+                requestType.Value = ServiceClass.GetConsumptionTypeText(Convert.ToInt32(item));
+                requestTypeList.Add(requestType);
+            }
+            return requestTypeList;
+        }
         public async Task UpdateAsync(UpdateContentPlatFormOrderDealInfoDto updateDto)
         {
             try
@@ -884,6 +921,7 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.IsOldCustomer = updateDto.IsOldCustomer;
                 ContentPlatFOrmOrderDealInfo.DealPerformanceType = updateDto.DealPerformanceType;
                 ContentPlatFOrmOrderDealInfo.CommissionRatio = updateDto.CommissionRatio;
+                ContentPlatFOrmOrderDealInfo.ConsumptionType = updateDto.ConsumptionType;
                 await dalContentPlatFormOrderDealInfo.UpdateAsync(ContentPlatFOrmOrderDealInfo, true);
                 await _contentPlatFormCustomerPictureService.DeleteByContentPlatFormOrderDealIdAsync(updateDto.Id);
                 //添加邀约凭证图片
@@ -1078,6 +1116,7 @@ namespace Fx.Amiya.Service
                     contentPlatFOrmOrderDealInfoDto.DealPerformanceTypeText = ServiceClass.GetContentPlateFormOrderDealPerformanceType(ContentPlatFOrmOrderDealInfo.DealPerformanceType);
                     contentPlatFOrmOrderDealInfoDto.InformationPrice = ContentPlatFOrmOrderDealInfo.InformationPrice;
                     contentPlatFOrmOrderDealInfoDto.SystemUpdatePrice = ContentPlatFOrmOrderDealInfo.SystemUpdatePrice;
+                    contentPlatFOrmOrderDealInfoDto.ConsumptionType = ContentPlatFOrmOrderDealInfo.ConsumptionType;
                     contentPlatFOrmOrderDealInfoDto.ReconciliationDocumentsId = ContentPlatFOrmOrderDealInfo.ReconciliationDocumentsId;
                     returnList.Add(contentPlatFOrmOrderDealInfoDto);
                 }
@@ -1990,6 +2029,8 @@ namespace Fx.Amiya.Service
             }
             return orderTypeList;
         }
+
+        
 
         #endregion
     }

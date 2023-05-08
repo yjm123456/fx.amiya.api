@@ -638,7 +638,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(query.StartDate, query.EndDate, query.SendStartDate, query.SendEndDate, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.ConsultationType, query.IsToHospital, query.TohospitalStartDate, query.ToHospitalEndDate, query.ToHospitalType, query.IsDeal, query.LastDealHospitalId, query.IsAccompanying, query.IsOldCustomer, query.CheckState, query.CheckStartDate, query.CheckEndDate, query.IsCreateBill, query.IsReturnBakcPrice, query.ReturnBackPriceStartDate, query.ReturnBackPriceEndDate, query.CustomerServiceId, query.BelongCompanyId, query.KeyWord, employeeId, true);
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(query.StartDate, query.EndDate, query.SendStartDate, query.SendEndDate, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.ConsultationType, query.IsToHospital, query.TohospitalStartDate, query.ToHospitalEndDate, query.ToHospitalType, query.IsDeal, query.LastDealHospitalId, query.IsAccompanying, query.IsOldCustomer, query.CheckState, query.CheckStartDate, query.CheckEndDate, query.IsCreateBill, query.IsReturnBakcPrice, query.ReturnBackPriceStartDate, query.ReturnBackPriceEndDate, query.CustomerServiceId, query.BelongCompanyId, query.KeyWord, employeeId, true,query.ConsumptionType);
 
             var contentPlatformOrders = from d in result
                                         select new ContentPlatFormOrderDealInfoReportVo
@@ -682,6 +682,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             ReturnBackDate = d.ReturnBackDate,
                                             ReturnBackPrice = d.ReturnBackPrice,
                                             CreateByEmpName = d.CreateByEmpName,
+                                            ConsumptionTypeText=d.ConsumptionTypeText,
                                             IsRepeatProfundityOrder = d.IsRepeatProfundityOrder == true ? "是" : "否"
                                         };
             List<ContentPlatFormOrderDealInfoReportVo> pageInfo = new List<ContentPlatFormOrderDealInfoReportVo>();
@@ -709,7 +710,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 }
                 int employeeId = Convert.ToInt32(employee.Id);
                 operationLog.OperationBy = employeeId;
-                var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(query.StartDate, query.EndDate, query.SendStartDate, query.SendEndDate, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.ConsultationType, query.IsToHospital, query.TohospitalStartDate, query.ToHospitalEndDate, query.ToHospitalType, query.IsDeal, query.LastDealHospitalId, query.IsAccompanying, query.IsOldCustomer, query.CheckState, query.CheckStartDate, query.CheckEndDate, query.IsCreateBill, query.IsReturnBakcPrice, query.ReturnBackPriceStartDate, query.ReturnBackPriceEndDate, query.CustomerServiceId, query.BelongCompanyId, query.KeyWord, employeeId, isHidePhone);
+                var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(query.StartDate, query.EndDate, query.SendStartDate, query.SendEndDate, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.ConsultationType, query.IsToHospital, query.TohospitalStartDate, query.ToHospitalEndDate, query.ToHospitalType, query.IsDeal, query.LastDealHospitalId, query.IsAccompanying, query.IsOldCustomer, query.CheckState, query.CheckStartDate, query.CheckEndDate, query.IsCreateBill, query.IsReturnBakcPrice, query.ReturnBackPriceStartDate, query.ReturnBackPriceEndDate, query.CustomerServiceId, query.BelongCompanyId, query.KeyWord, employeeId, isHidePhone,query.ConsumptionType);
 
                 var contentPlatformOrders = from d in result
                                             select new ContentPlatFormOrderDealInfoReportVo
@@ -738,6 +739,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 Remark = d.Remark,
                                                 Price = d.Price,
                                                 DealDate = d.DealDate,
+                                                ConsumptionTypeText=d.ConsumptionTypeText,
                                                 OtherOrderId = d.OtherAppOrderId,
                                                 BelongCompanyName = d.BelongCompanyName,
                                                 IsCreateBill = d.IsCreateBill == true ? "是" : "否",

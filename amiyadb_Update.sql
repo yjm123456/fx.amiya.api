@@ -182,5 +182,7 @@ ADD CONSTRAINT `fk_after_living_monthly_target`
 ALTER TABLE `tbl_customer_appointment_schedule`
 	ADD COLUMN `assign_liveanchor_id` VARCHAR(50) NULL DEFAULT NULL AFTER `consultation`;
 
-
+----成交情况添加消费类型
+ALTER TABLE `tbl_content_platform_order_deal_info`
+	ADD COLUMN `consumption_type` INT NULL DEFAULT NULL AFTER `belong_company`;
 -----------------------------------------王健  2023/05/04 END ------------------------------------------------

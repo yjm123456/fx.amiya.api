@@ -203,7 +203,9 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                                             IsAcompanying = d.IsAcompanying,
                                             IsOldCustomer = d.IsOldCustomer,
                                             CommissionRatio = d.CommissionRatio,
-                                            IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
+                                            IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
+                                            ConsumptionType=d.ConsumptionType,
+                                            ConsumptionTypeText=d.ConsumptionTypeText
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;
