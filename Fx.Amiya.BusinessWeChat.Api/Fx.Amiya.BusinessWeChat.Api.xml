@@ -544,7 +544,7 @@
             订单成交情况数据接口
             </summary>
         </member>
-        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormOrderDealInfoController.GetDealInfoAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Boolean},System.Int32,System.Int32,System.Nullable{System.Boolean})">
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormOrderDealInfoController.GetDealInfoAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Boolean},System.Int32,System.Int32,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             获取成交情况列表
             </summary>
@@ -574,6 +574,7 @@
             <param name="createBillCompanyId">开票公司</param>
             <param name="isCreateBill">是否开票</param>
             <param name="dataFrom">数据获取方：true：财务；false：其他</param>
+            <param name="consumptionType">消费类型</param>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
             <returns></returns>
@@ -594,6 +595,12 @@
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormOrderDealInfoController.GetContentPlateFormOrderDealPerformanceTypeList">
             <summary>
             获取内容平台成交业绩类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormOrderDealInfoController.GetStatusListAsync">
+            <summary>
+            消费类型列表
             </summary>
             <returns></returns>
         </member>
@@ -981,6 +988,16 @@
             名称
             </summary>
         </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Base.BaseKeyAndValueVo`1.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Base.BaseKeyAndValueVo`1.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService.BindCustomerInfoVo.CreateDate">
             <summary>
             建档时间
@@ -1334,6 +1351,11 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.OtherContentPlatFormOrderId">
             <summary>
             三方订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.ConsumptionType">
+            <summary>
+            消费类型
             </summary>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo.InvitationDocuments">
@@ -2196,6 +2218,16 @@
             开票公司
             </summary>
         </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.ConsumptionType">
+            <summary>
+            消费类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealInfoVo.ConsumptionTypeText">
+            <summary>
+            消费类型文本
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormOrderDealSimpleInfoVo.Id">
             <summary>
             编号
@@ -2594,6 +2626,11 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.InvitationDocuments">
             <summary>
             邀约凭证图片
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.UpdateContentPlateFormOrderFinishVo.ConsumptionType">
+            <summary>
+            消费类型
             </summary>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.AddContentPlatFormOrderAddWorkVo.AcceptBy">
