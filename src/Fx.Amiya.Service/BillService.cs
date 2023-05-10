@@ -653,18 +653,21 @@ namespace Fx.Amiya.Service
             {
                 RecommandDocumentSettleDto recommandDocumentSettleDto = new RecommandDocumentSettleDto();
                 recommandDocumentSettleDto.RecommandDocumentId = x.RecommandDocumentId;
-                var reconciliationDocument = await reconciliationDocumentsService.GetByIdAsync(x.RecommandDocumentId);
-                if (!string.IsNullOrEmpty(reconciliationDocument.BillId))
+                if (!string.IsNullOrEmpty(x.RecommandDocumentId))
                 {
-                    var bill = await this.GetByIdAsync(reconciliationDocument.BillId);
-                    recommandDocumentSettleDto.IsCerateBill = true;
-                    recommandDocumentSettleDto.BelongCompany = bill.CollectionCompanyName;
-                }
-                if (!string.IsNullOrEmpty(reconciliationDocument.BillId2))
-                {
-                    var bill = await this.GetByIdAsync(reconciliationDocument.BillId2);
-                    recommandDocumentSettleDto.IsCerateBill = true;
-                    recommandDocumentSettleDto.BelongCompany2 = bill.CollectionCompanyName;
+                    var reconciliationDocument = await reconciliationDocumentsService.GetByIdAsync(x.RecommandDocumentId);
+                    if (!string.IsNullOrEmpty(reconciliationDocument.BillId))
+                    {
+                        var bill = await this.GetByIdAsync(reconciliationDocument.BillId);
+                        recommandDocumentSettleDto.IsCerateBill = true;
+                        recommandDocumentSettleDto.BelongCompany = bill.CollectionCompanyName;
+                    }
+                    if (!string.IsNullOrEmpty(reconciliationDocument.BillId2))
+                    {
+                        var bill = await this.GetByIdAsync(reconciliationDocument.BillId2);
+                        recommandDocumentSettleDto.IsCerateBill = true;
+                        recommandDocumentSettleDto.BelongCompany2 = bill.CollectionCompanyName;
+                    }
                 }
 
                 recommandDocumentSettleDto.CreateDate = x.CreateDate;
@@ -701,6 +704,14 @@ namespace Fx.Amiya.Service
                     recommandDocumentSettleDto.AccountTypeText = x.AccountTypeText;
                     recommandDocumentSettleDto.InformationPrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.ReturnBackPricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
                     recommandDocumentSettleDto.SystemUpdatePrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.SystemUpdatePricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
+                }
+                else
+                {
+                    //排除连天美与维多利亚医院
+                    if (chooseHospitalId == 16 || chooseHospitalId == 37)
+                    {
+                        continue;
+                    }
                 }
                 if (x.BelongEmpId.HasValue)
                 {
