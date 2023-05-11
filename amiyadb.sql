@@ -124,3 +124,21 @@ CREATE TABLE `tbl_miniprogram` (
 
 ----------------------------------------------王健 2023/04/20 END--------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+-----------------------------------------------余建明 2023/04/13 BEGIN--------------------------------------------
+CREATE TABLE `amiyadb`.`tbl_content_platform_order_deal_details` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `goods_name` VARCHAR(300) NULL,
+  `goods_spec` VARCHAR(45) NULL,
+  `quantity` INT NOT NULL DEFAULT 0,
+  `price` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  `content_platform_order_deal_id` VARCHAR(50) NULL,
+  `content_platform_order_id` VARCHAR(50) NULL,
+  `create_by` INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`));
+-----------------------------------------------余建明 2023/04/13 END--------------------------------------------

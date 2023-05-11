@@ -57,6 +57,10 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.Performance
         /// 总业绩
         /// </summary>
         public decimal? TotalPerformance { get; set; }
+        /// <summary>
+        /// 辅助订单业绩
+        /// </summary>
+        public decimal? SupportPerformance { get; set; }
 
         /// <summary>
         /// 新客业绩

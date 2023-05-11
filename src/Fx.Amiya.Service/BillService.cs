@@ -743,19 +743,19 @@ namespace Fx.Amiya.Service
                         recommandDocumentSettleDto.DealDate = dealInfo.DealDate;
                         var contentPlatFormOrderInfo = await contentPlateFormOrderService.GetByOrderIdAsync(x.OrderId);
                         recommandDocumentSettleDto.GoodsName = contentPlatFormOrderInfo.GoodsName;
-                        recommandDocumentSettleDto.Phone = contentPlatFormOrderInfo.Phone;
+                        recommandDocumentSettleDto.Phone = isHidePhone == true? ServiceClass.GetIncompletePhone(contentPlatFormOrderInfo.Phone):contentPlatFormOrderInfo.Phone;
                         break;
                     case (int)OrderFrom.BuyAgainOrder:
                         var customerHospitalConsume = await customerHospitalConsumeService.GetByConsumeIdAsync(x.DealInfoId);
                         recommandDocumentSettleDto.DealDate = customerHospitalConsume.BuyAgainTime;
                         recommandDocumentSettleDto.GoodsName = customerHospitalConsume.ItemName;
-                        recommandDocumentSettleDto.Phone = customerHospitalConsume.Phone;
+                        recommandDocumentSettleDto.Phone = isHidePhone == true ? ServiceClass.GetIncompletePhone(customerHospitalConsume.Phone) : customerHospitalConsume.Phone;
                         break;
                     case (int)OrderFrom.ThirdPartyOrder:
                         var tmallOrder = await orderService.GetByIdInCRMAsync(x.OrderId);
                         recommandDocumentSettleDto.DealDate = tmallOrder.WriteOffDate;
                         recommandDocumentSettleDto.GoodsName = tmallOrder.GoodsName;
-                        recommandDocumentSettleDto.Phone = tmallOrder.Phone;
+                        recommandDocumentSettleDto.Phone = isHidePhone == true ? ServiceClass.GetIncompletePhone(tmallOrder.Phone) : tmallOrder.Phone;
                         break;
                 }
                 recommandDocumentSettleDtos.Add(recommandDocumentSettleDto);

@@ -553,7 +553,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 UpdateHospitalInfoDto updateDto = new UpdateHospitalInfoDto();
                 updateDto.Id = updateVo.Id;
                 updateDto.Name = updateVo.Name;
-                updateDto.ContractUrl = updateVo.ContractUrl;
                 updateDto.DueTime = updateVo.DueTime;
                 updateDto.ThumbPicUrl = updateVo.ThumbPicUrl;
                 updateDto.Address = updateVo.Address;
@@ -577,6 +576,28 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.SimpleName = updateVo.SimpleName;
                 updateDto.Sort = updateVo.Sort;
                 await hospitalInfoService.UpdateAsync(updateDto, employeeId);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 管理端修改医院合同信息
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut("UpdateContractUrl")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> UpdateContractUrlAsync(UpdateHospitalContractUrlVo updateVo)
+        {
+            try
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                await hospitalInfoService.UpdateContractUrlAsync(updateVo.ContractUrl,updateVo.HospitalId, employeeId);
                 return ResultData.Success();
             }
             catch (Exception ex)

@@ -1744,6 +1744,7 @@ namespace Fx.Amiya.Service
                 NewCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.NewCustomerPrice),
                 OldCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.OldCustomerPrice),
                 TotalPerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.TotalServicePrice),
+                SupportPerformance = DecimalExtension.ChangePriceToTenThousand(selectResult.SupportPrice),
                 VisitNumRatio = selectResult.VisitNumRatio,
                 ThisMonthSendThisMonthVisitNumRatio = selectResult.ThisMonthSendThisMonthVisitNumRatio,
 

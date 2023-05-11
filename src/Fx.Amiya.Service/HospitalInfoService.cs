@@ -663,7 +663,6 @@ namespace Fx.Amiya.Service
                 hospital.UpdateBy = employeeId;
                 hospital.UpdateDate = DateTime.Now;
                 hospital.DueTime = updateDto.DueTime;
-                hospital.ContractUrl = updateDto.ContractUrl;
                 hospital.CityId = updateDto.CityId;
                 hospital.BusinessHours = updateDto.BusinessHours;
                 hospital.IsShareInMiniProgram = updateDto.IsShareInMiniProgram;
@@ -703,6 +702,33 @@ namespace Fx.Amiya.Service
                 }
 
                 unitOfWork.Commit();
+
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 修改医院合同信息
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        public async Task UpdateContractUrlAsync(string contractUrl, int hospitalId, int employeeId)
+        {
+            try
+            {
+                var hospital = await dalHospitalInfo.GetAll().SingleOrDefaultAsync(e => e.Id == hospitalId);
+
+                if (hospital == null)
+                    throw new Exception("医院编号错误");
+                hospital.ContractUrl = contractUrl;
+                hospital.UpdateBy = employeeId;
+                hospital.UpdateDate = DateTime.Now;
+                await dalHospitalInfo.UpdateAsync(hospital, true);
 
             }
             catch (Exception ex)

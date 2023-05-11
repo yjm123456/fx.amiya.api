@@ -45,7 +45,7 @@ namespace Fx.Amiya.Service
             {
                 var messageNoticeService = from d in dalMessageNoticeService.GetAll().Include(x => x.AmiyaEmployeeInfo)
                                            where (!query.AcceptBy.HasValue || d.AcceptBy == query.AcceptBy.Value)
-                                           where (!query.NoticeType.HasValue || d.NoticeType == query.NoticeType.Value)
+                                           && (!query.NoticeType.HasValue || d.NoticeType == query.NoticeType.Value)
                                            && (!query.StartDate.HasValue || d.CreateDate >= query.StartDate.Value)
                                            && (!query.EndDate.HasValue || d.CreateDate <= query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
                                            && (d.Valid == true)

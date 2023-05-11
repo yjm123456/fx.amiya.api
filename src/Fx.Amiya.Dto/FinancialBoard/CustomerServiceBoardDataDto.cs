@@ -38,6 +38,7 @@ namespace Fx.Amiya.Dto.FinancialBoard
         public decimal? ThisMonthSendThisMonthVisitNumRatio { get; set; }
         public decimal DealPrice { get; set; }
         public decimal TotalServicePrice { get; set; }
+        public decimal SupportPrice { get; set; }
         public decimal NewCustomerPrice { get; set; }
         public decimal NewCustomerServicePrice { get; set; }
         public decimal OldCustomerPrice { get; set; }
@@ -115,6 +116,10 @@ namespace Fx.Amiya.Dto.FinancialBoard
         /// 总业绩
         /// </summary>
         public decimal TotaPrice { get; set; }
+        /// <summary>
+        /// 辅助业绩
+        /// </summary>
+        public decimal SupportPrice { get; set; }
 
         /// <summary>
         /// 新客业绩

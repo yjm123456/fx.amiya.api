@@ -1693,7 +1693,7 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
-        /// 获取不完整电话，中间四位用*代替
+        /// 获取客户昵称隐藏版
         /// </summary>
         /// <param name="phone"></param>
         /// <returns></returns>

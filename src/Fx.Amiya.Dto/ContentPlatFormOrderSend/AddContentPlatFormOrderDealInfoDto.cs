@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fx.Amiya.Dto.ContentPlatFormOrderDealDetails.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -104,5 +105,6 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 邀约凭证
         /// </summary>
         public List<string> InvitationDocuments { get; set; }
+        public List<AddContentPlatFormOrderDealDetailsDto> AddContentPlatFormOrderDealDetailsDtoList { get; set; }
     }
 }

@@ -22,6 +22,7 @@
     <ProjectReference Include="..\Fx.Amiya.IService\Fx.Amiya.IService.csproj" />
     <ProjectReference Include="..\Fx.Amiya.SyncOrder.Core\Fx.Amiya.SyncOrder.Core.csproj" />
     <ProjectReference Include="..\Fx.Amiya.SyncOrder.JD\Fx.Amiya.SyncOrder.JD.csproj" />
+    <ProjectReference Include="..\JDSDK\jos-sdk-net.csproj" />
   </ItemGroup>
 
   <ItemGroup>

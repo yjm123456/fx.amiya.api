@@ -5,6 +5,7 @@ using Fx.Amiya.Background.Api.Vo.Order;
 using Fx.Amiya.Background.Api.Vo.OrderCheck;
 using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
+using Fx.Amiya.Dto.ContentPlatFormOrderDealDetails.Input;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.CustomerInfo;
 using Fx.Amiya.Dto.OperationLog;
@@ -1177,6 +1178,22 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.EmpId = Convert.ToInt32(employee.Id);
             updateDto.ConsumptionType = updateVo.ConsumptionType;
             updateDto.InvitationDocuments = updateVo.InvitationDocuments;
+            List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
+            if (updateDto.IsFinish == true)
+            {
+                foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
+                {
+                    AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
+                    addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
+                    addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;
+                    addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
+                    addContentPlatFormOrderDealDetailsDto.Price = x.Price;
+                    addContentPlatFormOrderDealDetailsDto.CreateBy = updateDto.EmpId;
+                    addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;
+                    addContentPlatFormOrderDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);
+                }
+            }
+            updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
             await _orderService.FinishContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
         }
@@ -1192,6 +1209,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData> UpdateFinishOrderByEmployeeAsync(UpdateContentPlateFormOrderFinishVo updateVo)
         {
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             UpdateContentPlateFormOrderFinishDto updateDto = new UpdateContentPlateFormOrderFinishDto();
             updateDto.Id = updateVo.Id;
             updateDto.DealId = updateVo.DealId;
@@ -1212,6 +1230,22 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
             updateDto.InvitationDocuments = updateVo.InvitationDocuments;
             updateDto.ConsumptionType = updateVo.ConsumptionType;
+            List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
+            if (updateDto.IsFinish == true)
+            {
+                foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
+                {
+                    AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
+                    addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
+                    addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;
+                    addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
+                    addContentPlatFormOrderDealDetailsDto.Price = x.Price;
+                    addContentPlatFormOrderDealDetailsDto.CreateBy = Convert.ToInt32(employee.Id);
+                    addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;
+                    addContentPlatFormOrderDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);
+                }
+            }
+            updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
             await _orderService.UpdateFinishContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
         }
@@ -1243,6 +1277,69 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.InvitationDocuments = updateVo.InvitationDocuments;
             updateDto.ConsumptionType = updateVo.ConsumptionType;
             updateDto.EmpId = 0;
+            List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
+            if (updateDto.IsFinish == true)
+            {
+                foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
+                {
+                    AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
+                    addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
+                    addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;
+                    addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
+                    addContentPlatFormOrderDealDetailsDto.Price = x.Price;
+                    addContentPlatFormOrderDealDetailsDto.CreateBy = 0;
+                    addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;
+                    addContentPlatFormOrderDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);
+                }
+            }
+            updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
+            await _orderService.FinishContentPlateFormOrderAsync(updateDto);
+            return ResultData.Success();
+        }
+
+        /// <summary>
+        /// 医院对接同步完成订单
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut("finishContentPlateFormOrderByApi")]
+        [FxTenantAuthorize]
+        public async Task<ResultData> HospitalFinishOrderByApiAsync(ContentPlateFormOrderFinishVo updateVo)
+        {
+            //修改订单
+            ContentPlateFormOrderFinishDto updateDto = new ContentPlateFormOrderFinishDto();
+            updateDto.Id = updateVo.Id;
+            updateDto.IsFinish = updateVo.IsFinish;
+            updateDto.DealAmount = updateVo.DealAmount;
+            updateDto.LastDealHospitalId = updateVo.LastDealHospitalId;
+            updateDto.ToHospitalDate = updateVo.ToHospitalDate;
+            updateDto.LastProjectStage = updateVo.LastProjectStage;
+            updateDto.DealPictureUrl = updateVo.DealPictureUrl;
+            updateDto.UnDealReason = updateVo.UnDealReason;
+            updateDto.IsToHospital = updateVo.IsToHospital;
+            updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
+            updateDto.DealDate = updateVo.DealDate;
+            updateDto.IsAcompanying = updateVo.IsAcompanying;
+            updateDto.DealPerformanceType = (int)ContentPlateFormOrderDealPerformanceType.HospitalDeclaration;
+            updateDto.InvitationDocuments = updateVo.InvitationDocuments;
+            updateDto.ConsumptionType = updateVo.ConsumptionType;
+            updateDto.EmpId = 0;
+            List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
+            if (updateDto.IsFinish == true)
+            {
+                foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
+                {
+                    AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
+                    addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
+                    addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;
+                    addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
+                    addContentPlatFormOrderDealDetailsDto.Price = x.Price;
+                    addContentPlatFormOrderDealDetailsDto.CreateBy = 0;
+                    addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;
+                    addContentPlatFormOrderDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);
+                }
+            }
+            updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
             await _orderService.FinishContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
         }
@@ -1262,7 +1359,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                              select new ContentPlateFormOrderTypeVo
                              {
                                  OrderType = d.OrderType,
-                                 OrderTypeText = d.OrderTypeText 
+                                 OrderTypeText = d.OrderTypeText
                              };
             return ResultData<List<ContentPlateFormOrderTypeVo>>.Success().AddData("orderConsultationTypes", orderTypes.ToList());
         }
@@ -1343,7 +1440,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                              select new ContentPlateFormOrderTypeVo
                              {
                                  OrderType = d.OrderType,
-                                 OrderTypeText = d.OrderTypeText 
+                                 OrderTypeText = d.OrderTypeText
                              };
             return ResultData<List<ContentPlateFormOrderTypeVo>>.Success().AddData("orderTypes", orderTypes.ToList());
         }

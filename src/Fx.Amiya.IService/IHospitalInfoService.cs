@@ -110,6 +110,15 @@ namespace Fx.Amiya.IService
         Task UpdateAsync(UpdateHospitalInfoDto updateDto, int employeeId);
 
         /// <summary>
+        /// 修改医院合同信息
+        /// </summary>
+        /// <param name="contractUrl"></param>
+        /// <param name="hospitalId"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        Task UpdateContractUrlAsync(string contractUrl, int hospitalId, int employeeId);
+
+        /// <summary>
         /// 医院端编辑信息
         /// </summary>
         /// <param name="updateDto"></param>

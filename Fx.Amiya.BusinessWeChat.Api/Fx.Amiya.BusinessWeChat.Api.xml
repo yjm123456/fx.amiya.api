@@ -2763,6 +2763,41 @@
             申请理由
             </summary>
         </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Input.AddContentPlatFormOrderDealDetailsVo.GoodsName">
+            <summary>
+            项目名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Input.AddContentPlatFormOrderDealDetailsVo.GoodsSpec">
+            <summary>
+            项目规格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Input.AddContentPlatFormOrderDealDetailsVo.Quantity">
+            <summary>
+            数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Input.AddContentPlatFormOrderDealDetailsVo.Price">
+            <summary>
+            金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Input.AddContentPlatFormOrderDealDetailsVo.ContentPlatFormOrderDealId">
+            <summary>
+            成交编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Input.AddContentPlatFormOrderDealDetailsVo.ContentPlatFormOrderId">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Input.AddContentPlatFormOrderDealDetailsVo.CreateBy">
+            <summary>
+            创建人
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.AddContentPlatFormSendOrderInfoVo">
             <summary>
             内容平台添加派单
@@ -3753,6 +3788,11 @@
             总业绩
             </summary>
         </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerPerformanceDetailsVo.SupportPerformance">
+            <summary>
+            辅助订单业绩
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerPerformanceDetailsVo.NewCustomerPerformance">
             <summary>
             新客业绩
@@ -3851,6 +3891,11 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerServiceSimplePerformanceVo.TotaPrice">
             <summary>
             总业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerServiceSimplePerformanceVo.SupportPrice">
+            <summary>
+            辅助订单业绩
             </summary>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.Performance.CustomerServiceSimplePerformanceVo.NewCustomerPrice">

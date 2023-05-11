@@ -2219,8 +2219,9 @@ namespace Fx.Amiya.Service
                 }
                 orderDealDto.CreateBy = input.EmpId;
                 orderDealDto.InvitationDocuments = input.InvitationDocuments;
-
+                orderDealDto.AddContentPlatFormOrderDealDetailsDtoList = input.AddContentPlatFormOrderDealDetailsDtoList;
                 await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
+
 
                 //获取医院客户列表
                 var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(order.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalId, order.Phone);
@@ -2431,7 +2432,9 @@ namespace Fx.Amiya.Service
                     orderDealDto.Price = 0.00M;
                 }
                 orderDealDto.InvitationDocuments = input.InvitationDocuments;
+                orderDealDto.AddContentPlatFormOrderDealDetailsDtoList = input.AddContentPlatFormOrderDealDetailsDtoList;
                 await _contentPlatFormOrderDalService.UpdateAsync(orderDealDto);
+
                 unitOfWork.Commit();
             }
             catch (Exception err)
@@ -2981,6 +2984,13 @@ namespace Fx.Amiya.Service
             {
                 dealResult = new CustomerServiceSimplePerformanceDto();
             }
+
+            var supportData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
+            .Where(e => belongCustomerServiceId == e.SupportEmpId)
+            .SelectMany(k => k.ContentPlatformOrderDealInfoList)
+            .Where(u => u.CreateDate >= startDate && u.CreateDate < endDate && u.IsDeal == true);
+            dealResult.SupportPrice = DecimalExtension.ChangePriceToTenThousand(supportData.Sum(x => x.Price));
+            dealResult.TotaPrice += dealResult.SupportPrice;
             string belongLiveAnchorId = "";
             var empInfo = await _amiyaEmployeeService.GetByIdAsync(belongCustomerServiceId);
             dealResult.CustomerServiceName = empInfo.Name;
@@ -3068,6 +3078,13 @@ namespace Fx.Amiya.Service
 
             foreach (var z in dealResult)
             {
+                var supportData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
+                .Where(e => e.IsSupportOrder == true && e.SupportEmpId == z.CustomerServiceId)
+                .SelectMany(k => k.ContentPlatformOrderDealInfoList)
+                .Where(u => u.CreateDate >= startDate && u.CreateDate < endDate && u.IsDeal == true);
+                var supp = await supportData.ToListAsync();
+                z.SupportPrice = supportData.Sum(x => x.Price);
+                z.TotalServicePrice += z.SupportPrice;
                 z.CustomerServiceName = await _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(z.CustomerServiceId)).Select(e => e.Name).FirstOrDefaultAsync();
                 var sendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.BelongEmpId == z.CustomerServiceId && x.SendDate >= startDate && x.SendDate < endDate).ToList();
                 var thisMonthVisitInfo = sendInfo.Where(x => x.IsToHospital == true).ToList();

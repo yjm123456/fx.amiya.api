@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderDealDetails.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -89,5 +90,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 邀约凭证
         /// </summary>
         public List<string> InvitationDocuments { get; set; }
+
+        /// <summary>
+        /// 成交明细
+        /// </summary>
+        public List<AddContentPlatFormOrderDealDetailsVo> AddContentPlatFormOrderDealDetailsVoList { get; set; }
     }
 }

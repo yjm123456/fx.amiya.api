@@ -248,6 +248,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             customerPerformanceVo.CustomerServiceName = selectResult.CustomerServiceName;
             customerPerformanceVo.Rank = selectResult.Rank == null ? "#" : selectResult.Rank;
             customerPerformanceVo.TotaPrice = selectResult.TotaPrice;
+            customerPerformanceVo.SupportPrice = selectResult.SupportPrice;
             customerPerformanceVo.NewCustomerPrice = selectResult.NewCustomerPrice;
             customerPerformanceVo.OldCustomerPrice = selectResult.OldCustomerPrice;
             customerPerformanceVo.NewCustomerNum = selectResult.NewCustomerNum;
@@ -287,6 +288,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             CustomerPerformanceDetailsVo customerPerformanceVo = new CustomerPerformanceDetailsVo();
             customerPerformanceVo.CustomerServiceName = selectResult.CustomerServiceName;
             customerPerformanceVo.TotalPerformance = selectResult.TotalPerformance;
+            customerPerformanceVo.SupportPerformance = selectResult.SupportPerformance;
             customerPerformanceVo.NewCustomerPerformance = selectResult.NewCustomerPerformance;
             customerPerformanceVo.OldCustomerPerformance = selectResult.OldCustomerPerformance;
             customerPerformanceVo.VisitNumRatio = selectResult.VisitNumRatio;

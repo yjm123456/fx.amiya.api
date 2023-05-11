@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fx.Amiya.Dto.ContentPlatFormOrderDealDetails.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -99,6 +100,7 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 消费类型文本
         /// </summary>
         public string ConsumptionTypeText { get; set; }
+        public List<AddContentPlatFormOrderDealDetailsDto> AddContentPlatFormOrderDealDetailsDtoList { get; set; }
 
     }
 }

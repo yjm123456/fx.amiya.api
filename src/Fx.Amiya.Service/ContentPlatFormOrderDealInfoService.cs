@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
+using Fx.Amiya.Dto.ContentPlatFormOrderDealDetails.Input;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.FinancialBoard;
 using Fx.Amiya.Dto.Performance;
@@ -30,13 +31,11 @@ namespace Fx.Amiya.Service
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private IWxAppConfigService wxAppConfigService;
         private IDalAmiyaEmployee _dalAmiyaEmployee;
-        private ILiveAnchorMonthlyTargetService _liveAnchorMonthlyTargetService;
         private IDalHospitalInfo _dalHospitalInfo;
-        private IUnitOfWork unitOfWork;
+        private IContentPlatFormOrderDealDetailsService contentPlatFormOrderDealDetailsService;
         private IDalRecommandDocumentSettle dalRecommandDocumentSettle;
         private IDalCompanyBaseInfo dalCompanyBaseInfo;
         private IDalLiveAnchor dalLiveAnchor;
-        private IDalContentPlatformOrder dalContentPlatformOrder;
 
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
@@ -45,24 +44,22 @@ namespace Fx.Amiya.Service
             IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
             IDalBindCustomerService dalBindCustomerService,
             IDalAmiyaEmployee dalAmiyaEmployee,
-            IUnitOfWork unitOfWork,
-            IHospitalInfoService hospitalInfoService, ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService, IDalHospitalInfo dalHospitalInfo, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor, IDalContentPlatformOrder dalContentPlatformOrder)
+            IContentPlatFormOrderDealDetailsService contentPlatFormOrderDealDetailsService,
+            IHospitalInfoService hospitalInfoService, IDalHospitalInfo dalHospitalInfo, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor)
         {
             this.dalContentPlatFormOrderDealInfo = dalContentPlatFormOrderDealInfo;
             _hospitalInfoService = hospitalInfoService;
+            this.contentPlatFormOrderDealDetailsService = contentPlatFormOrderDealDetailsService;
             _amiyaEmployeeService = amiyaEmployeeService;
             this.wxAppConfigService = wxAppConfigService;
             _contentPlatFormCustomerPictureService = contentPlatFormCustomerPictureService;
             _dalBindCustomerService = dalBindCustomerService;
             _dalAmiyaEmployee = dalAmiyaEmployee;
-            this.unitOfWork = unitOfWork;
             this.companyBaseInfoService = companyBaseInfoService;
-            _liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
             _dalHospitalInfo = dalHospitalInfo;
             this.dalRecommandDocumentSettle = dalRecommandDocumentSettle;
             this.dalCompanyBaseInfo = dalCompanyBaseInfo;
             this.dalLiveAnchor = dalLiveAnchor;
-            this.dalContentPlatformOrder = dalContentPlatformOrder;
         }
 
         /// <summary>
@@ -206,9 +203,9 @@ namespace Fx.Amiya.Service
                 if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
                 {
                     dealInfo = from d in dealInfo
-                             where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0 || d.ContentPlatFormOrder.SupportEmpId == employeeId || d.ContentPlatFormOrder.BelongEmpId == employeeId
-                             where (d.ContentPlatFormOrder.IsSupportOrder == false || d.ContentPlatFormOrder.SupportEmpId == employeeId)
-                             select d;
+                               where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0 || d.ContentPlatFormOrder.SupportEmpId == employeeId || d.ContentPlatFormOrder.BelongEmpId == employeeId
+                               where (d.ContentPlatFormOrder.IsSupportOrder == false || d.ContentPlatFormOrder.SupportEmpId == employeeId)
+                               select d;
                 }
                 //财务录入数据只有管理员研发财务和CMO能看到
                 if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16 && employee.AmiyaPositionInfo.Id != 29)
@@ -823,6 +820,16 @@ namespace Fx.Amiya.Service
                         await _contentPlatFormCustomerPictureService.AddAsync(addPicture);
                     }
                 }
+
+                //添加成交详情
+                if (addDto.AddContentPlatFormOrderDealDetailsDtoList.Count > 0)
+                {
+                    foreach (var x in addDto.AddContentPlatFormOrderDealDetailsDtoList)
+                    {
+                        x.ContentPlatFormOrderDealId = ContentPlatFOrmOrderDealInfo.Id;
+                        await contentPlatFormOrderDealDetailsService.AddAsync(x);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -930,6 +937,7 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.CommissionRatio = updateDto.CommissionRatio;
                 ContentPlatFOrmOrderDealInfo.ConsumptionType = updateDto.ConsumptionType;
                 await dalContentPlatFormOrderDealInfo.UpdateAsync(ContentPlatFOrmOrderDealInfo, true);
+                //清除邀约凭证图片
                 await _contentPlatFormCustomerPictureService.DeleteByContentPlatFormOrderDealIdAsync(updateDto.Id);
                 //添加邀约凭证图片
                 foreach (var z in updateDto.InvitationDocuments)
@@ -942,6 +950,20 @@ namespace Fx.Amiya.Service
                     await _contentPlatFormCustomerPictureService.AddAsync(addPicture);
                 }
 
+                //添加成交详情
+                if (updateDto.AddContentPlatFormOrderDealDetailsDtoList.Count > 0)
+                {
+                    //清除自己提交的成交详情
+                    DeleteContentPlatFormOrderDealDetailsByDealIdDto deleteContentPlatFormOrderDealDetailsByDealIdDto = new DeleteContentPlatFormOrderDealDetailsByDealIdDto();
+                    deleteContentPlatFormOrderDealDetailsByDealIdDto.DealId = updateDto.Id;
+                    deleteContentPlatFormOrderDealDetailsByDealIdDto.CreateBy = updateDto.AddContentPlatFormOrderDealDetailsDtoList.Select(x => x.CreateBy).FirstOrDefault();
+                    await contentPlatFormOrderDealDetailsService.DeleteByDealIdAsync(deleteContentPlatFormOrderDealDetailsByDealIdDto);
+                    //添加成交详情
+                    foreach (var x in updateDto.AddContentPlatFormOrderDealDetailsDtoList)
+                    {
+                        await contentPlatFormOrderDealDetailsService.AddAsync(x);
+                    }
+                }
             }
             catch (Exception ex)
             {

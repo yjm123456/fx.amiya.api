@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderDealDetails.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -94,5 +95,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 消费类型
         /// </summary>
         public int? ConsumptionType { get; set; }
+        /// <summary>
+        /// 成交明细
+        /// </summary>
+        public List<AddContentPlatFormOrderDealDetailsVo> AddContentPlatFormOrderDealDetailsVoList { get; set; }
     }
 }

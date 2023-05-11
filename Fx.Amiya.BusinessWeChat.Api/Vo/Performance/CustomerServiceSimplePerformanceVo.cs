@@ -23,6 +23,10 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.Performance
         /// 总业绩
         /// </summary>
         public decimal TotaPrice { get; set; }
+        /// <summary>
+        /// 辅助订单业绩
+        /// </summary>
+        public decimal SupportPrice { get; set; }
 
         /// <summary>
         /// 新客业绩
