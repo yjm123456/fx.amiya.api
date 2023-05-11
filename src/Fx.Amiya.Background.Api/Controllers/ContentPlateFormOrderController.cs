@@ -1365,6 +1365,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addContentPlatFormOrderDealDetailsDto.GoodsName = x.ItemName;
                     addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.ItemStandard;
                     addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
+                    if (updateDto.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
+                    {
+                        x.CashAmount = -x.CashAmount;
+                    }
                     addContentPlatFormOrderDealDetailsDto.Price = x.CashAmount;
                     addContentPlatFormOrderDealDetailsDto.CreateBy = 0;
                     addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;
