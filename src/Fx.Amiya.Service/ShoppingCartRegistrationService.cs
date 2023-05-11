@@ -15,6 +15,7 @@ using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.MessageNotice.Input;
 using Fx.Amiya.Dto.WxAppConfig;
 using Newtonsoft.Json;
+using Fx.Amiya.Dto;
 
 namespace Fx.Amiya.Service
 {
@@ -29,6 +30,7 @@ namespace Fx.Amiya.Service
         private IDalConfig dalConfig;
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private IDalAmiyaEmployee dalAmiyaEmployee;
+        private IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo;
         public ShoppingCartRegistrationService(IDalShoppingCartRegistration dalShoppingCartRegistration,
             IContentPlatformService contentPlatformService,
              IMessageNoticeService messageNoticeService,
@@ -37,7 +39,7 @@ namespace Fx.Amiya.Service
             ILiveAnchorService liveAnchorService,
              ILiveAnchorWeChatInfoService liveAnchorWeChatInfoService,
             IDalConfig dalConfig,
-            IDalAmiyaEmployee dalAmiyaEmployee)
+            IDalAmiyaEmployee dalAmiyaEmployee, IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo)
         {
             this.dalShoppingCartRegistration = dalShoppingCartRegistration;
             _contentPlatformService = contentPlatformService;
@@ -48,11 +50,12 @@ namespace Fx.Amiya.Service
             _liveAnchorWeChatInfoService = liveAnchorWeChatInfoService;
             _amiyaEmployeeService = amiyaEmployeeService;
             this.dalAmiyaEmployee = dalAmiyaEmployee;
+            this.dalLiveAnchorBaseInfo = dalLiveAnchorBaseInfo;
         }
 
 
 
-        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? emergencyLevel, bool? isBadReview)
+        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source)
         {
             try
             {
@@ -77,7 +80,8 @@ namespace Fx.Amiya.Service
                                                && (!endBadReviewTime.HasValue || d.BadReviewDate <= endBadReviewTime.Value.AddDays(1).Date)
                                                && (!emergencyLevel.HasValue || d.EmergencyLevel == emergencyLevel)
                                                && (!isBadReview.HasValue || d.IsBadReview == isBadReview)
-
+                                               && (string.IsNullOrEmpty(baseLiveAnchorId) || d.BaseLiveAnchorId == baseLiveAnchorId)
+                                               && (!source.HasValue || d.Source == source.Value)
                                                select new ShoppingCartRegistrationDto
                                                {
                                                    Id = d.Id,
@@ -109,8 +113,10 @@ namespace Fx.Amiya.Service
                                                    BadReviewContent = d.BadReviewContent,
                                                    BadReviewReason = d.BadReviewReason,
                                                    IsBadReview = d.IsBadReview,
-                                                   EmergencyLevel = d.EmergencyLevel
-
+                                                   EmergencyLevel = d.EmergencyLevel,
+                                                   Source = d.Source,
+                                                   SourceText = ServiceClass.GetTiktokCustomerSourceText(d.Source),
+                                                   BaseLiveAnchorId = d.BaseLiveAnchorId
                                                };
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
                 if (!employee.AmiyaPositionInfo.IsDirector)
@@ -135,6 +141,8 @@ namespace Fx.Amiya.Service
                         var assignEmpInfo = await _amiyaEmployeeService.GetByIdAsync(x.AssignEmpId.Value);
                         x.AssignEmpName = assignEmpInfo.Name;
                     }
+                    x.BaseLiveAnchorName = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == x.BaseLiveAnchorId).SingleOrDefault()?.LiveAnchorName ?? "";
+
                 }
                 return shoppingCartRegistrationPageInfo;
             }
@@ -213,6 +221,12 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.IsCreateOrder = addDto.IsCreateOrder;
                 shoppingCartRegistration.IsSendOrder = addDto.IsSendOrder;
                 shoppingCartRegistration.EmergencyLevel = addDto.EmergencyLevel;
+                shoppingCartRegistration.Source = addDto.Source;
+                var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(addDto.LiveAnchorId);
+                if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
+                {
+                    shoppingCartRegistration.BaseLiveAnchorId = baseLiveAnchorId.LiveAnchorBaseId;
+                }
                 await dalShoppingCartRegistration.AddAsync(shoppingCartRegistration, true);
 
                 //unitOfWork.Commit();
@@ -268,6 +282,9 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.BadReviewReason = shoppingCartRegistration.BadReviewReason;
                 shoppingCartRegistrationDto.IsBadReview = shoppingCartRegistration.IsBadReview;
                 shoppingCartRegistrationDto.EmergencyLevel = shoppingCartRegistration.EmergencyLevel;
+                shoppingCartRegistrationDto.Source = shoppingCartRegistration.Source;
+                shoppingCartRegistrationDto.SourceText = ServiceClass.GetTiktokCustomerSourceText(shoppingCartRegistration.Source);
+                shoppingCartRegistrationDto.BaseLiveAnchorId = shoppingCartRegistration.BaseLiveAnchorId;
 
                 return shoppingCartRegistrationDto;
             }
@@ -324,7 +341,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.BadReviewReason = shoppingCartRegistration.BadReviewReason;
                 shoppingCartRegistrationDto.IsBadReview = shoppingCartRegistration.IsBadReview;
                 shoppingCartRegistrationDto.EmergencyLevel = shoppingCartRegistration.EmergencyLevel;
-
+                shoppingCartRegistrationDto.Source = shoppingCartRegistration.Source;
                 return shoppingCartRegistrationDto;
             }
             catch (Exception ex)
@@ -447,6 +464,12 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.IsCreateOrder = updateDto.IsCreateOrder;
                 shoppingCartRegistration.IsSendOrder = updateDto.IsSendOrder;
                 shoppingCartRegistration.EmergencyLevel = updateDto.EmergencyLevel;
+                shoppingCartRegistration.Source = updateDto.Source;
+                var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(updateDto.LiveAnchorId);
+                if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
+                {
+                    shoppingCartRegistration.BaseLiveAnchorId = baseLiveAnchorId.LiveAnchorBaseId;
+                }
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
                 // unitOfWork.Commit();
             }
@@ -503,7 +526,7 @@ namespace Fx.Amiya.Service
                         x.IsCreateOrder = true;
                         x.IsAddWeChat = true;
                         x.IsWriteOff = true;
-                        x.IsConsultation = true;
+                        //x.IsConsultation = true;
                         x.ConsultationDate = DateTime.Now;
                         await dalShoppingCartRegistration.UpdateAsync(x, true);
                     }
@@ -533,6 +556,7 @@ namespace Fx.Amiya.Service
                     {
                         x.EmergencyLevel = (int)EmergencyLevel.Important;
                         x.IsSendOrder = true;
+                        x.IsConsultation = true;
                         await dalShoppingCartRegistration.UpdateAsync(x, true);
                     }
                 }
@@ -571,6 +595,23 @@ namespace Fx.Amiya.Service
                 EmergencyLevelDto emergencyLevelDto = new EmergencyLevelDto();
                 emergencyLevelDto.EmergencyLevel = Convert.ToInt32(item);
                 emergencyLevelDto.EmergencyText = ServiceClass.GetShopCartRegisterEmergencyLevelText(emergencyLevelDto.EmergencyLevel);
+                emergencyLevelList.Add(emergencyLevelDto);
+            }
+            return emergencyLevelList;
+        }
+        /// <summary>
+        /// 获取客户来源
+        /// </summary>
+        /// <returns></returns>
+        public List<BaseKeyValueDto<int>> GetCustomerSourceList()
+        {
+            var emergencyLevels = Enum.GetValues(typeof(TiktokCustomerSource));
+            List<BaseKeyValueDto<int>> emergencyLevelList = new List<BaseKeyValueDto<int>>();
+            foreach (var item in emergencyLevels)
+            {
+                BaseKeyValueDto<int> emergencyLevelDto = new BaseKeyValueDto<int>();
+                emergencyLevelDto.Key = Convert.ToInt32(item);
+                emergencyLevelDto.Value = ServiceClass.GetTiktokCustomerSourceText(emergencyLevelDto.Key);
                 emergencyLevelList.Add(emergencyLevelDto);
             }
             return emergencyLevelList;
@@ -669,7 +710,7 @@ namespace Fx.Amiya.Service
         #endregion
 
         #region 【报表相关】
-        public async Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistrationReportAsync(DateTime? startDate, DateTime? endDate, int? emergencyLevel, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, bool isHidePhone)
+        public async Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistrationReportAsync(DateTime? startDate, DateTime? endDate, int? emergencyLevel, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, bool isHidePhone, string baseLiveAnchorId,int? source)
         {
             try
             {
@@ -684,6 +725,8 @@ namespace Fx.Amiya.Service
                                                && (!isSendOrder.HasValue || d.IsSendOrder == isSendOrder)
                                                && (!isCreateOrder.HasValue || d.IsCreateOrder == isCreateOrder)
                                                && (!isReturnBackPrice.HasValue || d.IsReturnBackPrice == isReturnBackPrice)
+                                               && (string.IsNullOrEmpty(baseLiveAnchorId) || d.BaseLiveAnchorId == baseLiveAnchorId)
+                                               && (!source.HasValue || d.Source==source.Value)
                                                select new ShoppingCartRegistrationDto
                                                {
                                                    Id = d.Id,
@@ -709,7 +752,11 @@ namespace Fx.Amiya.Service
                                                    CreateBy = d.CreateBy,
                                                    CreateByName = d.AmiyaEmployee.Name,
                                                    CreateDate = d.CreateDate,
-                                                   ConsultationTypeText = ServiceClass.GetConsulationTypeText(d.ConsultationType)
+                                                   ConsultationTypeText = ServiceClass.GetConsulationTypeText(d.ConsultationType),
+                                                   Source = d.Source,
+                                                   SourceText = ServiceClass.GetTiktokCustomerSourceText(d.Source),
+                                                   BaseLiveAnchorId = d.BaseLiveAnchorId,
+                                                   BaseLiveAnchorName = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == d.BaseLiveAnchorId).SingleOrDefault() == null ? "" : dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == d.BaseLiveAnchorId).SingleOrDefault().LiveAnchorName
                                                };
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
                 if (!employee.AmiyaPositionInfo.IsDirector)

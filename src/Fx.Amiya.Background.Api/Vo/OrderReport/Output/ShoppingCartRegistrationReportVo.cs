@@ -33,6 +33,16 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport.OutPut
         [Description("来源渠道")]
         public string ContentPlatFormName { get; set; }
         /// <summary>
+        /// 客户来源
+        /// </summary>
+        [Description("客户来源")]
+        public string SourceText { get; set; }
+        /// <summary>
+        /// 基础主播名称
+        /// </summary>
+        [Description("基础主播名称")]
+        public string BaseLiveAnchorName { get; set; }
+        /// <summary>
         /// 主播IP
         /// </summary>
         [Description("主播IP")]
@@ -86,9 +96,9 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport.OutPut
         [Description("是否核销")]
         public string IsWriteOff { get; set; }
         /// <summary>
-        /// 是否面诊
+        /// 是否派单
         /// </summary>
-        [Description("是否面诊")]
+        [Description("是否派单")]
         public string IsConsultation { get; set; }
         /// <summary>
         /// 是否退款

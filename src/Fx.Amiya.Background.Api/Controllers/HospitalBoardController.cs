@@ -167,6 +167,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 DepartMentName=e.DepartMentName,
                 ToHospitalRatio=e.ToHospitalRatio,
                 DealRation=e.DealRation,
+                AccumulateToHospitalRatio=e.AccumulateToHospitalRatio,
+                AccumulateDealRation=e.AccumulateDealRation,
                 NewCustomerUnitPrice=e.NewCustomerUnitPrice,
                 OldCustomerUnitPrice=e.OldCustomerUnitPrice,
                 Performance=e.Performance,

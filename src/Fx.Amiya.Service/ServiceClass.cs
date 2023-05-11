@@ -741,6 +741,39 @@ namespace Fx.Amiya.Service
 
         }
 
+        /// <summary>
+        /// 获取抖音新增客户来源类型
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string GetTiktokCustomerSourceText(int? type)
+        {
+            string sourceText = "";
+            switch (type)
+            {
+                case 0:
+                    sourceText = "短视频";
+                    break;
+                case 1:
+                    sourceText = "直播间";
+                    break;
+                case 2:
+                    sourceText = "粉丝群";
+                    break;
+                case 3:
+                    sourceText = "私信";
+                    break;
+                case 4:
+                    sourceText = "智能AI";
+                    break;
+                default:
+                    sourceText = "";
+                    break;
+            }
+            return sourceText;
+
+        }
+
         public static string GetOrderFromText(int orderFrom)
         {
             string orderTypeText = "";

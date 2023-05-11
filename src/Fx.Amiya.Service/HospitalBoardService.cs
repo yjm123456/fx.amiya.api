@@ -72,7 +72,7 @@ namespace Fx.Amiya.Service
             DealPerformanceBordDataDto dealPerformanceBordDataDto = new DealPerformanceBordDataDto();
             dealPerformanceBordDataDto.TotalPerformance = thisMonthData.TotalPerformance;
             dealPerformanceBordDataDto.TotalPerformanceChainRatio = DecimalExtension.CalculateChain(thisMonthData.TotalPerformance, lastMonthData.TotalPerformance);
-            dealPerformanceBordDataDto.TotalPerformanceYearOnYear = DecimalExtension.CalculateChain(lastMonthData.TotalPerformance, lastYearThisMonthData.TotalPerformance);
+            dealPerformanceBordDataDto.TotalPerformanceYearOnYear = DecimalExtension.CalculateChain(lastYearThisMonthData.TotalPerformance, lastYearThisMonthData.TotalPerformance);
 
             dealPerformanceBordDataDto.NewCustomerPerformance = thisMonthData.NewCustomerPerformance;
             dealPerformanceBordDataDto.NewCustomerPerformanceChainRatio = DecimalExtension.CalculateChain(thisMonthData.NewCustomerPerformance, lastMonthData.NewCustomerPerformance);

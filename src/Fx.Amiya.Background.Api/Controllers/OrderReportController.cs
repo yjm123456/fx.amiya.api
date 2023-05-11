@@ -403,7 +403,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(query.StartDate, query.EndDate, query.emergencyLevel, query.LiveAnchorId, query.IsCreateOrder, query.IsSendOrder, employeeId, query.IsAddWechat, query.IsWriteOff, query.IsConsultation, query.IsReturnBackPrice, query.KeyWord, query.ContentPlatFormId, true);
+            var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(query.StartDate, query.EndDate, query.emergencyLevel, query.LiveAnchorId, query.IsCreateOrder, query.IsSendOrder, employeeId, query.IsAddWechat, query.IsWriteOff, query.IsConsultation, query.IsReturnBackPrice, query.KeyWord, query.ContentPlatFormId, true,query.BaseLiveAnchorId,query.Source);
             var res = from d in q
                       select new ShoppingCartRegistrationReportVo()
                       {
@@ -415,6 +415,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                           EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(d.EmergencyLevel),
                           LiveAnchorWechatNo = d.LiveAnchorWechatNo,
                           CustomerNickName = d.CustomerNickName,
+                          BaseLiveAnchorName = d.BaseLiveAnchorName,
+                          SourceText = d.SourceText,
                           Phone = d.Phone,
                           Price = d.Price,
                           ConsultationTypeText = d.ConsultationTypeText,
@@ -426,6 +428,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                           Remark = d.Remark,
                           CreateBy = d.CreateByName,
                           CreateDate = d.CreateDate,
+                          
                       };
             return ResultData<List<ShoppingCartRegistrationReportVo>>.Success().AddData("OrderWriteOffReport", res.ToList());
         }
@@ -449,7 +452,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 {
                     isHidePhone = false;
                 }
-                var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(query.StartDate, query.EndDate, query.emergencyLevel, query.LiveAnchorId, query.IsCreateOrder, query.IsSendOrder, employeeId, query.IsAddWechat, query.IsWriteOff, query.IsConsultation, query.IsReturnBackPrice, query.KeyWord, query.ContentPlatFormId, isHidePhone);
+                var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(query.StartDate, query.EndDate, query.emergencyLevel, query.LiveAnchorId, query.IsCreateOrder, query.IsSendOrder, employeeId, query.IsAddWechat, query.IsWriteOff, query.IsConsultation, query.IsReturnBackPrice, query.KeyWord, query.ContentPlatFormId, isHidePhone,query.BaseLiveAnchorId,query.Source);
                 var res = from d in q
                           select new ShoppingCartRegistrationReportVo()
                           {
@@ -459,6 +462,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                               EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(d.EmergencyLevel),
                               LiveAnchorName = d.LiveAnchorName,
                               IsAddWechat = d.IsAddWeChat == true ? "是" : "否",
+                              BaseLiveAnchorName=d.BaseLiveAnchorName,
+                              SourceText=d.SourceText,
                               IsCreateOrder = d.IsCreateOrder == true ? "是" : "否",
                               IsSendOrder = d.IsSendOrder == true ? "是" : "否",
                               LiveAnchorWechatNo = d.LiveAnchorWechatNo,

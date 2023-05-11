@@ -159,8 +159,9 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 获取客服姓名列表
         /// </summary>
+        /// <param name="baseLiveAnchorId">主播基础信息id</param>
         /// <returns></returns>
-        Task<List<AmiyaEmployeeNameDto>> GetCustomerServiceNameListAsync();
+        Task<List<AmiyaEmployeeNameDto>> GetCustomerServiceNameListAsync(string baseLiveAnchorId=null);
 
         /// <summary>
         /// 获取运营咨询人员姓名列表
@@ -185,6 +186,12 @@ namespace Fx.Amiya.IService
         /// <param name="positionId"></param>
         /// <returns></returns>
         Task<List<AmiyaEmployeeNameDto>> GetemployeeByPositionIdAsync(int? positionId);
+        /// <summary>
+        /// 根据基础主播id
+        /// </summary>
+        /// <param name="baseLiveAnchorId"></param>
+        /// <returns></returns>
+        Task<List<AmiyaEmployeeNameDto>> GetCustomerServiceByBaseLiveAnchorid(string baseLiveAnchorId);
 
     }
 }

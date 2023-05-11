@@ -288,7 +288,7 @@ namespace Fx.Amiya.Service
                     Email = (employee.Email == "0") ? "" : employee.Email,
                     PositionId = employee.AmiyaPositionId,
                     PositionName = employee.AmiyaPositionInfo.Name,
-                    IsDirector=employee.AmiyaPositionInfo.IsDirector,
+                    IsDirector = employee.AmiyaPositionInfo.IsDirector,
                     IsCustomerService = employee.IsCustomerService,
                     DepartmentId = employee.AmiyaPositionInfo.DepartmentId,
                     DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name,
@@ -650,11 +650,12 @@ namespace Fx.Amiya.Service
         /// <summary>
         /// 获取客服姓名列表
         /// </summary>
+        /// <param name="baseLiveAnchorId">主播基础信息id</param>
         /// <returns></returns>
-        public async Task<List<AmiyaEmployeeNameDto>> GetCustomerServiceNameListAsync()
+        public async Task<List<AmiyaEmployeeNameDto>> GetCustomerServiceNameListAsync(string baseLiveAnchorId=null)
         {
             var employee = from d in dalAmiyaEmployee.GetAll()
-                           where d.IsCustomerService == true
+                           where d.IsCustomerService == true && (string.IsNullOrEmpty(baseLiveAnchorId) || d.LiveAnchorBaseId == baseLiveAnchorId)
                            && d.Valid == true
                            select new AmiyaEmployeeNameDto
                            {
@@ -727,6 +728,23 @@ namespace Fx.Amiya.Service
             var employee = from d in dalAmiyaEmployee.GetAll()
                            where d.Valid
                            && (!positionId.HasValue || d.AmiyaPositionInfo.Id == positionId)
+                           select new AmiyaEmployeeNameDto
+                           {
+                               Id = d.Id,
+                               Name = d.Name,
+                           };
+            return await employee.ToListAsync();
+
+        }
+        /// <summary>
+        /// 根据主播基础信息id获取客服列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<AmiyaEmployeeNameDto>> GetCustomerServiceByBaseLiveAnchorid(string baseLiveAnchorId)
+        {
+            var employee = from d in dalAmiyaEmployee.GetAll()
+                           where d.IsCustomerService == true && d.LiveAnchorBaseId == baseLiveAnchorId
+                           && d.Valid == true
                            select new AmiyaEmployeeNameDto
                            {
                                Id = d.Id,

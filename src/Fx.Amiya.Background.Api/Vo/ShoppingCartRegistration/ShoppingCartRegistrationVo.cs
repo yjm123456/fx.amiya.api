@@ -80,7 +80,7 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// </summary>
         public bool IsWriteOff { get; set; }
         /// <summary>
-        /// 是否面诊
+        /// 是否派单
         /// </summary>
         public bool IsConsultation { get; set; }
         /// <summary>
@@ -155,5 +155,25 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// 重要程度名称
         /// </summary>
         public string EmergencyLevelText { get; set; }
+        /// <summary>
+        /// 抖音新增客户来源
+        /// </summary>
+        public int? Source { get; set; }
+        /// <summary>
+        /// 抖音新增客户来源文本
+        /// </summary>
+        public string SourceText { get; set; }
+        /// <summary>
+        /// 基础主播信息id
+        /// </summary>
+        public string BaseLiveAnchorId { get; set; }
+        /// <summary>
+        /// 基础主播名称
+        /// </summary>
+        public string BaseLiveAnchorName { get; set; }
+        /// <summary>
+        /// 是否派单
+        /// </summary>
+        public bool SendOrder { get; set; }
     }
 }

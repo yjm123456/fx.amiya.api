@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.Performance;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.ShoppingCartRegistration;
 using Fx.Common;
 using System;
@@ -11,7 +12,7 @@ namespace Fx.Amiya.IService
 {
     public interface IShoppingCartRegistrationService
     {
-        Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? AdmissionId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? emergencyLevel, bool? isBadReview);
+        Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? AdmissionId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? emergencyLevel, bool? isBadReview,string baseLiveAnchorId,int? source);
         Task AddAsync(AddShoppingCartRegistrationDto addDto);
         Task<ShoppingCartRegistrationDto> GetByIdAsync(string id);
         Task<ShoppingCartRegistrationDto> GetByPhoneAsync(string phone, int createBy);
@@ -37,6 +38,11 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         List<EmergencyLevelDto> GetEmergencyLevelList();
+        /// <summary>
+        /// 获取客户来源
+        /// </summary>
+        /// <returns></returns>
+        List<BaseKeyValueDto<int>> GetCustomerSourceList();
         #region 【日数据业绩生成】
 
         /// <summary>
@@ -71,7 +77,7 @@ namespace Fx.Amiya.IService
 
 
         #region 【报表相关】
-        Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistrationReportAsync(DateTime? startDate, DateTime? endDate, int? emergencyLevel, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, bool isHidePhone);
+        Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistrationReportAsync(DateTime? startDate, DateTime? endDate, int? emergencyLevel, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, bool isHidePhone,string baseLiveAnchorId,int? source);
         #endregion
 
         #region 【业绩数据】

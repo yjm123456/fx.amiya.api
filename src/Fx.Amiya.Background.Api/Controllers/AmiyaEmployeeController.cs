@@ -19,6 +19,7 @@ using Fx.Amiya.Background.Api.Vo.Auth;
 using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Common.Extensions;
+using Fx.Amiya.Background.Api.Vo;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
@@ -376,11 +377,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 获取客服姓名列表
         /// </summary>
+        /// <param name="baseLiveAnchorId">主播基础信息id</param>
         /// <returns></returns>
         [HttpGet("customerServiceNameList")]
-        public async Task<ResultData<List<AmiyaEmployeeNameVo>>> GetCustomerServiceNameListAsync()
+        public async Task<ResultData<List<AmiyaEmployeeNameVo>>> GetCustomerServiceNameListAsync(string baseLiveAnchorId)
         {
-            var employee = from d in await employeeService.GetCustomerServiceNameListAsync()
+            var employee = from d in await employeeService.GetCustomerServiceNameListAsync(baseLiveAnchorId)
                            select new AmiyaEmployeeNameVo
                            {
                                Id = d.Id,
@@ -435,5 +437,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                            };
             return ResultData<List<AmiyaEmployeeNameVo>>.Success().AddData("employee", employee.ToList());
         }
+        
+
     }
 }

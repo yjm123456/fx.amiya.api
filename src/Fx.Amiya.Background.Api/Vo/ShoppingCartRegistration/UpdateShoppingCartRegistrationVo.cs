@@ -112,5 +112,13 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// 重要程度 0可忽略，1轻微，2一般，3重要，4非常重要
         /// </summary>
         public int EmergencyLevel { get; set; }
+        /// <summary>
+        /// 抖音客户来源
+        /// </summary>
+        public int? Source { get; set; }
+        /// <summary>
+        /// 是否派单
+        /// </summary>
+        public bool SendOrder { get; set; }
     }
 }

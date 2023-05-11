@@ -58,6 +58,10 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// </summary>
         public bool IsConsultation { get; set; }
         /// <summary>
+        /// 是否派单
+        /// </summary>
+        public bool SendOrder { get; set; }
+        /// <summary>
         /// 面诊时间
         /// </summary>
         public DateTime? ConsultationDate { get; set; }
@@ -109,6 +113,11 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// 紧急程度
         /// </summary>
         public int EmergencyLevel { get; set; }
+        /// <summary>
+        /// 抖音客户来源
+        /// </summary>
+        public int Source { get; set; }
+       
 
     }
 }

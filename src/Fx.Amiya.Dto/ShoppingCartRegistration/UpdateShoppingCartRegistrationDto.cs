@@ -28,6 +28,9 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         public DateTime? RefundDate { get; set; }
 
         public bool IsCreateOrder { get; set; }
+        /// <summary>
+        /// 派单触达
+        /// </summary>
         public bool IsSendOrder { get; set; }
         public string RefundReason { get; set; }
         public DateTime? BadReviewDate { get; set; }
@@ -44,5 +47,10 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// 紧急程度
         /// </summary>
         public int EmergencyLevel { get; set; }
+        /// <summary>
+        /// 抖音客户来源
+        /// </summary>
+        public int? Source { get; set; }
+        
     }
 }

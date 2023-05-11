@@ -35,7 +35,7 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport.Input
         /// </summary>
         public bool? IsWriteOff { get; set; }
         /// <summary>
-        /// 是否面诊
+        /// 是否派单
         /// </summary>
         public bool? IsConsultation { get; set; }
         /// <summary>
@@ -46,5 +46,13 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport.Input
         /// 内容平台id
         /// </summary>
         public string ContentPlatFormId { get; set; }
+        /// <summary>
+        /// 主播基础信息id
+        /// </summary>
+        public string BaseLiveAnchorId { get; set; }
+        /// <summary>
+        /// 客户来源
+        /// </summary>
+        public int? Source { get; set; }
     }
 }

@@ -910,6 +910,32 @@ namespace Fx.Amiya.IService
 
     }
 
+    /// <summary>
+    /// 抖音客户来源
+    /// </summary>
+    public enum TiktokCustomerSource { 
+        /// <summary>
+        /// 短视频
+        /// </summary>
+        ShortVideo=0,
+        /// <summary>
+        /// 直播前
+        /// </summary>
+        LiveRoom=1,
+        /// <summary>
+        /// 粉丝群
+        /// </summary>
+        FansGroup=2,
+        /// <summary>
+        /// 私信
+        /// </summary>
+        PrivateMessage=3,
+        /// <summary>
+        /// 智能AI
+        /// </summary>
+        AI=4
+}
+
     public enum ShoppingCartConsultationType
     {
         /// <summary>

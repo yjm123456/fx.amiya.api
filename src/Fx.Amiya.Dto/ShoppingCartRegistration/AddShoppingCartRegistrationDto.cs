@@ -22,6 +22,9 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         public int ConsultationType { get; set; }
         public bool IsAddWeChat { get; set; }
         public bool IsWriteOff { get; set; }
+        /// <summary>
+        /// 是否派单
+        /// </summary>
         public bool IsConsultation { get; set; }
         public DateTime? ConsultationDate { get; set; }
         public bool IsReturnBackPrice { get; set; }
@@ -67,5 +70,13 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// 紧急程度
         /// </summary>
         public int EmergencyLevel { get; set; }
+        /// <summary>
+        /// 抖音客户来源
+        /// </summary>
+        public int Source { get; set; }
+        /// <summary>
+        /// 是否派单
+        /// </summary>
+        public bool SendOrder { get; set; }
     }
 }

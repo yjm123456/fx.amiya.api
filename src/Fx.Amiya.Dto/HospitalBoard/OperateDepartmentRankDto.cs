@@ -17,13 +17,21 @@ namespace Fx.Amiya.Dto.HospitalBoard
         /// </summary>
         public string DepartMentName { get; set; }
         /// <summary>
-        /// 上门率
+        /// 当月上门率
         /// </summary>
         public decimal? ToHospitalRatio { get; set; }
         /// <summary>
-        /// 成交率
+        /// 当月成交率
         /// </summary>
         public decimal? DealRation { get; set; }
+        /// <summary>
+        /// 累计上门率
+        /// </summary>
+        public decimal? AccumulateToHospitalRatio { get; set; }
+        /// <summary>
+        /// 累计成交率
+        /// </summary>
+        public decimal? AccumulateDealRation { get; set; }
         /// <summary>
         /// 新客客单价
         /// </summary>

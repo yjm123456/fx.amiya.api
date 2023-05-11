@@ -21,6 +21,9 @@ namespace Fx.Amiya.DbModels.Model
         public int ConsultationType { get; set; }
         public bool IsAddWeChat { get; set; }
         public bool IsWriteOff { get; set; }
+        /// <summary>
+        /// 是否派单
+        /// </summary>
         public bool IsConsultation { get; set; }
 
         public DateTime? ConsultationDate { get; set; }
@@ -44,6 +47,15 @@ namespace Fx.Amiya.DbModels.Model
         /// 紧急程度
         /// </summary>
         public int EmergencyLevel { get; set; }
+        /// <summary>
+        /// 抖音客户来源
+        /// </summary>
+        public int? Source { get; set; }
+        /// <summary>
+        /// 主播基础id
+        /// </summary>
+        public string BaseLiveAnchorId { get; set; }
+        
         public Contentplatform Contentplatform { get; set; }
         public LiveAnchor LiveAnchor { get; set; }
         public AmiyaEmployee AmiyaEmployee { get; set; }
