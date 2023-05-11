@@ -1333,11 +1333,15 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.ToHospitalType = updateVo.Type == 0 ? (int)ContentPlateFormOrderToHospitalType.OTHER : (int)ContentPlateFormOrderToHospitalType.REFUND;
             updateDto.Id = contentPlatFormOrder.Id;
             updateDto.IsFinish = true;
-            updateDto.DealAmount = updateVo.TotalCashAmount;
+            if (updateDto.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
+            {
+                updateVo.TotalCashAmount = -updateVo.TotalCashAmount;
+            }
             updateDto.LastDealHospitalId = hospitalId;
             updateDto.ToHospitalDate = updateVo.Date;
             updateDto.LastProjectStage = "";
             updateDto.DealPictureUrl = "";
+            updateDto.DealAmount = updateVo.TotalCashAmount;
             updateDto.UnDealReason = "";
             updateDto.IsToHospital = true;
             updateDto.UnDealPictureUrl = "";
