@@ -1211,6 +1211,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             UpdateContentPlateFormOrderFinishDto updateDto = new UpdateContentPlateFormOrderFinishDto();
+            if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
+            {
+                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                {
+                    updateVo.DealAmount = -updateVo.DealAmount;
+                }
+                else
+                {
+                    throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
+                }
+            }
             updateDto.Id = updateVo.Id;
             updateDto.DealId = updateVo.DealId;
             updateDto.IsFinish = updateVo.IsFinish;
@@ -1319,6 +1330,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var contentPlatFormOrder = await _orderService.GetOrderListByPhoneAndHospitalIdAsync(updateVo.CustomerPhone, hospitalId);
             //修改订单
             ContentPlateFormOrderFinishDto updateDto = new ContentPlateFormOrderFinishDto();
+            updateDto.ToHospitalType = updateVo.Type == 0 ? (int)ContentPlateFormOrderToHospitalType.OTHER : (int)ContentPlateFormOrderToHospitalType.REFUND;
             updateDto.Id = contentPlatFormOrder.Id;
             updateDto.IsFinish = true;
             updateDto.DealAmount = updateVo.TotalCashAmount;

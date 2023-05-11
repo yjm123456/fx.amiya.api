@@ -2181,12 +2181,6 @@ namespace Fx.Amiya.Service
                 {
                     await customerAppointmentScheduleService.UpdateAppointmentCompleteStatusAsync(order.Phone, (int)AppointmentType.ToHospitalAppointment);
                 }
-                if (input.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
-                {
-                    //获取当前登陆账户是否为管理员
-                    var positionInfo = await _dalAmiyaEmployee.GetAll().Where(z => z.Id == input.EmpId).FirstOrDefaultAsync();
-
-                }
                 if (input.IsFinish == true)
                 {
                     var price = order.DepositAmount.HasValue ? order.DepositAmount.Value : 0.00M;
