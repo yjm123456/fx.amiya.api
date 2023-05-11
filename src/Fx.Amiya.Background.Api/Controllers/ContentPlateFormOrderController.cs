@@ -1314,7 +1314,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="updateVo"></param>
         /// <returns></returns>
         [HttpPut("finishContentPlateFormOrderByApi")]
-        [FxTenantAuthorize]
+        [FxPartnerAuthorize]
         public async Task<ResultData> HospitalFinishOrderByApiAsync(FinishContentPlateFormOrderByApi updateVo)
         {
             int hospitalId = 0;
