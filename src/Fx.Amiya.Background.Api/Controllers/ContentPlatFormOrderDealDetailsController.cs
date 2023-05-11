@@ -54,6 +54,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryCustomerAppointSchedulePageListDto.ContentPlatFormOrderId = query.ContentPlatFormOrderId;
                 queryCustomerAppointSchedulePageListDto.StartDate = query.StartDate;
                 queryCustomerAppointSchedulePageListDto.EndDate = query.EndDate;
+                queryCustomerAppointSchedulePageListDto.PageNum = query.PageNum;
+                queryCustomerAppointSchedulePageListDto.PageSize = query.PageSize;
                 var q = await contentPlatFormOrderDealDetailsService.GetListAsync(queryCustomerAppointSchedulePageListDto);
 
                 var contentPlatFormOrderDealDetails = from d in q.List
