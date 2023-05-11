@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -92,5 +93,6 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// 邀约凭证
         /// </summary>
         public List<string> InvitationDocuments { get; set; }
+        public List<AddContentPlatFormOrderDealDetailsVo> AddContentPlatFormOrderDealDetailsVoList { get; set; }
     }
 }

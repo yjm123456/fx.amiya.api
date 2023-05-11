@@ -611,13 +611,29 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             updateDto.UnDealReason = updateVo.UnDealReason;
             updateDto.IsToHospital = updateVo.IsToHospital;
             updateDto.ToHospitalType = updateVo.ToHospitalType;
+            updateDto.DealPerformanceType = updateVo.DealPerformanceType;
             updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
             updateDto.DealDate = updateVo.DealDate;
             updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
-            updateDto.DealPerformanceType = updateVo.DealPerformanceType;
             updateDto.EmpId = Convert.ToInt32(employee.Id);
-            updateDto.InvitationDocuments = updateVo.InvitationDocuments;
             updateDto.ConsumptionType = updateVo.ConsumptionType;
+            updateDto.InvitationDocuments = updateVo.InvitationDocuments;
+            List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
+            if (updateDto.IsFinish == true)
+            {
+                foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
+                {
+                    AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
+                    addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
+                    addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;
+                    addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
+                    addContentPlatFormOrderDealDetailsDto.Price = x.Price;
+                    addContentPlatFormOrderDealDetailsDto.CreateBy = updateDto.EmpId;
+                    addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;
+                    addContentPlatFormOrderDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);
+                }
+            }
+            updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
             await _orderService.FinishContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
         }

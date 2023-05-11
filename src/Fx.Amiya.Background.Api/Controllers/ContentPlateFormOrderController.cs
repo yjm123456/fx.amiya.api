@@ -1304,36 +1304,52 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpPut("finishContentPlateFormOrderByApi")]
         [FxTenantAuthorize]
-        public async Task<ResultData> HospitalFinishOrderByApiAsync(ContentPlateFormOrderFinishVo updateVo)
+        public async Task<ResultData> HospitalFinishOrderByApiAsync(FinishContentPlateFormOrderByApi updateVo)
         {
+            int hospitalId = 0;
+            if (updateVo.HospitalId == "hzltm")
+            {
+                hospitalId = 16;
+            }
+            if (updateVo.HospitalId == "hzwdly")
+            {
+                hospitalId = 37;
+            }
+            //验证订单是否存在
+            var contentPlatFormOrder = await _orderService.GetOrderListByPhoneAndHospitalIdAsync(updateVo.CustomerPhone, hospitalId);
             //修改订单
             ContentPlateFormOrderFinishDto updateDto = new ContentPlateFormOrderFinishDto();
-            updateDto.Id = updateVo.Id;
-            updateDto.IsFinish = updateVo.IsFinish;
-            updateDto.DealAmount = updateVo.DealAmount;
-            updateDto.LastDealHospitalId = updateVo.LastDealHospitalId;
-            updateDto.ToHospitalDate = updateVo.ToHospitalDate;
-            updateDto.LastProjectStage = updateVo.LastProjectStage;
-            updateDto.DealPictureUrl = updateVo.DealPictureUrl;
-            updateDto.UnDealReason = updateVo.UnDealReason;
-            updateDto.IsToHospital = updateVo.IsToHospital;
-            updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
-            updateDto.DealDate = updateVo.DealDate;
-            updateDto.IsAcompanying = updateVo.IsAcompanying;
+            updateDto.Id = contentPlatFormOrder.Id;
+            updateDto.IsFinish = true;
+            updateDto.DealAmount = updateVo.TotalCashAmount;
+            updateDto.LastDealHospitalId = hospitalId;
+            updateDto.ToHospitalDate = updateVo.Date;
+            updateDto.LastProjectStage = "";
+            updateDto.DealPictureUrl = "";
+            updateDto.UnDealReason = "";
+            updateDto.IsToHospital = true;
+            updateDto.UnDealPictureUrl = "";
+            updateDto.DealDate = updateVo.Date;
+            updateDto.IsAcompanying = false;
             updateDto.DealPerformanceType = (int)ContentPlateFormOrderDealPerformanceType.HospitalDeclaration;
-            updateDto.InvitationDocuments = updateVo.InvitationDocuments;
-            updateDto.ConsumptionType = updateVo.ConsumptionType;
+            updateDto.InvitationDocuments = new List<string>();
+            int consumptionType = (int)ConsumptionType.Deposit;
+            if (updateVo.ConsumptionType == 1 || updateVo.ConsumptionType == 2 || updateVo.ConsumptionType == 3)
+            {
+                consumptionType = (int)ConsumptionType.Deal;
+            }
+            updateDto.ConsumptionType = consumptionType;
             updateDto.EmpId = 0;
             List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
             if (updateDto.IsFinish == true)
             {
-                foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
+                foreach (var x in updateVo.Details)
                 {
                     AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
-                    addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
-                    addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;
+                    addContentPlatFormOrderDealDetailsDto.GoodsName = x.ItemName;
+                    addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.ItemStandard;
                     addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
-                    addContentPlatFormOrderDealDetailsDto.Price = x.Price;
+                    addContentPlatFormOrderDealDetailsDto.Price = x.CashAmount;
                     addContentPlatFormOrderDealDetailsDto.CreateBy = 0;
                     addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;
                     addContentPlatFormOrderDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);

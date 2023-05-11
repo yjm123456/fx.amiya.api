@@ -1663,7 +1663,7 @@
             <param name="updateVo"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormOrderController.HospitalFinishOrderByApiAsync(Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo)">
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ContentPlateFormOrderController.HospitalFinishOrderByApiAsync(Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.FinishContentPlateFormOrderByApi)">
             <summary>
             医院对接同步完成订单
             </summary>
@@ -12572,6 +12572,76 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.ExportContentPlatFormOrderInfoVo.IsRepeatProfundityOrder">
             <summary>
             是否是重单深度订单
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.FinishContentPlateFormOrderByApi.HospitalId">
+            <summary>
+            医院编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.FinishContentPlateFormOrderByApi.Type">
+            <summary>
+            消费类型{ 0=收费  1=退费}
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.FinishContentPlateFormOrderByApi.CustomerName">
+            <summary>
+            客户名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.FinishContentPlateFormOrderByApi.CustomerPhone">
+            <summary>
+            客户电话
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.FinishContentPlateFormOrderByApi.Date">
+            <summary>
+            消费日期
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.FinishContentPlateFormOrderByApi.TotalCashAmount">
+            <summary>
+            本次货币金额总额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.FinishContentPlateFormOrderByApi.ConsumptionType">
+            <summary>
+            操作类型 0交预交金，1=办卡，2=项目收费，3=划价单收费，4卡类欠款回收，5=欠款回收
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.FinishContentPlateFormOrderByApi.RefundType">
+             <summary>
+            退款类型 0=退预交金，1=退卡，2=退项目，3=退划价单，4退多余欠款，
+             </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.FinishContentPlateFormOrderByApi.Details">
+            <summary>
+            成交详情
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.FinishContentPlateFormOrderByApiDetails">
+            <summary>
+            成交详情
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.FinishContentPlateFormOrderByApiDetails.ItemName">
+            <summary>
+            项目名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.FinishContentPlateFormOrderByApiDetails.ItemStandard">
+            <summary>
+            项目规格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.FinishContentPlateFormOrderByApiDetails.Quantity">
+            <summary>
+            数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.FinishContentPlateFormOrderByApiDetails.CashAmount">
+            <summary>
+            货币金额
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.QueryExportContentPlateFormOrderLlistWithPage.AppointmentHospital">

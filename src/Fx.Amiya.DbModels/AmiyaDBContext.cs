@@ -103,7 +103,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<ShoppingCartRegistration> ShoppingCartRegistration { get; set; }
         public virtual DbSet<AmiyaPositionPermission> AmiyaPositionPermission { get; set; }
         public virtual DbSet<ContentPlatformOrderDealInfo> ContentPlatformOrderDealInfo { get; set; }
-        //public virtual DbSet<ContentPlatFormOrderDealDetails> ContentPlatFormOrderDealDetails { get; set; }
+        public virtual DbSet<ContentPlatFormOrderDealDetails> ContentPlatFormOrderDealDetails { get; set; }
         public virtual DbSet<ContentPlatFormOrderAddWork> ContentPlatFormOrderAddWork { get; set; }
         public virtual DbSet<HospitalSurplusAppointment> HospitalSurplusAppointment { get; set; }
         public virtual DbSet<SendOrderUpdateRecord> SendOrderUpdateRecord { get; set; }
@@ -257,7 +257,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new HospitalPositionModulePermissionConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalOperationDataConfiguration());
             modelBuilder.ApplyConfiguration(new ContentPlatFormOrderDealInfoConfiguration());
-            //modelBuilder.ApplyConfiguration(new ContentPlatFormOrderDealDetailsConfiguration());
+            modelBuilder.ApplyConfiguration(new ContentPlatFormOrderDealDetailsConfiguration());
             modelBuilder.ApplyConfiguration(new ConfigConfiguration());
             modelBuilder.ApplyConfiguration(new MiniProgramAutoSendMessageConfiguration());
             modelBuilder.ApplyConfiguration(new WxAppInfoConfiguration());

@@ -176,6 +176,8 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task RepeateContentPlateFormOrderAsync(ContentPlateFormOrderRepeateDto input, int hospitalEmployeeId, int hospitalId);
         Task<List<ContentPlatFormOrderInfoSimpleDto>> GetOrderListByPhoneAsync(string phone);
+
+        Task<ContentPlatFormOrderInfoSimpleDto> GetOrderListByPhoneAndHospitalIdAsync(string phone, int sendHospitalId);
         /// <summary>
         /// 编辑订单
         /// </summary>
