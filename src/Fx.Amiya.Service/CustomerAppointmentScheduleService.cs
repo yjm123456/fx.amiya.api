@@ -384,7 +384,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="type">预约日程类型</param>
         /// <returns></returns>
-        public async Task<FxPageInfo<CustomerAppointmentScheduleDto>> GetListWithPageByBaseLiveAnchorAsync(string liveAnchorId, int pageSize, int pageNum,int type)
+        public async Task<FxPageInfo<CustomerAppointmentScheduleDto>> GetListWithPageByBaseLiveAnchorAsync(string liveAnchorId, int? pageSize, int? pageNum,int type)
         {
             var liveAnchorAppointments = dalCustomerAppointmentScheduleService.GetAll().Where(e => e.AssignLiveanchorId == liveAnchorId && e.AppointmentType == type&&e.Valid==true&&e.IsFinish==false).OrderByDescending(e=>e.AppointmentDate);
             FxPageInfo<CustomerAppointmentScheduleDto> fxPageInfo = new FxPageInfo<CustomerAppointmentScheduleDto>();
@@ -407,9 +407,9 @@ namespace Fx.Amiya.Service
                 AppointmentHospitalId = d.AppointmentHospitalId,
                 AppointmentHospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == d.AppointmentHospitalId).Select(e => e.Name).SingleOrDefault() ?? "",
                 Consultation = d.Consultation,              
-            }).OrderByDescending(e=>e.CreateDate)
-            .Skip((pageNum - 1) * pageSize)
-            .Take(pageSize).ToList();
+            }).OrderBy(e=>e.AppointmentDate)
+            .Skip((pageNum.Value - 1) * pageSize.Value)
+            .Take(pageSize.Value).ToList();
             return fxPageInfo;
         }
 

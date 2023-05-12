@@ -744,6 +744,9 @@ namespace Fx.Amiya.Service
                 case 2:
                     consumptionType = "退款消费";
                     break;
+                case 3:
+                    consumptionType = "其他消费";
+                    break;
                 default:
                     consumptionType = "未知";
                     break;

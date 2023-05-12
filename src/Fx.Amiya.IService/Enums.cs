@@ -899,6 +899,7 @@ namespace Fx.Amiya.IService
     /// 成交情况消费类型
     /// </summary>
     public enum ConsumptionType{
+        
         /// <summary>
         /// 定金消费
         /// </summary>
@@ -910,7 +911,11 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 退款消费
         /// </summary>
-        Refund=2
+        Refund=2,
+        /// <summary>
+        /// 其他
+        /// </summary>
+        OTHER=3,
 
     }
 
