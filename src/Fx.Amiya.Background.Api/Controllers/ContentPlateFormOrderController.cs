@@ -1314,7 +1314,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="updateVo"></param>
         /// <returns></returns>
         [HttpPut("finishContentPlateFormOrderByApi")]
-        [FxPartnerAuthorize]
+        //[FxPartnerAuthorize]
         public async Task<ResultData> HospitalFinishOrderByApiAsync(FinishContentPlateFormOrderByApi updateVo)
         {
             int hospitalId = 0;
@@ -1331,7 +1331,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             //修改订单
             ContentPlateFormOrderFinishDto updateDto = new ContentPlateFormOrderFinishDto();
             updateDto.ToHospitalType = updateVo.Type == 0 ? (int)ContentPlateFormOrderToHospitalType.OTHER : (int)ContentPlateFormOrderToHospitalType.REFUND;
-            updateDto.Id = contentPlatFormOrder.Id;
+            if (contentPlatFormOrder != null)
+            {
+                updateDto.Id = contentPlatFormOrder.Id;
+            }
+            else
+            {
+                updateDto.LastProjectStage = updateVo.CustomerPhone;
+            }
             updateDto.IsFinish = true;
             if (updateDto.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
             {
@@ -1339,7 +1346,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             updateDto.LastDealHospitalId = hospitalId;
             updateDto.ToHospitalDate = updateVo.Date;
-            updateDto.LastProjectStage = "";
             updateDto.DealPictureUrl = "";
             updateDto.DealAmount = updateVo.TotalCashAmount;
             updateDto.UnDealReason = "";

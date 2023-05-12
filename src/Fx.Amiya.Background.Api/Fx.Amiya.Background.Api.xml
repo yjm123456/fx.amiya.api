@@ -7390,6 +7390,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.Background.Api.Controllers.ShoppingCartRegistrationController.GetConsultationTypeListAsync">
+            <summary>
+            面诊方式列表
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Fx.Amiya.Background.Api.Controllers.ShoppingCartRegistrationController.DeleteAsync(System.String)">
             <summary>
             删除小黄车登记信息

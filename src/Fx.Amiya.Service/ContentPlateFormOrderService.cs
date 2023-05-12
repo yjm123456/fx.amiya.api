@@ -2081,6 +2081,7 @@ namespace Fx.Amiya.Service
                 //取该订单的第一次成交业绩时间
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
                 var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true && x.ConsumptionType != (int)ConsumptionType.Deposit).FirstOrDefault();
+                AddContentPlatFormOrderDealInfoDto orderDealDto = new AddContentPlatFormOrderDealInfoDto();
 
                 if (dealCount != null)
                 //if (order.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
@@ -2172,57 +2173,72 @@ namespace Fx.Amiya.Service
                         orderIsOldCustomer = true;
                     }
                 }
-                if (order == null)
+                bool isRepeateOrder = false;
+                if (order != null)
                 {
-                    throw new Exception("未找到该订单的相关信息！");
-                }
-                //如果到院完成到院接诊预约
-                if (input.IsToHospital)
-                {
-                    await customerAppointmentScheduleService.UpdateAppointmentCompleteStatusAsync(order.Phone, (int)AppointmentType.ToHospitalAppointment);
-                }
-                if (input.IsFinish == true)
-                {
-                    var price = order.DepositAmount.HasValue ? order.DepositAmount.Value : 0.00M;
-                    await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + input.DealAmount.Value, (int)OrderFrom.ContentPlatFormOrder, order.LiveAnchor.Name, order.LiveAnchorWeChatNo, order.Contentplatform.ContentPlatformName, 1);
-                    await customerBaseInfoService.UpdateState(1, order.Phone);
-                    order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.OrderComplete);
-                    order.DealAmount += input.DealAmount;
-                    order.LateProjectStage = input.LastProjectStage;
-                    order.ToHospitalDate = input.ToHospitalDate;
-                    order.DealPictureUrl = input.DealPictureUrl;
-                    order.IsToHospital = true;
-                    order.ToHospitalDate = input.ToHospitalDate;
-                    order.CommissionRatio = input.CommissionRatio;
-                    order.UnDealReason = "";
-                    order.UnDealPictureUrl = "";
-                    order.DealDate = input.DealDate;
-                    order.DealPerformanceType = input.DealPerformanceType;
+                    //如果到院完成到院接诊预约
+                    if (input.IsToHospital)
+                    {
+                        await customerAppointmentScheduleService.UpdateAppointmentCompleteStatusAsync(order.Phone, (int)AppointmentType.ToHospitalAppointment);
+                    }
+                    if (input.IsFinish == true)
+                    {
+                        var price = order.DepositAmount.HasValue ? order.DepositAmount.Value : 0.00M;
+                        await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + input.DealAmount.Value, (int)OrderFrom.ContentPlatFormOrder, order.LiveAnchor.Name, order.LiveAnchorWeChatNo, order.Contentplatform.ContentPlatformName, 1);
+                        await customerBaseInfoService.UpdateState(1, order.Phone);
+                        order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.OrderComplete);
+                        order.DealAmount += input.DealAmount;
+                        order.LateProjectStage = input.LastProjectStage;
+                        order.ToHospitalDate = input.ToHospitalDate;
+                        order.DealPictureUrl = input.DealPictureUrl;
+                        order.IsToHospital = true;
+                        order.ToHospitalDate = input.ToHospitalDate;
+                        order.CommissionRatio = input.CommissionRatio;
+                        order.UnDealReason = "";
+                        order.UnDealPictureUrl = "";
+                        order.DealDate = input.DealDate;
+                        order.DealPerformanceType = input.DealPerformanceType;
+                    }
+                    else
+                    {
+                        order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.WithoutCompleteOrder);
+                        order.UnDealReason = input.UnDealReason;
+                        order.UnDealPictureUrl = input.UnDealPictureUrl;
+                        order.IsToHospital = input.IsToHospital;
+                        order.ToHospitalDate = input.ToHospitalDate;
+                        order.LateProjectStage = "";
+                        order.DealPictureUrl = "";
+                    }
+                    order.LastDealHospitalId = input.LastDealHospitalId;
+                    order.IsOldCustomer = orderIsOldCustomer;
+                    order.IsAcompanying = input.IsAcompanying;
+                    order.ToHospitalType = input.ToHospitalType;
+                    order.OtherContentPlatFormOrderId = input.OtherContentPlatFormOrderId;
+                    order.UpdateDate = DateTime.Now;
+                    if (order.CheckState == (int)CheckType.CheckedSuccess)
+                    {
+                        order.CheckState = (int)CheckType.Checking;
+                    }
+                    isRepeateOrder = order.IsRepeatProfundityOrder;
+                    await _dalContentPlatformOrder.UpdateAsync(order, true);
+
+
+                    //获取医院客户列表
+                    var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(order.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalId, order.Phone);
+                    //操作医院客户表
+                    if (!string.IsNullOrEmpty(customer.Id))
+                    {
+                        UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
+                        updateSendHospitalCustomerInfoDto.Id = customer.Id;
+                        updateSendHospitalCustomerInfoDto.DealAmount += 1;
+                        await hospitalCustomerInfoService.InsertDealAmountAsync(updateSendHospitalCustomerInfoDto);
+                    }
                 }
                 else
                 {
-                    order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.WithoutCompleteOrder);
-                    order.UnDealReason = input.UnDealReason;
-                    order.UnDealPictureUrl = input.UnDealPictureUrl;
-                    order.IsToHospital = input.IsToHospital;
-                    order.ToHospitalDate = input.ToHospitalDate;
-                    order.LateProjectStage = "";
-                    order.DealPictureUrl = "";
+                    input.LastProjectStage = "医院成交同步，未找到该顾客订单，顾客手机号：" + input.LastProjectStage;
                 }
-                order.LastDealHospitalId = input.LastDealHospitalId;
-                order.IsOldCustomer = orderIsOldCustomer;
-                order.IsAcompanying = input.IsAcompanying;
-                order.ToHospitalType = input.ToHospitalType;
-                order.OtherContentPlatFormOrderId = input.OtherContentPlatFormOrderId;
-                order.UpdateDate = DateTime.Now;
-                if (order.CheckState == (int)CheckType.CheckedSuccess)
-                {
-                    order.CheckState = (int)CheckType.Checking;
-                }
-                await _dalContentPlatformOrder.UpdateAsync(order, true);
-
                 //添加订单成交情况
-                AddContentPlatFormOrderDealInfoDto orderDealDto = new AddContentPlatFormOrderDealInfoDto();
                 orderDealDto.ContentPlatFormOrderId = input.Id;
                 orderDealDto.CreateDate = DateTime.Now;
                 orderDealDto.IsDeal = input.IsFinish;
@@ -2231,7 +2247,7 @@ namespace Fx.Amiya.Service
                 orderDealDto.IsOldCustomer = isoldCustomer;
                 orderDealDto.LastDealHospitalId = input.LastDealHospitalId;
                 orderDealDto.IsAcompanying = input.IsAcompanying;
-                orderDealDto.IsRepeatProfundityOrder = order.IsRepeatProfundityOrder;
+                orderDealDto.IsRepeatProfundityOrder = isRepeateOrder;
                 if (input.IsFinish == true)
                 {
                     orderDealDto.IsToHospital = true;
@@ -2257,17 +2273,6 @@ namespace Fx.Amiya.Service
                 orderDealDto.AddContentPlatFormOrderDealDetailsDtoList = input.AddContentPlatFormOrderDealDetailsDtoList;
                 await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
 
-
-                //获取医院客户列表
-                var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(order.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalId, order.Phone);
-                //操作医院客户表
-                if (!string.IsNullOrEmpty(customer.Id))
-                {
-                    UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
-                    updateSendHospitalCustomerInfoDto.Id = customer.Id;
-                    updateSendHospitalCustomerInfoDto.DealAmount += 1;
-                    await hospitalCustomerInfoService.InsertDealAmountAsync(updateSendHospitalCustomerInfoDto);
-                }
                 unitOfWork.Commit();
             }
             catch (Exception err)
