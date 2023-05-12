@@ -526,7 +526,7 @@ namespace Fx.Amiya.Service
                         x.IsCreateOrder = true;
                         x.IsAddWeChat = true;
                         x.IsWriteOff = true;
-                        //x.IsConsultation = true;
+                        x.IsConsultation = true;
                         x.ConsultationDate = DateTime.Now;
                         await dalShoppingCartRegistration.UpdateAsync(x, true);
                     }
@@ -556,7 +556,6 @@ namespace Fx.Amiya.Service
                     {
                         x.EmergencyLevel = (int)EmergencyLevel.Important;
                         x.IsSendOrder = true;
-                        x.IsConsultation = true;
                         await dalShoppingCartRegistration.UpdateAsync(x, true);
                     }
                 }

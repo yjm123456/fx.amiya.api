@@ -35,7 +35,7 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport.Input
         /// </summary>
         public bool? IsWriteOff { get; set; }
         /// <summary>
-        /// 是否派单
+        /// 是否面诊
         /// </summary>
         public bool? IsConsultation { get; set; }
         /// <summary>

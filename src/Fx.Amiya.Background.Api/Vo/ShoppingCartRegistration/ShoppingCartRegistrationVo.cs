@@ -80,7 +80,7 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// </summary>
         public bool IsWriteOff { get; set; }
         /// <summary>
-        /// 是否派单
+        /// 是否面诊
         /// </summary>
         public bool IsConsultation { get; set; }
         /// <summary>
@@ -171,9 +171,6 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// 基础主播名称
         /// </summary>
         public string BaseLiveAnchorName { get; set; }
-        /// <summary>
-        /// 是否派单
-        /// </summary>
-        public bool SendOrder { get; set; }
+       
     }
 }

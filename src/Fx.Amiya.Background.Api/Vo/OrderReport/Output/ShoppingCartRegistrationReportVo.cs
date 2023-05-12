@@ -98,7 +98,7 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport.OutPut
         /// <summary>
         /// 是否派单
         /// </summary>
-        [Description("是否派单")]
+        [Description("是否面诊")]
         public string IsConsultation { get; set; }
         /// <summary>
         /// 是否退款

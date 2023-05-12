@@ -95,7 +95,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    IsSendOrder = d.IsSendOrder,
                                                    ConsultationType = d.ConsultationType,
                                                    IsWriteOff = d.IsWriteOff,
-                                                   SendOrder = d.IsConsultation,
+                                                   IsConsultation = d.IsConsultation,
                                                    ConsultationDate = d.ConsultationDate,
                                                    IsAddWeChat = d.IsAddWeChat,
                                                    IsReturnBackPrice = d.IsReturnBackPrice,
@@ -179,6 +179,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.IsBadReview = addVo.IsBadReview;
                 addDto.EmergencyLevel = addVo.EmergencyLevel;
                 addDto.Source = addVo.Source;
+                addDto.IsConsultation = addVo.IsConsultation;
                 var contentPlatFormOrder = await contentPlateFormOrderService.GetOrderListByPhoneAsync(addVo.Phone);
                 var isSendOrder = contentPlatFormOrder.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder).Count();
                 if (contentPlatFormOrder.Count > 0)
@@ -189,7 +190,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 {
                     addDto.IsSendOrder = true;
                 }
-                addDto.IsConsultation = addVo.SendOrder;
+               
                 await shoppingCartRegistrationService.AddAsync(addDto);
 
                 return ResultData.Success();
@@ -227,7 +228,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.Price = shoppingCartRegistration.Price;
                 shoppingCartRegistrationVo.ConsultationType = shoppingCartRegistration.ConsultationType;
                 shoppingCartRegistrationVo.IsWriteOff = shoppingCartRegistration.IsWriteOff;
-                shoppingCartRegistrationVo.SendOrder = shoppingCartRegistration.IsConsultation;
+                shoppingCartRegistrationVo.IsConsultation = shoppingCartRegistration.IsConsultation;
                 shoppingCartRegistrationVo.ConsultationDate = shoppingCartRegistration.ConsultationDate;
                 shoppingCartRegistrationVo.IsReturnBackPrice = shoppingCartRegistration.IsReturnBackPrice;
                 shoppingCartRegistrationVo.Remark = shoppingCartRegistration.Remark;
@@ -343,7 +344,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.ConsultationType = updateVo.ConsultationType;
                 updateDto.IsWriteOff = updateVo.IsWriteOff;
                 updateDto.ConsultationDate = updateVo.ConsultationDate;
-                updateDto.IsConsultation = updateVo.SendOrder;
+                updateDto.IsConsultation = updateVo.IsConsultation;
                 updateDto.IsReturnBackPrice = updateVo.IsReturnBackPrice;
                 updateDto.Remark = updateVo.Remark;
                 updateDto.BadReviewContent = updateVo.BadReviewContent;

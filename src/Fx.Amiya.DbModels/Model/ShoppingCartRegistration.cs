@@ -22,7 +22,7 @@ namespace Fx.Amiya.DbModels.Model
         public bool IsAddWeChat { get; set; }
         public bool IsWriteOff { get; set; }
         /// <summary>
-        /// 是否派单
+        /// 是否面诊
         /// </summary>
         public bool IsConsultation { get; set; }
 
