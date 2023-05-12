@@ -205,7 +205,7 @@ namespace Fx.Amiya.Service
 
         public async Task<LiveAnchorWeChatInfoDto> GetByIdAsync(string id)
         {
-            var result = from d in dalLiveAnchorWeChatInfo.GetAll().Where(x => x.Valid).Include(x => x.LiveAnchor)
+            var result = from d in dalLiveAnchorWeChatInfo.GetAll().Include(x => x.LiveAnchor)
                          select d;
             var x = result.FirstOrDefault(e => e.Id == id);
             if (x == null)
