@@ -23,7 +23,7 @@ namespace Fx.Amiya.Service
         public LiveAnchorWeChatInfoService(IDalLiveAnchorWeChatInfo dalLiveAnchorWeChatInfo,
             ILiveRequirementInfoService liveRequirementInfoService,
             IAmiyaEmployeeService amiyaEmployeeService,
-            IEmployeeBindLiveAnchorService  employeeBindLiveAnchorService,
+            IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
             IDalContentplatform contentPlateForm)
         {
             this.dalLiveAnchorWeChatInfo = dalLiveAnchorWeChatInfo;
@@ -42,18 +42,18 @@ namespace Fx.Amiya.Service
         public async Task<List<LiveAnchorWeChatInfoDto>> GetValidAsync()
         {
             var liveAnchorWeChatInfos = from d in dalLiveAnchorWeChatInfo.GetAll()
-                              where d.Valid == true
-                              select new LiveAnchorWeChatInfoDto
-                              {
-                                  Id = d.Id,
-                                  LiveAnchorId = d.LiveAnchorId,
-                                  LiveAnchorName = d.LiveAnchor.Name,
-                                  ContentPlatFormId = d.LiveAnchor.ContentPlateFormId,
-                                  WeChatNo = d.WeChatNo,
-                                  NickName = d.NickName,
-                                  Remark = d.Remark,
-                                  Valid = d.Valid
-                              };
+                                        where d.Valid == true
+                                        select new LiveAnchorWeChatInfoDto
+                                        {
+                                            Id = d.Id,
+                                            LiveAnchorId = d.LiveAnchorId,
+                                            LiveAnchorName = d.LiveAnchor.Name,
+                                            ContentPlatFormId = d.LiveAnchor.ContentPlateFormId,
+                                            WeChatNo = d.WeChatNo,
+                                            NickName = d.NickName,
+                                            Remark = d.Remark,
+                                            Valid = d.Valid
+                                        };
             var resultList = await liveAnchorWeChatInfos.ToListAsync();
             foreach (var x in resultList)
             {
@@ -122,7 +122,7 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task<FxPageInfo<LiveAnchorWeChatInfoDto>> GetListAsync(string keyword,int?liveAnchorId, int employeeId,  bool valid, int pageNum, int pageSize)
+        public async Task<FxPageInfo<LiveAnchorWeChatInfoDto>> GetListAsync(string keyword, int? liveAnchorId, int employeeId, bool valid, int pageNum, int pageSize)
         {
             List<int> liveAnchorWeChatInfoIds = new List<int>();
             if (liveAnchorId.HasValue)
@@ -139,21 +139,21 @@ namespace Fx.Amiya.Service
                 }
             }
 
-            var liveAnchorWeChatInfos = from d in dalLiveAnchorWeChatInfo.GetAll().Include(e=>e.LiveAnchor)
-                              where (string.IsNullOrWhiteSpace(keyword) || d.LiveAnchor.Name.Contains(keyword)||d.WeChatNo.Contains(keyword)||d.NickName.Contains(keyword)||d.Remark.Contains(keyword))
-                              && (liveAnchorWeChatInfoIds.Count == 0 || liveAnchorWeChatInfoIds.Contains(d.LiveAnchorId))
-                              && (d.Valid == valid)
-                              select new LiveAnchorWeChatInfoDto
-                              {
-                                  Id = d.Id,
-                                  LiveAnchorId = d.LiveAnchorId,
-                                  LiveAnchorName = d.LiveAnchor.Name,
-                                  ContentPlatFormId = d.LiveAnchor.ContentPlateFormId,
-                                  WeChatNo = d.WeChatNo,
-                                  NickName = d.NickName,
-                                  Remark = d.Remark,
-                                  Valid = d.Valid
-                              };
+            var liveAnchorWeChatInfos = from d in dalLiveAnchorWeChatInfo.GetAll().Include(e => e.LiveAnchor)
+                                        where (string.IsNullOrWhiteSpace(keyword) || d.LiveAnchor.Name.Contains(keyword) || d.WeChatNo.Contains(keyword) || d.NickName.Contains(keyword) || d.Remark.Contains(keyword))
+                                        && (liveAnchorWeChatInfoIds.Count == 0 || liveAnchorWeChatInfoIds.Contains(d.LiveAnchorId))
+                                        && (d.Valid == valid)
+                                        select new LiveAnchorWeChatInfoDto
+                                        {
+                                            Id = d.Id,
+                                            LiveAnchorId = d.LiveAnchorId,
+                                            LiveAnchorName = d.LiveAnchor.Name,
+                                            ContentPlatFormId = d.LiveAnchor.ContentPlateFormId,
+                                            WeChatNo = d.WeChatNo,
+                                            NickName = d.NickName,
+                                            Remark = d.Remark,
+                                            Valid = d.Valid
+                                        };
             FxPageInfo<LiveAnchorWeChatInfoDto> liveAnchorWeChatInfoPageInfo = new FxPageInfo<LiveAnchorWeChatInfoDto>();
             liveAnchorWeChatInfoPageInfo.TotalCount = await liveAnchorWeChatInfos.CountAsync();
             liveAnchorWeChatInfoPageInfo.List = await liveAnchorWeChatInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -205,7 +205,7 @@ namespace Fx.Amiya.Service
 
         public async Task<LiveAnchorWeChatInfoDto> GetByIdAsync(string id)
         {
-            var result = from d in dalLiveAnchorWeChatInfo.GetAll().Include(x=>x.LiveAnchor)
+            var result = from d in dalLiveAnchorWeChatInfo.GetAll().Where(x => x.Valid).Include(x => x.LiveAnchor)
                          select d;
             var x = result.FirstOrDefault(e => e.Id == id);
             if (x == null)
@@ -233,7 +233,7 @@ namespace Fx.Amiya.Service
         public async Task UpdateAsync(UpdateLiveAnchorWeChatInfoDto updateDto)
         {
             var resultCount = await this.GetValidListAsync();
-            var result = resultCount.FirstOrDefault(e => e.Id != updateDto.Id&&e.LiveAnchorId == updateDto.LiveAnchorId && e.WeChatNo == updateDto.WeChatNo);
+            var result = resultCount.FirstOrDefault(e => e.Id != updateDto.Id && e.LiveAnchorId == updateDto.LiveAnchorId && e.WeChatNo == updateDto.WeChatNo);
             if (result != null)
                 throw new Exception("已存在该主播微信账号");
             LiveAnchorWeChatInfo liveAchor = new LiveAnchorWeChatInfo();
@@ -248,6 +248,17 @@ namespace Fx.Amiya.Service
 
 
 
+        ///// <summary>
+        ///// 删除主播微信账号
+        ///// </summary>
+        ///// <param name="id"></param>
+        ///// <returns></returns>
+        //public async Task DeleteAsync(string id)
+        //{
+        //    var result = await dalLiveAnchorWeChatInfo.GetAll().FirstOrDefaultAsync(e => e.Id == id);
+        //    await dalLiveAnchorWeChatInfo.DeleteAsync(result, true);
+        //}
+
         /// <summary>
         /// 删除主播微信账号
         /// </summary>
@@ -256,7 +267,8 @@ namespace Fx.Amiya.Service
         public async Task DeleteAsync(string id)
         {
             var result = await dalLiveAnchorWeChatInfo.GetAll().FirstOrDefaultAsync(e => e.Id == id);
-            await dalLiveAnchorWeChatInfo.DeleteAsync(result, true);
+            result.Valid = false;
+            await dalLiveAnchorWeChatInfo.UpdateAsync(result, true);
         }
 
         /// <summary>
@@ -266,18 +278,18 @@ namespace Fx.Amiya.Service
         private async Task<List<LiveAnchorWeChatInfoDto>> GetValidListAsync()
         {
             var liveAnchorWeChatInfos = from d in dalLiveAnchorWeChatInfo.GetAll()
-                              where d.Valid == true
-                              select new LiveAnchorWeChatInfoDto
-                              {
-                                  Id = d.Id,
-                                  LiveAnchorId = d.LiveAnchorId,
-                                  LiveAnchorName = d.LiveAnchor.Name,
-                                  ContentPlatFormId = d.LiveAnchor.ContentPlateFormId,
-                                  WeChatNo = d.WeChatNo,
-                                  NickName = d.NickName,
-                                  Remark = d.Remark,
-                                  Valid = d.Valid
-                              };
+                                        where d.Valid == true
+                                        select new LiveAnchorWeChatInfoDto
+                                        {
+                                            Id = d.Id,
+                                            LiveAnchorId = d.LiveAnchorId,
+                                            LiveAnchorName = d.LiveAnchor.Name,
+                                            ContentPlatFormId = d.LiveAnchor.ContentPlateFormId,
+                                            WeChatNo = d.WeChatNo,
+                                            NickName = d.NickName,
+                                            Remark = d.Remark,
+                                            Valid = d.Valid
+                                        };
             var resultList = await liveAnchorWeChatInfos.ToListAsync();
             foreach (var x in resultList)
             {
