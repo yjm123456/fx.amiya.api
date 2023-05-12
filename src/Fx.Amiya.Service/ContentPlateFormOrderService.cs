@@ -2212,6 +2212,7 @@ namespace Fx.Amiya.Service
                     orderDealDto.DealPicture = input.UnDealPictureUrl;
                     orderDealDto.Remark = input.UnDealReason;
                     orderDealDto.Price = 0.00M;
+                    orderDealDto.ConsumptionType = input.ConsumptionType;
                 }
                 orderDealDto.CreateBy = input.EmpId;
                 orderDealDto.InvitationDocuments = input.InvitationDocuments;
@@ -2373,6 +2374,7 @@ namespace Fx.Amiya.Service
                     orderDealDto.DealPicture = input.UnDealPictureUrl;
                     orderDealDto.Remark = input.UnDealReason;
                     orderDealDto.Price = 0.00M;
+                    orderDealDto.ConsumptionType = input.ConsumptionType;
                 }
                 orderDealDto.InvitationDocuments = input.InvitationDocuments;
                 orderDealDto.AddContentPlatFormOrderDealDetailsDtoList = input.AddContentPlatFormOrderDealDetailsDtoList;
