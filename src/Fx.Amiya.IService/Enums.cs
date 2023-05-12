@@ -906,7 +906,11 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 成交消费
         /// </summary>
-        Deal=1
+        Deal=1,
+        /// <summary>
+        /// 退款消费
+        /// </summary>
+        Refund=2
 
     }
 
