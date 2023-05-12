@@ -572,9 +572,11 @@ namespace Fx.Amiya.Service
         /// <summary>
         /// 获取小程序名称
         /// </summary>
-        public static string GetMiniprogramNameText(int miniprogram) {
+        public static string GetMiniprogramNameText(int miniprogram)
+        {
             string miniprogramName = "";
-            switch (miniprogram) {
+            switch (miniprogram)
+            {
                 case 0:
                     miniprogramName = "上合未来";
                     break;
@@ -624,9 +626,11 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="appid"></param>
         /// <returns></returns>
-        public static string GetMiniprogramNameByAppId(string appid) {
+        public static string GetMiniprogramNameByAppId(string appid)
+        {
             string miniprogramName = "";
-            switch (appid) {
+            switch (appid)
+            {
                 case "wx695942e4818de445":
                     miniprogramName = "上合未来";
                     break;
@@ -700,9 +704,11 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="tag"></param>
         /// <returns></returns>
-        public static string GetTagId(int tag) {
+        public static string GetTagId(int tag)
+        {
             string tagId = "";
-            switch (tag) {
+            switch (tag)
+            {
                 case 0:
                     tagId = "mzid";
                     break;
@@ -724,9 +730,11 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static string GetConsumptionTypeText(int? type) {
+        public static string GetConsumptionTypeText(int? type)
+        {
             string consumptionType = "";
-            switch (type) {
+            switch (type)
+            {
                 case 0:
                     consumptionType = "定金消费";
                     break;
@@ -765,6 +773,9 @@ namespace Fx.Amiya.Service
                     break;
                 case 4:
                     sourceText = "智能AI";
+                    break;
+                case 5:
+                    sourceText = "其他";
                     break;
                 default:
                     sourceText = "";
@@ -1599,7 +1610,7 @@ namespace Fx.Amiya.Service
                     break;
 
                 case 2:
-                    inventoryStateText = "图片";
+                    inventoryStateText = "照片";
                     break;
 
                 case 3:
@@ -1611,8 +1622,12 @@ namespace Fx.Amiya.Service
                     break;
 
                 case 5:
+                    inventoryStateText = "粉丝群";
+                    break;
+                case 6:
                     inventoryStateText = "短视频";
                     break;
+
             }
             return inventoryStateText;
         }

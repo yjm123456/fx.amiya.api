@@ -96,6 +96,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    ConsultationType = d.ConsultationType,
                                                    IsWriteOff = d.IsWriteOff,
                                                    IsConsultation = d.IsConsultation,
+                                                   ConsultationTypeText=d.ConsultationTypeText,
                                                    ConsultationDate = d.ConsultationDate,
                                                    IsAddWeChat = d.IsAddWeChat,
                                                    IsReturnBackPrice = d.IsReturnBackPrice,
@@ -450,6 +451,21 @@ namespace Fx.Amiya.Background.Api.Controllers
             }).ToList();
             return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("sourceList", result);
 
+        }
+        /// <summary>
+        /// 面诊方式列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("consultationTypeList")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetConsultationTypeListAsync()
+        {
+            var nameList = shoppingCartRegistrationService.GetShoppingCartConsultationTypeText();
+            var result = nameList.Select(e => new BaseIdAndNameVo<int>
+            {
+                Id = e.Key,
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("typeList", result);
         }
 
         /// <summary>

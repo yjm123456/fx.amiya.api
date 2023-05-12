@@ -94,6 +94,7 @@ namespace Fx.Amiya.Service
                                                    SubPhone = string.IsNullOrEmpty(d.SubPhone) ? "" : ServiceClass.GetIncompletePhone(d.SubPhone),
                                                    Price = d.Price,
                                                    ConsultationType = d.ConsultationType,
+                                                   ConsultationTypeText = ServiceClass.GetConsulationTypeText(d.ConsultationType),
                                                    IsWriteOff = d.IsWriteOff,
                                                    IsCreateOrder = d.IsCreateOrder,
                                                    IsSendOrder = d.IsSendOrder,
@@ -599,7 +600,7 @@ namespace Fx.Amiya.Service
             return emergencyLevelList;
         }
         /// <summary>
-        /// 获取客户来源
+        /// 获取客户来源列表
         /// </summary>
         /// <returns></returns>
         public List<BaseKeyValueDto<int>> GetCustomerSourceList()
@@ -611,6 +612,24 @@ namespace Fx.Amiya.Service
                 BaseKeyValueDto<int> emergencyLevelDto = new BaseKeyValueDto<int>();
                 emergencyLevelDto.Key = Convert.ToInt32(item);
                 emergencyLevelDto.Value = ServiceClass.GetTiktokCustomerSourceText(emergencyLevelDto.Key);
+                emergencyLevelList.Add(emergencyLevelDto);
+            }
+            return emergencyLevelList;
+        }
+
+        /// <summary>
+        /// 获取面诊方式列表
+        /// </summary>
+        /// <returns></returns>
+        public List<BaseKeyValueDto<int>> GetShoppingCartConsultationTypeText()
+        {
+            var emergencyLevels = Enum.GetValues(typeof(ShoppingCartConsultationType));
+            List<BaseKeyValueDto<int>> emergencyLevelList = new List<BaseKeyValueDto<int>>();
+            foreach (var item in emergencyLevels)
+            {
+                BaseKeyValueDto<int> emergencyLevelDto = new BaseKeyValueDto<int>();
+                emergencyLevelDto.Key = Convert.ToInt32(item);
+                emergencyLevelDto.Value = ServiceClass.GetConsulationTypeText(emergencyLevelDto.Key);
                 emergencyLevelList.Add(emergencyLevelDto);
             }
             return emergencyLevelList;

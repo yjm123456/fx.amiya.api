@@ -933,9 +933,15 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 智能AI
         /// </summary>
-        AI=4
-}
-
+        AI=4,
+        /// <summary>
+        /// 其他
+        /// </summary>
+        OTHER=5
+    }
+    /// <summary>
+    /// 面诊方式
+    /// </summary>
     public enum ShoppingCartConsultationType
     {
         /// <summary>
@@ -943,7 +949,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         Video = 1,
         /// <summary>
-        /// 图片
+        /// 照片
         /// </summary>
         Picture = 2,
         /// <summary>
@@ -955,9 +961,13 @@ namespace Fx.Amiya.IService
         /// </summary>
         Others = 4,
         /// <summary>
+        /// 粉丝群
+        /// </summary>
+        FansGroup=5,
+        /// <summary>
         /// 短视频
         /// </summary>
-        ShortVideo = 5
+        ShortVideo = 6
     }
 
     public enum ShootingAndClipVideoType

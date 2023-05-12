@@ -43,6 +43,11 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         List<BaseKeyValueDto<int>> GetCustomerSourceList();
+        /// <summary>
+        /// 获取面诊方式列表
+        /// </summary>
+        /// <returns></returns>
+        List<BaseKeyValueDto<int>> GetShoppingCartConsultationTypeText();
         #region 【日数据业绩生成】
 
         /// <summary>
