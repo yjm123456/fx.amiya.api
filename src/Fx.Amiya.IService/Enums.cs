@@ -554,7 +554,11 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// VIP管家稽查
         /// </summary>
-        VIPHousekeeperCheck = 6
+        VIPHousekeeperCheck = 6,
+        /// <summary>
+        /// 机构报单-API
+        /// </summary>
+        HospitalDeclarationInApi = 7
     }
     #endregion
 

@@ -1359,7 +1359,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.UnDealPictureUrl = "";
             updateDto.DealDate = updateVo.Date;
             updateDto.IsAcompanying = false;
-            updateDto.DealPerformanceType = (int)ContentPlateFormOrderDealPerformanceType.HospitalDeclaration;
+            updateDto.DealPerformanceType = (int)ContentPlateFormOrderDealPerformanceType.HospitalDeclarationInApi;
             updateDto.InvitationDocuments = new List<string>();
             int consumptionType = (int)ConsumptionType.Deposit;
             if (updateVo.ConsumptionType == 1 || updateVo.ConsumptionType == 2 || updateVo.ConsumptionType == 3)

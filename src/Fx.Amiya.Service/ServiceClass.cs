@@ -400,6 +400,9 @@ namespace Fx.Amiya.Service
                 case 6:
                     typeText = "VIP管家稽查";
                     break;
+                case 7:
+                    typeText = "机构报单-API";
+                    break;
             }
             return typeText;
         }

@@ -519,7 +519,7 @@ namespace Fx.Amiya.Service
                 if (startDate != null && endDate != null)
                 {
                     DateTime startrq = ((DateTime)startDate).Date;
-                    DateTime endrq = ((DateTime)endDate).Date.AddDays(1); 
+                    DateTime endrq = ((DateTime)endDate).Date.AddDays(1);
                     dealInfo = from d in dealInfo
                                where (d.CreateDate >= startrq && d.CreateDate < endrq)
                                select d;
@@ -2054,6 +2054,10 @@ namespace Fx.Amiya.Service
             {
                 BaseIdAndNameDto orderType = new BaseIdAndNameDto();
                 orderType.Id = Convert.ToInt32(item).ToString();
+                if (Convert.ToInt32(item) > 6)
+                {
+                    break;
+                }
                 orderType.Name = ServiceClass.GetContentPlateFormOrderDealPerformanceType(Convert.ToInt32(item));
                 orderTypeList.Add(orderType);
             }
