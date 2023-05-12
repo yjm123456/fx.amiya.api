@@ -27581,7 +27581,7 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.Input.QueryShoppingCartRegistrationReportVo.IsConsultation">
             <summary>
-            是否派单
+            是否面诊
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.OrderReport.Input.QueryShoppingCartRegistrationReportVo.IsReturnBackPrice">
@@ -34243,7 +34243,7 @@
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.IsConsultation">
             <summary>
-            是否派单
+            是否面诊
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.ConsultationDate">
@@ -34354,11 +34354,6 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.BaseLiveAnchorName">
             <summary>
             基础主播名称
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.ShoppingCartRegistrationVo.SendOrder">
-            <summary>
-            是否派单
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.UpdateShoppingCartRegistrationVo.Id">
@@ -34494,11 +34489,6 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.UpdateShoppingCartRegistrationVo.Source">
             <summary>
             抖音客户来源
-            </summary>
-        </member>
-        <member name="P:Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration.UpdateShoppingCartRegistrationVo.SendOrder">
-            <summary>
-            是否派单
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.TagInfo.AddTagInfoVo.Name">

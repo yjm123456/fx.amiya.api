@@ -187,7 +187,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var contentPlatFormOrderDealDetailsService = await dalContentPlatFormOrderDealDetailsService.GetAll().Where(e => e.Id == deleteDto.DealId).ToListAsync();
+                var contentPlatFormOrderDealDetailsService = await dalContentPlatFormOrderDealDetailsService.GetAll().Where(e => e.ContentPlatFormOrderDealId == deleteDto.DealId).ToListAsync();
                 foreach (var x in contentPlatFormOrderDealDetailsService)
                 {
                     var empInfo = await _amiyaEmployeeService.GetByIdAsync(x.CreateBy);

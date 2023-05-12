@@ -88,14 +88,14 @@ namespace Fx.Amiya.Service
                                where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0
                                select d;
                 }
-                //财务录入数据只有管理员研发财务和CMO能看到
-                if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16 && employee.AmiyaPositionInfo.Id != 29)
-                {
+                ////财务录入数据只有管理员研发财务和CMO能看到
+                //if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16 && employee.AmiyaPositionInfo.Id != 29)
+                //{
 
-                    dealInfo = from d in dealInfo
-                               where d.CreateBy != 61 && d.CreateBy != 80
-                               select d;
-                }
+                //    dealInfo = from d in dealInfo
+                //               where d.CreateBy != 61 && d.CreateBy != 80
+                //               select d;
+                //}
                 if (startDate != null)
                 {
                     DateTime startrq = ((DateTime)startDate).Date;
@@ -207,14 +207,14 @@ namespace Fx.Amiya.Service
                                where (d.ContentPlatFormOrder.IsSupportOrder == false || d.ContentPlatFormOrder.SupportEmpId == employeeId)
                                select d;
                 }
-                //财务录入数据只有管理员研发财务和CMO能看到
-                if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16 && employee.AmiyaPositionInfo.Id != 29)
-                {
+                ////财务录入数据只有管理员研发财务和CMO能看到
+                //if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16 && employee.AmiyaPositionInfo.Id != 29)
+                //{
 
-                    dealInfo = from d in dealInfo
-                               where d.CreateBy != 61 && d.CreateBy != 80
-                               select d;
-                }
+                //    dealInfo = from d in dealInfo
+                //               where d.CreateBy != 61 && d.CreateBy != 80
+                //               select d;
+                //}
                 if (startDate != null)
                 {
                     DateTime startrq = ((DateTime)startDate).Date;
@@ -508,18 +508,18 @@ namespace Fx.Amiya.Service
                 }
 
 
-                //财务录入数据只有管理员研发财务和CMO能看到
-                if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16 && employee.AmiyaPositionInfo.Id != 29)
-                {
+                ////财务录入数据只有管理员研发财务和CMO能看到
+                //if (employee.AmiyaPositionInfo.Id != 1 && employee.AmiyaPositionInfo.Id != 13 && employee.AmiyaPositionInfo.Id != 16 && employee.AmiyaPositionInfo.Id != 29)
+                //{
 
-                    dealInfo = from d in dealInfo
-                               where d.CreateBy != 61 && d.CreateBy != 80 && d.CreateBy != 215 && d.CreateBy != 202
-                               select d;
-                }
+                //    dealInfo = from d in dealInfo
+                //               where d.CreateBy != 61 && d.CreateBy != 80 && d.CreateBy != 215 && d.CreateBy != 202
+                //               select d;
+                //}
                 if (startDate != null && endDate != null)
                 {
                     DateTime startrq = ((DateTime)startDate).Date;
-                    DateTime endrq = ((DateTime)endDate).Date.AddDays(1);
+                    DateTime endrq = ((DateTime)endDate).Date.AddDays(1); 
                     dealInfo = from d in dealInfo
                                where (d.CreateDate >= startrq && d.CreateDate < endrq)
                                select d;
@@ -961,6 +961,7 @@ namespace Fx.Amiya.Service
                     //添加成交详情
                     foreach (var x in updateDto.AddContentPlatFormOrderDealDetailsDtoList)
                     {
+                        x.ContentPlatFormOrderDealId = ContentPlatFOrmOrderDealInfo.Id;
                         await contentPlatFormOrderDealDetailsService.AddAsync(x);
                     }
                 }
