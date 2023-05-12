@@ -2088,13 +2088,13 @@ namespace Fx.Amiya.Service
                 var orderIsOldCustomer = false;
                 //取该订单的第一次成交业绩时间
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
-                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true && x.ToHospitalType != (int)ContentPlateFormOrderToHospitalType.REFUND && x.ConsumptionType != (int)ConsumptionType.Deposit && x.ConsumptionType != (int)ConsumptionType.Refund).FirstOrDefault();
+                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true && x.ToHospitalType != (int)ContentPlateFormOrderToHospitalType.REFUND && x.ConsumptionType != (int)ConsumptionType.Deposit && x.ConsumptionType != (int)ConsumptionType.Refund && x.Price > 0).FirstOrDefault();
                 AddContentPlatFormOrderDealInfoDto orderDealDto = new AddContentPlatFormOrderDealInfoDto();
 
                 if (dealCount != null)
                 {
                     var dealinfo = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
-                    var realDealCount = dealinfo.Where(x => x.IsDeal == true && x.ToHospitalType != (int)ContentPlateFormOrderToHospitalType.REFUND && x.ConsumptionType != (int)ConsumptionType.Deposit && x.ConsultationType != (int)ConsumptionType.Refund).Count();
+                    var realDealCount = dealinfo.Where(x => x.IsDeal == true && x.Price > 0 && x.ToHospitalType != (int)ContentPlateFormOrderToHospitalType.REFUND && x.ConsumptionType != (int)ConsumptionType.Deposit && x.ConsultationType != (int)ConsumptionType.Refund).Count();
                     if (realDealCount > 1)
                     {
                         orderIsOldCustomer = true;
@@ -2110,7 +2110,7 @@ namespace Fx.Amiya.Service
                     }
                     else
                     {
-                        if (input.ConsumptionType == (int)ConsumptionType.Deal&& input.IsFinish == true && realDealCount == 1)
+                        if (input.ConsumptionType == (int)ConsumptionType.Deal && input.DealAmount > 0 && input.IsFinish == true && realDealCount == 1)
                         {
                             orderIsOldCustomer = true;
                         }
@@ -2254,7 +2254,7 @@ namespace Fx.Amiya.Service
                 }
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
                 //最近一次非定金成交且id和当前要修改的id不同
-                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true && x.Id != input.DealId && x.ToHospitalType != (int)ContentPlateFormOrderToHospitalType.REFUND && x.ConsumptionType != (int)ConsumptionType.Deposit && x.ConsultationType != (int)ConsumptionType.Refund).FirstOrDefault();
+                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true&&x.Price>0 && x.Id != input.DealId && x.ToHospitalType != (int)ContentPlateFormOrderToHospitalType.REFUND && x.ConsumptionType != (int)ConsumptionType.Deposit && x.ConsultationType != (int)ConsumptionType.Refund).FirstOrDefault();
 
                 //如果有
                 if (dealCount != null)
@@ -2279,16 +2279,16 @@ namespace Fx.Amiya.Service
                             await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, false);
 
                         }
-                       
+
                         //成交且为退款,定金,其他消费 将最近一次的成交消费更改为新客消费
-                        if (input.ConsumptionType == (int)ConsumptionType.Refund || input.ConsumptionType == (int)ConsumptionType.OTHER|| input.ConsumptionType == (int)ConsumptionType.Deposit)
+                        if (input.ConsumptionType == (int)ConsumptionType.Refund || input.ConsumptionType == (int)ConsumptionType.OTHER || input.ConsumptionType == (int)ConsumptionType.Deposit)
                         {
                             await _contentPlatFormOrderDalService.UpdateIsOldCustomerAsync(dealCount.Id, false);
                         }
                     }
                     else
                     {
-                        if (input.ConsumptionType == (int)ConsumptionType.Deal && input.IsFinish == true && realDealCount == 1)
+                        if (input.ConsumptionType == (int)ConsumptionType.Deal&&input.DealAmount>0 && input.IsFinish == true && realDealCount == 1)
                         {
                             orderIsOldCustomer = true;
                         }
