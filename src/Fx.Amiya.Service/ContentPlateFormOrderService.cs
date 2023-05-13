@@ -2083,7 +2083,7 @@ namespace Fx.Amiya.Service
                 {
                     input.ConsumptionType = (int)ConsumptionType.OTHER;
                 }
-                if (input.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
+                if (input.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND && input.IsFinish == true)
                 {
                     input.ConsumptionType = (int)ConsumptionType.Refund;
                 }
@@ -2250,7 +2250,7 @@ namespace Fx.Amiya.Service
                 {
                     input.ConsumptionType = (int)ConsumptionType.OTHER;
                 }
-                if (input.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
+                if (input.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND && input.IsFinish == true)
                 {
                     input.ConsumptionType = (int)ConsumptionType.Refund;
                 }
