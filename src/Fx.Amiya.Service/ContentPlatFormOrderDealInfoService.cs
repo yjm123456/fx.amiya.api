@@ -801,10 +801,7 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.SettlePrice = 0.00M;
                 ContentPlatFOrmOrderDealInfo.DealPerformanceType = addDto.DealPerformanceType;
                 ContentPlatFOrmOrderDealInfo.IsRepeatProfundityOrder = addDto.IsRepeatProfundityOrder;
-                if (ContentPlatFOrmOrderDealInfo.IsDeal)
-                {
-                    ContentPlatFOrmOrderDealInfo.ConsumptionType = addDto.ConsumptionType;
-                }
+                ContentPlatFOrmOrderDealInfo.ConsumptionType = addDto.ConsumptionType;
                 await dalContentPlatFormOrderDealInfo.AddAsync(ContentPlatFOrmOrderDealInfo, true);
 
                 //添加邀约凭证图片
