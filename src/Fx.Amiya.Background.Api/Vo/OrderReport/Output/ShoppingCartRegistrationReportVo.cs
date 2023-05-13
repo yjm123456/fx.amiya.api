@@ -40,7 +40,7 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport.OutPut
         /// <summary>
         /// 基础主播名称
         /// </summary>
-        [Description("基础主播名称")]
+        [Description("主播")]
         public string BaseLiveAnchorName { get; set; }
         /// <summary>
         /// 主播IP
