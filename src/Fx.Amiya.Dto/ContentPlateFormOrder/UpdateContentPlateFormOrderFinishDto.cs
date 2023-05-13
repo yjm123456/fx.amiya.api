@@ -96,6 +96,11 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 消费类型
         /// </summary>
         public int? ConsumptionType { get; set; }
+
+        /// <summary>
+        /// 修改人
+        /// </summary>
+        public int UpdateBy { get; set; }
         /// <summary>
         /// 消费类型文本
         /// </summary>

@@ -150,6 +150,11 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 消费类型文本
         /// </summary>
         public string ConsumptionTypeText { get; set; }
+
+        /// <summary>
+        /// 修改人
+        /// </summary>
+        public int UpdateBy { get; set; }
         public List<AddContentPlatFormOrderDealDetailsDto> AddContentPlatFormOrderDealDetailsDtoList { get; set; }
     }
 }

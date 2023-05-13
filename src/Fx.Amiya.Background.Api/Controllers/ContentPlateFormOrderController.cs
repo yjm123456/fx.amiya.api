@@ -1146,7 +1146,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData> FinishOrderByEmployeeAsync(ContentPlateFormOrderFinishVo updateVo)
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND||updateVo.ConsumptionType==(int)ConsumptionType.Refund)
+            if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND || updateVo.ConsumptionType == (int)ConsumptionType.Refund)
             {
                 if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
                 {
@@ -1183,6 +1183,17 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
                 {
+                    if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND || updateVo.ConsumptionType == (int)ConsumptionType.Refund)
+                    {
+                        if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                        {
+                            x.Price = -x.Price;
+                        }
+                        else
+                        {
+                            throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
+                        }
+                    }
                     AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
                     addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
                     addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;
@@ -1211,7 +1222,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             UpdateContentPlateFormOrderFinishDto updateDto = new UpdateContentPlateFormOrderFinishDto();
-            if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND|| updateVo.ConsumptionType == (int)ConsumptionType.Refund)
+            if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND || updateVo.ConsumptionType == (int)ConsumptionType.Refund)
             {
                 if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
                 {
@@ -1237,6 +1248,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.DealDate = updateVo.DealDate;
             updateDto.DealPerformanceType = updateVo.DealPerformanceType;
             updateDto.CommissionRatio = updateVo.CommissionRatio;
+            updateDto.UpdateBy = Convert.ToInt32(employee.Id);
             updateDto.IsAcompanying = updateVo.IsAcompanying;
             updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
             updateDto.InvitationDocuments = updateVo.InvitationDocuments;
@@ -1246,6 +1258,17 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
                 {
+                    if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND || updateVo.ConsumptionType == (int)ConsumptionType.Refund)
+                    {
+                        if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                        {
+                            x.Price = -x.Price;
+                        }
+                        else
+                        {
+                            throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
+                        }
+                    }
                     AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
                     addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
                     addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;
@@ -1298,6 +1321,11 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
                 {
+                    if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND || updateVo.ConsumptionType == (int)ConsumptionType.Refund)
+                    {
+                        x.Price = -x.Price;
+
+                    }
                     AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
                     addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
                     addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;
@@ -1377,14 +1405,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 foreach (var x in updateVo.Details)
                 {
-                    AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
-                    addContentPlatFormOrderDealDetailsDto.GoodsName = x.ItemName;
-                    addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.ItemStandard;
-                    addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
                     if (updateDto.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
                     {
                         x.CashAmount = -x.CashAmount;
                     }
+                    AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
+                    addContentPlatFormOrderDealDetailsDto.GoodsName = x.ItemName;
+                    addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.ItemStandard;
+                    addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
                     addContentPlatFormOrderDealDetailsDto.Price = x.CashAmount;
                     addContentPlatFormOrderDealDetailsDto.CreateBy = 0;
                     addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;

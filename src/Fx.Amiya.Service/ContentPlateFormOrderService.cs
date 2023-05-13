@@ -2385,6 +2385,7 @@ namespace Fx.Amiya.Service
                     orderDealDto.ConsumptionType = input.ConsumptionType;
                 }
                 orderDealDto.InvitationDocuments = input.InvitationDocuments;
+                orderDealDto.UpdateBy = input.UpdateBy;
                 orderDealDto.AddContentPlatFormOrderDealDetailsDtoList = input.AddContentPlatFormOrderDealDetailsDtoList;
                 await _contentPlatFormOrderDalService.UpdateAsync(orderDealDto);
 

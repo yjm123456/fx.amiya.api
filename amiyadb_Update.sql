@@ -185,16 +185,16 @@ ALTER TABLE `tbl_customer_appointment_schedule`
 ALTER TABLE `tbl_content_platform_order_deal_info`
 	ADD COLUMN `consumption_type` INT NULL DEFAULT NULL AFTER `belong_company`;
 -----------------------------------------王健  2023/05/04 END ------------------------------------------------
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
 
 -------------------------------------------王健 2023/05/10 BEGIN ----------------------------------------
 
 
-----小黄车登记添加基础主播id,客户来源,是否派单
+----小黄车登记添加基础主播id,客户来源
 ALTER TABLE `tbl_shopping_cart_registration`
 	ADD COLUMN `base_liveanchor_id` VARCHAR(50) NULL DEFAULT NULL AFTER `emergency_level`,
 	ADD COLUMN `source` INT NULL DEFAULT NULL AFTER `base_liveanchor_id`;
 
 -------------------------------------------王健 2023/05/10 END ----------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上

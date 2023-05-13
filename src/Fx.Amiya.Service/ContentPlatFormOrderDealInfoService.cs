@@ -946,15 +946,15 @@ namespace Fx.Amiya.Service
                     addPicture.Description = "邀约凭证";
                     await _contentPlatFormCustomerPictureService.AddAsync(addPicture);
                 }
+                //清除自己提交的成交详情
+                DeleteContentPlatFormOrderDealDetailsByDealIdDto deleteContentPlatFormOrderDealDetailsByDealIdDto = new DeleteContentPlatFormOrderDealDetailsByDealIdDto();
+                deleteContentPlatFormOrderDealDetailsByDealIdDto.DealId = updateDto.Id;
+                deleteContentPlatFormOrderDealDetailsByDealIdDto.CreateBy = updateDto.UpdateBy;
+                await contentPlatFormOrderDealDetailsService.DeleteByDealIdAsync(deleteContentPlatFormOrderDealDetailsByDealIdDto);
 
                 //添加成交详情
                 if (updateDto.AddContentPlatFormOrderDealDetailsDtoList.Count > 0)
                 {
-                    //清除自己提交的成交详情
-                    DeleteContentPlatFormOrderDealDetailsByDealIdDto deleteContentPlatFormOrderDealDetailsByDealIdDto = new DeleteContentPlatFormOrderDealDetailsByDealIdDto();
-                    deleteContentPlatFormOrderDealDetailsByDealIdDto.DealId = updateDto.Id;
-                    deleteContentPlatFormOrderDealDetailsByDealIdDto.CreateBy = updateDto.AddContentPlatFormOrderDealDetailsDtoList.Select(x => x.CreateBy).FirstOrDefault();
-                    await contentPlatFormOrderDealDetailsService.DeleteByDealIdAsync(deleteContentPlatFormOrderDealDetailsByDealIdDto);
                     //添加成交详情
                     foreach (var x in updateDto.AddContentPlatFormOrderDealDetailsDtoList)
                     {
