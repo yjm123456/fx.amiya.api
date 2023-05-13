@@ -2079,9 +2079,13 @@ namespace Fx.Amiya.Service
                 {
                     if (input.ConsumptionType == (int)ConsumptionType.OTHER) throw new Exception("成交订单不能选择其他消费类型！");
                 }
-                if (input.IsFinish == false)
+                if (input.IsFinish == false || input.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
                 {
                     input.ConsumptionType = (int)ConsumptionType.OTHER;
+                }
+                if (input.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
+                {
+                    input.ConsumptionType = (int)ConsumptionType.Refund;
                 }
                 var order = await _dalContentPlatformOrder.GetAll().Include(x => x.LiveAnchor).Include(x => x.Contentplatform).Include(x => x.ContentPlatformOrderSendList).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 var isoldCustomer = false;
@@ -2246,6 +2250,10 @@ namespace Fx.Amiya.Service
                 {
                     input.ConsumptionType = (int)ConsumptionType.OTHER;
                 }
+                if (input.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
+                {
+                    input.ConsumptionType = (int)ConsumptionType.Refund;
+                }
                 var order = await _dalContentPlatformOrder.GetAll().Include(x => x.LiveAnchor).Include(x => x.Contentplatform).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 var isoldCustomer = false;
                 var orderIsOldCustomer = false;
@@ -2255,7 +2263,7 @@ namespace Fx.Amiya.Service
                 }
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
                 //最近一次非定金成交且id和当前要修改的id不同
-                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true&&x.Price>0 && x.Id != input.DealId && x.ToHospitalType != (int)ContentPlateFormOrderToHospitalType.REFUND && x.ConsumptionType != (int)ConsumptionType.Deposit && x.ConsultationType != (int)ConsumptionType.Refund).FirstOrDefault();
+                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true && x.Price > 0 && x.Id != input.DealId && x.ToHospitalType != (int)ContentPlateFormOrderToHospitalType.REFUND && x.ConsumptionType != (int)ConsumptionType.Deposit && x.ConsultationType != (int)ConsumptionType.Refund).FirstOrDefault();
 
                 //如果有
                 if (dealCount != null)
@@ -2289,7 +2297,7 @@ namespace Fx.Amiya.Service
                     }
                     else
                     {
-                        if (input.ConsumptionType == (int)ConsumptionType.Deal&&input.DealAmount>0 && input.IsFinish == true && realDealCount == 1)
+                        if (input.ConsumptionType == (int)ConsumptionType.Deal && input.DealAmount > 0 && input.IsFinish == true && realDealCount == 1)
                         {
                             orderIsOldCustomer = true;
                         }
