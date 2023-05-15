@@ -422,6 +422,12 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<OrderBaseDto> GetOrderDataByMonthAsync(DateTime startDate,DateTime endDate,int hospitalId);
         /// <summary>
+        /// 获取医院看板订单累计数据
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<OrderBaseDto> GetAccumulateOrderDataAsync(int hospitalId);
+        /// <summary>
         /// 获取机构端运营看板数据
         /// </summary>
         /// <param name="startDate"></param>

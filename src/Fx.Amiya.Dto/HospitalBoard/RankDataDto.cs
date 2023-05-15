@@ -24,10 +24,19 @@ namespace Fx.Amiya.Dto.HospitalBoard
         /// 上门率
         /// </summary>
         public decimal? ToHospitalRatio { get; set; }
+       
         /// <summary>
         /// 成交率
         /// </summary>
         public decimal? DealRatio { get; set; }
+        /// <summary>
+        /// 累计上门率
+        /// </summary>
+        public decimal? AccumulateToHospitalRatio { get; set; }
+        /// <summary>
+        /// 累计成交率
+        /// </summary>
+        public decimal? AccumulateDealRatio { get; set; }
         /// <summary>
         /// 复购率
         /// </summary>

@@ -20,25 +20,31 @@ namespace Fx.Amiya.Dto.HospitalBoard
         /// 新客成交量
         /// </summary>
         public decimal NewCustomerDealCount { get; set; }
-        
-
         /// <summary>
-        /// 老客上门量
+        /// 累计新客成交量
         /// </summary>
-        public decimal OldCustomerToHospitalCount { get; set; }
+        public decimal AccumulateNewCustomerDealCount { get; set; }
         
         /// <summary>
         /// 老客成交量
         /// </summary>
         public decimal OldCustomerDealCount { get; set; }
-        
+        /// <summary>
+        /// 累计老客成交量
+        /// </summary>
 
+        public decimal AccumulateOldCustomerDealCount { get; set; }
 
         /// <summary>
         /// 新客上门率
         /// </summary>
         public decimal? NewCustomerToHospitalRatio { get; set; }
-       
+        /// <summary>
+        /// 累计新客上门率
+        /// </summary>
+
+        public decimal AccumulateNewCustomerToHospitalRatio { get; set; }
+
         /// <summary>
         /// 新客上门率健康值
         /// </summary>
@@ -49,7 +55,10 @@ namespace Fx.Amiya.Dto.HospitalBoard
         /// 新客成交率
         /// </summary>
         public decimal? NewCustomerDealRation { get; set; }
-        
+        /// <summary>
+        /// 累计新客成交率
+        /// </summary>
+        public decimal AccumulateNewCustomerDealRation { get; set; }
 
         /// <summary>
         /// 新客成交率健康值
@@ -67,16 +76,5 @@ namespace Fx.Amiya.Dto.HospitalBoard
         /// </summary>
         public decimal OldCustomerRepurchaseRatioHealthValue { get; set; }
 
-
-
-        /// <summary>
-        /// 老客成交率
-        /// </summary>
-        public decimal? OldCustomerDealRation { get; set; }
-       
-        /// <summary>
-        /// 老客成交率健康值
-        /// </summary>
-        public decimal OldCustomerDealRationHealthValue { get; set; }
     }
 }

@@ -62,6 +62,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderBordData.DealNoRepurchaseCount = orderData.DealNoRepurchaseCount;
             orderBordData.DealNoRepurchaseChainRatio = orderData.DealNoRepurchaseChainRatio;
             orderBordData.DealNoRepurchaseYearOnYear = orderData.DealNoRepurchaseYearOnYear;
+
+            orderBordData.AccumulateSendOrderCount = orderData.AccumulateSendOrderCount;
+            orderBordData.AccumulateProcessedOrderCount = orderData.AccumulateProcessedOrderCount;
+            orderBordData.AccumulateUntreatedOrderCount = orderData.AccumulateUntreatedOrderCount;
+            orderBordData.AccumulateSendOrderNotToHospitalCount = orderData.AccumulateSendOrderNotToHospitalCount;
+            orderBordData.AccumulateToHospitalNoDealCount = orderData.AccumulateToHospitalNoDealCount;
+            orderBordData.AccumulateDealNoRepurchaseCount = orderData.AccumulateDealNoRepurchaseCount;
             return ResultData<OrderBordDataVo>.Success().AddData("orderData", orderBordData);
         }
 
@@ -89,9 +96,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             operateDataVo.NewCustomerDealChainRatio = operateData.NewCustomerDealChainRatio;
             operateDataVo.NewCustomerDealYearOnYear = operateData.NewCustomerDealYearOnYear;
 
-            operateDataVo.OldCustomerToHospitalCount = operateData.OldCustomerToHospitalCount;
-            operateDataVo.OldCustomerToHospitalChainRatio = operateData.OldCustomerToHospitalChainRatio;
-            operateDataVo.OldCustomerToHospitalYearOnYear = operateData.OldCustomerToHospitalYearOnYear;
 
             operateDataVo.OldCustomerDealCount = operateData.OldCustomerDealCount;
             operateDataVo.OldCustomerDealChainRatio = operateData.OldCustomerDealChainRatio;
@@ -112,10 +116,25 @@ namespace Fx.Amiya.Background.Api.Controllers
             operateDataVo.OldCustomerRepurchaseRatioYearOnYear = operateData.OldCustomerRepurchaseRatioYearOnYear;
             operateDataVo.OldCustomerRepurchaseRatioHealthValue = operateData.OldCustomerRepurchaseRatioHealthValue;
 
-            operateDataVo.OldCustomerDealRation = operateData.OldCustomerDealRation;
-            operateDataVo.OldCustomerDealRationChainRatio = operateData.OldCustomerDealRationChainRatio;
-            operateDataVo.OldCustomerDealRationYearOnYear = operateData.OldCustomerDealRationYearOnYear;
-            operateDataVo.OldCustomerDealRationHealthValue = operateData.OldCustomerDealRationHealthValue;
+            operateDataVo.AccumulateNewCustomerToHospitalCount = operateData.AccumulateNewCustomerToHospitalCount;
+            operateDataVo.AccumulateNewCustomerToHospitalCountChainRatio = operateData.AccumulateNewCustomerToHospitalCountChainRatio;
+            operateDataVo.AccumulateNewCustomerToHospitalCountYearOnYear = operateData.AccumulateNewCustomerToHospitalCountYearOnYear;
+
+            operateDataVo.AccumulateNewCustomerDealCount = operateData.AccumulateNewCustomerDealCount;
+            operateDataVo.AccumulateNewCustomerDealCountChainRatio = operateData.AccumulateNewCustomerDealCountChainRatio;
+            operateDataVo.AccumulateNewCustomerDealCountYearOnYear = operateData.AccumulateNewCustomerDealCountYearOnYear;
+
+            operateDataVo.AccumulateOldCustomerDealCount = operateData.AccumulateOldCustomerDealCount;
+            operateDataVo.AccumulateOldCustomerDealCountChainRatio = operateData.AccumulateOldCustomerDealCountChainRatio;
+            operateDataVo.AccumulateOldCustomerDealCountYearOnYear = operateData.AccumulateOldCustomerDealCountYearOnYear;
+
+            operateDataVo.AccumulateNewCustomerToHospitalRatio = operateData.AccumulateNewCustomerToHospitalRatio;
+            operateDataVo.AccumulateNewCustomerToHospitalRatioChainRatio = operateData.AccumulateNewCustomerToHospitalRatioChainRatio;
+            operateDataVo.AccumulateNewCustomerToHospitalRatioYearOnYear = operateData.AccumulateNewCustomerToHospitalRatioYearOnYear;
+
+            operateDataVo.AccumulateNewCustomerDealRation = operateData.AccumulateNewCustomerDealRation;
+            operateDataVo.AccumulateNewCustomerDealRationChainRatio = operateData.AccumulateNewCustomerDealRationChainRatio;
+            operateDataVo.AccumulateNewCustomerDealRationYearOnYear = operateData.AccumulateNewCustomerDealRationYearOnYear;
 
             return ResultData<OperateDataVo>.Success().AddData("operateData", operateDataVo);
 
@@ -263,6 +282,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 DealRatio=e.DealRatio,
                 RepurchaseRatio=e.RepurchaseRatio,
                 NewCustomerUnitPrice=e.NewCustomerUnitPrice,
+                AccumulateToHospitalRatio=e.AccumulateToHospitalRatio,
+                AccumulateDealRatio=e.AccumulateDealRatio
             }).ToList();
             if (rank.MyRank == null)
             {

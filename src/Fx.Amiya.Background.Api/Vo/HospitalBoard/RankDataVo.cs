@@ -31,6 +31,14 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalBoard
         /// 新客客单价
         /// </summary>
         public decimal? NewCustomerUnitPrice { get; set; }
+        /// <summary>
+        /// 累计上门率
+        /// </summary>
+        public decimal? AccumulateToHospitalRatio { get; set; }
+        /// <summary>
+        /// 累计成交率
+        /// </summary>
+        public decimal? AccumulateDealRatio { get; set; }
     }
     public class RankDataVo {
         /// <summary>

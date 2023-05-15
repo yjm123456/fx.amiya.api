@@ -130,5 +130,74 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalBoard
         /// 老客成交率健康值
         /// </summary>
         public decimal? OldCustomerDealRationHealthValue { get; set; }
+
+        /// <summary>
+        /// 累计新客上门量
+        /// </summary>
+        public decimal AccumulateNewCustomerToHospitalCount { get; set; }
+        /// <summary>
+        /// 新客累计上门量环比
+        /// </summary>
+
+        public decimal? AccumulateNewCustomerToHospitalCountChainRatio { get; set; }
+        /// <summary>
+        /// 新客累计上门量同比
+        /// </summary>
+
+        public decimal? AccumulateNewCustomerToHospitalCountYearOnYear { get; set; }
+        /// <summary>
+        /// 累计新客成交量
+        /// </summary>
+        public decimal AccumulateNewCustomerDealCount { get; set; }
+        /// <summary>
+        /// 累计新客成交量环比
+        /// </summary>
+        public decimal? AccumulateNewCustomerDealCountChainRatio { get; set; }
+        /// <summary>
+        /// 累计新客成交量同比
+        /// </summary>
+        public decimal? AccumulateNewCustomerDealCountYearOnYear { get; set; }
+        /// <summary>
+        /// 累计老客成交量
+        /// </summary>
+
+        public decimal AccumulateOldCustomerDealCount { get; set; }
+        /// <summary>
+        /// 累计老客成交量环比
+        /// </summary>
+
+        public decimal? AccumulateOldCustomerDealCountChainRatio { get; set; }
+        /// <summary>
+        /// 累计老客成交量同比
+        /// </summary>
+
+        public decimal? AccumulateOldCustomerDealCountYearOnYear { get; set; }
+        /// <summary>
+        /// 累计新客上门率
+        /// </summary>
+
+        public decimal AccumulateNewCustomerToHospitalRatio { get; set; }
+        /// <summary>
+        /// 累计新客上门率环比
+        /// </summary>
+
+        public decimal? AccumulateNewCustomerToHospitalRatioChainRatio { get; set; }
+        /// <summary>
+        /// 累计新客上门率同比
+        /// </summary>
+
+        public decimal? AccumulateNewCustomerToHospitalRatioYearOnYear { get; set; }
+        /// <summary>
+        /// 累计新客成交率
+        /// </summary>
+        public decimal AccumulateNewCustomerDealRation { get; set; }
+        /// <summary>
+        /// 累计新客成交率环比
+        /// </summary>
+        public decimal? AccumulateNewCustomerDealRationChainRatio { get; set; }
+        /// <summary>
+        /// 累计新客成交率同比
+        /// </summary>
+        public decimal? AccumulateNewCustomerDealRationYearOnYear { get; set; }
     }
 }
