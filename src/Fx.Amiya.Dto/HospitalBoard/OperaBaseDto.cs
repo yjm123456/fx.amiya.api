@@ -12,7 +12,10 @@ namespace Fx.Amiya.Dto.HospitalBoard
         /// 新客上门量
         /// </summary>
         public decimal NewCustomerToHospitalCount { get; set; }
-        
+        /// <summary>
+        /// 累计新客上门量
+        /// </summary>
+        public decimal AccumulateNewCustomerToHospitalCount { get; set; }
         /// <summary>
         /// 新客成交量
         /// </summary>
