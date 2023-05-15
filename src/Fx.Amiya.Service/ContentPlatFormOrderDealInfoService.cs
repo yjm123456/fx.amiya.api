@@ -1251,7 +1251,7 @@ namespace Fx.Amiya.Service
             DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
             //选定的月份
             DateTime currentDate = new DateTime(year, month, 1);
-            var result = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
+            var result = await dalContentPlatFormOrderDealInfo.GetAll().Where(x => x.ContentPlatFormOrderId != null).Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
                 .Where(o => o.CreateDate >= currentDate && o.CreateDate < endDate && o.IsDeal == true)
                 .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id))
                 .ToListAsync();
@@ -1458,7 +1458,7 @@ namespace Fx.Amiya.Service
             DateTime startTime = new DateTime(year, 1, 1);
             //筛选结束的月份
             DateTime endDate = new DateTime(year, month, 1).AddMonths(1);
-            var orderinfo = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
+            var orderinfo = await dalContentPlatFormOrderDealInfo.GetAll().Where(x => x.ContentPlatFormOrderId != null).Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
                 .Where(o => o.IsDeal == true && o.CreateDate >= startTime && o.CreateDate < endDate)
                 .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id))
                 .ToListAsync();
