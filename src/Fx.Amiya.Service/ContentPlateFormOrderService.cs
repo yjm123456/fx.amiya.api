@@ -2077,10 +2077,13 @@ namespace Fx.Amiya.Service
             {
 
                 //验证唯一标识
-                var contentPlatFormOrderId = await _contentPlatFormOrderDalService.GetByOtherAppOrderIdAsync(input.OtherContentPlatFormOrderId);
-                if (!string.IsNullOrEmpty(contentPlatFormOrderId.Id))
+                if (!string.IsNullOrEmpty(input.OtherContentPlatFormOrderId))
                 {
-                    return;
+                    var contentPlatFormOrderId = await _contentPlatFormOrderDalService.GetByOtherAppOrderIdAsync(input.OtherContentPlatFormOrderId);
+                    if (!string.IsNullOrEmpty(contentPlatFormOrderId.Id))
+                    {
+                        return;
+                    }
                 }
                 if (input.IsFinish == true)
                 {
