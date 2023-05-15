@@ -539,6 +539,45 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormOrderDealDetailsController">
+            <summary>
+            订单成交情况数据接口
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormOrderDealDetailsController.#ctor(Fx.Amiya.IService.IContentPlatFormOrderDealDetailsService,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="contentPlatFormOrderDealDetailsService"></param>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormOrderDealDetailsController.GetListWithPageAsync(Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Input.QueryContentPlatFormOrderDealDetailsListVo)">
+            <summary>
+            根据时间，成交情况编号，订单号获取内容平台成交详情列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormOrderDealDetailsController.GetByIdAsync(System.String)">
+            <summary>
+            根据id获取数据
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormOrderDealDetailsController.UpdateDealDetailsBelongOrderAsync(Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Input.UpdateDealDetailsBelongOrderVo)">
+            <summary>
+            修改成交详情归属订单信息
+            </summary>
+            <param name="updateVo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormOrderDealDetailsController.DeleteAsync(System.String)">
+            <summary>
+            作废成交详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlatFormOrderDealInfoController">
             <summary>
             订单成交情况数据接口
@@ -2796,6 +2835,71 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Input.AddContentPlatFormOrderDealDetailsVo.CreateBy">
             <summary>
             创建人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Input.QueryContentPlatFormOrderDealDetailsListVo.ContentPlatFormOrderId">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Input.QueryContentPlatFormOrderDealDetailsListVo.ContentPlatFormOrderDealId">
+            <summary>
+            成交情况编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Input.UpdateDealDetailsBelongOrderVo.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Input.UpdateDealDetailsBelongOrderVo.ContentPlatFormOrderId">
+            <summary>
+            订单编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Input.UpdateDealDetailsBelongOrderVo.ContentPlatFormOrderDealId">
+            <summary>
+            成交情况编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Result.ContentPlatFormOrderDealDetailsVo.GoodsName">
+            <summary>
+            项目名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Result.ContentPlatFormOrderDealDetailsVo.GoodsSpec">
+            <summary>
+            项目规格
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Result.ContentPlatFormOrderDealDetailsVo.Quantity">
+            <summary>
+            数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Result.ContentPlatFormOrderDealDetailsVo.Price">
+            <summary>
+            金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Result.ContentPlatFormOrderDealDetailsVo.ContentPlatFormOrderDealId">
+            <summary>
+            成交编号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Result.ContentPlatFormOrderDealDetailsVo.ContentPlatFormOrderId">
+            <summary>
+            订单号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Result.ContentPlatFormOrderDealDetailsVo.CreateBy">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Result.ContentPlatFormOrderDealDetailsVo.CreateByEmpName">
+            <summary>
+            创建人名称（0为医院）
             </summary>
         </member>
         <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend.AddContentPlatFormSendOrderInfoVo">

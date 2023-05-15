@@ -2075,6 +2075,13 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
+
+                //验证唯一标识
+                var contentPlatFormOrderId = await _contentPlatFormOrderDalService.GetByOtherAppOrderIdAsync(input.OtherContentPlatFormOrderId);
+                if (!string.IsNullOrEmpty(contentPlatFormOrderId.Id))
+                {
+                    return;
+                }
                 if (input.IsFinish == true)
                 {
                     if (input.ConsumptionType == (int)ConsumptionType.OTHER) throw new Exception("成交订单不能选择其他消费类型！");
@@ -3163,9 +3170,10 @@ namespace Fx.Amiya.Service
         {
             string returnResult = "";
             var empInfo = await _amiyaEmployeeService.GetByIdAsync(belongCustomerServiceId);
+            List<int> empLoyeeIds = new List<int>();
             var employeeInfos = await _amiyaEmployeeService.GetByLiveAnchorBaseIdAsync(empInfo.LiveAnchorBaseId);
             var amiyaEmployeeIds = employeeInfos.Select(x => x.Id).ToList();
-            var rankResult = await this.GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(startDate, endDate, amiyaEmployeeIds);
+            var rankResult = await this.GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(startDate, endDate, empLoyeeIds);
             var res = rankResult.FindIndex(x => x.CustomerServiceId == belongCustomerServiceId) + 1;
             if (res == 0)
             {

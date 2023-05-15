@@ -616,10 +616,12 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             updateDto.DealDate = updateVo.DealDate;
             updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
             updateDto.EmpId = Convert.ToInt32(employee.Id);
-            updateDto.ConsumptionType = updateVo.ConsumptionType;
+            //企业微信新版本发布后退回
+            //updateDto.ConsumptionType = updateVo.ConsumptionType;
+            updateDto.ConsumptionType = (int)ConsumptionType.Deal;
             updateDto.InvitationDocuments = updateVo.InvitationDocuments;
             List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
-            if (updateDto.IsFinish == true)
+            if (updateDto.IsFinish == true && updateVo.AddContentPlatFormOrderDealDetailsVoList != null)
             {
                 foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
                 {

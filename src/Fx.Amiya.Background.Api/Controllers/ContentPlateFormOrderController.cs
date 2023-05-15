@@ -1350,12 +1350,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         //[FxPartnerAuthorize]
         public async Task<ResultData> HospitalFinishOrderByApiAsync(FinishContentPlateFormOrderByApi updateVo)
         {
+
             int hospitalId = 0;
-            if (updateVo.HospitalId == "hzltm")
+            if (updateVo.HospitalId == "HuaShan")
             {
                 hospitalId = 16;
             }
-            if (updateVo.HospitalId == "hzwdly")
+            if (updateVo.HospitalId == "WeiDuoLiYa")
             {
                 hospitalId = 37;
             }
@@ -1380,6 +1381,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             updateDto.LastDealHospitalId = hospitalId;
             updateDto.ToHospitalDate = updateVo.Date;
+            updateDto.OtherContentPlatFormOrderId = updateVo.MsgId;
             updateDto.DealPictureUrl = "";
             updateDto.DealAmount = updateVo.TotalCashAmount;
             updateDto.UnDealReason = "";
@@ -1401,7 +1403,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.ConsumptionType = consumptionType;
             updateDto.EmpId = 0;
             List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
-            if (updateDto.IsFinish == true)
+            if (updateDto.IsFinish == true && updateVo.Details != null && updateVo.Details.Count > 0)
             {
                 foreach (var x in updateVo.Details)
                 {

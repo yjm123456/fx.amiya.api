@@ -12620,6 +12620,11 @@
             退款类型 0=退预交金，1=退卡，2=退项目，3=退划价单，4退多余欠款，
              </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.FinishContentPlateFormOrderByApi.MsgId">
+            <summary>
+            唯一标识
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input.FinishContentPlateFormOrderByApi.Details">
             <summary>
             成交详情

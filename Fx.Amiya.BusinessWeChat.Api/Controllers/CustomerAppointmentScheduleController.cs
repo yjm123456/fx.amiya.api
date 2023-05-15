@@ -34,11 +34,11 @@ namespace Fx.Amiya.BusinessWeChat.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<CustomerAppointmentScheduleVo>>> GetListWithPageAsync([FromQuery]QueryLiveAnchorToHospitalLiveAnchorVo query)
+        public async Task<ResultData<FxPageInfo<CustomerAppointmentScheduleVo>>> GetListWithPageAsync([FromQuery] QueryLiveAnchorToHospitalLiveAnchorVo query)
         {
             try
             {
-                var q = await customerAppointmentScheduleService.GetListWithPageByBaseLiveAnchorAsync(query.LiveAnchorId,query.PageSize,query.PageNum,query.AppointmentType);
+                var q = await customerAppointmentScheduleService.GetListWithPageByBaseLiveAnchorAsync(query.StartDate, query.EndDate, query.PageSize, query.PageNum, query.LiveAnchorId, query.AppointmentType, query.KeyWord);
                 var customerAppointmentSchedule = from d in q.List
                                                   select new CustomerAppointmentScheduleVo
                                                   {
@@ -55,7 +55,7 @@ namespace Fx.Amiya.BusinessWeChat.Api.Controllers
                                                       CreateByEmpName = d.CreateByEmpName,
                                                       AppointmentHospitalId = d.AppointmentHospitalId,
                                                       AppointmentHospitalName = d.AppointmentHospitalName,
-                                                      Consultation = d.Consultation,                
+                                                      Consultation = d.Consultation,
                                                   };
                 FxPageInfo<CustomerAppointmentScheduleVo> customerAppointmentSchedulePageInfo = new FxPageInfo<CustomerAppointmentScheduleVo>();
                 customerAppointmentSchedulePageInfo.TotalCount = q.TotalCount;

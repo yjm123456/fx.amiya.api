@@ -16,13 +16,20 @@ namespace Fx.Amiya.IService
 {
     public interface IContentPlatFormOrderDealInfoService
     {
-        Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId,string createBillCompanyId,bool? isCreateBill, int pageNum, int pageSize, bool? dataFromint, int? consumptionType);
-        Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetSimpleOrderListWithPageAsync(DateTime? startDate, DateTime? endDate,  bool? isDeal, int? lastDealHospitalId, string keyWord, int employeeId, int pageNum, int pageSize);
+        Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, string createBillCompanyId, bool? isCreateBill, int pageNum, int pageSize, bool? dataFromint, int? consumptionType);
+        Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetSimpleOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, bool? isDeal, int? lastDealHospitalId, string keyWord, int employeeId, int pageNum, int pageSize);
         Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetContentPlatFormOrderDealInfoByReconciliationDocumentsIdAsync(string reconciliationDocumentsId, int pageNum, int pageSize);
         Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord, int employeeId, bool hidePhone, int? consumptionType);
         Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetListWithPageAsync(string contentPlafFormOrderId, int pageNum, int pageSize);
         Task AddAsync(AddContentPlatFormOrderDealInfoDto addDto);
         Task<ContentPlatFormOrderDealInfoDto> GetByIdAsync(string id);
+
+        /// <summary>
+        /// 根据三方标识获取成交情况
+        /// </summary>
+        /// <param name="otherAppOrder"></param>
+        /// <returns></returns>
+        Task<ContentPlatFormOrderDealInfoDto> GetByOtherAppOrderIdAsync(string otherAppOrder);
 
         Task UpdateAsync(UpdateContentPlatFormOrderDealInfoDto updateDto);
 
@@ -89,7 +96,7 @@ namespace Fx.Amiya.IService
         /// <param name="hospitalId"></param>
         /// <param name="recordDate"></param>
         /// <returns></returns>
-        Task<int> GetMonthSendPerformanceByHospitalIdAsync(int hospitalId,int year, int month);
+        Task<int> GetMonthSendPerformanceByHospitalIdAsync(int hospitalId, int year, int month);
         /// <summary>
         /// 根据到院id和时间获取指定年份成交量
         /// </summary>
@@ -305,7 +312,7 @@ namespace Fx.Amiya.IService
         /// <param name="endDate"></param>
         /// <param name="customerServiceId"></param>
         /// <returns></returns>
-        Task<CustomerServiceBoardDataDto> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate,DateTime? endDate,int customerServiceId);
+        Task<CustomerServiceBoardDataDto> GetCustomerServiceBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int customerServiceId);
         /// <summary>
         /// 根据主播id获取客服录入成交单业绩信息
         /// </summary>

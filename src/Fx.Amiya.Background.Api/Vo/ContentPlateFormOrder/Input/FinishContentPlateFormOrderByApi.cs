@@ -46,6 +46,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input
         /// </summary>
         public int RefundType { get; set; }
         /// <summary>
+        /// 唯一标识
+        /// </summary>
+        public string MsgId { get; set; }
+        /// <summary>
         /// 成交详情
         /// </summary>
         public List<FinishContentPlateFormOrderByApiDetails> Details { get; set; }

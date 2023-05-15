@@ -67,7 +67,7 @@ namespace Fx.Amiya.Service
                                                          && (!query.AppointmentType.HasValue || d.AppointmentType == query.AppointmentType.Value)
                                                          && (!query.IsFinish.HasValue || d.IsFinish == query.IsFinish.Value)
                                                          && (!query.StartDate.HasValue || d.AppointmentDate >= query.StartDate.Value)
-                                                         && (!query.EndDate.HasValue || d.AppointmentDate <= query.EndDate.Value.AddDays(1).AddMilliseconds(-1))                                                        
+                                                         && (!query.EndDate.HasValue || d.AppointmentDate <= query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
                                                          && (d.Valid == true)
                                                          select new CustomerAppointmentScheduleDto
                                                          {
@@ -90,13 +90,15 @@ namespace Fx.Amiya.Service
                                                              AppointmentHospitalId = d.AppointmentHospitalId,
                                                              AppointmentHospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == d.AppointmentHospitalId).Select(e => e.Name).SingleOrDefault() ?? "",
                                                              Consultation = d.Consultation,
-                                                             AssignLiveanchorId=d.AssignLiveanchorId,
-                                                             AssignLiveanchorName=dalLiveAnchorBaseInfo.GetAll().Where(e=>e.Id== d.AssignLiveanchorId).Select(e=>e.LiveAnchorName).SingleOrDefault()?? ""
+                                                             AssignLiveanchorId = d.AssignLiveanchorId,
+                                                             AssignLiveanchorName = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == d.AssignLiveanchorId).Select(e => e.LiveAnchorName).SingleOrDefault() ?? ""
                                                          };
-                if (query.AssignLiveanchorId=="0") {
+                if (query.AssignLiveanchorId == "0")
+                {
                     customerAppointmentScheduleService = customerAppointmentScheduleService.Where(e => e.AssignLiveanchorId == null);
                 }
-                if (!string.IsNullOrEmpty(query.AssignLiveanchorId)&&query.AssignLiveanchorId!="0") {
+                if (!string.IsNullOrEmpty(query.AssignLiveanchorId) && query.AssignLiveanchorId != "0")
+                {
                     customerAppointmentScheduleService = customerAppointmentScheduleService.Where(e => e.AssignLiveanchorId == query.AssignLiveanchorId);
                 }
                 FxPageInfo<CustomerAppointmentScheduleDto> customerAppointmentScheduleServicePageInfo = new FxPageInfo<CustomerAppointmentScheduleDto>();
@@ -181,8 +183,8 @@ namespace Fx.Amiya.Service
                                                              CreateByEmpName = d.AmiyaEmployeeInfo.Name,
                                                              AppointmentHospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == d.AppointmentHospitalId).Select(e => e.Name).SingleOrDefault() ?? "",
                                                              Consultation = d.Consultation,
-                                                             AssignLiveanchorId=d.AssignLiveanchorId,
-                                                             AssignLiveanchorName=dalLiveAnchorBaseInfo.GetAll().Where(e=>e.Id==d.AssignLiveanchorId).Select(e=>e.LiveAnchorName).SingleOrDefault() ?? ""
+                                                             AssignLiveanchorId = d.AssignLiveanchorId,
+                                                             AssignLiveanchorName = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == d.AssignLiveanchorId).Select(e => e.LiveAnchorName).SingleOrDefault() ?? ""
                                                          };
 
 
@@ -377,19 +379,22 @@ namespace Fx.Amiya.Service
 
         }
         /// <summary>
-        /// 分页获取主播预约日程
+        /// 分页获取主播预约日程（企业微信端使用）
         /// </summary>
         /// <param name="baseLiveAnchorId"></param>
         /// <param name="pageSize"></param>
         /// <param name="pageNum"></param>
         /// <param name="type">预约日程类型</param>
         /// <returns></returns>
-        public async Task<FxPageInfo<CustomerAppointmentScheduleDto>> GetListWithPageByBaseLiveAnchorAsync(string liveAnchorId, int? pageSize, int? pageNum,int type)
+        public async Task<FxPageInfo<CustomerAppointmentScheduleDto>> GetListWithPageByBaseLiveAnchorAsync(DateTime? startDate, DateTime? endDate, int? pageSize, int? pageNum, string liveAnchorId, int type, string keyWord)
         {
-            var liveAnchorAppointments = dalCustomerAppointmentScheduleService.GetAll().Where(e => e.AssignLiveanchorId == liveAnchorId && e.AppointmentType == type&&e.Valid==true&&e.IsFinish==false).OrderByDescending(e=>e.AppointmentDate);
+            var liveAnchorAppointments = dalCustomerAppointmentScheduleService.GetAll()
+                .Where(e => e.CreateDate > startDate.Value && e.CreateDate < endDate.Value.AddDays(1).AddMilliseconds(-1))
+                .Where(e => e.AssignLiveanchorId == liveAnchorId && e.AppointmentType == type && e.Valid == true && e.IsFinish == false).OrderByDescending(e => e.AppointmentDate);
+           
             FxPageInfo<CustomerAppointmentScheduleDto> fxPageInfo = new FxPageInfo<CustomerAppointmentScheduleDto>();
-            fxPageInfo.TotalCount = liveAnchorAppointments.Count();
-            fxPageInfo.List = liveAnchorAppointments.Select(d=>new CustomerAppointmentScheduleDto {
+            var result = liveAnchorAppointments.Select(d => new CustomerAppointmentScheduleDto
+            {
                 Id = d.Id,
                 CreateBy = d.CreateBy,
                 CreateDate = d.CreateDate,
@@ -406,10 +411,16 @@ namespace Fx.Amiya.Service
                 CreateByEmpName = d.AmiyaEmployeeInfo.Name,
                 AppointmentHospitalId = d.AppointmentHospitalId,
                 AppointmentHospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == d.AppointmentHospitalId).Select(e => e.Name).SingleOrDefault() ?? "",
-                Consultation = d.Consultation,              
-            }).OrderBy(e=>e.AppointmentDate)
+                Consultation = d.Consultation,
+            }).ToList();
+            if (!string.IsNullOrEmpty(keyWord))
+            {
+                result = result.Where(x => x.Phone.Contains(keyWord) || x.CustomerName.Contains(keyWord) || x.Remark.Contains(keyWord)).ToList();
+            }
+            fxPageInfo.TotalCount = result.Count();
+            fxPageInfo.List = result.OrderBy(e => e.AppointmentDate)
             .Skip((pageNum.Value - 1) * pageSize.Value)
-            .Take(pageSize.Value).ToList();
+            .Take(pageSize.Value);
             return fxPageInfo;
         }
 
@@ -425,7 +436,7 @@ namespace Fx.Amiya.Service
             if (appointment == null) throw new Exception("预约日程编号错误");
             appointment.UpdateDate = DateTime.Now;
             appointment.AssignLiveanchorId = AssignBy;
-            await dalCustomerAppointmentScheduleService.UpdateAsync(appointment,true);
+            await dalCustomerAppointmentScheduleService.UpdateAsync(appointment, true);
         }
     }
 }

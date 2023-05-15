@@ -890,6 +890,27 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
+
+        public async Task<ContentPlatFormOrderDealInfoDto> GetByOtherAppOrderIdAsync(string otherAppOrder)
+        {
+            try
+            {
+                var ContentPlatFOrmOrderDealInfo = await dalContentPlatFormOrderDealInfo.GetAll().SingleOrDefaultAsync(e => e.OtherAppOrderId == otherAppOrder);
+                if (ContentPlatFOrmOrderDealInfo == null)
+                {
+                    return new ContentPlatFormOrderDealInfoDto();
+                }
+
+                ContentPlatFormOrderDealInfoDto contentPlatFOrmOrderDealInfoDto = new ContentPlatFormOrderDealInfoDto();
+                contentPlatFOrmOrderDealInfoDto.Id = ContentPlatFOrmOrderDealInfo.Id;
+                return contentPlatFOrmOrderDealInfoDto;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
         /// <summary>
         /// 获取消费类型名称列表
         /// </summary>

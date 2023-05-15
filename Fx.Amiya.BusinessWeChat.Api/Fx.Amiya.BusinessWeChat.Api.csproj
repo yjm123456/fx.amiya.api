@@ -35,8 +35,4 @@
     <ProjectReference Include="..\src\Fx.Amiya.Service\Fx.Amiya.Service.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Vo\ContentPlatFormOrderDealDetails\Result\" />
-  </ItemGroup>
-
 </Project>
