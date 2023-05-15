@@ -398,6 +398,36 @@ namespace Fx.Amiya.Service
 
         }
 
+
+        /// <summary>
+        /// 添加(仅首次）
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        public async Task OnlyAddFistlyAsync(AddBindCustomerServiceFirstlyDto addDto)
+        {
+            BindCustomerService bindCustomerService = new BindCustomerService();
+            bindCustomerService.CustomerServiceId = addDto.CustomerServiceId;
+            bindCustomerService.BuyerPhone = addDto.BuyerPhone;
+            var customer = await dalCustomerInfo.GetAll().FirstOrDefaultAsync(e => e.Phone == addDto.BuyerPhone);
+            bindCustomerService.UserId = customer?.UserId; 
+            bindCustomerService.CreateBy = addDto.CreateBy;
+            bindCustomerService.CreateDate = DateTime.Now;
+            bindCustomerService.FirstProjectDemand = addDto.FirstProjectDemand;
+            bindCustomerService.FirstConsumptionDate = addDto.FirstConsumptionDate;
+            bindCustomerService.NewConsumptionDate = DateTime.Now;
+            bindCustomerService.NewConsumptionContentPlatform = addDto.NewConsumptionContentPlatform;
+            bindCustomerService.NewContentPlatForm = addDto.NewContentPlatForm;
+            bindCustomerService.AllPrice = addDto.AllPrice;
+            bindCustomerService.AllOrderCount = 1;
+            bindCustomerService.NewLiveAnchor = addDto.NewLiveAnchor;
+            bindCustomerService.NewWechatNo = addDto.NewWechatNo;
+            await dalBindCustomerService.AddAsync(bindCustomerService, true);
+
+
+        }
+
         public async Task UpdateConsumePriceAndLiveAnchorAsync(string phone, decimal Price, int Channel, int AllOrderCount, string LiveAnchorName)
         {
             var bindCustomerService = await dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == phone);

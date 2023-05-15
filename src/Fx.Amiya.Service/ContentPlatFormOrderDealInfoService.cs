@@ -385,7 +385,7 @@ namespace Fx.Amiya.Service
                     {
                         z.BelongCompany = dalCompanyBaseInfo.GetAll().Where(e => e.Id == z.BelongCompany).SingleOrDefault()?.Name;
                     }
-                    if (z.LastDealHospitalId.HasValue)
+                    if (z.LastDealHospitalId.HasValue && z.LastDealHospitalId.Value != 0)
                     {
                         var dealHospital = await _hospitalInfoService.GetBaseByIdAsync(z.LastDealHospitalId.Value);
                         z.LastDealHospital = dealHospital.Name;

@@ -2144,7 +2144,7 @@ namespace Fx.Amiya.Service
                     {
                         var price = order.DepositAmount.HasValue ? order.DepositAmount.Value : 0.00M;
                         await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + input.DealAmount.Value, (int)OrderFrom.ContentPlatFormOrder, order.LiveAnchor.Name, order.LiveAnchorWeChatNo, order.Contentplatform.ContentPlatformName, 1);
-                        await customerBaseInfoService.UpdateState(1, order.Phone);
+                        await customerBaseInfoService.UpdateState(1, input.CustomerName, order.Phone);
                         order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.OrderComplete);
                         order.DealAmount += input.DealAmount;
                         order.LateProjectStage = input.LastProjectStage;

@@ -92,5 +92,12 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task UpdateConsumePriceAndLiveAnchorAsync(string phone, decimal Price, int Channel, int AllOrderCount, string LiveAnchorName);
 
+        /// <summary>
+        /// 添加绑定客服
+        /// </summary>
+        /// <param name="addDto"></param>
+        /// <returns></returns>
+        Task OnlyAddFistlyAsync(AddBindCustomerServiceFirstlyDto addDto);
+
     }
 }

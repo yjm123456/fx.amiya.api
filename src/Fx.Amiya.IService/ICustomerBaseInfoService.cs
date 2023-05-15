@@ -13,7 +13,7 @@ namespace Fx.Amiya.IService
         Task<CustomerBaseInfoDto> GetByEncryptPhoneAsync(string encryptPhone);
         Task<CustomerBaseInfoDto> GetByPhoneAsync(string phone);
         Task UpdateAsync(UpdateCustomerBaseInfoDto updateDto);
-        Task UpdateState(int state, string phone);
+        Task UpdateState(int state, string customerName, string phone);
         Task<CustomerBaseInfoDto> GetByCustomerIdAsync(string customerId);
         /// <summary>
         /// 

@@ -4,6 +4,7 @@ using Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend;
 using Fx.Amiya.Background.Api.Vo.Order;
 using Fx.Amiya.Background.Api.Vo.OrderCheck;
 using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto.BindCustomerService;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderDealDetails.Input;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
@@ -1356,10 +1357,45 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 hospitalId = 16;
             }
-            if (updateVo.HospitalId == "WeiDuoLiYa")
+            else if (updateVo.HospitalId == "WeiDuoLiYa")
             {
                 hospitalId = 37;
             }
+            else
+            {
+                throw new Exception("医院编号错误！");
+            }
+            //验证是否已绑定客服
+            var bindCustomerServiceName = await bindCustomerServiceService.GetBindCustomerServiceNameByPhone(updateVo.CustomerPhone);
+            if (bindCustomerServiceName == "未绑定")
+            {
+                AddBindCustomerServiceFirstlyDto addBindCustomerServiceFirstlyDto = new AddBindCustomerServiceFirstlyDto();
+                addBindCustomerServiceFirstlyDto.CustomerServiceId = 188;
+                addBindCustomerServiceFirstlyDto.BuyerPhone = updateVo.CustomerPhone;
+                addBindCustomerServiceFirstlyDto.CreateBy = 188;
+                addBindCustomerServiceFirstlyDto.CreateDate = DateTime.Now;
+                string projectDemand = "";
+                if (updateVo.Details != null && updateVo.Details.Count > 0)
+                {
+                    foreach (var x in updateVo.Details)
+                    {
+
+                        projectDemand += x.ItemName + "，";
+                    }
+                    projectDemand = projectDemand.Substring(0, projectDemand.Length - 1);
+                }
+                addBindCustomerServiceFirstlyDto.FirstProjectDemand = projectDemand;
+                addBindCustomerServiceFirstlyDto.FirstConsumptionDate = DateTime.Now;
+                addBindCustomerServiceFirstlyDto.NewConsumptionDate = DateTime.Now;
+                addBindCustomerServiceFirstlyDto.NewConsumptionContentPlatform = (int)OrderFrom.ContentPlatFormOrder;
+                addBindCustomerServiceFirstlyDto.NewContentPlatForm = "医院";
+                addBindCustomerServiceFirstlyDto.AllPrice = updateVo.TotalCashAmount;
+                addBindCustomerServiceFirstlyDto.AllOrderCount = 1;
+                addBindCustomerServiceFirstlyDto.NewLiveAnchor = "";
+                addBindCustomerServiceFirstlyDto.NewWechatNo = "";
+                await bindCustomerServiceService.OnlyAddFistlyAsync(addBindCustomerServiceFirstlyDto);
+            }
+
             //验证订单是否存在
             var contentPlatFormOrder = await _orderService.GetOrderListByPhoneAndHospitalIdAsync(updateVo.CustomerPhone, hospitalId);
             //修改订单
@@ -1421,6 +1457,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addContentPlatFormOrderDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);
                 }
             }
+            updateDto.CustomerName = updateVo.CustomerName;
             updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
             await _orderService.FinishContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();

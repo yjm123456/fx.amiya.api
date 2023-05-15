@@ -186,7 +186,7 @@ namespace Fx.Amiya.Service
                     customerBaseInfoServiceDto.Remark = customerBaseInfoService.Remark;
                 }
 
-                
+
                 customerBaseInfoServiceDto.TagList = new List<BaseIdAndNameDto>();
                 if (customerInfo != null)
                 {
@@ -522,7 +522,7 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task UpdateState(int state, string phone)
+        public async Task UpdateState(int state, string customerName, string phone)
         {
             var customerBaseInfoService = await dalCustomerBaseInfo.GetAll().SingleOrDefaultAsync(e => e.Phone == phone);
             if (customerBaseInfoService == null)
@@ -530,6 +530,10 @@ namespace Fx.Amiya.Service
                 throw new Exception("客户信息未完善，请在“订单详情-顾客信息”中完善客户基本资料后点击“确定”后重试！");
             }
             customerBaseInfoService.CustomerState = state;
+            if (!string.IsNullOrEmpty(customerName))
+            {
+                customerBaseInfoService.RealName = customerName;
+            }
             await dalCustomerBaseInfo.UpdateAsync(customerBaseInfoService, true);
         }
     }

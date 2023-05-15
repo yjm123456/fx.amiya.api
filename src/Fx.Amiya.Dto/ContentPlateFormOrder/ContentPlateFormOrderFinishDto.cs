@@ -15,6 +15,11 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         public string Id { get; set; }
 
         /// <summary>
+        /// 客户名称
+        /// </summary>
+        public string CustomerName { get; set; }
+
+        /// <summary>
         /// 是否成交
         /// </summary>
         public bool IsFinish { get; set; }
