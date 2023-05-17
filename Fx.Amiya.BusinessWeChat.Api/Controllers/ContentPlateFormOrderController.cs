@@ -617,8 +617,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
             updateDto.EmpId = Convert.ToInt32(employee.Id);
             //企业微信新版本发布后退回
-            //updateDto.ConsumptionType = updateVo.ConsumptionType;
-            updateDto.ConsumptionType = (int)ConsumptionType.Deal;
+            updateDto.ConsumptionType = updateVo.ConsumptionType;
+            //updateDto.ConsumptionType = (int)ConsumptionType.Deal;
             updateDto.InvitationDocuments = updateVo.InvitationDocuments;
             List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
             if (updateDto.IsFinish == true && updateVo.AddContentPlatFormOrderDealDetailsVoList != null)
