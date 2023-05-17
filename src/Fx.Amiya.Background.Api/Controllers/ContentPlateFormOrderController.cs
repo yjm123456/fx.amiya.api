@@ -1479,7 +1479,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             finally
             {
 
-                operationAddDto.Message = "";
                 operationAddDto.Parameters = JsonConvert.SerializeObject(updateVo);
                 operationAddDto.RequestType = (int)RequestType.Update;
                 operationAddDto.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;

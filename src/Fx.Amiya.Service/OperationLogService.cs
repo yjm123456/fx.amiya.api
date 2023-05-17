@@ -31,7 +31,7 @@ namespace Fx.Amiya.Service
             operationLog.RequestType = operationAdd.RequestType;
             var parameters = operationAdd.Parameters;
             //字符串大于5000字节后截取
-            if (parameters.Length > 5000)
+            if (!string.IsNullOrEmpty(parameters) && parameters.Length > 5000)
             {
                 parameters = parameters.Substring(0, 4999);
             }
@@ -39,7 +39,7 @@ namespace Fx.Amiya.Service
             operationLog.Code = operationAdd.Code;
             var message = operationAdd.Message;
             //字符串大于5000字节后截取
-            if (message.Length > 5000)
+            if (!string.IsNullOrEmpty(message) && message.Length > 5000)
             {
                 message = message.Substring(0, 4999);
             }
