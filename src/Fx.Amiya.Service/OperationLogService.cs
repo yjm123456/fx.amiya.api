@@ -29,7 +29,13 @@ namespace Fx.Amiya.Service
             operationLog.Id = Guid.NewGuid().ToString().Replace("-", "");
             operationLog.RouteAddress = operationAdd.RouteAddress;
             operationLog.RequestType = operationAdd.RequestType;
-            operationLog.Parameters = operationAdd.Parameters;
+            var parameters = operationAdd.Parameters;
+            //字符串大于5000字节后截取
+            if (parameters.Length > 5000)
+            {
+                parameters = parameters.Substring(0, 4999);
+            }
+            operationLog.Parameters = parameters;
             operationLog.Code = operationAdd.Code;
             var message = operationAdd.Message;
             //字符串大于5000字节后截取
