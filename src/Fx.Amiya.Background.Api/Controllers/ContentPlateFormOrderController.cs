@@ -1427,10 +1427,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.IsAcompanying = false;
             updateDto.DealPerformanceType = (int)ContentPlateFormOrderDealPerformanceType.HospitalDeclarationInApi;
             updateDto.InvitationDocuments = new List<string>();
-            int consumptionType = (int)ConsumptionType.Deposit;
+            int consumptionType = (int)ConsumptionType.OTHER;
             if (updateVo.ConsumptionType == 1 || updateVo.ConsumptionType == 2 || updateVo.ConsumptionType == 3)
             {
                 consumptionType = (int)ConsumptionType.Deal;
+            }
+            else if (updateVo.ConsumptionType == 0)
+            { 
+               consumptionType=(int)ConsumptionType.Deposit;
             }
             if (updateVo.Type == 1)
             {

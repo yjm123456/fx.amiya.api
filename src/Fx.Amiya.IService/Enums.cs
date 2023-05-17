@@ -734,7 +734,8 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 小程序名称
     /// </summary>
-    public enum MiniprogramName {
+    public enum MiniprogramName
+    {
         /// <summary>
         /// 上合未来
         /// </summary>
@@ -755,7 +756,8 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 小程序类型
     /// </summary>
-    public enum MiniprogramType {
+    public enum MiniprogramType
+    {
         /// <summary>
         /// 上合未来
         /// </summary>
@@ -778,7 +780,8 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 小程序首页展示的标签
     /// </summary>
-    public enum MiniprogramIndexTag {
+    public enum MiniprogramIndexTag
+    {
         /// <summary>
         /// 美妆
         /// </summary>
@@ -902,55 +905,60 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 成交情况消费类型
     /// </summary>
-    public enum ConsumptionType{
-        
+    public enum ConsumptionType
+    {
+
         /// <summary>
         /// 定金消费
         /// </summary>
-        Deposit=0,
+        Deposit = 0,
         /// <summary>
         /// 成交消费
         /// </summary>
-        Deal=1,
+        Deal = 1,
         /// <summary>
         /// 退款消费
         /// </summary>
-        Refund=2,
+        Refund = 2,
         /// <summary>
         /// 其他
         /// </summary>
-        OTHER=3,
-
+        OTHER = 3,
+        /// <summary>
+        /// 欠款回收
+        /// </summary>
+        DebtCollection = 4,
     }
 
     /// <summary>
     /// 抖音客户来源
     /// </summary>
-    public enum TiktokCustomerSource { 
+    public enum TiktokCustomerSource
+    {
         /// <summary>
         /// 短视频
         /// </summary>
-        ShortVideo=0,
+        ShortVideo = 0,
         /// <summary>
         /// 直播前
         /// </summary>
-        LiveRoom=1,
+        LiveRoom = 1,
         /// <summary>
         /// 粉丝群
         /// </summary>
-        FansGroup=2,
+        FansGroup = 2,
         /// <summary>
         /// 私信
         /// </summary>
-        PrivateMessage=3,
+        PrivateMessage = 3,
         /// <summary>
         /// 智能AI
         /// </summary>
-        AI=4,
+        AI = 4,
         /// <summary>
         /// 其他
         /// </summary>
-        OTHER=5
+        OTHER = 5
     }
     /// <summary>
     /// 面诊方式
@@ -976,7 +984,7 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 粉丝群
         /// </summary>
-        FansGroup=5,
+        FansGroup = 5,
         /// <summary>
         /// 短视频
         /// </summary>

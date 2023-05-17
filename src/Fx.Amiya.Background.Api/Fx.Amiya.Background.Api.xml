@@ -17735,6 +17735,16 @@
             成交率
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperaConsultantRankDataVo.AccumulateToHospitalRatio">
+            <summary>
+            累计上门率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperaConsultantRankDataVo.AccumulateDealRation">
+            <summary>
+            累计成交率
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperaConsultantRankDataVo.NewCustomerUnitPrice">
             <summary>
             新客客单价
@@ -17895,6 +17905,81 @@
             老客成交率健康值
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperateDataVo.AccumulateNewCustomerToHospitalCount">
+            <summary>
+            累计新客上门量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperateDataVo.AccumulateNewCustomerToHospitalCountChainRatio">
+            <summary>
+            新客累计上门量环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperateDataVo.AccumulateNewCustomerToHospitalCountYearOnYear">
+            <summary>
+            新客累计上门量同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperateDataVo.AccumulateNewCustomerDealCount">
+            <summary>
+            累计新客成交量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperateDataVo.AccumulateNewCustomerDealCountChainRatio">
+            <summary>
+            累计新客成交量环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperateDataVo.AccumulateNewCustomerDealCountYearOnYear">
+            <summary>
+            累计新客成交量同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperateDataVo.AccumulateOldCustomerDealCount">
+            <summary>
+            累计老客成交量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperateDataVo.AccumulateOldCustomerDealCountChainRatio">
+            <summary>
+            累计老客成交量环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperateDataVo.AccumulateOldCustomerDealCountYearOnYear">
+            <summary>
+            累计老客成交量同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperateDataVo.AccumulateNewCustomerToHospitalRatio">
+            <summary>
+            累计新客上门率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperateDataVo.AccumulateNewCustomerToHospitalRatioChainRatio">
+            <summary>
+            累计新客上门率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperateDataVo.AccumulateNewCustomerToHospitalRatioYearOnYear">
+            <summary>
+            累计新客上门率同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperateDataVo.AccumulateNewCustomerDealRation">
+            <summary>
+            累计新客成交率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperateDataVo.AccumulateNewCustomerDealRationChainRatio">
+            <summary>
+            累计新客成交率环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperateDataVo.AccumulateNewCustomerDealRationYearOnYear">
+            <summary>
+            累计新客成交率同比
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OperateDepartmentRankVo.Rank">
             <summary>
             排名
@@ -18035,6 +18120,36 @@
             成交未复购订单量同比
             </summary>
         </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OrderBordDataVo.AccumulateSendOrderCount">
+            <summary>
+            累计派单量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OrderBordDataVo.AccumulateProcessedOrderCount">
+            <summary>
+            累计已处理订单数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OrderBordDataVo.AccumulateUntreatedOrderCount">
+            <summary>
+            累计未处理订单数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OrderBordDataVo.AccumulateSendOrderNotToHospitalCount">
+            <summary>
+            累计派单未上门订单数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OrderBordDataVo.AccumulateToHospitalNoDealCount">
+            <summary>
+            上门未成交订单数量
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.OrderBordDataVo.AccumulateDealNoRepurchaseCount">
+            <summary>
+            累计成交未复购订单数量
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.RankData.Rank">
             <summary>
             排名
@@ -18063,6 +18178,16 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.RankData.NewCustomerUnitPrice">
             <summary>
             新客客单价
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.RankData.AccumulateToHospitalRatio">
+            <summary>
+            累计上门率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.RankData.AccumulateDealRatio">
+            <summary>
+            累计成交率
             </summary>
         </member>
         <member name="P:Fx.Amiya.Background.Api.Vo.HospitalBoard.RankDataVo.RankList">
@@ -31343,6 +31468,251 @@
         <member name="P:Fx.Amiya.Background.Api.Vo.Order.UpdateSendOrderHospitalVo.OrderId">
             <summary>
             订单编号
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Input.QueryAmiyaAchievementDataVo">
+            <summary>
+            查询业绩输入类
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Input.QueryAmiyaAchievementDataVo.Year">
+            <summary>
+            年
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Input.QueryAmiyaAchievementDataVo.Month">
+            <summary>
+            月
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Input.QueryAmiyaAchievementDataVo.LiveAnchorBaseId">
+            <summary>
+            主播基础id（不传查询所有业绩）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Input.QueryAmiyaAchievementDataVo.IsSelfLKiveAnchor">
+            <summary>
+            是否为自播主播
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo">
+            <summary>
+            业绩看板输出类
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.TotalPerformance">
+            <summary>
+            总业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.TotalPerformanceCompleteRate">
+            <summary>
+            总业绩目标完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.TotalPerformanceYearOnYear">
+            <summary>
+            总业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.TotalPerformanceChainRatio">
+            <summary>
+            总业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.TotalPerformanceToDateSchedule">
+            <summary>
+            总业绩对比时间进度
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.TotalPerformanceDeviation">
+            <summary>
+            总业绩偏差
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.LaterCompleteEveryDayTotalPerformance">
+            <summary>
+            总业绩距离目标达成后期需完成业绩金额（若为负数则展示0）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.GroupDaoDaoPerformance">
+            <summary>
+            刀刀组总业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.GroupDaoDaoPerformanceProportion">
+            <summary>
+            刀刀组业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.GroupDaoDaoPerformanceCompleteRate">
+            <summary>
+            刀刀组业绩目标完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.GroupDaoDaoPerformanceYearOnYear">
+            <summary>
+            刀刀组业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.GroupDaoDaoPerformanceChainRatio">
+            <summary>
+            刀刀组业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.GroupDaoDaoPerformanceToDateSchedule">
+            <summary>
+            刀刀组业绩对比时间进度
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.GroupDaoDaoPerformanceDeviation">
+            <summary>
+            刀刀组业绩偏差
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.LaterCompleteEveryDayGroupDaoDaoPerformance">
+            <summary>
+            刀刀组业绩距离目标达成后期需完成业绩金额（若为负数则展示0）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.GroupJinaPerformance">
+            <summary>
+            吉娜组总业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.GroupJinaPerformanceProportion">
+            <summary>
+            吉娜组业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.GroupJinaPerformanceCompleteRate">
+            <summary>
+            吉娜组业绩目标完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.GroupJinaPerformanceYearOnYear">
+            <summary>
+            吉娜组业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.GroupJinaPerformanceChainRatio">
+            <summary>
+            吉娜组业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.GroupJinaPerformanceToDateSchedule">
+            <summary>
+            吉娜组业绩对比时间进度
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.GroupJinaPerformanceDeviation">
+            <summary>
+            吉娜组业绩偏差
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.LaterCompleteEveryDayGroupJinaPerformance">
+            <summary>
+            吉娜组业绩距离目标达成后期需完成业绩金额（若为负数则展示0）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.RefundPerformance">
+            <summary>
+            退款业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.NewCustomerPerformance">
+            <summary>
+            新客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.NewCustomerPerformanceProportion">
+            <summary>
+            新客业绩占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.NewCustomerPerformanceCompleteRate">
+            <summary>
+            新客业绩目标完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.NewCustomerPerformanceYearOnYear">
+            <summary>
+            新客业绩同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.NewCustomerPerformanceChainRatio">
+            <summary>
+            新客业绩环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.NewCustomerPerformanceToDateSchedule">
+            <summary>
+            新客业绩对比时间进度
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.NewCustomerPerformanceDeviation">
+            <summary>
+            新客业绩偏差
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.LaterCompleteEveryDayNewCustomerPerformance">
+            <summary>
+            新客业绩距离目标达成后期需完成业绩金额（若为负数则展示0）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.OldCustomerPerformance">
+            <summary>
+            老客业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.EffectivePerformance">
+            <summary>
+            有效业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.PotentialPerformance">
+            <summary>
+            潜在业绩
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.NewCustomerPerformanceBrokenLineList">
+            <summary>
+            新客业绩折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.OldCustomerPerformanceBrokenLineList">
+            <summary>
+            老客业绩折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.EffectivePerformanceBrokenLineList">
+            <summary>
+            有效业绩折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaAchievementDataVo.PotentialPerformanceBrokenLineList">
+            <summary>
+            潜在业绩折线图
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.AmiyaOperationDataVo">
+            <summary>
+            运营看板输出类
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.PerformanceBrokenLineListInfoVo">
+            <summary>
+            业绩折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.PerformanceBrokenLineListInfoVo.date">
+            <summary>
+            日期（可以是年也可以是月）例：年输出1-12，月输出1-31
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result.PerformanceBrokenLineListInfoVo.Performance">
+            <summary>
+            业绩金额
             </summary>
         </member>
         <member name="T:Fx.Amiya.Background.Api.Vo.Performance.LiveAnchorGroupPerformanceVo">
