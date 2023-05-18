@@ -73,7 +73,7 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input
         /// <summary>
         /// 数量
         /// </summary>
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
 
         /// <summary>
         /// 货币金额

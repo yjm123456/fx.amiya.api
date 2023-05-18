@@ -20,7 +20,7 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderDealDetails.Input
         /// <summary>
         /// 数量
         /// </summary>
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         /// <summary>
         /// 金额
         /// </summary>

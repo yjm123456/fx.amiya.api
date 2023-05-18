@@ -19,7 +19,7 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderDealDetails.Result
         /// <summary>
         /// 数量
         /// </summary>
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         /// <summary>
         /// 金额
         /// </summary>

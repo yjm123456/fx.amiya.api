@@ -20,7 +20,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.DeleteDate).HasColumnName("delete_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.GoodsName).HasColumnName("goods_name").HasColumnType("varchar(300)").IsRequired(false);
             builder.Property(e => e.GoodsSpec).HasColumnName("goods_spec").HasColumnType("varchar(45)").IsRequired(false);
-            builder.Property(e => e.Quantity).HasColumnName("quantity").HasColumnType("int").IsRequired();
+            builder.Property(e => e.Quantity).HasColumnName("quantity").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.Price).HasColumnName("price").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.ContentPlatFormOrderDealId).HasColumnName("content_platform_order_deal_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(e => e.ContentPlatFormOrderId).HasColumnName("content_platform_order_id").HasColumnType("varchar(50)").IsRequired(false);

@@ -19,7 +19,7 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderDealDetails.Input
         /// <summary>
         /// 数量
         /// </summary>
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         /// <summary>
         /// 金额
         /// </summary>
