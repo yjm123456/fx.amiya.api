@@ -1351,13 +1351,151 @@ namespace Fx.Amiya.Background.Api.Controllers
             dataVo.RefundPerformance = 10;
 
             #endregion
-            return null; 
-            
+            return ResultData<AmiyaAchievementDataVo>.Success().AddData("achievementdata", dataVo); ; 
+        }
+        [HttpGet("amiyaAchievementDetailData")]
+        public async Task<ResultData<AmiyaAchievementDetailDataVo>> GetAmiyaAchievementDetailedDataAsync([FromQuery] QueryAmiyaAchievementDataVo query) {
+            AmiyaAchievementDetailDataVo dataVo = new AmiyaAchievementDetailDataVo();
+
+            #region 新客业绩
+
+            dataVo.NewCustomerPerformance = 250;
+            dataVo.NewCustomerPerformanceProportion=25;
+            dataVo.NewCustomerPerformanceCompleteRate = 25;
+            dataVo.NewCustomerPerformanceYearOnYear = 20;
+            dataVo.NewCustomerPerformanceChainRatio = 20;
+            dataVo.NewCustomerPerformanceToDateSchedule = 0;
+            dataVo.NewCustomerPerformanceDeviation = 0;
+            dataVo.LaterCompleteEveryDayNewCustomerPerformance = 66.67m;
 
 
+            #endregion
 
+            #region 老客业绩
+
+            dataVo.OldCustomerPerformance = 250;
+            dataVo.OldCustomerPerformanceProportion = 25;
+            dataVo.OldCustomerPerformanceCompleteRate = 25;
+            dataVo.OldCustomerPerformanceYearOnYear = 20;
+            dataVo.OldCustomerPerformanceChainRatio = 20;
+            dataVo.OldCustomerPerformanceToDateSchedule = 0;
+            dataVo.OldCustomerPerformanceDeviation = 0;
+            dataVo.LaterCompleteEveryDayOldCustomerPerformance = 66.67m;
+
+            #endregion
+
+            #region 有效业绩
+
+            dataVo.EffectivePerformance = 250;
+            dataVo.EffectivePerformanceProportion = 25;
+            dataVo.EffectivePerformanceCompleteRate = 25;
+            dataVo.EffectivePerformanceYearOnYear = 20;
+            dataVo.EffectivePerformanceChainRatio = 20;
+            dataVo.EffectivePerformanceToDateSchedule = 0;
+            dataVo.EffectivePerformanceDeviation = 0;
+            dataVo.LaterCompleteEveryDayEffectivePerformance = 66.67m;
+
+            #endregion
+
+            #region 潜在业绩
+
+            dataVo.PotentialPerformance = 250;
+            dataVo.PotentialPerformanceProportion = 25;
+            dataVo.PotentialPerformanceCompleteRate = 25;
+            dataVo.PotentialPerformanceYearOnYear = 20;
+            dataVo.PotentialPerformanceChainRatio = 20;
+            dataVo.PotentialPerformanceToDateSchedule = 0;
+            dataVo.PotentialPerformanceDeviation = 0;
+            dataVo.LaterCompleteEveryDayPotentialPerformance = 66.67m;
+
+            #endregion
+
+            #region 当月派单业绩
+
+            dataVo.ThisMonthSendOrderPerformance = 250;
+            dataVo.ThisMonthSendOrderPerformanceProportion = 25;
+            dataVo.ThisMonthSendOrderPerformanceYearOnYear = 20;
+            dataVo.ThisMonthSendOrderPerformanceChainRatio = 20;
+
+            #endregion
+
+            #region 历史派单业绩
+
+            dataVo.HistorySendOrderPerformance = 250;
+            dataVo.HistorySendOrderPerformanceProportion = 25;
+            dataVo.HistorySendOrderPerformanceYearOnYear = 20;
+            dataVo.HistorySendOrderPerformanceChainRatio = 20;
+
+            #endregion
+
+            #region 抖音业绩
+
+            dataVo.TikTokPerformance = 250;
+            dataVo.TikTokPerformanceProportion = 25;
+            dataVo.TikTokPerformanceYearOnYear = 20;
+            dataVo.TikTokPerformanceChainRatio = 20;
+
+            #endregion
+
+            #region 视频号业绩
+
+            dataVo.VideoPerformance = 250;
+            dataVo.VideoPerformanceProportion = 25;
+            dataVo.VideoPerformanceYearOnYear = 20;
+            dataVo.VideoPerformanceChainRatio = 20;
+
+            #endregion
+
+            #region 主播视频业绩
+
+            dataVo.LiveAnchorVideoPerformance = 250;
+            dataVo.LiveAnchorVideoPerformanceProportion = 25;
+            dataVo.LiveAnchorVideoPerformanceYearOnYear = 20;
+            dataVo.LiveAnchorVideoPerformanceChainRatio = 20;
+
+            #endregion
+
+            #region 助理照片业绩
+
+            dataVo.AssistantPhotoPerformance = 250;
+            dataVo.AssistantPhotoPerformanceProportion = 25;
+            dataVo.AssistantPhotoPerformanceYearOnYear = 20;
+            dataVo.AssistantPhotoPerformanceChainRatio = 20;
+
+            #endregion
+
+            #region 主播接诊业绩
+
+            dataVo.LiveAnchorReceptionPerformance = 250;
+            dataVo.LiveAnchorReceptionPerformanceProportion = 25;
+            dataVo.LiveAnchorReceptionPerformanceYearOnYear = 20;
+            dataVo.LiveAnchorReceptionPerformanceChainRatio = 20;
+
+            #endregion
+
+            #region 非主播接诊业绩
+
+            dataVo.NoLiveAnchorReceptionPerformance = 250;
+            dataVo.NoLiveAnchorReceptionPerformanceProportion = 25;
+            dataVo.NoLiveAnchorReceptionPerformanceYearOnYear = 20;
+            dataVo.NoLiveAnchorReceptionPerformanceChainRatio = 20;
+
+            #endregion
+
+            return ResultData<AmiyaAchievementDetailDataVo>.Success().AddData("achievementdata",dataVo);
+        }
+
+        /// <summary>
+        /// 获取业绩折线图
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getAmiyaAchievementBrokenLineListData")]
+        public async Task<AmiyaAchievementBrokenLineListVo> GetAmiyaAchievementBrokenLineListDataAsync()
+        {
+            return null;
         }
         #endregion
+
 
         #region【运营看板】
 
