@@ -105,6 +105,16 @@ namespace Fx.Amiya.DbModels.Model
         /// 今日小黄车差评量
         /// </summary>
         public int MiniVanBadReviews { get; set; }
+        /// <summary>
+        /// 今日有效业绩
+        /// </summary>
+        public decimal EffectivePerformance { get; set; }
+        /// <summary>
+        /// 今日潜在业绩
+        /// </summary>
+        public decimal PotentialPerformance { get; set; }
+       
+        
         public DateTime RecordDate { get; set; }
 
         public LiveAnchorMonthlyTargetAfterLiving LiveAnchorMonthlyTargetAfterLiving { get; set; }

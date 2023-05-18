@@ -24,6 +24,9 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();
             builder.Property(e => e.DeleteDate).HasColumnName("delete_date").HasColumnType("datetime").IsRequired(false);
+            builder.Property(e => e.RefundCard).HasColumnName("refund_card").HasColumnType("int").IsRequired();
+            builder.Property(e => e.GMV).HasColumnName("gmv").HasColumnType("decimal(10,2)").IsRequired();
+            builder.Property(e => e.EliminateCardGMV).HasColumnName("eliminate_card_gmv").HasColumnType("decimal(10,2)").IsRequired();
 
             builder.HasOne(e => e.LiveAnchorMonthlyTargetLiving).WithMany(e => e.LivingDailyTargets).HasForeignKey(e => e.LiveAnchorMonthlyTargetId);
 

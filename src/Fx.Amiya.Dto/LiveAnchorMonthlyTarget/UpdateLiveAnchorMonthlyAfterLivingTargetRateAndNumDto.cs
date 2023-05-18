@@ -94,5 +94,13 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 当日小黄车差评
         /// </summary>
         public int CumulativeMiniVanBadReviews { get; set; }
+        /// <summary>
+        /// 今日有效业绩
+        /// </summary>
+        public decimal EffectivePerformance { get; set; }
+        /// <summary>
+        /// 今日潜在业绩
+        /// </summary>
+        public decimal PotentialPerformance { get; set; }
     }
 }

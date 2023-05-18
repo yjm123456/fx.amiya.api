@@ -35,7 +35,17 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.CumulativeCargoSettlementCommission).HasColumnName("cumulation_cargosettlementcommission").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.CargoSettlementCommissionCompleteRate).HasColumnName("cargosettlementcommission_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
 
+            builder.Property(t => t.LivingRefundCardTarget).HasColumnName("living_refund_card").HasColumnType("int").IsRequired();
+            builder.Property(t => t.CumulativeLivingRefundCard).HasColumnName("cumulative_living_refund_card").HasColumnType("int").IsRequired();
+            builder.Property(t => t.LivingRefundCardCompleteRate).HasColumnName("living_refund_card_complete_rate").HasColumnType("decimal(10,2)").IsRequired();
 
+            builder.Property(t => t.GMVTarget).HasColumnName("gmv").HasColumnType("decimal(10,2)").IsRequired();
+            builder.Property(t => t.CumulativeGMV).HasColumnName("cumulative_gmv").HasColumnType("decimal(10,2)").IsRequired();
+            builder.Property(t => t.GMVTargetCompleteRate).HasColumnName("gmv_target_complete_rate").HasColumnType("decimal(10,2)").IsRequired();
+
+            builder.Property(t => t.EliminateCardGMVTarget).HasColumnName("eliminate_card_gmv").HasColumnType("decimal(10,2)").IsRequired();
+            builder.Property(t => t.CumulativeEliminateCardGMV).HasColumnName("cumulative_eliminate_card_gmv").HasColumnType("decimal(10,2)").IsRequired();
+            builder.Property(t => t.EliminateCardGMVTargetCompleteRate).HasColumnName("eliminate_card_gmv_target_complete_rate").IsRequired();
 
             builder.Property(t => t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
 

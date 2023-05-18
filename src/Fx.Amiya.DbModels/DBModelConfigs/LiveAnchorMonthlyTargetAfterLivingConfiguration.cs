@@ -90,6 +90,17 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.CumulativeMiniVanBadReviews).HasColumnName("cumulative_mini_van_bad_reviews").HasColumnType("int").IsRequired();
             builder.Property(t => t.MiniVanBadReviewsCompleteRate).HasColumnName("mini_van_bad_reviews_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
 
+            builder.Property(t => t.EffectivePerformanceTarget).HasColumnName("effective_performance").HasColumnType("decimal(10,2)").IsRequired();
+            builder.Property(t => t.CumulativeEffectivePerformance).HasColumnName("cumulative_effective_performance").HasColumnType("decimal(10,2)").IsRequired();
+            builder.Property(t => t.EffectivePerformanceCompleteRate).HasColumnName("effective_performance_complete_rate").HasColumnType("decimal(10,2)").IsRequired();
+
+            builder.Property(t => t.PotentialPerformanceTarget).HasColumnName("potential_performance").HasColumnType("decimal(10,2)").IsRequired();
+            builder.Property(t => t.CumulativePotentialPerformance).HasColumnName("cumulative_potential_performance").HasColumnType("decimal(10,2)").IsRequired();
+            builder.Property(t => t.PotentialPerformanceCompleteRate).HasColumnName("potential_performance_completeRate").HasColumnType("decimal(10,2)").IsRequired();
+
+            
+
+
             builder.Property(t => t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
 
 

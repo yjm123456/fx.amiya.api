@@ -225,7 +225,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 Consultation = d.Consultation,
                                                 Consultation2 = d.Consultation2,
                                                 CargoSettlementCommission = d.CargoSettlementCommission,
-
+                                                RefundCard=d.RefundCard,
+                                                GMV=d.GMV,
+                                                EliminateCardGMV=d.EliminateCardGMV
                                             };
 
                 FxPageInfo<LivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<LivingDailyTargetVo>();
@@ -290,6 +292,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 PerformanceNum = d.PerformanceNum,
                                                 MinivanRefund = d.MinivanRefund,
                                                 MiniVanBadReviews = d.MiniVanBadReviews,
+                                                EffectivePerformance=d.EffectivePerformance,
+                                                PotentialPerformance=d.PotentialPerformance
                                             };
 
                 FxPageInfo<AfterLivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<AfterLivingDailyTargetVo>();
@@ -374,6 +378,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorDailyTargetVo.RecordDate = liveAnchorDailyTarget.RecordDate;
                 liveAnchorDailyTargetVo.MinivanRefund = liveAnchorDailyTarget.MinivanRefund;
                 liveAnchorDailyTargetVo.MiniVanBadReviews = liveAnchorDailyTarget.MiniVanBadReviews;
+                liveAnchorDailyTargetVo.RefundCard = liveAnchorDailyTarget.RefundCard;
+                liveAnchorDailyTargetVo.GMV = liveAnchorDailyTarget.GMV;
+                liveAnchorDailyTargetVo.EliminateCardGMV = liveAnchorDailyTarget.EliminateCardGMV;
 
                 return ResultData<LiveAnchorDailyTargetByIdVo>.Success().AddData("liveAnchorDailyTargetInfo", liveAnchorDailyTargetVo);
             }
@@ -762,6 +769,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.Consultation2 = addVo.Consultation2;
                     addDto.CargoSettlementCommission = addVo.CargoSettlementCommission;
                     addDto.RecordDate = addVo.RecordDate;
+                    addDto.RefundCard = addVo.RefundCard;
+                    addDto.GMV = addVo.GMV;
+                    addDto.EliminateCardGMV = addVo.EliminateCardGMV;
                     await _liveAnchorDailyTargetService.LivingAddAsync(addDto);
                 }
                 return ResultData.Success();
@@ -793,6 +803,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.Consultation2 = updateVo.Consultation2;
                 updateDto.CargoSettlementCommission = updateVo.CargoSettlementCommission;
                 updateDto.RecordDate = updateVo.RecordDate;
+                updateDto.RefundCard = updateVo.RefundCard;
+                updateDto.GMV = updateVo.GMV;
+                updateDto.EliminateCardGMV = updateVo.EliminateCardGMV;
                 await _liveAnchorDailyTargetService.LivingUpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -893,6 +906,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.MinivanRefund = addVo.MinivanRefund;
                     addDto.MiniVanBadReviews = addVo.MiniVanBadReviews;
                     addDto.RecordDate = addVo.RecordDate;
+                    addDto.EffectivePerformance = addVo.EffectivePerformance;
+                    addDto.PotentialPerformance = addVo.PotentialPerformance;
                     await _liveAnchorDailyTargetService.AfterLivingAddAsync(addDto);
                 }
                 return ResultData.Success();
@@ -941,6 +956,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.MiniVanBadReviews = updateVo.MiniVanBadReviews;
                 updateDto.RecordDate = updateVo.RecordDate;
                 updateDto.AfterLivingUpdateDate = DateTime.Now;
+                updateDto.PotentialPerformance = updateVo.PotentialPerformance;
+                updateDto.EffectivePerformance = updateVo.EffectivePerformance;
                 await _liveAnchorDailyTargetService.AfterLivingUpdateAsync(updateDto);
                 return ResultData.Success();
             }

@@ -635,6 +635,9 @@ namespace Fx.Amiya.Service
                                           Consultation = d.Consultation,
                                           Consultation2 = d.Consultation2,
                                           CargoSettlementCommission = d.CargoSettlementCommission,
+                                          RefundCard=d.RefundCard,
+                                          GMV=d.GMV,
+                                          EliminateCardGMV=d.EliminateCardGMV
                                       };
                 var result = await tikTokDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
 
@@ -720,6 +723,8 @@ namespace Fx.Amiya.Service
                                           PerformanceNum = d.PerformanceNum,
                                           MinivanRefund = d.MinivanRefund,
                                           MiniVanBadReviews = d.MiniVanBadReviews,
+                                          PotentialPerformance=d.PotentialPerformance,
+                                          EffectivePerformance=d.EffectivePerformance
                                       };
                 var result = await tikTokDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
 
@@ -858,6 +863,9 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.Consultation2 = liveAnchorDailyTarget.Consultation2;
                     liveAnchorDailyTargetDto.CargoSettlementCommission = liveAnchorDailyTarget.CargoSettlementCommission;
                     liveAnchorDailyTargetDto.RecordDate = liveAnchorDailyTarget.RecordDate;
+                    liveAnchorDailyTargetDto.RefundCard = liveAnchorDailyTarget.RefundCard;
+                    liveAnchorDailyTargetDto.GMV = liveAnchorDailyTarget.GMV;
+                    liveAnchorDailyTargetDto.EliminateCardGMV = liveAnchorDailyTarget.EliminateCardGMV;
                 }
 
                 if (type == 7)
@@ -894,6 +902,8 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.PerformanceNum = liveAnchorDailyTarget.PerformanceNum;
                     liveAnchorDailyTargetDto.MinivanRefund = liveAnchorDailyTarget.MinivanRefund;
                     liveAnchorDailyTargetDto.MiniVanBadReviews = liveAnchorDailyTarget.MiniVanBadReviews;
+                    liveAnchorDailyTargetDto.EffectivePerformance = liveAnchorDailyTarget.EffectivePerformance;
+                    liveAnchorDailyTargetDto.PotentialPerformance = liveAnchorDailyTarget.PotentialPerformance;
                 }
 
                 return liveAnchorDailyTargetDto;
@@ -1770,6 +1780,9 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTarget.Consultation = addDto.Consultation;
                     liveAnchorDailyTarget.Consultation2 = addDto.Consultation2;
                     liveAnchorDailyTarget.CargoSettlementCommission = addDto.CargoSettlementCommission;
+                    liveAnchorDailyTarget.RefundCard = addDto.RefundCard;
+                    liveAnchorDailyTarget.GMV = addDto.GMV;
+                    liveAnchorDailyTarget.EliminateCardGMV = addDto.EliminateCardGMV;
                     liveAnchorDailyTarget.CreateDate = DateTime.Now;
                     liveAnchorDailyTarget.Valid = true;
                     liveAnchorDailyTarget.UpdateDate = DateTime.Now;
@@ -1782,6 +1795,9 @@ namespace Fx.Amiya.Service
                     editLiveAnchorMonthlyTarget.CumulativeConsultation = addDto.Consultation;
                     editLiveAnchorMonthlyTarget.CumulativeConsultation2 = addDto.Consultation2;
                     editLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = addDto.CargoSettlementCommission;
+                    editLiveAnchorMonthlyTarget.RefundCard = addDto.RefundCard;
+                    editLiveAnchorMonthlyTarget.GMV = addDto.GMV;
+                    editLiveAnchorMonthlyTarget.EliminateCardGMV = addDto.EliminateCardGMV;
                     await _liveAnchorMonthlyTargetLivingService.EditAsync(editLiveAnchorMonthlyTarget);
                     unitOfWork.Commit();
                 }
@@ -1815,6 +1831,9 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeConsultation = -liveAnchorDailyTarget.Consultation;
                 editLiveAnchorMonthlyTarget.CumulativeConsultation2 = -liveAnchorDailyTarget.Consultation2;
                 editLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = -liveAnchorDailyTarget.CargoSettlementCommission;
+                editLiveAnchorMonthlyTarget.RefundCard = -liveAnchorDailyTarget.RefundCard;
+                editLiveAnchorMonthlyTarget.GMV = -liveAnchorDailyTarget.GMV;
+                editLiveAnchorMonthlyTarget.EliminateCardGMV = -liveAnchorDailyTarget.EliminateCardGMV;
                 await _liveAnchorMonthlyTargetLivingService.EditAsync(editLiveAnchorMonthlyTarget);
 
                 liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
@@ -1825,6 +1844,9 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.CargoSettlementCommission = updateDto.CargoSettlementCommission;
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
+                liveAnchorDailyTarget.RefundCard = updateDto.RefundCard;
+                liveAnchorDailyTarget.GMV = updateDto.GMV;
+                liveAnchorDailyTarget.EliminateCardGMV = updateDto.EliminateCardGMV;
                 await _livingDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 //添加修改后的
@@ -1834,6 +1856,9 @@ namespace Fx.Amiya.Service
                 lasteditLiveAnchorMonthlyTarget.CumulativeConsultation = updateDto.Consultation;
                 lasteditLiveAnchorMonthlyTarget.CumulativeConsultation2 = updateDto.Consultation2;
                 lasteditLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = updateDto.CargoSettlementCommission;
+                lasteditLiveAnchorMonthlyTarget.RefundCard = updateDto.RefundCard;
+                lasteditLiveAnchorMonthlyTarget.GMV = updateDto.GMV;
+                lasteditLiveAnchorMonthlyTarget.EliminateCardGMV = updateDto.EliminateCardGMV;
                 await _liveAnchorMonthlyTargetLivingService.EditAsync(lasteditLiveAnchorMonthlyTarget);
                 unitOfWork.Commit();
             }
@@ -1898,6 +1923,8 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 liveAnchorDailyTarget.Valid = true;
+                liveAnchorDailyTarget.EffectivePerformance = addDto.EffectivePerformance;
+                liveAnchorDailyTarget.PotentialPerformance = addDto.PotentialPerformance;
                 await _afterLivingDailyTarget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyAfterLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyAfterLivingTargetRateAndNumDto();
@@ -1921,6 +1948,8 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativePerformance = addDto.PerformanceNum;
                 editLiveAnchorMonthlyTarget.CumulativeMinivanRefund = addDto.MinivanRefund;
                 editLiveAnchorMonthlyTarget.CumulativeMiniVanBadReviews = addDto.MiniVanBadReviews;
+                editLiveAnchorMonthlyTarget.EffectivePerformance = addDto.EffectivePerformance;
+                editLiveAnchorMonthlyTarget.PotentialPerformance = addDto.PotentialPerformance;
                 await _liveAnchorMonthlyTargetAfterLivingService.EditAsync(editLiveAnchorMonthlyTarget);
                 unitOfWork.Commit();
             }
@@ -1969,6 +1998,8 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTargetDel.CumulativePerformance = -liveAnchorDailyTarget.PerformanceNum;
                 editLiveAnchorMonthlyTargetDel.CumulativeMinivanRefund = -liveAnchorDailyTarget.MinivanRefund;
                 editLiveAnchorMonthlyTargetDel.CumulativeMiniVanBadReviews = -liveAnchorDailyTarget.MiniVanBadReviews;
+                editLiveAnchorMonthlyTargetDel.EffectivePerformance = -liveAnchorDailyTarget.EffectivePerformance;
+                editLiveAnchorMonthlyTargetDel.PotentialPerformance = -liveAnchorDailyTarget.PotentialPerformance;
                 await _liveAnchorMonthlyTargetAfterLivingService.EditAsync(editLiveAnchorMonthlyTargetDel);
 
                 liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
@@ -1995,6 +2026,8 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.MiniVanBadReviews = updateDto.MiniVanBadReviews;
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
                 liveAnchorDailyTarget.UpdateDate = updateDto.AfterLivingUpdateDate;
+                liveAnchorDailyTarget.PotentialPerformance = updateDto.PotentialPerformance;
+                liveAnchorDailyTarget.EffectivePerformance = updateDto.EffectivePerformance;
                 await _afterLivingDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 //添加修改后的
@@ -2023,6 +2056,10 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTargetAdd.CumulativePerformance = updateDto.PerformanceNum;
                 editLiveAnchorMonthlyTargetAdd.CumulativeMinivanRefund = updateDto.MinivanRefund;
                 editLiveAnchorMonthlyTargetAdd.CumulativeMiniVanBadReviews = updateDto.MiniVanBadReviews;
+
+                editLiveAnchorMonthlyTargetAdd.EffectivePerformance = updateDto.EffectivePerformance;
+                editLiveAnchorMonthlyTargetAdd.PotentialPerformance = updateDto.PotentialPerformance;
+
                 await _liveAnchorMonthlyTargetAfterLivingService.EditAsync(editLiveAnchorMonthlyTargetAdd);
                 unitOfWork.Commit();
             }

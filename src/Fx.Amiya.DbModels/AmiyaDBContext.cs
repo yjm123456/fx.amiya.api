@@ -186,6 +186,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<WeChatVideoOrderInfo> WeChatVideoOrderInfos { get; set; }
         public virtual DbSet<UserLastTimeLoginAppId> UserLastTimeLoginAppIds { get; set; }
         public virtual DbSet<Miniprogram> Miniprograms { get; set; }
+        public virtual DbSet<HealthValue> HealthValues { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -371,6 +372,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new WeChatVideoOrderInfoConfiguration());
             modelBuilder.ApplyConfiguration(new UserLastTimeLoginAppIdConfiguration());
             modelBuilder.ApplyConfiguration(new MiniprogramConfiguration());
+            modelBuilder.ApplyConfiguration(new HealthValueConfigration());
             base.OnModelCreating(modelBuilder);
         }
     }

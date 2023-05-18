@@ -95,7 +95,42 @@ namespace Fx.Amiya.DbModels.Model
         /// 带货结算佣金完成率
         /// </summary>
         public decimal CargoSettlementCommissionCompleteRate { get; set; }
-
+        /// <summary>
+        /// 直播中退卡量目标
+        /// </summary>
+        public int LivingRefundCardTarget { get; set; }
+        /// <summary>
+        /// 月累计退卡量
+        /// </summary>
+        public int CumulativeLivingRefundCard { get; set; }
+        /// <summary>
+        /// 退卡量目标完成率
+        /// </summary>
+        public decimal LivingRefundCardCompleteRate { get; set; }
+        /// <summary>
+        /// GMV目标
+        /// </summary>
+        public decimal GMVTarget { get; set; }
+        /// <summary>
+        /// 月累计GMV
+        /// </summary>
+        public decimal CumulativeGMV { get; set; }
+        /// <summary>
+        /// GMV目标完成率
+        /// </summary>
+        public decimal GMVTargetCompleteRate { get; set; }
+        /// <summary>
+        /// 去卡GMV目标
+        /// </summary>
+        public decimal EliminateCardGMVTarget { get; set; }
+        /// <summary>
+        /// 月累计去卡GMV
+        /// </summary>
+        public decimal CumulativeEliminateCardGMV { get; set; }
+        /// <summary>
+        /// 去卡GMV目标完成率
+        /// </summary>
+        public decimal EliminateCardGMVTargetCompleteRate { get; set; }
         /// <summary>
         /// 创建日期
         /// </summary>

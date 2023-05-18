@@ -206,3 +206,46 @@ CHANGE COLUMN `quantity` `quantity` DECIMAL(12,2) NOT NULL DEFAULT '0' ;
 
 
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+
+--------------------------------------------王健 2023/05/17 BEGIN----------------------------------------------------
+
+---直播后日运营数据添加 有效业绩和潜在业绩
+ALTER TABLE `tbl_after_living_daily_target`
+	ADD COLUMN `effective_performance` DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER `mini_van_bad_reviews`,
+	ADD COLUMN `potential_performance` DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER `effective_performance`;
+
+
+---直播后月数据添加 有效业绩,累计有效业绩,目标完成率 潜在业绩,累计潜在业绩,目标完成率 
+ALTER TABLE `tbl_liveanchor_monthly_target_after_living`
+	ADD COLUMN `effective_performance` DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER `mini_van_bad_reviews_complete_rate`,
+	ADD COLUMN `cumulative_effective_performance` DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER `effective_performance`,
+	ADD COLUMN `effective_performance_complete_rate` DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_effective_performance`,
+	ADD COLUMN `potential_performance` DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER `effective_performance_complete_rate`,
+	ADD COLUMN `cumulative_potential_performance` DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER `potential_performance`,
+	ADD COLUMN `potential_performance_completeRate` DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_potential_performance`;
+
+
+---直播中添加退卡量,gmv,去卡gmv以及相关累计量和目标完成率
+ALTER TABLE `tbl_liveanchor_monthly_target_living`
+	ADD COLUMN `living_refund_card` INT NOT NULL DEFAULT 0 AFTER `cargosettlementcommission_complete_rate`,
+	ADD COLUMN `cumulative_living_refund_card` INT NOT NULL DEFAULT 0 AFTER `living_refund_card`,
+	ADD COLUMN `living_refund_card_complete_rate` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `cumulative_living_refund_card`,
+	ADD COLUMN `gmv` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `living_refund_card_complete_rate`,
+	ADD COLUMN `cumulative_gmv` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `gmv`,
+	ADD COLUMN `gmv_target_complete_rate` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `cumulative_gmv`,
+	ADD COLUMN `eliminate_card_gmv` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `gmv_target_complete_rate`,
+	ADD COLUMN `cumulative_eliminate_card_gmv` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `eliminate_card_gmv`,
+	ADD COLUMN `eliminate_card_gmv_target_complete_rate` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `cumulative_eliminate_card_gmv`;
+
+---直播中日运营数据添加退卡量,gmv,去卡gmv
+ALTER TABLE `tbl_living_daily_target`
+	ADD COLUMN `refund_card` INT NOT NULL DEFAULT 0 AFTER `record_date`,
+	ADD COLUMN `gmv` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `refund_card`,
+	ADD COLUMN `eliminate_card_gmv` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `gmv`;
+
+
+
+--------------------------------------------王健 2023/05/17 END----------------------------------------------------

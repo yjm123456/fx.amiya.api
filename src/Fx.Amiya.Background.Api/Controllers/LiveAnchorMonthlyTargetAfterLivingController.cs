@@ -117,7 +117,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         CumulativeMiniVanBadReviews = d.CumulativeMiniVanBadReviews,
                                                         MiniVanBadReviewsCompleteRate = d.MiniVanBadReviewsCompleteRate,
                                                         CreateDate = d.CreateDate,
-
+                                                        EffectivePerformanceTarget = d.EffectivePerformanceTarget,
+                                                        CumulativeEffectivePerformance=d.CumulativeEffectivePerformance,
+                                                        EffectivePerformanceCompleteRate=d.EffectivePerformanceCompleteRate,
+                                                        PotentialPerformanceTarget = d.PotentialPerformanceTarget,
+                                                        CumulativePotentialPerformance=d.CumulativePotentialPerformance,
+                                                        PotentialPerformanceCompleteRate=d.PotentialPerformanceCompleteRate
 
                                                     };
 
@@ -200,7 +205,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.PerformanceTarget = addVo.PerformanceTarget;
                 addDto.MiniVanBadReviewsTarget = addVo.MiniVanBadReviewsTarget;
                 addDto.MinivanRefundTarget = addVo.MinivanRefundTarget;
-
+                addDto.EffectivePerformanceTarget = addVo.EffectivePerformanceTarget;
+                addDto.PotentialPerformanceTarget = addVo.PotentialPerformanceTarget;
                 await _liveAnchorMonthlyTargetAfterLivingService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -295,6 +301,15 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorMonthlyTargetVo.MiniVanBadReviewsCompleteRate = liveAnchorMonthlyTarget.MiniVanBadReviewsCompleteRate;
                 liveAnchorMonthlyTargetVo.CreateDate = liveAnchorMonthlyTarget.CreateDate;
 
+                liveAnchorMonthlyTargetVo.EffectivePerformanceTarget = liveAnchorMonthlyTarget.EffectivePerformanceTarget;
+                liveAnchorMonthlyTargetVo.CumulativeEffectivePerformance = liveAnchorMonthlyTarget.CumulativeEffectivePerformance;
+                liveAnchorMonthlyTargetVo.EffectivePerformanceCompleteRate = liveAnchorMonthlyTarget.EffectivePerformanceCompleteRate;
+                
+                liveAnchorMonthlyTargetVo.PotentialPerformanceTarget = liveAnchorMonthlyTarget.PotentialPerformanceTarget;
+                liveAnchorMonthlyTargetVo.CumulativePotentialPerformance = liveAnchorMonthlyTarget.CumulativePotentialPerformance;
+                liveAnchorMonthlyTargetVo.PotentialPerformanceCompleteRate = liveAnchorMonthlyTarget.PotentialPerformanceCompleteRate;
+
+
                 return ResultData<LiveAnchorMonthlyTargetAfterLivingVo>.Success().AddData("liveAnchorMonthlyTargetAfterLivingInfo", liveAnchorMonthlyTargetVo);
             }
             catch (Exception ex)
@@ -338,6 +353,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.PerformanceTarget = updateVo.PerformanceTarget;
                 updateDto.MinivanRefundTarget = updateVo.MinivanRefundTarget;
                 updateDto.MiniVanBadReviewsTarget = updateVo.MiniVanBadReviewsTarget;
+                updateDto.EffectivePerformanceTarget = updateVo.EffectivePerformanceTarget;
+                updateDto.PotentialPerformanceTarget = updateVo.PotentialPerformanceTarget;
 
                 await _liveAnchorMonthlyTargetAfterLivingService.UpdateAsync(updateDto);
                 return ResultData.Success();

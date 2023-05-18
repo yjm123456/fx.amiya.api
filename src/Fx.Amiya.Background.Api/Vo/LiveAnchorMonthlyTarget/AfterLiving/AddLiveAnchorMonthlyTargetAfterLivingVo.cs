@@ -111,5 +111,13 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AfterLiving
         /// 小黄车差评总量
         /// </summary>
         public int MiniVanBadReviewsTarget { get; set; }
+        /// <summary>
+        /// 有效业绩
+        /// </summary>
+        public decimal EffectivePerformanceTarget { get; set; }
+        /// <summary>
+        /// 潜在业绩
+        /// </summary>
+        public decimal PotentialPerformanceTarget { get; set; }
     }
 }

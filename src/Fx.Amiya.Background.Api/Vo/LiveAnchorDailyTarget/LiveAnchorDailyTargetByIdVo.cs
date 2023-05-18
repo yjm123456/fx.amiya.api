@@ -237,6 +237,19 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 今日小黄车差评量
         /// </summary>
         public int MiniVanBadReviews { get; set; }
+        /// <summary>
+        /// 退卡量
+        /// </summary>
+        public decimal RefundCard { get; set; }
+        /// <summary>
+        /// GMV
+        /// </summary>
+        public decimal GMV { get; set; }
+
+        /// <summary>
+        /// 去卡GMV
+        /// </summary>
+        public decimal EliminateCardGMV { get; set; }
 
     }
 }

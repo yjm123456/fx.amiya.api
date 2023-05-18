@@ -466,6 +466,19 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
+        /// <summary>
+        /// 今日退卡量
+        /// </summary>
+        public int RefundCard { get; set; }
+        /// <summary>
+        /// 今日GMV
+        /// </summary>
+        public decimal GMV { get; set; }
+
+        /// <summary>
+        /// 今日去卡GMV
+        /// </summary>
+        public decimal EliminateCardGMV { get; set; }
     }
 
     /// <summary>
@@ -589,6 +602,15 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
+        /// <summary>
+        /// 今日有效业绩
+        /// </summary>
+        public decimal EffectivePerformance { get; set; }
+        /// <summary>
+        /// 今日潜在业绩
+        /// </summary>
+        public decimal PotentialPerformance { get; set; }
+
     }
 
 }

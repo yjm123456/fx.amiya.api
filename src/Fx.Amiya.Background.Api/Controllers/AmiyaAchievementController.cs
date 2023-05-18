@@ -1,6 +1,8 @@
 ﻿using Fx.Amiya.Background.Api.Vo.Appointment;
 using Fx.Amiya.Background.Api.Vo.OrderReport;
 using Fx.Amiya.Background.Api.Vo.Performance;
+using Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Input;
+using Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result;
 using Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration;
 using Fx.Amiya.Core.Interfaces.Goods;
 using Fx.Amiya.Dto.Performance;
@@ -1300,6 +1302,61 @@ namespace Fx.Amiya.Background.Api.Controllers
 
         #region 【业绩看板】
 
+        /// <summary>
+        /// 获取业绩数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("amiyaAchievementData")]
+        public async Task<ResultData<AmiyaAchievementDataVo>> GetAmiyaAchievementDataAsync([FromQuery] QueryAmiyaAchievementDataVo query) {
+            AmiyaAchievementDataVo dataVo = new AmiyaAchievementDataVo();
+
+            #region 总业绩
+            dataVo.TotalPerformance = 1000;
+            dataVo.TotalPerformanceCompleteRate = 50;
+            dataVo.TotalPerformanceYearOnYear = 20;
+            dataVo.TotalPerformanceChainRatio = 20;
+            dataVo.TotalPerformanceToDateSchedule = 50;
+            dataVo.TotalPerformanceDeviation = 0;
+            dataVo.LaterCompleteEveryDayTotalPerformance = 66.67m;
+            #endregion
+
+            #region 刀刀组业绩
+
+            dataVo.GroupDaoDaoPerformance = 500;
+            dataVo.GroupDaoDaoPerformanceProportion = 50;
+            dataVo.GroupDaoDaoPerformanceCompleteRate = 50;
+            dataVo.GroupDaoDaoPerformanceYearOnYear = 20;
+            dataVo.GroupDaoDaoPerformanceChainRatio = 20;
+            dataVo.GroupDaoDaoPerformanceToDateSchedule = 50;
+            dataVo.GroupDaoDaoPerformanceDeviation = 0;
+            dataVo.LaterCompleteEveryDayGroupDaoDaoPerformance = 66.67m;
+
+            #endregion
+
+            #region 吉娜组业绩
+
+            dataVo.GroupJinaPerformance = 500;
+            dataVo.GroupJinaPerformanceProportion = 50;
+            dataVo.GroupJinaPerformanceCompleteRate = 50;
+            dataVo.GroupJinaPerformanceYearOnYear = 20;
+            dataVo.GroupJinaPerformanceChainRatio = 20;
+            dataVo.GroupJinaPerformanceToDateSchedule = 50;
+            dataVo.GroupJinaPerformanceDeviation = 0;
+            dataVo.LaterCompleteEveryDayGroupJinaPerformance = 66.67m;
+
+            #endregion
+
+            #region 退款业绩 
+
+            dataVo.RefundPerformance = 10;
+
+            #endregion
+            return null; 
+            
+
+
+
+        }
         #endregion
 
         #region【运营看板】

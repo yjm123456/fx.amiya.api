@@ -120,6 +120,12 @@ namespace Fx.Amiya.Service
                                                   CumulativeMiniVanBadReviews = d.CumulativeMiniVanBadReviews,
                                                   MiniVanBadReviewsCompleteRate = d.MiniVanBadReviewsCompleteRate,
                                                   CreateDate = d.CreateDate,
+                                                  EffectivePerformanceTarget = d.EffectivePerformanceTarget,
+                                                  CumulativeEffectivePerformance=d.CumulativeEffectivePerformance,
+                                                  EffectivePerformanceCompleteRate=d.EffectivePerformanceCompleteRate,
+                                                  PotentialPerformanceTarget = d.PotentialPerformanceTarget,
+                                                  CumulativePotentialPerformance=d.CumulativePotentialPerformance,
+                                                  PotentialPerformanceCompleteRate=d.PotentialPerformanceCompleteRate
                                               };
 
                 FxPageInfo<LiveAnchorMonthlyTargetAfterLivingDto> liveAnchorMonthlyTargetAfterLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetAfterLivingDto>();
@@ -209,6 +215,14 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.MiniVanBadReviewsTarget = addDto.MiniVanBadReviewsTarget;
                 liveAnchorMonthlyTarget.CumulativeMiniVanBadReviews = 0;
                 liveAnchorMonthlyTarget.MiniVanBadReviewsCompleteRate = 0.00M;
+
+                liveAnchorMonthlyTarget.EffectivePerformanceTarget = addDto.EffectivePerformanceTarget;
+                liveAnchorMonthlyTarget.CumulativeEffectivePerformance = 0.00m;
+                liveAnchorMonthlyTarget.EffectivePerformanceCompleteRate = 0.00m;
+
+                liveAnchorMonthlyTarget.PotentialPerformanceTarget = addDto.PotentialPerformanceTarget;
+                liveAnchorMonthlyTarget.CumulativeEffectivePerformance = 0.00m;
+                liveAnchorMonthlyTarget.PotentialPerformanceCompleteRate = 0.00m;
 
                 liveAnchorMonthlyTarget.CreateDate = DateTime.Now;
 
@@ -321,6 +335,14 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.CumulativeMiniVanBadReviews = liveAnchorMonthlyTarget.CumulativeMiniVanBadReviews;
                 liveAnchorMonthlyTargetDto.MiniVanBadReviewsCompleteRate = liveAnchorMonthlyTarget.MiniVanBadReviewsCompleteRate;
                 liveAnchorMonthlyTargetDto.CreateDate = liveAnchorMonthlyTarget.CreateDate;
+
+                liveAnchorMonthlyTargetDto.EffectivePerformanceTarget = liveAnchorMonthlyTarget.EffectivePerformanceTarget;
+                liveAnchorMonthlyTargetDto.CumulativeEffectivePerformance = liveAnchorMonthlyTarget.CumulativeEffectivePerformance;
+                liveAnchorMonthlyTargetDto.EffectivePerformanceCompleteRate = liveAnchorMonthlyTarget.EffectivePerformanceCompleteRate;
+                liveAnchorMonthlyTargetDto.PotentialPerformanceTarget = liveAnchorMonthlyTarget.PotentialPerformanceTarget;
+                liveAnchorMonthlyTargetDto.CumulativePotentialPerformance = liveAnchorMonthlyTarget.CumulativePotentialPerformance;
+                liveAnchorMonthlyTargetDto.PotentialPerformanceCompleteRate = liveAnchorMonthlyTarget.PotentialPerformanceCompleteRate;
+
                 var liveAnchor = await _liveanchorService.GetByIdAsync(liveAnchorMonthlyTargetDto.LiveAnchorId);
                 liveAnchorMonthlyTargetDto.ContentPlatFormId = liveAnchor.ContentPlateFormId;
                 liveAnchorMonthlyTargetDto.CreateDate = liveAnchorMonthlyTarget.CreateDate;
@@ -362,6 +384,8 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.SubsequentPerformanceTarget = updateDto.SubsequentPerformanceTarget;
                 liveAnchorMonthlyTarget.OldCustomerPerformanceTarget = updateDto.OldCustomerPerformanceTarget;
                 liveAnchorMonthlyTarget.PerformanceTarget = updateDto.PerformanceTarget;
+                liveAnchorMonthlyTarget.EffectivePerformanceTarget = updateDto.EffectivePerformanceTarget;
+                liveAnchorMonthlyTarget.PotentialPerformanceTarget = updateDto.PotentialPerformanceTarget;
 
                 await dalLiveAnchorMonthlyTargetAfterLiving.UpdateAsync(liveAnchorMonthlyTarget, true);
             }
@@ -590,7 +614,33 @@ namespace Fx.Amiya.Service
                     liveAnchorMonthlyTargetAfterLiving.PerformanceCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetAfterLiving.CumulativePerformance) / Convert.ToDecimal(liveAnchorMonthlyTargetAfterLiving.PerformanceTarget)) * 100, 2);
                 }
                 #endregion
+                #region 有效业绩
 
+                liveAnchorMonthlyTargetAfterLiving.CumulativeEffectivePerformance += editDto.EffectivePerformance;
+                if (liveAnchorMonthlyTargetAfterLiving.CumulativeEffectivePerformance <= 0)
+                {
+                    liveAnchorMonthlyTargetAfterLiving.EffectivePerformanceCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetAfterLiving.EffectivePerformanceCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetAfterLiving.CumulativeEffectivePerformance) / Convert.ToDecimal(liveAnchorMonthlyTargetAfterLiving.EffectivePerformanceTarget)) * 100, 2);
+                }
+
+                #endregion
+
+                #region 潜在业绩
+
+                liveAnchorMonthlyTargetAfterLiving.CumulativePotentialPerformance += editDto.PotentialPerformance;
+                if (liveAnchorMonthlyTargetAfterLiving.CumulativePotentialPerformance <= 0)
+                {
+                    liveAnchorMonthlyTargetAfterLiving.PotentialPerformanceCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetAfterLiving.PotentialPerformanceCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetAfterLiving.CumulativePotentialPerformance) / Convert.ToDecimal(liveAnchorMonthlyTargetAfterLiving.PotentialPerformanceTarget)) * 100, 2);
+                }
+
+                #endregion
 
 
                 await dalLiveAnchorMonthlyTargetAfterLiving.UpdateAsync(liveAnchorMonthlyTargetAfterLiving, true);

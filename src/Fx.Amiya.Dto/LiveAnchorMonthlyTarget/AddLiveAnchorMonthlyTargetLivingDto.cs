@@ -44,5 +44,22 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 带货结算佣金目标
         /// </summary>
         public decimal CargoSettlementCommissionTarget { get; set; }
+        /// <summary>
+        /// 退卡量目标
+        /// </summary>
+        public int LivingRefundCardTarget { get; set; }
+        
+        /// <summary>
+        /// GMV目标
+        /// </summary>
+        public decimal GMVTarget { get; set; }
+        
+        /// <summary>
+        /// 去卡GMV目标
+        /// </summary>
+        public decimal EliminateCardGMVTarget { get; set; }
+
+        
+        
     }
 }

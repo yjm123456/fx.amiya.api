@@ -85,6 +85,18 @@ namespace Fx.Amiya.Service
                                                   CargoSettlementCommissionCompleteRate = d.CargoSettlementCommissionCompleteRate,
 
                                                   CreateDate = d.CreateDate,
+
+                                                  LivingRefundCardTarget = d.LivingRefundCardTarget,
+                                                  CumulativeLivingRefundCard=d.CumulativeLivingRefundCard,
+                                                  LivingRefundCardCompleteRate=d.LivingRefundCardCompleteRate,
+
+                                                  GMVTarget = d.GMVTarget,
+                                                  CumulativeGMV=d.CumulativeGMV,
+                                                  GMVTargetCompleteRate=d.GMVTargetCompleteRate,
+
+                                                  EliminateCardGMVTarget = d.EliminateCardGMVTarget,
+                                                  CumulativeEliminateCardGMV=d.CumulativeEliminateCardGMV,
+                                                  EliminateCardGMVTargetCompleteRate=d.EliminateCardGMVTargetCompleteRate
                                               };
 
                 FxPageInfo<LiveAnchorMonthlyTargetLivingDto> liveAnchorMonthlyTargetLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetLivingDto>();
@@ -123,6 +135,19 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.CargoSettlementCommissionTarget = addDto.CargoSettlementCommissionTarget;
                 liveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = 0.00M;
                 liveAnchorMonthlyTarget.CargoSettlementCommissionCompleteRate = 0.00M;
+
+                liveAnchorMonthlyTarget.LivingRefundCardTarget = addDto.LivingRefundCardTarget;
+                liveAnchorMonthlyTarget.CumulativeLivingRefundCard = 0;
+                liveAnchorMonthlyTarget.LivingRefundCardCompleteRate = 0.00m;
+
+                liveAnchorMonthlyTarget.GMVTarget = addDto.GMVTarget;
+                liveAnchorMonthlyTarget.CumulativeGMV = 0.00m;
+                liveAnchorMonthlyTarget.GMVTargetCompleteRate = 0.00m;
+
+                liveAnchorMonthlyTarget.EliminateCardGMVTarget = addDto.EliminateCardGMVTarget;
+                liveAnchorMonthlyTarget.CumulativeEliminateCardGMV = 0.00m;
+                liveAnchorMonthlyTarget.EliminateCardGMVTargetCompleteRate = 0.00m;
+
                 liveAnchorMonthlyTarget.CreateDate = DateTime.Now;
 
                 await dalLiveAnchorMonthlyTargetLiving.AddAsync(liveAnchorMonthlyTarget, true);
@@ -185,6 +210,18 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.CumulativeCargoSettlementCommission = liveAnchorMonthlyTarget.CumulativeCargoSettlementCommission;
                 liveAnchorMonthlyTargetDto.CargoSettlementCommissionCompleteRate = liveAnchorMonthlyTarget.CargoSettlementCommissionCompleteRate;
 
+                liveAnchorMonthlyTargetDto.LivingRefundCardTarget = liveAnchorMonthlyTarget.LivingRefundCardTarget;
+                liveAnchorMonthlyTargetDto.CumulativeLivingRefundCard = liveAnchorMonthlyTarget.CumulativeLivingRefundCard;
+                liveAnchorMonthlyTargetDto.LivingRefundCardCompleteRate = liveAnchorMonthlyTarget.LivingRefundCardCompleteRate;
+
+                liveAnchorMonthlyTargetDto.GMVTarget = liveAnchorMonthlyTarget.GMVTarget;
+                liveAnchorMonthlyTargetDto.CumulativeGMV = liveAnchorMonthlyTarget.CumulativeGMV;
+                liveAnchorMonthlyTargetDto.GMVTargetCompleteRate = liveAnchorMonthlyTarget.GMVTargetCompleteRate;
+
+                liveAnchorMonthlyTargetDto.EliminateCardGMVTarget = liveAnchorMonthlyTarget.EliminateCardGMVTarget;
+                liveAnchorMonthlyTargetDto.CumulativeEliminateCardGMV = liveAnchorMonthlyTarget.CumulativeEliminateCardGMV;
+                liveAnchorMonthlyTargetDto.EliminateCardGMVTargetCompleteRate = liveAnchorMonthlyTarget.EliminateCardGMVTargetCompleteRate;
+
                 liveAnchorMonthlyTargetDto.CreateDate = liveAnchorMonthlyTarget.CreateDate;
                 var liveAnchor = await _liveanchorService.GetByIdAsync(liveAnchorMonthlyTargetDto.LiveAnchorId);
                 liveAnchorMonthlyTargetDto.ContentPlatFormId = liveAnchor.ContentPlateFormId;
@@ -214,6 +251,9 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.ConsultationTarget = updateDto.ConsultationTarget;
                 liveAnchorMonthlyTarget.ConsultationTarget2 = updateDto.ConsultationTarget2;
                 liveAnchorMonthlyTarget.CargoSettlementCommissionTarget = updateDto.CargoSettlementCommissionTarget;
+                liveAnchorMonthlyTarget.LivingRefundCardTarget = updateDto.LivingRefundCardTarget;
+                liveAnchorMonthlyTarget.GMVTarget = updateDto.GMVTarget;
+                liveAnchorMonthlyTarget.EliminateCardGMVTarget = updateDto.EliminateCardGMVTarget;
 
                 await dalLiveAnchorMonthlyTargetLiving.UpdateAsync(liveAnchorMonthlyTarget, true);
             }
@@ -283,6 +323,48 @@ namespace Fx.Amiya.Service
                 {
                     liveAnchorMonthlyTargetLiving.CargoSettlementCommissionCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetLiving.CumulativeCargoSettlementCommission) / Convert.ToDecimal(liveAnchorMonthlyTargetLiving.CargoSettlementCommissionTarget)) * 100, 2);
                 }
+                #endregion
+
+                #region 退卡量
+
+                liveAnchorMonthlyTargetLiving.CumulativeLivingRefundCard += editDto.RefundCard;
+                if (liveAnchorMonthlyTargetLiving.CumulativeLivingRefundCard <= 0)
+                {
+                    liveAnchorMonthlyTargetLiving.LivingRefundCardCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetLiving.LivingRefundCardCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetLiving.CumulativeLivingRefundCard) / Convert.ToDecimal(liveAnchorMonthlyTargetLiving.LivingRefundCardTarget)) * 100, 2);
+                }
+
+                #endregion
+
+                #region GMV
+
+                liveAnchorMonthlyTargetLiving.CumulativeGMV += editDto.GMV;
+                if (liveAnchorMonthlyTargetLiving.CumulativeGMV <= 0)
+                {
+                    liveAnchorMonthlyTargetLiving.GMVTargetCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetLiving.GMVTargetCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetLiving.CumulativeGMV) / Convert.ToDecimal(liveAnchorMonthlyTargetLiving.GMVTarget)) * 100, 2);
+                }
+
+                #endregion
+
+                #region 去卡量GMV
+
+                liveAnchorMonthlyTargetLiving.CumulativeEliminateCardGMV += editDto.EliminateCardGMV;
+                if (liveAnchorMonthlyTargetLiving.CumulativeEliminateCardGMV <= 0)
+                {
+                    liveAnchorMonthlyTargetLiving.EliminateCardGMVTargetCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetLiving.EliminateCardGMVTargetCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetLiving.CumulativeEliminateCardGMV) / Convert.ToDecimal(liveAnchorMonthlyTargetLiving.EliminateCardGMVTarget)) * 100, 2);
+                }
+
                 #endregion
 
 

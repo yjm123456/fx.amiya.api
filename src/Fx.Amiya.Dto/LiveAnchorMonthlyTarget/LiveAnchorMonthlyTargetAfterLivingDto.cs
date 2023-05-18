@@ -292,6 +292,30 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
         public decimal MiniVanBadReviewsCompleteRate { get; set; }
         /// <summary>
+        /// 有效业绩目标
+        /// </summary>
+        public decimal EffectivePerformanceTarget { get; set; }
+        /// <summary>
+        /// 累计有效业绩
+        /// </summary>
+        public decimal CumulativeEffectivePerformance { get; set; }
+        /// <summary>
+        /// 有效业绩完成率
+        /// </summary>
+        public decimal EffectivePerformanceCompleteRate { get; set; }
+        /// <summary>
+        /// 潜在业绩目标
+        /// </summary>
+        public decimal PotentialPerformanceTarget { get; set; }
+        /// <summary>
+        /// 累计潜在业绩
+        /// </summary>
+        public decimal CumulativePotentialPerformance { get; set; }
+        /// <summary>
+        /// 潜在业绩目标完成率
+        /// </summary>
+        public decimal PotentialPerformanceCompleteRate { get; set; }
+        /// <summary>
         /// 创建日期
         /// </summary>
         public DateTime CreateDate { get; set; }

@@ -78,6 +78,15 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         CumulativeCargoSettlementCommission = d.CumulativeCargoSettlementCommission,
                                                         CargoSettlementCommissionCompleteRate = d.CargoSettlementCommissionCompleteRate,
                                                         CreateDate = d.CreateDate,
+                                                        LivingRefundCardTarget = d.LivingRefundCardTarget,
+                                                        CumulativeLivingRefundCard = d.CumulativeLivingRefundCard,
+                                                        LivingRefundCardCompleteRate = d.LivingRefundCardCompleteRate,
+                                                        GMVTarget = d.GMVTarget,
+                                                        CumulativeGMV = d.CumulativeGMV,
+                                                        GMVTargetCompleteRate = d.GMVTargetCompleteRate,
+                                                        EliminateCardGMVTarget = d.EliminateCardGMVTarget,
+                                                        CumulativeEliminateCardGMV = d.CumulativeEliminateCardGMV,
+                                                        EliminateCardGMVTargetCompleteRate = d.EliminateCardGMVTargetCompleteRate
                                                     };
 
                 FxPageInfo<LiveAnchorMonthlyTargetLivingVo> liveAnchorMonthlyTargetLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetLivingVo>();
@@ -145,7 +154,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.ConsultationTarget = addVo.ConsultationTarget;
                 addDto.ConsultationTarget2 = addVo.ConsultationTarget2;
                 addDto.CargoSettlementCommissionTarget = addVo.CargoSettlementCommissionTarget;
-
+                addDto.LivingRefundCardTarget = addVo.LivingRefundCardTarget;
+                addDto.GMVTarget = addVo.GMVTarget;
+                addDto.EliminateCardGMVTarget = addVo.EliminateCardGMVTarget;
                 await _liveAnchorMonthlyTargetLivingService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -189,6 +200,19 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorMonthlyTargetVo.CumulativeCargoSettlementCommission = liveAnchorMonthlyTarget.CumulativeCargoSettlementCommission;
                 liveAnchorMonthlyTargetVo.CargoSettlementCommissionCompleteRate = liveAnchorMonthlyTarget.CargoSettlementCommissionCompleteRate;
 
+                liveAnchorMonthlyTargetVo.LivingRefundCardTarget = liveAnchorMonthlyTarget.LivingRefundCardTarget;
+                liveAnchorMonthlyTargetVo.CumulativeLivingRefundCard = liveAnchorMonthlyTarget.CumulativeLivingRefundCard;
+                liveAnchorMonthlyTargetVo.LivingRefundCardCompleteRate = liveAnchorMonthlyTarget.LivingRefundCardCompleteRate;
+
+                liveAnchorMonthlyTargetVo.GMVTarget = liveAnchorMonthlyTarget.GMVTarget;
+                liveAnchorMonthlyTargetVo.CumulativeGMV = liveAnchorMonthlyTarget.CumulativeGMV;
+                liveAnchorMonthlyTargetVo.GMVTargetCompleteRate = liveAnchorMonthlyTarget.GMVTargetCompleteRate;
+
+                liveAnchorMonthlyTargetVo.EliminateCardGMVTarget = liveAnchorMonthlyTarget.EliminateCardGMVTarget;
+                liveAnchorMonthlyTargetVo.CumulativeEliminateCardGMV = liveAnchorMonthlyTarget.CumulativeEliminateCardGMV;
+                liveAnchorMonthlyTargetVo.EliminateCardGMVTargetCompleteRate = liveAnchorMonthlyTarget.EliminateCardGMVTargetCompleteRate;
+
+
                 liveAnchorMonthlyTargetVo.CreateDate = liveAnchorMonthlyTarget.CreateDate;
 
                 return ResultData<LiveAnchorMonthlyTargetLivingVo>.Success().AddData("liveAnchorMonthlyTargetLivingInfo", liveAnchorMonthlyTargetVo);
@@ -220,6 +244,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.ConsultationTarget = updateVo.ConsultationTarget;
                 updateDto.ConsultationTarget2 = updateVo.ConsultationTarget2;
                 updateDto.CargoSettlementCommissionTarget = updateVo.CargoSettlementCommissionTarget;
+                updateDto.LivingRefundCardTarget = updateVo.LivingRefundCardTarget;
+                updateDto.GMVTarget = updateVo.GMVTarget;
+                updateDto.EliminateCardGMVTarget = updateVo.EliminateCardGMVTarget;
                 await _liveAnchorMonthlyTargetLivingService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

@@ -142,3 +142,22 @@ CREATE TABLE `amiyadb`.`tbl_content_platform_order_deal_details` (
   PRIMARY KEY (`id`));
 -----------------------------------------------余建明 2023/05/13 END--------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+
+-----------------------------------------------王健 2023/05/17 BEGIN--------------------------------------
+
+----健康值
+CREATE TABLE `tbl_heath_value` (
+	`id` VARCHAR(100) NOT NULL,
+	`name` VARCHAR(200) NOT NULL,
+	`code` VARCHAR(200) NOT NULL,
+	`value` DECIMAL(10,2) NOT NULL DEFAULT '0.00',
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT(1) NOT NULL,
+	`delete_date` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+);
+
+-----------------------------------------------王健 2023/05/17 END--------------------------------------

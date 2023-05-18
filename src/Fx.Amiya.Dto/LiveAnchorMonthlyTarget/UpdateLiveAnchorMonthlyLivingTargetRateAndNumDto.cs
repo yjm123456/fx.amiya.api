@@ -29,5 +29,18 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 当日带货结算佣金金额
         /// </summary>
         public decimal CumulativeCargoSettlementCommission { get; set; }
+        /// <summary>
+        /// 退卡量
+        /// </summary>
+        public int RefundCard { get; set; }
+        /// <summary>
+        /// GMV
+        /// </summary>
+        public decimal GMV { get; set; }
+
+        /// <summary>
+        /// 去卡GMV
+        /// </summary>
+        public decimal EliminateCardGMV { get; set; }
     }
 }

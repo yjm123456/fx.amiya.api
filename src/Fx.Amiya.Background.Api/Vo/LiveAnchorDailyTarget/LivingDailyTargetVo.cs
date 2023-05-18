@@ -49,5 +49,18 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// </summary>
 
         public DateTime RecordDate { get; set; }
+        /// <summary>
+        /// 今日退卡量
+        /// </summary>
+        public decimal RefundCard { get; set; }
+        /// <summary>
+        /// 今日GMV
+        /// </summary>
+        public decimal GMV { get; set; }
+
+        /// <summary>
+        /// 今日去卡GMV
+        /// </summary>
+        public decimal EliminateCardGMV { get; set; }
     }
 }
