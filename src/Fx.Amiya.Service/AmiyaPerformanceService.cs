@@ -19,7 +19,7 @@ namespace Fx.Amiya.Service
 {
     public class AmiyaPerformanceService : IAmiyaPerformanceService
     {
-        private readonly ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService;
+        private readonly IHealthValueService healthValueService;
         private readonly ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService;
         private readonly ILiveAnchorMonthlyTargetAfterLivingService liveAnchorMonthlyTargetAfterLivingService;
         private readonly IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
@@ -29,7 +29,7 @@ namespace Fx.Amiya.Service
         private readonly IAmiyaEmployeeService amiyaEmployeeService;
         private readonly IContentPlateFormOrderService contentPlateFormOrderService;
 
-        public AmiyaPerformanceService(ILiveAnchorMonthlyTargetService liveAnchorMonthlyTargetService,
+        public AmiyaPerformanceService(IHealthValueService healthValueService,
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
             ILiveAnchorService liveAnchorService,
             ILiveAnchorBaseInfoService liveAnchorBaseInfoService,
@@ -39,7 +39,7 @@ namespace Fx.Amiya.Service
             IAmiyaEmployeeService amiyaEmployeeService,
             IContentPlateFormOrderService contentPlateFormOrderService)
         {
-            this.liveAnchorMonthlyTargetService = liveAnchorMonthlyTargetService;
+            this.healthValueService = healthValueService;
             this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
             this.liveAnchorBaseInfoService = liveAnchorBaseInfoService;
             this.liveAnchorMonthlyTargetAfterLivingService = liveanchorMonthlyTargetAfterLivingService;
@@ -1358,6 +1358,237 @@ namespace Fx.Amiya.Service
         }
         #endregion
 
+
+        #region[新运营看板业务层]
+        /// <summary>
+        /// 运营看板
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorName">主播名称</param>
+        /// <returns></returns>
+        public async Task<AmiyaOperationDataDto> GetPerformanceOperationDataAsync(int year, int month, string contentPlatFormId, bool isEffectiveCustomerData)
+        {
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month);
+            AmiyaOperationDataDto amiyaOperationDataDto = new AmiyaOperationDataDto();
+            var groupPerformanceTargetLiving = await liveAnchorMonthlyTargetLivingService.GetConsulationCardAddTargetByDateAsync(year, month);
+            var groupPerformanceTarget = await liveAnchorMonthlyTargetAfterLivingService.GetAfterLivingTargetByDateAsync(year, month);
+
+
+            NewCustomerOperationDataDto newCustomerOperationDataDto = new NewCustomerOperationDataDto();
+            newCustomerOperationDataDto.newCustomerOperationDataDetails = new List<NewCustomerOperationDataDetails>();
+            OldCustomerOperationDataDto oldCustomerOperationDataDto = new OldCustomerOperationDataDto();
+            #region{小黄车数据}
+
+            //小黄车数据
+            var baseBusinessPerformance = await shoppingCartRegistrationService.GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(sequentialDate.StartDate, sequentialDate.EndDate, isEffectiveCustomerData, contentPlatFormId);
+            //上月的小黄车数据
+            List<ShoppingCartRegistrationDto> lastMonthShoppingCardPerformance = null;
+            lastMonthShoppingCardPerformance = await shoppingCartRegistrationService.GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, isEffectiveCustomerData, contentPlatFormId);
+            //上年的小黄车数据
+            var lastYearShoppingCardPerformance = await shoppingCartRegistrationService.GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, isEffectiveCustomerData, contentPlatFormId);
+            #endregion
+
+            #region{订单数据}
+            var baseOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(sequentialDate.StartDate, sequentialDate.EndDate);
+
+            var baseLastMonthOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate);
+
+            var baseLastYearOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate);
+            #endregion
+
+            #region 【面诊卡下单】
+            //面诊卡下单
+            NewCustomerOperationDataDetails addCarddetails = new NewCustomerOperationDataDetails();
+            addCarddetails.Key = "AddCard";
+            addCarddetails.Name = "下卡量";
+            addCarddetails.Value = baseBusinessPerformance.Count();
+
+
+            //上月的面诊卡下单
+            var lastMonthConsulationAddCardPerformanceCount = lastMonthShoppingCardPerformance.Count();
+            addCarddetails.ChainRatioValue = CalculateChainratio(addCarddetails.Value, lastMonthConsulationAddCardPerformanceCount);
+
+            var lastYearTotalConsulationAddCardPerformance = lastYearShoppingCardPerformance.Count();
+            addCarddetails.YearToYearValue = CalculateYearOnYear(addCarddetails.Value, lastYearTotalConsulationAddCardPerformance);
+            //目标达成
+            addCarddetails.TargetCompleteRate = CalculateTargetComplete(addCarddetails.Value, groupPerformanceTargetLiving.ConsulationCardTarget);
+            newCustomerOperationDataDto.newCustomerOperationDataDetails.Add(addCarddetails);
+            #endregion
+
+            #region 【面诊卡退单】
+            //面诊卡退款
+            NewCustomerOperationDataDetails refundCarddetails = new NewCustomerOperationDataDetails();
+            refundCarddetails.Key = "RefundCard";
+            refundCarddetails.Name = "退卡量";
+            refundCarddetails.Value = baseBusinessPerformance.Where(x => x.IsReturnBackPrice == true).Count();
+
+            //上月的面诊卡退款
+            var lastMonthConsulationRefundCardPerformanceCount = lastMonthShoppingCardPerformance.Where(x => x.IsReturnBackPrice == true).Count();
+            refundCarddetails.ChainRatioValue = CalculateChainratio(refundCarddetails.Value, lastMonthConsulationRefundCardPerformanceCount);
+            //上年的面诊卡退款
+            var lastYearTotalConsulationRefundCardPerformance = lastYearShoppingCardPerformance.Where(x => x.IsReturnBackPrice == true).Count();
+            refundCarddetails.YearToYearValue = CalculateYearOnYear(refundCarddetails.Value, lastYearTotalConsulationRefundCardPerformance);
+            //目标达成
+            refundCarddetails.TargetCompleteRate = CalculateTargetComplete(refundCarddetails.Value, groupPerformanceTargetLiving.LivingRefundCardTarget + groupPerformanceTarget.ConsulationCardRefundTarget);
+            newCustomerOperationDataDto.newCustomerOperationDataDetails.Add(refundCarddetails);
+            #endregion
+            //退卡率
+            newCustomerOperationDataDto.RefundCardRate = CalculateTargetComplete(refundCarddetails.Value, addCarddetails.Value);
+            newCustomerOperationDataDto.RefundCardRateHealthValueSum = await healthValueService.GetValueByCode("RefundCardHealthValueSum");
+            newCustomerOperationDataDto.RefundCardRateHealthValueThisMonth = await healthValueService.GetValueByCode("RefundCardHealthValueThisMonth");
+
+            #region 【分诊】
+            //分诊
+            NewCustomerOperationDataDetails consulationdetails = new NewCustomerOperationDataDetails();
+            consulationdetails.Key = "Consulation";
+            consulationdetails.Name = "分诊量";
+            consulationdetails.Value = baseBusinessPerformance.Where(x => x.AssignEmpId != 0 && x.AssignEmpId.HasValue).Count();
+
+            //上月的分诊
+            var lastMonthConsulationConsulationPerformanceCount = lastMonthShoppingCardPerformance.Where(x => x.AssignEmpId != 0 && x.AssignEmpId.HasValue).Count();
+            consulationdetails.ChainRatioValue = CalculateChainratio(consulationdetails.Value, lastMonthConsulationConsulationPerformanceCount);
+            //上年的分诊
+            var lastYearTotalConsulationConsulationPerformance = lastYearShoppingCardPerformance.Where(x => x.AssignEmpId != 0 && x.AssignEmpId.HasValue).Count();
+            consulationdetails.YearToYearValue = CalculateYearOnYear(consulationdetails.Value, lastYearTotalConsulationConsulationPerformance);
+            //目标达成
+            consulationdetails.TargetCompleteRate = CalculateTargetComplete(consulationdetails.Value, groupPerformanceTarget.ConsulationCardConsumedTarget);
+            newCustomerOperationDataDto.newCustomerOperationDataDetails.Add(consulationdetails);
+            #endregion
+
+            #region 【加v】
+            NewCustomerOperationDataDetails addWechatdetails = new NewCustomerOperationDataDetails();
+            //加v
+            addWechatdetails.Key = "AddWeChat";
+            addWechatdetails.Name = "加v量";
+            addWechatdetails.Value = baseBusinessPerformance.Where(x => x.IsAddWeChat == true).Count();
+
+            //上月的分诊
+            var lastMonthAddWechatPerformanceCount = lastMonthShoppingCardPerformance.Where(x => x.IsAddWeChat == true).Count();
+            addWechatdetails.ChainRatioValue = CalculateChainratio(addWechatdetails.Value, lastMonthAddWechatPerformanceCount);
+            //上年的分诊
+            var lastYearTotalAddWechatPerformance = lastYearShoppingCardPerformance.Where(x => x.IsAddWeChat == true).Count();
+            addWechatdetails.YearToYearValue = CalculateYearOnYear(addWechatdetails.Value, lastYearTotalAddWechatPerformance);
+            //目标达成
+            addWechatdetails.TargetCompleteRate = CalculateTargetComplete(addWechatdetails.Value, groupPerformanceTarget.AddWeChatTarget);
+            newCustomerOperationDataDto.newCustomerOperationDataDetails.Add(addWechatdetails);
+            #endregion
+            //加v率
+            newCustomerOperationDataDto.AddWeChatRate = CalculateTargetComplete(addWechatdetails.Value, consulationdetails.Value);
+            newCustomerOperationDataDto.AddWeChatRateHealthValueSum = await healthValueService.GetValueByCode("AddWeChatHealthValueSum");
+            newCustomerOperationDataDto.AddWeChatRateHealthValueThisMonth = await healthValueService.GetValueByCode("AddWeChatHealthValueThisMonth");
+
+            #region 【派单】
+            NewCustomerOperationDataDetails sendOrderdetails = new NewCustomerOperationDataDetails();
+            //派单
+            sendOrderdetails.Key = "AddWeChat";
+            sendOrderdetails.Name = "派单量";
+            sendOrderdetails.Value = baseOrderPerformance.SendOrderNum;
+
+            //上月的派单
+            var lastMonthSendOrderPerformanceCount = baseLastMonthOrderPerformance.SendOrderNum;
+            sendOrderdetails.ChainRatioValue = CalculateChainratio(sendOrderdetails.Value, lastMonthSendOrderPerformanceCount);
+            //上年的派单
+            var lastYearTotalSendOrderPerformance = baseLastYearOrderPerformance.SendOrderNum;
+            sendOrderdetails.YearToYearValue = CalculateYearOnYear(sendOrderdetails.Value, lastYearTotalSendOrderPerformance);
+            //目标达成
+            sendOrderdetails.TargetCompleteRate = CalculateTargetComplete(sendOrderdetails.Value, groupPerformanceTarget.SendOrderTarget);
+            newCustomerOperationDataDto.newCustomerOperationDataDetails.Add(sendOrderdetails);
+            #endregion
+            //派单率
+            newCustomerOperationDataDto.SendOrderRate = CalculateTargetComplete(sendOrderdetails.Value, addWechatdetails.Value);
+            newCustomerOperationDataDto.SendOrderRateHealthValueSum = await healthValueService.GetValueByCode("SendOrderRateHealthValueSum");
+            newCustomerOperationDataDto.SendOrderRateHealthValueThisMonth = await healthValueService.GetValueByCode("SendOrderRateHealthValueThisMonth");
+
+            #region 【上门】
+            NewCustomerOperationDataDetails visitdetails = new NewCustomerOperationDataDetails();
+            //上门
+            visitdetails.Key = "AddWeChat";
+            visitdetails.Name = "上门量";
+            visitdetails.Value = baseOrderPerformance.VisitNum;
+
+            //上月的上门
+            var lastMonthVisitPerformanceCount = baseLastMonthOrderPerformance.VisitNum;
+            visitdetails.ChainRatioValue = CalculateChainratio(visitdetails.Value, lastMonthVisitPerformanceCount);
+            //上年的上门
+            var lastYearTotalVisitPerformance = baseLastYearOrderPerformance.VisitNum;
+            visitdetails.YearToYearValue = CalculateYearOnYear(visitdetails.Value, lastYearTotalVisitPerformance);
+            //目标达成
+            visitdetails.TargetCompleteRate = CalculateTargetComplete(visitdetails.Value, groupPerformanceTarget.NewCustomerVisitTarget);
+            newCustomerOperationDataDto.newCustomerOperationDataDetails.Add(visitdetails);
+            #endregion
+            //上门率
+            newCustomerOperationDataDto.ToHospitalRate = CalculateTargetComplete(visitdetails.Value, sendOrderdetails.Value);
+            newCustomerOperationDataDto.ToHospitalRateHealthValueSum = await healthValueService.GetValueByCode("ToHospitalRateHealthValueSum");
+            newCustomerOperationDataDto.ToHospitalRateHealthValueThisMonth = await healthValueService.GetValueByCode("ToHospitalRateHealthValueThisMonth");
+
+            #region 【成交】
+            NewCustomerOperationDataDetails dealdetails = new NewCustomerOperationDataDetails();
+            //成交
+            dealdetails.Key = "AddWeChat";
+            dealdetails.Name = "成交量";
+            dealdetails.Value = baseOrderPerformance.DealNum;
+
+            //上月的成交
+            var lastMonthDealPerformanceCount = baseLastMonthOrderPerformance.DealNum;
+            dealdetails.ChainRatioValue = CalculateChainratio(dealdetails.Value, lastMonthDealPerformanceCount);
+            //上年的成交
+            var lastYearTotalDealPerformance = baseLastYearOrderPerformance.DealNum;
+            dealdetails.YearToYearValue = CalculateYearOnYear(dealdetails.Value, lastYearTotalDealPerformance);
+            //目标达成
+            dealdetails.TargetCompleteRate = CalculateTargetComplete(dealdetails.Value, groupPerformanceTarget.NewCustomerDealTarget);
+            newCustomerOperationDataDto.newCustomerOperationDataDetails.Add(dealdetails);
+            #endregion
+            //成交率
+            newCustomerOperationDataDto.ToHospitalRate = CalculateTargetComplete(dealdetails.Value, visitdetails.Value);
+            newCustomerOperationDataDto.DealRateHealthValueThisMonth = await healthValueService.GetValueByCode("DealRateHealthValueThisMonth");
+            newCustomerOperationDataDto.DealRateHealthValueSum = await healthValueService.GetValueByCode("DealRateHealthValueSum");
+
+
+            //派单成交转化率
+            newCustomerOperationDataDto.SendOrderToDealRate = CalculateTargetComplete(dealdetails.Value, sendOrderdetails.Value);
+            //分诊成交转化率
+            newCustomerOperationDataDto.AllocationConsulationToDealRate = CalculateTargetComplete(dealdetails.Value, consulationdetails.Value);
+            if (baseOrderPerformance.DealPrice.HasValue)
+            {
+                if (sendOrderdetails.Value != 0)
+                    //派单成交能效
+                    newCustomerOperationDataDto.SendOrderToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / sendOrderdetails.Value, 2, MidpointRounding.AwayFromZero);
+                if (consulationdetails.Value != 0)
+                    //分诊成交能效
+                    newCustomerOperationDataDto.AllocationConsulationToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / consulationdetails.Value, 2, MidpointRounding.AwayFromZero);
+            }
+            else
+            {
+                //派单成交能效
+                newCustomerOperationDataDto.SendOrderToDealPrice = 0.00M;
+                //分诊成交能效
+                newCustomerOperationDataDto.AllocationConsulationToDealPrice = 0.00M;
+            }
+
+            amiyaOperationDataDto.NewCustomerData = newCustomerOperationDataDto;
+            //老客数据
+            var oldCustomerData = await contentPlateFormOrderService.GetOldCustomerBuyAgainByMonthAsync(sequentialDate.StartDate);
+            oldCustomerOperationDataDto.TotalDealPeople = oldCustomerData.TotalDealCustomer;
+            oldCustomerOperationDataDto.SecondDealPeople = oldCustomerData.SecondDealCustomer;
+            oldCustomerOperationDataDto.ThirdDealPeople = oldCustomerData.ThirdDealCustomer;
+            oldCustomerOperationDataDto.FourthOrMoreDealPeople = oldCustomerData.FourthOrMoreDealCustomer;
+            oldCustomerOperationDataDto.SecondTimeBuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.SecondDealPeople), Convert.ToDecimal(oldCustomerOperationDataDto.TotalDealPeople)).Value;
+            oldCustomerOperationDataDto.SecondTimeBuyRateProportion = oldCustomerOperationDataDto.SecondTimeBuyRate;
+
+            oldCustomerOperationDataDto.ThirdTimeBuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.ThirdDealPeople), Convert.ToDecimal(oldCustomerOperationDataDto.TotalDealPeople)).Value;
+            oldCustomerOperationDataDto.ThirdTimeBuyRateProportion = oldCustomerOperationDataDto.ThirdTimeBuyRate;
+
+            oldCustomerOperationDataDto.FourthTimeOrMoreBuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.FourthOrMoreDealPeople), Convert.ToDecimal(oldCustomerOperationDataDto.TotalDealPeople)).Value;
+            oldCustomerOperationDataDto.FourthTimeOrMoreBuyRateProportion = oldCustomerOperationDataDto.FourthTimeOrMoreBuyRate;
+
+            oldCustomerOperationDataDto.BuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.FourthOrMoreDealPeople + oldCustomerOperationDataDto.ThirdDealPeople + oldCustomerOperationDataDto.SecondDealPeople), Convert.ToDecimal(oldCustomerOperationDataDto.TotalDealPeople)).Value;
+
+            amiyaOperationDataDto.OldCustomerData = oldCustomerOperationDataDto;
+            return amiyaOperationDataDto;
+
+        }
+        #endregion
 
         //企业微信
 

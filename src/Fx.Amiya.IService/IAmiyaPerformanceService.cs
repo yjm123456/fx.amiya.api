@@ -227,6 +227,10 @@ namespace Fx.Amiya.IService
         Task<List<ShoppingCartRegistrationDto>> GetPictureOrVideoConsultationByLiveAnchorAsync(int year, int month, bool isVideo, string LiveAnchorName);
         #endregion
 
+        #region[新运营看板业务层]
+        Task<AmiyaOperationDataDto> GetPerformanceOperationDataAsync(int year, int month, string contentPlatFormId, bool isEffectiveCustomerData);
+        #endregion
+
         #region 【企业微信】
         /// <summary>
         /// 公司累计总业绩

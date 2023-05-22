@@ -1365,6 +1365,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 {
                     hospitalId = 37;
                 }
+                else if (updateVo.HospitalId == "test")
+                {
+                    hospitalId = 4;
+                }
                 else
                 {
                     throw new Exception("医院编号错误！");
@@ -1404,7 +1408,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var contentPlatFormOrder = await _orderService.GetOrderListByPhoneAndHospitalIdAsync(updateVo.CustomerPhone, hospitalId);
                 //修改订单
                 ContentPlateFormOrderFinishDto updateDto = new ContentPlateFormOrderFinishDto();
-                updateDto.ToHospitalType = updateVo.Type == 0 ? (int)ContentPlateFormOrderToHospitalType.OTHER : (int)ContentPlateFormOrderToHospitalType.REFUND;
                 if (contentPlatFormOrder != null)
                 {
                     updateDto.Id = contentPlatFormOrder.Id;
@@ -1414,10 +1417,25 @@ namespace Fx.Amiya.Background.Api.Controllers
                     updateDto.LastProjectStage = updateVo.CustomerPhone;
                 }
                 updateDto.IsFinish = true;
-                if (updateDto.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
-                {
-                    updateVo.TotalCashAmount = -updateVo.TotalCashAmount;
 
+                int consumptionType = (int)ConsumptionType.OTHER;
+                if (Convert.ToInt32(updateVo.Type) == 0)
+                {
+                    updateDto.ToHospitalType = (int)ContentPlateFormOrderToHospitalType.OTHER;
+                    if (updateVo.ConsumptionType == 1 || updateVo.ConsumptionType == 2 || updateVo.ConsumptionType == 3)
+                    {
+                        consumptionType = (int)ConsumptionType.Deal;
+                    }
+                    else if (updateVo.ConsumptionType == 0)
+                    {
+                        consumptionType = (int)ConsumptionType.Deposit;
+                    }
+                }
+                else
+                {
+                    updateDto.ToHospitalType = (int)ContentPlateFormOrderToHospitalType.REFUND;
+                    updateVo.TotalCashAmount = -updateVo.TotalCashAmount;
+                    consumptionType = (int)ConsumptionType.Refund;
                 }
                 updateDto.LastDealHospitalId = hospitalId;
                 updateDto.ToHospitalDate = updateVo.Date;
@@ -1431,19 +1449,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.IsAcompanying = false;
                 updateDto.DealPerformanceType = (int)ContentPlateFormOrderDealPerformanceType.HospitalDeclarationInApi;
                 updateDto.InvitationDocuments = new List<string>();
-                int consumptionType = (int)ConsumptionType.OTHER;
-                if (updateVo.ConsumptionType == 1 || updateVo.ConsumptionType == 2 || updateVo.ConsumptionType == 3)
-                {
-                    consumptionType = (int)ConsumptionType.Deal;
-                }
-                else if (updateVo.ConsumptionType == 0)
-                {
-                    consumptionType = (int)ConsumptionType.Deposit;
-                }
-                if (updateVo.Type == 1)
-                {
-                    consumptionType = (int)ConsumptionType.Refund;
-                }
                 updateDto.ConsumptionType = consumptionType;
                 updateDto.EmpId = 0;
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();

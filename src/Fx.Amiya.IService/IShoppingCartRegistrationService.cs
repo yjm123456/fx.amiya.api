@@ -114,6 +114,17 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<ShoppingCartRegistrationDto>> GetBaseBusinessPerformanceByLiveAnchorNameAsync(int year, int month, bool? isHistoryConsulationCardConsumed, bool? isConsulationCardRefund, List<int> liveAnchorIds);
 
+
+        /// <summary>
+        /// 根据平台/有效潜在获取小黄车登记业绩（新经营看板业绩）
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isEffectiveCustomerData"></param>
+        /// <param name="contentPlatFormId"></param>
+        /// <returns></returns>
+        Task<List<ShoppingCartRegistrationDto>> GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(DateTime startDate, DateTime endDate, bool isEffectiveCustomerData, string contentPlatFormId);
+
         /// <summary>
         /// 根据条件获取小黄车照片/视频面诊业绩折线图
         /// </summary>

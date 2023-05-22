@@ -56,77 +56,77 @@ namespace Fx.Amiya.Service
                     }
                 }
                 var liveAnchorMonthlyTargetAfterLiving = from d in dalLiveAnchorMonthlyTargetAfterLiving.GetAll().Include(e => e.LiveAnchor)
-                                              where (d.Year == Year)
-                                              && (d.Month == Month)
-                                              && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorId))
-                                              select new LiveAnchorMonthlyTargetAfterLivingDto
-                                              {
-                                                  Id = d.Id,
-                                                  Year = d.Year,
-                                                  Month = d.Month,
-                                                  MonthlyTargetName = d.MonthlyTargetName,
-                                                  LiveAnchorId = d.LiveAnchorId,
-                                                  LiveAnchorName = d.LiveAnchor.Name,
-                                                  ContentPlatFormId=d.LiveAnchor.ContentPlateFormId,
-                                                  AddWechatTarget = d.AddWechatTarget,
-                                                  CumulativeAddWechat = d.CumulativeAddWechat,
-                                                  AddWechatCompleteRate = d.AddWechatCompleteRate,
-                                                  ConsultationCardConsumedTarget = d.ConsultationCardConsumedTarget,
-                                                  CumulativeConsultationCardConsumed = d.CumulativeConsultationCardConsumed,
-                                                  ConsultationCardConsumedCompleteRate = d.ConsultationCardConsumedCompleteRate,
-                                                  ConsultationCardConsumedTarget2 = d.ConsultationCardConsumedTarget2,
-                                                  CumulativeConsultationCardConsumed2 = d.CumulativeConsultationCardConsumed2,
-                                                  ConsultationCardConsumedCompleteRate2 = d.ConsultationCardConsumedCompleteRate2,
-                                                  ActivateHistoricalConsultationTarget = d.ActivateHistoricalConsultationTarget,
-                                                  CumulativeActivateHistoricalConsultation = d.CumulativeActivateHistoricalConsultation,
-                                                  ActivateHistoricalConsultationCompleteRate = d.ActivateHistoricalConsultationCompleteRate,
-                                                  SendOrderTarget = d.SendOrderTarget,
-                                                  CumulativeSendOrder = d.CumulativeSendOrder,
-                                                  SendOrderCompleteRate = d.SendOrderCompleteRate,
-                                                  NewCustomerVisitTarget = d.NewCustomerVisitTarget,
-                                                  CumulativeNewCustomerVisit = d.CumulativeNewCustomerVisit,
-                                                  NewCustomerVisitCompleteRate = d.NewCustomerVisitCompleteRate,
-                                                  OldCustomerVisitTarget = d.OldCustomerVisitTarget,
-                                                  CumulativeOldCustomerVisit = d.CumulativeOldCustomerVisit,
-                                                  OldCustomerVisitCompleteRate = d.OldCustomerVisitCompleteRate,
-                                                  VisitTarget = d.VisitTarget,
-                                                  CumulativeVisit = d.CumulativeVisit,
-                                                  VisitCompleteRate = d.VisitCompleteRate,
-                                                  NewCustomerDealTarget = d.NewCustomerDealTarget,
-                                                  CumulativeNewCustomerDealTarget = d.CumulativeNewCustomerDealTarget,
-                                                  NewCustomerDealRate = d.NewCustomerDealRate,
-                                                  OldCustomerDealTarget = d.OldCustomerDealTarget,
-                                                  CumulativeOldCustomerDealTarget = d.CumulativeOldCustomerDealTarget,
-                                                  OldCustomerDealRate = d.OldCustomerDealRate,
-                                                  DealTarget = d.DealTarget,
-                                                  CumulativeDealTarget = d.CumulativeDealTarget,
-                                                  DealRate = d.DealRate,
-                                                  PerformanceTarget = d.PerformanceTarget,
-                                                  CumulativePerformance = d.CumulativePerformance,
-                                                  PerformanceCompleteRate = d.PerformanceCompleteRate,
-                                                  NewCustomerPerformanceTarget = d.NewCustomerPerformanceTarget,
-                                                  NewCustomerPerformanceCompleteRate = d.NewCustomerPerformanceCompleteRate,
-                                                  CumulativeNewCustomerPerformance = d.CumulativeNewCustomerPerformance,
-                                                  OldCustomerPerformanceTarget = d.OldCustomerPerformanceTarget,
-                                                  OldCustomerPerformanceCompleteRate = d.OldCustomerPerformanceCompleteRate,
-                                                  CumulativeOldCustomerPerformance = d.CumulativeOldCustomerPerformance,
-                                                  SubsequentPerformanceCompleteRate = d.SubsequentPerformanceCompleteRate,
-                                                  SubsequentPerformanceTarget = d.SubsequentPerformanceTarget,
-                                                  CumulativeSubsequentPerformance = d.CumulativeSubsequentPerformance,
-                                                  MinivanRefundTarget = d.MinivanRefundTarget,
-                                                  CumulativeMinivanRefund = d.CumulativeMinivanRefund,
-                                                  MinivanRefundCompleteRate = d.MinivanRefundCompleteRate,
-                                                  MiniVanBadReviewsTarget = d.MiniVanBadReviewsTarget,
-                                                  CumulativeMiniVanBadReviews = d.CumulativeMiniVanBadReviews,
-                                                  MiniVanBadReviewsCompleteRate = d.MiniVanBadReviewsCompleteRate,
-                                                  CreateDate = d.CreateDate,
-                                                  EffectivePerformanceTarget = d.EffectivePerformanceTarget,
-                                                  CumulativeEffectivePerformance=d.CumulativeEffectivePerformance,
-                                                  EffectivePerformanceCompleteRate=d.EffectivePerformanceCompleteRate,
-                                                  PotentialPerformanceTarget = d.PotentialPerformanceTarget,
-                                                  CumulativePotentialPerformance=d.CumulativePotentialPerformance,
-                                                  PotentialPerformanceCompleteRate=d.PotentialPerformanceCompleteRate
-                                              };
+                                                         where (d.Year == Year)
+                                                         && (d.Month == Month)
+                                                         && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorId))
+                                                         select new LiveAnchorMonthlyTargetAfterLivingDto
+                                                         {
+                                                             Id = d.Id,
+                                                             Year = d.Year,
+                                                             Month = d.Month,
+                                                             MonthlyTargetName = d.MonthlyTargetName,
+                                                             LiveAnchorId = d.LiveAnchorId,
+                                                             LiveAnchorName = d.LiveAnchor.Name,
+                                                             ContentPlatFormId = d.LiveAnchor.ContentPlateFormId,
+                                                             AddWechatTarget = d.AddWechatTarget,
+                                                             CumulativeAddWechat = d.CumulativeAddWechat,
+                                                             AddWechatCompleteRate = d.AddWechatCompleteRate,
+                                                             ConsultationCardConsumedTarget = d.ConsultationCardConsumedTarget,
+                                                             CumulativeConsultationCardConsumed = d.CumulativeConsultationCardConsumed,
+                                                             ConsultationCardConsumedCompleteRate = d.ConsultationCardConsumedCompleteRate,
+                                                             ConsultationCardConsumedTarget2 = d.ConsultationCardConsumedTarget2,
+                                                             CumulativeConsultationCardConsumed2 = d.CumulativeConsultationCardConsumed2,
+                                                             ConsultationCardConsumedCompleteRate2 = d.ConsultationCardConsumedCompleteRate2,
+                                                             ActivateHistoricalConsultationTarget = d.ActivateHistoricalConsultationTarget,
+                                                             CumulativeActivateHistoricalConsultation = d.CumulativeActivateHistoricalConsultation,
+                                                             ActivateHistoricalConsultationCompleteRate = d.ActivateHistoricalConsultationCompleteRate,
+                                                             SendOrderTarget = d.SendOrderTarget,
+                                                             CumulativeSendOrder = d.CumulativeSendOrder,
+                                                             SendOrderCompleteRate = d.SendOrderCompleteRate,
+                                                             NewCustomerVisitTarget = d.NewCustomerVisitTarget,
+                                                             CumulativeNewCustomerVisit = d.CumulativeNewCustomerVisit,
+                                                             NewCustomerVisitCompleteRate = d.NewCustomerVisitCompleteRate,
+                                                             OldCustomerVisitTarget = d.OldCustomerVisitTarget,
+                                                             CumulativeOldCustomerVisit = d.CumulativeOldCustomerVisit,
+                                                             OldCustomerVisitCompleteRate = d.OldCustomerVisitCompleteRate,
+                                                             VisitTarget = d.VisitTarget,
+                                                             CumulativeVisit = d.CumulativeVisit,
+                                                             VisitCompleteRate = d.VisitCompleteRate,
+                                                             NewCustomerDealTarget = d.NewCustomerDealTarget,
+                                                             CumulativeNewCustomerDealTarget = d.CumulativeNewCustomerDealTarget,
+                                                             NewCustomerDealRate = d.NewCustomerDealRate,
+                                                             OldCustomerDealTarget = d.OldCustomerDealTarget,
+                                                             CumulativeOldCustomerDealTarget = d.CumulativeOldCustomerDealTarget,
+                                                             OldCustomerDealRate = d.OldCustomerDealRate,
+                                                             DealTarget = d.DealTarget,
+                                                             CumulativeDealTarget = d.CumulativeDealTarget,
+                                                             DealRate = d.DealRate,
+                                                             PerformanceTarget = d.PerformanceTarget,
+                                                             CumulativePerformance = d.CumulativePerformance,
+                                                             PerformanceCompleteRate = d.PerformanceCompleteRate,
+                                                             NewCustomerPerformanceTarget = d.NewCustomerPerformanceTarget,
+                                                             NewCustomerPerformanceCompleteRate = d.NewCustomerPerformanceCompleteRate,
+                                                             CumulativeNewCustomerPerformance = d.CumulativeNewCustomerPerformance,
+                                                             OldCustomerPerformanceTarget = d.OldCustomerPerformanceTarget,
+                                                             OldCustomerPerformanceCompleteRate = d.OldCustomerPerformanceCompleteRate,
+                                                             CumulativeOldCustomerPerformance = d.CumulativeOldCustomerPerformance,
+                                                             SubsequentPerformanceCompleteRate = d.SubsequentPerformanceCompleteRate,
+                                                             SubsequentPerformanceTarget = d.SubsequentPerformanceTarget,
+                                                             CumulativeSubsequentPerformance = d.CumulativeSubsequentPerformance,
+                                                             MinivanRefundTarget = d.MinivanRefundTarget,
+                                                             CumulativeMinivanRefund = d.CumulativeMinivanRefund,
+                                                             MinivanRefundCompleteRate = d.MinivanRefundCompleteRate,
+                                                             MiniVanBadReviewsTarget = d.MiniVanBadReviewsTarget,
+                                                             CumulativeMiniVanBadReviews = d.CumulativeMiniVanBadReviews,
+                                                             MiniVanBadReviewsCompleteRate = d.MiniVanBadReviewsCompleteRate,
+                                                             CreateDate = d.CreateDate,
+                                                             EffectivePerformanceTarget = d.EffectivePerformanceTarget,
+                                                             CumulativeEffectivePerformance = d.CumulativeEffectivePerformance,
+                                                             EffectivePerformanceCompleteRate = d.EffectivePerformanceCompleteRate,
+                                                             PotentialPerformanceTarget = d.PotentialPerformanceTarget,
+                                                             CumulativePotentialPerformance = d.CumulativePotentialPerformance,
+                                                             PotentialPerformanceCompleteRate = d.PotentialPerformanceCompleteRate
+                                                         };
 
                 FxPageInfo<LiveAnchorMonthlyTargetAfterLivingDto> liveAnchorMonthlyTargetAfterLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetAfterLivingDto>();
                 liveAnchorMonthlyTargetAfterLivingPageInfo.TotalCount = await liveAnchorMonthlyTargetAfterLiving.CountAsync();
@@ -240,12 +240,12 @@ namespace Fx.Amiya.Service
             try
             {
                 var liveAnchorMonthlyTargetAfterLiving = from d in dalLiveAnchorMonthlyTargetAfterLiving.GetAll()
-                                              where (d.Year == year && d.Month == month)
-                                              select new LiveAnchorMonthlyTargetKeyAndValueDto
-                                              {
-                                                  Id = d.Id,
-                                                  Name = d.MonthlyTargetName
-                                              };
+                                                         where (d.Year == year && d.Month == month)
+                                                         select new LiveAnchorMonthlyTargetKeyAndValueDto
+                                                         {
+                                                             Id = d.Id,
+                                                             Name = d.MonthlyTargetName
+                                                         };
                 return liveAnchorMonthlyTargetAfterLiving.ToList();
             }
             catch (Exception ex)
@@ -730,6 +730,28 @@ namespace Fx.Amiya.Service
                 HistoryConsulationCardConsumedTarget = await performance.SumAsync(t => t.ActivateHistoricalConsultationTarget),
                 ConsulationCardRefundTarget = await performance.SumAsync(t => t.MinivanRefundTarget),
 
+            };
+            return performanceInfoDto;
+        }
+
+        /// <summary>
+        /// 根据时间获取直播后业绩目标
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        public async Task<LiveAnchorBaseBusinessMonthTargetPerformanceDto> GetAfterLivingTargetByDateAsync(int year, int month)
+        {
+            var performance = dalLiveAnchorMonthlyTargetAfterLiving.GetAll().Where(t => t.Year == year && t.Month == month);
+            LiveAnchorBaseBusinessMonthTargetPerformanceDto performanceInfoDto = new LiveAnchorBaseBusinessMonthTargetPerformanceDto
+            {
+                AddWeChatTarget = await performance.SumAsync(t => t.AddWechatTarget),
+                ConsulationCardConsumedTarget = await performance.SumAsync(t => t.ConsultationCardConsumedTarget + t.ConsultationCardConsumedTarget2),
+                HistoryConsulationCardConsumedTarget = await performance.SumAsync(t => t.ActivateHistoricalConsultationTarget),
+                ConsulationCardRefundTarget = await performance.SumAsync(t => t.MinivanRefundTarget),
+                SendOrderTarget = await performance.SumAsync(x => x.SendOrderTarget),
+                NewCustomerVisitTarget = await performance.SumAsync(x => x.NewCustomerVisitTarget),
+                NewCustomerDealTarget = await performance.SumAsync(x => x.NewCustomerDealTarget)
             };
             return performanceInfoDto;
         }

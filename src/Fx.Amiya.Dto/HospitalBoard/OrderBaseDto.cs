@@ -13,27 +13,27 @@ namespace Fx.Amiya.Dto.HospitalBoard
         /// 派单量
         /// </summary>
         public decimal SendOrderCount { get; set; }
-       
+
         /// <summary>
         /// 已处理订单数量
         /// </summary>
         public decimal ProcessedOrderCount { get; set; }
-        
+
         /// <summary>
         /// 未处理订单数量
         /// </summary>
         public decimal UntreatedOrderCount { get; set; }
-       
+
         /// <summary>
         /// 派单未上门订单数量
         /// </summary>
         public decimal SendOrderNotToHospitalCount { get; set; }
-        
+
         /// <summary>
         /// 上门未成交订单数量
         /// </summary>
         public decimal ToHospitalNoDealCount { get; set; }
-        
+
         /// <summary>
         /// 成交未复购订单数量
         /// </summary>
@@ -70,5 +70,25 @@ namespace Fx.Amiya.Dto.HospitalBoard
         public decimal AccumulateDealNoRepurchaseCount { get; set; }
 
 
+    }
+
+    /// <summary>
+    /// 新客派单成交数据
+    /// </summary>
+    public class OrderSendAndDealNumDto
+    {
+        public int SendOrderNum { get; set; }
+
+        public int VisitNum { get; set; }
+        public int DealNum { get; set; }
+        public decimal? DealPrice { get; set; }
+    }
+
+    public class OldCustomerDealNumDto
+    {
+        public int TotalDealCustomer { get; set; }
+        public int SecondDealCustomer { get; set; }
+        public int ThirdDealCustomer { get; set; }
+        public int FourthOrMoreDealCustomer { get; set; }
     }
 }

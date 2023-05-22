@@ -56,48 +56,48 @@ namespace Fx.Amiya.Service
                     }
                 }
                 var liveAnchorMonthlyTargetLiving = from d in dalLiveAnchorMonthlyTargetLiving.GetAll().Include(e => e.LiveAnchor)
-                                              where (d.Year == Year)
-                                              && (d.Month == Month)
-                                              && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorId))
-                                              select new LiveAnchorMonthlyTargetLivingDto
-                                              {
-                                                  Id = d.Id,
-                                                  Year = d.Year,
-                                                  Month = d.Month,
-                                                  MonthlyTargetName = d.MonthlyTargetName,
-                                                  LiveAnchorId = d.LiveAnchorId,
-                                                  LiveAnchorName = d.LiveAnchor.Name,
-                                                  ContentPlatFormId=d.LiveAnchor.ContentPlateFormId,
-                                                  LivingRoomCumulativeFlowInvestment = d.LivingRoomCumulativeFlowInvestment,
-                                                  LivingRoomFlowInvestmentTarget = d.LivingRoomFlowInvestmentTarget,
-                                                  LivingRoomFlowInvestmentCompleteRate = d.LivingRoomFlowInvestmentCompleteRate,
+                                                    where (d.Year == Year)
+                                                    && (d.Month == Month)
+                                                    && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorId))
+                                                    select new LiveAnchorMonthlyTargetLivingDto
+                                                    {
+                                                        Id = d.Id,
+                                                        Year = d.Year,
+                                                        Month = d.Month,
+                                                        MonthlyTargetName = d.MonthlyTargetName,
+                                                        LiveAnchorId = d.LiveAnchorId,
+                                                        LiveAnchorName = d.LiveAnchor.Name,
+                                                        ContentPlatFormId = d.LiveAnchor.ContentPlateFormId,
+                                                        LivingRoomCumulativeFlowInvestment = d.LivingRoomCumulativeFlowInvestment,
+                                                        LivingRoomFlowInvestmentTarget = d.LivingRoomFlowInvestmentTarget,
+                                                        LivingRoomFlowInvestmentCompleteRate = d.LivingRoomFlowInvestmentCompleteRate,
 
-                                                  ConsultationTarget = d.ConsultationTarget,
-                                                  CumulativeConsultation = d.CumulativeConsultation,
-                                                  ConsultationCompleteRate = d.ConsultationCompleteRate,
+                                                        ConsultationTarget = d.ConsultationTarget,
+                                                        CumulativeConsultation = d.CumulativeConsultation,
+                                                        ConsultationCompleteRate = d.ConsultationCompleteRate,
 
-                                                  CumulativeConsultation2 = d.CumulativeConsultation2,
-                                                  ConsultationTarget2 = d.ConsultationTarget2,
-                                                  ConsultationCompleteRate2 = d.ConsultationCompleteRate2,
+                                                        CumulativeConsultation2 = d.CumulativeConsultation2,
+                                                        ConsultationTarget2 = d.ConsultationTarget2,
+                                                        ConsultationCompleteRate2 = d.ConsultationCompleteRate2,
 
-                                                  CargoSettlementCommissionTarget = d.CargoSettlementCommissionTarget,
-                                                  CumulativeCargoSettlementCommission = d.CumulativeCargoSettlementCommission,
-                                                  CargoSettlementCommissionCompleteRate = d.CargoSettlementCommissionCompleteRate,
+                                                        CargoSettlementCommissionTarget = d.CargoSettlementCommissionTarget,
+                                                        CumulativeCargoSettlementCommission = d.CumulativeCargoSettlementCommission,
+                                                        CargoSettlementCommissionCompleteRate = d.CargoSettlementCommissionCompleteRate,
 
-                                                  CreateDate = d.CreateDate,
+                                                        CreateDate = d.CreateDate,
 
-                                                  LivingRefundCardTarget = d.LivingRefundCardTarget,
-                                                  CumulativeLivingRefundCard=d.CumulativeLivingRefundCard,
-                                                  LivingRefundCardCompleteRate=d.LivingRefundCardCompleteRate,
+                                                        LivingRefundCardTarget = d.LivingRefundCardTarget,
+                                                        CumulativeLivingRefundCard = d.CumulativeLivingRefundCard,
+                                                        LivingRefundCardCompleteRate = d.LivingRefundCardCompleteRate,
 
-                                                  GMVTarget = d.GMVTarget,
-                                                  CumulativeGMV=d.CumulativeGMV,
-                                                  GMVTargetCompleteRate=d.GMVTargetCompleteRate,
+                                                        GMVTarget = d.GMVTarget,
+                                                        CumulativeGMV = d.CumulativeGMV,
+                                                        GMVTargetCompleteRate = d.GMVTargetCompleteRate,
 
-                                                  EliminateCardGMVTarget = d.EliminateCardGMVTarget,
-                                                  CumulativeEliminateCardGMV=d.CumulativeEliminateCardGMV,
-                                                  EliminateCardGMVTargetCompleteRate=d.EliminateCardGMVTargetCompleteRate
-                                              };
+                                                        EliminateCardGMVTarget = d.EliminateCardGMVTarget,
+                                                        CumulativeEliminateCardGMV = d.CumulativeEliminateCardGMV,
+                                                        EliminateCardGMVTargetCompleteRate = d.EliminateCardGMVTargetCompleteRate
+                                                    };
 
                 FxPageInfo<LiveAnchorMonthlyTargetLivingDto> liveAnchorMonthlyTargetLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetLivingDto>();
                 liveAnchorMonthlyTargetLivingPageInfo.TotalCount = await liveAnchorMonthlyTargetLiving.CountAsync();
@@ -164,12 +164,12 @@ namespace Fx.Amiya.Service
             try
             {
                 var liveAnchorMonthlyTargetLiving = from d in dalLiveAnchorMonthlyTargetLiving.GetAll()
-                                              where (d.Year == year && d.Month == month)
-                                              select new LiveAnchorMonthlyTargetKeyAndValueDto
-                                              {
-                                                  Id = d.Id,
-                                                  Name = d.MonthlyTargetName
-                                              };
+                                                    where (d.Year == year && d.Month == month)
+                                                    select new LiveAnchorMonthlyTargetKeyAndValueDto
+                                                    {
+                                                        Id = d.Id,
+                                                        Name = d.MonthlyTargetName
+                                                    };
                 return liveAnchorMonthlyTargetLiving.ToList();
             }
             catch (Exception ex)
@@ -455,6 +455,23 @@ namespace Fx.Amiya.Service
             return performanceInfoDto;
         }
 
+        /// <summary>
+        /// 根据时间获取下卡量目标
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorIds">各个平台的主播ID集合</param>
+        /// <returns></returns>
+        public async Task<LiveAnchorBaseBusinessMonthTargetPerformanceDto> GetConsulationCardAddTargetByDateAsync(int year, int month)
+        {
+            var performance = dalLiveAnchorMonthlyTargetLiving.GetAll().Where(t => t.Year == year && t.Month == month);
+            LiveAnchorBaseBusinessMonthTargetPerformanceDto performanceInfoDto = new LiveAnchorBaseBusinessMonthTargetPerformanceDto
+            {
+                ConsulationCardTarget = await performance.SumAsync(t => t.ConsultationTarget + t.ConsultationTarget2),
+                LivingRefundCardTarget = await performance.SumAsync(t => t.LivingRefundCardTarget)
+            };
+            return performanceInfoDto;
+        }
 
     }
 }

@@ -47,6 +47,8 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<LiveAnchorBaseBusinessMonthTargetPerformanceDto> GetBasePerformanceTargetAsync(int year, int month, List<int> liveAnchorIds);
 
+        Task<LiveAnchorBaseBusinessMonthTargetPerformanceDto> GetAfterLivingTargetByDateAsync(int year, int month);
+
 
         /// <summary>
         /// 获取派单成交业绩目标

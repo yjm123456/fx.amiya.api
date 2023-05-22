@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
 {
-   public class LiveAnchorMonthTargetPerformanceDto
+    public class LiveAnchorMonthTargetPerformanceDto
     {
         /// <summary>
         /// 业绩目标
@@ -53,6 +53,11 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 面诊卡下单目标
         /// </summary>
         public int ConsulationCardTarget { get; set; }
+
+        /// <summary>
+        /// 面诊卡退卡目标
+        /// </summary>
+        public int LivingRefundCardTarget { get; set; }
         /// <summary>
         /// 面诊卡消耗目标
         /// </summary>
@@ -61,6 +66,20 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 历史面诊卡消耗目标
         /// </summary>
         public int HistoryConsulationCardConsumedTarget { get; set; }
+        /// <summary>
+        /// 派单目标
+        /// </summary>
+        public int SendOrderTarget { get; set; }
+        /// <summary>
+        /// 新客上门目标
+        /// </summary>
+        public int NewCustomerVisitTarget { get; set; }
+
+        /// <summary>
+        /// 新诊成交人数目标
+        /// </summary>
+        public int NewCustomerDealTarget { get; set; }
+
         /// <summary>
         /// 小黄车退款上限
         /// </summary>

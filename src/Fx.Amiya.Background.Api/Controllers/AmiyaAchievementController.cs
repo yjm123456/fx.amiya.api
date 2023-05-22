@@ -1307,7 +1307,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("amiyaAchievementData")]
-        public async Task<ResultData<AmiyaAchievementDataVo>> GetAmiyaAchievementDataAsync([FromQuery] QueryAmiyaAchievementDataVo query) {
+        public async Task<ResultData<AmiyaAchievementDataVo>> GetAmiyaAchievementDataAsync([FromQuery] QueryAmiyaAchievementDataVo query)
+        {
             AmiyaAchievementDataVo dataVo = new AmiyaAchievementDataVo();
 
             #region 总业绩
@@ -1351,16 +1352,17 @@ namespace Fx.Amiya.Background.Api.Controllers
             dataVo.RefundPerformance = 10;
 
             #endregion
-            return ResultData<AmiyaAchievementDataVo>.Success().AddData("achievementdata", dataVo); ; 
+            return ResultData<AmiyaAchievementDataVo>.Success().AddData("achievementdata", dataVo); ;
         }
         [HttpGet("amiyaAchievementDetailData")]
-        public async Task<ResultData<AmiyaAchievementDetailDataVo>> GetAmiyaAchievementDetailedDataAsync([FromQuery] QueryAmiyaAchievementDataVo query) {
+        public async Task<ResultData<AmiyaAchievementDetailDataVo>> GetAmiyaAchievementDetailedDataAsync([FromQuery] QueryAmiyaAchievementDataVo query)
+        {
             AmiyaAchievementDetailDataVo dataVo = new AmiyaAchievementDetailDataVo();
 
             #region 新客业绩
 
             dataVo.NewCustomerPerformance = 250;
-            dataVo.NewCustomerPerformanceProportion=25;
+            dataVo.NewCustomerPerformanceProportion = 25;
             dataVo.NewCustomerPerformanceCompleteRate = 25;
             dataVo.NewCustomerPerformanceYearOnYear = 20;
             dataVo.NewCustomerPerformanceChainRatio = 20;
@@ -1482,7 +1484,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             #endregion
 
-            return ResultData<AmiyaAchievementDetailDataVo>.Success().AddData("achievementdata",dataVo);
+            return ResultData<AmiyaAchievementDetailDataVo>.Success().AddData("achievementdata", dataVo);
         }
 
         /// <summary>
@@ -1498,7 +1500,67 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         #region【运营看板】
+        /// <summary>
+        /// 运营看板输出接口
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("performanceOperationData")]
+        public async Task<ResultData<AmiyaOperationDataVo>> GetPerformanceOperationDataAsync([FromQuery] QueryAmiyaOperationDataVo query)
+        {
+            //获取当前月同比,环比等数据
+            var performance = await amiyaPerformanceService.GetPerformanceOperationDataAsync(query.Year.Value, query.Month.Value, query.ContentPlatFormId, query.IsEffectiveCustomerData);
+            AmiyaOperationDataVo performanceVo = new AmiyaOperationDataVo();
+            NewCustomerOperationDataVo newCustomerOperationDataVo = new NewCustomerOperationDataVo();
+            newCustomerOperationDataVo.RefundCardRate = performance.NewCustomerData.RefundCardRate;
+            newCustomerOperationDataVo.RefundCardRateHealthValueSum = performance.NewCustomerData.RefundCardRateHealthValueSum;
+            newCustomerOperationDataVo.RefundCardRateHealthValueThisMonth = performance.NewCustomerData.RefundCardRateHealthValueThisMonth;
+            newCustomerOperationDataVo.AddWeChatRate = performance.NewCustomerData.AddWeChatRate;
+            newCustomerOperationDataVo.AddWeChatRateHealthValueSum = performance.NewCustomerData.AddWeChatRateHealthValueSum;
+            newCustomerOperationDataVo.AddWeChatRateHealthValueThisMonth = performance.NewCustomerData.AddWeChatRateHealthValueThisMonth;
+            newCustomerOperationDataVo.SendOrderRate = performance.NewCustomerData.SendOrderRate;
+            newCustomerOperationDataVo.SendOrderRateHealthValueSum = performance.NewCustomerData.SendOrderRateHealthValueSum;
+            newCustomerOperationDataVo.SendOrderRateHealthValueThisMonth = performance.NewCustomerData.SendOrderRateHealthValueThisMonth;
+            newCustomerOperationDataVo.ToHospitalRate = performance.NewCustomerData.ToHospitalRate;
+            newCustomerOperationDataVo.ToHospitalRateHealthValueSum = performance.NewCustomerData.ToHospitalRateHealthValueSum;
+            newCustomerOperationDataVo.ToHospitalRateHealthValueThisMonth = performance.NewCustomerData.ToHospitalRateHealthValueThisMonth;
+            newCustomerOperationDataVo.DealRate = performance.NewCustomerData.DealRate;
+            newCustomerOperationDataVo.DealRateHealthValueSum = performance.NewCustomerData.DealRateHealthValueSum;
+            newCustomerOperationDataVo.DealRateHealthValueThisMonth = performance.NewCustomerData.DealRateHealthValueThisMonth;
+            newCustomerOperationDataVo.AllocationConsulationToDealRate = performance.NewCustomerData.AllocationConsulationToDealRate;
+            newCustomerOperationDataVo.AllocationConsulationToDealPrice = performance.NewCustomerData.AllocationConsulationToDealPrice;
+            newCustomerOperationDataVo.SendOrderToDealRate = performance.NewCustomerData.SendOrderToDealRate;
+            newCustomerOperationDataVo.SendOrderToDealPrice = performance.NewCustomerData.SendOrderToDealPrice;
+            newCustomerOperationDataVo.newCustomerOperationDataDetails = new List<Vo.Performance.AmiyaPerformance2.Result.NewCustomerOperationDataDetails>();
+            foreach (var x in performance.NewCustomerData.newCustomerOperationDataDetails)
+            {
+                Vo.Performance.AmiyaPerformance2.Result.NewCustomerOperationDataDetails newCustomerOperationDataDetails = new Vo.Performance.AmiyaPerformance2.Result.NewCustomerOperationDataDetails();
+                newCustomerOperationDataDetails.Key = x.Key;
+                newCustomerOperationDataDetails.Name = x.Name;
+                newCustomerOperationDataDetails.Value = x.Value;
+                newCustomerOperationDataDetails.YearToYearValue = x.YearToYearValue;
+                newCustomerOperationDataDetails.ChainRatioValue = x.ChainRatioValue;
+                newCustomerOperationDataDetails.TargetCompleteRate = x.TargetCompleteRate;
+                newCustomerOperationDataVo.newCustomerOperationDataDetails.Add(newCustomerOperationDataDetails);
+            }
 
+            OldCustomerOperationDataVo oldCustomerOperationDataVo = new OldCustomerOperationDataVo();
+            oldCustomerOperationDataVo.TotalDealPeople = performance.OldCustomerData.TotalDealPeople;
+            oldCustomerOperationDataVo.SecondDealPeople = performance.OldCustomerData.SecondDealPeople;
+            oldCustomerOperationDataVo.ThirdDealPeople = performance.OldCustomerData.ThirdDealPeople;
+            oldCustomerOperationDataVo.FourthOrMoreDealPeople = performance.OldCustomerData.FourthOrMoreDealPeople;
+            oldCustomerOperationDataVo.SecondTimeBuyRate = performance.OldCustomerData.SecondTimeBuyRate;
+            oldCustomerOperationDataVo.SecondTimeBuyRateProportion = performance.OldCustomerData.SecondTimeBuyRateProportion;
+            oldCustomerOperationDataVo.ThirdTimeBuyRate = performance.OldCustomerData.ThirdTimeBuyRate;
+            oldCustomerOperationDataVo.ThirdTimeBuyRateProportion = performance.OldCustomerData.ThirdTimeBuyRateProportion;
+            oldCustomerOperationDataVo.FourthTimeOrMoreBuyRate = performance.OldCustomerData.FourthTimeOrMoreBuyRate;
+            oldCustomerOperationDataVo.FourthTimeOrMoreBuyRateProportion = performance.OldCustomerData.FourthTimeOrMoreBuyRateProportion;
+            oldCustomerOperationDataVo.BuyRate = performance.OldCustomerData.BuyRate;
+
+            performanceVo.NewCustomerData = newCustomerOperationDataVo;
+            performanceVo.OldCustomerData = oldCustomerOperationDataVo;
+            return ResultData<AmiyaOperationDataVo>.Success().AddData("performance", performanceVo);
+        }
         #endregion
     }
 }

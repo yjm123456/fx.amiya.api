@@ -27,4 +27,27 @@ namespace Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Input
         /// </summary>
         public bool IsSelfLKiveAnchor { get; set; }
     }
+
+    /// <summary>
+    /// 查询运营输入类
+    /// </summary>
+    public class QueryAmiyaOperationDataVo
+    {
+        /// <summary>
+        /// 年
+        /// </summary>
+        public int? Year { get; set; }
+        /// <summary>
+        /// 月
+        /// </summary>
+        public int? Month { get; set; }
+        /// <summary>
+        /// 渠道（抖音/视频号，不传查询整体）
+        /// </summary>
+        public string ContentPlatFormId { get; set; }
+        /// <summary>
+        /// 是否为有效客资
+        /// </summary>
+        public bool IsEffectiveCustomerData { get; set; }
+    }
 }

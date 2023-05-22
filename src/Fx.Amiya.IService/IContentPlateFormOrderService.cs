@@ -373,6 +373,21 @@ namespace Fx.Amiya.IService
         Task<List<ContentPlatFormOrderInfoDto>> GetSendOrDealPerformanceByLiveAnchorAsync(List<int> liveAnchorIds);
 
         /// <summary>
+        /// 根据时间获取派单成交数据量
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAsync(DateTime startDate, DateTime endDate);
+
+        /// <summary>
+        /// 获取老客复购数据
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        Task<OldCustomerDealNumDto> GetOldCustomerBuyAgainByMonthAsync(DateTime date);
+
+        /// <summary>
         /// 根据主播获取总订单数
         /// </summary>
         /// <param name="year"></param>
