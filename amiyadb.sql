@@ -161,3 +161,44 @@ CREATE TABLE `tbl_heath_value` (
 );
 
 -----------------------------------------------王健 2023/05/17 END--------------------------------------
+-----------------------------------------------余建明 2023/05/23 BEGIN--------------------------------------------
+--客户医院消费列表
+CREATE TABLE `amiyadb`.`tbl_customer_hospital_deal_info` (
+  `id` VARCHAR(50) NOT NULL,
+  `hospital_id` INT UNSIGNED NOT NULL,
+  `type` INT NOT NULL,
+  `customer_name` VARCHAR(45) NOT NULL,
+  `customer_phone` VARCHAR(30) NOT NULL,
+  `date` DATETIME NOT NULL,
+  `total_amount` DECIMAL(12,2) NOT NULL,
+  `consumption_type` INT NULL,
+  `refund_type` INT NULL,
+  `msg_id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_customer_hospital_deal_hospitalinfo_idx` (`hospital_id` ASC) VISIBLE,
+  CONSTRAINT `fk_customer_hospital_deal_hospitalinfo`
+    FOREIGN KEY (`hospital_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+	--客户医院消费详情
+	CREATE TABLE `amiyadb`.`tbl_customer_hospital_deal_details` (
+  `id` VARCHAR(50) NOT NULL,
+  `customer_hospital_deal_id` VARCHAR(50) NOT NULL,
+  `item_name` VARCHAR(300) NULL,
+  `item_standard` VARCHAR(400) NULL,
+  `quantity` DECIMAL(12,2) NULL,
+  `cash_amount` DECIMAL(12,2) NULL,
+  `create_date` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  INDEX `tbl_customer_hospital_deal_details_deal_info_idx` (`customer_hospital_deal_id` ASC) VISIBLE,
+  CONSTRAINT `tbl_customer_hospital_deal_details_deal_info`
+    FOREIGN KEY (`customer_hospital_deal_id`)
+    REFERENCES `amiyadb`.`tbl_customer_hospital_deal_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+-----------------------------------------------余建明 2023/05/23 END--------------------------------------------

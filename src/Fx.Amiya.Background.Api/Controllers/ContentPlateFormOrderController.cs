@@ -8,6 +8,8 @@ using Fx.Amiya.Dto.BindCustomerService;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderDealDetails.Input;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
+using Fx.Amiya.Dto.CustomerHospitalDealDetails.Input;
+using Fx.Amiya.Dto.CustomerHospitalDealInfo.Input;
 using Fx.Amiya.Dto.CustomerInfo;
 using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.Dto.TmallOrder;
@@ -46,6 +48,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IContentPlatformOrderSendService _contentPlatformOrderSend;
         private IAmiyaHospitalDepartmentService _departmentService;
         private IOrderService _tmallOrderService;
+        private ICustomerHospitalDealInfoService customerHospitalDealInfoService;
         private IAmiyaPositionInfoService amiyaPositionInfoService;
         private IContentPlatFormCustomerPictureService _contentPlatFormCustomerPictureService;
         private IHospitalInfoService _hospitalInfoService;
@@ -55,6 +58,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             IOrderService tmallOrderService,
             IAmiyaEmployeeService amiyaEmployeeService,
             IBindCustomerServiceService bindCustomerServiceService,
+            ICustomerHospitalDealInfoService customerHospitalDealInfoService,
             IAmiyaPositionInfoService amiyaPositionInfoService,
             IHospitalInfoService hospitalInfoService,
             IAmiyaHospitalDepartmentService departmentService,
@@ -67,6 +71,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             _orderService = orderService;
             _tmallOrderService = tmallOrderService;
             this.customerService = customerService;
+            this.customerHospitalDealInfoService = customerHospitalDealInfoService;
             this.bindCustomerServiceService = bindCustomerServiceService;
             this.amiyaPositionInfoService = amiyaPositionInfoService;
             this.amiyaEmployeeService = amiyaEmployeeService;
@@ -1341,9 +1346,159 @@ namespace Fx.Amiya.Background.Api.Controllers
             await _orderService.FinishContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
         }
+        #region {医院对接同步}
+        ///// <summary>
+        ///// 医院对接同步完成订单(影响订单业务)
+        ///// </summary>
+        ///// <param name="updateVo"></param>
+        ///// <returns></returns>
+        //[HttpPut("finishContentPlateFormOrderByApi")]
+        ////[FxPartnerAuthorize]
+        //public async Task<ResultData> HospitalFinishOrderByApiAsync(FinishContentPlateFormOrderByApi updateVo)
+        //{
+        //    OperationAddDto operationAddDto = new OperationAddDto();
+        //    operationAddDto.Code = 0;
+        //    try
+        //    {
+
+        //        int hospitalId = 0;
+        //        if (updateVo.HospitalId == "HuaShan")
+        //        {
+        //            hospitalId = 16;
+        //        }
+        //        else if (updateVo.HospitalId == "WeiDuoLiYa")
+        //        {
+        //            hospitalId = 37;
+        //        }
+        //        else if (updateVo.HospitalId == "test")
+        //        {
+        //            hospitalId = 4;
+        //        }
+        //        else
+        //        {
+        //            throw new Exception("医院编号错误！");
+        //        }
+        //        //验证是否已绑定客服
+        //        var bindCustomerServiceName = await bindCustomerServiceService.GetBindCustomerServiceNameByPhone(updateVo.CustomerPhone);
+        //        if (bindCustomerServiceName == "未绑定")
+        //        {
+        //            AddBindCustomerServiceFirstlyDto addBindCustomerServiceFirstlyDto = new AddBindCustomerServiceFirstlyDto();
+        //            addBindCustomerServiceFirstlyDto.CustomerServiceId = 188;
+        //            addBindCustomerServiceFirstlyDto.BuyerPhone = updateVo.CustomerPhone;
+        //            addBindCustomerServiceFirstlyDto.CreateBy = 188;
+        //            addBindCustomerServiceFirstlyDto.CreateDate = DateTime.Now;
+        //            string projectDemand = "";
+        //            if (updateVo.Details != null && updateVo.Details.Count > 0)
+        //            {
+        //                foreach (var x in updateVo.Details)
+        //                {
+
+        //                    projectDemand += x.ItemName + "，";
+        //                }
+        //                projectDemand = projectDemand.Substring(0, projectDemand.Length - 1);
+        //            }
+        //            addBindCustomerServiceFirstlyDto.FirstProjectDemand = projectDemand;
+        //            addBindCustomerServiceFirstlyDto.FirstConsumptionDate = DateTime.Now;
+        //            addBindCustomerServiceFirstlyDto.NewConsumptionDate = DateTime.Now;
+        //            addBindCustomerServiceFirstlyDto.NewConsumptionContentPlatform = (int)OrderFrom.ContentPlatFormOrder;
+        //            addBindCustomerServiceFirstlyDto.NewContentPlatForm = "医院";
+        //            addBindCustomerServiceFirstlyDto.AllPrice = updateVo.TotalCashAmount;
+        //            addBindCustomerServiceFirstlyDto.AllOrderCount = 1;
+        //            addBindCustomerServiceFirstlyDto.NewLiveAnchor = "";
+        //            addBindCustomerServiceFirstlyDto.NewWechatNo = "";
+        //            await bindCustomerServiceService.OnlyAddFistlyAsync(addBindCustomerServiceFirstlyDto);
+        //        }
+
+        //        //验证订单是否存在
+        //        var contentPlatFormOrder = await _orderService.GetOrderListByPhoneAndHospitalIdAsync(updateVo.CustomerPhone, hospitalId);
+        //        //修改订单
+        //        ContentPlateFormOrderFinishDto updateDto = new ContentPlateFormOrderFinishDto();
+        //        if (contentPlatFormOrder != null)
+        //        {
+        //            updateDto.Id = contentPlatFormOrder.Id;
+        //        }
+        //        else
+        //        {
+        //            updateDto.LastProjectStage = updateVo.CustomerPhone;
+        //        }
+        //        updateDto.IsFinish = true;
+
+        //        int consumptionType = (int)ConsumptionType.OTHER;
+        //        if (Convert.ToInt32(updateVo.Type) == 0)
+        //        {
+        //            updateDto.ToHospitalType = (int)ContentPlateFormOrderToHospitalType.OTHER;
+        //            if (updateVo.ConsumptionType == 1 || updateVo.ConsumptionType == 2 || updateVo.ConsumptionType == 3)
+        //            {
+        //                consumptionType = (int)ConsumptionType.Deal;
+        //            }
+        //            else if (updateVo.ConsumptionType == 0)
+        //            {
+        //                consumptionType = (int)ConsumptionType.Deposit;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            updateDto.ToHospitalType = (int)ContentPlateFormOrderToHospitalType.REFUND;
+        //            updateVo.TotalCashAmount = -updateVo.TotalCashAmount;
+        //            consumptionType = (int)ConsumptionType.Refund;
+        //        }
+        //        updateDto.LastDealHospitalId = hospitalId;
+        //        updateDto.ToHospitalDate = updateVo.Date;
+        //        updateDto.OtherContentPlatFormOrderId = updateVo.MsgId;
+        //        updateDto.DealPictureUrl = "";
+        //        updateDto.DealAmount = updateVo.TotalCashAmount;
+        //        updateDto.UnDealReason = "";
+        //        updateDto.IsToHospital = true;
+        //        updateDto.UnDealPictureUrl = "";
+        //        updateDto.DealDate = updateVo.Date;
+        //        updateDto.IsAcompanying = false;
+        //        updateDto.DealPerformanceType = (int)ContentPlateFormOrderDealPerformanceType.HospitalDeclarationInApi;
+        //        updateDto.InvitationDocuments = new List<string>();
+        //        updateDto.ConsumptionType = consumptionType;
+        //        updateDto.EmpId = 0;
+        //        List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
+        //        if (updateDto.IsFinish == true && updateVo.Details != null && updateVo.Details.Count > 0)
+        //        {
+        //            foreach (var x in updateVo.Details)
+        //            {
+        //                if (updateDto.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
+        //                {
+        //                    x.CashAmount = -x.CashAmount;
+        //                }
+        //                AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
+        //                addContentPlatFormOrderDealDetailsDto.GoodsName = x.ItemName;
+        //                addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.ItemStandard;
+        //                addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
+        //                addContentPlatFormOrderDealDetailsDto.Price = x.CashAmount;
+        //                addContentPlatFormOrderDealDetailsDto.CreateBy = 0;
+        //                addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;
+        //                addContentPlatFormOrderDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);
+        //            }
+        //        }
+        //        updateDto.CustomerName = updateVo.CustomerName;
+        //        updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
+        //        await _orderService.FinishContentPlateFormOrderAsync(updateDto);
+        //        return ResultData.Success();
+        //    }
+        //    catch (Exception err)
+        //    {
+        //        operationAddDto.Code = -1;
+        //        operationAddDto.Message = err.Message.ToString();
+        //        throw new Exception(err.Message.ToString());
+        //    }
+        //    finally
+        //    {
+
+        //        operationAddDto.Parameters = JsonConvert.SerializeObject(updateVo);
+        //        operationAddDto.RequestType = (int)RequestType.Update;
+        //        operationAddDto.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
+        //        await operationLogService.AddOperationLogAsync(operationAddDto);
+        //    }
+        //}
+
 
         /// <summary>
-        /// 医院对接同步完成订单
+        /// 医院对接同步（不影响订单业务）
         /// </summary>
         /// <param name="updateVo"></param>
         /// <returns></returns>
@@ -1403,76 +1558,32 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addBindCustomerServiceFirstlyDto.NewWechatNo = "";
                     await bindCustomerServiceService.OnlyAddFistlyAsync(addBindCustomerServiceFirstlyDto);
                 }
+                AddCustomerHospitalDealInfoDto addCustomerHospitalDealInfoDto = new AddCustomerHospitalDealInfoDto();
+                addCustomerHospitalDealInfoDto.HospitalId = hospitalId;
+                addCustomerHospitalDealInfoDto.Type = updateVo.Type;
+                addCustomerHospitalDealInfoDto.CustomerName = updateVo.CustomerName;
+                addCustomerHospitalDealInfoDto.CustomerPhone = updateVo.CustomerPhone;
+                addCustomerHospitalDealInfoDto.Date = updateVo.Date;
+                addCustomerHospitalDealInfoDto.TotalCashAmount = updateVo.TotalCashAmount;
+                addCustomerHospitalDealInfoDto.ConsumptionType = updateVo.ConsumptionType;
+                addCustomerHospitalDealInfoDto.RefundType = updateVo.RefundType;
+                addCustomerHospitalDealInfoDto.MsgId = updateVo.MsgId;
+                List<AddCustomerHospitalDealDetailsDto> addCustomerHospitalDealDetailsDtos = new List<AddCustomerHospitalDealDetailsDto>();
 
-                //验证订单是否存在
-                var contentPlatFormOrder = await _orderService.GetOrderListByPhoneAndHospitalIdAsync(updateVo.CustomerPhone, hospitalId);
-                //修改订单
-                ContentPlateFormOrderFinishDto updateDto = new ContentPlateFormOrderFinishDto();
-                if (contentPlatFormOrder != null)
-                {
-                    updateDto.Id = contentPlatFormOrder.Id;
-                }
-                else
-                {
-                    updateDto.LastProjectStage = updateVo.CustomerPhone;
-                }
-                updateDto.IsFinish = true;
-
-                int consumptionType = (int)ConsumptionType.OTHER;
-                if (Convert.ToInt32(updateVo.Type) == 0)
-                {
-                    updateDto.ToHospitalType = (int)ContentPlateFormOrderToHospitalType.OTHER;
-                    if (updateVo.ConsumptionType == 1 || updateVo.ConsumptionType == 2 || updateVo.ConsumptionType == 3)
-                    {
-                        consumptionType = (int)ConsumptionType.Deal;
-                    }
-                    else if (updateVo.ConsumptionType == 0)
-                    {
-                        consumptionType = (int)ConsumptionType.Deposit;
-                    }
-                }
-                else
-                {
-                    updateDto.ToHospitalType = (int)ContentPlateFormOrderToHospitalType.REFUND;
-                    updateVo.TotalCashAmount = -updateVo.TotalCashAmount;
-                    consumptionType = (int)ConsumptionType.Refund;
-                }
-                updateDto.LastDealHospitalId = hospitalId;
-                updateDto.ToHospitalDate = updateVo.Date;
-                updateDto.OtherContentPlatFormOrderId = updateVo.MsgId;
-                updateDto.DealPictureUrl = "";
-                updateDto.DealAmount = updateVo.TotalCashAmount;
-                updateDto.UnDealReason = "";
-                updateDto.IsToHospital = true;
-                updateDto.UnDealPictureUrl = "";
-                updateDto.DealDate = updateVo.Date;
-                updateDto.IsAcompanying = false;
-                updateDto.DealPerformanceType = (int)ContentPlateFormOrderDealPerformanceType.HospitalDeclarationInApi;
-                updateDto.InvitationDocuments = new List<string>();
-                updateDto.ConsumptionType = consumptionType;
-                updateDto.EmpId = 0;
-                List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
-                if (updateDto.IsFinish == true && updateVo.Details != null && updateVo.Details.Count > 0)
+                if (updateVo.ConsumptionType == 2 || updateVo.ConsumptionType == 3 || updateVo.RefundType == 2 || updateVo.RefundType == 3)
                 {
                     foreach (var x in updateVo.Details)
                     {
-                        if (updateDto.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
-                        {
-                            x.CashAmount = -x.CashAmount;
-                        }
-                        AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
-                        addContentPlatFormOrderDealDetailsDto.GoodsName = x.ItemName;
-                        addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.ItemStandard;
+                        AddCustomerHospitalDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddCustomerHospitalDealDetailsDto();
+                        addContentPlatFormOrderDealDetailsDto.ItemName = x.ItemName;
+                        addContentPlatFormOrderDealDetailsDto.ItemStandard = x.ItemStandard;
                         addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
-                        addContentPlatFormOrderDealDetailsDto.Price = x.CashAmount;
-                        addContentPlatFormOrderDealDetailsDto.CreateBy = 0;
-                        addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;
-                        addContentPlatFormOrderDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);
+                        addContentPlatFormOrderDealDetailsDto.CashAmount = x.CashAmount;
+                        addCustomerHospitalDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);
                     }
                 }
-                updateDto.CustomerName = updateVo.CustomerName;
-                updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
-                await _orderService.FinishContentPlateFormOrderAsync(updateDto);
+                addCustomerHospitalDealInfoDto.addCustomerHospitalDealDetailsDtos = addCustomerHospitalDealDetailsDtos;
+                await customerHospitalDealInfoService.AddAsync(addCustomerHospitalDealInfoDto);
                 return ResultData.Success();
             }
             catch (Exception err)
@@ -1490,6 +1601,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 await operationLogService.AddOperationLogAsync(operationAddDto);
             }
         }
+        #endregion
 
 
         #region 枚举下拉框

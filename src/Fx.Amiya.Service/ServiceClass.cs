@@ -1481,6 +1481,96 @@ namespace Fx.Amiya.Service
             }
             return statusText;
         }
+
+        /// <summary>
+        /// 获取医院成交类型
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public static string GetHospitalDealTypeText(int type)
+        {
+            var statusText = "";
+            switch (type)
+            {
+                case 0:
+                    statusText = "收费";
+                    break;
+                case 1:
+                    statusText = "退费";
+                    break;
+                default:
+                    statusText = "未知";
+                    break;
+            }
+            return statusText;
+        }
+
+        /// <summary>
+        /// 获取医院消费类型
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public static string GetHospitalConsumptionTypeText(int consumptionType)
+        {
+            var statusText = "";
+            switch (consumptionType)
+            {
+                case 0:
+                    statusText = "交预交金";
+                    break;
+                case 1:
+                    statusText = "办卡";
+                    break;
+                case 2:
+                    statusText = "项目收费";
+                    break;
+                case 3:
+                    statusText = "划价单收费";
+                    break;
+                case 4:
+                    statusText = "卡类欠款回收";
+                    break;
+                case 5:
+                    statusText = "欠款回收";
+                    break;
+                default:
+                    statusText = "未知";
+                    break;
+            }
+            return statusText;
+        }
+
+        /// <summary>
+        /// 获取医院退款类型类型
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public static string GetHospitalRefundTypeText(int refundType)
+        {
+            var statusText = "";
+            switch (refundType)
+            {
+                case 0:
+                    statusText = "退预交金";
+                    break;
+                case 1:
+                    statusText = "退卡";
+                    break;
+                case 2:
+                    statusText = "退项目";
+                    break;
+                case 3:
+                    statusText = "退划价单";
+                    break;
+                case 4:
+                    statusText = "退多余欠款";
+                    break;
+                default:
+                    statusText = "未知";
+                    break;
+            }
+            return statusText;
+        }
         /// <summary>
         /// 获取抵用券类型
         /// </summary>

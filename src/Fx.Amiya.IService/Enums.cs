@@ -882,7 +882,9 @@ namespace Fx.Amiya.IService
         //预约成功
         Success = 2
     }
-
+    /// <summary>
+    /// 预约类型
+    /// </summary>
     public enum AppointmentType
     {
         ///// <summary>
@@ -1182,4 +1184,82 @@ namespace Fx.Amiya.IService
         /// </summary>
         DistributeInterviewNotice = 4,
     }
+
+    #region{医院板块枚举类}
+
+    /// <summary>
+    /// 医院成交类型
+    /// </summary>
+    public enum HospitalDealType
+    {
+        ///// <summary>
+        ///// 收费
+        ///// </summary>
+        Charge = 0,
+        /// <summary>
+        /// 退费
+        /// </summary>
+        Refund = 1,
+    }
+
+
+    /// <summary>
+    /// 医院消费类型
+    /// </summary>
+    public enum HospitalConsumptionType
+    {
+        ///// <summary>
+        ///// 交预交金
+        ///// </summary>
+        PayAdvance = 0,
+        /// <summary>
+        /// 办卡
+        /// </summary>
+        ApplyCard = 1,
+        /// <summary>
+        /// 项目收费
+        /// </summary>
+        ProjectCharge = 2,
+        /// <summary>
+        /// 划价单收费
+        /// </summary>
+        RateSheetCharge = 3,
+        /// <summary>
+        /// 卡类欠款回收
+        /// </summary>
+        CardArrearsRecovery = 4,
+        /// <summary>
+        /// 欠款回收
+        /// </summary>
+        CollectionOfArrears=5,
+    }
+
+
+    /// <summary>
+    /// 医院退款类型
+    /// </summary>
+    public enum HospitalRefundType
+    {
+        ///// <summary>
+        ///// 退预交金
+        ///// </summary>
+        RefundAdvance = 0,
+        /// <summary>
+        /// 退卡
+        /// </summary>
+        RefundCard = 1,
+        /// <summary>
+        /// 退项目
+        /// </summary>
+        RefundProjectCharge = 2,
+        /// <summary>
+        /// 退划价单
+        /// </summary>
+        RefundRateSheetCharge = 3,
+        /// <summary>
+        /// 退多余欠款
+        /// </summary>
+        RefundExcessDebt = 4,
+    }
+    #endregion
 }

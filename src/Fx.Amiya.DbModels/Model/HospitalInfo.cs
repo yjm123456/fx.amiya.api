@@ -169,5 +169,7 @@ namespace Fx.Amiya.DbModels.Model
         public List<BillReturnBackPriceData> BillReturnBackPriceDataList { get; set; }
 
         public List<ContentPlatFormOrderAddWork> ContentPlatFormOrderAddWork { get; set; }
+
+        public List<CustomerHospitalDealInfo> CustomerHospitalDealInfoList { get; set; }
     }
 }

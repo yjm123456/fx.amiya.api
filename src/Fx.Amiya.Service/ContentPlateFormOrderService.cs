@@ -44,7 +44,6 @@ namespace Fx.Amiya.Service
         private IHospitalCustomerInfoService hospitalCustomerInfoService;
         private IOrderCheckPictureService _orderCheckPictureService;
         private IContentPlatformOrderSendService _contentPlatformOrderSend;
-        private ICustomerBaseInfoService customerBaseInfoService;
         private IDalAmiyaEmployee _dalAmiyaEmployee;
         private ILiveAnchorService _liveAnchorService;
         private IShoppingCartRegistrationService _shoppingCartRegistration;
@@ -70,7 +69,6 @@ namespace Fx.Amiya.Service
            IDalContentPlatformOrder dalContentPlatformOrder,
            IDalAmiyaEmployee dalAmiyaEmployee,
            IRecommandDocumentSettleService recommandDocumentSettleService,
-           ICustomerBaseInfoService customerBaseInfoService,
            ILiveAnchorWeChatInfoService liveAnchorWeChatInfoService,
             ILiveAnchorService liveAnchorService,
             IOrderRemarkService orderRemarkService,
@@ -101,7 +99,6 @@ namespace Fx.Amiya.Service
             this.hospitalCustomerInfoService = hospitalCustomerInfoService;
             this.bindCustomerServiceService = bindCustomerServiceService;
             _dalBindCustomerService = dalBindCustomerService;
-            this.customerBaseInfoService = customerBaseInfoService;
             this.orderRemarkService = orderRemarkService;
             _departmentService = departmentService;
             this.recommandDocumentSettleService = recommandDocumentSettleService;
@@ -2144,7 +2141,7 @@ namespace Fx.Amiya.Service
                     {
                         var price = order.DepositAmount.HasValue ? order.DepositAmount.Value : 0.00M;
                         await bindCustomerServiceService.UpdateConsumePriceAsync(order.Phone, price + input.DealAmount.Value, (int)OrderFrom.ContentPlatFormOrder, order.LiveAnchor.Name, order.LiveAnchorWeChatNo, order.Contentplatform.ContentPlatformName, 1);
-                        await customerBaseInfoService.UpdateState(1, input.CustomerName, order.Phone);
+                        //await customerBaseInfoService.UpdateState(1, input.CustomerName, order.Phone);
                         order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.OrderComplete);
                         order.DealAmount += input.DealAmount;
                         order.LateProjectStage = input.LastProjectStage;
