@@ -171,14 +171,14 @@ namespace Fx.Amiya.Service
             var result = from d in dalLiveAnchorBaseInfo.GetAll()
                          select d;
             var x = result.Where(e => string.IsNullOrEmpty(id) || e.Id == id)
-                .Where(e => !isSelfLiveAnchor.HasValue || e.IsSelfLivevAnchor == isSelfLiveAnchor.Value);
+                .Where(e => !isSelfLiveAnchor.HasValue || e.IsSelfLivevAnchor == isSelfLiveAnchor.Value).ToList();
             if (x == null)
             {
                 return new List<LiveAnchorBaseInfoDto>();
             }
             List<LiveAnchorBaseInfoDto> liveAnchorBaseInfoDtos = new List<LiveAnchorBaseInfoDto>();
-            var baseInfList = await x.ToListAsync();
-            foreach (var k in baseInfList)
+            
+            foreach (var k in x)
             {
                 LiveAnchorBaseInfoDto liveAnchorBaseInfoDto = new LiveAnchorBaseInfoDto();
                 liveAnchorBaseInfoDto.Id = k.Id;

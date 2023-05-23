@@ -2001,6 +2001,541 @@ namespace Fx.Amiya.Service
 
         #endregion
 
+        #region 业绩看板
+
+        /// <summary>
+        /// 总业绩数据
+        /// </summary>
+        /// <param name="baseLiveanchorId"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="day"></param>
+        /// <returns></returns>
+        public async Task<AmiyaAchievementDataDto> GetTotalAndLiveanchorPerformanceAsync(string baseLiveanchorId, int year, int month, int day)
+        {
+
+            AmiyaAchievementDataDto amiyaAchievementDataDto = new AmiyaAchievementDataDto();
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month==0?1:month);
+            List<int> liveAnchorIds = new List<int>();
+            if (!string.IsNullOrEmpty(baseLiveanchorId))
+            {
+                liveAnchorIds = await this.GetLiveAnchorIdsByBaseIdAndIsSelfLiveAnchorAsync(baseLiveanchorId, null);
+            }
+            var type = DetermineQueryTime(year, month, day);
+            if (type == "year")
+            {
+                sequentialDate.StartDate = new DateTime(year, 1, 1);
+                sequentialDate.EndDate = new DateTime(year + 1, 1, 1);
+                sequentialDate.LastYearThisMonthStartDate = new DateTime(year - 1, 1, 1);
+                sequentialDate.LastYearThisMonthEndDate = new DateTime(year, 1, 1);
+            }
+            if (type == "day")
+            {
+                sequentialDate.StartDate = new DateTime(year, month, day);
+                sequentialDate.EndDate = sequentialDate.StartDate.AddDays(1);
+                sequentialDate.LastYearThisMonthStartDate = sequentialDate.StartDate.AddYears(-1);
+                sequentialDate.LastYearThisMonthEndDate = sequentialDate.LastYearThisMonthStartDate.AddDays(1);
+                sequentialDate.LastMonthStartDate = sequentialDate.StartDate.AddDays(-1);
+                sequentialDate.LastMonthEndDate = sequentialDate.StartDate;
+            }
+            //获取目标
+            var target = await liveAnchorMonthlyTargetAfterLivingService.GetPerformanceTargetAsync(year, month, liveAnchorIds);
+
+            //总业绩
+            var order = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAndLiveAnchorIdsAsync(sequentialDate.StartDate, sequentialDate.EndDate, liveAnchorIds);
+            //同比业绩
+            var orderYearOnYear = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAndLiveAnchorIdsAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, liveAnchorIds);
+            //环比业绩
+            List<PerformanceDto> orderChain = new List<PerformanceDto>();
+            if (type != "year") {
+                orderChain = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAndLiveAnchorIdsAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, liveAnchorIds);
+            }
+
+            var curTotalPerformance = order.Sum(o => o.Price);
+            var totalPerformanceYearOnYear = orderYearOnYear.Sum(o => o.Price);
+            var totalPerformanceChainRatio = orderChain.Sum(o => o.Price);
+            amiyaAchievementDataDto.TotalPerformance = curTotalPerformance;
+            
+            amiyaAchievementDataDto.TotalPerformanceChainRatio = DecimalExtension.CalculateChain(curTotalPerformance, totalPerformanceChainRatio).Value;
+            amiyaAchievementDataDto.TotalPerformanceYearOnYear = DecimalExtension.CalculateChain(curTotalPerformance, totalPerformanceYearOnYear).Value;
+            if (type!="day") {
+                amiyaAchievementDataDto.TotalPerformanceCompleteRate = DecimalExtension.CalculateTargetComplete(curTotalPerformance, target.TotalPerformanceTarget).Value;
+            }
+            if (type=="month") {
+                var totalperformanceSchedule = this.CalculateSchedule(target.TotalPerformanceTarget, curTotalPerformance, year, month);
+                amiyaAchievementDataDto.TotalPerformanceToDateSchedule = totalperformanceSchedule.ContrastTimeSchedule;
+                amiyaAchievementDataDto.TotalPerformanceDeviation = totalperformanceSchedule.PerformanceDeviation;
+                amiyaAchievementDataDto.LaterCompleteEveryDayTotalPerformance = totalperformanceSchedule.ResidueTimeNeedCompletePerformance < 0 ? 0m : totalperformanceSchedule.ResidueTimeNeedCompletePerformance;
+            }
+
+            //退款业绩
+            decimal refundPerformance = 0m;
+            if (string.IsNullOrEmpty(baseLiveanchorId))
+            {
+                refundPerformance = order.Where(e => e.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND).Sum(e => e.Price);
+            }
+            else { 
+                refundPerformance=order.Where(e => e.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND&& liveAnchorIds.Contains(e.LiveAnchorId.Value)).Sum(e => e.Price);
+            }
+            amiyaAchievementDataDto.RefundPerformance = refundPerformance;
+            if (string.IsNullOrEmpty(baseLiveanchorId))
+            {
+
+                var liveAnchorList = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync(new List<string> { "dd", "jn" });
+                var daodaoLiveanchorIds = liveAnchorList.Select(e => e.Id).ToList();
+                var jinaLiveanchorIds = liveAnchorList.Select(e => e.Id).ToList();
+                var daodaoTarget = await liveAnchorMonthlyTargetAfterLivingService.GetPerformance(year, month, daodaoLiveanchorIds);
+                var jinaTarget = await liveAnchorMonthlyTargetAfterLivingService.GetPerformance(year, month, jinaLiveanchorIds);
+
+                amiyaAchievementDataDto.GroupDaoDaoPerformance = order.Where(e=>e.LiveAnchorId.HasValue).Where(e => daodaoLiveanchorIds.Contains(e.LiveAnchorId.Value)).Sum(e => e.Price);               
+                amiyaAchievementDataDto.GroupDaoDaoPerformanceChainRatio = DecimalExtension.CalculateChain(amiyaAchievementDataDto.GroupDaoDaoPerformance, orderChain.Where(e => e.LiveAnchorId.HasValue).Where(e => daodaoLiveanchorIds.Contains(e.LiveAnchorId.Value)).Sum(e => e.Price)).Value;
+                amiyaAchievementDataDto.GroupDaoDaoPerformanceYearOnYear = DecimalExtension.CalculateChain(amiyaAchievementDataDto.GroupDaoDaoPerformance, orderYearOnYear.Where(e => e.LiveAnchorId.HasValue).Where(e => daodaoLiveanchorIds.Contains(e.LiveAnchorId.Value)).Sum(e => e.Price)).Value;
+                amiyaAchievementDataDto.GroupDaoDaoPerformanceProportion = DecimalExtension.CalculateTargetComplete(amiyaAchievementDataDto.GroupDaoDaoPerformance, curTotalPerformance).Value;
+                if (type != "day") {
+                    amiyaAchievementDataDto.GroupDaoDaoPerformanceCompleteRate = DecimalExtension.CalculateTargetComplete(amiyaAchievementDataDto.GroupDaoDaoPerformance, daodaoTarget.TotalPerformanceTarget).Value;
+                }
+                if (type=="month") {
+                    var daodaoPerformanceSchedule = this.CalculateSchedule(daodaoTarget.TotalPerformanceTarget, amiyaAchievementDataDto.GroupDaoDaoPerformance, year, month);
+                    amiyaAchievementDataDto.GroupDaoDaoPerformanceToDateSchedule = daodaoPerformanceSchedule.ContrastTimeSchedule;
+                    amiyaAchievementDataDto.GroupDaoDaoPerformanceDeviation = daodaoPerformanceSchedule.PerformanceDeviation;
+                    amiyaAchievementDataDto.LaterCompleteEveryDayGroupDaoDaoPerformance = daodaoPerformanceSchedule.ResidueTimeNeedCompletePerformance < 0 ? 0m : daodaoPerformanceSchedule.ResidueTimeNeedCompletePerformance;
+                }
+
+
+                amiyaAchievementDataDto.GroupJinaPerformance = order.Where(e => e.LiveAnchorId.HasValue).Where(e => jinaLiveanchorIds.Contains(e.LiveAnchorId.Value)).Sum(e => e.Price);
+                amiyaAchievementDataDto.GroupJinaPerformanceChainRatio = DecimalExtension.CalculateChain(amiyaAchievementDataDto.GroupJinaPerformance, orderChain.Where(e => e.LiveAnchorId.HasValue).Where(e => jinaLiveanchorIds.Contains(e.LiveAnchorId.Value)).Sum(e => e.Price)).Value;
+                amiyaAchievementDataDto.GroupJinaPerformanceYearOnYear = DecimalExtension.CalculateChain(amiyaAchievementDataDto.GroupJinaPerformance, orderYearOnYear.Where(e => e.LiveAnchorId.HasValue).Where(e => jinaLiveanchorIds.Contains(e.LiveAnchorId.Value)).Sum(e => e.Price)).Value;
+                amiyaAchievementDataDto.GroupJinaPerformanceProportion = DecimalExtension.CalculateTargetComplete(amiyaAchievementDataDto.GroupJinaPerformance, curTotalPerformance).Value;
+                if (type!="day") {
+                    amiyaAchievementDataDto.GroupJinaPerformanceCompleteRate = DecimalExtension.CalculateTargetComplete(amiyaAchievementDataDto.GroupJinaPerformance, jinaTarget.TotalPerformanceTarget).Value;
+                }
+                if (type=="month") {
+                    var jinaPerformanceSchedule = this.CalculateSchedule(jinaTarget.TotalPerformanceTarget, amiyaAchievementDataDto.GroupJinaPerformance, year, month);
+                    amiyaAchievementDataDto.GroupJinaPerformanceToDateSchedule = jinaPerformanceSchedule.ContrastTimeSchedule;
+                    amiyaAchievementDataDto.GroupJinaPerformanceDeviation = jinaPerformanceSchedule.PerformanceDeviation;
+                    amiyaAchievementDataDto.LaterCompleteEveryDayGroupJinaPerformance = jinaPerformanceSchedule.ResidueTimeNeedCompletePerformance < 0 ? 0m : jinaPerformanceSchedule.ResidueTimeNeedCompletePerformance;
+                }
+
+            }
+            return amiyaAchievementDataDto;
+        }
+        /// <summary>
+        /// 业绩看板获取业绩详情
+        /// </summary>
+        /// <param name="baseLiveanchorId"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="day"></param>
+        /// <returns></returns>
+        public async Task<AmiyaAchievementDetailDataDto> GetDetailPerformanceAsync(string baseLiveanchorId, int year, int month, int day)
+        {
+            AmiyaAchievementDetailDataDto amiyaAchievementDetailDataDto = new AmiyaAchievementDetailDataDto();
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month==0?1:month);
+            //获取各个平台的主播ID
+            List<int> LiveAnchorInfo = new List<int>();
+            if (!string.IsNullOrEmpty(baseLiveanchorId)) {
+                LiveAnchorInfo = await this.GetLiveAnchorIdsByBaseIdAndIsSelfLiveAnchorAsync(baseLiveanchorId, null);
+            }
+            var type = DetermineQueryTime(year,month,day);
+            //获取目标
+            var target = await liveAnchorMonthlyTargetAfterLivingService.GetPerformanceTargetAsync(year, month, LiveAnchorInfo);
+            if (type=="year") {
+                sequentialDate.StartDate = new DateTime(year,1,1);
+                sequentialDate.EndDate = new DateTime(year+1, 1, 1);
+                sequentialDate.LastYearThisMonthStartDate = new DateTime(year-1,1,1);
+                sequentialDate.LastYearThisMonthEndDate = new DateTime(year, 1, 1);
+            }
+            if (type== "day") {
+                sequentialDate.StartDate = new DateTime(year, month, day);
+                sequentialDate.EndDate = sequentialDate.StartDate.AddDays(1);
+                sequentialDate.LastYearThisMonthStartDate = sequentialDate.StartDate.AddYears(-1);
+                sequentialDate.LastYearThisMonthEndDate = sequentialDate.LastYearThisMonthStartDate.AddDays(1);
+                sequentialDate.LastMonthStartDate = sequentialDate.StartDate.AddDays(-1);
+                sequentialDate.LastMonthEndDate = sequentialDate.StartDate;
+            }
+            #region 总业绩
+            //总业绩
+            var order = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAsync(sequentialDate.StartDate, sequentialDate.EndDate, LiveAnchorInfo);
+            var curTotalPerformance = order.Sum(o => o.Price);
+            //同比业绩
+            var orderYearOnYear = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, LiveAnchorInfo);
+            //环比业绩
+            List<ContentPlatFormOrderDealInfoDto> orderChain = new List<ContentPlatFormOrderDealInfoDto>();
+            if (type != "year") {
+                orderChain = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, LiveAnchorInfo);
+            }
+            #endregion
+
+            #region 新客业绩
+            var curNewCustomer = order.Where(o => o.IsOldCustomer == false).Sum(o => o.Price);
+            var newOrderYearOnYear = orderYearOnYear.Where(x => x.IsOldCustomer == false).Sum(o => o.Price);
+            var newOrderChainRatio = orderChain.Where(x => x.IsOldCustomer == false).Sum(o => o.Price);
+            amiyaAchievementDetailDataDto.NewCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(curNewCustomer);
+            amiyaAchievementDetailDataDto.NewCustomerPerformanceChainRatio = DecimalExtension.CalculateChain(curNewCustomer, newOrderChainRatio).Value;
+            amiyaAchievementDetailDataDto.NewCustomerPerformanceYearOnYear = DecimalExtension.CalculateChain(curNewCustomer, newOrderYearOnYear).Value;
+            if (type=="day") {
+                amiyaAchievementDetailDataDto.NewCustomerPerformanceCompleteRate = DecimalExtension.CalculateTargetComplete(curNewCustomer, target.NewCustomerPerformanceTarget).Value;
+            }
+            if (type=="month") {
+                var newCustomerSchedule = CalculateSchedule(target.NewCustomerPerformanceTarget, curNewCustomer, year, month);
+                amiyaAchievementDetailDataDto.NewCustomerPerformanceProportion = DecimalExtension.CalculateTargetComplete(curNewCustomer, curTotalPerformance).Value;
+                amiyaAchievementDetailDataDto.NewCustomerPerformanceToDateSchedule = newCustomerSchedule.ContrastTimeSchedule;
+                amiyaAchievementDetailDataDto.NewCustomerPerformanceDeviation = newCustomerSchedule.PerformanceDeviation;
+                amiyaAchievementDetailDataDto.LaterCompleteEveryDayNewCustomerPerformance = newCustomerSchedule.ResidueTimeNeedCompletePerformance;
+            }
+            #endregion
+
+            #region 老客业绩
+            var curOldCustomer = order.Where(o => o.IsOldCustomer == true).Sum(o => o.Price);
+            var oldOrderYearOnYear = orderYearOnYear.Where(x => x.IsOldCustomer == true).Sum(o => o.Price);
+            var oldOrderChainRatio = orderChain.Where(x => x.IsOldCustomer == true).Sum(o => o.Price);
+            amiyaAchievementDetailDataDto.OldCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(curOldCustomer);
+            amiyaAchievementDetailDataDto.OldCustomerPerformanceChainRatio = DecimalExtension.CalculateChain(curOldCustomer, oldOrderChainRatio).Value;
+            amiyaAchievementDetailDataDto.OldCustomerPerformanceYearOnYear = DecimalExtension.CalculateChain(curOldCustomer, oldOrderYearOnYear).Value;
+            if (type!="day") {
+                amiyaAchievementDetailDataDto.OldCustomerPerformanceCompleteRate = DecimalExtension.CalculateTargetComplete(curOldCustomer, target.OldCustomerPerformanceTarget).Value;
+            }
+            if (type=="month") {
+                var oldCustomerSchedule = CalculateSchedule(target.OldCustomerPerformanceTarget, curOldCustomer, year, month);
+                amiyaAchievementDetailDataDto.OldCustomerPerformanceProportion = DecimalExtension.CalculateTargetComplete(curOldCustomer, curTotalPerformance).Value;
+                amiyaAchievementDetailDataDto.OldCustomerPerformanceToDateSchedule = oldCustomerSchedule.ContrastTimeSchedule;
+                amiyaAchievementDetailDataDto.OldCustomerPerformanceDeviation = oldCustomerSchedule.PerformanceDeviation;
+                amiyaAchievementDetailDataDto.LaterCompleteEveryDayOldCustomerPerformance = oldCustomerSchedule.ResidueTimeNeedCompletePerformance;
+            }
+            #endregion
+
+            #region 有效业绩
+            var curHavingPricePerformance = order.Where(o => o.AddOrderPrice > 0).Sum(o => o.Price);
+            var havingPriceYearOnYearr = orderYearOnYear.Where(x => x.AddOrderPrice > 0).Sum(o => o.Price);
+            var havingPriceOrderChainRatio = orderChain.Where(x => x.AddOrderPrice > 0).Sum(o => o.Price);
+            amiyaAchievementDetailDataDto.EffectivePerformance = DecimalExtension.ChangePriceToTenThousand(curHavingPricePerformance);        
+            amiyaAchievementDetailDataDto.EffectivePerformanceChainRatio = DecimalExtension.CalculateChain(curHavingPricePerformance, havingPriceOrderChainRatio).Value;
+            amiyaAchievementDetailDataDto.EffectivePerformanceYearOnYear = DecimalExtension.CalculateChain(curHavingPricePerformance, havingPriceYearOnYearr).Value;
+            if (type!="day") {
+                amiyaAchievementDetailDataDto.EffectivePerformanceCompleteRate = DecimalExtension.CalculateTargetComplete(curHavingPricePerformance, target.EffectivePerformance).Value;
+            }
+            if (type=="month") {
+                var havingPricePerformanceSchedule = CalculateSchedule(target.EffectivePerformance, curHavingPricePerformance, year, month);
+                amiyaAchievementDetailDataDto.EffectivePerformanceProportion = DecimalExtension.CalculateTargetComplete(curHavingPricePerformance, curTotalPerformance).Value;
+                amiyaAchievementDetailDataDto.EffectivePerformanceToDateSchedule = havingPricePerformanceSchedule.ContrastTimeSchedule;
+                amiyaAchievementDetailDataDto.EffectivePerformanceDeviation = havingPricePerformanceSchedule.PerformanceDeviation;
+                amiyaAchievementDetailDataDto.LaterCompleteEveryDayEffectivePerformance = havingPricePerformanceSchedule.ResidueTimeNeedCompletePerformance;
+            }
+            #endregion
+
+            #region 潜在业绩
+            var curNotHavePricePerformance = order.Where(o => o.AddOrderPrice == 0).Sum(o => o.Price);
+            var notHavePriceYearOnYearr = orderYearOnYear.Where(x => x.AddOrderPrice == 0).Sum(o => o.Price);
+            var notHavePriceOrderChainRatio = orderChain.Where(x => x.AddOrderPrice == 0).Sum(o => o.Price);
+            amiyaAchievementDetailDataDto.PotentialPerformance = DecimalExtension.ChangePriceToTenThousand(curNotHavePricePerformance);
+            amiyaAchievementDetailDataDto.PotentialPerformanceChainRatio = DecimalExtension.CalculateChain(curNotHavePricePerformance, notHavePriceOrderChainRatio).Value;
+            amiyaAchievementDetailDataDto.PotentialPerformanceYearOnYear = DecimalExtension.CalculateChain(curNotHavePricePerformance, notHavePriceYearOnYearr).Value;
+            if (type!="day") {
+                amiyaAchievementDetailDataDto.PotentialPerformanceCompleteRate = DecimalExtension.CalculateTargetComplete(curNotHavePricePerformance, target.PotentialPerformance).Value;
+            }
+            if (type=="month") {
+                var notHavePricePerformanceSchedule = CalculateSchedule(target.PotentialPerformance, curNotHavePricePerformance, year, month);
+                amiyaAchievementDetailDataDto.PotentialPerformanceProportion = DecimalExtension.CalculateTargetComplete(curNotHavePricePerformance, curTotalPerformance).Value;
+                amiyaAchievementDetailDataDto.PotentialPerformanceToDateSchedule = notHavePricePerformanceSchedule.ContrastTimeSchedule;
+                amiyaAchievementDetailDataDto.PotentialPerformanceDeviation = notHavePricePerformanceSchedule.PerformanceDeviation;
+                amiyaAchievementDetailDataDto.LaterCompleteEveryDayPotentialPerformance = notHavePricePerformanceSchedule.ResidueTimeNeedCompletePerformance;
+            }
+            #endregion
+
+
+            #region 当月派单当月成交业绩
+
+            if (type!="year") {
+                var thisMonthSendAndDealPerformance = order.Where(e => e.SendDate >= sequentialDate.StartDate && e.SendDate < sequentialDate.EndDate).Sum(o => o.Price);
+                var thisMonthSendAndDealPerformanceYearOnYear = orderYearOnYear.Where(e => e.SendDate >= sequentialDate.LastYearThisMonthStartDate && e.SendDate < sequentialDate.LastYearThisMonthEndDate).Sum(o => o.Price);
+                var thisMonthSendAndDealPerformanceChainRatio = orderChain.Where(e => e.SendDate >= sequentialDate.LastMonthStartDate && e.SendDate < sequentialDate.LastMonthEndDate).Sum(o => o.Price);
+                amiyaAchievementDetailDataDto.ThisMonthSendOrderPerformance = DecimalExtension.ChangePriceToTenThousand(thisMonthSendAndDealPerformance);
+                amiyaAchievementDetailDataDto.ThisMonthSendOrderPerformanceChainRatio = DecimalExtension.CalculateChain(thisMonthSendAndDealPerformance, thisMonthSendAndDealPerformanceChainRatio).Value;
+                amiyaAchievementDetailDataDto.ThisMonthSendOrderPerformanceYearOnYear = DecimalExtension.CalculateChain(thisMonthSendAndDealPerformance, thisMonthSendAndDealPerformanceYearOnYear).Value;
+                amiyaAchievementDetailDataDto.ThisMonthSendOrderPerformanceProportion = DecimalExtension.CalculateTargetComplete(thisMonthSendAndDealPerformance, curTotalPerformance).Value;
+            }
+
+            #endregion
+
+            #region 历史派单当月成交业绩
+            if (type!="year") {
+                var historyMonthSendAndDealPerformance = order.Where(e => e.SendDate < sequentialDate.StartDate).Sum(o => o.Price);
+                var historyMonthSendAndDealPerformanceYearOnYear = orderYearOnYear.Where(e => e.SendDate < sequentialDate.LastYearThisMonthStartDate).Sum(o => o.Price);
+                var historyMonthSendAndDealPerformanceChainRatio = orderChain.Where(e => e.SendDate < sequentialDate.LastMonthStartDate).Sum(o => o.Price);
+                amiyaAchievementDetailDataDto.HistorySendOrderPerformance = DecimalExtension.ChangePriceToTenThousand(historyMonthSendAndDealPerformance);
+                amiyaAchievementDetailDataDto.HistorySendOrderPerformanceChainRatio = DecimalExtension.CalculateChain(historyMonthSendAndDealPerformance, historyMonthSendAndDealPerformanceChainRatio).Value;
+                amiyaAchievementDetailDataDto.HistorySendOrderPerformanceYearOnYear = DecimalExtension.CalculateChain(historyMonthSendAndDealPerformance, historyMonthSendAndDealPerformanceYearOnYear).Value;
+                amiyaAchievementDetailDataDto.HistorySendOrderPerformanceProportion = DecimalExtension.CalculateTargetComplete(historyMonthSendAndDealPerformance, curTotalPerformance).Value;
+            }
+            #endregion
+
+            #region 抖音业绩
+
+            var tiktokPerformance = order.Where(e => e.ContentPlatFormId == "").Sum(e=>e.Price);
+            var tiktokPerformanceChain = orderChain.Where(e => e.ContentPlatFormId == "").Sum(e=>e.Price);
+            var tiktokPerformanceYearOnYear = orderYearOnYear.Where(e => e.ContentPlatFormId == "").Sum(e => e.Price);
+            amiyaAchievementDetailDataDto.TikTokPerformance = DecimalExtension.ChangePriceToTenThousand(tiktokPerformance);
+            amiyaAchievementDetailDataDto.TikTokPerformanceChainRatio = DecimalExtension.CalculateChain(tiktokPerformance, tiktokPerformanceChain).Value;
+            amiyaAchievementDetailDataDto.TikTokPerformanceYearOnYear = DecimalExtension.CalculateChain(tiktokPerformance, tiktokPerformanceYearOnYear).Value;
+            amiyaAchievementDetailDataDto.TikTokPerformanceProportion = DecimalExtension.CalculateTargetComplete(tiktokPerformance, curTotalPerformance).Value;
+
+            #endregion
+
+            #region 视频号业绩
+
+            var videoNoPerformance = order.Where(e => e.ContentPlatFormId == "").Sum(e => e.Price);
+            var videoNoPerformanceChain = orderChain.Where(e => e.ContentPlatFormId == "").Sum(e => e.Price);
+            var videoNoPerformanceYearOnYear = orderYearOnYear.Where(e => e.ContentPlatFormId == "").Sum(e => e.Price);
+            amiyaAchievementDetailDataDto.VideoPerformance = DecimalExtension.ChangePriceToTenThousand(videoNoPerformance);
+            amiyaAchievementDetailDataDto.VideoPerformanceChainRatio = DecimalExtension.CalculateChain(videoNoPerformance, videoNoPerformanceChain).Value;
+            amiyaAchievementDetailDataDto.VideoPerformanceYearOnYear = DecimalExtension.CalculateChain(videoNoPerformance, videoNoPerformanceYearOnYear).Value;
+            amiyaAchievementDetailDataDto.VideoPerformanceProportion = DecimalExtension.CalculateTargetComplete(videoNoPerformance, curTotalPerformance).Value;
+            #endregion
+
+            #region 视频业绩
+            var curVideoPerformance = order.Where(o => o.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Sum(o => o.Price);
+            var videoYearOnYearr = orderYearOnYear.Where(x => x.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Sum(o => o.Price);
+            var videoOrderChainRatio = orderChain.Where(x => x.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Sum(o => o.Price);
+            amiyaAchievementDetailDataDto.LiveAnchorVideoPerformance = DecimalExtension.ChangePriceToTenThousand(curVideoPerformance);
+            amiyaAchievementDetailDataDto.LiveAnchorVideoPerformanceChainRatio = DecimalExtension.CalculateChain(curVideoPerformance, videoOrderChainRatio).Value;
+            amiyaAchievementDetailDataDto.LiveAnchorVideoPerformanceYearOnYear = DecimalExtension.CalculateChain(curVideoPerformance, videoYearOnYearr).Value;
+            amiyaAchievementDetailDataDto.LiveAnchorVideoPerformanceProportion = DecimalExtension.CalculateTargetComplete(curVideoPerformance, curTotalPerformance).Value;
+            #endregion
+
+            #region 照片业绩
+
+            var curPicturePerformance = order.Where(o => o.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).Sum(o => o.Price);
+            var pictureYearOnYearr = orderYearOnYear.Where(x => x.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).Sum(o => o.Price);
+            var pictureOrderChainRatio = orderChain.Where(x => x.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).Sum(o => o.Price);
+            amiyaAchievementDetailDataDto.AssistantPhotoPerformance = DecimalExtension.ChangePriceToTenThousand(curPicturePerformance);
+            amiyaAchievementDetailDataDto.AssistantPhotoPerformanceChainRatio = DecimalExtension.CalculateChain(curPicturePerformance, pictureOrderChainRatio).Value;
+            amiyaAchievementDetailDataDto.AssistantPhotoPerformanceYearOnYear = DecimalExtension.CalculateChain(curPicturePerformance, pictureYearOnYearr).Value;
+            amiyaAchievementDetailDataDto.AssistantPhotoPerformanceProportion = DecimalExtension.CalculateTargetComplete(curPicturePerformance, curTotalPerformance).Value;
+            #endregion
+
+            #region 主播接诊业绩
+
+            var curLiveAnchorAcompanyingPerformance = order.Where(o => o.IsAcompanying == true).Sum(o => o.Price);
+            var liveAnchorAcompanyingYearOnYearr = orderYearOnYear.Where(x => x.IsAcompanying == true).Sum(o => o.Price);
+            var liveAnchorAcompanyingOrderChainRatio = orderChain.Where(x => x.IsAcompanying == true).Sum(o => o.Price);
+            amiyaAchievementDetailDataDto.LiveAnchorReceptionPerformance = DecimalExtension.ChangePriceToTenThousand(curLiveAnchorAcompanyingPerformance);
+            amiyaAchievementDetailDataDto.LiveAnchorReceptionPerformanceChainRatio = DecimalExtension.CalculateChain(curLiveAnchorAcompanyingPerformance, liveAnchorAcompanyingOrderChainRatio).Value;
+            amiyaAchievementDetailDataDto.LiveAnchorReceptionPerformanceYearOnYear = DecimalExtension.CalculateChain(curLiveAnchorAcompanyingPerformance, liveAnchorAcompanyingYearOnYearr).Value;
+            amiyaAchievementDetailDataDto.LiveAnchorReceptionPerformanceProportion = DecimalExtension.CalculateTargetComplete(curLiveAnchorAcompanyingPerformance, curTotalPerformance).Value;
+            #endregion
+
+            #region 非主播接诊业绩
+            var curNotLiveAnchorAcompanyingPerformance = order.Where(o => o.IsAcompanying == false).Sum(o => o.Price);
+            var notLiveAnchorAcompanyingYearOnYearr = orderYearOnYear.Where(x => x.IsAcompanying == false).Sum(o => o.Price);
+            var notLiveAnchorAcompanyingOrderChainRatio = orderChain.Where(x => x.IsAcompanying == false).Sum(o => o.Price);
+            amiyaAchievementDetailDataDto.NoLiveAnchorReceptionPerformance = DecimalExtension.ChangePriceToTenThousand(curNotLiveAnchorAcompanyingPerformance);
+            amiyaAchievementDetailDataDto.NoLiveAnchorReceptionPerformanceChainRatio = DecimalExtension.CalculateChain(curNotLiveAnchorAcompanyingPerformance, notLiveAnchorAcompanyingOrderChainRatio).Value;
+            amiyaAchievementDetailDataDto.NoLiveAnchorReceptionPerformanceYearOnYear = DecimalExtension.CalculateChain(curNotLiveAnchorAcompanyingPerformance, notLiveAnchorAcompanyingYearOnYearr).Value;
+            amiyaAchievementDetailDataDto.NoLiveAnchorReceptionPerformanceProportion = DecimalExtension.CalculateTargetComplete(curNotLiveAnchorAcompanyingPerformance, curTotalPerformance).Value;
+            #endregion
+
+            return amiyaAchievementDetailDataDto;
+        }
+
+        /// <summary>
+        /// 业绩看板获取折线图
+        /// </summary>
+        /// <param name="baseLiveanchorId"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="day"></param>
+        /// <returns></returns>
+        public async Task<AmiyaAchievementBrokenLineListDto> GetAmiyaAchievementBrokenLineListDataAsync(string baseLiveanchorId, int year, int month)
+        {
+            AmiyaAchievementBrokenLineListDto amiyaAchievementDetailDataDto = new AmiyaAchievementBrokenLineListDto();
+            //获取各个平台的主播ID
+            List<int> LiveAnchorInfo = new List<int>();
+            if (!string.IsNullOrEmpty(baseLiveanchorId))
+            {
+                LiveAnchorInfo = await this.GetLiveAnchorIdsByBaseIdAndIsSelfLiveAnchorAsync(baseLiveanchorId, null);
+            }
+            
+            DateTime startDate = DateTime.Now;
+            DateTime endDate = DateTime.Now;
+            var type = DetermineQueryTime(year, month, 0);
+            if (type == "year")
+            {
+                startDate = new DateTime(year, 1, 1);
+                endDate = new DateTime(year + 1, 1, 1);
+            }
+            else {
+                startDate = new DateTime(year, month, 1);
+                endDate = new DateTime(year, month + 1, 1);
+            }
+            
+            var order = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAsync(startDate, endDate, LiveAnchorInfo);
+            List<GroupByTimeBrokenLineListDto> dataList = new List<GroupByTimeBrokenLineListDto>();
+            if (type == "year")
+            {
+                dataList = order.GroupBy(e => e.CreateDate.Month)
+                    .Select(x => new GroupByTimeBrokenLineListDto
+                    {
+                        Time=x.Key,
+                        NewCustomerPerformance = x.Where(e => e.IsOldCustomer == false).Sum(e => e.Price),
+                        OldCustomerPerformance = x.Where(e => e.IsOldCustomer == true).Sum(e => e.Price),
+                        EffectivePerformance = x.Where(e => e.AddOrderPrice > 0).Sum(e => e.Price),
+                        PotentialPerformance = x.Where(e => e.AddOrderPrice == 0).Sum(e => e.Price),
+                        ThisMonthSendOrderPerformance = x.Where(e => e.SendDate >= new DateTime(year, x.Key, 1) && e.SendDate < new DateTime(year, x.Key, 1).AddMonths(1)).Sum(e => e.Price),
+                        HistorySendOrderPerformance = x.Where(e => e.SendDate < new DateTime(year, x.Key, 1)).Sum(e => e.Price),
+                        TikTokPerformance = x.Where(e => e.ContentPlatFormId == "").Sum(e => e.Price),
+                        VideoPerformance = x.Where(e => e.ContentPlatFormId == "").Sum(e => e.Price),
+                        LiveAnchorVideoPerformance = x.Where(e => e.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Sum(e => e.Price),
+                        AssistantPhotoPerformance = x.Where(e => e.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).Sum(e => e.Price),
+                        LiveAnchorReceptionPerformance = x.Where(e => e.IsAcompanying == true).Sum(e => e.Price),
+                        NoLiveAnchorReceptionPerformance = x.Where(e => e.IsAcompanying == false).Sum(e => e.Price),
+                    }).ToList();
+            }
+            else {
+                dataList= order.GroupBy(e => e.CreateDate.Day)
+                    .Select(x => new GroupByTimeBrokenLineListDto
+                    {
+                        Time=x.Key,
+                        NewCustomerPerformance = x.Where(e => e.IsOldCustomer == false).Sum(e => e.Price),
+                        OldCustomerPerformance = x.Where(e => e.IsOldCustomer == true).Sum(e => e.Price),
+                        EffectivePerformance = x.Where(e => e.AddOrderPrice > 0).Sum(e => e.Price),
+                        PotentialPerformance = x.Where(e => e.AddOrderPrice == 0).Sum(e => e.Price),
+                        ThisMonthSendOrderPerformance = x.Where(e => e.SendDate >= new DateTime(year, month, 1) && e.SendDate < new DateTime(year, month, 1).AddMonths(1)).Sum(e => e.Price),
+                        HistorySendOrderPerformance = x.Where(e => e.SendDate < new DateTime(year, month, 1)).Sum(e => e.Price),
+                        TikTokPerformance = x.Where(e => e.ContentPlatFormId == "").Sum(e => e.Price),
+                        VideoPerformance = x.Where(e => e.ContentPlatFormId == "").Sum(e => e.Price),
+                        LiveAnchorVideoPerformance = x.Where(e => e.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Sum(e => e.Price),
+                        AssistantPhotoPerformance = x.Where(e => e.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).Sum(e => e.Price),
+                        LiveAnchorReceptionPerformance = x.Where(e => e.IsAcompanying == true).Sum(e => e.Price),
+                        NoLiveAnchorReceptionPerformance = x.Where(e => e.IsAcompanying == false).Sum(e => e.Price),
+                    }).ToList();
+            }
+            amiyaAchievementDetailDataDto.NewCustomerPerformanceBrokenLineList = this.FillDate(type,year,month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.NewCustomerPerformance }).ToList();
+            amiyaAchievementDetailDataDto.OldCustomerPerformanceBrokenLineList = this.FillDate(type, year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.OldCustomerPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.EffectivePerformanceBrokenLineList = this.FillDate(type, year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.EffectivePerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.PotentialPerformanceBrokenLineList = this.FillDate(type, year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.PotentialPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.ThisMonthSendOrderPerformanceBrokenLineList = this.FillDate(type, year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.ThisMonthSendOrderPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.HistorySendOrderPerformanceBrokenLineList = this.FillDate(type, year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.HistorySendOrderPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.TikTokPerformanceBrokenLineList = this.FillDate(type, year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.TikTokPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.VideoPerformanceBrokenLineList = this.FillDate(type, year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.VideoPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.LiveAnchorVideoPerformanceBrokenLineList = this.FillDate(type, year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.LiveAnchorVideoPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.AssistantPhotoPerformanceBrokenLineList = this.FillDate(type, year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.AssistantPhotoPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.LiveAnchorReceptionPerformanceBrokenLineList = this.FillDate(type, year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.LiveAnchorReceptionPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.NoLiveAnchorReceptionPerformanceBrokenLineList = this.FillDate(type, year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.NoLiveAnchorReceptionPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            return amiyaAchievementDetailDataDto;
+        }
+
+        /// <summary>
+        /// 计算对比进度,业绩偏差和后期需完成业绩
+        /// </summary>
+        /// <param name="performanceTarget">总业绩目标</param>
+        /// <param name="currentPerformance">当前完成业绩</param>
+        /// <param name="year">年</param>
+        /// <param name="month">月</param>
+        private PerformanceScheduleDto CalculateSchedule(decimal performanceTarget, decimal currentPerformance, int year, int month)
+        {
+            PerformanceScheduleDto performanceScheduleDto = new PerformanceScheduleDto();
+            if (performanceTarget==0m|| currentPerformance==0m) {
+                performanceScheduleDto.ContrastTimeSchedule = 0;
+                performanceScheduleDto.PerformanceDeviation = 0;
+                performanceScheduleDto.ResidueTimeNeedCompletePerformance = 0;
+                return performanceScheduleDto;
+            }
+            
+            decimal timeSchedule = 0;
+            var now = DateTime.Now;
+            var totalDay = DateTime.DaysInMonth(now.Year, now.Month);
+            var nowDay = now.Day;
+            if (year != now.Year || month != now.Month)
+            {
+                timeSchedule = 100m;
+            }
+            else
+            {
+                timeSchedule = Math.Round(Convert.ToDecimal(nowDay) / Convert.ToDecimal(totalDay) * 100, 2, MidpointRounding.AwayFromZero);
+            }
+            decimal performanceSchedule = Math.Round(currentPerformance / performanceTarget * 100, 2, MidpointRounding.AwayFromZero);
+            performanceScheduleDto.ContrastTimeSchedule = performanceSchedule - timeSchedule;
+            performanceScheduleDto.PerformanceDeviation = Math.Round(performanceTarget * (timeSchedule - performanceSchedule) / 100,2);
+            performanceScheduleDto.ResidueTimeNeedCompletePerformance= timeSchedule == 100m ? 0 : Math.Round((performanceTarget - currentPerformance) / (totalDay - nowDay), 2, MidpointRounding.AwayFromZero);
+            return performanceScheduleDto;
+
+        }
+        /// <summary>
+        /// 判断要筛选的时间类型
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="day"></param>
+        /// <returns></returns>
+        private string  DetermineQueryTime(int year,int month,int day) {
+            var type = "";
+            if (day!=0) {
+                 type = "day";
+            }
+            if (day==0&&month!=0) {
+                type = "month";
+            }
+            if (day==0&&month==0) {
+                type = "year";
+            }
+            return type;
+        }
+        /// <summary>
+        /// 填充日期数据
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="dataList"></param>
+        /// <returns></returns>
+        private List<GroupByTimeBrokenLineListDto> FillDate(string type,int year,int month, List<GroupByTimeBrokenLineListDto> dataList) {
+            List<GroupByTimeBrokenLineListDto> list = new List<GroupByTimeBrokenLineListDto>();
+            if (type=="year") {
+                for (int i = 1; i < 13; i++)
+                {
+                    GroupByTimeBrokenLineListDto item = new GroupByTimeBrokenLineListDto();
+                    item.Time = i;
+                    item.NewCustomerPerformance = dataList.Where(e => e.Time == i).Select(e => e.NewCustomerPerformance).SingleOrDefault();
+                    item.OldCustomerPerformance = dataList.Where(e => e.Time == i).Select(e => e.OldCustomerPerformance).SingleOrDefault();
+                    item.EffectivePerformance = dataList.Where(e => e.Time == i).Select(e => e.EffectivePerformance).SingleOrDefault();
+                    item.PotentialPerformance = dataList.Where(e => e.Time == i).Select(e => e.PotentialPerformance).SingleOrDefault();
+                    item.ThisMonthSendOrderPerformance = dataList.Where(e => e.Time == i).Select(e => e.ThisMonthSendOrderPerformance).SingleOrDefault();
+                    item.HistorySendOrderPerformance = dataList.Where(e => e.Time == i).Select(e => e.HistorySendOrderPerformance).SingleOrDefault();
+                    item.TikTokPerformance = dataList.Where(e => e.Time == i).Select(e => e.TikTokPerformance).SingleOrDefault();
+                    item.VideoPerformance = dataList.Where(e => e.Time == i).Select(e => e.VideoPerformance).SingleOrDefault();
+                    item.LiveAnchorVideoPerformance = dataList.Where(e => e.Time == i).Select(e => e.LiveAnchorVideoPerformance).SingleOrDefault();
+                    item.AssistantPhotoPerformance = dataList.Where(e => e.Time == i).Select(e => e.AssistantPhotoPerformance).SingleOrDefault();
+                    item.LiveAnchorReceptionPerformance = dataList.Where(e => e.Time == i).Select(e => e.LiveAnchorReceptionPerformance).SingleOrDefault();
+                    item.NoLiveAnchorReceptionPerformance = dataList.Where(e => e.Time == i).Select(e => e.NoLiveAnchorReceptionPerformance).SingleOrDefault();
+                    list.Add(item);
+                }
+            }
+            if (type=="month") {
+                var totalDays =DateTime.DaysInMonth(year, month);
+                for (int i =1    ; i < totalDays+1; i++)
+                {
+                    GroupByTimeBrokenLineListDto item = new GroupByTimeBrokenLineListDto();
+                    item.Time = i;
+                    item.NewCustomerPerformance = dataList.Where(e => e.Time == i).Select(e => e.NewCustomerPerformance).SingleOrDefault();
+                    item.OldCustomerPerformance = dataList.Where(e => e.Time == i).Select(e => e.OldCustomerPerformance).SingleOrDefault();
+                    item.EffectivePerformance = dataList.Where(e => e.Time == i).Select(e => e.EffectivePerformance).SingleOrDefault();
+                    item.PotentialPerformance = dataList.Where(e => e.Time == i).Select(e => e.PotentialPerformance).SingleOrDefault();
+                    item.ThisMonthSendOrderPerformance = dataList.Where(e => e.Time == i).Select(e => e.ThisMonthSendOrderPerformance).SingleOrDefault();
+                    item.HistorySendOrderPerformance = dataList.Where(e => e.Time == i).Select(e => e.HistorySendOrderPerformance).SingleOrDefault();
+                    item.TikTokPerformance = dataList.Where(e => e.Time == i).Select(e => e.TikTokPerformance).SingleOrDefault();
+                    item.VideoPerformance = dataList.Where(e => e.Time == i).Select(e => e.VideoPerformance).SingleOrDefault();
+                    item.LiveAnchorVideoPerformance = dataList.Where(e => e.Time == i).Select(e => e.LiveAnchorVideoPerformance).SingleOrDefault();
+                    item.AssistantPhotoPerformance = dataList.Where(e => e.Time == i).Select(e => e.AssistantPhotoPerformance).SingleOrDefault();
+                    item.LiveAnchorReceptionPerformance = dataList.Where(e => e.Time == i).Select(e => e.LiveAnchorReceptionPerformance).SingleOrDefault();
+                    item.NoLiveAnchorReceptionPerformance = dataList.Where(e => e.Time == i).Select(e => e.NoLiveAnchorReceptionPerformance).SingleOrDefault();
+                    list.Add(item);
+                }
+            }
+            return list;
+        }
+
+        #endregion
+
         #region【公共使用业务，包括折线图，业绩明细等】
         /// <summary>
         /// 获取当月/历史派单当月成交折线图
@@ -2272,6 +2807,8 @@ namespace Fx.Amiya.Service
             }
             return LiveAnchorInfo;
         }
+
+        
 
         #endregion
     }

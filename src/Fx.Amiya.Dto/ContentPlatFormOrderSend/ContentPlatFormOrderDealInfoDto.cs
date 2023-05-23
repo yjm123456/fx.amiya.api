@@ -267,5 +267,9 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 消费类型文本
         /// </summary>
         public string ConsumptionTypeText { get; set; }
+        /// <summary>
+        /// 订单来源
+        /// </summary>
+        public string ContentPlatFormId { get; set; }
     }
 }

@@ -217,6 +217,23 @@ namespace Fx.Amiya.IService
         Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByDateAsync(DateTime startDate, DateTime endDate, List<int> LiveAnchorIds);
 
         /// <summary>
+        /// 根据精确时间线主播获取啊美雅业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="LiveAnchorIds">主播id集合()传空查所有</param>
+        /// <returns></returns>
+        Task<List<PerformanceDto>> GetPerformanceByDateAndLiveAnchorIdsAsync(DateTime startDate, DateTime endDate, List<int> LiveAnchorIds);
+        /// <summary>
+        /// 根据精确时间线获取业绩详情
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="LiveAnchorIds"></param>
+        /// <returns></returns>
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceDetailByDateAsync(DateTime startDate, DateTime endDate, List<int> LiveAnchorIds);
+
+        /// <summary>
         /// 根据精确时间线获取派单成交业绩
         /// </summary>
         /// <param name="startDate"></param>

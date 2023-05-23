@@ -381,6 +381,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorDailyTargetVo.RefundCard = liveAnchorDailyTarget.RefundCard;
                 liveAnchorDailyTargetVo.GMV = liveAnchorDailyTarget.GMV;
                 liveAnchorDailyTargetVo.EliminateCardGMV = liveAnchorDailyTarget.EliminateCardGMV;
+                liveAnchorDailyTargetVo.EffectivePerformance = liveAnchorDailyTarget.EffectivePerformance;
+                liveAnchorDailyTargetVo.PotentialPerformance = liveAnchorDailyTarget.PotentialPerformance;
 
                 return ResultData<LiveAnchorDailyTargetByIdVo>.Success().AddData("liveAnchorDailyTargetInfo", liveAnchorDailyTargetVo);
             }

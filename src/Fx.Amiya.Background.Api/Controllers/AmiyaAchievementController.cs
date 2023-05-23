@@ -1310,46 +1310,46 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<AmiyaAchievementDataVo>> GetAmiyaAchievementDataAsync([FromQuery] QueryAmiyaAchievementDataVo query)
         {
             AmiyaAchievementDataVo dataVo = new AmiyaAchievementDataVo();
-
+            var performance = await amiyaPerformanceService.GetTotalAndLiveanchorPerformanceAsync(query.LiveAnchorBaseId,query.Year,query.Month,query.Day);
             #region 总业绩
-            dataVo.TotalPerformance = 1000;
-            dataVo.TotalPerformanceCompleteRate = 50;
-            dataVo.TotalPerformanceYearOnYear = 20;
-            dataVo.TotalPerformanceChainRatio = 20;
-            dataVo.TotalPerformanceToDateSchedule = 50;
-            dataVo.TotalPerformanceDeviation = 0;
-            dataVo.LaterCompleteEveryDayTotalPerformance = 66.67m;
+            dataVo.TotalPerformance = performance.TotalPerformance;
+            dataVo.TotalPerformanceCompleteRate = performance.TotalPerformanceCompleteRate;
+            dataVo.TotalPerformanceYearOnYear = performance.TotalPerformanceYearOnYear;
+            dataVo.TotalPerformanceChainRatio = performance.TotalPerformanceChainRatio;
+            dataVo.TotalPerformanceToDateSchedule = performance.TotalPerformanceToDateSchedule;
+            dataVo.TotalPerformanceDeviation = performance.TotalPerformanceDeviation;
+            dataVo.LaterCompleteEveryDayTotalPerformance = performance.LaterCompleteEveryDayTotalPerformance;
             #endregion
 
             #region 刀刀组业绩
 
-            dataVo.GroupDaoDaoPerformance = 500;
-            dataVo.GroupDaoDaoPerformanceProportion = 50;
-            dataVo.GroupDaoDaoPerformanceCompleteRate = 50;
-            dataVo.GroupDaoDaoPerformanceYearOnYear = 20;
-            dataVo.GroupDaoDaoPerformanceChainRatio = 20;
-            dataVo.GroupDaoDaoPerformanceToDateSchedule = 50;
-            dataVo.GroupDaoDaoPerformanceDeviation = 0;
-            dataVo.LaterCompleteEveryDayGroupDaoDaoPerformance = 66.67m;
+            dataVo.GroupDaoDaoPerformance = performance.GroupDaoDaoPerformance;
+            dataVo.GroupDaoDaoPerformanceProportion = performance.GroupDaoDaoPerformanceProportion;
+            dataVo.GroupDaoDaoPerformanceCompleteRate = performance.GroupDaoDaoPerformanceCompleteRate;
+            dataVo.GroupDaoDaoPerformanceYearOnYear = performance.GroupDaoDaoPerformanceYearOnYear;
+            dataVo.GroupDaoDaoPerformanceChainRatio = performance.GroupDaoDaoPerformanceChainRatio;
+            dataVo.GroupDaoDaoPerformanceToDateSchedule = performance.GroupDaoDaoPerformanceToDateSchedule;
+            dataVo.GroupDaoDaoPerformanceDeviation = performance.GroupDaoDaoPerformanceDeviation;
+            dataVo.LaterCompleteEveryDayGroupDaoDaoPerformance = performance.LaterCompleteEveryDayGroupDaoDaoPerformance;
 
             #endregion
 
             #region 吉娜组业绩
 
-            dataVo.GroupJinaPerformance = 500;
-            dataVo.GroupJinaPerformanceProportion = 50;
-            dataVo.GroupJinaPerformanceCompleteRate = 50;
-            dataVo.GroupJinaPerformanceYearOnYear = 20;
-            dataVo.GroupJinaPerformanceChainRatio = 20;
-            dataVo.GroupJinaPerformanceToDateSchedule = 50;
-            dataVo.GroupJinaPerformanceDeviation = 0;
-            dataVo.LaterCompleteEveryDayGroupJinaPerformance = 66.67m;
+            dataVo.GroupJinaPerformance = performance.GroupJinaPerformance;
+            dataVo.GroupJinaPerformanceProportion = performance.GroupJinaPerformanceProportion;
+            dataVo.GroupJinaPerformanceCompleteRate = performance.GroupJinaPerformanceCompleteRate;
+            dataVo.GroupJinaPerformanceYearOnYear = performance.GroupJinaPerformanceYearOnYear;
+            dataVo.GroupJinaPerformanceChainRatio = performance.GroupJinaPerformanceChainRatio;
+            dataVo.GroupJinaPerformanceToDateSchedule = performance.GroupJinaPerformanceToDateSchedule;
+            dataVo.GroupJinaPerformanceDeviation = performance.GroupJinaPerformanceDeviation;
+            dataVo.LaterCompleteEveryDayGroupJinaPerformance = performance.LaterCompleteEveryDayGroupJinaPerformance;
 
             #endregion
 
             #region 退款业绩 
 
-            dataVo.RefundPerformance = 10;
+            dataVo.RefundPerformance = performance.RefundPerformance;
 
             #endregion
             return ResultData<AmiyaAchievementDataVo>.Success().AddData("achievementdata", dataVo); ;
@@ -1358,129 +1358,129 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<AmiyaAchievementDetailDataVo>> GetAmiyaAchievementDetailedDataAsync([FromQuery] QueryAmiyaAchievementDataVo query)
         {
             AmiyaAchievementDetailDataVo dataVo = new AmiyaAchievementDetailDataVo();
-
+            var performance =await amiyaPerformanceService.GetDetailPerformanceAsync(query.LiveAnchorBaseId,query.Year,query.Month,query.Day);
             #region 新客业绩
 
-            dataVo.NewCustomerPerformance = 250;
-            dataVo.NewCustomerPerformanceProportion = 25;
-            dataVo.NewCustomerPerformanceCompleteRate = 25;
-            dataVo.NewCustomerPerformanceYearOnYear = 20;
-            dataVo.NewCustomerPerformanceChainRatio = 20;
-            dataVo.NewCustomerPerformanceToDateSchedule = 0;
-            dataVo.NewCustomerPerformanceDeviation = 0;
-            dataVo.LaterCompleteEveryDayNewCustomerPerformance = 66.67m;
+            dataVo.NewCustomerPerformance = performance.NewCustomerPerformance;
+            dataVo.NewCustomerPerformanceProportion= performance.NewCustomerPerformanceProportion;
+            dataVo.NewCustomerPerformanceCompleteRate = performance.NewCustomerPerformanceCompleteRate;
+            dataVo.NewCustomerPerformanceYearOnYear = performance.NewCustomerPerformanceYearOnYear;
+            dataVo.NewCustomerPerformanceChainRatio = performance.NewCustomerPerformanceChainRatio;
+            dataVo.NewCustomerPerformanceToDateSchedule = performance.NewCustomerPerformanceToDateSchedule;
+            dataVo.NewCustomerPerformanceDeviation = performance.NewCustomerPerformanceDeviation;
+            dataVo.LaterCompleteEveryDayNewCustomerPerformance = performance.LaterCompleteEveryDayNewCustomerPerformance;
 
 
             #endregion
 
             #region 老客业绩
 
-            dataVo.OldCustomerPerformance = 250;
-            dataVo.OldCustomerPerformanceProportion = 25;
-            dataVo.OldCustomerPerformanceCompleteRate = 25;
-            dataVo.OldCustomerPerformanceYearOnYear = 20;
-            dataVo.OldCustomerPerformanceChainRatio = 20;
-            dataVo.OldCustomerPerformanceToDateSchedule = 0;
-            dataVo.OldCustomerPerformanceDeviation = 0;
-            dataVo.LaterCompleteEveryDayOldCustomerPerformance = 66.67m;
+            dataVo.OldCustomerPerformance = performance.OldCustomerPerformance;
+            dataVo.OldCustomerPerformanceProportion = performance.OldCustomerPerformanceProportion;
+            dataVo.OldCustomerPerformanceCompleteRate = performance.OldCustomerPerformanceCompleteRate;
+            dataVo.OldCustomerPerformanceYearOnYear = performance.OldCustomerPerformanceYearOnYear;
+            dataVo.OldCustomerPerformanceChainRatio = performance.OldCustomerPerformanceChainRatio;
+            dataVo.OldCustomerPerformanceToDateSchedule = performance.OldCustomerPerformanceToDateSchedule;
+            dataVo.OldCustomerPerformanceDeviation = performance.OldCustomerPerformanceDeviation;
+            dataVo.LaterCompleteEveryDayOldCustomerPerformance = performance.LaterCompleteEveryDayOldCustomerPerformance;
 
             #endregion
 
             #region 有效业绩
 
-            dataVo.EffectivePerformance = 250;
-            dataVo.EffectivePerformanceProportion = 25;
-            dataVo.EffectivePerformanceCompleteRate = 25;
-            dataVo.EffectivePerformanceYearOnYear = 20;
-            dataVo.EffectivePerformanceChainRatio = 20;
-            dataVo.EffectivePerformanceToDateSchedule = 0;
-            dataVo.EffectivePerformanceDeviation = 0;
-            dataVo.LaterCompleteEveryDayEffectivePerformance = 66.67m;
+            dataVo.EffectivePerformance = performance.EffectivePerformance;
+            dataVo.EffectivePerformanceProportion = performance.EffectivePerformanceProportion;
+            dataVo.EffectivePerformanceCompleteRate = performance.EffectivePerformanceCompleteRate;
+            dataVo.EffectivePerformanceYearOnYear = performance.EffectivePerformanceYearOnYear;
+            dataVo.EffectivePerformanceChainRatio = performance.EffectivePerformanceChainRatio;
+            dataVo.EffectivePerformanceToDateSchedule = performance.EffectivePerformanceToDateSchedule;
+            dataVo.EffectivePerformanceDeviation = performance.EffectivePerformanceDeviation;
+            dataVo.LaterCompleteEveryDayEffectivePerformance = performance.LaterCompleteEveryDayEffectivePerformance;
 
             #endregion
 
             #region 潜在业绩
 
-            dataVo.PotentialPerformance = 250;
-            dataVo.PotentialPerformanceProportion = 25;
-            dataVo.PotentialPerformanceCompleteRate = 25;
-            dataVo.PotentialPerformanceYearOnYear = 20;
-            dataVo.PotentialPerformanceChainRatio = 20;
-            dataVo.PotentialPerformanceToDateSchedule = 0;
-            dataVo.PotentialPerformanceDeviation = 0;
-            dataVo.LaterCompleteEveryDayPotentialPerformance = 66.67m;
+            dataVo.PotentialPerformance = performance.PotentialPerformance;
+            dataVo.PotentialPerformanceProportion = performance.PotentialPerformanceProportion;
+            dataVo.PotentialPerformanceCompleteRate = performance.PotentialPerformanceCompleteRate;
+            dataVo.PotentialPerformanceYearOnYear = performance.PotentialPerformanceYearOnYear;
+            dataVo.PotentialPerformanceChainRatio = performance.PotentialPerformanceChainRatio;
+            dataVo.PotentialPerformanceToDateSchedule = performance.PotentialPerformanceToDateSchedule;
+            dataVo.PotentialPerformanceDeviation = performance.PotentialPerformanceDeviation;
+            dataVo.LaterCompleteEveryDayPotentialPerformance = performance.LaterCompleteEveryDayPotentialPerformance;
 
             #endregion
 
             #region 当月派单业绩
 
-            dataVo.ThisMonthSendOrderPerformance = 250;
-            dataVo.ThisMonthSendOrderPerformanceProportion = 25;
-            dataVo.ThisMonthSendOrderPerformanceYearOnYear = 20;
-            dataVo.ThisMonthSendOrderPerformanceChainRatio = 20;
+            dataVo.ThisMonthSendOrderPerformance = performance.ThisMonthSendOrderPerformance;
+            dataVo.ThisMonthSendOrderPerformanceProportion = performance.ThisMonthSendOrderPerformanceProportion;
+            dataVo.ThisMonthSendOrderPerformanceYearOnYear = performance.ThisMonthSendOrderPerformanceYearOnYear;
+            dataVo.ThisMonthSendOrderPerformanceChainRatio = performance.ThisMonthSendOrderPerformanceChainRatio;
 
             #endregion
 
             #region 历史派单业绩
 
-            dataVo.HistorySendOrderPerformance = 250;
-            dataVo.HistorySendOrderPerformanceProportion = 25;
-            dataVo.HistorySendOrderPerformanceYearOnYear = 20;
-            dataVo.HistorySendOrderPerformanceChainRatio = 20;
+            dataVo.HistorySendOrderPerformance = performance.HistorySendOrderPerformance;
+            dataVo.HistorySendOrderPerformanceProportion = performance.HistorySendOrderPerformanceProportion;
+            dataVo.HistorySendOrderPerformanceYearOnYear = performance.HistorySendOrderPerformanceYearOnYear;
+            dataVo.HistorySendOrderPerformanceChainRatio = performance.HistorySendOrderPerformanceChainRatio;
 
             #endregion
 
             #region 抖音业绩
 
-            dataVo.TikTokPerformance = 250;
-            dataVo.TikTokPerformanceProportion = 25;
-            dataVo.TikTokPerformanceYearOnYear = 20;
-            dataVo.TikTokPerformanceChainRatio = 20;
+            dataVo.TikTokPerformance = performance.TikTokPerformance;
+            dataVo.TikTokPerformanceProportion = performance.TikTokPerformanceProportion;
+            dataVo.TikTokPerformanceYearOnYear = performance.TikTokPerformanceYearOnYear;
+            dataVo.TikTokPerformanceChainRatio = performance.TikTokPerformanceChainRatio;
 
             #endregion
 
             #region 视频号业绩
 
-            dataVo.VideoPerformance = 250;
-            dataVo.VideoPerformanceProportion = 25;
-            dataVo.VideoPerformanceYearOnYear = 20;
-            dataVo.VideoPerformanceChainRatio = 20;
+            dataVo.VideoPerformance = performance.VideoPerformance;
+            dataVo.VideoPerformanceProportion = performance.VideoPerformanceProportion;
+            dataVo.VideoPerformanceYearOnYear = performance.VideoPerformanceYearOnYear;
+            dataVo.VideoPerformanceChainRatio = performance.VideoPerformanceChainRatio;
 
             #endregion
 
             #region 主播视频业绩
 
-            dataVo.LiveAnchorVideoPerformance = 250;
-            dataVo.LiveAnchorVideoPerformanceProportion = 25;
-            dataVo.LiveAnchorVideoPerformanceYearOnYear = 20;
-            dataVo.LiveAnchorVideoPerformanceChainRatio = 20;
+            dataVo.LiveAnchorVideoPerformance = performance.LiveAnchorVideoPerformance;
+            dataVo.LiveAnchorVideoPerformanceProportion = performance.LiveAnchorVideoPerformanceProportion;
+            dataVo.LiveAnchorVideoPerformanceYearOnYear = performance.LiveAnchorVideoPerformanceYearOnYear;
+            dataVo.LiveAnchorVideoPerformanceChainRatio = performance.LiveAnchorVideoPerformanceChainRatio;
 
             #endregion
 
             #region 助理照片业绩
 
-            dataVo.AssistantPhotoPerformance = 250;
-            dataVo.AssistantPhotoPerformanceProportion = 25;
-            dataVo.AssistantPhotoPerformanceYearOnYear = 20;
-            dataVo.AssistantPhotoPerformanceChainRatio = 20;
+            dataVo.AssistantPhotoPerformance = performance.AssistantPhotoPerformance;
+            dataVo.AssistantPhotoPerformanceProportion = performance.AssistantPhotoPerformanceProportion;
+            dataVo.AssistantPhotoPerformanceYearOnYear = performance.AssistantPhotoPerformanceYearOnYear;
+            dataVo.AssistantPhotoPerformanceChainRatio = performance.AssistantPhotoPerformanceChainRatio;
 
             #endregion
 
             #region 主播接诊业绩
 
-            dataVo.LiveAnchorReceptionPerformance = 250;
-            dataVo.LiveAnchorReceptionPerformanceProportion = 25;
-            dataVo.LiveAnchorReceptionPerformanceYearOnYear = 20;
-            dataVo.LiveAnchorReceptionPerformanceChainRatio = 20;
+            dataVo.LiveAnchorReceptionPerformance = performance.LiveAnchorReceptionPerformance;
+            dataVo.LiveAnchorReceptionPerformanceProportion = performance.LiveAnchorReceptionPerformanceProportion;
+            dataVo.LiveAnchorReceptionPerformanceYearOnYear = performance.LiveAnchorReceptionPerformanceYearOnYear;
+            dataVo.LiveAnchorReceptionPerformanceChainRatio = performance.LiveAnchorReceptionPerformanceChainRatio;
 
             #endregion
 
             #region 非主播接诊业绩
 
-            dataVo.NoLiveAnchorReceptionPerformance = 250;
-            dataVo.NoLiveAnchorReceptionPerformanceProportion = 25;
-            dataVo.NoLiveAnchorReceptionPerformanceYearOnYear = 20;
-            dataVo.NoLiveAnchorReceptionPerformanceChainRatio = 20;
+            dataVo.NoLiveAnchorReceptionPerformance = performance.NoLiveAnchorReceptionPerformance;
+            dataVo.NoLiveAnchorReceptionPerformanceProportion = performance.NoLiveAnchorReceptionPerformanceProportion;
+            dataVo.NoLiveAnchorReceptionPerformanceYearOnYear = performance.NoLiveAnchorReceptionPerformanceYearOnYear;
+            dataVo.NoLiveAnchorReceptionPerformanceChainRatio = performance.NoLiveAnchorReceptionPerformanceChainRatio;
 
             #endregion
 
@@ -1492,9 +1492,23 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getAmiyaAchievementBrokenLineListData")]
-        public async Task<AmiyaAchievementBrokenLineListVo> GetAmiyaAchievementBrokenLineListDataAsync()
+        public async Task<ResultData<AmiyaAchievementBrokenLineListVo>> GetAmiyaAchievementBrokenLineListDataAsync([FromQuery] QueryAmiyaAchievementDataVo query)
         {
-            return null;
+            AmiyaAchievementBrokenLineListVo dataVo = new AmiyaAchievementBrokenLineListVo();
+            var brokenLineList =await amiyaPerformanceService.GetAmiyaAchievementBrokenLineListDataAsync(query.LiveAnchorBaseId,query.Year,query.Month);
+            dataVo.NewCustomerPerformanceBrokenLineList = brokenLineList.NewCustomerPerformanceBrokenLineList.Select(e=>new PerformanceBrokenLineListInfoVo { date=e.date,Performance=e.Performance}).ToList();
+            dataVo.OldCustomerPerformanceBrokenLineList = brokenLineList.OldCustomerPerformanceBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            dataVo.EffectivePerformanceBrokenLineList = brokenLineList.EffectivePerformanceBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            dataVo.PotentialPerformanceBrokenLineList = brokenLineList.PotentialPerformanceBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            dataVo.ThisMonthSendOrderPerformanceBrokenLineList = brokenLineList.ThisMonthSendOrderPerformanceBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            dataVo.HistorySendOrderPerformanceBrokenLineList = brokenLineList.HistorySendOrderPerformanceBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            dataVo.TikTokPerformanceBrokenLineList = brokenLineList.TikTokPerformanceBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            dataVo.VideoPerformanceBrokenLineList = brokenLineList.VideoPerformanceBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            dataVo.LiveAnchorVideoPerformanceBrokenLineList = brokenLineList.LiveAnchorVideoPerformanceBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            dataVo.AssistantPhotoPerformanceBrokenLineList = brokenLineList.AssistantPhotoPerformanceBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            dataVo.LiveAnchorReceptionPerformanceBrokenLineList = brokenLineList.LiveAnchorReceptionPerformanceBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            dataVo.NoLiveAnchorReceptionPerformanceBrokenLineList = brokenLineList.NoLiveAnchorReceptionPerformanceBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            return ResultData<AmiyaAchievementBrokenLineListVo>.Success().AddData("brokenLineListData", dataVo);
         }
         #endregion
 

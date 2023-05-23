@@ -74,20 +74,19 @@ namespace Fx.Amiya.Service
             {
                 throw new Exception("主播基础id为空！");
             }
-            var liveAnchors = from d in dalLiveAnchor.GetAll()
-                              where d.Valid == true
-                              && liveAnchorBaseIds.Contains(d.LiveAnchorBaseId)
-                              select new LiveAnchorDto
-                              {
-                                  Id = d.Id,
-                                  Name = d.Name,
-                                  HostAccountName = string.IsNullOrWhiteSpace(d.HostAccountName) ? "" : d.HostAccountName,
-                                  ContentPlateFormId = string.IsNullOrWhiteSpace(d.ContentPlateFormId) ? "" : d.ContentPlateFormId,
-                                  LiveAnchorBaseId = d.LiveAnchorBaseId,
-                                  Valid = d.Valid
-                              };
-            var resultList = await liveAnchors.ToListAsync();
-            return resultList;
+            return (from d in dalLiveAnchor.GetAll()
+                               where d.Valid == true
+                               && liveAnchorBaseIds.Contains(d.LiveAnchorBaseId)
+                               select new LiveAnchorDto
+                               {
+                                   Id = d.Id,
+                                   Name = d.Name,
+                                   HostAccountName = string.IsNullOrWhiteSpace(d.HostAccountName) ? "" : d.HostAccountName,
+                                   ContentPlateFormId = string.IsNullOrWhiteSpace(d.ContentPlateFormId) ? "" : d.ContentPlateFormId,
+                                   LiveAnchorBaseId = d.LiveAnchorBaseId,
+                                   Valid = d.Valid
+                               }).ToList();
+            
         }
 
         /// <summary>

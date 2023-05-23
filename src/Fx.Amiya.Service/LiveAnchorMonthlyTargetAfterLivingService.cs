@@ -691,6 +691,28 @@ namespace Fx.Amiya.Service
             };
             return performanceInfoDto;
         }
+        public async Task<LiveAnchorMonthTargetPerformanceDto> GetPerformanceTargetAsync(int year, int month, List<int> liveAnchorIds)
+        {
+            var performance = dalLiveAnchorMonthlyTargetAfterLiving.GetAll().Where(t => t.Year == year && t.Month==0? true: t.Month== month)
+                .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.LiveAnchorId))
+                .Select(e=>new { 
+                    PerformanceTarget=e.PerformanceTarget, 
+                    EffectivePerformanceTarget = e.EffectivePerformanceTarget, 
+                    PotentialPerformanceTarget = e.PotentialPerformanceTarget,
+                    OldCustomerPerformanceTarget = e.OldCustomerPerformanceTarget,
+                    NewCustomerPerformanceTarget = e.NewCustomerPerformanceTarget
+                })
+                .ToList();
+            LiveAnchorMonthTargetPerformanceDto performanceInfoDto = new LiveAnchorMonthTargetPerformanceDto
+            {
+                TotalPerformanceTarget =performance.Sum(t => t.PerformanceTarget),
+                OldCustomerPerformanceTarget=performance.Sum(t=>t.OldCustomerPerformanceTarget),
+                NewCustomerPerformanceTarget=performance.Sum(t=>t.NewCustomerPerformanceTarget),
+                EffectivePerformance = performance.Sum(t => t.EffectivePerformanceTarget),
+                PotentialPerformance = performance.Sum(t => t.PotentialPerformanceTarget),
+            };
+            return performanceInfoDto;
+        }
 
 
         /// <summary>

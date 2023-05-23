@@ -286,5 +286,33 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<DetailCustomerPerformanceBWDto> GetCustomerServicePerformanceDetails(int year, int month, int customerServiceId);
         #endregion
+        #region 业绩看板
+        /// <summary>
+        /// 业绩看板获取总业绩
+        /// </summary>
+        /// <param name="baseLiveanchorId">基础主播id(传空查所有)</param>
+        /// <param name="year">年</param>
+        /// <param name="month">月</param>
+        /// <param name="day">日</param>
+        /// <returns></returns>
+        Task<AmiyaAchievementDataDto> GetTotalAndLiveanchorPerformanceAsync(string baseLiveanchorId, int year, int month, int day);
+        /// <summary>
+        /// 业绩看板获取业绩详情
+        /// </summary>
+        /// <param name="baseLiveanchorId"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="day"></param>
+        /// <returns></returns>
+        Task<AmiyaAchievementDetailDataDto> GetDetailPerformanceAsync(string baseLiveanchorId, int year, int month, int day);
+        /// <summary>
+        /// 获取业绩看板折线图
+        /// </summary>
+        /// <param name="baseLiveanchorId"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        Task<AmiyaAchievementBrokenLineListDto> GetAmiyaAchievementBrokenLineListDataAsync(string baseLiveanchorId, int year, int month);
+        #endregion
     }
 }

@@ -19,6 +19,10 @@ namespace Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Input
         /// </summary>
         public int Month { get; set; }
         /// <summary>
+        /// 日
+        /// </summary>
+        public int Day { get; set; }
+        /// <summary>
         /// 主播基础id（不传查询所有业绩）
         /// </summary>
         public string LiveAnchorBaseId { get; set; }

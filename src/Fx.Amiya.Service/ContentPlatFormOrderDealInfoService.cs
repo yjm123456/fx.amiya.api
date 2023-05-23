@@ -1923,7 +1923,7 @@ namespace Fx.Amiya.Service
                          && (d.CheckState == (int)CheckType.NotChecked)
                          && (d.IsDeal == true)
                          && (!hospitalId.HasValue || d.LastDealHospitalId == hospitalId)
-                         && (d.LastDealHospitalId.HasValue == true)
+                         && (d.LastDealHospitalId.HasValue == true&&d.LastDealHospitalId!=0)
                          && (d.Price > 0)
                          && (!hospitalId.HasValue || d.LastDealHospitalId.Value == hospitalId)
                          select d;
@@ -2063,6 +2063,43 @@ namespace Fx.Amiya.Service
 
         #endregion
 
+        #region 系统端新业绩看板
+
+        public async Task<List<PerformanceDto>> GetPerformanceByDateAndLiveAnchorIdsAsync(DateTime startDate, DateTime endDate, List<int> LiveAnchorIds)
+        {
+            return await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
+                .Where(o => o.CreateDate >= startDate && o.CreateDate < endDate && o.IsDeal == true)
+                .Where(o => LiveAnchorIds.Count == 0 || LiveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id))
+                .Select(ContentPlatFOrmOrderDealInfo => new PerformanceDto
+                {
+                    Price = ContentPlatFOrmOrderDealInfo.Price,
+                    LiveAnchorId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchorId,
+                    ToHospitalType = ContentPlatFOrmOrderDealInfo.ToHospitalType
+                }
+                ).ToListAsync();
+        }
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceDetailByDateAsync(DateTime startDate, DateTime endDate, List<int> LiveAnchorIds)
+        {
+            return dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
+                .Where(o => o.CreateDate >= startDate && o.CreateDate < endDate && o.IsDeal == true)
+                .Where(o => LiveAnchorIds.Count == 0 || LiveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id))
+                .Select(ContentPlatFOrmOrderDealInfo => new ContentPlatFormOrderDealInfoDto
+                {
+                    Id = ContentPlatFOrmOrderDealInfo.Id,
+                    Price = ContentPlatFOrmOrderDealInfo.Price,
+                    IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,
+                    ConsultationType = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ConsultationType,
+                    IsAcompanying = ContentPlatFOrmOrderDealInfo.IsAcompanying,
+                    AddOrderPrice = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.AddOrderPrice,
+                    ContentPlatFormId= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ContentPlateformId,
+                    SendDate= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SendDate,
+                    CreateDate= ContentPlatFOrmOrderDealInfo.CreateDate
+                }
+                ).ToList();
+        }
+       
+        #endregion
+
         #region 【枚举下拉框】
 
         public List<BaseIdAndNameDto> GetOrderDealPerformanceTypeList()
@@ -2082,6 +2119,8 @@ namespace Fx.Amiya.Service
             }
             return orderTypeList;
         }
+
+        
 
 
 
