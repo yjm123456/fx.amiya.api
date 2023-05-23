@@ -1354,6 +1354,11 @@ namespace Fx.Amiya.Background.Api.Controllers
             #endregion
             return ResultData<AmiyaAchievementDataVo>.Success().AddData("achievementdata", dataVo); ;
         }
+        /// <summary>
+        /// 获取业绩详情
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         [HttpGet("amiyaAchievementDetailData")]
         public async Task<ResultData<AmiyaAchievementDetailDataVo>> GetAmiyaAchievementDetailedDataAsync([FromQuery] QueryAmiyaAchievementDataVo query)
         {

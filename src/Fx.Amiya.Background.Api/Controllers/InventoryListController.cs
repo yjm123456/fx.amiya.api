@@ -141,9 +141,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 operationAddDto.Message = err.Message.ToString();
                 throw new Exception(err.Message.ToString());
             }
-            finally
+            
+
+
             {
-                operationAddDto.Message = "";
+                
                 operationAddDto.Parameters = JsonConvert.SerializeObject(query);
                 operationAddDto.RequestType = (int)RequestType.Export;
                 operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;

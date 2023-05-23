@@ -2082,8 +2082,8 @@ namespace Fx.Amiya.Service
             {
 
                 var liveAnchorList = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync(new List<string> { "dd", "jn" });
-                var daodaoLiveanchorIds = liveAnchorList.Select(e => e.Id).ToList();
-                var jinaLiveanchorIds = liveAnchorList.Select(e => e.Id).ToList();
+                var daodaoLiveanchorIds = liveAnchorList.Where(e=>e.LiveAnchorBaseId=="dd").Select(e => e.Id).ToList();
+                var jinaLiveanchorIds = liveAnchorList.Where(e => e.LiveAnchorBaseId == "jn").Select(e => e.Id).ToList();
                 var daodaoTarget = await liveAnchorMonthlyTargetAfterLivingService.GetPerformance(year, month, daodaoLiveanchorIds);
                 var jinaTarget = await liveAnchorMonthlyTargetAfterLivingService.GetPerformance(year, month, jinaLiveanchorIds);
 
@@ -2409,7 +2409,7 @@ namespace Fx.Amiya.Service
                         NoLiveAnchorReceptionPerformance = x.Where(e => e.IsAcompanying == false).Sum(e => e.Price),
                     }).ToList();
             }
-            amiyaAchievementDetailDataDto.NewCustomerPerformanceBrokenLineList = this.FillDate(type,year,month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.NewCustomerPerformance }).ToList();
+            amiyaAchievementDetailDataDto.NewCustomerPerformanceBrokenLineList = this.FillDate(type,year,month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.NewCustomerPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
             amiyaAchievementDetailDataDto.OldCustomerPerformanceBrokenLineList = this.FillDate(type, year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.OldCustomerPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
             amiyaAchievementDetailDataDto.EffectivePerformanceBrokenLineList = this.FillDate(type, year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.EffectivePerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
             amiyaAchievementDetailDataDto.PotentialPerformanceBrokenLineList = this.FillDate(type, year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.PotentialPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();

@@ -213,7 +213,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationAddDto.Message = "";
+                
                 operationAddDto.Parameters = JsonConvert.SerializeObject(query);
                 operationAddDto.RequestType = (int)RequestType.Export;
                 operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -297,7 +297,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationAddDto.Message = "";
+                
                 operationAddDto.Parameters = JsonConvert.SerializeObject(query);
                 operationAddDto.RequestType = (int)RequestType.Export;
                 operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -383,7 +383,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationAddDto.Message = "";
+                
                 operationAddDto.Parameters = JsonConvert.SerializeObject(query);
                 operationAddDto.RequestType = (int)RequestType.Export;
                 operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -491,7 +491,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationAddDto.Message = "";
+                
                 operationAddDto.Parameters = JsonConvert.SerializeObject(query);
                 operationAddDto.RequestType = (int)RequestType.Export;
                 operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -624,7 +624,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationAddDto.Message = "";
+                
                 operationAddDto.Parameters = JsonConvert.SerializeObject(query);
                 operationAddDto.RequestType = (int)RequestType.Export;
                 operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -775,7 +775,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationLog.Message = "";
+                
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -865,7 +865,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationLog.Message = "";
+                
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -945,7 +945,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationLog.Message = "";
+                
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1033,7 +1033,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationLog.Message = "";
+                
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1111,7 +1111,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationLog.Message = "";
+                
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1220,7 +1220,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationLog.Message = "";
+                
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1318,7 +1318,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationLog.Message = "";
+                
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1447,7 +1447,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationLog.Message = "";
+                
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1565,7 +1565,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationLog.Message = "";
+                
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1686,7 +1686,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationLog.Message = "";
+                
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1802,7 +1802,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationLog.Message = "";
+                
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1904,7 +1904,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationLog.Message = "";
+                
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -2042,7 +2042,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationLog.Message = "";
+                
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -2381,7 +2381,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationLog.Message = "";
+                
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;

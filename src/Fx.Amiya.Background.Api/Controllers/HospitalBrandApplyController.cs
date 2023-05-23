@@ -289,7 +289,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             finally
             {
                 
-                operationAddDto.Message = "";
+                
                 operationAddDto.Parameters = keyWord;
                 operationAddDto.RequestType = (int)RequestType.Export;
                 operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
