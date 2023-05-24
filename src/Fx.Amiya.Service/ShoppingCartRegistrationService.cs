@@ -929,13 +929,10 @@ namespace Fx.Amiya.Service
         /// <param name="isEffectiveCustomerData"></param>
         /// <param name="contentPlatFormId"></param>
         /// <returns></returns>
-        public async Task<List<ShoppingCartRegistrationDto>> GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(DateTime startDate,DateTime endDate, bool isEffectiveCustomerData, string contentPlatFormId)
+        public async Task<List<ShoppingCartRegistrationDto>> GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(DateTime startDate, DateTime endDate, bool isEffectiveCustomerData, string contentPlatFormId)
         {
-            var contentPlatForm = await _contentPlatformService.GetValidListAsync();
-            var comtentPlatFormId = contentPlatForm.Where(x => x.ContentPlatformName == "抖音").Select(x => x.Id).FirstOrDefault();
             var result = from d in dalShoppingCartRegistration.GetAll()
-                .Where(o => o.ContentPlatFormId == comtentPlatFormId)
-                .Where(o => o.ContentPlatFormId == contentPlatFormId)
+                .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlatFormId == contentPlatFormId)
                 .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate)
                          select d;
 
