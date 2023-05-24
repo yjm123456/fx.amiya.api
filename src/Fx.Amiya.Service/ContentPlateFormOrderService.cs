@@ -1877,7 +1877,7 @@ namespace Fx.Amiya.Service
                 addRecommandDocumentSettleDto.DealInfoId = input.OrderDealInfoId;
                 addRecommandDocumentSettleDto.OrderFrom = (int)OrderFrom.ContentPlatFormOrder;
                 addRecommandDocumentSettleDto.ReturnBackPrice = input.SettlePrice;
-                addRecommandDocumentSettleDto.CustomerServiceSettlePrice = input.CustomerServiceSettlePrice;
+                addRecommandDocumentSettleDto.CustomerServiceSettlePrice = input.CustomerServiceSettlePrice.HasValue ? input.CustomerServiceSettlePrice.Value : 0.00M;
                 addRecommandDocumentSettleDto.BelongLiveAnchorAccount = order.LiveAnchorId;
                 addRecommandDocumentSettleDto.BelongEmpId = order.BelongEmpId;
                 addRecommandDocumentSettleDto.CreateEmpId = dealInfoUpdate.CreateBy;
