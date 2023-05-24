@@ -1531,25 +1531,25 @@ namespace Fx.Amiya.Background.Api.Controllers
             var performance = await amiyaPerformanceService.GetPerformanceOperationDataAsync(query.Year.Value, query.Month.Value, query.ContentPlatFormId, query.IsEffectiveCustomerData);
             AmiyaOperationDataVo performanceVo = new AmiyaOperationDataVo();
             NewCustomerOperationDataVo newCustomerOperationDataVo = new NewCustomerOperationDataVo();
-            newCustomerOperationDataVo.RefundCardRate = performance.NewCustomerData.RefundCardRate;
+            newCustomerOperationDataVo.RefundCardRate = performance.NewCustomerData.RefundCardRate.HasValue? performance.NewCustomerData.RefundCardRate.Value:0.00M;
             newCustomerOperationDataVo.RefundCardRateHealthValueSum = performance.NewCustomerData.RefundCardRateHealthValueSum;
             newCustomerOperationDataVo.RefundCardRateHealthValueThisMonth = performance.NewCustomerData.RefundCardRateHealthValueThisMonth;
-            newCustomerOperationDataVo.AddWeChatRate = performance.NewCustomerData.AddWeChatRate;
+            newCustomerOperationDataVo.AddWeChatRate = performance.NewCustomerData.AddWeChatRate.HasValue? performance.NewCustomerData.AddWeChatRate.Value:0.00M;
             newCustomerOperationDataVo.AddWeChatRateHealthValueSum = performance.NewCustomerData.AddWeChatRateHealthValueSum;
             newCustomerOperationDataVo.AddWeChatRateHealthValueThisMonth = performance.NewCustomerData.AddWeChatRateHealthValueThisMonth;
-            newCustomerOperationDataVo.SendOrderRate = performance.NewCustomerData.SendOrderRate;
+            newCustomerOperationDataVo.SendOrderRate = performance.NewCustomerData.SendOrderRate.HasValue? performance.NewCustomerData.SendOrderRate.Value:0.00M;
             newCustomerOperationDataVo.SendOrderRateHealthValueSum = performance.NewCustomerData.SendOrderRateHealthValueSum;
             newCustomerOperationDataVo.SendOrderRateHealthValueThisMonth = performance.NewCustomerData.SendOrderRateHealthValueThisMonth;
-            newCustomerOperationDataVo.ToHospitalRate = performance.NewCustomerData.ToHospitalRate;
+            newCustomerOperationDataVo.ToHospitalRate = performance.NewCustomerData.ToHospitalRate.HasValue? performance.NewCustomerData.ToHospitalRate.Value:0.00M;
             newCustomerOperationDataVo.ToHospitalRateHealthValueSum = performance.NewCustomerData.ToHospitalRateHealthValueSum;
             newCustomerOperationDataVo.ToHospitalRateHealthValueThisMonth = performance.NewCustomerData.ToHospitalRateHealthValueThisMonth;
-            newCustomerOperationDataVo.DealRate = performance.NewCustomerData.DealRate;
+            newCustomerOperationDataVo.DealRate = performance.NewCustomerData.DealRate.HasValue? performance.NewCustomerData.DealRate.Value:0.00M;
             newCustomerOperationDataVo.DealRateHealthValueSum = performance.NewCustomerData.DealRateHealthValueSum;
             newCustomerOperationDataVo.DealRateHealthValueThisMonth = performance.NewCustomerData.DealRateHealthValueThisMonth;
-            newCustomerOperationDataVo.AllocationConsulationToDealRate = performance.NewCustomerData.AllocationConsulationToDealRate;
-            newCustomerOperationDataVo.AllocationConsulationToDealPrice = performance.NewCustomerData.AllocationConsulationToDealPrice;
-            newCustomerOperationDataVo.SendOrderToDealRate = performance.NewCustomerData.SendOrderToDealRate;
-            newCustomerOperationDataVo.SendOrderToDealPrice = performance.NewCustomerData.SendOrderToDealPrice;
+            newCustomerOperationDataVo.AllocationConsulationToDealRate = performance.NewCustomerData.AllocationConsulationToDealRate.HasValue? performance.NewCustomerData.AllocationConsulationToDealRate.Value:0.00M;
+            newCustomerOperationDataVo.AllocationConsulationToDealPrice = performance.NewCustomerData.AllocationConsulationToDealPrice.HasValue ? performance.NewCustomerData.AllocationConsulationToDealPrice.Value : 0.00M;
+            newCustomerOperationDataVo.SendOrderToDealRate = performance.NewCustomerData.SendOrderToDealRate.HasValue ? performance.NewCustomerData.SendOrderToDealRate.Value : 0.00M;
+            newCustomerOperationDataVo.SendOrderToDealPrice = performance.NewCustomerData.SendOrderToDealPrice.HasValue ? performance.NewCustomerData.SendOrderToDealPrice.Value : 0.00M;
             newCustomerOperationDataVo.newCustomerOperationDataDetails = new List<Vo.Performance.AmiyaPerformance2.Result.NewCustomerOperationDataDetails>();
             foreach (var x in performance.NewCustomerData.newCustomerOperationDataDetails)
             {
@@ -1557,9 +1557,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 newCustomerOperationDataDetails.Key = x.Key;
                 newCustomerOperationDataDetails.Name = x.Name;
                 newCustomerOperationDataDetails.Value = x.Value;
-                newCustomerOperationDataDetails.YearToYearValue = x.YearToYearValue;
-                newCustomerOperationDataDetails.ChainRatioValue = x.ChainRatioValue;
-                newCustomerOperationDataDetails.TargetCompleteRate = x.TargetCompleteRate;
+                newCustomerOperationDataDetails.YearToYearValue = x.YearToYearValue.HasValue? x.YearToYearValue.Value:0.00M;
+                newCustomerOperationDataDetails.ChainRatioValue = x.ChainRatioValue.HasValue ? x.ChainRatioValue.Value : 0.00M;
+                newCustomerOperationDataDetails.TargetCompleteRate = x.TargetCompleteRate.HasValue ? x.TargetCompleteRate.Value : 0.00M;
                 newCustomerOperationDataVo.newCustomerOperationDataDetails.Add(newCustomerOperationDataDetails);
             }
 
