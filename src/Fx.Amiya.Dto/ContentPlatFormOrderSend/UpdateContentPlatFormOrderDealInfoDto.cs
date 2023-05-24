@@ -114,7 +114,7 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 审核客服结算金额
         /// </summary>
 
-        public decimal CustomerServiceSettlePrice { get; set; }
+        public decimal? CustomerServiceSettlePrice { get; set; }
 
         /// <summary>
         /// 审核人

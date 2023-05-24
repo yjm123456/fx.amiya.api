@@ -35,7 +35,7 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 审核客服结算金额
         /// </summary>
 
-        public decimal CustomerServiceSettlePrice { get; set; }
+        public decimal? CustomerServiceSettlePrice { get; set; }
 
         /// <summary>
         /// 信息服务费
