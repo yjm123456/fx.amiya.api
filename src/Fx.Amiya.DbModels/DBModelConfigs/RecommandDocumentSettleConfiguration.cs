@@ -23,6 +23,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.OrderPrice).HasColumnName("order_price").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.RecolicationPrice).HasColumnName("recolication_price").HasColumnType("decimal(12,2)").IsRequired(false);
             builder.Property(e => e.IsOldCustomer).HasColumnName("is_oldcustomer").HasColumnType("bit").IsRequired();
+            builder.Property(e => e.CustomerServiceSettlePrice).HasColumnName("customer_service_settle_price").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.ReturnBackPrice).HasColumnName("return_back_price").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.Property(e => e.SettleDate).HasColumnName("settle_date").HasColumnType("datetime").IsRequired(false);

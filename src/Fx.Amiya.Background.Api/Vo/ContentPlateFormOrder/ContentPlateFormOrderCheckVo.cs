@@ -45,6 +45,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
 
         public decimal SettlePrice { get; set; }
         /// <summary>
+        /// 审核客服业绩金额
+        /// </summary>
+
+        public decimal CustomerServiceSettlePrice { get; set; }
+        /// <summary>
         /// 审核信息
         /// </summary>
         public string CheckRemark { get; set; }

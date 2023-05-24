@@ -113,6 +113,11 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public decimal? SystemUpdatePrice { get; set; }
         public decimal? SettlePrice { get; set; }
+        /// <summary>
+        /// 审核客服结算金额
+        /// </summary>
+
+        public decimal CustomerServiceSettlePrice { get; set; }
         public int? CheckBy { get; set; }
         public string CheckRemark { get; set; }
 

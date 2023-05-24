@@ -110,6 +110,11 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// </summary>
 
         public decimal? SettlePrice { get; set; }
+        /// <summary>
+        /// 审核客服结算金额
+        /// </summary>
+
+        public decimal CustomerServiceSettlePrice { get; set; }
 
         /// <summary>
         /// 审核人

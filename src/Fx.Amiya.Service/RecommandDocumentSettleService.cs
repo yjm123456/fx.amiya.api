@@ -100,6 +100,7 @@ namespace Fx.Amiya.Service
             recommandDocumentSettle.IsOldCustomer = addRecommandDocumentSettleDto.IsOldCustomer;
             recommandDocumentSettle.DealInfoId = addRecommandDocumentSettleDto.DealInfoId;
             recommandDocumentSettle.ReturnBackPrice = addRecommandDocumentSettleDto.ReturnBackPrice;
+            recommandDocumentSettle.CustomerServiceSettlePrice = addRecommandDocumentSettleDto.CustomerServiceSettlePrice;
             recommandDocumentSettle.CreateDate = DateTime.Now;
             recommandDocumentSettle.CreateEmpId = addRecommandDocumentSettleDto.CreateEmpId;
             recommandDocumentSettle.IsSettle = false;

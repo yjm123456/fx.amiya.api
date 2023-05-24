@@ -955,6 +955,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.CheckPrice = updateVo.CheckPrice;
             updateDto.CheckState = updateVo.CheckState;
             updateDto.SettlePrice = updateVo.SettlePrice;
+            updateDto.CustomerServiceSettlePrice = updateVo.CustomerServiceSettlePrice;
             updateDto.employeeId = employeeId;
             updateDto.CheckRemark = updateVo.CheckRemark;
             updateDto.SystemUpdatePrice = updateVo.SystemUpdatePrice;

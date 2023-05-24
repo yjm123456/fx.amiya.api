@@ -27,6 +27,11 @@ namespace Fx.Amiya.DbModels.Model
         /// 服务费合计
         /// </summary>
         public decimal ReturnBackPrice { get; set; }
+        /// <summary>
+        /// 审核客服结算金额
+        /// </summary>
+
+        public decimal CustomerServiceSettlePrice { get; set; }
         public DateTime CreateDate { get; set; }
         public bool IsSettle { get; set; }
         public DateTime? SettleDate { get; set; }

@@ -58,6 +58,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.CheckPrice).HasColumnName("check_price").HasColumnType("DECIMAL").IsRequired(false);
             builder.Property(e => e.CheckDate).HasColumnName("check_date").HasColumnType("DATETIME").IsRequired(false);
             builder.Property(e => e.SettlePrice).HasColumnName("settle_price").HasColumnType("DECIMAL").IsRequired(false);
+            builder.Property(e => e.CustomerServiceSettlePrice).HasColumnName("customer_service_settle_price").HasColumnType("DECIMAL").IsRequired(false);
             builder.Property(e => e.CheckBy).HasColumnName("check_by").HasColumnType("int").IsRequired(false);
             builder.Property(e => e.CheckRemark).HasColumnName("check_remark").HasColumnType("VARCHAR(300)").IsRequired(false);
             builder.Property(e => e.BelongEmpId).HasColumnName("belong_emp_id").HasColumnType("int").IsRequired(false);

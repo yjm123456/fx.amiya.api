@@ -21,6 +21,11 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         public bool IsOldCustomer { get; set; }
         public decimal ReturnBackPrice { get; set; }
         /// <summary>
+        /// 审核客服结算金额
+        /// </summary>
+
+        public decimal CustomerServiceSettlePrice { get; set; }
+        /// <summary>
         /// 业绩上传人员
         /// </summary>
         public int? CreateEmpId { get; set; }

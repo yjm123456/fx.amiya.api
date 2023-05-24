@@ -1778,6 +1778,7 @@ namespace Fx.Amiya.Service
                 order.CheckBy = input.employeeId;
                 order.CheckPrice += input.CheckPrice;
                 order.SettlePrice += input.SettlePrice;
+                order.CustomerServiceSettlePrice += input.CustomerServiceSettlePrice;
                 order.CheckRemark = input.CheckRemark;
                 order.CheckDate = DateTime.Now;
                 await _dalContentPlatformOrder.UpdateAsync(order, true);
@@ -1807,6 +1808,7 @@ namespace Fx.Amiya.Service
                         dealInfoCheck.CheckState = (int)CheckType.CheckedSuccess;
                         dealInfoCheck.CheckPrice = input.CheckPrice;
                         dealInfoCheck.SettlePrice = input.SettlePrice;
+                        dealInfoCheck.CustomerServiceSettlePrice = input.CustomerServiceSettlePrice;
                     }
                     else
                     {
@@ -1815,6 +1817,7 @@ namespace Fx.Amiya.Service
                             dealInfoCheck.CheckState = (int)CheckType.CheckedSuccess;
                             dealInfoCheck.CheckPrice = dealInfoUpdate.Price;
                             dealInfoCheck.SettlePrice = input.SettlePrice + dealInfoUpdate.SettlePrice;
+                            dealInfoCheck.CustomerServiceSettlePrice = input.CustomerServiceSettlePrice + dealInfoUpdate.CustomerServiceSettlePrice;
                         }
                         else
                         {
@@ -1830,10 +1833,12 @@ namespace Fx.Amiya.Service
                             if (dealInfoUpdate.SettlePrice.HasValue)
                             {
                                 dealInfoCheck.SettlePrice = input.SettlePrice + dealInfoUpdate.SettlePrice;
+                                dealInfoCheck.CustomerServiceSettlePrice = input.CustomerServiceSettlePrice + dealInfoUpdate.CustomerServiceSettlePrice;
                             }
                             else
                             {
                                 dealInfoCheck.SettlePrice = input.SettlePrice;
+                                dealInfoCheck.CustomerServiceSettlePrice = input.CustomerServiceSettlePrice;
                             }
                         }
                     }
@@ -1843,6 +1848,7 @@ namespace Fx.Amiya.Service
                     dealInfoCheck.CheckState = (int)CheckType.CheckNotPassed;
                     dealInfoCheck.CheckPrice = 0.00M;
                     dealInfoCheck.SettlePrice = 0.00M;
+                    dealInfoCheck.CustomerServiceSettlePrice = 0.00M;
                 }
                 if (dealInfoUpdate.InformationPrice.HasValue)
                 {
@@ -1871,6 +1877,7 @@ namespace Fx.Amiya.Service
                 addRecommandDocumentSettleDto.DealInfoId = input.OrderDealInfoId;
                 addRecommandDocumentSettleDto.OrderFrom = (int)OrderFrom.ContentPlatFormOrder;
                 addRecommandDocumentSettleDto.ReturnBackPrice = input.SettlePrice;
+                addRecommandDocumentSettleDto.CustomerServiceSettlePrice = input.CustomerServiceSettlePrice;
                 addRecommandDocumentSettleDto.BelongLiveAnchorAccount = order.LiveAnchorId;
                 addRecommandDocumentSettleDto.BelongEmpId = order.BelongEmpId;
                 addRecommandDocumentSettleDto.CreateEmpId = dealInfoUpdate.CreateBy;
@@ -3288,7 +3295,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAsync(DateTime startDate, DateTime endDate)
         {
-            var sendCount =await dalContentPlatformOrderSend.GetAll()
+            var sendCount = await dalContentPlatformOrderSend.GetAll()
                 .Include(e => e.ContentPlatformOrder)
                 .ThenInclude(e => e.ContentPlatformOrderDealInfoList)
                 .Where(e => e.SendDate >= startDate && e.SendDate < endDate && e.ContentPlatformOrder.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.ContentPlatformOrder.IsOldCustomer == false)
@@ -3323,7 +3330,7 @@ namespace Fx.Amiya.Service
         public async Task<OldCustomerDealNumDto> GetOldCustomerBuyAgainByMonthAsync(DateTime date)
         {
             DateTime startDate = Convert.ToDateTime("2000-01-01");
-            var dealDate =await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList)
+            var dealDate = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList)
                 .Where(e => e.IsToHospital == true && e.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete && e.DealDate.Value >= startDate && e.DealDate.Value < date).ToListAsync();
             OldCustomerDealNumDto orderData = new OldCustomerDealNumDto();
             orderData.TotalDealCustomer = dealDate

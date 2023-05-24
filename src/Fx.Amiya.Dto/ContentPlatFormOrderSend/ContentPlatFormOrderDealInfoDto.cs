@@ -183,6 +183,11 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
 
         public decimal? SettlePrice { get; set; }
         /// <summary>
+        /// 审核客服结算金额
+        /// </summary>
+
+        public decimal CustomerServiceSettlePrice { get; set; }
+        /// <summary>
         /// 审核人
         /// </summary>
         public int? CheckBy { get; set; }

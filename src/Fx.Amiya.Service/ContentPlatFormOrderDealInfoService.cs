@@ -1029,6 +1029,7 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.CheckPrice = updateDto.CheckPrice;
                 ContentPlatFOrmOrderDealInfo.CheckRemark = updateDto.CheckRemark;
                 ContentPlatFOrmOrderDealInfo.CheckState = updateDto.CheckState;
+                ContentPlatFOrmOrderDealInfo.CustomerServiceSettlePrice = updateDto.CustomerServiceSettlePrice;
                 ContentPlatFOrmOrderDealInfo.SettlePrice = updateDto.SettlePrice;
                 ContentPlatFOrmOrderDealInfo.InformationPrice = updateDto.InformationPrice;
                 ContentPlatFOrmOrderDealInfo.SystemUpdatePrice = updateDto.SystemUpdatePrice;
