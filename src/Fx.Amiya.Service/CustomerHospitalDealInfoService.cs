@@ -39,31 +39,31 @@ namespace Fx.Amiya.Service
             try
             {
                 var customerHospitalDealInfoService = from d in dalCustomerHospitalDealInfo.GetAll().Include(x => x.HospitalInfoData).Include(x => x.CustomerHospitalDealDetailsList)
-                                                         where (query.KeyWord == null || d.CustomerPhone.Contains(query.KeyWord) || d.CustomerName.Contains(query.KeyWord) || d.MsgId.Contains(query.KeyWord))
-                                                         && (!query.Type.HasValue || d.Type == query.Type.Value)
-                                                         && (!query.ConsumptionType.HasValue || d.ConsumptionType == query.ConsumptionType.Value)
-                                                         && (!query.HospitalId.HasValue || d.HospitalId == query.HospitalId.Value)
-                                                         && (!query.RefundType.HasValue || d.RefundType == query.RefundType.Value)
-                                                         && (!query.StartDate.HasValue || d.CreateDate >= query.StartDate.Value)
-                                                         && (!query.EndDate.HasValue || d.CreateDate <= query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
-                                                         select new CustomerHospitalDealInfoDto
-                                                         {
-                                                             Id = d.Id,
-                                                             HospitalId = d.HospitalId,
-                                                             HospitalName = d.HospitalInfoData.Name,
-                                                             Type = d.Type,
-                                                             TypeText = ServiceClass.GetHospitalDealTypeText(d.Type),
-                                                             CustomerName = d.CustomerName,
-                                                             CustomerPhone = d.CustomerPhone,
-                                                             Date = d.Date,
-                                                             TotalCashAmount = d.TotalCashAmount,
-                                                             ConsumptionType = d.ConsumptionType,
-                                                             ConsumptionTypeText = ServiceClass.GetHospitalConsumptionTypeText(d.ConsumptionType),
-                                                             RefundType = d.RefundType,
-                                                             RefundTypeText = ServiceClass.GetHospitalRefundTypeText(d.RefundType),
-                                                             MsgId = d.MsgId,
-                                                             CreateDate = d.CreateDate,
-                                                         };
+                                                      where (query.KeyWord == null || d.CustomerPhone.Contains(query.KeyWord) || d.CustomerName.Contains(query.KeyWord) || d.MsgId.Contains(query.KeyWord))
+                                                      && (!query.Type.HasValue || d.Type == query.Type.Value)
+                                                      && (!query.ConsumptionType.HasValue || d.ConsumptionType == query.ConsumptionType.Value)
+                                                      && (!query.HospitalId.HasValue || d.HospitalId == query.HospitalId.Value)
+                                                      && (!query.RefundType.HasValue || d.RefundType == query.RefundType.Value)
+                                                      && (!query.StartDate.HasValue || d.CreateDate >= query.StartDate.Value)
+                                                      && (!query.EndDate.HasValue || d.CreateDate <= query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
+                                                      select new CustomerHospitalDealInfoDto
+                                                      {
+                                                          Id = d.Id,
+                                                          HospitalId = d.HospitalId,
+                                                          HospitalName = d.HospitalInfoData.Name,
+                                                          Type = d.Type,
+                                                          TypeText = ServiceClass.GetHospitalDealTypeText(d.Type),
+                                                          CustomerName = d.CustomerName,
+                                                          CustomerPhone = d.CustomerPhone,
+                                                          Date = d.Date,
+                                                          TotalCashAmount = d.TotalCashAmount,
+                                                          ConsumptionType = d.ConsumptionType,
+                                                          ConsumptionTypeText = d.Type == 0 ? d.ConsumptionType.HasValue ? ServiceClass.GetHospitalConsumptionTypeText(d.ConsumptionType.Value) : "" : "",
+                                                          RefundType = d.RefundType,
+                                                          RefundTypeText = d.Type == 1 ? d.RefundType.HasValue ? ServiceClass.GetHospitalRefundTypeText(d.RefundType.Value) : "" : "",
+                                                          MsgId = d.MsgId,
+                                                          CreateDate = d.CreateDate,
+                                                      };
                 FxPageInfo<CustomerHospitalDealInfoDto> customerHospitalDealInfoServicePageInfo = new FxPageInfo<CustomerHospitalDealInfoDto>();
                 customerHospitalDealInfoServicePageInfo.TotalCount = await customerHospitalDealInfoService.CountAsync();
                 customerHospitalDealInfoServicePageInfo.List = new List<CustomerHospitalDealInfoDto>();

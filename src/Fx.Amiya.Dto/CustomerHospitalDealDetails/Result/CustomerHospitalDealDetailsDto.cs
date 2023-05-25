@@ -24,11 +24,11 @@ namespace Fx.Amiya.Dto.CustomerHospitalDealDetails.Result
         /// <summary>
         /// 数量
         /// </summary>
-        public decimal Quantity { get; set; }
+        public decimal? Quantity { get; set; }
         /// <summary>
         /// 金额
         /// </summary>
-        public decimal CashAmount { get; set; }
+        public decimal? CashAmount { get; set; }
 
         public DateTime CreateDate { get; set; }
     }

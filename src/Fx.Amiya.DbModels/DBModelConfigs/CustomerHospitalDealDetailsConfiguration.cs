@@ -19,8 +19,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.CustomerHospitalDealId).HasColumnName("customer_hospital_deal_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(e => e.ItemName).HasColumnName("item_name").HasColumnType("varchar(300)").IsRequired(false);
             builder.Property(e => e.ItemStandard).HasColumnName("item_standard").HasColumnType("varchar(400)").IsRequired(false);
-            builder.Property(e => e.Quantity).HasColumnName("quantity").HasColumnType("decimal(12,2)").IsRequired();
-            builder.Property(e => e.CashAmount).HasColumnName("cash_amount").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.Quantity).HasColumnName("quantity").HasColumnType("decimal(12,2)").IsRequired(false);
+            builder.Property(e => e.CashAmount).HasColumnName("cash_amount").HasColumnType("decimal(12,2)").IsRequired(false);
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.HasOne(t => t.CustomerHospitalDealInfo).WithMany(t => t.CustomerHospitalDealDetailsList).HasForeignKey(t => t.CustomerHospitalDealId);
         }

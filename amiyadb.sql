@@ -192,7 +192,7 @@ CREATE TABLE `amiyadb`.`tbl_customer_hospital_deal_info` (
   `item_standard` VARCHAR(400) NULL,
   `quantity` DECIMAL(12,2) NULL,
   `cash_amount` DECIMAL(12,2) NULL,
-  `create_date` DATETIME NULL,
+  `create_date` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `tbl_customer_hospital_deal_details_deal_info_idx` (`customer_hospital_deal_id` ASC) VISIBLE,
   CONSTRAINT `tbl_customer_hospital_deal_details_deal_info`

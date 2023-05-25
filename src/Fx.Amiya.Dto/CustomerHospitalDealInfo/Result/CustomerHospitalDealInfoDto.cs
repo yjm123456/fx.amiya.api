@@ -47,7 +47,7 @@ namespace Fx.Amiya.Dto.CustomerHospitalDealInfo.Result
         /// <summary>
         /// 消费类型（0=交预交金，1=办卡，2=项目收费，3=划价单收费，4卡类欠款回收，5=欠款回收）
         /// </summary>
-        public int ConsumptionType { get; set; }
+        public int? ConsumptionType { get; set; }
         /// <summary>
         /// 消费类型文本
         /// </summary>
@@ -55,7 +55,7 @@ namespace Fx.Amiya.Dto.CustomerHospitalDealInfo.Result
         /// <summary>
         /// 退款类型（0=退预交金，1=退卡，2=退项目，3=退划价单,4退多余欠款）
         /// </summary>
-        public int RefundType { get; set; }
+        public int? RefundType { get; set; }
         /// <summary>
         /// 退款类型文本
         /// </summary>

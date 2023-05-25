@@ -20,6 +20,8 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<Bill> Bill { get; set; }
         public virtual DbSet<BillReturnBackPriceData> BillReturnBackPriceData { get; set; }
         public virtual DbSet<CustomerAppointmentSchedule> CustomerAppointmentSchedule { get; set; }
+        public virtual DbSet<CustomerHospitalDealInfo> CustomerHospitalDealInfo { get; set; }
+        public virtual DbSet<CustomerHospitalDealDetails> CustomerHospitalDealDetails { get; set; }
         public virtual DbSet<AmiyaWareHouse> AmiyaWareHouse { get; set; }
         public virtual DbSet<ShootingAndClip> ShootingAndClip { get; set; }
         public virtual DbSet<AmiyaLessonApply> AmiyaLessonApply { get; set; }
@@ -204,6 +206,8 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new LiveAnchorBaseInfoConfiguration());
             modelBuilder.ApplyConfiguration(new LiveAnchorWechatInfoConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaWareHouseConfiguration());
+            modelBuilder.ApplyConfiguration(new CustomerHospitalDealInfoConfiguration());
+            modelBuilder.ApplyConfiguration(new CustomerHospitalDealDetailsConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaInWarehouseConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaOutWarehouseConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaWareHouseNameManageConfiguration());
