@@ -251,13 +251,13 @@ ALTER TABLE `tbl_living_daily_target`
 
 --内容平台订单新增审核客服业绩金额
 ALTER TABLE `amiyadb`.`tbl_content_platform_order` 
-ADD COLUMN `customer_service_settle_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `settle_price`;
+ADD COLUMN `customer_service_settle_price` DECIMAL(12,2) NULL DEFAULT 0.00 AFTER `settle_price`;
 
 --内容平台订单成交情况新增审核客服业绩金额
 ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
-ADD COLUMN `customer_service_settle_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `settle_price`;
+ADD COLUMN `customer_service_settle_price` DECIMAL(12,2) NULL DEFAULT 0.00 AFTER `settle_price`;
 
 --对账单审核记录新增审核客服业绩金额
 ALTER TABLE `amiyadb`.`tbl_recommand_document_settle` 
-ADD COLUMN `customer_service_settle_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `return_back_price`;
+ADD COLUMN `customer_service_settle_price` DECIMAL(12,2) NULL DEFAULT 0.00 AFTER `return_back_price`;
 

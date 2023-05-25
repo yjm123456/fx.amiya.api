@@ -2070,7 +2070,7 @@ namespace Fx.Amiya.Service
         public async Task<List<PerformanceDto>> GetPerformanceByDateAndLiveAnchorIdsAsync(DateTime startDate, DateTime endDate, List<int> LiveAnchorIds)
         {
             return await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
-                .Where(o => o.CreateDate >= startDate && o.CreateDate < endDate && o.IsDeal == true)
+                .Where(o => o.CreateDate >= startDate && o.CreateDate < endDate && o.IsDeal == true && o.ContentPlatFormOrderId != null)
                 .Where(o => LiveAnchorIds.Count == 0 || LiveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id))
                 .Select(ContentPlatFOrmOrderDealInfo => new PerformanceDto
                 {
@@ -2083,7 +2083,7 @@ namespace Fx.Amiya.Service
         public async Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceDetailByDateAsync(DateTime startDate, DateTime endDate, List<int> LiveAnchorIds)
         {
             return dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
-                .Where(o => o.CreateDate >= startDate && o.CreateDate < endDate && o.IsDeal == true)
+                .Where(o => o.CreateDate >= startDate && o.CreateDate < endDate && o.IsDeal == true && o.ContentPlatFormOrderId != null)
                 .Where(o => LiveAnchorIds.Count == 0 || LiveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id))
                 .Select(ContentPlatFOrmOrderDealInfo => new ContentPlatFormOrderDealInfoDto
                 {
