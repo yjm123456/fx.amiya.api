@@ -19,6 +19,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 订单编号
         /// </summary>
         public string ContentPlatFormOrderId { get; set; }
+        /// <summary>
+        /// 客户手机号
+        /// </summary>
+        public string CustomerPhone { get; set; }
 
         /// <summary>
         /// 登记时间

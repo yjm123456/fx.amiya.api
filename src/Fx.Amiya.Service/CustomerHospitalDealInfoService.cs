@@ -44,8 +44,8 @@ namespace Fx.Amiya.Service
                                                       && (!query.ConsumptionType.HasValue || d.ConsumptionType == query.ConsumptionType.Value)
                                                       && (!query.HospitalId.HasValue || d.HospitalId == query.HospitalId.Value)
                                                       && (!query.RefundType.HasValue || d.RefundType == query.RefundType.Value)
-                                                      && (!query.StartDate.HasValue || d.CreateDate >= query.StartDate.Value)
-                                                      && (!query.EndDate.HasValue || d.CreateDate <= query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
+                                                      && (!query.StartDate.HasValue || d.Date >= query.StartDate.Value)
+                                                      && (!query.EndDate.HasValue || d.Date <= query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
                                                       select new CustomerHospitalDealInfoDto
                                                       {
                                                           Id = d.Id,

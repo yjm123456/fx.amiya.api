@@ -23,6 +23,11 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         public string ContentPlatFormOrderId { get; set; }
 
         /// <summary>
+        /// 客户手机号
+        /// </summary>
+        public string CustomerPhone { get; set; }
+
+        /// <summary>
         /// 下单时间
         /// </summary>
         public DateTime OrderCreateDate { get; set; }

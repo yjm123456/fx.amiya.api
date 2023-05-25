@@ -839,7 +839,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var ContentPlatFOrmOrderDealInfo = await dalContentPlatFormOrderDealInfo.GetAll().SingleOrDefaultAsync(e => e.Id == id);
+                var ContentPlatFOrmOrderDealInfo = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).SingleOrDefaultAsync(e => e.Id == id);
                 if (ContentPlatFOrmOrderDealInfo == null)
                 {
                     throw new Exception("未找到该成交信息");
@@ -849,6 +849,7 @@ namespace Fx.Amiya.Service
                 contentPlatFOrmOrderDealInfoDto.Id = ContentPlatFOrmOrderDealInfo.Id;
                 contentPlatFOrmOrderDealInfoDto.ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId;
                 contentPlatFOrmOrderDealInfoDto.CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate;
+                contentPlatFOrmOrderDealInfoDto.CustomerPhone = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.Phone;
                 contentPlatFOrmOrderDealInfoDto.IsToHospital = ContentPlatFOrmOrderDealInfo.IsToHospital;
                 contentPlatFOrmOrderDealInfoDto.ToHospitalType = ContentPlatFOrmOrderDealInfo.ToHospitalType;
                 contentPlatFOrmOrderDealInfoDto.ToHospitalDate = ContentPlatFOrmOrderDealInfo.ToHospitalDate;
@@ -1924,7 +1925,7 @@ namespace Fx.Amiya.Service
                          && (d.CheckState == (int)CheckType.NotChecked)
                          && (d.IsDeal == true)
                          && (!hospitalId.HasValue || d.LastDealHospitalId == hospitalId)
-                         && (d.LastDealHospitalId.HasValue == true&&d.LastDealHospitalId!=0)
+                         && (d.LastDealHospitalId.HasValue == true && d.LastDealHospitalId != 0)
                          && (d.Price > 0)
                          && (!hospitalId.HasValue || d.LastDealHospitalId.Value == hospitalId)
                          select d;
@@ -2092,13 +2093,13 @@ namespace Fx.Amiya.Service
                     ConsultationType = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ConsultationType,
                     IsAcompanying = ContentPlatFOrmOrderDealInfo.IsAcompanying,
                     AddOrderPrice = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.AddOrderPrice,
-                    ContentPlatFormId= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ContentPlateformId,
-                    SendDate= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SendDate,
-                    CreateDate= ContentPlatFOrmOrderDealInfo.CreateDate
+                    ContentPlatFormId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ContentPlateformId,
+                    SendDate = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SendDate,
+                    CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate
                 }
                 ).ToList();
         }
-       
+
         #endregion
 
         #region 【枚举下拉框】
@@ -2121,7 +2122,7 @@ namespace Fx.Amiya.Service
             return orderTypeList;
         }
 
-        
+
 
 
 
