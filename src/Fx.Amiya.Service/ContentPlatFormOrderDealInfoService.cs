@@ -1418,6 +1418,7 @@ namespace Fx.Amiya.Service
                            IsOldCustomer = d.IsOldCustomer,
                            ToHospitalType = d.ToHospitalType,
                            Price = d.Price,
+                           AddOrderPrice=d.ContentPlatFormOrder.AddOrderPrice
                        }
                 ).ToList();
 

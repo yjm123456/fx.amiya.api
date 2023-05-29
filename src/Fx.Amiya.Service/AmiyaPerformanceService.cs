@@ -2085,9 +2085,9 @@ namespace Fx.Amiya.Service
             if (string.IsNullOrEmpty(baseLiveanchorId))
             {
 
-                var liveAnchorList = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync(new List<string> { "dd", "jn" });
-                var daodaoLiveanchorIds = liveAnchorList.Where(e => e.LiveAnchorBaseId == "dd").Select(e => e.Id).ToList();
-                var jinaLiveanchorIds = liveAnchorList.Where(e => e.LiveAnchorBaseId == "jn").Select(e => e.Id).ToList();
+                var liveAnchorList = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync(new List<string> { "f0a77257-c905-4719-95c4-ad2c4f33855c", "af69dcf5-f749-41ea-8b50-fe685facdd8b" });
+                var daodaoLiveanchorIds = liveAnchorList.Where(e => e.LiveAnchorBaseId == "f0a77257-c905-4719-95c4-ad2c4f33855c").Select(e => e.Id).ToList();
+                var jinaLiveanchorIds = liveAnchorList.Where(e => e.LiveAnchorBaseId == "af69dcf5-f749-41ea-8b50-fe685facdd8b").Select(e => e.Id).ToList();
                 var daodaoTarget = await liveAnchorMonthlyTargetAfterLivingService.GetPerformance(year, month, daodaoLiveanchorIds);
                 var jinaTarget = await liveAnchorMonthlyTargetAfterLivingService.GetPerformance(year, month, jinaLiveanchorIds);
 
@@ -2293,9 +2293,9 @@ namespace Fx.Amiya.Service
 
             #region 抖音业绩
 
-            var tiktokPerformance = order.Where(e => e.ContentPlatFormId == "").Sum(e => e.Price);
-            var tiktokPerformanceChain = orderChain.Where(e => e.ContentPlatFormId == "").Sum(e => e.Price);
-            var tiktokPerformanceYearOnYear = orderYearOnYear.Where(e => e.ContentPlatFormId == "").Sum(e => e.Price);
+            var tiktokPerformance = order.Where(e => e.ContentPlatFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Sum(e => e.Price);
+            var tiktokPerformanceChain = orderChain.Where(e => e.ContentPlatFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Sum(e => e.Price);
+            var tiktokPerformanceYearOnYear = orderYearOnYear.Where(e => e.ContentPlatFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Sum(e => e.Price);
             amiyaAchievementDetailDataDto.TikTokPerformance = ChangePriceToTenThousand(tiktokPerformance);
             amiyaAchievementDetailDataDto.TikTokPerformanceChainRatio = DecimalExtension.CalculateChain(tiktokPerformance, tiktokPerformanceChain).Value;
             amiyaAchievementDetailDataDto.TikTokPerformanceYearOnYear = DecimalExtension.CalculateChain(tiktokPerformance, tiktokPerformanceYearOnYear).Value;
@@ -2305,9 +2305,9 @@ namespace Fx.Amiya.Service
 
             #region 视频号业绩
 
-            var videoNoPerformance = order.Where(e => e.ContentPlatFormId == "").Sum(e => e.Price);
-            var videoNoPerformanceChain = orderChain.Where(e => e.ContentPlatFormId == "").Sum(e => e.Price);
-            var videoNoPerformanceYearOnYear = orderYearOnYear.Where(e => e.ContentPlatFormId == "").Sum(e => e.Price);
+            var videoNoPerformance = order.Where(e => e.ContentPlatFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Sum(e => e.Price);
+            var videoNoPerformanceChain = orderChain.Where(e => e.ContentPlatFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Sum(e => e.Price);
+            var videoNoPerformanceYearOnYear = orderYearOnYear.Where(e => e.ContentPlatFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Sum(e => e.Price);
             amiyaAchievementDetailDataDto.VideoPerformance = ChangePriceToTenThousand(videoNoPerformance);
             amiyaAchievementDetailDataDto.VideoPerformanceChainRatio = DecimalExtension.CalculateChain(videoNoPerformance, videoNoPerformanceChain).Value;
             amiyaAchievementDetailDataDto.VideoPerformanceYearOnYear = DecimalExtension.CalculateChain(videoNoPerformance, videoNoPerformanceYearOnYear).Value;

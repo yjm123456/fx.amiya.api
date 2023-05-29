@@ -863,6 +863,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.MinivanRefund = shoppingCardRefundInfo.Count();
             var shoppingCardBadViewInfo = await shoppingCartRegistrationService.GetDialyYellowCardBadReviewInfoByLiveAnchorId(liveAnchorId, recordDate);
             result.MiniVanBadReviews = shoppingCardBadViewInfo.Count();
+            result.EffectivePerformance = toHospitalAndDealInfo.Where(x => x.IsDeal == true && x.AddOrderPrice > 0).Sum(x => x.Price);
+            result.PotentialPerformance = toHospitalAndDealInfo.Where(x => x.IsDeal == true && x.AddOrderPrice <= 0).Sum(x => x.Price);
             return result;
         }
 
