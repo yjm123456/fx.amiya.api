@@ -1540,7 +1540,7 @@ namespace Fx.Amiya.Service
             newCustomerOperationDataDto.newCustomerOperationDataDetails.Add(dealdetails);
             #endregion
             //成交率
-            newCustomerOperationDataDto.ToHospitalRate = CalculateTargetComplete(dealdetails.Value, visitdetails.Value);
+            newCustomerOperationDataDto.DealRate = CalculateTargetComplete(dealdetails.Value, visitdetails.Value);
             newCustomerOperationDataDto.DealRateHealthValueThisMonth = await healthValueService.GetValueByCode("DealRateHealthValueThisMonth");
             newCustomerOperationDataDto.DealRateHealthValueSum = await healthValueService.GetValueByCode("DealRateHealthValueSum");
 

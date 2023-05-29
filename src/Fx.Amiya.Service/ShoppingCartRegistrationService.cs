@@ -962,6 +962,7 @@ namespace Fx.Amiya.Service
                         IsSendOrder = d.IsSendOrder,
                         IsConsultation = d.IsConsultation,
                         ConsultationDate = d.ConsultationDate,
+                        AssignEmpId = d.AssignEmpId,
                         IsAddWeChat = d.IsAddWeChat,
                         IsWriteOff = d.IsWriteOff,
                         IsReturnBackPrice = d.IsReturnBackPrice,
