@@ -378,7 +378,7 @@ namespace Fx.Amiya.IService
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAsync(DateTime startDate, DateTime endDate);
+        Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAsync (DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId);
 
         /// <summary>
         /// 获取老客复购数据

@@ -1168,6 +1168,7 @@ namespace Fx.Amiya.Service
                     contentPlatFOrmOrderDealInfoDto.InformationPrice = ContentPlatFOrmOrderDealInfo.InformationPrice;
                     contentPlatFOrmOrderDealInfoDto.SystemUpdatePrice = ContentPlatFOrmOrderDealInfo.SystemUpdatePrice;
                     contentPlatFOrmOrderDealInfoDto.ConsumptionType = ContentPlatFOrmOrderDealInfo.ConsumptionType;
+                    contentPlatFOrmOrderDealInfoDto.CustomerServiceSettlePrice = ContentPlatFOrmOrderDealInfo.CustomerServiceSettlePrice.HasValue ? ContentPlatFOrmOrderDealInfo.CustomerServiceSettlePrice.Value : 0.00M;
                     contentPlatFOrmOrderDealInfoDto.ReconciliationDocumentsId = ContentPlatFOrmOrderDealInfo.ReconciliationDocumentsId;
                     returnList.Add(contentPlatFOrmOrderDealInfoDto);
                 }
@@ -1418,7 +1419,7 @@ namespace Fx.Amiya.Service
                            IsOldCustomer = d.IsOldCustomer,
                            ToHospitalType = d.ToHospitalType,
                            Price = d.Price,
-                           AddOrderPrice=d.ContentPlatFormOrder.AddOrderPrice
+                           AddOrderPrice = d.ContentPlatFormOrder.AddOrderPrice
                        }
                 ).ToList();
 

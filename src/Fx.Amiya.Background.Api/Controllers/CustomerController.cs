@@ -158,7 +158,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 MemberRank = m?.MemberRankName,
                                 MemberCardNum = m?.MemberCardNum,
                                 IntegrationBalance = i == null ? 0m : i.Balance,
-                                AppName=d.AppName
+                                AppName = d.AppName
                             };
             FxPageInfo<CustomerInfoVo> customerPageInfo = new FxPageInfo<CustomerInfoVo>();
             customerPageInfo.TotalCount = customerPage.TotalCount;
@@ -295,8 +295,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                FirstOrderInfo = d.FirstOrderInfo,
                                FirstOrderCreateDate = d.FirstOrderCreateDate,
                                NewConsumptionPlatFormAppTypeText = d.NewConsumptionPlatFormAppTypeText,
-                               NewLiveAnchorName=d.NewLiveAnchorName,
-                               NewWechatNo=d.NewWechatNo
+                               NewLiveAnchorName = d.NewLiveAnchorName,
+                               NewWechatNo = d.NewWechatNo
                            };
             FxPageInfo<CustomerConsumptionInfoVo> customerPageInfo = new FxPageInfo<CustomerConsumptionInfoVo>();
             customerPageInfo.TotalCount = q.TotalCount;
@@ -368,8 +368,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                FirstOrderInfo = d.FirstOrderInfo,
                                FirstOrderCreateDate = d.FirstOrderCreateDate,
                                NewConsumptionPlatFormAppTypeText = d.NewConsumptionPlatFormAppTypeText,
-                               NewLiveAnchorName=d.NewLiveAnchorName,
-                               NewWechatNo=d.NewWechatNo
+                               NewLiveAnchorName = d.NewLiveAnchorName,
+                               NewWechatNo = d.NewWechatNo
                            };
             List<CustomerConsumptionInfoVo> customerPageInfo = new List<CustomerConsumptionInfoVo>();
             customerPageInfo = customer.ToList();
@@ -541,7 +541,18 @@ namespace Fx.Amiya.Background.Api.Controllers
             string phone = await customerService.DecryptoPhone(encryptPhone);
             return ResultData<string>.Success().AddData("phone", phone);
         }
-
+        /// <summary>
+        /// （新）解密手机号
+        /// </summary>
+        /// <param name="encryptPhone"></param>
+        /// <returns></returns>
+        [HttpGet("decryptoPhone")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<string>> NewDecryptoPhone(string encryptPhone)
+        {
+            string phone = await customerService.DecryptoPhone(encryptPhone);
+            return ResultData<string>.Success().AddData("phone", phone);
+        }
 
         /// <summary>
         /// 根据加密电话查询简单的客户信息
@@ -739,7 +750,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             editDto.HandleBy = Convert.ToInt32(employee.Id);
             await integrationAccountService.AddInterGrationAsync(editDto);
 
-            
+
             return ResultData.Success();
         }
 
@@ -843,7 +854,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpPost("addCustomerTag")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData> AddCustomerTag(AddCustomerTagVo add) {
+        public async Task<ResultData> AddCustomerTag(AddCustomerTagVo add)
+        {
             AddCustomerTagDto tagDto = new AddCustomerTagDto();
             tagDto.CustomerId = add.CustomerId;
             tagDto.TagIds = add.TagIds;
@@ -857,18 +869,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("getCustomertagList/{customerId}")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<List<BaseIdAndNameVo>>> GetCustomerTagById(string customerId) {
-            
-            var tagList =await  customerService.GetCustomerTagListAsync(customerId);
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetCustomerTagById(string customerId)
+        {
+
+            var tagList = await customerService.GetCustomerTagListAsync(customerId);
             var list = tagList.Select(e => new BaseIdAndNameVo
             {
                 Id = e.Id,
                 Name = e.Name
             }).ToList();
-            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("customerTagList",list);
+            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("customerTagList", list);
         }
 
-        
+
 
         /// <summary>
         /// 根据加密电话获取详细信息

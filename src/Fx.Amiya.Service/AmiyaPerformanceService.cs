@@ -1390,11 +1390,11 @@ namespace Fx.Amiya.Service
             #endregion
 
             #region{订单数据}
-            var baseOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(sequentialDate.StartDate, sequentialDate.EndDate);
+            var baseOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(sequentialDate.StartDate, sequentialDate.EndDate, isEffectiveCustomerData, contentPlatFormId);
 
-            var baseLastMonthOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate);
+            var baseLastMonthOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, isEffectiveCustomerData, contentPlatFormId);
 
-            var baseLastYearOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate);
+            var baseLastYearOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, isEffectiveCustomerData, contentPlatFormId);
             #endregion
 
             #region 【面诊卡下单】
@@ -2104,7 +2104,7 @@ namespace Fx.Amiya.Service
                     var daodaoPerformanceSchedule = this.CalculateSchedule(daodaoTarget.TotalPerformanceTarget, amiyaAchievementDataDto.GroupDaoDaoPerformance, year, month);
                     amiyaAchievementDataDto.GroupDaoDaoPerformanceToDateSchedule = daodaoPerformanceSchedule.ContrastTimeSchedule;
                     amiyaAchievementDataDto.GroupDaoDaoPerformanceDeviation = daodaoPerformanceSchedule.PerformanceDeviation;
-                    amiyaAchievementDataDto.LaterCompleteEveryDayGroupDaoDaoPerformance =daodaoPerformanceSchedule.ResidueTimeNeedCompletePerformance;
+                    amiyaAchievementDataDto.LaterCompleteEveryDayGroupDaoDaoPerformance = daodaoPerformanceSchedule.ResidueTimeNeedCompletePerformance;
                 }
 
 

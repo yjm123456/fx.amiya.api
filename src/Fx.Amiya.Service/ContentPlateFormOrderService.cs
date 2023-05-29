@@ -1778,7 +1778,15 @@ namespace Fx.Amiya.Service
                 order.CheckBy = input.employeeId;
                 order.CheckPrice += input.CheckPrice;
                 order.SettlePrice += input.SettlePrice;
-                order.CustomerServiceSettlePrice += input.CustomerServiceSettlePrice;
+                if (order.CustomerServiceSettlePrice.HasValue)
+                {
+                    order.CustomerServiceSettlePrice += input.CustomerServiceSettlePrice.Value;
+                }
+                else
+                {
+                    order.CustomerServiceSettlePrice = input.CustomerServiceSettlePrice.Value;
+
+                }
                 order.CheckRemark = input.CheckRemark;
                 order.CheckDate = DateTime.Now;
                 await _dalContentPlatformOrder.UpdateAsync(order, true);
@@ -3293,18 +3301,52 @@ namespace Fx.Amiya.Service
         /// <param name="startDate">开始时间</param>
         /// <param name="endDate">结束时间</param>
         /// <returns></returns>
-        public async Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAsync(DateTime startDate, DateTime endDate)
+        public async Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId)
         {
             var sendCount = await dalContentPlatformOrderSend.GetAll()
                 .Include(e => e.ContentPlatformOrder)
                 .ThenInclude(e => e.ContentPlatformOrderDealInfoList)
-                .Where(e => e.SendDate >= startDate && e.SendDate < endDate && e.ContentPlatformOrder.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.ContentPlatformOrder.IsOldCustomer == false)
-                .Select(e => new { Phone = e.ContentPlatformOrder.Phone, OrderStatus = e.ContentPlatformOrder.OrderStatus })
                 .ToListAsync();
+            if (!string.IsNullOrEmpty(contentPlatFormId))
+            {
+                sendCount = sendCount.Where(x => x.ContentPlatformOrder.ContentPlateformId == contentPlatFormId).ToList();
+            }
+            if (isEffectiveCustomerData.HasValue)
+            {
+                if (isEffectiveCustomerData.Value == true)
+                {
+                    sendCount = sendCount.Where(x => x.ContentPlatformOrder.AddOrderPrice > 0).ToList();
+                }
+                else
+                {
+                    sendCount = sendCount.Where(x => x.ContentPlatformOrder.AddOrderPrice == 0).ToList();
+                }
+            }
+            var sendRes = sendCount
+                     .Where(e => e.SendDate >= startDate && e.SendDate < endDate
+                     && e.ContentPlatformOrder.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.ContentPlatformOrder.IsOldCustomer == false)
+                 .Select(e => new { Phone = e.ContentPlatformOrder.Phone, OrderStatus = e.ContentPlatformOrder.OrderStatus }).ToList();
             OrderSendAndDealNumDto orderData = new OrderSendAndDealNumDto();
-            orderData.SendOrderNum = sendCount.Select(e => e.Phone).Distinct().Count();
 
-            var tohospitalDate = _dalContentPlatformOrder.GetAll()
+            orderData.SendOrderNum = sendRes.Select(e => e.Phone).Distinct().Count();
+
+            var tohospitalDate = _dalContentPlatformOrder.GetAll();
+            if (!string.IsNullOrEmpty(contentPlatFormId))
+            {
+                tohospitalDate = tohospitalDate.Where(x => x.ContentPlateformId == contentPlatFormId);
+            }
+            if (isEffectiveCustomerData.HasValue)
+            {
+                if (isEffectiveCustomerData.Value == true)
+                {
+                    tohospitalDate = tohospitalDate.Where(x => x.AddOrderPrice > 0);
+                }
+                else
+                {
+                    tohospitalDate = tohospitalDate.Where(x => x.AddOrderPrice == 0);
+                }
+            }
+            tohospitalDate = tohospitalDate
                 .Where(e => e.ToHospitalDate >= startDate && e.ToHospitalDate < endDate && e.IsToHospital == true && e.IsOldCustomer == false);
             orderData.VisitNum = tohospitalDate
                 .Select(e => e.Phone)
