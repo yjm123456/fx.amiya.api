@@ -3343,10 +3343,12 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="date">时间</param>
         /// <returns></returns>
-        public async Task<OldCustomerDealNumDto> GetOldCustomerBuyAgainByMonthAsync(DateTime date)
+        public async Task<OldCustomerDealNumDto> GetOldCustomerBuyAgainByMonthAsync(DateTime date, bool isEffectiveCustomerData, string contentPlatFormId)
         {
             DateTime startDate = Convert.ToDateTime("2000-01-01");
             var dealDate = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList)
+             .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlateformId == contentPlatFormId)
+             .Where(o => isEffectiveCustomerData == true ? o.AddOrderPrice > 0 : o.AddOrderPrice == 0)
                 .Where(e => e.IsToHospital == true && e.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete && e.DealDate.Value >= startDate && e.DealDate.Value < date).ToListAsync();
             OldCustomerDealNumDto orderData = new OldCustomerDealNumDto();
             orderData.TotalDealCustomer = dealDate

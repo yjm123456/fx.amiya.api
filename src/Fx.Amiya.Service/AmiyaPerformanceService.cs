@@ -1568,7 +1568,7 @@ namespace Fx.Amiya.Service
 
             amiyaOperationDataDto.NewCustomerData = newCustomerOperationDataDto;
             //老客数据
-            var oldCustomerData = await contentPlateFormOrderService.GetOldCustomerBuyAgainByMonthAsync(sequentialDate.StartDate);
+            var oldCustomerData = await contentPlateFormOrderService.GetOldCustomerBuyAgainByMonthAsync(sequentialDate.StartDate,isEffectiveCustomerData,contentPlatFormId);
             oldCustomerOperationDataDto.TotalDealPeople = oldCustomerData.TotalDealCustomer;
             oldCustomerOperationDataDto.SecondDealPeople = oldCustomerData.SecondDealCustomer;
             oldCustomerOperationDataDto.ThirdDealPeople = oldCustomerData.ThirdDealCustomer;

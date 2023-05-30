@@ -385,7 +385,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="date"></param>
         /// <returns></returns>
-        Task<OldCustomerDealNumDto> GetOldCustomerBuyAgainByMonthAsync(DateTime date);
+        Task<OldCustomerDealNumDto> GetOldCustomerBuyAgainByMonthAsync(DateTime date, bool isEffectiveCustomerData, string contentPlatFormId);
 
         /// <summary>
         /// 根据主播获取总订单数
