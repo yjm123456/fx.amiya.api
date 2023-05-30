@@ -2169,12 +2169,12 @@ namespace Fx.Amiya.Service
             var order = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAsync(sequentialDate.StartDate, sequentialDate.EndDate, LiveAnchorInfo);
             var curTotalPerformance = order.Sum(o => o.Price);
             //同比业绩
-            var orderYearOnYear = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, LiveAnchorInfo);
+            var orderYearOnYear = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, LiveAnchorInfo);
             //环比业绩
             List<ContentPlatFormOrderDealInfoDto> orderChain = new List<ContentPlatFormOrderDealInfoDto>();
             if (type != "year")
             {
-                orderChain = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, LiveAnchorInfo);
+                orderChain = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, LiveAnchorInfo);
             }
             #endregion
 

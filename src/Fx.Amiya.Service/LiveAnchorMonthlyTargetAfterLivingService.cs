@@ -693,7 +693,7 @@ namespace Fx.Amiya.Service
         }
         public async Task<LiveAnchorMonthTargetPerformanceDto> GetPerformanceTargetAsync(int year, int month, List<int> liveAnchorIds)
         {
-            var performance = dalLiveAnchorMonthlyTargetAfterLiving.GetAll().Where(t => t.Year == year && t.Month==0? true: t.Month== month)
+            var performance = dalLiveAnchorMonthlyTargetAfterLiving.GetAll().Where(t => t.Year == year && t.Month== month)
                 .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.LiveAnchorId))
                 .Select(e=>new { 
                     PerformanceTarget=e.PerformanceTarget, 
