@@ -1443,7 +1443,7 @@ namespace Fx.Amiya.Service
             NewCustomerOperationDataDetails consulationdetails = new NewCustomerOperationDataDetails();
             consulationdetails.Key = "Consulation";
             consulationdetails.Name = "分诊量";
-            consulationdetails.Value = baseBusinessPerformance.Where(x => x.AssignEmpId != 0 && x.AssignEmpId.HasValue).Count();
+            consulationdetails.Value = baseBusinessPerformance.Where(x => x.AssignEmpId != 0 && x.AssignEmpId.HasValue && x.IsReturnBackPrice == false).Count();
 
             //上月的分诊
             var lastMonthConsulationConsulationPerformanceCount = lastMonthShoppingCardPerformance.Where(x => x.AssignEmpId != 0 && x.AssignEmpId.HasValue).Count();
@@ -1461,7 +1461,7 @@ namespace Fx.Amiya.Service
             //加v
             addWechatdetails.Key = "AddWeChat";
             addWechatdetails.Name = "加v量";
-            addWechatdetails.Value = baseBusinessPerformance.Where(x => x.IsAddWeChat == true).Count();
+            addWechatdetails.Value = baseBusinessPerformance.Where(x => x.IsAddWeChat == true && x.AssignEmpId != 0 && x.AssignEmpId.HasValue && x.IsReturnBackPrice == false).Count();
 
             //上月的分诊
             var lastMonthAddWechatPerformanceCount = lastMonthShoppingCardPerformance.Where(x => x.IsAddWeChat == true).Count();

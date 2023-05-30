@@ -932,43 +932,19 @@ namespace Fx.Amiya.Service
         public async Task<List<ShoppingCartRegistrationDto>> GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(DateTime startDate, DateTime endDate, bool isEffectiveCustomerData, string contentPlatFormId)
         {
             var result = from d in dalShoppingCartRegistration.GetAll()
-                .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlatFormId == contentPlatFormId)
-                .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate)
+            .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlatFormId == contentPlatFormId)
+            .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate)
+             .Where(o => isEffectiveCustomerData == true ? o.Price > 0 : o.Price == 0)
                          select d;
 
-            if (isEffectiveCustomerData == true)
-            {
-                result = from d in result
-              .Where(o => o.Price > 0)
-                         select d;
-            }
-            else
-            {
-
-                result = from d in result
-              .Where(o => o.Price == 0)
-                         select d;
-            }
             var x = from d in result
                     select new ShoppingCartRegistrationDto
                     {
-                        RecordDate = d.RecordDate,
-                        EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(d.EmergencyLevel),
-                        CustomerNickName = d.CustomerNickName,
-                        Phone = d.Phone,
-                        Price = d.Price,
-                        RefundDate = d.RefundDate,
-                        IsCreateOrder = d.IsCreateOrder,
-                        IsSendOrder = d.IsSendOrder,
-                        IsConsultation = d.IsConsultation,
-                        ConsultationDate = d.ConsultationDate,
+                        IsReturnBackPrice = d.IsReturnBackPrice,
                         AssignEmpId = d.AssignEmpId,
                         IsAddWeChat = d.IsAddWeChat,
-                        IsWriteOff = d.IsWriteOff,
-                        IsReturnBackPrice = d.IsReturnBackPrice,
-                        IsBadReview = d.IsBadReview,
                     };
-            return await x.OrderByDescending(x => x.RecordDate).ToListAsync();
+            return await x.ToListAsync();
         }
         /// <summary>
         /// 获取面诊卡库存
