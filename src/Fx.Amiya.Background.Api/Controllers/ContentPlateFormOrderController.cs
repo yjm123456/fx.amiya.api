@@ -573,7 +573,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             finally
             {
 
-                
+
                 operationAddDto.Parameters = JsonConvert.SerializeObject(query);
                 operationAddDto.RequestType = (int)RequestType.Export;
                 operationAddDto.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
@@ -1178,7 +1178,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.UnDealReason = updateVo.UnDealReason;
             updateDto.IsToHospital = updateVo.IsToHospital;
             updateDto.ToHospitalType = updateVo.ToHospitalType;
-            updateDto.DealPerformanceType = updateVo.DealPerformanceType;
+            updateDto.DealPerformanceType = updateVo.DealPerformanceType.HasValue ? 0 : updateVo.DealPerformanceType.Value;
             updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
             updateDto.DealDate = updateVo.DealDate;
             updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;

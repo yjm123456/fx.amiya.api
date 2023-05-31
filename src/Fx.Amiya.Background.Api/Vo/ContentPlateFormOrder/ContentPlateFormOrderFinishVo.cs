@@ -66,7 +66,7 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// <summary>
         /// 业绩类型
         /// </summary>
-        public int DealPerformanceType { get; set; }
+        public int? DealPerformanceType { get; set; }
         /// <summary>
         /// 是否陪诊
         /// </summary>
