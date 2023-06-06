@@ -196,6 +196,11 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport.OutPut
         [Description("结算金额")]
         public decimal? SettlePrice { get; set; }
         /// <summary>
+        /// 审核客服业绩金额
+        /// </summary>
+        [Description("助理服务费")]
+        public decimal? CustomerServiceSettlePrice { get; set; }
+        /// <summary>
         /// 审核人
         /// </summary>
         [Description("审核人")]

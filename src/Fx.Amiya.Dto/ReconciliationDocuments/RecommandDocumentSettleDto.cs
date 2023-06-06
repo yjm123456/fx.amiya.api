@@ -79,6 +79,10 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// 出入账金额
         /// </summary>
         public decimal AccountPrice { get; set; }
+        /// <summary>
+        /// 审核客服业绩金额
+        /// </summary>
+        public decimal? CustomerServiceSettlePrice { get; set; }
 
     }
 }

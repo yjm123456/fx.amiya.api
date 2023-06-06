@@ -55,7 +55,8 @@ namespace Fx.Amiya.Service
                   BelongEmpId = e.BelongEmpId,
                   CreateByEmpName = e.AmiyaEmployee.Name,
                   AccountTypeText = e.AccountType == true ? "出账" : "入账",
-                  AccountPrice = e.AccountPrice
+                  AccountPrice = e.AccountPrice,
+                  CustomerServiceSettlePrice=e.CustomerServiceSettlePrice
               });
 
             return await record.ToListAsync();

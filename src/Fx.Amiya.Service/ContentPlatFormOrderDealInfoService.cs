@@ -370,7 +370,8 @@ namespace Fx.Amiya.Service
                                                        IsCreateBill = d.IsCreateBill,
                                                        BelongCompany = d.BelongCompany,
                                                        ConsumptionType = d.ConsumptionType,
-                                                       ConsumptionTypeText = ServiceClass.GetConsumptionTypeText(d.ConsumptionType)
+                                                       ConsumptionTypeText = ServiceClass.GetConsumptionTypeText(d.ConsumptionType),
+                                                       CustomerServiceSettlePrice=d.CustomerServiceSettlePrice ?? 0m
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -650,7 +651,8 @@ namespace Fx.Amiya.Service
                                                        ReconciliationDocumentsId = d.ReconciliationDocumentsId,
                                                        IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
                                                        ConsumptionType = d.ConsumptionType,
-                                                       ConsumptionTypeText = ServiceClass.GetConsumptionTypeText(d.ConsumptionType)
+                                                       ConsumptionTypeText = ServiceClass.GetConsumptionTypeText(d.ConsumptionType),
+                                                       CustomerServiceSettlePrice=d.CustomerServiceSettlePrice ?? 0m
                                                    };
 
                 List<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new List<ContentPlatFormOrderDealInfoDto>();

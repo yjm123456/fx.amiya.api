@@ -104,6 +104,11 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         [Description("审核服务费金额")]
         public decimal ReturnBackPrice { get; set; }
         /// <summary>
+        /// 审核客服业绩金额
+        /// </summary>
+        [Description("审核助理服务费金额")]
+        public decimal? CustomerServiceSettlePrice { get; set; }
+        /// <summary>
         /// 是否回款
         /// </summary>
         [Description("是否回款")]

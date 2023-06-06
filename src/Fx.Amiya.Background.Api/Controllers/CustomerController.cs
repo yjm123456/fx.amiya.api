@@ -36,10 +36,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IIntegrationAccount integrationAccountService;
         private IWxAppConfigService wxAppConfigService;
         private ITagDetailInfoService tagDetailInfoService;
+        private IMemberRankInfo memberRankInfoService;
         public CustomerController(ICustomerService customerService, IHttpContextAccessor httpContextAccessor,
             ICustomerBaseInfoService customerBaseInfoService,
             IWxAppConfigService wxAppConfigService,
-            IMemberCard memberCardService, IIntegrationAccount integrationAccountService, ITagDetailInfoService tagDetailInfoService)
+            IMemberCard memberCardService, IIntegrationAccount integrationAccountService, ITagDetailInfoService tagDetailInfoService, IMemberRankInfo memberRankInfoService)
         {
             this.customerService = customerService;
             this.httpContextAccessor = httpContextAccessor;
@@ -48,6 +49,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             this.memberCardService = memberCardService;
             this.integrationAccountService = integrationAccountService;
             this.tagDetailInfoService = tagDetailInfoService;
+            this.memberRankInfoService = memberRankInfoService;
         }
 
 
@@ -752,6 +754,31 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
             return ResultData.Success();
+        }
+
+        /// <summary>
+        /// 客户积分生成比例
+        /// </summary>
+        /// <param name="editVo"></param>
+        /// <returns></returns>
+        [HttpGet("customerInternelPercent")]
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData<decimal>> AddCustomerIntergrationAsync(string customerId)
+        {
+            decimal integrationPercent = 0m;
+            var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(customerId);
+            if (memberCard != null)
+            {
+                integrationPercent = memberCard.GenerateIntegrationPercent;
+            }
+            else
+            {
+                var memberRank = await memberRankInfoService.GetMinGeneratePercentMemberRankInfoAsync();
+                integrationPercent = memberRank.GenerateIntegrationPercent;
+            }
+
+
+            return ResultData<decimal>.Success().AddData("percent",integrationPercent*100);
         }
 
         /// <summary>

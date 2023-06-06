@@ -131,7 +131,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             IsCreateBill = d.IsCreateBill,
                                             CreatBillCompany = d.BelongCompany,
                                             ConsumptionType = d.ConsumptionType,
-                                            ConsumptionTypeText = d.ConsumptionTypeText
+                                            ConsumptionTypeText = d.ConsumptionTypeText,
+                                            CustomerServiceSettlePrice=d.CustomerServiceSettlePrice
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;

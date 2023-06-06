@@ -188,5 +188,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 是否陪诊
         /// </summary>
         public bool IsAcompanying { get; set; }
+        /// <summary>
+        /// 审核客服业绩金额
+        /// </summary>
+        public decimal? CustomerServiceSettlePrice { get; set; }
     }
 }

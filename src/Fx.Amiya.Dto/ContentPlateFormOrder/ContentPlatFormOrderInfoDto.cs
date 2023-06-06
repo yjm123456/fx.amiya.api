@@ -138,5 +138,9 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 辅助客服名称
         /// </summary>
         public string SupportEmpName { get; set; }
+        /// <summary>
+        /// 审核客服业绩金额
+        /// </summary>
+        public decimal? CustomerServiceSettlePrice { get; set; }
     }
 }

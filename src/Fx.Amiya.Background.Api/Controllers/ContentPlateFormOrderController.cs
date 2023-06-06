@@ -651,6 +651,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
                                 CommissionRatio = d.CommissionRatio,
                                 IsOldCustomer = d.IsOldCustomer == false ? "新客业绩" : "老客业绩",
+                                CustomerServiceSettlePrice=d.CustomerServiceSettlePrice
                             };
                 FxPageInfo<ContentPlatFormCompleteOrderInfoVo> orderPageInfo = new FxPageInfo<ContentPlatFormCompleteOrderInfoVo>();
                 orderPageInfo.TotalCount = q.TotalCount;
@@ -781,6 +782,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.IsSupportOrder = order.IsSupportOrder;
             orderUpdateInfo.SupportEmpName = order.SupportEmpName;
             orderUpdateInfo.SupportEmpId = order.SupportEmpId;
+            orderUpdateInfo.CustomerServiceSettlePrice = order.CustomerServiceSettlePrice;
             return ResultData<ContentPlateFormOrderVo>.Success().AddData("orderInfo", orderUpdateInfo);
         }
 

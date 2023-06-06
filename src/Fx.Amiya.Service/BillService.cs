@@ -518,6 +518,7 @@ namespace Fx.Amiya.Service
             {
                 RecommandDocumentSettleDto recommandDocumentSettleDto = new RecommandDocumentSettleDto();
                 recommandDocumentSettleDto.RecommandDocumentId = x.RecommandDocumentId;
+                recommandDocumentSettleDto.CustomerServiceSettlePrice = x.CustomerServiceSettlePrice;
                 if (!string.IsNullOrEmpty(x.RecommandDocumentId))
                 {
                     var reconciliationDocument = await reconciliationDocumentsService.GetByIdAsync(x.RecommandDocumentId);
@@ -653,6 +654,7 @@ namespace Fx.Amiya.Service
             {
                 RecommandDocumentSettleDto recommandDocumentSettleDto = new RecommandDocumentSettleDto();
                 recommandDocumentSettleDto.RecommandDocumentId = x.RecommandDocumentId;
+                recommandDocumentSettleDto.CustomerServiceSettlePrice = x.CustomerServiceSettlePrice;
                 if (!string.IsNullOrEmpty(x.RecommandDocumentId))
                 {
                     var reconciliationDocument = await reconciliationDocumentsService.GetByIdAsync(x.RecommandDocumentId);

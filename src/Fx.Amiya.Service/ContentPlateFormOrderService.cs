@@ -1005,6 +1005,7 @@ namespace Fx.Amiya.Service
                                 ReturnBackDate = d.ReturnBackDate,
                                 ReturnBackPrice = d.ReturnBackPrice,
                                 CommissionRatio = d.CommissionRatio,
+                                CustomerServiceSettlePrice=d.CustomerServiceSettlePrice
                             };
 
 
@@ -1484,6 +1485,7 @@ namespace Fx.Amiya.Service
             result.IsRepeatProfundityOrder = order.IsRepeatProfundityOrder;
             result.IsCreateBill = order.IsCreateBill;
             result.CreateBillCompany = dalCompanyBaseInfo.GetAll().Where(e => e.Id == order.BelongCompany).SingleOrDefault()?.Name;
+            result.CustomerServiceSettlePrice = order.CustomerServiceSettlePrice;
             return result;
         }
 

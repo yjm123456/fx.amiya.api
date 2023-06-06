@@ -240,5 +240,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 消费类型文本
         /// </summary>
         public string ConsumptionTypeText { get; set; }
+        /// <summary>
+        /// 审核客服业绩金额
+        /// </summary>
+        public decimal? CustomerServiceSettlePrice { get; set; }
+
     }
 }

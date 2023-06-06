@@ -90,7 +90,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         AccountTypeText = d.AccountTypeText,
                                                         AccountPrice = d.AccountPrice,
                                                         BelongEmpName = d.BelongEmpName,
-                                                        BelongLiveAnchor = d.BelongLiveAnchor
+                                                        BelongLiveAnchor = d.BelongLiveAnchor,
+                                                        CustomerServiceSettlePrice=d.CustomerServiceSettlePrice
                                                     };
 
                 FxPageInfo<ReconciliationDocumentsSettleVo> reconciliationDocumentsSettleResult = new FxPageInfo<ReconciliationDocumentsSettleVo>();
@@ -168,7 +169,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         AccountTypeText = d.AccountTypeText,
                                                         AccountPrice = d.AccountPrice,
                                                         BelongEmpName = d.BelongEmpName,
-                                                        BelongLiveAnchor = d.BelongLiveAnchor
+                                                        BelongLiveAnchor = d.BelongLiveAnchor,
+                                                        CustomerServiceSettlePrice=d.CustomerServiceSettlePrice
                                                     };
 
                 res = reconciliationDocumentsSettle.ToList();
