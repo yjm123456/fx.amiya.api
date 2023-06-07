@@ -81,6 +81,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       ConsumptionTypeText = d.ConsumptionTypeText,
                                                       RefundType = d.RefundType,
                                                       RefundTypeText = d.RefundTypeText,
+                                                      EncryptPhone=d.EncryptPhone,
                                                       MsgId = d.MsgId,
                                                       CreateDate = d.CreateDate,
                                                   };

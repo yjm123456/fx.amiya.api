@@ -53,6 +53,21 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerAppointmentSchedule.Input
         /// 指派主播id
         /// </summary>
         public string AssignLiveanchorId { get; set; }
-    
+        /// <summary>
+        /// 顾客照片1
+        /// </summary>
+
+        public string CustomerPic1 { get; set; }
+        /// <summary>
+        /// 顾客照片2
+        /// </summary>
+
+        public string CustomerPic2 { get; set; }
+        /// <summary>
+        /// 顾客照片3
+        /// </summary>
+
+        public string CustomerPic3 { get; set; }
+
     }
 }

@@ -1746,7 +1746,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
-                throw new Exception("编辑失败！");
+                throw new Exception(err.Message.ToString());
 
             }
         }

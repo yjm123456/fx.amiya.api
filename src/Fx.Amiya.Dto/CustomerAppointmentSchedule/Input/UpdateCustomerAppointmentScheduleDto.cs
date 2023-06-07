@@ -58,5 +58,20 @@ namespace Fx.Amiya.Dto.CustomerAppointmentSchedule.Input
         /// 指派主播名称
         /// </summary>
         public string AssignLiveanchorName { get; set; }
+        /// <summary>
+        /// 顾客照片1
+        /// </summary>
+
+        public string CustomerPic1 { get; set; }
+        /// <summary>
+        /// 顾客照片2
+        /// </summary>
+
+        public string CustomerPic2 { get; set; }
+        /// <summary>
+        /// 顾客照片3
+        /// </summary>
+
+        public string CustomerPic3 { get; set; }
     }
 }

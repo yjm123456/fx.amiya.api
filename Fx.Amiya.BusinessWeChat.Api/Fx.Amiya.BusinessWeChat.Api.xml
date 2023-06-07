@@ -3432,6 +3432,21 @@
             接诊咨询
             </summary>
         </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.CustomerPic1">
+            <summary>
+            顾客照片1
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.CustomerPic2">
+            <summary>
+            顾客照片2
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule.CustomerAppointmentScheduleVo.CustomerPic3">
+            <summary>
+            顾客照片3
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo.CustomerBaseDetailInfoVo.Id">
             <summary>
             编号

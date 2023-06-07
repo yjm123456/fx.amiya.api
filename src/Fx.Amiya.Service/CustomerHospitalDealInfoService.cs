@@ -3,11 +3,13 @@ using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.CustomerHospitalDealDetails.Input;
 using Fx.Amiya.Dto.CustomerHospitalDealInfo.Input;
 using Fx.Amiya.Dto.CustomerHospitalDealInfo.Result;
+using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
 using Fx.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,18 +21,21 @@ namespace Fx.Amiya.Service
     public class CustomerHospitalDealInfoService : ICustomerHospitalDealInfoService
     {
         private readonly IDalCustomerHospitalDealInfo dalCustomerHospitalDealInfo;
+        private IDalConfig dalConfig;
         private ICustomerHospitalDealDetailsService customerHospitalDealDetailsService;
         private ICustomerBaseInfoService customerBaseInfoService;
         private readonly IUnitOfWork unitOfWork;
 
         public CustomerHospitalDealInfoService(IDalCustomerHospitalDealInfo dalCustomerHospitalDealInfo,
            ICustomerBaseInfoService customerBaseInfoService,
+           IDalConfig dalConfig,
             ICustomerHospitalDealDetailsService customerHospitalDealDetailsService, IUnitOfWork unitOfWork)
         {
             this.dalCustomerHospitalDealInfo = dalCustomerHospitalDealInfo;
             this.customerHospitalDealDetailsService = customerHospitalDealDetailsService;
             this.customerBaseInfoService = customerBaseInfoService;
             this.unitOfWork = unitOfWork;
+            this.dalConfig = dalConfig;
         }
 
 
@@ -38,6 +43,8 @@ namespace Fx.Amiya.Service
         {
             try
             {
+                var config = await dalConfig.GetAll().SingleOrDefaultAsync();
+                var jsonConfig= JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig; 
                 var customerHospitalDealInfoService = from d in dalCustomerHospitalDealInfo.GetAll().Include(x => x.HospitalInfoData).Include(x => x.CustomerHospitalDealDetailsList)
                                                       where (query.KeyWord == null || d.CustomerPhone.Contains(query.KeyWord) || d.CustomerName.Contains(query.KeyWord) || d.MsgId.Contains(query.KeyWord))
                                                       && (!query.Type.HasValue || d.Type == query.Type.Value)
@@ -53,8 +60,9 @@ namespace Fx.Amiya.Service
                                                           HospitalName = d.HospitalInfoData.Name,
                                                           Type = d.Type,
                                                           TypeText = ServiceClass.GetHospitalDealTypeText(d.Type),
-                                                          CustomerName = d.CustomerName,
-                                                          CustomerPhone = d.CustomerPhone,
+                                                          CustomerName = ServiceClass.GetIncompleteCustomerName(d.CustomerName),
+                                                          CustomerPhone = ServiceClass.GetIncompletePhone(d.CustomerPhone),
+                                                          EncryptPhone=ServiceClass.Encrypt(d.CustomerPhone, jsonConfig.PhoneEncryptKey),
                                                           Date = d.Date,
                                                           TotalCashAmount = d.TotalCashAmount,
                                                           ConsumptionType = d.ConsumptionType,

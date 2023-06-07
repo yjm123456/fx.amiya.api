@@ -27,6 +27,9 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.Remark).HasColumnName("remark").HasColumnType("varchar(5000)").IsRequired(false);
             builder.Property(e => e.AppointmentHospitalId).HasColumnName("appointment_hospital_id").HasColumnType("int").IsRequired(false);
             builder.Property(e => e.Consultation).HasColumnName("consultation").HasColumnType("varchar(50)").IsRequired(false);
+            builder.Property(e => e.CustomerPic1).HasColumnName("customer_pic1").HasColumnType("varchar(300)").IsRequired(false);
+            builder.Property(e => e.CustomerPic2).HasColumnName("customer_pic2").HasColumnType("varchar(300)").IsRequired(false);
+            builder.Property(e => e.CustomerPic3).HasColumnName("customer_pic3").HasColumnType("varchar(300)").IsRequired(false);
             builder.Property(e => e.AssignLiveanchorId).HasColumnName("assign_liveanchor_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.HasOne(t => t.AmiyaEmployeeInfo).WithMany(t => t.CustomerAppointmentScheduleList).HasForeignKey(t => t.CreateBy);
 

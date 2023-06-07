@@ -88,7 +88,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       AppointmentHospitalName=d.AppointmentHospitalName,
                                                       Consultation=d.Consultation,
                                                       AssignLiveanchorId=d.AssignLiveanchorId,
-                                                      AssignLiveanchorName=d.AssignLiveanchorName
+                                                      CustomerPic1 = d.CustomerPic1,
+                                                      CustomerPic2 = d.CustomerPic2,
+                                                      CustomerPic3 = d.CustomerPic3,
+                                                      AssignLiveanchorName =d.AssignLiveanchorName
                                                   };
 
                 FxPageInfo<CustomerAppointmentScheduleVo> customerAppointmentSchedulePageInfo = new FxPageInfo<CustomerAppointmentScheduleVo>();
@@ -193,6 +196,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.AppointmentHospitalId = addVo.AppointmentHospitalId;
                 addDto.Consultation = addVo.Consultation;
                 addDto.AssignLiveanchorId = addVo.AssignLiveanchorId;
+                addDto.CustomerPic1 = addVo.CustomerPic1;
+                addDto.CustomerPic2 = addVo.CustomerPic2;
+                addDto.CustomerPic3 = addVo.CustomerPic3;
                 await customerAppointmentScheduleService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -231,6 +237,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 customerAppointmentScheduleVo.Consultation = customerAppointmentSchedule.Consultation;
                 customerAppointmentScheduleVo.AssignLiveanchorId = customerAppointmentSchedule.AssignLiveanchorId;
                 customerAppointmentScheduleVo.AssignLiveanchorName = customerAppointmentSchedule.AssignLiveanchorName;
+                customerAppointmentScheduleVo.CustomerPic1 = customerAppointmentSchedule.CustomerPic1;
+                customerAppointmentScheduleVo.CustomerPic2 = customerAppointmentSchedule.CustomerPic2;
+                customerAppointmentScheduleVo.CustomerPic3 = customerAppointmentSchedule.CustomerPic3;
                 return ResultData<CustomerAppointmentScheduleVo>.Success().AddData("customerAppointmentScheduleInfo", customerAppointmentScheduleVo);
             }
             catch (Exception ex)
@@ -265,6 +274,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 customerAppointmentScheduleVo.AppointmentHospitalId = customerAppointmentSchedule.AppointmentHospitalId;
                 customerAppointmentScheduleVo.AppointmentHospitalName = customerAppointmentSchedule.AppointmentHospitalName;
                 customerAppointmentScheduleVo.Consultation = customerAppointmentSchedule.Consultation;
+                customerAppointmentScheduleVo.CustomerPic1 = customerAppointmentSchedule.CustomerPic1;
+                customerAppointmentScheduleVo.CustomerPic2 = customerAppointmentSchedule.CustomerPic2;
+                customerAppointmentScheduleVo.CustomerPic3 = customerAppointmentSchedule.CustomerPic3;
                 return ResultData<CustomerAppointmentScheduleVo>.Success().AddData("customerAppointmentScheduleInfo", customerAppointmentScheduleVo);
             }
             catch (Exception ex)
@@ -296,6 +308,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.AppointmentHospitalId = updateVo.AppointmentHospitalId;
                 updateDto.Consultation = updateVo.Consultation;
                 updateDto.AssignLiveanchorId = updateVo.AssignLiveanchorId;
+                updateDto.CustomerPic1 = updateVo.CustomerPic1;
+                updateDto.CustomerPic2 = updateVo.CustomerPic2;
+                updateDto.CustomerPic3 = updateVo.CustomerPic3;
                 await customerAppointmentScheduleService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

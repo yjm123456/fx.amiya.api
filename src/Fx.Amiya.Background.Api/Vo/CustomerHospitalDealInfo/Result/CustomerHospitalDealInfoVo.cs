@@ -36,6 +36,10 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerHospitalDealInfo.Result
         /// </summary>
         public string CustomerPhone { get; set; }
         /// <summary>
+        /// 加密手机号
+        /// </summary>
+        public string EncryptPhone { get; set; }
+        /// <summary>
         /// 消费日期
         /// </summary>
         public DateTime Date { get; set; }

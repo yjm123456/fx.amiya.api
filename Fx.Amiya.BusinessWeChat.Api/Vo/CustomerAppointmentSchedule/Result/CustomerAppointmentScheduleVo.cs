@@ -82,5 +82,21 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.CustomerAppointmentSchedule
         /// 接诊咨询
         /// </summary>
         public string Consultation { get; set; }
+        /// <summary>
+        /// 顾客照片1
+        /// </summary>
+
+        public string CustomerPic1 { get; set; }
+        /// <summary>
+        /// 顾客照片2
+        /// </summary>
+
+        public string CustomerPic2 { get; set; }
+        /// <summary>
+        /// 顾客照片3
+        /// </summary>
+
+        public string CustomerPic3 { get; set; }
+
     }
 }

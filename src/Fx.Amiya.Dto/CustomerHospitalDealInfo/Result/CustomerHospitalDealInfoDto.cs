@@ -36,6 +36,11 @@ namespace Fx.Amiya.Dto.CustomerHospitalDealInfo.Result
         /// 客户手机号
         /// </summary>
         public string CustomerPhone { get; set; }
+
+        /// <summary>
+        /// 加密手机号
+        /// </summary>
+        public string EncryptPhone { get; set; }
         /// <summary>
         /// 消费日期
         /// </summary>

@@ -487,6 +487,7 @@ namespace Fx.Amiya.Service
                         var tags = dalTagDetailInfo.GetAll().Where(e => e.CustomerGoodsId == addCustomerTagDto.CustomerId).Select(e => e.TagId).ToList();
                         if (tags.Count() > 0)
                         {
+
                             //删除原有标签
                             foreach (var item in tags)
                             {

@@ -56,6 +56,9 @@ namespace Fx.Amiya.BusinessWeChat.Api.Controllers
                                                       AppointmentHospitalId = d.AppointmentHospitalId,
                                                       AppointmentHospitalName = d.AppointmentHospitalName,
                                                       Consultation = d.Consultation,
+                                                      CustomerPic1 = d.CustomerPic1,
+                                                      CustomerPic2 = d.CustomerPic2,
+                                                      CustomerPic3 = d.CustomerPic3,
                                                   };
                 FxPageInfo<CustomerAppointmentScheduleVo> customerAppointmentSchedulePageInfo = new FxPageInfo<CustomerAppointmentScheduleVo>();
                 customerAppointmentSchedulePageInfo.TotalCount = q.TotalCount;

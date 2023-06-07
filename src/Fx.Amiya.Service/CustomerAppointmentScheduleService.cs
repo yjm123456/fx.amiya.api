@@ -87,6 +87,9 @@ namespace Fx.Amiya.Service
                                                              ImportantTypeText = ServiceClass.GetShopCartRegisterEmergencyLevelText(d.ImportantType),
                                                              Remark = d.Remark,
                                                              CreateByEmpName = d.AmiyaEmployeeInfo.Name,
+                                                             CustomerPic1 = d.CustomerPic1,
+                                                             CustomerPic2 = d.CustomerPic2,
+                                                             CustomerPic3 = d.CustomerPic3,
                                                              AppointmentHospitalId = d.AppointmentHospitalId,
                                                              AppointmentHospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == d.AppointmentHospitalId).Select(e => e.Name).SingleOrDefault() ?? "",
                                                              Consultation = d.Consultation,
@@ -218,6 +221,9 @@ namespace Fx.Amiya.Service
                 customerAppointmentScheduleService.AppointmentHospitalId = addDto.AppointmentHospitalId;
                 customerAppointmentScheduleService.Consultation = addDto.Consultation;
                 customerAppointmentScheduleService.AssignLiveanchorId = addDto.AssignLiveanchorId;
+                customerAppointmentScheduleService.CustomerPic1 = addDto.CustomerPic1;
+                customerAppointmentScheduleService.CustomerPic2 = addDto.CustomerPic2;
+                customerAppointmentScheduleService.CustomerPic3 = addDto.CustomerPic3;
                 await dalCustomerAppointmentScheduleService.AddAsync(customerAppointmentScheduleService, true);
 
             }
@@ -253,7 +259,9 @@ namespace Fx.Amiya.Service
                 customerAppointmentScheduleServiceDto.AppointmentHospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == customerAppointmentScheduleService.AppointmentHospitalId).Select(e => e.Name).SingleOrDefault() ?? "";
                 customerAppointmentScheduleServiceDto.AssignLiveanchorId = customerAppointmentScheduleService.AssignLiveanchorId;
                 customerAppointmentScheduleServiceDto.AssignLiveanchorName = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == customerAppointmentScheduleServiceDto.AssignLiveanchorId).Select(e => e.LiveAnchorName).SingleOrDefault() ?? "";
-
+                customerAppointmentScheduleServiceDto.CustomerPic1 = customerAppointmentScheduleService.CustomerPic1;
+                customerAppointmentScheduleServiceDto.CustomerPic2 = customerAppointmentScheduleService.CustomerPic2;
+                customerAppointmentScheduleServiceDto.CustomerPic3 = customerAppointmentScheduleService.CustomerPic3;
                 return customerAppointmentScheduleServiceDto;
             }
             catch (Exception ex)
@@ -291,6 +299,9 @@ namespace Fx.Amiya.Service
                 customerAppointmentScheduleServiceDto.AppointmentHospitalId = customerAppointmentScheduleService.AppointmentHospitalId;
                 customerAppointmentScheduleServiceDto.Consultation = customerAppointmentScheduleService.Consultation;
                 customerAppointmentScheduleServiceDto.AppointmentHospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == customerAppointmentScheduleService.AppointmentHospitalId).Select(e => e.Name).SingleOrDefault() ?? "";
+                customerAppointmentScheduleServiceDto.CustomerPic1 = customerAppointmentScheduleService.CustomerPic1;
+                customerAppointmentScheduleServiceDto.CustomerPic2 = customerAppointmentScheduleService.CustomerPic2;
+                customerAppointmentScheduleServiceDto.CustomerPic3 = customerAppointmentScheduleService.CustomerPic3;
 
                 return customerAppointmentScheduleServiceDto;
             }
@@ -321,6 +332,10 @@ namespace Fx.Amiya.Service
                 customerAppointmentScheduleService.AppointmentHospitalId = updateDto.AppointmentHospitalId;
                 customerAppointmentScheduleService.Consultation = updateDto.Consultation;
                 customerAppointmentScheduleService.AssignLiveanchorId = updateDto.AssignLiveanchorId;
+                customerAppointmentScheduleService.CustomerPic1 = updateDto.CustomerPic1;
+                customerAppointmentScheduleService.CustomerPic2 = updateDto.CustomerPic2;
+                customerAppointmentScheduleService.CustomerPic3 = updateDto.CustomerPic3;
+
                 await dalCustomerAppointmentScheduleService.UpdateAsync(customerAppointmentScheduleService, true);
 
 
@@ -391,7 +406,7 @@ namespace Fx.Amiya.Service
             var liveAnchorAppointments = dalCustomerAppointmentScheduleService.GetAll()
                 .Where(e => e.AppointmentDate >= startDate.Value && e.AppointmentDate < endDate.Value.AddDays(1).AddMilliseconds(-1))
                 .Where(e => e.AssignLiveanchorId == liveAnchorId && e.AppointmentType == type && e.Valid == true && e.IsFinish == false).OrderByDescending(e => e.AppointmentDate);
-           
+
             FxPageInfo<CustomerAppointmentScheduleDto> fxPageInfo = new FxPageInfo<CustomerAppointmentScheduleDto>();
             var result = liveAnchorAppointments.Select(d => new CustomerAppointmentScheduleDto
             {
@@ -412,6 +427,9 @@ namespace Fx.Amiya.Service
                 AppointmentHospitalId = d.AppointmentHospitalId,
                 AppointmentHospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == d.AppointmentHospitalId).Select(e => e.Name).SingleOrDefault() ?? "",
                 Consultation = d.Consultation,
+                CustomerPic1 = d.CustomerPic1,
+                CustomerPic2 = d.CustomerPic2,
+                CustomerPic3 = d.CustomerPic3
             }).ToList();
             if (!string.IsNullOrEmpty(keyWord))
             {
