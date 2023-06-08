@@ -206,6 +206,14 @@ namespace Fx.Amiya.Service
         {
             try
             {
+                if (!string.IsNullOrEmpty(addDto.AssignLiveanchorId))
+                {
+                    var customerAppointmentScheduleData = await dalCustomerAppointmentScheduleService.GetAll().Where(x => x.AppointmentDate == addDto.AppointmentDate && x.AssignLiveanchorId == addDto.AssignLiveanchorId).FirstOrDefaultAsync();
+                    if (customerAppointmentScheduleData != null)
+                    {
+                        throw new Exception("主播该段预约时间已占用，请重新选择预约时间！");
+                    }
+                }
                 CustomerAppointmentSchedule customerAppointmentScheduleService = new CustomerAppointmentSchedule();
                 customerAppointmentScheduleService.Id = Guid.NewGuid().ToString();
                 customerAppointmentScheduleService.CustomerName = addDto.CustomerName;
@@ -320,7 +328,14 @@ namespace Fx.Amiya.Service
                 var customerAppointmentScheduleService = await dalCustomerAppointmentScheduleService.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
                 if (customerAppointmentScheduleService == null)
                     throw new Exception("客户预约日程编号错误！");
-
+                if (!string.IsNullOrEmpty(updateDto.AssignLiveanchorId))
+                {
+                    var customerAppointmentScheduleData = await dalCustomerAppointmentScheduleService.GetAll().Where(x => x.AppointmentDate == updateDto.AppointmentDate && x.AssignLiveanchorId == updateDto.AssignLiveanchorId && x.Id != updateDto.Id).FirstOrDefaultAsync();
+                    if (customerAppointmentScheduleData != null)
+                    {
+                        throw new Exception("主播该段预约时间已占用，请重新选择预约时间！");
+                    }
+                }
                 customerAppointmentScheduleService.CustomerName = updateDto.CustomerName;
                 customerAppointmentScheduleService.Phone = updateDto.Phone;
                 customerAppointmentScheduleService.AppointmentType = updateDto.AppointmentType;
@@ -450,8 +465,15 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task AssignAsync(string id, string AssignBy)
         {
+
             var appointment = dalCustomerAppointmentScheduleService.GetAll().Where(e => e.Id == id).SingleOrDefault();
             if (appointment == null) throw new Exception("预约日程编号错误");
+
+            var customerAppointmentScheduleData = await dalCustomerAppointmentScheduleService.GetAll().Where(x => x.AppointmentDate == appointment.AppointmentDate && x.AssignLiveanchorId == AssignBy && x.Id != appointment.Id).FirstOrDefaultAsync();
+            if (customerAppointmentScheduleData != null)
+            {
+                throw new Exception("主播预约时间已存在占用情况，请重新选择预约时间！");
+            }
             appointment.UpdateDate = DateTime.Now;
             appointment.AssignLiveanchorId = AssignBy;
             await dalCustomerAppointmentScheduleService.UpdateAsync(appointment, true);
