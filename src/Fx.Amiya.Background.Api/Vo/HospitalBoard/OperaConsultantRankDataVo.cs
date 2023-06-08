@@ -23,14 +23,14 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalBoard
         /// 成交率
         /// </summary>
         public decimal? DealRation { get; set; }
-        /// <summary>
+       /* /// <summary>
         /// 累计上门率
         /// </summary>
         public decimal? AccumulateToHospitalRatio { get; set; }
         /// <summary>
         /// 累计成交率
         /// </summary>
-        public decimal? AccumulateDealRation { get; set; }
+        public decimal? AccumulateDealRation { get; set; }*/
         /// <summary>
         /// 新客客单价
         /// </summary>

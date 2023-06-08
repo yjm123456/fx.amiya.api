@@ -25,6 +25,14 @@ namespace Fx.Amiya.Dto.Order
         /// 抵用券id
         /// </summary>
         public string VoucherId { get; set; }
+        /// <summary>
+        /// 支付方式
+        /// </summary>
+        public int ExchageType { get; set; }
+        /// <summary>
+        /// 用户下达时使用的小程序appid
+        /// </summary>
+        public string AppId { get; set; }
         public List<OrderItem> OrderItemList { get; set; }
     }
     public class OrderItem {

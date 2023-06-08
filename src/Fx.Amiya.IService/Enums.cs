@@ -1262,4 +1262,14 @@ namespace Fx.Amiya.IService
         RefundExcessDebt = 4,
     }
     #endregion
+    public enum HospitalBoardDataType {
+        /// <summary>
+        /// 累计数据
+        /// </summary>
+        Accumulate=0,
+        /// <summary>
+        /// 当月数据
+        /// </summary>
+        ThisMonth=1
+    }
 }

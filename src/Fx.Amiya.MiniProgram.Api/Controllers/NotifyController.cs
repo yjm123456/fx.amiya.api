@@ -360,7 +360,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 //成功通知微信
                 if (weiXinPayNotifyVo.return_code.ToUpper() == "SUCCESS")
                 {
-                    var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(weiXinPayNotifyVo.out_trade_no);
+                    var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(weiXinPayNotifyVo.attach);
                     if (orderTrade.StatusCode == OrderStatusCode.WAIT_BUYER_PAY)
                     {
                         List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
@@ -436,6 +436,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             weiXinPayNotifyVo.time_end = xmlDoc.DocumentElement.GetElementsByTagName("time_end")[0].InnerText;
             weiXinPayNotifyVo.trade_type = xmlDoc.DocumentElement.GetElementsByTagName("trade_type")[0].InnerText;
             weiXinPayNotifyVo.sign = xmlDoc.DocumentElement.GetElementsByTagName("sign")[0].InnerText;
+            weiXinPayNotifyVo.attach = xmlDoc.DocumentElement.GetElementsByTagName("attach")[0].InnerText;
             return weiXinPayNotifyVo;
         }
         /// <summary>

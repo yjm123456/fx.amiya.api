@@ -104,7 +104,9 @@ namespace Fx.Amiya.Dto.OrderAppInfo
 			set;
 		}
 
-		public WxPackageInfo()
+        public string AppId { get; set; }
+
+        public WxPackageInfo()
 		{
 			this.BankType = "WX";
 			this.FeeType = "1";

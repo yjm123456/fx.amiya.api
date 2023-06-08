@@ -19,6 +19,10 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Order
         /// 抵用券id
         /// </summary>
         public string VoucherId { get; set; }
+        /// <summary>
+        /// 支付类型
+        /// </summary>
+        public int ExchageType { get; set; }
         public List<OrderItem> OrderItemList { get; set; }
     }
     public class OrderItem

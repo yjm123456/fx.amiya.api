@@ -26,10 +26,10 @@ namespace Fx.Amiya.Service
         /// <param name="month"></param>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
-        public async Task<List<OperateConsultantRankDataDto>> GetDealConsultantRankDataAsync(int year, int month, int hospitalId)
+        public async Task<List<OperateConsultantRankDataDto>> GetDealConsultantRankDataAsync(int year, int month, int hospitalId,int type)
         {
             var date = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month);
-            return await contentPlateFormOrderService.GetDealConsultantDataAsync(date.StartDate,date.EndDate,hospitalId);
+            return await contentPlateFormOrderService.GetDealConsultantDataAsync(date.StartDate, date.EndDate, hospitalId,type);
         }
         /// <summary>
         /// 获取成交看板接诊数据
@@ -38,10 +38,10 @@ namespace Fx.Amiya.Service
         /// <param name="month"></param>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
-        public async Task<List<OperateConsultantRankDataDto>> GetDealSceneRankDataAsync(int year, int month, int hospitalId)
+        public async Task<List<OperateConsultantRankDataDto>> GetDealSceneRankDataAsync(int year, int month, int hospitalId,int type)
         {
             var date = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month);
-            return await contentPlateFormOrderService.GetDealSceneConsultantDataAsync(date.StartDate, date.EndDate, hospitalId);
+            return await contentPlateFormOrderService.GetDealSceneConsultantDataAsync(date.StartDate, date.EndDate, hospitalId,type);
         }
         /// <summary>
         /// 获取成交看板科室数据
@@ -50,10 +50,10 @@ namespace Fx.Amiya.Service
         /// <param name="month"></param>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
-        public async Task<List<OperateDepartmentRankDto>> GetDealDepartmentRankDataAsync(int year, int month, int hospitalId)
+        public async Task<List<OperateDepartmentRankDto>> GetDealDepartmentRankDataAsync(int year, int month, int hospitalId,int type)
         {
             var date = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month);
-            return await contentPlateFormOrderService.GetDealDepartmentDataAsync(date.StartDate, date.EndDate, hospitalId);
+            return await contentPlateFormOrderService.GetDealDepartmentDataAsync(date.StartDate, date.EndDate, hospitalId,type);
         }
         /// <summary>
         /// 获取成交看板业绩数据
@@ -77,7 +77,7 @@ namespace Fx.Amiya.Service
             dealPerformanceBordDataDto.NewCustomerPerformance = thisMonthData.NewCustomerPerformance;
             dealPerformanceBordDataDto.NewCustomerPerformanceChainRatio = DecimalExtension.CalculateChain(thisMonthData.NewCustomerPerformance, lastMonthData.NewCustomerPerformance);
             dealPerformanceBordDataDto.NewCustomerPerformanceYearOnYear = DecimalExtension.CalculateChain(thisMonthData.NewCustomerPerformance, lastYearThisMonthData.NewCustomerPerformance);
-            
+
 
             dealPerformanceBordDataDto.OldCustomerPerformance = thisMonthData.OldCustomerPerformance;
             dealPerformanceBordDataDto.OldCustomerPerformanceChainRatio = DecimalExtension.CalculateChain(thisMonthData.OldCustomerPerformance, lastMonthData.OldCustomerPerformance);
@@ -95,10 +95,10 @@ namespace Fx.Amiya.Service
         /// <param name="year"></param>
         /// <param name="month"></param>
         /// <returns></returns>
-        public async Task<HospitalRankDto> GetHospitalRankDataAsync(int year, int month,int hospitalId)
+        public async Task<HospitalRankDto> GetHospitalRankDataAsync(int year, int month, int hospitalId,int type)
         {
             var date = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month);
-            var rankList= await contentPlateFormOrderService.GetRankDataAsync(date.StartDate,date.EndDate);
+            var rankList = await contentPlateFormOrderService.GetRankDataAsync(date.StartDate, date.EndDate,type);
             HospitalRankDto hospitalRankDto = new HospitalRankDto();
             hospitalRankDto.RankList = rankList;
             hospitalRankDto.MyRank = rankList.Where(e => e.HospitalId == hospitalId).SingleOrDefault();
@@ -110,17 +110,17 @@ namespace Fx.Amiya.Service
         /// <param name="year"></param>
         /// <param name="month"></param>
         /// <returns></returns>
-        public async Task<OperateDataDto> GetOperateDataAsync(int year, int month,int hospitalId)
+        public async Task<OperateDataDto> GetOperateDataAsync(int year, int month, int hospitalId, int type)
         {
             var date = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month);
-            var thisMonthData = await contentPlateFormOrderService.GetOperateDataByMonthAsync(date.StartDate, date.EndDate, hospitalId);
+            var thisMonthData = await contentPlateFormOrderService.GetOperateDataByMonthAsync(date.StartDate, date.EndDate, hospitalId,type);
 
-            var lastMonthData = await contentPlateFormOrderService.GetOperateDataByMonthAsync(date.LastMonthStartDate, date.LastMonthEndDate, hospitalId);
+            var lastMonthData = await contentPlateFormOrderService.GetOperateDataByMonthAsync(date.LastMonthStartDate, date.LastMonthEndDate, hospitalId,type);
 
-            var lastYearThisMonthData = await contentPlateFormOrderService.GetOperateDataByMonthAsync(date.LastYearThisMonthStartDate, date.LastYearThisMonthEndDate, hospitalId);
+            var lastYearThisMonthData = await contentPlateFormOrderService.GetOperateDataByMonthAsync(date.LastYearThisMonthStartDate, date.LastYearThisMonthEndDate, hospitalId,type);
             OperateDataDto operateData = new OperateDataDto();
             operateData.NewCustomerToHospitalCount = thisMonthData.NewCustomerToHospitalCount;
-            operateData.NewCustomerToHospitalChainRatio = DecimalExtension.CalculateChain(thisMonthData.NewCustomerToHospitalCount,lastMonthData.NewCustomerToHospitalCount);
+            operateData.NewCustomerToHospitalChainRatio = DecimalExtension.CalculateChain(thisMonthData.NewCustomerToHospitalCount, lastMonthData.NewCustomerToHospitalCount);
             operateData.NewCustomerToHospitalYearOnYear = DecimalExtension.CalculateChain(lastMonthData.NewCustomerToHospitalCount, lastYearThisMonthData.NewCustomerToHospitalCount);
 
             operateData.NewCustomerDealCount = thisMonthData.NewCustomerDealCount;
@@ -128,43 +128,43 @@ namespace Fx.Amiya.Service
             operateData.NewCustomerDealYearOnYear = DecimalExtension.CalculateChain(thisMonthData.NewCustomerDealCount, lastYearThisMonthData.NewCustomerDealCount);
 
             operateData.OldCustomerDealCount = thisMonthData.OldCustomerDealCount;
-            operateData.OldCustomerDealChainRatio= DecimalExtension.CalculateChain(thisMonthData.OldCustomerDealCount, lastMonthData.OldCustomerDealCount);
+            operateData.OldCustomerDealChainRatio = DecimalExtension.CalculateChain(thisMonthData.OldCustomerDealCount, lastMonthData.OldCustomerDealCount);
             operateData.OldCustomerDealYearOnYear = DecimalExtension.CalculateChain(thisMonthData.OldCustomerDealCount, lastYearThisMonthData.OldCustomerDealCount);
 
             operateData.NewCustomerToHospitalRatio = thisMonthData.NewCustomerToHospitalRatio;
-            operateData.NewCustomerToHospitalRatioChainRatio= DecimalExtension.CalculateChain(thisMonthData.NewCustomerToHospitalRatio.Value, lastMonthData.NewCustomerToHospitalRatio.Value);
-            operateData.NewCustomerToHospitalRatioYearOnYear= DecimalExtension.CalculateChain(thisMonthData.NewCustomerToHospitalRatio.Value, lastYearThisMonthData.NewCustomerToHospitalRatio.Value);
+            operateData.NewCustomerToHospitalRatioChainRatio = DecimalExtension.CalculateChain(thisMonthData.NewCustomerToHospitalRatio.Value, lastMonthData.NewCustomerToHospitalRatio.Value);
+            operateData.NewCustomerToHospitalRatioYearOnYear = DecimalExtension.CalculateChain(thisMonthData.NewCustomerToHospitalRatio.Value, lastYearThisMonthData.NewCustomerToHospitalRatio.Value);
             operateData.NewCustomerToHospitalRatioHealthValue = thisMonthData.NewCustomerToHospitalRatioHealthValue;
 
             operateData.NewCustomerDealRation = thisMonthData.NewCustomerDealRation;
-            operateData.NewCustomerDealRationChainRatio= DecimalExtension.CalculateChain(thisMonthData.NewCustomerDealRation.Value, lastMonthData.NewCustomerDealRation.Value);
-            operateData.NewCustomerDealRationYearOnYear= DecimalExtension.CalculateChain(thisMonthData.NewCustomerDealRation.Value, lastYearThisMonthData.NewCustomerDealRation.Value);
+            operateData.NewCustomerDealRationChainRatio = DecimalExtension.CalculateChain(thisMonthData.NewCustomerDealRation.Value, lastMonthData.NewCustomerDealRation.Value);
+            operateData.NewCustomerDealRationYearOnYear = DecimalExtension.CalculateChain(thisMonthData.NewCustomerDealRation.Value, lastYearThisMonthData.NewCustomerDealRation.Value);
             operateData.NewCustomerDealRationHealthValue = thisMonthData.NewCustomerDealRationHealthValue;
 
             operateData.OldCustomerRepurchaseRatio = thisMonthData.OldCustomerRepurchaseRatio;
-            operateData.OldCustomerRepurchaseRatioChainRatio= DecimalExtension.CalculateChain(thisMonthData.OldCustomerRepurchaseRatio.Value, lastMonthData.OldCustomerRepurchaseRatio.Value);
-            operateData.OldCustomerRepurchaseRatioYearOnYear= DecimalExtension.CalculateChain(thisMonthData.OldCustomerRepurchaseRatio.Value, lastYearThisMonthData.OldCustomerRepurchaseRatio.Value);
+            operateData.OldCustomerRepurchaseRatioChainRatio = DecimalExtension.CalculateChain(thisMonthData.OldCustomerRepurchaseRatio.Value, lastMonthData.OldCustomerRepurchaseRatio.Value);
+            operateData.OldCustomerRepurchaseRatioYearOnYear = DecimalExtension.CalculateChain(thisMonthData.OldCustomerRepurchaseRatio.Value, lastYearThisMonthData.OldCustomerRepurchaseRatio.Value);
             operateData.OldCustomerRepurchaseRatioHealthValue = thisMonthData.OldCustomerRepurchaseRatioHealthValue;
 
-            operateData.AccumulateNewCustomerToHospitalCount = thisMonthData.AccumulateNewCustomerToHospitalCount;
-            operateData.AccumulateNewCustomerToHospitalCountChainRatio = DecimalExtension.CalculateChain(thisMonthData.AccumulateNewCustomerToHospitalCount,lastMonthData.AccumulateNewCustomerToHospitalCount);
+            /*operateData.AccumulateNewCustomerToHospitalCount = thisMonthData.AccumulateNewCustomerToHospitalCount;
+            operateData.AccumulateNewCustomerToHospitalCountChainRatio = DecimalExtension.CalculateChain(thisMonthData.AccumulateNewCustomerToHospitalCount, lastMonthData.AccumulateNewCustomerToHospitalCount);
             operateData.AccumulateNewCustomerToHospitalCountYearOnYear = DecimalExtension.CalculateChain(thisMonthData.AccumulateNewCustomerToHospitalCount, lastYearThisMonthData.AccumulateNewCustomerToHospitalCount);
 
             operateData.AccumulateNewCustomerDealCount = thisMonthData.AccumulateNewCustomerDealCount;
-            operateData.AccumulateNewCustomerDealCountChainRatio = DecimalExtension.CalculateChain(thisMonthData.AccumulateNewCustomerDealCount,lastMonthData.AccumulateNewCustomerDealCount);
-            operateData.AccumulateNewCustomerDealCountYearOnYear = DecimalExtension.CalculateChain(thisMonthData.AccumulateNewCustomerDealCount,lastYearThisMonthData.AccumulateNewCustomerDealCount);
+            operateData.AccumulateNewCustomerDealCountChainRatio = DecimalExtension.CalculateChain(thisMonthData.AccumulateNewCustomerDealCount, lastMonthData.AccumulateNewCustomerDealCount);
+            operateData.AccumulateNewCustomerDealCountYearOnYear = DecimalExtension.CalculateChain(thisMonthData.AccumulateNewCustomerDealCount, lastYearThisMonthData.AccumulateNewCustomerDealCount);
 
             operateData.AccumulateOldCustomerDealCount = thisMonthData.AccumulateOldCustomerDealCount;
-            operateData.AccumulateOldCustomerDealCountChainRatio = DecimalExtension.CalculateChain(thisMonthData.AccumulateOldCustomerDealCount,lastMonthData.AccumulateOldCustomerDealCount);
+            operateData.AccumulateOldCustomerDealCountChainRatio = DecimalExtension.CalculateChain(thisMonthData.AccumulateOldCustomerDealCount, lastMonthData.AccumulateOldCustomerDealCount);
             operateData.AccumulateOldCustomerDealCountYearOnYear = DecimalExtension.CalculateChain(thisMonthData.AccumulateOldCustomerDealCount, lastYearThisMonthData.AccumulateOldCustomerDealCount);
 
             operateData.AccumulateNewCustomerToHospitalRatio = thisMonthData.AccumulateNewCustomerToHospitalRatio;
-            operateData.AccumulateNewCustomerToHospitalRatioChainRatio = DecimalExtension.CalculateChain(thisMonthData.AccumulateNewCustomerToHospitalRatio,lastMonthData.AccumulateNewCustomerToHospitalRatio);
-            operateData.AccumulateNewCustomerToHospitalRatioYearOnYear = DecimalExtension.CalculateChain(thisMonthData.AccumulateNewCustomerToHospitalRatio,lastYearThisMonthData.AccumulateNewCustomerToHospitalRatio);
+            operateData.AccumulateNewCustomerToHospitalRatioChainRatio = DecimalExtension.CalculateChain(thisMonthData.AccumulateNewCustomerToHospitalRatio, lastMonthData.AccumulateNewCustomerToHospitalRatio);
+            operateData.AccumulateNewCustomerToHospitalRatioYearOnYear = DecimalExtension.CalculateChain(thisMonthData.AccumulateNewCustomerToHospitalRatio, lastYearThisMonthData.AccumulateNewCustomerToHospitalRatio);
 
             operateData.AccumulateNewCustomerDealRation = thisMonthData.AccumulateNewCustomerDealRation;
-            operateData.AccumulateNewCustomerDealRationChainRatio = DecimalExtension.CalculateChain(thisMonthData.AccumulateNewCustomerDealRation,lastMonthData.AccumulateNewCustomerDealRation);
-            operateData.AccumulateNewCustomerDealRationYearOnYear = DecimalExtension.CalculateChain(thisMonthData.AccumulateNewCustomerDealRation, lastYearThisMonthData.AccumulateNewCustomerDealRation);
+            operateData.AccumulateNewCustomerDealRationChainRatio = DecimalExtension.CalculateChain(thisMonthData.AccumulateNewCustomerDealRation, lastMonthData.AccumulateNewCustomerDealRation);
+            operateData.AccumulateNewCustomerDealRationYearOnYear = DecimalExtension.CalculateChain(thisMonthData.AccumulateNewCustomerDealRation, lastYearThisMonthData.AccumulateNewCustomerDealRation);*/
 
             return operateData;
         }
@@ -176,64 +176,89 @@ namespace Fx.Amiya.Service
         /// <param name="hospitalId"></param>
         /// <returns></returns>
 
-        public async Task<OrderDataDto> GetOrderBoardDataAsync(int year, int month, int hospitalId)
+        public async Task<OrderDataDto> GetOrderBoardDataAsync(int year, int month, int hospitalId, int type)
         {
-            var date = DateTimeExtension.GetSequentialDateByStartAndEndDate(year,month);
-
-            var thisMonthData=await contentPlateFormOrderService.GetOrderDataByMonthAsync(date.StartDate,date.EndDate,hospitalId);
-
-            var lastMonthData=await contentPlateFormOrderService.GetOrderDataByMonthAsync(date.LastMonthStartDate, date.LastMonthEndDate, hospitalId);
-
-            var lastYearThisMonthData=await contentPlateFormOrderService.GetOrderDataByMonthAsync(date.LastYearThisMonthStartDate, date.LastYearThisMonthEndDate, hospitalId);
-
-            var accumulateOrderData = await contentPlateFormOrderService.GetAccumulateOrderDataAsync(hospitalId);
-
+            var date = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month);
             OrderDataDto orderDataDto = new OrderDataDto();
-            orderDataDto.SendOrderCount = thisMonthData.SendOrderCount;
-            orderDataDto.SendOrderCountChainRatio = DecimalExtension.CalculateChain(thisMonthData.SendOrderCount,lastMonthData.SendOrderCount);
-            orderDataDto.SendOrderCountYearOnYear = DecimalExtension.CalculateChain(thisMonthData.SendOrderCount,lastYearThisMonthData.SendOrderCount);
+            if (type == (int)HospitalBoardDataType.ThisMonth)
+            {
+                var thisMonthData = await contentPlateFormOrderService.GetOrderDataByMonthAsync(date.StartDate, date.EndDate, hospitalId, type);
+
+                var lastMonthData = await contentPlateFormOrderService.GetOrderDataByMonthAsync(date.LastMonthStartDate, date.LastMonthEndDate, hospitalId, type);
+
+                var lastYearThisMonthData = await contentPlateFormOrderService.GetOrderDataByMonthAsync(date.LastYearThisMonthStartDate, date.LastYearThisMonthEndDate, hospitalId, type);
+                orderDataDto.SendOrderCount = thisMonthData.SendOrderCount;
+                orderDataDto.SendOrderCountChainRatio = DecimalExtension.CalculateChain(thisMonthData.SendOrderCount, lastMonthData.SendOrderCount);
+                orderDataDto.SendOrderCountYearOnYear = DecimalExtension.CalculateChain(thisMonthData.SendOrderCount, lastYearThisMonthData.SendOrderCount);
 
 
-            orderDataDto.ProcessedOrderCount = thisMonthData.ProcessedOrderCount;
-            orderDataDto.ProcessedOrderChainRatio= DecimalExtension.CalculateChain(thisMonthData.ProcessedOrderCount, lastMonthData.ProcessedOrderCount);
-            orderDataDto.ProcessedOrderYearOnYear = DecimalExtension.CalculateChain(thisMonthData.ProcessedOrderCount, lastYearThisMonthData.ProcessedOrderCount);
-
-
-
-
-            orderDataDto.UntreatedOrderCount = thisMonthData.UntreatedOrderCount;
-            orderDataDto.UntreatedChainRatio = DecimalExtension.CalculateChain(thisMonthData.UntreatedOrderCount, lastMonthData.UntreatedOrderCount);
-            orderDataDto.UntreatedYearOnYear= DecimalExtension.CalculateChain(thisMonthData.UntreatedOrderCount, lastYearThisMonthData.UntreatedOrderCount);
-
-
-
-            orderDataDto.SendOrderNotToHospitalCount = thisMonthData.SendOrderNotToHospitalCount;
-            orderDataDto.SendOrderNotToHospitalChainRatio= DecimalExtension.CalculateChain(thisMonthData.SendOrderNotToHospitalCount, lastMonthData.SendOrderNotToHospitalCount);
-            orderDataDto.SendOrderNotToHospitalYearOnYear = DecimalExtension.CalculateChain(thisMonthData.SendOrderNotToHospitalCount, lastYearThisMonthData.SendOrderNotToHospitalCount);
-
-
-            orderDataDto.ToHospitalNoDealCount = thisMonthData.ToHospitalNoDealCount;
-            orderDataDto.ToHospitalNoDealChainRatio= DecimalExtension.CalculateChain(thisMonthData.ToHospitalNoDealCount, lastMonthData.ToHospitalNoDealCount);
-            orderDataDto.ToHospitalNoDealYearOnYear= DecimalExtension.CalculateChain(thisMonthData.ToHospitalNoDealCount, lastYearThisMonthData.ToHospitalNoDealCount);
+                orderDataDto.ProcessedOrderCount = thisMonthData.ProcessedOrderCount;
+                orderDataDto.ProcessedOrderChainRatio = DecimalExtension.CalculateChain(thisMonthData.ProcessedOrderCount, lastMonthData.ProcessedOrderCount);
+                orderDataDto.ProcessedOrderYearOnYear = DecimalExtension.CalculateChain(thisMonthData.ProcessedOrderCount, lastYearThisMonthData.ProcessedOrderCount);
 
 
 
-            orderDataDto.DealNoRepurchaseCount = thisMonthData.DealNoRepurchaseCount;
-            orderDataDto.DealNoRepurchaseChainRatio= DecimalExtension.CalculateChain(thisMonthData.DealNoRepurchaseCount, lastMonthData.DealNoRepurchaseCount);
-            orderDataDto.DealNoRepurchaseYearOnYear = DecimalExtension.CalculateChain(thisMonthData.DealNoRepurchaseCount, lastYearThisMonthData.DealNoRepurchaseCount);
+
+                orderDataDto.UntreatedOrderCount = thisMonthData.UntreatedOrderCount;
+                orderDataDto.UntreatedChainRatio = DecimalExtension.CalculateChain(thisMonthData.UntreatedOrderCount, lastMonthData.UntreatedOrderCount);
+                orderDataDto.UntreatedYearOnYear = DecimalExtension.CalculateChain(thisMonthData.UntreatedOrderCount, lastYearThisMonthData.UntreatedOrderCount);
 
 
-            orderDataDto.AccumulateSendOrderCount = accumulateOrderData.AccumulateSendOrderCount;
-            orderDataDto.AccumulateProcessedOrderCount = accumulateOrderData.AccumulateProcessedOrderCount;
-            orderDataDto.AccumulateUntreatedOrderCount = accumulateOrderData.AccumulateUntreatedOrderCount;
-            orderDataDto.AccumulateSendOrderNotToHospitalCount = accumulateOrderData.AccumulateSendOrderNotToHospitalCount;
-            orderDataDto.AccumulateToHospitalNoDealCount = accumulateOrderData.AccumulateToHospitalNoDealCount;
-            orderDataDto.AccumulateDealNoRepurchaseCount = accumulateOrderData.AccumulateDealNoRepurchaseCount;
+
+                orderDataDto.SendOrderNotToHospitalCount = thisMonthData.SendOrderNotToHospitalCount;
+                orderDataDto.SendOrderNotToHospitalChainRatio = DecimalExtension.CalculateChain(thisMonthData.SendOrderNotToHospitalCount, lastMonthData.SendOrderNotToHospitalCount);
+                orderDataDto.SendOrderNotToHospitalYearOnYear = DecimalExtension.CalculateChain(thisMonthData.SendOrderNotToHospitalCount, lastYearThisMonthData.SendOrderNotToHospitalCount);
 
 
+                orderDataDto.ToHospitalNoDealCount = thisMonthData.ToHospitalNoDealCount;
+                orderDataDto.ToHospitalNoDealChainRatio = DecimalExtension.CalculateChain(thisMonthData.ToHospitalNoDealCount, lastMonthData.ToHospitalNoDealCount);
+                orderDataDto.ToHospitalNoDealYearOnYear = DecimalExtension.CalculateChain(thisMonthData.ToHospitalNoDealCount, lastYearThisMonthData.ToHospitalNoDealCount);
+
+
+
+                orderDataDto.DealNoRepurchaseCount = thisMonthData.DealNoRepurchaseCount;
+                orderDataDto.DealNoRepurchaseChainRatio = DecimalExtension.CalculateChain(thisMonthData.DealNoRepurchaseCount, lastMonthData.DealNoRepurchaseCount);
+                orderDataDto.DealNoRepurchaseYearOnYear = DecimalExtension.CalculateChain(thisMonthData.DealNoRepurchaseCount, lastYearThisMonthData.DealNoRepurchaseCount);
+            }
+            else
+            {
+                var accumulateOrderData = await contentPlateFormOrderService.GetAccumulateOrderDataAsync(hospitalId);
+                orderDataDto.SendOrderCount = accumulateOrderData.AccumulateSendOrderCount; ;
+                orderDataDto.SendOrderCountChainRatio = 0;
+                orderDataDto.SendOrderCountYearOnYear = 0;
+
+
+                orderDataDto.ProcessedOrderCount = accumulateOrderData.AccumulateProcessedOrderCount;
+                orderDataDto.ProcessedOrderChainRatio = 0;
+                orderDataDto.ProcessedOrderYearOnYear = 0;
+
+
+
+
+                orderDataDto.UntreatedOrderCount = accumulateOrderData.AccumulateUntreatedOrderCount;
+                orderDataDto.UntreatedChainRatio = 0;
+                orderDataDto.UntreatedYearOnYear = 0;
+
+
+
+                orderDataDto.SendOrderNotToHospitalCount = accumulateOrderData.AccumulateSendOrderNotToHospitalCount;
+                orderDataDto.SendOrderNotToHospitalChainRatio = 0;
+                orderDataDto.SendOrderNotToHospitalYearOnYear = 0;
+
+
+                orderDataDto.ToHospitalNoDealCount = accumulateOrderData.AccumulateToHospitalNoDealCount;
+                orderDataDto.ToHospitalNoDealChainRatio = 0;
+                orderDataDto.ToHospitalNoDealYearOnYear = 0;
+
+
+
+                orderDataDto.DealNoRepurchaseCount = accumulateOrderData.AccumulateDealNoRepurchaseCount;
+                orderDataDto.DealNoRepurchaseChainRatio = 0;
+                orderDataDto.DealNoRepurchaseYearOnYear = 0;
+            }
             return orderDataDto;
         }
 
-        
+
     }
 }

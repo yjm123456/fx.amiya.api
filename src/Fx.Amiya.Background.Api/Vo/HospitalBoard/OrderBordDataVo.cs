@@ -89,7 +89,7 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalBoard
         /// </summary>
         public decimal? DealNoRepurchaseYearOnYear { get; set; }
 
-        /// <summary>
+        /*/// <summary>
         /// 累计派单量
         /// </summary>
         public decimal AccumulateSendOrderCount { get; set; }
@@ -117,6 +117,6 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalBoard
         /// <summary>
         /// 累计成交未复购订单数量
         /// </summary>
-        public decimal AccumulateDealNoRepurchaseCount { get; set; }
+        public decimal AccumulateDealNoRepurchaseCount { get; set; }*/
     }
 }

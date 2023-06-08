@@ -189,7 +189,6 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<UserLastTimeLoginAppId> UserLastTimeLoginAppIds { get; set; }
         public virtual DbSet<Miniprogram> Miniprograms { get; set; }
         public virtual DbSet<HealthValue> HealthValues { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());

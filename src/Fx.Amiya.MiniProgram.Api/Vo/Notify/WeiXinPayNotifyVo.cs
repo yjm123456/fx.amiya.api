@@ -23,5 +23,6 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Notify
         public string total_fee { get; set; }
         public string trade_type { get; set; }
         public string transaction_id { get; set; }
+        public string attach { get; set; }
     }
 }

@@ -435,7 +435,7 @@ namespace Fx.Amiya.IService
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        Task<OrderBaseDto> GetOrderDataByMonthAsync(DateTime startDate,DateTime endDate,int hospitalId);
+        Task<OrderBaseDto> GetOrderDataByMonthAsync(DateTime startDate,DateTime endDate,int hospitalId,int type);
         /// <summary>
         /// 获取医院看板订单累计数据
         /// </summary>
@@ -449,7 +449,7 @@ namespace Fx.Amiya.IService
         /// <param name="endDate"></param>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
-        Task<OperaBaseDto> GetOperateDataByMonthAsync(DateTime startDate, DateTime endDate, int hospitalId);
+        Task<OperaBaseDto> GetOperateDataByMonthAsync(DateTime startDate, DateTime endDate, int hospitalId,int type);
         /// <summary>
         /// 获取机构端成交看板数据
         /// </summary>
@@ -465,7 +465,7 @@ namespace Fx.Amiya.IService
         /// <param name="endDate"></param>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
-        Task<List<OperateDepartmentRankDto>> GetDealDepartmentDataAsync(DateTime startDate, DateTime endDate, int hospitalId);
+        Task<List<OperateDepartmentRankDto>> GetDealDepartmentDataAsync(DateTime startDate, DateTime endDate, int hospitalId,int type);
         /// <summary>
         /// 获取机构端成交看板邀约排名数据
         /// </summary>
@@ -473,7 +473,7 @@ namespace Fx.Amiya.IService
         /// <param name="endDate"></param>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
-        Task<List<OperateConsultantRankDataDto>> GetDealConsultantDataAsync(DateTime startDate,DateTime endDate,int hospitalId);
+        Task<List<OperateConsultantRankDataDto>> GetDealConsultantDataAsync(DateTime startDate,DateTime endDate,int hospitalId,int type);
         /// <summary>
         /// 获取机构端成交看板接诊排名数据
         /// </summary>
@@ -482,14 +482,14 @@ namespace Fx.Amiya.IService
         /// <param name="hospitalId"></param>
         /// <returns></returns>
 
-        Task<List<OperateConsultantRankDataDto>> GetDealSceneConsultantDataAsync(DateTime startDate, DateTime endDate, int hospitalId);
+        Task<List<OperateConsultantRankDataDto>> GetDealSceneConsultantDataAsync(DateTime startDate, DateTime endDate, int hospitalId,int type);
         /// <summary>
         /// 获取机构排名
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        Task<List<RankDataDto>> GetRankDataAsync(DateTime startDate, DateTime endDate);
+        Task<List<RankDataDto>> GetRankDataAsync(DateTime startDate, DateTime endDate,int type);
         #endregion
     }
 }

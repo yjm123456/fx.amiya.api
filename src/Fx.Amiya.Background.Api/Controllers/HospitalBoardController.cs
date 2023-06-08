@@ -33,16 +33,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="year"></param>
         /// <param name="month"></param>
+        /// <param name="type">0累计,1当月 (默认为1,当月)</param>
         /// <returns></returns>
         [HttpGet("orderData")]
-        public async Task<ResultData<OrderBordDataVo>> GetHospitalOrderData(int year,int month) {
+        public async Task<ResultData<OrderBordDataVo>> GetHospitalOrderData(int year,int month,int type) {
             int hospitalId = 0;
             if (httpContextAccessor.HttpContext.User is FxAmiyaHospitalEmployeeIdentity tenant)
                 hospitalId = tenant.HospitalId;
 
             if (hospitalId == 0)
                 throw new Exception("医院编号不能为空");
-            var orderData= await hospitalBoardService.GetOrderBoardDataAsync(year,month,hospitalId);
+            var orderData= await hospitalBoardService.GetOrderBoardDataAsync(year,month,hospitalId,type);
             OrderBordDataVo orderBordData = new OrderBordDataVo();
             orderBordData.SendOrderCount = orderData.SendOrderCount;
             orderBordData.SendOrderCountChainRatio = orderData.SendOrderCountChainRatio;
@@ -63,12 +64,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderBordData.DealNoRepurchaseChainRatio = orderData.DealNoRepurchaseChainRatio;
             orderBordData.DealNoRepurchaseYearOnYear = orderData.DealNoRepurchaseYearOnYear;
 
-            orderBordData.AccumulateSendOrderCount = orderData.AccumulateSendOrderCount;
-            orderBordData.AccumulateProcessedOrderCount = orderData.AccumulateProcessedOrderCount;
-            orderBordData.AccumulateUntreatedOrderCount = orderData.AccumulateUntreatedOrderCount;
-            orderBordData.AccumulateSendOrderNotToHospitalCount = orderData.AccumulateSendOrderNotToHospitalCount;
-            orderBordData.AccumulateToHospitalNoDealCount = orderData.AccumulateToHospitalNoDealCount;
-            orderBordData.AccumulateDealNoRepurchaseCount = orderData.AccumulateDealNoRepurchaseCount;
             return ResultData<OrderBordDataVo>.Success().AddData("orderData", orderBordData);
         }
 
@@ -77,16 +72,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="year"></param>
         /// <param name="month"></param>
+        /// <param name="type">0累计,1当月 (默认为0,累计)</param>
         /// <returns></returns>
         [HttpGet("operationData")]
-        public async Task<ResultData<OperateDataVo>> GetHospitalOperateDataAsync(int year, int month) {
+        public async Task<ResultData<OperateDataVo>> GetHospitalOperateDataAsync(int year, int month, int type) {
             int hospitalId = 0;
             if (httpContextAccessor.HttpContext.User is FxAmiyaHospitalEmployeeIdentity tenant)
                 hospitalId = tenant.HospitalId;
 
             if (hospitalId == 0)
                 throw new Exception("医院编号不能为空");
-            var operateData = await hospitalBoardService.GetOperateDataAsync(year, month, hospitalId);
+            var operateData = await hospitalBoardService.GetOperateDataAsync(year, month, hospitalId,type);
             OperateDataVo operateDataVo = new OperateDataVo();
             operateDataVo.NewCustomerToHospitalCount = operateData.NewCustomerToHospitalCount;
             operateDataVo.NewCustomerToHospitalChainRatio = operateData.NewCustomerToHospitalChainRatio;
@@ -116,7 +112,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             operateDataVo.OldCustomerRepurchaseRatioYearOnYear = operateData.OldCustomerRepurchaseRatioYearOnYear;
             operateDataVo.OldCustomerRepurchaseRatioHealthValue = operateData.OldCustomerRepurchaseRatioHealthValue;
 
-            operateDataVo.AccumulateNewCustomerToHospitalCount = operateData.AccumulateNewCustomerToHospitalCount;
+            /*operateDataVo.AccumulateNewCustomerToHospitalCount = operateData.AccumulateNewCustomerToHospitalCount;
             operateDataVo.AccumulateNewCustomerToHospitalCountChainRatio = operateData.AccumulateNewCustomerToHospitalCountChainRatio;
             operateDataVo.AccumulateNewCustomerToHospitalCountYearOnYear = operateData.AccumulateNewCustomerToHospitalCountYearOnYear;
 
@@ -134,7 +130,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             operateDataVo.AccumulateNewCustomerDealRation = operateData.AccumulateNewCustomerDealRation;
             operateDataVo.AccumulateNewCustomerDealRationChainRatio = operateData.AccumulateNewCustomerDealRationChainRatio;
-            operateDataVo.AccumulateNewCustomerDealRationYearOnYear = operateData.AccumulateNewCustomerDealRationYearOnYear;
+            operateDataVo.AccumulateNewCustomerDealRationYearOnYear = operateData.AccumulateNewCustomerDealRationYearOnYear;*/
 
             return ResultData<OperateDataVo>.Success().AddData("operateData", operateDataVo);
 
@@ -171,23 +167,24 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="year"></param>
         /// <param name="month"></param>
+        /// <param name="type">0累计,1当月 (默认为0,累计)</param>
         /// <returns></returns>
         [HttpGet("departmentRankList")]
-        public async Task<ResultData<List<OperateDepartmentRankVo>>> GetDealDepartmentRankAsync(int year,int month) {
+        public async Task<ResultData<List<OperateDepartmentRankVo>>> GetDealDepartmentRankAsync(int year,int month, int type) {
             int hospitalId = 0;
             if (httpContextAccessor.HttpContext.User is FxAmiyaHospitalEmployeeIdentity tenant)
                 hospitalId = tenant.HospitalId;
 
             if (hospitalId == 0)
                 throw new Exception("医院编号不能为空");
-            var data = await hospitalBoardService.GetDealDepartmentRankDataAsync(year, month, hospitalId);
+            var data = await hospitalBoardService.GetDealDepartmentRankDataAsync(year, month, hospitalId,type);
             var rankList = data.Select(e => new OperateDepartmentRankVo {
                 Rank=e.Rank,
                 DepartMentName=e.DepartMentName,
                 ToHospitalRatio=e.ToHospitalRatio,
                 DealRation=e.DealRation,
-                AccumulateToHospitalRatio=e.AccumulateToHospitalRatio,
-                AccumulateDealRation=e.AccumulateDealRation,
+                /*AccumulateToHospitalRatio=e.AccumulateToHospitalRatio,
+                AccumulateDealRation=e.AccumulateDealRation,*/
                 NewCustomerUnitPrice=e.NewCustomerUnitPrice,
                 OldCustomerUnitPrice=e.OldCustomerUnitPrice,
                 Performance=e.Performance,
@@ -201,9 +198,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="year"></param>
         /// <param name="month"></param>
+        /// <param name="type">0累计,1当月 (默认为0,累计)</param>
         /// <returns></returns>
         [HttpGet("consultantRankList")]
-        public async Task<ResultData<List<OperaConsultantRankDataVo>>> GetDealConsultantRankAsync(int year, int month)
+        public async Task<ResultData<List<OperaConsultantRankDataVo>>> GetDealConsultantRankAsync(int year, int month, int type)
         {
             int hospitalId = 0;
             if (httpContextAccessor.HttpContext.User is FxAmiyaHospitalEmployeeIdentity tenant)
@@ -211,15 +209,15 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             if (hospitalId == 0)
                 throw new Exception("医院编号不能为空");
-            var data = await hospitalBoardService.GetDealConsultantRankDataAsync(year, month, hospitalId);
+            var data = await hospitalBoardService.GetDealConsultantRankDataAsync(year, month, hospitalId,type);
             var rankList = data.Select(e => new OperaConsultantRankDataVo
             {
                 Rank = e.Rank,
                 Name = e.Name,
                 ToHospitalRatio = e.ToHospitalRatio,
                 DealRation = e.DealRation,
-                AccumulateToHospitalRatio=e.AccumulateToHospitalRatio,
-                AccumulateDealRation=e.AccumulateDealRation,
+                /*AccumulateToHospitalRatio=e.AccumulateToHospitalRatio,
+                AccumulateDealRation=e.AccumulateDealRation,*/
                 NewCustomerUnitPrice = e.NewCustomerUnitPrice,
                 OldCustomerUnitPrice = e.OldCustomerUnitPrice,
                 Performance = e.Performance,
@@ -233,9 +231,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="year"></param>
         /// <param name="month"></param>
+        /// <param name="type">0累计,1当月 (默认为0,累计)</param>
         /// <returns></returns>
         [HttpGet("sceneConsultantRankList")]
-        public async Task<ResultData<List<OperaConsultantRankDataVo>>> GetDealSceneConsultantRankAsync(int year, int month)
+        public async Task<ResultData<List<OperaConsultantRankDataVo>>> GetDealSceneConsultantRankAsync(int year, int month, int type)
         {
             int hospitalId = 0;
             if (httpContextAccessor.HttpContext.User is FxAmiyaHospitalEmployeeIdentity tenant)
@@ -243,15 +242,15 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             if (hospitalId == 0)
                 throw new Exception("医院编号不能为空");
-            var data = await hospitalBoardService.GetDealSceneRankDataAsync(year, month, hospitalId);
+            var data = await hospitalBoardService.GetDealSceneRankDataAsync(year, month, hospitalId,type);
             var rankList = data.Select(e => new OperaConsultantRankDataVo
             {
                 Rank = e.Rank,
                 Name = e.Name,
                 ToHospitalRatio = e.ToHospitalRatio,
                 DealRation = e.DealRation,
-                AccumulateToHospitalRatio=e.AccumulateToHospitalRatio,
-                AccumulateDealRation=e.AccumulateDealRation,
+                /*AccumulateToHospitalRatio=e.AccumulateToHospitalRatio,
+                AccumulateDealRation=e.AccumulateDealRation,*/
                 NewCustomerUnitPrice = e.NewCustomerUnitPrice,
                 OldCustomerUnitPrice = e.OldCustomerUnitPrice,
                 Performance = e.Performance,
@@ -263,16 +262,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 获取机构排名数据
         /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="type">0累计,1当月 (默认为0,累计)</param>
         /// <returns></returns>
         [HttpGet("rankData")]
-        public async Task<ResultData<RankDataVo>> GetRankDataAsync(int year,int month) {
+        public async Task<ResultData<RankDataVo>> GetRankDataAsync(int year,int month, int type) {
             int hospitalId = 0;
             if (httpContextAccessor.HttpContext.User is FxAmiyaHospitalEmployeeIdentity tenant)
                 hospitalId = tenant.HospitalId;
 
             if (hospitalId == 0)
                 throw new Exception("医院编号不能为空");
-            var rank=await hospitalBoardService.GetHospitalRankDataAsync(year,month,hospitalId);
+            var rank=await hospitalBoardService.GetHospitalRankDataAsync(year,month,hospitalId,type);
             RankDataVo rankDataVo = new RankDataVo();
             rankDataVo.RankList = rank.RankList.Select(e => new RankData
             {
@@ -282,8 +284,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 DealRatio=e.DealRatio,
                 RepurchaseRatio=e.RepurchaseRatio,
                 NewCustomerUnitPrice=e.NewCustomerUnitPrice,
-                AccumulateToHospitalRatio=e.AccumulateToHospitalRatio,
-                AccumulateDealRatio=e.AccumulateDealRatio
             }).ToList();
             if (rank.MyRank == null)
             {

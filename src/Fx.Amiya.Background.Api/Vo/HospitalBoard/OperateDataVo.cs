@@ -131,7 +131,7 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalBoard
         /// </summary>
         public decimal? OldCustomerDealRationHealthValue { get; set; }
 
-        /// <summary>
+        /*/// <summary>
         /// 累计新客上门量
         /// </summary>
         public decimal AccumulateNewCustomerToHospitalCount { get; set; }
@@ -198,6 +198,6 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalBoard
         /// <summary>
         /// 累计新客成交率同比
         /// </summary>
-        public decimal? AccumulateNewCustomerDealRationYearOnYear { get; set; }
+        public decimal? AccumulateNewCustomerDealRationYearOnYear { get; set; }*/
     }
 }
