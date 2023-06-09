@@ -262,9 +262,9 @@ ADD COLUMN `customer_service_settle_price` DECIMAL(12,2) NULL DEFAULT 0.00 AFTER
 
 
 
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 --客户预约日程新增客户照片
 ALTER TABLE `amiyadb`.`tbl_customer_appointment_schedule` 
 ADD COLUMN `customer_pic1` VARCHAR(300) NULL AFTER `assign_liveanchor_id`,
 ADD COLUMN `customer_pic2` VARCHAR(300) NULL AFTER `customer_pic1`,
 ADD COLUMN `customer_pic3` VARCHAR(300) NULL AFTER `customer_pic2`;
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上

@@ -44,7 +44,7 @@ namespace Fx.Amiya.Service
             try
             {
                 var config = await dalConfig.GetAll().SingleOrDefaultAsync();
-                var jsonConfig= JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig; 
+                var jsonConfig = JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig;
                 var customerHospitalDealInfoService = from d in dalCustomerHospitalDealInfo.GetAll().Include(x => x.HospitalInfoData).Include(x => x.CustomerHospitalDealDetailsList)
                                                       where (query.KeyWord == null || d.CustomerPhone.Contains(query.KeyWord) || d.CustomerName.Contains(query.KeyWord) || d.MsgId.Contains(query.KeyWord))
                                                       && (!query.Type.HasValue || d.Type == query.Type.Value)
@@ -62,7 +62,7 @@ namespace Fx.Amiya.Service
                                                           TypeText = ServiceClass.GetHospitalDealTypeText(d.Type),
                                                           CustomerName = ServiceClass.GetIncompleteCustomerName(d.CustomerName),
                                                           CustomerPhone = ServiceClass.GetIncompletePhone(d.CustomerPhone),
-                                                          EncryptPhone=ServiceClass.Encrypt(d.CustomerPhone, jsonConfig.PhoneEncryptKey),
+                                                          EncryptPhone = ServiceClass.Encrypt(d.CustomerPhone, jsonConfig.PhoneEncryptKey),
                                                           Date = d.Date,
                                                           TotalCashAmount = d.TotalCashAmount,
                                                           ConsumptionType = d.ConsumptionType,
@@ -77,7 +77,7 @@ namespace Fx.Amiya.Service
                 customerHospitalDealInfoServicePageInfo.List = new List<CustomerHospitalDealInfoDto>();
                 if (customerHospitalDealInfoServicePageInfo.TotalCount > 0)
                 {
-                    customerHospitalDealInfoServicePageInfo.List = await customerHospitalDealInfoService.Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
+                    customerHospitalDealInfoServicePageInfo.List = await customerHospitalDealInfoService.OrderByDescending(x => x.CreateDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
                 }
                 return customerHospitalDealInfoServicePageInfo;
             }
