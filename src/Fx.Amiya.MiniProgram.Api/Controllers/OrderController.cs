@@ -763,8 +763,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     packageInfo.AppId = appId;
                     packageInfo.Body = orderId;
                     //回调地址需重新设置(todo;)                   
-                    packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");
+                    //packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");
+                    packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://www.amyk.cn");
                     packageInfo.OutTradeNo = tradeId;
+                    packageInfo.Attach = tradeId;
                     packageInfo.TotalFee = (int)(totalFee * 100m);
                     if (packageInfo.TotalFee < 1m)
                     {
@@ -932,7 +934,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
             foreach (var item in orderTrade.OrderInfoList)
             {
-                if (item.ExchangeType != (int)ExchangeType.HuiShouQian && item.ExchangeType != (int)ExchangeType.PointAndMoney)
+                if (item.ExchangeType != (int)ExchangeType.HuiShouQian && item.ExchangeType != (int)ExchangeType.PointAndMoney && item.ExchangeType != (int)ExchangeType.Wechat)
                 {
                     throw new Exception("该订单不支持重新支付,请取消订单重新下单并支付!");
                 }
@@ -960,16 +962,18 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
             //支付时使用的订单号
             var transNo = "";
-            if (orderTrade.OrderInfoList.FirstOrDefault()?.ExchangeType==(int)ExchangeType.Wechat) {
+            if (appId == "wx8747b7f34c0047eb")
+            {
                 WxPackageInfo packageInfo = new WxPackageInfo();
                 packageInfo.AppId = appId;
                 packageInfo.Body = tradeId;
                 packageInfo.Attach = tradeId;
                 //回调地址需重新设置(todo;)
                 //packageInfo.NotifyUrl = string.Format("http://{0}/pay/wx_Pay.aspx", Request.HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString() + ":" + Request.HttpContext.Connection.LocalPort);
-                packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");
-                packageInfo.OutTradeNo = Guid.NewGuid().ToString().Replace("-","");
-                packageInfo.TotalFee = (int)orderTrade.TotalAmount * 100m;
+                //packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");
+                packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://www.amyk.cn");
+                packageInfo.OutTradeNo = Guid.NewGuid().ToString().Replace("-", "");
+                packageInfo.TotalFee = (int)(orderTrade.TotalAmount * 100m);
                 if (packageInfo.TotalFee < 1m)
                 {
                     packageInfo.TotalFee = 1m;
@@ -999,7 +1003,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             #region 慧收钱支付
 
 
-            if (orderTrade.OrderInfoList.FirstOrDefault()?.ExchangeType == (int)ExchangeType.HuiShouQian) {
+            if (appId != "wx8747b7f34c0047eb")
+            {
                 HuiShouQianPayRequestInfo huiShouQianPayRequestInfo = new HuiShouQianPayRequestInfo();
                 huiShouQianPayRequestInfo.TransNo = Guid.NewGuid().ToString().Replace("-", "");
                 huiShouQianPayRequestInfo.PayType = "WECHAT_APPLET";
@@ -1040,6 +1045,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 var sessionInfo = sessionStorage.GetSession(token);
                 string customerId = sessionInfo.FxCustomerId;
                 string userId = sessionInfo.FxUserId;
+                string appId = sessionInfo.AppId;
                 if (string.IsNullOrEmpty(customerId)) throw new Exception("请先绑定手机号！");
                 var belongLiveAnchorId = await userService.BindUserBelongAppIdAsync(userId, customerId);
                 //积分余额
@@ -1187,28 +1193,76 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 if (totalFee < 0) throw new Exception("支付金额异常");
                 orderId = orderId.Trim(',');
                 goodsName = goodsName.Trim(',');
-                //微信支付
+
+
+                PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
+                # region 微信支付
+
+
+                if (appId == "wx8747b7f34c0047eb")
+                {
+                    //啊美雅美容使用微信支付    
+                    WxPackageInfo packageInfo = new WxPackageInfo();
+                    packageInfo.AppId = appId;
+                    packageInfo.Body = orderId;
+                    //回调地址需重新设置(todo;)                   
+                    //packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");
+                    packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://www.amyk.cn");
+                    packageInfo.OutTradeNo = tradeId;
+                    packageInfo.Attach = tradeId;
+                    packageInfo.TotalFee = (int)(totalFee * 100m);
+                    if (packageInfo.TotalFee < 1m)
+                    {
+                        packageInfo.TotalFee = 1m;
+                    }
+                    //支付人
+                    packageInfo.OpenId = OpenId;
+                    string CheckValue = "";
+                    //验证参数
+                    if (orderService.CheckVxSetParams(out CheckValue))
+                    {
+                        if (!orderService.CheckVxPackage(packageInfo, out CheckValue))
+                        {
+                            throw new Exception(CheckValue.ToString());
+                        }
+                        var payRequest = await orderService.BuildPayRequest(packageInfo);
+
+                        payRequestInfo.appId = payRequest.appId;
+                        payRequestInfo.package = payRequest.package;
+                        payRequestInfo.timeStamp = payRequest.timeStamp;
+                        payRequestInfo.nonceStr = payRequest.nonceStr;
+                        payRequestInfo.paySign = payRequest.paySign;
+                        orderAddResult.PayRequestInfo = payRequestInfo;
+                    }
+                    //交易信息添加支付交易订单号
+                    await orderService.TradeAddTransNoAsync(tradeId, tradeId);
+                }
+
+                #endregion
 
                 #region 慧收钱支付
-                HuiShouQianPayRequestInfo huiShouQianPayRequestInfo = new HuiShouQianPayRequestInfo();
-                huiShouQianPayRequestInfo.TransNo = Guid.NewGuid().ToString().Replace("-", "");
-                huiShouQianPayRequestInfo.PayType = "WECHAT_APPLET";
-                huiShouQianPayRequestInfo.OrderAmt = (totalFee * 100m).ToString().Split(".")[0];
-                huiShouQianPayRequestInfo.GoodsInfo = "商品付款";
-                huiShouQianPayRequestInfo.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
-                huiShouQianPayRequestInfo.Extend = tradeId;
-                var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId, customerId);
+                if (appId != "wx8747b7f34c0047eb")
+                {
+                    HuiShouQianPayRequestInfo huiShouQianPayRequestInfo = new HuiShouQianPayRequestInfo();
+                    huiShouQianPayRequestInfo.TransNo = Guid.NewGuid().ToString().Replace("-", "");
+                    huiShouQianPayRequestInfo.PayType = "WECHAT_APPLET";
+                    huiShouQianPayRequestInfo.OrderAmt = (totalFee * 100m).ToString().Split(".")[0];
+                    huiShouQianPayRequestInfo.GoodsInfo = "商品付款";
+                    huiShouQianPayRequestInfo.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    huiShouQianPayRequestInfo.Extend = tradeId;
+                    var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId, customerId);
 
-                if (result.Success == false) throw new Exception("下单失败,请重新下单");
-                //交易信息添加支付交易订单号
-                await orderService.TradeAddTransNoAsync(tradeId, huiShouQianPayRequestInfo.TransNo);
-                PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
-                payRequestInfo.appId = result.PayParam.AppId;
-                payRequestInfo.package = result.PayParam.Package;
-                payRequestInfo.timeStamp = result.PayParam.TimeStamp;
-                payRequestInfo.nonceStr = result.PayParam.NonceStr;
-                payRequestInfo.paySign = result.PayParam.PaySign;
-                orderAddResult.PayRequestInfo = payRequestInfo;
+                    if (result.Success == false) throw new Exception("下单失败,请重新下单");
+                    //交易信息添加支付交易订单号
+                    await orderService.TradeAddTransNoAsync(tradeId, huiShouQianPayRequestInfo.TransNo);
+
+                    payRequestInfo.appId = result.PayParam.AppId;
+                    payRequestInfo.package = result.PayParam.Package;
+                    payRequestInfo.timeStamp = result.PayParam.TimeStamp;
+                    payRequestInfo.nonceStr = result.PayParam.NonceStr;
+                    payRequestInfo.paySign = result.PayParam.PaySign;
+                    orderAddResult.PayRequestInfo = payRequestInfo;
+                }
                 //更新抵用券使用状态
                 if (voucher != null)
                 {
@@ -1576,7 +1630,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                               Standard = goodsInfoService.GetByIdAsync(o.GoodsId).Result.Standard
                                           }).ToList();
             return ResultData<OrderTradeVo>.Success().AddData("orderTrade", orderTradeVo);
-
         }
 
 
@@ -1625,8 +1678,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 {
                     await goodsInfoService.AddGoodsInventoryQuantityAsync(item.GoodsId, (int)item.Quantity);
                 }
-
-
                 //退还抵用券
                 if (item.IsUseCoupon)
                 {
@@ -1684,7 +1735,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     updateOrderList.Add(updateOrder);
                 }
                 await orderService.UpdateWithNoTranstionAsync(updateOrderList);
-
                 #region 本人积分奖励
                 decimal integrationPercent = 0m;
                 var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(customerId);
@@ -1755,7 +1805,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     }
                 }*/
                 #endregion
-
                 #region 成长值奖励
                 //foreach (var item in orderTrade.OrderInfoList)
                 //{
@@ -1768,7 +1817,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 //    }
                 //}
                 #endregion
-
                 unitOfWork.Commit();
                 return ResultData.Success();
             }
@@ -1777,7 +1825,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 unitOfWork.RollBack();
                 throw new Exception("确认收货失败");
             }
-
         }
         /// <summary>
         /// 微信支付回调地址
@@ -1790,10 +1837,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             var token = tokenReader.GetToken();
             var sessionInfo = sessionStorage.GetSession(token);
             string customerId = sessionInfo.FxCustomerId;
-
             var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(tradeId);
-
-
             List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
             foreach (var item in orderTrade.OrderInfoList)
             {
@@ -1810,7 +1854,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     useIntegrationDto.UseQuantity = (decimal)item.IntegrationQuantity;
                     await integrationAccountService.UseByGoodsConsumption(useIntegrationDto);
                 }
-
                 UpdateOrderDto updateOrder = new UpdateOrderDto();
                 updateOrder.OrderId = item.Id;
                 updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
@@ -1883,8 +1926,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         return ResultData.Fail();
                     }
                 }
-
-
             }
             catch (Exception ex)
             {

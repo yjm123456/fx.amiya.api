@@ -22,11 +22,15 @@ namespace Fx.Amiya.Service
         private IDalOrderRefund dalOrderRefund;
         private readonly IHuiShouQianPaymentService huiShouQianPaymentService;
         private readonly IOrderService orderService;
-        public WxPayService(IDalOrderRefund dalOrderRefund, IHuiShouQianPaymentService huiShouQianPaymentService, IOrderService orderService)
+        private readonly IDalCustomerInfo dalCustomerInfo;
+        private readonly IDalWechatPayInfo dalWechatPayInfo;
+        public WxPayService(IDalOrderRefund dalOrderRefund, IHuiShouQianPaymentService huiShouQianPaymentService, IOrderService orderService, IDalCustomerInfo dalCustomerInfo, IDalWechatPayInfo dalWechatPayInfo)
         {
             this.dalOrderRefund = dalOrderRefund;
             this.huiShouQianPaymentService = huiShouQianPaymentService;
             this.orderService = orderService;
+            this.dalCustomerInfo = dalCustomerInfo;
+            this.dalWechatPayInfo = dalWechatPayInfo;
         }
 
         /// <summary>
@@ -37,30 +41,46 @@ namespace Fx.Amiya.Service
         public async Task<RefundOrderResult> WechatRefundAsync(string refundOrderId)
         {
             var refundOrder = dalOrderRefund.GetAll().Where(e => e.Id == refundOrderId).SingleOrDefault();
-
-            
-            if (refundOrder.ExchangeType==(int)ExchangeType.PointAndMoney|| refundOrder.ExchangeType == (int)ExchangeType.HuiShouQian) {
+            var customerInfo = dalCustomerInfo.GetAll().Where(e => e.Id == refundOrder.CustomerId).SingleOrDefault();
+            if (customerInfo == null)
+            {
+                throw new Exception("用户编号错误");
+            }
+            if (customerInfo.AppId == "wx695942e4818de445" && (refundOrder.ExchangeType == (int)ExchangeType.PointAndMoney || refundOrder.ExchangeType == (int)ExchangeType.HuiShouQian))
+            {
                 //退还积分
                 await orderService.CancelPointAndMoneyOrderWithNoTransactionAsync(refundOrder.TradeId, refundOrder.CustomerId);
-                var refunResult= await huiShouQianPaymentService.CreateHuiShouQianAndPointRefundOrder(refundOrderId);
+                var refunResult = await huiShouQianPaymentService.CreateHuiShouQianAndPointRefundOrder(refundOrderId);
                 return refunResult;
             }
-
             if (refundOrder == null) { throw new Exception("退款编号错误"); }
             if (refundOrder.CheckState != (int)CheckState.CheckSuccess) throw new Exception("只有审核通过的订单才能退款");
             var success = dalOrderRefund.GetAll().Where(e => e.TradeId == refundOrder.TradeId && e.RefundState == (int)RefundState.RefundSuccess).ToList();
-            if (success.Count>0) {
+            if (success.Count > 0)
+            {
                 throw new Exception("订单已退款,请勿重复请求");
             }
             if (refundOrder.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
+            var wechatPayInfo = dalWechatPayInfo.GetAll().Where(e => e.AppId == customerInfo.AppId).SingleOrDefault();
+            if (wechatPayInfo == null)
+            {
+                throw new Exception("没有为该小程序配置微信支付信息！");
+            }
+
+            //退还积分,支付积分大于0时退还,小于等于0时,不处理
+            await orderService.CancelPointAndMoneyOrderWithNoTransactionAsync(refundOrder.TradeId, refundOrder.CustomerId);
+
             WxRefundPackageInfo packageInfo = new WxRefundPackageInfo();
+            packageInfo.AppId = wechatPayInfo.AppId;
+            packageInfo.MchId = wechatPayInfo.PartnerId;
+            packageInfo.AppSecret = wechatPayInfo.PartnerKey;
             packageInfo.NotifyUrl = "https://app.ameiyes.com/amiyamini";
-            packageInfo.OutTradeNo = refundOrder.TradeId;
+            packageInfo.OutTradeNo = string.IsNullOrEmpty(refundOrder.TransNo) ? refundOrder.TradeId :refundOrder.TransNo;
             packageInfo.OutRefundNo = refundOrder.Id;
             packageInfo.TotalFee = (int)(refundOrder.ActualPayAmount * 100m);
             packageInfo.RefundFee = (int)(refundOrder.RefundAmount * 100m);
             packageInfo.RefundDesc = "商品退款";
-            var result=await this.BuildRefundRequest(packageInfo);
+            var result = await this.BuildRefundRequest(packageInfo);
             result.TardeId = refundOrder.TradeId;
             return result;
         }
@@ -86,38 +106,58 @@ namespace Fx.Amiya.Service
             payDictionary.Add("notify_url", packageInfo.NotifyUrl);
             SignHelper signHelper = new SignHelper();
             string sign = await signHelper.SignPackage(payDictionary, packageInfo.AppSecret);
-            return await this.PostRefundRequest(payDictionary, sign);
+            return await this.PostRefundRequest(payDictionary, sign, packageInfo.AppId, packageInfo.MchId);
         }
-        private async Task<RefundOrderResult> PostRefundRequest(PayDictionary dict, string sign)
+        private async Task<RefundOrderResult> PostRefundRequest(PayDictionary dict, string sign, string appId,string mchId)
         {
             dict.Add("sign", sign);
             SignHelper signHelper = new SignHelper();
             string text = await signHelper.BuildQueryAsync(dict, false);
             string postData = await signHelper.BuildXmlAsync(dict, false);
             string refundUrl = "https://api.mch.weixin.qq.com/secapi/pay/refund";
-            return this.PostRefundData(refundUrl, postData);
+            return this.PostRefundData(refundUrl, postData, appId,mchId);
         }
         /// <summary>
         /// 微信支付帮助方法
         /// </summary>
         /// <param name="url"></param>
         /// <param name="postData"></param>
+        /// <param name="appId">小程序appid</param>
+        /// <param name="mchId">微信支付商户号id</param>
         /// <returns></returns>
-        private RefundOrderResult PostRefundData(string url, string postData)
+        private RefundOrderResult PostRefundData(string url, string postData, string appId,string mchId)
         {
-            string text = string.Empty;           
+            string text = string.Empty;
             try
             {
                 Uri requestUri = new Uri(url);
-                HttpWebRequest httpWebRequest;                
+                HttpWebRequest httpWebRequest;
                 if (url.ToLower().StartsWith("https"))
                 {
                     //string path = "C:\\wechatsecret\\" + "apiclientrefund78345hsdfcert.p12";
                     //证书文件地址
-                    string path = AppDomain.CurrentDomain.BaseDirectory + "apiclientrefund78345hsdfcert.p12";
+                    string path = "";
+                    //上合未来密钥
+                    if (appId == "wx695942e4818de445")
+                    {
+                        path = AppDomain.CurrentDomain.BaseDirectory + "apiclientrefund78345hsdfcert.p12";
+                    }
+                    if (appId == "wx8747b7f34c0047eb")
+                    {
+                        path = AppDomain.CurrentDomain.BaseDirectory + "apiclientmrrefund_certamiya20231344.p12";
+                    }
+                    if (string.IsNullOrEmpty(path)) {
+                        throw new Exception("没有该小程序的证书文件！");
+                    }
                     ServicePointManager.ServerCertificateValidationCallback = ((object s, X509Certificate c, X509Chain ch, SslPolicyErrors e) => true);
                     //加载证书
-                    X509Certificate2 cer = new X509Certificate2(path, "1632393371");                
+                    X509Certificate2 cer = null;
+                    if (appId== "wx695942e4818de445") {
+                        cer=new X509Certificate2(path,mchId);
+                    }
+                    if (appId== "wx8747b7f34c0047eb") {
+                        cer= new X509Certificate2(path, mchId);
+                    }
                     httpWebRequest = (HttpWebRequest)WebRequest.CreateDefault(requestUri);
                     httpWebRequest.ClientCertificates.Add(cer);
                 }
@@ -128,7 +168,7 @@ namespace Fx.Amiya.Service
                 Encoding uTF = Encoding.UTF8;
                 byte[] bytes = uTF.GetBytes(postData);
                 httpWebRequest.Method = "POST";
-                httpWebRequest.KeepAlive = true;                
+                httpWebRequest.KeepAlive = true;
                 Stream requestStream = httpWebRequest.GetRequestStream();
                 requestStream.Write(bytes, 0, bytes.Length);
                 requestStream.Close();
@@ -153,9 +193,10 @@ namespace Fx.Amiya.Service
                         {
                             if (xmlDocument == null)
                             {
-                                RefundOrderResult refundOrderResult = new RefundOrderResult {
-                                    Result=false,
-                                    Msg="返回数据为空"
+                                RefundOrderResult refundOrderResult = new RefundOrderResult
+                                {
+                                    Result = false,
+                                    Msg = "返回数据为空"
                                 };
                                 return refundOrderResult;
                             }
@@ -178,11 +219,12 @@ namespace Fx.Amiya.Service
                                     RefundOrderResult refundOrderResult = new RefundOrderResult
                                     {
                                         Result = true,
-                                        TradeNo= refundIdNode.InnerText
+                                        TradeNo = refundIdNode.InnerText
                                     };
                                     return refundOrderResult;
                                 }
-                                else {
+                                else
+                                {
                                     XmlNode errDescNode = xmlDocument.SelectSingleNode("xml/err_code_des");
                                     RefundOrderResult refundOrderResult = new RefundOrderResult
                                     {
@@ -190,7 +232,7 @@ namespace Fx.Amiya.Service
                                         Msg = errDescNode.InnerText
                                     };
                                     return refundOrderResult;
-                                }                                                               
+                                }
                             }
                             else
                             {
@@ -200,7 +242,8 @@ namespace Fx.Amiya.Service
                                     Result = false,
                                     Msg = xmlNode3.InnerText
                                 };
-                                if (refundOrderResult.Msg== "订单不存在") {
+                                if (refundOrderResult.Msg == "订单不存在")
+                                {
                                     refundOrderResult.Msg = "该订单非微信支付订单";
                                 }
                                 return refundOrderResult;
@@ -230,7 +273,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task WechatRefundNotifyAsync()
         {
-            
+
         }
 
     }

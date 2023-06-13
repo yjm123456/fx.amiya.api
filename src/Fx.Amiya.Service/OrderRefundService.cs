@@ -116,15 +116,6 @@ namespace Fx.Amiya.Service
                 if (!string.IsNullOrEmpty(createRefundOrderDto.OrderId))
                 {
                     throw new Exception("暂不支持部分退款");
-                    /*var order = await dalOrderInfo.GetAll().Where(e => e.Id == createRefundOrderDto.OrderId && e.TradeId == createRefundOrderDto.TradeId).SingleOrDefaultAsync();
-                    if (order == null)
-                    {
-                        throw new Exception("订单编号不存在");
-                    }
-                    if (!(order.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || order.StatusCode == OrderStatusCode.TRADE_BUYER_SIGNED || order.StatusCode == OrderStatusCode.TRADE_FINISHED || order.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || order.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || order.StatusCode == OrderStatusCode.PARTIAL_REFUND))
-                    {
-                        throw new Exception("当前订单状态不能退款");
-                    }   */
                 }
                 else
                 {

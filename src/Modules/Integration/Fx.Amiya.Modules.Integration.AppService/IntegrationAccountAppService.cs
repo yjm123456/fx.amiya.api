@@ -222,13 +222,13 @@ namespace Fx.Amiya.Modules.Integration.AppService
         /// <returns></returns>
         public async Task AddInterGrationAsync(AddCustomerIntergrationDto addCustomerIntergration)
         {
-            var customerId = await customerService.GetCustomerIdByPhoneAsync(addCustomerIntergration.Phone);
-            if (string.IsNullOrWhiteSpace(customerId))
+            //var customerId = await customerService.GetCustomerIdByPhoneAsync(addCustomerIntergration.Phone);
+            if (string.IsNullOrWhiteSpace(addCustomerIntergration.CustomerId))
             {
                 throw new Exception("该客户未注册小程序，无法赠送积分！");
             }
             decimal integrationPercent = 0m;
-            var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(customerId);
+            var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(addCustomerIntergration.CustomerId);
             if (memberCard != null)
             {
                 integrationPercent = memberCard.GenerateIntegrationPercent;
@@ -240,7 +240,7 @@ namespace Fx.Amiya.Modules.Integration.AppService
             }
             if (!string.IsNullOrWhiteSpace(addCustomerIntergration.OrderId))
             {
-                var exist = await this.GetIsIntegrationGenerateRecordByOrderIdAndCustomerIdAsync(addCustomerIntergration.OrderId, customerId);
+                var exist = await this.GetIsIntegrationGenerateRecordByOrderIdAndCustomerIdAsync(addCustomerIntergration.OrderId, addCustomerIntergration.CustomerId);
                 if (exist) throw new Exception("该订单已赠送过积分");
             }
             ConsumptionIntegrationDto consumptionIntegrationDto = new ConsumptionIntegrationDto
@@ -249,15 +249,15 @@ namespace Fx.Amiya.Modules.Integration.AppService
                 Percent = integrationPercent,
                 AmountOfConsumption = addCustomerIntergration.ActualPayment.Value,
                 Date = DateTime.Now,
-                CustomerId = customerId,
+                CustomerId = addCustomerIntergration.CustomerId,
                 OrderId = addCustomerIntergration.OrderId,
                 Type=(int)GenerateType.Handsel,
                 HandleBy=addCustomerIntergration.HandleBy
             };
             await this.AddByConsumptionAsync(consumptionIntegrationDto);
-            var account=await _integrationAccountRepository.GetIntegrationAccountAsync(customerId);
+            var account=await _integrationAccountRepository.GetIntegrationAccountAsync(addCustomerIntergration.CustomerId);
             SendPointMessageDto sendPointMessageDto = new SendPointMessageDto();
-            sendPointMessageDto.CustomerId = customerId;
+            sendPointMessageDto.CustomerId = addCustomerIntergration.CustomerId;
             sendPointMessageDto.MerchantName = "啊美雅";
             sendPointMessageDto.Title = "消费领积分";
             sendPointMessageDto.ChangeCount = $"+{consumptionIntegrationDto.Quantity}";

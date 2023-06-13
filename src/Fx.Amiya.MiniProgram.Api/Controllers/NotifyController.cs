@@ -353,7 +353,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 SignHelper signHelper = new SignHelper();
 
                 //签名验证
-                string sign = await signHelper.SignPay(sParam, "Amy20202020202020202020202020202");
+                string sign = await signHelper.SignPay(sParam, "Amymr202020202020202020202020202");
                 if (sign != weiXinPayNotifyVo.sign) return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
 
                 // 业务逻辑
@@ -462,6 +462,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             sDic.Add("fee_type", weiXinPayNotifyVo.fee_type);
             sDic.Add("is_subscribe", weiXinPayNotifyVo.is_subscribe);
             sDic.Add("return_code", weiXinPayNotifyVo.return_code);
+            sDic.Add("attach", weiXinPayNotifyVo.attach);
             return sDic;
         }
         /// <summary>

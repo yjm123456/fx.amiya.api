@@ -743,13 +743,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData> AddCustomerIntergrationAsync(AddCustomerIntergrationVo editVo)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            var config = await wxAppConfigService.GetCallCenterConfig();
-            string decryptPhone = ServiceClass.Decrypto(editVo.EncryptPhone, config.PhoneEncryptKey);
             AddCustomerIntergrationDto editDto = new AddCustomerIntergrationDto();
-            editDto.Phone = decryptPhone;
             editDto.OrderId = editVo.OrderId;
             editDto.ActualPayment = editVo.ActualPayment;
             editDto.HandleBy = Convert.ToInt32(employee.Id);
+            editDto.CustomerId = editVo.CustomerId;
             await integrationAccountService.AddInterGrationAsync(editDto);
 
 

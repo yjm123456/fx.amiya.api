@@ -14,7 +14,7 @@ namespace Fx.Amiya.DbModels.Model
         /// <summary>
         /// 微信支付商户号
         /// </summary>
-        public int PartnerId { get; set; }
+        public string PartnerId { get; set; }
         /// <summary>
         /// 微信支付密钥
         /// </summary>

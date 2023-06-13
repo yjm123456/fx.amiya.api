@@ -41,7 +41,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpPost("wechatRefund/{id}")]
         public async Task<ResultData> WechatRefund(string id)
         {
-
             try
             {
                 unitOfWork.BeginTransaction();

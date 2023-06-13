@@ -3494,6 +3494,8 @@ namespace Fx.Amiya.Service
         public async Task<WxPayRequestInfo> BuildPayRequest(WxPackageInfo packageInfo)
         {
             var wechatPayInfo = dalWechatPayInfo.GetAll().Where(e => e.AppId == packageInfo.AppId).FirstOrDefault();
+            wechatPayInfo.SubAppId = "";
+            wechatPayInfo.SubMchId = "";
             if (wechatPayInfo == null) throw new Exception("支付方式不可用！");
             WxPayRequestInfo payRequestInfo = new WxPayRequestInfo();
             payRequestInfo.appId = wechatPayInfo.AppId;
@@ -3657,7 +3659,7 @@ namespace Fx.Amiya.Service
             payDictionary.Add("device_info", "");
             payDictionary.Add("nonce_str", Guid.NewGuid().ToString("N"));
             payDictionary.Add("body", package.Body);
-            payDictionary.Add("attach", "");
+            payDictionary.Add("attach", package.Attach);
             payDictionary.Add("out_trade_no", package.OutTradeNo);
             payDictionary.Add("total_fee", (int)package.TotalFee);
             payDictionary.Add("spbill_create_ip", package.SpbillCreateIp);
@@ -5109,12 +5111,12 @@ namespace Fx.Amiya.Service
                 voucher.CustomerConsumptionVoucherId = cartOrderAddDto.VoucherId;
             }
             var goodsInfoList = await goodsInfoService2.GetGoodListByIdsAsync(cartOrderAddDto.OrderItemList.Select(e => e.GoodsId).ToList());
-            var amiyaOrderList = await CreateOrderItemAsync(cartOrderAddDto.OrderItemList, goodsInfoList, voucher, cartOrderAddDto.CustomerId, cartOrderAddDto.ExchageType);
+            var amiyaOrderList = await CreateOrderItemAsync(cartOrderAddDto.OrderItemList, goodsInfoList, voucher, cartOrderAddDto.CustomerId, cartOrderAddDto.AppId);
             totalIntegral = amiyaOrderList.Sum(e => e.IntegrationQuantity).Value;
             var balance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(cartOrderAddDto.CustomerId);
             if (totalIntegral > balance) throw new Exception("积分余额不足！");
             //integralOrderList = amiyaOrderList.Where(e => e.ExchangeType == (int)ExchangeType.Integration).ToList();
-            moneyOrintegralMoneyOrderList = amiyaOrderList.Where(e => e.ExchangeType == (int)ExchangeType.HuiShouQian || e.ExchangeType ==(int) ExchangeType.Wechat || e.ExchangeType == (int)ExchangeType.PointAndMoney).ToList();
+            moneyOrintegralMoneyOrderList = amiyaOrderList.Where(e => e.ExchangeType == (int)ExchangeType.HuiShouQian || e.ExchangeType == (int)ExchangeType.Wechat || e.ExchangeType == (int)ExchangeType.PointAndMoney).ToList();
 
             PayRequestInfoDto payRequestInfoDto = null;
 
@@ -5122,14 +5124,17 @@ namespace Fx.Amiya.Service
             if (moneyOrintegralMoneyOrderList.Count() > 0)
             {
 
-                if (cartOrderAddDto.ExchageType==2) {
+                if (cartOrderAddDto.AppId == "wx8747b7f34c0047eb")
+                {
                     //微信支付
-                    payRequestInfoDto = await AddWechatMoneyOrPointAndMoneyTradeAsync(moneyOrintegralMoneyOrderList, voucher, cartOrderAddDto.CustomerId, cartOrderAddDto.AddressId.Value, cartOrderAddDto.Remark, cartOrderAddDto.OpenId,cartOrderAddDto.AppId);
-                } else {
+                    payRequestInfoDto = await AddWechatMoneyOrPointAndMoneyTradeAsync(moneyOrintegralMoneyOrderList, voucher, cartOrderAddDto.CustomerId, cartOrderAddDto.AddressId.Value, cartOrderAddDto.Remark, cartOrderAddDto.OpenId, cartOrderAddDto.AppId);
+                }
+                else
+                {
                     //慧收钱支付
                     payRequestInfoDto = await AddMoneyOrPointAndMoneyTradeAsync(moneyOrintegralMoneyOrderList, voucher, cartOrderAddDto.CustomerId, cartOrderAddDto.AddressId.Value, cartOrderAddDto.Remark, cartOrderAddDto.OpenId);
                 }
-                
+
             }
 
             //更改抵用券状态
@@ -5155,7 +5160,7 @@ namespace Fx.Amiya.Service
         /// <param name="goodsInfoList">查询的商品信息</param>
         /// <param name="voucher">使用的抵用券</param>
         /// <returns></returns>
-        private async Task<List<CartCreateOrderDto>> CreateOrderItemAsync(List<OrderItem> orderItems, List<GoodsOrderInfoDto> goodsInfoList, CustomerConsumptioVoucherInfoDto voucher, string customerId, int exchange)
+        private async Task<List<CartCreateOrderDto>> CreateOrderItemAsync(List<OrderItem> orderItems, List<GoodsOrderInfoDto> goodsInfoList, CustomerConsumptioVoucherInfoDto voucher, string customerId, string appId)
         {
             string phone = await customerService.GetPhoneByCustomerIdAsync(customerId);
             if (string.IsNullOrEmpty(phone)) throw new Exception("请先绑定手机号！");
@@ -5217,7 +5222,22 @@ namespace Fx.Amiya.Service
                 cartCreateOrderDto.Quantity = orderItem.Quantity;
                 cartCreateOrderDto.Description = "";
                 cartCreateOrderDto.Standard = orderStandard.StandardName;
-                cartCreateOrderDto.ExchangeType = (byte)(goodsInfo.ExchageType == (int)ExchangeType.ThirdPartyPayment ? (exchange == 2 ? (int)ExchangeType.Wechat : (int)ExchangeType.HuiShouQian) : goodsInfo.ExchageType);
+                //cartCreateOrderDto.ExchangeType = (byte)(goodsInfo.ExchageType == (int)ExchangeType.ThirdPartyPayment ? (exchange == 2 ? (int)ExchangeType.Wechat : (int)ExchangeType.HuiShouQian) : goodsInfo.ExchageType);
+                if (goodsInfo.ExchageType == (int)ExchangeType.ThirdPartyPayment)
+                {
+                    if (appId == "wx8747b7f34c0047eb")
+                    {
+                        cartCreateOrderDto.ExchangeType = (int)ExchangeType.Wechat;
+                    }
+                    else
+                    {
+                        cartCreateOrderDto.ExchangeType = (int)ExchangeType.HuiShouQian;
+                    }
+                }
+                else
+                {
+                    cartCreateOrderDto.ExchangeType = (byte)goodsInfo.ExchageType;
+                }
                 if (bindCustomerId != 0)
                 {
                     cartCreateOrderDto.BelongEmpId = bindCustomerId;
@@ -5398,7 +5418,7 @@ namespace Fx.Amiya.Service
         /// 添加钱或积分加钱购交易订单并生成微信支付支付信息
         /// </summary>
         /// <returns></returns>
-        private async Task<PayRequestInfoDto> AddWechatMoneyOrPointAndMoneyTradeAsync(List<CartCreateOrderDto> moneyOrPointOrderList, CustomerConsumptioVoucherInfoDto voucher, string customerId, int addressId, string remark, string OpenId,string appId)
+        private async Task<PayRequestInfoDto> AddWechatMoneyOrPointAndMoneyTradeAsync(List<CartCreateOrderDto> moneyOrPointOrderList, CustomerConsumptioVoucherInfoDto voucher, string customerId, int addressId, string remark, string OpenId, string appId)
         {
 
             try
@@ -5445,23 +5465,33 @@ namespace Fx.Amiya.Service
                 //添加订单
                 await AddAmiyaCartOrderWithNoTransactionAsync(orderTradeAdd);
                 //生成支付信息
-                HuiShouQianPayRequestInfo huiShouQianPayRequestInfo = new HuiShouQianPayRequestInfo();
-                huiShouQianPayRequestInfo.TransNo = Guid.NewGuid().ToString().Replace("-", "");
-                huiShouQianPayRequestInfo.PayType = "WECHAT_APPLET";
-                huiShouQianPayRequestInfo.OrderAmt = (moneyOrPointOrderList.Sum(e => e.ActualPayment).Value * 100m).ToString().Split(".")[0];
-                huiShouQianPayRequestInfo.GoodsInfo = "商品付款";
-                huiShouQianPayRequestInfo.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
-                huiShouQianPayRequestInfo.Extend = orderTradeAdd.Id;
-                var result = await huiShouQianPaymentService.CreateHuiShouQianOrder(huiShouQianPayRequestInfo, OpenId, customerId);
-                if (result.Success == false) throw new Exception("下单失败,请重新下单！");
-                //交易信息添加支付交易订单号
-                await this.TradeAddTransNoAsync(orderTradeAdd.Id, huiShouQianPayRequestInfo.TransNo);
+
+                WxPackageInfo packageInfo = new WxPackageInfo();
+                packageInfo.AppId = appId;
+                packageInfo.Body = orderTradeAdd.OrderInfoAddList.FirstOrDefault().Id;
+                //回调地址需重新设置(todo;)                   
+                //packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");
+                packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://www.amyk.cn");
+                packageInfo.OutTradeNo = orderTradeAdd.Id;
+                packageInfo.Attach = orderTradeAdd.Id;
+                packageInfo.TotalFee = (int)(orderTradeAdd.OrderInfoAddList.Sum(e => e.ActualPayment) * 100m);
+                if (packageInfo.TotalFee < 1m)
+                {
+                    packageInfo.TotalFee = 1m;
+                }
+                //支付人
+                packageInfo.OpenId = OpenId;
+                string CheckValue = "";
+                //验证参数
+                var payRequest = await this.BuildPayRequest(packageInfo);
                 PayRequestInfoDto payRequestInfo = new PayRequestInfoDto();
-                payRequestInfo.appId = result.PayParam.AppId;
-                payRequestInfo.package = result.PayParam.Package;
-                payRequestInfo.timeStamp = result.PayParam.TimeStamp;
-                payRequestInfo.nonceStr = result.PayParam.NonceStr;
-                payRequestInfo.paySign = result.PayParam.PaySign;
+                payRequestInfo.appId = payRequest.appId;
+                payRequestInfo.package = payRequest.package;
+                payRequestInfo.timeStamp = payRequest.timeStamp;
+                payRequestInfo.nonceStr = payRequest.nonceStr;
+                payRequestInfo.paySign = payRequest.paySign;
+                //交易信息添加支付交易订单号
+                await this.TradeAddTransNoAsync(orderTradeAdd.Id, orderTradeAdd.Id);
 
                 //扣除库存
                 foreach (var item in moneyOrPointOrderList)

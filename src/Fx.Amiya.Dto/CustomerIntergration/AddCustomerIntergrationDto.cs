@@ -27,5 +27,9 @@ namespace Fx.Amiya.Dto.CustomerIntergration
         /// 发放人
         /// </summary>
         public int HandleBy { get; set; }
+        /// <summary>
+        /// 用户id
+        /// </summary>
+        public string CustomerId { get; set; }
     }
 }

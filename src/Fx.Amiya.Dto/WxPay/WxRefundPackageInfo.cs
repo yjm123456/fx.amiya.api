@@ -73,10 +73,7 @@ namespace Fx.Amiya.Dto.WxPay
 			this.RefundFeeType = "CNY";
 			//默认从未结算资金退款
 			this.RefundAccount = "REFUND_SOURCE_UNSETTLED_FUNDS";
-			this.AppId = "wx695942e4818de445";
-			this.MchId = "1632393371";
 			this.SignType = "MD5";
-			this.AppSecret = "Amy20202020202020202020202020202";
 		}
 	}
 }

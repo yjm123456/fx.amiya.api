@@ -12,10 +12,7 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerIntergration
     /// </summary>
     public class AddCustomerIntergrationVo
     {
-        /// <summary>
-        /// 客户手机号(加密)
-        /// </summary>
-        public string EncryptPhone { get; set; }
+       
         /// <summary>
         /// 订单号
         /// </summary>
@@ -24,5 +21,9 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerIntergration
         /// 消费金额
         /// </summary>
         public decimal? ActualPayment { get; set; }
+        /// <summary>
+        /// 客户id
+        /// </summary>
+        public string CustomerId { get; set; }
     }
 }

@@ -189,6 +189,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<UserLastTimeLoginAppId> UserLastTimeLoginAppIds { get; set; }
         public virtual DbSet<Miniprogram> Miniprograms { get; set; }
         public virtual DbSet<HealthValue> HealthValues { get; set; }
+        public virtual DbSet<WechatPayInfo> WechatPayInfos { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -376,6 +377,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new UserLastTimeLoginAppIdConfiguration());
             modelBuilder.ApplyConfiguration(new MiniprogramConfiguration());
             modelBuilder.ApplyConfiguration(new HealthValueConfigration());
+            modelBuilder.ApplyConfiguration(new WechatPayInfoConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }
