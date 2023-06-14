@@ -5470,8 +5470,8 @@ namespace Fx.Amiya.Service
                 packageInfo.AppId = appId;
                 packageInfo.Body = orderTradeAdd.OrderInfoAddList.FirstOrDefault().Id;
                 //回调地址需重新设置(todo;)                   
-                //packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");
-                packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://www.amyk.cn");
+                packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");
+                //packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://www.amyk.cn");
                 packageInfo.OutTradeNo = orderTradeAdd.Id;
                 packageInfo.Attach = orderTradeAdd.Id;
                 packageInfo.TotalFee = (int)(orderTradeAdd.OrderInfoAddList.Sum(e => e.ActualPayment) * 100m);

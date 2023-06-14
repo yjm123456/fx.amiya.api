@@ -202,3 +202,27 @@ CREATE TABLE `amiyadb`.`tbl_customer_hospital_deal_info` (
 -----------------------------------------------余建明 2023/05/23 END--------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+
+------------------------------------------王健 2023/06/14 BEGIN--------------------------------------
+
+
+----微信支付信息
+CREATE TABLE `tbl_wechat_payinfo` (
+	`id` VARCHAR(50) NOT NULL ,
+	`app_id` VARCHAR(50) NOT NULL,
+	`app_secret` VARCHAR(50) NOT NULL,
+	`partner_id` VARCHAR(50) NOT NULL,
+	`partner_key` VARCHAR(50) NOT NULL,
+	`enablesp` BIT(1) NOT NULL DEFAULT 0,
+	`sub_app_id` VARCHAR(50) NOT NULL,
+	`sub_mch_id` VARCHAR(50) NOT NULL,
+	`remark` VARCHAR(200) NULL DEFAULT NULL,
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT(1) NOT NULL DEFAULT 0,
+	`delete_date` DATETIME NULL DEFAULT NULL
+);
+
+------------------------------------------王健 2023/06/14 END--------------------------------------
