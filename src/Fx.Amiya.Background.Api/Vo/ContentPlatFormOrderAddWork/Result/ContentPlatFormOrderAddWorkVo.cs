@@ -27,6 +27,14 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderAddWork.Result
         /// </summary>
         public string Phone { get; set; }
         /// <summary>
+        /// 申请类型
+        /// </summary>
+        public int AddWorkType { get; set; }
+        /// <summary>
+        /// 申请类型文本
+        /// </summary>
+        public string AddWorkTypeText { get; set; }
+        /// <summary>
         /// 加密手机号
         /// </summary>
         public string EncryptPhone { get; set; }

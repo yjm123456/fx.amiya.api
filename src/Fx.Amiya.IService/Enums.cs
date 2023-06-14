@@ -1185,6 +1185,22 @@ namespace Fx.Amiya.IService
         DistributeInterviewNotice = 4,
     }
 
+
+
+    /// <summary>
+    /// 申请类型
+    /// </summary>
+    public enum ContentPlatformOrderAddWorkType
+    {
+        ///// <summary>
+        ///// 录单申请
+        ///// </summary>
+        AddOrderApply = 1,
+        /// <summary>
+        /// 改绑申请
+        /// </summary>
+        UpdateBindApply = 2,
+    }
     #region{医院板块枚举类}
 
     /// <summary>

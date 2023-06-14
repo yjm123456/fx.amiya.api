@@ -17,6 +17,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderAddWork.Input
         /// 手机号
         /// </summary>
         public string Phone { get; set; }
+        /// <summary>
+        /// 申请类型
+        /// </summary>
+        public int AddWorkType { get; set; }
 
         /// <summary>
         /// 医院编号

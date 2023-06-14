@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderAddWork;
 using Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderAddWork.Input;
 using Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderAddWork.Result;
@@ -66,6 +67,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       HospitalName = e.HospitalName,
                                                       AcceptBy = e.AcceptBy,
                                                       AcceptByEmpName = e.AcceptByEmpName,
+                                                      AddWorkTypeText = e.AddWorkTypeText,
                                                       Phone = e.Phone,
                                                       EncryptPhone = e.EncryptPhone,
                                                       SendRemark = e.SendRemark,
@@ -110,6 +112,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.HospitalId = addVo.HospitalId;
                 addDto.CreateBy = employeeId;
                 addDto.AcceptBy = addVo.AcceptBy;
+                addDto.AddWorkType = addVo.AddWorkType;
                 addDto.Phone = addVo.Phone;
                 addDto.SendRemark = addVo.SendRemark;
                 await contentPlatFormOrderAddWorkService.AddAsync(addDto);
@@ -141,6 +144,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 result.Phone = selectResult.Phone;
                 result.SendRemark = selectResult.SendRemark;
                 result.CreateBy = selectResult.CreateBy;
+                result.AddWorkType = selectResult.AddWorkType;
                 result.CreateDate = selectResult.CreateDate;
                 result.BelongCustomerServiceId = selectResult.BelongCustomerServiceId;
                 result.CheckState = selectResult.CheckState;
@@ -169,11 +173,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var selectResult = await contentPlatFormOrderAddWorkService.GetByPhoneAsync(phone,employeeId);
+                var selectResult = await contentPlatFormOrderAddWorkService.GetByPhoneAsync(phone, employeeId);
                 ContentPlatFormOrderAddWorkVo result = new ContentPlatFormOrderAddWorkVo();
                 result.Id = selectResult.Id;
                 result.HospitalId = selectResult.HospitalId;
                 result.AcceptBy = selectResult.AcceptBy;
+                result.AddWorkType = selectResult.AddWorkType;
+                result.AddWorkTypeText = selectResult.AddWorkTypeText;
                 result.Phone = selectResult.Phone;
                 result.SendRemark = selectResult.SendRemark;
                 result.CreateBy = selectResult.CreateBy;
@@ -210,7 +216,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.Phone = updateVo.Phone;
                 updateDto.HospitalId = updateVo.HospitalId;
                 updateDto.SendRemark = updateVo.SendRemark;
-
+                updateDto.AddWorkType = updateVo.AddWorkType;
                 await contentPlatFormOrderAddWorkService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -294,6 +300,27 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+        #region 枚举下拉框
+
+        /// <summary>
+        /// 获取申请类型
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getContentPlatformOrderAddWorkTypeList")]
+        [FxInternalAuthorize]
+        public ResultData<List<BaseIdAndNameVo>> GetContentPlatformOrderAddWorkTypeList()
+        {
+            var orderTypes = from d in contentPlatFormOrderAddWorkService.GetContentPlatformOrderAddWorkTypeText()
+                             select new BaseIdAndNameVo
+                             {
+                                 Id = d.Id,
+                                 Name = d.Name
+                             };
+            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("contentPlatformOrderAddWorkTypeList", orderTypes.ToList());
+        }
+
+
+        #endregion
 
     }
 }

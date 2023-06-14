@@ -27,6 +27,11 @@ namespace Fx.Amiya.DbModels.Model
         public string Phone { get; set; }
 
         /// <summary>
+        /// 申请类型
+        /// </summary>
+        public int AddWorkType { get; set; }
+
+        /// <summary>
         /// 医院编号
         /// </summary>
         public int HospitalId { get; set; }

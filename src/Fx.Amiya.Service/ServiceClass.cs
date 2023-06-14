@@ -1901,6 +1901,25 @@ namespace Fx.Amiya.Service
             return rankCodeText;
         }
         /// <summary>
+        /// 获取录单申请类型
+        /// </summary>
+        /// <param name="rankcode"></param>
+        /// <returns></returns>
+        public static string GetContentPlatformOrderAddWorkTypeText(int contentPlatformOrderAddWorkType)
+        {
+            string contentPlatformOrderAddWorkTypeText = "";
+            switch (contentPlatformOrderAddWorkType)
+            {
+                case 1:
+                    contentPlatformOrderAddWorkTypeText = "录单申请";
+                    break;
+                case 2:
+                    contentPlatformOrderAddWorkTypeText = "改绑申请";
+                    break;
+            }
+            return contentPlatformOrderAddWorkTypeText;
+        }
+        /// <summary>
         /// 根据类型exchangetype获取支付方式名称
         /// </summary>
         /// <param name="type"></param>

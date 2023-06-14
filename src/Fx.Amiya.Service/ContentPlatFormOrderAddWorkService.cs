@@ -1,5 +1,6 @@
 ﻿
 using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.ContentPlatFormOrderAddWork;
 using Fx.Amiya.Dto.ContentPlatFormOrderAddWork.Input;
 using Fx.Amiya.IDal;
@@ -51,6 +52,7 @@ namespace Fx.Amiya.Service
                     EncryptPhone = ServiceClass.GetIncompletePhone(e.Phone),
                     Phone = e.Phone,
                     SendRemark = e.SendRemark,
+                    AddWorkTypeText=ServiceClass.GetContentPlatformOrderAddWorkTypeText(e.AddWorkType),
                     CreateBy = e.CreateBy,
                     CreateByEmpName = e.CreateEmployee.Name,
                     CreateDate = e.CreateDate,
@@ -81,6 +83,7 @@ namespace Fx.Amiya.Service
             contentPlatFormOrderAddWork.HospitalId = addDto.HospitalId;
             contentPlatFormOrderAddWork.AcceptBy = addDto.AcceptBy;
             contentPlatFormOrderAddWork.Phone = addDto.Phone;
+            contentPlatFormOrderAddWork.AddWorkType = addDto.AddWorkType;
             contentPlatFormOrderAddWork.SendRemark = addDto.SendRemark;
             contentPlatFormOrderAddWork.CheckState = (int)CheckState.CheckPending;
             contentPlatFormOrderAddWork.CheckRemark = "";
@@ -102,6 +105,7 @@ namespace Fx.Amiya.Service
             result.Id = selectResult.Id;
             result.HospitalId = selectResult.HospitalId;
             result.AcceptBy = selectResult.AcceptBy;
+            result.AddWorkType = selectResult.AddWorkType;
             result.Phone = selectResult.Phone;
             result.SendRemark = selectResult.SendRemark;
             result.CreateBy = selectResult.CreateBy;
@@ -128,6 +132,8 @@ namespace Fx.Amiya.Service
             result.AcceptBy = selectResult.AcceptBy;
             result.Phone = selectResult.Phone;
             result.SendRemark = selectResult.SendRemark;
+            result.AddWorkType = selectResult.AddWorkType;
+            result.AddWorkTypeText = ServiceClass.GetContentPlatformOrderAddWorkTypeText(selectResult.AddWorkType);
             result.CreateBy = selectResult.CreateBy;
             result.CreateDate = selectResult.CreateDate;
             result.BelongCustomerServiceId = selectResult.BelongCustomerServiceId;
@@ -144,6 +150,7 @@ namespace Fx.Amiya.Service
             {
                 throw new Exception("未找到录单申请列表数据，请重新获取！");
             }
+            result.AddWorkType = updateContentPlatFormOrderAddWorkDto.AddWorkType;
             result.AcceptBy = updateContentPlatFormOrderAddWorkDto.AcceptBy;
             result.Phone = updateContentPlatFormOrderAddWorkDto.Phone;
             result.HospitalId = updateContentPlatFormOrderAddWorkDto.HospitalId;
@@ -152,7 +159,7 @@ namespace Fx.Amiya.Service
             await _dalContentPlatFormOrderAddWork.UpdateAsync(result, true);
         }
         /// <summary>
-        /// 审核录单申请工单
+        /// 转移申请单
         /// </summary>
         /// <param name="updateContentPlatFormOrderAddWorkDto"></param>
         /// <returns></returns>
@@ -213,6 +220,25 @@ namespace Fx.Amiya.Service
                 unitOfWork.RollBack();
                 throw err;
             }
+        }
+
+
+        /// <summary>
+        /// 获取申请类型
+        /// </summary>
+        /// <returns></returns>
+        public List<BaseIdAndNameDto> GetContentPlatformOrderAddWorkTypeText()
+        {
+            var appointmentTypes = Enum.GetValues(typeof(ContentPlatformOrderAddWorkType));
+            List<BaseIdAndNameDto> appointmentTypeList = new List<BaseIdAndNameDto>();
+            foreach (var item in appointmentTypes)
+            {
+                BaseIdAndNameDto appointmentType = new BaseIdAndNameDto();
+                appointmentType.Id = Convert.ToInt32(item).ToString();
+                appointmentType.Name = ServiceClass.GetContentPlatformOrderAddWorkTypeText(Convert.ToByte(item));
+                appointmentTypeList.Add(appointmentType);
+            }
+            return appointmentTypeList;
         }
     }
 }

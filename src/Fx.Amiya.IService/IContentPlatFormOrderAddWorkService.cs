@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.AmiyaLessonApply;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.AmiyaLessonApply;
 using Fx.Amiya.Dto.ContentPlatFormOrderAddWork;
 using Fx.Amiya.Dto.ContentPlatFormOrderAddWork.Input;
 using Fx.Common;
@@ -27,5 +28,7 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task CheckAsync(CheckContentPlatFormOrderAddWorkDto updateContentPlatFormOrderAddWorkDto);
         Task DeleteAsync(List<string> idList);
+
+        public List<BaseIdAndNameDto> GetContentPlatformOrderAddWorkTypeText();
     }
 }

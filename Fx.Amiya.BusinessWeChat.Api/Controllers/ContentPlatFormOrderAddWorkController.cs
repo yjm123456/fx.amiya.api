@@ -68,6 +68,7 @@ namespace Fx.Amiya.BusinessWeChat.Api.Controllers
                                                       Phone = e.Phone,
                                                       EncryptPhone = e.EncryptPhone,
                                                       SendRemark = e.SendRemark,
+                                                      AddWorkTypeText = e.AddWorkTypeText,
                                                       CreateBy = e.CreateBy,
                                                       CreateByEmpName = e.CreateByEmpName,
                                                       CreateDate = e.CreateDate,
@@ -110,6 +111,7 @@ namespace Fx.Amiya.BusinessWeChat.Api.Controllers
                 addDto.CreateBy = employeeId;
                 addDto.AcceptBy = addVo.AcceptBy;
                 addDto.Phone = addVo.Phone;
+                addDto.AddWorkType = addVo.AddWorkType;
                 addDto.SendRemark = addVo.SendRemark;
                 await contentPlatFormOrderAddWorkService.AddAsync(addDto);
                 return ResultData.Success();
@@ -139,6 +141,7 @@ namespace Fx.Amiya.BusinessWeChat.Api.Controllers
                 result.AcceptBy = selectResult.AcceptBy;
                 result.Phone = selectResult.Phone;
                 result.SendRemark = selectResult.SendRemark;
+                result.AddWorkType = selectResult.AddWorkType;
                 result.CreateBy = selectResult.CreateBy;
                 result.CreateDate = selectResult.CreateDate;
                 result.BelongCustomerServiceId = selectResult.BelongCustomerServiceId;
@@ -175,6 +178,8 @@ namespace Fx.Amiya.BusinessWeChat.Api.Controllers
                 result.AcceptBy = selectResult.AcceptBy;
                 result.Phone = selectResult.Phone;
                 result.SendRemark = selectResult.SendRemark;
+                result.AddWorkType = selectResult.AddWorkType;
+                result.AddWorkTypeText = selectResult.AddWorkTypeText;
                 result.CreateBy = selectResult.CreateBy;
                 result.CreateDate = selectResult.CreateDate;
                 result.BelongCustomerServiceId = selectResult.BelongCustomerServiceId;
@@ -209,7 +214,7 @@ namespace Fx.Amiya.BusinessWeChat.Api.Controllers
                 updateDto.Phone = updateVo.Phone;
                 updateDto.HospitalId = updateVo.HospitalId;
                 updateDto.SendRemark = updateVo.SendRemark;
-
+                updateDto.AddWorkType = updateVo.AddWorkType;
                 await contentPlatFormOrderAddWorkService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

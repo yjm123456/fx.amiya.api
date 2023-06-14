@@ -19,6 +19,10 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderAddWork
         /// </summary>
         public string Phone { get; set; }
         /// <summary>
+        /// 申请类型
+        /// </summary>
+        public int AddWorkType { get; set; }
+        /// <summary>
         /// 医院id
         /// </summary>
         public int HospitalId { get; set; }
