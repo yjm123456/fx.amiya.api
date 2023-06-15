@@ -472,7 +472,7 @@ namespace Fx.Amiya.Service
             var customerAppointmentScheduleData = await dalCustomerAppointmentScheduleService.GetAll().Where(x => x.AppointmentDate == appointment.AppointmentDate && x.AssignLiveanchorId == AssignBy && x.Id != appointment.Id).FirstOrDefaultAsync();
             if (customerAppointmentScheduleData != null)
             {
-                throw new Exception("主播预约时间已存在占用情况，请重新选择预约时间！");
+                throw new Exception("主播预约时间已存在占用情况，请重新选择预约时间，占用时间段：" + customerAppointmentScheduleData.AppointmentDate.ToString("yyyy-MM-dd HH:mm:ss"));
             }
             appointment.UpdateDate = DateTime.Now;
             appointment.AssignLiveanchorId = AssignBy;
