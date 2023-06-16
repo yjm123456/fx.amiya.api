@@ -11,7 +11,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Vo.Login
         public string EmployeeName { get; set; }
         public int HospitalId { get; set; }
         public string HospitalName { get; set; }
-
+        public string Avatar { get; set; }
         public int HospitalPositionId { get; set; }
         public string HospitalPositionName { get; set; }
 

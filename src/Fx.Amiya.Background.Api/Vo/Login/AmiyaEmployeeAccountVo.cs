@@ -19,6 +19,7 @@ namespace Fx.Amiya.Background.Api.Vo.Login
         public bool IsDirector { get; set; }
         public string Token { get; set; }
 
+        public string Avatar { get; set; }
         public string RefreshToken { get; set; }
         public int DepartmentId { get; set; }
         public string DepartmentName { get; set; }

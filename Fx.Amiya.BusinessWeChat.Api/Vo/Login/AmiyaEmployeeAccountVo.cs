@@ -15,7 +15,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Vo.Login
         public bool IsCustomerService { get; set; }
         public bool IsDirector { get; set; }
         public string Token { get; set; }
-
+        public string Avatar { get; set; }
         public string RefreshToken { get; set; }
         public int DepartmentId { get; set; }
         public string DepartmentName { get; set; }

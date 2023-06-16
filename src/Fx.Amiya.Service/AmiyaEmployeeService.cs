@@ -68,6 +68,7 @@ namespace Fx.Amiya.Service
                 employeeDto.DepartmentId = employee.AmiyaPositionInfo.DepartmentId;
                 employeeDto.DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name;
                 employeeDto.UserId = employee.UserId;
+                employeeDto.Avatar = employee.Avatar;
                 employeeDto.ReadDataCenter = employee.AmiyaPositionInfo.ReadDataCenter;
                 employeeDto.ReadLiveAnchorData = employee.AmiyaPositionInfo.ReadLiveAnchorData;
                 return employeeDto;
@@ -752,6 +753,19 @@ namespace Fx.Amiya.Service
                            };
             return await employee.ToListAsync();
 
+        }
+        /// <summary>
+        /// 修改用户头像
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public async Task UpdateAvatarAsync(int id, string url)
+        {
+            var account =await dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e=>e.Id==id);
+            if (account == null) throw new Exception("用户编号错误！");
+            account.Avatar = url;
+            await dalAmiyaEmployee.UpdateAsync(account,true);
         }
     }
 }

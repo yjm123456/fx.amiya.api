@@ -236,6 +236,7 @@ namespace Fx.Amiya.Service
                 employeeDto.HospitalPositionId = employee.HospitalPositionId;
                 employeeDto.HospitalPositionName = employee.HospitalPositionInfo.Name;
                 employeeDto.IsCustomerService = employee.IsCustomerService;
+                employeeDto.Avatar = employee.Avatar;
                 return employeeDto;
             }
             catch (Exception ex)
@@ -336,6 +337,19 @@ namespace Fx.Amiya.Service
             {
                 throw ex;
             }
+        }
+
+        /// <summary>
+        /// 修改医院账号头像
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task UpdateAvatarAsync(int id,string url)
+        {
+            var account =await dalHospitalEmployee.GetAll().Where(e => e.Id == id).SingleOrDefaultAsync();
+            if (account == null) throw new Exception("用户编号错误");
+            account.Avatar = url;
+            await dalHospitalEmployee.UpdateAsync(account,true);
         }
     }
 }

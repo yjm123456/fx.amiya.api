@@ -192,6 +192,13 @@ namespace Fx.Amiya.IService
         /// <param name="baseLiveAnchorId"></param>
         /// <returns></returns>
         Task<List<AmiyaEmployeeNameDto>> GetCustomerServiceByBaseLiveAnchorid(string baseLiveAnchorId);
+        /// <summary>
+        /// 修改用户头像
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        Task UpdateAvatarAsync(int id,string url);
 
     }
 }

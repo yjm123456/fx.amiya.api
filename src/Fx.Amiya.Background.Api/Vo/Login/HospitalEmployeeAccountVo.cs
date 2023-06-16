@@ -25,5 +25,9 @@ namespace Fx.Amiya.Background.Api.Vo.Login
         public bool IsCustomerService { get; set; }
         public string Token { get; set; }
         public string RefreshToken { get; set; }
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string Avatar { get; set; }
     }
 }

@@ -64,7 +64,12 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task UpdateAsync(UpdateHospitalEmployeeDto updateDto, string employeeType);
 
-
+        /// <summary>
+        /// 修改医院账号头像
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task UpdateAvatarAsync(int id,string url);
 
         /// <summary>
         /// 登录

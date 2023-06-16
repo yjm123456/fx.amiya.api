@@ -61,7 +61,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 {
                     employeeVo.Id = q.Id;
                     employeeVo.Name = q.Name;
-                    employeeVo.Avatar = q.Avatar;
+                    employeeVo.Avatar = q.Avatar ?? "";
                     employeeVo.UserName = q.UserName;
                     employeeVo.Valid = q.Valid;
                     employeeVo.PositionId = q.PositionId;
@@ -178,6 +178,25 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                                Name = d.Name
                            };
             return ResultData<List<BaseKeyAndValueVo>>.Success().AddData("employee", employee.ToList());
+        }
+        /// <summary>
+        /// 修改用户头像
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        [HttpPut("updateAvatar")]
+        public async Task<ResultData<string>> UpdateAvatarAsync(UpdateAvatarVo updateVo)
+        {
+            try
+            {
+                await employeeService.UpdateAvatarAsync(updateVo.Id, updateVo.Url);
+                return ResultData<string>.Success().AddData("avatar",updateVo.Url);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("修改头像失败,请稍后重试！");
+            }
         }
     }
 }

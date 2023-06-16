@@ -20,6 +20,7 @@ using Fx.Common.Extensions;
 using Fx.Identity.Core;
 using System.Security.Claims;
 using Fx.Authentication.Jwt;
+using Fx.Amiya.Background.Api.Vo.AmiyaEmployee;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
@@ -31,7 +32,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IHospitalEmployeeService hospitalEmployeeService;
         private IHttpContextAccessor httpContextAccessor;
         private FxAppGlobal _fxAppGlobal;
-      
+
         public AuthController(IAmiyaEmployeeService amiyaEmployeeService,
             IHospitalEmployeeService hospitalEmployeeService,
             IHttpContextAccessor httpContextAccessor,
@@ -67,11 +68,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                     AmiyaPositionName = employee.PositionName,
                     EmployeeType = EmployeeTypeConstant.AMIYA_EMPLOYEE_TYPE,
                     IsCustomerService = employee.IsCustomerService,
-                    IsDirector=employee.IsDirector,
+                    IsDirector = employee.IsDirector,
                     Token = identity.BuildJwtToken(jwtConfig.Key, jwtConfig.ExpireInSeconds / 60),
                     RefreshToken = identity.BuildRefreshToken(jwtConfig.Key, jwtConfig.RefreshTokenExpireInSeconds / 60),
                     DepartmentId = employee.DepartmentId,
-
+                    Avatar = employee.Avatar ?? "",
                     DepartmentName = employee.DepartmentName,
                     ReadDataCenter = employee.ReadDataCenter
                 };
@@ -95,7 +96,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-            
+
                 var jwtConfig = _fxAppGlobal.AppConfig.FxJwtConfig;
                 FxJwtParser fxJwtParser = new FxJwtParser(refreshToken);
                 if (!fxJwtParser.ValidateSignature(jwtConfig.Key) || fxJwtParser.IsExpired() || !fxJwtParser.IsRefreshToken())
@@ -108,7 +109,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 int employeeId = Convert.ToInt32(fxJwtParser.Claims[FxIdentity.ClaimsType_IdentityId]);
                 var employee = await amiyaEmployeeService.GetByIdAsync(employeeId);
                 var identity = new FxInternalEmployeeIdentity().CreateFxIdentity(employee.Id.ToString());
-              
+
                 TokenVo tokenVo = new TokenVo();
                 tokenVo.Token = identity.BuildJwtToken(jwtConfig.Key, jwtConfig.ExpireInSeconds / 60);
                 tokenVo.RefreshToken = identity.BuildRefreshToken(jwtConfig.Key, jwtConfig.RefreshTokenExpireInSeconds / 60);
@@ -117,7 +118,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             catch (Exception ex)
             {
                 return ResultData<TokenVo>.Fail(401, ex.Message);
-            } 
+            }
         }
 
 
@@ -138,9 +139,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var employee = await hospitalEmployeeService.LoginAsync(userName.Trim(), password.Trim().GetMD5String());
 
                 var identity = new FxTenantIdentity().CreateFxIdentity(employee.Id.ToString());
-            
+
                 HospitalEmployeeAccountVo avvountVo = new HospitalEmployeeAccountVo()
                 {
+                    Avatar=employee.Avatar ?? "",
                     EmployeeId = employee.Id,
                     EmployeeName = employee.Name,
                     HospitalId = employee.HospitalId,
@@ -149,8 +151,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                     HospitalPositionName = employee.HospitalPositionName,
                     IsCustomerService = employee.IsCustomerService,
                     EmployeeType = EmployeeTypeConstant.HOSPITAL_EMPLOYEE_TYPE,
-                    Token = identity.BuildJwtToken(jwtConfig.Key,jwtConfig.ExpireInSeconds / 60),
-                    RefreshToken = identity.BuildRefreshToken(jwtConfig.Key,jwtConfig.RefreshTokenExpireInSeconds / 60)
+                    Token = identity.BuildJwtToken(jwtConfig.Key, jwtConfig.ExpireInSeconds / 60),
+                    RefreshToken = identity.BuildRefreshToken(jwtConfig.Key, jwtConfig.RefreshTokenExpireInSeconds / 60)
                 };
 
                 return ResultData<HospitalEmployeeAccountVo>.Success().AddData("token", avvountVo);
@@ -184,7 +186,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 int employeeId = Convert.ToInt32(fxJwtParser.Claims[FxIdentity.ClaimsType_IdentityId]);
                 var employee = await hospitalEmployeeService.GetByIdAsync(employeeId);
                 var identity = new FxTenantIdentity().CreateFxIdentity(employee.Id.ToString());
-               
+
                 TokenVo tokenVo = new TokenVo();
                 tokenVo.Token = identity.BuildJwtToken(jwtConfig.Key, jwtConfig.ExpireInSeconds / 60);
                 tokenVo.RefreshToken = identity.BuildRefreshToken(jwtConfig.Key, jwtConfig.RefreshTokenExpireInSeconds / 60);
@@ -195,9 +197,37 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData<TokenVo>.Fail(401, ex.Message);
             }
         }
+        /// <summary>
+        /// 修改用户头像
+        /// </summary>
+        /// <param name="type">1:啊美雅端,2:医院端</param>
+        /// <param name="id"></param>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        [HttpPut("updateAvatar")]
+        public async Task<ResultData<string>> UpdateAvatarAsync(UpdateAvatarVo updateVo)
+        {
+            try
+            {
+                if (updateVo.Type == 1)
+                {
+                    await amiyaEmployeeService.UpdateAvatarAsync(updateVo.Id, updateVo.Url);
+                }
+                if (updateVo.Type == 2)
+                {
+                    await hospitalEmployeeService.UpdateAvatarAsync(updateVo.Id, updateVo.Url);
+                }
+                return ResultData<string>.Success().AddData("avatar", updateVo.Url);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("修改头像失败,请稍后重试！");
+            }
+
+        }
 
 
 
-         
+
     }
 }
