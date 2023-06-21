@@ -267,7 +267,6 @@ ALTER TABLE `amiyadb`.`tbl_customer_appointment_schedule`
 ADD COLUMN `customer_pic1` VARCHAR(300) NULL AFTER `assign_liveanchor_id`,
 ADD COLUMN `customer_pic2` VARCHAR(300) NULL AFTER `customer_pic1`,
 ADD COLUMN `customer_pic3` VARCHAR(300) NULL AFTER `customer_pic2`;
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 -----------------------------------------------余建明 2023/06/12 BEGIN--------------------------------------------
 --录单申请新增申请类型
@@ -277,3 +276,4 @@ ADD COLUMN `add_work_type` INT NOT NULL AFTER `phone`;
 update tbl_content_pat_form_order_add_work set add_work_type=1
 
 -----------------------------------------------余建明 2023/06/12 END--------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上

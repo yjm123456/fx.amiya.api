@@ -129,6 +129,14 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaEmployeeController.UpdateAvatarAsync(Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.UpdateAvatarVo)">
+            <summary>
+            修改用户头像
+            </summary>
+            <param name="id"></param>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.AmiyaGoodsDemandController">
             <summary>
             商品需求数据板块接口
@@ -2682,6 +2690,11 @@
             手机号
             </summary>
         </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.AddContentPlatFormOrderAddWorkVo.AddWorkType">
+            <summary>
+            申请类型
+            </summary>
+        </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.AddContentPlatFormOrderAddWorkVo.HospitalId">
             <summary>
             医院编号
@@ -2725,6 +2738,16 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.ContentPlatFormOrderAddWorkVo.Phone">
             <summary>
             手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.ContentPlatFormOrderAddWorkVo.AddWorkType">
+            <summary>
+            申请类型
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.ContentPlatFormOrderAddWorkVo.AddWorkTypeText">
+            <summary>
+            申请类型文本
             </summary>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.ContentPlatFormOrderAddWorkVo.EncryptPhone">
@@ -2790,6 +2813,11 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.UpdateContentPlatFormOrderAddWorkVo.Phone">
             <summary>
             手机号
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.UpdateContentPlatFormOrderAddWorkVo.AddWorkType">
+            <summary>
+            申请类型
             </summary>
         </member>
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork.UpdateContentPlatFormOrderAddWorkVo.HospitalId">
