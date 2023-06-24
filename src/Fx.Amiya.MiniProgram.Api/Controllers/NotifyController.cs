@@ -270,7 +270,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         public async Task<string> PayRechargeNotifyUrl()
         {
             try
-            {               
+            {
                 //获取回调POST过来的xml数据的代码
                 using Stream stream = HttpContext.Request.Body;
                 byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
@@ -341,6 +341,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
             try
             {
+                bool isMaterialOrder = false;
                 //获取回调POST过来的xml数据的代码
                 using Stream stream = HttpContext.Request.Body;
                 byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
@@ -368,7 +369,15 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         {
                             UpdateOrderDto updateOrder = new UpdateOrderDto();
                             updateOrder.OrderId = item.Id;
-                            updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                            if (item.OrderType == (byte)OrderType.MaterialOrder)
+                            {
+                                updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                                isMaterialOrder = true;
+                            }
+                            else if (item.OrderType == (byte)OrderType.VirtualOrder)
+                            {
+                                updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                            }
                             if (item.ActualPayment.HasValue)
                             {
                                 updateOrder.Actual_payment = item.ActualPayment.Value;
@@ -400,7 +409,14 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
                         updateOrderTrade.TradeId = weiXinPayNotifyVo.out_trade_no;
                         updateOrderTrade.AddressId = orderTrade.AddressId;
-                        updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                        if (isMaterialOrder)
+                        {
+                            updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                        }
+                        else
+                        {
+                            updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                        }
                         await orderService.UpdateOrderTradeAsync(updateOrderTrade);
                     }
                 }
@@ -470,7 +486,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("hsqPayResult")]
-        public async Task<string> HSQPayOrderNotifyUrl() {
+        public async Task<string> HSQPayOrderNotifyUrl()
+        {
             try
             {
                 HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
@@ -478,27 +495,29 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
                 await stream.ReadAsync(buffer);
                 string notify = System.Text.Encoding.UTF8.GetString(buffer);
-                notify= HttpUtility.UrlDecode(notify);
+                notify = HttpUtility.UrlDecode(notify);
                 var list = notify.Split("&");
                 string signContent = "";
                 string sign = "";
                 foreach (var item in list)
                 {
                     var arr = item.Split("=");
-                    if (arr[0]== "signContent") {
+                    if (arr[0] == "signContent")
+                    {
                         signContent = arr[1];
                     }
-                    if (arr[0]== "sign") {
+                    if (arr[0] == "sign")
+                    {
                         sign = arr[1];
                     }
                 }
-                var notifyParam = JsonConvert.DeserializeObject<HuiShouQianNotifyParam>(signContent);              
-                var signContent1 = BuildPayParamString("CALLBACK", "1.0.0","JSON", "864001883569", "RSA2",signContent, huiShouQianPackageInfo.Key);               
-                RSAHelper rsa = new RSAHelper(RSAType.RSA2,Encoding.UTF8,huiShouQianPackageInfo.PrivateKey,huiShouQianPackageInfo.PublicKey);
-                var verify= rsa.Verify(signContent1,sign);
+                var notifyParam = JsonConvert.DeserializeObject<HuiShouQianNotifyParam>(signContent);
+                var signContent1 = BuildPayParamString("CALLBACK", "1.0.0", "JSON", "864001883569", "RSA2", signContent, huiShouQianPackageInfo.Key);
+                RSAHelper rsa = new RSAHelper(RSAType.RSA2, Encoding.UTF8, huiShouQianPackageInfo.PrivateKey, huiShouQianPackageInfo.PublicKey);
+                var verify = rsa.Verify(signContent1, sign);
                 if (verify)
                 {
-                    if (notifyParam.extend == "RECHARGE"&& notifyParam.orderStatus.ToUpper() == "SUCCESS")
+                    if (notifyParam.extend == "RECHARGE" && notifyParam.orderStatus.ToUpper() == "SUCCESS")
                     {
                         //储值
                         try
@@ -547,7 +566,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                             return "fail";
                         }
                     }
-                    else {
+                    else
+                    {
                         if (notifyParam.orderStatus.ToUpper() == "SUCCESS")
                         {
                             bool isMaterialOrder = false;
@@ -564,10 +584,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                         updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
                                         isMaterialOrder = true;
                                     }
-                                    else if(item.OrderType == (byte)OrderType.VirtualOrder)
+                                    else if (item.OrderType == (byte)OrderType.VirtualOrder)
                                     {
                                         updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
-                                    }                                    
+                                    }
                                     if (item.ActualPayment.HasValue)
                                     {
                                         updateOrder.Actual_payment = item.ActualPayment.Value;
@@ -597,9 +617,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                 UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
                                 updateOrderTrade.TradeId = notifyParam.extend;
                                 updateOrderTrade.AddressId = orderTrade.AddressId;
-                                if (isMaterialOrder) {
+                                if (isMaterialOrder)
+                                {
                                     updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
-                                } else {
+                                }
+                                else
+                                {
                                     updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
                                 }
 
@@ -607,19 +630,19 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                             }
                         }
                     }
-                    
+
                     return "SUCCESS";
                 }
                 else
                 {
                     return "Fail";
                 }
-                
+
             }
             catch (Exception ex)
             {
                 return "Fail";
-                
+
             }
         }
         /// <summary>
@@ -651,7 +674,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             builder.Append("&key=");
             builder.Append(key);
             return builder.ToString();
-        }       
+        }
 
     }
 }

@@ -3176,6 +3176,7 @@ namespace Fx.Amiya.Service
             {
                 orderTrades = from d in orderTrades
                               where d.StatusCode == OrderStatusCode.TRADE_FINISHED
+                              || d.StatusCode == OrderStatusCode.TRADE_BUYER_PAID
                               || d.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS
                               || d.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS
                               select d;
@@ -3191,6 +3192,7 @@ namespace Fx.Amiya.Service
             {
                 orderTrades = from d in orderTrades
                               where d.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS
+                              || d.StatusCode == OrderStatusCode.TRADE_BUYER_PAID
                               select d;
             }
 
@@ -3276,6 +3278,7 @@ namespace Fx.Amiya.Service
                 order = from d in order
                         where d.StatusCode == OrderStatusCode.TRADE_FINISHED
                               || d.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS
+                              || d.StatusCode == OrderStatusCode.TRADE_BUYER_PAID
                               || d.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS
                         select d;
             }
@@ -3290,6 +3293,7 @@ namespace Fx.Amiya.Service
             {
                 order = from d in order
                         where d.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS
+                        || d.StatusCode == OrderStatusCode.TRADE_BUYER_PAID
                         select d;
             }
             var orderList = order.Select(d => new MiniprogramOrderExportDto
@@ -3416,13 +3420,13 @@ namespace Fx.Amiya.Service
 
                 var order = dalOrderInfo.GetAll().Where(e => e.Id == sendGoodsDto.OrderId).SingleOrDefault();
                 if (order == null) throw new Exception("订单编号错误！");
-                if (order.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || order.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS)
+                if (order.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || order.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || order.StatusCode == OrderStatusCode.TRADE_BUYER_PAID)
                 {
                     order.StatusCode = OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS;
                     order.UpdateDate = date;
                     await dalOrderInfo.UpdateAsync(order, true);
                     var orderList = dalOrderInfo.GetAll().Where(e => e.TradeId == sendGoodsDto.TradeId).Select(e => e.StatusCode).ToList();
-                    if (!orderList.Contains(OrderStatusCode.WAIT_SELLER_SEND_GOODS) && orderTrade.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS)
+                    if (!orderList.Contains(OrderStatusCode.WAIT_SELLER_SEND_GOODS) && !orderList.Contains(OrderStatusCode.TRADE_BUYER_PAID) && orderTrade.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS)
                     {
                         orderTrade.StatusCode = OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS;
                         orderTrade.UpdateDate = date;
