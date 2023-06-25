@@ -25,6 +25,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public string LiveAnchorName { get; set; }
         /// <summary>
+        /// 主播微信号
+        /// </summary>
+        public string LiveAnchorWeChatNo { get; set; }
+        /// <summary>
         /// 下单时间
         /// </summary>
         public DateTime CreateDate { get; set; }

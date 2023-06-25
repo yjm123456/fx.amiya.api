@@ -1122,6 +1122,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             ContentPlatformName = d.ContentPlatformName,
                                             LiveAnchorId = d.LiveAnchorId,
                                             LiveAnchorName = d.LiveAnchorName,
+                                            LiveAnchorWeChatNo=d.LiveAnchorWeChatNo,
                                             CreateDate = d.CreateDate,
                                             UpdateDate = d.UpdateDate,
                                             GoodsId = d.GoodsId,

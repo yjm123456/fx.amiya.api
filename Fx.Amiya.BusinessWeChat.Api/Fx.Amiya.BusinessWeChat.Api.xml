@@ -397,7 +397,7 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.GetBindCustomerServieContentPlatformOrdersAsync(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.GetBindCustomerServieContentPlatformOrdersAsync(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.String,System.Int32,System.Int32)">
             <summary>
             获取已绑定客服的内容平台订单列表
             </summary>
@@ -406,6 +406,7 @@
             <param name="liveAnchorId"></param>
             <param name="startDate"></param>
             <param name="endDate"></param>
+            <param name="liveAnchorWechatNoId"></param>
             <param name="pageNum"></param>
             <param name="pageSize"></param>
             <returns></returns>

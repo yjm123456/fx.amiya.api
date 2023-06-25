@@ -18,6 +18,7 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public string GoodsId { get; set; }
+        public string LiveAnchorWeChatNo { get; set; }
         public string GoodsName { get; set; }
         public string ThumbPictureUrl { get; set; }
         public string CustomerName { get; set; }

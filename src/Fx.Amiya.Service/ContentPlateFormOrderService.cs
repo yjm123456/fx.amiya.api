@@ -2569,6 +2569,7 @@ namespace Fx.Amiya.Service
                              CreateDate = d.CreateDate,
                              UpdateDate = d.UpdateDate,
                              GoodsId = d.GoodsId,
+                             LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                              GoodsName = d.AmiyaGoodsDemand.ProjectNname,
                              ThumbPictureUrl = d.AmiyaGoodsDemand.ThumbPictureUrl,
                              CustomerName = d.CustomerName,
@@ -2587,6 +2588,17 @@ namespace Fx.Amiya.Service
             FxPageInfo<BindCustomerServiceContentPlatformOrderDto> pageInfo = new FxPageInfo<BindCustomerServiceContentPlatformOrderDto>();
             pageInfo.TotalCount = await orders.CountAsync();
             pageInfo.List = await orders.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+            foreach (var x in pageInfo.List)
+            {
+                if (!string.IsNullOrEmpty(x.LiveAnchorWeChatNo))
+                {
+                    var wechatNoInfo = await liveAnchorWeChatInfoService.GetByIdAsync(x.LiveAnchorWeChatNo);
+                    if (wechatNoInfo.Id != null)
+                    {
+                        x.LiveAnchorWeChatNo = wechatNoInfo.WeChatNo;
+                    }
+                }
+            }
             return pageInfo;
         }
 
