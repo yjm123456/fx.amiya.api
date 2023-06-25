@@ -260,10 +260,11 @@ namespace Fx.Amiya.IService
         /// <param name="liveAnchorId"></param>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
+        /// <param name="liveAnchorWechatNoId"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<BindCustomerServiceContentPlatformOrderDto>> GetBindCustomerServieContentPlatformOrdersAsync(int? customerServiceId, int? liveAnchorId, DateTime? startDate, DateTime? endDate, string keyword, int pageNum, int pageSize);
+        Task<FxPageInfo<BindCustomerServiceContentPlatformOrderDto>> GetBindCustomerServieContentPlatformOrdersAsync(int? customerServiceId, int? liveAnchorId, DateTime? startDate, DateTime? endDate, string keyword, string liveAnchorWechatNoId, int pageNum, int pageSize);
 
         /// <summary>
         /// 获取订单来源枚举数据

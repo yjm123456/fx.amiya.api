@@ -990,7 +990,11 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 短视频
         /// </summary>
-        ShortVideo = 6
+        ShortVideo = 6,
+        /// <summary>
+        /// 产品转化
+        /// </summary>
+        ProductionTransform=7,
     }
 
     public enum ShootingAndClipVideoType

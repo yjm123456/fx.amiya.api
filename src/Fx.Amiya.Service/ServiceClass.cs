@@ -1729,7 +1729,9 @@ namespace Fx.Amiya.Service
                 case 6:
                     inventoryStateText = "短视频";
                     break;
-
+                case 7:
+                    inventoryStateText = "产品转化";
+                    break;
             }
             return inventoryStateText;
         }

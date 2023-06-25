@@ -1103,14 +1103,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="liveAnchorId"></param>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
+        /// <param name="liveAnchorWechatNoId"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("bindCustomerServieOrders")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<BindCustomerServiceContentPlatformOrderVo>>> GetBindCustomerServieContentPlatformOrdersAsync(int? customerServiceId, int? liveAnchorId, DateTime? startDate, DateTime? endDate, string keyword, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<BindCustomerServiceContentPlatformOrderVo>>> GetBindCustomerServieContentPlatformOrdersAsync(int? customerServiceId, int? liveAnchorId, DateTime? startDate, DateTime? endDate, string keyword,string liveAnchorWechatNoId, int pageNum, int pageSize)
         {
-            var orders = await _orderService.GetBindCustomerServieContentPlatformOrdersAsync(customerServiceId, liveAnchorId, startDate, endDate, keyword, pageNum, pageSize);
+            var orders = await _orderService.GetBindCustomerServieContentPlatformOrdersAsync(customerServiceId, liveAnchorId, startDate, endDate, keyword,liveAnchorWechatNoId, pageNum, pageSize);
             var contentPlatformOrders = from d in orders.List
                                         select new BindCustomerServiceContentPlatformOrderVo
                                         {

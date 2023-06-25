@@ -2540,10 +2540,14 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="keyword"></param>
         /// <param name="customerServiceId"></param>
+        /// <param name="liveAnchorId"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="liveAnchorWechatNoId"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<BindCustomerServiceContentPlatformOrderDto>> GetBindCustomerServieContentPlatformOrdersAsync(int? customerServiceId, int? liveAnchorId, DateTime? startDate, DateTime? endDate, string keyword, int pageNum, int pageSize)
+        public async Task<FxPageInfo<BindCustomerServiceContentPlatformOrderDto>> GetBindCustomerServieContentPlatformOrdersAsync(int? customerServiceId, int? liveAnchorId, DateTime? startDate, DateTime? endDate, string keyword, string liveAnchorWechatNoId, int pageNum, int pageSize)
         {
             var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
             var orders = from d in _dalContentPlatformOrder.GetAll()
@@ -2551,6 +2555,7 @@ namespace Fx.Amiya.Service
                          where (string.IsNullOrWhiteSpace(keyword) || d.Id == keyword || d.Phone == keyword || d.CustomerName.Contains(keyword))
                          && (customerServiceId == null || c.CustomerServiceId == customerServiceId)
                          && (liveAnchorId == null || d.LiveAnchorId == liveAnchorId)
+                         && (string.IsNullOrWhiteSpace(liveAnchorWechatNoId) || d.LiveAnchorWeChatNo == liveAnchorWechatNoId)
                          && (startDate == null && endDate == null || d.CreateDate >= startDate.Value && d.CreateDate < endDate.Value.AddDays(1))
                          select new BindCustomerServiceContentPlatformOrderDto
                          {
@@ -3686,7 +3691,7 @@ namespace Fx.Amiya.Service
                 .Select(e => e.ContentPlatformOrder.Phone)
                 .Distinct()
                 .Count() : dalContentPlatFormOrderDealInfo.GetAll()
-                .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.LastDealHospitalId == hospitalId && e.IsToHospital == true && e.IsOldCustomer == true&&e.ContentPlatFormOrderId!=null)
+                .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.LastDealHospitalId == hospitalId && e.IsToHospital == true && e.IsOldCustomer == true && e.ContentPlatFormOrderId != null)
                 .Select(e => e.ContentPlatFormOrder.Phone)
                 .Distinct()
                 .Count();
@@ -3710,8 +3715,8 @@ namespace Fx.Amiya.Service
             var startSelectDate = startDate.Date;
 
             //老客总数
-            var lastMonthCustomer = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.LastDealHospitalId == hospitalId && e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true && e.IsOldCustomer == true&&e.ContentPlatFormOrderId != null).Select(e => e.ContentPlatFormOrder.Phone).Distinct().ToList();
-            var lastNewMonthCustomer = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.LastDealHospitalId == hospitalId && e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true && e.IsOldCustomer == false && (e.ConsumptionType == (int)ConsumptionType.Deal || e.ConsumptionType == null)&& e.ContentPlatFormOrderId != null).Select(e => e.ContentPlatFormOrder.Phone).Distinct().ToList();
+            var lastMonthCustomer = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.LastDealHospitalId == hospitalId && e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true && e.IsOldCustomer == true && e.ContentPlatFormOrderId != null).Select(e => e.ContentPlatFormOrder.Phone).Distinct().ToList();
+            var lastNewMonthCustomer = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.LastDealHospitalId == hospitalId && e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true && e.IsOldCustomer == false && (e.ConsumptionType == (int)ConsumptionType.Deal || e.ConsumptionType == null) && e.ContentPlatFormOrderId != null).Select(e => e.ContentPlatFormOrder.Phone).Distinct().ToList();
             var c = lastMonthCustomer.Intersect(lastNewMonthCustomer).Count();
             var count = lastMonthCustomer.Count() - c;
 
@@ -3740,7 +3745,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<DealPerformanceDataDto> GetDealDataAsync(DateTime startDate, DateTime endDate, int hospitalId)
         {
-            var performanceList = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true && e.LastDealHospitalId == hospitalId&&e.ContentPlatFormOrderId!=null).Select(e => new
+            var performanceList = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true && e.LastDealHospitalId == hospitalId && e.ContentPlatFormOrderId != null).Select(e => new
             {
                 Price = e.Price,
                 IsOldCustomer = e.IsOldCustomer
@@ -3829,7 +3834,7 @@ namespace Fx.Amiya.Service
                 .GroupBy(e => e.HospitalDepartmentId)
                 .Select(e => new { HospitalDepartmentId = e.Key, DealCount = e.Select(e => e.Phone).Distinct().Count() }).ToList();*/
 
-            var dealInfo = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.LastDealHospitalId == hospitalId&&e.ContentPlatFormOrderId!=null).GroupBy(e => e.ContentPlatFormOrder.HospitalDepartmentId).Select(e => new
+            var dealInfo = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.LastDealHospitalId == hospitalId && e.ContentPlatFormOrderId != null).GroupBy(e => e.ContentPlatFormOrder.HospitalDepartmentId).Select(e => new
             {
                 DepartMentName = dalAmiyaHospitalDepartment.GetAll().Where(d => d.Id == e.Key).FirstOrDefault().DepartmentName,
                 HospitalDepartmentId = e.Key,
@@ -3943,7 +3948,7 @@ namespace Fx.Amiya.Service
                 .GroupBy(e => e.NetWorkConsulationName)
                 .Select(e => new { NetWorkConsulationName = e.Key, DealCount = e.Select(e => e.Phone).Distinct().Count() }).ToList();*/
 
-            var dealInfo = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.LastDealHospitalId == hospitalId&&e.ContentPlatFormOrderId!=null).GroupBy(e => e.ContentPlatFormOrder.NetWorkConsulationName).Select(e => new
+            var dealInfo = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.LastDealHospitalId == hospitalId && e.ContentPlatFormOrderId != null).GroupBy(e => e.ContentPlatFormOrder.NetWorkConsulationName).Select(e => new
             {
                 Name = e.Key,
                 OldCustomerCount = e.Sum(e => e.IsOldCustomer == true && e.IsDeal == true ? 1 : 0),
@@ -4043,7 +4048,7 @@ namespace Fx.Amiya.Service
                 {
                     SceneConsulationName = e.Key,
                     DealCount = e.Select(e => e.Phone).Distinct().Count(),
-                }) 
+                })
                 : _dalContentPlatformOrder.GetAll()
                 .Include(e => e.ContentPlatformOrderDealInfoList)
                 .Where(e => e.IsToHospital == true && e.LastDealHospitalId == hospitalId && e.ContentPlatformOrderDealInfoList.Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsOldCustomer == false && e.IsDeal == true).Count() > 0)
@@ -4053,7 +4058,7 @@ namespace Fx.Amiya.Service
             //累计新客成交人数
             //var totalNewCustomerDealCount = 
 
-            var dealInfo = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.LastDealHospitalId == hospitalId&&e.ContentPlatFormOrderId!=null).GroupBy(e => e.ContentPlatFormOrder.SceneConsulationName).Select(e => new
+            var dealInfo = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.LastDealHospitalId == hospitalId && e.ContentPlatFormOrderId != null).GroupBy(e => e.ContentPlatFormOrder.SceneConsulationName).Select(e => new
             {
                 Name = e.Key,
                 OldCustomerCount = e.Sum(e => e.IsOldCustomer == true && e.IsDeal == true ? 1 : 0),
@@ -4104,7 +4109,7 @@ namespace Fx.Amiya.Service
             //总计人数
             var endSelectDate = startDate.Date;
             var totalCustomerCount = _dalContentPlatformOrder.GetAll()
-                .Where(e => e.CreateDate < endSelectDate && e.ContentPlatformOrderDealInfoList.Where(e => e.CreateDate < endSelectDate && e.IsDeal == true&&e.ContentPlatFormOrderId!=null).Count() > 0)
+                .Where(e => e.CreateDate < endSelectDate && e.ContentPlatformOrderDealInfoList.Where(e => e.CreateDate < endSelectDate && e.IsDeal == true && e.ContentPlatFormOrderId != null).Count() > 0)
                 .Select(e => new { HospitalId = e.LastDealHospitalId, Phone = e.Phone })
                 .ToList()
                 .GroupBy(e => e.HospitalId)
@@ -4122,7 +4127,7 @@ namespace Fx.Amiya.Service
                 oldCustomerCountList.Add(new { HospitalId = item.HospitalId, Count = count });
             }
 
-            var dealData = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.LastDealHospitalId != null&&e.ContentPlatFormOrderId != null).GroupBy(e => e.LastDealHospitalId).Select(
+            var dealData = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.LastDealHospitalId != null && e.ContentPlatFormOrderId != null).GroupBy(e => e.LastDealHospitalId).Select(
                 e => new
                 {
                     Name = dalHospitalInfo.GetAll().Where(h => h.Id == e.Key).FirstOrDefault() == null ? "" : dalHospitalInfo.GetAll().Where(h => h.Id == e.Key).FirstOrDefault().Name,
@@ -4132,20 +4137,20 @@ namespace Fx.Amiya.Service
                 }
                 ).ToListAsync();
 
-           
+
             if (type == (int)HospitalBoardDataType.ThisMonth)
             {
                 //当月数据
                 var toHospitalCount = dalContentPlatformOrderSend.GetAll()
                 .Include(e => e.ContentPlatformOrder)
-                .Where(e => e.SendDate >= startDate && e.SendDate < endDate && e.ContentPlatformOrder.ContentPlatformOrderDealInfoList.Where(e => e.CreateDate >= startDate && e.CreateDate < endDate&&e.ContentPlatFormOrderId != null).Count() > 0)
+                .Where(e => e.SendDate >= startDate && e.SendDate < endDate && e.ContentPlatformOrder.ContentPlatformOrderDealInfoList.Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.ContentPlatFormOrderId != null).Count() > 0)
                 .Select(e => new { Phone = e.ContentPlatformOrder.Phone, HospitalId = e.HospitalId }).ToList()
                 .GroupBy(e => e.HospitalId)
                 .Select(e => new { HospitalId = e.Key, ToHospitalCount = e.Select(e => e.Phone).Distinct().Count() }).ToList();
 
                 var newCustomerToHospitalCount = dalContentPlatformOrderSend.GetAll()
                 .Include(e => e.ContentPlatformOrder)
-                .Where(e => e.SendDate >= startDate && e.SendDate < endDate && e.ContentPlatformOrder.ContentPlatformOrderDealInfoList.Where(x => x.CreateDate >= startDate && x.CreateDate < endDate && x.IsOldCustomer == false && x.IsToHospital == true&& x.ContentPlatFormOrderId != null).Count() > 0)
+                .Where(e => e.SendDate >= startDate && e.SendDate < endDate && e.ContentPlatformOrder.ContentPlatformOrderDealInfoList.Where(x => x.CreateDate >= startDate && x.CreateDate < endDate && x.IsOldCustomer == false && x.IsToHospital == true && x.ContentPlatFormOrderId != null).Count() > 0)
                 .Select(e => new { Phone = e.ContentPlatformOrder.Phone, HospitalId = e.HospitalId }).ToList()
                 .GroupBy(e => e.HospitalId)
                 .Select(e => new { HospitalId = e.Key, ToHospitalCount = e.Select(e => e.Phone).Distinct().Count() }).ToList();
@@ -4166,8 +4171,8 @@ namespace Fx.Amiya.Service
                 {
                     RankDataDto rankDataDto = new RankDataDto();
                     rankDataDto.Name = item.Name;
-                    rankDataDto.ToHospitalRatio = DecimalExtension.CalculateTargetComplete(toHospitalCount.Where(e => e.HospitalId == item.HospitalId).FirstOrDefault()?.ToHospitalCount ?? 0m, sendCount.Where(e => e.HospitalId == item.HospitalId).FirstOrDefault()?.SendCount ?? 0m);                   
-                    rankDataDto.DealRatio = DecimalExtension.CalculateTargetComplete(newCustomerDealCount.Where(e => e.HospitalId == item.HospitalId).FirstOrDefault()?.DealCount ?? 0m, newCustomerToHospitalCount.Where(e => e.HospitalId == item.HospitalId).FirstOrDefault()?.ToHospitalCount ?? 0m);                    
+                    rankDataDto.ToHospitalRatio = DecimalExtension.CalculateTargetComplete(toHospitalCount.Where(e => e.HospitalId == item.HospitalId).FirstOrDefault()?.ToHospitalCount ?? 0m, sendCount.Where(e => e.HospitalId == item.HospitalId).FirstOrDefault()?.SendCount ?? 0m);
+                    rankDataDto.DealRatio = DecimalExtension.CalculateTargetComplete(newCustomerDealCount.Where(e => e.HospitalId == item.HospitalId).FirstOrDefault()?.DealCount ?? 0m, newCustomerToHospitalCount.Where(e => e.HospitalId == item.HospitalId).FirstOrDefault()?.ToHospitalCount ?? 0m);
                     rankDataDto.RepurchaseRatio = DecimalExtension.CalculateTargetComplete(oldCustomerCountList.Where(e => e.HospitalId == item.HospitalId).FirstOrDefault()?.Count ?? 0m, totalCustomerCount.Where(e => e.HospitalId == item.HospitalId).FirstOrDefault()?.Count ?? 0m);
                     rankDataDto.NewCustomerUnitPrice = Division(item.NewCustomerPerformance, item.NewCustomerCount);
                     rankDataDto.HospitalId = item.HospitalId.Value;
@@ -4186,10 +4191,10 @@ namespace Fx.Amiya.Service
             else
             {
                 //累计数据
-                
+
                 //累计上门人数
                 var toHospitalCount = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
-                    .Where(e => e.LastDealHospitalId != null && e.ContentPlatformOrderDealInfoList.Where(x=> x.ContentPlatFormOrderId != null).OrderByDescending(k => k.CreateDate).FirstOrDefault().CreateDate >= startDate && e.ContentPlatformOrderDealInfoList.Where(x => x.ContentPlatFormOrderId != null).OrderByDescending(k => k.CreateDate).FirstOrDefault().CreateDate < endDate)
+                    .Where(e => e.LastDealHospitalId != null && e.ContentPlatformOrderDealInfoList.Where(x => x.ContentPlatFormOrderId != null).OrderByDescending(k => k.CreateDate).FirstOrDefault().CreateDate >= startDate && e.ContentPlatformOrderDealInfoList.Where(x => x.ContentPlatFormOrderId != null).OrderByDescending(k => k.CreateDate).FirstOrDefault().CreateDate < endDate)
                     .Select(e => new { HospitalId = e.LastDealHospitalId, Phone = e.Phone }).ToList()
                     .GroupBy(e => e.HospitalId)
                     .Select(e => new { HospitalId = e.Key, ToHospitalCount = e.Select(e => e.Phone).Distinct().Count() }).ToList();
@@ -4205,7 +4210,7 @@ namespace Fx.Amiya.Service
                 //累计新客成交人数
                 var newCustomerDealCount = _dalContentPlatformOrder.GetAll()
                     .Include(e => e.ContentPlatformOrderDealInfoList)
-                    .Where(e => e.LastDealHospitalId != null && e.ContentPlatformOrderDealInfoList.Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsOldCustomer == false && e.IsDeal == true&&e.ContentPlatFormOrderId!=null).Count() > 0)
+                    .Where(e => e.LastDealHospitalId != null && e.ContentPlatformOrderDealInfoList.Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsOldCustomer == false && e.IsDeal == true && e.ContentPlatFormOrderId != null).Count() > 0)
                     .Select(e => new { HospitalId = e.LastDealHospitalId, Phone = e.Phone }).ToList()
                     .GroupBy(e => e.HospitalId)
                     .Select(e => new { HospitalId = e.Key, DealCount = e.Select(e => e.Phone).Distinct().Count() }).ToList();
