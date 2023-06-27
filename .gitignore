@@ -342,3 +342,8 @@ healthchecksdb
 src/Fx.Amiya.Background.Api/obj
 src/Fx.Amiya.MiniProgram.Api/obj
 /src/Fx.Amiya.Background.Api/appsettings.json
+/Fx.Amiya.BusinessWeChat.Api/appsettings.json
+/src/Fx.Amiya.Call.Api/appsettings.json
+/src/Fx.Amiya.JD.Api/appsettings.json
+/src/Fx.Amiya.MiniProgram.Api/appsettings.json
+/src/Fx.Amiya.Wx.Message.Api/appsettings.json
