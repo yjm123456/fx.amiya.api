@@ -571,19 +571,9 @@ ADD COLUMN `return_back_date` DATETIME NULL AFTER `return_back_price`;
   ALTER TABLE `amiyadb`.`tbl_track_type` 
 ADD COLUMN `has_model` BIT(1) NOT NULL AFTER `valid`;
 
---维多医院订单对接功能
-INSERT INTO `amiyadb`.`tbl_docking_hospital_customer_info` (`id`, `app_key`, `app_secret`, `hospital_id`, `base_url`, `token_url`, `get_customer_url`, `get_customer_order_url`) VALUES ('1001', 'p00001', 'bf701b37ef67a5f99cd473dae1bc', '1', 'https://app.victoriazj.com/fxgate/main', '/Login/partnerAuth', '/partner/Customer/getCustomerList', '/partner/FinanceTotal/getCustomerConsumptionRecords');
-
 
 -----------------------------------------------余建明 2022/07/18  BEGIN--------------------------------------------;
 
---tbl_config表修改config列【加入抖店渠道】
-
-
-UPDATE `amiyadb`.`tbl_config` SET `config_json` = '{"FxJwtConfig":{"Key":"kljdsf982734jkldg!@#","ExpireInSeconds":7200,"RefreshTokenExpireInSeconds":14400},"FxOpenConfig":{"Enable":true,"RequestBaseUrl":"https://app.ameiyes.com"},"FxOSSConfig":null,"FxRedisConfig":{"ConnectionString":"app.hsltm.com:6379,allowadmin=true,password=hsltm"},"FxSmsConfig":{"AliyunSmsList":[{"Name":"send_validate_code","AccessKeyId":"LTAI4FyjkURk6usCWjWucQ7o","AccessSecret":"T0GFcYOVS6FJyRj9HzzEtC3ljFdxjs","RegionId":"cn_hangzhou","SignName":"啊美雅","TemplateCode":"SMS_205630076","Remark":"发送验证码"},{"Name":"order_buyerpay_commit","AccessKeyId":"LTAI4FyjkURk6usCWjWucQ7o","AccessSecret":"T0GFcYOVS6FJyRj9HzzEtC3ljFdxjs","RegionId":"cn_hangzhou","SignName":"啊美雅","TemplateCode":"SMS_224341042","Remark":"订单下单通知"},{"Name":"order_intergrationpay_commit","AccessKeyId":"LTAI4FyjkURk6usCWjWucQ7o","AccessSecret":"T0GFcYOVS6FJyRj9HzzEtC3ljFdxjs","RegionId":"cn_hangzhou","SignName":"啊美雅","TemplateCode":"SMS_224351049","Remark":"积分兑换通知"},{"Name":"order_gift_commit","AccessKeyId":"LTAI4FyjkURk6usCWjWucQ7o","AccessSecret":"T0GFcYOVS6FJyRj9HzzEtC3ljFdxjs","RegionId":"cn_hangzhou","SignName":"啊美雅","TemplateCode":"SMS_224346105","Remark":"礼品兑换通知"}]},"FxUniteWxAccessTokenConfig":{"Enable":true,"RequestBaseUrl":"https://app.ameiyes.com/fxwxaccesstoken"},"WxPayConfig":null,"FxMessageCenterConfig":{"EnableMessageCenter":true,"EnableMessageQueue":true,"MQHostName":"app.hsltm.com","MQUserName":"admin","Port":5672,"MQPassword":"hsltm1007","MQQueueName":"fx_wxmp_message_queue","MessageCenterWebSocketUrl":null},"ChatInMinute":1440,"CallCenterConfig":{"CallRecordStoreAddress":"mongodb://192.168.12.138:58001","EnablevoiceCardCallable":false,"SupportOldCallBox":false,"SwitchSimCardInCallCount":5,"VoiceCardManagerAddress":"","PhoneEncryptKey":"test","EnablePhoneEncrypt":true,"HidePhoneNumber":true},"SyncOrderConfig":{"Jd":false,"Tmall":false,"WeiFenXiao":false,"DouYin":true},"NoticeConfig":{"EmailNoticeConfig":true}}' WHERE (`id` = '1');
-
---tbl_order_app_info表加入抖店商户号配置
-INSERT INTO `amiyadb`.`tbl_order_app_info` (`id`, `app_key`, `app_secret`, `access_token`, `authorize_date`, `app_type`, `expire_date`, `refresh_token`) VALUES ('5', '7109321803654252040', '1', 'edae7c30-8386-443b-88a1-031111596fdd', '2022-07-18 16:20:00', '4', '2022-07-19 16:20:00', '1');
 
 -----------------------------------------------余建明 2022/07/18 END--------------------------------------------;
 
