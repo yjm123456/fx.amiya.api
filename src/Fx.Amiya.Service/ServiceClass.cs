@@ -968,6 +968,15 @@ namespace Fx.Amiya.Service
                 case 3:
                     channelTypeText = "美肤卡";
                     break;
+                case 4:
+                    channelTypeText = "直播间";
+                    break;
+                case 5:
+                    channelTypeText = "短视频";
+                    break;
+                case 6:
+                    channelTypeText = "私信";
+                    break;
             }
             return channelTypeText;
         }

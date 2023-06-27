@@ -480,6 +480,20 @@ namespace Fx.Amiya.IService
         /// 美肤卡
         /// </summary>
         BeautifulSkinCard = 3,
+        /// <summary>
+        /// 直播间
+        /// </summary>
+        LivingRoom = 4,
+
+        /// <summary>
+        /// 短视频
+        /// </summary>
+        ShortVideo = 5,
+
+        /// <summary>
+        /// 私信
+        /// </summary>
+        PersonalLetter = 6,
     }
 
     /// <summary>
@@ -994,7 +1008,7 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 产品转化
         /// </summary>
-        ProductionTransform=7,
+        ProductionTransform = 7,
     }
 
     public enum ShootingAndClipVideoType
@@ -1251,7 +1265,7 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 欠款回收
         /// </summary>
-        CollectionOfArrears=5,
+        CollectionOfArrears = 5,
     }
 
 
@@ -1282,14 +1296,15 @@ namespace Fx.Amiya.IService
         RefundExcessDebt = 4,
     }
     #endregion
-    public enum HospitalBoardDataType {
+    public enum HospitalBoardDataType
+    {
         /// <summary>
         /// 累计数据
         /// </summary>
-        Accumulate=0,
+        Accumulate = 0,
         /// <summary>
         /// 当月数据
         /// </summary>
-        ThisMonth=1
+        ThisMonth = 1
     }
 }
