@@ -341,3 +341,4 @@ healthchecksdb
 
 src/Fx.Amiya.Background.Api/obj
 src/Fx.Amiya.MiniProgram.Api/obj
+/src/Fx.Amiya.Background.Api/appsettings.json
