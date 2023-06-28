@@ -80,13 +80,13 @@ namespace Fx.Amiya.Service
             packageInfo.TotalFee = (int)(refundOrder.ActualPayAmount * 100m);
             packageInfo.RefundFee = (int)(refundOrder.RefundAmount * 100m);
             packageInfo.RefundDesc = "商品退款";
-            var result = await this.BuildRefundRequest(packageInfo);
+            var result = await this.BuildRefundRequest(packageInfo, wechatPayInfo.SubAppId);
             result.TardeId = refundOrder.TradeId;
             return result;
         }
 
 
-        private async Task<RefundOrderResult> BuildRefundRequest(WxRefundPackageInfo packageInfo)
+        private async Task<RefundOrderResult> BuildRefundRequest(WxRefundPackageInfo packageInfo,string perPath)
         {
 
             packageInfo.NonceStr = Guid.NewGuid().ToString("N");
@@ -106,16 +106,16 @@ namespace Fx.Amiya.Service
             payDictionary.Add("notify_url", packageInfo.NotifyUrl);
             SignHelper signHelper = new SignHelper();
             string sign = await signHelper.SignPackage(payDictionary, packageInfo.AppSecret);
-            return await this.PostRefundRequest(payDictionary, sign, packageInfo.AppId, packageInfo.MchId);
+            return await this.PostRefundRequest(payDictionary, sign, packageInfo.AppId, packageInfo.MchId, perPath);
         }
-        private async Task<RefundOrderResult> PostRefundRequest(PayDictionary dict, string sign, string appId,string mchId)
+        private async Task<RefundOrderResult> PostRefundRequest(PayDictionary dict, string sign, string appId,string mchId,string perPath)
         {
             dict.Add("sign", sign);
             SignHelper signHelper = new SignHelper();
             string text = await signHelper.BuildQueryAsync(dict, false);
             string postData = await signHelper.BuildXmlAsync(dict, false);
             string refundUrl = "https://api.mch.weixin.qq.com/secapi/pay/refund";
-            return this.PostRefundData(refundUrl, postData, appId,mchId);
+            return this.PostRefundData(refundUrl, postData, appId,mchId, perPath);
         }
         /// <summary>
         /// 微信支付帮助方法
@@ -125,7 +125,7 @@ namespace Fx.Amiya.Service
         /// <param name="appId">小程序appid</param>
         /// <param name="mchId">微信支付商户号id</param>
         /// <returns></returns>
-        private RefundOrderResult PostRefundData(string url, string postData, string appId,string mchId)
+        private RefundOrderResult PostRefundData(string url, string postData, string appId,string mchId,string perPath)
         {
             string text = string.Empty;
             try
@@ -134,30 +134,18 @@ namespace Fx.Amiya.Service
                 HttpWebRequest httpWebRequest;
                 if (url.ToLower().StartsWith("https"))
                 {
-                    //string path = "C:\\wechatsecret\\" + "apiclientrefund78345hsdfcert.p12";
+                    
                     //证书文件地址
                     string path = "";
                     //上合未来密钥
-                    if (appId == "wx695942e4818de445")
-                    {
-                        path = AppDomain.CurrentDomain.BaseDirectory + "apiclientrefund78345hsdfcert.p12";
-                    }
-                    if (appId == "wx8747b7f34c0047eb")
-                    {
-                        path = AppDomain.CurrentDomain.BaseDirectory + "apiclientmrrefund_certamiya20231344.p12";
-                    }
+                    path = AppDomain.CurrentDomain.BaseDirectory + perPath;
                     if (string.IsNullOrEmpty(path)) {
                         throw new Exception("没有该小程序的证书文件！");
                     }
                     ServicePointManager.ServerCertificateValidationCallback = ((object s, X509Certificate c, X509Chain ch, SslPolicyErrors e) => true);
                     //加载证书
                     X509Certificate2 cer = null;
-                    if (appId== "wx695942e4818de445") {
-                        cer=new X509Certificate2(path,mchId);
-                    }
-                    if (appId== "wx8747b7f34c0047eb") {
-                        cer= new X509Certificate2(path, mchId);
-                    }
+                    cer = new X509Certificate2(path, mchId);
                     httpWebRequest = (HttpWebRequest)WebRequest.CreateDefault(requestUri);
                     httpWebRequest.ClientCertificates.Add(cer);
                 }

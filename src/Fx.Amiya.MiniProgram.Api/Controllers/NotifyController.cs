@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -45,9 +46,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private IIntegrationAccount integrationAccount;
         private readonly IRechargeRewardRuleService rechargeRewardRuleService;
         private readonly IDalBindCustomerService _dalBindCustomerService;
+        private readonly IDalWechatPayInfo dalWechatPayInfo;
         public NotifyController(IOrderService orderService,
             IAliPayService aliPayService,
-            ILogger<AliPayService> logger, IBalanceRechargeService balanceRechargeRecordService, IBalanceAccountService balanceAccountService, IUnitOfWork unitOfWork, IIntegrationAccount integrationAccount, IRechargeRewardRuleService rechargeRewardRuleService, IDalBindCustomerService dalBindCustomerService)
+            ILogger<AliPayService> logger, IBalanceRechargeService balanceRechargeRecordService, IBalanceAccountService balanceAccountService, IUnitOfWork unitOfWork, IIntegrationAccount integrationAccount, IRechargeRewardRuleService rechargeRewardRuleService, IDalBindCustomerService dalBindCustomerService, IDalWechatPayInfo dalWechatPayInfo)
         {
             this.orderService = orderService;
             _aliPayService = aliPayService;
@@ -58,6 +60,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             this.integrationAccount = integrationAccount;
             this.rechargeRewardRuleService = rechargeRewardRuleService;
             _dalBindCustomerService = dalBindCustomerService;
+            this.dalWechatPayInfo = dalWechatPayInfo;
         }
         /// <summary>
         /// 支付宝订单回调地址
@@ -67,6 +70,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         [HttpPost("aliPayNotifyUrl")]
         public async Task<string> aliPayNotifyUrlAsync([FromForm] AliPayNotifyVo input)
         {
+            throw new Exception("不支持支付方式");
             string notifyLog = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 开始回调，回调id：" + input.notify_id;
             logger.LogInformation(notifyLog);
             SortedDictionary<string, string> sPara = GetRequestPost(input);
@@ -271,6 +275,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         {
             try
             {
+                throw new Exception("暂不支持充值");
+                return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
                 //获取回调POST过来的xml数据的代码
                 using Stream stream = HttpContext.Request.Body;
                 byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
@@ -282,7 +288,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 SortedDictionary<string, string> sParam = GetWeiXinRequestPostDic(weiXinPayNotifyVo);
                 SignHelper signHelper = new SignHelper();
                 //签名验证
-                string sign = await signHelper.SignPay(sParam, "Amy20202020202020202020202020202");
+                string sign = await signHelper.SignPay(sParam, "");
                 if (sign != weiXinPayNotifyVo.sign)
                     return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
                 unitOfWork.BeginTransaction();
@@ -352,9 +358,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 WeiXinPayNotifyVo weiXinPayNotifyVo = GetWeiXinRequestPostData(xmlDoc);
                 SortedDictionary<string, string> sParam = GetWeiXinRequestPostDic(weiXinPayNotifyVo);
                 SignHelper signHelper = new SignHelper();
-
+                var wechatPayinfo = dalWechatPayInfo.GetAll().Where(e => e.AppId == "wx8747b7f34c0047eb").FirstOrDefault();
                 //签名验证
-                string sign = await signHelper.SignPay(sParam, "Amymr202020202020202020202020202");
+                string sign = await signHelper.SignPay(sParam, wechatPayinfo.PartnerKey);
                 if (sign != weiXinPayNotifyVo.sign) return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
 
                 // 业务逻辑
@@ -491,6 +497,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             try
             {
                 HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
+                var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
+                huiShouQianPackageInfo.Key = payInfo.PartnerKey;
+                huiShouQianPackageInfo.PrivateKey = payInfo.SubAppId;
+                huiShouQianPackageInfo.PublicKey = payInfo.SubMchId;
                 using Stream stream = HttpContext.Request.Body;
                 byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
                 await stream.ReadAsync(buffer);
@@ -512,7 +522,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     }
                 }
                 var notifyParam = JsonConvert.DeserializeObject<HuiShouQianNotifyParam>(signContent);
-                var signContent1 = BuildPayParamString("CALLBACK", "1.0.0", "JSON", "864001883569", "RSA2", signContent, huiShouQianPackageInfo.Key);
+                var signContent1 = BuildPayParamString("CALLBACK", "1.0.0", "JSON", payInfo.AppId, "RSA2", signContent, huiShouQianPackageInfo.Key);
                 RSAHelper rsa = new RSAHelper(RSAType.RSA2, Encoding.UTF8, huiShouQianPackageInfo.PrivateKey, huiShouQianPackageInfo.PublicKey);
                 var verify = rsa.Verify(signContent1, sign);
                 if (verify)

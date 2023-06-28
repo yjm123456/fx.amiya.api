@@ -39,7 +39,6 @@ namespace Fx.Amiya.Dto.HuiShouQianPay
             TimeExpire = "";
             paylimit= "";
             appid ="wx695942e4818de445";
-            SpbillCreateIp = "47.114.37.45";
             Longitude = "119.95720242";
             Latitude = "29.15949412";
             AreaInfo = "";

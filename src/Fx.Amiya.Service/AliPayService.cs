@@ -30,8 +30,7 @@ namespace Fx.Amiya.Service
         private static string GATEWAY_NEW = "https://mapi.alipay.com/gateway.do?";
         //支付宝消息验证地址
         private string Https_veryfy_url = "https://mapi.alipay.com/gateway.do?service=notify_verify&";
-        //商户的私钥
-        private static string _key = "9hyegjtuaak0mbrhrmpw68wu5n4to0mu";
+        private static string _key = "";
         //编码格式
         private static string _input_charset = "utf-8";
         //签名方式

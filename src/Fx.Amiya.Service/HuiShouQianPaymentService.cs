@@ -21,11 +21,13 @@ namespace Fx.Amiya.Service
     {
         private readonly IDalOrderRefund dalOrderRefund;
         private readonly IDalCustomerInfo dalCustomerInfo;
+        private readonly IDalWechatPayInfo dalWechatPayInfo;
 
-        public HuiShouQianPaymentService(IDalOrderRefund dalOrderRefund, IDalCustomerInfo dalCustomerInfo)
+        public HuiShouQianPaymentService(IDalOrderRefund dalOrderRefund, IDalCustomerInfo dalCustomerInfo, IDalWechatPayInfo dalWechatPayInfo)
         {
             this.dalOrderRefund = dalOrderRefund;
             this.dalCustomerInfo = dalCustomerInfo;
+            this.dalWechatPayInfo = dalWechatPayInfo;
         }
 
         public bool CheckHSQCommonParams(HuiShouQianCommonInfo huiShouQianCommonInfo, out string errmsg)
@@ -117,6 +119,10 @@ namespace Fx.Amiya.Service
         public async Task<HuiShouQianOrderResult> CreateHuiShouQianOrder(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo, string openId,string customerId)
         {
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
+            huiShouQianPackageInfo.PrivateKey = payInfo.SubAppId;
+            huiShouQianPackageInfo.PublicKey = payInfo.SubMchId;
+            huiShouQianPackageInfo.Key = payInfo.PartnerKey;
             var commonParam = BuildCommonParam(huiShouQianPayRequestInfo, openId,customerId);
             return PostData(huiShouQianPackageInfo.OrderUrl + "?" + commonParam, "");
 
@@ -157,6 +163,11 @@ namespace Fx.Amiya.Service
                     if (response.success == "true" && response.result.orderStatus != "FAIL")
                     {
                         HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
+                        var payInfo = dalWechatPayInfo.GetAll().Where(e=>e.Id== "202306281235").FirstOrDefault();
+                        huiShouQianPackageInfo.Key = payInfo.PartnerKey;
+                        huiShouQianPackageInfo.PrivateKey = payInfo.SubAppId;
+                        huiShouQianPackageInfo.PublicKey = payInfo.SubMchId;
+
                         string signContent = BuildPayResponseParamString(response, huiShouQianPackageInfo.Key);
                         HuiShouQianOrderResult huiShouQianOrderResult = new HuiShouQianOrderResult();
                         huiShouQianOrderResult.Success = true;
@@ -212,6 +223,10 @@ namespace Fx.Amiya.Service
             huiShouQianRefundRequestParam.RefundReason = "退款";
             huiShouQianRefundRequestParam.Extend = order.Id;
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
+            huiShouQianPackageInfo.Key = payInfo.PartnerKey;
+            huiShouQianPackageInfo.PrivateKey = payInfo.SubAppId;
+            huiShouQianPackageInfo.PublicKey = payInfo.SubMchId;
             var commonParam = BuildRefundCommonParam(huiShouQianRefundRequestParam);
             var result = await PostRefundData(huiShouQianPackageInfo.RefundUrl + "?", commonParam);
             result.TardeId = order.TradeId;
@@ -227,10 +242,16 @@ namespace Fx.Amiya.Service
             var customerInfo = dalCustomerInfo.GetAll().Where(e => e.Id == customerId).SingleOrDefault();
             if (customerInfo == null) throw new Exception("用户编号错误！");
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
+            huiShouQianPackageInfo.Key = payInfo.PartnerKey;
+            huiShouQianPackageInfo.PrivateKey = payInfo.SubAppId;
+            huiShouQianPackageInfo.PublicKey = payInfo.SubMchId;
             HuiShouQianCommonInfo huiShouQianCommonInfo = new HuiShouQianCommonInfo();
+            huiShouQianCommonInfo.MerchantNo = payInfo.AppId;
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             HuiShouQianMemoInfo huiShouQianMemoInfo = new HuiShouQianMemoInfo();
+            huiShouQianMemoInfo.SpbillCreateIp = payInfo.AppSecret;
             huiShouQianMemoInfo.openid = openId;
             huiShouQianMemoInfo.appid = customerInfo.AppId;
             string memoContent = JsonConvert.SerializeObject(huiShouQianMemoInfo, serializerSettings);
@@ -253,6 +274,10 @@ namespace Fx.Amiya.Service
         private string BuildRefundCommonParam(HuiShouQianRefundRequestParam huiShouQianRefundRequestParam)
         {
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
+            huiShouQianPackageInfo.Key = payInfo.PartnerKey;
+            huiShouQianPackageInfo.PrivateKey = payInfo.SubAppId;
+            huiShouQianPackageInfo.PublicKey = payInfo.SubMchId;
             HuiShouQianRefundCommonParam huiShouQianCommonInfo = new HuiShouQianRefundCommonParam();
             huiShouQianCommonInfo.SignContent = huiShouQianRefundRequestParam;
             var serializerSettings = new JsonSerializerSettings();
@@ -498,6 +523,10 @@ namespace Fx.Amiya.Service
             huiShouQianRefundRequestParam.RefundReason = "退款";
             huiShouQianRefundRequestParam.Extend = order.Id;
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
+            huiShouQianPackageInfo.Key = payInfo.PartnerKey;
+            huiShouQianPackageInfo.PrivateKey = payInfo.SubAppId;
+            huiShouQianPackageInfo.PublicKey = payInfo.SubMchId;
             var commonParam = BuildRefundCommonParam(huiShouQianRefundRequestParam);
             var result = await PostRefundData(huiShouQianPackageInfo.RefundUrl + "?", commonParam);
             result.TardeId = order.TradeId;

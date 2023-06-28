@@ -164,8 +164,7 @@ namespace Fx.Amiya.Service
             this.userService = userService;
             this.dalWechatPayInfo = dalWechatPayInfo;
         }
-        //WxPayAccount _payAccount = new WxPayAccount("wx695942e4818de445", "0b2e89d17e84a947244569d0ec63b816", "1611476157", "asdfg67890asdfg67890asdfg67890as", false, "", "");
-        WxPayAccount _payAccount = new WxPayAccount("wx695942e4818de445", "0b2e89d17e84a947244569d0ec63b816", "1632393371", "Amy20202020202020202020202020202", false, "", "");
+
         /// <summary>
         /// 获取订单列表
         /// </summary>
@@ -3535,7 +3534,7 @@ namespace Fx.Amiya.Service
 
         public bool CheckVxSetParams(out string errmsg)
         {
-            errmsg = "";
+            /*errmsg = "";
             bool flag = true;
             bool result;
             if (this._payAccount == null)
@@ -3610,7 +3609,9 @@ namespace Fx.Amiya.Service
                 }
             }
             result = flag;
-            return result;
+            return result;*/
+            errmsg = "";
+            return true;
         }
 
         public bool CheckVxPackage(WxPackageInfo package, out string errmsg)
