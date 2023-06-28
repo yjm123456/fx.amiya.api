@@ -14,6 +14,7 @@ namespace Fx.Amiya.IService
     public interface ICustomerHospitalDealDetailsService
     {
         Task<FxPageInfo<CustomerHospitalDealDetailsDto>> GetListWithPageAsync(QueryCustomerHospitalDealDetailsPageListDto query);
+        Task<FxPageInfo<CustomerHospitalDealDetailsDto>> GetListByIdsWithPageAsync(QueryCustomerHospitalDealDetailsByIdsPageListDto query);
         Task AddAsync(AddCustomerHospitalDealDetailsDto addDto);
         Task DeleteAsync(string id);
     }
