@@ -275,5 +275,13 @@ ADD COLUMN `add_work_type` INT NOT NULL AFTER `phone`;
 
 update tbl_content_pat_form_order_add_work set add_work_type=1
 
------------------------------------------------余建明 2023/06/12 END--------------------------------------------
+-----------------------------------------------余建明 2023/06/29 END--------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+--小黄车登记列表手机号加多位数
+ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
+CHANGE COLUMN `phone` `phone` VARCHAR(20) NOT NULL ;
+--录单申请列表手机号加多位数
+ALTER TABLE `amiyadb`.`tbl_content_pat_form_order_add_work` 
+CHANGE COLUMN `phone` `phone` VARCHAR(20) NOT NULL ;
+-----------------------------------------------余建明 2023/06/29 END--------------------------------------------
+

@@ -252,7 +252,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<string> GetBindCustomerServiceNameByPhone(string phone)
         {
-            var bindCustomerServiceInfo = await dalBindCustomerService.GetAll().Include(x => x.CustomerServiceAmiyaEmployee).OrderByDescending(x => x.CreateDate).Where(e => e.BuyerPhone.Contains(phone)).SingleOrDefaultAsync();
+            var bindCustomerServiceInfo = await dalBindCustomerService.GetAll().Include(x => x.CustomerServiceAmiyaEmployee).OrderByDescending(x => x.CreateDate).Where(e => e.BuyerPhone.Contains(phone)).FirstOrDefaultAsync();
             if (bindCustomerServiceInfo != null)
             {
                 return bindCustomerServiceInfo.CustomerServiceAmiyaEmployee.Name;

@@ -18,7 +18,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.LiveAnchorId).HasColumnName("live_anchor_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.LiveAnchorWechatNo).HasColumnName("live_anchor_wechat_no").HasColumnType("varchar(100)").IsRequired(false);
             builder.Property(t => t.CustomerNickName).HasColumnName("customer_nick_name").HasColumnType("varchar(200)").IsRequired(false);
-            builder.Property(t => t.Phone).HasColumnName("phone").HasColumnType("varchar(11)").IsRequired();
+            builder.Property(t => t.Phone).HasColumnName("phone").HasColumnType("varchar(20)").IsRequired();
             builder.Property(t => t.SubPhone).HasColumnName("sub_phone").HasColumnType("varchar(45)").IsRequired(false);
             builder.Property(t => t.Price).HasColumnName("price").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.ConsultationType).HasColumnName("consultation_type").HasColumnType("int").IsRequired();
