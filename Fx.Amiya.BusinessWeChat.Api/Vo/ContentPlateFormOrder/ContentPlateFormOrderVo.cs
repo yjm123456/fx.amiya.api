@@ -350,6 +350,10 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public string UnDealPictureUrl { get; set; }
         /// <summary>
+        /// 未成交原因
+        /// </summary>
+        public string UnDealReason { get; set; }
+        /// <summary>
         /// 成交凭证
         /// </summary>
         public string DealPictureUrl { get; set; }

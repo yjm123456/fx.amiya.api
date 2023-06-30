@@ -1413,6 +1413,7 @@ namespace Fx.Amiya.Service
             result.ToHospitalType = order.ToHospitalType;
             result.ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(result.ToHospitalType);
             result.UnDealPictureUrl = order.UnDealPictureUrl;
+            result.UnDealPictureUrl = order.UnDealReason;
             result.DealPictureUrl = order.DealPictureUrl;
             result.ToHospitalDate = order.ToHospitalDate;
             result.IsReturnBackPrice = order.IsReturnBackPrice;
