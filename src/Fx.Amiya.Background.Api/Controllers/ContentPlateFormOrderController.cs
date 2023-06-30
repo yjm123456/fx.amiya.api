@@ -1351,6 +1351,27 @@ namespace Fx.Amiya.Background.Api.Controllers
             await _orderService.FinishContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
         }
+        /// <summary>
+        /// 根据加密手机号获取内容平台订单简易信息
+        /// </summary>
+        /// <param name="encryPhone"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("getContentPlateFormOrderSimpleInfo")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<FxPageInfo<ContentPlateformOrderSimpleInfoVo>>> GetContentPlateformOrderSimpleInfoAsync(string phone,int pageNum,int pageSize) {
+            FxPageInfo<ContentPlateformOrderSimpleInfoVo> fxPageInfo = new FxPageInfo<ContentPlateformOrderSimpleInfoVo>();
+            var result= await _orderService.GetContentOrderInfoByEncryPhone(phone,pageNum,pageSize);
+            fxPageInfo.TotalCount = result.TotalCount;
+            fxPageInfo.List = result.List.Select(e => new ContentPlateformOrderSimpleInfoVo { 
+                Id=e.Id,
+                AppointmentHospital=e.AppointmentHospital,
+                OrderStatus=e.OrderStatus,
+                ConsultContent=e.ConsultContent
+            }).ToList();
+            return ResultData<FxPageInfo<ContentPlateformOrderSimpleInfoVo>>.Success().AddData("data",fxPageInfo);
+        }
         #region {医院对接同步}
         ///// <summary>
         ///// 医院对接同步完成订单(影响订单业务)

@@ -304,6 +304,12 @@ namespace Fx.Amiya.IService
         /// <param name="update"></param>
         /// <returns></returns>
         Task UpdateCreateBillAndBelongCompany(UpdateCreateBillAndCompanyDto update);
+        /// <summary>
+        /// 根据手机号查询内容平台订单信息
+        /// </summary>
+        /// <param name="encryphone"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<ContentPlateformOrderSimpleInfoDto>> GetContentOrderInfoByEncryPhone(string phone, int pageNum,int pageSize);
 
         #region 财务看板
 

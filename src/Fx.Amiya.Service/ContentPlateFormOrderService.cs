@@ -64,7 +64,7 @@ namespace Fx.Amiya.Service
         private IDalHospitalInfo dalHospitalInfo;
         private ICustomerAppointmentScheduleService customerAppointmentScheduleService;
         private IDalContentPlatformOrderSend dalContentPlatformOrderSend;
-
+        
         public ContentPlateFormOrderService(
            IDalContentPlatformOrder dalContentPlatformOrder,
            IDalAmiyaEmployee dalAmiyaEmployee,
@@ -2610,7 +2610,30 @@ namespace Fx.Amiya.Service
             var config = await _dalConfig.GetAll().SingleOrDefaultAsync();
             return JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig;
         }
-
+        /// <summary>
+        /// 根据手机号获取内容平台简易信息
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<ContentPlateformOrderSimpleInfoDto>> GetContentOrderInfoByEncryPhone(string phone, int pageNum,int pageSize)
+        {
+            FxPageInfo<ContentPlateformOrderSimpleInfoDto> fxPageInfo = new FxPageInfo<ContentPlateformOrderSimpleInfoDto>();
+            /*var config = await _dalConfig.GetAll().SingleOrDefaultAsync();
+            var confgiInfo= JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig;
+            string phone = ServiceClass.Decrypto(encryptPhone, confgiInfo.PhoneEncryptKey);*/
+            var result = _dalContentPlatformOrder.GetAll().Where(e => e.Phone == phone).Select(e => new ContentPlateformOrderSimpleInfoDto
+            {
+                Id = e.Id,
+                AppointmentHospital = e.AppointmentHospitalId.HasValue ? dalHospitalInfo.GetAll().Where(h => h.Id == e.AppointmentHospitalId.Value).FirstOrDefault().Name : "未知医院",
+                OrderStatus = ServiceClass.GetContentPlateFormOrderStatusText((byte)e.OrderStatus),
+                ConsultContent=e.ConsultingContent
+            });
+            fxPageInfo.TotalCount = result.Count();
+            fxPageInfo.List = result.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+            return fxPageInfo;
+        }
         #region 财务看板
 
 
@@ -4263,6 +4286,8 @@ namespace Fx.Amiya.Service
                 return 0;
             return Math.Round(a.Value / b.Value, 2);
         }
+
+       
 
 
         #endregion
