@@ -1307,4 +1307,35 @@ namespace Fx.Amiya.IService
         /// </summary>
         ThisMonth = 1
     }
+    #region RFM相关
+    public enum RFM
+    {
+        /// <summary>
+        /// 低
+        /// </summary>
+        Low=0,
+        /// <summary>
+        /// 高
+        /// </summary>
+        High=1,
+        /// <summary>
+        /// VIP
+        /// </summary>
+        VIP=2
+    }
+    /// <summary>
+    /// RFM标签等级
+    /// </summary>
+    public enum RFMTagLeave { 
+        R1=1,
+        R2 = 2,
+        R3 = 3,
+        R4 = 4,
+        R5 = 5,
+        R6 = 6,
+        R7 = 7,
+        R8 = 8,
+        V=9
+    }
+    #endregion
 }
