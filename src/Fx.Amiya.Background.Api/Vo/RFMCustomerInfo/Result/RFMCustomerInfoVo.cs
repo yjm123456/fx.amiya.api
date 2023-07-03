@@ -10,6 +10,10 @@ namespace Fx.Amiya.Background.Api.Vo.RFMCustomerInfo.Result
         public string Id { get; set; }
         public string Phone { get; set; }
         /// <summary>
+        /// 加密手机号
+        /// </summary>
+        public string EncryptPhone { get; set; }
+        /// <summary>
         /// 客服名称
         /// </summary>
         public string CustomerServiceName { get; set; }
@@ -22,7 +26,7 @@ namespace Fx.Amiya.Background.Api.Vo.RFMCustomerInfo.Result
         /// </summary>
         public string HospitalName { get; set; }
         /// <summary>
-        /// 最近一次成交金额
+        /// 成交金额
         /// </summary>
         public decimal DealPrice { get; set; }
         /// <summary>
@@ -34,23 +38,23 @@ namespace Fx.Amiya.Background.Api.Vo.RFMCustomerInfo.Result
         /// </summary>
         public int ConsumptionFrequency { get; set; }
         /// <summary>
-        /// 
+        /// 最近一次成交金额
         /// </summary>
         public decimal RecentDealPrice { get; set; }
         /// <summary>
-        /// R
+        /// 最近一次消费级别
         /// </summary>
         public string Recency { get; set; }
         /// <summary>
-        /// F
+        /// 消费频率级别
         /// </summary>
         public string Frequency { get; set; }
         /// <summary>
-        /// M
+        /// 消费级别
         /// </summary>
         public string Monetary { get; set; }
         /// <summary>
-        /// RFM
+        /// RFM标签等级
         /// </summary>
         public string RFMTag { get; set; }
         /// <summary>

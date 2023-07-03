@@ -11,6 +11,10 @@ namespace Fx.Amiya.Dto.RFMCustomerInfo
         public string Id { get; set; }
         public string Phone { get; set; }
         /// <summary>
+        /// 加密手机号
+        /// </summary>
+        public string EncryptPhone { get; set; }
+        /// <summary>
         /// 客服名称
         /// </summary>
         public string CustomerServiceName { get; set; }

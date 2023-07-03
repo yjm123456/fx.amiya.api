@@ -1358,7 +1358,7 @@ namespace Fx.Amiya.IService
         R6 = 6,
         R7 = 7,
         R8 = 8,
-        V=9
+        CV=9
     }
     #endregion
 }

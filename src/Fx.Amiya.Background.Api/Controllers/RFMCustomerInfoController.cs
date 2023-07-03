@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Background.Api.Vo.RFMCustomerInfo.Input;
+﻿using Fx.Amiya.Background.Api.Vo;
+using Fx.Amiya.Background.Api.Vo.RFMCustomerInfo.Input;
 using Fx.Amiya.Background.Api.Vo.RFMCustomerInfo.Result;
 using Fx.Amiya.Dto.RFMCustomerInfo;
 using Fx.Amiya.IService;
@@ -22,10 +23,11 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class RFMCustomerInfoController : ControllerBase
     {
         private IRFMCustomerInfoService rFMCustomerInfoService;
-
-        public RFMCustomerInfoController(IRFMCustomerInfoService rFMCustomerInfoService)
+        private IHttpContextAccessor _httpContextAccessor;
+        public RFMCustomerInfoController(IRFMCustomerInfoService rFMCustomerInfoService, IHttpContextAccessor httpContextAccessor)
         {
             this.rFMCustomerInfoService = rFMCustomerInfoService;
+            _httpContextAccessor = httpContextAccessor;
         }
         /// <summary>
         /// 导入RFM客户信息
@@ -76,16 +78,30 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         }
-
+        /// <summary>
+        /// 分页获取数据
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("getListByPage")]
         public async Task<ResultData<FxPageInfo<RFMCustomerInfoVo>>> GetListByPageAsync(string keyword, int pageNum, int pageSize)
         {
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int? employeeId = null;
+            if (employee.IsCustomerService && (Convert.ToInt32(employee.PositionId) != 1 || Convert.ToInt32(employee.PositionId) != 4))
+            {
+                employeeId = Convert.ToInt32(employee.Id);
+            }
             FxPageInfo<RFMCustomerInfoVo> fxPageInfo = new FxPageInfo<RFMCustomerInfoVo>();
-            var list = await rFMCustomerInfoService.GetListByPageAsync(keyword, pageNum, pageSize);
+            var list = await rFMCustomerInfoService.GetListByPageAsync(keyword, pageNum, pageSize,employeeId);
             fxPageInfo.TotalCount = list.TotalCount;
             fxPageInfo.List = list.List.Select(e => new RFMCustomerInfoVo
             {
                 Id = e.Id,
                 Phone = e.Phone,
+                EncryptPhone = e.EncryptPhone,
                 CustomerServiceName = e.CustomerServiceName,
                 LastDealDate = e.LastDealDate,
                 HospitalName = e.HospitalName,
@@ -104,7 +120,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
         /// <summary>
-        /// 添加健康值
+        /// 添加rfm客户
         /// </summary>
         /// <param name="addHealthValueVo"></param>
         /// <returns></returns>
@@ -124,13 +140,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.Frequency = addVo.Frequency;
             addDto.Monetary = addVo.Monetary;
             addDto.RFMTag = addVo.RFMTag;
-            addDto.LiveAnchorWechatNo = addVo.LiveAnchorWechatNo;
+            addDto.LiveAnchorWechatNo = addVo.LiveAnchorWechatNoId;
             await rFMCustomerInfoService.AddAsync(addDto);
             return ResultData.Success();
         }
 
         /// <summary>
-        /// 修改健康值
+        /// 修改rfm客户信息
         /// </summary>
         /// <param name="updateHealthValueVo"></param>
         /// <returns></returns>
@@ -150,12 +166,12 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.Frequency = updateVo.Frequency;
             updateDto.Monetary = updateVo.Monetary;
             updateDto.RFMTag = updateVo.RFMTag;
-            updateDto.LiveAnchorWechatNo = updateVo.LiveAnchorWechatNo;
+            updateDto.LiveAnchorWechatNo = updateVo.LiveAnchorWechatNoId;
             await rFMCustomerInfoService.UpdateAsync(updateDto);
             return ResultData.Success();
         }
         /// <summary>
-        /// 删除健康值
+        /// 删除rfm客户信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -166,7 +182,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData.Success();
         }
         /// <summary>
-        /// 根据id获取健康值详情
+        /// 根据id获取rfm客户详情
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -191,6 +207,38 @@ namespace Fx.Amiya.Background.Api.Controllers
             info.RFMTagText = result.RFMTagText;
             info.LiveAnchorWechatNo = result.LiveAnchorWechatNo;
             return ResultData<RFMCustomerInfoVo>.Success().AddData("info", info);
+        }
+        /// <summary>
+        /// rfm值名称列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("rfmvalueNameList")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetRFMValueNameListAsync()
+        {
+            var nameList = rFMCustomerInfoService.GetRFMValueText();
+            var result = nameList.Select(e => new BaseIdAndNameVo<int>
+            {
+                Id = Convert.ToInt32(e.Key),
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("nameList", result);
+
+        }
+        /// <summary>
+        /// rfm标签名称列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("rfmtagNameList")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetRFMTagNameListAsync()
+        {
+            var nameList = rFMCustomerInfoService.GetRFMTagText();
+            var result = nameList.Select(e => new BaseIdAndNameVo<int>
+            {
+                Id = Convert.ToInt32(e.Key),
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("nameList", result);
+
         }
     }
 }

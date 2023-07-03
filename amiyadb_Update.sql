@@ -285,3 +285,14 @@ ALTER TABLE `amiyadb`.`tbl_content_pat_form_order_add_work`
 CHANGE COLUMN `phone` `phone` VARCHAR(20) NOT NULL ;
 -----------------------------------------------余建明 2023/06/29 END--------------------------------------------
 
+
+
+-----------------------------------------------王健 2023/07/03 BEGIN--------------------------------------------
+
+-----微信支付信息字段长度修改
+ALTER TABLE `tbl_wechat_payinfo`
+	CHANGE COLUMN `sub_app_id` `sub_app_id` VARCHAR(5000) NOT NULL AFTER `enablesp`,
+	CHANGE COLUMN `sub_mch_id` `sub_mch_id` VARCHAR(5000) NOT NULL AFTER `sub_app_id`;
+
+-----------------------------------------------王健 2023/07/03 BEGIN--------------------------------------------
+

@@ -21,7 +21,7 @@ namespace Fx.Amiya.Background.Api.Vo.RFMCustomerInfo.Input
         /// </summary>
         public int HospitalId { get; set; }
         /// <summary>
-        /// 最近一次成交金额
+        /// 成交金额
         /// </summary>
         public decimal DealPrice { get; set; }
         /// <summary>
@@ -33,28 +33,28 @@ namespace Fx.Amiya.Background.Api.Vo.RFMCustomerInfo.Input
         /// </summary>
         public int ConsumptionFrequency { get; set; }
         /// <summary>
-        /// 
+        /// 最近一次成交金额
         /// </summary>
         public decimal RecentDealPrice { get; set; }
         /// <summary>
-        /// R
+        /// 最近一次消费级别
         /// </summary>
         public int Recency { get; set; }
         /// <summary>
-        /// F
+        /// 消费频率级别
         /// </summary>
         public int Frequency { get; set; }
         /// <summary>
-        /// M
+        /// 消费级别
         /// </summary>
         public int Monetary { get; set; }
         /// <summary>
-        /// RFM
+        ///  RFM标签等级
         /// </summary>
         public int RFMTag { get; set; }
         /// <summary>
-        /// 主播微信号
+        /// 主播微信号id
         /// </summary>
-        public string LiveAnchorWechatNo { get; set; }
+        public string LiveAnchorWechatNoId { get; set; }
     }
 }

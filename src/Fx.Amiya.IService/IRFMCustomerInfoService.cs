@@ -12,7 +12,7 @@ namespace Fx.Amiya.IService
     public interface IRFMCustomerInfoService
     {
         Task ImportRFMCustomerInfoAsync(List<ImportRfmCustomerDto> list);
-        Task<FxPageInfo<RFMCustomerInfoDto>> GetListByPageAsync(string keyword,int pageNum,int pageSize);
+        Task<FxPageInfo<RFMCustomerInfoDto>> GetListByPageAsync(string keyword,int pageNum,int pageSize, int? employeeId);
         List<BaseKeyValueDto> GetRFMValueText();
         List<BaseKeyValueDto> GetRFMTagText();
         Task AddAsync(AddRFMCustomerInfoDto addDto);

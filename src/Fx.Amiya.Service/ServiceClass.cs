@@ -2190,6 +2190,45 @@ namespace Fx.Amiya.Service
             }
             return str;
         }
+
+        public static int GetRFMTagByName(string tag)
+        {
+            int t = 1;
+            switch (tag)
+            {
+                case "R1":
+                    t = 1;
+                    break;
+                case "R2":
+                    t = 2;
+                    break;
+                case "R3":
+                    t = 3;
+                    break;
+                case "R4":
+                    t = 4;
+                    break;
+                case "R5":
+                    t = 5;
+                    break;
+                case "R6":
+                    t = 6;
+                    break;
+                case "R7":
+                    t = 7;
+                    break;
+                case "R8":
+                    t = 8;
+                    break;
+                case "CV":
+                    t = 9;
+                    break;
+                default:
+                    t = 0;
+                    break;
+            }
+            return t;
+        }
         #endregion
     }
 }

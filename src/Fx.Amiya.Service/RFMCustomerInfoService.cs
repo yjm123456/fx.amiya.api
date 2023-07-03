@@ -1,9 +1,12 @@
 ﻿using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.RFMCustomerInfo;
+using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,18 +20,22 @@ namespace Fx.Amiya.Service
         private readonly IDalHospitalInfo dalHospitalInfo;
         private readonly IDalAmiyaEmployee dalAmiyaEmployee;
         private readonly IDalRFMCustomerInfo dalRFMCustomerInfo;
-
-        public RFMCustomerInfoService(IDalHospitalInfo dalHospitalInfo, IDalAmiyaEmployee dalAmiyaEmployee, IDalRFMCustomerInfo dalRFMCustomerInfo)
+        private IDalConfig _dalConfig;
+        private IDalLiveAnchorWeChatInfo dalLiveAnchorWeChatInfo;
+        public RFMCustomerInfoService(IDalHospitalInfo dalHospitalInfo, IDalAmiyaEmployee dalAmiyaEmployee, IDalRFMCustomerInfo dalRFMCustomerInfo, IDalConfig dalConfig, IDalLiveAnchorWeChatInfo dalLiveAnchorWeChatInfo)
         {
             this.dalHospitalInfo = dalHospitalInfo;
             this.dalAmiyaEmployee = dalAmiyaEmployee;
             this.dalRFMCustomerInfo = dalRFMCustomerInfo;
+            _dalConfig = dalConfig;
+            this.dalLiveAnchorWeChatInfo = dalLiveAnchorWeChatInfo;
         }
 
         public async Task ImportRFMCustomerInfoAsync(List<ImportRfmCustomerDto> list)
         {
             var hospitalInfoList = dalHospitalInfo.GetAll().Select(e => new { Name = e.Name, Id = e.Id });
             var employeeInfoList = dalAmiyaEmployee.GetAll().Select(e => new { Name = e.Name, Id = e.Id });
+            var wechatNoInfoList = dalLiveAnchorWeChatInfo.GetAll().Select(e=>new {Name=e.WeChatNo,Id=e.Id });
             var RFMValue = GetRFMValueText();
             var RFMTagValue = GetRFMTagText();
             foreach (var item in list)
@@ -46,8 +53,8 @@ namespace Fx.Amiya.Service
                 info.Recency = Convert.ToInt32(RFMValue.Where(e => e.Value == item.Recency).FirstOrDefault()?.Key ?? "0");
                 info.Frequency = Convert.ToInt32(RFMValue.Where(e => e.Value == item.Frequency).FirstOrDefault()?.Key ?? "0");
                 info.Monetary = Convert.ToInt32(RFMValue.Where(e => e.Value == item.Monetary).FirstOrDefault()?.Key ?? "0");
-                info.RFMTag = Convert.ToInt32(RFMTagValue.Where(e => e.Value == item.RFMTag).FirstOrDefault()?.Key ?? "0");
-                info.LiveAnchorWechatNo = item.LiveAnchorWechatNo;
+                info.RFMTag = ServiceClass.GetRFMTagByName(item.RFMTag);
+                info.LiveAnchorWechatNo = wechatNoInfoList.Where(e => e.Name == item.LiveAnchorWechatNo).FirstOrDefault()?.Id ?? null; ;
                 info.Valid = true;
                 info.CreateDate = DateTime.Now;
                 await dalRFMCustomerInfo.AddAsync(info,true);
@@ -69,30 +76,32 @@ namespace Fx.Amiya.Service
         }
         public List<BaseKeyValueDto> GetRFMTagText()
         {
-            var billReturnBackStateTexts = Enum.GetValues(typeof(RFM));
+            var billReturnBackStateTexts = Enum.GetValues(typeof(RFMTagLeave));
 
             List<BaseKeyValueDto> billReturnBackStateTextList = new List<BaseKeyValueDto>();
             foreach (var item in billReturnBackStateTexts)
             {
                 BaseKeyValueDto baseKeyValueDto = new BaseKeyValueDto();
                 baseKeyValueDto.Key = Convert.ToInt32(item).ToString();
-                baseKeyValueDto.Value = ServiceClass.GetRFMText(Convert.ToInt32(item));
+                baseKeyValueDto.Value = ServiceClass.GetRFMTagText(Convert.ToInt32(item));
                 billReturnBackStateTextList.Add(baseKeyValueDto);
             }
             return billReturnBackStateTextList;
         }
 
-        public async Task<FxPageInfo<RFMCustomerInfoDto>> GetListByPageAsync(string keyword, int pageNum, int pageSize)
+        public async Task<FxPageInfo<RFMCustomerInfoDto>> GetListByPageAsync(string keyword, int pageNum, int pageSize,int? employeeId)
         {
+            var config = await GetCallCenterConfig();
             FxPageInfo<RFMCustomerInfoDto> fxPageInfo = new FxPageInfo<RFMCustomerInfoDto>();
-            var infoList= dalRFMCustomerInfo.GetAll().Where(e => string.IsNullOrEmpty(keyword) || e.Phone.Contains(keyword)).Where(e=>e.Valid==true);
+            var infoList= dalRFMCustomerInfo.GetAll().Where(e => string.IsNullOrEmpty(keyword) || e.Phone.Contains(keyword)).Where(e=>e.Valid==true).Where(e=>!employeeId.HasValue||e.CustomerServiceId==employeeId);
             fxPageInfo.TotalCount = infoList.Count();
             fxPageInfo.List = infoList.Skip((pageNum - 1) * pageSize).Take(pageSize).Select(e => new RFMCustomerInfoDto {
                 Id = e.Id,
-                Phone = e.Phone,
-                CustomerServiceName = dalAmiyaEmployee.GetAll().Where(a => a.Id == e.CustomerServiceId).FirstOrDefault().Name,
+                Phone = config.EnablePhoneEncrypt == true ? ServiceClass.GetIncompletePhone(e.Phone) : e.Phone,
+                EncryptPhone = ServiceClass.Encrypt(e.Phone, config.PhoneEncryptKey),
+                CustomerServiceName = e.CustomerServiceId.HasValue? dalAmiyaEmployee.GetAll().Where(a => a.Id == e.CustomerServiceId).FirstOrDefault().Name:"",
                 LastDealDate = e.LastDealDate,
-                HospitalName = dalHospitalInfo.GetAll().Where(h => h.Id == e.HospitalId).FirstOrDefault().Name,
+                HospitalName = e.HospitalId.HasValue? dalHospitalInfo.GetAll().Where(h => h.Id == e.HospitalId).FirstOrDefault().Name:"",
                 DealPrice = e.DealPrice,
                 TotalDealPrice = e.TotalDealPrice,
                 ConsumptionFrequency=e.ConsumptionFrequency,
@@ -102,7 +111,7 @@ namespace Fx.Amiya.Service
                 Monetary = ServiceClass.GetRFMText(e.Monetary),
                 RFMTag=((RFMTagLeave)e.RFMTag).ToString(),
                 RFMTagText = ServiceClass.GetRFMTagText(e.RFMTag),
-                LiveAnchorWechatNo=e.LiveAnchorWechatNo
+                LiveAnchorWechatNo=string.IsNullOrEmpty(e.LiveAnchorWechatNo) ? dalLiveAnchorWeChatInfo.GetAll().Where(w=>w.Id==e.LiveAnchorWechatNo).FirstOrDefault().WeChatNo : "",
             }).ToList();
             return fxPageInfo;
         }
@@ -126,6 +135,7 @@ namespace Fx.Amiya.Service
             info.LiveAnchorWechatNo = addDto.LiveAnchorWechatNo;
             info.Valid = true;
             info.CreateDate = DateTime.Now;
+            await dalRFMCustomerInfo.AddAsync(info,true);
         }
 
         public async Task<RFMCustomerInfoDto> GetByIdAsync(string id)
@@ -169,7 +179,6 @@ namespace Fx.Amiya.Service
             info.UpdateDate = DateTime.Now;
             await dalRFMCustomerInfo.UpdateAsync(info,true);
         }
-
         public async Task DeleteAsync(string id)
         {
             var info = dalRFMCustomerInfo.GetAll().Where(e => e.Id == id).FirstOrDefault();
@@ -177,6 +186,11 @@ namespace Fx.Amiya.Service
             info.Valid = false;
             info.DeleteDate = DateTime.Now;
             await dalRFMCustomerInfo.UpdateAsync(info, true);
+        }
+        private async Task<CallCenterConfigDto> GetCallCenterConfig()
+        {
+            var config = await _dalConfig.GetAll().SingleOrDefaultAsync();
+            return JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig;
         }
     }
 }
