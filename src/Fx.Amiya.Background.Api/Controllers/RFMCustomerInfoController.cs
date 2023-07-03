@@ -213,6 +213,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             info.RFMTag = result.RFMTag;
             info.RFMTagText = result.RFMTagText;
             info.LiveAnchorWechatNo = result.LiveAnchorWechatNo;
+            info.LiveAnchorWechatNoId = result.LiveAnchorWechatNoId;
             return ResultData<RFMCustomerInfoVo>.Success().AddData("info", info);
         }
         /// <summary>

@@ -165,6 +165,7 @@ namespace Fx.Amiya.Service
                 RFMTag = ((RFMTagLeave)e.RFMTag).ToString(),
                 RFMTagText = ServiceClass.GetRFMTagText(e.RFMTag),
                 LiveAnchorWechatNo = !string.IsNullOrEmpty(e.LiveAnchorWechatNo) ? dalLiveAnchorWeChatInfo.GetAll().Where(w => w.Id == e.LiveAnchorWechatNo).FirstOrDefault().WeChatNo : null,
+                LiveAnchorWechatNoId = e.LiveAnchorWechatNo
             }).FirstOrDefault();
         }
 
