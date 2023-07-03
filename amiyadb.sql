@@ -241,18 +241,20 @@ CREATE TABLE `tbl_rmf_customerinfo` (
 	`deal_price` DECIMAL(10,2) NOT NULL,
 	`total_deal_price` DECIMAL(10,2) NOT NULL,
 	`consumption_frequency` INT(10) NOT NULL,
-	`recent_deal_price` DECIMAL(10,2) NOT NULL,
+	`recency_date` INT(10) NOT NULL DEFAULT 0,
 	`recency` INT(10) NOT NULL,
 	`frequency` INT(10) NOT NULL,
 	`monetary` INT(10) NOT NULL,
 	`rfm_tag` INT(10) NOT NULL,
-	`live_anchor_wechatno` VARCHAR(100) NOT NULL DEFAULT '',
+	`live_anchor_wechatno` VARCHAR(100) NULL DEFAULT NULL,
 	`create_date` DATETIME NOT NULL,
 	`update_date` DATETIME NULL DEFAULT NULL,
 	`valid` BIT(1) NOT NULL,
 	`delete_date` DATETIME NULL DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
+
+
 
 
 ------------------------------------------王健 2023/07/03 END--------------------------------------

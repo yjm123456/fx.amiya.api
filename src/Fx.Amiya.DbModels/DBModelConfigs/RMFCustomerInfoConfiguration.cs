@@ -23,12 +23,12 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.DealPrice).HasColumnName("deal_price").HasColumnType("deciaml(10,2)").IsRequired();
             builder.Property(e => e.TotalDealPrice).HasColumnName("total_deal_price").HasColumnType("decimal(10,2)").IsRequired();
             builder.Property(e => e.ConsumptionFrequency).HasColumnName("consumption_frequency").HasColumnType("int").IsRequired();
-            builder.Property(e => e.RecentDealPrice).HasColumnName("recent_deal_price").HasColumnType("decimal(10,2)").IsRequired();
+            builder.Property(e => e.RecencyDate).HasColumnName("recency_date").HasColumnType("int").IsRequired();
             builder.Property(e => e.Recency).HasColumnName("recency").HasColumnType("int").IsRequired();
             builder.Property(e => e.Frequency).HasColumnName("frequency").HasColumnType("int").IsRequired();
             builder.Property(e => e.Monetary).HasColumnName("monetary").HasColumnType("int").IsRequired();
             builder.Property(e => e.RFMTag).HasColumnName("rfm_tag").HasColumnType("int").IsRequired();
-            builder.Property(e => e.LiveAnchorWechatNo).HasColumnName("live_anchor_wechatno").HasColumnType("varchar(100)").IsRequired();
+            builder.Property(e => e.LiveAnchorWechatNo).HasColumnName("live_anchor_wechatno").HasColumnType("varchar(100)").IsRequired(false);
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();

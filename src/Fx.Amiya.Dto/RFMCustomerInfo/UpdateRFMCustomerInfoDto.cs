@@ -38,9 +38,9 @@ namespace Fx.Amiya.Dto.RFMCustomerInfo
         /// </summary>
         public int ConsumptionFrequency { get; set; }
         /// <summary>
-        /// 
+        /// 最近一次成交时间
         /// </summary>
-        public decimal RecentDealPrice { get; set; }
+        public int RecencyDate { get; set; }
         /// <summary>
         /// R
         /// </summary>

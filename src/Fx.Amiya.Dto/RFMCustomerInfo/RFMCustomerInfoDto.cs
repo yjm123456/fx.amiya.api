@@ -15,6 +15,10 @@ namespace Fx.Amiya.Dto.RFMCustomerInfo
         /// </summary>
         public string EncryptPhone { get; set; }
         /// <summary>
+        /// 客服id
+        /// </summary>
+        public int? CustomerServiceId { get; set; }
+        /// <summary>
         /// 客服名称
         /// </summary>
         public string CustomerServiceName { get; set; }
@@ -22,6 +26,10 @@ namespace Fx.Amiya.Dto.RFMCustomerInfo
         /// 最近一次成交时间
         /// </summary>
         public DateTime? LastDealDate { get; set; }
+        /// <summary>
+        /// 医院id
+        /// </summary>
+        public  int? HospitalId { get; set; }
         /// <summary>
         /// 医院名称
         /// </summary>
@@ -41,19 +49,24 @@ namespace Fx.Amiya.Dto.RFMCustomerInfo
         /// <summary>
         /// 
         /// </summary>
-        public decimal RecentDealPrice { get; set; }
+        public int RecencyDate { get; set; }
+        public int RecencyLeave { get; set; }
         /// <summary>
         /// R
         /// </summary>
         public string Recency { get; set; }
+        public int FrequencyLeave { get; set; }
         /// <summary>
         /// F
         /// </summary>
         public string Frequency { get; set; }
+        public int MonetaryLeave { get; set; }
         /// <summary>
         /// M
         /// </summary>
         public string Monetary { get; set; }
+
+        public int RFMTagLeave { get; set; }
         /// <summary>
         /// RFM
         /// </summary>
@@ -62,6 +75,7 @@ namespace Fx.Amiya.Dto.RFMCustomerInfo
         /// RFM等级名称
         /// </summary>
         public string RFMTagText { get; set; }
+        public string LiveAnchorWechatNoId { get; set; }
         /// <summary>
         /// 主播微信号
         /// </summary>

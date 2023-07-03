@@ -63,7 +63,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                         addDto.DealPrice = Convert.ToDecimal(worksheet.Cells[x, 5].Value);
                         addDto.TotalDealPrice = Convert.ToDecimal(worksheet.Cells[x, 6].Value);
                         addDto.ConsumptionFrequency = Convert.ToInt32(worksheet.Cells[x, 7].Value);
-                        addDto.RecentDealPrice = Convert.ToDecimal(worksheet.Cells[x, 8].Value);
+                        addDto.RecencyDate = Convert.ToInt32(worksheet.Cells[x, 8].Value);
                         addDto.Recency = worksheet.Cells[x, 9].Value.ToString();
                         addDto.Frequency = worksheet.Cells[x, 10].Value.ToString();
                         addDto.Monetary = worksheet.Cells[x, 11].Value.ToString();
@@ -90,7 +90,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int? employeeId = null;
-            if (employee.IsCustomerService && (Convert.ToInt32(employee.PositionId) != 1 || Convert.ToInt32(employee.PositionId) != 4))
+            if (employee.IsCustomerService && (Convert.ToInt32(employee.PositionId) != 1 && Convert.ToInt32(employee.PositionId) != 4))
             {
                 employeeId = Convert.ToInt32(employee.Id);
             }
@@ -108,7 +108,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 DealPrice = e.DealPrice,
                 TotalDealPrice = e.TotalDealPrice,
                 ConsumptionFrequency = e.ConsumptionFrequency,
-                RecentDealPrice = e.RecentDealPrice,
+                RecencyDate = e.RecencyDate,
                 Recency = e.Recency,
                 Frequency = e.Frequency,
                 Monetary = e.Monetary,
@@ -135,7 +135,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.DealPrice = addVo.DealPrice;
             addDto.TotalDealPrice = addVo.TotalDealPrice;
             addDto.ConsumptionFrequency = addVo.ConsumptionFrequency;
-            addDto.RecentDealPrice = addVo.RecentDealPrice;
+            addDto.RecencyDate = addVo.RecencyDate;
             addDto.Recency = addVo.Recency;
             addDto.Frequency = addVo.Frequency;
             addDto.Monetary = addVo.Monetary;
@@ -154,6 +154,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData> UpdateAsync(UpdateRFMCustomerInfoVo updateVo)
         {
             UpdateRFMCustomerInfoDto updateDto = new UpdateRFMCustomerInfoDto();
+            updateDto.Id = updateVo.Id;
             updateDto.Phone = updateVo.Phone;
             updateDto.CustomerServiceId = updateVo.CustomerServiceId;
             updateDto.LastDealDate = updateVo.LastDealDate;
@@ -161,7 +162,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.DealPrice = updateVo.DealPrice;
             updateDto.TotalDealPrice = updateVo.TotalDealPrice;
             updateDto.ConsumptionFrequency = updateVo.ConsumptionFrequency;
-            updateDto.RecentDealPrice = updateVo.RecentDealPrice;
+            updateDto.RecencyDate = updateVo.RecencyDate;
             updateDto.Recency = updateVo.Recency;
             updateDto.Frequency = updateVo.Frequency;
             updateDto.Monetary = updateVo.Monetary;
@@ -193,16 +194,22 @@ namespace Fx.Amiya.Background.Api.Controllers
             RFMCustomerInfoVo info = new RFMCustomerInfoVo();
             info.Id = result.Id;
             info.Phone = result.Phone;
+            info.CustomerServiceId = result.CustomerServiceId;
             info.CustomerServiceName = result.CustomerServiceName;
             info.LastDealDate = result.LastDealDate;
+            info.HospitalId = result.HospitalId;
             info.HospitalName = result.HospitalName;
             info.DealPrice = result.DealPrice;
             info.TotalDealPrice = result.TotalDealPrice;
             info.ConsumptionFrequency = result.ConsumptionFrequency;
-            info.RecentDealPrice = result.RecentDealPrice;
+            info.RecencyDate = result.RecencyDate;
+            info.RecencyLeave = result.RecencyLeave;
             info.Recency = result.Recency;
+            info.FrequencyLeave = result.FrequencyLeave;
             info.Frequency = result.Frequency;
+            info.MonetaryLeave = result.MonetaryLeave;
             info.Monetary = result.Monetary;
+            info.RFMTagLeave = result.RFMTagLeave;
             info.RFMTag = result.RFMTag;
             info.RFMTagText = result.RFMTagText;
             info.LiveAnchorWechatNo = result.LiveAnchorWechatNo;

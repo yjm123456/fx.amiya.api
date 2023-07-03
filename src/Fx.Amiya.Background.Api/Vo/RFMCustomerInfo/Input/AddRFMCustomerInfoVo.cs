@@ -33,9 +33,9 @@ namespace Fx.Amiya.Background.Api.Vo.RFMCustomerInfo.Input
         /// </summary>
         public int ConsumptionFrequency { get; set; }
         /// <summary>
-        /// 最近一次成交金额
+        /// 最近一次成交时间
         /// </summary>
-        public decimal RecentDealPrice { get; set; }
+        public int RecencyDate { get; set; }
         /// <summary>
         /// 最近一次消费级别
         /// </summary>

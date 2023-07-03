@@ -39,7 +39,7 @@ namespace Fx.Amiya.Dto.RFMCustomerInfo
         /// <summary>
         /// 
         /// </summary>
-        public decimal RecentDealPrice { get; set; }
+        public int RecencyDate { get; set; }
         /// <summary>
         /// R
         /// </summary>

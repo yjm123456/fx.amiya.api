@@ -38,9 +38,9 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public int ConsumptionFrequency { get; set; }
         /// <summary>
-        /// 
+        /// 最近一次消费距离当前时间的天数
         /// </summary>
-        public decimal RecentDealPrice { get; set; }
+        public int RecencyDate { get; set; }
         /// <summary>
         /// R
         /// </summary>
