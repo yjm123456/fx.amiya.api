@@ -239,6 +239,68 @@ namespace Fx.Amiya.Service
             }
         }
 
+        public async Task AddListAsync(List<AddShoppingCartRegistrationDto> addDtoList)
+        {
+            unitOfWork.BeginTransaction();
+            try
+            {
+                foreach (var addDto in addDtoList)
+                {
+                    var searchDataByPhone = await dalShoppingCartRegistration.GetAll().FirstOrDefaultAsync(e => e.Phone == addDto.Phone);
+                    if (searchDataByPhone == null)
+                    {
+                        continue;
+                    }
+
+                    ShoppingCartRegistration shoppingCartRegistration = new ShoppingCartRegistration();
+                    shoppingCartRegistration.Id = CreateOrderIdHelper.GetNextNumber();
+                    shoppingCartRegistration.RecordDate = addDto.RecordDate;
+                    shoppingCartRegistration.ContentPlatFormId = addDto.ContentPlatFormId;
+                    shoppingCartRegistration.LiveAnchorId = addDto.LiveAnchorId;
+                    shoppingCartRegistration.LiveAnchorWechatNo = addDto.LiveAnchorWechatNo;
+                    shoppingCartRegistration.CustomerNickName = addDto.CustomerNickName;
+                    shoppingCartRegistration.Phone = addDto.Phone;
+                    shoppingCartRegistration.SubPhone = addDto.SubPhone;
+                    shoppingCartRegistration.IsAddWeChat = addDto.IsAddWeChat;
+                    shoppingCartRegistration.Price = addDto.Price;
+                    shoppingCartRegistration.ConsultationType = addDto.ConsultationType;
+                    shoppingCartRegistration.IsWriteOff = addDto.IsWriteOff;
+                    shoppingCartRegistration.IsConsultation = addDto.IsConsultation;
+                    shoppingCartRegistration.ConsultationDate = addDto.ConsultationDate;
+                    shoppingCartRegistration.IsReturnBackPrice = addDto.IsReturnBackPrice;
+                    shoppingCartRegistration.Remark = addDto.Remark;
+                    shoppingCartRegistration.CreateBy = addDto.CreateBy;
+                    shoppingCartRegistration.AssignEmpId = addDto.AssignEmpId;
+                    shoppingCartRegistration.CreateDate = DateTime.Now;
+                    shoppingCartRegistration.BadReviewContent = addDto.BadReviewContent;
+                    shoppingCartRegistration.BadReviewDate = addDto.BadReviewDate;
+                    shoppingCartRegistration.BadReviewReason = addDto.BadReviewReason;
+                    shoppingCartRegistration.IsReContent = addDto.IsReContent;
+                    shoppingCartRegistration.ReContent = addDto.ReContent;
+                    shoppingCartRegistration.RefundDate = addDto.RefundDate;
+                    shoppingCartRegistration.RefundReason = addDto.RefundReason;
+                    shoppingCartRegistration.IsBadReview = addDto.IsBadReview;
+                    shoppingCartRegistration.IsCreateOrder = addDto.IsCreateOrder;
+                    shoppingCartRegistration.IsSendOrder = addDto.IsSendOrder;
+                    shoppingCartRegistration.EmergencyLevel = addDto.EmergencyLevel;
+                    shoppingCartRegistration.Source = addDto.Source;
+                    var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(addDto.LiveAnchorId);
+                    if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
+                    {
+                        shoppingCartRegistration.BaseLiveAnchorId = baseLiveAnchorId.LiveAnchorBaseId;
+                    }
+                    await dalShoppingCartRegistration.AddAsync(shoppingCartRegistration, true);
+                }
+
+                unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex;
+            }
+        }
+
         public async Task<ShoppingCartRegistrationDto> GetByIdAsync(string id)
         {
             try

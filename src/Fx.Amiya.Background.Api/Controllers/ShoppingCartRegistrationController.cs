@@ -9,8 +9,10 @@ using Fx.Open.Infrastructure.Web;
 using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -71,13 +73,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="source">客户来源</param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId,int? source)
+        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, assignEmpId, startRefundTime, endRefundTime, startBadReviewTime, endBadReviewTime, emergencyLevel, isBadReview, baseLiveAnchorId,source);
+                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, assignEmpId, startRefundTime, endRefundTime, startBadReviewTime, endBadReviewTime, emergencyLevel, isBadReview, baseLiveAnchorId, source);
 
                 var shoppingCartRegistration = from d in q.List
                                                select new ShoppingCartRegistrationVo
@@ -96,7 +98,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    ConsultationType = d.ConsultationType,
                                                    IsWriteOff = d.IsWriteOff,
                                                    IsConsultation = d.IsConsultation,
-                                                   ConsultationTypeText=d.ConsultationTypeText,
+                                                   ConsultationTypeText = d.ConsultationTypeText,
                                                    ConsultationDate = d.ConsultationDate,
                                                    IsAddWeChat = d.IsAddWeChat,
                                                    IsReturnBackPrice = d.IsReturnBackPrice,
@@ -191,7 +193,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 {
                     addDto.IsSendOrder = true;
                 }
-               
+
                 await shoppingCartRegistrationService.AddAsync(addDto);
 
                 return ResultData.Success();
@@ -250,7 +252,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(shoppingCartRegistration.EmergencyLevel);
                 shoppingCartRegistrationVo.Source = shoppingCartRegistration.Source;
                 shoppingCartRegistrationVo.BaseLiveAnchorId = shoppingCartRegistration.BaseLiveAnchorId;
-                
+
                 return ResultData<ShoppingCartRegistrationVo>.Success().AddData("shoppingCartRegistrationInfo", shoppingCartRegistrationVo);
             }
             catch (Exception ex)
@@ -369,7 +371,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 {
                     updateDto.IsSendOrder = true;
                 }
-                
+
                 await shoppingCartRegistrationService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -488,5 +490,123 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+
+        /// <summary>
+        /// 导入小黄车登记列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut("importShoppingCartRegistionData")]
+        [FxTenantAuthorize]
+        public async Task<ResultData> ReconciliationDocumentsInPortAsync(IFormFile file)
+        {
+            if (file == null || file.Length <= 0)
+                throw new Exception("请检查文件是否存在");
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);//取到文件流
+
+                using (ExcelPackage package = new ExcelPackage(stream))
+                {
+
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets["sheet1"];
+                    if (worksheet == null)
+                    {
+                        throw new Exception("请另外新建一个excel文件'.xlsx'后将填写好的数据复制到新文件中上传，勿采用当前导出文件进行上传！");
+                    }
+                    //获取表格的列数和行数
+                    int rowCount = worksheet.Dimension.Rows;
+
+                    List<AddShoppingCartRegistrationDto> addDtoList = new List<AddShoppingCartRegistrationDto>();
+                    for (int x = 2; x <= rowCount; x++)
+                    {
+                        AddShoppingCartRegistrationDto addDto = new AddShoppingCartRegistrationDto();
+                        if (worksheet.Cells[x, 1].Value != null)
+                        {
+                            string liveanchorName = worksheet.Cells[x, 1].Value.ToString();
+                            if (liveanchorName == "刀刀")
+                            {
+                                addDto.LiveAnchorId = 84;
+                            }
+                            else if (liveanchorName == "吉娜")
+                            {
+                                addDto.LiveAnchorId = 12;
+                            }
+                            else
+                            {
+                                throw new Exception("主播栏目有数据输入非“刀刀”或者“吉娜”，请检查表格数据！");
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("主播有参数列为空，请检查表格数据！");
+                        }
+                        if (worksheet.Cells[x, 2].Value != null)
+                        {
+                            addDto.CustomerNickName = worksheet.Cells[x, 2].Value.ToString();
+                        }
+                        else
+                        {
+                            throw new Exception("客户昵称有参数列为空，请检查表格数据！");
+                        }
+                        if (worksheet.Cells[x, 3].Value != null)
+                        {
+                            addDto.Phone = worksheet.Cells[x, 3].Value.ToString();
+                        }
+                        else
+                        {
+                            throw new Exception("客户电话有参数列为空，请检查表格数据！");
+                        }
+                        if (worksheet.Cells[x, 4].Value != null)
+                        {
+                            double tempValue;
+                            if (double.TryParse(worksheet.Cells[x, 4].Value.ToString(), out tempValue))
+                            {
+                                var dealDate = DateTime.FromOADate(double.Parse(worksheet.Cells[x, 4].Value.ToString()));
+                                addDto.RecordDate = dealDate;
+                            }
+                            else
+                            {
+                                addDto.RecordDate = Convert.ToDateTime(worksheet.Cells[x, 4].Value.ToString());
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("登记时间有参数列为空，请检查表格数据！");
+                        }
+                        if (worksheet.Cells[x, 5].Value != null)
+                        {
+                            addDto.Price = Convert.ToDecimal(worksheet.Cells[x, 5].Value.ToString());
+                        }
+                        else
+                        {
+                            throw new Exception("消费金额有参数列为空，请检查表格数据！");
+                        }
+                        if (worksheet.Cells[x, 6].Value != null)
+                        {
+                            addDto.Remark = worksheet.Cells[x, 6].Value.ToString();
+                        }
+                        addDto.ContentPlatFormId = "9196b247-1ab9-4d0c-a11e-a1ef09019878";
+                        addDto.SubPhone = "";
+                        addDto.IsConsultation = false;
+                        addDto.ConsultationType = 4;
+                        addDto.IsWriteOff = false;
+                        addDto.IsAddWeChat = false;
+                        addDto.IsReturnBackPrice = false;
+                        addDto.IsReContent = false;
+                        addDto.CreateBy = employeeId;
+                        addDto.IsBadReview = false;
+                        addDto.EmergencyLevel = 2;
+                        addDto.Source = 7;
+                        addDtoList.Add(addDto);
+                    }
+                    await shoppingCartRegistrationService.AddListAsync(addDtoList);
+                }
+            }
+            return ResultData.Success();
+
+
+        }
     }
 }

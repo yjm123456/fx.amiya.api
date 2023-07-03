@@ -974,8 +974,31 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 其他
         /// </summary>
-        OTHER = 5
+        OTHER = 5,
+
+        /// <summary>
+        /// 产品转化
+        /// </summary>
+        ProductionTransform = 6,
+
+        /// <summary>
+        /// 带货
+        /// </summary>
+        TakeGoods=7,
     }
+
+    /// <summary>
+    /// 产品类型
+    /// </summary>
+    public enum ShoppingCartProductType
+    {
+        //超声炮
+        //护肤品
+        //彩妆
+        //饰品&衣服
+        //其他
+    }
+
     /// <summary>
     /// 面诊方式
     /// </summary>
