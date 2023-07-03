@@ -2133,5 +2133,63 @@ namespace Fx.Amiya.Service
             }
             return typeText;
         }
+        #region RFM相关
+        /// <summary>
+        /// 获取R,F,M值对应的文本
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string GetRFMText(int value) {
+            string str = "";
+            switch (value) {
+                case 0:
+                    str = "低";
+                    break;
+                case 1:
+                    str = "高";
+                    break;
+                case 2:
+                    str = "VIP";
+                    break;
+                default: str = "";
+                    break;
+            }
+            return str;
+        }
+
+        public static string GetRFMTagText(int tag) {
+            string str = "";
+            switch (tag) {
+                case 1:
+                    str = "一般挽留客户";
+                    break;
+                case 2:
+                    str = "一般发展客户";
+                    break;
+                case 3:
+                    str = "一般保持客户";
+                    break;
+                case 4:
+                    str = "一般价值客户";
+                    break;
+                case 5:
+                    str = "重要挽留客户";
+                    break;
+                case 6:
+                    str = "重要发展客户";
+                    break;
+                case 7:
+                    str = "重要保持客户";
+                    break;
+                case 8:
+                    str = "重要价值客户";
+                    break;
+                case 9:
+                    str = "超级VIP";
+                    break;
+            }
+            return str;
+        }
+        #endregion
     }
 }
