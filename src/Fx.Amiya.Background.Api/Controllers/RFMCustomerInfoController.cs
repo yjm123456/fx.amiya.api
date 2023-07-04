@@ -24,10 +24,12 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private IRFMCustomerInfoService rFMCustomerInfoService;
         private IHttpContextAccessor _httpContextAccessor;
-        public RFMCustomerInfoController(IRFMCustomerInfoService rFMCustomerInfoService, IHttpContextAccessor httpContextAccessor)
+        private IAmiyaPositionInfoService amiyaPositionInfoService;
+        public RFMCustomerInfoController(IRFMCustomerInfoService rFMCustomerInfoService, IHttpContextAccessor httpContextAccessor, IAmiyaPositionInfoService amiyaPositionInfoService)
         {
             this.rFMCustomerInfoService = rFMCustomerInfoService;
             _httpContextAccessor = httpContextAccessor;
+            this.amiyaPositionInfoService = amiyaPositionInfoService;
         }
         /// <summary>
         /// 导入RFM客户信息
@@ -90,7 +92,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int? employeeId = null;
-            if (employee.IsCustomerService && Convert.ToInt32(employee.PositionId) != 1)
+            var position =await amiyaPositionInfoService.GetByIdAsync(Convert.ToInt32(employee.PositionId));
+            if (employee.IsCustomerService && !position.IsDirector)
             {
                 employeeId = Convert.ToInt32(employee.Id);
             }
