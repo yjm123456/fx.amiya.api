@@ -90,7 +90,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int? employeeId = null;
-            if (employee.IsCustomerService && (Convert.ToInt32(employee.PositionId) != 1 && Convert.ToInt32(employee.PositionId) != 4))
+            if (employee.IsCustomerService && Convert.ToInt32(employee.PositionId) != 1)
             {
                 employeeId = Convert.ToInt32(employee.Id);
             }
