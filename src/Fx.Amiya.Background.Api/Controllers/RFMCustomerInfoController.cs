@@ -70,7 +70,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                         addDto.Frequency = worksheet.Cells[x, 10].Value.ToString();
                         addDto.Monetary = worksheet.Cells[x, 11].Value.ToString();
                         addDto.RFMTag = worksheet.Cells[x, 13].Value.ToString();
-                        addDto.LiveAnchorWechatNo = worksheet.Cells[x, 14].Value.ToString();
+                        addDto.LiveAnchorWechatNo = Convert.ToString(worksheet.Cells[x, 14].Value);
                         addDtoList.Add(addDto);
                     }
                     await rFMCustomerInfoService.ImportRFMCustomerInfoAsync(addDtoList);

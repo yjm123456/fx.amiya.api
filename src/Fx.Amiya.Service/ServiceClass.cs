@@ -2160,33 +2160,34 @@ namespace Fx.Amiya.Service
         public static string GetRFMTagText(int tag) {
             string str = "";
             switch (tag) {
-                case 1:
-                    str = "一般挽留客户";
-                    break;
-                case 2:
-                    str = "一般发展客户";
-                    break;
-                case 3:
-                    str = "一般保持客户";
-                    break;
-                case 4:
-                    str = "一般价值客户";
-                    break;
-                case 5:
-                    str = "重要挽留客户";
-                    break;
-                case 6:
-                    str = "重要发展客户";
-                    break;
-                case 7:
-                    str = "重要保持客户";
-                    break;
-                case 8:
-                    str = "重要价值客户";
-                    break;
-                case 9:
+                case 0:
                     str = "超级VIP";
                     break;
+                case 1:
+                    str = "重要价值客户";
+                    break;
+                case 2:
+                    str = "重要保持客户";
+                    break;
+                case 3:
+                    str = "重要发展客户";
+                    break;
+                case 4:
+                    str = "重要挽留客户";
+                    break;
+                case 5:
+                    str = "一般价值客户";
+                    break;
+                case 6:
+                    str = "一般保持客户";
+                    break;
+                case 7:
+                    str = "一般发展客户";
+                    break;
+                case 8:
+                    str = "一般挽留客户";
+                    break;
+                
             }
             return str;
         }
@@ -2196,6 +2197,9 @@ namespace Fx.Amiya.Service
             int t = 1;
             switch (tag)
             {
+                case "CV":
+                    t = 0;
+                    break;
                 case "R1":
                     t = 1;
                     break;
@@ -2220,12 +2224,7 @@ namespace Fx.Amiya.Service
                 case "R8":
                     t = 8;
                     break;
-                case "CV":
-                    t = 9;
-                    break;
-                default:
-                    t = 0;
-                    break;
+               
             }
             return t;
         }

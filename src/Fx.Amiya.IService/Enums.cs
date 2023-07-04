@@ -1349,8 +1349,9 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// RFM标签等级
     /// </summary>
-    public enum RFMTagLeave { 
-        R1=1,
+    public enum RFMTagLeave {
+        CV = 0,
+        R1 =1,
         R2 = 2,
         R3 = 3,
         R4 = 4,
@@ -1358,7 +1359,7 @@ namespace Fx.Amiya.IService
         R6 = 6,
         R7 = 7,
         R8 = 8,
-        CV=9
+        
     }
     #endregion
 }
