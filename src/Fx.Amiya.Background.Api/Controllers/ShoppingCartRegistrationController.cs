@@ -279,7 +279,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.Id = shoppingCartRegistration.Id;
                 shoppingCartRegistrationVo.RecordDate = shoppingCartRegistration.RecordDate;
                 shoppingCartRegistrationVo.ContentPlatFormId = shoppingCartRegistration.ContentPlatFormId;
+                shoppingCartRegistrationVo.ContentPlatFormName = shoppingCartRegistration.ContentPlatFormName;
                 shoppingCartRegistrationVo.LiveAnchorId = shoppingCartRegistration.LiveAnchorId;
+                shoppingCartRegistrationVo.LiveAnchorName = shoppingCartRegistration.LiveAnchorName;
                 shoppingCartRegistrationVo.LiveAnchorWechatNo = shoppingCartRegistration.LiveAnchorWechatNo;
                 shoppingCartRegistrationVo.LiveAnchorWeChatId = shoppingCartRegistration.LiveAnchorWeChatId;
                 shoppingCartRegistrationVo.CustomerNickName = shoppingCartRegistration.CustomerNickName;
@@ -496,7 +498,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPut("importShoppingCartRegistionData")]
-        [FxTenantAuthorize]
         public async Task<ResultData> ReconciliationDocumentsInPortAsync(IFormFile file)
         {
             if (file == null || file.Length <= 0)
