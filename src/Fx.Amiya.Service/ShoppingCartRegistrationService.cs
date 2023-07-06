@@ -247,7 +247,7 @@ namespace Fx.Amiya.Service
                 foreach (var addDto in addDtoList)
                 {
                     var searchDataByPhone = await dalShoppingCartRegistration.GetAll().FirstOrDefaultAsync(e => e.Phone == addDto.Phone);
-                    if (searchDataByPhone == null)
+                    if (searchDataByPhone != null)
                     {
                         continue;
                     }
