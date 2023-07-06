@@ -12,5 +12,6 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         public string AppointmentHospital { get; set; }
         public string OrderStatus { get; set; }
         public string ConsultContent { get; set; }
+        public bool IsToHosiotal { get; set; }
     }
 }

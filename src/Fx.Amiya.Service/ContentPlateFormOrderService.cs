@@ -2629,7 +2629,8 @@ namespace Fx.Amiya.Service
                 Id = e.Id,
                 AppointmentHospital = e.AppointmentHospitalId.HasValue ? dalHospitalInfo.GetAll().Where(h => h.Id == e.AppointmentHospitalId.Value).FirstOrDefault().Name : "未知医院",
                 OrderStatus = ServiceClass.GetContentPlateFormOrderStatusText((byte)e.OrderStatus),
-                ConsultContent=e.ConsultingContent
+                ConsultContent=e.ConsultingContent,
+                IsToHosiotal=e.IsToHospital
             });
             fxPageInfo.TotalCount = result.Count();
             fxPageInfo.List = result.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();

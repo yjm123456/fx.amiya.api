@@ -2197,7 +2197,7 @@ namespace Fx.Amiya.Service
             int t = 1;
             switch (tag)
             {
-                case "CV":
+                case "RV":
                     t = 0;
                     break;
                 case "R1":

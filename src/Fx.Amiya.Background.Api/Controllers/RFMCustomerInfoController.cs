@@ -86,9 +86,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="keyword"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
+        /// <param name="leave">级别</param>
         /// <returns></returns>
         [HttpGet("getListByPage")]
-        public async Task<ResultData<FxPageInfo<RFMCustomerInfoVo>>> GetListByPageAsync(string keyword, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<RFMCustomerInfoVo>>> GetListByPageAsync(string keyword,int? leave, int pageNum, int pageSize)
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int? employeeId = null;
@@ -98,7 +99,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 employeeId = Convert.ToInt32(employee.Id);
             }
             FxPageInfo<RFMCustomerInfoVo> fxPageInfo = new FxPageInfo<RFMCustomerInfoVo>();
-            var list = await rFMCustomerInfoService.GetListByPageAsync(keyword, pageNum, pageSize,employeeId);
+            var list = await rFMCustomerInfoService.GetListByPageAsync(employeeId,leave,keyword, pageNum, pageSize);
             fxPageInfo.TotalCount = list.TotalCount;
             fxPageInfo.List = list.List.Select(e => new RFMCustomerInfoVo
             {

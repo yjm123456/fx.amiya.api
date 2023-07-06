@@ -104,11 +104,17 @@ namespace Fx.Amiya.Service
             return billReturnBackStateTextList;
         }
 
-        public async Task<FxPageInfo<RFMCustomerInfoDto>> GetListByPageAsync(string keyword, int pageNum, int pageSize, int? employeeId)
+        public async Task<FxPageInfo<RFMCustomerInfoDto>> GetListByPageAsync(int? employeeId,int? leave,string keyword, int pageNum, int pageSize)
         {
             var config = await GetCallCenterConfig();
             FxPageInfo<RFMCustomerInfoDto> fxPageInfo = new FxPageInfo<RFMCustomerInfoDto>();
-            var infoList = dalRFMCustomerInfo.GetAll().Where(e => string.IsNullOrEmpty(keyword) || e.Phone.Contains(keyword)).Where(e => e.Valid == true).Where(e => !employeeId.HasValue || e.CustomerServiceId == employeeId).OrderBy(e=>e.RFMTag).ThenBy(e=>e.Phone).ThenByDescending(e=>e.LastDealDate);
+            var infoList = dalRFMCustomerInfo.GetAll()
+                .Where(e => string.IsNullOrEmpty(keyword) || e.Phone.Contains(keyword))
+                .Where(e => e.Valid == true).Where(e => !employeeId.HasValue || e.CustomerServiceId == employeeId)
+                .Where(e=>!leave.HasValue||e.RFMTag==leave)
+                .OrderBy(e=>e.RFMTag)
+                .ThenBy(e=>e.Phone)
+                .ThenByDescending(e=>e.LastDealDate);
             fxPageInfo.TotalCount = infoList.Count();
             fxPageInfo.List = infoList.Skip((pageNum - 1) * pageSize).Take(pageSize).Select(e => new RFMCustomerInfoDto
             {

@@ -1350,7 +1350,7 @@ namespace Fx.Amiya.IService
     /// RFM标签等级
     /// </summary>
     public enum RFMTagLeave {
-        CV = 0,
+        RV = 0,
         R1 =1,
         R2 = 2,
         R3 = 3,

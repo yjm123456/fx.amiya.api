@@ -20,5 +20,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 咨询内容
         /// </summary>
         public string ConsultContent { get; set; }
+        /// <summary>
+        /// 是否到院
+        /// </summary>
+        public bool IsToHospital { get; set; }
     }
 }
