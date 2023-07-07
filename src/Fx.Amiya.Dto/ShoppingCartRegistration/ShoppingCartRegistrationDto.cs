@@ -65,6 +65,14 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// </summary>
         public string SourceText { get; set; }
         /// <summary>
+        /// 带货产品类型
+        /// </summary>
+        public int ProductType { get; set; }
+        /// <summary>
+        /// 带货产品类型文本
+        /// </summary>
+        public string ProductTypeText { get; set; }
+        /// <summary>
         /// 基础主播信息id
         /// </summary>
         public string BaseLiveAnchorId { get; set; }

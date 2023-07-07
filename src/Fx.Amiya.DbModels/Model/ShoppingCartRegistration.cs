@@ -52,6 +52,10 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public int? Source { get; set; }
         /// <summary>
+        /// 带货产品类型
+        /// </summary>
+        public int ProductType { get; set; }
+        /// <summary>
         /// 主播基础id
         /// </summary>
         public string BaseLiveAnchorId { get; set; }

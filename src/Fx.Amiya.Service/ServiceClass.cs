@@ -803,6 +803,40 @@ namespace Fx.Amiya.Service
 
         }
 
+
+        /// <summary>
+        /// 获取小黄车带货产品类型
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string GetShoppingCartTakeGoodsProductTypeText(int? type)
+        {
+            string sourceText = "";
+            switch (type)
+            {
+                case 0:
+                    sourceText = "其他";
+                    break;
+                case 1:
+                    sourceText = "超声炮";
+                    break;
+                case 2:
+                    sourceText = "护肤品";
+                    break;
+                case 3:
+                    sourceText = "彩妆";
+                    break;
+                case 4:
+                    sourceText = "饰品&衣服";
+                    break;
+                default:
+                    sourceText = "";
+                    break;
+            }
+            return sourceText;
+
+        }
+
         public static string GetOrderFromText(int orderFrom)
         {
             string orderTypeText = "";

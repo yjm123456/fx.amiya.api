@@ -75,6 +75,10 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// </summary>
         public int Source { get; set; }
         /// <summary>
+        /// 带货产品类型
+        /// </summary>
+        public int ProductType { get; set; }
+        /// <summary>
         /// 是否派单
         /// </summary>
         public bool SendOrder { get; set; }

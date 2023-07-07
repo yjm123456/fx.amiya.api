@@ -984,7 +984,7 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 带货
         /// </summary>
-        TakeGoods=7,
+        TakeGoods = 7,
     }
 
     /// <summary>
@@ -992,11 +992,16 @@ namespace Fx.Amiya.IService
     /// </summary>
     public enum ShoppingCartProductType
     {
-        //超声炮
-        //护肤品
-        //彩妆
-        //饰品&衣服
         //其他
+        Ohter = 0,
+        //超声炮
+        Peninsula = 1,
+        //护肤品
+        SkinCareProduct = 2,
+        //彩妆
+        MakeUpProduct = 3,
+        //饰品&衣服
+        AccessoryAndClothes = 4
     }
 
     /// <summary>
@@ -1336,22 +1341,23 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 低
         /// </summary>
-        Low=0,
+        Low = 0,
         /// <summary>
         /// 高
         /// </summary>
-        High=1,
+        High = 1,
         /// <summary>
         /// VIP
         /// </summary>
-        VIP=2
+        VIP = 2
     }
     /// <summary>
     /// RFM标签等级
     /// </summary>
-    public enum RFMTagLeave {
+    public enum RFMTagLeave
+    {
         RV = 0,
-        R1 =1,
+        R1 = 1,
         R2 = 2,
         R3 = 3,
         R4 = 4,
@@ -1359,7 +1365,7 @@ namespace Fx.Amiya.IService
         R6 = 6,
         R7 = 7,
         R8 = 8,
-        
+
     }
     #endregion
 }

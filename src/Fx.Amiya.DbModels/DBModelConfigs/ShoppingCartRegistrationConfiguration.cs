@@ -44,7 +44,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t=>t.EmergencyLevel).HasColumnName("emergency_level").HasColumnType("int").HasDefaultValue(0);
             builder.Property(t => t.BaseLiveAnchorId).HasColumnName("base_liveanchor_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(t => t.Source).HasColumnName("source").HasColumnType("int").IsRequired(false);
-            
+            builder.Property(t => t.ProductType).HasColumnName("product_type").HasColumnType("int").IsRequired();
+
             builder.HasOne(e => e.Contentplatform).WithMany(e => e.ShoppingCartRegistrationList).HasForeignKey(e => e.ContentPlatFormId);
             builder.HasOne(e => e.LiveAnchor).WithMany(e => e.ShoppingCartRegistrationList).HasForeignKey(e => e.LiveAnchorId);
             builder.HasOne(e => e.AmiyaEmployee).WithMany(e => e.ShoppingCartRegistrationList).HasForeignKey(e => e.CreateBy);

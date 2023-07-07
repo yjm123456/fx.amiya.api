@@ -116,6 +116,10 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// 抖音客户来源
         /// </summary>
         public int? Source { get; set; }
-        
+        /// <summary>
+        /// 带货产品类型
+        /// </summary>
+        public int ProductType { get; set; }
+
     }
 }

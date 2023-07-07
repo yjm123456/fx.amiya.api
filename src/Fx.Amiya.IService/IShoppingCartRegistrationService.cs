@@ -46,6 +46,11 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         List<BaseKeyValueDto<int>> GetCustomerSourceList();
         /// <summary>
+        /// 获取带货产品类型列表
+        /// </summary>
+        /// <returns></returns>
+        List<BaseKeyValueDto<int>> GetShoppingCartTakeGoodsProductTypeList();
+        /// <summary>
         /// 获取面诊方式列表
         /// </summary>
         /// <returns></returns>

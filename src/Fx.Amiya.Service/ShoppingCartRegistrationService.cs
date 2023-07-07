@@ -16,6 +16,7 @@ using Fx.Amiya.Dto.MessageNotice.Input;
 using Fx.Amiya.Dto.WxAppConfig;
 using Newtonsoft.Json;
 using Fx.Amiya.Dto;
+using System.Threading;
 
 namespace Fx.Amiya.Service
 {
@@ -60,7 +61,7 @@ namespace Fx.Amiya.Service
             try
             {
                 var shoppingCartRegistration = from d in dalShoppingCartRegistration.GetAll()
-                                               where (keyword == null || d.Phone.Contains(keyword) || d.SubPhone.Contains(keyword) || d.CustomerNickName.Contains(keyword) || d.LiveAnchorWechatNo.Contains(keyword))
+                                               where (keyword == null || d.Phone.Contains(keyword) || d.SubPhone.Contains(keyword) || d.CustomerNickName.Contains(keyword) || d.LiveAnchorWechatNo.Contains(keyword)|| d.Remark.Contains(keyword))
                                                && ((!startDate.HasValue && !endDate.HasValue) || d.RecordDate >= startDate.Value.Date && d.RecordDate < endDate.Value.AddDays(1).Date)
                                                && (string.IsNullOrEmpty(contentPlatFormId) || d.ContentPlatFormId == contentPlatFormId)
                                                && (!isAddWechat.HasValue || d.IsAddWeChat == isAddWechat)
@@ -117,6 +118,8 @@ namespace Fx.Amiya.Service
                                                    EmergencyLevel = d.EmergencyLevel,
                                                    Source = d.Source,
                                                    SourceText = ServiceClass.GetTiktokCustomerSourceText(d.Source),
+                                                   ProductType = d.ProductType,
+                                                   ProductTypeText = ServiceClass.GetShoppingCartTakeGoodsProductTypeText(d.ProductType),
                                                    BaseLiveAnchorId = d.BaseLiveAnchorId
                                                };
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
@@ -223,6 +226,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.IsSendOrder = addDto.IsSendOrder;
                 shoppingCartRegistration.EmergencyLevel = addDto.EmergencyLevel;
                 shoppingCartRegistration.Source = addDto.Source;
+                shoppingCartRegistration.ProductType = addDto.ProductType;
                 var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(addDto.LiveAnchorId);
                 if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
                 {
@@ -290,6 +294,7 @@ namespace Fx.Amiya.Service
                         shoppingCartRegistration.BaseLiveAnchorId = baseLiveAnchorId.LiveAnchorBaseId;
                     }
                     await dalShoppingCartRegistration.AddAsync(shoppingCartRegistration, true);
+                    Thread.Sleep(1000);
                 }
 
                 unitOfWork.Commit();
@@ -346,6 +351,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.IsBadReview = shoppingCartRegistration.IsBadReview;
                 shoppingCartRegistrationDto.EmergencyLevel = shoppingCartRegistration.EmergencyLevel;
                 shoppingCartRegistrationDto.Source = shoppingCartRegistration.Source;
+                shoppingCartRegistrationDto.ProductType = shoppingCartRegistration.ProductType;
                 shoppingCartRegistrationDto.SourceText = ServiceClass.GetTiktokCustomerSourceText(shoppingCartRegistration.Source);
                 shoppingCartRegistrationDto.BaseLiveAnchorId = shoppingCartRegistration.BaseLiveAnchorId;
 
@@ -409,6 +415,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.IsBadReview = shoppingCartRegistration.IsBadReview;
                 shoppingCartRegistrationDto.EmergencyLevel = shoppingCartRegistration.EmergencyLevel;
                 shoppingCartRegistrationDto.Source = shoppingCartRegistration.Source;
+                shoppingCartRegistrationDto.ProductType = shoppingCartRegistration.ProductType;
                 return shoppingCartRegistrationDto;
             }
             catch (Exception ex)
@@ -458,6 +465,8 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.BadReviewContent = shoppingCartRegistration.BadReviewContent;
                 shoppingCartRegistrationDto.BadReviewReason = shoppingCartRegistration.BadReviewReason;
                 shoppingCartRegistrationDto.IsBadReview = shoppingCartRegistration.IsBadReview;
+                shoppingCartRegistrationDto.Source = shoppingCartRegistration.Source;
+                shoppingCartRegistrationDto.ProductType = shoppingCartRegistrationDto.ProductType;
                 return shoppingCartRegistrationDto;
             }
             catch (Exception ex)
@@ -532,6 +541,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.IsSendOrder = updateDto.IsSendOrder;
                 shoppingCartRegistration.EmergencyLevel = updateDto.EmergencyLevel;
                 shoppingCartRegistration.Source = updateDto.Source;
+                shoppingCartRegistration.ProductType = updateDto.ProductType;
                 var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(updateDto.LiveAnchorId);
                 if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
                 {
@@ -681,6 +691,24 @@ namespace Fx.Amiya.Service
                 emergencyLevelList.Add(emergencyLevelDto);
             }
             return emergencyLevelList;
+        }
+
+        /// <summary>
+        /// 获取带货产品类型列表
+        /// </summary>
+        /// <returns></returns>
+        public List<BaseKeyValueDto<int>> GetShoppingCartTakeGoodsProductTypeList()
+        {
+            var emergencyLevels = Enum.GetValues(typeof(ShoppingCartProductType));
+            List<BaseKeyValueDto<int>> resultList = new List<BaseKeyValueDto<int>>();
+            foreach (var item in emergencyLevels)
+            {
+                BaseKeyValueDto<int> resultDto = new BaseKeyValueDto<int>();
+                resultDto.Key = Convert.ToInt32(item);
+                resultDto.Value = ServiceClass.GetShoppingCartTakeGoodsProductTypeText(resultDto.Key);
+                resultList.Add(resultDto);
+            }
+            return resultList;
         }
 
         /// <summary>

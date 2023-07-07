@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Fx.Amiya.Background.Api.Controllers
@@ -117,7 +118,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    EmergencyLevel = d.EmergencyLevel,
                                                    EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(d.EmergencyLevel),
                                                    Source = d.Source,
-                                                   SourceText = ServiceClass.GetTiktokCustomerSourceText(d.Source),
+                                                   SourceText = d.SourceText,
+                                                   ProductType=d.ProductType,
+                                                   ProductTypeText=d.ProductTypeText,
                                                    BaseLiveAnchorId = d.BaseLiveAnchorId,
                                                    BaseLiveAnchorName = d.BaseLiveAnchorName
                                                };
@@ -182,6 +185,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.IsBadReview = addVo.IsBadReview;
                 addDto.EmergencyLevel = addVo.EmergencyLevel;
                 addDto.Source = addVo.Source;
+                addDto.ProductType = addVo.ProductType;
                 addDto.IsConsultation = addVo.IsConsultation;
                 var contentPlatFormOrder = await contentPlateFormOrderService.GetOrderListByPhoneAsync(addVo.Phone);
                 var isSendOrder = contentPlatFormOrder.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder).Count();
@@ -251,6 +255,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.EmergencyLevel = shoppingCartRegistration.EmergencyLevel;
                 shoppingCartRegistrationVo.EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(shoppingCartRegistration.EmergencyLevel);
                 shoppingCartRegistrationVo.Source = shoppingCartRegistration.Source;
+                shoppingCartRegistrationVo.ProductType = shoppingCartRegistration.ProductType;
                 shoppingCartRegistrationVo.BaseLiveAnchorId = shoppingCartRegistration.BaseLiveAnchorId;
 
                 return ResultData<ShoppingCartRegistrationVo>.Success().AddData("shoppingCartRegistrationInfo", shoppingCartRegistrationVo);
@@ -312,6 +317,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.EmergencyLevel = shoppingCartRegistration.EmergencyLevel;
                 shoppingCartRegistrationVo.EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(shoppingCartRegistration.EmergencyLevel);
                 shoppingCartRegistrationVo.Source = shoppingCartRegistration.Source;
+                shoppingCartRegistrationVo.ProductType = shoppingCartRegistration.ProductType;
                 return ResultData<ShoppingCartRegistrationVo>.Success().AddData("shoppingCartRegistrationInfo", shoppingCartRegistrationVo);
             }
             catch (Exception ex)
@@ -363,6 +369,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.AssignEmpId = updateVo.AssignEmpId;
                 updateDto.EmergencyLevel = updateVo.EmergencyLevel;
                 updateDto.Source = updateVo.Source;
+                updateDto.ProductType = updateVo.ProductType;
                 var contentPlatFormOrder = await contentPlateFormOrderService.GetOrderListByPhoneAsync(updateVo.Phone);
                 var isSendOrder = contentPlatFormOrder.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder).Count();
                 if (contentPlatFormOrder.Count > 0)
@@ -448,6 +455,24 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetCustomerSourceListAsync()
         {
             var nameList = shoppingCartRegistrationService.GetCustomerSourceList();
+            var result = nameList.Select(e => new BaseIdAndNameVo<int>
+            {
+                Id = e.Key,
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("sourceList", result);
+
+        }
+
+
+        /// <summary>
+        /// 获取带货产品类型列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("shoppingCartTakeGoodsProductTypeList")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetShoppingCartTakeGoodsProductTypeListAsync()
+        {
+            var nameList = shoppingCartRegistrationService.GetShoppingCartTakeGoodsProductTypeList();
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Key,
