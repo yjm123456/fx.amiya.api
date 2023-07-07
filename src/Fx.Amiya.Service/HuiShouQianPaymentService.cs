@@ -120,8 +120,8 @@ namespace Fx.Amiya.Service
         {
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
             var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
-            huiShouQianPackageInfo.PrivateKey = payInfo.SubAppId;
-            huiShouQianPackageInfo.PublicKey = payInfo.SubMchId;
+            huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
+            huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
             huiShouQianPackageInfo.Key = payInfo.PartnerKey;
             var commonParam = BuildCommonParam(huiShouQianPayRequestInfo, openId,customerId);
             return PostData(huiShouQianPackageInfo.OrderUrl + "?" + commonParam, "");
@@ -165,8 +165,8 @@ namespace Fx.Amiya.Service
                         HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
                         var payInfo = dalWechatPayInfo.GetAll().Where(e=>e.Id== "202306281235").FirstOrDefault();
                         huiShouQianPackageInfo.Key = payInfo.PartnerKey;
-                        huiShouQianPackageInfo.PrivateKey = payInfo.SubAppId;
-                        huiShouQianPackageInfo.PublicKey = payInfo.SubMchId;
+                        huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
+                        huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
 
                         string signContent = BuildPayResponseParamString(response, huiShouQianPackageInfo.Key);
                         HuiShouQianOrderResult huiShouQianOrderResult = new HuiShouQianOrderResult();
@@ -225,8 +225,8 @@ namespace Fx.Amiya.Service
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
             var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
             huiShouQianPackageInfo.Key = payInfo.PartnerKey;
-            huiShouQianPackageInfo.PrivateKey = payInfo.SubAppId;
-            huiShouQianPackageInfo.PublicKey = payInfo.SubMchId;
+            huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
+            huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
             var commonParam = BuildRefundCommonParam(huiShouQianRefundRequestParam);
             var result = await PostRefundData(huiShouQianPackageInfo.RefundUrl + "?", commonParam);
             result.TardeId = order.TradeId;
@@ -244,8 +244,8 @@ namespace Fx.Amiya.Service
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
             var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
             huiShouQianPackageInfo.Key = payInfo.PartnerKey;
-            huiShouQianPackageInfo.PrivateKey = payInfo.SubAppId;
-            huiShouQianPackageInfo.PublicKey = payInfo.SubMchId;
+            huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
+            huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
             HuiShouQianCommonInfo huiShouQianCommonInfo = new HuiShouQianCommonInfo();
             huiShouQianCommonInfo.MerchantNo = payInfo.AppId;
             var serializerSettings = new JsonSerializerSettings();
@@ -276,8 +276,8 @@ namespace Fx.Amiya.Service
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
             var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
             huiShouQianPackageInfo.Key = payInfo.PartnerKey;
-            huiShouQianPackageInfo.PrivateKey = payInfo.SubAppId;
-            huiShouQianPackageInfo.PublicKey = payInfo.SubMchId;
+            huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
+            huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
             HuiShouQianRefundCommonParam huiShouQianCommonInfo = new HuiShouQianRefundCommonParam();
             huiShouQianCommonInfo.SignContent = huiShouQianRefundRequestParam;
             var serializerSettings = new JsonSerializerSettings();
@@ -525,8 +525,8 @@ namespace Fx.Amiya.Service
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
             var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
             huiShouQianPackageInfo.Key = payInfo.PartnerKey;
-            huiShouQianPackageInfo.PrivateKey = payInfo.SubAppId;
-            huiShouQianPackageInfo.PublicKey = payInfo.SubMchId;
+            huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
+            huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
             var commonParam = BuildRefundCommonParam(huiShouQianRefundRequestParam);
             var result = await PostRefundData(huiShouQianPackageInfo.RefundUrl + "?", commonParam);
             result.TardeId = order.TradeId;

@@ -80,7 +80,7 @@ namespace Fx.Amiya.Service
             packageInfo.TotalFee = (int)(refundOrder.ActualPayAmount * 100m);
             packageInfo.RefundFee = (int)(refundOrder.RefundAmount * 100m);
             packageInfo.RefundDesc = "商品退款";
-            var result = await this.BuildRefundRequest(packageInfo, wechatPayInfo.SubAppId);
+            var result = await this.BuildRefundRequest(packageInfo, wechatPayInfo.CertificateName);
             result.TardeId = refundOrder.TradeId;
             return result;
         }

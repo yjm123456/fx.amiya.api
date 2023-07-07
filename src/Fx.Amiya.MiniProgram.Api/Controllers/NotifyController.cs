@@ -685,6 +685,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             builder.Append(key);
             return builder.ToString();
         }
+        public async Task<string> SDPayResult() {
+            return null;
+        }
 
     }
 }

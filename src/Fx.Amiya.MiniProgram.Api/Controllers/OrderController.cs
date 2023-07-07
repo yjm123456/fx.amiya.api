@@ -23,6 +23,7 @@ using Fx.Amiya.Dto.HuiShouQianPay;
 using Fx.Amiya.Dto.Order;
 using Fx.Amiya.Dto.OrderAppInfo;
 using Fx.Amiya.Dto.OrderRefund;
+using Fx.Amiya.Dto.ShanDePay;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -79,6 +80,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private readonly IHuiShouQianPaymentService huiShouQianPaymentService;
         private readonly IGoodsStandardsPriceService goodsStandardsPriceService;
         private readonly IUnitOfWork unitOfWork;
+        private readonly IShanDePayMentService shanDePayMentService;
 
 
 
@@ -96,7 +98,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             IAliPayService aliPayService,
             Domain.IRepository.IWxMiniUserRepository wxMiniUserRepository,
             IIntegrationAccount integrationAccountService,
-            ICustomerIntegralOrderRefundService customerIntegralOrderRefundService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, ITaskService taskService, IBalanceAccountService balanceAccountService, IBalanceService balanceService, IUnitOfWork unitOfWork, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IGoodsHospitalsPrice goodsHospitalsPrice, IMemberCardHandleService memberCardHandleService, IOrderRefundService orderRefundService, IHuiShouQianPaymentService huiShouQianPaymentService, IGoodsStandardsPriceService goodsStandardsPriceService)
+            ICustomerIntegralOrderRefundService customerIntegralOrderRefundService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, ITaskService taskService, IBalanceAccountService balanceAccountService, IBalanceService balanceService, IUnitOfWork unitOfWork, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IGoodsHospitalsPrice goodsHospitalsPrice, IMemberCardHandleService memberCardHandleService, IOrderRefundService orderRefundService, IHuiShouQianPaymentService huiShouQianPaymentService, IGoodsStandardsPriceService goodsStandardsPriceService, IShanDePayMentService shanDePayMentService)
         {
             this.orderHistoryService = orderHistoryService;
             this.orderService = orderService;
@@ -124,6 +126,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             this.userService = userService;
             this.huiShouQianPaymentService = huiShouQianPaymentService;
             this.goodsStandardsPriceService = goodsStandardsPriceService;
+            this.shanDePayMentService = shanDePayMentService;
         }
 
 
@@ -759,7 +762,14 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 //微信支付
                 if (orderAdd.ExchangeType == 2)
                 {
-                    WxPackageInfo packageInfo = new WxPackageInfo();
+                    ShanDeOrderInfo shanDeOrderInfo = new ShanDeOrderInfo();
+                    shanDeOrderInfo.AppId = appId;
+                    shanDeOrderInfo.CreateDate = DateTime.Now;
+                    shanDeOrderInfo.OpenId = sessionInfo.OpenId;
+                    shanDeOrderInfo.TotalFee = totalFee;
+                    shanDeOrderInfo.TradeId = tradeId;
+                    var result=await shanDePayMentService.OrderAsync(shanDeOrderInfo);
+                    /*WxPackageInfo packageInfo = new WxPackageInfo();
                     packageInfo.AppId = appId;
                     packageInfo.Body = orderId;
                     //回调地址需重新设置(todo;)                   
@@ -790,7 +800,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         payRequestInfo.nonceStr = payRequest.nonceStr;
                         payRequestInfo.paySign = payRequest.paySign;
                         orderAddResult.PayRequestInfo = payRequestInfo;
-                    }
+                    }*/
                     //交易信息添加支付交易订单号
                     await orderService.TradeAddTransNoAsync(tradeId, tradeId);
                 }

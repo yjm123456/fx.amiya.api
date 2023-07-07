@@ -22,6 +22,10 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.EnableSP).HasColumnName("enablesp").HasColumnType("bit").IsRequired();
             builder.Property(e => e.SubAppId).HasColumnName("sub_app_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(e => e.SubMchId).HasColumnName("sub_mch_id").HasColumnType("varchar(50)").IsRequired();
+            builder.Property(e => e.PrivateKey).HasColumnName("private_key").HasColumnType("varchar(5000)").IsRequired(false);
+            builder.Property(e => e.PublickKey).HasColumnName("public_key").HasColumnType("varchar(5000)").IsRequired(false);
+            builder.Property(e => e.CertificateName).HasColumnName("certificate_name").HasColumnType("varchar(500)").IsRequired(false);
+            builder.Property(e => e.StoreId).HasColumnName("store_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(e => e.Remark).HasColumnName("remark").HasColumnType("varchar(200)").IsRequired();
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);
