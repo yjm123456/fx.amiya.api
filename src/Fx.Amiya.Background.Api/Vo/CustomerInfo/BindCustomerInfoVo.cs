@@ -23,6 +23,11 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerInfo
         /// 最新消费渠道
         /// </summary>
         public string NewContentPlatForm { get; set; }
+        /// <summary>
+        /// 最新消费时间
+        /// </summary>
+
+        public DateTime? NewConsumptionDate { get; set; }
 
         /// <summary>
         /// 加密电话
@@ -62,5 +67,30 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerInfo
         public string Name { get; set; }
         public int? Age { get; set; }
         public string Sex { get; set; }
+
+        /// <summary>
+        /// 累计消费
+        /// </summary>
+        public decimal? AllPrice { get; set; }
+
+        /// <summary>
+        /// 总单数
+        /// </summary>
+        public int? AllOrderCount { get; set; }
+
+        /// <summary>
+        /// 距今消费间隔天数
+        /// </summary>
+        public int ConsumptionDate { get; set; }
+
+        /// <summary>
+        /// RFM类型
+        /// </summary>
+        public int RfmType { get; set; }
+
+        /// <summary>
+        /// RFM类型文本
+        /// </summary>
+        public string RfmTypeText { get; set; }
     }
 }

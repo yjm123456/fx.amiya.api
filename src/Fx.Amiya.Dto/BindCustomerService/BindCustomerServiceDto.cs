@@ -48,5 +48,20 @@ namespace Fx.Amiya.Dto.BindCustomerService
         /// </summary>
         public int? AllOrderCount { get; set; }
 
+        /// <summary>
+        /// 距今消费间隔天数
+        /// </summary>
+        public int ConsumptionDate { get; set; }
+
+        /// <summary>
+        /// RFM类型
+        /// </summary>
+        public int RfmType { get; set; }
+
+        /// <summary>
+        /// RFM类型文本
+        /// </summary>
+        public string RfmTypeText { get; set; }
+
     }
 }

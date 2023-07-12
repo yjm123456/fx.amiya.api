@@ -99,5 +99,27 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task OnlyAddFistlyAsync(AddBindCustomerServiceFirstlyDto addDto);
 
+        /// <summary>
+        /// 获取消费金额大于0的顾客
+        /// </summary>
+        /// <returns></returns>
+        Task<List<BindCustomerServiceDto>> GetAllCustomerAsync();
+
+        /// <summary>
+        /// 根据条件获取客户RFM模型数据
+        /// </summary>
+        /// <param name="bindCustomerServiceIds"></param>
+        /// <returns></returns>
+        Task<List<BindCustomerServiceRfmDataDto>> GetAllCustomerByRFMAsync(List<int> bindCustomerServiceIds);
+
+        /// <summary>
+        /// 根据RFM条件获取客户RFM详情数据
+        /// </summary>
+        /// <param name="rfmType"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<BindCustomerServiceDto>> GetAllCustomerByRFMTypeAsync(List<int> bindCustomerServiceIds, int rfmType, int pageNum, int pageSize);
+
     }
 }

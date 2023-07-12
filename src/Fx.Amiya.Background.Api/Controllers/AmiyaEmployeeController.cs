@@ -375,7 +375,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 获取客服姓名列表
+        /// 根据主播基础id获取客服姓名列表
         /// </summary>
         /// <param name="baseLiveAnchorId">主播基础信息id</param>
         /// <returns></returns>

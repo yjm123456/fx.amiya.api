@@ -23,14 +23,17 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class BindCustomerServiceController : ControllerBase
     {
         private IBindCustomerServiceService bindCustomerServiceService;
+        private IAmiyaEmployeeService employeeService;
         private IOrderService _orderService;
         private IContentPlateFormOrderService _contentPlatFormOrderService;
         private IHttpContextAccessor httpContextAccessor;
         public BindCustomerServiceController(IBindCustomerServiceService bindCustomerServiceService,
             IOrderService orderService,
+            IAmiyaEmployeeService employeeService,
             IContentPlateFormOrderService contentPlatFormOrderService,
             IHttpContextAccessor httpContextAccessor)
         {
+            this.employeeService = employeeService;
             this.bindCustomerServiceService = bindCustomerServiceService;
             this.httpContextAccessor = httpContextAccessor;
             _orderService = orderService;
@@ -200,6 +203,104 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData.Success();
         }
 
+        /// <summary>
+        /// 根据条件获取客户RFM模型数据
+        /// </summary>
+        /// <param name="query">绑定客服id集合</param>
+        /// <returns></returns>
 
+        [HttpGet("getAllCustomerByRFM")]
+        public async Task<ResultData<List<BindCustomerServiceRfmDataVo>>> GetAllCustomerByRFMAsync([FromQuery] GetAllCustomerByRFM query)
+        {
+            List<int> employeeIds = new List<int>();
+            List<BindCustomerServiceRfmDataVo> bindResult = new List<BindCustomerServiceRfmDataVo>();
+            if (query.EmployeeId.HasValue)
+            {
+                employeeIds.Add(query.EmployeeId.Value);
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(query.LiveAnchorBaseId))
+                {
+                    var empInfo = await employeeService.GetByLiveAnchorBaseIdAsync(query.LiveAnchorBaseId);
+                    employeeIds = empInfo.Select(x => x.Id).ToList();
+                }
+            }
+            var result = await bindCustomerServiceService.GetAllCustomerByRFMAsync(employeeIds);
+            result = result.OrderByDescending(x => x.RFMType).ToList();
+            for (int x = 0; x < 9; x++)
+            {
+                BindCustomerServiceRfmDataVo bindCustomerServiceRFMData = new BindCustomerServiceRfmDataVo();
+                bindCustomerServiceRFMData.RFMType = x;
+                bindCustomerServiceRFMData.RFMTypeText = ServiceClass.GetRFMTagText(x);
+                bindCustomerServiceRFMData.CustomerCount=0;
+                bindCustomerServiceRFMData.TotalConsumptionPrice =0.00M;
+                bindResult.Add(bindCustomerServiceRFMData);
+            }
+            foreach (var x in result)
+            {
+                if (bindResult.Exists(k => k.RFMType == x.RFMType))
+                {
+                    var bind = bindResult.Where(x => x.RFMType == x.RFMType).FirstOrDefault();
+                    bind.CustomerCount = x.CustomerCount;
+                    bind.TotalConsumptionPrice = x.TotalConsumptionPrice;
+                }
+            }
+            return ResultData<List<BindCustomerServiceRfmDataVo>>.Success().AddData("allCustomerByRFM", bindResult);
+        }
+
+        /// <summary>
+        /// 根据RFM条件获取客户RFM详情数据（分页）
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getAllCustomerByRFMType")]
+
+        public async Task<ResultData<FxPageInfo<BindCustomerInfoVo>>> GetAllCustomerByRFMTypeAsync([FromQuery] GetAllCustomerByRFMTypeVo query)
+        {
+            try
+            {
+                List<int> employeeIds = new List<int>();
+                List<BindCustomerServiceRfmDataVo> hospitalPerformanceVo = new List<BindCustomerServiceRfmDataVo>();
+                if (query.EmployeeId.HasValue)
+                {
+                    employeeIds.Add(query.EmployeeId.Value);
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(query.LiveAnchorBaseId))
+                    {
+                        var empInfo = await employeeService.GetByLiveAnchorBaseIdAsync(query.LiveAnchorBaseId);
+                        employeeIds = empInfo.Select(x => x.Id).ToList();
+                    }
+                }
+                var q = await bindCustomerServiceService.GetAllCustomerByRFMTypeAsync(employeeIds, query.rfmType, query.PageNum.Value, query.PageSize.Value);
+                var billReturnBackPriceData = from d in q.List
+                                              select new BindCustomerInfoVo
+                                              {
+                                                  Id = d.Id.ToString(),
+                                                  CustomerServiceId = d.CustomerServiceId,
+                                                  CustomerServiceName = d.CustomerServiceName,
+                                                  Phone = d.BuyerPhone,
+                                                  EncryptPhone = d.EncryptPhone,
+                                                  NewConsumptionDate = d.NewConsumptionDate,
+                                                  AllPrice = d.AllPrice,
+                                                  AllOrderCount = d.AllOrderCount,
+                                                  ConsumptionDate = d.ConsumptionDate,
+                                                  RfmType = d.RfmType,
+                                                  RfmTypeText = d.RfmTypeText
+                                              };
+
+                FxPageInfo<BindCustomerInfoVo> pageInfo = new FxPageInfo<BindCustomerInfoVo>();
+                pageInfo.TotalCount = q.TotalCount;
+                pageInfo.List = billReturnBackPriceData;
+
+                return ResultData<FxPageInfo<BindCustomerInfoVo>>.Success().AddData("allCustomerByRFMType", pageInfo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<FxPageInfo<BindCustomerInfoVo>>.Fail(ex.Message);
+            }
+        }
     }
 }

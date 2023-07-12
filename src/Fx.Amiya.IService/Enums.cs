@@ -1356,14 +1356,41 @@ namespace Fx.Amiya.IService
     /// </summary>
     public enum RFMTagLeave
     {
+        /// <summary>
+        /// 超级VIP
+        /// </summary>
         RV = 0,
+        /// <summary>
+        /// 重要价值客户
+        /// </summary>
         R1 = 1,
+        /// <summary>
+        /// 重要发展客户
+        /// </summary>
         R2 = 2,
+        /// <summary>
+        /// 重要保持客户
+        /// </summary>
         R3 = 3,
+        /// <summary>
+        /// 重要挽留客户
+        /// </summary>
         R4 = 4,
+        /// <summary>
+        /// 一般价值客户
+        /// </summary>
         R5 = 5,
+        /// <summary>
+        /// 一般发展客户
+        /// </summary>
         R6 = 6,
+        /// <summary>
+        /// 一般保持客户
+        /// </summary>
         R7 = 7,
+        /// <summary>
+        /// 一般挽留客户
+        /// </summary>
         R8 = 8,
 
     }

@@ -17,3 +17,9 @@ ALTER TABLE `tbl_wechat_payinfo`
 ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
 ADD COLUMN `product_type` INT NOT NULL DEFAULT 0 AFTER `source`;
 -----------------------------------------------余建明 2023/07/07 END--------------------------------------------
+
+--绑定客服列表新增距今消费间隔天数和RFM类型
+ALTER TABLE `amiyadb`.`tbl_bind_customer_service` 
+ADD COLUMN `consumption_date` INT NOT NULL DEFAULT 0 AFTER `new_wechat_no`,
+ADD COLUMN `rfm_type` INT NOT NULL DEFAULT 0 AFTER `consumption_date`;
+-----------------------------------------------余建明 2023/07/11 END--------------------------------------------

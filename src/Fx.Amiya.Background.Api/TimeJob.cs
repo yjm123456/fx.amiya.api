@@ -456,5 +456,27 @@ namespace Fx.Amiya.Background.Api
             }
         }
 
+        /// <summary>
+        /// 新增客户RFM数据更改(一天运行一次)
+        /// </summary>
+        /// <returns></returns>
+        /// <returns></returns>
+        //[Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 1, SkipWhileExecuting = true)]//1分钟运行一次
+        [Invoke(Begin = "03:00:00", Interval = 1000 * 60 * 60 * 24 + 60 * 1000, SkipWhileExecuting = true)]
+        public async Task BindCustomerServiceRFMUpdate()
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var bindCustomerServiceService = scope.ServiceProvider.GetService<IBindCustomerServiceService>();
+                //获取所有消费过的顾客
+                var allConsumedCustomer = await bindCustomerServiceService.GetAllCustomerAsync();
+                
+                //foreach (var x in allConsumedCustomer)
+                //{
+
+                //}
+            }
+        }
+
     }
 }

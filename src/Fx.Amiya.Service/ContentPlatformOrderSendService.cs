@@ -624,6 +624,12 @@ namespace Fx.Amiya.Service
                          where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatformOrder.Phone) > 0 || d.ContentPlatformOrder.SupportEmpId == employeeId || d.ContentPlatformOrder.BelongEmpId == employeeId
                          where (d.ContentPlatformOrder.IsSupportOrder == false || d.ContentPlatformOrder.SupportEmpId == employeeId)
                          select d;
+                if (employeeId != -1)
+                {
+                    orders = from d in orders
+                             where d.ContentPlatformOrder.BelongEmpId == employeeId
+                             select d;
+                }
             }
             var orderCount = await orders.CountAsync();
             var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();

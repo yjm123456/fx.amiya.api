@@ -411,7 +411,7 @@ namespace Fx.Amiya.Service
             bindCustomerService.CustomerServiceId = addDto.CustomerServiceId;
             bindCustomerService.BuyerPhone = addDto.BuyerPhone;
             var customer = await dalCustomerInfo.GetAll().FirstOrDefaultAsync(e => e.Phone == addDto.BuyerPhone);
-            bindCustomerService.UserId = customer?.UserId; 
+            bindCustomerService.UserId = customer?.UserId;
             bindCustomerService.CreateBy = addDto.CreateBy;
             bindCustomerService.CreateDate = DateTime.Now;
             bindCustomerService.FirstProjectDemand = addDto.FirstProjectDemand;
@@ -455,5 +455,94 @@ namespace Fx.Amiya.Service
                 await dalBindCustomerService.UpdateAsync(bindCustomerService, true);
             }
         }
+
+        /// <summary>
+        /// 获取消费金额大于0的顾客
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<BindCustomerServiceDto>> GetAllCustomerAsync()
+        {
+            try
+            {
+                var bindCustomerServiceInfoResult = from d in dalBindCustomerService.GetAll()
+                                                    where (d.AllPrice > 0.00M)
+                                                    select new BindCustomerServiceDto
+                                                    {
+                                                        Id = d.Id,
+                                                        NewConsumptionDate = d.NewConsumptionDate,
+                                                        AllPrice = d.AllPrice,
+                                                        AllOrderCount = d.AllOrderCount,
+                                                        ConsumptionDate = d.ConsumptionDate,
+                                                        RfmType = d.RfmType
+                                                    };
+                return bindCustomerServiceInfoResult.ToList();
+
+            }
+            catch (Exception err)
+            {
+                return new List<BindCustomerServiceDto>();
+            }
+
+        }
+
+        /// <summary>
+        /// 根据条件获取客户RFM模型数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<BindCustomerServiceRfmDataDto>> GetAllCustomerByRFMAsync(List<int> bindCustomerServiceIds)
+        {
+            try
+            {
+                var bindCustomerServiceInfoResult = from d in dalBindCustomerService.GetAll()
+                                                    where (d.AllPrice > 0.00M)
+                                                    where (bindCustomerServiceIds.Count == 0 || bindCustomerServiceIds.Contains(d.CustomerServiceId))
+                                                    select new BindCustomerServiceDto
+                                                    {
+                                                        AllPrice = d.AllPrice,
+                                                        RfmType = d.RfmType
+                                                    };
+                var result = await bindCustomerServiceInfoResult.GroupBy(x => x.RfmType).Select(x => new BindCustomerServiceRfmDataDto { RFMType = Convert.ToInt32(x.Key.ToString()), CustomerCount = x.Count(), TotalConsumptionPrice = x.Sum(z => z.AllPrice.Value) }).ToListAsync();
+                return result;
+
+            }
+            catch (Exception err)
+            {
+                return new List<BindCustomerServiceRfmDataDto>();
+            }
+
+        }
+
+        /// <summary>
+        /// 根据RFM条件获取客户RFM详情数据
+        /// </summary>
+        /// <returns></returns>
+        /// <summary>
+        public async Task<FxPageInfo<BindCustomerServiceDto>> GetAllCustomerByRFMTypeAsync(List<int> bindCustomerServiceIds,int rfmType, int pageNum, int pageSize)
+        {
+            var config = await GetCallCenterConfig();
+            var bindCustomerServiceInfoResult = from d in dalBindCustomerService.GetAll().Include(x => x.CustomerServiceAmiyaEmployee)
+                                                where (d.RfmType == rfmType)
+                                                where (bindCustomerServiceIds.Count==0|| bindCustomerServiceIds.Contains(d.CustomerServiceId))
+                                                select new BindCustomerServiceDto
+                                                {
+                                                    Id = d.Id,
+                                                    CustomerServiceId = d.CustomerServiceId,
+                                                    CustomerServiceName = d.CustomerServiceAmiyaEmployee.Name,
+                                                    BuyerPhone = ServiceClass.GetIncompletePhone(d.BuyerPhone),
+                                                    EncryptPhone = ServiceClass.Encrypt(d.BuyerPhone, config.PhoneEncryptKey),
+                                                    NewConsumptionDate = d.NewConsumptionDate,
+                                                    AllPrice = d.AllPrice,
+                                                    AllOrderCount = d.AllOrderCount,
+                                                    ConsumptionDate = d.ConsumptionDate,
+                                                    RfmType = d.RfmType,
+                                                    RfmTypeText = ServiceClass.GetRFMTagText(d.RfmType),
+                                                    CreateDate=d.CreateDate
+                                                };
+            FxPageInfo<BindCustomerServiceDto> result = new FxPageInfo<BindCustomerServiceDto>();
+            result.TotalCount = await bindCustomerServiceInfoResult.CountAsync();
+            result.List = await bindCustomerServiceInfoResult.OrderByDescending(z => z.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+            return result;
+        }
     }
 }
+

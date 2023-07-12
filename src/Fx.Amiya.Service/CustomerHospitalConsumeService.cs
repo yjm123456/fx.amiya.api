@@ -304,8 +304,22 @@ namespace Fx.Amiya.Service
                     bind.NewLiveAnchor = liveAnchor.Name;
                 }
                 bind.NewContentPlatForm = result.Channel.HasValue ? ServiceClass.GerConsumeChannelText(result.Channel.Value) : "消费追踪";
-                bind.AllPrice += result.Price;
-                bind.AllOrderCount += 1;
+                if (bind.AllPrice.HasValue)
+                {
+                    bind.AllPrice += result.Price;
+                }
+                else
+                {
+                    bind.AllPrice = result.Price;
+                }
+                if (bind.AllOrderCount.HasValue)
+                {
+                    bind.AllOrderCount += 1;
+                }
+                else
+                {
+                    bind.AllOrderCount = 1;
+                }
                 await _dalBindCustomerService.UpdateAsync(bind, true);
                 unitOfWork.Commit();
             }
