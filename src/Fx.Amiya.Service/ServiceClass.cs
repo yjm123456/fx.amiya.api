@@ -2198,31 +2198,31 @@ namespace Fx.Amiya.Service
             string str = "";
             switch (tag) {
                 case 0:
-                    str = "超级VIP";
+                    str = "超级VIP（RV）";
                     break;
                 case 1:
-                    str = "重要价值客户";
+                    str = "重要价值客户(R1)";
                     break;
                 case 2:
-                    str = "重要保持客户";
+                    str = "重要保持客户(R2)";
                     break;
                 case 3:
-                    str = "重要发展客户";
+                    str = "重要发展客户(R3)";
                     break;
                 case 4:
-                    str = "重要挽留客户";
+                    str = "重要挽留客户(R4)";
                     break;
                 case 5:
-                    str = "一般价值客户";
+                    str = "一般价值客户(R5)";
                     break;
                 case 6:
-                    str = "一般保持客户";
+                    str = "一般保持客户(R6)";
                     break;
                 case 7:
-                    str = "一般发展客户";
+                    str = "一般发展客户(R7)";
                     break;
                 case 8:
-                    str = "一般挽留客户";
+                    str = "一般挽留客户(R8)";
                     break;
                 
             }

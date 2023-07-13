@@ -1354,7 +1354,7 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// RFM标签等级
     /// </summary>
-    public enum RFMTagLeave
+    public enum RFMTagLevel
     {
         /// <summary>
         /// 超级VIP

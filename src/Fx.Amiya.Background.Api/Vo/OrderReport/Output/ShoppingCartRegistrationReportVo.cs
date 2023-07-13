@@ -28,15 +28,20 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport.OutPut
         [Description("紧急程度")]
         public string EmergencyLevelText { get; set; }
         /// <summary>
-        /// 来源渠道
+        /// 渠道
         /// </summary>
-        [Description("来源渠道")]
+        [Description("渠道")]
         public string ContentPlatFormName { get; set; }
         /// <summary>
         /// 客户来源
         /// </summary>
         [Description("客户来源")]
         public string SourceText { get; set; }
+        /// <summary>
+        /// 产品类型
+        /// </summary>
+        [Description("产品类型")]
+        public string ProductTypeText { get; set; }
         /// <summary>
         /// 基础主播名称
         /// </summary>

@@ -55,16 +55,12 @@ namespace Fx.Amiya.DbModels.Model
         public string NewWechatNo { get; set; }
 
         /// <summary>
-        /// 距今消费间隔天数
-        /// </summary>
-        public int ConsumptionDate { get; set; }
-
-        /// <summary>
         /// RFM类型
         /// </summary>
         public int RfmType { get; set; }
 
         public AmiyaEmployee CustomerServiceAmiyaEmployee { get; set; }
         public AmiyaEmployee CreateByAmiyaEmployee { get; set; }
+        public List<BindCustomerRFMLevelUpdateLog> BindCustomerRFMLevelUpdateLogList { get; set; }
     }
 }

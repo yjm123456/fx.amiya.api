@@ -18,6 +18,10 @@ namespace Fx.Amiya.Dto.BindCustomerService
         /// </summary>
         public int CustomerCount { get; set; }
         /// <summary>
+        /// 较昨日增长/下降
+        /// </summary>
+        public int CustomerIncreaseFromYesterday { get; set; }
+        /// <summary>
         /// 累计消费金额
         /// </summary>
 

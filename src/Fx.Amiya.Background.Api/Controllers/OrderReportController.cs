@@ -428,7 +428,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                           Remark = d.Remark,
                           CreateBy = d.CreateByName,
                           CreateDate = d.CreateDate,
-                          
+                          ProductTypeText = d.ProductTypeText
+
                       };
             return ResultData<List<ShoppingCartRegistrationReportVo>>.Success().AddData("OrderWriteOffReport", res.ToList());
         }
@@ -477,6 +478,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                               Remark = d.Remark,
                               CreateBy = d.CreateByName,
                               CreateDate = d.CreateDate,
+                              ProductTypeText=d.ProductTypeText
                           };
                 var exportOrderWriteOff = res.ToList();
                 var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);

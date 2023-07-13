@@ -868,7 +868,8 @@ namespace Fx.Amiya.Service
                                                    Source = d.Source,
                                                    SourceText = ServiceClass.GetTiktokCustomerSourceText(d.Source),
                                                    BaseLiveAnchorId = d.BaseLiveAnchorId,
-                                                   BaseLiveAnchorName = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == d.BaseLiveAnchorId).SingleOrDefault() == null ? "" : dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == d.BaseLiveAnchorId).SingleOrDefault().LiveAnchorName
+                                                   BaseLiveAnchorName = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == d.BaseLiveAnchorId).SingleOrDefault() == null ? "" : dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == d.BaseLiveAnchorId).SingleOrDefault().LiveAnchorName,
+                                                   ProductTypeText=ServiceClass.GetShoppingCartTakeGoodsProductTypeText(d.ProductType)
                                                };
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
                 if (!employee.AmiyaPositionInfo.IsDirector)

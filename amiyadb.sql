@@ -32,3 +32,28 @@ CREATE TABLE `tbl_rmf_customerinfo` (
 ------------------------------------------王健 2023/07/03 END--------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
+------------------------------------------余建明 2023/07/13 END--------------------------------------
+--新增客户RFM等级刷新记录
+CREATE TABLE `amiyadb`.`tbl_bind_customer_rfm_level_update_log` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `bind_customer_service_id` INT UNSIGNED NOT NULL,
+  `customer_service_id` INT UNSIGNED NOT NULL,
+  `from` INT NOT NULL,
+  `to` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_bind_customer_update_log_bindcustomerserviceid_idx` (`bind_customer_service_id` ASC) VISIBLE,
+  INDEX `fk_bind_customer_rfm_level_log_empinfo_idx` (`customer_service_id` ASC) VISIBLE,
+  CONSTRAINT `fk_bind_customer_update_log_bindcustomerserviceid`
+    FOREIGN KEY (`bind_customer_service_id`)
+    REFERENCES `amiyadb`.`tbl_bind_customer_service` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_bind_customer_rfm_level_log_empinfo`
+    FOREIGN KEY (`customer_service_id`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+------------------------------------------余建明 2023/07/13 END--------------------------------------
+
+

@@ -22,12 +22,14 @@ namespace Fx.Amiya.Service
         private IUnitOfWork unitOfWork;
         private IDalCustomerInfo dalCustomerInfo;
         private IDalAmiyaEmployee _dalAmiyaEmployee;
+        private IDalBindCustomerRFMLevelUpdateLog dalBindCustomerRFMLevelUpdateLog;
         private IAmiyaHospitalDepartmentService amiyaHospitalDepartmentService;
         private IDalOrderInfo dalOrderInfo;
         private IDalConfig dalConfig;
         private IItemInfoService itemInfoService;
         public BindCustomerServiceService(IDalBindCustomerService dalBindCustomerService,
             IUnitOfWork unitOfWork,
+            IDalBindCustomerRFMLevelUpdateLog dalBindCustomerRFMLevelUpdateLog,
             IDalAmiyaEmployee dalAmiyaEmployee,
             IDalCustomerInfo dalCustomerInfo,
             IAmiyaHospitalDepartmentService amiyaHospitalDepartmentService,
@@ -37,6 +39,7 @@ namespace Fx.Amiya.Service
         {
             this.dalBindCustomerService = dalBindCustomerService;
             this.unitOfWork = unitOfWork;
+            this.dalBindCustomerRFMLevelUpdateLog = dalBindCustomerRFMLevelUpdateLog;
             _dalAmiyaEmployee = dalAmiyaEmployee;
             this.itemInfoService = itemInfoService;
             this.dalCustomerInfo = dalCustomerInfo;
@@ -91,6 +94,7 @@ namespace Fx.Amiya.Service
                                 bindCustomerService.AllPrice = 0.00M;
                             }
                             bindCustomerService.AllOrderCount = order.Quantity;
+                            bindCustomerService.RfmType = (int)RFMTagLevel.R8;
                             bindCustomerServiceList.Add(bindCustomerService);
                         }
                     }
@@ -391,6 +395,7 @@ namespace Fx.Amiya.Service
                     bindCustomerService.UserId = customer?.UserId;
                     bindCustomerService.CreateBy = employeeId;
                     bindCustomerService.CreateDate = date;
+                    bindCustomerService.RfmType = (int)RFMTagLevel.R8;
                     await dalBindCustomerService.AddAsync(bindCustomerService, true);
                 }
 
@@ -423,6 +428,7 @@ namespace Fx.Amiya.Service
             bindCustomerService.AllOrderCount = 1;
             bindCustomerService.NewLiveAnchor = addDto.NewLiveAnchor;
             bindCustomerService.NewWechatNo = addDto.NewWechatNo;
+            bindCustomerService.RfmType = (int)RFMTagLevel.R8;
             await dalBindCustomerService.AddAsync(bindCustomerService, true);
 
 
@@ -471,8 +477,9 @@ namespace Fx.Amiya.Service
                                                         Id = d.Id,
                                                         NewConsumptionDate = d.NewConsumptionDate,
                                                         AllPrice = d.AllPrice,
+                                                        CustomerServiceId = d.CustomerServiceId,
                                                         AllOrderCount = d.AllOrderCount,
-                                                        ConsumptionDate = d.ConsumptionDate,
+                                                        ConsumptionDate = DateTime.Now.Subtract(d.NewConsumptionDate.Value).Days + 1,
                                                         RfmType = d.RfmType
                                                     };
                 return bindCustomerServiceInfoResult.ToList();
@@ -494,7 +501,6 @@ namespace Fx.Amiya.Service
             try
             {
                 var bindCustomerServiceInfoResult = from d in dalBindCustomerService.GetAll()
-                                                    where (d.AllPrice > 0.00M)
                                                     where (bindCustomerServiceIds.Count == 0 || bindCustomerServiceIds.Contains(d.CustomerServiceId))
                                                     select new BindCustomerServiceDto
                                                     {
@@ -502,6 +508,17 @@ namespace Fx.Amiya.Service
                                                         RfmType = d.RfmType
                                                     };
                 var result = await bindCustomerServiceInfoResult.GroupBy(x => x.RfmType).Select(x => new BindCustomerServiceRfmDataDto { RFMType = Convert.ToInt32(x.Key.ToString()), CustomerCount = x.Count(), TotalConsumptionPrice = x.Sum(z => z.AllPrice.Value) }).ToListAsync();
+
+                foreach (var x in result)
+                {
+                    var yesterDayStartDate = DateTime.Now.Date;
+                    var yesterDayEndDate = DateTime.Now.Date.AddDays(1);
+                    //查询昨日增长量
+                    var insertLogData = await dalBindCustomerRFMLevelUpdateLog.GetAll().Where(z => z.To == x.RFMType && z.CreateDate >= yesterDayStartDate && z.CreateDate < yesterDayEndDate).CountAsync();
+                    //查询昨日增流失
+                    var lossLogData = await dalBindCustomerRFMLevelUpdateLog.GetAll().Where(z => z.From == x.RFMType && z.CreateDate >= yesterDayStartDate && z.CreateDate < yesterDayEndDate).CountAsync();
+                    x.CustomerIncreaseFromYesterday = insertLogData - lossLogData;
+                }
                 return result;
 
             }
@@ -517,12 +534,12 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <returns></returns>
         /// <summary>
-        public async Task<FxPageInfo<BindCustomerServiceDto>> GetAllCustomerByRFMTypeAsync(List<int> bindCustomerServiceIds,int rfmType, int pageNum, int pageSize)
+        public async Task<FxPageInfo<BindCustomerServiceDto>> GetAllCustomerByRFMTypeAsync(List<int> bindCustomerServiceIds, int rfmType, int pageNum, int pageSize)
         {
             var config = await GetCallCenterConfig();
             var bindCustomerServiceInfoResult = from d in dalBindCustomerService.GetAll().Include(x => x.CustomerServiceAmiyaEmployee)
                                                 where (d.RfmType == rfmType)
-                                                where (bindCustomerServiceIds.Count==0|| bindCustomerServiceIds.Contains(d.CustomerServiceId))
+                                                where (bindCustomerServiceIds.Count == 0 || bindCustomerServiceIds.Contains(d.CustomerServiceId))
                                                 select new BindCustomerServiceDto
                                                 {
                                                     Id = d.Id,
@@ -533,12 +550,85 @@ namespace Fx.Amiya.Service
                                                     NewConsumptionDate = d.NewConsumptionDate,
                                                     AllPrice = d.AllPrice,
                                                     AllOrderCount = d.AllOrderCount,
-                                                    ConsumptionDate = d.ConsumptionDate,
+                                                    ConsumptionDate = DateTime.Now.Subtract(d.NewConsumptionDate.Value).Days + 1,
                                                     RfmType = d.RfmType,
                                                     RfmTypeText = ServiceClass.GetRFMTagText(d.RfmType),
-                                                    CreateDate=d.CreateDate
+                                                    CreateDate = d.CreateDate
                                                 };
             FxPageInfo<BindCustomerServiceDto> result = new FxPageInfo<BindCustomerServiceDto>();
+            result.TotalCount = await bindCustomerServiceInfoResult.CountAsync();
+            result.List = await bindCustomerServiceInfoResult.OrderByDescending(z => z.NewConsumptionDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+            return result;
+        }
+        /// <summary>
+        /// 修改客户RFM等级
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="rFMLevel"></param>
+        /// <returns></returns>
+        public async Task UpdateCustomerRFMLevelAsync(int id, int rFMLevel)
+        {
+            var bindCustomerService = await dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.Id == id);
+            if (bindCustomerService != null)
+            {
+                bindCustomerService.RfmType = rFMLevel;
+                await dalBindCustomerService.UpdateAsync(bindCustomerService, true);
+            }
+        }
+
+
+        /// <summary>
+        /// 添加RFM更新记录
+        /// </summary>
+        /// <param name="addDto"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        public async Task AddRFMTypeUpdateLogAsync(AddBindCustomerRFMLevelUpdateLog addDto)
+        {
+            try
+            {
+                DateTime date = DateTime.Now;
+                BindCustomerRFMLevelUpdateLog bindCustomerRFMLevelUpdateLog = new BindCustomerRFMLevelUpdateLog();
+                bindCustomerRFMLevelUpdateLog.Id = Guid.NewGuid().ToString();
+                bindCustomerRFMLevelUpdateLog.CreateDate = DateTime.Now;
+                bindCustomerRFMLevelUpdateLog.BindCustomerServiceId = addDto.BindCustomerServiceId;
+                bindCustomerRFMLevelUpdateLog.CustomerServiceId = addDto.CustomerServiceId;
+                bindCustomerRFMLevelUpdateLog.From = addDto.From;
+                bindCustomerRFMLevelUpdateLog.To = addDto.To;
+                await dalBindCustomerRFMLevelUpdateLog.AddAsync(bindCustomerRFMLevelUpdateLog, true);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 获取客户RFM等级更新记录
+        /// </summary>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<BindCustomerRFMLevelUpdateLogDto>> GetCustomerRFMTypeUpdateDataAsync(DateTime? startDate, DateTime? endDate, string keyWord, int? customerServiceId, int pageNum, int pageSize)
+        {
+            var config = await GetCallCenterConfig();
+            var bindCustomerServiceInfoResult = from d in dalBindCustomerRFMLevelUpdateLog.GetAll().Include(x => x.BindCustomerService).Include(x => x.CustomerServiceInfo)
+                                                where (!customerServiceId.HasValue || d.CustomerServiceId == customerServiceId)
+                                                where (string.IsNullOrEmpty(keyWord) || d.BindCustomerService.BuyerPhone.Contains(keyWord))
+                                                where (!startDate.HasValue || d.CreateDate > startDate.Value)
+                                                where (!endDate.HasValue || d.CreateDate < endDate.Value.AddDays(1))
+
+                                                select new BindCustomerRFMLevelUpdateLogDto
+                                                {
+                                                    Id = d.Id,
+                                                    CustomerServiceName = d.CustomerServiceInfo.Name,
+                                                    Phone = ServiceClass.GetIncompletePhone(d.BindCustomerService.BuyerPhone.),
+                                                    EncryptPhone = ServiceClass.Encrypt(d.BindCustomerService.BuyerPhone, config.PhoneEncryptKey),
+                                                    From = ServiceClass.GetRFMTagText(d.From),
+                                                    To = ServiceClass.GetRFMTagText(d.To),
+                                                    CreateDate = d.CreateDate,
+                                                };
+            FxPageInfo<BindCustomerRFMLevelUpdateLogDto> result = new FxPageInfo<BindCustomerRFMLevelUpdateLogDto>();
             result.TotalCount = await bindCustomerServiceInfoResult.CountAsync();
             result.List = await bindCustomerServiceInfoResult.OrderByDescending(z => z.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
             return result;

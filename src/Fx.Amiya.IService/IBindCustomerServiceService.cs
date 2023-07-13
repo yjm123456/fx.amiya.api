@@ -121,5 +121,31 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<FxPageInfo<BindCustomerServiceDto>> GetAllCustomerByRFMTypeAsync(List<int> bindCustomerServiceIds, int rfmType, int pageNum, int pageSize);
 
+        /// <summary>
+        /// 修改客户RFM等级
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="rFMLevel"></param>
+        /// <returns></returns>
+        Task UpdateCustomerRFMLevelAsync(int id, int rFMLevel);
+
+        /// <summary>
+        /// 添加RFM更新记录
+        /// </summary>
+        /// <param name="addDto"></param>
+        /// <returns></returns>
+        Task AddRFMTypeUpdateLogAsync(AddBindCustomerRFMLevelUpdateLog addDto);
+
+        /// <summary>
+        /// 获取客户RFM等级更新记录
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="keyWord"></param>
+        /// <param name="customerServiceId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<BindCustomerRFMLevelUpdateLogDto>> GetCustomerRFMTypeUpdateDataAsync(DateTime? startDate, DateTime? endDate, string keyWord, int? customerServiceId, int pageNum, int pageSize);
     }
 }

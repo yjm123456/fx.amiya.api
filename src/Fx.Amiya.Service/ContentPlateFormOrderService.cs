@@ -186,6 +186,7 @@ namespace Fx.Amiya.Service
                     bindCustomerService.NewWechatNo = input.LiveAnchorWeChatNo;
                     bindCustomerService.AllPrice = 0;
                     bindCustomerService.AllOrderCount = 0;
+                    bindCustomerService.RfmType = (int)RFMTagLevel.R8;
                     await _dalBindCustomerService.AddAsync(bindCustomerService, true);
                 }
 

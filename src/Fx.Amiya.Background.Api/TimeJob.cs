@@ -22,6 +22,8 @@ using Fx.Amiya.Dto.HospitalOperationIndicator;
 using Fx.Amiya.SyncOrder.WeChatVideo;
 using Fx.Amiya.Dto.WechatVideoOrder;
 using Fx.Amiya.Dto.MessageNotice.Input;
+using Fx.Amiya.Dto.BindCustomerService;
+using Fx.Infrastructure.DataAccess;
 
 namespace Fx.Amiya.Background.Api
 {
@@ -29,6 +31,7 @@ namespace Fx.Amiya.Background.Api
     {
         private IOrderService orderService;
         private ISyncOrder syncOrder;
+        private IUnitOfWork unitOfWork;
         private ISyncWeiFenXiaoOrder _syncWeiFenXiaoOrder;
         private ISyncTikTokOrder _syncTikTokOrder;
         private FxAppGlobal _fxAppGlobal;
@@ -47,6 +50,7 @@ namespace Fx.Amiya.Background.Api
           IIntegrationAccount integrationAccountService,
             ICustomerService customerService,
              IMemberCard memberCardService,
+             IUnitOfWork unitOfWork,
              ISyncTikTokOrder syncTikTokOrder,
              ICustomerAppointmentScheduleService customerAppointmentScheduleService,
              IMessageNoticeService messageNoticeService,
@@ -60,6 +64,7 @@ namespace Fx.Amiya.Background.Api
             _syncWeiFenXiaoOrder = syncWeiFenXiaoOrder;
             this.integrationAccountService = integrationAccountService;
             this.customerService = customerService;
+            this.unitOfWork = unitOfWork;
             this.memberCardService = memberCardService;
             _syncTikTokOrder = syncTikTokOrder;
             this.memberRankInfoService = memberRankInfoService;
@@ -465,16 +470,102 @@ namespace Fx.Amiya.Background.Api
         [Invoke(Begin = "03:00:00", Interval = 1000 * 60 * 60 * 24 + 60 * 1000, SkipWhileExecuting = true)]
         public async Task BindCustomerServiceRFMUpdate()
         {
-            using (var scope = _serviceProvider.CreateScope())
+            unitOfWork.BeginTransaction();
+            try
             {
-                var bindCustomerServiceService = scope.ServiceProvider.GetService<IBindCustomerServiceService>();
-                //获取所有消费过的顾客
-                var allConsumedCustomer = await bindCustomerServiceService.GetAllCustomerAsync();
-                
-                //foreach (var x in allConsumedCustomer)
-                //{
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var bindCustomerServiceService = scope.ServiceProvider.GetService<IBindCustomerServiceService>();
+                    //获取所有消费过的顾客
+                    var allConsumedCustomer = await bindCustomerServiceService.GetAllCustomerAsync();
+                    int OldRFMLevel = 0;
+                    int NewRFMLevel = 0;
+                    foreach (var x in allConsumedCustomer)
+                    {
+                        int RValue = 0;
+                        int FValue = 0;
+                        int MValue = 0;
+                        OldRFMLevel = x.RfmType;
+                        //计算距今消费时间
+                        if (x.ConsumptionDate < 91)
+                        {
+                            RValue = (int)RFM.High;
+                        }
+                        else
+                        {
+                            RValue = (int)RFM.Low;
+                        }
+                        if (x.AllOrderCount > 1)
+                        {
+                            FValue = (int)RFM.High;
+                        }
+                        else
+                        {
+                            FValue = (int)RFM.Low;
+                        }
+                        switch (x.AllPrice)
+                        {
+                            case < 100000.00M:
+                                MValue = (int)RFM.Low;
+                                break;
+                            case < 300000.00M:
+                                MValue = (int)RFM.High;
+                                break;
+                            case >= 300000.00M:
+                                MValue = (int)RFM.VIP;
+                                break;
+                        }
 
-                //}
+                        switch (RValue, FValue, MValue)
+                        {
+                            case ((int)RFM.High, (int)RFM.High, (int)RFM.High):
+                                NewRFMLevel = (int)RFMTagLevel.R1;
+                                break;
+                            case ((int)RFM.High, (int)RFM.Low, (int)RFM.High):
+                                NewRFMLevel = (int)RFMTagLevel.R2;
+                                break;
+                            case ((int)RFM.Low, (int)RFM.High, (int)RFM.High):
+                                NewRFMLevel = (int)RFMTagLevel.R3;
+                                break;
+                            case ((int)RFM.Low, (int)RFM.Low, (int)RFM.High):
+                                NewRFMLevel = (int)RFMTagLevel.R4;
+                                break;
+                            case ((int)RFM.High, (int)RFM.High, (int)RFM.Low):
+                                NewRFMLevel = (int)RFMTagLevel.R5;
+                                break;
+                            case ((int)RFM.High, (int)RFM.Low, (int)RFM.Low):
+                                NewRFMLevel = (int)RFMTagLevel.R6;
+                                break;
+                            case ((int)RFM.Low, (int)RFM.High, (int)RFM.Low):
+                                NewRFMLevel = (int)RFMTagLevel.R7;
+                                break;
+                            case ((int)RFM.Low, (int)RFM.Low, (int)RFM.Low):
+                                NewRFMLevel = (int)RFMTagLevel.R8;
+                                break;
+                            default:
+                                NewRFMLevel = (int)RFMTagLevel.RV;
+                                break;
+                        }
+                        if (OldRFMLevel != NewRFMLevel)
+                        {
+                            //修改绑定客服RFM登记
+                            await bindCustomerServiceService.UpdateCustomerRFMLevelAsync(x.Id, NewRFMLevel);
+                            //新增修改记录
+                            AddBindCustomerRFMLevelUpdateLog addBindCustomerRFMLevelUpdateLog = new AddBindCustomerRFMLevelUpdateLog();
+                            addBindCustomerRFMLevelUpdateLog.BindCustomerServiceId = x.Id;
+                            addBindCustomerRFMLevelUpdateLog.CustomerServiceId = x.CustomerServiceId;
+                            addBindCustomerRFMLevelUpdateLog.From = OldRFMLevel;
+                            addBindCustomerRFMLevelUpdateLog.To = NewRFMLevel;
+                            await bindCustomerServiceService.AddRFMTypeUpdateLogAsync(addBindCustomerRFMLevelUpdateLog);
+                        }
+                    }
+                    unitOfWork.Commit();
+                }
+            }
+            catch (Exception err)
+            {
+                unitOfWork.RollBack();
+
             }
         }
 

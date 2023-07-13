@@ -81,5 +81,6 @@ namespace Fx.Amiya.DbModels.Model
 
         public List<CustomerAppointmentSchedule> CustomerAppointmentScheduleList { get; set; }
         public List<MessageNotice> MessageNoticeList { get; set; }
+        public List<BindCustomerRFMLevelUpdateLog> BindCustomerRFMLevelUpdateLogList { get; set; }
     }
 }

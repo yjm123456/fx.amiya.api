@@ -91,7 +91,7 @@ namespace Fx.Amiya.Service
         }
         public List<BaseKeyValueDto> GetRFMTagText()
         {
-            var billReturnBackStateTexts = Enum.GetValues(typeof(RFMTagLeave));
+            var billReturnBackStateTexts = Enum.GetValues(typeof(RFMTagLevel));
 
             List<BaseKeyValueDto> billReturnBackStateTextList = new List<BaseKeyValueDto>();
             foreach (var item in billReturnBackStateTexts)
@@ -131,7 +131,7 @@ namespace Fx.Amiya.Service
                 Recency = ServiceClass.GetRFMText(e.Recency),
                 Frequency = ServiceClass.GetRFMText(e.Frequency),
                 Monetary = ServiceClass.GetRFMText(e.Monetary),
-                RFMTag = ((RFMTagLeave)e.RFMTag).ToString(),
+                RFMTag = ((RFMTagLevel)e.RFMTag).ToString(),
                 RFMTagText = ServiceClass.GetRFMTagText(e.RFMTag),
                 LiveAnchorWechatNo = !string.IsNullOrEmpty(e.LiveAnchorWechatNo) ? dalLiveAnchorWeChatInfo.GetAll().Where(w => w.Id == e.LiveAnchorWechatNo).FirstOrDefault().WeChatNo : "",
             }).ToList();
@@ -182,7 +182,7 @@ namespace Fx.Amiya.Service
                 MonetaryLeave = e.Monetary,
                 Monetary = ServiceClass.GetRFMText(e.Monetary),
                 RFMTagLeave = e.RFMTag,
-                RFMTag = ((RFMTagLeave)e.RFMTag).ToString(),
+                RFMTag = ((RFMTagLevel)e.RFMTag).ToString(),
                 RFMTagText = ServiceClass.GetRFMTagText(e.RFMTag),
                 LiveAnchorWechatNo = !string.IsNullOrEmpty(e.LiveAnchorWechatNo) ? dalLiveAnchorWeChatInfo.GetAll().Where(w => w.Id == e.LiveAnchorWechatNo).FirstOrDefault().WeChatNo : null,
                 LiveAnchorWechatNoId = e.LiveAnchorWechatNo

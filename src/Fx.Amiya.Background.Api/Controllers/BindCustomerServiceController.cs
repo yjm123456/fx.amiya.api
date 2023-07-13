@@ -234,6 +234,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 bindCustomerServiceRFMData.RFMType = x;
                 bindCustomerServiceRFMData.RFMTypeText = ServiceClass.GetRFMTagText(x);
                 bindCustomerServiceRFMData.CustomerCount=0;
+                bindCustomerServiceRFMData.CustomerIncreaseFromYesterday = 0;
                 bindCustomerServiceRFMData.TotalConsumptionPrice =0.00M;
                 bindResult.Add(bindCustomerServiceRFMData);
             }
@@ -241,8 +242,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 if (bindResult.Exists(k => k.RFMType == x.RFMType))
                 {
-                    var bind = bindResult.Where(x => x.RFMType == x.RFMType).FirstOrDefault();
+                    var bind = bindResult.Where(z => z.RFMType == x.RFMType).FirstOrDefault();
                     bind.CustomerCount = x.CustomerCount;
+                    bind.CustomerIncreaseFromYesterday = x.CustomerIncreaseFromYesterday;
                     bind.TotalConsumptionPrice = x.TotalConsumptionPrice;
                 }
             }
@@ -300,6 +302,42 @@ namespace Fx.Amiya.Background.Api.Controllers
             catch (Exception ex)
             {
                 return ResultData<FxPageInfo<BindCustomerInfoVo>>.Fail(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 获取客户RFM等级更新记录（分页）
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getCustomerRFMTypeUpdateData")]
+
+        public async Task<ResultData<FxPageInfo<BindCustomerRFMLevelUpdateLogVo>>> GetCustomerRFMTypeUpdateDataAsync([FromQuery] QueryCustomerRFMTypeUpdateDataVo query)
+        {
+            try
+            {
+                var q = await bindCustomerServiceService.GetCustomerRFMTypeUpdateDataAsync(query.StartDate.Value, query.EndDate.Value,query.KeyWord,query.customerServiceId, query.PageNum.Value, query.PageSize.Value);
+                var billReturnBackPriceData = from d in q.List
+                                              select new BindCustomerRFMLevelUpdateLogVo
+                                              {
+                                                  Id = d.Id,
+                                                  CustomerServiceName = d.CustomerServiceName,
+                                                  Phone =d.Phone,
+                                                  EncryptPhone =d.EncryptPhone,
+                                                  From = d.From,
+                                                  To = d.To,
+                                                  CreateDate = d.CreateDate,
+                                              };
+
+                FxPageInfo<BindCustomerRFMLevelUpdateLogVo> pageInfo = new FxPageInfo<BindCustomerRFMLevelUpdateLogVo>();
+                pageInfo.TotalCount = q.TotalCount;
+                pageInfo.List = billReturnBackPriceData;
+
+                return ResultData<FxPageInfo<BindCustomerRFMLevelUpdateLogVo>>.Success().AddData("getCustomerRFMTypeUpdateData", pageInfo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<FxPageInfo<BindCustomerRFMLevelUpdateLogVo>>.Fail(ex.Message);
             }
         }
     }

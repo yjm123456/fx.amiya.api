@@ -37,6 +37,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<LiveAnchorWeChatInfo> LiveAnchorWeChatInfo { get; set; }
         public virtual DbSet<AmiyaWareHouseNameManage> AmiyaWareHouseNameManage { get; set; }
         public virtual DbSet<DockingHospitalCustomerInfo> DockingHospitalCustomerInfo { get; set; }
+        public virtual DbSet<BindCustomerRFMLevelUpdateLog> BindCustomerRFMLevelUpdateLog { get; set; }
         public virtual DbSet<GreatHospitalOperationHealth> GreatHospitalOperationHealth { get; set; }
         public virtual DbSet<ReconciliationDocuments> ReconciliationDocuments { get; set; }
         public virtual DbSet<HospitalOperationData> HospitalOperationData { get; set; }
@@ -229,6 +230,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new HospitalPositionInfoConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalEmployeeConfiguration());
             modelBuilder.ApplyConfiguration(new BeautyDiaryTagInfoConfiguration());
+            modelBuilder.ApplyConfiguration(new BindCustomerRFMLevelUpdateLogConfiguration());
             modelBuilder.ApplyConfiguration(new BeautyDiaryTagDetailConfiguration());
             modelBuilder.ApplyConfiguration(new BeautyDiaryBannerImageConfiguration());
             modelBuilder.ApplyConfiguration(new BeautyDiaryManageConfiguration());
