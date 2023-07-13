@@ -503,8 +503,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
                 var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
                 huiShouQianPackageInfo.Key = payInfo.PartnerKey;
-                huiShouQianPackageInfo.PrivateKey = payInfo.SubAppId;
-                huiShouQianPackageInfo.PublicKey = payInfo.SubMchId;
+                huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
+                huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
                 using Stream stream = HttpContext.Request.Body;
                 byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
                 await stream.ReadAsync(buffer);

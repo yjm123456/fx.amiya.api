@@ -15,6 +15,7 @@ namespace Fx.Amiya.Dto.ShanDePay
         /// 河马付网关接口地址
         /// </summary>
         public string ServerUrl { get; set; } = "https://hmpay.sandpay.com.cn/gateway/api";
+
         /// <summary>
         /// 代理商应用ID/商户应用ID
         /// </summary>

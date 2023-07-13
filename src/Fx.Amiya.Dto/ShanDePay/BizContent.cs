@@ -30,7 +30,9 @@ namespace Fx.Amiya.Dto.ShanDePay
         /// 微信用户openid
         /// </summary>
         public string mer_buyer_id { get; set; }
-        public string notify_url { get; set; } = "https://www.amyk.cn/amiya/wxmini/notify/shanDePayResultNotify";
+        //public string notify_url { get; set; } = "https://www.amyk.cn/amiya/wxmini/notify/shanDePayResultNotify";
+
+        public string notify_url { get; set; } = "https://app.ameiyes.com/amiyamini/amiya/wxmini/Notify/shanDePayResultNotify";
         /// <summary>
         /// 商户订单号不可重复
         /// </summary>
