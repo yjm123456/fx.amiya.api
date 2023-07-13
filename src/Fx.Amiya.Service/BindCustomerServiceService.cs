@@ -622,7 +622,7 @@ namespace Fx.Amiya.Service
                                                 {
                                                     Id = d.Id,
                                                     CustomerServiceName = d.CustomerServiceInfo.Name,
-                                                    Phone = ServiceClass.GetIncompletePhone(d.BindCustomerService.BuyerPhone.),
+                                                    Phone = ServiceClass.GetIncompletePhone(d.BindCustomerService.BuyerPhone),
                                                     EncryptPhone = ServiceClass.Encrypt(d.BindCustomerService.BuyerPhone, config.PhoneEncryptKey),
                                                     From = ServiceClass.GetRFMTagText(d.From),
                                                     To = ServiceClass.GetRFMTagText(d.To),
