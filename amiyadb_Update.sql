@@ -23,3 +23,21 @@ ALTER TABLE `amiyadb`.`tbl_bind_customer_service`
 ADD COLUMN `consumption_date` INT NOT NULL DEFAULT 0 AFTER `new_wechat_no`,
 ADD COLUMN `rfm_type` INT NOT NULL DEFAULT 0 AFTER `consumption_date`;
 -----------------------------------------------余建明 2023/07/11 END--------------------------------------------
+
+
+------------------------------------------------王健 2023/07/13 BEGIN--------------------------------------------
+
+----修改支付信息表字段
+ALTER TABLE `tbl_wechat_payinfo`
+	CHANGE COLUMN `sub_app_id` `sub_app_id` VARCHAR(50) NOT NULL  AFTER `enablesp`,
+	CHANGE COLUMN `sub_mch_id` `sub_mch_id` VARCHAR(50) NOT NULL  AFTER `sub_app_id`,
+	ADD COLUMN `private_key` VARCHAR(5000) NOT NULL AFTER `sub_mch_id`,
+	ADD COLUMN `public_key` VARCHAR(5000) NOT NULL AFTER `private_key`,
+	ADD COLUMN `store_id` VARCHAR(50) NOT NULL AFTER `public_key`;
+
+----添加证书名称字段
+ALTER TABLE `tbl_wechat_payinfo`
+	ADD COLUMN `certificate_name` VARCHAR(500) NULL DEFAULT NULL AFTER `delete_date`;
+
+
+-------------------------------------------------王健 2023/07/13 END-------------------------------------------------
