@@ -3,12 +3,14 @@ using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.Dto.Balance;
 using Fx.Amiya.Dto.HuiShouQianPay;
 using Fx.Amiya.Dto.HuiShouQianPayNotify;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Amiya.MiniProgram.Api.Vo.Notify;
 using Fx.Amiya.Modules.Integration.Domin;
 using Fx.Amiya.Service;
+using Fx.Common.Utils;
 using Fx.Infrastructure.DataAccess;
 using Fx.Open.Infrastructure.Web.Utils;
 using jos_sdk_net.Util;
@@ -47,9 +49,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private readonly IRechargeRewardRuleService rechargeRewardRuleService;
         private readonly IDalBindCustomerService _dalBindCustomerService;
         private readonly IDalWechatPayInfo dalWechatPayInfo;
+        private readonly IOperationLogService operationLogService;
         public NotifyController(IOrderService orderService,
             IAliPayService aliPayService,
-            ILogger<AliPayService> logger, IBalanceRechargeService balanceRechargeRecordService, IBalanceAccountService balanceAccountService, IUnitOfWork unitOfWork, IIntegrationAccount integrationAccount, IRechargeRewardRuleService rechargeRewardRuleService, IDalBindCustomerService dalBindCustomerService, IDalWechatPayInfo dalWechatPayInfo)
+            ILogger<AliPayService> logger, IBalanceRechargeService balanceRechargeRecordService, IBalanceAccountService balanceAccountService, IUnitOfWork unitOfWork, IIntegrationAccount integrationAccount, IRechargeRewardRuleService rechargeRewardRuleService, IDalBindCustomerService dalBindCustomerService, IDalWechatPayInfo dalWechatPayInfo, IOperationLogService operationLogService)
         {
             this.orderService = orderService;
             _aliPayService = aliPayService;
@@ -61,6 +64,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             this.rechargeRewardRuleService = rechargeRewardRuleService;
             _dalBindCustomerService = dalBindCustomerService;
             this.dalWechatPayInfo = dalWechatPayInfo;
+            this.operationLogService = operationLogService;
         }
         /// <summary>
         /// 支付宝订单回调地址
@@ -685,8 +689,130 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             builder.Append(key);
             return builder.ToString();
         }
+        /// <summary>
+        /// 杉德支付回调
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("shanDePayResultNotify")]
         public async Task<string> SDPayResult() {
-            return null;
+            OperationAddDto operationAddDto = new OperationAddDto();
+            bool isMaterialOrder = false;
+            var query=HttpContext.Request.Query;
+            Dictionary<string,string> dic = new Dictionary<string,string>();
+            string sign = "";
+            foreach (var item in query)
+            {
+                if (item.Key=="sign") {
+                    sign = HttpUtility.UrlDecode(item.Value);
+                    continue;
+                }
+                dic.Add(item.Key,HttpUtility.UrlDecode(item.Value));
+            }
+            SignHelper signHelper = new SignHelper();
+            var signContent= await signHelper.BuildQueryAsync(dic,false);
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202307072015").FirstOrDefault();
+            if (payInfo == null) throw new Exception("没有该支付方式配置信息！");
+            var result= RSAFromPkcs8Helper.Verify(signContent,sign, payInfo.PublickKey, "UTF-8");
+            if (result == true)
+            {
+                var tradeStatus = "";
+                dic.TryGetValue("trade_status", out tradeStatus);
+
+                if (tradeStatus == "SUCCESS")
+                {
+                    var tradeId = "";
+                    dic.TryGetValue("req_reserved", out tradeId);
+                    var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(tradeId);
+                    if (orderTrade.StatusCode == OrderStatusCode.WAIT_BUYER_PAY)
+                    {
+                        List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
+                        foreach (var item in orderTrade.OrderInfoList)
+                        {
+                            UpdateOrderDto updateOrder = new UpdateOrderDto();
+                            updateOrder.OrderId = item.Id;
+                            if (item.OrderType == (byte)OrderType.MaterialOrder)
+                            {
+                                updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                                isMaterialOrder = true;
+                            }
+                            else if (item.OrderType == (byte)OrderType.VirtualOrder)
+                            {
+                                updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                            }
+                            if (item.ActualPayment.HasValue)
+                            {
+                                updateOrder.Actual_payment = item.ActualPayment.Value;
+
+                                var bind = await _dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == item.Phone);
+                                if (bind != null)
+                                {
+                                    bind.NewConsumptionDate = DateTime.Now;
+                                    bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
+                                    bind.NewContentPlatForm = ServiceClass.GetAppTypeText(item.AppType);
+                                    bind.AllPrice += item.ActualPayment.Value;
+                                    bind.AllOrderCount += item.Quantity;
+                                    await _dalBindCustomerService.UpdateAsync(bind, true);
+                                }
+                            }
+                            if (item.IntegrationQuantity.HasValue)
+                            {
+                                updateOrder.IntergrationQuantity = item.IntegrationQuantity;
+                            }
+                            Random random = new Random();
+                            updateOrder.AppType = item.AppType;
+                            updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
+                            updateOrderList.Add(updateOrder);
+                        }
+                        //修改订单状态
+                        await orderService.UpdateAsync(updateOrderList);
+
+
+                        UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
+                        updateOrderTrade.TradeId = tradeId;
+                        updateOrderTrade.AddressId = orderTrade.AddressId;
+                        if (isMaterialOrder)
+                        {
+                            updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+                        }
+                        else
+                        {
+                            updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                        }
+                        await orderService.UpdateOrderTradeAsync(updateOrderTrade);
+                    }
+                    else {
+                        operationAddDto.Parameters = query.ToString();
+                        operationAddDto.Code = -1;
+                        operationAddDto.RouteAddress = "杉德支付回调请求";
+                        operationAddDto.RequestType = (int)RequestType.Select;
+                        operationAddDto.Message = $"支付成功订单:{tradeId}状态已改变当前订单状态为{orderTrade.StatusCode}";
+                        operationAddDto.OperationBy = null;
+                        operationAddDto.Source = (int)RequestSource.AmiyaBackground;
+                        await operationLogService.AddOperationLogAsync(operationAddDto);
+                    }
+                }
+                else {
+                    operationAddDto.Parameters = query.ToString();
+                    operationAddDto.Code = -1;
+                    operationAddDto.RouteAddress = "杉德支付回调请求";
+                    operationAddDto.RequestType = (int)RequestType.Select;
+                    operationAddDto.Message = "支付失败";
+                    operationAddDto.OperationBy = null;
+                    operationAddDto.Source = (int)RequestSource.AmiyaBackground;
+                    await operationLogService.AddOperationLogAsync(operationAddDto);
+                }
+            }
+            else {
+                operationAddDto.Parameters = query.ToString();
+                operationAddDto.Code = -1;
+                operationAddDto.RouteAddress = "杉德支付回调请求";
+                operationAddDto.RequestType = (int)RequestType.Select;
+                operationAddDto.Message = "签名验证失败";
+                operationAddDto.OperationBy = null;
+                operationAddDto.Source = (int)RequestSource.AmiyaBackground;
+                await operationLogService.AddOperationLogAsync(operationAddDto);
+            }
+            return "SUCCESS";
         }
 
     }

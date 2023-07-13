@@ -8,6 +8,7 @@ namespace Fx.Amiya.Dto.ShanDePay
 {
     public class ShanDeOrderResult
     {
+        public string TransNo { get; set; }
         public bool Success { get; set; }
         /// <summary>
         /// 错误码

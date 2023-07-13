@@ -497,7 +497,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     }
                     else if (orderAdd.ExchangeType == 2)
                     {
-                        amiyaOrder.ExchangeType = (int)ExchangeType.Wechat;
+                        //amiyaOrder.ExchangeType = (int)ExchangeType.Wechat;
+                        amiyaOrder.ExchangeType = (int)ExchangeType.ShanDePay;
                     }
                 }
                 //积分商品计算所选规格价
@@ -759,7 +760,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     }
                 }
 
-                //微信支付
+                //杉德支付
                 if (orderAdd.ExchangeType == 2)
                 {
                     ShanDeOrderInfo shanDeOrderInfo = new ShanDeOrderInfo();
@@ -769,6 +770,14 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     shanDeOrderInfo.TotalFee = totalFee;
                     shanDeOrderInfo.TradeId = tradeId;
                     var result=await shanDePayMentService.OrderAsync(shanDeOrderInfo);
+                    if (result.Success==false) throw new Exception("下单失败,请重新下单");
+                    PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
+                    payRequestInfo.appId = result.PayParam.AppId;
+                    payRequestInfo.package = result.PayParam.Package;
+                    payRequestInfo.timeStamp = result.PayParam.TimeStamp;
+                    payRequestInfo.nonceStr = result.PayParam.NonceStr;
+                    payRequestInfo.paySign = result.PayParam.PaySign;
+                    orderAddResult.PayRequestInfo = payRequestInfo;
                     /*WxPackageInfo packageInfo = new WxPackageInfo();
                     packageInfo.AppId = appId;
                     packageInfo.Body = orderId;
@@ -802,7 +811,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         orderAddResult.PayRequestInfo = payRequestInfo;
                     }*/
                     //交易信息添加支付交易订单号
-                    await orderService.TradeAddTransNoAsync(tradeId, tradeId);
+                    await orderService.TradeAddTransNoAsync(tradeId, result.TransNo);
                 }
                 else if (orderAdd.ExchangeType == 1)
                 {
@@ -944,7 +953,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
             foreach (var item in orderTrade.OrderInfoList)
             {
-                if (item.ExchangeType != (int)ExchangeType.HuiShouQian && item.ExchangeType != (int)ExchangeType.PointAndMoney && item.ExchangeType != (int)ExchangeType.Wechat)
+                if (item.ExchangeType != (int)ExchangeType.HuiShouQian && item.ExchangeType != (int)ExchangeType.PointAndMoney && item.ExchangeType != (int)ExchangeType.ShanDePay &&item.ExchangeType!=(int)ExchangeType.ShanDePay)
                 {
                     throw new Exception("该订单不支持重新支付,请取消订单重新下单并支付!");
                 }
@@ -974,7 +983,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             var transNo = "";
             if (appId == "wx8747b7f34c0047eb")
             {
-                WxPackageInfo packageInfo = new WxPackageInfo();
+                /*WxPackageInfo packageInfo = new WxPackageInfo();
                 packageInfo.AppId = appId;
                 packageInfo.Body = tradeId;
                 packageInfo.Attach = tradeId;
@@ -1005,8 +1014,23 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     payRequestInfo.nonceStr = payRequest.nonceStr;
                     payRequestInfo.paySign = payRequest.paySign;
                     orderPayResult.PayRequestInfo = payRequestInfo;
-                }
-                transNo = packageInfo.OutTradeNo;
+                }*/
+
+                ShanDeOrderInfo shanDeOrderInfo = new ShanDeOrderInfo();
+                shanDeOrderInfo.AppId = appId;
+                shanDeOrderInfo.CreateDate = DateTime.Now;
+                shanDeOrderInfo.OpenId = sessionInfo.OpenId;
+                shanDeOrderInfo.TotalFee = orderTrade.TotalAmount??0.01m;
+                shanDeOrderInfo.TradeId = tradeId;
+                var result = await shanDePayMentService.OrderAsync(shanDeOrderInfo);
+                if (result.Success == false) throw new Exception("下单失败,请重新下单");
+                payRequestInfo.appId = result.PayParam.AppId;
+                payRequestInfo.package = result.PayParam.Package;
+                payRequestInfo.timeStamp = result.PayParam.TimeStamp;
+                payRequestInfo.nonceStr = result.PayParam.NonceStr;
+                payRequestInfo.paySign = result.PayParam.PaySign;
+                orderPayResult.PayRequestInfo = payRequestInfo;
+                transNo = result.TransNo;
             }
             #endregion
 
@@ -1211,8 +1235,22 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
                 if (appId == "wx8747b7f34c0047eb")
                 {
+                    ShanDeOrderInfo shanDeOrderInfo = new ShanDeOrderInfo();
+                    shanDeOrderInfo.AppId = appId;
+                    shanDeOrderInfo.CreateDate = DateTime.Now;
+                    shanDeOrderInfo.OpenId = sessionInfo.OpenId;
+                    shanDeOrderInfo.TotalFee = totalFee;
+                    shanDeOrderInfo.TradeId = tradeId;
+                    var result = await shanDePayMentService.OrderAsync(shanDeOrderInfo);
+                    if (result.Success == false) throw new Exception("下单失败,请重新下单");
+                    payRequestInfo.appId = result.PayParam.AppId;
+                    payRequestInfo.package = result.PayParam.Package;
+                    payRequestInfo.timeStamp = result.PayParam.TimeStamp;
+                    payRequestInfo.nonceStr = result.PayParam.NonceStr;
+                    payRequestInfo.paySign = result.PayParam.PaySign;
+                    orderAddResult.PayRequestInfo = payRequestInfo;
                     //啊美雅美容使用微信支付    
-                    WxPackageInfo packageInfo = new WxPackageInfo();
+                    /*WxPackageInfo packageInfo = new WxPackageInfo();
                     packageInfo.AppId = appId;
                     packageInfo.Body = orderId;
                     //回调地址需重新设置(todo;)                   
@@ -1243,9 +1281,10 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         payRequestInfo.nonceStr = payRequest.nonceStr;
                         payRequestInfo.paySign = payRequest.paySign;
                         orderAddResult.PayRequestInfo = payRequestInfo;
-                    }
+                    }*/
+
                     //交易信息添加支付交易订单号
-                    await orderService.TradeAddTransNoAsync(tradeId, tradeId);
+                    await orderService.TradeAddTransNoAsync(tradeId, result.TransNo);
                 }
 
                 #endregion

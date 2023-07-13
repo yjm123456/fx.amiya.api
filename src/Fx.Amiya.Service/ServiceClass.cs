@@ -894,6 +894,9 @@ namespace Fx.Amiya.Service
                 case 7:
                     orderTypeText = "积分加钱支付";
                     break;
+                case 8:
+                    orderTypeText = "杉德支付";
+                    break;
                 default:
                     orderTypeText = "未知";
                     break;

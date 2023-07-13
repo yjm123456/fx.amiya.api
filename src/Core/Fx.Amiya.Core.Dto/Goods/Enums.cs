@@ -54,7 +54,11 @@ namespace Fx.Amiya.Core.Dto.Goods
         /// <summary>
         /// 积分加钱购
         /// </summary>
-        PointAndMoney
+        PointAndMoney,
+        /// <summary>
+        /// 杉德支付
+        /// </summary>
+        ShanDePay
 
     }
 

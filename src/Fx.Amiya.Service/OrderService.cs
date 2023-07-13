@@ -49,6 +49,7 @@ using Fx.Amiya.Dto.Order;
 using Fx.Amiya.Dto.GoodsInfo;
 using Fx.Amiya.Dto.BindCustomerService;
 using Fx.Amiya.Dto.HuiShouQianPay;
+using Fx.Amiya.Dto.ShanDePay;
 
 namespace Fx.Amiya.Service
 {
@@ -93,6 +94,7 @@ namespace Fx.Amiya.Service
         private IHuiShouQianPaymentService huiShouQianPaymentService;
         private IUserService userService;
         private IDalWechatPayInfo dalWechatPayInfo;
+        private IShanDePayMentService shanDePayMentService;
         public OrderService(
             IDalContentPlatformOrder dalContentPlatFormOrder,
             IDalOrderInfo dalOrderInfo,
@@ -123,7 +125,7 @@ namespace Fx.Amiya.Service
             IExpressManageService expressManageService,
             IFxSmsBasedTemplateSender smsSender,
              IMemberRankInfo memberRankInfoService,
-            IIntegrationAccount integrationAccountService, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor, IGoodsInfoService goodsInfoService2, IHuiShouQianPaymentService huiShouQianPaymentService, IUserService userService, IDalWechatPayInfo dalWechatPayInfo)
+            IIntegrationAccount integrationAccountService, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor, IGoodsInfoService goodsInfoService2, IHuiShouQianPaymentService huiShouQianPaymentService, IUserService userService, IDalWechatPayInfo dalWechatPayInfo, IShanDePayMentService shanDePayMentService)
         {
             this.dalOrderInfo = dalOrderInfo;
             this.dalCustomerInfo = dalCustomerInfo;
@@ -163,6 +165,7 @@ namespace Fx.Amiya.Service
             this.huiShouQianPaymentService = huiShouQianPaymentService;
             this.userService = userService;
             this.dalWechatPayInfo = dalWechatPayInfo;
+            this.shanDePayMentService = shanDePayMentService;
         }
 
         /// <summary>
@@ -5121,7 +5124,7 @@ namespace Fx.Amiya.Service
             var balance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(cartOrderAddDto.CustomerId);
             if (totalIntegral > balance) throw new Exception("积分余额不足！");
             //integralOrderList = amiyaOrderList.Where(e => e.ExchangeType == (int)ExchangeType.Integration).ToList();
-            moneyOrintegralMoneyOrderList = amiyaOrderList.Where(e => e.ExchangeType == (int)ExchangeType.HuiShouQian || e.ExchangeType == (int)ExchangeType.Wechat || e.ExchangeType == (int)ExchangeType.PointAndMoney).ToList();
+            moneyOrintegralMoneyOrderList = amiyaOrderList.Where(e => e.ExchangeType == (int)ExchangeType.HuiShouQian || e.ExchangeType == (int)ExchangeType.ShanDePay || e.ExchangeType == (int)ExchangeType.PointAndMoney).ToList();
 
             PayRequestInfoDto payRequestInfoDto = null;
 
@@ -5131,8 +5134,8 @@ namespace Fx.Amiya.Service
 
                 if (cartOrderAddDto.AppId == "wx8747b7f34c0047eb")
                 {
-                    //微信支付
-                    payRequestInfoDto = await AddWechatMoneyOrPointAndMoneyTradeAsync(moneyOrintegralMoneyOrderList, voucher, cartOrderAddDto.CustomerId, cartOrderAddDto.AddressId.Value, cartOrderAddDto.Remark, cartOrderAddDto.OpenId, cartOrderAddDto.AppId);
+                    //杉德支付
+                    payRequestInfoDto = await AddShanDeMoneyOrPointAndMoneyTradeAsync(moneyOrintegralMoneyOrderList, voucher, cartOrderAddDto.CustomerId, cartOrderAddDto.AddressId.Value, cartOrderAddDto.Remark, cartOrderAddDto.OpenId, cartOrderAddDto.AppId);
                 }
                 else
                 {
@@ -5232,7 +5235,7 @@ namespace Fx.Amiya.Service
                 {
                     if (appId == "wx8747b7f34c0047eb")
                     {
-                        cartCreateOrderDto.ExchangeType = (int)ExchangeType.Wechat;
+                        cartCreateOrderDto.ExchangeType = (int)ExchangeType.ShanDePay;
                     }
                     else
                     {
@@ -5497,6 +5500,99 @@ namespace Fx.Amiya.Service
                 payRequestInfo.paySign = payRequest.paySign;
                 //交易信息添加支付交易订单号
                 await this.TradeAddTransNoAsync(orderTradeAdd.Id, orderTradeAdd.Id);
+
+                //扣除库存
+                foreach (var item in moneyOrPointOrderList)
+                {
+                    await _goodsInfoService.ReductionGoodsInventoryQuantityAsync(item.GoodsId, item.Quantity.Value);
+                }
+
+                //如果包含积分加钱购订单扣除积分(放在最后解决积分回滚问题)
+                if (moneyOrPointOrderList.Sum(e => e.IntegrationQuantity) > 0)
+                {
+                    UseIntegrationDto useIntegrationDto = new UseIntegrationDto();
+                    useIntegrationDto.CustomerId = customerId;
+                    useIntegrationDto.OrderId = orderTradeAdd.Id;
+                    useIntegrationDto.Date = DateTime.Now;
+                    useIntegrationDto.UseQuantity = moneyOrPointOrderList.Sum(e => e.IntegrationQuantity).Value;
+                    await integrationAccountService.UseByGoodsConsumption(useIntegrationDto);
+                }
+                unitOfWork.Commit();
+                return payRequestInfo;
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw new Exception("商城商品下单失败！");
+            }
+        }
+        /// <summary>
+        /// 添加钱或积分加钱购交易订单并调用杉德支付生成微信支付支付信息
+        /// </summary>
+        /// <returns></returns>
+        private async Task<PayRequestInfoDto> AddShanDeMoneyOrPointAndMoneyTradeAsync(List<CartCreateOrderDto> moneyOrPointOrderList, CustomerConsumptioVoucherInfoDto voucher, string customerId, int addressId, string remark, string OpenId, string appId)
+        {
+
+            try
+            {
+                unitOfWork.BeginTransaction();
+                var customerInfo = await dalCustomerInfo.GetAll().Where(e => e.Id == customerId).SingleOrDefaultAsync();
+                //绑定主播
+                var belongAnchorId = await userService.BindUserBelongAppIdAsync(customerInfo.UserId, customerInfo.Id);
+                //计算全局抵用券折扣价格
+                if (voucher != null && !voucher.IsSpecifyProduct)
+                {
+                    if (voucher.IsNeedMinPrice)
+                    {
+                        if (moneyOrPointOrderList.Sum(e => e.ActualPayment).Value < voucher.MinPrice) throw new Exception("商品支付总金额不满足抵用券最低消费金额！");
+                    }
+
+                    moneyOrPointOrderList.First().IsUseCoupon = true;
+                    moneyOrPointOrderList.First().CouponId = voucher.CustomerConsumptionVoucherId;
+                    if (voucher.Type == (int)ConsumptionVoucherType.Material)
+                    {
+                        moneyOrPointOrderList.First().DeductMoney = voucher.DeductMoney;
+                    }
+                    else if (voucher.Type == (int)ConsumptionVoucherType.Discount)
+                    {
+                        var deductedMoney = Math.Ceiling(moneyOrPointOrderList.First().ActualPayment.Value * voucher.DeductMoney);
+                        moneyOrPointOrderList.First().DeductMoney = moneyOrPointOrderList.First().ActualPayment.Value - deductedMoney;
+                    }
+                }
+                CartOrderTradeAddDto orderTradeAdd = new CartOrderTradeAddDto();
+                orderTradeAdd.Id = Guid.NewGuid().ToString().Replace("-", "");
+                orderTradeAdd.CustomerId = customerId;
+                orderTradeAdd.CreateDate = DateTime.Now;
+                orderTradeAdd.AddressId = addressId;
+                orderTradeAdd.Remark = remark;
+                orderTradeAdd.IsAdminAdd = false;
+                foreach (var item in moneyOrPointOrderList)
+                {
+                    item.TradeId = orderTradeAdd.Id;
+                    item.ActualPayment = (item.ActualPayment - item.DeductMoney <= 0) ? 0.01m : (item.ActualPayment - item.DeductMoney);
+                    item.BelongLiveAnchorId = belongAnchorId.HasValue ? belongAnchorId.Value : 0;
+                }
+                orderTradeAdd.OrderInfoAddList = moneyOrPointOrderList;
+
+                //添加订单
+                await AddAmiyaCartOrderWithNoTransactionAsync(orderTradeAdd);
+                //生成支付信息
+                ShanDeOrderInfo shanDeOrderInfo = new ShanDeOrderInfo();
+                shanDeOrderInfo.AppId = appId;
+                shanDeOrderInfo.CreateDate = DateTime.Now;
+                shanDeOrderInfo.OpenId = OpenId;
+                shanDeOrderInfo.TotalFee = orderTradeAdd.OrderInfoAddList.Sum(e => e.ActualPayment) ?? 0.01m;
+                shanDeOrderInfo.TradeId = orderTradeAdd.Id;
+                var result = await shanDePayMentService.OrderAsync(shanDeOrderInfo);
+                if (result.Success == false) throw new Exception("下单失败,请重新下单");
+                PayRequestInfoDto payRequestInfo = new PayRequestInfoDto();
+                payRequestInfo.appId = result.PayParam.AppId;
+                payRequestInfo.package = result.PayParam.Package;
+                payRequestInfo.timeStamp = result.PayParam.TimeStamp;
+                payRequestInfo.nonceStr = result.PayParam.NonceStr;
+                payRequestInfo.paySign = result.PayParam.PaySign;
+                //交易信息添加支付交易订单号
+                await this.TradeAddTransNoAsync(orderTradeAdd.Id, result.TransNo);
 
                 //扣除库存
                 foreach (var item in moneyOrPointOrderList)

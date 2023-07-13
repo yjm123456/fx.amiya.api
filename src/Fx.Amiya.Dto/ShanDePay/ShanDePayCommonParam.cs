@@ -19,7 +19,7 @@ namespace Fx.Amiya.Dto.ShanDePay
         /// 代理商应用ID/商户应用ID
         /// </summary>
         public string app_id { get; set; }
-        public string method { get; set; } = "trade.percreate";
+        public string method { get; set; } = "trade.create";
         /// <summary>
         /// 接口版本号
         /// </summary>
@@ -31,7 +31,7 @@ namespace Fx.Amiya.Dto.ShanDePay
         /// <summary>
         /// 签名类型
         /// </summary>
-        public string sign_type = "RSA2";
+        public string sign_type = "RSA";
         /// <summary>
         /// 字符编码
         /// </summary>
@@ -48,6 +48,6 @@ namespace Fx.Amiya.Dto.ShanDePay
         /// 业务参数
         /// </summary>
         public string biz_content { get; set; }
-
+        
     }
 }

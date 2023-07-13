@@ -11,19 +11,6 @@ namespace Fx.Amiya.Dto.ShanDePay
     /// </summary>
     public class BizContent
     {
-        
-        public string pay_way { get; set; } = "WECHAT";
-        public string pay_type { get; set; } = "JSAPI";
-        
-        
-        /// <summary>
-        /// 订单总金额
-        /// </summary>
-        public decimal total_amount { get; set; }
-        /// <summary>
-        /// 商户订单号不可重复
-        /// </summary>
-        public string out_order_no { get; set; }
         public string body { get; set; } = "商品支付";
         /// <summary>
         /// 微信用户openid
@@ -34,6 +21,7 @@ namespace Fx.Amiya.Dto.ShanDePay
         /// 订单创建时间 order
         /// </summary>
         public string create_time { get; set; }
+        
         /// <summary>
         /// 小程序appid
         /// </summary>
@@ -42,10 +30,27 @@ namespace Fx.Amiya.Dto.ShanDePay
         /// 微信用户openid
         /// </summary>
         public string mer_buyer_id { get; set; }
+        public string notify_url { get; set; } = "https://www.amyk.cn/amiya/wxmini/notify/shanDePayResultNotify";
+        /// <summary>
+        /// 商户订单号不可重复
+        /// </summary>
+        public string out_order_no { get; set; }
+        public string pay_type { get; set; } = "JSAPI";
+        public string pay_way { get; set; } = "WECHAT";
+        /// <summary>
+        /// 自定义字段,用于存储tradeid
+        /// </summary>
+        public string req_reserved { get; set; }
         /// <summary>
         /// 门店号
         /// </summary>
         public string store_id { get; set; }
+        /// <summary>
+        /// 订单总金额
+        /// </summary>
+        public decimal total_amount { get; set; }
+       
+        
         /*/// <summary>
         /// 特殊参数 json格式
         /// </summary>

@@ -848,7 +848,8 @@ namespace Fx.Amiya.Modules.Goods.AppService
             {ExchangeType.Wechat,"微信支付"},
             {ExchangeType.Alipay,"支付宝"},
             { ExchangeType.HuiShouQian,"慧收钱"},
-            { ExchangeType.PointAndMoney,"积分加钱购"}
+            { ExchangeType.PointAndMoney,"积分加钱购"},
+            {ExchangeType.ShanDePay,"杉德支付" }
         };
     }
 }

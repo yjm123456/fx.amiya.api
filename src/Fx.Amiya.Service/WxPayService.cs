@@ -24,13 +24,15 @@ namespace Fx.Amiya.Service
         private readonly IOrderService orderService;
         private readonly IDalCustomerInfo dalCustomerInfo;
         private readonly IDalWechatPayInfo dalWechatPayInfo;
-        public WxPayService(IDalOrderRefund dalOrderRefund, IHuiShouQianPaymentService huiShouQianPaymentService, IOrderService orderService, IDalCustomerInfo dalCustomerInfo, IDalWechatPayInfo dalWechatPayInfo)
+        private readonly IShanDePayMentService shanDePayMentService;
+        public WxPayService(IDalOrderRefund dalOrderRefund, IHuiShouQianPaymentService huiShouQianPaymentService, IOrderService orderService, IDalCustomerInfo dalCustomerInfo, IDalWechatPayInfo dalWechatPayInfo, IShanDePayMentService shanDePayMentService)
         {
             this.dalOrderRefund = dalOrderRefund;
             this.huiShouQianPaymentService = huiShouQianPaymentService;
             this.orderService = orderService;
             this.dalCustomerInfo = dalCustomerInfo;
             this.dalWechatPayInfo = dalWechatPayInfo;
+            this.shanDePayMentService = shanDePayMentService;
         }
 
         /// <summary>
@@ -46,6 +48,7 @@ namespace Fx.Amiya.Service
             {
                 throw new Exception("用户编号错误");
             }
+            //慧收钱退款
             if (customerInfo.AppId == "wx695942e4818de445" && (refundOrder.ExchangeType == (int)ExchangeType.PointAndMoney || refundOrder.ExchangeType == (int)ExchangeType.HuiShouQian))
             {
                 //退还积分
@@ -53,6 +56,16 @@ namespace Fx.Amiya.Service
                 var refunResult = await huiShouQianPaymentService.CreateHuiShouQianAndPointRefundOrder(refundOrderId);
                 return refunResult;
             }
+            
+
+            //杉德支付退款
+            if (customerInfo.AppId == "wx8747b7f34c0047eb" && (refundOrder.ExchangeType == (int)ExchangeType.PointAndMoney || refundOrder.ExchangeType == (int)ExchangeType.ShanDePay)){
+                await orderService.CancelPointAndMoneyOrderWithNoTransactionAsync(refundOrder.TradeId, refundOrder.CustomerId);
+                var refunResult = await shanDePayMentService.CreateRefundOrderAsync(refundOrderId);
+                return refunResult;
+            }
+
+            //微信支付退款
             if (refundOrder == null) { throw new Exception("退款编号错误"); }
             if (refundOrder.CheckState != (int)CheckState.CheckSuccess) throw new Exception("只有审核通过的订单才能退款");
             var success = dalOrderRefund.GetAll().Where(e => e.TradeId == refundOrder.TradeId && e.RefundState == (int)RefundState.RefundSuccess).ToList();
