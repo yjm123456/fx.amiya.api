@@ -471,7 +471,7 @@ namespace Fx.Amiya.Service
             try
             {
                 var bindCustomerServiceInfoResult = from d in dalBindCustomerService.GetAll()
-                                                    where (d.AllPrice > 0.00M)
+                                                    where (d.AllPrice >0)
                                                     select new BindCustomerServiceDto
                                                     {
                                                         Id = d.Id,
@@ -511,8 +511,8 @@ namespace Fx.Amiya.Service
 
                 foreach (var x in result)
                 {
-                    var yesterDayStartDate = DateTime.Now.Date;
-                    var yesterDayEndDate = DateTime.Now.Date.AddDays(1);
+                    var yesterDayStartDate = DateTime.Now.Date.AddDays(-1);
+                    var yesterDayEndDate = DateTime.Now.Date;
                     //查询昨日增长量
                     var insertLogData = await dalBindCustomerRFMLevelUpdateLog.GetAll().Where(z => z.To == x.RFMType && z.CreateDate >= yesterDayStartDate && z.CreateDate < yesterDayEndDate).CountAsync();
                     //查询昨日增流失
