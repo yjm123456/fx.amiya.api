@@ -430,10 +430,6 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         [HttpPost]
         public async Task<ResultData<OrderAddResultVo>> AddOrderAsync(OrderAddVo orderAdd)
         {
-            if (orderAdd.ExchangeType != 0 && orderAdd.ExchangeType != 4 && orderAdd.ExchangeType != 2)
-            {
-                throw new Exception("不支持的支付方式");
-            }
             var token = tokenReader.GetToken();
             var sessionInfo = sessionStorage.GetSession(token);
             string customerId = sessionInfo.FxCustomerId;
@@ -489,13 +485,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 OrderInfoAddDto amiyaOrder = new OrderInfoAddDto();
                 if (goodsInfo.ExchangeType == ExchangeType.ThirdPartyPayment)
                 {
-                    if (orderAdd.ExchangeType != 4 && orderAdd.ExchangeType != 2) throw new Exception("付款方式错误");
+                    //if (orderAdd.ExchangeType != 4 && orderAdd.ExchangeType != 2) throw new Exception("付款方式错误");
                     IsExistThirdPartPay = true;
-                    if (orderAdd.ExchangeType == 4)
+                    if (appId == "wx695942e4818de445")
                     {
                         amiyaOrder.ExchangeType = (int)ExchangeType.HuiShouQian;
                     }
-                    else if (orderAdd.ExchangeType == 2)
+                    else if (appId == "wx8747b7f34c0047eb")
                     {
                         //amiyaOrder.ExchangeType = (int)ExchangeType.Wechat;
                         amiyaOrder.ExchangeType = (int)ExchangeType.ShanDePay;
@@ -761,7 +757,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 }
 
                 //杉德支付
-                if (orderAdd.ExchangeType == 2)
+                if (appId == "wx8747b7f34c0047eb")
                 {
                     ShanDeOrderInfo shanDeOrderInfo = new ShanDeOrderInfo();
                     shanDeOrderInfo.AppId = appId;
@@ -812,30 +808,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     }*/
                     //交易信息添加支付交易订单号
                     await orderService.TradeAddTransNoAsync(tradeId, result.TransNo);
-                }
-                else if (orderAdd.ExchangeType == 1)
-                {
-                    #region 支付宝支付
-                    SortedDictionary<string, string> sParaTemp = new SortedDictionary<string, string>();
-                    AliPayConfig Config = new AliPayConfig();
-                    sParaTemp.Add("service", Config.service);
-                    sParaTemp.Add("partner", Config.seller_id);
-                    sParaTemp.Add("seller_id", Config.seller_id);
-                    sParaTemp.Add("_input_charset", Config.input_charset.ToLower());
-                    sParaTemp.Add("payment_type", Config.payment_type);
-                    sParaTemp.Add("notify_url", Config.notify_url);
-                    sParaTemp.Add("return_url", Config.return_url);
-                    sParaTemp.Add("anti_phishing_key", Config.anti_phishing_key);
-                    sParaTemp.Add("exter_invoke_ip", Config.exter_invoke_ip);
-                    sParaTemp.Add("out_trade_no", tradeId);
-                    sParaTemp.Add("subject", orderId);
-                    sParaTemp.Add("total_fee", totalFee.ToString("0.00"));
-                    sParaTemp.Add("body", goodsName);
-                    var res = _aliPayService.BuildRequest(sParaTemp);
-                    orderAddResult.AlipayUrl = res.Result;
-                    #endregion
-                }
-                else if (orderAdd.ExchangeType == 4)
+                }else if (appId == "wx695942e4818de445")
                 {
                     #region 慧收钱支付
                     HuiShouQianPayRequestInfo huiShouQianPayRequestInfo = new HuiShouQianPayRequestInfo();
@@ -860,6 +833,29 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     orderAddResult.PayRequestInfo = payRequestInfo;
                     #endregion
                 }
+                /*else if (orderAdd.ExchangeType == 1)
+                {
+                    #region 支付宝支付
+                    SortedDictionary<string, string> sParaTemp = new SortedDictionary<string, string>();
+                    AliPayConfig Config = new AliPayConfig();
+                    sParaTemp.Add("service", Config.service);
+                    sParaTemp.Add("partner", Config.seller_id);
+                    sParaTemp.Add("seller_id", Config.seller_id);
+                    sParaTemp.Add("_input_charset", Config.input_charset.ToLower());
+                    sParaTemp.Add("payment_type", Config.payment_type);
+                    sParaTemp.Add("notify_url", Config.notify_url);
+                    sParaTemp.Add("return_url", Config.return_url);
+                    sParaTemp.Add("anti_phishing_key", Config.anti_phishing_key);
+                    sParaTemp.Add("exter_invoke_ip", Config.exter_invoke_ip);
+                    sParaTemp.Add("out_trade_no", tradeId);
+                    sParaTemp.Add("subject", orderId);
+                    sParaTemp.Add("total_fee", totalFee.ToString("0.00"));
+                    sParaTemp.Add("body", goodsName);
+                    var res = _aliPayService.BuildRequest(sParaTemp);
+                    orderAddResult.AlipayUrl = res.Result;
+                    #endregion
+                }*/
+
             }
             return ResultData<OrderAddResultVo>.Success().AddData("orderAddResult", orderAddResult);
         }
