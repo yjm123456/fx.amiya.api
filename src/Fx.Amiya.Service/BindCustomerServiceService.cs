@@ -471,7 +471,7 @@ namespace Fx.Amiya.Service
             try
             {
                 var bindCustomerServiceInfoResult = from d in dalBindCustomerService.GetAll()
-                                                    where (d.AllPrice >0)
+                                                    where (d.AllPrice > 0)
                                                     select new BindCustomerServiceDto
                                                     {
                                                         Id = d.Id,

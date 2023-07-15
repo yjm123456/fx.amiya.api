@@ -466,8 +466,8 @@ namespace Fx.Amiya.Background.Api
         /// </summary>
         /// <returns></returns>
         /// <returns></returns>
-        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 1, SkipWhileExecuting = true)]//1分钟运行一次
-        //[Invoke(Begin = "03:00:00", Interval = 1000 * 60 * 60 * 24 + 60 * 1000, SkipWhileExecuting = true)]
+        //[Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 1, SkipWhileExecuting = true)]//1分钟运行一次
+        [Invoke(Begin = "03:00:00", Interval = 1000 * 60 * 60 * 24 + 60 * 1000, SkipWhileExecuting = true)]
         public async Task BindCustomerServiceRFMUpdate()
         {
             unitOfWork.BeginTransaction();
