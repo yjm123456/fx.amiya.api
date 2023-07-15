@@ -94,7 +94,7 @@ namespace Fx.Amiya.Service
                                 bindCustomerService.AllPrice = 0.00M;
                             }
                             bindCustomerService.AllOrderCount = order.Quantity;
-                            bindCustomerService.RfmType = (int)RFMTagLevel.R8;
+                            bindCustomerService.RfmType = 9;
                             bindCustomerServiceList.Add(bindCustomerService);
                         }
                     }
@@ -395,7 +395,7 @@ namespace Fx.Amiya.Service
                     bindCustomerService.UserId = customer?.UserId;
                     bindCustomerService.CreateBy = employeeId;
                     bindCustomerService.CreateDate = date;
-                    bindCustomerService.RfmType = (int)RFMTagLevel.R8;
+                    bindCustomerService.RfmType = 9;
                     await dalBindCustomerService.AddAsync(bindCustomerService, true);
                 }
 
@@ -428,7 +428,7 @@ namespace Fx.Amiya.Service
             bindCustomerService.AllOrderCount = 1;
             bindCustomerService.NewLiveAnchor = addDto.NewLiveAnchor;
             bindCustomerService.NewWechatNo = addDto.NewWechatNo;
-            bindCustomerService.RfmType = (int)RFMTagLevel.R8;
+            bindCustomerService.RfmType = 9;
             await dalBindCustomerService.AddAsync(bindCustomerService, true);
 
 

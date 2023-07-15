@@ -2176,9 +2176,11 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static string GetRFMText(int value) {
+        public static string GetRFMText(int value)
+        {
             string str = "";
-            switch (value) {
+            switch (value)
+            {
                 case 0:
                     str = "低";
                     break;
@@ -2188,15 +2190,18 @@ namespace Fx.Amiya.Service
                 case 2:
                     str = "VIP";
                     break;
-                default: str = "";
+                default:
+                    str = "";
                     break;
             }
             return str;
         }
 
-        public static string GetRFMTagText(int tag) {
+        public static string GetRFMTagText(int tag)
+        {
             string str = "";
-            switch (tag) {
+            switch (tag)
+            {
                 case 0:
                     str = "超级VIP（RV）";
                     break;
@@ -2224,7 +2229,9 @@ namespace Fx.Amiya.Service
                 case 8:
                     str = "一般挽留客户(R8)";
                     break;
-                
+                default:
+                   str= "/";
+                    break;
             }
             return str;
         }
@@ -2261,7 +2268,7 @@ namespace Fx.Amiya.Service
                 case "R8":
                     t = 8;
                     break;
-               
+
             }
             return t;
         }
