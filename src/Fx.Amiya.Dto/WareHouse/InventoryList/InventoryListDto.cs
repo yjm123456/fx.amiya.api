@@ -52,6 +52,10 @@ namespace Fx.Amiya.Dto.WareHouse.InventoryList
         /// </summary>
         public string WareHouseName { get; set; }
         /// <summary>
+        /// 货架
+        /// </summary>
+        public string StorageRacksName { get; set; }
+        /// <summary>
         /// 盘前单价
         /// </summary>
         public decimal BeforeInventorySinglePrice { get; set; }

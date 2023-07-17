@@ -56,4 +56,28 @@ CREATE TABLE `amiyadb`.`tbl_bind_customer_rfm_level_update_log` (
 ------------------------------------------余建明 2023/07/13 END--------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
+-----------------------------------------------余建明 2023/07/17 BEGIN--------------------------------------------
+CREATE TABLE `amiyadb`.`tbl_amiya_warehouse_storage_racks` (
+  `id` VARCHAR(50) NOT NULL,
+  `warehouse_id` VARCHAR(50) NOT NULL,
+  `name` VARCHAR(100) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `create_by` INT UNSIGNED NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_tbl_warehouse_storage_racks_warehouseinfo_idx` (`warehouse_id` ASC) VISIBLE,
+  INDEX `fk_tb_warehouse_storage_racks_empinfo_idx` (`create_by` ASC) VISIBLE,
+  CONSTRAINT `fk_tbl_warehouse_storage_racks_warehouseinfo`
+    FOREIGN KEY (`warehouse_id`)
+    REFERENCES `amiyadb`.`tbl_amiya_warehouse` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_warehouse_storage_racks_empinfo`
+    FOREIGN KEY (`create_by`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+-----------------------------------------------余建明 2023/07/17 END--------------------------------------------
 

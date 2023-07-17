@@ -29,7 +29,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var inventoryList = from d in dalInventoryListService.GetAll()
+                var inventoryList = from d in dalInventoryListService.GetAll().Include(x => x.WareHouseInfo).ThenInclude(x => x.WareHouseNameManage).ThenInclude(x => x.AmiyaWareHouseStorageRacks)
                                     select d;
                 if (startDate != null && endDate != null)
                 {
@@ -46,7 +46,8 @@ namespace Fx.Amiya.Service
                                            {
                                                Id = d.Id,
                                                GoodsName = d.WareHouseInfo.GoodsName,
-                                               Unit=d.WareHouseInfo.Unit,
+                                               StorageRacksName = d.WareHouseInfo.WareHouseNameManage.AmiyaWareHouseStorageRacks.Where(x => x.Id == d.WareHouseInfo.StorageRacksId).FirstOrDefault().Name,
+                                               Unit =d.WareHouseInfo.Unit,
                                                WareHouseName=d.WareHouseInfo.WareHouseNameManage.Name,
                                                InventoryState = d.InventoryState,
                                                InventoryStateText = ServiceClass.GetInventoryStateText(d.InventoryState),
@@ -152,7 +153,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var inventoryListService = await dalInventoryListService.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                var inventoryListService = await dalInventoryListService.GetAll().FirstOrDefaultAsync(e => e.Id == updateDto.Id);
                 if (inventoryListService == null)
                     throw new Exception("盘库编号错误！");
                 inventoryListService.Id = updateDto.Id;
@@ -177,7 +178,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var inventoryListService = await dalInventoryListService.GetAll().SingleOrDefaultAsync(e => e.Id == id);
+                var inventoryListService = await dalInventoryListService.GetAll().FirstOrDefaultAsync(e => e.Id == id);
 
                 if (inventoryListService == null)
                     throw new Exception("盘库编号错误");
@@ -194,7 +195,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var inventoryList = from d in dalInventoryListService.GetAll()
+                var inventoryList = from d in dalInventoryListService.GetAll().Include(x => x.WareHouseInfo).ThenInclude(x => x.WareHouseNameManage).ThenInclude(x => x.AmiyaWareHouseStorageRacks)
                                     select d;
                 if (startDate != null && endDate != null)
                 {
@@ -212,6 +213,7 @@ namespace Fx.Amiya.Service
                                                Id = d.Id,
                                                GoodsName = d.WareHouseInfo.GoodsName,
                                                Unit = d.WareHouseInfo.Unit,
+                                               StorageRacksName = d.WareHouseInfo.WareHouseNameManage.AmiyaWareHouseStorageRacks.Where(x => x.Id == d.WareHouseInfo.StorageRacksId).FirstOrDefault().Name,
                                                WareHouseName = d.WareHouseInfo.WareHouseNameManage.Name,
                                                InventoryState = d.InventoryState,
                                                InventoryStateText = ServiceClass.GetInventoryStateText(d.InventoryState),

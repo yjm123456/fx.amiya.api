@@ -14,5 +14,7 @@ namespace Fx.Amiya.DbModels.Model
 
 
         public List<AmiyaWareHouse> WareHouse { get; set; }
+
+        public List<AmiyaWareHouseStorageRacks> AmiyaWareHouseStorageRacks { get; set; }
     }
 }

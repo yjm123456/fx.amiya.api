@@ -28,7 +28,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var amiyaOutWareHouseInfo = from d in dalAmiyaOutWareHouseService.GetAll()
+                var amiyaOutWareHouseInfo = from d in dalAmiyaOutWareHouseService.GetAll().Include(x => x.WareHouseInfo).ThenInclude(x => x.WareHouseNameManage).ThenInclude(x => x.AmiyaWareHouseStorageRacks)
                                             select d;
                 if (startDate != null && endDate != null)
                 {
@@ -48,6 +48,7 @@ namespace Fx.Amiya.Service
                                                    Unit=d.WareHouseInfo.Unit,
                                                    WareHouseName = d.WareHouseInfo.WareHouseNameManage.Name,
                                                    GoodsName = d.WareHouseInfo.GoodsName,
+                                                   StorageRacksName = d.WareHouseInfo.WareHouseNameManage.AmiyaWareHouseStorageRacks.Where(x => x.Id == d.WareHouseInfo.StorageRacksId).FirstOrDefault().Name,
                                                    SinglePrice = d.SinglePrice,
                                                    Num = d.Num,
                                                    UseEmployee=d.UseEmployee.Name,
@@ -125,7 +126,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var amiyaOutWareHouseService = await dalAmiyaOutWareHouseService.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                var amiyaOutWareHouseService = await dalAmiyaOutWareHouseService.GetAll().FirstOrDefaultAsync(e => e.Id == updateDto.Id);
                 if (amiyaOutWareHouseService == null)
                     throw new Exception("出库编号错误！");
                 amiyaOutWareHouseService.Id = updateDto.Id;
@@ -148,7 +149,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var amiyaOutWareHouseService = await dalAmiyaOutWareHouseService.GetAll().SingleOrDefaultAsync(e => e.Id == id);
+                var amiyaOutWareHouseService = await dalAmiyaOutWareHouseService.GetAll().FirstOrDefaultAsync(e => e.Id == id);
 
                 if (amiyaOutWareHouseService == null)
                     throw new Exception("出库编号错误");
@@ -165,7 +166,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var amiyaOutWareHouseInfo = from d in dalAmiyaOutWareHouseService.GetAll()
+                var amiyaOutWareHouseInfo = from d in dalAmiyaOutWareHouseService.GetAll().Include(x => x.WareHouseInfo).ThenInclude(x => x.WareHouseNameManage).ThenInclude(x => x.AmiyaWareHouseStorageRacks)
                                             select d;
                 if (startDate != null && endDate != null)
                 {
@@ -188,6 +189,7 @@ namespace Fx.Amiya.Service
                                                    SinglePrice = d.SinglePrice,
                                                    Num = d.Num,
                                                    AllPrice = d.AllPrice,
+                                                   StorageRacksName = d.WareHouseInfo.WareHouseNameManage.AmiyaWareHouseStorageRacks.Where(x => x.Id == d.WareHouseInfo.StorageRacksId).FirstOrDefault().Name,
                                                    CreateBy = d.CreateBy,
                                                    CreateByEmpName = d.Employee.Name,
                                                    CreateDate = d.CreateDate,

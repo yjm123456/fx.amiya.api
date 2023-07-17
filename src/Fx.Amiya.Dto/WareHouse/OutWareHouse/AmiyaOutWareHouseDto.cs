@@ -27,6 +27,10 @@ namespace Fx.Amiya.Dto.WareHouse.OutWareHouse
         /// 物料名称
         /// </summary>
         public string GoodsName { get; set; }
+        /// <summary>
+        /// 货架
+        /// </summary>
+        public string StorageRacksName { get; set; }
 
         /// <summary>
         /// 单位

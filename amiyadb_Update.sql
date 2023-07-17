@@ -40,3 +40,28 @@ ALTER TABLE `tbl_wechat_payinfo`
 
 -------------------------------------------------王健 2023/07/13 END-------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+-----------------------------------------------余建明 2023/07/17 BEGIN--------------------------------------------
+--小黄车登记列表新增获客方式
+ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
+ADD COLUMN `get_customer_type` INT NOT NULL DEFAULT 0 AFTER `product_type`;
+
+--库存板块新增货架id
+ALTER TABLE `amiyadb`.`tbl_amiya_warehouse` 
+ADD COLUMN `storage_racks_id` VARCHAR(50) NULL AFTER `total_price`;
+
+--货架管理主外键更改
+ALTER TABLE `amiyadb`.`tbl_amiya_warehouse_storage_racks` 
+DROP FOREIGN KEY `fk_tbl_warehouse_storage_racks_warehouseinfo`;
+ALTER TABLE `amiyadb`.`tbl_amiya_warehouse_storage_racks` 
+ADD INDEX `fk_tbl_warehouse_storage_racks_warehouseinfo_idx` (`warehouse_id` ASC) VISIBLE,
+DROP INDEX `fk_tbl_warehouse_storage_racks_warehouseinfo_idx` ;
+;
+ALTER TABLE `amiyadb`.`tbl_amiya_warehouse_storage_racks` 
+ADD CONSTRAINT `fk_tbl_warehouse_storage_racks_warehouseinfo`
+  FOREIGN KEY (`warehouse_id`)
+  REFERENCES `amiyadb`.`tbl_amiya_warehouse_name_manage` (`id`);
+
+-----------------------------------------------余建明 2023/07/17 END--------------------------------------------
+

@@ -44,7 +44,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var amiyaWareHouseService = from d in dalAmiyaWareHouseService.GetAll()
+                var amiyaWareHouseService = from d in dalAmiyaWareHouseService.GetAll().Include(x => x.WareHouseNameManage).ThenInclude(x => x.AmiyaWareHouseStorageRacks)
                                             where (keyword == null || d.GoodsName.Contains(keyword))
                                                && (string.IsNullOrEmpty(wareHouseInfoId) || d.GoodsSourceId == wareHouseInfoId)
                                             select new AmiyaWareHouseDto
@@ -53,6 +53,7 @@ namespace Fx.Amiya.Service
                                                 Unit = d.Unit,
                                                 GoodsName = d.GoodsName,
                                                 GoodsSourceName = d.WareHouseNameManage.Name,
+                                                StorageRacks = d.WareHouseNameManage.AmiyaWareHouseStorageRacks.Where(x => x.Id == d.StorageRacksId).FirstOrDefault().Name,
                                                 SinglePrice = d.SinglePrice,
                                                 Amount = d.Amount,
                                                 TotalPrice = d.TotalPrice,
@@ -72,7 +73,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var amiyaWareHouseService = from d in dalAmiyaWareHouseService.GetAll()
+                var amiyaWareHouseService = from d in dalAmiyaWareHouseService.GetAll().Include(x=>x.WareHouseNameManage).ThenInclude(x=>x.AmiyaWareHouseStorageRacks)
                                             where (keyword == null || d.GoodsName.Contains(keyword))
                                                && (string.IsNullOrEmpty(wareHouseInfoId) || d.GoodsSourceId == wareHouseInfoId)
                                             select new AmiyaWareHouseDto
@@ -81,6 +82,7 @@ namespace Fx.Amiya.Service
                                                 Unit = d.Unit,
                                                 GoodsName = d.GoodsName,
                                                 GoodsSourceName = d.WareHouseNameManage.Name,
+                                                StorageRacks = d.WareHouseNameManage.AmiyaWareHouseStorageRacks.Where(x => x.Id == d.StorageRacksId).FirstOrDefault().Name,
                                                 SinglePrice = d.SinglePrice,
                                                 Amount = d.Amount,
                                                 TotalPrice = d.TotalPrice,
@@ -104,6 +106,7 @@ namespace Fx.Amiya.Service
                 amiyaWareHouseService.Unit = addDto.Unit;
                 amiyaWareHouseService.GoodsName = addDto.GoodsName;
                 amiyaWareHouseService.GoodsSourceId = addDto.GoodsSourceId;
+                amiyaWareHouseService.StorageRacksId = addDto.StorageRacksId;
                 amiyaWareHouseService.SinglePrice = addDto.SinglePrice;
                 amiyaWareHouseService.Amount = addDto.Amount;
                 amiyaWareHouseService.TotalPrice = addDto.TotalPrice;
@@ -121,7 +124,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var amiyaWareHouseService = await dalAmiyaWareHouseService.GetAll().SingleOrDefaultAsync(e => e.Id == id);
+                var amiyaWareHouseService = await dalAmiyaWareHouseService.GetAll().FirstOrDefaultAsync(e => e.Id == id);
                 if (amiyaWareHouseService == null)
                 {
                     return new AmiyaWareHouseDto();
@@ -133,6 +136,7 @@ namespace Fx.Amiya.Service
                 amiyaWareHouseServiceDto.GoodsName = amiyaWareHouseService.GoodsName;
                 amiyaWareHouseServiceDto.GoodsSourceId = amiyaWareHouseService.GoodsSourceId;
                 amiyaWareHouseServiceDto.SinglePrice = amiyaWareHouseService.SinglePrice;
+                amiyaWareHouseServiceDto.StorageRacksId = amiyaWareHouseService.StorageRacksId;
                 amiyaWareHouseServiceDto.Amount = amiyaWareHouseService.Amount;
                 amiyaWareHouseServiceDto.TotalPrice = amiyaWareHouseService.TotalPrice;
 
@@ -157,6 +161,7 @@ namespace Fx.Amiya.Service
                 amiyaWareHouseService.Unit = updateDto.Unit;
                 amiyaWareHouseService.GoodsName = updateDto.GoodsName;
                 amiyaWareHouseService.GoodsSourceId = updateDto.GoodsSourceId;
+                amiyaWareHouseService.StorageRacksId = updateDto.StorageRacksId;
 
                 await dalAmiyaWareHouseService.UpdateAsync(amiyaWareHouseService, true);
 
@@ -173,7 +178,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var amiyaWareHouseService = await dalAmiyaWareHouseService.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                var amiyaWareHouseService = await dalAmiyaWareHouseService.GetAll().FirstOrDefaultAsync(e => e.Id == updateDto.Id);
                 if (amiyaWareHouseService == null)
                     throw new Exception("仓库编号错误！");
                 InventoryListAddDto inventoryListAddDto = new InventoryListAddDto();
@@ -208,7 +213,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var amiyaWareHouseService = await dalAmiyaWareHouseService.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+                var amiyaWareHouseService = await dalAmiyaWareHouseService.GetAll().FirstOrDefaultAsync(e => e.Id == updateDto.Id);
                 if (amiyaWareHouseService == null)
                     throw new Exception("仓库编号错误！");
                 if (amiyaWareHouseService.Amount - updateDto.Amount < 0)

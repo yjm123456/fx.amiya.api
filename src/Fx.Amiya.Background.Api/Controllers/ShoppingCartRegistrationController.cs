@@ -119,10 +119,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(d.EmergencyLevel),
                                                    Source = d.Source,
                                                    SourceText = d.SourceText,
-                                                   ProductType=d.ProductType,
-                                                   ProductTypeText=d.ProductTypeText,
+                                                   ProductType = d.ProductType,
+                                                   ProductTypeText = d.ProductTypeText,
                                                    BaseLiveAnchorId = d.BaseLiveAnchorId,
-                                                   BaseLiveAnchorName = d.BaseLiveAnchorName
+                                                   BaseLiveAnchorName = d.BaseLiveAnchorName,
+                                                   GetCustomerType = d.GetCustomerType,
+                                                   GetCustomerTypeText = d.GetCustomerTypeText
                                                };
 
                 FxPageInfo<ShoppingCartRegistrationVo> shoppingCartRegistrationPageInfo = new FxPageInfo<ShoppingCartRegistrationVo>();
@@ -162,6 +164,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.RecordDate = addVo.RecordDate;
                 addDto.ContentPlatFormId = addVo.ContentPlatFormId;
                 addDto.LiveAnchorId = addVo.LiveAnchorId;
+                addDto.GetCustomerType = addVo.GetCustomerType;
                 addDto.LiveAnchorWechatNo = addVo.LiveAnchorWechatNo;
                 addDto.CustomerNickName = addVo.CustomerNickName;
                 addDto.Phone = addVo.Phone;
@@ -235,6 +238,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.Price = shoppingCartRegistration.Price;
                 shoppingCartRegistrationVo.ConsultationType = shoppingCartRegistration.ConsultationType;
                 shoppingCartRegistrationVo.IsWriteOff = shoppingCartRegistration.IsWriteOff;
+                shoppingCartRegistrationVo.GetCustomerType = shoppingCartRegistration.GetCustomerType;
                 shoppingCartRegistrationVo.IsConsultation = shoppingCartRegistration.IsConsultation;
                 shoppingCartRegistrationVo.ConsultationDate = shoppingCartRegistration.ConsultationDate;
                 shoppingCartRegistrationVo.IsReturnBackPrice = shoppingCartRegistration.IsReturnBackPrice;
@@ -283,6 +287,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 ShoppingCartRegistrationVo shoppingCartRegistrationVo = new ShoppingCartRegistrationVo();
                 shoppingCartRegistrationVo.Id = shoppingCartRegistration.Id;
                 shoppingCartRegistrationVo.RecordDate = shoppingCartRegistration.RecordDate;
+                shoppingCartRegistrationVo.GetCustomerType = shoppingCartRegistration.GetCustomerType;
                 shoppingCartRegistrationVo.ContentPlatFormId = shoppingCartRegistration.ContentPlatFormId;
                 shoppingCartRegistrationVo.ContentPlatFormName = shoppingCartRegistration.ContentPlatFormName;
                 shoppingCartRegistrationVo.LiveAnchorId = shoppingCartRegistration.LiveAnchorId;
@@ -362,6 +367,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.IsReContent = updateVo.IsReContent;
                 updateDto.ReContent = updateVo.ReContent;
                 updateDto.RefundDate = updateVo.RefundDate;
+                updateDto.GetCustomerType = updateVo.GetCustomerType;
                 updateDto.RefundReason = updateVo.RefundReason;
                 updateDto.BadReviewDate = updateVo.BadReviewDate;
                 updateDto.BadReviewReason = updateVo.BadReviewReason;
@@ -489,6 +495,23 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetConsultationTypeListAsync()
         {
             var nameList = shoppingCartRegistrationService.GetShoppingCartConsultationTypeText();
+            var result = nameList.Select(e => new BaseIdAndNameVo<int>
+            {
+                Id = e.Key,
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("typeList", result);
+        }
+
+
+        /// <summary>
+        /// 获客方式列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("shoppingCartGetCustomerTypeList")] 
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetShoppingCartGetCustomerTypeListAsync()
+        {
+            var nameList = shoppingCartRegistrationService.GetShoppingCartGetCustomerTypeText();
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Key,

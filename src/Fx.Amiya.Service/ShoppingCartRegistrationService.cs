@@ -61,7 +61,7 @@ namespace Fx.Amiya.Service
             try
             {
                 var shoppingCartRegistration = from d in dalShoppingCartRegistration.GetAll()
-                                               where (keyword == null || d.Phone.Contains(keyword) || d.SubPhone.Contains(keyword) || d.CustomerNickName.Contains(keyword) || d.LiveAnchorWechatNo.Contains(keyword)|| d.Remark.Contains(keyword))
+                                               where (keyword == null || d.Phone.Contains(keyword) || d.SubPhone.Contains(keyword) || d.CustomerNickName.Contains(keyword) || d.LiveAnchorWechatNo.Contains(keyword) || d.Remark.Contains(keyword))
                                                && ((!startDate.HasValue && !endDate.HasValue) || d.RecordDate >= startDate.Value.Date && d.RecordDate < endDate.Value.AddDays(1).Date)
                                                && (string.IsNullOrEmpty(contentPlatFormId) || d.ContentPlatFormId == contentPlatFormId)
                                                && (!isAddWechat.HasValue || d.IsAddWeChat == isAddWechat)
@@ -120,7 +120,9 @@ namespace Fx.Amiya.Service
                                                    SourceText = ServiceClass.GetTiktokCustomerSourceText(d.Source),
                                                    ProductType = d.ProductType,
                                                    ProductTypeText = ServiceClass.GetShoppingCartTakeGoodsProductTypeText(d.ProductType),
-                                                   BaseLiveAnchorId = d.BaseLiveAnchorId
+                                                   BaseLiveAnchorId = d.BaseLiveAnchorId,
+                                                   GetCustomerType = d.GetCustomerType,
+                                                   GetCustomerTypeText = ServiceClass.GetShoppingCartGetCustomerTypeText(d.GetCustomerType),
                                                };
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
                 if (!employee.AmiyaPositionInfo.IsDirector)
@@ -217,6 +219,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.BadReviewContent = addDto.BadReviewContent;
                 shoppingCartRegistration.BadReviewDate = addDto.BadReviewDate;
                 shoppingCartRegistration.BadReviewReason = addDto.BadReviewReason;
+                shoppingCartRegistration.GetCustomerType = addDto.GetCustomerType;
                 shoppingCartRegistration.IsReContent = addDto.IsReContent;
                 shoppingCartRegistration.ReContent = addDto.ReContent;
                 shoppingCartRegistration.RefundDate = addDto.RefundDate;
@@ -287,6 +290,7 @@ namespace Fx.Amiya.Service
                     shoppingCartRegistration.IsCreateOrder = addDto.IsCreateOrder;
                     shoppingCartRegistration.IsSendOrder = addDto.IsSendOrder;
                     shoppingCartRegistration.EmergencyLevel = addDto.EmergencyLevel;
+                    shoppingCartRegistration.GetCustomerType = (int)ShoppingCartGetCustomerType.Ohter;
                     shoppingCartRegistration.Source = addDto.Source;
                     var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(addDto.LiveAnchorId);
                     if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
@@ -351,6 +355,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.IsBadReview = shoppingCartRegistration.IsBadReview;
                 shoppingCartRegistrationDto.EmergencyLevel = shoppingCartRegistration.EmergencyLevel;
                 shoppingCartRegistrationDto.Source = shoppingCartRegistration.Source;
+                shoppingCartRegistrationDto.GetCustomerType = shoppingCartRegistration.GetCustomerType;
                 shoppingCartRegistrationDto.ProductType = shoppingCartRegistration.ProductType;
                 shoppingCartRegistrationDto.SourceText = ServiceClass.GetTiktokCustomerSourceText(shoppingCartRegistration.Source);
                 shoppingCartRegistrationDto.BaseLiveAnchorId = shoppingCartRegistration.BaseLiveAnchorId;
@@ -390,6 +395,7 @@ namespace Fx.Amiya.Service
                 //shoppingCartRegistrationDto.LiveAnchorWeChatId = wechatResult.Id;
                 shoppingCartRegistrationDto.CustomerNickName = shoppingCartRegistration.CustomerNickName;
                 shoppingCartRegistrationDto.Phone = shoppingCartRegistration.Phone;
+                shoppingCartRegistrationDto.GetCustomerType = shoppingCartRegistration.GetCustomerType;
                 shoppingCartRegistrationDto.SubPhone = shoppingCartRegistration.SubPhone;
                 shoppingCartRegistrationDto.Price = shoppingCartRegistration.Price;
                 shoppingCartRegistrationDto.IsAddWeChat = shoppingCartRegistration.IsAddWeChat;
@@ -442,6 +448,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.LiveAnchorId = shoppingCartRegistration.LiveAnchorId;
                 shoppingCartRegistrationDto.LiveAnchorWechatNo = shoppingCartRegistration.LiveAnchorWechatNo;
                 shoppingCartRegistrationDto.CustomerNickName = shoppingCartRegistration.CustomerNickName;
+                shoppingCartRegistrationDto.GetCustomerType = shoppingCartRegistration.GetCustomerType;
                 shoppingCartRegistrationDto.Phone = shoppingCartRegistration.Phone;
                 shoppingCartRegistrationDto.SubPhone = shoppingCartRegistration.SubPhone;
                 shoppingCartRegistrationDto.Price = shoppingCartRegistration.Price;
@@ -521,6 +528,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.Phone = updateDto.Phone;
                 shoppingCartRegistration.SubPhone = updateDto.SubPhone;
                 shoppingCartRegistration.Price = updateDto.Price;
+                shoppingCartRegistration.GetCustomerType = updateDto.GetCustomerType;
                 shoppingCartRegistration.IsAddWeChat = updateDto.IsAddWeChat;
                 shoppingCartRegistration.ConsultationType = updateDto.ConsultationType;
                 shoppingCartRegistration.IsWriteOff = updateDto.IsWriteOff;
@@ -729,6 +737,24 @@ namespace Fx.Amiya.Service
             return emergencyLevelList;
         }
 
+        /// <summary>
+        /// 获取获客方式
+        /// </summary>
+        /// <returns></returns>
+        public List<BaseKeyValueDto<int>> GetShoppingCartGetCustomerTypeText()
+        {
+            var emergencyLevels = Enum.GetValues(typeof(ShoppingCartGetCustomerType));
+            List<BaseKeyValueDto<int>> emergencyLevelList = new List<BaseKeyValueDto<int>>();
+            foreach (var item in emergencyLevels)
+            {
+                BaseKeyValueDto<int> emergencyLevelDto = new BaseKeyValueDto<int>();
+                emergencyLevelDto.Key = Convert.ToInt32(item);
+                emergencyLevelDto.Value = ServiceClass.GetShoppingCartGetCustomerTypeText(emergencyLevelDto.Key);
+                emergencyLevelList.Add(emergencyLevelDto);
+            }
+            return emergencyLevelList;
+        }
+
         #region 【日数据业绩生成】
 
         /// <summary>
@@ -869,7 +895,7 @@ namespace Fx.Amiya.Service
                                                    SourceText = ServiceClass.GetTiktokCustomerSourceText(d.Source),
                                                    BaseLiveAnchorId = d.BaseLiveAnchorId,
                                                    BaseLiveAnchorName = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == d.BaseLiveAnchorId).SingleOrDefault() == null ? "" : dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == d.BaseLiveAnchorId).SingleOrDefault().LiveAnchorName,
-                                                   ProductTypeText=ServiceClass.GetShoppingCartTakeGoodsProductTypeText(d.ProductType)
+                                                   ProductTypeText = ServiceClass.GetShoppingCartTakeGoodsProductTypeText(d.ProductType)
                                                };
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
                 if (!employee.AmiyaPositionInfo.IsDirector)

@@ -59,6 +59,11 @@ namespace Fx.Amiya.DbModels.Model
         /// 主播基础id
         /// </summary>
         public string BaseLiveAnchorId { get; set; }
+
+        /// <summary>
+        /// 获客方式
+        /// </summary>
+        public int GetCustomerType { get; set; }
         
         public Contentplatform Contentplatform { get; set; }
         public LiveAnchor LiveAnchor { get; set; }

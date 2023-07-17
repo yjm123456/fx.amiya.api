@@ -31,6 +31,14 @@ namespace Fx.Amiya.Dto.WareHouse.WareHouseInfo
         /// 归属仓库
         /// </summary>
         public string GoodsSourceName { get; set; }
+        /// <summary>
+        /// 归属货架id
+        /// </summary>
+        public string StorageRacksId { get; set; }
+        /// <summary>
+        /// 归属货架
+        /// </summary>
+        public string StorageRacks { get; set; }
 
         /// <summary>
         /// 单价

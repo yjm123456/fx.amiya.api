@@ -65,6 +65,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   Unit = d.Unit,
                                   GoodsName = d.GoodsName,
                                   GoodsSourceName = d.GoodsSourceName,
+                                  StorageRacks=d.StorageRacks,
                                   SinglePrice = d.SinglePrice,
                                   Amount = d.Amount,
                                   TotalPrice = d.TotalPrice,
@@ -100,6 +101,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.GoodsName = addVo.GoodsName;
                 addDto.GoodsSourceId = addVo.GoodsSourceId;
                 addDto.SinglePrice = addVo.SinglePrice;
+                addDto.StorageRacksId = addVo.StorageRacksId;
                 addDto.Amount = addVo.Amount;
                 addDto.TotalPrice = addVo.TotalPrice;
                 await _amiyaWareHouseService.AddAsync(addDto);
@@ -130,6 +132,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 amiyaWareHouseVo.Unit = amiyaWareHouse.Unit;
                 amiyaWareHouseVo.GoodsName = amiyaWareHouse.GoodsName;
                 amiyaWareHouseVo.GoodsSourceId = amiyaWareHouse.GoodsSourceId;
+                amiyaWareHouseVo.StorageRacksId = amiyaWareHouse.StorageRacksId;
                 amiyaWareHouseVo.SinglePrice = amiyaWareHouse.SinglePrice;
                 amiyaWareHouseVo.Amount = amiyaWareHouse.Amount;
                 amiyaWareHouseVo.TotalPrice = amiyaWareHouse.TotalPrice;
@@ -156,6 +159,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 AmiyaWareHouseUpdateDto updateDto = new AmiyaWareHouseUpdateDto();
                 updateDto.Id = updateVo.Id;
                 updateDto.Unit = updateVo.Unit;
+                updateDto.StorageRacksId = updateVo.StorageRacksId;
                 updateDto.GoodsName = updateVo.GoodsName;
                 updateDto.GoodsSourceId = updateVo.GoodsSourceId;
                 await _amiyaWareHouseService.UpdateAsync(updateDto);
@@ -299,6 +303,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                               GoodsName = d.GoodsName,
                               GoodsSourceName = d.GoodsSourceName,
                               SinglePrice = d.SinglePrice,
+                              StorageRacks = d.StorageRacks,
                               Amount = d.Amount,
                               TotalPrice = d.TotalPrice,
                           };

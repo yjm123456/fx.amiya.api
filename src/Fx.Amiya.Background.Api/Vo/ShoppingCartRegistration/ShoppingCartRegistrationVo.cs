@@ -179,6 +179,14 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// 基础主播名称
         /// </summary>
         public string BaseLiveAnchorName { get; set; }
-       
+        /// <summary>
+        /// 获客方式
+        /// </summary>
+        public int GetCustomerType { get; set; }
+        /// <summary>
+        /// 获客方式(文本)
+        /// </summary>
+        public string GetCustomerTypeText { get; set; }
+
     }
 }

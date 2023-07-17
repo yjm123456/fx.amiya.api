@@ -463,14 +463,17 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
-        /// 获取消费金额大于0的顾客
+        /// 获取15分钟时间段内消费金额大于0的顾客
         /// </summary>
         /// <returns></returns>
         public async Task<List<BindCustomerServiceDto>> GetAllCustomerAsync()
         {
             try
             {
+                DateTime startDate = DateTime.Now.AddMinutes(-15);
+                DateTime endDate = DateTime.Now;
                 var bindCustomerServiceInfoResult = from d in dalBindCustomerService.GetAll()
+                                                    where (d.NewConsumptionDate.HasValue && d.NewConsumptionDate > startDate && d.NewConsumptionDate < endDate)
                                                     where (d.AllPrice > 0)
                                                     select new BindCustomerServiceDto
                                                     {
@@ -482,7 +485,7 @@ namespace Fx.Amiya.Service
                                                         ConsumptionDate = DateTime.Now.Subtract(d.NewConsumptionDate.Value).Days + 1,
                                                         RfmType = d.RfmType
                                                     };
-                return bindCustomerServiceInfoResult.ToList();
+                return await bindCustomerServiceInfoResult.ToListAsync();
 
             }
             catch (Exception err)
@@ -511,12 +514,12 @@ namespace Fx.Amiya.Service
 
                 foreach (var x in result)
                 {
-                    var yesterDayStartDate = DateTime.Now.Date.AddDays(-1);
-                    var yesterDayEndDate = DateTime.Now.Date;
-                    //查询昨日增长量
-                    var insertLogData = await dalBindCustomerRFMLevelUpdateLog.GetAll().Where(z => z.To == x.RFMType && z.CreateDate >= yesterDayStartDate && z.CreateDate < yesterDayEndDate).CountAsync();
-                    //查询昨日增流失
-                    var lossLogData = await dalBindCustomerRFMLevelUpdateLog.GetAll().Where(z => z.From == x.RFMType && z.CreateDate >= yesterDayStartDate && z.CreateDate < yesterDayEndDate).CountAsync();
+                    var startDate = DateTime.Now.Date;
+                    var endDate = DateTime.Now;
+                    //查询今日增长量
+                    var insertLogData = await dalBindCustomerRFMLevelUpdateLog.GetAll().Where(z => z.To == x.RFMType && z.CreateDate >= startDate && z.CreateDate < endDate).CountAsync();
+                    //查询今日增流失
+                    var lossLogData = await dalBindCustomerRFMLevelUpdateLog.GetAll().Where(z => z.From == x.RFMType && z.CreateDate >= startDate && z.CreateDate < endDate).CountAsync();
                     x.CustomerIncreaseFromYesterday = insertLogData - lossLogData;
                 }
                 return result;

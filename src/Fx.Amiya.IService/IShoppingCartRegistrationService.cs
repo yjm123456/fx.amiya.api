@@ -55,6 +55,12 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         List<BaseKeyValueDto<int>> GetShoppingCartConsultationTypeText();
+
+        /// <summary>
+        /// 获取获客方式
+        /// </summary>
+        /// <returns></returns>
+        List<BaseKeyValueDto<int>> GetShoppingCartGetCustomerTypeText();
         #region 【日数据业绩生成】
 
         /// <summary>

@@ -1003,6 +1003,18 @@ namespace Fx.Amiya.IService
         //饰品&衣服
         AccessoryAndClothes = 4
     }
+    /// <summary>
+    /// 获客方式
+    /// </summary>
+    public enum ShoppingCartGetCustomerType
+    {
+        //其他
+        Ohter = 0,
+        //自主获客
+        OneSelfGetCustomer = 1,
+        //组内分诊
+        GroupDistribute = 2
+    }
 
     /// <summary>
     /// 面诊方式

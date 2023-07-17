@@ -25,6 +25,10 @@ namespace Fx.Amiya.Background.Api.Vo.WareHouse.AmiyaWareHouse.InWareHouse
         /// 仓库
         /// </summary>
         public string WareHouseName { get; set; }
+        /// <summary>
+        /// 货架
+        /// </summary>
+        public string StorageRacksName { get; set; }
 
         /// <summary>
         /// 单价

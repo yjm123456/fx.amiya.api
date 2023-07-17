@@ -19,7 +19,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<WxMiniUserInfo> WxMiniUserInfo { get; set; }
         public virtual DbSet<Bill> Bill { get; set; }
         public virtual DbSet<BillReturnBackPriceData> BillReturnBackPriceData { get; set; }
-        public virtual DbSet<CustomerAppointmentSchedule> CustomerAppointmentSchedule { get; set; }
+        public virtual DbSet<CustomerAppointmentSchedule> CustomerAppointmentSchedule { get; set; }        
         public virtual DbSet<CustomerHospitalDealInfo> CustomerHospitalDealInfo { get; set; }
         public virtual DbSet<CustomerHospitalDealDetails> CustomerHospitalDealDetails { get; set; }
         public virtual DbSet<AmiyaWareHouse> AmiyaWareHouse { get; set; }
@@ -36,6 +36,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<LiveAnchorBaseInfo> LiveAnchorBaseInfo { get; set; }
         public virtual DbSet<LiveAnchorWeChatInfo> LiveAnchorWeChatInfo { get; set; }
         public virtual DbSet<AmiyaWareHouseNameManage> AmiyaWareHouseNameManage { get; set; }
+        public virtual DbSet<AmiyaWareHouseStorageRacks> AmiyaWareHouseStorageRacks { get; set; }
         public virtual DbSet<DockingHospitalCustomerInfo> DockingHospitalCustomerInfo { get; set; }
         public virtual DbSet<BindCustomerRFMLevelUpdateLog> BindCustomerRFMLevelUpdateLog { get; set; }
         public virtual DbSet<GreatHospitalOperationHealth> GreatHospitalOperationHealth { get; set; }
@@ -207,7 +208,8 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new GreatHospitalDataWriteConfiguration());
             modelBuilder.ApplyConfiguration(new LiveAnchorBaseInfoConfiguration());
             modelBuilder.ApplyConfiguration(new LiveAnchorWechatInfoConfiguration());
-            modelBuilder.ApplyConfiguration(new AmiyaWareHouseConfiguration());
+            modelBuilder.ApplyConfiguration(new AmiyaWareHouseConfiguration()); 
+            modelBuilder.ApplyConfiguration(new AmiyaWareHouseStorageRacksConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerHospitalDealInfoConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerHospitalDealDetailsConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaInWarehouseConfiguration());

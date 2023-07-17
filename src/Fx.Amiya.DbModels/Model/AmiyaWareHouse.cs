@@ -25,6 +25,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 归属仓库id
         /// </summary>
         public string GoodsSourceId { get; set; }
+        /// <summary>
+        /// 归属货架id
+        /// </summary>
+        public string StorageRacksId { get; set; }
 
         /// <summary>
         /// 单价
