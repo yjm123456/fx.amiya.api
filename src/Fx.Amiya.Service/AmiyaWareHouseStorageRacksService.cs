@@ -40,6 +40,7 @@ namespace Fx.Amiya.Service
                                                             WareHouseName = d.WareHouseNameManage.Name,
                                                             CreateDate = d.CreateDate,
                                                             CreateBy = d.CreateBy,
+                                                            Name=d.Name,
                                                             CreateByEmpName=d.AmiyaEmployee.Name,
                                                             Valid = d.Valid,
                                                             DeleteDate = d.DeleteDate,

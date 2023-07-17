@@ -48,8 +48,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        
-        public async Task<ResultData<FxPageInfo<AmiyaWareHouseStorageRacksVo>>> GetListWithPageAsync( [FromQuery] QueryAmiyaWareHouseStorageRacksVo query)
+
+        public async Task<ResultData<FxPageInfo<AmiyaWareHouseStorageRacksVo>>> GetListWithPageAsync([FromQuery] QueryAmiyaWareHouseStorageRacksVo query)
         {
             try
             {
@@ -62,17 +62,18 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var q = await _amiyaWareHouseStorageRacksService.GetListWithPageAsync(queryAmiyaWareHouseStorageRacksDto);
 
                 var amiyaWareHouseStorageRacks = from d in q.List
-                              select new AmiyaWareHouseStorageRacksVo
-                              {
-                                  Id = d.Id,
-                                  WareHouseId = d.WareHouseId,
-                                  WareHouseName = d.WareHouseName,
-                                  CreateDate = d.CreateDate,
-                                  CreateBy = d.CreateBy,
-                                  CreateByEmpName=d.CreateByEmpName,
-                                  Valid = d.Valid,
-                                  DeleteDate = d.DeleteDate,
-                              };
+                                                 select new AmiyaWareHouseStorageRacksVo
+                                                 {
+                                                     Id = d.Id,
+                                                     WareHouseId = d.WareHouseId,
+                                                     WareHouseName = d.WareHouseName,
+                                                     CreateDate = d.CreateDate,
+                                                     Name = d.Name,
+                                                     CreateBy = d.CreateBy,
+                                                     CreateByEmpName = d.CreateByEmpName,
+                                                     Valid = d.Valid,
+                                                     DeleteDate = d.DeleteDate,
+                                                 };
 
                 FxPageInfo<AmiyaWareHouseStorageRacksVo> amiyaWareHouseStorageRacksPageInfo = new FxPageInfo<AmiyaWareHouseStorageRacksVo>();
                 amiyaWareHouseStorageRacksPageInfo.TotalCount = q.TotalCount;
@@ -94,7 +95,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="addVo"></param>
         /// <returns></returns>
         [HttpPost]
-       
+
         public async Task<ResultData> AddAsync(AmiyaWareHouseStorageRacksAddVo addVo)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
@@ -122,7 +123,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("byId/{id}")]
-       
+
         public async Task<ResultData<AmiyaWareHouseStorageRacksVo>> GetByIdAsync(string id)
         {
             try
@@ -152,7 +153,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="updateVo"></param>
         /// <returns></returns>
         [HttpPut("update")]
-       
+
         public async Task<ResultData> UpdateAsync(AmiyaWareHouseStorageRacksUpdateVo updateVo)
         {
             try
@@ -175,7 +176,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        
+
         public async Task<ResultData> DeleteAsync(string id)
         {
             try
@@ -199,11 +200,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<BaseIdAndNameVo>>> GetOperatingConsultingNameListAsync(string wareHouseId)
         {
             var result = from d in await _amiyaWareHouseStorageRacksService.GetValidByWareHouseIdAsync(wareHouseId)
-                           select new BaseIdAndNameVo
-                           {
-                               Id = d.Key,
-                               Name = d.Value
-                           };
+                         select new BaseIdAndNameVo
+                         {
+                             Id = d.Key,
+                             Name = d.Value
+                         };
             return ResultData<List<BaseIdAndNameVo>>.Success().AddData("amiyawareHouseStorageRacks", result.ToList());
         }
 
