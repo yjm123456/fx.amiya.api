@@ -164,7 +164,11 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorId, liveAnchorWechatId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
+                List<int> liveAnchorIds = new List<int>();
+                if (liveAnchorId.HasValue) {
+                    liveAnchorIds.Add(liveAnchorId.Value);
+                }
+                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorIds, liveAnchorWechatId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
                 List<ContentPlatFormOrderInfoVo> contentPlatFormOrderInfoVoList = new List<ContentPlatFormOrderInfoVo>();
                 var resutList = q.List.ToList();
                 foreach (var x in resutList)
@@ -287,8 +291,11 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 employeeId = Convert.ToInt32(employee.Id);
             }
-
-            var q = await _orderService.GetUnSendOrderListWithPageAsync(liveAnchorId, keyword, startDate, endDate, consultationEmpId, (int)employeeId, orderStatus, contentPlateFormId, orderSource, pageNum, pageSize);
+            List<int?> liveAnchorIds = new List<int?>();
+            if (liveAnchorId.HasValue) {
+                liveAnchorIds.Add(liveAnchorId.Value);
+            }
+            var q = await _orderService.GetUnSendOrderListWithPageAsync(liveAnchorIds, keyword, startDate, endDate, consultationEmpId, (int)employeeId, orderStatus, contentPlateFormId, orderSource, pageNum, pageSize);
             var unSendOrder = from d in q.List
                               select new UnContentPlateFormSendOrderInfoVo
                               {

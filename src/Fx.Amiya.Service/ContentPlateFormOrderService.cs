@@ -277,14 +277,14 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(int? liveAnchorId, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId, int orderSource, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(List<int> liveAnchorId, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId, int orderSource, int pageNum, int pageSize)
         {
             try
             {
                 List<int> liveAnchorIds = new List<int>();
-                if (liveAnchorId.HasValue)
+                if (liveAnchorId.Count>0)
                 {
-                    liveAnchorIds.Add(liveAnchorId.Value);
+                    liveAnchorIds.AddRange(liveAnchorId);
                 }
                 else
                 {
@@ -464,7 +464,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<UnSendContentPlatFormOrderInfoDto>> GetUnSendOrderListWithPageAsync(int? liveAnchorId, string keyword, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int employeeId, int statusCode, string contentPlatFormId, int orderSource, int pageNum, int pageSize)
+        public async Task<FxPageInfo<UnSendContentPlatFormOrderInfoDto>> GetUnSendOrderListWithPageAsync(List<int?> liveAnchorIds, string keyword, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int employeeId, int statusCode, string contentPlatFormId, int orderSource, int pageNum, int pageSize)
         {
             var config = await GetCallCenterConfig();
 
@@ -506,7 +506,7 @@ namespace Fx.Amiya.Service
                               where o.ContentPlatformOrderSendList.Count(e => e.ContentPlatformOrderId == o.Id) == 0
                               && (keyword == null || o.Id == keyword || o.Phone == keyword || o.AmiyaGoodsDemand.ProjectNname.Contains(keyword) || o.HospitalInfo.Name.Contains(keyword))
                               && (orderSource == -1 || o.OrderSource == orderSource)
-                              && (!liveAnchorId.HasValue || o.LiveAnchorId == liveAnchorId.Value)
+                              && (liveAnchorIds.Count<=0 || liveAnchorIds.Contains(o.LiveAnchorId))
                               orderby b.CreateDate descending
                               select new UnSendContentPlatFormOrderInfoDto
                               {
@@ -1188,7 +1188,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<List<ContentPlatFormOrderInfoDto>> ExportOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, int? consultationEmpId, int? appointmentHospital, int? belongEmpId, int? liveAnchorId, string keyword, string hospitalDepartmentId, int? orderStatus, int orderSource, string contentPlateFormId, int employeeId, bool IsHidePhone)
+        public async Task<List<ContentPlatFormOrderInfoDto>> ExportOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, int? consultationEmpId, int? appointmentHospital, int? belongEmpId, List<int?> liveAnchorIds, string keyword, string hospitalDepartmentId, int? orderStatus, int orderSource, string contentPlateFormId, int employeeId, bool IsHidePhone)
         {
             try
             {
@@ -1200,7 +1200,7 @@ namespace Fx.Amiya.Service
                             && (!belongEmpId.HasValue || d.BelongEmpId == belongEmpId)
                             && (orderSource == -1 || d.OrderSource == orderSource)
                             && (string.IsNullOrWhiteSpace(hospitalDepartmentId) || d.HospitalDepartmentId == hospitalDepartmentId)
-                            && (!liveAnchorId.HasValue || d.LiveAnchorId == liveAnchorId)
+                            && (liveAnchorIds.Count<=0 || liveAnchorIds.Contains(d.LiveAnchorId))
                             && (string.IsNullOrEmpty(contentPlateFormId) || d.ContentPlateformId == contentPlateFormId)
                              select d;
 

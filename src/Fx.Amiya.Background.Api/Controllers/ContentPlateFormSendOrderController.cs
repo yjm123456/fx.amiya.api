@@ -32,17 +32,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IWxAppConfigService _wxAppConfigService;
         private IContentPlatFormOrderDealInfoService orderDealInfoService;
         private IHospitalCustomerInfoService hospitalCustomerInfoService;
+        private ILiveAnchorService liveAnchorService;
         public ContentPlateFormSendOrderController(IContentPlatformOrderSendService sendOrderInfoService,
             IContentPlatFormOrderDealInfoService orderDealInfoService,
             IHospitalCustomerInfoService hospitalCustomerInfoService,
             IHttpContextAccessor httpContextAccessor,
-             IWxAppConfigService wxAppConfigService)
+             IWxAppConfigService wxAppConfigService, ILiveAnchorService liveAnchorService)
         {
             this._sendOrderInfoService = sendOrderInfoService;
             this.orderDealInfoService = orderDealInfoService;
             _wxAppConfigService = wxAppConfigService;
             this.hospitalCustomerInfoService = hospitalCustomerInfoService;
             _httpContextAccessor = httpContextAccessor;
+            this.liveAnchorService = liveAnchorService;
         }
 
 
@@ -337,6 +339,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 获取内容平台订单已派单信息列表
         /// </summary>
         /// <param name="keyword"></param>
+        /// <param name="baseLiveAnchorId">基础主播id</param>
         /// <param name="employeeId"> -1(归属客服)查询全部</param>
         /// <param name="sendBy"> 派单人（空查询全部）</param>
         /// <param name="isAcompanying">是否陪诊，为空查询所有</param>
@@ -362,14 +365,36 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetSendOrderList(string keyword, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? liveAnchorId, int? consultationEmpId, int? employeeId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetSendOrderList(string keyword,string baseLiveAnchorId, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? liveAnchorId, int? consultationEmpId, int? employeeId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int pageNum, int pageSize)
         {
             if (employeeId == null)
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 employeeId = Convert.ToInt32(employee.Id);
             }
-            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorId, consultationEmpId, sendBy, isAcompanying, isOldCustomer, commissionRatio, keyword, belongMonth, minAddOrderPrice, maxAddOrderPrice, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, orderSource, pageNum, pageSize);
+            List<int?> liveAnchorIds = new List<int?>();
+            if (!string.IsNullOrEmpty(baseLiveAnchorId))
+            {
+                if (!liveAnchorId.HasValue)
+                {
+                    var list = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e => e.Id).ToList();
+                    foreach (var item in list)
+                    {
+                        liveAnchorIds.Add(item);
+                    }
+                }
+                else {
+                    liveAnchorIds.Add(liveAnchorId);
+                }
+            }
+            else
+            {
+                if (liveAnchorId.HasValue)
+                {
+                    liveAnchorIds.Add(liveAnchorId.Value);
+                }
+            }
+            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorIds, consultationEmpId, sendBy, isAcompanying, isOldCustomer, commissionRatio, keyword, belongMonth, minAddOrderPrice, maxAddOrderPrice, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, orderSource, pageNum, pageSize);
 
             var contentPlatformOrders = from d in orders.List
                                         select new SendContentPlatformOrderVo

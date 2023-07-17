@@ -44,5 +44,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input
         /// 内容平台
         /// </summary>
         public string ContentPlateFormId { get; set; }
+        /// <summary>
+        /// 基础主播id
+        /// </summary>
+        public string BaseLiveAnchorId { get; set; }
     }
 }

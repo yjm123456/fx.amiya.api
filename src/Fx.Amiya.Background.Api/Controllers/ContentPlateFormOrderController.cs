@@ -54,6 +54,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IHospitalInfoService _hospitalInfoService;
         private IHttpContextAccessor _httpContextAccessor;
         private IOperationLogService operationLogService;
+        private ILiveAnchorService liveAnchorService;
         public ContentPlateFormOrderController(IContentPlateFormOrderService orderService,
             IOrderService tmallOrderService,
             IAmiyaEmployeeService amiyaEmployeeService,
@@ -66,7 +67,7 @@ namespace Fx.Amiya.Background.Api.Controllers
            ICustomerService customerService,
             IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
             IHttpContextAccessor httpContextAccessor,
-             IWxAppConfigService wxAppConfigService, IOperationLogService operationLogService)
+             IWxAppConfigService wxAppConfigService, IOperationLogService operationLogService, ILiveAnchorService liveAnchorService)
         {
             _orderService = orderService;
             _tmallOrderService = tmallOrderService;
@@ -82,6 +83,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             _httpContextAccessor = httpContextAccessor;
             _contentPlatFormCustomerPictureService = contentPlatFormCustomerPictureService;
             this.operationLogService = operationLogService;
+            this.liveAnchorService = liveAnchorService;
         }
 
         /// <summary>
@@ -160,6 +162,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 根据条件获取内容平台订单
         /// </summary>
+        /// <param name="baseLiveAnchorId">基础主播id</param>
         /// <param name="liveAnchorId">主播id</param>
         /// <param name="liveAnchorWechatId">主播微信号id</param>
         /// <param name="startDate">开始时间</param>
@@ -180,13 +183,29 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("contentPlateFormOrderLlistWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>> GetOrderListWithPageAsync(int? liveAnchorId,string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int orderSource, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>> GetOrderListWithPageAsync(string baseLiveAnchorId,int? liveAnchorId,string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int orderSource, int pageNum, int pageSize)
         {
             try
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorId, liveAnchorWechatId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
+                List<int> liveAnchorIds = new List<int>();
+                if (!string.IsNullOrEmpty(baseLiveAnchorId))
+                {
+                    if (!liveAnchorId.HasValue)
+                    {
+                        liveAnchorIds = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e => e.Id).ToList();
+                    }
+                    else {
+                        liveAnchorIds.Add(liveAnchorId.Value);
+                    }
+                }
+                else {
+                    if (liveAnchorId.HasValue) {
+                        liveAnchorIds.Add(liveAnchorId.Value);
+                    }
+                }
+                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorIds, liveAnchorWechatId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
                 List<ContentPlatFormOrderInfoVo> contentPlatFormOrderInfoVoList = new List<ContentPlatFormOrderInfoVo>();
                 var resutList = q.List.ToList();
                 foreach (var x in resutList)
@@ -290,6 +309,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 获取未派单订单列表（分页）
         /// </summary>
+        /// <param name="baseLiveAnchorId"></param>
         /// <param name="liveAnchorId">归属主播id</param>
         /// <param name="keyword">关键词</param>
         /// <param name="startDate">开始时间</param>
@@ -304,15 +324,36 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("unContentPlatFormSendOrderList")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<UnContentPlateFormSendOrderInfoVo>>> GetUnSendOrderListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? consultationEmpId, string keyword, string contentPlateFormId, int? employeeId, int orderStatus, int orderSource, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<UnContentPlateFormSendOrderInfoVo>>> GetUnSendOrderListWithPageAsync(string baseLiveAnchorId,int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? consultationEmpId, string keyword, string contentPlateFormId, int? employeeId, int orderStatus, int orderSource, int pageNum, int pageSize)
         {
             if (employeeId == null)
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 employeeId = Convert.ToInt32(employee.Id);
             }
-
-            var q = await _orderService.GetUnSendOrderListWithPageAsync(liveAnchorId, keyword, startDate, endDate, consultationEmpId, (int)employeeId, orderStatus, contentPlateFormId, orderSource, pageNum, pageSize);
+            List<int?> liveAnchorIds = new List<int?>();
+            if (!string.IsNullOrEmpty(baseLiveAnchorId))
+            {
+                if (!liveAnchorId.HasValue)
+                {
+                    var list = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e => e.Id).ToList();
+                    foreach (var item in list)
+                    {
+                        liveAnchorIds.Add(item);
+                    }
+                }
+                else {
+                    liveAnchorIds.Add(liveAnchorId);
+                }
+            }
+            else
+            {
+                if (liveAnchorId.HasValue)
+                {
+                    liveAnchorIds.Add(liveAnchorId.Value);
+                }
+            }
+            var q = await _orderService.GetUnSendOrderListWithPageAsync(liveAnchorIds, keyword, startDate, endDate, consultationEmpId, (int)employeeId, orderStatus, contentPlateFormId, orderSource, pageNum, pageSize);
             var unSendOrder = from d in q.List
                               select new UnContentPlateFormSendOrderInfoVo
                               {
@@ -389,7 +430,30 @@ namespace Fx.Amiya.Background.Api.Controllers
                 {
                     isHidePhone = false;
                 }
-                var q = await _orderService.ExportOrderListWithPageAsync(query.StartDate, query.EndDate, query.ConsultationEmpId, query.AppointmentHospital, query.BelongEmpId, query.LiveAnchorId, query.Keyword, query.HospitalDepartmentId, query.OrderStatus, query.OrderSource, query.ContentPlateFormId, employeeId, isHidePhone);
+                List<int?> liveAnchorIds = new List<int?>();
+                if (!string.IsNullOrEmpty(query.BaseLiveAnchorId))
+                {
+                    if (!query.LiveAnchorId.HasValue)
+                    {
+                        var list = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId)).Select(e => e.Id).ToList();
+                        foreach (var item in list)
+                        {
+                            liveAnchorIds.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        liveAnchorIds.Add(query.LiveAnchorId.Value);
+                    }
+                }
+                else
+                {
+                    if (query.LiveAnchorId.HasValue)
+                    {
+                        liveAnchorIds.Add(query.LiveAnchorId.Value);
+                    }
+                }
+                var q = await _orderService.ExportOrderListWithPageAsync(query.StartDate, query.EndDate, query.ConsultationEmpId, query.AppointmentHospital, query.BelongEmpId, liveAnchorIds, query.Keyword, query.HospitalDepartmentId, query.OrderStatus, query.OrderSource, query.ContentPlateFormId, employeeId, isHidePhone);
 
                 #region 【注释代码】
                 //var resutList = q.ToList();

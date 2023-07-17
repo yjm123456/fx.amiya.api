@@ -46,6 +46,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private ICustomerHospitalConsumeService _customerHospitalConsumeService;
         private ILiveAnchorDailyTargetService _liveAnchorDailyTargetService;
         private IOperationLogService operatonLogService;
+        private ILiveAnchorService liveAnchorService;
         public OrderReportController(IOrderService orderService,
             IContentPlatformOrderSendService sendContentPlatFormOrderInfoService,
             IAppointmentService appointmentService,
@@ -59,7 +60,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             ISendOrderInfoService sendOrderInfoService,
             ICustomerHospitalConsumeService customerHospitalConsumeService,
             IShoppingCartRegistrationService shoppingCartRegistrationService,
-            ILiveAnchorDailyTargetService liveAnchorDailyTargetService, IOperationLogService operatonLogService)
+            ILiveAnchorDailyTargetService liveAnchorDailyTargetService, IOperationLogService operatonLogService, ILiveAnchorService liveAnchorService)
         {
             this.orderService = orderService;
             _sendContentPlatFormOrderInfoService = sendContentPlatFormOrderInfoService;
@@ -76,6 +77,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             _customerHospitalConsumeService = customerHospitalConsumeService;
             _liveAnchorDailyTargetService = liveAnchorDailyTargetService;
             this.operatonLogService = operatonLogService;
+            this.liveAnchorService = liveAnchorService;
         }
 
         /// <summary>
@@ -645,7 +647,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(query.StartDate, query.EndDate, query.SendStartDate, query.SendEndDate, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.ConsultationType, query.IsToHospital, query.TohospitalStartDate, query.ToHospitalEndDate, query.ToHospitalType, query.IsDeal, query.LastDealHospitalId, query.IsAccompanying, query.IsOldCustomer, query.CheckState, query.CheckStartDate, query.CheckEndDate, query.IsCreateBill, query.IsReturnBakcPrice, query.ReturnBackPriceStartDate, query.ReturnBackPriceEndDate, query.CustomerServiceId, query.BelongCompanyId, query.KeyWord, employeeId, true,query.ConsumptionType);
+            List<int?> liveAnchorIds = new List<int?>();
+            if (!string.IsNullOrEmpty(query.BaseLiveAnchorId))
+            {
+                var list = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId)).Select(e => e.Id).ToList();
+                foreach (var item in list)
+                {
+                    liveAnchorIds.Add(item);
+                }
+            }
+            
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(query.StartDate, query.EndDate, query.SendStartDate, query.SendEndDate, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.ConsultationType, query.IsToHospital, query.TohospitalStartDate, query.ToHospitalEndDate, query.ToHospitalType, query.IsDeal, query.LastDealHospitalId, query.IsAccompanying, query.IsOldCustomer, query.CheckState, query.CheckStartDate, query.CheckEndDate, query.IsCreateBill, query.IsReturnBakcPrice, query.ReturnBackPriceStartDate, query.ReturnBackPriceEndDate, query.CustomerServiceId, query.BelongCompanyId, query.KeyWord, employeeId, true,query.ConsumptionType, liveAnchorIds);
 
             var contentPlatformOrders = from d in result
                                         select new ContentPlatFormOrderDealInfoReportVo
@@ -718,7 +730,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                 }
                 int employeeId = Convert.ToInt32(employee.Id);
                 operationLog.OperationBy = employeeId;
-                var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(query.StartDate, query.EndDate, query.SendStartDate, query.SendEndDate, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.ConsultationType, query.IsToHospital, query.TohospitalStartDate, query.ToHospitalEndDate, query.ToHospitalType, query.IsDeal, query.LastDealHospitalId, query.IsAccompanying, query.IsOldCustomer, query.CheckState, query.CheckStartDate, query.CheckEndDate, query.IsCreateBill, query.IsReturnBakcPrice, query.ReturnBackPriceStartDate, query.ReturnBackPriceEndDate, query.CustomerServiceId, query.BelongCompanyId, query.KeyWord, employeeId, isHidePhone,query.ConsumptionType);
+                List<int?> liveAnchorIds = new List<int?>();
+                if (!string.IsNullOrEmpty(query.BaseLiveAnchorId))
+                {
+                    var list = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId)).Select(e => e.Id).ToList();
+                    foreach (var item in list)
+                    {
+                        liveAnchorIds.Add(item);
+                    }
+                }
+
+                var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(query.StartDate, query.EndDate, query.SendStartDate, query.SendEndDate, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.ConsultationType, query.IsToHospital, query.TohospitalStartDate, query.ToHospitalEndDate, query.ToHospitalType, query.IsDeal, query.LastDealHospitalId, query.IsAccompanying, query.IsOldCustomer, query.CheckState, query.CheckStartDate, query.CheckEndDate, query.IsCreateBill, query.IsReturnBakcPrice, query.ReturnBackPriceStartDate, query.ReturnBackPriceEndDate, query.CustomerServiceId, query.BelongCompanyId, query.KeyWord, employeeId, isHidePhone,query.ConsumptionType,liveAnchorIds);
 
                 var contentPlatformOrders = from d in result
                                             select new ContentPlatFormOrderDealInfoReportVo

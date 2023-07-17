@@ -9,6 +9,7 @@ using Fx.Open.Infrastructure.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -108,7 +109,11 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 employeeId = Convert.ToInt32(employee.Id);
             }
-            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorId, consultationEmpId, sendBy, isAcompanying, isOldCustomer, commissionRatio, keyword, belongMonth, minAddOrderPrice, maxAddOrderPrice, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, orderSource, pageNum, pageSize);
+            List<int?> liveAnchorIds = new List<int?>();
+            if (liveAnchorId.HasValue) {
+                liveAnchorIds.Add(liveAnchorId);
+            }
+            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorIds, consultationEmpId, sendBy, isAcompanying, isOldCustomer, commissionRatio, keyword, belongMonth, minAddOrderPrice, maxAddOrderPrice, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, orderSource, pageNum, pageSize);
 
             var contentPlatformOrders = from d in orders.List
                                         select new SendContentPlatformOrderVo

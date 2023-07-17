@@ -102,5 +102,9 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport.Input
         /// 消费类型
         /// </summary>
         public int? ConsumptionType { get; set; }
+        /// <summary>
+        /// 基础主播id
+        /// </summary>
+        public string BaseLiveAnchorId { get; set; }
     }
 }

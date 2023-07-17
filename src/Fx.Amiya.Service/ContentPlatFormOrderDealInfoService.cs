@@ -493,7 +493,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord, int employeeId, bool hidePhone, int? consumptionType)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord, int employeeId, bool hidePhone, int? consumptionType,List<int?> liveAnchorIds)
         {
             try
             {
@@ -603,6 +603,7 @@ namespace Fx.Amiya.Service
                                                    && (!customerServiceId.HasValue || d.ContentPlatFormOrder.BelongEmpId == customerServiceId || d.ContentPlatFormOrder.SupportEmpId == customerServiceId)
                                                    && (!minAddOrderPrice.HasValue || d.ContentPlatFormOrder.AddOrderPrice >= minAddOrderPrice)
                                                    && (!maxAddOrderPrice.HasValue || d.ContentPlatFormOrder.AddOrderPrice <= maxAddOrderPrice)
+                                                   && (liveAnchorIds.Count<=0 || liveAnchorIds.Contains(d.ContentPlatFormOrder.LiveAnchorId))
                                                    select new ContentPlatFormOrderDealInfoDto
                                                    {
                                                        Id = d.Id,

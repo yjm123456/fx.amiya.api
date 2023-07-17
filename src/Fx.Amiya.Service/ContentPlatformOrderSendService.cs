@@ -579,7 +579,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<SendContentPlatformOrderDto>> GetSendOrderList(int? liveAnchorId, int? consultationEmpId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string keyword, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int employeeId, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int pageNum, int pageSize)
+        public async Task<FxPageInfo<SendContentPlatformOrderDto>> GetSendOrderList(List<int?> liveAnchorIds, int? consultationEmpId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string keyword, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int employeeId, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int pageNum, int pageSize)
         {
             var orders = _dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder)
                        .Where(e => string.IsNullOrWhiteSpace(keyword) || e.ContentPlatformOrderId == keyword || e.ContentPlatformOrder.Phone.Contains(keyword) || e.ContentPlatformOrder.LiveAnchorWeChatNo.Contains(keyword))
@@ -595,7 +595,7 @@ namespace Fx.Amiya.Service
                        .Where(e => !commissionRatio.HasValue || e.ContentPlatformOrder.CommissionRatio == commissionRatio.Value)
                        .Where(e => !toHospitalType.HasValue || e.ContentPlatformOrder.ToHospitalType == toHospitalType.Value)
                        .Where(e => !consultationEmpId.HasValue || e.ContentPlatformOrder.ConsultationEmpId == consultationEmpId.Value)
-                       .Where(e => !liveAnchorId.HasValue || e.ContentPlatformOrder.LiveAnchorId == liveAnchorId.Value)
+                       .Where(e => liveAnchorIds.Count<=0 || liveAnchorIds.Contains(e.ContentPlatformOrder.LiveAnchorId))
                        .Where(e => orderStatus == null || (orderStatus != null && orderStatus == (int)ContentPlateFormOrderStatus.RepeatOrderProfundity ? e.ContentPlatformOrder.IsRepeatProfundityOrder == true : e.ContentPlatformOrder.OrderStatus == orderStatus))
                        .Where(e => string.IsNullOrWhiteSpace(contentPlatFormId) || e.ContentPlatformOrder.ContentPlateformId == contentPlatFormId);
 
