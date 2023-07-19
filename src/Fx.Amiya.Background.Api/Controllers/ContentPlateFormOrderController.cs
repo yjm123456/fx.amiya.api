@@ -195,6 +195,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                     if (!liveAnchorId.HasValue)
                     {
                         liveAnchorIds = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e => e.Id).ToList();
+                        if (liveAnchorIds.Count<=0) {
+                            FxPageInfo<ContentPlatFormOrderInfoVo> emptyPageInfo = new FxPageInfo<ContentPlatFormOrderInfoVo>();
+                            emptyPageInfo.TotalCount = 0;
+                            emptyPageInfo.List =new List<ContentPlatFormOrderInfoVo>();
+                            return ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>.Success().AddData("contentPlatFormOrder", emptyPageInfo);
+                        }
                     }
                     else {
                         liveAnchorIds.Add(liveAnchorId.Value);
@@ -337,6 +343,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 if (!liveAnchorId.HasValue)
                 {
                     var list = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e => e.Id).ToList();
+                    if (list.Count<=0) {
+                        FxPageInfo<UnContentPlateFormSendOrderInfoVo> emptyPageInfo = new FxPageInfo<UnContentPlateFormSendOrderInfoVo>();
+                        emptyPageInfo.TotalCount = 0;
+                        emptyPageInfo.List = new List<UnContentPlateFormSendOrderInfoVo>();
+                        return ResultData<FxPageInfo<UnContentPlateFormSendOrderInfoVo>>.Success().AddData("unSendOrder", emptyPageInfo);
+                    }
                     foreach (var item in list)
                     {
                         liveAnchorIds.Add(item);
@@ -414,6 +426,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<FileStreamResult> ExportOrderListWithPageAsync([FromQuery] QueryExportContentPlateFormOrderLlistWithPage query)
         {
+            List<ExportContentPlatFormOrderInfoVo> exportSendOrder = new List<ExportContentPlatFormOrderInfoVo>();
             OperationAddDto operationAddDto = new OperationAddDto();
             operationAddDto.Code = 0;
             try
@@ -436,6 +449,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                     if (!query.LiveAnchorId.HasValue)
                     {
                         var list = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId)).Select(e => e.Id).ToList();
+                        if (list.Count<=0) {
+                            var resultStream = ExportExcelHelper.ExportExcel(exportSendOrder);
+                            var finalResult = File(resultStream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "内容平台订单报表.xls");
+                            return finalResult;
+                        }
                         foreach (var item in list)
                         {
                             liveAnchorIds.Add(item);
@@ -595,7 +613,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 SendHospital = d.SendHospital,
                                 IsRepeatProfundityOrder = d.IsRepeatProfundityOrder == true ? "是" : "否"
                             };
-                var exportSendOrder = order.ToList();
+                exportSendOrder = order.ToList();
                 foreach (var x in exportSendOrder)
                 {
 

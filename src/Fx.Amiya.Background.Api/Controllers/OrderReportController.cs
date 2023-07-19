@@ -651,6 +651,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             if (!string.IsNullOrEmpty(query.BaseLiveAnchorId))
             {
                 var list = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId)).Select(e => e.Id).ToList();
+                if (list.Count<=0) {
+                    List<ContentPlatFormOrderDealInfoReportVo> emptyInfo = new List<ContentPlatFormOrderDealInfoReportVo>();
+                    return ResultData<List<ContentPlatFormOrderDealInfoReportVo>>.Success().AddData("contentPlatFormOrderDealInfo", emptyInfo);
+                }
                 foreach (var item in list)
                 {
                     liveAnchorIds.Add(item);
@@ -734,6 +738,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 if (!string.IsNullOrEmpty(query.BaseLiveAnchorId))
                 {
                     var list = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId)).Select(e => e.Id).ToList();
+                    if (list.Count<=0) {
+                        var emptyStream = ExportExcelHelper.ExportExcel(new List<ContentPlatFormOrderDealInfoReportVo>());
+                        var emptyExportInfo = File(emptyStream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "内容平台成交情况报表.xls");
+                        return emptyExportInfo;
+                    }
                     foreach (var item in list)
                     {
                         liveAnchorIds.Add(item);

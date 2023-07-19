@@ -378,6 +378,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 if (!liveAnchorId.HasValue)
                 {
                     var list = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e => e.Id).ToList();
+                    if (list.Count<=0) {
+                        FxPageInfo<SendContentPlatformOrderVo> emptyPageInfo = new FxPageInfo<SendContentPlatformOrderVo>();
+                        emptyPageInfo.TotalCount = emptyPageInfo.TotalCount;
+                        emptyPageInfo.List = new List<SendContentPlatformOrderVo>();
+                        return ResultData<FxPageInfo<SendContentPlatformOrderVo>>.Success().AddData("sendOrders", emptyPageInfo);
+                    }
                     foreach (var item in list)
                     {
                         liveAnchorIds.Add(item);
