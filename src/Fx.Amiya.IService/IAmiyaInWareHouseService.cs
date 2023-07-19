@@ -11,13 +11,13 @@ namespace Fx.Amiya.IService
 {
     public interface IAmiyaInWareHouseService
     {
-        Task<FxPageInfo<AmiyaInWareHouseDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, string keyword, string wareHouseInfoId, int pageNum, int pageSize);
+        Task<FxPageInfo<AmiyaInWareHouseDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, string keyword, string wareHouseInfoId, string warehouseStorageRacksId, int pageNum, int pageSize);
         Task AddAsync(AmiyaInWareHouseAddDto addDto);
         Task<AmiyaInWareHouseDto> GetByIdAsync(string id);
         Task UpdateAsync(AmiyaInWareHouseUpdateDto updateDto);
         Task DeleteAsync(string id);
 
-        Task<List<AmiyaInWareHouseDto>> ExportListAsync(DateTime? startDate, DateTime? endDate, string keyword, string wareHouseInfoId);
+        Task<List<AmiyaInWareHouseDto>> ExportListAsync(DateTime? startDate, DateTime? endDate, string keyword, string wareHouseInfoId, string warehouseStorageRacksId);
 
     }
 }

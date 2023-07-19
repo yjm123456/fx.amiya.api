@@ -24,7 +24,7 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<AmiyaOutWareHouseDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, string keyword, string wareHouseInfoId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<AmiyaOutWareHouseDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, string keyword, string wareHouseInfoId, string warehouseStorageRacksId, int pageNum, int pageSize)
         {
             try
             {
@@ -41,6 +41,7 @@ namespace Fx.Amiya.Service
                 var amiyaOutWareHouseService = from d in amiyaOutWareHouseInfo
                                                where (keyword == null || d.WareHouseInfo.GoodsName.Contains(keyword))
                                                && (string.IsNullOrEmpty(wareHouseInfoId) || d.WareHouseInfo.GoodsSourceId == wareHouseInfoId)
+                                               && (string.IsNullOrEmpty(warehouseStorageRacksId) || d.WareHouseInfo.StorageRacksId == warehouseStorageRacksId)
                                                select new AmiyaOutWareHouseDto
                                                {
                                                    Id = d.Id,
@@ -162,7 +163,7 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
-        public async Task<List<AmiyaOutWareHouseDto>> ExportListAsync(DateTime? startDate, DateTime? endDate, string keyword, string wareHouseInfoId)
+        public async Task<List<AmiyaOutWareHouseDto>> ExportListAsync(DateTime? startDate, DateTime? endDate, string keyword, string wareHouseInfoId,string warehouseStorageRacksId)
         {
             try
             {
@@ -179,6 +180,7 @@ namespace Fx.Amiya.Service
                 var amiyaOutWareHouseService = from d in amiyaOutWareHouseInfo
                                                where (keyword == null || d.WareHouseInfo.GoodsName.Contains(keyword))
                                                && (string.IsNullOrEmpty(wareHouseInfoId) || d.WareHouseInfo.GoodsSourceId == wareHouseInfoId)
+                                               && (string.IsNullOrEmpty(warehouseStorageRacksId) || d.WareHouseInfo.StorageRacksId == warehouseStorageRacksId)
                                                select new AmiyaOutWareHouseDto
                                                {
                                                    Id = d.Id,

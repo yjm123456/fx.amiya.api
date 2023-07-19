@@ -15,5 +15,10 @@ namespace Fx.Amiya.Background.Api.Vo.WareHouse.AmiyaWareHouse.Input
         /// 仓库id
         /// </summary>
         public string WareHouseInfoId { get; set; }
+        /// <summary>
+        /// 货架id
+        /// </summary>
+
+        public string WarehouseStorageRacksId { get; set; }
     }
 }

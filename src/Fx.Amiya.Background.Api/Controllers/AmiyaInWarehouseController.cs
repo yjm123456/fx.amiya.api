@@ -52,11 +52,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("listWithPage")]
 
-        public async Task<ResultData<FxPageInfo<AmiyaInWarehouseVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, string keyword, string wareHouseInfoId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<AmiyaInWarehouseVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, string keyword, string wareHouseInfoId, string warehouseStorageRacksId, int pageNum, int pageSize)
         {
             try
             {
-                var q = await _amiyaInWarehouseService.GetListWithPageAsync(startDate, endDate, keyword, wareHouseInfoId, pageNum, pageSize);
+                var q = await _amiyaInWarehouseService.GetListWithPageAsync(startDate, endDate, keyword, wareHouseInfoId,warehouseStorageRacksId, pageNum, pageSize);
 
                 var amiyaInWarehouse = from d in q.List
                                        select new AmiyaInWarehouseVo
@@ -104,7 +104,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
                 operationAddDto.OperationBy = employeeId;
-                var q = await _amiyaInWarehouseService.ExportListAsync(query.StartDate, query.EndDate, query.Keyword, query.WareHouseInfoId);
+                var q = await _amiyaInWarehouseService.ExportListAsync(query.StartDate, query.EndDate, query.Keyword, query.WareHouseInfoId,query.WarehouseStorageRacksId);
                 var res = from d in q
                           select new AmiyaInWarehouseExportVo()
                           {

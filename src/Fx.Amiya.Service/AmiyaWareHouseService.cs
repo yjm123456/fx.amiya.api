@@ -40,13 +40,14 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<AmiyaWareHouseDto>> GetListWithPageAsync(string keyword, string wareHouseInfoId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<AmiyaWareHouseDto>> GetListWithPageAsync(string keyword, string wareHouseInfoId, string warehouseStorageRacksId, int pageNum, int pageSize)
         {
             try
             {
                 var amiyaWareHouseService = from d in dalAmiyaWareHouseService.GetAll().Include(x => x.WareHouseNameManage).ThenInclude(x => x.AmiyaWareHouseStorageRacks)
                                             where (keyword == null || d.GoodsName.Contains(keyword))
                                                && (string.IsNullOrEmpty(wareHouseInfoId) || d.GoodsSourceId == wareHouseInfoId)
+                                               && (string.IsNullOrEmpty(warehouseStorageRacksId) ||d.StorageRacksId == warehouseStorageRacksId)
                                             select new AmiyaWareHouseDto
                                             {
                                                 Id = d.Id,
@@ -69,13 +70,14 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<List<AmiyaWareHouseDto>> ExportListAsync(string keyword, string wareHouseInfoId)
+        public async Task<List<AmiyaWareHouseDto>> ExportListAsync(string keyword, string wareHouseInfoId, string warehouseStorageRacksId)
         {
             try
             {
                 var amiyaWareHouseService = from d in dalAmiyaWareHouseService.GetAll().Include(x=>x.WareHouseNameManage).ThenInclude(x=>x.AmiyaWareHouseStorageRacks)
                                             where (keyword == null || d.GoodsName.Contains(keyword))
                                                && (string.IsNullOrEmpty(wareHouseInfoId) || d.GoodsSourceId == wareHouseInfoId)
+                                               && (string.IsNullOrEmpty(warehouseStorageRacksId) || d.StorageRacksId == warehouseStorageRacksId)
                                             select new AmiyaWareHouseDto
                                             {
                                                 Id = d.Id,

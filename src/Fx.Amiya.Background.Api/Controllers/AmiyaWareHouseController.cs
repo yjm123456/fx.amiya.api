@@ -47,16 +47,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 获取库存管理信息列表（分页）
         /// </summary>
         /// <param name="keyword"></param>
+        /// <param name="wareHouseInfoId">仓库id</param>
+        /// <param name="warehouseStorageRacksId">货架id</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
         
-        public async Task<ResultData<FxPageInfo<AmiyaWareHouseVo>>> GetListWithPageAsync( string keyword, string wareHouseInfoId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<AmiyaWareHouseVo>>> GetListWithPageAsync( string keyword, string wareHouseInfoId, string warehouseStorageRacksId, int pageNum, int pageSize)
         {
             try
             {
-                var q = await _amiyaWareHouseService.GetListWithPageAsync(keyword,wareHouseInfoId, pageNum, pageSize);
+                var q = await _amiyaWareHouseService.GetListWithPageAsync(keyword,wareHouseInfoId,warehouseStorageRacksId, pageNum, pageSize);
 
                 var amiyaWareHouse = from d in q.List
                               select new AmiyaWareHouseVo
@@ -281,8 +283,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 库存报表导出
         /// </summary>
-        /// <param name="keyword"></param>
-        /// <param name="wareHouseInfoId"></param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("AmiyaWareHouseExport")]
         [FxInternalAuthorize]
@@ -295,7 +296,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
                 operationAddDto.OperationBy = employeeId;
-                var q = await _amiyaWareHouseService.ExportListAsync(query.Keyword, query.WareHouseInfoId);
+                var q = await _amiyaWareHouseService.ExportListAsync(query.Keyword, query.WareHouseInfoId,query.WarehouseStorageRacksId);
                 var res = from d in q
                           select new ExportAmiyaWareHouseVo()
                           {
