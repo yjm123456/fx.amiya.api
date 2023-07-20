@@ -11,5 +11,6 @@ namespace Fx.Amiya.Dto.WxAppConfig
         public bool WeiFenXiao { get; set; }
 
         public bool DouYin { get; set; }
+        public bool WechatVideo { get; set; }
     }
 }

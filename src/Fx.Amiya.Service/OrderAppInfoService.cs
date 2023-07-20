@@ -360,5 +360,24 @@ namespace Fx.Amiya.Service
             tmallAppInfoDto.ExpireDate = appInfo.ExpireDate;
             return tmallAppInfoDto;
         }
+        /// <summary>
+        /// 根据引用类型获取应用证书集合
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public async Task<List<OrderAppInfoDto>> GetOrderAppinfosByType(int type)
+        {
+            return await dalOrderAppInfo.GetAll().Where(e=>e.AppType==(byte)type).Select(e=>new OrderAppInfoDto {
+                Id = e.Id,
+                AppKey = e.AppKey,
+                AppSecret = e.AppSecret,
+                AccessToken = e.AccessToken,
+                AuthorizeDate = e.AuthorizeDate,
+                AppType = e.AppType,
+                ExpireDate = e.ExpireDate,
+                BelongLiveAnchorId=e.BelongLiveAnchor
+            }).ToListAsync();
+
+        }
     }
 }

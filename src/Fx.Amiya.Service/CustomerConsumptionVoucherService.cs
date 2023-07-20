@@ -656,7 +656,7 @@ namespace Fx.Amiya.Service
         {
             var voucherList = from cv in dalCustomerConsumptionVoucher.GetAll().Where(e => e.CustomerId == customerId && e.IsUsed == false && e.IsExpire == false && e.ExpireDate > DateTime.Now)
                               join c in dalConsumptionVoucher.GetAll() on cv.ConsumptionVoucherId equals c.Id
-                              where (c.Type == 0 || c.Type == 4)
+                              where (c.Type == 4)
                               select new SimpleVoucherInfoDto
                               {
                                   CustomerVoucherId = cv.Id,

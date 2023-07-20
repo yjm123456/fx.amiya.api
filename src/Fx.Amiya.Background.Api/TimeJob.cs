@@ -46,6 +46,7 @@ namespace Fx.Amiya.Background.Api
         private IServiceProvider _serviceProvider;
         private ISyncWeChatVideoOrder _syncWeChatVideoOrder;
         private IWeChatVideoOrderService weChatVideoOrderService;
+        private IOrderAppInfoService orderAppInfoService;
         public TimeJob(IOrderService orderService, ISyncOrder syncOrder, ISyncWeiFenXiaoOrder syncWeiFenXiaoOrder, FxAppGlobal fxAppGlobal, IBindCustomerServiceService bindCustomerService,
           IIntegrationAccount integrationAccountService,
             ICustomerService customerService,
@@ -54,7 +55,7 @@ namespace Fx.Amiya.Background.Api
              ISyncTikTokOrder syncTikTokOrder,
              ICustomerAppointmentScheduleService customerAppointmentScheduleService,
              IMessageNoticeService messageNoticeService,
-             IMemberRankInfo memberRankInfoService, ITikTokOrderInfoService tokOrderInfoService, IServiceProvider serviceProvider, ISyncWeChatVideoOrder syncWeChatVideoOrder = null, IWeChatVideoOrderService weChatVideoOrderService = null)
+             IMemberRankInfo memberRankInfoService, ITikTokOrderInfoService tokOrderInfoService, IServiceProvider serviceProvider, ISyncWeChatVideoOrder syncWeChatVideoOrder = null, IWeChatVideoOrderService weChatVideoOrderService = null, IOrderAppInfoService orderAppInfoService = null)
         {
             this.orderService = orderService;
             this.syncOrder = syncOrder;
@@ -73,6 +74,7 @@ namespace Fx.Amiya.Background.Api
             _serviceProvider = serviceProvider;
             _syncWeChatVideoOrder = syncWeChatVideoOrder;
             this.weChatVideoOrderService = weChatVideoOrderService;
+            this.orderAppInfoService = orderAppInfoService;
         }
 
 
@@ -118,8 +120,19 @@ namespace Fx.Amiya.Background.Api
                     var douYinOrderResult4 = await _syncTikTokOrder.TranslateTradesSoldChangedOrders(date.AddMinutes(-15), date, 1);
                     tikTokOrderList.AddRange(douYinOrderResult4);
                 }
-
-                var wechatVideoOrderList = await _syncWeChatVideoOrder.TranslateTradesSoldChangedOrders(DateTime.Now, DateTime.Now, 10);
+                List<WechatVideoOrder> wechatVideoOrderList = new List<WechatVideoOrder>();
+                if (_fxAppGlobal.AppConfig.SyncOrderConfig.WechatVideo == true) {
+                    //获取视频号订单
+                    var liveAnchorIds=await orderAppInfoService.GetOrderAppinfosByType((byte)AppType.WeChatVideo);
+                    foreach (var item in liveAnchorIds)
+                    {
+                        if (!item.BelongLiveAnchorId.HasValue) {
+                            continue;
+                        }
+                        wechatVideoOrderList.AddRange(await _syncWeChatVideoOrder.TranslateTradesSoldChangedOrders(DateTime.Now, DateTime.Now, item.BelongLiveAnchorId.Value));
+                    }
+                }
+                
 
                 List<OrderInfoAddDto> amiyaOrderList = new List<OrderInfoAddDto>();
                 List<TikTokOrderAddDto> tikTokOrderAddList = new List<TikTokOrderAddDto>();

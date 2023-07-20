@@ -5277,6 +5277,11 @@ namespace Fx.Amiya.Service
                         {
                             if (orderVoucher != null)
                             {
+                                if (voucher.IsNeedMinPrice) {
+                                    if (cartCreateOrderDto.ActualPayment<voucher.MinPrice) {
+                                        throw new Exception("支付金额不满足抵用券使用条件！");
+                                    }
+                                }
                                 cartCreateOrderDto.IsUseCoupon = true;
                                 cartCreateOrderDto.CouponId = voucher.CustomerConsumptionVoucherId;
                                 if (orderVoucher.VoucherType == (int)ConsumptionVoucherType.Material)

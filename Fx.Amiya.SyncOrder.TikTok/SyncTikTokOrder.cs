@@ -56,11 +56,18 @@ namespace Fx.Amiya.SyncOrder.TikTok
         /// <returns></returns>
         public async Task<List<TikTokOrder>> TranslateTradesSoldChangedOrders(DateTime startDate, DateTime endDate, int belongLiveAnchorId)
         {
-            int pageNum = 0;
-            var tikTokAppInfo = await _tikTokAppInfoReader.GetTikTokAppInfo(belongLiveAnchorId);
-            List<TikTokOrder> amiyaOrderList = new List<TikTokOrder>();
-            amiyaOrderList = await RequestTikTokOrderAsync(startDate, endDate, tikTokAppInfo, pageNum, amiyaOrderList);
-            return amiyaOrderList;
+            try
+            {
+                int pageNum = 0;
+                var tikTokAppInfo = await _tikTokAppInfoReader.GetTikTokAppInfo(belongLiveAnchorId);
+                List<TikTokOrder> amiyaOrderList = new List<TikTokOrder>();
+                amiyaOrderList = await RequestTikTokOrderAsync(startDate, endDate, tikTokAppInfo, pageNum, amiyaOrderList);
+                return amiyaOrderList;
+            }
+            catch (Exception ex)
+            {
+                return new List<TikTokOrder>();
+            }
         }
 
         /// <summary>

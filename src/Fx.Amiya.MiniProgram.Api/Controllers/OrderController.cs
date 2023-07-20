@@ -617,6 +617,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     {
                         if (goodsInfo.GoodsConsumptionVoucher.Exists(e => e.ConsumptionVoucherId == voucher.ConsumptionVoucherId))
                         {
+                            if (voucher.IsNeedMinPrice==true) {
+                                if (amiyaOrder.ActualPayment < voucher.MinPrice) throw new Exception("不满足抵用券使用条件！");
+                            }
                             IsUseSpecifyVoucher = true;
                             amiyaOrder.IsUseCoupon = true;
                             amiyaOrder.CouponId = voucher.Id;
@@ -1123,6 +1126,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     amiyaOrder.ActualPayment = find.Price * item.Quantity;
                     if (voucher != null && IsSpecifyVoucher)
                     {
+                        if (voucher.IsNeedMinPrice==true) {
+                            if (amiyaOrder.ActualPayment<voucher.MinPrice) {
+                                throw new Exception("支付金额不满足抵用券使用条件！");
+                            }
+                        }
                         if (voucher.Type == (int)ConsumptionVoucherType.Material)
                         {
                             amiyaOrder.ActualPayment = (amiyaOrder.ActualPayment - voucher.DeductMoney <= 0) ? 0.01m : (amiyaOrder.ActualPayment - voucher.DeductMoney);

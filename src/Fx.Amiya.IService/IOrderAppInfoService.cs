@@ -50,6 +50,12 @@ namespace Fx.Amiya.IService
         /// <param name="belongLiveAnchor">归属主播id</param>
         /// <returns></returns>
         Task<OrderAppInfoDto> GetWeChatVideoAppInfo(int belongLiveAnchor);
+        /// <summary>
+        /// 根据引用类型获取应用证书集合
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        Task<List<OrderAppInfoDto>> GetOrderAppinfosByType(int type);
 
     }
 }

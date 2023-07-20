@@ -27,18 +27,26 @@ namespace Fx.Amiya.SyncOrder.WeChatVideo
         /// <returns></returns>
         public async Task<List<WechatVideoOrder>> TranslateTradesSoldChangedOrders(DateTime startDate, DateTime endDate, int belongLiveAnchorId)
         {
-            var appInfo = await wechatVideoAppInfoReader.GetWeChatVideoAppInfo(belongLiveAnchorId);
-            var idList = await GetAllOrderIdListAsync(appInfo.AccessToken);
-            List<WechatVideoOrder> orderList = new List<WechatVideoOrder>();
-            foreach (var item in idList)
+            try
             {
-                var order = await GetOrderInfoByIdAsync(item, appInfo.AccessToken, null);
-                if (order!=null) {
-                    orderList.Add(order);
+                var appInfo = await wechatVideoAppInfoReader.GetWeChatVideoAppInfo(belongLiveAnchorId);
+                var idList = await GetAllOrderIdListAsync(appInfo.AccessToken);
+                List<WechatVideoOrder> orderList = new List<WechatVideoOrder>();
+                foreach (var item in idList)
+                {
+                    var order = await GetOrderInfoByIdAsync(item, appInfo.AccessToken, null);
+                    if (order != null)
+                    {
+                        orderList.Add(order);
+                    }
                 }
+                orderList.ForEach(e => e.BelongLiveAnchorId = belongLiveAnchorId);
+                return orderList;
             }
-            orderList.ForEach(e => e.BelongLiveAnchorId = belongLiveAnchorId);
-            return orderList;
+            catch (Exception ex)
+            {
+                return new List<WechatVideoOrder>();
+            }
         }
         /// <summary>
         /// 获取指定时间所有的订单id
