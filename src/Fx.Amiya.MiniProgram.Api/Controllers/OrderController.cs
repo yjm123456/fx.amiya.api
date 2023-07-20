@@ -617,8 +617,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     {
                         if (goodsInfo.GoodsConsumptionVoucher.Exists(e => e.ConsumptionVoucherId == voucher.ConsumptionVoucherId))
                         {
-                            if (voucher.IsNeedMinPrice==true) {
-                                if (amiyaOrder.ActualPayment < voucher.MinPrice) throw new Exception("不满足抵用券使用条件！");
+                            if (voucher.IsNeedMinPrice && amiyaOrder.ActualPayment < voucher.MinPrice)
+                            {
+                                throw new Exception("不满足抵用券使用条件！");
                             }
                             IsUseSpecifyVoucher = true;
                             amiyaOrder.IsUseCoupon = true;
@@ -768,8 +769,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     shanDeOrderInfo.OpenId = sessionInfo.OpenId;
                     shanDeOrderInfo.TotalFee = totalFee;
                     shanDeOrderInfo.TradeId = tradeId;
-                    var result=await shanDePayMentService.OrderAsync(shanDeOrderInfo);
-                    if (result.Success==false) throw new Exception("下单失败,请重新下单");
+                    var result = await shanDePayMentService.OrderAsync(shanDeOrderInfo);
+                    if (result.Success == false) throw new Exception("下单失败,请重新下单");
                     PayRequestInfoVo payRequestInfo = new PayRequestInfoVo();
                     payRequestInfo.appId = result.PayParam.AppId;
                     payRequestInfo.package = result.PayParam.Package;
@@ -811,7 +812,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     }*/
                     //交易信息添加支付交易订单号
                     await orderService.TradeAddTransNoAsync(tradeId, result.TransNo);
-                }else if (appId == "wx695942e4818de445")
+                }
+                else if (appId == "wx695942e4818de445")
                 {
                     #region 慧收钱支付
                     HuiShouQianPayRequestInfo huiShouQianPayRequestInfo = new HuiShouQianPayRequestInfo();
@@ -952,7 +954,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
             foreach (var item in orderTrade.OrderInfoList)
             {
-                if (item.ExchangeType != (int)ExchangeType.HuiShouQian && item.ExchangeType != (int)ExchangeType.PointAndMoney && item.ExchangeType != (int)ExchangeType.ShanDePay &&item.ExchangeType!=(int)ExchangeType.ShanDePay)
+                if (item.ExchangeType != (int)ExchangeType.HuiShouQian && item.ExchangeType != (int)ExchangeType.PointAndMoney && item.ExchangeType != (int)ExchangeType.ShanDePay && item.ExchangeType != (int)ExchangeType.ShanDePay)
                 {
                     throw new Exception("该订单不支持重新支付,请取消订单重新下单并支付!");
                 }
@@ -1019,7 +1021,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 shanDeOrderInfo.AppId = appId;
                 shanDeOrderInfo.CreateDate = DateTime.Now;
                 shanDeOrderInfo.OpenId = sessionInfo.OpenId;
-                shanDeOrderInfo.TotalFee = orderTrade.TotalAmount??0.01m;
+                shanDeOrderInfo.TotalFee = orderTrade.TotalAmount ?? 0.01m;
                 shanDeOrderInfo.TradeId = tradeId;
                 var result = await shanDePayMentService.OrderAsync(shanDeOrderInfo);
                 if (result.Success == false) throw new Exception("下单失败,请重新下单");
@@ -1126,10 +1128,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     amiyaOrder.ActualPayment = find.Price * item.Quantity;
                     if (voucher != null && IsSpecifyVoucher)
                     {
-                        if (voucher.IsNeedMinPrice==true) {
-                            if (amiyaOrder.ActualPayment<voucher.MinPrice) {
-                                throw new Exception("支付金额不满足抵用券使用条件！");
-                            }
+                        if (voucher.IsNeedMinPrice && amiyaOrder.ActualPayment < voucher.MinPrice)
+                        {
+                            throw new Exception("支付金额不满足抵用券使用条件！");
                         }
                         if (voucher.Type == (int)ConsumptionVoucherType.Material)
                         {
