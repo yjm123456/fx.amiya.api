@@ -227,6 +227,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 checkDto.CheckRemark = updateVo.CheckRemark;
                 checkDto.CheckPicture = updateVo.CheckPicture;
                 checkDto.ReconciliationDocumentsId = updateVo.ReconciliationDocumentsId;
+                checkDto.CustomerServiceSettlePrice = updateVo.CustomerServiceSettlePrice;
                 await customerHospitalConsumeService.CustomerManageCheckAsync(checkDto);
                 return ResultData.Success();
             }

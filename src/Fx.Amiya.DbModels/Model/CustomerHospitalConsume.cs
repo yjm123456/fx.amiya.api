@@ -101,6 +101,11 @@ namespace Fx.Amiya.DbModels.Model
         public decimal? CheckSettlePrice { get; set; }
 
         /// <summary>
+        /// 审核助理服务费
+        /// </summary>
+        public decimal? CustomerServiceSettlePrice { get; set; }
+
+        /// <summary>
         /// 结算日期
         /// </summary>
         public DateTime? CheckDate { get; set; }

@@ -27,6 +27,10 @@ namespace Fx.Amiya.Dto.CustomerHospitalConsume
         /// 结算金额
         /// </summary>
         public decimal CheckSettlePrice { get; set; }
+        /// <summary>
+        /// 审核助理服务费
+        /// </summary>
+        public decimal? CustomerServiceSettlePrice { get; set; }
 
         /// <summary>
         /// 审核人员

@@ -350,6 +350,7 @@ namespace Fx.Amiya.Service
 
                         result.CheckState = (int)CheckType.CheckedSuccess;
                         result.CheckSettlePrice = updateDto.CheckSettlePrice;
+                        result.CustomerServiceSettlePrice = updateDto.CustomerServiceSettlePrice;
                         result.CheckBuyAgainPrice = updateDto.CheckBuyAgainPrice;
                     }
                     else
@@ -358,6 +359,7 @@ namespace Fx.Amiya.Service
                         {
                             result.CheckState = (int)CheckType.CheckedSuccess;
                             result.CheckSettlePrice += updateDto.CheckSettlePrice;
+                            result.CustomerServiceSettlePrice += updateDto.CustomerServiceSettlePrice;
                             result.CheckBuyAgainPrice = result.Price;
                         }
                         else
@@ -374,10 +376,12 @@ namespace Fx.Amiya.Service
                             if (result.CheckSettlePrice.HasValue)
                             {
                                 result.CheckSettlePrice += updateDto.CheckSettlePrice;
+                                result.CustomerServiceSettlePrice += updateDto.CustomerServiceSettlePrice;
                             }
                             else
                             {
                                 result.CheckSettlePrice = updateDto.CheckSettlePrice;
+                                result.CustomerServiceSettlePrice = updateDto.CustomerServiceSettlePrice;
                             }
                         }
                     }
@@ -406,6 +410,7 @@ namespace Fx.Amiya.Service
                 addRecommandDocumentSettleDto.BelongLiveAnchorAccount = result.LiveAnchorId;
                 addRecommandDocumentSettleDto.BelongEmpId = result.AddedBy;
                 addRecommandDocumentSettleDto.RecolicationPrice = updateDto.CheckBuyAgainPrice;
+                addRecommandDocumentSettleDto.CustomerServiceSettlePrice = updateDto.CustomerServiceSettlePrice.HasValue ? updateDto.CustomerServiceSettlePrice.Value : 0.00M;
                 addRecommandDocumentSettleDto.CreateBy = updateDto.CheckEmpId;
                 addRecommandDocumentSettleDto.CreateEmpId = result.AddedBy;
                 addRecommandDocumentSettleDto.AccountType = false;

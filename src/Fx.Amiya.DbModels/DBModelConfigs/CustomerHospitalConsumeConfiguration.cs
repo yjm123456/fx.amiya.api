@@ -38,7 +38,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.PersonTime).HasColumnName("person_time").HasColumnType("int").IsRequired();
             builder.Property(t => t.IsReceiveAdditionalPurchase).HasColumnName("is_receive_additional_purchase").HasColumnType("bit").IsRequired();
             builder.Property(t => t.CheckBuyAgainPrice).HasColumnName("check_buy_again_price").HasColumnType("decimal(10,2)").IsRequired(false);
-            builder.Property(t => t.CheckSettlePrice).HasColumnName("check_settle_price").HasColumnType("decimal(10,2)").IsRequired(false);
+            builder.Property(t => t.CheckSettlePrice).HasColumnName("check_settle_price").HasColumnType("decimal(10,2)").IsRequired(false); 
+            builder.Property(t => t.CustomerServiceSettlePrice).HasColumnName("customer_service_settle_price").HasColumnType("decimal(12,2)").IsRequired(false);
             builder.Property(t => t.CheckDate).HasColumnName("check_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(t => t.CheckState).HasColumnName("check_state").HasColumnType("int").IsRequired();
             builder.Property(t => t.CheckBy).HasColumnName("check_by").HasColumnType("int").IsRequired();
