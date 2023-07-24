@@ -525,7 +525,7 @@ namespace Fx.Amiya.Service
 
         public async Task UpdateState(int state, string customerName, string phone)
         {
-            var customerBaseInfoService = await dalCustomerBaseInfo.GetAll().SingleOrDefaultAsync(e => e.Phone == phone);
+            var customerBaseInfoService = await dalCustomerBaseInfo.GetAll().SingleOrDefaultAsync(e => e.Phone == phone||e.OtherPhone.Contains(phone));
             if (customerBaseInfoService == null)
             {
                 throw new Exception("客户信息未完善，请在“订单详情-顾客信息”中完善客户基本资料后点击“确定”后重试！");
