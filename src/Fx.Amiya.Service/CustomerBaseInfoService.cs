@@ -248,9 +248,8 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var customerBaseInfoService = await dalCustomerBaseInfo.GetAll().FirstOrDefaultAsync(e => e.Phone == phone);
+                var customerBaseInfoService = await dalCustomerBaseInfo.GetAll().FirstOrDefaultAsync(e => e.Phone == phone || e.OtherPhone.Contains(phone));
                 CustomerBaseInfoDto customerBaseInfoServiceDto = new CustomerBaseInfoDto();
-                customerBaseInfoServiceDto.Phone = phone;
                 if (customerBaseInfoService != null)
                 {
                     customerBaseInfoServiceDto.Id = customerBaseInfoService.Id;
@@ -265,6 +264,7 @@ namespace Fx.Amiya.Service
                     customerBaseInfoServiceDto.Birthday = customerBaseInfoService.Birthday;
                     customerBaseInfoServiceDto.City = customerBaseInfoService.City;
                     customerBaseInfoServiceDto.Occupation = customerBaseInfoService.Occupation;
+                    customerBaseInfoServiceDto.Phone = customerBaseInfoService.Phone;
                     customerBaseInfoServiceDto.OtherPhone = customerBaseInfoService.OtherPhone;
                     customerBaseInfoServiceDto.DetailAddress = customerBaseInfoService.DetailAddress;
                     customerBaseInfoServiceDto.IsCall = customerBaseInfoService.IsCall;

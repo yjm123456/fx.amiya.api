@@ -27,6 +27,7 @@ namespace Fx.Amiya.Service
         private IContentPlatFormCustomerPictureService _contentPlatFormCustomerPictureService;
         private IHospitalInfoService _hospitalInfoService;
         private ICompanyBaseInfoService companyBaseInfoService;
+        private ICustomerBaseInfoService customerBaseInfoService;
         private IDalBindCustomerService _dalBindCustomerService;
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private IWxAppConfigService wxAppConfigService;
@@ -40,6 +41,7 @@ namespace Fx.Amiya.Service
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
             ICompanyBaseInfoService companyBaseInfoService,
+            ICustomerBaseInfoService customerBaseInfoService,
             IWxAppConfigService wxAppConfigService,
             IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
             IDalBindCustomerService dalBindCustomerService,
@@ -56,6 +58,7 @@ namespace Fx.Amiya.Service
             _dalBindCustomerService = dalBindCustomerService;
             _dalAmiyaEmployee = dalAmiyaEmployee;
             this.companyBaseInfoService = companyBaseInfoService;
+            this.customerBaseInfoService = customerBaseInfoService;
             _dalHospitalInfo = dalHospitalInfo;
             this.dalRecommandDocumentSettle = dalRecommandDocumentSettle;
             this.dalCompanyBaseInfo = dalCompanyBaseInfo;
@@ -198,7 +201,8 @@ namespace Fx.Amiya.Service
             try
             {
                 var dealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(z => z.ContentPlatformOrderSendList) select d;
-
+                var customerBaseInfo = await customerBaseInfoService.GetByPhoneAsync(keyWord);
+                var basePhone = customerBaseInfo.Phone;
                 var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
                 //普通客服角色过滤其他订单信息只展示自己录单信息
                 if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
@@ -311,7 +315,7 @@ namespace Fx.Amiya.Service
                     config.HidePhoneNumber = false;
                 }
                 var ContentPlatFOrmOrderDealInfo = from d in dealInfo
-                                                   where (string.IsNullOrEmpty(keyWord) || d.ContentPlatFormOrderId.Contains(keyWord) || d.ContentPlatFormOrder.Phone.Contains(keyWord) || d.Id.Contains(keyWord))
+                                                   where (string.IsNullOrEmpty(keyWord) || d.ContentPlatFormOrderId.Contains(keyWord) || d.ContentPlatFormOrder.Phone.Contains(keyWord) || d.Id.Contains(keyWord) || d.ContentPlatFormOrder.Phone.Contains(basePhone))
                                                    && (!isToHospital.HasValue || d.IsToHospital == isToHospital.Value)
                                                    && (!toHospitalType.HasValue || d.ToHospitalType == toHospitalType.Value)
                                                    && (!isDeal.HasValue || d.IsDeal == isDeal.Value)
@@ -371,7 +375,7 @@ namespace Fx.Amiya.Service
                                                        BelongCompany = d.BelongCompany,
                                                        ConsumptionType = d.ConsumptionType,
                                                        ConsumptionTypeText = ServiceClass.GetConsumptionTypeText(d.ConsumptionType),
-                                                       CustomerServiceSettlePrice=d.CustomerServiceSettlePrice ?? 0m
+                                                       CustomerServiceSettlePrice = d.CustomerServiceSettlePrice ?? 0m
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -493,7 +497,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord, int employeeId, bool hidePhone, int? consumptionType,List<int?> liveAnchorIds)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord, int employeeId, bool hidePhone, int? consumptionType, List<int?> liveAnchorIds)
         {
             try
             {
@@ -603,7 +607,7 @@ namespace Fx.Amiya.Service
                                                    && (!customerServiceId.HasValue || d.ContentPlatFormOrder.BelongEmpId == customerServiceId || d.ContentPlatFormOrder.SupportEmpId == customerServiceId)
                                                    && (!minAddOrderPrice.HasValue || d.ContentPlatFormOrder.AddOrderPrice >= minAddOrderPrice)
                                                    && (!maxAddOrderPrice.HasValue || d.ContentPlatFormOrder.AddOrderPrice <= maxAddOrderPrice)
-                                                   && (liveAnchorIds.Count<=0 || liveAnchorIds.Contains(d.ContentPlatFormOrder.LiveAnchorId))
+                                                   && (liveAnchorIds.Count <= 0 || liveAnchorIds.Contains(d.ContentPlatFormOrder.LiveAnchorId))
                                                    select new ContentPlatFormOrderDealInfoDto
                                                    {
                                                        Id = d.Id,
@@ -653,7 +657,7 @@ namespace Fx.Amiya.Service
                                                        IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
                                                        ConsumptionType = d.ConsumptionType,
                                                        ConsumptionTypeText = ServiceClass.GetConsumptionTypeText(d.ConsumptionType),
-                                                       CustomerServiceSettlePrice=d.CustomerServiceSettlePrice ?? 0m
+                                                       CustomerServiceSettlePrice = d.CustomerServiceSettlePrice ?? 0m
                                                    };
 
                 List<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new List<ContentPlatFormOrderDealInfoDto>();

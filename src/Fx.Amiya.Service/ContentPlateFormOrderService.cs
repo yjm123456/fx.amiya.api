@@ -40,6 +40,7 @@ namespace Fx.Amiya.Service
         private IAmiyaGoodsDemandService amiyaGoodsDemandService;
         private IRecommandDocumentSettleService recommandDocumentSettleService;
         private ILiveAnchorWeChatInfoService liveAnchorWeChatInfoService;
+        private ICustomerBaseInfoService customerBaseInfoService;
         private IBindCustomerServiceService bindCustomerServiceService;
         private IHospitalCustomerInfoService hospitalCustomerInfoService;
         private IOrderCheckPictureService _orderCheckPictureService;
@@ -64,10 +65,11 @@ namespace Fx.Amiya.Service
         private IDalHospitalInfo dalHospitalInfo;
         private ICustomerAppointmentScheduleService customerAppointmentScheduleService;
         private IDalContentPlatformOrderSend dalContentPlatformOrderSend;
-        
+
         public ContentPlateFormOrderService(
            IDalContentPlatformOrder dalContentPlatformOrder,
            IDalAmiyaEmployee dalAmiyaEmployee,
+            ICustomerBaseInfoService customerBaseInfoService,
            IRecommandDocumentSettleService recommandDocumentSettleService,
            ILiveAnchorWeChatInfoService liveAnchorWeChatInfoService,
             ILiveAnchorService liveAnchorService,
@@ -99,6 +101,7 @@ namespace Fx.Amiya.Service
             this.hospitalCustomerInfoService = hospitalCustomerInfoService;
             this.bindCustomerServiceService = bindCustomerServiceService;
             _dalBindCustomerService = dalBindCustomerService;
+            this.customerBaseInfoService = customerBaseInfoService;
             this.orderRemarkService = orderRemarkService;
             _departmentService = departmentService;
             this.recommandDocumentSettleService = recommandDocumentSettleService;
@@ -281,8 +284,10 @@ namespace Fx.Amiya.Service
         {
             try
             {
+                var customerBaseInfo = await customerBaseInfoService.GetByPhoneAsync(keyword);
+                var basePhone = customerBaseInfo.Phone;
                 List<int> liveAnchorIds = new List<int>();
-                if (liveAnchorId.Count>0)
+                if (liveAnchorId.Count > 0)
                 {
                     liveAnchorIds.AddRange(liveAnchorId);
                 }
@@ -301,7 +306,7 @@ namespace Fx.Amiya.Service
                 }
                 var orders = from d in _dalContentPlatformOrder.GetAll()
                              where (string.IsNullOrWhiteSpace(keyword) || d.Id.Contains(keyword) || d.ConsultingContent.Contains(keyword) || d.CustomerName.Contains(keyword) || d.AcceptConsulting.Contains(keyword) || d.Remark.Contains(keyword) || d.LiveAnchorWeChatNo.Contains(keyword)
-                             || d.Phone.Contains(keyword))
+                             || d.Phone.Contains(keyword) || d.Phone.Contains(basePhone))
                              && (orderStatus == null || d.OrderStatus == orderStatus)
                              && (!appointmentHospital.HasValue || d.AppointmentHospitalId == appointmentHospital)
                              && (!belongMonth.HasValue || d.BelongMonth == belongMonth)
@@ -506,7 +511,7 @@ namespace Fx.Amiya.Service
                               where o.ContentPlatformOrderSendList.Count(e => e.ContentPlatformOrderId == o.Id) == 0
                               && (keyword == null || o.Id == keyword || o.Phone == keyword || o.AmiyaGoodsDemand.ProjectNname.Contains(keyword) || o.HospitalInfo.Name.Contains(keyword))
                               && (orderSource == -1 || o.OrderSource == orderSource)
-                              && (liveAnchorIds.Count<=0 || liveAnchorIds.Contains(o.LiveAnchorId))
+                              && (liveAnchorIds.Count <= 0 || liveAnchorIds.Contains(o.LiveAnchorId))
                               orderby b.CreateDate descending
                               select new UnSendContentPlatFormOrderInfoDto
                               {
@@ -1200,7 +1205,7 @@ namespace Fx.Amiya.Service
                             && (!belongEmpId.HasValue || d.BelongEmpId == belongEmpId)
                             && (orderSource == -1 || d.OrderSource == orderSource)
                             && (string.IsNullOrWhiteSpace(hospitalDepartmentId) || d.HospitalDepartmentId == hospitalDepartmentId)
-                            && (liveAnchorIds.Count<=0 || liveAnchorIds.Contains(d.LiveAnchorId))
+                            && (liveAnchorIds.Count <= 0 || liveAnchorIds.Contains(d.LiveAnchorId))
                             && (string.IsNullOrEmpty(contentPlateFormId) || d.ContentPlateformId == contentPlateFormId)
                              select d;
 
@@ -2620,7 +2625,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlateformOrderSimpleInfoDto>> GetContentOrderInfoByEncryPhone(string phone, int pageNum,int pageSize)
+        public async Task<FxPageInfo<ContentPlateformOrderSimpleInfoDto>> GetContentOrderInfoByEncryPhone(string phone, int pageNum, int pageSize)
         {
             FxPageInfo<ContentPlateformOrderSimpleInfoDto> fxPageInfo = new FxPageInfo<ContentPlateformOrderSimpleInfoDto>();
             /*var config = await _dalConfig.GetAll().SingleOrDefaultAsync();
@@ -2631,8 +2636,8 @@ namespace Fx.Amiya.Service
                 Id = e.Id,
                 AppointmentHospital = e.AppointmentHospitalId.HasValue ? dalHospitalInfo.GetAll().Where(h => h.Id == e.AppointmentHospitalId.Value).FirstOrDefault().Name : "未知医院",
                 OrderStatus = ServiceClass.GetContentPlateFormOrderStatusText((byte)e.OrderStatus),
-                ConsultContent=e.ConsultingContent,
-                IsToHosiotal=e.IsToHospital
+                ConsultContent = e.ConsultingContent,
+                IsToHosiotal = e.IsToHospital
             });
             fxPageInfo.TotalCount = result.Count();
             fxPageInfo.List = result.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
@@ -4291,7 +4296,7 @@ namespace Fx.Amiya.Service
             return Math.Round(a.Value / b.Value, 2);
         }
 
-       
+
 
 
         #endregion
