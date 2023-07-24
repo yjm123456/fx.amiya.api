@@ -122,6 +122,10 @@ namespace Fx.Amiya.Dto.TmallOrder
         /// 是否发货
         /// </summary>
         public bool IsSendOrder { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remark { get; set; }
 
         #region  财务审核板块
         /// <summary>

@@ -242,6 +242,10 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         /// 对账单id
         /// </summary>
         public string ReconciliationDocumentsId { get; set; }
+        /// <summary>
+        /// 订单备注
+        /// </summary>
+        public string Remark { get; set; }
 
 
         #endregion

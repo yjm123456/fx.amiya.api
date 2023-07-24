@@ -257,7 +257,8 @@ namespace Fx.Amiya.Service
                                 FinalConsumptionHospital = d.FinalConsumptionHospital,
                                 LiveAnchorId = d.LiveAnchorId,
                                 Standard = d.Standard,
-                                IsSendOrder = dalSendGoodsRecord.GetAll().Any(e=>e.OrderId==d.Id)
+                                IsSendOrder = dalSendGoodsRecord.GetAll().Any(e=>e.OrderId==d.Id),
+                                Remark=d.OrderTrade?.Remark
                             };
 
 

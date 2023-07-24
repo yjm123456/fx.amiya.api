@@ -596,7 +596,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 LiveAnchorPlatForm = d.LiveAnchorPlatForm,
                                 BelongEmpName = d.BelongEmpName,
                                 Standard = d.Standard,
-                                IsSendOrder=d.IsSendOrder
+                                IsSendOrder=d.IsSendOrder,
+                                Remark=d.Remark ?? ""
                             };
                 FxPageInfo<OrderInfoVo> orderPageInfo = new FxPageInfo<OrderInfoVo>();
                 orderPageInfo.TotalCount = q.TotalCount;
