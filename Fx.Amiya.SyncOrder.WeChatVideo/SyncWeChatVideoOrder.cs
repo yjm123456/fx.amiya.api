@@ -68,8 +68,8 @@ namespace Fx.Amiya.SyncOrder.WeChatVideo
         /// <returns></returns>
         private async Task<List<string>> GetOrderIdLIstAsync(string token, object param)
         {
-            var start = DateTimeOffset.Now.ToUnixTimeSeconds() - 2100;
-            var end = DateTimeOffset.Now.ToUnixTimeSeconds() - 1200;
+            var start = DateTimeOffset.Now.ToUnixTimeSeconds() - 2400;
+            var end = DateTimeOffset.Now.ToUnixTimeSeconds();
             if (param == null)
             {
                 param = new { update_time_range = new { start_time = start, end_time = end }, page_size = 100 };
@@ -143,6 +143,7 @@ namespace Fx.Amiya.SyncOrder.WeChatVideo
             return start.AddSeconds(timestamp);
         }
 
+        
 
     }
 }

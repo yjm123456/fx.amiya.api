@@ -175,6 +175,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             if (decryptRes != null)
             {
+                if (string.IsNullOrEmpty(decryptRes.Phone)) {
+                    return ResultData.Fail("解密失败");
+                }
                 TikTokUserInfoVo tikTokUserInfoVo = new TikTokUserInfoVo();
                 tikTokUserInfoVo.Id = decryptRes.Id;
                 tikTokUserInfoVo.Name = decryptRes.Name;

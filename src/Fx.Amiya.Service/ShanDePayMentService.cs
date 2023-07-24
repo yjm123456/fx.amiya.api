@@ -37,7 +37,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<ShanDeOrderResult> OrderAsync(ShanDeOrderInfo orderInfo)
         {
-            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202307072015").FirstOrDefault();
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202307072015").FirstOrDefault();            
             if (payInfo == null) throw new Exception("没有该支付方式配置信息！");
             //公共请求参数
             ShanDePayCommonParam commonParam = new ShanDePayCommonParam();
@@ -73,12 +73,32 @@ namespace Fx.Amiya.Service
             var order = dalOrderRefund.GetAll().Where(e => e.Id == id).SingleOrDefault();
             if (order == null) { throw new Exception("退款编号错误"); }
             if (order.CheckState != (int)CheckState.CheckSuccess) throw new Exception("只有审核通过的订单才能退款");
-            var success = dalOrderRefund.GetAll().Where(e => e.TradeId == order.TradeId && e.RefundState == (int)RefundState.RefundSuccess).ToList();
-            if (success.Count > 0)
+            if (order.IsPartial)
             {
-                throw new Exception("订单已退款,请勿重复请求");
+                var success = dalOrderRefund.GetAll().Where(e => e.TradeId == order.TradeId && e.OrderId == order.OrderId && e.RefundState == (int)RefundState.RefundSuccess).ToList();
+                if (success.Count > 0)
+                {
+                    throw new Exception("订单已退款,请勿重复请求");
+                }
+                if (order.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
             }
-            if (order.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
+            else
+            {
+                var success = dalOrderRefund.GetAll().Where(e => e.TradeId == order.TradeId && e.RefundState == (int)RefundState.RefundSuccess).ToList();
+                if (success.Count > 0)
+                {
+                    throw new Exception("订单已退款,请勿重复请求");
+                }
+                if (order.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
+            }
+
+            //var success = dalOrderRefund.GetAll().Where(e => e.TradeId == order.TradeId && e.RefundState == (int)RefundState.RefundSuccess).ToList();
+            //if (success.Count > 0)
+            //{
+            //    throw new Exception("订单已退款,请勿重复请求");
+            //}
+            //if (order.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
+
             var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202307072015").FirstOrDefault();
             if (payInfo == null) throw new Exception("没有该支付方式配置信息！");
             //公共请求参数

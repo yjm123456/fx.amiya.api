@@ -54,12 +54,38 @@ namespace Fx.Amiya.Background.Api.Controllers
                         RefundStartDate = DateTime.Now,
                         RefundState = (byte)RefundState.RefundSuccess,
                         RefundFailReason = "",
-                        RefundTradeNo=result.TradeNo
+                        RefundTradeNo = result.TradeNo
                     };
                     //修改退款订单状态
                     await orderRefundService.UpdateStartRefundStateAsync(refundStartUpdateDto);
                     //修改订单状态                   
-                    await orderService.UpdateStatusByTradeIdAsync(result.TardeId,OrderStatusCode.TRADE_CLOSED);
+                    if (!result.IsPartial)
+                    {
+                        await orderService.UpdateStatusByTradeIdAsync(result.TardeId, OrderStatusCode.TRADE_CLOSED);
+                    }
+                    else
+                    {
+                        bool isAllRefund = true;
+                        var orderList = await orderService.GetOrderListByTradeIdAsync(result.TardeId);
+                        foreach (var item in orderList)
+                        {
+                            if (item.Id==result.OrderId) {
+                                continue;
+                            }
+                            if (item.StatusCode != OrderStatusCode.TRADE_CLOSED)
+                            {
+                                isAllRefund = false;
+                            }
+                        }
+                        if (isAllRefund)
+                        {
+                            await orderService.UpdateStatusByTradeIdAsync(result.TardeId, OrderStatusCode.TRADE_CLOSED);
+                        }
+                        else {
+                            await orderService.UpdateOrderStatus(result.OrderId,OrderStatusCode.TRADE_CLOSED);
+                        }
+                    }
+
                     unitOfWork.Commit();
                     return ResultData.Success();
                 }
@@ -70,7 +96,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                         Id = id,
                         RefundStartDate = DateTime.Now,
                         RefundState = (byte)RefundState.RefundFail,
-                        RefundFailReason=result.Msg
+                        RefundFailReason = result.Msg
                     };
                     await orderRefundService.UpdateStartRefundStateAsync(refundStartUpdateDto);
                     unitOfWork.Commit();

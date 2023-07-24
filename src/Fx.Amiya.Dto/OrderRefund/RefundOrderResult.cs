@@ -24,5 +24,13 @@ namespace Fx.Amiya.Dto.OrderRefund
         /// 系统内部交易编号
         /// </summary>
         public string TardeId { get; set; }
+        /// <summary>
+        /// 是否是部分退款
+        /// </summary>
+        public bool IsPartial { get; set; }
+        /// <summary>
+        /// 退款子订单id
+        /// </summary>
+        public string OrderId { get; set; }
     }
 }

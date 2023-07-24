@@ -52,5 +52,6 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Order
         /// 抵用券抵扣金额
         /// </summary>
         public decimal DeductMoney { get; set; }
+        
     }
 }

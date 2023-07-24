@@ -597,12 +597,19 @@ namespace Fx.Amiya.IService
 
         Task<List<OrderWriteOffDto>> GetCustomerPaidOrderReceivableAsync(DateTime? startDate, DateTime? endDate, int? CheckState, bool? ReturnBackPriceState, string customerName, bool isHidePhone);
         /// <summary>
-        /// 积分加钱购退还积分(无事务版本,事务有外层控制)
+        /// 积分加钱购全部退款退还积分(无事务版本,事务有外层控制)
         /// </summary>
-        /// <param name="tradeId"></param>
+        /// <param name="tradeId">交易id</param>
         /// <param name="customerId"></param>
         /// <returns></returns>
         Task CancelPointAndMoneyOrderWithNoTransactionAsync(string tradeId, string customerId);
+        /// <summary>
+        /// 积分加钱购部分退款退还积分(无事务版本,事务有外层控制)
+        /// </summary>
+        /// <param name="orderId">订单id</param>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        Task CancelPartPointAndMoneyOrderWithNoTransactionAsync(string orderId, string customerId);
 
         /// <summary>
         /// 购物车生成订单

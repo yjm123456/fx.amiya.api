@@ -54,6 +54,11 @@ namespace Fx.Amiya.IService
         /// <param name="baseInfoId"></param>
         /// <returns></returns>
         Task<List<LiveAnchorDto>> GetLiveAnchorListByBaseInfoId(string baseInfoId);
+        /// <summary>
+        /// 获取需要同步视频号订单的主播信息
+        /// </summary>
+        /// <returns></returns>
+        Task<List<LiveAnchorDto>> GetWechatVideoOrderLiveAnchorIdAsync();
 
     }
 }

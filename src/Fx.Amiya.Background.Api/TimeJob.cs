@@ -81,7 +81,7 @@ namespace Fx.Amiya.Background.Api
         /// <summary>
         /// Begin:开始时间，Interval：隔多长时间执行一次（单位毫秒），SkipWhileExecuting：是否等待上个任务执行完再开始执行
         /// </summary>
-        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 5, SkipWhileExecuting = true)]
+        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 20, SkipWhileExecuting = true)]
         public async Task Run()
         {
             try
@@ -101,6 +101,8 @@ namespace Fx.Amiya.Background.Api
                 //    var weiFenXiaoOrderResult = await _syncWeiFenXiaoOrder.TranslateTradesSoldChangedOrders(date.AddMinutes(-15), date);
                 //    orderList.AddRange(weiFenXiaoOrderResult);
                 //}
+
+                ////获取抖音发生改变的订单，开始时间和结束时间不能超过一天
                 if (_fxAppGlobal.AppConfig.SyncOrderConfig.DouYin == true)
                 {
                     ////获取抖音发生改变的订单，开始时间和结束时间不能超过一天
@@ -121,18 +123,20 @@ namespace Fx.Amiya.Background.Api
                     tikTokOrderList.AddRange(douYinOrderResult4);
                 }
                 List<WechatVideoOrder> wechatVideoOrderList = new List<WechatVideoOrder>();
-                if (_fxAppGlobal.AppConfig.SyncOrderConfig.WechatVideo == true) {
+                if (_fxAppGlobal.AppConfig.SyncOrderConfig.WechatVideo == true)
+                {
                     //获取视频号订单
-                    var liveAnchorIds=await orderAppInfoService.GetOrderAppinfosByType((byte)AppType.WeChatVideo);
+                    var liveAnchorIds = await orderAppInfoService.GetOrderAppinfosByType((byte)AppType.WeChatVideo);
                     foreach (var item in liveAnchorIds)
                     {
-                        if (!item.BelongLiveAnchorId.HasValue) {
+                        if (!item.BelongLiveAnchorId.HasValue)
+                        {
                             continue;
                         }
                         wechatVideoOrderList.AddRange(await _syncWeChatVideoOrder.TranslateTradesSoldChangedOrders(DateTime.Now, DateTime.Now, item.BelongLiveAnchorId.Value));
                     }
                 }
-                
+
 
                 List<OrderInfoAddDto> amiyaOrderList = new List<OrderInfoAddDto>();
                 List<TikTokOrderAddDto> tikTokOrderAddList = new List<TikTokOrderAddDto>();

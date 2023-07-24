@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.HuiShouQianPay;
+﻿using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto.HuiShouQianPay;
 using Fx.Amiya.Dto.OrderRefund;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -116,14 +117,14 @@ namespace Fx.Amiya.Service
         /// 创建慧收钱支付订单
         /// </summary>
         /// <returns></returns>
-        public async Task<HuiShouQianOrderResult> CreateHuiShouQianOrder(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo, string openId,string customerId)
+        public async Task<HuiShouQianOrderResult> CreateHuiShouQianOrder(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo, string openId, string customerId)
         {
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
-            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();           
             huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
             huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
             huiShouQianPackageInfo.Key = payInfo.PartnerKey;
-            var commonParam = BuildCommonParam(huiShouQianPayRequestInfo, openId,customerId);
+            var commonParam = BuildCommonParam(huiShouQianPayRequestInfo, openId, customerId);
             return PostData(huiShouQianPackageInfo.OrderUrl + "?" + commonParam, "");
 
         }
@@ -163,7 +164,7 @@ namespace Fx.Amiya.Service
                     if (response.success == "true" && response.result.orderStatus != "FAIL")
                     {
                         HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
-                        var payInfo = dalWechatPayInfo.GetAll().Where(e=>e.Id== "202306281235").FirstOrDefault();
+                        var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();                       
                         huiShouQianPackageInfo.Key = payInfo.PartnerKey;
                         huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
                         huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
@@ -216,33 +217,33 @@ namespace Fx.Amiya.Service
             if (order.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
             HuiShouQianRefundRequestParam huiShouQianRefundRequestParam = new HuiShouQianRefundRequestParam();
             huiShouQianRefundRequestParam.TransNo = Guid.NewGuid().ToString().Replace("-", "");
-            huiShouQianRefundRequestParam.OrigTransNo = string.IsNullOrEmpty(order.TransNo)?order.TradeId:order.TransNo;
+            huiShouQianRefundRequestParam.OrigTransNo = string.IsNullOrEmpty(order.TransNo) ? order.TradeId : order.TransNo;
             huiShouQianRefundRequestParam.OrigOrderAmt = (order.ActualPayAmount * 100m).ToString().Split(".")[0];
             huiShouQianRefundRequestParam.OrderAmt = (order.ActualPayAmount * 100m).ToString().Split(".")[0];
             huiShouQianRefundRequestParam.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
             huiShouQianRefundRequestParam.RefundReason = "退款";
             huiShouQianRefundRequestParam.Extend = order.Id;
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
-            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();          
             huiShouQianPackageInfo.Key = payInfo.PartnerKey;
             huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
             huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
             var commonParam = BuildRefundCommonParam(huiShouQianRefundRequestParam);
             var result = await PostRefundData(huiShouQianPackageInfo.RefundUrl + "?", commonParam);
             result.TardeId = order.TradeId;
-            
+
             return result;
         }
         /// <summary>
         /// 创建公共请求参数
         /// </summary>
         /// <returns></returns>
-        private string BuildCommonParam(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo, string openId,string customerId)
+        private string BuildCommonParam(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo, string openId, string customerId)
         {
             var customerInfo = dalCustomerInfo.GetAll().Where(e => e.Id == customerId).SingleOrDefault();
             if (customerInfo == null) throw new Exception("用户编号错误！");
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
-            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();            
             huiShouQianPackageInfo.Key = payInfo.PartnerKey;
             huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
             huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
@@ -274,7 +275,7 @@ namespace Fx.Amiya.Service
         private string BuildRefundCommonParam(HuiShouQianRefundRequestParam huiShouQianRefundRequestParam)
         {
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
-            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();          
             huiShouQianPackageInfo.Key = payInfo.PartnerKey;
             huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
             huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
@@ -284,8 +285,8 @@ namespace Fx.Amiya.Service
             serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             string signContent = JsonConvert.SerializeObject(huiShouQianRefundRequestParam, serializerSettings);
             var signData = BuildPayParamString(huiShouQianCommonInfo.Method, huiShouQianCommonInfo.Version, huiShouQianCommonInfo.Format, huiShouQianCommonInfo.MerchantNo, huiShouQianCommonInfo.SignType, signContent, huiShouQianPackageInfo.Key);
-            RSAHelper rsa = new RSAHelper(RSAType.RSA2,Encoding.UTF8, huiShouQianPackageInfo.PrivateKey,"");
-            var sign= rsa.Sign(signData);
+            RSAHelper rsa = new RSAHelper(RSAType.RSA2, Encoding.UTF8, huiShouQianPackageInfo.PrivateKey, "");
+            var sign = rsa.Sign(signData);
             huiShouQianCommonInfo.Sign = sign;
             return BuildRefundQueryParamString(huiShouQianCommonInfo.Method, huiShouQianCommonInfo.Version, huiShouQianCommonInfo.Format, huiShouQianCommonInfo.MerchantNo, huiShouQianCommonInfo.SignType, signContent, sign);
         }
@@ -505,25 +506,37 @@ namespace Fx.Amiya.Service
             var order = dalOrderRefund.GetAll().Where(e => e.Id == id).SingleOrDefault();
             if (order == null) { throw new Exception("退款编号错误"); }
             if (order.CheckState != (int)CheckState.CheckSuccess) throw new Exception("只有审核通过的订单才能退款");
-            var success = dalOrderRefund.GetAll().Where(e => e.TradeId == order.TradeId && e.RefundState == (int)RefundState.RefundSuccess).ToList();
-            if (success.Count > 0)
+            if (order.IsPartial)
             {
-                throw new Exception("订单已退款,请勿重复请求");
+                var success = dalOrderRefund.GetAll().Where(e => e.TradeId == order.TradeId && e.OrderId == order.OrderId && e.RefundState == (int)RefundState.RefundSuccess).ToList();
+                if (success.Count > 0)
+                {
+                    throw new Exception("订单已退款,请勿重复请求");
+                }
+                if (order.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
             }
-            if (order.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
+            else
+            {
+                var success = dalOrderRefund.GetAll().Where(e => e.TradeId == order.TradeId && e.RefundState == (int)RefundState.RefundSuccess).ToList();
+                if (success.Count > 0)
+                {
+                    throw new Exception("订单已退款,请勿重复请求");
+                }
+                if (order.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
+            }
 
-           
+
 
             HuiShouQianRefundRequestParam huiShouQianRefundRequestParam = new HuiShouQianRefundRequestParam();
             huiShouQianRefundRequestParam.TransNo = Guid.NewGuid().ToString().Replace("-", "");
             huiShouQianRefundRequestParam.OrigTransNo = string.IsNullOrEmpty(order.TransNo) ? order.TradeId : order.TransNo;
             huiShouQianRefundRequestParam.OrigOrderAmt = (order.ActualPayAmount * 100m).ToString().Split(".")[0];
-            huiShouQianRefundRequestParam.OrderAmt = (order.ActualPayAmount * 100m).ToString().Split(".")[0];
+            huiShouQianRefundRequestParam.OrderAmt = (order.RefundAmount * 100m).ToString().Split(".")[0];
             huiShouQianRefundRequestParam.RequestDate = DateTime.Now.ToString("yyyyMMddHHmmss");
             huiShouQianRefundRequestParam.RefundReason = "退款";
             huiShouQianRefundRequestParam.Extend = order.Id;
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
-            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();           
             huiShouQianPackageInfo.Key = payInfo.PartnerKey;
             huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
             huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;

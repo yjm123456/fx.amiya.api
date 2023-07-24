@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fx.Amiya.IService;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,5 +20,25 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Order
         public string StatusText { get; set; }
 
         public List<OrderInfoVo> OrderInfoList { get; set; }
+        /// <summary>
+        /// 子订单是否包含退款订单
+        /// </summary>
+        public bool HasRefundOrder
+        {
+            get
+            {
+                return OrderInfoList.Any(e => e.StatusCode == OrderStatusCode.REFUNDING || e.StatusCode == OrderStatusCode.TRADE_CLOSED);
+            }
+        }
+        /// <summary>
+        /// 是否包含多个子订单
+        /// </summary>
+        public bool IsMultiOrder
+        {
+            get
+            {
+                return OrderInfoList.Count() > 1;
+            }
+        }
     }
 }

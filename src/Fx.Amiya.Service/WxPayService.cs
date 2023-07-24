@@ -42,6 +42,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<RefundOrderResult> WechatRefundAsync(string refundOrderId)
         {
+            RefundOrderResult refunResult = new RefundOrderResult();
             var refundOrder = dalOrderRefund.GetAll().Where(e => e.Id == refundOrderId).SingleOrDefault();
             var customerInfo = dalCustomerInfo.GetAll().Where(e => e.Id == refundOrder.CustomerId).SingleOrDefault();
             if (customerInfo == null)
@@ -52,28 +53,68 @@ namespace Fx.Amiya.Service
             if (customerInfo.AppId == "wx695942e4818de445" && (refundOrder.ExchangeType == (int)ExchangeType.PointAndMoney || refundOrder.ExchangeType == (int)ExchangeType.HuiShouQian))
             {
                 //退还积分
-                await orderService.CancelPointAndMoneyOrderWithNoTransactionAsync(refundOrder.TradeId, refundOrder.CustomerId);
-                var refunResult = await huiShouQianPaymentService.CreateHuiShouQianAndPointRefundOrder(refundOrderId);
+                if (refundOrder.IsPartial)
+                {
+                    await orderService.CancelPartPointAndMoneyOrderWithNoTransactionAsync(refundOrder.OrderId, refundOrder.CustomerId);
+                }
+                else {
+                    //退还积分
+                    await orderService.CancelPointAndMoneyOrderWithNoTransactionAsync(refundOrder.TradeId, refundOrder.CustomerId);
+                }
+               
+                refunResult = await huiShouQianPaymentService.CreateHuiShouQianAndPointRefundOrder(refundOrderId);
+                refunResult.IsPartial = refundOrder.IsPartial;
+                refunResult.OrderId = refundOrder.OrderId;
                 return refunResult;
             }
             
 
             //杉德支付退款
             if (customerInfo.AppId == "wx8747b7f34c0047eb" && (refundOrder.ExchangeType == (int)ExchangeType.PointAndMoney || refundOrder.ExchangeType == (int)ExchangeType.ShanDePay)){
-                await orderService.CancelPointAndMoneyOrderWithNoTransactionAsync(refundOrder.TradeId, refundOrder.CustomerId);
-                var refunResult = await shanDePayMentService.CreateRefundOrderAsync(refundOrderId);
+                //退还积分
+                if (refundOrder.IsPartial)
+                {
+                    await orderService.CancelPartPointAndMoneyOrderWithNoTransactionAsync(refundOrder.OrderId, refundOrder.CustomerId);
+                }
+                else
+                {
+                    
+                    await orderService.CancelPointAndMoneyOrderWithNoTransactionAsync(refundOrder.TradeId, refundOrder.CustomerId);
+                }
+                refunResult = await shanDePayMentService.CreateRefundOrderAsync(refundOrderId);
+                refunResult.IsPartial = refundOrder.IsPartial;
+                refunResult.OrderId = refundOrder.OrderId;
                 return refunResult;
             }
 
             //微信支付退款
             if (refundOrder == null) { throw new Exception("退款编号错误"); }
             if (refundOrder.CheckState != (int)CheckState.CheckSuccess) throw new Exception("只有审核通过的订单才能退款");
-            var success = dalOrderRefund.GetAll().Where(e => e.TradeId == refundOrder.TradeId && e.RefundState == (int)RefundState.RefundSuccess).ToList();
-            if (success.Count > 0)
+            if (refundOrder.IsPartial)
             {
-                throw new Exception("订单已退款,请勿重复请求");
+                var success = dalOrderRefund.GetAll().Where(e => e.TradeId == refundOrder.TradeId && e.OrderId == refundOrder.OrderId && e.RefundState == (int)RefundState.RefundSuccess).ToList();
+                if (success.Count > 0)
+                {
+                    throw new Exception("订单已退款,请勿重复请求");
+                }
+                if (refundOrder.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
             }
-            if (refundOrder.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
+            else
+            {
+                var success = dalOrderRefund.GetAll().Where(e => e.TradeId == refundOrder.TradeId && e.RefundState == (int)RefundState.RefundSuccess).ToList();
+                if (success.Count > 0)
+                {
+                    throw new Exception("订单已退款,请勿重复请求");
+                }
+                if (refundOrder.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
+            }
+
+            //var success = dalOrderRefund.GetAll().Where(e => e.TradeId == refundOrder.TradeId && e.RefundState == (int)RefundState.RefundSuccess).ToList();
+            //if (success.Count > 0)
+            //{
+            //    throw new Exception("订单已退款,请勿重复请求");
+            //}
+            //if (refundOrder.RefundState == (byte)RefundState.RefundSuccess) throw new Exception("订单已退款,请勿重复请求");
             var wechatPayInfo = dalWechatPayInfo.GetAll().Where(e => e.AppId == customerInfo.AppId).SingleOrDefault();
             if (wechatPayInfo == null)
             {
@@ -81,7 +122,15 @@ namespace Fx.Amiya.Service
             }
 
             //退还积分,支付积分大于0时退还,小于等于0时,不处理
-            await orderService.CancelPointAndMoneyOrderWithNoTransactionAsync(refundOrder.TradeId, refundOrder.CustomerId);
+            if (refundOrder.IsPartial)
+            {
+                await orderService.CancelPartPointAndMoneyOrderWithNoTransactionAsync(refundOrder.OrderId, refundOrder.CustomerId);
+            }
+            else
+            {
+
+                await orderService.CancelPointAndMoneyOrderWithNoTransactionAsync(refundOrder.TradeId, refundOrder.CustomerId);
+            }
 
             WxRefundPackageInfo packageInfo = new WxRefundPackageInfo();
             packageInfo.AppId = wechatPayInfo.AppId;
@@ -95,6 +144,8 @@ namespace Fx.Amiya.Service
             packageInfo.RefundDesc = "商品退款";
             var result = await this.BuildRefundRequest(packageInfo, wechatPayInfo.CertificateName);
             result.TardeId = refundOrder.TradeId;
+            refunResult.IsPartial = refundOrder.IsPartial;
+            refunResult.OrderId = refundOrder.OrderId;
             return result;
         }
 

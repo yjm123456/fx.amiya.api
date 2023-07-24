@@ -20,17 +20,19 @@ namespace Fx.Amiya.Service
         private IEmployeeBindLiveAnchorService employeeBindLiveAnchorService;
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private ILiveRequirementInfoService _liveRequirementInfoService;
+        private IDalOrderAppInfo dalOrderAppInfo;
         public LiveAnchorService(IDalLiveAnchor dalLiveAnchor,
             IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
             ILiveRequirementInfoService liveRequirementInfoService,
             IAmiyaEmployeeService amiyaEmployeeService,
-            IDalContentplatform contentPlateForm)
+            IDalContentplatform contentPlateForm, IDalOrderAppInfo dalOrderAppInfo)
         {
             this.dalLiveAnchor = dalLiveAnchor;
             this.employeeBindLiveAnchorService = employeeBindLiveAnchorService;
             _amiyaEmployeeService = amiyaEmployeeService;
             _liveRequirementInfoService = liveRequirementInfoService;
             _contentPlateForm = contentPlateForm;
+            this.dalOrderAppInfo = dalOrderAppInfo;
         }
 
 
@@ -352,6 +354,19 @@ namespace Fx.Amiya.Service
             return await dalLiveAnchor.GetAll().Where(l => l.LiveAnchorBaseId == baseInfoId&&l.Valid==true).Select(l=>new LiveAnchorDto {
                 Id=l.Id
             }).ToListAsync();
+        }
+        /// <summary>
+        /// 获取需要同步视频号订单的主播信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<LiveAnchorDto>> GetWechatVideoOrderLiveAnchorIdAsync()
+        {
+            var list = dalOrderAppInfo.GetAll().Where(e=>e.AppType==(byte)AppType.WeChatVideo).Select(e=>e.BelongLiveAnchor).ToList();
+            return dalLiveAnchor.GetAll().Where(e => list.Contains(e.Id)).Select(e=>new LiveAnchorDto { 
+                Id=e.Id,
+                Name=e.Name
+            }).ToList();
+            
         }
     }
 }

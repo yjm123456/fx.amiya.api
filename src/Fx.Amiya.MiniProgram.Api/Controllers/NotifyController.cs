@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Core.Dto.Integration;
 using Fx.Amiya.Core.Interfaces.Integration;
+using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.Balance;
 using Fx.Amiya.Dto.HuiShouQianPay;
 using Fx.Amiya.Dto.HuiShouQianPayNotify;
@@ -501,7 +502,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             try
             {
                 HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
-                var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
+                var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();            
                 huiShouQianPackageInfo.Key = payInfo.PartnerKey;
                 huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
                 huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
@@ -710,7 +711,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
             SignHelper signHelper = new SignHelper();
             var signContent= await signHelper.BuildQueryAsync(dic,false);
-            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202307072015").FirstOrDefault();
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202307072015").FirstOrDefault();           
             if (payInfo == null) throw new Exception("没有该支付方式配置信息！");
             var result= RSAFromPkcs8Helper.Verify(signContent,sign, payInfo.PublickKey, "UTF-8");
             if (result == true)

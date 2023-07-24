@@ -89,7 +89,7 @@ namespace Fx.Amiya.SyncOrder.TikTok
 
                 var host = "https://openapi-fxg.jinritemai.com";
                 var start = DateTimeOffset.Now.ToUnixTimeSeconds() - 2400;
-                var end = DateTimeOffset.Now.ToUnixTimeSeconds() - 1200;
+                var end = DateTimeOffset.Now.ToUnixTimeSeconds();
                 //请求参数
                 var param = new Dictionary<string, object> {
                 { "page",pageNum},

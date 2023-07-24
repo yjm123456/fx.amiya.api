@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Background.Api.Vo.WeChatVideo;
+﻿using Fx.Amiya.Background.Api.Vo;
+using Fx.Amiya.Background.Api.Vo.WeChatVideo;
 using Fx.Amiya.Background.Api.Vo.WeChatVideo.Input;
 using Fx.Amiya.Dto.WechatVideoOrder;
 using Fx.Amiya.IService;
@@ -22,11 +23,12 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private readonly IWeChatVideoOrderService weChatVideoOrderService;
         private readonly ISyncWeChatVideoOrder syncWeChatVideoOrder;
-
-        public WeChatVideoOrderController(IWeChatVideoOrderService weChatVideoOrderService, ISyncWeChatVideoOrder syncWeChatVideoOrder)
+        private readonly ILiveAnchorService liveAnchorService;
+        public WeChatVideoOrderController(IWeChatVideoOrderService weChatVideoOrderService, ISyncWeChatVideoOrder syncWeChatVideoOrder, ILiveAnchorService liveAnchorService)
         {
             this.weChatVideoOrderService = weChatVideoOrderService;
             this.syncWeChatVideoOrder = syncWeChatVideoOrder;
+            this.liveAnchorService = liveAnchorService;
         }
         /// <summary>
         /// 获取订单列表
@@ -111,5 +113,19 @@ namespace Fx.Amiya.Background.Api.Controllers
             weChatVideoOrderInfoVo.BelongLiveAnchorId = input.BelongLiveAnchorId;
             return ResultData<WeChatVideoOrderInfoVo>.Success().AddData("orderInfo",weChatVideoOrderInfoVo);
         }
+        /// <summary>
+        /// 获取需要拉取订单的视频号主播
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("wechatVideoOrderLiveAnchorId")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetWechatVideoOrderLiveAnchorIdAsync() {
+            var nameList =await liveAnchorService.GetWechatVideoOrderLiveAnchorIdAsync();
+            var result= nameList.Select(e => new BaseIdAndNameVo<int> { 
+                Id=e.Id,
+                Name=e.Name
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("nameList",result);
+        }
+
     }
 }

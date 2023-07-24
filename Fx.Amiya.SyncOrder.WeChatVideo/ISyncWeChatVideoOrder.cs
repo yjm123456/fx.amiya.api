@@ -20,5 +20,6 @@ namespace Fx.Amiya.SyncOrder.WeChatVideo
         /// <param name="token"></param>
         /// <returns></returns>
         Task<WechatVideoOrder> GetOrderInfoByIdAsync(string orderId, string token,int? belongLiveAnchorId);
+        
     }
 }

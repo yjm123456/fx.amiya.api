@@ -74,51 +74,105 @@ namespace Fx.Amiya.Service
 
             try
             {
-                
+
                 OrderRefund orderRefund = new OrderRefund();
                 var refundOrder = dalOrderRefund.GetAll().Where(e => e.TradeId == createRefundOrderDto.TradeId && (createRefundOrderDto.OrderId == null || e.OrderId == createRefundOrderDto.OrderId)).FirstOrDefault();
                 if (refundOrder != null)
                 {
-                    throw new Exception("请勿重复提交");
+                    throw new Exception("请勿重复提交！");
                 }
 
                 var trade = dalOrderTrade.GetAll().Where(e => e.TradeId == createRefundOrderDto.TradeId).Include(e => e.OrderInfoList).SingleOrDefault();
                 if (trade == null)
                 {
-                    throw new Exception("交易编号不存在");
+                    throw new Exception("交易编号不存在！");
                 }
                 if (trade.StatusCode == OrderStatusCode.TRADE_FINISHED)
                 {
-                    throw new Exception("已核销订单不能退款");
+                    throw new Exception("已核销订单不能退款！");
                 }
                 if (!(trade.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || trade.StatusCode == OrderStatusCode.TRADE_BUYER_SIGNED || trade.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || trade.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || trade.StatusCode == OrderStatusCode.PARTIAL_REFUND))
                 {
-                    throw new Exception("当前订单状态不能退款");
+                    throw new Exception("当前订单状态不能退款！");
                 }
 
 
                 List<string> ids = new List<string>();
-                foreach (var item in trade.OrderInfoList)
-                {
-                    if (item.ExchangeType == 0)
-                    {
-                        throw new Exception("积分支付订单不能申请退款!");
-                    }
-                    if (item.AppType != (byte)AppType.MiniProgram)
-                    {
-                        throw new Exception("当前订单不属于小程序!");
-                    }
-                    else
-                    {
-                        ids.Add(item.Id);
-                    }
-                }
+
                 if (!string.IsNullOrEmpty(createRefundOrderDto.OrderId))
                 {
-                    throw new Exception("暂不支持部分退款");
+                    if (trade.OrderInfoList.Any(e => e.IsUseCoupon == true))
+                    {
+                        throw new Exception("该交易使用了抵用券,不能部分退款！");
+                    }
+
+                    //判断所有子订单是否都处于退款状态
+                    bool isAllRefundingOrClosed = true;
+                    foreach (var item in trade.OrderInfoList)
+                    {
+                        if (item.Id == createRefundOrderDto.OrderId)
+                        {
+                            continue;
+                        }
+                        if (item.StatusCode != OrderStatusCode.TRADE_CLOSED || item.StatusCode != OrderStatusCode.REFUNDING)
+                        {
+                            isAllRefundingOrClosed = false;
+                        }
+
+                    }
+
+                    var orderInfo = dalOrderInfo.GetAll().Where(e => e.Id == createRefundOrderDto.OrderId).FirstOrDefault();
+                    if (orderInfo == null)
+                    {
+                        throw new Exception("订单不存在！");
+                    }
+                    if (!(orderInfo.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || orderInfo.StatusCode == OrderStatusCode.TRADE_BUYER_SIGNED || orderInfo.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || orderInfo.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS))
+                    {
+                        throw new Exception("当前订单状态不能退款！");
+                    }
+                    orderRefund.CheckState = (byte)CheckState.CheckPending;
+                    orderRefund.IsPartial = true;
+                    orderRefund.ActualPayAmount = trade.TotalAmount.Value;
+                    orderRefund.RefundAmount = orderInfo.ActualPayment.Value;
+                    orderRefund.PayDate = trade.CreateDate;
+                    orderRefund.ExchangeType = orderInfo.ExchangeType.Value;
+
+
+                    if (isAllRefundingOrClosed)
+                    {
+                        trade.StatusCode = OrderStatusCode.REFUNDING;
+                    }
+                    await dalOrderTrade.UpdateAsync(trade, true);
+                    string goodsName = string.Empty;
+                    var nameList = new List<string>();
+                    ids.Add(createRefundOrderDto.OrderId);
+                    nameList.Add(orderInfo.GoodsName);
+                    await orderService.UpdateOrderStatus(createRefundOrderDto.OrderId, OrderStatusCode.REFUNDING);
+                    orderRefund.GoodsName = string.Join(",", nameList);
+
                 }
                 else
                 {
+
+                    foreach (var item in trade.OrderInfoList)
+                    {
+                        if (item.StatusCode == OrderStatusCode.REFUNDING || item.StatusCode == OrderStatusCode.TRADE_CLOSED)
+                        {
+                            throw new Exception("当前订单不支持全部退款,请单独退款！");
+                        }
+                        if (item.ExchangeType == 0)
+                        {
+                            throw new Exception("积分支付订单不能申请退款!");
+                        }
+                        if (item.AppType != (byte)AppType.MiniProgram)
+                        {
+                            throw new Exception("当前订单不属于小程序!");
+                        }
+                        else
+                        {
+                            ids.Add(item.Id);
+                        }
+                    }
                     orderRefund.CheckState = (byte)CheckState.CheckPending;
                     orderRefund.IsPartial = false;
                     orderRefund.ActualPayAmount = trade.TotalAmount.Value;
@@ -146,12 +200,12 @@ namespace Fx.Amiya.Service
                 orderRefund.Valid = true;
                 orderRefund.TransNo = trade.TransNo;
                 await dalOrderRefund.AddAsync(orderRefund, true);
-                
+
                 return new CreateRefundOrderResult { Result = true, Msg = "提交成功" };
             }
             catch (Exception ex)
             {
-                
+
                 throw new Exception("退款提交失败请稍后重试!");
             }
         }

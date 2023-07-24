@@ -190,6 +190,10 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         /// 物流单号
         /// </summary>
         public string CourierNumber { get; set; }
+        /// <summary>
+        /// 是否发货
+        /// </summary>
+        public bool IsSendOrder { get; set; }
 
         #region  财务审核板块
         /// <summary>

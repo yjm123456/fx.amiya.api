@@ -1606,7 +1606,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                                   AppType = o.AppType,
                                                   AppTypeText = o.AppTypeText,
                                                   StatusCode = o.StatusCode,
-                                                  StatusCodeText = o.StatusText
+                                                  StatusCodeText = o.StatusText,
+                                                  
                                               }).ToList()
                          };
 
@@ -1782,11 +1783,13 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
                 foreach (var item in orderTrade.OrderInfoList)
                 {
-                    UpdateOrderDto updateOrder = new UpdateOrderDto();
-                    updateOrder.OrderId = item.Id;
-                    updateOrder.StatusCode = OrderStatusCode.TRADE_FINISHED;
-                    updateOrder.AppType = (byte)AppType.MiniProgram;
-                    updateOrderList.Add(updateOrder);
+                    if (item.StatusCode==OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS||item.StatusCode==OrderStatusCode.WAIT_SELLER_SEND_GOODS||item.StatusCode==OrderStatusCode.TRADE_BUYER_PAID) {
+                        UpdateOrderDto updateOrder = new UpdateOrderDto();
+                        updateOrder.OrderId = item.Id;
+                        updateOrder.StatusCode = OrderStatusCode.TRADE_FINISHED;
+                        updateOrder.AppType = (byte)AppType.MiniProgram;
+                        updateOrderList.Add(updateOrder);
+                    }
                 }
                 await orderService.UpdateWithNoTranstionAsync(updateOrderList);
                 #region 本人积分奖励
