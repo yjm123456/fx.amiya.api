@@ -258,7 +258,7 @@ namespace Fx.Amiya.Service
                                 LiveAnchorId = d.LiveAnchorId,
                                 Standard = d.Standard,
                                 IsSendOrder = dalSendGoodsRecord.GetAll().Any(e=>e.OrderId==d.Id),
-                                Remark=d.OrderTrade?.Remark
+                                Remark=d.OrderTrade.Remark
                             };
 
 

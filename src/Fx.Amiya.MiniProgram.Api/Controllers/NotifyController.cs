@@ -711,7 +711,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
             SignHelper signHelper = new SignHelper();
             var signContent= await signHelper.BuildQueryAsync(dic,false);
-            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202307072015").FirstOrDefault();           
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202307072015").FirstOrDefault();
+
             if (payInfo == null) throw new Exception("没有该支付方式配置信息！");
             var result= RSAFromPkcs8Helper.Verify(signContent,sign, payInfo.PublickKey, "UTF-8");
             if (result == true)
