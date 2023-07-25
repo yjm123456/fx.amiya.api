@@ -2865,7 +2865,7 @@ namespace Fx.Amiya.Service
         public async Task<OrderInfoDto> GetByIdInCRMAsync(string id)
         {
             var config = await _wxAppConfigService.GetCallCenterConfig();
-            var order = await dalOrderInfo.GetAll().Include(x => x.SendOrderInfoList).SingleOrDefaultAsync(e => e.Id == id);
+            var order = await dalOrderInfo.GetAll().Include(x=>x.OrderTrade).Include(x => x.SendOrderInfoList).SingleOrDefaultAsync(e => e.Id == id);
             if (order == null)
                 throw new Exception("订单编号错误");
 

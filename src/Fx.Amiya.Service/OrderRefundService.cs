@@ -83,6 +83,9 @@ namespace Fx.Amiya.Service
                 }
 
                 var trade = dalOrderTrade.GetAll().Where(e => e.TradeId == createRefundOrderDto.TradeId).Include(e => e.OrderInfoList).SingleOrDefault();
+                if (trade.CustomerId != createRefundOrderDto.CustomerId) {
+                    throw new Exception("该订单不属于该小程序,不能在当前小程序退款！");
+                }
                 if (trade == null)
                 {
                     throw new Exception("交易编号不存在！");
