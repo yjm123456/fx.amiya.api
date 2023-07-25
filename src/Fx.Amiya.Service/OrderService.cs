@@ -2901,6 +2901,8 @@ namespace Fx.Amiya.Service
             orderInfo.IsCreateBill = order.IsCreateBill;
             orderInfo.BelongCompany = dalCompanyBaseInfo.GetAll().Where(e => e.Id == order.BelongCompany).SingleOrDefault()?.Name;
             orderInfo.IsReturnBackPrice = order.IsReturnBackPrice;
+            orderInfo.IsSendOrder = dalSendGoodsRecord.GetAll().Any(e => e.OrderId == order.Id);
+            orderInfo.Remark = order.OrderTrade.Remark;
             if (order.CheckState == (int)CheckType.CheckedSuccess)
             {
                 orderInfo.CheckDate = order.CheckDate;
@@ -3140,7 +3142,8 @@ namespace Fx.Amiya.Service
                                                TradeId = o.TradeId,
                                                IsUseCoupon = o.IsUseCoupon,
                                                CouponId = o.CouponId,
-                                               DeductMoney = o.DeductMoney
+                                               DeductMoney = o.DeductMoney,
+                                               StatusCode=o.StatusCode
                                            }).ToList();
             return orderTradeDto;
         }

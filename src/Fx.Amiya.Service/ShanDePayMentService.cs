@@ -37,7 +37,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<ShanDeOrderResult> OrderAsync(ShanDeOrderInfo orderInfo)
         {
-            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202307072015").FirstOrDefault();            
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202307072015").FirstOrDefault();
             if (payInfo == null) throw new Exception("没有该支付方式配置信息！");
             //公共请求参数
             ShanDePayCommonParam commonParam = new ShanDePayCommonParam();

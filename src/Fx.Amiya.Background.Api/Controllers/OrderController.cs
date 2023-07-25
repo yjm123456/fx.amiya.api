@@ -1234,6 +1234,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             tmallOrderVo.ReturnBackDate = order.ReturnBackDate;
             tmallOrderVo.IsCreateBill = order.IsCreateBill;
             tmallOrderVo.CreateBillCompany = order.BelongCompany;
+            tmallOrderVo.IsSendOrder = order.IsSendOrder;
+            tmallOrderVo.Remark = order.Remark;
             return ResultData<OrderInfoVo>.Success().AddData("order", tmallOrderVo);
         }
 

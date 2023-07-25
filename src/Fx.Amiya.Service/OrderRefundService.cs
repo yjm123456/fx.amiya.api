@@ -114,7 +114,7 @@ namespace Fx.Amiya.Service
                         {
                             continue;
                         }
-                        if (item.StatusCode != OrderStatusCode.TRADE_CLOSED || item.StatusCode != OrderStatusCode.REFUNDING)
+                        if (item.StatusCode != OrderStatusCode.TRADE_CLOSED && item.StatusCode != OrderStatusCode.REFUNDING)
                         {
                             isAllRefundingOrClosed = false;
                         }
