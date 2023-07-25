@@ -63,11 +63,31 @@ ADD CONSTRAINT `fk_tbl_warehouse_storage_racks_warehouseinfo`
   REFERENCES `amiyadb`.`tbl_amiya_warehouse_name_manage` (`id`);
 
 -----------------------------------------------余建明 2023/07/17 END--------------------------------------------
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
 -----------------------------------------------余建明 2023/07/20 BEGIN--------------------------------------------
 --升单加入审核助理服务费
 ALTER TABLE `amiyadb`.`tbl_customer_hospital_consume` 
 ADD COLUMN `customer_service_settle_price` DECIMAL(12,2)  NULL   AFTER `check_settle_price`;
+-----------------------------------------------余建明 2023/07/20 END--------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+-----------------------------------------------余建明 2023/07/20 BEGIN--------------------------------------------
+--品类列表加入品牌主外键
+ALTER TABLE `amiyadb`.`tbl_supplier_category` 
+ADD INDEX `fk_tbl_supplier_category_brandinfo_idx` (`brand_id` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`tbl_supplier_category` 
+ADD CONSTRAINT `fk_tbl_supplier_category_brandinfo`
+  FOREIGN KEY (`brand_id`)
+  REFERENCES `amiyadb`.`tbl_supplier_brand` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+  --项目列表加入品牌品类相关数据和平台数据
+  ALTER TABLE `amiyadb`.`tbl_item_info` 
+ADD COLUMN `app_type` INT NOT NULL DEFAULT 0 AFTER `live_price`,
+ADD COLUMN `brand_id` VARCHAR(50) NOT NULL AFTER `other_app_item_id`,
+ADD COLUMN `category_id` VARCHAR(50) NOT NULL AFTER `brand_id`;
+
 -----------------------------------------------余建明 2023/07/20 END--------------------------------------------

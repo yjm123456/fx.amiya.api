@@ -48,8 +48,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                                     Id = d.Id,
                                     OtherAppItemId = d.OtherAppItemId,
                                     Name = d.Name,
-                                    HospitalDepartmentId=d.HospitalDepartmentId,
-                                    DepartmentName=d.DepartmentName,
+                                    HospitalDepartmentId = d.HospitalDepartmentId,
+                                    DepartmentName = d.DepartmentName,
+                                    AppType = d.AppType,
+                                    AppTypeText = d.AppTypeText,
+                                    BrandId = d.BrandId,
+                                    BrandName = d.BrandName,
+                                    CategoryName = d.CategoryName,
+                                    CategoryId = d.CategoryId,
                                     ThumbPicUrl = d.ThumbPicUrl,
                                     Description = d.Description,
                                     Standard = d.Standard,
@@ -69,7 +75,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                     UpdateName = d.UpdateName,
                                     Valid = d.Valid,
                                     Remark = d.Remark,
-                                    
+
                                 };
 
                 FxPageInfo<ItemInfoVo> itemPageInfo = new FxPageInfo<ItemInfoVo>();
@@ -104,7 +110,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                            Id = d.Id,
                            OtherAppItemId = d.OtherAppItemId,
                            Name = d.Name,
-                           DepartmentName=d.DepartmentName,
+                           DepartmentName = d.DepartmentName,
                            ThumbPicUrl = d.ThumbPicUrl,
                            Description = d.Description,
                            Standard = d.Standard,
@@ -146,6 +152,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.Description = addVo.Description;
                 addDto.Standard = addVo.Standard;
                 addDto.Parts = addVo.Parts;
+                addDto.CategoryId = addVo.CategoryId;
+                addDto.BrandId = addVo.BrandId;
+                addVo.AppType = addVo.AppType;
                 addDto.SalePrice = addVo.SalePrice;
                 addDto.LivePrice = addVo.LivePrice;
                 addDto.IsLimitBuy = addVo.IsLimitBuy;
@@ -190,6 +199,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 itemInfoVo.Parts = itemInfo.Parts;
                 itemInfoVo.SalePrice = itemInfo.SalePrice;
                 itemInfoVo.LivePrice = itemInfo.LivePrice;
+                itemInfoVo.AppType = itemInfo.AppType;
+                itemInfoVo.BrandId = itemInfo.BrandId;
+                itemInfoVo.CategoryId = itemInfo.CategoryId;
                 itemInfoVo.IsLimitBuy = itemInfo.IsLimitBuy;
                 itemInfoVo.LimitBuyQuantity = itemInfo.LimitBuyQuantity;
                 itemInfoVo.Commitment = itemInfo.Commitment;
@@ -231,6 +243,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.Id = updateVo.Id;
                 updateDto.OtherAppItemId = updateVo.OtherAppItemId;
                 updateDto.Name = updateVo.Name;
+                updateDto.AppType = updateVo.AppType;
+                updateDto.BrandId = updateVo.BrandId;
+                updateDto.CategoryId = updateVo.CategoryId;
                 updateDto.HospitalDepartmentId = updateVo.HospitalDepartmentId;
                 updateDto.ThumbPicUrl = updateVo.ThumbPicUrl;
                 updateDto.Description = updateVo.Description;

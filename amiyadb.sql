@@ -81,3 +81,22 @@ CREATE TABLE `amiyadb`.`tbl_amiya_warehouse_storage_racks` (
 
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
+--基础数据新增品牌列表
+CREATE TABLE `amiyadb`.`tbl_supplier_brand` (
+  `id` VARCHAR(50)  NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `brand_name` VARCHAR(100) NULL,
+  PRIMARY KEY (`id`));
+--基础数据新增品类列表
+CREATE TABLE `amiyadb`.`tbl_supplier_category` (
+  `id` VARCHAR(50)  NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `category_name` VARCHAR(100) NULL,
+  `brand_id` VARCHAR(50) NOT NULL ,
+  PRIMARY KEY (`id`));

@@ -62,10 +62,22 @@ namespace Fx.Amiya.Background.Api.Vo.ItemInfo
         /// 直播价
         /// </summary>
         public decimal? LivePrice { get; set; }
+        /// <summary>
+        /// 渠道
+        /// </summary>
+        public int AppType { get; set; }
+        /// <summary>
+        /// 品牌id
+        /// </summary>
+        public string BrandId { get; set; }
+        /// <summary>
+        /// 品类id
+        /// </summary>
+        public string CategoryId { get; set; }
 
-       /// <summary>
-       /// 是否限购
-       /// </summary>
+        /// <summary>
+        /// 是否限购
+        /// </summary>
         public bool IsLimitBuy { get; set; }
 
         /// <summary>

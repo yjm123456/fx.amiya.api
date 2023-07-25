@@ -19,14 +19,20 @@ namespace Fx.Amiya.Service
         private IDalCustomerInfo dalCustomerInfo;
         private IDalOrderInfo dalOrderInfo;
         private IAmiyaHospitalDepartmentService _hospitalDepartmentService;
+        private ISupplierBrandService supplierBrandService;
+        private ISupplierCategoryService supplierCategoryService;
         public ItemInfoService(IDalItemInfo dalItemInfo,
             IDalCustomerInfo dalCustomerInfo,
+            ISupplierBrandService supplierBrandService,
+            ISupplierCategoryService supplierCategoryService,
             IAmiyaHospitalDepartmentService hospitalDepartmentService,
             IDalOrderInfo dalOrderInfo)
         {
             this.dalItemInfo = dalItemInfo;
             this.dalCustomerInfo = dalCustomerInfo;
             this.dalOrderInfo = dalOrderInfo;
+            this.supplierBrandService = supplierBrandService;
+            this.supplierCategoryService = supplierCategoryService;
             _hospitalDepartmentService = hospitalDepartmentService;
         }
 
@@ -59,6 +65,10 @@ namespace Fx.Amiya.Service
                                    Parts = d.Parts,
                                    SalePrice = d.SalePrice,
                                    LivePrice = d.LivePrice,
+                                   AppType = d.AppType,
+                                   AppTypeText = ServiceClass.GetAppTypeText(Convert.ToByte(d.AppType)),
+                                   BrandId = d.BrandId,
+                                   CategoryId = d.CategoryId,
                                    IsLimitBuy = d.IsLimitBuy,
                                    LimitBuyQuantity = d.LimitBuyQuantity,
                                    Commitment = d.Commitment,
@@ -76,15 +86,25 @@ namespace Fx.Amiya.Service
                 FxPageInfo<ItemInfoDto> itemPageInfo = new FxPageInfo<ItemInfoDto>();
                 itemPageInfo.TotalCount = await itemInfo.CountAsync();
                 itemPageInfo.List = await itemInfo.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
-                foreach(var x in itemPageInfo.List)
+                foreach (var x in itemPageInfo.List)
                 {
                     if (!string.IsNullOrEmpty(x.HospitalDepartmentId))
                     {
                         var hospitalDepartment = await _hospitalDepartmentService.GetByIdAsync(x.HospitalDepartmentId);
-                        if(hospitalDepartment!=null)
+                        if (hospitalDepartment != null)
                         {
                             x.DepartmentName = hospitalDepartment.DepartmentName;
                         }
+                    }
+                    if (!string.IsNullOrEmpty(x.BrandId))
+                    {
+                        var brandInfo = await supplierBrandService.GetByIdAsync(x.BrandId);
+                        x.BrandName = brandInfo.BrandName;
+                    }
+                    if (!string.IsNullOrEmpty(x.CategoryId))
+                    {
+                        var categoryInfo = await supplierCategoryService.GetByIdAsync(x.CategoryId);
+                        x.CategoryName = categoryInfo.CategoryName;
                     }
                 }
                 return itemPageInfo;
@@ -161,6 +181,9 @@ namespace Fx.Amiya.Service
                 itemInfo.Parts = addDto.Parts;
                 itemInfo.SalePrice = addDto.SalePrice;
                 itemInfo.LivePrice = addDto.LivePrice;
+                itemInfo.AppType = addDto.AppType;
+                itemInfo.BrandId = addDto.BrandId;
+                itemInfo.CategoryId = addDto.CategoryId;
                 itemInfo.IsLimitBuy = addDto.IsLimitBuy;
                 itemInfo.LimitBuyQuantity = addDto.LimitBuyQuantity;
                 itemInfo.Commitment = addDto.Commitment;
@@ -218,6 +241,9 @@ namespace Fx.Amiya.Service
                 itemInfoDto.Parts = itemInfo.Parts;
                 itemInfoDto.SalePrice = itemInfo.SalePrice;
                 itemInfoDto.LivePrice = itemInfo.LivePrice;
+                itemInfoDto.BrandId = itemInfo.BrandId;
+                itemInfoDto.AppType = itemInfo.AppType;
+                itemInfoDto.CategoryId = itemInfo.CategoryId;
                 itemInfoDto.IsLimitBuy = itemInfo.IsLimitBuy;
                 itemInfoDto.LimitBuyQuantity = itemInfo.LimitBuyQuantity;
                 itemInfoDto.Commitment = itemInfo.Commitment;
@@ -250,7 +276,7 @@ namespace Fx.Amiya.Service
             {
                 var itemInfo = await dalItemInfo.GetAll()
                     .Include(e => e.CreateEmployee)
-                    .Include(e => e.UpdateEmployee).Where(x=>x.Valid==true)
+                    .Include(e => e.UpdateEmployee).Where(x => x.Valid == true)
                     .FirstOrDefaultAsync(e => e.OtherAppItemId == otherAppItemId);
                 if (itemInfo == null)
                     return new ItemInfoDto();
@@ -310,6 +336,9 @@ namespace Fx.Amiya.Service
                 itemInfo.Description = updateDto.Description;
                 itemInfo.Standard = updateDto.Standard;
                 itemInfo.Parts = updateDto.Parts;
+                itemInfo.AppType = updateDto.AppType;
+                itemInfo.CategoryId = updateDto.CategoryId;
+                itemInfo.BrandId = updateDto.BrandId;
                 itemInfo.SalePrice = updateDto.SalePrice;
                 itemInfo.LivePrice = updateDto.LivePrice;
                 itemInfo.IsLimitBuy = updateDto.IsLimitBuy;
@@ -349,7 +378,8 @@ namespace Fx.Amiya.Service
             try
             {
                 var itemInfo = await dalItemInfo.GetAll().SingleOrDefaultAsync(e => e.Id == id);
-                await dalItemInfo.DeleteAsync(itemInfo, true);
+                itemInfo.Valid = false;
+                await dalItemInfo.UpdateAsync(itemInfo, true);
             }
             catch (Exception ex)
             {

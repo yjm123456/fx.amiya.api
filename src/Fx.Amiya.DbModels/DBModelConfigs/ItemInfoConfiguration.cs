@@ -22,6 +22,9 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.Parts).HasColumnName("parts").HasColumnType("varchar(100)").IsRequired();
             builder.Property(t => t.SalePrice).HasColumnName("sale_price").HasColumnType("decimal(10,2)").IsRequired();
             builder.Property(t => t.LivePrice).HasColumnName("live_price").HasColumnType("decimal(10,2)").IsRequired(false);
+            builder.Property(t => t.AppType).HasColumnName("app_type").HasColumnType("int").IsRequired();
+            builder.Property(t => t.BrandId).HasColumnName("brand_id").HasColumnType("varchar(50)").IsRequired();
+            builder.Property(t => t.CategoryId).HasColumnName("category_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(t => t.IsLimitBuy).HasColumnName("is_limit_buy").HasColumnType("bit").IsRequired();
             builder.Property(t => t.LimitBuyQuantity).HasColumnName("limit_buy_quantity").HasColumnType("int").IsRequired(false);
             builder.Property(t => t.Commitment).HasColumnName("commitment").HasColumnType("varchar(150)").IsRequired(false);

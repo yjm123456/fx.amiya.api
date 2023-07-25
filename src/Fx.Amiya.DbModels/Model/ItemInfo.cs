@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Fx.Amiya.DbModels.Model
 {
-   public class ItemInfo
+    public class ItemInfo
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -13,6 +13,9 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public string HospitalDepartmentId { get; set; }
         public string ThumbPicUrl { get; set; }
+        public int AppType { get; set; }
+        public string BrandId { get; set; }
+        public string CategoryId { get; set; }
         public string Description { get; set; }
         public string Standard { get; set; }
         public string Parts { get; set; }
@@ -34,7 +37,7 @@ namespace Fx.Amiya.DbModels.Model
 
         public AmiyaEmployee CreateEmployee { get; set; }
         public AmiyaEmployee UpdateEmployee { get; set; }
-      
+
         public List<ActivityItemDetail> ActivityItemDetailList { get; set; }
         public List<HospitalPartakeItem> HospitalPartakeItemList { get; set; }
     }

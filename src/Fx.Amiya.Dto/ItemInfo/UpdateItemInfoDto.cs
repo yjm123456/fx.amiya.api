@@ -14,6 +14,18 @@ namespace Fx.Amiya.Dto.ItemInfo
         /// </summary>
         public string HospitalDepartmentId { get; set; }
         public string ThumbPicUrl { get; set; }
+        /// <summary>
+        /// 渠道
+        /// </summary>
+        public int AppType { get; set; }
+        /// <summary>
+        /// 品牌id
+        /// </summary>
+        public string BrandId { get; set; }
+        /// <summary>
+        /// 品类id
+        /// </summary>
+        public string CategoryId { get; set; }
         public string Description { get; set; }
         public string Standard { get; set; }
         public string Parts { get; set; }

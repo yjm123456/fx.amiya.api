@@ -47,6 +47,30 @@ namespace Fx.Amiya.Background.Api.Vo.ItemInfo
         /// 部位
         /// </summary>
         public string Parts { get; set; }
+        /// <summary>
+        /// 渠道id
+        /// </summary>
+        public int AppType { get; set; }
+        /// <summary>
+        /// 渠道名称
+        /// </summary>
+        public string AppTypeText { get; set; }
+        /// <summary>
+        /// 品牌id
+        /// </summary>
+        public string BrandId { get; set; }
+        /// <summary>
+        /// 品牌名称
+        /// </summary>
+        public string BrandName { get; set; }
+        /// <summary>
+        /// 品类id
+        /// </summary>
+        public string CategoryId { get; set; }
+        /// <summary>
+        /// 品类名称
+        /// </summary>
+        public string CategoryName { get; set; }
 
         /// <summary>
         /// 单价

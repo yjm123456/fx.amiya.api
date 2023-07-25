@@ -57,6 +57,18 @@ namespace Fx.Amiya.Background.Api.Vo.ItemInfo
         /// </summary>
         [StringLength(100, ErrorMessage = "治疗部位最多{1}个字符")]
         public string Parts { get; set; }
+        /// <summary>
+        /// 渠道
+        /// </summary>
+        public int AppType { get; set; }
+        /// <summary>
+        /// 品牌id
+        /// </summary>
+        public string BrandId { get; set; }
+        /// <summary>
+        /// 品类id
+        /// </summary>
+        public string CategoryId { get; set; }
 
         /// <summary>
         /// 单价
