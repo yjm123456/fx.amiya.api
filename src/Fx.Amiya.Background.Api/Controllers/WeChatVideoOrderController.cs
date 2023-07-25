@@ -58,7 +58,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 OrderTypeText =e.OrderTypeText,
                 Quantity = e.Quantity,
                 BelongLiveAnchorId = e.BelongLiveAnchorId,
-                BelongLiveAnchorName = e.BelongLiveAnchorName
+                BelongLiveAnchorName = e.BelongLiveAnchorName,
+                EncryptPhone=e.EncryptPhone
             }).ToList();
             return ResultData<FxPageInfo<WeChatVideoOrderInfoVo>>.Success().AddData("list",fxPageInfo);
         }

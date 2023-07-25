@@ -73,5 +73,9 @@ namespace Fx.Amiya.Background.Api.Vo.WeChatVideo
         /// 归属主播名称
         /// </summary>
         public string BelongLiveAnchorName { get; set; }
+        /// <summary>
+        /// 加密手机号
+        /// </summary>
+        public string EncryptPhone { get; set; }
     }
 }

@@ -12,6 +12,7 @@ using Fx.Amiya.Dto.OrderWriteOffIno;
 using Fx.Amiya.Dto.TikTokOrder;
 using Fx.Amiya.Dto.TikTokUserInfo;
 using Fx.Amiya.Dto.TmallOrder;
+using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
@@ -58,8 +59,8 @@ namespace Fx.Amiya.Service
         private IExpressManageService _expressManageService;
         private ITikTokUserInfoService tikTokUserInfoService;
         private IBindCustomerServiceService _bindCustomerService;
-
-        public TikTokOrderInfoService(IDalTikTokOrderInfo dalTikTokOrderInfo, IFxSmsBasedTemplateSender smsSender, IDalBindCustomerService dalBindCustomerService, ISendOrderInfoService sendOrderInfoService, IDalAmiyaEmployee dalAmiyaEmployee, IDalOrderInfo dalOrderInfo, IWxAppConfigService wxAppConfigService, ILiveAnchorService liveAnchorService, IContentPlatformService contentPlatFormService, IUnitOfWork unitOfWork, IDalOrderTrade dalOrderTrade, IAmiyaGoodsDemandService amiyaGoodsDemandService, ICustomerService customerService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, IIntegrationAccount integrationAccountService, IBindCustomerServiceService bindCustomerServiceService, IOrderCheckPictureService orderCheckPictureService, IDalCustomerInfo dalCustomerInfo, IDalReceiveGift dalReceiveGift, IGoodsInfo goodsInfoService, IDalContentPlatformOrder dalContentPlatFormOrder, IHospitalInfoService hospitalInfoService, IDalSendGoodsRecord dalSendGoodsRecord, IOrderWriteOffInfoService orderWriteOffInfoService, IExpressManageService expressManageService, ITikTokUserInfoService tikTokUserInfoService, IBindCustomerServiceService bindCustomerService)
+        private IDalConfig _dalConfig;
+        public TikTokOrderInfoService(IDalTikTokOrderInfo dalTikTokOrderInfo, IFxSmsBasedTemplateSender smsSender, IDalBindCustomerService dalBindCustomerService, ISendOrderInfoService sendOrderInfoService, IDalAmiyaEmployee dalAmiyaEmployee, IDalOrderInfo dalOrderInfo, IWxAppConfigService wxAppConfigService, ILiveAnchorService liveAnchorService, IContentPlatformService contentPlatFormService, IUnitOfWork unitOfWork, IDalOrderTrade dalOrderTrade, IAmiyaGoodsDemandService amiyaGoodsDemandService, ICustomerService customerService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, IIntegrationAccount integrationAccountService, IBindCustomerServiceService bindCustomerServiceService, IOrderCheckPictureService orderCheckPictureService, IDalCustomerInfo dalCustomerInfo, IDalReceiveGift dalReceiveGift, IGoodsInfo goodsInfoService, IDalContentPlatformOrder dalContentPlatFormOrder, IHospitalInfoService hospitalInfoService, IDalSendGoodsRecord dalSendGoodsRecord, IOrderWriteOffInfoService orderWriteOffInfoService, IExpressManageService expressManageService, ITikTokUserInfoService tikTokUserInfoService, IBindCustomerServiceService bindCustomerService, IDalConfig dalConfig)
         {
             this.dalTikTokOrderInfo = dalTikTokOrderInfo;
             _smsSender = smsSender;
@@ -88,6 +89,7 @@ namespace Fx.Amiya.Service
             _expressManageService = expressManageService;
             this.tikTokUserInfoService = tikTokUserInfoService;
             _bindCustomerService = bindCustomerService;
+            _dalConfig = dalConfig;
         }
 
         public async Task<string> AddAmiyaOrderAsync(OrderTradeAddDto orderTradeAddDto)
@@ -470,6 +472,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
+                var encryptConfig = await GetCallCenterConfig();
                 var orders = from d in dalTikTokOrderInfo.GetAll()
                              where (string.IsNullOrWhiteSpace(keyword) || d.Id.Contains(keyword) || d.GoodsName.Contains(keyword)
                              || d.Phone == keyword || d.AppointmentHospital.Contains(keyword))
@@ -514,6 +517,7 @@ namespace Fx.Amiya.Service
                                 ExchangeType = d.ExchangeType,
                                 ExchangeTypeText = ServiceClass.GetExchangeTypeText((byte)d.ExchangeType),
                                 LiveAnchorId = d.LiveAnchorId,
+                                EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey)
                             };
 
 
@@ -796,6 +800,11 @@ namespace Fx.Amiya.Service
                     await _smsSender.SendSingleAsync(z.Value, templateName, JsonConvert.SerializeObject(new { orderId = z.Key }));
                 }
             }
+        }
+        private async Task<CallCenterConfigDto> GetCallCenterConfig()
+        {
+            var config = await _dalConfig.GetAll().SingleOrDefaultAsync();
+            return JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig;
         }
     }
 }

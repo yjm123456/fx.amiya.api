@@ -5,6 +5,7 @@ using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.BindCustomerService;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.Dto.WechatVideoOrder;
+using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
@@ -39,7 +40,8 @@ namespace Fx.Amiya.Service
         private IDalLiveAnchor dalLiveAnchor;
         private IDalCustomerInfo dalCustomerInfo;
         private IWxAppConfigService _wxAppConfigService;
-        public WeChatVideoOrderService(IDalWeChatVideoOrderInfo dalWeChatVideoOrderInfo, IFxSmsBasedTemplateSender smsSender, IDalAmiyaEmployee dalAmiyaEmployee, IDalBindCustomerService dalBindCustomerService, IIntegrationAccount integrationAccountService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, IBindCustomerServiceService bindCustomerService, ICustomerService customerService, IOrderService orderService, IDalLiveAnchor dalLiveAnchor, IDalCustomerInfo dalCustomerInfo, IWxAppConfigService wxAppConfigService)
+        private readonly IDalConfig _dalConfig;
+        public WeChatVideoOrderService(IDalWeChatVideoOrderInfo dalWeChatVideoOrderInfo, IFxSmsBasedTemplateSender smsSender, IDalAmiyaEmployee dalAmiyaEmployee, IDalBindCustomerService dalBindCustomerService, IIntegrationAccount integrationAccountService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, IBindCustomerServiceService bindCustomerService, ICustomerService customerService, IOrderService orderService, IDalLiveAnchor dalLiveAnchor, IDalCustomerInfo dalCustomerInfo, IWxAppConfigService wxAppConfigService, IDalConfig dalConfig)
         {
             this.dalWeChatVideoOrderInfo = dalWeChatVideoOrderInfo;
             _smsSender = smsSender;
@@ -54,6 +56,7 @@ namespace Fx.Amiya.Service
             this.dalLiveAnchor = dalLiveAnchor;
             this.dalCustomerInfo = dalCustomerInfo;
             _wxAppConfigService = wxAppConfigService;
+            _dalConfig = dalConfig;
         }
 
         /// <summary>
@@ -277,6 +280,8 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<WechatVideoOrderInfoDto>> GetListByPageAsync(string keyWord,DateTime? startDate, DateTime? endDate, int? belongLiveAnchorId, string status, int? orderType, int pageSize, int pageNum)
         {
             var config = await _wxAppConfigService.GetCallCenterConfig();
+            var encryptConfig = await GetCallCenterConfig();
+            
             var order= dalWeChatVideoOrderInfo.GetAll().Where(e => !startDate.HasValue|| e.CreateDate >= startDate.Value.Date)
                 .Where(e => !endDate.HasValue || e.CreateDate <= endDate.Value.AddDays(1).Date)
                 .Where(e => !belongLiveAnchorId.HasValue || e.BelongLiveAnchorId == belongLiveAnchorId)
@@ -303,9 +308,15 @@ namespace Fx.Amiya.Service
                 OrderTypeText = ServiceClass.GetWechatOrderTypeText(e.OrderType.Value),
                 Quantity = e.Quantity,
                 BelongLiveAnchorId = e.BelongLiveAnchorId,
-                BelongLiveAnchorName=dalLiveAnchor.GetAll().Where(e=>e.Id==belongLiveAnchorId).SingleOrDefault().Name
+                BelongLiveAnchorName=dalLiveAnchor.GetAll().Where(e=>e.Id==belongLiveAnchorId).SingleOrDefault().Name,
+                EncryptPhone= ServiceClass.Encrypt(e.Phone, config.PhoneEncryptKey),
             }).ToList();
             return fxPageInfo;
+        }
+        private async Task<CallCenterConfigDto> GetCallCenterConfig()
+        {
+            var config = await _dalConfig.GetAll().SingleOrDefaultAsync();
+            return JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig;
         }
     }
 }

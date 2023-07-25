@@ -15,7 +15,6 @@ namespace Fx.Amiya.Dto.TikTokOrder
         public string ThumbPicUrl { get; set; }
         public string BuyerNick { get; set; }
         public string Phone { get; set; }
-        public string EncryptPhone { get; set; }
         public string AppointmentHospital { get; set; }
         public int SendOrderHospitalId { get; set; }
         public string SendOrderHospital { get; set; }
@@ -105,6 +104,10 @@ namespace Fx.Amiya.Dto.TikTokOrder
         /// 订单完成时间
         /// </summary>
         public DateTime? FinishDate { get; set; }
+        /// <summary>
+        /// 加密手机号
+        /// </summary>
+        public string EncryptPhone { get; set; }
 
 
     }
