@@ -32,6 +32,8 @@ namespace Fx.Amiya.Service
                                                   where (query.KeyWord == null || d.Remark.Contains(query.KeyWord))
                                                            && (string.IsNullOrEmpty(query.BrandId) || d.BrandId == query.BrandId)
                                                            && (string.IsNullOrEmpty(query.CategoryId) || d.CategoryId == query.CategoryId)
+                                                           && (!query.StartDate.HasValue || d.CreateDate >= query.StartDate.Value)
+                                                           && (!query.EndDate.HasValue || d.CreateDate < query.EndDate.Value.AddDays(1).AddMinutes(-1))
                                                            && (!query.CreateBy.HasValue || d.CreatBy == query.CreateBy)
                                                            && (!query.Valid.HasValue || d.Valid == query.Valid)
                                                   select new LivingDailyTakeGoodsDto
@@ -56,7 +58,7 @@ namespace Fx.Amiya.Service
                                                   };
                 FxPageInfo<LivingDailyTakeGoodsDto> livingDailyTakeGoodsServicePageInfo = new FxPageInfo<LivingDailyTakeGoodsDto>();
                 livingDailyTakeGoodsServicePageInfo.TotalCount = await livingDailyTakeGoodsService.CountAsync();
-                livingDailyTakeGoodsServicePageInfo.List = await livingDailyTakeGoodsService.Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
+                livingDailyTakeGoodsServicePageInfo.List = await livingDailyTakeGoodsService.OrderByDescending(x => x.CreateDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
                 return livingDailyTakeGoodsServicePageInfo;
             }
             catch (Exception ex)

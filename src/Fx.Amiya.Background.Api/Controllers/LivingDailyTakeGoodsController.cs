@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace Fx.Amiya.Background.Api.Controllers
 {
     /// <summary>
-    /// 供应商品类管理数据接口
+    /// 直播间带货数据数据接口
     /// </summary>
     [Route("[controller]")]
     [ApiController]
@@ -40,7 +40,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 获取供应商品类管理信息列表（分页）
+        /// 获取直播间带货数据信息列表（分页）
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
@@ -53,6 +53,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 QueryLivingDailyTakeGoodsDto queryLivingDailyTakeGoodsDto = new QueryLivingDailyTakeGoodsDto();
                 queryLivingDailyTakeGoodsDto.PageNum = query.PageNum;
                 queryLivingDailyTakeGoodsDto.PageSize = query.PageSize;
+                queryLivingDailyTakeGoodsDto.StartDate = query.StartDate;
+                queryLivingDailyTakeGoodsDto.EndDate = query.EndDate;
                 queryLivingDailyTakeGoodsDto.KeyWord = query.KeyWord;
                 queryLivingDailyTakeGoodsDto.BrandId = query.BrandId;
                 queryLivingDailyTakeGoodsDto.CategoryId = query.CategoryId;
@@ -97,7 +99,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 添加供应商品类管理信息
+        /// 添加直播间带货数据信息
         /// </summary>
         /// <param name="addVo"></param>
         /// <returns></returns>
@@ -134,7 +136,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 根据供应商品类管理编号获取供应商品类管理信息
+        /// 根据直播间带货数据编号获取直播间带货数据信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -171,7 +173,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 修改供应商品类管理信息
+        /// 修改直播间带货数据信息
         /// </summary>
         /// <param name="updateVo"></param>
         /// <returns></returns>
@@ -202,7 +204,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
         /// <summary>
-        /// 删除供应商品类管理信息(软删除)
+        /// 删除直播间带货数据信息(软删除)
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
