@@ -289,7 +289,10 @@ namespace Fx.Amiya.Service
                     typeText = "抖音";
                     break;
                 case 5:
-                    typeText = "其他";
+                    typeText = "啊美雅企业微信";
+                    break;
+                case 6:
+                    typeText = "医院端企业微信";
                     break;
                 case 7:
                     typeText = "视频号";
@@ -836,6 +839,29 @@ namespace Fx.Amiya.Service
             return sourceText;
 
         }
+
+        /// <summary>
+        /// 获取带货商品类型
+        /// </summary>
+        /// <param name="consumeType"></param>
+        /// <returns></returns>
+        public static string GerTakeGoodsTypeText(int takeGoodsType)
+        {
+            string takeGoodsTypeText = "";
+            switch (takeGoodsType)
+            {
+                case 0:
+                    takeGoodsTypeText = "下单";
+                    break;
+
+                case 1:
+                    takeGoodsTypeText = "退款";
+                    break;
+
+            }
+            return takeGoodsTypeText;
+        }
+
 
         /// <summary>
         /// 获取小黄车获客方式
@@ -2254,7 +2280,7 @@ namespace Fx.Amiya.Service
                     str = "一般挽留客户(R8)";
                     break;
                 default:
-                   str= "/";
+                    str = "/";
                     break;
             }
             return str;

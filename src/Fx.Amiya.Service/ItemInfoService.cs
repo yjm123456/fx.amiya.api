@@ -10,6 +10,7 @@ using Fx.Amiya.IService;
 using Fx.Infrastructure;
 using Fx.Amiya.DbModels.Model;
 using Fx.Common;
+using Fx.Amiya.Dto;
 
 namespace Fx.Amiya.Service
 {
@@ -569,6 +570,25 @@ namespace Fx.Amiya.Service
             itemPageInfo.TotalCount = await items.CountAsync();
             itemPageInfo.List = await items.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
             return itemPageInfo;
+        }
+
+        /// <summary>
+        /// 根据品牌品类id获取项目id和名称
+        /// </summary>
+        /// <param name="brandId">品牌id</param>
+        /// <param name="categoryId">品类id</param>
+        /// <returns></returns>
+        /// <returns></returns>
+        public async Task<List<BaseKeyValueDto>> GetItemNameByBrandIdAndCategoryIdAsync(string brandId, string categoryId)
+        {
+            var items = from d in dalItemInfo.GetAll()
+                        where (d.BrandId == brandId && d.CategoryId == categoryId && d.Valid == true)
+                        select new BaseKeyValueDto
+                        {
+                            Key = d.Id.ToString(),
+                            Value = d.Name
+                        };
+            return await items.ToListAsync();
         }
     }
 }

@@ -72,7 +72,7 @@ ADD COLUMN `customer_service_settle_price` DECIMAL(12,2)  NULL   AFTER `check_se
 -----------------------------------------------余建明 2023/07/20 END--------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
------------------------------------------------余建明 2023/07/20 BEGIN--------------------------------------------
+-----------------------------------------------余建明 2023/07/25 BEGIN--------------------------------------------
 --品类列表加入品牌主外键
 ALTER TABLE `amiyadb`.`tbl_supplier_category` 
 ADD INDEX `fk_tbl_supplier_category_brandinfo_idx` (`brand_id` ASC) VISIBLE;
@@ -90,4 +90,61 @@ ADD COLUMN `app_type` INT NOT NULL DEFAULT 0 AFTER `live_price`,
 ADD COLUMN `brand_id` VARCHAR(50) NOT NULL AFTER `other_app_item_id`,
 ADD COLUMN `category_id` VARCHAR(50) NOT NULL AFTER `brand_id`;
 
------------------------------------------------余建明 2023/07/20 END--------------------------------------------
+--新建直播中每日带货商品列表
+CREATE TABLE `amiyadb`.`tbl_living_daily_take_goods` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `create_by` INT UNSIGNED NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `brand_id` VARCHAR(50) NOT NULL,
+  `category_id` VARCHAR(50) NOT NULL,
+  `content_plat_form_id` VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL,
+  `live_anchor_id` INT UNSIGNED NOT NULL,
+  `item_id` INT UNSIGNED NOT NULL,
+  `single_price` DECIMAL(12,2) NOT NULL,
+  `take_goods_quantity` INT NOT NULL,
+  `total_price` DECIMAL(12,2) NOT NULL,
+  `take_goods_type` INT NOT NULL DEFAULT 0,
+  `remark` VARCHAR(500) NULL ,
+  PRIMARY KEY (`id`),
+  INDEX `fk_living_daily_take_goods_create_empinfo_idx` (`create_by` ASC) VISIBLE,
+  INDEX `fk_living_daily_take_goods_brandinfo_idx` (`brand_id` ASC) VISIBLE,
+  INDEX `fk_living_daily_take_goods_categoryinfo_idx` (`category_id` ASC) VISIBLE,
+  INDEX `fk_living_daily_take_goods_contentplatforminfo_idx` (`content_plat_form_id` ASC) VISIBLE,
+  INDEX `fk_living_daily_take_goods_liveanchorinfo_idx` (`live_anchor_id` ASC) VISIBLE,
+  INDEX `fk_living_daily_take_goods_iteminfo_idx` (`item_id` ASC) VISIBLE,
+  CONSTRAINT `fk_living_daily_take_goods_create_empinfo`
+    FOREIGN KEY (`create_by`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_living_daily_take_goods_brandinfo`
+    FOREIGN KEY (`brand_id`)
+    REFERENCES `amiyadb`.`tbl_supplier_brand` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_living_daily_take_goods_categoryinfo`
+    FOREIGN KEY (`category_id`)
+    REFERENCES `amiyadb`.`tbl_supplier_category` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_living_daily_take_goods_contentplatforminfo`
+    FOREIGN KEY (`content_plat_form_id`)
+    REFERENCES `amiyadb`.`tbl_content_platform` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_living_daily_take_goods_liveanchorinfo`
+    FOREIGN KEY (`live_anchor_id`)
+    REFERENCES `amiyadb`.`tbl_live_anchor` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_living_daily_take_goods_iteminfo`
+    FOREIGN KEY (`item_id`)
+    REFERENCES `amiyadb`.`tbl_item_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-----------------------------------------------余建明 2023/07/26 END--------------------------------------------

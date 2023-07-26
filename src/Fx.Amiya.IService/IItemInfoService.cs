@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.ItemInfo;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.ItemInfo;
 using Fx.Common;
 using Fx.Infrastructure;
 using System;
@@ -116,5 +117,13 @@ namespace Fx.Amiya.IService
         /// <param name="pageSize"></param>
         /// <returns></returns>
         Task<FxPageInfo<ItemNameDto>> GetNameListWithPageAsync(string keyword, int pageNum, int pageSize);
+
+        /// <summary>
+        /// 根据品牌品类id获取项目id和名称
+        /// </summary>
+        /// <param name="brandId">品牌id</param>
+        /// <param name="categoryId">品类id</param>
+        /// <returns></returns>
+        Task<List<BaseKeyValueDto>> GetItemNameByBrandIdAndCategoryIdAsync(string brandId, string categoryId);
     }
 }

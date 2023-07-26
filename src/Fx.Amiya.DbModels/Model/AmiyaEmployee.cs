@@ -83,5 +83,6 @@ namespace Fx.Amiya.DbModels.Model
         public List<MessageNotice> MessageNoticeList { get; set; }
         public List<BindCustomerRFMLevelUpdateLog> BindCustomerRFMLevelUpdateLogList { get; set; }
         public List<AmiyaWareHouseStorageRacks> AmiyaWareHouseStorageRacks { get; set; }
+        public List<LivingDailyTakeGoods> LivingDailyTakeGoodsList { get; set; }
     }
 }

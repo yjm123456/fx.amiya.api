@@ -987,6 +987,22 @@ namespace Fx.Amiya.IService
         TakeGoods = 7,
     }
 
+
+
+    /// <summary>
+    /// 带货商品类型
+    /// </summary>
+    public enum TakeGoodsType
+    {
+        /// <summary>
+        /// 下单
+        /// </summary>
+        CreateOrder = 0,
+        /// <summary>
+        /// 退款
+        /// </summary>
+        ReturnBackOrder = 1,
+    }
     /// <summary>
     /// 产品类型
     /// </summary>

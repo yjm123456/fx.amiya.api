@@ -17,6 +17,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<CustomerInfo> CustomerInfo { get; set; }
         public virtual DbSet<HospitalCustomerInfo> HospitalCustomerInfo { get; set; }
         public virtual DbSet<WxMiniUserInfo> WxMiniUserInfo { get; set; }
+        public virtual DbSet<LivingDailyTakeGoods> LivingDailyTakeGoods { get; set; }
         public virtual DbSet<Bill> Bill { get; set; }
         public virtual DbSet<BillReturnBackPriceData> BillReturnBackPriceData { get; set; }
         public virtual DbSet<CustomerAppointmentSchedule> CustomerAppointmentSchedule { get; set; }        
@@ -234,10 +235,10 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new HospitalPositionInfoConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalEmployeeConfiguration());
             modelBuilder.ApplyConfiguration(new BeautyDiaryTagInfoConfiguration());
-            modelBuilder.ApplyConfiguration(new BindCustomerRFMLevelUpdateLogConfiguration());
             modelBuilder.ApplyConfiguration(new BeautyDiaryTagDetailConfiguration());
             modelBuilder.ApplyConfiguration(new BeautyDiaryBannerImageConfiguration());
             modelBuilder.ApplyConfiguration(new BeautyDiaryManageConfiguration());
+            modelBuilder.ApplyConfiguration(new BindCustomerRFMLevelUpdateLogConfiguration());
             modelBuilder.ApplyConfiguration(new GoodsInfoConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalInfoConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalEnvironmentConfiguration());
@@ -287,6 +288,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new LivingDailyTargetConfiguration());
             modelBuilder.ApplyConfiguration(new SupplierBrandConfiguration());
             modelBuilder.ApplyConfiguration(new SupplierCategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new LivingDailyTakeGoodsConfiguration());
             modelBuilder.ApplyConfiguration(new AfterLivingDailyTargetConfiguration());
             modelBuilder.ApplyConfiguration(new ProvinceConfiguration());
             modelBuilder.ApplyConfiguration(new PermissionInfoConfiguration());
@@ -300,10 +302,6 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new HospitalCheckPhoneRecordConfiguration());
             modelBuilder.ApplyConfiguration(new BindCustomerServiceConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalBindCustomerServiceConfiguration());
-            modelBuilder.ApplyConfiguration(new BeautyDiaryTagInfoConfiguration());
-            modelBuilder.ApplyConfiguration(new BeautyDiaryBannerImageConfiguration());
-            modelBuilder.ApplyConfiguration(new BeautyDiaryManageConfiguration());
-            modelBuilder.ApplyConfiguration(new BeautyDiaryTagDetailConfiguration());
             modelBuilder.ApplyConfiguration(new MessageNoticeConfiguration());
             modelBuilder.ApplyConfiguration(new NoticeConfigConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerConsumptionCredentialsConfiguration());

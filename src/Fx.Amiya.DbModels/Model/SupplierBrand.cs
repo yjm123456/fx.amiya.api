@@ -14,5 +14,6 @@ namespace Fx.Amiya.DbModels.Model
         public string BrandName { get; set; }
 
         public List<SupplierCategory> SupplierCategoryList { get; set; }
+        public List<LivingDailyTakeGoods> LivingDailyTakeGoodsList { get; set; }
     }
 }

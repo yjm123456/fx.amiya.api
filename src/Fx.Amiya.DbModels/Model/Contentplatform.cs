@@ -16,5 +16,6 @@ namespace Fx.Amiya.DbModels.Model
         public List<ContentPlatformOrder> ContentPlatformOrderList { get; set; }
 
         public List<ShoppingCartRegistration> ShoppingCartRegistrationList { get; set; }
+        public List<LivingDailyTakeGoods> LivingDailyTakeGoodsList { get; set; }
     }
 }

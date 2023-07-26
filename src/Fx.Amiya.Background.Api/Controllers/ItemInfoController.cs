@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.ItemInfo;
 using Fx.Amiya.Dto.ItemInfo;
 using Fx.Amiya.IService;
@@ -315,6 +316,26 @@ namespace Fx.Amiya.Background.Api.Controllers
             itemPageInfo.TotalCount = q.TotalCount;
             itemPageInfo.List = items;
             return ResultData<FxPageInfo<ItemNameVo>>.Success().AddData("items", itemPageInfo);
+        }
+
+
+        /// <summary>
+        /// 根据品牌品类id获取项目id和名称
+        /// </summary>
+        /// <param name="brandId">品牌id</param>
+        /// <param name="categoryId">品类id</param>
+        /// <returns></returns>
+        [HttpGet("getItemNameByBrandIdAndCategoryId")]
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetItemNameByBrandIdAndCategoryIdAsync(string brandId, string categoryId)
+        {
+            var q = await itemInfoService.GetItemNameByBrandIdAndCategoryIdAsync(brandId, categoryId);
+            var items = from d in q
+                        select new BaseIdAndNameVo
+                        {
+                            Id = d.Key,
+                            Name = d.Value
+                        };
+            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("items", items.ToList());
         }
     }
 }
