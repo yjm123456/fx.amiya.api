@@ -13,6 +13,11 @@ namespace Fx.Amiya.Dto.LivingDailyTakeGoods.Input
         /// </summary>
         public int CreatBy { get; set; }
         /// <summary>
+        /// 带货时间
+        /// </summary>
+
+        public DateTime? TakeGoodsDate { get; set; }
+        /// <summary>
         /// 品牌id
         /// </summary>
         public string BrandId { get; set; }

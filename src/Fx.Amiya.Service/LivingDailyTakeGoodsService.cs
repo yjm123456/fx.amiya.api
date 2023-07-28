@@ -32,8 +32,8 @@ namespace Fx.Amiya.Service
                                                   where (query.KeyWord == null || d.Remark.Contains(query.KeyWord))
                                                            && (string.IsNullOrEmpty(query.BrandId) || d.BrandId == query.BrandId)
                                                            && (string.IsNullOrEmpty(query.CategoryId) || d.CategoryId == query.CategoryId)
-                                                           && (!query.StartDate.HasValue || d.CreateDate >= query.StartDate.Value)
-                                                           && (!query.EndDate.HasValue || d.CreateDate < query.EndDate.Value.AddDays(1).AddMinutes(-1))
+                                                           && (!query.StartDate.HasValue || d.TakeGoodsDate.Value >= query.StartDate.Value)
+                                                           && (!query.EndDate.HasValue || d.TakeGoodsDate < query.EndDate.Value.AddDays(1).AddMinutes(-1))
                                                            && (!query.CreateBy.HasValue || d.CreatBy == query.CreateBy)
                                                            && (!query.Valid.HasValue || d.Valid == query.Valid)
                                                   select new LivingDailyTakeGoodsDto
@@ -45,6 +45,7 @@ namespace Fx.Amiya.Service
                                                       UpdateDate = d.UpdateDate,
                                                       Valid = d.Valid,
                                                       DeleteDate = d.DeleteDate,
+                                                      TakeGoodsDate=d.TakeGoodsDate,
                                                       BrandName = d.SupplierBrand.BrandName,
                                                       CategoryName = d.SupplierCategory.CategoryName,
                                                       ContentPlatFormName = d.Contentplatform.ContentPlatformName,
@@ -75,6 +76,7 @@ namespace Fx.Amiya.Service
                 LivingDailyTakeGoods livingDailyTakeGoodsService = new LivingDailyTakeGoods();
                 livingDailyTakeGoodsService.Id = Guid.NewGuid().ToString();
                 livingDailyTakeGoodsService.CreatBy = addDto.CreatBy;
+                livingDailyTakeGoodsService.TakeGoodsDate = addDto.TakeGoodsDate;
                 livingDailyTakeGoodsService.BrandId = addDto.BrandId;
                 livingDailyTakeGoodsService.CategoryId = addDto.CategoryId;
                 livingDailyTakeGoodsService.ContentPlatFormId = addDto.ContentPlatFormId;
@@ -111,6 +113,7 @@ namespace Fx.Amiya.Service
                 LivingDailyTakeGoodsDto livingDailyTakeGoodsServiceDto = new LivingDailyTakeGoodsDto();
                 livingDailyTakeGoodsServiceDto.Id = livingDailyTakeGoodsService.Id;
                 livingDailyTakeGoodsServiceDto.CreatBy = livingDailyTakeGoodsService.CreatBy;
+                livingDailyTakeGoodsServiceDto.TakeGoodsDate = livingDailyTakeGoodsService.TakeGoodsDate;
                 livingDailyTakeGoodsServiceDto.BrandId = livingDailyTakeGoodsService.BrandId;
                 livingDailyTakeGoodsServiceDto.CategoryId = livingDailyTakeGoodsService.CategoryId;
                 livingDailyTakeGoodsServiceDto.ContentPlatFormId = livingDailyTakeGoodsService.ContentPlatFormId;
@@ -143,6 +146,7 @@ namespace Fx.Amiya.Service
 
                 livingDailyTakeGoodsService.BrandId = updateDto.BrandId;
                 livingDailyTakeGoodsService.CategoryId = updateDto.CategoryId;
+                livingDailyTakeGoodsService.TakeGoodsDate = updateDto.TakeGoodsDate;
                 livingDailyTakeGoodsService.ContentPlatFormId = updateDto.ContentPlatFormId;
                 livingDailyTakeGoodsService.LiveAnchorId = updateDto.LiveAnchorId;
                 livingDailyTakeGoodsService.ItemId = updateDto.ItemId;

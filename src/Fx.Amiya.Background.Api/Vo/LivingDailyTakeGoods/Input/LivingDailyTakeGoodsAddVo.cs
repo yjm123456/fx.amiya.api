@@ -12,6 +12,11 @@ namespace Fx.Amiya.Background.Api.Vo.LivingDailyTakeGoods.Input
         /// </summary>
         public string BrandId { get; set; }
         /// <summary>
+        /// 带货时间
+        /// </summary>
+
+        public DateTime? TakeGoodsDate { get; set; }
+        /// <summary>
         /// 品类id
         /// </summary>
         public string CategoryId { get; set; }

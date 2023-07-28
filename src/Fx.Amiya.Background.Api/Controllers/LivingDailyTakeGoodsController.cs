@@ -72,6 +72,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                UpdateDate = d.UpdateDate,
                                                Valid = d.Valid,
                                                DeleteDate = d.DeleteDate,
+                                               TakeGoodsDate=d.TakeGoodsDate,
                                                BrandName = d.BrandName,
                                                CategoryName = d.CategoryName,
                                                ContentPlatFormName = d.ContentPlatFormName,
@@ -116,6 +117,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.CreatBy = employeeId;
                 addDto.BrandId = addVo.BrandId;
                 addDto.CategoryId = addVo.CategoryId;
+                addDto.TakeGoodsDate = addVo.TakeGoodsDate;
                 addDto.ContentPlatFormId = addVo.ContentPlatFormId;
                 addDto.LiveAnchorId = addVo.LiveAnchorId;
                 addDto.ItemId = addVo.ItemId;
@@ -150,6 +152,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 LivingDailyTakeGoodsVo LivingDailyTakeGoodsVo = new LivingDailyTakeGoodsVo();
                 LivingDailyTakeGoodsVo.Id = LivingDailyTakeGoods.Id;
                 LivingDailyTakeGoodsVo.CreatBy = LivingDailyTakeGoods.CreatBy;
+                LivingDailyTakeGoodsVo.TakeGoodsDate = LivingDailyTakeGoods.TakeGoodsDate;
                 LivingDailyTakeGoodsVo.BrandId = LivingDailyTakeGoods.BrandId;
                 LivingDailyTakeGoodsVo.CategoryId = LivingDailyTakeGoods.CategoryId;
                 LivingDailyTakeGoodsVo.ContentPlatFormId = LivingDailyTakeGoods.ContentPlatFormId;
@@ -186,6 +189,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 LivingDailyTakeGoodsUpdateDto updateDto = new LivingDailyTakeGoodsUpdateDto();
                 updateDto.Id = updateVo.Id;
                 updateDto.BrandId = updateVo.BrandId;
+                updateDto.TakeGoodsDate = updateVo.TakeGoodsDate;
                 updateDto.CategoryId = updateVo.CategoryId;
                 updateDto.ContentPlatFormId = updateVo.ContentPlatFormId;
                 updateDto.LiveAnchorId = updateVo.LiveAnchorId;

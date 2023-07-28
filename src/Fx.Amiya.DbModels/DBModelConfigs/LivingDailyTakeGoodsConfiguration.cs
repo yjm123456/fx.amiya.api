@@ -19,6 +19,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.DeleteDate).HasColumnName("delete_date").HasColumnType("DateTime").IsRequired(false);
             builder.Property(t => t.Valid).HasColumnName("valid").HasColumnType("BIT(1)").IsRequired();
 
+            builder.Property(t => t.TakeGoodsDate).HasColumnName("take_goods_date").HasColumnType("DateTime").IsRequired(false);
             builder.Property(t => t.BrandId).HasColumnName("brand_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(t => t.CategoryId).HasColumnName("category_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(t => t.ContentPlatFormId).HasColumnName("content_plat_form_id").HasColumnType("varchar(50)").IsRequired();
