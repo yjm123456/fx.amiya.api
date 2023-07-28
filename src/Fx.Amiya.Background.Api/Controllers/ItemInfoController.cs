@@ -155,7 +155,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.Parts = addVo.Parts;
                 addDto.CategoryId = addVo.CategoryId;
                 addDto.BrandId = addVo.BrandId;
-                addVo.AppType = addVo.AppType;
+                addDto.AppType = addVo.AppType;
                 addDto.SalePrice = addVo.SalePrice;
                 addDto.LivePrice = addVo.LivePrice;
                 addDto.IsLimitBuy = addVo.IsLimitBuy;
