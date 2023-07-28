@@ -107,45 +107,49 @@ namespace Fx.Amiya.Service
                         orderInfo.OrderType = orderItem.OrderType;
                         orderInfo.ThumbPicUrl = orderItem.ThumbPicUrl;
                         orderInfo.BelongLiveAnchorId = orderItem.BelongLiveAnchorId;
-                        await dalWeChatVideoOrderInfo.UpdateAsync(orderInfo, true);
-                        //计算积分,如果订单信息包含手机号则计算积分,否则暂时不计算
-                        if (orderInfo.StatusCode == "TRADE_FINISHED" && orderInfo.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(orderInfo.Phone))
-                        {
-                            bool isIntegrationGenerateRecord = await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAsync(orderInfo.Id);
-                            if (isIntegrationGenerateRecord == true)
-                                continue;
-                            var customerId = await customerService.GetCustomerIdByPhoneAsync(orderInfo.Phone);
-                            if (string.IsNullOrWhiteSpace(customerId))
-                                continue;
-                            ConsumptionIntegrationDto consumptionIntegration = new ConsumptionIntegrationDto();
-                            consumptionIntegration.CustomerId = customerId;
-                            consumptionIntegration.OrderId = orderInfo.Id;
-                            consumptionIntegration.AmountOfConsumption = (decimal)orderInfo.ActualPayment;
-                            consumptionIntegration.Date = DateTime.Now;
-
-                            var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(customerId);
-                            if (memberCard != null)
-                            {
-                                consumptionIntegration.Quantity = Math.Floor(memberCard.GenerateIntegrationPercent * (decimal)orderInfo.ActualPayment);
-                                consumptionIntegration.Percent = memberCard.GenerateIntegrationPercent;
-                            }
-                            else
-                            {
-                                var memberRank = await memberRankInfoService.GetMinGeneratePercentMemberRankInfoAsync();
-                                consumptionIntegration.Quantity = Math.Floor(memberRank.GenerateIntegrationPercent * (decimal)orderInfo.ActualPayment);
-                                consumptionIntegration.Percent = memberRank.GenerateIntegrationPercent;
-
-                            }
-
-                            if (consumptionIntegration.Quantity > 0)
-                                await integrationAccountService.AddByConsumptionAsync(consumptionIntegration);
-                            //根据phone获取获取绑定的员工
-                            var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(orderInfo.Phone);
-                            if (findInfo != 0)
-                            {
-                                await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder, "", "", "抖音", 1);
-                            }
+                        try {
+                            await dalWeChatVideoOrderInfo.UpdateAsync(orderInfo, true);
+                        } catch (Exception ex) {
+                            
                         }
+                        //计算积分,如果订单信息包含手机号则计算积分,否则暂时不计算
+                        //if (orderInfo.StatusCode == "TRADE_FINISHED" && orderInfo.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(orderInfo.Phone))
+                        //{
+                        //    bool isIntegrationGenerateRecord = await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAsync(orderInfo.Id);
+                        //    if (isIntegrationGenerateRecord == true)
+                        //        continue;
+                        //    var customerId = await customerService.GetCustomerIdByPhoneAsync(orderInfo.Phone);
+                        //    if (string.IsNullOrWhiteSpace(customerId))
+                        //        continue;
+                        //    ConsumptionIntegrationDto consumptionIntegration = new ConsumptionIntegrationDto();
+                        //    consumptionIntegration.CustomerId = customerId;
+                        //    consumptionIntegration.OrderId = orderInfo.Id;
+                        //    consumptionIntegration.AmountOfConsumption = (decimal)orderInfo.ActualPayment;
+                        //    consumptionIntegration.Date = DateTime.Now;
+
+                        //    var memberCard = await memberCardService.GetMemberCardHandelByCustomerIdAsync(customerId);
+                        //    if (memberCard != null)
+                        //    {
+                        //        consumptionIntegration.Quantity = Math.Floor(memberCard.GenerateIntegrationPercent * (decimal)orderInfo.ActualPayment);
+                        //        consumptionIntegration.Percent = memberCard.GenerateIntegrationPercent;
+                        //    }
+                        //    else
+                        //    {
+                        //        var memberRank = await memberRankInfoService.GetMinGeneratePercentMemberRankInfoAsync();
+                        //        consumptionIntegration.Quantity = Math.Floor(memberRank.GenerateIntegrationPercent * (decimal)orderInfo.ActualPayment);
+                        //        consumptionIntegration.Percent = memberRank.GenerateIntegrationPercent;
+
+                        //    }
+
+                        //    if (consumptionIntegration.Quantity > 0)
+                        //        await integrationAccountService.AddByConsumptionAsync(consumptionIntegration);
+                        //    //根据phone获取获取绑定的员工
+                        //    var findInfo = await _bindCustomerService.GetEmployeeIdByPhone(orderInfo.Phone);
+                        //    if (findInfo != 0)
+                        //    {
+                        //        await _bindCustomerService.UpdateConsumePriceAsync(orderInfo.Phone, orderInfo.ActualPayment.Value, (int)OrderFrom.ThirdPartyOrder, "", "", "抖音", 1);
+                        //    }
+                        //}
                     }
                     else
                     {
@@ -173,7 +177,12 @@ namespace Fx.Amiya.Service
                         if (bindCustomerId!=0) {
                             order.BelongEmpId = bindCustomerId;
                         }
-                        await dalWeChatVideoOrderInfo.AddAsync(order, true);
+                        try {
+                            await dalWeChatVideoOrderInfo.AddAsync(order, true);
+                        }
+                        catch (Exception ex) {
+                            
+                        }
 
                     }
                 }
@@ -308,7 +317,7 @@ namespace Fx.Amiya.Service
                 OrderTypeText = ServiceClass.GetWechatOrderTypeText(e.OrderType.Value),
                 Quantity = e.Quantity,
                 BelongLiveAnchorId = e.BelongLiveAnchorId,
-                BelongLiveAnchorName=dalLiveAnchor.GetAll().Where(e=>e.Id==belongLiveAnchorId).SingleOrDefault().Name,
+                BelongLiveAnchorName=dalLiveAnchor.GetAll().Where(a=>a.Id==e.BelongLiveAnchorId).SingleOrDefault().Name,
                 EncryptPhone= ServiceClass.Encrypt(e.Phone, config.PhoneEncryptKey),
             }).ToList();
             return fxPageInfo;

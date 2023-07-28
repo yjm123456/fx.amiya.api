@@ -48,6 +48,45 @@ namespace Fx.Amiya.SyncOrder.WeChatVideo
                 return new List<WechatVideoOrder>();
             }
         }
+
+        public async Task<List<WechatVideoOrder>> TranslateTradesSoldChangedOrders2(DateTime startDate, DateTime endDate, int belongLiveAnchorId)
+        {
+            try
+            {
+                var date = new DateTime(2023, 7, 26, 1, 1, 1);
+                var offset = DateTimeOffset.Parse(date.ToString("yyyy-MM-dd HH:mm:ss"));
+                var start = offset.AddYears(-1);
+                var end = offset.ToUnixTimeSeconds();
+
+                var lastDate = new DateTime(2023, 7, 28, 1, 1, 1);
+                var lastEnd = DateTimeOffset.Parse(lastDate.ToString("yyyy-MM-dd HH:mm:ss")).ToUnixTimeSeconds();
+                List<WechatVideoOrder> orderList = new List<WechatVideoOrder>();
+
+                while (!(start.ToUnixTimeSeconds() > end)) {
+                    var s = start;
+                    var e = start.AddDays(7);
+                    var appInfo = await wechatVideoAppInfoReader.GetWeChatVideoAppInfo(belongLiveAnchorId);
+                    var idList = await GetOrderIdLIstByDayAsync(s.ToUnixTimeSeconds(),e.ToUnixTimeSeconds() , appInfo.AccessToken, null);
+
+                    foreach (var item in idList)
+                    {
+                        var order = await GetOrderInfoByIdAsync(item, appInfo.AccessToken, null);
+                        if (order != null)
+                        {
+                            orderList.Add(order);
+                        }
+                    }
+                    start = e;
+                    
+                }
+                orderList.ForEach(e => e.BelongLiveAnchorId = belongLiveAnchorId);
+                return orderList;
+            }
+            catch (Exception ex)
+            {
+                return new List<WechatVideoOrder>();
+            }
+        }
         /// <summary>
         /// 获取指定时间所有的订单id
         /// </summary>
@@ -68,8 +107,10 @@ namespace Fx.Amiya.SyncOrder.WeChatVideo
         /// <returns></returns>
         private async Task<List<string>> GetOrderIdLIstAsync(string token, object param)
         {
-            var start = DateTimeOffset.Now.ToUnixTimeSeconds() - 2400;
-            var end = DateTimeOffset.Now.ToUnixTimeSeconds();
+            var date = DateTime.Now;
+            var offset= DateTimeOffset.Parse(date.ToString("yyyy-MM-dd HH:mm:ss"));
+            var start = offset.AddSeconds(-2400).ToUnixTimeSeconds();
+            var end = offset.ToUnixTimeSeconds();
             if (param == null)
             {
                 param = new { update_time_range = new { start_time = start, end_time = end }, page_size = 100 };
@@ -89,6 +130,31 @@ namespace Fx.Amiya.SyncOrder.WeChatVideo
                 }
                 return allIds;
             }
+            return new List<string>();
+        }
+        private async Task<List<string>> GetOrderIdLIstByDayAsync(long startTime,long endTime, string token, object param)
+        {
+           
+            if (param == null)
+            {
+                param = new { update_time_range = new { start_time = startTime, end_time = endTime }, page_size = 100 };
+            }
+            string requestUrl = $"https://api.weixin.qq.com/channels/ec/order/list/get?access_token={token}";
+            var res = await HttpUtil.HttpJsonPostAsync(requestUrl, JsonSerializer.Serialize(param));
+            var result = JsonSerializer.Deserialize<WeChatVideoOrderIdListResult>(res);
+            List<string> allIds = new List<string>();
+            if (result.errcode == 0)
+            {
+                allIds.AddRange(result.order_id_list);
+                if (result.has_more)
+                {
+                    var nextPageParm = new { update_time_range = new { start_time = startTime, end_time = endTime }, page_size = 100, next_key = result.next_key };
+                    var nextPageOrder = await GetOrderIdLIstByDayAsync(startTime, endTime, token, nextPageParm);
+                    allIds.AddRange(nextPageOrder);
+                }
+                return allIds;
+            }
+           
             return new List<string>();
         }
         /// <summary>

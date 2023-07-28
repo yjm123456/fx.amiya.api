@@ -3,6 +3,7 @@ using Fx.Amiya.Background.Api.Vo.WeChatVideo;
 using Fx.Amiya.Background.Api.Vo.WeChatVideo.Input;
 using Fx.Amiya.Dto.WechatVideoOrder;
 using Fx.Amiya.IService;
+using Fx.Amiya.SyncOrder.Core;
 using Fx.Amiya.SyncOrder.WeChatVideo;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -24,11 +25,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         private readonly IWeChatVideoOrderService weChatVideoOrderService;
         private readonly ISyncWeChatVideoOrder syncWeChatVideoOrder;
         private readonly ILiveAnchorService liveAnchorService;
-        public WeChatVideoOrderController(IWeChatVideoOrderService weChatVideoOrderService, ISyncWeChatVideoOrder syncWeChatVideoOrder, ILiveAnchorService liveAnchorService)
+        private readonly ISyncWeChatVideoOrder _syncTikTokOrder;
+
+        public WeChatVideoOrderController(IWeChatVideoOrderService weChatVideoOrderService, ISyncWeChatVideoOrder syncWeChatVideoOrder, ILiveAnchorService liveAnchorService, ISyncWeChatVideoOrder syncTikTokOrder)
         {
             this.weChatVideoOrderService = weChatVideoOrderService;
             this.syncWeChatVideoOrder = syncWeChatVideoOrder;
             this.liveAnchorService = liveAnchorService;
+            _syncTikTokOrder = syncTikTokOrder;
         }
         /// <summary>
         /// 获取订单列表
@@ -126,6 +130,38 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Name=e.Name
             }).ToList();
             return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("nameList",result);
+        }
+
+        /// <summary>
+        /// 同步指定时间内的视频号订单
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("syncWechatVideoOrder")]
+        public async Task SyncVideoOrder(int liveAnchorId){
+            
+
+            var wechatVideoOrderResult = await _syncTikTokOrder.TranslateTradesSoldChangedOrders2(DateTime.Now, DateTime.Now, liveAnchorId);
+            List<WechatVideoAddDto> wechatVideoList = new List<WechatVideoAddDto>();
+            foreach (var item in wechatVideoOrderResult)
+            {
+                WechatVideoAddDto add = new WechatVideoAddDto();
+                add.Id = item.Id;
+                add.GoodsName = item.GoodsName;
+                add.GoodsId = item.GoodsId;
+                add.Phone = item.Phone;
+                add.StatusCode = item.StatusCode;
+                add.ActualPayment = item.ActualPayment;
+                add.AccountReceivable = item.AccountReceivable;
+                add.CreateDate = item.CreateDate.Value;
+                add.UpdateDate = item.UpdateDate;
+                add.ThumbPicUrl = item.ThumbPicUrl;
+                add.BuyerNick = item.BuyerNick;
+                add.OrderType = item.OrderType;
+                add.Quantity = item.Quantity;
+                add.BelongLiveAnchorId = item.BelongLiveAnchorId;
+                wechatVideoList.Add(add);
+            }
+            await weChatVideoOrderService.AddAsync(wechatVideoList);
         }
 
     }
