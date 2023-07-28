@@ -20,7 +20,7 @@ namespace Fx.Amiya.Dto.ItemInfo
         public string ThumbPicUrl { get; set; }
         public string Description { get; set; }
         public string Standard { get; set; }
-        public int AppType { get; set; }
+        public string AppType { get; set; }
         public string AppTypeText { get; set; }
         public string BrandId { get; set; }
         public string BrandName { get; set; }

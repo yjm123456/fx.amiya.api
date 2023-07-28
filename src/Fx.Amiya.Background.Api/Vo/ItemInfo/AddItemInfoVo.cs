@@ -65,7 +65,7 @@ namespace Fx.Amiya.Background.Api.Vo.ItemInfo
         /// <summary>
         /// 渠道
         /// </summary>
-        public int AppType { get; set; }
+        public string AppType { get; set; }
         /// <summary>
         /// 品牌id
         /// </summary>

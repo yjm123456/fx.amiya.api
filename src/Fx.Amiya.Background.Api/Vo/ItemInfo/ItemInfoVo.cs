@@ -48,9 +48,9 @@ namespace Fx.Amiya.Background.Api.Vo.ItemInfo
         /// </summary>
         public string Parts { get; set; }
         /// <summary>
-        /// 渠道id
+        /// 渠道
         /// </summary>
-        public int AppType { get; set; }
+        public string AppType { get; set; }
         /// <summary>
         /// 渠道名称
         /// </summary>

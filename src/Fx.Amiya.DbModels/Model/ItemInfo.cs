@@ -13,7 +13,7 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public string HospitalDepartmentId { get; set; }
         public string ThumbPicUrl { get; set; }
-        public int AppType { get; set; }
+        public string AppType { get; set; }
         public string BrandId { get; set; }
         public string CategoryId { get; set; }
         public string Description { get; set; }

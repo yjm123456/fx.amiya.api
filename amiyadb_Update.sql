@@ -85,14 +85,16 @@ ADD CONSTRAINT `fk_tbl_supplier_category_brandinfo`
 
   --项目列表加入品牌品类相关数据和平台数据
   ALTER TABLE `amiyadb`.`tbl_item_info` 
-ADD COLUMN `app_type` INT NOT NULL DEFAULT 0 AFTER `live_price`,
+ADD COLUMN `app_type`  VARCHAR(100)  NULL AFTER `live_price`,
 ADD COLUMN `brand_id` VARCHAR(50) NOT NULL AFTER `other_app_item_id`,
 ADD COLUMN `category_id` VARCHAR(50) NOT NULL AFTER `brand_id`;
 
+
+
 -----------------------------------------------余建明 2023/07/26 END--------------------------------------------
 -------------------------------------------------------------------
------------------------------------------------余建明 2023/07/28 BEGIN---------------------------------------------------------------------------------------------------------以上已发布至线上
 --带货列表新增带货时间
 ALTER TABLE `amiyadb`.`tbl_living_daily_take_goods` 
 ADD COLUMN `take_goods_date` DATETIME NULL AFTER `delete_date`;
 -----------------------------------------------余建明 2023/07/28 END--------------------------------------------
+-----------------------------------------------余建明 2023/07/28 BEGIN---------------------------------------------------------------------------------------------------------以上已发布至线上

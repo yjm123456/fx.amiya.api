@@ -67,7 +67,6 @@ namespace Fx.Amiya.Service
                                    SalePrice = d.SalePrice,
                                    LivePrice = d.LivePrice,
                                    AppType = d.AppType,
-                                   AppTypeText = ServiceClass.GetAppTypeText(Convert.ToByte(d.AppType)),
                                    BrandId = d.BrandId,
                                    CategoryId = d.CategoryId,
                                    IsLimitBuy = d.IsLimitBuy,
@@ -106,6 +105,16 @@ namespace Fx.Amiya.Service
                     {
                         var categoryInfo = await supplierCategoryService.GetByIdAsync(x.CategoryId);
                         x.CategoryName = categoryInfo.CategoryName;
+                    }
+                    if (!string.IsNullOrEmpty(x.AppType))
+                    {
+                        string appTypeResult = "";
+                        List<string> appTypes = new List<string>(x.AppType.Split(","));
+                        foreach (var z in appTypes)
+                        {
+                            appTypeResult += ServiceClass.GetAppTypeText(Convert.ToByte(z)) + " ";
+                        }
+                        x.AppTypeText = appTypeResult;
                     }
                 }
                 return itemPageInfo;
