@@ -92,6 +92,23 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 小黄车退款上限
         /// </summary>
         public int ConsulationCardRefundTarget { get; set; }
+        /// <summary>
+        /// gmv目标
+        /// </summary>
+        public decimal GMVTarget { get; set; }
+        /// <summary>
+        /// 直播间投流目标
+        /// </summary>
+        public decimal LivingRoomFlowInvestmentTarget { get; set; }
+        /// <summary>
+        /// 月累计投流
+        /// </summary>
+        public decimal LivingRoomCumulativeFlowInvestment { get; set; }
+        /// <summary>
+        /// 退款GMV目标
+        /// </summary>
+        public decimal RefundGMVTarget { get; set; }
+
     }
 
     public class LiveAnchorBaseBusinessMonthTargetSendOrDealDto

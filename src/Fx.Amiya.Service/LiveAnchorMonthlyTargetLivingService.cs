@@ -96,7 +96,11 @@ namespace Fx.Amiya.Service
 
                                                         EliminateCardGMVTarget = d.EliminateCardGMVTarget,
                                                         CumulativeEliminateCardGMV = d.CumulativeEliminateCardGMV,
-                                                        EliminateCardGMVTargetCompleteRate = d.EliminateCardGMVTargetCompleteRate
+                                                        EliminateCardGMVTargetCompleteRate = d.EliminateCardGMVTargetCompleteRate,
+
+                                                        RefundGMVTarget=d.RefundGMVTarget,
+                                                        CumulativeRefundGMV=d.CumulativeRefundGMV,
+                                                        RefundGMVTargetCompleteRate=d.RefundGMVTargetCompleteRate
                                                     };
 
                 FxPageInfo<LiveAnchorMonthlyTargetLivingDto> liveAnchorMonthlyTargetLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetLivingDto>();
@@ -147,6 +151,10 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.EliminateCardGMVTarget = addDto.EliminateCardGMVTarget;
                 liveAnchorMonthlyTarget.CumulativeEliminateCardGMV = 0.00m;
                 liveAnchorMonthlyTarget.EliminateCardGMVTargetCompleteRate = 0.00m;
+
+                liveAnchorMonthlyTarget.RefundGMVTarget = addDto.RefundGMVTarget;
+                liveAnchorMonthlyTarget.CumulativeRefundGMV = 0.00m;
+                liveAnchorMonthlyTarget.RefundGMVTargetCompleteRate = 0.00m;
 
                 liveAnchorMonthlyTarget.CreateDate = DateTime.Now;
 
@@ -222,6 +230,10 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.CumulativeEliminateCardGMV = liveAnchorMonthlyTarget.CumulativeEliminateCardGMV;
                 liveAnchorMonthlyTargetDto.EliminateCardGMVTargetCompleteRate = liveAnchorMonthlyTarget.EliminateCardGMVTargetCompleteRate;
 
+                liveAnchorMonthlyTargetDto.RefundGMVTarget = liveAnchorMonthlyTarget.RefundGMVTarget;
+                liveAnchorMonthlyTargetDto.CumulativeRefundGMV = liveAnchorMonthlyTarget.CumulativeRefundGMV;
+                liveAnchorMonthlyTargetDto.RefundGMVTargetCompleteRate = liveAnchorMonthlyTarget.RefundGMVTargetCompleteRate;
+
                 liveAnchorMonthlyTargetDto.CreateDate = liveAnchorMonthlyTarget.CreateDate;
                 var liveAnchor = await _liveanchorService.GetByIdAsync(liveAnchorMonthlyTargetDto.LiveAnchorId);
                 liveAnchorMonthlyTargetDto.ContentPlatFormId = liveAnchor.ContentPlateFormId;
@@ -254,6 +266,7 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.LivingRefundCardTarget = updateDto.LivingRefundCardTarget;
                 liveAnchorMonthlyTarget.GMVTarget = updateDto.GMVTarget;
                 liveAnchorMonthlyTarget.EliminateCardGMVTarget = updateDto.EliminateCardGMVTarget;
+                liveAnchorMonthlyTarget.RefundGMVTarget = updateDto.RefundGMVTarget;
 
                 await dalLiveAnchorMonthlyTargetLiving.UpdateAsync(liveAnchorMonthlyTarget, true);
             }
@@ -367,7 +380,19 @@ namespace Fx.Amiya.Service
 
                 #endregion
 
+                #region 退款gmv
 
+                liveAnchorMonthlyTargetLiving.CumulativeRefundGMV += editDto.RefundGMV;
+                if (liveAnchorMonthlyTargetLiving.CumulativeRefundGMV <= 0)
+                {
+                    liveAnchorMonthlyTargetLiving.RefundGMVTargetCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetLiving.RefundGMVTargetCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetLiving.CumulativeRefundGMV) / Convert.ToDecimal(liveAnchorMonthlyTargetLiving.RefundGMVTarget)) * 100, 2);
+                }
+
+                #endregion
 
                 await dalLiveAnchorMonthlyTargetLiving.UpdateAsync(liveAnchorMonthlyTargetLiving, true);
             }
@@ -450,7 +475,10 @@ namespace Fx.Amiya.Service
             LiveAnchorBaseBusinessMonthTargetPerformanceDto performanceInfoDto = new LiveAnchorBaseBusinessMonthTargetPerformanceDto
             {
                 ConsulationCardTarget = await performance.SumAsync(t => t.ConsultationTarget + t.ConsultationTarget2),
-
+                GMVTarget = await performance.SumAsync(e => e.GMVTarget),
+                LivingRoomFlowInvestmentTarget = await performance.SumAsync(e => e.LivingRoomFlowInvestmentTarget),
+                LivingRoomCumulativeFlowInvestment = await performance.SumAsync(e => e.LivingRoomCumulativeFlowInvestment),
+                RefundGMVTarget = await performance.SumAsync(e=>e.RefundGMVTarget)
             };
             return performanceInfoDto;
         }
@@ -472,6 +500,16 @@ namespace Fx.Amiya.Service
             };
             return performanceInfoDto;
         }
-
+        /// <summary>
+        /// 根据主播id集合获取指定月份的月目标id
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        public async Task<List<string>> GetTargetIdsAsync(int year, int month, List<int> liveAnchorIds)
+        {
+            return dalLiveAnchorMonthlyTargetLiving.GetAll().Where(e => e.Year == year && e.Month == e.Month && liveAnchorIds.Contains(e.LiveAnchorId)).Select(e => e.Id).ToList();
+        }
     }
 }

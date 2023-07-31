@@ -86,7 +86,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         GMVTargetCompleteRate = d.GMVTargetCompleteRate,
                                                         EliminateCardGMVTarget = d.EliminateCardGMVTarget,
                                                         CumulativeEliminateCardGMV = d.CumulativeEliminateCardGMV,
-                                                        EliminateCardGMVTargetCompleteRate = d.EliminateCardGMVTargetCompleteRate
+                                                        EliminateCardGMVTargetCompleteRate = d.EliminateCardGMVTargetCompleteRate,
+                                                        RefundGMVTarget=d.RefundGMVTarget,
+                                                        CumulativeRefundGMV=d.CumulativeRefundGMV,
+                                                        RefundGMVTargetCompleteRate=d.RefundGMVTargetCompleteRate
                                                     };
 
                 FxPageInfo<LiveAnchorMonthlyTargetLivingVo> liveAnchorMonthlyTargetLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetLivingVo>();
@@ -157,6 +160,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.LivingRefundCardTarget = addVo.LivingRefundCardTarget;
                 addDto.GMVTarget = addVo.GMVTarget;
                 addDto.EliminateCardGMVTarget = addVo.EliminateCardGMVTarget;
+                addDto.RefundGMVTarget = addVo.RefundGMVTarget;
                 await _liveAnchorMonthlyTargetLivingService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -212,6 +216,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorMonthlyTargetVo.CumulativeEliminateCardGMV = liveAnchorMonthlyTarget.CumulativeEliminateCardGMV;
                 liveAnchorMonthlyTargetVo.EliminateCardGMVTargetCompleteRate = liveAnchorMonthlyTarget.EliminateCardGMVTargetCompleteRate;
 
+                liveAnchorMonthlyTargetVo.RefundGMVTarget = liveAnchorMonthlyTarget.RefundGMVTarget;
+                liveAnchorMonthlyTargetVo.CumulativeRefundGMV = liveAnchorMonthlyTarget.CumulativeRefundGMV;
+                liveAnchorMonthlyTargetVo.RefundGMVTargetCompleteRate = liveAnchorMonthlyTarget.RefundGMVTargetCompleteRate;
 
                 liveAnchorMonthlyTargetVo.CreateDate = liveAnchorMonthlyTarget.CreateDate;
 
@@ -247,6 +254,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.LivingRefundCardTarget = updateVo.LivingRefundCardTarget;
                 updateDto.GMVTarget = updateVo.GMVTarget;
                 updateDto.EliminateCardGMVTarget = updateVo.EliminateCardGMVTarget;
+                updateDto.RefundGMVTarget = updateVo.RefundGMVTarget;
                 await _liveAnchorMonthlyTargetLivingService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

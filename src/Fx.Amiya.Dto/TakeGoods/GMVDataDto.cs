@@ -128,7 +128,7 @@ namespace Fx.Amiya.Dto.TakeGoods
         /// <summary>
         /// 吉娜组下单gmv距目标达成后期每天需完成
         /// </summary>
-        public decimal JInaLaterCompleteEveryDayOrderGMV { get; set; }
+        public decimal LaterCompleteEveryDayJInaOrderGMV { get; set; }
         /// <summary>
         /// 退款gmv
         /// </summary>

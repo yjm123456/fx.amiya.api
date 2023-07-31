@@ -257,8 +257,8 @@ namespace Fx.Amiya.Service
                                 FinalConsumptionHospital = d.FinalConsumptionHospital,
                                 LiveAnchorId = d.LiveAnchorId,
                                 Standard = d.Standard,
-                                IsSendOrder = dalSendGoodsRecord.GetAll().Any(e=>e.OrderId==d.Id),
-                                Remark=d.OrderTrade.Remark
+                                IsSendOrder = dalSendGoodsRecord.GetAll().Any(e => e.OrderId == d.Id),
+                                Remark = d.OrderTrade == null ? "" : d.OrderTrade.Remark
                             };
 
 
@@ -2865,7 +2865,7 @@ namespace Fx.Amiya.Service
         public async Task<OrderInfoDto> GetByIdInCRMAsync(string id)
         {
             var config = await _wxAppConfigService.GetCallCenterConfig();
-            var order = await dalOrderInfo.GetAll().Include(x=>x.OrderTrade).Include(x => x.SendOrderInfoList).SingleOrDefaultAsync(e => e.Id == id);
+            var order = await dalOrderInfo.GetAll().Include(x => x.OrderTrade).Include(x => x.SendOrderInfoList).SingleOrDefaultAsync(e => e.Id == id);
             if (order == null)
                 throw new Exception("订单编号错误");
 
@@ -2902,7 +2902,7 @@ namespace Fx.Amiya.Service
             orderInfo.BelongCompany = dalCompanyBaseInfo.GetAll().Where(e => e.Id == order.BelongCompany).SingleOrDefault()?.Name;
             orderInfo.IsReturnBackPrice = order.IsReturnBackPrice;
             orderInfo.IsSendOrder = dalSendGoodsRecord.GetAll().Any(e => e.OrderId == order.Id);
-            orderInfo.Remark = order.OrderTrade.Remark;
+            orderInfo.Remark = order.OrderTrade?.Remark;
             if (order.CheckState == (int)CheckType.CheckedSuccess)
             {
                 orderInfo.CheckDate = order.CheckDate;
@@ -3143,7 +3143,7 @@ namespace Fx.Amiya.Service
                                                IsUseCoupon = o.IsUseCoupon,
                                                CouponId = o.CouponId,
                                                DeductMoney = o.DeductMoney,
-                                               StatusCode=o.StatusCode
+                                               StatusCode = o.StatusCode
                                            }).ToList();
             return orderTradeDto;
         }
@@ -3366,7 +3366,7 @@ namespace Fx.Amiya.Service
             }
 
             var orders = from d in dalOrderInfo.GetAll()
-                         where d.TradeId == tradeId &&(d.StatusCode==OrderStatusCode.TRADE_BUYER_PAID||d.StatusCode==OrderStatusCode.WAIT_SELLER_SEND_GOODS||d.StatusCode==OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS||d.StatusCode==OrderStatusCode.TRADE_FINISHED)
+                         where d.TradeId == tradeId && (d.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || d.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || d.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || d.StatusCode == OrderStatusCode.TRADE_FINISHED)
                          select new OrderInfoDto
                          {
                              Id = d.Id,
@@ -5282,8 +5282,10 @@ namespace Fx.Amiya.Service
                         {
                             if (orderVoucher != null)
                             {
-                                if (voucher.IsNeedMinPrice) {
-                                    if (cartCreateOrderDto.ActualPayment<voucher.MinPrice) {
+                                if (voucher.IsNeedMinPrice)
+                                {
+                                    if (cartCreateOrderDto.ActualPayment < voucher.MinPrice)
+                                    {
                                         throw new Exception("支付金额不满足抵用券使用条件！");
                                     }
                                 }
@@ -5921,15 +5923,16 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var order = dalOrderInfo.GetAll().Include(e=>e.OrderTrade).Where(e => e.Id == orderId).SingleOrDefault();
+                var order = dalOrderInfo.GetAll().Include(e => e.OrderTrade).Where(e => e.Id == orderId).SingleOrDefault();
                 if (order == null) throw new Exception("订单编号错误");
                 var existRecord = await integrationAccountService.GetIsIntegrationGenerateRecordByOrderIdAndCustomerIdAsync(orderId, order.OrderTrade.CustomerId);
                 if (existRecord)
                 {
                     return;
                 }
-                if (order.ExchangeType != (byte)ExchangeType.PointAndMoney) {
-                    return;   
+                if (order.ExchangeType != (byte)ExchangeType.PointAndMoney)
+                {
+                    return;
                 }
                 //如果已存在该积分的记录则直接返回
                 var integrationRecord = await CreateIntegrationRecordAsync(customerId, order.IntegrationQuantity.Value, orderId);

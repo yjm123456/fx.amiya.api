@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Dto.LiveAnchorDailyTarget;
 using Fx.Amiya.Dto.OrderReport;
+using Fx.Amiya.Dto.TakeGoods;
 using Fx.Common;
 using System;
 using System.Collections.Generic;
@@ -63,5 +64,14 @@ namespace Fx.Amiya.IService
 
         Task<List<OrderOperationConditionDto>> GetConsultingCardBuyDataAsync(DateTime startDate, DateTime endDate);
         Task<List<OrderOperationConditionDto>> GetConsultingCardUseDataAsync(DateTime startDate, DateTime endDate);
+        Task<List<GmvAndRefundGmvDto>> GetDailyDataByLiveAnchorIdsAsync(List<string> targetIds);
+        /// <summary>
+        /// 根据时间和主播id集合获取下单gmv和退款gmv数据
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        Task<List<GmvAndRefundGmvDto>> GetGmvDataAsync(DateTime start,DateTime end,List<int> liveAnchorIds);
     }
 }

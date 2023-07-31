@@ -227,7 +227,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 CargoSettlementCommission = d.CargoSettlementCommission,
                                                 RefundCard=d.RefundCard,
                                                 GMV=d.GMV,
-                                                EliminateCardGMV=d.EliminateCardGMV
+                                                EliminateCardGMV=d.EliminateCardGMV,
+                                                RefundGMV=d.RefundGMV
                                             };
 
                 FxPageInfo<LivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<LivingDailyTargetVo>();
@@ -383,6 +384,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorDailyTargetVo.EliminateCardGMV = liveAnchorDailyTarget.EliminateCardGMV;
                 liveAnchorDailyTargetVo.EffectivePerformance = liveAnchorDailyTarget.EffectivePerformance;
                 liveAnchorDailyTargetVo.PotentialPerformance = liveAnchorDailyTarget.PotentialPerformance;
+                liveAnchorDailyTargetVo.RefundGMV = liveAnchorDailyTarget.RefundGMV;
 
                 return ResultData<LiveAnchorDailyTargetByIdVo>.Success().AddData("liveAnchorDailyTargetInfo", liveAnchorDailyTargetVo);
             }
@@ -774,6 +776,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.RefundCard = addVo.RefundCard;
                     addDto.GMV = addVo.GMV;
                     addDto.EliminateCardGMV = addVo.EliminateCardGMV;
+                    addDto.RefundGMV = addVo.RefundGMV;
                     await _liveAnchorDailyTargetService.LivingAddAsync(addDto);
                 }
                 return ResultData.Success();
@@ -808,6 +811,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.RefundCard = updateVo.RefundCard;
                 updateDto.GMV = updateVo.GMV;
                 updateDto.EliminateCardGMV = updateVo.EliminateCardGMV;
+                updateDto.RefundGMV = updateVo.RefundGMV;
                 await _liveAnchorDailyTargetService.LivingUpdateAsync(updateDto);
                 return ResultData.Success();
             }

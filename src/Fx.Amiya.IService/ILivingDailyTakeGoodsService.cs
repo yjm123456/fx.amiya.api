@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.LivingDailyTakeGoods.Input;
 using Fx.Amiya.Dto.LivingDailyTakeGoods.OutPut;
+using Fx.Amiya.Dto.TakeGoods;
 using Fx.Common;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,15 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<BaseKeyValueDto>> GetTakeGoodsTypeAsync();
+        /// <summary>
+        /// 获取带货业绩数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="contentPlatformId"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        Task<List<TakeGoodsDataDto>> GetTakeGoodsDataAsync(DateTime startDate,DateTime endDate,string contentPlatformId,List<int> liveAnchorIds);
 
     }
 }

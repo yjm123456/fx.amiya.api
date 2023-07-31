@@ -139,5 +139,18 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.Living
         /// 去卡GMV目标完成率
         /// </summary>
         public decimal EliminateCardGMVTargetCompleteRate { get; set; }
+        /// <summary>
+        /// 退款GMV目标
+        /// </summary>
+        public decimal RefundGMVTarget { get; set; }
+        /// <summary>
+        /// 累计退款gmv
+        /// </summary>
+        public decimal CumulativeRefundGMV { get; set; }
+        /// <summary>
+        /// 退款gmv完成率
+        /// </summary>
+
+        public decimal RefundGMVTargetCompleteRate { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.WeChatVideo;
 using Fx.Amiya.Background.Api.Vo.WeChatVideo.Input;
+using Fx.Amiya.Background.Api.Vo.WeChatVideo.Result;
 using Fx.Amiya.Dto.WechatVideoOrder;
 using Fx.Amiya.IService;
 using Fx.Amiya.SyncOrder.Core;
@@ -162,6 +163,19 @@ namespace Fx.Amiya.Background.Api.Controllers
                 wechatVideoList.Add(add);
             }
             await weChatVideoOrderService.AddAsync(wechatVideoList);
+        }
+
+        /// <summary>
+        /// 自动填写视频号带货订单数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("autoCompleteData")]
+        public async Task<ResultData<AutoCompleteDataVo>> AutoCompleteDataAsync([FromQuery]AutoCompleteDataParam param) {
+            AutoCompleteDataVo result = new AutoCompleteDataVo();
+            var data =await weChatVideoOrderService.AutoCompleteDataAsync(param.date,param.liveAnchorId,param.GoodsName,param.TakeGoodsType);
+            result.Quantity = data.Quantity;
+            result.TotalPrice = data.TotalPrice;
+            return ResultData<AutoCompleteDataVo>.Success().AddData("data",result);
         }
 
     }

@@ -10,16 +10,19 @@ using System.Threading.Tasks;
 using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.LivingDailyTakeGoods.Input;
 using Fx.Amiya.Dto.LivingDailyTakeGoods.OutPut;
+using Fx.Amiya.Dto.TakeGoods;
 
 namespace Fx.Amiya.Service
 {
     public class LivingDailyTakeGoodsService : ILivingDailyTakeGoodsService
     {
         private IDalLivingDailyTakeGoods dalLivingDailyTakeGoodsService;
+        private ILiveAnchorService liveAnchorService;
 
-        public LivingDailyTakeGoodsService(IDalLivingDailyTakeGoods dalLivingDailyTakeGoodsService)
+        public LivingDailyTakeGoodsService(IDalLivingDailyTakeGoods dalLivingDailyTakeGoodsService, ILiveAnchorService liveAnchorService)
         {
             this.dalLivingDailyTakeGoodsService = dalLivingDailyTakeGoodsService;
+            this.liveAnchorService = liveAnchorService;
         }
 
 
@@ -209,6 +212,34 @@ namespace Fx.Amiya.Service
             return orderTypeList;
 
         }
+        /// <summary>
+        /// 获取带货业绩数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="contentPlatformId"></param>
+        /// <param name="baseLiveAnchorId"></param>
+        /// <returns></returns>
+        public async Task<List<TakeGoodsDataDto>> GetTakeGoodsDataAsync(DateTime startDate, DateTime endDate, string contentPlatformId, List<int> liveAnchorIds)
+        {
+            
+            var data= dalLivingDailyTakeGoodsService.GetAll().Where(e => e.TakeGoodsDate >= startDate && e.TakeGoodsDate <= endDate&&e.Valid==true);
+            if (!string.IsNullOrEmpty(contentPlatformId)) {
+                data = data.Where(e => e.ContentPlatFormId == contentPlatformId);
+                if (liveAnchorIds.Count>0) {
+                    data = data.Where(e => liveAnchorIds.Contains(e.LiveAnchorId));
+                }
+            }
+            return await data.Select(e=>new TakeGoodsDataDto { 
+                GMV=e.TotalPrice,
+                Count=e.TakeGoodsQuantity,
+                SinglePrice=e.SinglePrice,
+                LiveAnchorId=e.LiveAnchorId,
+                TakeGoodsType=e.TakeGoodsType,
+                TotalPrice=e.TotalPrice,
+                TakeGoodsDate=e.TakeGoodsDate.Value
+            }).ToListAsync();
 
+        }
     }
 }

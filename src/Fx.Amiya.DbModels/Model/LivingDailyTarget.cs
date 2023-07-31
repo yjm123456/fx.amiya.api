@@ -31,7 +31,11 @@ namespace Fx.Amiya.DbModels.Model
         /// 去卡GMV
         /// </summary>
         public decimal EliminateCardGMV { get; set; }
-        
+        /// <summary>
+        /// 退款gmv
+        /// </summary>
+        public decimal RefundGMV { get; set; }
+
 
         public DateTime RecordDate { get; set; }
 

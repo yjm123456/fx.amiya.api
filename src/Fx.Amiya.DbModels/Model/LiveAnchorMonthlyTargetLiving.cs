@@ -111,6 +111,7 @@ namespace Fx.Amiya.DbModels.Model
         /// GMV目标
         /// </summary>
         public decimal GMVTarget { get; set; }
+        
         /// <summary>
         /// 月累计GMV
         /// </summary>
@@ -119,6 +120,21 @@ namespace Fx.Amiya.DbModels.Model
         /// GMV目标完成率
         /// </summary>
         public decimal GMVTargetCompleteRate { get; set; }
+
+        /// <summary>
+        /// 退款GMV目标
+        /// </summary>
+        public decimal RefundGMVTarget { get; set; }
+        /// <summary>
+        /// 累计退款gmv
+        /// </summary>
+        public decimal CumulativeRefundGMV { get; set; }
+        /// <summary>
+        /// 退款gmv完成率
+        /// </summary>
+
+        public decimal RefundGMVTargetCompleteRate { get; set; }
+
         /// <summary>
         /// 去卡GMV目标
         /// </summary>

@@ -368,5 +368,17 @@ namespace Fx.Amiya.Service
             }).ToList();
             
         }
+        /// <summary>
+        /// 根据平台id和基础主播id获取主播ip的id
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<int>> GetLiveAnchorIdsByContentPlatformIdAndBaseId(string contentPlatformId, string baseId)
+        {
+            var data= dalLiveAnchor.GetAll().Where(e => e.ContentPlateFormId == contentPlatformId);
+            if (!string.IsNullOrEmpty(baseId)) {
+                data = data.Where(e => e.LiveAnchorBaseId == baseId);
+            }
+            return await data.Select(e => e.Id).ToListAsync();
+        }
     }
 }

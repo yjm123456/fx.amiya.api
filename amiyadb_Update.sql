@@ -98,3 +98,23 @@ ALTER TABLE `amiyadb`.`tbl_living_daily_take_goods`
 ADD COLUMN `take_goods_date` DATETIME NULL AFTER `delete_date`;
 -----------------------------------------------余建明 2023/07/28 END--------------------------------------------
 -----------------------------------------------余建明 2023/07/28 BEGIN---------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+
+-------------------------------------------------王健 2023/07/31 BEGIN-----------------------------------------------------------------
+
+
+---直播中月目标添加退款,累计退款gmv,退款gmv完成率
+ALTER TABLE `tbl_liveanchor_monthly_target_living`
+	ADD COLUMN `refund_gmv_target` DECIMAL(10,2) NOT NULL DEFAULT '0.00' AFTER `eliminate_card_gmv_target_complete_rate`,
+	ADD COLUMN `refund_gmv_target_completerate` DECIMAL(10,2) NOT NULL DEFAULT '0.00' AFTER `refund_gmv_target`,
+	ADD COLUMN `cumulative_refund_gmv` DECIMAL(10,2) NOT NULL DEFAULT '0.00' AFTER `refund_gmv_target_completerate`;
+
+
+----直播中日数据添加退款gmv
+ALTER TABLE `tbl_living_daily_target`
+	ADD COLUMN `refund_gmv` DECIMAL(10,2) NOT NULL DEFAULT '0.00' AFTER `eliminate_card_gmv`;
+
+
+
+-------------------------------------------------王健 2023/07/31 END-----------------------------------------------------------------

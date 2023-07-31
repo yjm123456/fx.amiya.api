@@ -60,6 +60,10 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 去卡GMV
         /// </summary>
         public decimal EliminateCardGMVTarget { get; set; }
+        /// <summary>
+        /// 退款GMV目标
+        /// </summary>
+        public decimal RefundGMVTarget { get; set; }
 
     }
 }

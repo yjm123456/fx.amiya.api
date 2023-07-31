@@ -20,5 +20,14 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<FxPageInfo<WechatVideoOrderInfoDto>> GetListByPageAsync(string keyWord,DateTime? startDate,DateTime? endDate,int? belongLiveAnchorId,string status,int? orderType,int pageSize,int pageNum  );
+        /// <summary>
+        /// 获取视频号带货数据
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="liveAnchorId"></param>
+        /// <param name="goodsName"></param>
+        /// <param name="takeGoodsType"></param>
+        /// <returns></returns>
+        Task<AutoCompleteDataDto> AutoCompleteDataAsync(DateTime date,int liveAnchorId,string goodsName,int takeGoodsType);
     }
 }

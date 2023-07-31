@@ -68,21 +68,21 @@ namespace Fx.Amiya.Service
         {
             try
             {
-               
+
                 var emailConfig = false;
                 //订单号集合
                 string goodsName = "";
                 Dictionary<string, string> orderPhoneDict = new Dictionary<string, string>();
                 byte appType = 7;
                 List<WeChatVideoOrderInfo> orderInfoList = new List<WeChatVideoOrderInfo>();
-                
+
                 foreach (var orderItem in addList)
                 {
                     var orderInfos = from d in dalWeChatVideoOrderInfo.GetAll()
                                      where d.Id == orderItem.Id
                                      select d;
                     var orderInfo = orderInfos.FirstOrDefault();
-                    
+
                     if (orderInfo != null)
                     {
                         //根据是否包含手机号判断该订单是否已经解密
@@ -107,10 +107,13 @@ namespace Fx.Amiya.Service
                         orderInfo.OrderType = orderItem.OrderType;
                         orderInfo.ThumbPicUrl = orderItem.ThumbPicUrl;
                         orderInfo.BelongLiveAnchorId = orderItem.BelongLiveAnchorId;
-                        try {
+                        try
+                        {
                             await dalWeChatVideoOrderInfo.UpdateAsync(orderInfo, true);
-                        } catch (Exception ex) {
-                            
+                        }
+                        catch (Exception ex)
+                        {
+
                         }
                         //计算积分,如果订单信息包含手机号则计算积分,否则暂时不计算
                         //if (orderInfo.StatusCode == "TRADE_FINISHED" && orderInfo.ActualPayment >= 1 && !string.IsNullOrWhiteSpace(orderInfo.Phone))
@@ -169,24 +172,27 @@ namespace Fx.Amiya.Service
                         order.OrderType = orderItem.OrderType;
                         order.Quantity = orderItem.Quantity;
                         order.BelongLiveAnchorId = orderItem.BelongLiveAnchorId;
-                        
+
                         order.Valid = true;
                         var orderStatus = ServiceClass.GetTikTokOrderStatusText(order.StatusCode);
-                        var bindCustomerId =await _bindCustomerService.GetEmployeeIdByPhone(orderItem.Phone);
+                        var bindCustomerId = await _bindCustomerService.GetEmployeeIdByPhone(orderItem.Phone);
 
-                        if (bindCustomerId!=0) {
+                        if (bindCustomerId != 0)
+                        {
                             order.BelongEmpId = bindCustomerId;
                         }
-                        try {
+                        try
+                        {
                             await dalWeChatVideoOrderInfo.AddAsync(order, true);
                         }
-                        catch (Exception ex) {
-                            
+                        catch (Exception ex)
+                        {
+
                         }
 
                     }
                 }
-               
+
                 //发送短信通知
                 SendPhoneInfo(orderPhoneDict, appType);
 
@@ -286,21 +292,22 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<FxPageInfo<WechatVideoOrderInfoDto>> GetListByPageAsync(string keyWord,DateTime? startDate, DateTime? endDate, int? belongLiveAnchorId, string status, int? orderType, int pageSize, int pageNum)
+        public async Task<FxPageInfo<WechatVideoOrderInfoDto>> GetListByPageAsync(string keyWord, DateTime? startDate, DateTime? endDate, int? belongLiveAnchorId, string status, int? orderType, int pageSize, int pageNum)
         {
             var config = await _wxAppConfigService.GetCallCenterConfig();
             var encryptConfig = await GetCallCenterConfig();
-            
-            var order= dalWeChatVideoOrderInfo.GetAll().Where(e => !startDate.HasValue|| e.CreateDate >= startDate.Value.Date)
+
+            var order = dalWeChatVideoOrderInfo.GetAll().Where(e => !startDate.HasValue || e.CreateDate >= startDate.Value.Date)
                 .Where(e => !endDate.HasValue || e.CreateDate <= endDate.Value.AddDays(1).Date)
                 .Where(e => !belongLiveAnchorId.HasValue || e.BelongLiveAnchorId == belongLiveAnchorId)
                 .Where(e => string.IsNullOrEmpty(status) || e.StatusCode == status)
                 .Where(e => !orderType.HasValue || e.OrderType == orderType)
-                .Where(e=>string.IsNullOrEmpty(keyWord)||(e.Phone.Contains(keyWord)||e.GoodsName.Contains(keyWord))||e.Id.Contains(keyWord)).OrderByDescending
-                (e=>e.CreateDate);
+                .Where(e => string.IsNullOrEmpty(keyWord) || (e.Phone.Contains(keyWord) || e.GoodsName.Contains(keyWord)) || e.Id.Contains(keyWord)).OrderByDescending
+                (e => e.CreateDate);
             FxPageInfo<WechatVideoOrderInfoDto> fxPageInfo = new FxPageInfo<WechatVideoOrderInfoDto>();
-            fxPageInfo.TotalCount =await order.CountAsync();
-            fxPageInfo.List = order.Skip((pageNum - 1) * pageSize).Take(pageSize).Select(e => new WechatVideoOrderInfoDto {
+            fxPageInfo.TotalCount = await order.CountAsync();
+            fxPageInfo.List = order.Skip((pageNum - 1) * pageSize).Take(pageSize).Select(e => new WechatVideoOrderInfoDto
+            {
                 Id = e.Id,
                 GoodsName = e.GoodsName,
                 GoodsId = e.GoodsId,
@@ -317,8 +324,8 @@ namespace Fx.Amiya.Service
                 OrderTypeText = ServiceClass.GetWechatOrderTypeText(e.OrderType.Value),
                 Quantity = e.Quantity,
                 BelongLiveAnchorId = e.BelongLiveAnchorId,
-                BelongLiveAnchorName=dalLiveAnchor.GetAll().Where(a=>a.Id==e.BelongLiveAnchorId).SingleOrDefault().Name,
-                EncryptPhone= ServiceClass.Encrypt(e.Phone, config.PhoneEncryptKey),
+                BelongLiveAnchorName = dalLiveAnchor.GetAll().Where(a => a.Id == e.BelongLiveAnchorId).SingleOrDefault().Name,
+                EncryptPhone = ServiceClass.Encrypt(e.Phone, config.PhoneEncryptKey),
             }).ToList();
             return fxPageInfo;
         }
@@ -326,6 +333,33 @@ namespace Fx.Amiya.Service
         {
             var config = await _dalConfig.GetAll().SingleOrDefaultAsync();
             return JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig;
+        }
+        /// <summary>
+        /// 获取视频号带货数据
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="liveAnchorId"></param>
+        /// <param name="goodsName"></param>
+        /// <param name="takeGoodsType"></param>
+        /// <returns></returns>
+        public async Task<AutoCompleteDataDto> AutoCompleteDataAsync(DateTime date, int liveAnchorId, string goodsName, int takeGoodsType)
+        {
+            AutoCompleteDataDto autoCompleteDataDto = new AutoCompleteDataDto();
+            var order = dalWeChatVideoOrderInfo.GetAll().Where(e => e.BelongLiveAnchorId == liveAnchorId && e.CreateDate >= date.Date && e.CreateDate < date.AddDays(1).Date && e.GoodsName.Contains(goodsName));
+            if (takeGoodsType == (int)TakeGoodsType.CreateOrder)
+            {
+                order = order.Where(e => e.StatusCode == "WAIT_SELLER_SEND_GOODS" || e.StatusCode == "WAIT_BUYER_CONFIRM_GOODS" || e.StatusCode == "TRADE_FINISHED");
+            }
+            if (takeGoodsType == (int)TakeGoodsType.ReturnBackOrder)
+            {
+                order = order.Where(e => e.StatusCode == "TRADE_CLOSED");
+            }
+
+            autoCompleteDataDto.Quantity = order.Sum(e => e.Quantity) ?? 0;
+            autoCompleteDataDto.TotalPrice = order.Sum(e => e.AccountReceivable) ?? 0;
+
+            return autoCompleteDataDto;
+
         }
     }
 }

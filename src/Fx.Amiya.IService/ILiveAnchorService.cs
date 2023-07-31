@@ -59,6 +59,11 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<LiveAnchorDto>> GetWechatVideoOrderLiveAnchorIdAsync();
+        /// <summary>
+        /// 根据平台id和基础主播id获取主播ip的id
+        /// </summary>
+        /// <returns></returns>
+        Task<List<int>> GetLiveAnchorIdsByContentPlatformIdAndBaseId(string contentPlatformId,string baseId);
 
     }
 }

@@ -2493,7 +2493,7 @@ namespace Fx.Amiya.Service
             decimal performanceSchedule = Math.Round(currentPerformance / performanceTarget * 100, 2, MidpointRounding.AwayFromZero);
             performanceScheduleDto.ContrastTimeSchedule = performanceSchedule - timeSchedule;
             performanceScheduleDto.PerformanceDeviation = Math.Round(performanceTarget * (timeSchedule - performanceSchedule) / 100, 2);
-            performanceScheduleDto.ResidueTimeNeedCompletePerformance = timeSchedule == 100m ? 0 : Math.Round((performanceTarget - currentPerformance) / (totalDay - nowDay), 2, MidpointRounding.AwayFromZero);
+            performanceScheduleDto.ResidueTimeNeedCompletePerformance = timeSchedule == 100m ? performanceScheduleDto.PerformanceDeviation : Math.Round((performanceTarget - currentPerformance) / (totalDay - nowDay), 2, MidpointRounding.AwayFromZero);
             return performanceScheduleDto;
 
         }

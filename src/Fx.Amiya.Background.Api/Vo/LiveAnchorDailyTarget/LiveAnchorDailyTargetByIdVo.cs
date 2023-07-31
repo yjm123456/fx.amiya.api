@@ -251,6 +251,10 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// </summary>
         public decimal EliminateCardGMV { get; set; }
         /// <summary>
+        /// 退款GMV
+        /// </summary>
+        public decimal RefundGMV { get; set; }
+        /// <summary>
         /// 今日有效业绩
         /// </summary>
         public decimal EffectivePerformance { get; set; }
