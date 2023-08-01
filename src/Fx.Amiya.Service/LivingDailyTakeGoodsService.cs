@@ -35,6 +35,7 @@ namespace Fx.Amiya.Service
                                                   where (query.KeyWord == null || d.Remark.Contains(query.KeyWord))
                                                            && (string.IsNullOrEmpty(query.BrandId) || d.BrandId == query.BrandId)
                                                            && (string.IsNullOrEmpty(query.CategoryId) || d.CategoryId == query.CategoryId)
+                                                           && (string.IsNullOrEmpty(query.ItemDetailsId) || d.ItemDetailsId == query.ItemDetailsId)
                                                            && (!query.StartDate.HasValue || d.TakeGoodsDate.Value >= query.StartDate.Value)
                                                            && (!query.EndDate.HasValue || d.TakeGoodsDate < query.EndDate.Value.AddDays(1).AddMinutes(-1))
                                                            && (!query.CreateBy.HasValue || d.CreatBy == query.CreateBy)

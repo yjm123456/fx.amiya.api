@@ -58,6 +58,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryLivingDailyTakeGoodsDto.KeyWord = query.KeyWord;
                 queryLivingDailyTakeGoodsDto.BrandId = query.BrandId;
                 queryLivingDailyTakeGoodsDto.CategoryId = query.CategoryId;
+                queryLivingDailyTakeGoodsDto.ItemDetailsId = query.ItemDetailsId;
                 queryLivingDailyTakeGoodsDto.CreateBy = query.CreateBy;
                 queryLivingDailyTakeGoodsDto.Valid = query.Valid;
                 var q = await _LivingDailyTakeGoodsService.GetListWithPageAsync(queryLivingDailyTakeGoodsDto);

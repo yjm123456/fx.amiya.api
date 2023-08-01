@@ -45,10 +45,13 @@ namespace Fx.Amiya.Service
         /// 获取项目列表（分页）
         /// </summary>
         /// <param name="keyword"></param>
+        /// <param name="brandId">品牌</param>
+        /// <param name="categoryId">品类</param>
+        /// <param name="itemDetailsId">品项</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ItemInfoDto>> GetListWithPageAsync(string keyword, int pageNum, int pageSize, bool? valid)
+        public async Task<FxPageInfo<ItemInfoDto>> GetListWithPageAsync(string keyword, string brandId, string categoryId, string itemDetailsId, int pageNum, int pageSize, bool? valid)
         {
             try
             {
@@ -56,6 +59,9 @@ namespace Fx.Amiya.Service
                                .Include(e => e.CreateEmployee)
                                .Include(e => e.UpdateEmployee)
                                where (keyword == null || d.Name.Contains(keyword) || d.Description.Contains(keyword))
+                               where (string.IsNullOrEmpty(brandId)|| d.BrandId==brandId)
+                               where (string.IsNullOrEmpty(categoryId) || d.CategoryId == categoryId)
+                               where (string.IsNullOrEmpty(itemDetailsId) || d.ItemDetailsId == itemDetailsId)
                                && (valid == null || d.Valid == valid)
                                select new ItemInfoDto
                                {

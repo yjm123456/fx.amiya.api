@@ -33,16 +33,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 获取项目列表（分页）
         /// </summary>
         /// <param name="keyword"></param>
+        /// <param name="brandId">品牌</param>
+        /// <param name="categoryId">品类</param>
+        /// <param name="itemDetailsId">品项</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <param name="valid"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<ItemInfoVo>>> GetListWithPageAsync(string keyword, int pageNum, int pageSize, bool? valid)
+        public async Task<ResultData<FxPageInfo<ItemInfoVo>>> GetListWithPageAsync(string keyword, string brandId, string categoryId, string itemDetailsId, int pageNum, int pageSize, bool? valid)
         {
             try
             {
-                var q = await itemInfoService.GetListWithPageAsync(keyword, pageNum, pageSize, valid);
+                var q = await itemInfoService.GetListWithPageAsync(keyword,brandId,categoryId,itemDetailsId, pageNum, pageSize, valid);
                 var itemInfos = from d in q.List
                                 select new ItemInfoVo
                                 {
