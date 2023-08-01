@@ -57,6 +57,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                     BrandName = d.BrandName,
                                     CategoryName = d.CategoryName,
                                     CategoryId = d.CategoryId,
+                                    ItemDetailsId = d.ItemDetailsId,
+                                    ItemDetailsName = d.ItemDetailsName,
                                     ThumbPicUrl = d.ThumbPicUrl,
                                     Description = d.Description,
                                     Standard = d.Standard,
@@ -155,6 +157,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.Parts = addVo.Parts;
                 addDto.CategoryId = addVo.CategoryId;
                 addDto.BrandId = addVo.BrandId;
+                addDto.ItemDetailsId = addVo.ItemDetailsId;
                 addDto.AppType = addVo.AppType;
                 addDto.SalePrice = addVo.SalePrice;
                 addDto.LivePrice = addVo.LivePrice;
@@ -203,6 +206,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 itemInfoVo.AppType = itemInfo.AppType;
                 itemInfoVo.BrandId = itemInfo.BrandId;
                 itemInfoVo.CategoryId = itemInfo.CategoryId;
+                itemInfoVo.ItemDetailsId = itemInfo.ItemDetailsId;
                 itemInfoVo.IsLimitBuy = itemInfo.IsLimitBuy;
                 itemInfoVo.LimitBuyQuantity = itemInfo.LimitBuyQuantity;
                 itemInfoVo.Commitment = itemInfo.Commitment;
@@ -247,6 +251,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.AppType = updateVo.AppType;
                 updateDto.BrandId = updateVo.BrandId;
                 updateDto.CategoryId = updateVo.CategoryId;
+                updateDto.ItemDetailsId = updateVo.ItemDetailsId;
                 updateDto.HospitalDepartmentId = updateVo.HospitalDepartmentId;
                 updateDto.ThumbPicUrl = updateVo.ThumbPicUrl;
                 updateDto.Description = updateVo.Description;
@@ -320,15 +325,16 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 根据品牌品类id获取项目id和名称
+        /// 根据品牌品类id,品项id获取项目id和名称
         /// </summary>
         /// <param name="brandId">品牌id</param>
         /// <param name="categoryId">品类id</param>
+        /// <param name="itemDetailsId">品项id</param>
         /// <returns></returns>
         [HttpGet("getItemNameByBrandIdAndCategoryId")]
-        public async Task<ResultData<List<BaseIdAndNameVo>>> GetItemNameByBrandIdAndCategoryIdAsync(string brandId, string categoryId)
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetItemNameByBrandIdAndCategoryIdAsync(string brandId, string categoryId, string itemDetailsId)
         {
-            var q = await itemInfoService.GetItemNameByBrandIdAndCategoryIdAsync(brandId, categoryId);
+            var q = await itemInfoService.GetItemNameByBrandIdAndCategoryIdAsync(brandId, categoryId, itemDetailsId);
             var items = from d in q
                         select new BaseIdAndNameVo
                         {

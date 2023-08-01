@@ -54,7 +54,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 querySupplierCategoryDto.PageNum = query.PageNum;
                 querySupplierCategoryDto.PageSize = query.PageSize;
                 querySupplierCategoryDto.KeyWord = query.KeyWord;
-                querySupplierCategoryDto.BrandId = query.BrandId;
                 querySupplierCategoryDto.Valid = query.Valid;
                 var q = await _supplierCategoryService.GetListWithPageAsync(querySupplierCategoryDto);
 
@@ -62,8 +61,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                  select new SupplierCategoryVo
                                                  {
                                                      Id = d.Id,
-                                                     BrandId = d.BrandId,
-                                                     BrandName = d.BrandName,
                                                      CreateDate = d.CreateDate,
                                                      CategoryName = d.CategoryName,
                                                      Valid = d.Valid,
@@ -96,7 +93,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 SupplierCategoryAddDto addDto = new SupplierCategoryAddDto();
-                addDto.BrandId = addVo.BrandId;
                 addDto.CategoryName = addVo.CategoryName;
                 await _supplierCategoryService.AddAsync(addDto);
                 return ResultData.Success();
@@ -124,7 +120,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 SupplierCategoryVo supplierCategoryVo = new SupplierCategoryVo();
                 supplierCategoryVo.Id = supplierCategory.Id;
                 supplierCategoryVo.CategoryName = supplierCategory.CategoryName;
-                supplierCategoryVo.BrandId = supplierCategory.BrandId;
                 supplierCategoryVo.CreateDate = supplierCategory.CreateDate;
                 supplierCategoryVo.UpdateDate = supplierCategory.UpdateDate;
                 supplierCategoryVo.DeleteDate = supplierCategory.DeleteDate;
@@ -151,7 +146,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 SupplierCategoryUpdateDto updateDto = new SupplierCategoryUpdateDto();
                 updateDto.Id = updateVo.Id;
-                updateDto.BrandId = updateVo.BrandId;
                 updateDto.CategoryName = updateVo.CategoryName;
                 await _supplierCategoryService.UpdateAsync(updateDto);
                 return ResultData.Success();
@@ -183,14 +177,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
         /// <summary>
-        /// 根据供应商品牌id获取供应商品类
+        /// 获取供应商品类
         /// </summary>
-        /// <param name="brandId">品牌id</param>
         /// <returns></returns>
-        [HttpGet("getSupplierCategoryListByBrandId")]
-        public async Task<ResultData<List<BaseIdAndNameVo>>> GetOperatingConsultingNameListAsync(string brandId)
+        [HttpGet("getSupplierCategoryList")]
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetOperatingConsultingNameListAsync()
         {
-            var result = from d in await _supplierCategoryService.GetValidByBrandIdAsync(brandId)
+            var result = from d in await _supplierCategoryService.GetValidByBrandIdAsync()
                          select new BaseIdAndNameVo
                          {
                              Id = d.Key,

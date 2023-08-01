@@ -38,6 +38,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<LiveAnchorWeChatInfo> LiveAnchorWeChatInfo { get; set; }
         public virtual DbSet<SupplierBrand> SupplierBrand { get; set; }
         public virtual DbSet<SupplierCategory> SupplierCategory { get; set; }
+        public virtual DbSet<SupplierItemDetails> SupplierItemDetails { get; set; }
         public virtual DbSet<AmiyaWareHouseNameManage> AmiyaWareHouseNameManage { get; set; }
         public virtual DbSet<AmiyaWareHouseStorageRacks> AmiyaWareHouseStorageRacks { get; set; }
         public virtual DbSet<DockingHospitalCustomerInfo> DockingHospitalCustomerInfo { get; set; }
@@ -288,6 +289,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new LivingDailyTargetConfiguration());
             modelBuilder.ApplyConfiguration(new SupplierBrandConfiguration());
             modelBuilder.ApplyConfiguration(new SupplierCategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new SupplierItemDetailsConfiguration());
             modelBuilder.ApplyConfiguration(new LivingDailyTakeGoodsConfiguration());
             modelBuilder.ApplyConfiguration(new AfterLivingDailyTargetConfiguration());
             modelBuilder.ApplyConfiguration(new ProvinceConfiguration());

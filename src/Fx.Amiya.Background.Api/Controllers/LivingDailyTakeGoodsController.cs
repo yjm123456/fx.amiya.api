@@ -72,9 +72,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                UpdateDate = d.UpdateDate,
                                                Valid = d.Valid,
                                                DeleteDate = d.DeleteDate,
-                                               TakeGoodsDate=d.TakeGoodsDate,
+                                               TakeGoodsDate = d.TakeGoodsDate,
                                                BrandName = d.BrandName,
                                                CategoryName = d.CategoryName,
+                                               ItemDetailsName = d.ItemDetailsName,
                                                ContentPlatFormName = d.ContentPlatFormName,
                                                LiveAnchorName = d.LiveAnchorName,
                                                ItemName = d.ItemName,
@@ -117,6 +118,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.CreatBy = employeeId;
                 addDto.BrandId = addVo.BrandId;
                 addDto.CategoryId = addVo.CategoryId;
+                addDto.ItemDetailsId = addVo.ItemDetailsId;
                 addDto.TakeGoodsDate = addVo.TakeGoodsDate;
                 addDto.ContentPlatFormId = addVo.ContentPlatFormId;
                 addDto.LiveAnchorId = addVo.LiveAnchorId;
@@ -155,6 +157,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 LivingDailyTakeGoodsVo.TakeGoodsDate = LivingDailyTakeGoods.TakeGoodsDate;
                 LivingDailyTakeGoodsVo.BrandId = LivingDailyTakeGoods.BrandId;
                 LivingDailyTakeGoodsVo.CategoryId = LivingDailyTakeGoods.CategoryId;
+                LivingDailyTakeGoodsVo.ItemDetailsId = LivingDailyTakeGoods.ItemDetailsId;
                 LivingDailyTakeGoodsVo.ContentPlatFormId = LivingDailyTakeGoods.ContentPlatFormId;
                 LivingDailyTakeGoodsVo.LiveAnchorId = LivingDailyTakeGoods.LiveAnchorId;
                 LivingDailyTakeGoodsVo.ItemId = LivingDailyTakeGoods.ItemId;
@@ -191,6 +194,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.BrandId = updateVo.BrandId;
                 updateDto.TakeGoodsDate = updateVo.TakeGoodsDate;
                 updateDto.CategoryId = updateVo.CategoryId;
+                updateDto.ItemDetailsId = updateVo.ItemDetailsId;
                 updateDto.ContentPlatFormId = updateVo.ContentPlatFormId;
                 updateDto.LiveAnchorId = updateVo.LiveAnchorId;
                 updateDto.ItemId = updateVo.ItemId;

@@ -22,16 +22,19 @@ namespace Fx.Amiya.Service
         private IAmiyaHospitalDepartmentService _hospitalDepartmentService;
         private ISupplierBrandService supplierBrandService;
         private ISupplierCategoryService supplierCategoryService;
+        private ISupplierItemDetailsService supplierItemDetailsService;
         public ItemInfoService(IDalItemInfo dalItemInfo,
             IDalCustomerInfo dalCustomerInfo,
             ISupplierBrandService supplierBrandService,
             ISupplierCategoryService supplierCategoryService,
             IAmiyaHospitalDepartmentService hospitalDepartmentService,
+            ISupplierItemDetailsService supplierItemDetailsService,
             IDalOrderInfo dalOrderInfo)
         {
             this.dalItemInfo = dalItemInfo;
             this.dalCustomerInfo = dalCustomerInfo;
             this.dalOrderInfo = dalOrderInfo;
+            this.supplierItemDetailsService = supplierItemDetailsService;
             this.supplierBrandService = supplierBrandService;
             this.supplierCategoryService = supplierCategoryService;
             _hospitalDepartmentService = hospitalDepartmentService;
@@ -69,6 +72,7 @@ namespace Fx.Amiya.Service
                                    AppType = d.AppType,
                                    BrandId = d.BrandId,
                                    CategoryId = d.CategoryId,
+                                   ItemDetailsId=d.ItemDetailsId,
                                    IsLimitBuy = d.IsLimitBuy,
                                    LimitBuyQuantity = d.LimitBuyQuantity,
                                    Commitment = d.Commitment,
@@ -105,6 +109,11 @@ namespace Fx.Amiya.Service
                     {
                         var categoryInfo = await supplierCategoryService.GetByIdAsync(x.CategoryId);
                         x.CategoryName = categoryInfo.CategoryName;
+                    }
+                    if (!string.IsNullOrEmpty(x.ItemDetailsId))
+                    {
+                        var itemDetailsInfo = await supplierItemDetailsService.GetByIdAsync(x.ItemDetailsId);
+                        x.ItemDetailsName = itemDetailsInfo.ItemDetailsName;
                     }
                     if (!string.IsNullOrEmpty(x.AppType))
                     {
@@ -194,6 +203,7 @@ namespace Fx.Amiya.Service
                 itemInfo.AppType = addDto.AppType;
                 itemInfo.BrandId = addDto.BrandId;
                 itemInfo.CategoryId = addDto.CategoryId;
+                itemInfo.ItemDetailsId = addDto.ItemDetailsId;
                 itemInfo.IsLimitBuy = addDto.IsLimitBuy;
                 itemInfo.LimitBuyQuantity = addDto.LimitBuyQuantity;
                 itemInfo.Commitment = addDto.Commitment;
@@ -254,6 +264,7 @@ namespace Fx.Amiya.Service
                 itemInfoDto.BrandId = itemInfo.BrandId;
                 itemInfoDto.AppType = itemInfo.AppType;
                 itemInfoDto.CategoryId = itemInfo.CategoryId;
+                itemInfoDto.ItemDetailsId = itemInfo.ItemDetailsId;
                 itemInfoDto.IsLimitBuy = itemInfo.IsLimitBuy;
                 itemInfoDto.LimitBuyQuantity = itemInfo.LimitBuyQuantity;
                 itemInfoDto.Commitment = itemInfo.Commitment;
@@ -348,6 +359,7 @@ namespace Fx.Amiya.Service
                 itemInfo.Parts = updateDto.Parts;
                 itemInfo.AppType = updateDto.AppType;
                 itemInfo.CategoryId = updateDto.CategoryId;
+                itemInfo.ItemDetailsId = updateDto.ItemDetailsId;
                 itemInfo.BrandId = updateDto.BrandId;
                 itemInfo.SalePrice = updateDto.SalePrice;
                 itemInfo.LivePrice = updateDto.LivePrice;
@@ -586,12 +598,13 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="brandId">品牌id</param>
         /// <param name="categoryId">品类id</param>
+        /// <param name="itemDetailsId">品项id</param>
         /// <returns></returns>
         /// <returns></returns>
-        public async Task<List<BaseKeyValueDto>> GetItemNameByBrandIdAndCategoryIdAsync(string brandId, string categoryId)
+        public async Task<List<BaseKeyValueDto>> GetItemNameByBrandIdAndCategoryIdAsync(string brandId, string categoryId, string itemDetailsId)
         {
             var items = from d in dalItemInfo.GetAll()
-                        where (d.BrandId == brandId && d.CategoryId == categoryId && d.Valid == true)
+                        where (d.BrandId == brandId && d.CategoryId == categoryId && d.ItemDetailsId == itemDetailsId && d.Valid == true)
                         select new BaseKeyValueDto
                         {
                             Key = d.Id.ToString(),

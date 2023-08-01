@@ -16,6 +16,7 @@ namespace Fx.Amiya.DbModels.Model
         public string AppType { get; set; }
         public string BrandId { get; set; }
         public string CategoryId { get; set; }
+        public string ItemDetailsId { get; set; }
         public string Description { get; set; }
         public string Standard { get; set; }
         public string Parts { get; set; }

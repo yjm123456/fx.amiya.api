@@ -31,7 +31,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var livingDailyTakeGoodsService = from d in dalLivingDailyTakeGoodsService.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.SupplierBrand).Include(x => x.SupplierCategory).Include(x => x.Contentplatform).Include(x => x.LiveAnchor).Include(x => x.ItemInfo)
+                var livingDailyTakeGoodsService = from d in dalLivingDailyTakeGoodsService.GetAll().Include(x => x.AmiyaEmployee).Include(x => x.SupplierBrand).Include(x => x.SupplierCategory).Include(x => x.Contentplatform).Include(x => x.LiveAnchor).Include(x => x.ItemInfo).Include(x=>x.SupplierItemDetails)
                                                   where (query.KeyWord == null || d.Remark.Contains(query.KeyWord))
                                                            && (string.IsNullOrEmpty(query.BrandId) || d.BrandId == query.BrandId)
                                                            && (string.IsNullOrEmpty(query.CategoryId) || d.CategoryId == query.CategoryId)
@@ -51,6 +51,7 @@ namespace Fx.Amiya.Service
                                                       TakeGoodsDate=d.TakeGoodsDate,
                                                       BrandName = d.SupplierBrand.BrandName,
                                                       CategoryName = d.SupplierCategory.CategoryName,
+                                                      ItemDetailsName=d.SupplierItemDetails.ItemDetailsName,
                                                       ContentPlatFormName = d.Contentplatform.ContentPlatformName,
                                                       LiveAnchorName = d.LiveAnchor.Name,
                                                       ItemName = d.ItemInfo.Name,
@@ -82,6 +83,7 @@ namespace Fx.Amiya.Service
                 livingDailyTakeGoodsService.TakeGoodsDate = addDto.TakeGoodsDate;
                 livingDailyTakeGoodsService.BrandId = addDto.BrandId;
                 livingDailyTakeGoodsService.CategoryId = addDto.CategoryId;
+                livingDailyTakeGoodsService.ItemDetailsId = addDto.ItemDetailsId;
                 livingDailyTakeGoodsService.ContentPlatFormId = addDto.ContentPlatFormId;
                 livingDailyTakeGoodsService.LiveAnchorId = addDto.LiveAnchorId;
                 livingDailyTakeGoodsService.ItemId = addDto.ItemId;
@@ -119,6 +121,7 @@ namespace Fx.Amiya.Service
                 livingDailyTakeGoodsServiceDto.TakeGoodsDate = livingDailyTakeGoodsService.TakeGoodsDate;
                 livingDailyTakeGoodsServiceDto.BrandId = livingDailyTakeGoodsService.BrandId;
                 livingDailyTakeGoodsServiceDto.CategoryId = livingDailyTakeGoodsService.CategoryId;
+                livingDailyTakeGoodsServiceDto.ItemDetailsId = livingDailyTakeGoodsService.ItemDetailsId;
                 livingDailyTakeGoodsServiceDto.ContentPlatFormId = livingDailyTakeGoodsService.ContentPlatFormId;
                 livingDailyTakeGoodsServiceDto.LiveAnchorId = livingDailyTakeGoodsService.LiveAnchorId;
                 livingDailyTakeGoodsServiceDto.ItemId = livingDailyTakeGoodsService.ItemId;
@@ -149,6 +152,7 @@ namespace Fx.Amiya.Service
 
                 livingDailyTakeGoodsService.BrandId = updateDto.BrandId;
                 livingDailyTakeGoodsService.CategoryId = updateDto.CategoryId;
+                livingDailyTakeGoodsService.ItemDetailsId = updateDto.ItemDetailsId;
                 livingDailyTakeGoodsService.TakeGoodsDate = updateDto.TakeGoodsDate;
                 livingDailyTakeGoodsService.ContentPlatFormId = updateDto.ContentPlatFormId;
                 livingDailyTakeGoodsService.LiveAnchorId = updateDto.LiveAnchorId;
@@ -238,6 +242,42 @@ namespace Fx.Amiya.Service
                 TakeGoodsType=e.TakeGoodsType,
                 TotalPrice=e.TotalPrice,
                 TakeGoodsDate=e.TakeGoodsDate.Value
+            }).ToListAsync();
+
+        }
+
+
+        /// <summary>
+        /// 获取当月带货业绩数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="contentPlatformId"></param>
+        /// <param name="baseLiveAnchorId"></param>
+        /// <returns></returns>
+        public async Task<List<LivingDailyTakeGoodsDto>> GetTakeGoodsAnalizeDataAsync(DateTime startDate, DateTime endDate, string contentPlatformId, List<int> liveAnchorIds)
+        {
+
+            var data = dalLivingDailyTakeGoodsService.GetAll().Include(x=>x.SupplierBrand).Include(x=>x.SupplierCategory).Include(x=>x.SupplierItemDetails)
+                .Where(e => e.TakeGoodsDate >= startDate && e.TakeGoodsDate <= endDate && e.Valid == true);
+            if (!string.IsNullOrEmpty(contentPlatformId))
+            {
+                data = data.Where(e => e.ContentPlatFormId == contentPlatformId);
+                if (liveAnchorIds.Count > 0)
+                {
+                    data = data.Where(e => liveAnchorIds.Contains(e.LiveAnchorId));
+                }
+            }
+            return await data.Select(e => new LivingDailyTakeGoodsDto
+            {
+                CategoryName = e.SupplierCategory.CategoryName,
+                BrandName = e.SupplierBrand.BrandName,
+                ItemDetailsName=e.SupplierItemDetails.ItemDetailsName,
+                SinglePrice = e.SinglePrice,
+                LiveAnchorId = e.LiveAnchorId,
+                TakeGoodsType = e.TakeGoodsType,
+                TotalPrice = e.TotalPrice,
+                TakeGoodsDate = e.TakeGoodsDate.Value
             }).ToListAsync();
 
         }

@@ -13,7 +13,7 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public string BrandName { get; set; }
 
-        public List<SupplierCategory> SupplierCategoryList { get; set; }
+        public List<SupplierItemDetails> SupplierItemDetailsList { get; set; }
         public List<LivingDailyTakeGoods> LivingDailyTakeGoodsList { get; set; }
     }
 }

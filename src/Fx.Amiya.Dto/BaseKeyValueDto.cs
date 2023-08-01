@@ -30,4 +30,23 @@ namespace Fx.Amiya.Dto
         /// </summary>
         public string Value { get; set; }
     }
+
+    /// <summary>
+    /// 获取数值与占比模块使用类
+    /// </summary>
+    public class BaseKeyValueAndPercentDto
+    {
+        /// <summary>
+        /// 编号
+        /// </summary>
+        public string Key { get; set; }
+        /// <summary>
+        /// 值
+        /// </summary>
+        public string Value { get; set; }
+        /// <summary>
+        /// 占比
+        /// </summary>
+        public decimal Rate { get; set; }
+    }
 }

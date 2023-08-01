@@ -160,3 +160,23 @@ ENGINE = InnoDB;
 
 -----------------------------------------------余建明 2023/07/26 END--------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+-----------------------------------------------余建明 2023/08/01 BEGIN--------------------------------------------
+--基础数据新增品项列表
+CREATE TABLE `amiyadb`.`tbl_supplier_item_details` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `item_details_name` VARCHAR(100) NULL,
+  `brand_id` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_tbl_supplier_item_brandinfo_idx` (`brand_id` ASC) VISIBLE,
+  CONSTRAINT `fk_tbl_supplier_item_brandinfo`
+    FOREIGN KEY (`brand_id`)
+    REFERENCES `amiyadb`.`tbl_supplier_brand` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+    
+-----------------------------------------------余建明 2023/08/01 END--------------------------------------------

@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result;
+﻿using Fx.Amiya.Background.Api.Vo;
+using Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result;
 using Fx.Amiya.Background.Api.Vo.TakeGoods.Input;
 using Fx.Amiya.Background.Api.Vo.TakeGoods.Result;
 using Fx.Amiya.IService;
@@ -35,9 +36,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("gmvData")]
-        public async Task<ResultData<GMVDataVo>> GetGMVDataAsync([FromQuery] QueryGmvDataVo query) {
+        public async Task<ResultData<GMVDataVo>> GetGMVDataAsync([FromQuery] QueryGmvDataVo query)
+        {
             GMVDataVo result = new GMVDataVo();
-            var data=await takeGoodsDataBoardService.GetGMVDataAsync(query.ContentPlatformId,query.LiveAnchorId,query.Year,query.Month);
+            var data = await takeGoodsDataBoardService.GetGMVDataAsync(query.ContentPlatformId, query.LiveAnchorId, query.Year, query.Month);
             result.OrderGmv = data.OrderGmv;
             result.OrderGmvCompleteRate = data.OrderGmvCompleteRate;
             result.OrderGMVChainRatio = data.OrderGMVChainRatio;
@@ -72,7 +74,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.RefunGMVCompleteRate = data.RefunGMVCompleteRate;
             result.RefunGMVChainRatio = data.RefunGMVChainRatio;
             result.RefunGMVYearOnYear = data.RefunGMVYearOnYear;
-            return ResultData<GMVDataVo>.Success().AddData("gmvData",result);
+            return ResultData<GMVDataVo>.Success().AddData("gmvData", result);
         }
         /// <summary>
         /// 获取件数看板数据
@@ -80,7 +82,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("packagesData")]
-        public async Task<ResultData<PackagesDataVo>> GetPackagesDataAsync([FromQuery] QueryGmvDataVo query) {
+        public async Task<ResultData<PackagesDataVo>> GetPackagesDataAsync([FromQuery] QueryGmvDataVo query)
+        {
             PackagesDataVo result = new PackagesDataVo();
             var data = await takeGoodsDataBoardService.GetPackagesDataAsync(query.ContentPlatformId, query.LiveAnchorId, query.Year, query.Month);
             result.OrderCount = data.OrderCount;
@@ -100,7 +103,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.RefundCount = data.RefundCount;
             result.RefundCountChainRatio = data.RefundCountChainRatio;
             result.RefundCountYearOnYear = data.RefundCountYearOnYear;
-            return ResultData<PackagesDataVo>.Success().AddData("packagesData",result);
+            return ResultData<PackagesDataVo>.Success().AddData("packagesData", result);
         }
         /// <summary>
         /// 获取件单价看板数据
@@ -108,7 +111,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("singlePriceData")]
-        public async Task<ResultData<SinglePriceDataVo>> GetSinglePriceAsync([FromQuery] QueryGmvDataVo query) {
+        public async Task<ResultData<SinglePriceDataVo>> GetSinglePriceAsync([FromQuery] QueryGmvDataVo query)
+        {
             SinglePriceDataVo result = new SinglePriceDataVo();
             var data = await takeGoodsDataBoardService.GetSinglePriceAsync(query.ContentPlatformId, query.LiveAnchorId, query.Year, query.Month);
             result.SinglePrice = data.SinglePrice;
@@ -126,7 +130,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.RefundSinglePrice = data.RefundSinglePrice;
             result.RefundSinglePriceChainRatio = data.RefundSinglePriceChainRatio;
             result.RefundSinglePriceYearOnYear = data.RefundSinglePriceYearOnYear;
-            return ResultData<SinglePriceDataVo>.Success().AddData("singlePrice",result);
+            return ResultData<SinglePriceDataVo>.Success().AddData("singlePrice", result);
         }
         /// <summary>
         /// 获取业绩趋势折线图数据
@@ -134,12 +138,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("gmvDataBrokenLineData")]
-        public async Task<ResultData<GMVDataBrokenLineVo>> GetGMVDataBrokenLineDataAsync([FromQuery] QueryGmvDataVo query) {
+        public async Task<ResultData<GMVDataBrokenLineVo>> GetGMVDataBrokenLineDataAsync([FromQuery] QueryGmvDataVo query)
+        {
             GMVDataBrokenLineVo result = new GMVDataBrokenLineVo();
             var data = await takeGoodsDataBoardService.GetGMVDataBrokenLineDataAsync(query.ContentPlatformId, query.LiveAnchorId, query.Year, query.Month);
-            result.OrderGMVBrokenLineList = data.OrderGMVBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo {
-                date=e.date,
-                Performance=e.Performance
+            result.OrderGMVBrokenLineList = data.OrderGMVBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo
+            {
+                date = e.date,
+                Performance = e.Performance
             }).ToList();
             result.QianChuanPutInBrokenLineList = data.QianChuanPutInBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo
             {
@@ -171,7 +177,168 @@ namespace Fx.Amiya.Background.Api.Controllers
                 date = e.date,
                 Performance = e.Performance
             }).ToList();
-            return ResultData<GMVDataBrokenLineVo>.Success().AddData("brokenLineData",result);
+            return ResultData<GMVDataBrokenLineVo>.Success().AddData("brokenLineData", result);
+        }
+
+
+        /// <summary>
+        /// 获取品类看板分析数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("categoryAnalizeData")]
+        public async Task<ResultData<CategoryAnalizeDataVo>> GetCategoryAnalizeDataAsync([FromQuery] QueryGmvDataVo query)
+        {
+            CategoryAnalizeDataVo result = new CategoryAnalizeDataVo();
+            var data = await takeGoodsDataBoardService.GetCategoryAnalizeDataAsync(query.ContentPlatformId, query.LiveAnchorId, query.Year, query.Month);
+            result.ActualGMVAnalizeData = data.ActualGMVAnalizeData.Select(e => new BaseIdNameAndRateVo
+            {
+                Id = e.Key,
+                Name = e.Value,
+                Rate = e.Rate,
+            }).ToList();
+            result.ActualNumAnalizeData = data.ActualNumAnalizeData.Select(e => new BaseIdNameAndRateVo
+            {
+                Id = e.Key,
+                Name = e.Value,
+                Rate = e.Rate,
+            }).ToList();
+
+            result.ActualSinglePriceAnalizeData = data.ActualSinglePriceAnalizeData.Select(e => new BaseIdNameAndRateVo
+            {
+                Id = e.Key,
+                Name = e.Value,
+                Rate = e.Rate,
+            }).ToList();
+
+            result.RefundGMVAnalizeData = data.RefundGMVAnalizeData.Select(e => new BaseIdNameAndRateVo
+            {
+                Id = e.Key,
+                Name = e.Value,
+                Rate = e.Rate,
+            }).ToList();
+
+            result.RefundNumAnalizeData = data.RefundNumAnalizeData.Select(e => new BaseIdNameAndRateVo
+            {
+                Id = e.Key,
+                Rate = e.Rate,
+                Name = e.Value,
+            }).ToList();
+
+            result.RefundSinglePriceAnalizeData = data.RefundSinglePriceAnalizeData.Select(e => new BaseIdNameAndRateVo
+            {
+                Id = e.Key,
+                Name = e.Value,
+                Rate = e.Rate,
+            }).ToList();
+
+            result.CreateOrderGMVAnalizeData = data.CreateOrderGMVAnalizeData.Select(e => new BaseIdNameAndRateVo
+            {
+                Id = e.Key,
+                Name = e.Value,
+                Rate = e.Rate,
+            }).ToList();
+
+            result.CreateOrderNumAnalizeData = data.CreateOrderNumAnalizeData.Select(e => new BaseIdNameAndRateVo
+            {
+                Id = e.Key,
+                Name = e.Value,
+                Rate = e.Rate,
+            }).ToList();
+
+            result.CreateOrderSinglePriceAnalizeData = data.CreateOrderSinglePriceAnalizeData.Select(e => new BaseIdNameAndRateVo
+            {
+                Id = e.Key,
+                Name = e.Value,
+                Rate = e.Rate,
+            }).ToList();
+
+
+            return ResultData<CategoryAnalizeDataVo>.Success().AddData("categoryAnalizeData", result);
+        }
+
+        /// <summary>
+        /// 获取品牌看板分析数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("brandAnalizeData")]
+        public async Task<ResultData<BrandAnalizeDataVo>> GetbrandAnalizeDataAsync([FromQuery] QueryGmvDataVo query)
+        {
+            BrandAnalizeDataVo result = new BrandAnalizeDataVo();
+            var data = await takeGoodsDataBoardService.GetBrandAnalizeDataAsync(query.ContentPlatformId, query.LiveAnchorId, query.Year, query.Month);
+            result.TopCreateOrderGMVDtoList = data.TopCreateOrderGMVDtoList.Select(e => new TopCreateOrderGMVVo
+            {
+                BrandName = e.BrandName,
+                CreateOrderGMV = e.CreateOrderGMV,
+                CreateOrderQuantity = e.CreateOrderQuantity,
+                SinglePrice = e.SinglePrice
+            }).ToList();
+            result.CreateOrderGMVAnalizeData = data.CreateOrderGMVAnalizeData.Select(e => new BaseIdNameAndRateVo
+            {
+                Id = e.Key,
+                Name = e.Value,
+                Rate = e.Rate,
+            }).ToList();
+
+            result.CreateOrderNumAnalizeData = data.CreateOrderNumAnalizeData.Select(e => new BaseIdNameAndRateVo
+            {
+                Id = e.Key,
+                Name = e.Value,
+                Rate = e.Rate,
+            }).ToList();
+
+            result.CreateOrderSinglePriceAnalizeData = data.CreateOrderSinglePriceAnalizeData.Select(e => new BaseIdNameAndRateVo
+            {
+                Id = e.Key,
+                Name = e.Value,
+                Rate = e.Rate,
+            }).ToList();
+
+
+            return ResultData<BrandAnalizeDataVo>.Success().AddData("brandAnalizeData", result);
+        }
+
+        /// <summary>
+        /// 获取品项看板分析数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("itemDetailsAnalizeData")]
+        public async Task<ResultData<BrandAnalizeDataVo>> GetItemDetailsAnalizeDataAsync([FromQuery] QueryGmvDataVo query)
+        {
+            BrandAnalizeDataVo result = new BrandAnalizeDataVo();
+            var data = await takeGoodsDataBoardService.GetItemDetailsAnalizeDataAsync(query.ContentPlatformId, query.LiveAnchorId, query.Year, query.Month);
+            result.TopCreateOrderGMVDtoList = data.TopCreateOrderGMVDtoList.Select(e => new TopCreateOrderGMVVo
+            {
+                BrandName = e.BrandName,
+                CreateOrderGMV = e.CreateOrderGMV,
+                CreateOrderQuantity = e.CreateOrderQuantity,
+                SinglePrice = e.SinglePrice
+            }).ToList();
+            result.CreateOrderGMVAnalizeData = data.CreateOrderGMVAnalizeData.Select(e => new BaseIdNameAndRateVo
+            {
+                Id = e.Key,
+                Name = e.Value,
+                Rate = e.Rate,
+            }).ToList();
+
+            result.CreateOrderNumAnalizeData = data.CreateOrderNumAnalizeData.Select(e => new BaseIdNameAndRateVo
+            {
+                Id = e.Key,
+                Name = e.Value,
+                Rate = e.Rate,
+            }).ToList();
+
+            result.CreateOrderSinglePriceAnalizeData = data.CreateOrderSinglePriceAnalizeData.Select(e => new BaseIdNameAndRateVo
+            {
+                Id = e.Key,
+                Name = e.Value,
+                Rate = e.Rate,
+            }).ToList();
+
+
+            return ResultData<BrandAnalizeDataVo>.Success().AddData("itemDetailsAnalizeData", result);
         }
 
         #endregion

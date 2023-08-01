@@ -118,3 +118,30 @@ ALTER TABLE `tbl_living_daily_target`
 
 
 -------------------------------------------------王健 2023/07/31 END-----------------------------------------------------------------
+
+-----------------------------------------------余建明 2023/08/01 BEGIN--------------------------------------------
+--直播带货数据新增品项列与主外键关系
+ALTER TABLE `amiyadb`.`tbl_living_daily_take_goods` 
+ADD COLUMN `item_details_id` VARCHAR(50) NOT NULL AFTER `remark`,
+ADD INDEX `fk_living_daily_take_goods_supplieritemdetailsinfo_idx` (`item_details_id` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`tbl_living_daily_take_goods` 
+ADD CONSTRAINT `fk_living_daily_take_goods_supplieritemdetailsinfo`
+  FOREIGN KEY (`item_details_id`)
+  REFERENCES `amiyadb`.`tbl_supplier_item_details` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+  --带货商品列表新增品项列
+  ALTER TABLE `amiyadb`.`tbl_item_info` 
+ADD COLUMN `item_details_id` VARCHAR(50) NOT NULL AFTER `category_id`;
+
+--取消品类对品牌的关联关系
+ALTER TABLE `amiyadb`.`tbl_supplier_category` 
+DROP FOREIGN KEY `fk_tbl_supplier_category_brandinfo`;
+ALTER TABLE `amiyadb`.`tbl_supplier_category` 
+DROP COLUMN `brand_id`,
+DROP INDEX `fk_tbl_supplier_category_brandinfo_idx` ;
+;
+
+-----------------------------------------------余建明 2023/08/01 END--------------------------------------------

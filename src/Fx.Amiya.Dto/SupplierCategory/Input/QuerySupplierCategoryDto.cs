@@ -8,10 +8,6 @@ namespace Fx.Amiya.Dto.SupplierCategory.Input
 {
     public class QuerySupplierCategoryDto:BaseQueryDto
     {
-        /// <summary>
-        /// 品牌id
-        /// </summary>
-        public string BrandId { get; set; }
         public bool? Valid { get; set; }
     }
 }

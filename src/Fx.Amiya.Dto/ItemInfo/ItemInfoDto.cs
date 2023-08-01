@@ -27,6 +27,14 @@ namespace Fx.Amiya.Dto.ItemInfo
         public string CategoryId { get; set; }
 
         public string CategoryName { get; set; }
+        /// <summary>
+        /// 品项id
+        /// </summary>
+        public string ItemDetailsId { get; set; }
+        /// <summary>
+        /// 品项名称
+        /// </summary>
+        public string ItemDetailsName { get; set; }
         public string Parts { get; set; }
         public decimal SalePrice { get; set; }
         public decimal? LivePrice { get; set; }

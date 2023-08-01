@@ -12,13 +12,6 @@ namespace Fx.Amiya.DbModels.Model
         /// 品类名称
         /// </summary>
         public string CategoryName { get; set; }
-
-        /// <summary>
-        /// 品牌id
-        /// </summary>
-        public string BrandId { get; set; }
-
-        public SupplierBrand SupplierBrand { get; set; }
         public List<LivingDailyTakeGoods> LivingDailyTakeGoodsList { get; set; }
     }
 }

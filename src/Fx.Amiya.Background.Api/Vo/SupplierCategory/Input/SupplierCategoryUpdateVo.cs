@@ -9,6 +9,5 @@ namespace Fx.Amiya.Background.Api.Vo.SupplierCategory.Input
     {
         public string Id { get; set; }
         public string CategoryName { get; set; }
-        public string BrandId { get; set; }
     }
 }

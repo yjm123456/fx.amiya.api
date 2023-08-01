@@ -18,7 +18,7 @@ namespace Fx.Amiya.IService
         Task UpdateAsync(SupplierCategoryUpdateDto updateDto);
         Task DeleteAsync(string id);
 
-        Task<List<BaseKeyValueDto>> GetValidByBrandIdAsync(string warehouseId);
+        Task<List<BaseKeyValueDto>> GetValidByBrandIdAsync();
 
     }
 }

@@ -123,7 +123,8 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="brandId">品牌id</param>
         /// <param name="categoryId">品类id</param>
+        /// <param name="itemDetailsId">品项id</param>
         /// <returns></returns>
-        Task<List<BaseKeyValueDto>> GetItemNameByBrandIdAndCategoryIdAsync(string brandId, string categoryId);
+        Task<List<BaseKeyValueDto>> GetItemNameByBrandIdAndCategoryIdAsync(string brandId, string categoryId, string itemDetailsId);
     }
 }

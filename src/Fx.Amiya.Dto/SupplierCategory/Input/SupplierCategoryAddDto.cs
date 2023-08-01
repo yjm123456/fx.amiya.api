@@ -8,7 +8,6 @@ namespace Fx.Amiya.Dto.SupplierCategory.Input
 {
     public class SupplierCategoryAddDto
     {
-        public string BrandId { get; set; }
         public string CategoryName { get; set; }
     }
 }

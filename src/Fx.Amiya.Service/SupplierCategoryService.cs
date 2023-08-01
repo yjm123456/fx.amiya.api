@@ -30,13 +30,10 @@ namespace Fx.Amiya.Service
             {
                 var supplierCategoryService = from d in dalSupplierCategoryService.GetAll()
                                                         where (query.KeyWord == null || d.CategoryName.Contains(query.KeyWord))
-                                                           && (string.IsNullOrEmpty(query.BrandId) || d.BrandId == query.BrandId)
                                                            && (!query.Valid.HasValue || d.Valid == query.Valid)
                                                         select new SupplierCategoryDto
                                                         {
                                                             Id = d.Id,
-                                                            BrandId = d.BrandId,
-                                                            BrandName = d.SupplierBrand.BrandName,
                                                             CreateDate = d.CreateDate,
                                                             CategoryName=d.CategoryName,
                                                             Valid = d.Valid,
@@ -61,7 +58,6 @@ namespace Fx.Amiya.Service
                 SupplierCategory supplierCategoryService = new SupplierCategory();
                 supplierCategoryService.Id = Guid.NewGuid().ToString();
                 supplierCategoryService.CategoryName = addDto.CategoryName;
-                supplierCategoryService.BrandId = addDto.BrandId;
                 supplierCategoryService.CreateDate = DateTime.Now;
                 supplierCategoryService.Valid = true;
 
@@ -87,7 +83,6 @@ namespace Fx.Amiya.Service
                 SupplierCategoryDto supplierCategoryServiceDto = new SupplierCategoryDto();
                 supplierCategoryServiceDto.Id = supplierCategoryService.Id;
                 supplierCategoryServiceDto.CategoryName = supplierCategoryService.CategoryName;
-                supplierCategoryServiceDto.BrandId = supplierCategoryService.BrandId;
                 supplierCategoryServiceDto.CreateDate = supplierCategoryService.CreateDate;
                 supplierCategoryServiceDto.UpdateDate = supplierCategoryService.UpdateDate;
                 supplierCategoryServiceDto.DeleteDate = supplierCategoryService.DeleteDate;
@@ -109,7 +104,6 @@ namespace Fx.Amiya.Service
                 if (supplierCategoryService == null)
                     throw new Exception("品类编号错误！");
 
-                supplierCategoryService.BrandId = updateDto.BrandId;
                 supplierCategoryService.CategoryName = updateDto.CategoryName;
                 supplierCategoryService.UpdateDate = DateTime.Now;
 
@@ -146,15 +140,14 @@ namespace Fx.Amiya.Service
 
 
         /// <summary>
-        /// 根据品牌id获取品类
+        /// 获取品类
         /// </summary>
         /// <returns></returns>
 
-        public async Task<List<BaseKeyValueDto>> GetValidByBrandIdAsync(string brandId)
+        public async Task<List<BaseKeyValueDto>> GetValidByBrandIdAsync()
         {
             var employee = from d in dalSupplierCategoryService.GetAll()
                            where d.Valid
-                           && (d.BrandId == brandId)
                            select new BaseKeyValueDto
                            {
                                Key = d.Id,

@@ -8,8 +8,6 @@ namespace Fx.Amiya.Dto.SupplierCategory.OutPut
 {
     public class SupplierCategoryDto : BaseDto
     {
-        public string BrandName { get; set; }
-        public string BrandId { get; set; }
         public string CategoryName { get; set; }
     }
 }

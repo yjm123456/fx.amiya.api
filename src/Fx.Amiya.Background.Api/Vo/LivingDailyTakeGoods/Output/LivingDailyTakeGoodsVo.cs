@@ -41,6 +41,14 @@ namespace Fx.Amiya.Background.Api.Vo.LivingDailyTakeGoods.Output
         /// </summary>
         public string CategoryName { get; set; }
         /// <summary>
+        /// 品项id
+        /// </summary>
+        public string ItemDetailsId { get; set; }
+        /// <summary>
+        /// 品项名称
+        /// </summary>
+        public string ItemDetailsName { get; set; }
+        /// <summary>
         /// 主播平台
         /// </summary>
         public string ContentPlatFormId { get; set; }

@@ -24,6 +24,10 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public string CategoryId { get; set; }
         /// <summary>
+        /// 品项id
+        /// </summary>
+        public string ItemDetailsId { get; set; }
+        /// <summary>
         /// 主播平台
         /// </summary>
         public string ContentPlatFormId { get; set; }
@@ -59,6 +63,8 @@ namespace Fx.Amiya.DbModels.Model
         public AmiyaEmployee AmiyaEmployee { get; set; }
         public SupplierBrand SupplierBrand { get; set; }
         public SupplierCategory SupplierCategory { get; set; }
+
+        public SupplierItemDetails SupplierItemDetails { get; set; }
         public Contentplatform Contentplatform { get; set; }
         public LiveAnchor LiveAnchor { get; set; }
         public ItemInfo ItemInfo { get; set; }

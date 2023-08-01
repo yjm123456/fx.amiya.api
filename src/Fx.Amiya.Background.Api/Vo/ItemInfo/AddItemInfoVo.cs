@@ -74,6 +74,10 @@ namespace Fx.Amiya.Background.Api.Vo.ItemInfo
         /// 品类id
         /// </summary>
         public string CategoryId { get; set; }
+        /// <summary>
+        /// 品项id
+        /// </summary>
+        public string ItemDetailsId { get; set; }
 
         /// <summary>
         /// 是否限购
