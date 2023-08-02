@@ -509,7 +509,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<string>> GetTargetIdsAsync(int year, int month, List<int> liveAnchorIds)
         {
-            return dalLiveAnchorMonthlyTargetLiving.GetAll().Where(e => e.Year == year && e.Month == e.Month && liveAnchorIds.Contains(e.LiveAnchorId)).Select(e => e.Id).ToList();
+            return dalLiveAnchorMonthlyTargetLiving.GetAll().Where(e => e.Year == year && e.Month == month && liveAnchorIds.Contains(e.LiveAnchorId)).Select(e => e.Id).ToList();
         }
     }
 }

@@ -139,25 +139,32 @@ namespace Fx.Amiya.Service
             GMVDataBrokenLineDto gMVDataBrokenLineDto = new GMVDataBrokenLineDto();
             var ids = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(contentPlatformId, liveAnchorId);
             var targetIds = await liveAnchorMonthlyTargetLivingService.GetTargetIdsAsync(year, month, ids);
-            var flow = await liveAnchorDailyTargetService.GetDailyDataByLiveAnchorIdsAsync(targetIds);
-            var flowList = flow.GroupBy(e => e.Date.Day).Select(e => new { Date = e.Key, GMV = e.Sum(e => e.GMV), RefundGMV = e.Sum(e => e.RefundGMV), LivingRoomCumulativeFlowInvestment = e.Sum(e => e.LivingRoomCumulativeFlowInvestment) }).ToList();
+            var flowData = await liveAnchorDailyTargetService.GetDailyDataByLiveAnchorIdsAsync(targetIds);
+            var flowList = flowData.GroupBy(e => e.Date.Day).Select(e => new { Date = e.Key, GMV = e.Sum(e => e.GMV), RefundGMV = e.Sum(e => e.RefundGMV), LivingRoomCumulativeFlowInvestment = e.Sum(e => e.LivingRoomCumulativeFlowInvestment) }).ToList();
             var startDate = new DateTime(year, month, 1);
             var endDate = startDate.AddMonths(1);
             var thisMonthData = await livingDailyTakeGoodsService.GetTakeGoodsDataAsync(startDate, endDate, contentPlatformId, ids);
             List<GroupTakeGoodsDataDto> dataList = new List<GroupTakeGoodsDataDto>();
             dataList = thisMonthData.GroupBy(e => e.TakeGoodsDate.Day).Select(e => new GroupTakeGoodsDataDto
             {
-                Date = e.Key,
-                //OrderGMV = e.Sum(c => c.TakeGoodsType == (int)TakeGoodsType.CreateOrder ? c.GMV : 0m),
-                OrderGMV = flowList.Where(c => e.Key == c.Date).Select(e => e.GMV).FirstOrDefault(),
-                QianChuanPutIn = flowList.Where(c => e.Key == c.Date).Select(e => e.LivingRoomCumulativeFlowInvestment).FirstOrDefault(),
-                //RefundGMV = e.Sum(c => c.TakeGoodsType == (int)TakeGoodsType.ReturnBackOrder ? c.GMV : 0m),
-                RefundGMV = flowList.Where(c => e.Key == c.Date).Select(e => e.RefundGMV).FirstOrDefault(),
+                Date = e.Key,     
                 OrderPackages = e.Sum(c => c.TakeGoodsType == (int)TakeGoodsType.CreateOrder ? c.Count : 0),
                 RefundPackages = e.Sum(c => c.TakeGoodsType == (int)TakeGoodsType.ReturnBackOrder ? c.Count : 0),
                 SinglePrice = DecimalExtension.Division(e.Sum(c => c.TakeGoodsType == (int)TakeGoodsType.CreateOrder ? c.GMV : 0m), e.Sum(c => c.TakeGoodsType == (int)TakeGoodsType.CreateOrder ? c.Count : 0)).Value,
                 RefundSinglePrice = DecimalExtension.Division(e.Sum(c => c.TakeGoodsType == (int)TakeGoodsType.ReturnBackOrder ? c.GMV : 0m), e.Sum(c => c.TakeGoodsType == (int)TakeGoodsType.ReturnBackOrder ? c.Count : 0)).Value,
             }).ToList();
+            foreach (var flow in flowList)
+            {
+                GroupTakeGoodsDataDto data = new GroupTakeGoodsDataDto();
+                data.Date = flow.Date;
+                data.OrderGMV = flow.GMV;
+                data.QianChuanPutIn = flow.LivingRoomCumulativeFlowInvestment;
+                data.RefundGMV = flow.RefundGMV;
+                data.OrderPackages = 0;
+                data.SinglePrice = 0;
+                data.RefundSinglePrice = 0;
+                dataList.Add(data);
+            }
             gMVDataBrokenLineDto.OrderGMVBrokenLineList = this.FillDate(year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Date.ToString(), Performance = e.OrderGMV }).OrderBy(e => Convert.ToInt32(e.date)).ToList(); ;
             gMVDataBrokenLineDto.QianChuanPutInBrokenLineList = this.FillDate(year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Date.ToString(), Performance = e.QianChuanPutIn }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
             gMVDataBrokenLineDto.RefundGMVBrokenLineList = this.FillDate(year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Date.ToString(), Performance = e.RefundGMV }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
@@ -262,8 +269,8 @@ namespace Fx.Amiya.Service
 
             #region 实际件单价
 
-            singlePriceData.ActualSinglePrice = DecimalExtension.Division(thisMonthData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.CreateOrder).Sum(e => e.TotalPrice) + thisMonthData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.ReturnBackOrder).Sum(e => e.TotalPrice),
-                thisMonthData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.ReturnBackOrder).Sum(e => e.Count) - thisMonthData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.CreateOrder).Sum(e => e.Count)).Value;
+            singlePriceData.ActualSinglePrice = DecimalExtension.Division(thisMonthData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.CreateOrder).Sum(e => e.TotalPrice) - thisMonthData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.ReturnBackOrder).Sum(e => e.TotalPrice),
+                thisMonthData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.CreateOrder).Sum(e => e.Count) - thisMonthData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.ReturnBackOrder).Sum(e => e.Count)).Value;
             var lastMonthSinglePrice = DecimalExtension.Division(lastMonthData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.CreateOrder).Sum(e => e.TotalPrice) - lastMonthData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.ReturnBackOrder).Sum(e => e.TotalPrice),
                 lastMonthData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.CreateOrder).Sum(e => e.Count) - lastMonthData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.ReturnBackOrder).Sum(e => e.Count)).Value;
             var lastYearSinglePrice = DecimalExtension.Division(lastYearData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.CreateOrder).Sum(e => e.TotalPrice) - lastYearData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.ReturnBackOrder).Sum(e => e.TotalPrice),
