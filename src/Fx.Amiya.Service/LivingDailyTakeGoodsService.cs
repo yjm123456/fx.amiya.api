@@ -278,6 +278,7 @@ namespace Fx.Amiya.Service
                 LiveAnchorId = e.LiveAnchorId,
                 TakeGoodsType = e.TakeGoodsType,
                 TotalPrice = e.TotalPrice,
+                TakeGoodsQuantity=e.TakeGoodsQuantity,
                 TakeGoodsDate = e.TakeGoodsDate.Value
             }).ToListAsync();
 

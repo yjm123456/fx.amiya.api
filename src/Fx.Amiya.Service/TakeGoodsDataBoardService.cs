@@ -378,9 +378,9 @@ namespace Fx.Amiya.Service
 
             #endregion
             #region 实际
-            List<BaseKeyValueAndPercentDto> ActualGMVAnalizeDataList = new List<BaseKeyValueAndPercentDto>();
-            List<BaseKeyValueAndPercentDto> ActualNumAnalizeDataList = new List<BaseKeyValueAndPercentDto>();
-            List<BaseKeyValueAndPercentDto> ActualSinglePriceAnalizeDataList = new List<BaseKeyValueAndPercentDto>();
+            categoryAnalizeDataDto.ActualGMVAnalizeData = new List<BaseKeyValueAndPercentDto>();
+            categoryAnalizeDataDto.ActualNumAnalizeData = new List<BaseKeyValueAndPercentDto>();
+            categoryAnalizeDataDto.ActualSinglePriceAnalizeData = new List<BaseKeyValueAndPercentDto>();
             foreach (var x in categoryAnalizeDataDto.CreateOrderGMVAnalizeData)
             {
                 BaseKeyValueAndPercentDto actualGmvAnalizeData = new BaseKeyValueAndPercentDto();
@@ -388,29 +388,51 @@ namespace Fx.Amiya.Service
                 BaseKeyValueAndPercentDto actualSinglePriceAnalizeData = new BaseKeyValueAndPercentDto();
                 //实际GMV占比分析
                 var refundGMVValue = categoryAnalizeDataDto.RefundGMVAnalizeData.Where(z => z.Key == x.Key).FirstOrDefault();
+                decimal refundGMV = 0.00M;
+                if (refundGMVValue != null)
+                {
+                    refundGMV = Convert.ToDecimal(refundGMVValue.Value);
+                }
                 actualGmvAnalizeData.Key = x.Key;
-                actualGmvAnalizeData.Value = (Convert.ToDecimal(x.Value) - Convert.ToDecimal(refundGMVValue)).ToString();
+                actualGmvAnalizeData.Value = (Convert.ToDecimal(x.Value) - refundGMV).ToString();
                 actualGmvAnalizeData.Rate = DecimalExtension.CalculateTargetComplete(Convert.ToDecimal(actualGmvAnalizeData.Value), totalCreateOrderGMV-totalRefundGMV).Value;
-                ActualGMVAnalizeDataList.Add(actualGmvAnalizeData);
+                categoryAnalizeDataDto.ActualGMVAnalizeData.Add(actualGmvAnalizeData);
 
                 //实际件数占比分析
                 var createOrderNumAnalize = categoryAnalizeDataDto.CreateOrderNumAnalizeData.Where(z => z.Key == x.Key).FirstOrDefault();
+                int createOrderNum = 0;
+                if (createOrderNumAnalize != null)
+                {
+                    createOrderNum = Convert.ToInt32(createOrderNumAnalize.Value);
+                }
                 var refundOrderNumAnalize = categoryAnalizeDataDto.RefundNumAnalizeData.Where(z => z.Key == x.Key).FirstOrDefault();
+                int refundOrderNum = 0;
+                if (refundOrderNumAnalize!=null)
+                {
+                    refundOrderNum = Convert.ToInt32(refundOrderNumAnalize.Value);
+                }
                 actualNumAnalizeData.Key = x.Key;
-                actualNumAnalizeData.Value = (Convert.ToInt32(createOrderNumAnalize) - Convert.ToInt32(refundOrderNumAnalize)).ToString();
+                actualNumAnalizeData.Value = (createOrderNum - refundOrderNum).ToString();
                 actualNumAnalizeData.Rate = DecimalExtension.CalculateTargetComplete(Convert.ToDecimal(actualNumAnalizeData.Value), totalCreateOrderQuantity - totalRefundOrderQuantity).Value;
-                ActualNumAnalizeDataList.Add(actualNumAnalizeData);
+                categoryAnalizeDataDto.ActualNumAnalizeData.Add(actualNumAnalizeData);
 
                 //实际件单价分析
                 var createOrderSinglePriceAnalizeData = categoryAnalizeDataDto.CreateOrderSinglePriceAnalizeData.Where(z => z.Key == x.Key).FirstOrDefault();
+                decimal createOrderSinglePrice = 0.00M;
+                if (createOrderSinglePriceAnalizeData != null)
+                {
+                    createOrderSinglePrice = Convert.ToDecimal(createOrderSinglePriceAnalizeData.Value);
+                }
                 var refundSinglePriceAnalizeData = categoryAnalizeDataDto.RefundSinglePriceAnalizeData.Where(z => z.Key == x.Key).FirstOrDefault();
+                decimal refundOrderSinglePrice = 0.00M;
+                if (refundSinglePriceAnalizeData != null)
+                {
+                    refundOrderSinglePrice = Convert.ToDecimal(refundSinglePriceAnalizeData);
+                }
                 actualSinglePriceAnalizeData.Key = x.Key;
-                actualSinglePriceAnalizeData.Value = (Convert.ToDecimal(createOrderSinglePriceAnalizeData) - Convert.ToDecimal(refundSinglePriceAnalizeData)).ToString();
-                ActualSinglePriceAnalizeDataList.Add(actualSinglePriceAnalizeData);
+                actualSinglePriceAnalizeData.Value = (createOrderSinglePrice - refundOrderSinglePrice).ToString();
+                categoryAnalizeDataDto.ActualSinglePriceAnalizeData.Add(actualSinglePriceAnalizeData);
             }
-            ActualGMVAnalizeDataList = ActualGMVAnalizeDataList.OrderByDescending(x => Convert.ToDecimal(x.Value)).ToList();
-            ActualNumAnalizeDataList = ActualNumAnalizeDataList.OrderByDescending(x => Convert.ToInt32(x.Value)).ToList();
-            ActualSinglePriceAnalizeDataList = ActualSinglePriceAnalizeDataList.OrderByDescending(x => Convert.ToDecimal(x.Value)).ToList();
             #endregion
 
             return categoryAnalizeDataDto;
