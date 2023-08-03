@@ -153,6 +153,7 @@ namespace Fx.Amiya.Service
                 SinglePrice = DecimalExtension.Division(e.Sum(c => c.TakeGoodsType == (int)TakeGoodsType.CreateOrder ? c.GMV : 0m), e.Sum(c => c.TakeGoodsType == (int)TakeGoodsType.CreateOrder ? c.Count : 0)).Value,
                 RefundSinglePrice = DecimalExtension.Division(e.Sum(c => c.TakeGoodsType == (int)TakeGoodsType.ReturnBackOrder ? c.GMV : 0m), e.Sum(c => c.TakeGoodsType == (int)TakeGoodsType.ReturnBackOrder ? c.Count : 0)).Value,
             }).ToList();
+            List<GroupTakeGoodsDataDto> monthDataList = new List<GroupTakeGoodsDataDto>();
             foreach (var flow in flowList)
             {
                 GroupTakeGoodsDataDto data = new GroupTakeGoodsDataDto();
@@ -163,11 +164,11 @@ namespace Fx.Amiya.Service
                 data.OrderPackages = 0;
                 data.SinglePrice = 0;
                 data.RefundSinglePrice = 0;
-                dataList.Add(data);
+                monthDataList.Add(data);
             }
-            gMVDataBrokenLineDto.OrderGMVBrokenLineList = this.FillDate(year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Date.ToString(), Performance = e.OrderGMV }).OrderBy(e => Convert.ToInt32(e.date)).ToList(); ;
-            gMVDataBrokenLineDto.QianChuanPutInBrokenLineList = this.FillDate(year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Date.ToString(), Performance = e.QianChuanPutIn }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
-            gMVDataBrokenLineDto.RefundGMVBrokenLineList = this.FillDate(year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Date.ToString(), Performance = e.RefundGMV }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            gMVDataBrokenLineDto.OrderGMVBrokenLineList = this.FillDate(year, month, monthDataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Date.ToString(), Performance = e.OrderGMV }).OrderBy(e => Convert.ToInt32(e.date)).ToList(); ;
+            gMVDataBrokenLineDto.QianChuanPutInBrokenLineList = this.FillDate(year, month, monthDataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Date.ToString(), Performance = e.QianChuanPutIn }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            gMVDataBrokenLineDto.RefundGMVBrokenLineList = this.FillDate(year, month, monthDataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Date.ToString(), Performance = e.RefundGMV }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
             gMVDataBrokenLineDto.OrderPackagesBrokenLineList = this.FillDate(year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Date.ToString(), Performance = e.OrderPackages }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
             gMVDataBrokenLineDto.RefundPackagesBrokenLineList = this.FillDate(year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Date.ToString(), Performance = e.RefundPackages }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
             gMVDataBrokenLineDto.SinglePriceBrokenLineList = this.FillDate(year, month, dataList).Select(e => new PeformanceBrokenLineListInfoDto { date = e.Date.ToString(), Performance = e.SinglePrice }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
