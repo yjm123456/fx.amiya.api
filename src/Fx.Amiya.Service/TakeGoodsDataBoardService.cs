@@ -325,9 +325,8 @@ namespace Fx.Amiya.Service
         {
             CategoryAnalizeDataDto categoryAnalizeDataDto = new CategoryAnalizeDataDto();
             var ids = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(contentPlatformId, liveAnchorId);
-            var startDate = Convert.ToDateTime(year + "-" + month + "-01");
-            var endDate = DateTime.Now.AddDays(1).AddMilliseconds(-1);
-            var thisMonthData = await livingDailyTakeGoodsService.GetTakeGoodsAnalizeDataAsync(startDate, endDate, contentPlatformId, ids);
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month == 0 ? 1 : month);
+            var thisMonthData = await livingDailyTakeGoodsService.GetTakeGoodsAnalizeDataAsync(sequentialDate.StartDate, sequentialDate.EndDate, contentPlatformId, ids);
             var createOrderData = thisMonthData.Where(x => x.TakeGoodsType == (int)TakeGoodsType.CreateOrder);
             var totalCreateOrderQuantity = createOrderData.Sum(x => x.TakeGoodsQuantity);
             var totalCreateOrderGMV = createOrderData.Sum(x => x.TotalPrice);
@@ -341,7 +340,7 @@ namespace Fx.Amiya.Service
                 Key = e.Key,
                 Value = e.Sum(e => e.TotalPrice).ToString(),
                 Rate=DecimalExtension.CalculateTargetComplete(e.Sum(e => e.TotalPrice), totalCreateOrderGMV).Value,
-            }).OrderByDescending(x => Convert.ToDecimal(x.Value)).ToList();
+            }).OrderByDescending(x => Convert.ToDecimal(x.Value)).Take(10).ToList();
 
             //下单件数占比分析
             categoryAnalizeDataDto.CreateOrderNumAnalizeData = createOrderData.GroupBy(x => x.CategoryName).Select(e => new BaseKeyValueAndPercentDto
@@ -349,14 +348,14 @@ namespace Fx.Amiya.Service
                 Key = e.Key,
                 Value = e.Sum(e => e.TakeGoodsQuantity).ToString(),
                 Rate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.TakeGoodsQuantity), totalCreateOrderQuantity).Value,
-            }).OrderByDescending(x => Convert.ToInt32(x.Value)).ToList();
+            }).OrderByDescending(x => Convert.ToInt32(x.Value)).Take(10).ToList();
 
             //下单件单价分析
             categoryAnalizeDataDto.CreateOrderSinglePriceAnalizeData = createOrderData.GroupBy(x => x.CategoryName).Select(e => new BaseKeyValueAndPercentDto
             {
                 Key = e.Key,
                 Value = Math.Round(e.Sum(e => e.TotalPrice) / e.Sum(e => e.TakeGoodsQuantity), 2, MidpointRounding.AwayFromZero).ToString(),
-            }).OrderByDescending(x => Convert.ToDecimal(x.Value)).ToList();
+            }).OrderByDescending(x => Convert.ToDecimal(x.Value)).Take(10).ToList();
 
             #endregion
 
@@ -367,7 +366,7 @@ namespace Fx.Amiya.Service
                 Key = e.Key,
                 Value = e.Sum(e => e.TotalPrice).ToString(),
                 Rate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.TotalPrice), totalRefundGMV).Value,
-            }).OrderByDescending(x => Convert.ToDecimal(x.Value)).ToList();
+            }).OrderByDescending(x => Convert.ToDecimal(x.Value)).Take(10).ToList();
 
             //退款件数占比分析
             categoryAnalizeDataDto.RefundNumAnalizeData = refundOrderData.GroupBy(x => x.CategoryName).Select(e => new BaseKeyValueAndPercentDto
@@ -375,14 +374,14 @@ namespace Fx.Amiya.Service
                 Key = e.Key,
                 Value = e.Sum(e => e.TakeGoodsQuantity).ToString(),
                 Rate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.TakeGoodsQuantity), totalRefundOrderQuantity).Value,
-            }).OrderByDescending(x => Convert.ToInt32(x.Value)).ToList();
+            }).OrderByDescending(x => Convert.ToInt32(x.Value)).Take(10).ToList();
 
             //退款件单价分析
             categoryAnalizeDataDto.RefundSinglePriceAnalizeData = refundOrderData.GroupBy(x => x.CategoryName).Select(e => new BaseKeyValueAndPercentDto
             {
                 Key = e.Key,
                 Value = Math.Round(e.Sum(e => e.TotalPrice) / e.Sum(e => e.TakeGoodsQuantity), 2, MidpointRounding.AwayFromZero).ToString(),
-            }).OrderByDescending(x => Convert.ToDecimal(x.Value)).ToList();
+            }).OrderByDescending(x => Convert.ToDecimal(x.Value)).Take(10).ToList();
 
             #endregion
             #region 实际
@@ -460,9 +459,8 @@ namespace Fx.Amiya.Service
         {
             BrandAnalizeDataDto brandAnalizeDataDto = new BrandAnalizeDataDto();
             var ids = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(contentPlatformId, liveAnchorId);
-            var startDate = Convert.ToDateTime(year + "-" + month + "-01");
-            var endDate = DateTime.Now.AddDays(1).AddMilliseconds(-1);
-            var thisMonthData = await livingDailyTakeGoodsService.GetTakeGoodsAnalizeDataAsync(startDate, endDate, contentPlatformId, ids);
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month == 0 ? 1 : month);
+            var thisMonthData = await livingDailyTakeGoodsService.GetTakeGoodsAnalizeDataAsync(sequentialDate.StartDate, sequentialDate.EndDate, contentPlatformId, ids);
             var createOrderData = thisMonthData.Where(x => x.TakeGoodsType == (int)TakeGoodsType.CreateOrder);
             //下单GMV TOP20
             brandAnalizeDataDto.TopCreateOrderGMVDtoList = createOrderData.GroupBy(x => x.BrandName).Select(e => new TopCreateOrderGMVDto
@@ -471,27 +469,27 @@ namespace Fx.Amiya.Service
                 CreateOrderGMV = e.Sum(e => e.TotalPrice),
                 CreateOrderQuantity = e.Sum(e => e.TakeGoodsQuantity),
                 SinglePrice = Math.Round((e.Sum(e => e.TotalPrice) / e.Sum(e => e.TakeGoodsQuantity)), 2, MidpointRounding.AwayFromZero)
-            }).OrderByDescending(x => x.CreateOrderGMV).Take(20).ToList();
+            }).OrderByDescending(x => x.CreateOrderGMV).Take(10).ToList();
             //下单GMV占比分析
             brandAnalizeDataDto.CreateOrderGMVAnalizeData = createOrderData.GroupBy(x => x.BrandName).Select(e => new BaseKeyValueAndPercentDto
             {
                 Key = e.Key,
                 Value = e.Sum(e => e.TotalPrice).ToString(),
-            }).OrderByDescending(x => Convert.ToDecimal(x.Value)).ToList();
+            }).OrderByDescending(x => Convert.ToDecimal(x.Value)).Take(10).ToList();
 
             //下单件数占比分析
             brandAnalizeDataDto.CreateOrderNumAnalizeData = createOrderData.GroupBy(x => x.BrandName).Select(e => new BaseKeyValueAndPercentDto
             {
                 Key = e.Key,
                 Value = e.Sum(e => e.TakeGoodsQuantity).ToString(),
-            }).OrderByDescending(x => Convert.ToInt32(x.Value)).ToList();
+            }).OrderByDescending(x => Convert.ToInt32(x.Value)).Take(10).ToList();
 
             //下单件单价分析
             brandAnalizeDataDto.CreateOrderSinglePriceAnalizeData = createOrderData.GroupBy(x => x.BrandName).Select(e => new BaseKeyValueAndPercentDto
             {
                 Key = e.Key,
                 Value = Math.Round(e.Sum(e => e.TotalPrice) / e.Sum(e => e.TakeGoodsQuantity), 2, MidpointRounding.AwayFromZero).ToString(),
-            }).OrderByDescending(x => Convert.ToDecimal(x.Value)).ToList();
+            }).OrderByDescending(x => Convert.ToDecimal(x.Value)).Take(10).ToList();
 
 
             return brandAnalizeDataDto;
@@ -510,9 +508,8 @@ namespace Fx.Amiya.Service
         {
             BrandAnalizeDataDto brandAnalizeDataDto = new BrandAnalizeDataDto();
             var ids = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(contentPlatformId, liveAnchorId);
-            var startDate = Convert.ToDateTime(year + "-" + month + "-01");
-            var endDate = DateTime.Now.AddDays(1).AddMilliseconds(-1);
-            var thisMonthData = await livingDailyTakeGoodsService.GetTakeGoodsAnalizeDataAsync(startDate, endDate, contentPlatformId, ids);
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(year, month == 0 ? 1 : month);
+            var thisMonthData = await livingDailyTakeGoodsService.GetTakeGoodsAnalizeDataAsync(sequentialDate.StartDate, sequentialDate.EndDate, contentPlatformId, ids);
             var createOrderData = thisMonthData.Where(x => x.TakeGoodsType == (int)TakeGoodsType.CreateOrder);
             //下单GMV TOP20
             brandAnalizeDataDto.TopCreateOrderGMVDtoList = createOrderData.GroupBy(x => x.ItemDetailsName).Select(e => new TopCreateOrderGMVDto
@@ -521,27 +518,27 @@ namespace Fx.Amiya.Service
                 CreateOrderGMV = e.Sum(e => e.TotalPrice),
                 CreateOrderQuantity = e.Sum(e => e.TakeGoodsQuantity),
                 SinglePrice = Math.Round((e.Sum(e => e.TotalPrice) / e.Sum(e => e.TakeGoodsQuantity)), 2, MidpointRounding.AwayFromZero)
-            }).OrderByDescending(x => x.CreateOrderGMV).Take(20).ToList();
+            }).OrderByDescending(x => x.CreateOrderGMV).Take(10).ToList();
             //下单GMV占比分析
             brandAnalizeDataDto.CreateOrderGMVAnalizeData = createOrderData.GroupBy(x => x.ItemDetailsName).Select(e => new BaseKeyValueAndPercentDto
             {
                 Key = e.Key,
                 Value = e.Sum(e => e.TotalPrice).ToString(),
-            }).OrderByDescending(x => Convert.ToDecimal(x.Value)).ToList();
+            }).OrderByDescending(x => Convert.ToDecimal(x.Value)).Take(10).ToList();
 
             //下单件数占比分析
             brandAnalizeDataDto.CreateOrderNumAnalizeData = createOrderData.GroupBy(x => x.ItemDetailsName).Select(e => new BaseKeyValueAndPercentDto
             {
                 Key = e.Key,
                 Value = e.Sum(e => e.TakeGoodsQuantity).ToString(),
-            }).OrderByDescending(x => Convert.ToInt32(x.Value)).ToList();
+            }).OrderByDescending(x => Convert.ToInt32(x.Value)).Take(10).ToList();
 
             //下单件单价分析
             brandAnalizeDataDto.CreateOrderSinglePriceAnalizeData = createOrderData.GroupBy(x => x.ItemDetailsName).Select(e => new BaseKeyValueAndPercentDto
             {
                 Key = e.Key,
                 Value = Math.Round(e.Sum(e => e.TotalPrice) / e.Sum(e => e.TakeGoodsQuantity), 2, MidpointRounding.AwayFromZero).ToString(),
-            }).OrderByDescending(x => Convert.ToDecimal(x.Value)).ToList();
+            }).OrderByDescending(x => Convert.ToDecimal(x.Value)).Take(10).ToList();
 
 
             return brandAnalizeDataDto;
