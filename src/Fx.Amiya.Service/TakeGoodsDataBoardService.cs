@@ -435,7 +435,7 @@ namespace Fx.Amiya.Service
                 decimal refundOrderSinglePrice = 0.00M;
                 if (refundSinglePriceAnalizeData != null)
                 {
-                    refundOrderSinglePrice = Convert.ToDecimal(refundSinglePriceAnalizeData);
+                    refundOrderSinglePrice = Convert.ToDecimal(refundSinglePriceAnalizeData.Value);
                 }
                 actualSinglePriceAnalizeData.Key = x.Key;
                 actualSinglePriceAnalizeData.Value = (createOrderSinglePrice - refundOrderSinglePrice).ToString();
