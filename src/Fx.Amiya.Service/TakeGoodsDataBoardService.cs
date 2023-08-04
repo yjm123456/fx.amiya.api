@@ -76,8 +76,8 @@ namespace Fx.Amiya.Service
             {
 
 
-                var daodaoIds = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(contentPlatformId, "40aea761-f9c1-4078-bb2b-4aeac8e71ad6");
-                var jinaIds = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(contentPlatformId, "44b0e329-fe66-4690-9a50-1873822fa54d");
+                var daodaoIds = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(contentPlatformId, "f0a77257-c905-4719-95c4-ad2c4f33855c");
+                var jinaIds = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(contentPlatformId, "af69dcf5-f749-41ea-8b50-fe685facdd8b");
 
                 var daodaoThisMonthTarget = await liveAnchorMonthlyTargetLivingService.GetBasePerformanceTargetAsync(year, month, daodaoIds);
                 var daodaoThisMonthData = await liveAnchorDailyTargetService.GetGmvDataAsync(sequentialDate.StartDate, sequentialDate.EndDate, daodaoIds);
@@ -215,8 +215,8 @@ namespace Fx.Amiya.Service
 
             if (string.IsNullOrEmpty(liveAnchorId))
             {
-                var daodaoIds = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(contentPlatformId, "40aea761-f9c1-4078-bb2b-4aeac8e71ad6");
-                var jinaIds = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(contentPlatformId, "44b0e329-fe66-4690-9a50-1873822fa54d");
+                var daodaoIds = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(contentPlatformId, "f0a77257-c905-4719-95c4-ad2c4f33855c");
+                var jinaIds = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(contentPlatformId, "af69dcf5-f749-41ea-8b50-fe685facdd8b");
 
                 packagesData.DaoDaoOrderCount = thisMonthData.Where(e => daodaoIds.Contains(e.LiveAnchorId)).Where(e => e.TakeGoodsType == (int)TakeGoodsType.CreateOrder).Sum(e => e.Count);
                 packagesData.DaoDaoOrderCountChainRatio = DecimalExtension.CalculateChain(packagesData.DaoDaoOrderCount, lastMonthData.Where(e => daodaoIds.Contains(e.LiveAnchorId)).Where(e => e.TakeGoodsType == (int)TakeGoodsType.CreateOrder).Sum(e => e.Count)).Value;
@@ -285,8 +285,8 @@ namespace Fx.Amiya.Service
 
             if (string.IsNullOrEmpty(liveAnchorId))
             {
-                var daodaoIds = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(contentPlatformId, "40aea761-f9c1-4078-bb2b-4aeac8e71ad6");
-                var jinaIds = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(contentPlatformId, "44b0e329-fe66-4690-9a50-1873822fa54d");
+                var daodaoIds = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(contentPlatformId, "f0a77257-c905-4719-95c4-ad2c4f33855c");
+                var jinaIds = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(contentPlatformId, "af69dcf5-f749-41ea-8b50-fe685facdd8b");
 
                 singlePriceData.DaoDaoActualSinglePrice = DecimalExtension.Division(thisMonthData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.CreateOrder && daodaoIds.Contains(e.LiveAnchorId)).Sum(e => e.TotalPrice), thisMonthData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.CreateOrder && daodaoIds.Contains(e.LiveAnchorId)).Sum(e => e.Count)).Value;
                 singlePriceData.DaoDaoActualSinglePriceChainRatio = DecimalExtension.CalculateChain(singlePriceData.DaoDaoActualSinglePrice, DecimalExtension.Division(lastMonthData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.CreateOrder && daodaoIds.Contains(e.LiveAnchorId)).Sum(e => e.TotalPrice), lastMonthData.Where(e => e.TakeGoodsType == (int)TakeGoodsType.CreateOrder && daodaoIds.Contains(e.LiveAnchorId)).Sum(e => e.Count)).Value).Value;
