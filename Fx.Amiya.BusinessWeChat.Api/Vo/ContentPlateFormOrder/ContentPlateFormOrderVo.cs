@@ -397,5 +397,13 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// 辅助客服名称
         /// </summary>
         public string SupportEmpName { get; set; }
+        /// <summary>
+        /// 获客方式
+        /// </summary>
+        public int GetCustomerType { get; set; }
+        /// <summary>
+        /// 获客方式文本
+        /// </summary>
+        public string GetCustomerTypeText { get; set; }
     }
 }

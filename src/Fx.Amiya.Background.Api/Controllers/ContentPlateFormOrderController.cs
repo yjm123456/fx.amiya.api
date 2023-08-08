@@ -140,6 +140,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.CustomerPictures = addVo.CustomerPictures;
             addDto.IsSupportOrder = addVo.IsSupportOrder;
             addDto.SupportEmpId = addVo.SupportEmpId;
+            addDto.GetCustomerType = addVo.GetCustomerType;
             await _orderService.AddContentPlateFormOrderAsync(addDto);
 
 
@@ -163,6 +164,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 根据条件获取内容平台订单
         /// </summary>
         /// <param name="baseLiveAnchorId">基础主播id</param>
+        /// <param name="getCustomerType">获客方式</param>
         /// <param name="liveAnchorId">主播id</param>
         /// <param name="liveAnchorWechatId">主播微信号id</param>
         /// <param name="startDate">开始时间</param>
@@ -183,7 +185,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("contentPlateFormOrderLlistWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>> GetOrderListWithPageAsync(string baseLiveAnchorId,int? liveAnchorId,string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int orderSource, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>> GetOrderListWithPageAsync(string baseLiveAnchorId, int? getCustomerType, int? liveAnchorId,string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int orderSource, int pageNum, int pageSize)
         {
             try
             {
@@ -211,7 +213,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                         liveAnchorIds.Add(liveAnchorId.Value);
                     }
                 }
-                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorIds, liveAnchorWechatId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
+                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorIds,getCustomerType, liveAnchorWechatId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
                 List<ContentPlatFormOrderInfoVo> contentPlatFormOrderInfoVoList = new List<ContentPlatFormOrderInfoVo>();
                 var resutList = q.List.ToList();
                 foreach (var x in resutList)
@@ -227,6 +229,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     resultVo.AddOrderPrice = x.AddOrderPrice;
                     resultVo.CreateDate = x.CreateDate;
                     resultVo.CustomerName = x.CustomerName;
+                    resultVo.GetCustomerTypeText = x.GetCustomerTypeText;
                     resultVo.IsSupportOrder = x.IsSupportOrder;
                     resultVo.SupportEmpName = x.SupportEmpName;
                     resultVo.Phone = x.Phone;
@@ -786,6 +789,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.GoodsId = order.GoodsId;
             orderUpdateInfo.CustomerName = order.CustomerName;
             orderUpdateInfo.Phone = order.Phone;
+            orderUpdateInfo.GetCustomerType = order.GetCustomerType;
+            orderUpdateInfo.GetCustomerTypeText = order.GetCustomerTypeText;
             orderUpdateInfo.EncryptPhone = order.EncryptPhone;
             var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
             string encryptPhone = ServiceClass.Encrypt(order.Phone, config.PhoneEncryptKey);
@@ -984,6 +989,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.AppointmentHospitalId = updateVo.AppointmentHospitalId;
             updateDto.DepositAmount = updateVo.DepositAmount;
             updateDto.ConsultingContent = updateVo.ConsultingContent;
+            updateDto.GetCustomerType = updateVo.GetCustomerType;
             updateDto.Remark = updateVo.Remark;
             updateDto.LateProjectStage = updateVo.LateProjectStage;
             updateDto.EmployeeId = employeeId;

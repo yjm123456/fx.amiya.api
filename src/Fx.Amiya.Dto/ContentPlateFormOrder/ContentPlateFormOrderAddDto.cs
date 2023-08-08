@@ -161,5 +161,9 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 辅助客服
         /// </summary>
         public int SupportEmpId { get; set; }
+        /// <summary>
+        /// 获客方式
+        /// </summary>
+        public int GetCustomerType { get; set; }
     }
 }

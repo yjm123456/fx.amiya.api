@@ -115,6 +115,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             addDto.CustomerPictures = addVo.CustomerPictures;
             addDto.IsSupportOrder = addVo.IsSupportOrder;
             addDto.SupportEmpId = addVo.SupportEmpId;
+            addDto.GetCustomerType = addVo.GetCustomerType;
             await _orderService.AddContentPlateFormOrderAsync(addDto);
 
 
@@ -139,6 +140,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// 根据条件获取内容平台订单
         /// </summary>
         /// <param name="liveAnchorId">主播id</param>
+        /// <param name="getCustomerType">获客方式</param>
         /// <param name="liveAnchorWechatId">主播微信号id</param>
         /// <param name="startDate">开始时间</param>
         /// <param name="endDate">结束时间</param>
@@ -158,7 +160,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <returns></returns>
         [HttpGet("contentPlateFormOrderLlistWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>> GetOrderListWithPageAsync(int? liveAnchorId,string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int orderSource, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>> GetOrderListWithPageAsync(int? liveAnchorId, int? getCustomerType, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int orderSource, int pageNum, int pageSize)
         {
             try
             {
@@ -168,7 +170,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 if (liveAnchorId.HasValue) {
                     liveAnchorIds.Add(liveAnchorId.Value);
                 }
-                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorIds, liveAnchorWechatId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
+                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorIds,getCustomerType, liveAnchorWechatId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
                 List<ContentPlatFormOrderInfoVo> contentPlatFormOrderInfoVoList = new List<ContentPlatFormOrderInfoVo>();
                 var resutList = q.List.ToList();
                 foreach (var x in resutList)
@@ -362,6 +364,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.ConsultationTypeText = order.ConsultationTypeText;
             orderUpdateInfo.BelongMonth = order.BelongMonth;
             orderUpdateInfo.AddOrderPrice = order.AddOrderPrice;
+            orderUpdateInfo.GetCustomerType = order.GetCustomerType;
+            orderUpdateInfo.GetCustomerTypeText = order.GetCustomerTypeText;
             orderUpdateInfo.LiveAnchorId = order.LiveAnchorId;
             orderUpdateInfo.GoodsId = order.GoodsId;
             orderUpdateInfo.CustomerName = order.CustomerName;
@@ -482,6 +486,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             updateDto.BelongMonth = updateVo.BelongMonth;
             updateDto.OrderType = updateVo.OrderType;
             updateDto.ContentPlateFormId = updateVo.ContentPlateFormId;
+            updateDto.GetCustomerType = updateVo.GetCustomerType;
             updateDto.LiveAnchorWeChatNo = updateVo.LiveAnchorWeChatNo;
             updateDto.LiveAnchorId = updateVo.LiveAnchorId;
             updateDto.GoodsId = updateVo.GoodsId;

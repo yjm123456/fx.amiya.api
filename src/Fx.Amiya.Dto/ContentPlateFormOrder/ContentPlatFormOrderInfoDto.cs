@@ -142,5 +142,13 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 审核客服业绩金额
         /// </summary>
         public decimal? CustomerServiceSettlePrice { get; set; }
+        /// <summary>
+        /// 获客方式
+        /// </summary>
+        public int GetCustomerType { get; set; }
+        /// <summary>
+        /// 获客方式文本
+        /// </summary>
+        public string GetCustomerTypeText { get; set; }
     }
 }

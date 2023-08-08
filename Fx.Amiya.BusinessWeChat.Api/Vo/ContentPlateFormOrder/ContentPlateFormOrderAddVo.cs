@@ -159,5 +159,9 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// 辅助客服（企业微信目前写死为0）
         /// </summary>
         public int SupportEmpId { get; set; }
+        /// <summary>
+        /// 获客方式
+        /// </summary>
+        public int GetCustomerType { get; set; }
     }
 }

@@ -152,6 +152,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 辅助客服
         /// </summary>
         public int SupportEmpId { get; set; }
+        /// <summary>
+        /// 获客方式
+        /// </summary>
+        public int GetCustomerType { get; set; }
 
         public Contentplatform Contentplatform { get; set; }
         public LiveAnchor LiveAnchor { get; set; }

@@ -295,11 +295,12 @@
             <param name="addVo"></param>
             <returns></returns>
         </member>
-        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.GetOrderListWithPageAsync(System.Nullable{System.Int32},System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Int32,System.Int32,System.Int32)">
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.GetOrderListWithPageAsync(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Int32,System.Int32,System.Int32)">
             <summary>
             根据条件获取内容平台订单
             </summary>
             <param name="liveAnchorId">主播id</param>
+            <param name="getCustomerType">获客方式</param>
             <param name="liveAnchorWechatId">主播微信号id</param>
             <param name="startDate">开始时间</param>
             <param name="endDate">结束时间</param>
@@ -1317,6 +1318,11 @@
             辅助客服（企业微信目前写死为0）
             </summary>
         </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderAddVo.GetCustomerType">
+            <summary>
+            获客方式
+            </summary>
+        </member>
         <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderFinishVo">
             <summary>
             内容平台完成订单
@@ -1575,6 +1581,11 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.CustomerPictures">
             <summary>
             顾客照片（最多上传5张）
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderUpdateVo.GetCustomerType">
+            <summary>
+            获客方式
             </summary>
         </member>
         <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo">
@@ -2010,6 +2021,16 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.SupportEmpName">
             <summary>
             辅助客服名称
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.GetCustomerType">
+            <summary>
+            获客方式
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlateFormOrderVo.GetCustomerTypeText">
+            <summary>
+            获客方式文本
             </summary>
         </member>
         <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder.ContentPlatFormCustomerPictureVo">

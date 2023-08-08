@@ -168,5 +168,9 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// 顾客照片（最多上传5张）
         /// </summary>
         public List<string> CustomerPictures { get; set; }
+        /// <summary>
+        /// 获客方式
+        /// </summary>
+        public int GetCustomerType { get; set; }
     }
 }

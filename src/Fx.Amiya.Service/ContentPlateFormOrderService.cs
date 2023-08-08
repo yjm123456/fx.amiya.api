@@ -213,6 +213,7 @@ namespace Fx.Amiya.Service
                 order.AcceptConsulting = input.AcceptConsulting;
                 order.HospitalDepartmentId = input.HospitalDepartmentId;
                 order.Phone = input.Phone;
+                order.GetCustomerType = input.GetCustomerType;
                 order.AppointmentDate = input.AppointmentDate;
                 order.AppointmentHospitalId = input.AppointmentHospitalId;
                 order.OrderStatus = input.OrderStatus;
@@ -269,6 +270,7 @@ namespace Fx.Amiya.Service
         /// 获取订单列表
         /// </summary>
         /// <param name="startDate"></param>
+        /// <param name="getCustomerType">获客方式</param>
         /// <param name="endDate"></param>
         /// <param name="writeOffStartDate"></param>
         /// <param name="writeOffEndDate"></param>
@@ -280,7 +282,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(List<int> liveAnchorId, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId, int orderSource, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(List<int> liveAnchorId, int? getCustomerType, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId, int orderSource, int pageNum, int pageSize)
         {
             try
             {
@@ -313,6 +315,7 @@ namespace Fx.Amiya.Service
                              && (!minAddOrderPrice.HasValue || d.AddOrderPrice >= minAddOrderPrice)
                              && (!maxAddOrderPrice.HasValue || d.AddOrderPrice <= maxAddOrderPrice)
                              && (!consultationType.HasValue || d.ConsultationType == consultationType)
+                             && (!getCustomerType.HasValue || d.GetCustomerType == getCustomerType)
                              && (!belongEmpId.HasValue || d.BelongEmpId == belongEmpId)
                              && (orderSource == -1 || d.OrderSource == orderSource)
                              && (string.IsNullOrWhiteSpace(hospitalDepartmentId) || d.HospitalDepartmentId == hospitalDepartmentId)
@@ -350,6 +353,7 @@ namespace Fx.Amiya.Service
                                 ContentPlatformName = d.Contentplatform.ContentPlatformName,
                                 LiveAnchorId = d.LiveAnchorId,
                                 LiveAnchorName = d.LiveAnchor.HostAccountName,
+                                GetCustomerTypeText=ServiceClass.GetShoppingCartGetCustomerTypeText(d.GetCustomerType),
                                 ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ConsultationType),
                                 LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 CreateDate = d.CreateDate,
@@ -1384,6 +1388,8 @@ namespace Fx.Amiya.Service
             }
             result.IsOldCustomer = order.IsOldCustomer;
             result.IsAcompanying = order.IsAcompanying;
+            result.GetCustomerType = order.GetCustomerType;
+            result.GetCustomerTypeText = ServiceClass.GetShoppingCartGetCustomerTypeText(order.GetCustomerType);
             result.ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(order.ConsultationType);
             result.ConsultationType = order.ConsultationType;
             result.CommissionRatio = order.CommissionRatio;
@@ -1713,6 +1719,7 @@ namespace Fx.Amiya.Service
                 order.CustomerName = input.CustomerName;
                 order.Phone = input.Phone;
                 order.BelongMonth = input.BelongMonth;
+                order.GetCustomerType = input.GetCustomerType;
                 order.AddOrderPrice = input.AddOrderPrice;
                 order.AppointmentDate = input.AppointmentDate;
                 order.AppointmentHospitalId = input.AppointmentHospitalId;
