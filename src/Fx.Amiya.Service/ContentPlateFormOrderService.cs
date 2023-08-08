@@ -158,7 +158,7 @@ namespace Fx.Amiya.Service
                     }
                     else
                     {
-                        bind.NewConsumptionDate = DateTime.Now;
+                        //bind.NewConsumptionDate = DateTime.Now;
                         bind.NewConsumptionContentPlatform = (int)OrderFrom.ContentPlatFormOrder;
                         bind.NewContentPlatForm = contentPlatForm.ContentPlatformName;
                         bind.NewLiveAnchor = dalLiveAnchor.GetAll().Where(e => e.Id == input.LiveAnchorId).FirstOrDefault().Name;
@@ -178,7 +178,7 @@ namespace Fx.Amiya.Service
                     var goodsInfo = await amiyaGoodsDemandService.GetByIdAsync(input.GoodsId);
                     bindCustomerService.FirstProjectDemand = "(" + goodsInfo.HospitalDepartmentName + ")" + goodsInfo.ProjectNname;
                     bindCustomerService.FirstConsumptionDate = DateTime.Now;
-                    bindCustomerService.NewConsumptionDate = DateTime.Now;
+                    //bindCustomerService.NewConsumptionDate = DateTime.Now;
                     bindCustomerService.NewConsumptionContentPlatform = (int)OrderFrom.ContentPlatFormOrder;
                     bindCustomerService.NewContentPlatForm = contentPlatForm.ContentPlatformName;
                     var liveAnchor = dalLiveAnchor.GetAll().Where(e => e.Id == input.LiveAnchorId).FirstOrDefault();

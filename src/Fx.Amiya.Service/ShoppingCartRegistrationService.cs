@@ -56,7 +56,7 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source)
+        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source)
         {
             try
             {
@@ -64,6 +64,7 @@ namespace Fx.Amiya.Service
                                                where (keyword == null || d.Phone.Contains(keyword) || d.SubPhone.Contains(keyword) || d.CustomerNickName.Contains(keyword) || d.LiveAnchorWechatNo.Contains(keyword) || d.Remark.Contains(keyword))
                                                && ((!startDate.HasValue && !endDate.HasValue) || d.RecordDate >= startDate.Value.Date && d.RecordDate < endDate.Value.AddDays(1).Date)
                                                && (string.IsNullOrEmpty(contentPlatFormId) || d.ContentPlatFormId == contentPlatFormId)
+                                               && (!createBy.HasValue || d.CreateBy == createBy)
                                                && (!isAddWechat.HasValue || d.IsAddWeChat == isAddWechat)
                                                && (!isWriteOff.HasValue || d.IsWriteOff == isWriteOff)
                                                && (!isSendOrder.HasValue || d.IsSendOrder == isSendOrder)

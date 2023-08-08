@@ -62,6 +62,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="minPrice">最小金额</param>
         /// <param name="maxPrice">最大金额</param>
         /// <param name="assignEmpId">接诊人员</param>
+        /// <param name="createBy">创建人</param>
         /// <param name="startBadReviewTime">差评开始时间</param>
         /// <param name="endBadReviewTime">差评结束时间</param>
         /// <param name="startRefundTime">退款开始时间</param>
@@ -74,13 +75,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="source">客户来源</param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source)
+        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder,int? createBy, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, assignEmpId, startRefundTime, endRefundTime, startBadReviewTime, endBadReviewTime, emergencyLevel, isBadReview, baseLiveAnchorId, source);
+                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder,createBy, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, assignEmpId, startRefundTime, endRefundTime, startBadReviewTime, endBadReviewTime, emergencyLevel, isBadReview, baseLiveAnchorId, source);
 
                 var shoppingCartRegistration = from d in q.List
                                                select new ShoppingCartRegistrationVo
