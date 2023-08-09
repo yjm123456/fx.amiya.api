@@ -18,11 +18,13 @@ namespace Fx.Amiya.Service
     {
         private IDalLivingDailyTakeGoods dalLivingDailyTakeGoodsService;
         private ILiveAnchorService liveAnchorService;
+        private IDalLiveAnchorMonthlyTargetLiving dalLiveAnchorMonthlyTargetLiving;
 
-        public LivingDailyTakeGoodsService(IDalLivingDailyTakeGoods dalLivingDailyTakeGoodsService, ILiveAnchorService liveAnchorService)
+        public LivingDailyTakeGoodsService(IDalLivingDailyTakeGoods dalLivingDailyTakeGoodsService, ILiveAnchorService liveAnchorService, IDalLiveAnchorMonthlyTargetLiving dalLiveAnchorMonthlyTargetLiving)
         {
             this.dalLivingDailyTakeGoodsService = dalLivingDailyTakeGoodsService;
             this.liveAnchorService = liveAnchorService;
+            this.dalLiveAnchorMonthlyTargetLiving = dalLiveAnchorMonthlyTargetLiving;
         }
 
 
@@ -283,5 +285,24 @@ namespace Fx.Amiya.Service
             }).ToListAsync();
 
         }
+        /// <summary>
+        /// 直播中带货数据自动填写
+        /// </summary>
+        /// <returns></returns>
+        public async Task<AutoCompleteTakeGoodsGmvDto> AutoCompleteTakeGoodsGmvDataAsync(DateTime takeGoodsDate, string monthTargetId)
+        {
+            AutoCompleteTakeGoodsGmvDto autoCompleteTakeGoodsGmvDto = new AutoCompleteTakeGoodsGmvDto();
+            var liveAnchorId= dalLiveAnchorMonthlyTargetLiving.GetAll().Where(e => e.Id == monthTargetId).Select(e=>e.LiveAnchorId).SingleOrDefault();
+            if (liveAnchorId == 0) throw new Exception("主播ip错误!");
+            var startDate = takeGoodsDate.Date;
+            var endDate = takeGoodsDate.AddDays(1).Date;
+            var data= dalLivingDailyTakeGoodsService.GetAll().Where(e => e.LiveAnchorId == liveAnchorId && e.TakeGoodsDate >= startDate && e.TakeGoodsDate < endDate);
+            autoCompleteTakeGoodsGmvDto.TodayGMV = data.Where(e => e.TakeGoodsType == (int)TakeGoodsType.CreateOrder).Sum(e => e.TotalPrice);
+            autoCompleteTakeGoodsGmvDto.RefundGMV = data.Where(e => e.TakeGoodsType == (int)TakeGoodsType.ReturnBackOrder).Sum(e => e.TotalPrice);
+            autoCompleteTakeGoodsGmvDto.EliminateCardGMV = autoCompleteTakeGoodsGmvDto.TodayGMV;
+            return autoCompleteTakeGoodsGmvDto;
+        }
+
+       
     }
 }

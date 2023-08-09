@@ -64,7 +64,7 @@ namespace Fx.Amiya.IService
 
         Task<List<OrderOperationConditionDto>> GetConsultingCardBuyDataAsync(DateTime startDate, DateTime endDate);
         Task<List<OrderOperationConditionDto>> GetConsultingCardUseDataAsync(DateTime startDate, DateTime endDate);
-        Task<List<GmvAndRefundGmvDto>> GetDailyDataByLiveAnchorIdsAsync(List<string> targetIds);
+        Task<List<GmvAndRefundGmvDto>> GetDailyDataByLiveAnchorIdsAsync(List<string> targetIds,int year,int month);
         /// <summary>
         /// 根据时间和主播id集合获取下单gmv和退款gmv数据
         /// </summary>

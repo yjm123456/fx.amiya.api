@@ -30,9 +30,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 构造函数
         /// </summary>
         /// <param name="LivingDailyTakeGoodsService"></param>
-        public LivingDailyTakeGoodsController(ILivingDailyTakeGoodsService LivingDailyTakeGoodsService,
-
-            IHttpContextAccessor httpContextAccessor)
+        public LivingDailyTakeGoodsController(ILivingDailyTakeGoodsService LivingDailyTakeGoodsService,IHttpContextAccessor httpContextAccessor)
         {
             _LivingDailyTakeGoodsService = LivingDailyTakeGoodsService;
             this.httpContextAccessor = httpContextAccessor;
@@ -247,6 +245,20 @@ namespace Fx.Amiya.Background.Api.Controllers
                              Name = d.Value
                          };
             return ResultData<List<BaseIdAndNameVo>>.Success().AddData("takeGoodsTypeText", result.ToList());
+        }
+        /// <summary>
+        /// 自动填写带货数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("autoCompleteGMVData")]
+        public async Task<ResultData<AutoCompleteTakeGoodsGmvVo>> AutoCompleteTakeGoodsGmvAsync([FromQuery] AutoCompleteGmvDataVo query)
+        {
+            AutoCompleteTakeGoodsGmvVo result = new AutoCompleteTakeGoodsGmvVo();
+            var data = await _LivingDailyTakeGoodsService.AutoCompleteTakeGoodsGmvDataAsync(query.RecordDate, query.monthTargetId);
+            result.TodayGMV = data.TodayGMV;
+            result.RefundGMV = data.RefundGMV;
+            result.EliminateCardGMV = data.EliminateCardGMV;
+            return ResultData<AutoCompleteTakeGoodsGmvVo>.Success().AddData("data", result);
         }
 
     }

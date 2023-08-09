@@ -139,7 +139,7 @@ namespace Fx.Amiya.Service
             GMVDataBrokenLineDto gMVDataBrokenLineDto = new GMVDataBrokenLineDto();
             var ids = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(contentPlatformId, liveAnchorId);
             var targetIds = await liveAnchorMonthlyTargetLivingService.GetTargetIdsAsync(year, month, ids);
-            var flowData = await liveAnchorDailyTargetService.GetDailyDataByLiveAnchorIdsAsync(targetIds);
+            var flowData = await liveAnchorDailyTargetService.GetDailyDataByLiveAnchorIdsAsync(targetIds,year,month);
             var flowList = flowData.GroupBy(e => e.Date.Day).Select(e => new { Date = e.Key, GMV = e.Sum(e => e.GMV), RefundGMV = e.Sum(e => e.RefundGMV), LivingRoomCumulativeFlowInvestment = e.Sum(e => e.LivingRoomCumulativeFlowInvestment) }).ToList();
             var startDate = new DateTime(year, month, 1);
             var endDate = startDate.AddMonths(1);

@@ -41,6 +41,13 @@ namespace Fx.Amiya.IService
         /// <param name="contentPlatformId"></param>
         /// <param name="liveAnchorIds"></param>
         /// <returns></returns>
-        Task<List<LivingDailyTakeGoodsDto>> GetTakeGoodsAnalizeDataAsync(DateTime startDate, DateTime endDate, string contentPlatformId, List<int> liveAnchorIds);  
+        Task<List<LivingDailyTakeGoodsDto>> GetTakeGoodsAnalizeDataAsync(DateTime startDate, DateTime endDate, string contentPlatformId, List<int> liveAnchorIds);
+        /// <summary>
+        /// 直播中带货数据自动填写
+        /// </summary>
+        /// <param name="monthTargetId">月目标id</param>
+        /// <param name="takeGoodsDate">带货时间</param>
+        /// <returns></returns>
+        Task<AutoCompleteTakeGoodsGmvDto> AutoCompleteTakeGoodsGmvDataAsync(DateTime takeGoodsDate,string monthTargetId);
     }
 }

@@ -636,10 +636,10 @@ namespace Fx.Amiya.Service
                                           Consultation = d.Consultation,
                                           Consultation2 = d.Consultation2,
                                           CargoSettlementCommission = d.CargoSettlementCommission,
-                                          RefundCard=d.RefundCard,
-                                          GMV=d.GMV,
-                                          EliminateCardGMV=d.EliminateCardGMV,
-                                          RefundGMV=d.RefundGMV
+                                          RefundCard = d.RefundCard,
+                                          GMV = d.GMV,
+                                          EliminateCardGMV = d.EliminateCardGMV,
+                                          RefundGMV = d.RefundGMV
                                       };
                 var result = await tikTokDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
 
@@ -725,8 +725,8 @@ namespace Fx.Amiya.Service
                                           PerformanceNum = d.PerformanceNum,
                                           MinivanRefund = d.MinivanRefund,
                                           MiniVanBadReviews = d.MiniVanBadReviews,
-                                          PotentialPerformance=d.PotentialPerformance,
-                                          EffectivePerformance=d.EffectivePerformance
+                                          PotentialPerformance = d.PotentialPerformance,
+                                          EffectivePerformance = d.EffectivePerformance
                                       };
                 var result = await tikTokDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
 
@@ -1771,46 +1771,46 @@ namespace Fx.Amiya.Service
         }
         public async Task LivingAddAsync(LivingAddLiveAnchorDailyTargetDto addDto)
         {
-                unitOfWork.BeginTransaction();
-                try
-                {
+            unitOfWork.BeginTransaction();
+            try
+            {
 
-                    LivingDailyTarget liveAnchorDailyTarget = new LivingDailyTarget();
-                    liveAnchorDailyTarget.Id = Guid.NewGuid().ToString();
-                    liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
-                    liveAnchorDailyTarget.OperationEmpId = addDto.LivingTrackingEmployeeId;
-                    liveAnchorDailyTarget.LivingRoomFlowInvestmentNum = addDto.LivingRoomFlowInvestmentNum;
-                    liveAnchorDailyTarget.Consultation = addDto.Consultation;
-                    liveAnchorDailyTarget.Consultation2 = addDto.Consultation2;
-                    liveAnchorDailyTarget.CargoSettlementCommission = addDto.CargoSettlementCommission;
-                    liveAnchorDailyTarget.RefundCard = addDto.RefundCard;
-                    liveAnchorDailyTarget.GMV = addDto.GMV;
-                    liveAnchorDailyTarget.EliminateCardGMV = addDto.EliminateCardGMV;
-                    liveAnchorDailyTarget.RefundGMV = addDto.RefundGMV;
-                    liveAnchorDailyTarget.CreateDate = DateTime.Now;
-                    liveAnchorDailyTarget.Valid = true;
-                    liveAnchorDailyTarget.UpdateDate = DateTime.Now;
-                    liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
-                    await _livingDailyTarget.AddAsync(liveAnchorDailyTarget, true);
+                LivingDailyTarget liveAnchorDailyTarget = new LivingDailyTarget();
+                liveAnchorDailyTarget.Id = Guid.NewGuid().ToString();
+                liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = addDto.LiveanchorMonthlyTargetId;
+                liveAnchorDailyTarget.OperationEmpId = addDto.LivingTrackingEmployeeId;
+                liveAnchorDailyTarget.LivingRoomFlowInvestmentNum = addDto.LivingRoomFlowInvestmentNum;
+                liveAnchorDailyTarget.Consultation = addDto.Consultation;
+                liveAnchorDailyTarget.Consultation2 = addDto.Consultation2;
+                liveAnchorDailyTarget.CargoSettlementCommission = addDto.CargoSettlementCommission;
+                liveAnchorDailyTarget.RefundCard = addDto.RefundCard;
+                liveAnchorDailyTarget.GMV = addDto.GMV;
+                liveAnchorDailyTarget.EliminateCardGMV = addDto.EliminateCardGMV;
+                liveAnchorDailyTarget.RefundGMV = addDto.RefundGMV;
+                liveAnchorDailyTarget.CreateDate = DateTime.Now;
+                liveAnchorDailyTarget.Valid = true;
+                liveAnchorDailyTarget.UpdateDate = DateTime.Now;
+                liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
+                await _livingDailyTarget.AddAsync(liveAnchorDailyTarget, true);
 
-                    UpdateLiveAnchorMonthlyLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyLivingTargetRateAndNumDto();
-                    editLiveAnchorMonthlyTarget.Id = addDto.LiveanchorMonthlyTargetId;
-                    editLiveAnchorMonthlyTarget.LivingRoomCumulativeFlowInvestment = addDto.LivingRoomFlowInvestmentNum;
-                    editLiveAnchorMonthlyTarget.CumulativeConsultation = addDto.Consultation;
-                    editLiveAnchorMonthlyTarget.CumulativeConsultation2 = addDto.Consultation2;
-                    editLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = addDto.CargoSettlementCommission;
-                    editLiveAnchorMonthlyTarget.RefundCard = addDto.RefundCard;
-                    editLiveAnchorMonthlyTarget.GMV = addDto.GMV;
-                    editLiveAnchorMonthlyTarget.EliminateCardGMV = addDto.EliminateCardGMV;
-                    editLiveAnchorMonthlyTarget.RefundGMV = addDto.RefundGMV;
-                    await _liveAnchorMonthlyTargetLivingService.EditAsync(editLiveAnchorMonthlyTarget);
-                    unitOfWork.Commit();
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.RollBack();
-                    throw ex;
-                }
+                UpdateLiveAnchorMonthlyLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyLivingTargetRateAndNumDto();
+                editLiveAnchorMonthlyTarget.Id = addDto.LiveanchorMonthlyTargetId;
+                editLiveAnchorMonthlyTarget.LivingRoomCumulativeFlowInvestment = addDto.LivingRoomFlowInvestmentNum;
+                editLiveAnchorMonthlyTarget.CumulativeConsultation = addDto.Consultation;
+                editLiveAnchorMonthlyTarget.CumulativeConsultation2 = addDto.Consultation2;
+                editLiveAnchorMonthlyTarget.CumulativeCargoSettlementCommission = addDto.CargoSettlementCommission;
+                editLiveAnchorMonthlyTarget.RefundCard = addDto.RefundCard;
+                editLiveAnchorMonthlyTarget.GMV = addDto.GMV;
+                editLiveAnchorMonthlyTarget.EliminateCardGMV = addDto.EliminateCardGMV;
+                editLiveAnchorMonthlyTarget.RefundGMV = addDto.RefundGMV;
+                await _liveAnchorMonthlyTargetLivingService.EditAsync(editLiveAnchorMonthlyTarget);
+                unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex;
+            }
         }
 
         public async Task LivingUpdateAsync(LivingUpdateLiveAnchorDailyTargetDto updateDto)
@@ -2761,16 +2761,20 @@ namespace Fx.Amiya.Service
         /// 根据月目标集合查询直播间投流数据
         /// </summary>
         /// <param name="targetIds"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
         /// <returns></returns>
-        public async Task<List<GmvAndRefundGmvDto>> GetDailyDataByLiveAnchorIdsAsync(List<string> targetIds)
+        public async Task<List<GmvAndRefundGmvDto>> GetDailyDataByLiveAnchorIdsAsync(List<string> targetIds, int year, int month)
         {
-           return  _livingDailyTarget.GetAll().Where(e => targetIds.Contains(e.LiveAnchorMonthlyTargetId)&&e.Valid==true).Select(e => new GmvAndRefundGmvDto
-           {
-               GMV = e.GMV,
-               RefundGMV = e.RefundGMV,
-               LivingRoomCumulativeFlowInvestment = e.LivingRoomFlowInvestmentNum,
-               Date=e.RecordDate
-           }).ToList();
+            var startDate = new DateTime(year, month, 1);
+            var endDate = startDate.AddMonths(1);
+            return _livingDailyTarget.GetAll().Where(e => targetIds.Contains(e.LiveAnchorMonthlyTargetId) && e.Valid == true && e.RecordDate >= startDate && e.RecordDate < endDate).Select(e => new GmvAndRefundGmvDto
+            {
+                GMV = e.GMV,
+                RefundGMV = e.RefundGMV,
+                LivingRoomCumulativeFlowInvestment = e.LivingRoomFlowInvestmentNum,
+                Date = e.RecordDate
+            }).ToList();
         }
         /// <summary>
         /// 根据时间和主播id集合获取下单gmv和退款gmv数据
@@ -2783,10 +2787,11 @@ namespace Fx.Amiya.Service
         {
             return _livingDailyTarget.GetAll()
                 .Where(e => e.RecordDate >= start && e.RecordDate < end && liveAnchorIds.Contains(e.LiveAnchorMonthlyTargetLiving.LiveAnchorId) && e.Valid == true)
-                .Select(e => new GmvAndRefundGmvDto {
-                    GMV=e.GMV,
-                    RefundGMV=e.RefundGMV,
-                    LivingRoomCumulativeFlowInvestment=e.LivingRoomFlowInvestmentNum
+                .Select(e => new GmvAndRefundGmvDto
+                {
+                    GMV = e.GMV,
+                    RefundGMV = e.RefundGMV,
+                    LivingRoomCumulativeFlowInvestment = e.LivingRoomFlowInvestmentNum
                 }).ToList();
         }
     }
