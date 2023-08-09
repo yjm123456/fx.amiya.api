@@ -30,6 +30,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         private IContentPlateFormOrderService _orderService;
         private ICustomerService customerService;
         private IBindCustomerServiceService bindCustomerServiceService;
+        private IShoppingCartRegistrationService shoppingCartRegistrationService;
         private IWxAppConfigService _wxAppConfigService;
         private IContentPlatFormCustomerPictureService _contentPlatFormCustomerPictureService;
         private IHttpContextAccessor _httpContextAccessor;
@@ -45,6 +46,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <param name="wxAppConfigService"></param>
         public ContentPlateFormOrderController(IContentPlateFormOrderService orderService,
             IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
+            IShoppingCartRegistrationService shoppingCartRegistrationService,
             IHttpContextAccessor httpContextAccessor,
             IBindCustomerServiceService bindCustomerServiceService,
             IAmiyaPositionInfoService amiyaPositionInfoService,
@@ -53,6 +55,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         {
             _orderService = orderService;
             this.customerService = customerService;
+            this.shoppingCartRegistrationService = shoppingCartRegistrationService;
             this.bindCustomerServiceService = bindCustomerServiceService;
             this.amiyaPositionInfoService = amiyaPositionInfoService;
             _wxAppConfigService = wxAppConfigService;
@@ -839,6 +842,23 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                              };
             return ResultData<List<BaseKeyAndValueVo>>.Success().AddData("orderTypes", orderTypes.ToList());
         }
+
+        /// <summary>
+        /// 获客方式列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("shoppingCartGetCustomerTypeList")]
+        public async Task<ResultData<List<BaseKeyAndValueVo>>> GetShoppingCartGetCustomerTypeListAsync()
+        {
+            var nameList = shoppingCartRegistrationService.GetShoppingCartGetCustomerTypeText();
+            var result = nameList.Select(e => new BaseKeyAndValueVo
+            {
+                Id = e.Key.ToString(),
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseKeyAndValueVo>>.Success().AddData("typeList", result);
+        }
+
         #endregion
     }
 }

@@ -277,7 +277,7 @@
             内容平台订单模块
             </summary>
         </member>
-        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.#ctor(Fx.Amiya.IService.IContentPlateFormOrderService,Fx.Amiya.IService.IContentPlatFormCustomerPictureService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Fx.Amiya.IService.IBindCustomerServiceService,Fx.Amiya.IService.IAmiyaPositionInfoService,Fx.Amiya.IService.ICustomerService,Fx.Amiya.IService.IWxAppConfigService)">
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.#ctor(Fx.Amiya.IService.IContentPlateFormOrderService,Fx.Amiya.IService.IContentPlatFormCustomerPictureService,Fx.Amiya.IService.IShoppingCartRegistrationService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Fx.Amiya.IService.IBindCustomerServiceService,Fx.Amiya.IService.IAmiyaPositionInfoService,Fx.Amiya.IService.ICustomerService,Fx.Amiya.IService.IWxAppConfigService)">
             <summary>
             内容平台订单模块
             </summary>
@@ -440,6 +440,12 @@
         <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.GetContentPlateFormOrderToHospitalTypeList">
             <summary>
             获取内容平台订单到院状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.ContentPlateFormOrderController.GetShoppingCartGetCustomerTypeListAsync">
+            <summary>
+            获客方式列表
             </summary>
             <returns></returns>
         </member>
