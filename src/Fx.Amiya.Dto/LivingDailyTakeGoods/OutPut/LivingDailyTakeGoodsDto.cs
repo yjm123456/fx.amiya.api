@@ -82,6 +82,11 @@ namespace Fx.Amiya.Dto.LivingDailyTakeGoods.OutPut
         /// 总价
         /// </summary>
         public decimal TotalPrice { get; set; }
+
+        /// <summary>
+        /// 订单量
+        /// </summary>
+        public int OrderNum { get; set; }
         /// <summary>
         /// 带货商品类型（0-下单；1-退款）
         /// </summary>

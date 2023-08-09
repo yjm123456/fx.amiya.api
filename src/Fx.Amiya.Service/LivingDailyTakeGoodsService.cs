@@ -50,6 +50,7 @@ namespace Fx.Amiya.Service
                                                       CreateByEmpName = d.AmiyaEmployee.Name,
                                                       UpdateDate = d.UpdateDate,
                                                       Valid = d.Valid,
+                                                      OrderNum=d.OrderNum,
                                                       DeleteDate = d.DeleteDate,
                                                       TakeGoodsDate=d.TakeGoodsDate,
                                                       BrandName = d.SupplierBrand.BrandName,
@@ -90,6 +91,7 @@ namespace Fx.Amiya.Service
                 livingDailyTakeGoodsService.ContentPlatFormId = addDto.ContentPlatFormId;
                 livingDailyTakeGoodsService.LiveAnchorId = addDto.LiveAnchorId;
                 livingDailyTakeGoodsService.ItemId = addDto.ItemId;
+                livingDailyTakeGoodsService.OrderNum = addDto.OrderNum;
                 livingDailyTakeGoodsService.SinglePrice = addDto.SinglePrice;
                 livingDailyTakeGoodsService.TakeGoodsQuantity = addDto.TakeGoodsQuantity;
                 livingDailyTakeGoodsService.TotalPrice = addDto.TotalPrice;
@@ -124,6 +126,7 @@ namespace Fx.Amiya.Service
                 livingDailyTakeGoodsServiceDto.TakeGoodsDate = livingDailyTakeGoodsService.TakeGoodsDate;
                 livingDailyTakeGoodsServiceDto.BrandId = livingDailyTakeGoodsService.BrandId;
                 livingDailyTakeGoodsServiceDto.CategoryId = livingDailyTakeGoodsService.CategoryId;
+                livingDailyTakeGoodsServiceDto.OrderNum = livingDailyTakeGoodsService.OrderNum;
                 livingDailyTakeGoodsServiceDto.ItemDetailsId = livingDailyTakeGoodsService.ItemDetailsId;
                 livingDailyTakeGoodsServiceDto.ContentPlatFormId = livingDailyTakeGoodsService.ContentPlatFormId;
                 livingDailyTakeGoodsServiceDto.LiveAnchorId = livingDailyTakeGoodsService.LiveAnchorId;
@@ -163,6 +166,7 @@ namespace Fx.Amiya.Service
                 livingDailyTakeGoodsService.SinglePrice = updateDto.SinglePrice;
                 livingDailyTakeGoodsService.TakeGoodsQuantity = updateDto.TakeGoodsQuantity;
                 livingDailyTakeGoodsService.TotalPrice = updateDto.TotalPrice;
+                livingDailyTakeGoodsService.OrderNum = updateDto.OrderNum;
                 livingDailyTakeGoodsService.TakeGoodsType = updateDto.TakeGoodsType;
                 livingDailyTakeGoodsService.Remark = updateDto.Remark;
 

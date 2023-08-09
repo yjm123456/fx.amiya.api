@@ -153,4 +153,9 @@ DROP INDEX `fk_tbl_supplier_category_brandinfo_idx` ;
 --内容平台订单列表新增获客方式
 ALTER TABLE `amiyadb`.`tbl_content_platform_order` 
 ADD COLUMN `get_customer_type` INT NOT NULL DEFAULT 0 AFTER `belong_company`;
------------------------------------------------余建明 2023/08/08 END--------------------------------------------
+
+--直播带货数据新增订单量
+ALTER TABLE `amiyadb`.`tbl_living_daily_take_goods` 
+ADD COLUMN `order_num` INT NOT NULL DEFAULT 0 AFTER `item_details_id`;
+
+-----------------------------------------------余建明 2023/08/9 END--------------------------------------------

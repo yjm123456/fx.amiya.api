@@ -60,6 +60,11 @@ namespace Fx.Amiya.DbModels.Model
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+
+        /// <summary>
+        /// 订单量
+        /// </summary>
+        public int OrderNum { get; set; }
         public AmiyaEmployee AmiyaEmployee { get; set; }
         public SupplierBrand SupplierBrand { get; set; }
         public SupplierCategory SupplierCategory { get; set; }

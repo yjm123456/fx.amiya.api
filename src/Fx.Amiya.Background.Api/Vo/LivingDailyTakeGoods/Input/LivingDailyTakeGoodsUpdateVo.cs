@@ -51,6 +51,10 @@ namespace Fx.Amiya.Background.Api.Vo.LivingDailyTakeGoods.Input
         /// </summary>
         public decimal TotalPrice { get; set; }
         /// <summary>
+        /// 订单量
+        /// </summary>
+        public int OrderNum { get; set; }
+        /// <summary>
         /// 带货商品类型（0-下单；1-退款）
         /// </summary>
         public int TakeGoodsType { get; set; }

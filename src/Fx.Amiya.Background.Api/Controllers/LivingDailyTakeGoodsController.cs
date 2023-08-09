@@ -75,6 +75,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                BrandName = d.BrandName,
                                                CategoryName = d.CategoryName,
                                                ItemDetailsName = d.ItemDetailsName,
+                                               OrderNum = d.OrderNum,
                                                ContentPlatFormName = d.ContentPlatFormName,
                                                LiveAnchorName = d.LiveAnchorName,
                                                ItemName = d.ItemName,
@@ -122,6 +123,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.ContentPlatFormId = addVo.ContentPlatFormId;
                 addDto.LiveAnchorId = addVo.LiveAnchorId;
                 addDto.ItemId = addVo.ItemId;
+                addDto.OrderNum = addVo.OrderNum;
                 addDto.SinglePrice = addVo.SinglePrice;
                 addDto.TakeGoodsQuantity = addVo.TakeGoodsQuantity;
                 addDto.TotalPrice = addVo.TotalPrice;
@@ -153,6 +155,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 LivingDailyTakeGoodsVo LivingDailyTakeGoodsVo = new LivingDailyTakeGoodsVo();
                 LivingDailyTakeGoodsVo.Id = LivingDailyTakeGoods.Id;
                 LivingDailyTakeGoodsVo.CreatBy = LivingDailyTakeGoods.CreatBy;
+                LivingDailyTakeGoodsVo.OrderNum = LivingDailyTakeGoods.OrderNum;
                 LivingDailyTakeGoodsVo.TakeGoodsDate = LivingDailyTakeGoods.TakeGoodsDate;
                 LivingDailyTakeGoodsVo.BrandId = LivingDailyTakeGoods.BrandId;
                 LivingDailyTakeGoodsVo.CategoryId = LivingDailyTakeGoods.CategoryId;
@@ -200,6 +203,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.SinglePrice = updateVo.SinglePrice;
                 updateDto.TakeGoodsQuantity = updateVo.TakeGoodsQuantity;
                 updateDto.TotalPrice = updateVo.TotalPrice;
+                updateDto.OrderNum = updateVo.OrderNum;
                 updateDto.TakeGoodsType = updateVo.TakeGoodsType;
                 updateDto.Remark = updateVo.Remark;
                 await _LivingDailyTakeGoodsService.UpdateAsync(updateDto);
