@@ -377,6 +377,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.EmergencyLevel = updateVo.EmergencyLevel;
                 updateDto.Source = updateVo.Source;
                 updateDto.ProductType = updateVo.ProductType;
+                updateDto.CreateBy = updateVo.CreateBy;
                 var contentPlatFormOrder = await contentPlateFormOrderService.GetOrderListByPhoneAsync(updateVo.Phone);
                 var isSendOrder = contentPlatFormOrder.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder).Count();
                 if (contentPlatFormOrder.Count > 0)

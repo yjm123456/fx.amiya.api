@@ -550,6 +550,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.IsSendOrder = updateDto.IsSendOrder;
                 shoppingCartRegistration.EmergencyLevel = updateDto.EmergencyLevel;
                 shoppingCartRegistration.Source = updateDto.Source;
+                shoppingCartRegistration.CreateBy = updateDto.CreateBy;
                 shoppingCartRegistration.ProductType = updateDto.ProductType;
                 var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(updateDto.LiveAnchorId);
                 if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
