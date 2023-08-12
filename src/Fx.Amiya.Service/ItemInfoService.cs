@@ -23,13 +23,16 @@ namespace Fx.Amiya.Service
         private ISupplierBrandService supplierBrandService;
         private ISupplierCategoryService supplierCategoryService;
         private ISupplierItemDetailsService supplierItemDetailsService;
+        private IDalSupplierBrand dalSupplierBrand;
+        private IDalSupplierCategory dalSupplierCategory;
+        private IDalSupplierItemDetails dalSupplierItemDetails;
         public ItemInfoService(IDalItemInfo dalItemInfo,
             IDalCustomerInfo dalCustomerInfo,
             ISupplierBrandService supplierBrandService,
             ISupplierCategoryService supplierCategoryService,
             IAmiyaHospitalDepartmentService hospitalDepartmentService,
             ISupplierItemDetailsService supplierItemDetailsService,
-            IDalOrderInfo dalOrderInfo)
+            IDalOrderInfo dalOrderInfo, IDalSupplierBrand dalSupplierBrand, IDalSupplierCategory dalSupplierCategory, IDalSupplierItemDetails dalSupplierItemDetails)
         {
             this.dalItemInfo = dalItemInfo;
             this.dalCustomerInfo = dalCustomerInfo;
@@ -38,6 +41,9 @@ namespace Fx.Amiya.Service
             this.supplierBrandService = supplierBrandService;
             this.supplierCategoryService = supplierCategoryService;
             _hospitalDepartmentService = hospitalDepartmentService;
+            this.dalSupplierBrand = dalSupplierBrand;
+            this.dalSupplierCategory = dalSupplierCategory;
+            this.dalSupplierItemDetails = dalSupplierItemDetails;
         }
 
 
@@ -617,6 +623,33 @@ namespace Fx.Amiya.Service
                             Value = d.Name
                         };
             return await items.ToListAsync();
+        }
+        /// <summary>
+        /// 获取有效带货商品的品牌类别,品项信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<GoodsItemInfoDto>> GetValidItemInfoAsync()
+        {
+            var data = from goods in dalItemInfo.GetAll()
+                       where goods.Valid == true
+                       from brand in dalSupplierBrand.GetAll()
+                       where goods.BrandId == brand.Id
+                       from category in dalSupplierCategory.GetAll()
+                       where goods.CategoryId == category.Id
+                       from itemDetail in dalSupplierItemDetails.GetAll()
+                       where goods.ItemDetailsId == itemDetail.Id
+                       select new GoodsItemInfoDto
+                       {
+                           Category=category.CategoryName,
+                           CategoryId=category.Id,
+                           Brand=brand.BrandName,
+                           BrandId=brand.Id,
+                           ItemDetail=itemDetail.ItemDetailsName,
+                           ItemDetailId=itemDetail.Id,
+                           GoodsId=goods.Id,
+                           GoodsName=goods.Name
+                       };
+            return await data.ToListAsync();
         }
     }
 }
