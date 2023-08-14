@@ -295,22 +295,24 @@ namespace Fx.Amiya.Background.Api.Controllers
                     }
                     //获取表格的列数和行数
                     int rowCount = worksheet.Dimension.Rows;
-                    
+
                     for (int x = 2; x <= rowCount; x++)
                     {
                         LivingDailyTakeGoodsImportDto addDto = new LivingDailyTakeGoodsImportDto();
-                        var ContentPlatForm = worksheet.Cells[x, 1].Value.ToString();
-                        var LiveAnchor = worksheet.Cells[x, 2].Value.ToString();
-                        var Category = worksheet.Cells[x, 3].Value.ToString();
-                        var Brand = worksheet.Cells[x, 4].Value.ToString();
-                        var ItemDetails = worksheet.Cells[x, 5].Value.ToString();
-                        var Item = worksheet.Cells[x, 6].Value.ToString();
-                        var TakeGoodsDate = worksheet.Cells[x, 7].Value.ToString();
-                        var TakeGoodsType = worksheet.Cells[x, 8].Value.ToString();
-                        var TakeGoodsQuantity = worksheet.Cells[x, 9].Value.ToString();
-                        var TotalPrice = worksheet.Cells[x, 10].Value.ToString();
-                        var OrderNum = worksheet.Cells[x, 11].Value.ToString();
-                        var Remark = worksheet.Cells[x, 12].Value.ToString();
+                        var ContentPlatForm = worksheet.Cells[x, 1].Value?.ToString() ?? "";
+                        var LiveAnchor = worksheet.Cells[x, 2].Value?.ToString() ?? "";
+                        var Category = worksheet.Cells[x, 3].Value?.ToString() ?? "";
+                        var Brand = worksheet.Cells[x, 4].Value?.ToString() ?? "";
+                        var ItemDetails = worksheet.Cells[x, 5].Value?.ToString() ?? "";
+                        var Item = worksheet.Cells[x, 6].Value?.ToString() ?? "";
+                        var TakeGoodsDate = worksheet.Cells[x, 7].Value?.ToString() ?? "";
+                        var isDate = DateTime.TryParse(TakeGoodsDate, out DateTime time);
+                        if (!isDate) throw new Exception("带货时间格式错误");
+                        var TakeGoodsType = worksheet.Cells[x, 8].Value?.ToString() ?? "";
+                        var TakeGoodsQuantity = worksheet.Cells[x, 9].Value?.ToString() ?? "";
+                        var TotalPrice = worksheet.Cells[x, 10].Value?.ToString() ?? "";
+                        var OrderNum = worksheet.Cells[x, 11].Value?.ToString() ?? "";
+                        var Remark = worksheet.Cells[x, 12].Value?.ToString() ?? "";
                         if (string.IsNullOrEmpty(ContentPlatForm)) throw new Exception("主播平台不能为空!");
                         if (string.IsNullOrEmpty(LiveAnchor)) throw new Exception("主播ip不能为空!");
                         if (string.IsNullOrEmpty(Category)) throw new Exception("品类名称不能为空!");
@@ -318,7 +320,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                         if (string.IsNullOrEmpty(ItemDetails)) throw new Exception("品相名称不能为空!");
                         if (string.IsNullOrEmpty(Item)) throw new Exception("商品名称不能为空!");
                         if (string.IsNullOrEmpty(TakeGoodsDate)) throw new Exception("带货时间不能为空!");
-                        if (string.IsNullOrEmpty(TakeGoodsType)&&(TakeGoodsType!="下单"||TakeGoodsType!="退款")) throw new Exception("带货类型必须是'下单'或'退款'");
+                        if (string.IsNullOrEmpty(TakeGoodsType) && (TakeGoodsType != "下单" || TakeGoodsType != "退款")) throw new Exception("带货类型必须是'下单'或'退款'");
                         if (string.IsNullOrEmpty(TakeGoodsQuantity)) throw new Exception("数量不能为空!");
                         if (string.IsNullOrEmpty(TotalPrice)) throw new Exception("总价不能为空!");
                         if (string.IsNullOrEmpty(OrderNum)) throw new Exception("订单量不能为空!");
@@ -348,7 +350,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("template")]
-        public async Task<FileStreamResult> ExportTemplateAsync() {
+        public async Task<FileStreamResult> ExportTemplateAsync()
+        {
             List<ImportTemplate> res = new List<ImportTemplate>();
             var stream = ExportExcelHelper.ExportExcel(res);
             var result = File(stream, "application/vnd.ms-excel", "带货数据导入模板.xls");

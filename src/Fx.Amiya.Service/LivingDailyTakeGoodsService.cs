@@ -328,7 +328,7 @@ namespace Fx.Amiya.Service
                 var invalidContentPlatform = import.Select(e => e.ContentPlatForm).Where(e => !liveanchorList.Select(e => e.ContentPlateFormName).ToList().Contains(e)).ToList();
                 if (invalidContentPlatform.Count > 0)
                 {
-                    throw new Exception($"{string.Join(",", invalidContentPlatform)}平台名称错误");
+                    throw new Exception($"平台:{string.Join(",", invalidContentPlatform)}不存在");
                 }
                 var goods = await itemInfoService.GetValidItemInfoAsync();
                 List<LivingDailyTakeGoods> list = new List<LivingDailyTakeGoods>();
