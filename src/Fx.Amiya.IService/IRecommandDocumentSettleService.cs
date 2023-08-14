@@ -19,7 +19,7 @@ namespace Fx.Amiya.IService
         /// <param name="accountType"></param>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<RecommandDocumentSettleDto>> GetAllAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, string keyword);
+        Task<List<RecommandDocumentSettleDto>> GetAllAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, int chooseHospitalId, string keyword);
         /// <summary>
         /// 根据对账单获取回款单未回款的数据
         /// </summary>

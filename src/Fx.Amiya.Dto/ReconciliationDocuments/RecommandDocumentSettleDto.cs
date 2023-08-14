@@ -13,6 +13,7 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         public bool IsCerateBill { get; set; }
         public string BelongCompany { get; set; }
         public string BelongCompany2 { get; set; }
+        public int HospitalId { get; set; }
         public string HospitalName { get; set; }
         public string OrderId { get; set; }
         /// <summary>

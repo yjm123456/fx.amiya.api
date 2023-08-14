@@ -61,6 +61,11 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public decimal AccountPrice { get; set; }
 
+        /// <summary>
+        /// 对账医院id
+        /// </summary>
+        public int HospitalId { get; set; }
+
         public AmiyaEmployee AmiyaEmployee { get; set; }
         /// <summary>
         /// 对账单

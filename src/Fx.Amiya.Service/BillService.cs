@@ -509,7 +509,7 @@ namespace Fx.Amiya.Service
             {
                 endDate = endDate.Value.Date.AddDays(1);
             }
-            var record = await recommandDocumentSettleService.GetAllAsync(startDate, endDate, isSettle, accountType, keyword);
+            var record = await recommandDocumentSettleService.GetAllAsync(startDate, endDate, isSettle, accountType, chooseHospitalId, keyword);
 
             FxPageInfo<RecommandDocumentSettleDto> fxPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();
             var selectResult = record.OrderByDescending(x => x.CreateDate).ToList();
@@ -539,21 +539,6 @@ namespace Fx.Amiya.Service
                 if (!string.IsNullOrEmpty(x.RecommandDocumentId) && x.RecommandDocumentId != "string")
                 {
                     var reconciliationDocumentsInfo = await reconciliationDocumentsService.GetByIdAsync(x.RecommandDocumentId);
-                    //排除连天美与维多利亚医院
-                    if (chooseHospitalId == 0)
-                    {
-                        if (reconciliationDocumentsInfo.HospitalId == 16 || reconciliationDocumentsInfo.HospitalId == 37)
-                        {
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        if (reconciliationDocumentsInfo.HospitalId != chooseHospitalId)
-                        {
-                            continue;
-                        }
-                    }
                     recommandDocumentSettleDto.HospitalName = reconciliationDocumentsInfo.HospitalName;
                     recommandDocumentSettleDto.OrderId = x.OrderId;
                     recommandDocumentSettleDto.DealInfoId = x.DealInfoId;
@@ -569,14 +554,6 @@ namespace Fx.Amiya.Service
                     recommandDocumentSettleDto.AccountTypeText = x.AccountTypeText;
                     recommandDocumentSettleDto.InformationPrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.ReturnBackPricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
                     recommandDocumentSettleDto.SystemUpdatePrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.SystemUpdatePricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
-                }
-                else
-                {
-                    //排除连天美与维多利亚医院
-                    if (chooseHospitalId == 16 || chooseHospitalId == 37)
-                    {
-                        continue;
-                    }
                 }
                 if (x.BelongEmpId.HasValue)
                 {
@@ -646,7 +623,7 @@ namespace Fx.Amiya.Service
             {
                 endDate = endDate.Value.Date.AddDays(1);
             }
-            var record = await recommandDocumentSettleService.GetAllAsync(startDate, endDate, isSettle, accountType, keyword);
+            var record = await recommandDocumentSettleService.GetAllAsync(startDate, endDate, isSettle, accountType, chooseHospitalId, keyword);
 
             var selectResult = record.OrderByDescending(x => x.CreateDate).ToList();
             List<RecommandDocumentSettleDto> recommandDocumentSettleDtos = new List<RecommandDocumentSettleDto>();
@@ -676,21 +653,7 @@ namespace Fx.Amiya.Service
                 if (!string.IsNullOrEmpty(x.RecommandDocumentId) && x.RecommandDocumentId != "string")
                 {
                     var reconciliationDocumentsInfo = await reconciliationDocumentsService.GetByIdAsync(x.RecommandDocumentId);
-                    //排除连天美与维多利亚医院
-                    if (chooseHospitalId == 0)
-                    {
-                        if (reconciliationDocumentsInfo.HospitalId == 16 || reconciliationDocumentsInfo.HospitalId == 37)
-                        {
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        if (reconciliationDocumentsInfo.HospitalId != chooseHospitalId)
-                        {
-                            continue;
-                        }
-                    }
+                   
                     recommandDocumentSettleDto.HospitalName = reconciliationDocumentsInfo.HospitalName;
                     recommandDocumentSettleDto.OrderId = x.OrderId;
                     recommandDocumentSettleDto.DealInfoId = x.DealInfoId;
@@ -706,14 +669,6 @@ namespace Fx.Amiya.Service
                     recommandDocumentSettleDto.AccountTypeText = x.AccountTypeText;
                     recommandDocumentSettleDto.InformationPrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.ReturnBackPricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
                     recommandDocumentSettleDto.SystemUpdatePrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.SystemUpdatePricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
-                }
-                else
-                {
-                    //排除连天美与维多利亚医院
-                    if (chooseHospitalId == 16 || chooseHospitalId == 37)
-                    {
-                        continue;
-                    }
                 }
                 if (x.BelongEmpId.HasValue)
                 {
@@ -745,7 +700,7 @@ namespace Fx.Amiya.Service
                         recommandDocumentSettleDto.DealDate = dealInfo.DealDate;
                         var contentPlatFormOrderInfo = await contentPlateFormOrderService.GetByOrderIdAsync(x.OrderId);
                         recommandDocumentSettleDto.GoodsName = contentPlatFormOrderInfo.GoodsName;
-                        recommandDocumentSettleDto.Phone = isHidePhone == true? ServiceClass.GetIncompletePhone(contentPlatFormOrderInfo.Phone):contentPlatFormOrderInfo.Phone;
+                        recommandDocumentSettleDto.Phone = isHidePhone == true ? ServiceClass.GetIncompletePhone(contentPlatFormOrderInfo.Phone) : contentPlatFormOrderInfo.Phone;
                         break;
                     case (int)OrderFrom.BuyAgainOrder:
                         var customerHospitalConsume = await customerHospitalConsumeService.GetByConsumeIdAsync(x.DealInfoId);

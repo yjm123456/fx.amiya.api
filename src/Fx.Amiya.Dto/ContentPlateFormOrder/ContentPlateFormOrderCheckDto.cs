@@ -63,6 +63,10 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 对账单id
         /// </summary>
         public string ReconciliationDocumentsId { get; set; }
+        /// <summary>
+        /// 医院id
+        /// </summary>
+        public int HospitalId { get; set; }
 
     }
 }

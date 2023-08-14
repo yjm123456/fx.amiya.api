@@ -62,5 +62,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 对账单id
         /// </summary>
         public string ReconciliationDocumentsId { get; set; }
+
+        /// <summary>
+        /// 对账医院id
+        /// </summary>
+        public int HospitalId { get; set; }
     }
 }

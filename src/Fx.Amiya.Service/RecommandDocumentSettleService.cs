@@ -26,11 +26,13 @@ namespace Fx.Amiya.Service
             this.liveAnchorService = liveAnchorService;
         }
 
-        public async Task<List<RecommandDocumentSettleDto>> GetAllAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, string keyword)
+        public async Task<List<RecommandDocumentSettleDto>> GetAllAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, int chooseHospitalId, string keyword)
         {
             var record = _dalRecommandDocumentSettle.GetAll().Include(x => x.AmiyaEmployee)
               .Where(e => (string.IsNullOrEmpty(keyword) || e.RecommandDocumentId.Contains(keyword) || e.OrderId.Contains(keyword) || e.DealInfoId.Contains(keyword)))
               .Where(e => !isSettle.HasValue || e.IsSettle == isSettle.Value)
+              .Where(e => !startDate.HasValue || e.CreateDate >= startDate)
+              .Where(e => chooseHospitalId == 0 || e.HospitalId == chooseHospitalId)
               .Where(e => !startDate.HasValue || e.CreateDate >= startDate)
               .Where(e => !endDate.HasValue || e.CreateDate <= endDate)
               .Where(e => !accountType.HasValue || e.AccountType == accountType).OrderByDescending(x => x.CreateDate)
@@ -41,14 +43,15 @@ namespace Fx.Amiya.Service
                   OrderId = e.OrderId,
                   DealInfoId = e.DealInfoId,
                   OrderFrom = e.OrderFrom,
+                  HospitalId = e.HospitalId,
                   OrderFromText = ServiceClass.GetOrderFromText(e.OrderFrom),
                   IsOldCustomer = e.IsOldCustomer,
                   IsOldCustomerText = e.IsOldCustomer == true ? "老客业绩" : "新客业绩",
                   OrderPrice = e.OrderPrice,
                   ReturnBackPrice = e.ReturnBackPrice,
                   CreateDate = e.CreateDate,
-                  RecolicationPrice=e.RecolicationPrice,
-                  CreateEmpId=e.CreateEmpId,
+                  RecolicationPrice = e.RecolicationPrice,
+                  CreateEmpId = e.CreateEmpId,
                   IsSettle = e.IsSettle,
                   SettleDate = e.SettleDate,
                   BelongLiveAnchorAccount = e.BelongLiveAnchorAccount,
@@ -56,10 +59,15 @@ namespace Fx.Amiya.Service
                   CreateByEmpName = e.AmiyaEmployee.Name,
                   AccountTypeText = e.AccountType == true ? "出账" : "入账",
                   AccountPrice = e.AccountPrice,
-                  CustomerServiceSettlePrice=e.CustomerServiceSettlePrice
+                  CustomerServiceSettlePrice = e.CustomerServiceSettlePrice
               });
 
-            return await record.ToListAsync();
+            var result = await record.ToListAsync();
+            if (chooseHospitalId == 0)
+            {
+                result = result.Where(x => x.HospitalId != 16 && x.HospitalId != 37).ToList();
+            }
+            return result;
         }
 
         public async Task<List<RecommandDocumentSettleDto>> GetRecommandDocumentSettleAsync(List<string> recommandDocumentIds, bool? isSettle)
@@ -110,11 +118,12 @@ namespace Fx.Amiya.Service
             recommandDocumentSettle.CreateBy = addRecommandDocumentSettleDto.CreateBy;
             recommandDocumentSettle.AccountType = addRecommandDocumentSettleDto.AccountType;
             recommandDocumentSettle.AccountPrice = addRecommandDocumentSettleDto.AccountPrice;
+            recommandDocumentSettle.HospitalId = addRecommandDocumentSettleDto.HospitalId;
             await _dalRecommandDocumentSettle.AddAsync(recommandDocumentSettle, true);
         }
 
 
-        public async Task UpdateIsRerturnBackAsync(string Id,DateTime returnBackDate)
+        public async Task UpdateIsRerturnBackAsync(string Id, DateTime returnBackDate)
         {
             var result = await _dalRecommandDocumentSettle.GetAll().Where(x => x.Id == Id).FirstOrDefaultAsync();
             if (result != null)

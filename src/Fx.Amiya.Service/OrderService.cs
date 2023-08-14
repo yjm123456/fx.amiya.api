@@ -2057,7 +2057,7 @@ namespace Fx.Amiya.Service
                     addCheckPic.PictureUrl = x;
                     await _orderCheckPictureService.AddAsync(addCheckPic);
                 }
-                //对账单回款表插入数据
+                //对账单审核记录表插入数据
                 AddRecommandDocumentSettleDto addRecommandDocumentSettleDto = new AddRecommandDocumentSettleDto();
                 addRecommandDocumentSettleDto.RecommandDocumentId = input.ReconciliationDocumentsId;
                 addRecommandDocumentSettleDto.OrderId = input.Id.ToString();
@@ -2072,6 +2072,7 @@ namespace Fx.Amiya.Service
                 addRecommandDocumentSettleDto.AccountPrice = input.CheckPrice - input.SettlePrice;
                 addRecommandDocumentSettleDto.OrderPrice = order.ActualPayment.HasValue ? order.ActualPayment.Value : 0.00M;
                 addRecommandDocumentSettleDto.IsOldCustomer = true;
+                addRecommandDocumentSettleDto.HospitalId = input.HospitalId;
                 await recommandDocumentSettleService.AddAsync(addRecommandDocumentSettleDto);
                 unitOfWork.Commit();
             }

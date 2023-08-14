@@ -1054,6 +1054,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.InformationPrice = updateVo.InformationPrice;
             updateDto.CheckPicture = updateVo.CheckPicture;
             updateDto.ReconciliationDocumentsId = updateVo.ReconciliationDocumentsId;
+            updateDto.HospitalId = updateVo.HospitalId;
             await _orderService.CheckContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
         }

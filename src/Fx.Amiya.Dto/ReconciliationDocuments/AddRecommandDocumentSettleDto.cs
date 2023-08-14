@@ -51,5 +51,10 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// 出入账金额
         /// </summary>
         public decimal AccountPrice { get; set; }
+
+        /// <summary>
+        /// 医院id
+        /// </summary>
+        public int HospitalId { get; set; }
     }
 }
