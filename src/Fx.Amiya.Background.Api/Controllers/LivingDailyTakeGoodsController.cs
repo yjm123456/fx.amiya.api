@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Background.Api.Vo;
+using Fx.Amiya.Background.Api.Vo.ItemInfo;
 using Fx.Amiya.Background.Api.Vo.LivingDailyTakeGoods.Input;
 using Fx.Amiya.Background.Api.Vo.LivingDailyTakeGoods.Output;
 using Fx.Amiya.Dto.LivingDailyTakeGoods.Input;
@@ -6,10 +7,13 @@ using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
+using Jd.Api.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,7 +34,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 构造函数
         /// </summary>
         /// <param name="LivingDailyTakeGoodsService"></param>
-        public LivingDailyTakeGoodsController(ILivingDailyTakeGoodsService LivingDailyTakeGoodsService,IHttpContextAccessor httpContextAccessor)
+        public LivingDailyTakeGoodsController(ILivingDailyTakeGoodsService LivingDailyTakeGoodsService, IHttpContextAccessor httpContextAccessor)
         {
             _LivingDailyTakeGoodsService = LivingDailyTakeGoodsService;
             this.httpContextAccessor = httpContextAccessor;
@@ -264,6 +268,92 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.EliminateCardGMV = data.EliminateCardGMV;
             return ResultData<AutoCompleteTakeGoodsGmvVo>.Success().AddData("data", result);
         }
+        /// <summary>
+        /// 导入带货数据
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        [HttpPost("importTakeGoodsData")]
+        public async Task<ResultData> ImportTakeGoodsDataAsync(IFormFile file)
+        {
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var employeeId = Convert.ToInt32(employee.Id);
+            if (file == null || file.Length <= 0)
+                throw new Exception("请检查文件是否存在");
+            List<LivingDailyTakeGoodsImportDto> addDtoList = new List<LivingDailyTakeGoodsImportDto>();
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);//取到文件流
 
+                using (ExcelPackage package = new ExcelPackage(stream))
+                {
+
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets["sheet1"];
+                    if (worksheet == null)
+                    {
+                        throw new Exception("请另外新建一个excel文件'.xlsx'后将填写好的数据复制到新文件中上传，勿采用当前导出文件进行上传！");
+                    }
+                    //获取表格的列数和行数
+                    int rowCount = worksheet.Dimension.Rows;
+                    
+                    for (int x = 2; x <= rowCount; x++)
+                    {
+                        LivingDailyTakeGoodsImportDto addDto = new LivingDailyTakeGoodsImportDto();
+                        var ContentPlatForm = worksheet.Cells[x, 1].Value.ToString();
+                        var LiveAnchor = worksheet.Cells[x, 2].Value.ToString();
+                        var Category = worksheet.Cells[x, 3].Value.ToString();
+                        var Brand = worksheet.Cells[x, 4].Value.ToString();
+                        var ItemDetails = worksheet.Cells[x, 5].Value.ToString();
+                        var Item = worksheet.Cells[x, 6].Value.ToString();
+                        var TakeGoodsDate = worksheet.Cells[x, 7].Value.ToString();
+                        var TakeGoodsType = worksheet.Cells[x, 8].Value.ToString();
+                        var TakeGoodsQuantity = worksheet.Cells[x, 9].Value.ToString();
+                        var TotalPrice = worksheet.Cells[x, 10].Value.ToString();
+                        var OrderNum = worksheet.Cells[x, 11].Value.ToString();
+                        var Remark = worksheet.Cells[x, 12].Value.ToString();
+                        if (string.IsNullOrEmpty(ContentPlatForm)) throw new Exception("主播平台不能为空!");
+                        if (string.IsNullOrEmpty(LiveAnchor)) throw new Exception("主播ip不能为空!");
+                        if (string.IsNullOrEmpty(Category)) throw new Exception("品类名称不能为空!");
+                        if (string.IsNullOrEmpty(Brand)) throw new Exception("品牌名称不能为空!");
+                        if (string.IsNullOrEmpty(ItemDetails)) throw new Exception("品相名称不能为空!");
+                        if (string.IsNullOrEmpty(Item)) throw new Exception("商品名称不能为空!");
+                        if (string.IsNullOrEmpty(TakeGoodsDate)) throw new Exception("带货时间不能为空!");
+                        if (string.IsNullOrEmpty(TakeGoodsType)&&(TakeGoodsType!="下单"||TakeGoodsType!="退款")) throw new Exception("带货类型必须是'下单'或'退款'");
+                        if (string.IsNullOrEmpty(TakeGoodsQuantity)) throw new Exception("数量不能为空!");
+                        if (string.IsNullOrEmpty(TotalPrice)) throw new Exception("总价不能为空!");
+                        if (string.IsNullOrEmpty(OrderNum)) throw new Exception("订单量不能为空!");
+                        addDto.ContentPlatForm = ContentPlatForm;
+                        addDto.LiveAnchor = LiveAnchor;
+                        addDto.Category = Category;
+                        addDto.Brand = Brand;
+                        addDto.ItemDetails = ItemDetails;
+                        addDto.Item = Item;
+                        addDto.TakeGoodsDate = Convert.ToDateTime(TakeGoodsDate);
+                        addDto.TakeGoodsType = TakeGoodsType;
+                        addDto.TakeGoodsQuantity = Convert.ToInt32(TakeGoodsQuantity);
+                        addDto.TotalPrice = Convert.ToDecimal(TotalPrice);
+                        addDto.OrderNum = Convert.ToInt32(OrderNum);
+                        addDto.Remark = Remark;
+                        addDto.ContentPlatForm = ContentPlatForm;
+                        addDto.CreateBy = employeeId;
+                        addDtoList.Add(addDto);
+                    }
+                }
+            }
+            await _LivingDailyTakeGoodsService.ImportTakeGoodsDataAsync(addDtoList);
+            return ResultData.Success();
+        }
+        /// <summary>
+        /// 下载模板
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("template")]
+        public async Task<FileStreamResult> ExportTemplateAsync() {
+            List<ImportTemplate> res = new List<ImportTemplate>();
+            var stream = ExportExcelHelper.ExportExcel(res);
+            var result = File(stream, "application/vnd.ms-excel", "带货数据导入模板.xls");
+            //application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+            return result;
+        }
     }
 }

@@ -129,5 +129,10 @@ namespace Fx.Amiya.IService
         /// <param name="itemDetailsId">品项id</param>
         /// <returns></returns>
         Task<List<BaseKeyValueDto>> GetItemNameByBrandIdAndCategoryIdAsync(string brandId, string categoryId, string itemDetailsId);
+        /// <summary>
+        /// 获取有效带货商品的品牌类别,品项信息
+        /// </summary>
+        /// <returns></returns>
+        Task<List<GoodsItemInfoDto>> GetValidItemInfoAsync();
     }
 }

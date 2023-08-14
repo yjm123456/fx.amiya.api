@@ -49,5 +49,11 @@ namespace Fx.Amiya.IService
         /// <param name="takeGoodsDate">带货时间</param>
         /// <returns></returns>
         Task<AutoCompleteTakeGoodsGmvDto> AutoCompleteTakeGoodsGmvDataAsync(DateTime takeGoodsDate,string monthTargetId);
+        /// <summary>
+        /// 导入带货数据
+        /// </summary>
+        /// <param name="addDto"></param>
+        /// <returns></returns>
+        Task ImportTakeGoodsDataAsync(List<LivingDailyTakeGoodsImportDto> import);
     }
 }
