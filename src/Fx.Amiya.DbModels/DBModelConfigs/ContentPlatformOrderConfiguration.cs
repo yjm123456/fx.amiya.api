@@ -28,7 +28,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.NetWorkConsulationName).HasColumnName("network_consulation_name").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(e => e.GoodsId).HasColumnName("goods_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(e => e.HospitalDepartmentId).HasColumnName("hospital_department_id").HasColumnType("varchar(50)").IsRequired(false);
-            builder.Property(e => e.CustomerName).HasColumnName("customer_name").HasColumnType("VARCHAR(50)").IsRequired(false);
+            builder.Property(e => e.CustomerName).HasColumnName("customer_name").HasColumnType("VARCHAR(100)").IsRequired(false);
             builder.Property(e => e.AddOrderPrice).HasColumnName("add_order_price").HasColumnType("DECIMAL(12,2)").IsRequired();
             builder.Property(e => e.Phone).HasColumnName("phone").HasColumnType("VARCHAR(20)").IsRequired();
             builder.Property(e => e.AppointmentDate).HasColumnName("appointment_date").HasColumnType("DATETIME").IsRequired(false);

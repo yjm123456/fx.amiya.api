@@ -14,7 +14,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.ToTable("tbl_customer_base_info");
             builder.HasKey(t => t.Id);
             builder.Property(t => t.Id).HasColumnName("id").HasColumnType("int").IsRequired();
-            builder.Property(t => t.Name).HasColumnName("name").HasColumnType("varchar(20)").IsRequired(false);
+            builder.Property(t => t.Name).HasColumnName("name").HasColumnType("varchar(100)").IsRequired(false);
             builder.Property(t => t.RealName).HasColumnName("real_name").HasColumnType("varchar(45)").IsRequired(false);
             // builder.Property(t => t.Age).HasColumnName("age").HasColumnType("int").IsRequired();
             builder.Property(t => t.Sex).HasColumnName("sex").HasColumnType("char(1)").IsRequired(false);
