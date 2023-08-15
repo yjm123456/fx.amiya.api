@@ -239,7 +239,7 @@ namespace Fx.Amiya.Service
                 var reconciliationDocuments = await dalReconciliationDocuments.GetAll().Include(x => x.HospitalInfo).SingleOrDefaultAsync(e => e.Id == id);
                 if (reconciliationDocuments == null)
                 {
-                    throw new Exception("对账编号错误！");
+                    return new ReconciliationDocumentsDto();
                 }
 
                 ReconciliationDocumentsDto reconciliationDocumentsDto = new ReconciliationDocumentsDto();

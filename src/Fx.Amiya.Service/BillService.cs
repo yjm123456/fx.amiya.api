@@ -519,26 +519,22 @@ namespace Fx.Amiya.Service
                 RecommandDocumentSettleDto recommandDocumentSettleDto = new RecommandDocumentSettleDto();
                 recommandDocumentSettleDto.RecommandDocumentId = x.RecommandDocumentId;
                 recommandDocumentSettleDto.CustomerServiceSettlePrice = x.CustomerServiceSettlePrice;
-                if (!string.IsNullOrEmpty(x.RecommandDocumentId))
-                {
-                    var reconciliationDocument = await reconciliationDocumentsService.GetByIdAsync(x.RecommandDocumentId);
-                    if (!string.IsNullOrEmpty(reconciliationDocument.BillId))
-                    {
-                        var bill = await this.GetByIdAsync(reconciliationDocument.BillId);
-                        recommandDocumentSettleDto.IsCerateBill = true;
-                        recommandDocumentSettleDto.BelongCompany = bill.CollectionCompanyName;
-                    }
-                    if (!string.IsNullOrEmpty(reconciliationDocument.BillId2))
-                    {
-                        var bill = await this.GetByIdAsync(reconciliationDocument.BillId2);
-                        recommandDocumentSettleDto.IsCerateBill = true;
-                        recommandDocumentSettleDto.BelongCompany2 = bill.CollectionCompanyName;
-                    }
-                }
                 recommandDocumentSettleDto.CreateDate = x.CreateDate;
                 if (!string.IsNullOrEmpty(x.RecommandDocumentId) && x.RecommandDocumentId != "string")
                 {
                     var reconciliationDocumentsInfo = await reconciliationDocumentsService.GetByIdAsync(x.RecommandDocumentId);
+                    if (!string.IsNullOrEmpty(reconciliationDocumentsInfo.BillId))
+                    {
+                        var bill = await this.GetByIdAsync(reconciliationDocumentsInfo.BillId);
+                        recommandDocumentSettleDto.IsCerateBill = true;
+                        recommandDocumentSettleDto.BelongCompany = bill.CollectionCompanyName;
+                    }
+                    if (!string.IsNullOrEmpty(reconciliationDocumentsInfo.BillId2))
+                    {
+                        var bill = await this.GetByIdAsync(reconciliationDocumentsInfo.BillId2);
+                        recommandDocumentSettleDto.IsCerateBill = true;
+                        recommandDocumentSettleDto.BelongCompany2 = bill.CollectionCompanyName;
+                    }
                     recommandDocumentSettleDto.HospitalName = reconciliationDocumentsInfo.HospitalName;
                     recommandDocumentSettleDto.OrderId = x.OrderId;
                     recommandDocumentSettleDto.DealInfoId = x.DealInfoId;
@@ -552,8 +548,10 @@ namespace Fx.Amiya.Service
                     recommandDocumentSettleDto.AccountPrice = x.AccountPrice;
                     recommandDocumentSettleDto.CreateByEmpName = x.CreateByEmpName;
                     recommandDocumentSettleDto.AccountTypeText = x.AccountTypeText;
-                    recommandDocumentSettleDto.InformationPrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.ReturnBackPricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
-                    recommandDocumentSettleDto.SystemUpdatePrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.SystemUpdatePricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
+                    if (reconciliationDocumentsInfo.ReturnBackPricePercent.HasValue)
+                        recommandDocumentSettleDto.InformationPrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.ReturnBackPricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
+                    if (reconciliationDocumentsInfo.SystemUpdatePricePercent.HasValue)
+                        recommandDocumentSettleDto.SystemUpdatePrice = Math.Round(x.RecolicationPrice.Value * reconciliationDocumentsInfo.SystemUpdatePricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
                 }
                 if (x.BelongEmpId.HasValue)
                 {
@@ -632,28 +630,22 @@ namespace Fx.Amiya.Service
                 RecommandDocumentSettleDto recommandDocumentSettleDto = new RecommandDocumentSettleDto();
                 recommandDocumentSettleDto.RecommandDocumentId = x.RecommandDocumentId;
                 recommandDocumentSettleDto.CustomerServiceSettlePrice = x.CustomerServiceSettlePrice;
-                if (!string.IsNullOrEmpty(x.RecommandDocumentId))
-                {
-                    var reconciliationDocument = await reconciliationDocumentsService.GetByIdAsync(x.RecommandDocumentId);
-                    if (!string.IsNullOrEmpty(reconciliationDocument.BillId))
-                    {
-                        var bill = await this.GetByIdAsync(reconciliationDocument.BillId);
-                        recommandDocumentSettleDto.IsCerateBill = true;
-                        recommandDocumentSettleDto.BelongCompany = bill.CollectionCompanyName;
-                    }
-                    if (!string.IsNullOrEmpty(reconciliationDocument.BillId2))
-                    {
-                        var bill = await this.GetByIdAsync(reconciliationDocument.BillId2);
-                        recommandDocumentSettleDto.IsCerateBill = true;
-                        recommandDocumentSettleDto.BelongCompany2 = bill.CollectionCompanyName;
-                    }
-                }
-
                 recommandDocumentSettleDto.CreateDate = x.CreateDate;
                 if (!string.IsNullOrEmpty(x.RecommandDocumentId) && x.RecommandDocumentId != "string")
                 {
                     var reconciliationDocumentsInfo = await reconciliationDocumentsService.GetByIdAsync(x.RecommandDocumentId);
-                   
+                    if (!string.IsNullOrEmpty(reconciliationDocumentsInfo.BillId))
+                    {
+                        var bill = await this.GetByIdAsync(reconciliationDocumentsInfo.BillId);
+                        recommandDocumentSettleDto.IsCerateBill = true;
+                        recommandDocumentSettleDto.BelongCompany = bill.CollectionCompanyName;
+                    }
+                    if (!string.IsNullOrEmpty(reconciliationDocumentsInfo.BillId2))
+                    {
+                        var bill = await this.GetByIdAsync(reconciliationDocumentsInfo.BillId2);
+                        recommandDocumentSettleDto.IsCerateBill = true;
+                        recommandDocumentSettleDto.BelongCompany2 = bill.CollectionCompanyName;
+                    }
                     recommandDocumentSettleDto.HospitalName = reconciliationDocumentsInfo.HospitalName;
                     recommandDocumentSettleDto.OrderId = x.OrderId;
                     recommandDocumentSettleDto.DealInfoId = x.DealInfoId;
