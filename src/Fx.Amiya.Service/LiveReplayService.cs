@@ -86,7 +86,7 @@ namespace Fx.Amiya.Service
                 LiveDuration = e.LiveDuration,
                 GMV = e.GMV,
                 LivePersonnel = e.LivePersonnel
-            }).Skip((pageSize - 1) * pageNum).Take(pageSize).ToListAsync();
+            }).OrderByDescending(e=>e.LiveDate).Skip((pageSize - 1) * pageNum).Take(pageSize).ToListAsync();
             return fxPageInfo;
         }
         
