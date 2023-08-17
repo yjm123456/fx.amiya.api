@@ -331,13 +331,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 根据品牌品类id,品项id获取项目id和名称
         /// </summary>
         /// <param name="brandId">品牌id</param>
-        /// <param name="categoryId">品类id</param>
         /// <param name="itemDetailsId">品项id</param>
         /// <returns></returns>
         [HttpGet("getItemNameByBrandIdAndCategoryId")]
-        public async Task<ResultData<List<BaseIdAndNameVo>>> GetItemNameByBrandIdAndCategoryIdAsync(string brandId, string categoryId, string itemDetailsId)
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetItemNameByBrandIdAndCategoryIdAsync(string brandId,string itemDetailsId)
         {
-            var q = await itemInfoService.GetItemNameByBrandIdAndCategoryIdAsync(brandId, categoryId, itemDetailsId);
+            var q = await itemInfoService.GetItemNameByBrandIdAndCategoryIdAsync(brandId,itemDetailsId);
             var items = from d in q
                         select new BaseIdAndNameVo
                         {

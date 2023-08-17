@@ -65,7 +65,7 @@ namespace Fx.Amiya.Service
                                .Include(e => e.CreateEmployee)
                                .Include(e => e.UpdateEmployee)
                                where (keyword == null || d.Name.Contains(keyword) || d.Description.Contains(keyword))
-                               where (string.IsNullOrEmpty(brandId)|| d.BrandId==brandId)
+                               where (string.IsNullOrEmpty(brandId) || d.BrandId == brandId)
                                where (string.IsNullOrEmpty(categoryId) || d.CategoryId == categoryId)
                                where (string.IsNullOrEmpty(itemDetailsId) || d.ItemDetailsId == itemDetailsId)
                                && (valid == null || d.Valid == valid)
@@ -84,7 +84,7 @@ namespace Fx.Amiya.Service
                                    AppType = d.AppType,
                                    BrandId = d.BrandId,
                                    CategoryId = d.CategoryId,
-                                   ItemDetailsId=d.ItemDetailsId,
+                                   ItemDetailsId = d.ItemDetailsId,
                                    IsLimitBuy = d.IsLimitBuy,
                                    LimitBuyQuantity = d.LimitBuyQuantity,
                                    Commitment = d.Commitment,
@@ -613,10 +613,10 @@ namespace Fx.Amiya.Service
         /// <param name="itemDetailsId">品项id</param>
         /// <returns></returns>
         /// <returns></returns>
-        public async Task<List<BaseKeyValueDto>> GetItemNameByBrandIdAndCategoryIdAsync(string brandId, string categoryId, string itemDetailsId)
+        public async Task<List<BaseKeyValueDto>> GetItemNameByBrandIdAndCategoryIdAsync(string brandId, string itemDetailsId)
         {
             var items = from d in dalItemInfo.GetAll()
-                        where (d.BrandId == brandId && d.CategoryId == categoryId && d.ItemDetailsId == itemDetailsId && d.Valid == true)
+                        where (d.BrandId == brandId && d.ItemDetailsId == itemDetailsId && d.Valid == true)
                         select new BaseKeyValueDto
                         {
                             Key = d.Id.ToString(),
@@ -640,14 +640,14 @@ namespace Fx.Amiya.Service
                        where goods.ItemDetailsId == itemDetail.Id
                        select new GoodsItemInfoDto
                        {
-                           Category=category.CategoryName,
-                           CategoryId=category.Id,
-                           Brand=brand.BrandName,
-                           BrandId=brand.Id,
-                           ItemDetail=itemDetail.ItemDetailsName,
-                           ItemDetailId=itemDetail.Id,
-                           GoodsId=goods.Id,
-                           GoodsName=goods.Name
+                           Category = category.CategoryName,
+                           CategoryId = category.Id,
+                           Brand = brand.BrandName,
+                           BrandId = brand.Id,
+                           ItemDetail = itemDetail.ItemDetailsName,
+                           ItemDetailId = itemDetail.Id,
+                           GoodsId = goods.Id,
+                           GoodsName = goods.Name
                        };
             return await data.ToListAsync();
         }
