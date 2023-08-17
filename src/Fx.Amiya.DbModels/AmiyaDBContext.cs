@@ -197,6 +197,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<HealthValue> HealthValues { get; set; }
         public virtual DbSet<WechatPayInfo> WechatPayInfos { get; set; }
         public virtual DbSet<RMFCustomerInfo> RMFCustomerInfos { get; set; }
+        public virtual DbSet<LiveReplay> LiveReplays { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -388,6 +389,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new HealthValueConfigration());
             modelBuilder.ApplyConfiguration(new WechatPayInfoConfiguration());
             modelBuilder.ApplyConfiguration(new RMFCustomerInfoConfiguration());
+            modelBuilder.ApplyConfiguration(new LiveReplayConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

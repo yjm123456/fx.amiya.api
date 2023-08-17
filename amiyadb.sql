@@ -180,3 +180,30 @@ CREATE TABLE `amiyadb`.`tbl_supplier_item_details` (
     
 -----------------------------------------------余建明 2023/08/01 END--------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+
+------------------------------------------王健 2023/08/17 BEGIN-------------------------------------------------
+
+-------------直播复盘表主表
+
+CREATE TABLE `tbl_live_replay` (
+	`id` VARCHAR(100) NOT NULL,
+	`content_platform_id` VARCHAR(50) NOT NULL,
+	`liveanchor_id` INT(10) UNSIGNED NOT NULL,
+	`live_date` DATE NOT NULL,
+	`live_duration` INT(10) NOT NULL DEFAULT '0',
+	`gmv` DECIMAL(10,2) NOT NULL DEFAULT '0.00',
+	`live_personnel` VARCHAR(500) NOT NULL,
+	`create_date` DATE NOT NULL,
+	`update_date` DATE NULL DEFAULT NULL,
+	`valid` BIT(1) NOT NULL DEFAULT '0',
+	`delete_date` DATE NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+	INDEX `fk_to_contentplatform` (`content_platform_id`),
+	INDEX `fk_to_liveanchor` (`liveanchor_id`),
+	CONSTRAINT `fk_to_contentplatform` FOREIGN KEY (`content_platform_id`) REFERENCES `tbl_content_platform` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT `fk_to_liveanchor` FOREIGN KEY (`liveanchor_id`) REFERENCES `tbl_live_anchor` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+------------------------------------------王健 2023/08/17 END-------------------------------------------------
