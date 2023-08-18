@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto.LiveReplay.Input;
 using Fx.Amiya.Dto.LiveRepley;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -25,6 +26,8 @@ namespace Fx.Amiya.Service
         
         public async Task AddAsync(AddLiveReplayDto addDto)
         {
+            var replay = dalLiveReply.GetAll().Where(e => e.ContentPlatformId == addDto.ContentPlatformId && e.LiveAnchorId == addDto.LiveAnchorId && e.LiveDate.Date == addDto.LiveDate.Date&&e.Valid==true).FirstOrDefault();
+            if (replay != null) throw new Exception("当前添加的复盘记录已存在,请在已有记录上修改!");
             LiveReplay liveReplay = new LiveReplay();
             liveReplay.Id = Guid.NewGuid().ToString().Replace("-","");
             liveReplay.ContentPlatformId = addDto.ContentPlatformId;
@@ -65,15 +68,15 @@ namespace Fx.Amiya.Service
 
         }
         
-        public async Task<FxPageInfo<LiveReplayInfoDto>> GetListWithPageAsync(bool? valid, string keyWord,DateTime? date, int pageSize, int pageNum)
+        public async Task<FxPageInfo<LiveReplayInfoDto>> GetListWithPageAsync(QueryReplayDto query)
         {
             FxPageInfo<LiveReplayInfoDto> fxPageInfo = new FxPageInfo<LiveReplayInfoDto>();
             var replay =  dalLiveReply.GetAll()
                 .Include(e => e.Contentplatform)
                 .Include(e => e.LiveAnchor)
-                .Where(e => !date.HasValue || e.LiveDate == date.Value.Date)
-                .Where(e => !valid.HasValue || e.Valid == valid.Value)
-                .Where(e => string.IsNullOrEmpty(keyWord) || e.Contentplatform.ContentPlatformName.Contains(keyWord) || e.LiveAnchor.Name.Contains(keyWord));
+                .Where(e => !query.Date.HasValue || e.LiveDate == query.Date.Value.Date)
+                .Where(e => !query.Valid.HasValue || e.Valid == query.Valid.Value)
+                .Where(e => string.IsNullOrEmpty(query.KeyWord) || e.Contentplatform.ContentPlatformName.Contains(query.KeyWord) || e.LiveAnchor.Name.Contains(query.KeyWord));
             fxPageInfo.TotalCount =await replay.CountAsync();
             fxPageInfo.List =await replay.Select(e => new LiveReplayInfoDto
             {
@@ -86,10 +89,39 @@ namespace Fx.Amiya.Service
                 LiveDuration = e.LiveDuration,
                 GMV = e.GMV,
                 LivePersonnel = e.LivePersonnel
-            }).OrderByDescending(e=>e.LiveDate).Skip((pageSize - 1) * pageNum).Take(pageSize).ToListAsync();
+            }).OrderByDescending(e=>e.LiveDate).Skip((query.PageSize.Value - 1) * query.PageNum.Value).Take(query.PageSize.Value).ToListAsync();
             return fxPageInfo;
         }
-        
+        /// <summary>
+        /// 根据指定条件获取直播复盘数据
+        /// </summary>
+        /// <param name="contentPlatformId"></param>
+        /// <param name="liveAnchorId"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public async Task<LiveReplayInfoDto> GetFirstReplayAsync(QueryFirstReplayDto query)
+        {
+            FxPageInfo<LiveReplayInfoDto> fxPageInfo = new FxPageInfo<LiveReplayInfoDto>();
+            var replay = dalLiveReply.GetAll()
+                .Include(e => e.Contentplatform)
+                .Include(e => e.LiveAnchor)
+                .Where(e => e.Valid == true)
+                .Where(e=>e.ContentPlatformId==query.ContentPlatformId&&e.LiveAnchorId== query.LiveAnchorId && e.LiveDate.Date== query.Date.Date);
+            return await replay.Select(e => new LiveReplayInfoDto
+            {
+                Id = e.Id,
+                ContentPlatformId = e.ContentPlatformId,
+                ContentPlatformName = e.Contentplatform.ContentPlatformName,
+                LiveAnchorId = e.LiveAnchorId,
+                LiveAnchorName = e.LiveAnchor.Name,
+                LiveDate = e.LiveDate,
+                LiveDuration = e.LiveDuration,
+                GMV = e.GMV,
+                LivePersonnel = e.LivePersonnel
+            }).FirstOrDefaultAsync();
+            
+        }
+
         public async Task UpdateAsync(UpdateLiveReplayDto updateDto)
         {
             var replay =await dalLiveReply.GetAll().Where(e => e.Id == updateDto.Id && e.Valid == true).SingleOrDefaultAsync();

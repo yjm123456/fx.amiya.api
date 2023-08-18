@@ -1,8 +1,10 @@
 ﻿using Fx.Amiya.Background.Api.Vo.LiveReplay.Input;
 using Fx.Amiya.Background.Api.Vo.LiveReplay.Result;
 using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto.LiveReplay.Input;
 using Fx.Amiya.Dto.LiveRepley;
 using Fx.Amiya.IService;
+using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +21,7 @@ namespace Fx.Amiya.Background.Api.Controllers
     /// </summary>
     [Route("[controller]")]
     [ApiController]
+    [FxInternalAuthorize]
     public class LiveReplayController : ControllerBase
     {
         private readonly ILiveReplayService liveReplayService;
@@ -41,7 +44,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             liveReplay.LiveDate = addDto.LiveDate;
             liveReplay.LiveDuration = addDto.LiveDuration;
             liveReplay.GMV = addDto.GMV;
-            liveReplay.LivePersonnel =string.Join( ",", addDto.LivePersonnels);
+            liveReplay.LivePersonnel = string.Join(",", addDto.LivePersonnels);
             await liveReplayService.AddAsync(liveReplay);
             return ResultData.Success();
         }
@@ -64,7 +67,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("getById/{id}")]
         public async Task<ResultData<LiveReplayInfoVo>> GetByIdAsync(string id)
         {
-            var replay =await liveReplayService.GetByIdAsync(id);
+            var replay = await liveReplayService.GetByIdAsync(id);
             LiveReplayInfoVo liveReplayInfoVo = new LiveReplayInfoVo();
             liveReplayInfoVo.Id = replay.Id;
             liveReplayInfoVo.ContentPlatformId = replay.ContentPlatformId;
@@ -80,17 +83,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 分页获取信息
         /// </summary>
-        /// <param name="valid"></param>
-        /// <param name="keyWord"></param>
-        /// <param name="date"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="pageNum"></param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getListWithPage")]
-        public async Task<ResultData<FxPageInfo<LiveReplayInfoVo>>> GetListWithPageAsync([FromQuery]QueryReplayVo query)
+        public async Task<ResultData<FxPageInfo<LiveReplayInfoVo>>> GetListWithPageAsync([FromQuery] QueryReplayVo query)
         {
             FxPageInfo<LiveReplayInfoVo> fxPageInfo = new FxPageInfo<LiveReplayInfoVo>();
-            var replayList =await liveReplayService.GetListWithPageAsync(query.Valid,query.KeyWord,query.Date,query.PageSize.Value,query.PageNum.Value);
+            QueryReplayDto queryDto = new QueryReplayDto();
+            queryDto.Valid = query.Valid;
+            queryDto.KeyWord = query.KeyWord;
+            queryDto.Date = query.Date;
+            queryDto.PageSize = query.PageSize;
+            queryDto.PageNum = query.PageNum;
+            var replayList = await liveReplayService.GetListWithPageAsync(queryDto);
             fxPageInfo.TotalCount = replayList.TotalCount;
             fxPageInfo.List = replayList.List.Select(e => new LiveReplayInfoVo
             {
@@ -105,6 +110,36 @@ namespace Fx.Amiya.Background.Api.Controllers
                 LivePersonnels = e.LivePersonnel.Split(",").ToList()
             }).ToList();
             return ResultData<FxPageInfo<LiveReplayInfoVo>>.Success().AddData("data", fxPageInfo);
+        }
+        /// <summary>
+        /// 根据条件获取复盘信息
+        /// </summary>
+        /// <param name="query">平台id</param>
+        /// <returns></returns>
+        [HttpGet("getLiveReplay")]
+        public async Task<ResultData<List<LiveReplayInfoVo>>> GetFirstReplayAsync(QueryFirstReplayVo query)
+        {
+            List<LiveReplayInfoVo> list = new List<LiveReplayInfoVo>();
+            QueryFirstReplayDto queryDto = new QueryFirstReplayDto();
+            queryDto.ContentPlatformId = query.ContentPlatformId;
+            queryDto.LiveAnchorId = query.LiveAnchorId;
+            queryDto.Date = query.Date;
+            var replay = await liveReplayService.GetFirstReplayAsync(queryDto);
+            if (replay != null) {
+                LiveReplayInfoVo liveReplayInfoVo = new LiveReplayInfoVo();
+                liveReplayInfoVo.Id = replay.Id;
+                liveReplayInfoVo.ContentPlatformId = replay.ContentPlatformId;
+                liveReplayInfoVo.ContentPlatformName = replay.ContentPlatformName;
+                liveReplayInfoVo.LiveAnchorId = replay.LiveAnchorId;
+                liveReplayInfoVo.LiveAnchorName = replay.LiveAnchorName;
+                liveReplayInfoVo.LiveDate = replay.LiveDate;
+                liveReplayInfoVo.LiveDuration = replay.LiveDuration;
+                liveReplayInfoVo.GMV = replay.GMV;
+                liveReplayInfoVo.LivePersonnels = replay.LivePersonnel.Split(",").ToList();
+                list.Add(liveReplayInfoVo);
+            }
+            
+            return ResultData<List<LiveReplayInfoVo>>.Success().AddData("data", list);
         }
         /// <summary>
         /// 修改复盘表信息

@@ -15,7 +15,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
         {
             builder.ToTable("tbl_live_replay");
             builder.HasKey(e => e.Id);
-            builder.Property(e => e.Id).HasColumnName("id").HasColumnType("varchar(100)").IsRequired();
+            builder.Property(e => e.Id).HasColumnName("id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(e => e.ContentPlatformId).HasColumnName("content_platform_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(e => e.LiveAnchorId).HasColumnName("liveanchor_id").HasColumnType("int").IsRequired();
             builder.Property(e => e.LiveDate).HasColumnName("live_date").HasColumnType("datetime").IsRequired();
