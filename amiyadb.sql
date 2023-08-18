@@ -207,3 +207,26 @@ CREATE TABLE `tbl_live_replay` (
 );
 
 ------------------------------------------王健 2023/08/17 END-------------------------------------------------
+--直播复盘-成交数据
+CREATE TABLE `amiyadb`.`tbl_live_replay_product_deal_data` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `live_replay_id` VARCHAR(50) NOT NULL,
+  `replay_target` VARCHAR(100) NULL,
+  `data_target` DECIMAL(12,2) NOT NULL,
+  `last_living_data` DECIMAL(12,2) NOT NULL,
+  `last_living_compare` DECIMAL(12,2) NOT NULL,
+  `question_analize` VARCHAR(3000) NULL,
+  `later_period_solution` VARCHAR(3000) NULL,
+  `sort` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_to_live_replay_idx` (`live_replay_id` ASC) VISIBLE,
+  CONSTRAINT `fk_to_live_replay`
+    FOREIGN KEY (`live_replay_id`)
+    REFERENCES `amiyadb`.`tbl_live_replay` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
