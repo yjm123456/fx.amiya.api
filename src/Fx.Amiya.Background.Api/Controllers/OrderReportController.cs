@@ -47,6 +47,25 @@ namespace Fx.Amiya.Background.Api.Controllers
         private ILiveAnchorDailyTargetService _liveAnchorDailyTargetService;
         private IOperationLogService operatonLogService;
         private ILiveAnchorService liveAnchorService;
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="orderService"></param>
+        /// <param name="sendContentPlatFormOrderInfoService"></param>
+        /// <param name="appointmentService"></param>
+        /// <param name="httpContextAccessor"></param>
+        /// <param name="shootingAndClipService"></param>
+        /// <param name="operationLogService"></param>
+        /// <param name="customerService"></param>
+        /// <param name="contentPlatFormOrderService"></param>
+        /// <param name="hospitalInfoService"></param>
+        /// <param name="contentPlatFormOrderDealInfoService"></param>
+        /// <param name="sendOrderInfoService"></param>
+        /// <param name="customerHospitalConsumeService"></param>
+        /// <param name="shoppingCartRegistrationService"></param>
+        /// <param name="liveAnchorDailyTargetService"></param>
+        /// <param name="operatonLogService"></param>
+        /// <param name="liveAnchorService"></param>
         public OrderReportController(IOrderService orderService,
             IContentPlatformOrderSendService sendContentPlatFormOrderInfoService,
             IAppointmentService appointmentService,

@@ -63,7 +63,31 @@ namespace Fx.Amiya.Background.Api.Controllers
         private ISendOrderInfoService _sendOrderInfoService;
         private ISyncTikTokOrder syncTikTokOrder;
         private IDalCustomerBaseInfo dalCustomerBaseInfo;
-
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="orderService"></param>
+        /// <param name="httpContextAccessor"></param>
+        /// <param name="goodsInfoService"></param>
+        /// <param name="dalBindCustomerService"></param>
+        /// <param name="memberCardService"></param>
+        /// <param name="customerService"></param>
+        /// <param name="integrationAccountService"></param>
+        /// <param name="expressManageService"></param>
+        /// <param name="amiyaGoodsDemandService"></param>
+        /// <param name="memberRankInfoService"></param>
+        /// <param name="tikTokOrderInfoService"></param>
+        /// <param name="dalTikTokUserInfo"></param>
+        /// <param name="tikTokUserInfo"></param>
+        /// <param name="dalAmiyaEmployee"></param>
+        /// <param name="wxAppConfigService"></param>
+        /// <param name="liveAnchorService"></param>
+        /// <param name="contentPlatFormService"></param>
+        /// <param name="sendOrderInfoService"></param>
+        /// <param name="tikTokOrderService"></param>
+        /// <param name="dalTikTokOrderInfo"></param>
+        /// <param name="syncTikTokOrder"></param>
+        /// <param name="dalCustomerBaseInfo"></param>
         public TikTokOrderController(ITikTokOrderInfoService orderService, IHttpContextAccessor httpContextAccessor, IGoodsInfo goodsInfoService, IDalBindCustomerService dalBindCustomerService, IMemberCard memberCardService, ICustomerService customerService, IIntegrationAccount integrationAccountService, IExpressManageService expressManageService, IAmiyaGoodsDemandService amiyaGoodsDemandService, IMemberRankInfo memberRankInfoService, ITikTokOrderInfoService tikTokOrderInfoService, IDalTikTokUserInfo dalTikTokUserInfo, ITikTokUserInfoService tikTokUserInfo, IDalAmiyaEmployee dalAmiyaEmployee, IWxAppConfigService wxAppConfigService, ILiveAnchorService liveAnchorService, IContentPlatformService contentPlatFormService, ISendOrderInfoService sendOrderInfoService, ITikTokOrderInfoService tikTokOrderService, IDalTikTokOrderInfo dalTikTokOrderInfo, ISyncTikTokOrder syncTikTokOrder, IDalCustomerBaseInfo dalCustomerBaseInfo)
         {
             this.tikTokOrderService = orderService;

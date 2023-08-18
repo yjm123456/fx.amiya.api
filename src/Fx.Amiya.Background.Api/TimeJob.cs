@@ -27,6 +27,9 @@ using Fx.Infrastructure.DataAccess;
 
 namespace Fx.Amiya.Background.Api
 {
+    /// <summary>
+    /// 定时器
+    /// </summary>
     public class TimeJob : Job
     {
         private IOrderService orderService;
@@ -47,6 +50,27 @@ namespace Fx.Amiya.Background.Api
         private ISyncWeChatVideoOrder _syncWeChatVideoOrder;
         private IWeChatVideoOrderService weChatVideoOrderService;
         private IOrderAppInfoService orderAppInfoService;
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="orderService"></param>
+        /// <param name="syncOrder"></param>
+        /// <param name="syncWeiFenXiaoOrder"></param>
+        /// <param name="fxAppGlobal"></param>
+        /// <param name="bindCustomerService"></param>
+        /// <param name="integrationAccountService"></param>
+        /// <param name="customerService"></param>
+        /// <param name="memberCardService"></param>
+        /// <param name="unitOfWork"></param>
+        /// <param name="syncTikTokOrder"></param>
+        /// <param name="customerAppointmentScheduleService"></param>
+        /// <param name="messageNoticeService"></param>
+        /// <param name="memberRankInfoService"></param>
+        /// <param name="tokOrderInfoService"></param>
+        /// <param name="serviceProvider"></param>
+        /// <param name="syncWeChatVideoOrder"></param>
+        /// <param name="weChatVideoOrderService"></param>
+        /// <param name="orderAppInfoService"></param>
         public TimeJob(IOrderService orderService, ISyncOrder syncOrder, ISyncWeiFenXiaoOrder syncWeiFenXiaoOrder, FxAppGlobal fxAppGlobal, IBindCustomerServiceService bindCustomerService,
           IIntegrationAccount integrationAccountService,
             ICustomerService customerService,

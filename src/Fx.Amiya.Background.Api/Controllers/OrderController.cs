@@ -59,6 +59,21 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IAmiyaGoodsDemandService _amiyaGoodsDemandService;
         private IMemberRankInfo memberRankInfoService;
         private IOperationLogService operationLogService;
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="orderService"></param>
+        /// <param name="syncOrder"></param>
+        /// <param name="customerService"></param>
+        /// <param name="httpContextAccessor"></param>
+        /// <param name="memberCardService"></param>
+        /// <param name="goodsInfoService"></param>
+        /// <param name="integrationAccountService"></param>
+        /// <param name="dalBindCustomerService"></param>
+        /// <param name="expressManageService"></param>
+        /// <param name="amiyaGoodsDemandService"></param>
+        /// <param name="memberRankInfoService"></param>
+        /// <param name="operationLogService"></param>
         public OrderController(IOrderService orderService,
             ISyncOrder syncOrder,
             ICustomerService customerService,
@@ -891,6 +906,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="keyword"></param>
         /// <param name="minPayment">最下金额</param>
         /// <param name="maxPayment">最大金额</param>
+        /// <param name="appType"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
@@ -935,6 +951,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="keyword"></param>
         /// <param name="customerServiceId"></param>
         /// <param name="appType">下单平台</param>
+        /// <param name="statusCode">状态</param>
+        /// <param name="minPayment">最小下单金额</param>
+        /// <param name="maxPayment">最大下单金额</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>

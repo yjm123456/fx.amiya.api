@@ -28,6 +28,11 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
 
         private IHttpContextAccessor _httpContextAccessor;
         private IContentPlatFormOrderDealInfoService _contentPlatFormOrderDealInfoService;
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="contentPlatFormOrderDealInfoService"></param>
+        /// <param name="httpContextAccessor"></param>
         public ContentPlatFormOrderDealInfoController(IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
             IHttpContextAccessor httpContextAccessor)
         {

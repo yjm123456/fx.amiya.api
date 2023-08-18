@@ -33,10 +33,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         private readonly IHospitalInfoService hospitalInfoService;
         private readonly IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
         private readonly ICustomerHospitalConsumeService customerHospitalConsumeService;
+
         /// <summary>
         /// 构造函数
         /// </summary>
+        /// <param name="httpContextAccessor"></param>
         /// <param name="reconciliationDocumentsService"></param>
+        /// <param name="orderService"></param>
+        /// <param name="contentPlatFormOrderDealInfoService"></param>
+        /// <param name="customerHospitalConsumeService"></param>
+        /// <param name="hospitalInfoService"></param>
         public ReconciliationDocumentsController(
             IHttpContextAccessor httpContextAccessor,
              IReconciliationDocumentsService reconciliationDocumentsService,
@@ -469,7 +475,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("exportReconciliationDocuments")]
         [FxTenantAuthorize]
-        public async Task<FileStreamResult> exportReconciliationDocuments()
+        public FileStreamResult exportReconciliationDocuments()
         {
             var res = new List<AddReconciliationDocumentsVo>();
             var exportOrderWriteOff = res.ToList();

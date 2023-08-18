@@ -55,6 +55,24 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IHttpContextAccessor _httpContextAccessor;
         private IOperationLogService operationLogService;
         private ILiveAnchorService liveAnchorService;
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="orderService"></param>
+        /// <param name="tmallOrderService"></param>
+        /// <param name="amiyaEmployeeService"></param>
+        /// <param name="bindCustomerServiceService"></param>
+        /// <param name="customerHospitalDealInfoService"></param>
+        /// <param name="amiyaPositionInfoService"></param>
+        /// <param name="hospitalInfoService"></param>
+        /// <param name="departmentService"></param>
+        /// <param name="contentPlatformOrderSend"></param>
+        /// <param name="customerService"></param>
+        /// <param name="contentPlatFormCustomerPictureService"></param>
+        /// <param name="httpContextAccessor"></param>
+        /// <param name="wxAppConfigService"></param>
+        /// <param name="operationLogService"></param>
+        /// <param name="liveAnchorService"></param>
         public ContentPlateFormOrderController(IContentPlateFormOrderService orderService,
             IOrderService tmallOrderService,
             IAmiyaEmployeeService amiyaEmployeeService,

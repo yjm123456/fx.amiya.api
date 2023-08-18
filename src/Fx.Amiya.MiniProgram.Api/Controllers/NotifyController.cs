@@ -73,113 +73,113 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost("aliPayNotifyUrl")]
-        public async Task<string> aliPayNotifyUrlAsync([FromForm] AliPayNotifyVo input)
+        public  Task<string> aliPayNotifyUrlAsync([FromForm] AliPayNotifyVo input)
         {
             throw new Exception("不支持支付方式");
-            string notifyLog = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 开始回调，回调id：" + input.notify_id;
-            logger.LogInformation(notifyLog);
-            SortedDictionary<string, string> sPara = GetRequestPost(input);
-            var verifyResult = _aliPayService.Verify(sPara, input.notify_id, input.sign);
-            if (verifyResult.Result != true)
-            {
-                return "fail";
-            }
-            if (input.body == "RECHARGE")
-            {
-                //储值
-                try
-                {
-                    unitOfWork.BeginTransaction();
-                    var rechargeRecord = await balanceRechargeRecordService.GetRechargeRecordByIdAsync(input.out_trade_no);
-                    //如果订单记录状态为success直接返回success
-                    if (rechargeRecord.Status == (int)RechargeStatus.Success)
-                    {
-                        return "success";
-                    }
-                    UpdateRechargeRecordStatusDto update = new UpdateRechargeRecordStatusDto
-                    {
-                        Id = rechargeRecord.Id,
-                        Status = (int)RechargeStatus.Success,
-                        OrderId = input.trade_no,
-                        CompleteDate = DateTime.Now
-                    };
-                    //更新记录状态
-                    await balanceRechargeRecordService.UpdateRechargeRecordStatusAsync(update);
-                    //更新余额
-                    await balanceAccountService.UpdateAccountBalanceAsync(rechargeRecord.CustomerId);
+            //string notifyLog = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 开始回调，回调id：" + input.notify_id;
+            //logger.LogInformation(notifyLog);
+            //SortedDictionary<string, string> sPara = GetRequestPost(input);
+            //var verifyResult = _aliPayService.Verify(sPara, input.notify_id, input.sign);
+            //if (verifyResult.Result != true)
+            //{
+            //    return "fail";
+            //}
+            //if (input.body == "RECHARGE")
+            //{
+            //    //储值
+            //    try
+            //    {
+            //        unitOfWork.BeginTransaction();
+            //        var rechargeRecord = await balanceRechargeRecordService.GetRechargeRecordByIdAsync(input.out_trade_no);
+            //        //如果订单记录状态为success直接返回success
+            //        if (rechargeRecord.Status == (int)RechargeStatus.Success)
+            //        {
+            //            return "success";
+            //        }
+            //        UpdateRechargeRecordStatusDto update = new UpdateRechargeRecordStatusDto
+            //        {
+            //            Id = rechargeRecord.Id,
+            //            Status = (int)RechargeStatus.Success,
+            //            OrderId = input.trade_no,
+            //            CompleteDate = DateTime.Now
+            //        };
+            //        //更新记录状态
+            //        await balanceRechargeRecordService.UpdateRechargeRecordStatusAsync(update);
+            //        //更新余额
+            //        await balanceAccountService.UpdateAccountBalanceAsync(rechargeRecord.CustomerId);
 
-                    #region 储值奖励积分
+            //        #region 储值奖励积分
 
-                    var totalRecharge = await balanceRechargeRecordService.GetAllRechargeAmountAsync(rechargeRecord.CustomerId);
+            //        var totalRecharge = await balanceRechargeRecordService.GetAllRechargeAmountAsync(rechargeRecord.CustomerId);
 
-                    var rechargeRewardRuleList = await rechargeRewardRuleService.GetRewardListAsync();
+            //        var rechargeRewardRuleList = await rechargeRewardRuleService.GetRewardListAsync();
 
-                    foreach (var rule in rechargeRewardRuleList)
-                    {
-                        if (totalRecharge >= rule.MinAmount)
-                        {
-                            var integrationRecord = await CreateIntegrationRecordAsync(rechargeRecord.CustomerId, rule.GiveIntegration, 1);
-                            if (integrationRecord != null) await integrationAccount.AddByConsumptionAsync(integrationRecord);
-                        }
-                    }
+            //        foreach (var rule in rechargeRewardRuleList)
+            //        {
+            //            if (totalRecharge >= rule.MinAmount)
+            //            {
+            //                var integrationRecord = await CreateIntegrationRecordAsync(rechargeRecord.CustomerId, rule.GiveIntegration, 1);
+            //                if (integrationRecord != null) await integrationAccount.AddByConsumptionAsync(integrationRecord);
+            //            }
+            //        }
 
-                    #endregion
+            //        #endregion
 
-                    unitOfWork.Commit();
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.RollBack();
-                    return "fail";
-                }
+            //        unitOfWork.Commit();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        unitOfWork.RollBack();
+            //        return "fail";
+            //    }
 
 
-            }
-            else
-            {
-                //商城下单
-                var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(input.out_trade_no);
-                List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
-                foreach (var item in orderTrade.OrderInfoList)
-                {
+            //}
+            //else
+            //{
+            //    //商城下单
+            //    var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(input.out_trade_no);
+            //    List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
+            //    foreach (var item in orderTrade.OrderInfoList)
+            //    {
 
-                    UpdateOrderDto updateOrder = new UpdateOrderDto();
-                    updateOrder.OrderId = item.Id;
-                    updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
-                    if (item.ActualPayment.HasValue)
-                    {
-                        updateOrder.Actual_payment = item.ActualPayment.Value;
-                        var bind = await _dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == item.Phone);
-                        if (bind != null)
-                        {
-                            bind.NewConsumptionDate = DateTime.Now;
-                            bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
-                            bind.NewContentPlatForm = ServiceClass.GetAppTypeText(item.AppType);
-                            bind.AllPrice += item.ActualPayment.Value;
-                            bind.AllOrderCount += item.Quantity;
-                            await _dalBindCustomerService.UpdateAsync(bind, true);
-                        }
-                    }
-                    if (item.IntegrationQuantity.HasValue)
-                    {
-                        updateOrder.IntergrationQuantity = item.IntegrationQuantity;
-                    }
-                    Random random = new Random();
-                    updateOrder.AppType = item.AppType;
-                    updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
-                    updateOrderList.Add(updateOrder);
-                }
+            //        UpdateOrderDto updateOrder = new UpdateOrderDto();
+            //        updateOrder.OrderId = item.Id;
+            //        updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+            //        if (item.ActualPayment.HasValue)
+            //        {
+            //            updateOrder.Actual_payment = item.ActualPayment.Value;
+            //            var bind = await _dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == item.Phone);
+            //            if (bind != null)
+            //            {
+            //                bind.NewConsumptionDate = DateTime.Now;
+            //                bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
+            //                bind.NewContentPlatForm = ServiceClass.GetAppTypeText(item.AppType);
+            //                bind.AllPrice += item.ActualPayment.Value;
+            //                bind.AllOrderCount += item.Quantity;
+            //                await _dalBindCustomerService.UpdateAsync(bind, true);
+            //            }
+            //        }
+            //        if (item.IntegrationQuantity.HasValue)
+            //        {
+            //            updateOrder.IntergrationQuantity = item.IntegrationQuantity;
+            //        }
+            //        Random random = new Random();
+            //        updateOrder.AppType = item.AppType;
+            //        updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
+            //        updateOrderList.Add(updateOrder);
+            //    }
 
-                //修改订单状态
-                await orderService.UpdateAsync(updateOrderList);
+            //    //修改订单状态
+            //    await orderService.UpdateAsync(updateOrderList);
 
-                UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
-                updateOrderTrade.TradeId = input.out_trade_no;
-                updateOrderTrade.AddressId = orderTrade.AddressId;
-                updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
-                await orderService.UpdateOrderTradeAsync(updateOrderTrade);
-            }
-            return "success";
+            //    UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
+            //    updateOrderTrade.TradeId = input.out_trade_no;
+            //    updateOrderTrade.AddressId = orderTrade.AddressId;
+            //    updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+            //    await orderService.UpdateOrderTradeAsync(updateOrderTrade);
+            //}
+            //return "success";
         }
         /// <summary>
         /// 创建储值奖励记录
@@ -276,71 +276,71 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("rechargepayresult")]
-        public async Task<string> PayRechargeNotifyUrl()
+        public  Task<string> PayRechargeNotifyUrl()
         {
-            try
-            {
-                throw new Exception("暂不支持充值");
-                return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
-                //获取回调POST过来的xml数据的代码
-                using Stream stream = HttpContext.Request.Body;
-                byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
-                await stream.ReadAsync(buffer);
-                string xml = System.Text.Encoding.UTF8.GetString(buffer);
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(xml);
-                WeiXinPayNotifyVo weiXinPayNotifyVo = GetWeiXinRequestPostData(xmlDoc);
-                SortedDictionary<string, string> sParam = GetWeiXinRequestPostDic(weiXinPayNotifyVo);
-                SignHelper signHelper = new SignHelper();
-                //签名验证
-                string sign = await signHelper.SignPay(sParam, "");
-                if (sign != weiXinPayNotifyVo.sign)
-                    return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
-                unitOfWork.BeginTransaction();
-                // 业务逻辑
-                //成功通知微信
-                if (weiXinPayNotifyVo.return_code.ToUpper() == "SUCCESS")
-                {
-                    var record = await balanceRechargeRecordService.GetRechargeRecordByIdAsync(weiXinPayNotifyVo.out_trade_no);
+            throw new Exception("暂不支持充值");
+            //try
+            //{
+            //    return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
+            //    //获取回调POST过来的xml数据的代码
+            //    using Stream stream = HttpContext.Request.Body;
+            //    byte[] buffer = new byte[HttpContext.Request.ContentLength.Value];
+            //    await stream.ReadAsync(buffer);
+            //    string xml = System.Text.Encoding.UTF8.GetString(buffer);
+            //    XmlDocument xmlDoc = new XmlDocument();
+            //    xmlDoc.LoadXml(xml);
+            //    WeiXinPayNotifyVo weiXinPayNotifyVo = GetWeiXinRequestPostData(xmlDoc);
+            //    SortedDictionary<string, string> sParam = GetWeiXinRequestPostDic(weiXinPayNotifyVo);
+            //    SignHelper signHelper = new SignHelper();
+            //    //签名验证
+            //    string sign = await signHelper.SignPay(sParam, "");
+            //    if (sign != weiXinPayNotifyVo.sign)
+            //        return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
+            //    unitOfWork.BeginTransaction();
+            //    // 业务逻辑
+            //    //成功通知微信
+            //    if (weiXinPayNotifyVo.return_code.ToUpper() == "SUCCESS")
+            //    {
+            //        var record = await balanceRechargeRecordService.GetRechargeRecordByIdAsync(weiXinPayNotifyVo.out_trade_no);
 
-                    if (record == null) throw new Exception("没有找到该用户的充值信息");
-                    if (record.Status == 1)
-                        return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
-                    UpdateRechargeRecordStatusDto updateRechargeRecord = new UpdateRechargeRecordStatusDto();
-                    updateRechargeRecord.Id = record.Id;
-                    updateRechargeRecord.OrderId = weiXinPayNotifyVo.transaction_id;
-                    updateRechargeRecord.Status = 1;
-                    updateRechargeRecord.CompleteDate = DateTime.Now;
-                    await balanceRechargeRecordService.UpdateRechargeRecordStatusAsync(updateRechargeRecord);
-                    //更新余额
-                    await balanceAccountService.UpdateAccountBalanceAsync(record.CustomerId);
+            //        if (record == null) throw new Exception("没有找到该用户的充值信息");
+            //        if (record.Status == 1)
+            //            return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
+            //        UpdateRechargeRecordStatusDto updateRechargeRecord = new UpdateRechargeRecordStatusDto();
+            //        updateRechargeRecord.Id = record.Id;
+            //        updateRechargeRecord.OrderId = weiXinPayNotifyVo.transaction_id;
+            //        updateRechargeRecord.Status = 1;
+            //        updateRechargeRecord.CompleteDate = DateTime.Now;
+            //        await balanceRechargeRecordService.UpdateRechargeRecordStatusAsync(updateRechargeRecord);
+            //        //更新余额
+            //        await balanceAccountService.UpdateAccountBalanceAsync(record.CustomerId);
 
-                    #region 储值奖励积分
+            //        #region 储值奖励积分
 
-                    var totalRecharge = await balanceRechargeRecordService.GetAllRechargeAmountAsync(record.CustomerId);
+            //        var totalRecharge = await balanceRechargeRecordService.GetAllRechargeAmountAsync(record.CustomerId);
 
-                    var rechargeRewardRuleList = await rechargeRewardRuleService.GetRewardListAsync();
+            //        var rechargeRewardRuleList = await rechargeRewardRuleService.GetRewardListAsync();
 
-                    foreach (var rule in rechargeRewardRuleList)
-                    {
-                        if (totalRecharge >= rule.MinAmount)
-                        {
-                            var integrationRecord = await CreateIntegrationRecordAsync(record.CustomerId, rule.GiveIntegration, 1);
-                            if (integrationRecord != null) await integrationAccount.AddByConsumptionAsync(integrationRecord);
-                        }
-                    }
+            //        foreach (var rule in rechargeRewardRuleList)
+            //        {
+            //            if (totalRecharge >= rule.MinAmount)
+            //            {
+            //                var integrationRecord = await CreateIntegrationRecordAsync(record.CustomerId, rule.GiveIntegration, 1);
+            //                if (integrationRecord != null) await integrationAccount.AddByConsumptionAsync(integrationRecord);
+            //            }
+            //        }
 
-                    #endregion
+            //        #endregion
 
-                }
-                unitOfWork.Commit();
-                return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
-            }
-            catch (Exception e)
-            {
-                unitOfWork.RollBack();
-                return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
-            }
+            //    }
+            //    unitOfWork.Commit();
+            //    return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
+            //}
+            //catch (Exception e)
+            //{
+            //    unitOfWork.RollBack();
+            //    return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>";
+            //}
         }
         /// <summary>
         /// 微信订单付款回调
