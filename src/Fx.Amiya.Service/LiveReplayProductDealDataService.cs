@@ -28,12 +28,12 @@ namespace Fx.Amiya.Service
 
         public async Task<List<LiveReplayProductDealDataInfoDto>> GetListAsync(QueryLiveReplayProductDealDataDto query)
         {
-            List<LiveReplayProductDealDataInfoDto> fxPageInfo = new List<LiveReplayProductDealDataInfoDto>();
-            var replay = dalLiveReplyProductDealData.GetAll()
+            List<LiveReplayProductDealDataInfoDto> LiveReplayProductDealDataInfoDtoList = new List<LiveReplayProductDealDataInfoDto>();
+            var replayProductDealData = dalLiveReplyProductDealData.GetAll()
                 .Where(e => e.LiveReplayId == query.LiveReplayId)
                 .Where(e => e.Valid == query.Valid)
                 .Where(e => string.IsNullOrEmpty(query.KeyWord) || e.ReplayTarget.Contains(query.KeyWord) || e.QuestionAnalize.Contains(query.KeyWord) || e.LaterPeriodSolution.Contains(query.KeyWord));
-            fxPageInfo = await replay.Select(e => new LiveReplayProductDealDataInfoDto
+            LiveReplayProductDealDataInfoDtoList = await replayProductDealData.Select(e => new LiveReplayProductDealDataInfoDto
             {
                 Id = e.Id,
                 LiveReplayId = e.LiveReplayId,
@@ -45,7 +45,7 @@ namespace Fx.Amiya.Service
                 LaterPeriodSolution = e.LaterPeriodSolution,
                 Sort = e.Sort,
             }).OrderBy(e => e.Sort).ToListAsync();
-            return fxPageInfo;
+            return LiveReplayProductDealDataInfoDtoList;
         }
         public async Task AddListAsync(List<AddLiveReplayProductDealDataDto> addDtoList)
         {
