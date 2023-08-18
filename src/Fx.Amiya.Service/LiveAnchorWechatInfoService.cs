@@ -196,8 +196,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception err)
             {
-                string erra = err.Message.ToString();
-                string u = "";
+                throw new Exception(err.Message.ToString());
             }
         }
 

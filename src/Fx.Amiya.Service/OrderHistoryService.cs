@@ -51,8 +51,6 @@ namespace Fx.Amiya.Service
         private ILogger<OrderService> logger;
         private IDalOrderTrade dalOrderTrade;
         private IDalSendGoodsRecord dalSendGoodsRecord;
-        private readonly IItemInfoService _itemInfoService;
-        private IGoodsCategory goodsCategoryService;
         private IOrderWriteOffInfoService _orderWriteOffInfoService;
         private IGoodsInfo _goodsInfoService;
         private IHospitalInfoService _hospitalInfoService;
@@ -74,7 +72,6 @@ namespace Fx.Amiya.Service
             IDalSendGoodsRecord dalSendGoodsRecord,
             IOrderWriteOffInfoService orderWriteOffService,
             IGoodsInfo goodsInfoService,
-            IItemInfoService itemInfoService,
             ISendOrderInfoService sendOrderInfoService,
             IHospitalInfoService hospitalInfoService,
             IExpressManageService expressManageService,
@@ -91,7 +88,6 @@ namespace Fx.Amiya.Service
             this.dalOrderTrade = dalOrderTrade;
             this.dalSendGoodsRecord = dalSendGoodsRecord;
             _amiyaGoodsDemandService = amiyaGoodsDemandService;
-            _itemInfoService = itemInfoService;
             _goodsInfoService = goodsInfoService;
             _orderWriteOffInfoService = orderWriteOffService;
             _hospitalInfoService = hospitalInfoService;
@@ -191,7 +187,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -289,7 +285,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -337,7 +333,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -719,7 +715,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -756,7 +752,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -1610,7 +1606,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -1707,7 +1703,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 

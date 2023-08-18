@@ -70,7 +70,6 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <summary>
         /// 获取有效医院简称列表
         /// </summary>
-        /// <param name="name"></param>
         /// <returns></returns>
         [HttpGet("simpleNameList")]
         public async Task<ResultData<List<BaseKeyAndValueVo>>> GetHospitalSimpleNameListAsync()

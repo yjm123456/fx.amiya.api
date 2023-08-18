@@ -40,9 +40,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 获取小程序自动回复留言信息列表
         /// </summary>
-        /// <param name="keyword"></param>
-        /// <param name="pageNum"></param>
-        /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
         public async Task<ResultData<FxPageInfo<MiniProgramAutoSendMessageVo>>> GetListWithPageAsync()

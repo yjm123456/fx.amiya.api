@@ -369,7 +369,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
 
             }
 

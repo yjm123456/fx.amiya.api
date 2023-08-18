@@ -119,7 +119,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
-                throw err;
+                throw new Exception(err.Message.ToString());;
             }
         }
 
@@ -216,7 +216,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
-                throw err;
+                throw new Exception(err.Message.ToString());;
             }
         }
 
@@ -246,7 +246,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception err)
             {
-                throw err;
+                throw new Exception(err.Message.ToString());;
             }
         }
 
@@ -271,7 +271,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
-                throw err;
+                throw new Exception(err.Message.ToString());;
             }
         }
     }

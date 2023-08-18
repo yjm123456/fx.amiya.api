@@ -67,7 +67,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -93,7 +93,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -119,7 +119,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -142,7 +142,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -160,7 +160,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
         public async Task<List<AmiyaOutWareHouseDto>> ExportListAsync(DateTime? startDate, DateTime? endDate, string keyword, string wareHouseInfoId,string warehouseStorageRacksId)
@@ -205,7 +205,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
     }

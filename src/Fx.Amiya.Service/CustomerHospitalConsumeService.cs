@@ -222,7 +222,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
-                throw err;
+                throw new Exception(err.Message.ToString());;
             }
         }
 
@@ -424,7 +424,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
-                throw err;
+                throw new Exception(err.Message.ToString());;
             }
         }
 
@@ -458,7 +458,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception err)
             {
-                throw new Exception("操作失败！");
+                throw new Exception(err.Message.ToString());
             }
         }
 
@@ -616,7 +616,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
-                throw err;
+                throw new Exception(err.Message.ToString());;
             }
         }
 

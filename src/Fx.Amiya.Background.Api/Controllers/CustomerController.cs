@@ -757,7 +757,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 客户积分生成比例
         /// </summary>
-        /// <param name="editVo"></param>
+        /// <param name="customerId">客户id</param>
         /// <returns></returns>
         [HttpGet("customerInternelPercent")]
         [FxInternalOrTenantAuthroize]

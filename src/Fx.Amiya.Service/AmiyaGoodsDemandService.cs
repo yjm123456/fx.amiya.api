@@ -49,7 +49,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -75,7 +75,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -96,7 +96,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
         public async Task<AmiyaGoodsDemandDto> GetByIdAsync(string id)
@@ -120,7 +120,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
         public async Task<AmiyaGoodsDemandDto> GetByNameAsync(string name)
@@ -151,7 +151,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
         public async Task UpdateAsync(UpdateAmiyaGoodsDemandDto updateDto)
@@ -181,7 +181,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -199,7 +199,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 

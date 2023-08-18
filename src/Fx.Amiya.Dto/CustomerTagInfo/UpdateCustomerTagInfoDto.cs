@@ -9,7 +9,6 @@ namespace Fx.Amiya.Dto.CustomerTagInfo
     public class UpdateCustomerTagInfoDto:BaseDto
     {
         public string TagName { get; set; }
-        public bool Valid { get; set; }
         public int TagCategory { get; set; }
     }
 }

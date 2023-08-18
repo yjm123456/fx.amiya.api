@@ -182,8 +182,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <summary>
         /// 修改用户头像
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="url"></param>
+        /// <param name="updateVo"></param>
         /// <returns></returns>
         [HttpPut("updateAvatar")]
         public async Task<ResultData<string>> UpdateAvatarAsync(UpdateAvatarVo updateVo)

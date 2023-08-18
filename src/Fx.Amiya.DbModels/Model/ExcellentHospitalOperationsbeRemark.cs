@@ -11,8 +11,6 @@ namespace Fx.Amiya.DbModels.Model
     /// </summary>
     public class ExcellentHospitalOperationsbeRemark:BaseDbModel
     {
-        public string Id { get; set; }
         public string Remark { get; set; }
-        public DateTime CreateDate { get; set; }
     }
 }

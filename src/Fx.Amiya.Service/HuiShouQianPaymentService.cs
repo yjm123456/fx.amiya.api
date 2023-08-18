@@ -107,7 +107,6 @@ namespace Fx.Amiya.Service
             }
             if (string.IsNullOrEmpty(huiShouQianPayRequestInfo.RequestDate) || huiShouQianPayRequestInfo.RequestDate.Length > 14)
             {
-                DateTime date = new DateTime();
                 errmsg = "商品说明信息错误";
                 return false;
             }
@@ -117,6 +116,7 @@ namespace Fx.Amiya.Service
         /// 创建慧收钱支付订单
         /// </summary>
         /// <returns></returns>
+        [Obsolete]
         public async Task<HuiShouQianOrderResult> CreateHuiShouQianOrder(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo, string openId, string customerId)
         {
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
@@ -128,10 +128,10 @@ namespace Fx.Amiya.Service
             return PostData(huiShouQianPackageInfo.OrderUrl + "?" + commonParam, "");
 
         }
+        [Obsolete]
         internal HuiShouQianOrderResult PostData(string url, string postData)
         {
             string text = string.Empty;
-            string result;
             Uri requestUri = new Uri(url, false);
             HttpWebRequest httpWebRequest;
             httpWebRequest = (HttpWebRequest)WebRequest.Create(requestUri);
@@ -204,6 +204,7 @@ namespace Fx.Amiya.Service
         /// 创建慧收钱退款订单
         /// </summary>
         /// <returns></returns>
+        [Obsolete]
         public async Task<RefundOrderResult> CreateHuiShouQianRefundOrde(string id)
         {
             var order = dalOrderRefund.GetAll().Where(e => e.Id == id).SingleOrDefault();
@@ -292,10 +293,10 @@ namespace Fx.Amiya.Service
         }
 
 
+        [Obsolete]
         internal async Task<RefundOrderResult> PostRefundData(string url, string postData)
         {
             string text = string.Empty;
-            string result;
 
             Uri requestUri = new Uri(url, false);
             HttpWebRequest httpWebRequest;
@@ -501,6 +502,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Obsolete]
         public async Task<RefundOrderResult> CreateHuiShouQianAndPointRefundOrder(string id)
         {
             var order = dalOrderRefund.GetAll().Where(e => e.Id == id).SingleOrDefault();

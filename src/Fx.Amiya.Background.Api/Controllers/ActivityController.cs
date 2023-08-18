@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
+    /// <summary>
+    /// 活动板块控制层
+    /// </summary>
     [Route("[controller]")]
     [ApiController]
     
@@ -22,6 +25,11 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private IActivityService activityService;
         private IHttpContextAccessor httpContextAccessor;
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="activityService"></param>
+        /// <param name="httpContextAccessor"></param>
         public ActivityController(IActivityService activityService, IHttpContextAccessor httpContextAccessor)
         {
             this.activityService = activityService;

@@ -36,7 +36,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 是否启动邮箱通知
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="emailNotice"></param>
         /// <returns></returns>
         [HttpPut("updateEmailNoticeControll")]
         public async Task<ResultData> UpdateEmailNoticeControll(bool emailNotice)
@@ -44,7 +44,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             await wxAppConfigService.UpdateEmailNotice(emailNotice);
             return ResultData.Success();
         }
-
+        /// <summary>
+        /// 获取配置相关信息
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ResultData<string>> GetWxAppConfigAsync()
         {

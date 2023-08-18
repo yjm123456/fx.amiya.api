@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Fx.Infrastructure;
 using Newtonsoft.Json;
@@ -108,7 +107,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -125,7 +124,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -160,7 +159,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -237,7 +236,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -269,7 +268,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
 
         }
@@ -431,7 +430,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -971,7 +970,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
-                throw err;
+                throw new Exception(err.Message.ToString());;
             }
         }
 

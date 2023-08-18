@@ -76,7 +76,6 @@ namespace Fx.Amiya.Service
         private IRecommandDocumentSettleService recommandDocumentSettleService;
         private IDalSendGoodsRecord dalSendGoodsRecord;
         private readonly IItemInfoService _itemInfoService;
-        private IGoodsCategory goodsCategoryService;
         private IIntegrationAccount integrationAccountService;
         private IOrderWriteOffInfoService _orderWriteOffInfoService;
         private IGoodsInfo _goodsInfoService;
@@ -288,7 +287,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -434,7 +433,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -534,7 +533,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -634,7 +633,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -682,7 +681,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -729,8 +728,8 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
                 return false;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -746,7 +745,7 @@ namespace Fx.Amiya.Service
             {
                 var date = DateTime.Today;
                 var model = from d in dalOrderInfo.GetAll() where (d.CreateDate >= date && d.CreateDate < date.AddDays(1)) select d;
-                return model.CountAsync().Result.ToString();
+                return  model.CountAsync().Result.ToString();
             }
             catch (Exception e)
             {
@@ -1070,7 +1069,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
         /// <summary>
@@ -1225,9 +1224,7 @@ namespace Fx.Amiya.Service
             {
                 //var noticeConfigResult = from notice in dalNoticeConfig.GetAll() where notice.Name == "EMailNoticeConfig" select notice;
                 //var noticeRes = noticeConfigResult.FirstOrDefault();
-                var emailConfig = false;
                 //订单号集合
-                string goodsName = "";
                 Dictionary<string, string> orderPhoneDict = new Dictionary<string, string>();
                 byte appType = 0;
                 decimal intergration_quantity = 0M;
@@ -1345,7 +1342,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
         /// <summary>
@@ -1414,7 +1411,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
         /// <summary>
@@ -1607,7 +1604,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
             try
             {
@@ -1720,7 +1717,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
             try
             {
@@ -1785,7 +1782,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -1911,7 +1908,7 @@ namespace Fx.Amiya.Service
             catch (Exception e)
             {
                 unitOfWork.RollBack();
-                throw e;
+                throw new Exception(e.Message.ToString());
             }
         }
 
@@ -1939,7 +1936,7 @@ namespace Fx.Amiya.Service
             catch (Exception e)
             {
                 unitOfWork.RollBack();
-                throw e;
+                throw new Exception(e.Message.ToString());
             }
         }
         /// <summary>
@@ -1988,7 +1985,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception e)
             {
-                throw e;
+                throw new Exception(e.Message.ToString());
             }
         }
 
@@ -3461,7 +3458,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -3790,7 +3787,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -4062,7 +4059,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
         public async Task<List<OrderOperationConditionDto>> GetOrderOperationConditionAsync(DateTime? startDate, DateTime? endDate)
@@ -5098,7 +5095,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
         /// <summary>
@@ -5502,7 +5499,6 @@ namespace Fx.Amiya.Service
                 }
                 //支付人
                 packageInfo.OpenId = OpenId;
-                string CheckValue = "";
                 //验证参数
                 var payRequest = await this.BuildPayRequest(packageInfo);
                 PayRequestInfoDto payRequestInfo = new PayRequestInfoDto();

@@ -32,7 +32,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="hospitalOperationDataService"></param>
+        /// <param name="hospitalDealItemService"></param>
         public HospitalDealItemOperationController(IHospitalDealItemService hospitalDealItemService)
         {
             this.hospitalDealItemService = hospitalDealItemService;
@@ -187,7 +187,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
         /// <summary>

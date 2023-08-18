@@ -344,7 +344,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 获取有效医院简称列表
         /// </summary>
-        /// <param name="name"></param>
         /// <returns></returns>
         [HttpGet("simpleNameList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetHospitalSimpleNameListAsync()
@@ -675,7 +674,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 

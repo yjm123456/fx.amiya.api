@@ -1343,7 +1343,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
             #endregion
 
@@ -1437,7 +1437,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
             return ResultData.Success();
         }
@@ -1987,7 +1987,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
     }

@@ -41,7 +41,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -63,7 +63,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -89,7 +89,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -125,7 +125,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
     }

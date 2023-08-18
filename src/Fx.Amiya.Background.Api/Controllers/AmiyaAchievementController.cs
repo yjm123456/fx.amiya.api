@@ -48,6 +48,24 @@ namespace Fx.Amiya.Background.Api.Controllers
         private ILiveAnchorDailyTargetService _liveAnchorDailyTargetService;
         private ILiveAnchorMonthlyTargetService _liveAnchorMonthlyTargetService;
         private IAmiyaPerformanceService amiyaPerformanceService;
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="orderService"></param>
+        /// <param name="sendContentPlatFormOrderInfoService"></param>
+        /// <param name="appointmentService"></param>
+        /// <param name="httpContextAccessor"></param>
+        /// <param name="customerService"></param>
+        /// <param name="contentPlatFormOrderService"></param>
+        /// <param name="hospitalInfoService"></param>
+        /// <param name="contentPlatFormOrderDealInfoService"></param>
+        /// <param name="sendOrderInfoService"></param>
+        /// <param name="customerHospitalConsumeService"></param>
+        /// <param name="shoppingCartRegistrationService"></param>
+        /// <param name="liveAnchorDailyTargetService"></param>
+        /// <param name="amiyaPerformanceService"></param>
+        /// <param name="liveAnchorMonthlyTargetService"></param>
+        /// <param name="hospitalPerformanceService"></param>
         public AmiyaAchievementController(IOrderService orderService,
             IContentPlatformOrderSendService sendContentPlatFormOrderInfoService,
             IAppointmentService appointmentService,

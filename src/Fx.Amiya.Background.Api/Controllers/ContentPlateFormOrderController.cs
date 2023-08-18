@@ -417,13 +417,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 根据条件导出内容平台订单
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="keyword">关键词</param>
-        /// <param name="consultationEmpId">面诊员</param>
-        /// <param name="orderStatus">订单状态</param>
-        /// <param name="orderSource">订单来源(-1查询全部)</param>
-        /// <param name="contentPlateFormId">内容平台</param>
+        /// <param name="query">开始时间</param>
         /// <returns></returns>
         [HttpGet("exportContentPlateFormOrderLlistWithPage")]
         [FxInternalAuthorize]
@@ -1445,7 +1439,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 根据加密手机号获取内容平台订单简易信息
         /// </summary>
-        /// <param name="encryPhone"></param>
+        /// <param name="phone"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
@@ -1777,7 +1771,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 关闭重单可深度状态
         /// </summary>
-        /// <param name="contentPlateFormId"></param>
+        /// <param name="close"></param>
         /// <returns></returns>
         [HttpPost("colseRepeatProfundityOrder")]
         [FxInternalAuthorize]

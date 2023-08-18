@@ -53,12 +53,12 @@ namespace Fx.Amiya.Service
                                                      Valid = d.Valid
                                                  };
                 fxPageInfo.TotalCount = hospitalOperationIndicator.Count();
-                fxPageInfo.List = hospitalOperationIndicator.OrderByDescending(x => x.StartDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+                fxPageInfo.List = await hospitalOperationIndicator.OrderByDescending(x => x.StartDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
                 return fxPageInfo;
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -104,7 +104,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -138,10 +138,9 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-
-                throw ex;
+                return null;
+                throw new Exception(ex.Message.ToString());
             }
-            return null;
         }
 
         public async Task UpdateAsync(UpdateHospitalOperationIndicatorDto updateDto)
@@ -162,8 +161,8 @@ namespace Fx.Amiya.Service
                 var sendHospitals = dalIndicatorSendHospital.GetAll().Where(e => e.Valid == true && e.IndicatorId == updateDto.Id).Select(e => e.HospitalId).ToList();
                 foreach (var item in sendHospitals)
                 {
-                    var sendHospital = dalIndicatorSendHospital.GetAll().Where(e=> e.HospitalId == item && e.IndicatorId == updateDto.Id).SingleOrDefault();
-                    await dalIndicatorSendHospital.DeleteAsync(sendHospital,true);
+                    var sendHospital = dalIndicatorSendHospital.GetAll().Where(e => e.HospitalId == item && e.IndicatorId == updateDto.Id).SingleOrDefault();
+                    await dalIndicatorSendHospital.DeleteAsync(sendHospital, true);
                 }
                 List<IndicatorSendHospital> indicatorSendHospitalList = new List<IndicatorSendHospital>();
                 foreach (var item in sendList)
@@ -183,7 +182,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -208,7 +207,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -231,7 +230,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -254,14 +253,15 @@ namespace Fx.Amiya.Service
         {
             var month = DateTime.Now.Month;
             var lastMonth = DateTime.Now.AddMonths(-1);
-            var startDate = new DateTime(lastMonth.Year, lastMonth.Month,1);
+            var startDate = new DateTime(lastMonth.Year, lastMonth.Month, 1);
             var nextMonth = DateTime.Now.AddMonths(1);
-            var endDate = new DateTime(nextMonth.Year, nextMonth.Month,1);
-            var indicatorList= dalHospitalOperationIndicator.GetAll().Where(e=>e.Valid==true&&e.StartDate>=startDate&&e.EndDate<=endDate&&(e.RemarkStatus==false||e.SubmitStatus==false)).Select(e=>new OperationIndicatorSubmitAndRemarkDto {
-                Id=e.Id,
-                SubmitStatus=e.SubmitStatus,
-                RemarkStatus=e.RemarkStatus
-            }).ToList();
+            var endDate = new DateTime(nextMonth.Year, nextMonth.Month, 1);
+            var indicatorList =await dalHospitalOperationIndicator.GetAll().Where(e => e.Valid == true && e.StartDate >= startDate && e.EndDate <= endDate && (e.RemarkStatus == false || e.SubmitStatus == false)).Select(e => new OperationIndicatorSubmitAndRemarkDto
+            {
+                Id = e.Id,
+                SubmitStatus = e.SubmitStatus,
+                RemarkStatus = e.RemarkStatus
+            }).ToListAsync();
             return indicatorList;
         }
         /// <summary>
@@ -270,11 +270,11 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task UpdateRemarkAndSubmitStatusAsync(UpdateSubmitAndRemarkStatus updateDto)
         {
-            var indicator =await dalHospitalOperationIndicator.GetAll().Where(e=>e.Id==updateDto.Id).SingleOrDefaultAsync();
+            var indicator = await dalHospitalOperationIndicator.GetAll().Where(e => e.Id == updateDto.Id).SingleOrDefaultAsync();
             indicator.SubmitStatus = updateDto.SubmitStatus;
             indicator.RemarkStatus = updateDto.RemarkStatus;
             indicator.UpdateDate = DateTime.Now;
-            await dalHospitalOperationIndicator.UpdateAsync(indicator,true);
+            await dalHospitalOperationIndicator.UpdateAsync(indicator, true);
         }
         /// <summary>
         /// 获取已过期的运营指标
@@ -283,10 +283,10 @@ namespace Fx.Amiya.Service
         public async Task<List<OperationIndicatorSubmitAndRemarkDto>> GetUnValidIndicatorAsync()
         {
             var endDate = DateTime.Now.Date;
-            var indicatorList = dalHospitalOperationIndicator.GetAll().Where(e => e.Valid == true &&  e.EndDate < endDate).Select(e => new OperationIndicatorSubmitAndRemarkDto
+            var indicatorList =await dalHospitalOperationIndicator.GetAll().Where(e => e.Valid == true && e.EndDate < endDate).Select(e => new OperationIndicatorSubmitAndRemarkDto
             {
                 Id = e.Id,
-            }).ToList();
+            }).ToListAsync();
             return indicatorList;
         }
     }

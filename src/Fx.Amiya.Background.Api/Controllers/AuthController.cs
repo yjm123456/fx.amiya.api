@@ -200,9 +200,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 修改用户头像
         /// </summary>
-        /// <param name="type">1:啊美雅端,2:医院端</param>
-        /// <param name="id"></param>
-        /// <param name="url"></param>
+        /// <param name="updateVo"></param>
         /// <returns></returns>
         [HttpPut("updateAvatar")]
         public async Task<ResultData<string>> UpdateAvatarAsync(UpdateAvatarVo updateVo)

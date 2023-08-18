@@ -116,7 +116,7 @@ namespace jos_sdk_net.Util
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
     }

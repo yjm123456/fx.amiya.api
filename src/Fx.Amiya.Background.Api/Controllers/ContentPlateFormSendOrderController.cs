@@ -318,7 +318,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 医院填写备注
         /// </summary>
-        /// <param name="updateVo"></param>
+        /// <param name="input"></param>
         /// <returns></returns>
         [HttpPut("contentPlateFormOrderRemark")]
         [FxTenantAuthorize]

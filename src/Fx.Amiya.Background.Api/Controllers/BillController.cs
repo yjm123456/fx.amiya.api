@@ -108,14 +108,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 根据条件导出发票信息
         /// </summary>
-        /// <param name="startDate"></param>
-        /// <param name="endDate"></param>
-        /// <param name="keyWord">关键词（可搜索费用备注，开票事由）</param>
-        /// <param name="hospitalId">客户id</param>
-        /// <param name="billType">票据类型（医美/其他）</param>
-        /// <param name="returnBackState"></param>
-        /// <param name="companyId">回款状态（未回款/回款中/已回款）</param>
-        /// <param name="valid">是否作废（1正常，0作废）</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("exportBillList")]
         [FxInternalAuthorize]

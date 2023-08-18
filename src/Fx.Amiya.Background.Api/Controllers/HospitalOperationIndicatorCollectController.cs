@@ -46,8 +46,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 获取指标数据汇总列表
         /// </summary>
-        /// <param name="keyword">关键词</param>
-        /// <param name="indicatorsId">归属指标id</param>
+        /// <param name="indicatorId"></param>
+        /// <param name="hospitalId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalAuthorize]

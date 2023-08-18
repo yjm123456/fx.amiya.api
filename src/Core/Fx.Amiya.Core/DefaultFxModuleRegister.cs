@@ -14,7 +14,7 @@ namespace Fx.Amiya.Core
     public class DefaultFxModuleRegister : IFxModuleRegisterable
     {
         public string Name { get; set; }
-        public string? DbConnectionString { get; set; }
+        public string DbConnectionString { get; set; }
         public FxDBType DBType { get; set; }
         public string[] ReadDbConnectionStrings { get; set; }
 

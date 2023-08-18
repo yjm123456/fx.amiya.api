@@ -119,7 +119,7 @@ namespace Jd.Api
                 catch (Exception e)
                 {
                     topLogger.Error(this.serverUrl + "\r\n" + e.StackTrace);
-                    throw e;
+                    throw new Exception(e.Message.ToString());
                 }
             }
         }

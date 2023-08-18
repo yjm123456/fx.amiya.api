@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Background.Api.Vo.Activity
 {
+    /// <summary>
+    /// 活动板块输出类
+    /// </summary>
     public class ActivityInfoVo
     {
         /// <summary>

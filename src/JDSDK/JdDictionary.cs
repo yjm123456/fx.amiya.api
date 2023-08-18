@@ -98,7 +98,7 @@ namespace Jd.Api
             this.Add(key, strValue);
         }
 
-        public new void AddNotNull(string key, string value)
+        public  void AddNotNull(string key, string value)
         {
             if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value))
             {

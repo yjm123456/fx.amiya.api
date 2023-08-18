@@ -26,7 +26,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="_consumptionLevelService"></param>
+        /// <param name="consumptionLevelService"></param>
         public ConsumptionLevelController(IConsumptionLevelService consumptionLevelService)
         {
             _consumptionLevelService = consumptionLevelService;
@@ -197,7 +197,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
     }

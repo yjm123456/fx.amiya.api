@@ -32,7 +32,7 @@ namespace Fx.Amiya.Infrastructure
             _dalMpUserSubscribeDetail = dalMpUserSubscribeDetail;
         }
 
-
+        [Obsolete]
         public async Task<WxMpUser> AddAsync(WxMpUser entity)
         {
             var userInfo = await _dalUserInfo.GetAll().SingleOrDefaultAsync(t => t.UnionId == entity.UnionId);
@@ -197,6 +197,7 @@ namespace Fx.Amiya.Infrastructure
             }
         }
 
+        [Obsolete]
         public async Task UpdateAsync(WxMpUser entity)
         {
             if (entity.SubscribeDetail != null)

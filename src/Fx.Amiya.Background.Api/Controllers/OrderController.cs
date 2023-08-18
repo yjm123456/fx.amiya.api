@@ -771,14 +771,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 导出订单列表
         /// </summary>
-        /// <param name="startDate">创建开始时间</param>
-        /// <param name="endDate">创建结束时间</param>
-        /// <param name="writeOffStartDate">核销开始时间</param>
-        /// <param name="writeOffEndDate">核销结束时间</param>
-        /// <param name="keyword"></param>
-        /// <param name="statusCode">状态码</param>
-        /// <param name="appType">渠道</param>
-        /// <param name="orderNature">订单性质</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("exportTmallOrderLlist")]
         [FxInternalAuthorize]
@@ -1374,10 +1367,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 导出小程序订单交易列表
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="isSendGoods">是否已发货，null：全部</param>
-        /// <param name="keyword"></param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("exportMiniProgramOrderLlist")]
         [FxInternalAuthorize]
@@ -1387,7 +1377,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             operationAddDto.Code = 0;
             try
             {
-                bool isHidePhone = true;
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
                 operationAddDto.OperationBy = employeeId;

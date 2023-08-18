@@ -35,6 +35,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="orderInfo"></param>
         /// <returns></returns>
+        [Obsolete]
         public async Task<ShanDeOrderResult> OrderAsync(ShanDeOrderInfo orderInfo)
         {
             var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202307072015").FirstOrDefault();
@@ -68,6 +69,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Obsolete]
         public async Task<RefundOrderResult> CreateRefundOrderAsync(string id)
         {
             var order = dalOrderRefund.GetAll().Where(e => e.Id == id).SingleOrDefault();
@@ -155,11 +157,11 @@ namespace Fx.Amiya.Service
             paramsTemp.Add("sign", sign);
             return paramsTemp;
         }
+        [Obsolete]
         internal async Task<ShanDeOrderResult> PostDataAsync(string url, string postData)
         {
             OperationAddDto operationAddDto = new OperationAddDto(); 
             string text = string.Empty;
-            string result;
             Uri requestUri = new Uri(url, false);
             HttpWebRequest httpWebRequest;
             httpWebRequest = (HttpWebRequest)WebRequest.Create(requestUri);
@@ -235,10 +237,10 @@ namespace Fx.Amiya.Service
             /*result = text;
             return result;*/
         }
+        [Obsolete]
         internal RefundOrderResult PostRefundData(string url, string postData)
         {
             string text = string.Empty;
-            string result;
             Uri requestUri = new Uri(url, false);
             HttpWebRequest httpWebRequest;
             httpWebRequest = (HttpWebRequest)WebRequest.Create(requestUri);

@@ -227,10 +227,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 导出领取礼品列表
         /// </summary>
-        /// <param name="startDate">开始时间（必填）</param>
-        /// <param name="endDate">结束时间（必填）</param>
-        /// <param name="isSendGoods">是否已发货,null:全部</param>
-        /// <param name="keyword">礼品名称、电话号</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("exportReceiveGiftList")]
         public async Task<FileStreamResult> ExportReceiveGiftListAsync([FromQuery] QueryExportReceiveGiftListVo query)
@@ -380,7 +377,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 手动发放礼品
         /// </summary>
-        /// <param name="categoryId"></param>
+        /// <param name="sendGift"></param>
         /// <returns></returns>
         [HttpPost("SendGift")]
         public async Task<ResultData> SendGiftAsync(SendGiftVo sendGift)

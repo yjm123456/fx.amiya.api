@@ -23,8 +23,13 @@ namespace Fx.Amiya.Background.Api.Vo
         /// 关键词
         /// </summary>
         public string KeyWord { get; set; }
-
+        /// <summary>
+        /// 第/页
+        /// </summary>
         public int? PageNum { get; set; }
+        /// <summary>
+        /// 每页/行
+        /// </summary>
         public int? PageSize { get; set; }
 
     }

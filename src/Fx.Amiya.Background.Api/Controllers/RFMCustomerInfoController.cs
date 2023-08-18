@@ -126,7 +126,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 添加rfm客户
         /// </summary>
-        /// <param name="addHealthValueVo"></param>
+        /// <param name="addVo"></param>
         /// <returns></returns>
         [HttpPost]
         public async Task<ResultData> AddAsync(AddRFMCustomerInfoVo addVo)
@@ -152,7 +152,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 修改rfm客户信息
         /// </summary>
-        /// <param name="updateHealthValueVo"></param>
+        /// <param name="updateVo"></param>
         /// <returns></returns>
         [HttpPut]
         public async Task<ResultData> UpdateAsync(UpdateRFMCustomerInfoVo updateVo)

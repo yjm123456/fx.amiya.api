@@ -30,7 +30,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="hospitalOperationDataService"></param>
+        /// <param name="hospitalImprovePlanRemarkService"></param>
         public HospitalImprovePlanController(IHospitalImprovePlanRemarkService hospitalImprovePlanRemarkService )
         {
             this.hospitalImprovePlanRemarkService = hospitalImprovePlanRemarkService;

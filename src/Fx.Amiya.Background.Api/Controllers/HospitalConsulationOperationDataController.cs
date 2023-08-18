@@ -247,7 +247,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
         /// <summary>
@@ -449,7 +449,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             catch (Exception err)
             {
-                throw err;
+                throw new Exception(err.Message.ToString());;
             }
 
         }

@@ -95,7 +95,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 添加医院品牌报名信息
         /// </summary>
-        /// <param name="hospitalName"></param>
         /// <param name="addVo"></param>
         /// <returns></returns>
         [HttpPost]
@@ -238,7 +237,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
 

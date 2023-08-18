@@ -32,7 +32,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="hospitalOperationDataService"></param>
+        /// <param name="indicatorSendHospitalService"></param>
+        /// <param name="httpContextAccessor"></param>
         public HospitalIndicatorFillController(IIndicatorSendHospitalService indicatorSendHospitalService, IHttpContextAccessor httpContextAccessor)
         {
             _indicatorSendHospitalService = indicatorSendHospitalService;

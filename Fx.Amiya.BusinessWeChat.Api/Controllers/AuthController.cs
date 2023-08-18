@@ -126,8 +126,6 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <summary>
         /// 啊美雅员工登录2【使用场景：code检索返回有啊美雅员工数据时使用】
         /// </summary>
-        /// <param name="userName"></param>
-        /// <param name="password"></param>
         /// <param name="userId">企业微信UserId</param>
         /// <param name="code">企业微信Code</param>
         /// <returns></returns>

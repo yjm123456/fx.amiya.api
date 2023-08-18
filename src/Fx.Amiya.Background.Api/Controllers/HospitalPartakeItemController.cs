@@ -273,9 +273,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 根据城市和项目导出医院列表
         /// </summary>
-        /// <param name="activityId"></param>
-        /// <param name="cityId"></param>
-        /// <param name="itemId"></param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("exportHospitalListByCity")]
         [FxInternalAuthorize]
@@ -369,8 +367,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 根据医院编号导出参与的项目列表
         /// </summary>
-        /// <param name="activityId"></param>
-        /// <param name="hospitalId"></param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("exportItemListByHospitalId")]
         [FxInternalAuthorize]
@@ -501,8 +498,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 根据项目编号导出参与的医院列表
         /// </summary>
-        /// <param name="activityId"></param>
-        /// <param name="itemId"></param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("exportHospitalListByItemId")]
         [FxInternalAuthorize]

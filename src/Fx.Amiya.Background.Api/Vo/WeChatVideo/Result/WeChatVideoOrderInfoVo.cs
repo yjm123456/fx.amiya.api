@@ -43,7 +43,7 @@ namespace Fx.Amiya.Background.Api.Vo.WeChatVideo
         /// <summary>
         /// 更新时间
         /// </summary>
-        public string? UpdateDate { get; set; }
+        public string UpdateDate { get; set; }
         /// <summary>
         /// 商品图片
         /// </summary>

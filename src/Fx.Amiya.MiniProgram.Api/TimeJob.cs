@@ -44,7 +44,7 @@ namespace Fx.Amiya.MiniProgram.Api
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
         

@@ -194,7 +194,7 @@ namespace Fx.Amiya.Modules.Integration.Infrastructure.Repositories
                     catch (Exception ex)
                     {
                         uow.Rollback();
-                        throw ex;
+                        throw new Exception(ex.Message.ToString());
 
                     }
                 }

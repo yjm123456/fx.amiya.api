@@ -273,7 +273,7 @@ namespace Fx.Amiya.Background.Api
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
 
         }

@@ -18,7 +18,7 @@ namespace Fx.Amiya.Core.Services
         /// <param name="defaultDbConnectionString">默认数据库连接地址，当模块没有配置连接地址时，都使用默认连接地址</param>
         /// <param name="defaultReadDbConnectionStrings">默认读数据库连接地址，当模块没有配置连接地址时，都使用默认连接地址</param>
         /// <param name="fxDBType">默认数据库类型，当模块没有配置数据库类型时，都使用默认数据库类型</param>
-        public static void RegisteModules(IServiceCollection services, string? defaultDbConnectionString = null, string[] defaultReadDbConnectionStrings = null, FxDBType fxDBType = FxDBType.MySql)
+        public static void RegisteModules(IServiceCollection services, string defaultDbConnectionString = null, string[] defaultReadDbConnectionStrings = null, FxDBType fxDBType = FxDBType.MySql)
         {
             //注册应用程序目录下的所有模块
             var configuration = services.BuildServiceProvider().GetService<IConfiguration>();

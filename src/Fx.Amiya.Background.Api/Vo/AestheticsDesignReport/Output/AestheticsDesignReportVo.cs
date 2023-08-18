@@ -62,13 +62,13 @@ namespace Fx.Amiya.Background.Api.Vo.AestheticsDesignReport.Output
         /// 是否有过过敏史或其他疾病
         /// </summary>
         public bool? WhetherAllergyOrOtherDisease { get; set; }
-        /// <summary>
-        /// 过敏或疾病描述
-        /// </summary>
+        ///// <summary>
+        ///// 过敏或疾病描述
+        ///// </summary>
         //public string AllergyOrOtherDiseaseDescribe { get; set; }
-        /// <summary>
-        /// 变美需求
-        /// </summary>
+        ///// <summary>
+        ///// 变美需求
+        ///// </summary>
         //public string BeautyDemand { get; set; }
         /// <summary>
         /// 预算

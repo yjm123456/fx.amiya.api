@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
@@ -24,6 +23,10 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class HospitalAchievementController : ControllerBase
     {
         private IHospitalPerformanceService hospitalPerformanceService;
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="hospitalPerformanceService"></param>
         public HospitalAchievementController(IHospitalPerformanceService hospitalPerformanceService)
         {
             this.hospitalPerformanceService = hospitalPerformanceService;

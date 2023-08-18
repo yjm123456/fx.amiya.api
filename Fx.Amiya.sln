@@ -169,7 +169,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HistoryDataBase", "HistoryD
 		amiyadbUpdateHistory-2023.sql = amiyadbUpdateHistory-2023.sql
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fx.Amiya.SyncOrder.WeChatVideo", "Fx.Amiya.SyncOrder.WeChatVideo\Fx.Amiya.SyncOrder.WeChatVideo.csproj", "{F3FA4120-22B4-459E-8C3C-8A1B366DCC94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fx.Amiya.SyncOrder.WeChatVideo", "Fx.Amiya.SyncOrder.WeChatVideo\Fx.Amiya.SyncOrder.WeChatVideo.csproj", "{F3FA4120-22B4-459E-8C3C-8A1B366DCC94}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E131EA0C-7532-4926-B243-9CE43B3B7AB9}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

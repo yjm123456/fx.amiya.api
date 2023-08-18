@@ -139,7 +139,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 根据职位id获取职位首页
         /// </summary>
         /// <param name="amyPositionId">职位id</param>
-        /// <param name="route">首页菜单id</param>
         /// <returns></returns>
         [HttpGet("getDefaultRoute")]
         public async Task<ResultData<string>> GetDefaultRouteAsync([Required] int amyPositionId)
@@ -153,7 +152,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 修改啊美雅职位首页
         /// </summary>
         /// <param name="amyPositionId">职位id</param>
-        /// <param name="route">首页菜单id</param>
+        /// <param name="moduleId">首页菜单id</param>
         /// <returns></returns>
         [HttpPut("updateAmyPositionIndex")]
         public async Task<ResultData> UpdateAmyPositionIndexAsync([Required] int amyPositionId,[Required]int moduleId)
@@ -366,7 +365,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 置顶/底内层菜单（Module）
         /// </summary>
-        /// <param name="goodsCategoryMove">菜单移动基础类</param>
+        /// <param name="moduleMove"></param>
         /// <returns></returns>
         [HttpPut("movetopordownModule")]
         public async Task<ResultData> UpdateTopOrDownModuleAsync(ModuleMoveVo moduleMove)
@@ -412,8 +411,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 获取有效的按钮权限信息列表
         /// </summary>
-        /// <param name="pageNum"></param>
-        /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("simplePermissionList")]
         public async Task<ResultData<List<PermissionInfoIdAndNameVo>>> GetSimplePermissionInfoListAsync()

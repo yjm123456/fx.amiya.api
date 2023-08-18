@@ -21,7 +21,7 @@ namespace Fx.Amiya.Core
         /// <summary>
         /// 数据库连接地址
         /// </summary>
-        string? DbConnectionString { get; set; }
+        string DbConnectionString { get; set; }
 
         /// <summary>
         /// 读数据库连接地址

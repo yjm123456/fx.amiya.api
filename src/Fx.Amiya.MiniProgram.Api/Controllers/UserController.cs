@@ -342,7 +342,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
         [HttpGet("birthDayCard")]
@@ -424,7 +424,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
         /// <summary>
@@ -604,7 +604,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
         /// <summary>

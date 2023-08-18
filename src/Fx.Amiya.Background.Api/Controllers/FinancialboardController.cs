@@ -119,9 +119,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 主播业绩
         /// </summary>
-        /// <param name="startDate"></param>
-        /// <param name="endDate"></param>
-        /// <param name="liveAnchorId">主播id</param>
+        /// <param name="search"></param>
         /// <returns></returns>
         [HttpPost("liveAnchorBoardData")]
         public async Task<ResultData<List<LiveAnchorBoardVo>>> GetLiveAnchorBoard(SearchVo search)

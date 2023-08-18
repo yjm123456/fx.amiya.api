@@ -13,7 +13,7 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         public string ContentPlatformName { get; set; }
         public DateTime CreateDate { get; set; }
         public string LiveAnchorName { get; set; }
-        public string? AppointmentDate { get; set; }
+        public string AppointmentDate { get; set; }
         public string AppointmentHospitalName { get; set; }
         public string GoodsName { get; set; }
         public string ConsultingContent { get; set; }

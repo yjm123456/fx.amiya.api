@@ -159,7 +159,7 @@ namespace Fx.Amiya.SyncOrder.TikTok
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
         public string Fetch(string appKey, string host, string method, long timestamp, string paramJson,
@@ -395,7 +395,7 @@ namespace Fx.Amiya.SyncOrder.TikTok
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
     }

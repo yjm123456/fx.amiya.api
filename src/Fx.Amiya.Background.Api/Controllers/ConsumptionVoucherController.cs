@@ -200,8 +200,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 手动发放优惠券
         /// </summary>
-        /// <param name="customerId"></param>
-        /// <param name="code"></param>
+        /// <param name="send"></param>
         /// <returns></returns>
         [HttpPost("sendVoucher")]
         public async Task<ResultData> SendVoucher(SendVoucherVo send)

@@ -38,8 +38,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 获取医院科室信息列表（分页）
         /// </summary>
         /// <param name="keyword"></param>
-        /// <param name="pageNum"></param>
-        /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
         [FxInternalAuthorize]
@@ -195,7 +193,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             catch (Exception ex)
             {
 
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
         }
         /// <summary>

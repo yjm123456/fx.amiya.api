@@ -8,17 +8,17 @@ namespace Fx.Amiya.Background.Api.Vo.MessageRecieve
     public class MessageRecieveVo
     {
         public string Id { get; set; }
-        /// <summary>
-        /// 是否绑定微信号
-        /// </summary>
+        ///// <summary>
+        ///// 是否绑定微信号
+        ///// </summary>
         /*public bool IsBindWechat { get; set; }
         /// <summary>
         /// 是否绑定公众号
         /// </summary>
         public bool IsBindOfficialAccounts { get; set; }*/
-        /// <summary>
-        /// 是否接受消息
-        /// </summary>
+        ///// <summary>
+        ///// 是否接受消息
+        ///// </summary>
         public bool IsReceive { get; set; }
         /// <summary>
         /// 开始时间

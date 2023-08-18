@@ -99,7 +99,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 审核客户消费凭证信息
         /// </summary>
-        /// <param name="updateVo"></param>
+        /// <param name="checkInfo"></param>
         /// <returns></returns>
         [HttpPut]
         public async Task<ResultData> UpdateAsync(CheckInfoVo checkInfo)

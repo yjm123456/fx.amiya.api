@@ -36,7 +36,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 发起退款
         /// </summary>
-        /// <param name="orderId"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost("wechatRefund/{id}")]
         public async Task<ResultData> WechatRefund(string id)

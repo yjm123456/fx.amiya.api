@@ -16,8 +16,6 @@ namespace Fx.Amiya.Service
     public class GiftCategoryService : IGiftCategoryService
     {
         private readonly IDalGiftCategory dalGiftCategory;
-        private readonly IAmiyaEmployeeService amiyaEmployeeService;
-        private readonly IDalAmiyaEmployee dalAmiyaEmployee;
 
         public GiftCategoryService(IDalGiftCategory dalGiftCategory)
         {

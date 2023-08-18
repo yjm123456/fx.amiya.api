@@ -46,11 +46,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData.Fail(ex.Message);
             }
         }
-        /// <summary>
-        /// 修改优秀机构运营健康批注
-        /// </summary>
-        /// <param name="addVo"></param>
-        /// <returns></returns>
+        ///// <summary>
+        ///// 修改优秀机构运营健康批注
+        ///// </summary>
+        ///// <param name="addVo"></param>
+        ///// <returns></returns>
         /*[HttpPut("updateAmiyaRemark")]
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> UpdateAmiyaRemarkAsync(UpdateAmiyaRemarkVo updateVo)
@@ -129,11 +129,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData.Fail(ex.Message);
             }
         }
-        /// <summary>
-        /// 修改机构运营数据批注
-        /// </summary>
-        /// <param name="addVo"></param>
-        /// <returns></returns>
+        ///// <summary>
+        ///// 修改机构运营数据批注
+        ///// </summary>
+        ///// <param name="addVo"></param>
+        ///// <returns></returns>
         /*[HttpPut("updateHospitalOperationRemark")]
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> UpdateHospitalOperationRemarkAsync(UpdateHospitalOperationRemarkVo updateVo)
@@ -157,7 +157,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 获取机构运营数据批注
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="indicatorId"></param>
+        /// <param name="hospitalId"></param>
         /// <returns></returns>
         [HttpGet("getHospitalOperationRemark")]
         [FxInternalOrTenantAuthroize]
@@ -214,11 +215,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData.Fail(ex.Message);
             }
         }
-        /// <summary>
-        /// 修改机构网咨运营数据分析批注
-        /// </summary>
-        /// <param name="addVo"></param>
-        /// <returns></returns>
+        ///// <summary>
+        ///// 修改机构网咨运营数据分析批注
+        ///// </summary>
+        ///// <param name="addVo"></param>
+        ///// <returns></returns>
         /*[HttpPut("updateHospitalOnlineConsultRemark")]
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> UpdateHospitalOnlineConsultRemarkAsync(UpdateHospitalOnlineConsultRemarkVo updateVo)
@@ -244,7 +245,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 获取机构网咨运营数据分析批注
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="indicatorId"></param>
+        /// <param name="hospitalId"></param>
         /// <returns></returns>
         [HttpGet("getHospitalOnlineConsultRemark")]
         [FxInternalOrTenantAuthroize]
@@ -303,11 +305,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData.Fail(ex.Message);
             }
         }
-        /// <summary>
-        /// 修改机构咨询师运营数据分析批注
-        /// </summary>
-        /// <param name="addVo"></param>
-        /// <returns></returns>
+        ///// <summary>
+        ///// 修改机构咨询师运营数据分析批注
+        ///// </summary>
+        ///// <param name="addVo"></param>
+        ///// <returns></returns>
         /*[HttpPut("updateHospitalConsultRemark")]
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> UpdateHospitalConsultRemarkAsync(UpdateHospitalConsultRemarkVo updateVo)
@@ -333,7 +335,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 获取机构咨询师运营数据分析批注
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="indicatorId"></param>
+        /// <param name="hospitalId"></param>
         /// <returns></returns>
         [HttpGet("getHospitalConsultRemark")]
         [FxInternalOrTenantAuthroize]
@@ -392,11 +395,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData.Fail(ex.Message);
             }
         }
-        /// <summary>
-        /// 修改机构医生运营数据分析
-        /// </summary>
-        /// <param name="addVo"></param>
-        /// <returns></returns>
+        ///// <summary>
+        ///// 修改机构医生运营数据分析
+        ///// </summary>
+        ///// <param name="addVo"></param>
+        ///// <returns></returns>
         /*[HttpPut("updateHospitalDoctorRemark")]
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> UpdateHospitalDoctorRemarkAsync(UpdateHospitalDoctorRemarkVo updateVo)
@@ -421,7 +424,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 获取机构医生运营数据分析
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="indicatorId"></param>
+        /// <param name="hospitalId"></param>
         /// <returns></returns>
         [HttpGet("getHospitalDoctorRemark")]
         [FxInternalOrTenantAuthroize]
@@ -480,11 +484,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData.Fail(ex.Message);
             }
         }
-        /// <summary>
-        /// 修改机构成交品项数据分析批注
-        /// </summary>
-        /// <param name="addVo"></param>
-        /// <returns></returns>
+        ///// <summary>
+        ///// 修改机构成交品项数据分析批注
+        ///// </summary>
+        ///// <param name="addVo"></param>
+        ///// <returns></returns>
         /*[HttpPut("updateHospitalDealRemark")]
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> UpdateHospitalDealRemarkAsync(UpdateHospitalDealRemarkVo updateVo)
@@ -509,7 +513,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 获取机构成交品项数据分析批注
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="indicatorId"></param>
+        /// <param name="hospitalId"></param>
         /// <returns></returns>
         [HttpGet("getHospitalDealRemark")]
         [FxInternalOrTenantAuthroize]

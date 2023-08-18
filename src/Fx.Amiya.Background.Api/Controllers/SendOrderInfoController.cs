@@ -320,8 +320,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="keyword"></param>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
-        /// <param name="pageNum"></param>
-        /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("exportOfHospital")]
         [FxTenantAuthorize]

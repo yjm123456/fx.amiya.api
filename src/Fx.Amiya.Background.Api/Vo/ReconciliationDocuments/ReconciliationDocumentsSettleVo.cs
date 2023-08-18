@@ -132,7 +132,7 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         /// 业绩上传人员名称
         /// </summary>
         [Description("业绩上传人员")]
-        public string? CreateEmpName { get; set; }
+        public string CreateEmpName { get; set; }
         /// <summary>
         /// 操作人
         /// </summary>

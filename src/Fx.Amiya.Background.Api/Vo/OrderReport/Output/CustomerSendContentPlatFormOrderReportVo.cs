@@ -128,9 +128,9 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport.OutPut
         [Description("成交金额")]
         public decimal? DealAmount { get; set; }
 
-        /// <summary>
-        /// 佣金比例
-        /// </summary>
+        ///// <summary>
+        ///// 佣金比例
+        ///// </summary>
         /*[Description("佣金比例")]
         public decimal CommissionRatio { get; set; }*/
         /// <summary>

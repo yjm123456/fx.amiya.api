@@ -64,7 +64,7 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// <summary>
         /// 业绩上传人员名称
         /// </summary>
-        public string? CreateEmpName { get; set; }
+        public string CreateEmpName { get; set; }
         /// <summary>
         /// 操作人
         /// </summary>

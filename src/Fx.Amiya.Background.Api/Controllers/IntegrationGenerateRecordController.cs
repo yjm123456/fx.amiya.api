@@ -74,9 +74,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 根据条件导出积分发放信息
         /// </summary>
-        /// <param name="keyword">关键词</param>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("exportRecordList")]
         [FxInternalAuthorize]

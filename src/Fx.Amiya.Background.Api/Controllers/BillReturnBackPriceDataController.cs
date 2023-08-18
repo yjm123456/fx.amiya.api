@@ -88,12 +88,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 根据条件导出发票回款记录信息
         /// </summary>
-        /// <param name="startDate">回款时间（起）</param>
-        /// <param name="endDate">回款时间（止）</param>
-        /// <param name="keyWord">关键词（支持模糊搜索票据单，备注）</param>
-        /// <param name="hospitalId">客户id</param>
-        /// <param name="returnBackState">回款状态（未回款/回款中/已回款）</param>
-        /// <param name="companyId">收款公司id</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("exportBillReturnBackPriceDataList")]
         [FxInternalAuthorize]

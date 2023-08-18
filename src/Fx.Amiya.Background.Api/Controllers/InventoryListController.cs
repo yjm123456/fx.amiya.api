@@ -95,10 +95,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 盘库导出
         /// </summary>
-        /// <param name="startDate">开始时间</param>
-        /// <param name="endDate">结束时间</param>
-        /// <param name="keyword">关键字</param>
-        /// <param name="wareHouseInfoId">归属仓库id</param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("InventoryListExport")]
         [FxInternalAuthorize]
@@ -145,7 +142,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             
 
-
+            finally
             {
                 
                 operationAddDto.Parameters = JsonConvert.SerializeObject(query);

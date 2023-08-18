@@ -164,7 +164,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
-                throw err;
+                throw new Exception(err.Message.ToString());;
             }
         }
         /// <summary>

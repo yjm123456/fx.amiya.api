@@ -423,7 +423,7 @@ namespace Jd.ACES
             {
                 // null input
                 statistic[StatisticType.ENCERRCNT.GetValue()]++;
-                throw e;
+                throw new Exception(e.Message.ToString());
             }
             catch (Exception e)
             {
@@ -466,12 +466,12 @@ namespace Jd.ACES
             catch (ArgumentNullException e)
             {
                 statistic[StatisticType.DECERRCNT.GetValue()]++;
-                throw e;
+                throw new Exception(e.Message.ToString());
             }
             catch (MalformedException e)
             {
                 statistic[StatisticType.DECERRCNT.GetValue()]++;
-                throw e;
+                throw new Exception(e.Message.ToString());
             }
             catch (Exception e)
             {
@@ -588,7 +588,7 @@ namespace Jd.ACES
             catch (IOException e)
             {
                 statistic[StatisticType.ENCERRCNT.GetValue()]++;
-                throw e;
+                throw new Exception(e.Message.ToString());
             }
             catch (Exception e)
             {
@@ -642,7 +642,7 @@ namespace Jd.ACES
             catch (IOException e)
             {
                 statistic[StatisticType.DECERRCNT.GetValue()]++;
-                throw e;
+                throw new Exception(e.Message.ToString());
             }
             catch (Exception e)
             {
@@ -740,7 +740,7 @@ namespace Jd.ACES
             catch (MalformedException e)
             {
                 statistic[StatisticType.SIGNERRCNT.GetValue()]++;
-                throw e;
+                throw new Exception(e.Message.ToString());
             }
             catch (Exception e)
             {
@@ -796,12 +796,12 @@ namespace Jd.ACES
             catch (MalformedException e)
             {
                 statistic[StatisticType.VERIFYERRCNT.GetValue()]++;
-                throw e;
+                throw new Exception(e.Message.ToString());
             }
             catch (Exception e)
             {
                 statistic[StatisticType.VERIFYERRCNT.GetValue()]++;
-                throw e;
+                throw new Exception(e.Message.ToString());
             }
 
             return ret;
