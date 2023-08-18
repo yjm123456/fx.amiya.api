@@ -44,7 +44,7 @@ namespace Fx.Amiya.Service
                 QuestionAnalize = e.QuestionAnalize,
                 LaterPeriodSolution = e.LaterPeriodSolution,
                 Sort = e.Sort,
-            }).OrderBy(e => e.Sort).Skip((query.PageSize.Value - 1) * query.PageNum.Value).Take(query.PageSize.Value).ToListAsync();
+            }).OrderBy(e => e.Sort).ToListAsync();
             return fxPageInfo;
         }
         public async Task AddListAsync(List<AddLiveReplayProductDealDataDto> addDtoList)

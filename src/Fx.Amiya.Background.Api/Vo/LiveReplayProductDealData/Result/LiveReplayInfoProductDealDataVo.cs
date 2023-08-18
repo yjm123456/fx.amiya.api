@@ -42,4 +42,25 @@ namespace Fx.Amiya.Background.Api.Vo.LiveReplayProductDealData.Result
         /// </summary>
         public int Sort { get; set; }
     }
+
+    /// <summary>
+    /// 成交量自动填写相关参数
+    /// </summary>
+    public class AutoWriteProductDealDataVo
+    {
+        /// <summary>
+        /// 同比数据获取
+        /// </summary>
+        public List<LiveReplayInfoProductDealDataVo> LiveReplayInfoProductDealDataVoList{ get;set;}
+
+        /// <summary>
+        /// 成交量
+        /// </summary>
+        public decimal DealNum { get; set; }
+
+        /// <summary>
+        /// 成交额
+        /// </summary>
+        public decimal DealPrice { get; set; }
+    }
 }
