@@ -654,6 +654,7 @@ namespace Fx.Amiya.Service
             {
                 //订单号集合
                 
+                string goodsName = "";
                 unitOfWork.BeginTransaction();
                 var gift = await dalGiftInfo.GetAll().SingleOrDefaultAsync(e => e.Id == addDto.GiftId);
                 if (gift == null)

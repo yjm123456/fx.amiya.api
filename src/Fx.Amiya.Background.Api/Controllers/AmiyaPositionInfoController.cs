@@ -22,7 +22,11 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private IAmiyaPositionInfoService amiyaPositionInfoService;
         private IHttpContextAccessor httpContextAccessor;
-
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="amiyaPositionInfoService"></param>
+        /// <param name="httpContextAccessor"></param>
         public AmiyaPositionInfoController(IAmiyaPositionInfoService amiyaPositionInfoService,
             IHttpContextAccessor httpContextAccessor)
         {

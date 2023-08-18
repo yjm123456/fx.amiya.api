@@ -222,7 +222,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
-                throw new Exception(err.Message.ToString());;
+                throw new Exception(err.Message.ToString());
             }
         }
 
@@ -278,7 +278,7 @@ namespace Fx.Amiya.Service
             catch (Exception er)
             {
                 unitOfWork.RollBack();
-                throw er;
+                throw new Exception(er.Message.ToString());
             }
         }
         public async Task CustomerServiceCheckAsync(int Id)
@@ -424,7 +424,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
-                throw new Exception(err.Message.ToString());;
+                throw new Exception(err.Message.ToString());
             }
         }
 
@@ -458,7 +458,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception err)
             {
-                throw new Exception(err.Message.ToString());
+                throw new Exception("操作失败！");
             }
         }
 
@@ -616,7 +616,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
-                throw new Exception(err.Message.ToString());;
+                throw new Exception(err.Message.ToString());
             }
         }
 

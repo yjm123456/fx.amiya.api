@@ -107,6 +107,7 @@ namespace Fx.Amiya.Service
             }
             if (string.IsNullOrEmpty(huiShouQianPayRequestInfo.RequestDate) || huiShouQianPayRequestInfo.RequestDate.Length > 14)
             {
+                DateTime date = new DateTime();
                 errmsg = "商品说明信息错误";
                 return false;
             }
@@ -120,7 +121,7 @@ namespace Fx.Amiya.Service
         public async Task<HuiShouQianOrderResult> CreateHuiShouQianOrder(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo, string openId, string customerId)
         {
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
-            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();           
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
             huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
             huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
             huiShouQianPackageInfo.Key = payInfo.PartnerKey;
@@ -199,12 +200,12 @@ namespace Fx.Amiya.Service
             /*result = text;
             return result;*/
         }
+        [Obsolete]
 
         /// <summary>
         /// 创建慧收钱退款订单
         /// </summary>
         /// <returns></returns>
-        [Obsolete]
         public async Task<RefundOrderResult> CreateHuiShouQianRefundOrde(string id)
         {
             var order = dalOrderRefund.GetAll().Where(e => e.Id == id).SingleOrDefault();
@@ -497,12 +498,12 @@ namespace Fx.Amiya.Service
             }
             return builder.ToString();
         }
+        [Obsolete]
         /// <summary>
         /// 创建积分加钱购退款订单
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Obsolete]
         public async Task<RefundOrderResult> CreateHuiShouQianAndPointRefundOrder(string id)
         {
             var order = dalOrderRefund.GetAll().Where(e => e.Id == id).SingleOrDefault();

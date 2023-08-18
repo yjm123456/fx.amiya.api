@@ -449,6 +449,7 @@ namespace Fx.Amiya.Service
         }
         public static Stream GetBytesFromUrl(string url)
         {
+            byte[] b;
             HttpWebRequest myReq = (HttpWebRequest)WebRequest.Create(url);
             WebResponse myResp = myReq.GetResponse();
             Stream stream = myResp.GetResponseStream();

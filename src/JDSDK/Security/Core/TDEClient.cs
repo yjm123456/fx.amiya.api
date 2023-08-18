@@ -148,7 +148,7 @@ namespace Jd.ACES
                 // step 8: connect KMS for flash keys
                 kmc.FetchMKeys();
                 // FetchMKeys are blocking call, check key chain is ready for bootup
-                // if not keys here, throw exception here..
+                // if not keys here, throw new Exception(ex.Message.ToString())ception here..
                 if (!kmc.IsKeyChainReady())
                 {
                     throw new SystemException(SDK_HAS_NO_AVAILABLE_KEYS.GetMessage());
@@ -617,7 +617,7 @@ namespace Jd.ACES
                 using (FileStream fout = File.OpenWrite(dest), fin = File.OpenRead(source))
                 {
                     int rdlen = fin.Read(minheader, 0, minheader.Length);
-                    // throw earlier
+                    // throw new Exception(ex.Message.ToString())arlier
                     if (rdlen < STRONG_HDR_LEN)
                     {
                         string message = SDK_HAS_CORRUPTED_CIPHER.GetMessage() + Convert.ToBase64String(minheader);

@@ -35,7 +35,6 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="orderInfo"></param>
         /// <returns></returns>
-        [Obsolete]
         public async Task<ShanDeOrderResult> OrderAsync(ShanDeOrderInfo orderInfo)
         {
             var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202307072015").FirstOrDefault();
