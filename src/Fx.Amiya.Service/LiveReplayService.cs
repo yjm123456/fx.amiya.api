@@ -80,7 +80,9 @@ namespace Fx.Amiya.Service
             if (replay != null)
             {
                 var currentLiveDate = replay.LiveDate;
-                var lastReplayData = await dalLiveReply.GetAll().Where(e => e.LiveDate < currentLiveDate && e.Valid == true).ToListAsync();
+                var liveanchor = replay.LiveAnchorId;
+                var contentPlatFormId = replay.ContentPlatformId;
+                var lastReplayData = await dalLiveReply.GetAll().Where(e => e.LiveDate < currentLiveDate && e.LiveAnchorId == liveanchor && e.ContentPlatformId == contentPlatFormId && e.Valid == true).ToListAsync();
                 if (lastReplayData.Count > 0)
                 {
                     result = lastReplayData.OrderByDescending(x => x.LiveDate).FirstOrDefault().Id;
