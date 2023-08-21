@@ -353,7 +353,7 @@ namespace Fx.Amiya.Service
                                 ContentPlatformName = d.Contentplatform.ContentPlatformName,
                                 LiveAnchorId = d.LiveAnchorId,
                                 LiveAnchorName = d.LiveAnchor.HostAccountName,
-                                GetCustomerTypeText=ServiceClass.GetShoppingCartGetCustomerTypeText(d.GetCustomerType),
+                                GetCustomerTypeText = ServiceClass.GetShoppingCartGetCustomerTypeText(d.GetCustomerType),
                                 ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ConsultationType),
                                 LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 CreateDate = d.CreateDate,
@@ -2998,7 +2998,7 @@ namespace Fx.Amiya.Service
         public async Task<CustomerServiceSimplePerformanceDto> GetCustomerServiceSimpleByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int belongCustomerServiceId)
         {
             var dealData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
-                .Where(e => belongCustomerServiceId == 0 || belongCustomerServiceId == e.BelongEmpId.Value);
+                .Where(e => belongCustomerServiceId == 0 || (e.SupportEmpId == 0 ? belongCustomerServiceId == e.BelongEmpId.Value : e.SupportEmpId == belongCustomerServiceId));
             var dealResult = await dealData
                 .SelectMany(e => e.ContentPlatformOrderDealInfoList)
                 .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsToHospital == true)
@@ -3020,12 +3020,12 @@ namespace Fx.Amiya.Service
                 dealResult = new CustomerServiceSimplePerformanceDto();
             }
 
-            var supportData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
-            .Where(e => belongCustomerServiceId == e.SupportEmpId)
-            .SelectMany(k => k.ContentPlatformOrderDealInfoList)
-            .Where(u => u.CreateDate >= startDate && u.CreateDate < endDate && u.IsDeal == true);
-            dealResult.SupportPrice = DecimalExtension.ChangePriceToTenThousand(supportData.Sum(x => x.Price));
-            dealResult.TotaPrice += dealResult.SupportPrice;
+            //var supportData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
+            //.Where(e => belongCustomerServiceId == e.SupportEmpId && e.SupportEmpId != e.BelongEmpId)
+            //.SelectMany(k => k.ContentPlatformOrderDealInfoList)
+            //.Where(u => u.CreateDate >= startDate && u.CreateDate < endDate && u.IsDeal == true);
+            //dealResult.SupportPrice = DecimalExtension.ChangePriceToTenThousand(supportData.Sum(x => x.Price));
+            //dealResult.TotaPrice += dealResult.SupportPrice;
             string belongLiveAnchorId = "";
             var empInfo = await _amiyaEmployeeService.GetByIdAsync(belongCustomerServiceId);
             dealResult.CustomerServiceName = empInfo.Name;
@@ -3092,7 +3092,7 @@ namespace Fx.Amiya.Service
         public async Task<List<CustomerServiceDetailsPerformanceDto>> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, List<int> belongCustomerServiceIds)
         {
             var dealData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
-                .Where(e => belongCustomerServiceIds.Count == 0 || belongCustomerServiceIds.Contains(e.BelongEmpId.Value));
+                .Where(e => belongCustomerServiceIds.Count == 0 || (e.SupportEmpId == 0 ? belongCustomerServiceIds.Contains(e.BelongEmpId.Value) : belongCustomerServiceIds.Contains(e.SupportEmpId)));
             var dealResult = dealData
                 .SelectMany(e => e.ContentPlatformOrderDealInfoList)
                 .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true)
@@ -3113,13 +3113,13 @@ namespace Fx.Amiya.Service
 
             foreach (var z in dealResult)
             {
-                var supportData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
-                .Where(e => e.IsSupportOrder == true && e.SupportEmpId == z.CustomerServiceId)
-                .SelectMany(k => k.ContentPlatformOrderDealInfoList)
-                .Where(u => u.CreateDate >= startDate && u.CreateDate < endDate && u.IsDeal == true);
-                var supp = await supportData.ToListAsync();
-                z.SupportPrice = supportData.Sum(x => x.Price);
-                z.TotalServicePrice += z.SupportPrice;
+                //var supportData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
+                //.Where(e => e.IsSupportOrder == true && e.SupportEmpId == z.CustomerServiceId && e.SupportEmpId != e.BelongEmpId)
+                //.SelectMany(k => k.ContentPlatformOrderDealInfoList)
+                //.Where(u => u.CreateDate >= startDate && u.CreateDate < endDate && u.IsDeal == true);
+                //var supp = await supportData.ToListAsync();
+                //z.SupportPrice = supportData.Sum(x => x.Price);
+                //z.TotalServicePrice += z.SupportPrice;
                 z.CustomerServiceName = await _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(z.CustomerServiceId)).Select(e => e.Name).FirstOrDefaultAsync();
                 var sendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.BelongEmpId == z.CustomerServiceId && x.SendDate >= startDate && x.SendDate < endDate).ToList();
                 var thisMonthVisitInfo = sendInfo.Where(x => x.IsToHospital == true).ToList();
