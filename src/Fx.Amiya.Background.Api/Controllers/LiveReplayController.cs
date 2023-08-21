@@ -117,7 +117,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query">平台id</param>
         /// <returns></returns>
         [HttpGet("getLiveReplay")]
-        public async Task<ResultData<List<LiveReplayInfoVo>>> GetFirstReplayAsync(QueryFirstReplayVo query)
+        public async Task<ResultData<List<LiveReplayInfoVo>>> GetFirstReplayAsync([FromQuery]QueryFirstReplayVo query)
         {
             List<LiveReplayInfoVo> list = new List<LiveReplayInfoVo>();
             QueryFirstReplayDto queryDto = new QueryFirstReplayDto();
@@ -147,7 +147,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="updateVo"></param>
         /// <returns></returns>
         [HttpPut]
-        public async Task UpdateAsync(UpdateLiveReplayVo updateVo)
+        public async Task<ResultData> UpdateAsync(UpdateLiveReplayVo updateVo)
         {
             UpdateLiveReplayDto updateDto = new UpdateLiveReplayDto();
             updateDto.Id = updateVo.Id;
@@ -158,6 +158,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.GMV = updateVo.GMV;
             updateDto.LivePersonnel = string.Join(",", updateVo.LivePersonnels);
             await liveReplayService.UpdateAsync(updateDto);
+            return ResultData.Success();
         }
     }
 }
