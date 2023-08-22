@@ -206,6 +206,45 @@ CREATE TABLE `tbl_live_replay` (
 	CONSTRAINT `fk_to_liveanchor` FOREIGN KEY (`liveanchor_id`) REFERENCES `tbl_live_anchor` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
+
+--直播分析流量优化
+
+CREATE TABLE `tbl_live_replay_flow_optimize` (
+	`id` VARCHAR(50) NOT NULL,
+	`live_replay_id` VARCHAR(50) NOT NULL,
+	`flow_source` VARCHAR(100) NOT NULL,
+	`proportion` DECIMAL(10,2) NOT NULL DEFAULT '0.00',
+	`drainage_count` INT(10) NOT NULL DEFAULT '0',
+	`last_drainage_count` INT(10) NOT NULL DEFAULT '0',
+	`last_drainage_proportion` DECIMAL(10,2) NOT NULL DEFAULT '0.00',
+	`problem_analysis` VARCHAR(500) NULL DEFAULT NULL,
+	`later_solution` VARCHAR(500) NULL DEFAULT NULL,
+	`sort` INT(10) NOT NULL DEFAULT '0',
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT(1) NOT NULL DEFAULT '0',
+	`delete_date` BIT(1) NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+);
+
+
+--直播分析-话术内容
+CREATE TABLE `tbl_live_replay_word_analyse` (
+	`id` VARCHAR(50) NOT NULL,
+	`live_replay_id` VARCHAR(50) NOT NULL,
+	`replay_content` VARCHAR(500) NOT NULL,
+	`word_manifestation` VARCHAR(500) NULL DEFAULT NULL,
+	`problem_analysis` VARCHAR(500) NULL DEFAULT NULL,
+	`later_solution` VARCHAR(500) NULL DEFAULT NULL,
+	`sort` INT(10) NOT NULL DEFAULT '0',
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT(1) NOT NULL DEFAULT '0',
+	`delete_date` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+);
+
+
 ------------------------------------------王健 2023/08/17 END-------------------------------------------------
 --直播复盘-成交数据
 CREATE TABLE `amiyadb`.`tbl_live_replay_product_deal_data` (

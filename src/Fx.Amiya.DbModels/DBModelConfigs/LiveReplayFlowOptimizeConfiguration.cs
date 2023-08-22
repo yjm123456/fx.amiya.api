@@ -22,8 +22,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.DrainageCount).HasColumnName("drainage_count").HasColumnType("int").IsRequired();
             builder.Property(e => e.LastDrainageCount).HasColumnName("last_drainage_count").HasColumnType("int").IsRequired();
             builder.Property(e => e.LastDrainageProportion).HasColumnName("last_drainage_proportion").HasColumnType("decimal(10,2)").IsRequired();           
-            builder.Property(e => e.ProblemAnalysis).HasColumnName("problem_analysis").HasColumnType("varchar(500)").IsRequired();
-            builder.Property(e => e.LaterSolution).HasColumnName("later_solution").HasColumnType("varchar(500)").IsRequired();
+            builder.Property(e => e.ProblemAnalysis).HasColumnName("problem_analysis").HasColumnType("varchar(500)").IsRequired(false);
+            builder.Property(e => e.LaterSolution).HasColumnName("later_solution").HasColumnType("varchar(500)").IsRequired(false);
             builder.Property(e => e.Sort).HasColumnName("sort").HasColumnType("int").IsRequired();
 
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();

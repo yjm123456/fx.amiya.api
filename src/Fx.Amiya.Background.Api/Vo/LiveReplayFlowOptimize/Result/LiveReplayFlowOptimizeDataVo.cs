@@ -45,4 +45,11 @@ namespace Fx.Amiya.Background.Api.Vo.LiveReplayFlowOptimize.Result
         /// </summary>
         public int Sort { get; set; }
     }
+    /// <summary>
+    /// 流量优化自动填写相关参数
+    /// </summary>
+    public class AutoWriteFlowOptimizeDataVo
+    {
+        public List<LiveReplayFlowOptimizeDataVo> LiveReplayFlowOptimizeDataVoList { get; set; }
+    }
 }

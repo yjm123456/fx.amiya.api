@@ -18,9 +18,9 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.Id).HasColumnName("id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(e => e.LiveReplayId).HasColumnName("live_replay_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(e => e.ReplayContent).HasColumnName("replay_content").HasColumnType("varchar(500)").IsRequired();
-            builder.Property(e => e.WordManifestation).HasColumnName("word_manifestation").HasColumnType("varchar(500)").IsRequired();
-            builder.Property(e => e.ProblemAnalysis).HasColumnName("problem_analysis").HasColumnType("varchar(500)").IsRequired();
-            builder.Property(e => e.LaterSolution).HasColumnName("later_solution").HasColumnType("varchar(500)").IsRequired();
+            builder.Property(e => e.WordManifestation).HasColumnName("word_manifestation").HasColumnType("varchar(500)").IsRequired(false);
+            builder.Property(e => e.ProblemAnalysis).HasColumnName("problem_analysis").HasColumnType("varchar(500)").IsRequired(false);
+            builder.Property(e => e.LaterSolution).HasColumnName("later_solution").HasColumnType("varchar(500)").IsRequired(false);
             builder.Property(e => e.Sort).HasColumnName("sort").HasColumnType("int").IsRequired();
 
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
