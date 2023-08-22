@@ -246,6 +246,7 @@ CREATE TABLE `tbl_live_replay_word_analyse` (
 
 
 ------------------------------------------王健 2023/08/17 END-------------------------------------------------
+-----------------------------------------------余建明 2023/08/18 BEGIN--------------------------------------------
 --直播复盘-成交数据
 CREATE TABLE `amiyadb`.`tbl_live_replay_product_deal_data` (
   `id` VARCHAR(50) NOT NULL,
@@ -268,4 +269,55 @@ CREATE TABLE `amiyadb`.`tbl_live_replay_product_deal_data` (
     REFERENCES `amiyadb`.`tbl_live_replay` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+--直播复盘-互动数据
+CREATE TABLE `amiyadb`.`tbl_live_replay_interactionl_data` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `live_replay_id` VARCHAR(50) NOT NULL,
+  `replay_target` VARCHAR(100) NULL,
+  `data_target` DECIMAL(12,2) NOT NULL,
+  `last_living_data` DECIMAL(12,2) NOT NULL,
+  `last_living_compare` DECIMAL(12,2) NOT NULL,
+  `question_analize` VARCHAR(3000) NULL,
+  `later_period_solution` VARCHAR(3000) NULL,
+  `sort` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_to_live_replay_idx` (`live_replay_id` ASC) VISIBLE,
+  CONSTRAINT `fk_to_live_replay`
+    FOREIGN KEY (`live_replay_id`)
+    REFERENCES `amiyadb`.`tbl_live_replay` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+	--直播复盘-商品分析数据
+	CREATE TABLE `amiyadb`.`tbl_live_replay_merchandise_top_data` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `live_replay_id` VARCHAR(50) NOT NULL,
+  `sort` VARCHAR(45) NOT NULL,
+  `merchandise_name` VARCHAR(500) NOT NULL,
+  `gmv` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  `merchandise_show_num` INT NOT NULL DEFAULT 0,
+  `merchandise_visit_num` INT NOT NULL DEFAULT 0,
+  `merchandise_show_visit_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  `merchandise_create_order_num` INT NOT NULL DEFAULT 0,
+  `merchandise_visit_create_order_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  `merchandise_deal_num` INT NOT NULL DEFAULT 0,
+  `merchandise_create_order_deal_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  `merchandise_question` VARCHAR(500) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_to_live_replay_idx` (`live_replay_id` ASC) VISIBLE,
+  CONSTRAINT `fk_live_replay_merchandise_top_data_to_live_replay`
+    FOREIGN KEY (`live_replay_id`)
+    REFERENCES `amiyadb`.`tbl_live_replay` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+-----------------------------------------------余建明 2023/08/22 END--------------------------------------------
 

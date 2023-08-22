@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.DbModels.Model
+namespace Fx.Amiya.Background.Api.Vo.LiveReplayInteractionlData.Result
 {
-    /// <summary>
-    /// 直播复盘-成交数据
-    /// </summary>
-    public class LiveReplayProductDealData:BaseDbModel
+    public class LiveReplayInteractionlDataVo
     {
+        /// <summary>
+        /// 编号
+        /// </summary>
+        public string Id { get; set; }
         /// <summary>
         /// 复盘主表id
         /// </summary>
@@ -39,13 +39,21 @@ namespace Fx.Amiya.DbModels.Model
         /// 后续解决方案
         /// </summary>
         public string LaterPeriodSolution { get; set; }
+
         /// <summary>
         /// 排序
         /// </summary>
         public int Sort { get; set; }
+    }
+
+    /// <summary>
+    /// 成交量自动填写相关参数
+    /// </summary>
+    public class AutoWriteInteractionlDataVo
+    {
         /// <summary>
-        /// 直播复盘主表
+        /// 同比数据获取
         /// </summary>
-        public LiveReplay LiveReplay { get; set; }
+        public List<LiveReplayInteractionlDataVo> LiveReplayInfoInteractionlDataVoList{ get;set;}
     }
 }

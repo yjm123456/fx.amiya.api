@@ -34,6 +34,16 @@ namespace Fx.Amiya.IService
         Task<List<TakeGoodsDataDto>> GetTakeGoodsDataAsync(DateTime startDate,DateTime endDate,string contentPlatformId,List<int> liveAnchorIds);
 
         /// <summary>
+        /// 根据主播IP获取单品带货TOP10数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="contentPlatformId"></param>
+        /// <param name="liveAnchorId"></param>
+        /// <returns></returns>
+        Task<List<LivingDailyTakeGoodsDto>> GetTopTakeGoodsDateByLiveAnchorAsync(DateTime startDate, DateTime endDate, string contentPlatformId, int liveAnchorId);
+
+        /// <summary>
         /// 获取当月带货业绩数据
         /// </summary>
         /// <param name="startDate"></param>

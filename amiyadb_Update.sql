@@ -158,7 +158,6 @@ ALTER TABLE `amiyadb`.`tbl_living_daily_take_goods`
 ADD COLUMN `order_num` INT NOT NULL DEFAULT 0 AFTER `item_details_id`;
 
 -----------------------------------------------余建明 2023/08/9 END--------------------------------------------
---------------------------------------------------------------------------以上已发布至线上
 
 
 -----------------------------------------------余建明 2023/08/14 BEGIN--------------------------------------------
@@ -166,3 +165,19 @@ ADD COLUMN `order_num` INT NOT NULL DEFAULT 0 AFTER `item_details_id`;
 ALTER TABLE `amiyadb`.`tbl_recommand_document_settle` 
 ADD COLUMN `hospital_id` INT NOT NULL DEFAULT 0 AFTER `account_price`;
 -----------------------------------------------余建明 2023/08/14 END--------------------------------------------
+
+--------------------------------------------------------------------------以上已发布至线上
+
+-----------------------------------------------余建明 2023/08/22 BEGIN--------------------------------------------
+	--直播复盘-商品分析数据加入商品主外键
+ALTER TABLE `amiyadb`.`tbl_live_replay_merchandise_top_data` 
+CHANGE COLUMN `merchandise_name` `item_id` INT UNSIGNED NOT NULL ,
+ADD INDEX `fk_live_replay_merchandise_top_data_to_item_info_idx` (`item_id` ASC) VISIBLE;
+;
+ALTER TABLE `amiyadb`.`tbl_live_replay_merchandise_top_data` 
+ADD CONSTRAINT `fk_live_replay_merchandise_top_data_to_item_info`
+  FOREIGN KEY (`item_id`)
+  REFERENCES `amiyadb`.`tbl_item_info` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+-----------------------------------------------余建明 2023/08/22 END--------------------------------------------

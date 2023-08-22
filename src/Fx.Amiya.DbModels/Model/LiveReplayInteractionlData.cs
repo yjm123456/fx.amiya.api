@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace Fx.Amiya.DbModels.Model
 {
     /// <summary>
-    /// 直播复盘-成交数据
+    /// 直播复盘-互动数据
     /// </summary>
-    public class LiveReplayProductDealData:BaseDbModel
+    public class LiveReplayInteractionlData : BaseDbModel
     {
         /// <summary>
         /// 复盘主表id

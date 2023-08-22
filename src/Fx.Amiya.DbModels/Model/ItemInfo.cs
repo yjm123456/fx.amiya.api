@@ -42,5 +42,6 @@ namespace Fx.Amiya.DbModels.Model
         public List<ActivityItemDetail> ActivityItemDetailList { get; set; }
         public List<HospitalPartakeItem> HospitalPartakeItemList { get; set; }
         public List<LivingDailyTakeGoods> LivingDailyTakeGoodsList { get; set; }
+        public List<LiveReplayMerchandiseTopData> LiveReplayMerchandiseTopDataList { get; set; }
     }
 }

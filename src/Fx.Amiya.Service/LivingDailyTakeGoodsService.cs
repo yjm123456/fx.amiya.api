@@ -250,6 +250,7 @@ namespace Fx.Amiya.Service
             }
             return await data.Select(e => new TakeGoodsDataDto
             {
+
                 GMV = e.TotalPrice,
                 Count = e.TakeGoodsQuantity,
                 SinglePrice = e.SinglePrice,
@@ -258,6 +259,37 @@ namespace Fx.Amiya.Service
                 TotalPrice = e.TotalPrice,
                 TakeGoodsDate = e.TakeGoodsDate.Value
             }).ToListAsync();
+
+        }
+
+        /// <summary>
+        /// 根据主播IP获取单品带货TOP10数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="contentPlatformId"></param>
+        /// <param name="liveAnchorId"></param>
+        /// <returns></returns>
+        public async Task<List<LivingDailyTakeGoodsDto>> GetTopTakeGoodsDateByLiveAnchorAsync(DateTime startDate, DateTime endDate, string contentPlatformId, int liveAnchorId)
+        {
+
+            var data = dalLivingDailyTakeGoodsService.GetAll().Include(x => x.ItemInfo).Where(e => e.TakeGoodsDate >= startDate && e.TakeGoodsDate <= endDate && e.Valid == true);
+            if (!string.IsNullOrEmpty(contentPlatformId))
+            {
+                data = data.Where(e => e.ContentPlatFormId == contentPlatformId);
+                if (liveAnchorId != 0)
+                {
+                    data = data.Where(e => e.LiveAnchorId == liveAnchorId);
+                }
+            }
+            return await data.Select(e => new LivingDailyTakeGoodsDto
+            {
+                ItemId = e.ItemId,
+                ItemName = e.ItemInfo.Name,
+                TotalPrice = e.TotalPrice,
+                OrderNum = e.OrderNum,
+                TakeGoodsQuantity = e.TakeGoodsQuantity,
+            }).OrderByDescending(x => x.TotalPrice).Take(10).ToListAsync();
 
         }
 

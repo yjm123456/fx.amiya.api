@@ -45,5 +45,9 @@ namespace Fx.Amiya.DbModels.Model
         public LiveAnchor LiveAnchor { get; set; }
 
         public List<LiveReplayProductDealData> LiveReplayProductDealDataList { get; set; }
+
+        public List<LiveReplayInteractionlData> LiveReplayInteractionlDataList { get; set; }
+
+        public List<LiveReplayMerchandiseTopData> LiveReplayMerchandiseTopDataList { get; set; }
     }
 }
