@@ -297,8 +297,9 @@ namespace Fx.Amiya.Service
         [Obsolete]
         internal async Task<RefundOrderResult> PostRefundData(string url, string postData)
         {
+            
             string text = string.Empty;
-            url = url.Replace("?","");
+            
             Uri requestUri = new Uri(url, false);
             HttpWebRequest httpWebRequest;
 

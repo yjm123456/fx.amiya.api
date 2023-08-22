@@ -223,7 +223,7 @@ CREATE TABLE `tbl_live_replay_flow_optimize` (
 	`create_date` DATETIME NOT NULL,
 	`update_date` DATETIME NULL DEFAULT NULL,
 	`valid` BIT(1) NOT NULL DEFAULT '0',
-	`delete_date` BIT(1) NULL DEFAULT NULL,
+	`delete_date` DATETIME NULL DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
 

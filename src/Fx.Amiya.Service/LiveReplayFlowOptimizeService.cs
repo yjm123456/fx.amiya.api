@@ -87,12 +87,13 @@ namespace Fx.Amiya.Service
             {
                 Id = e.Id,
                 LiveReplayId = e.LiveReplayId,
-                FlowSource=e.FlowSource,
-                Proportion=e.Proportion,
-                DrainageCount=e.DrainageCount,
-                LastDrainageCount=e.LastDrainageCount,
-                ProblemAnalysis=e.ProblemAnalysis,
-                LaterSolution=e.LaterSolution,
+                FlowSource = e.FlowSource,
+                Proportion = e.Proportion,
+                DrainageCount = e.DrainageCount,
+                LastDrainageCount = e.LastDrainageCount,
+                ProblemAnalysis = e.ProblemAnalysis,
+                LastDrainageProportion = e.LastDrainageProportion,
+                LaterSolution = e.LaterSolution,
                 Sort = e.Sort,
             }).OrderBy(e => e.Sort).ToListAsync();
             return LiveReplayFlowOptimizeDataInfoDtoList;
