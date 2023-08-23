@@ -119,7 +119,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryLiveReplayFlowOptimizeDataDto.Valid = true;
             queryLiveReplayFlowOptimizeDataDto.KeyWord = "";
             var replayList = await liveReplayFlowOptimizeService.GetListAsync(queryLiveReplayFlowOptimizeDataDto);
-            resultList = resultList.Select(e => new LiveReplayFlowOptimizeDataVo
+            resultList = replayList.Select(e => new LiveReplayFlowOptimizeDataVo
             {
                 LastDrainageCount=e.DrainageCount,
                 LastDrainageProportion=e.Proportion,
