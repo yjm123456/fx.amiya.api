@@ -14,7 +14,7 @@ namespace Fx.Amiya.IService
         Task<FxPageInfo<LiveReplayInfoDto>> GetListWithPageAsync(QueryReplayDto query);
         Task AddAsync(AddLiveReplayDto addDto);
         Task<LiveReplayInfoDto> GetByIdAsync(string id);
-        Task<string> GetLastLiveReplayId(string id);
+        Task<LiveReplayInfoDto> GetLastLiveReplayId(string id);
         Task UpdateAsync(UpdateLiveReplayDto updateDto);
         Task DeleteAsync(string id);
         /// <summary>

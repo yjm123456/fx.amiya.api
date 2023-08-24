@@ -13,5 +13,8 @@ namespace Fx.Amiya.Dto.LivingDailyTakeGoods.Input
         public string BrandId { get; set; }
         public string CategoryId { get; set; }
         public string ItemDetailsId { get; set; }
+
+        public string ContentPlatFormId { get; set; }
+        public int LiveAnchorId { get; set; }
     }
 }

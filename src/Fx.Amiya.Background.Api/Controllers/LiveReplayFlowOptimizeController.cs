@@ -111,11 +111,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet]
         public async Task<ResultData<AutoWriteFlowOptimizeDataVo>> GetAutoWriteDataAsync(string replayId)
         {
-            var lastReplayId = await liveReplayService.GetLastLiveReplayId(replayId);
+            var lastReplay = await liveReplayService.GetLastLiveReplayId(replayId);
             AutoWriteFlowOptimizeDataVo autoWriteFlowOptimizeDataVo = new AutoWriteFlowOptimizeDataVo();
             List<LiveReplayFlowOptimizeDataVo> resultList = new List<LiveReplayFlowOptimizeDataVo>();
             QueryLiveReplayFlowOptimizeDataDto queryLiveReplayFlowOptimizeDataDto = new QueryLiveReplayFlowOptimizeDataDto();
-            queryLiveReplayFlowOptimizeDataDto.LiveReplayId = lastReplayId;
+            queryLiveReplayFlowOptimizeDataDto.LiveReplayId = lastReplay.Id;
             queryLiveReplayFlowOptimizeDataDto.Valid = true;
             queryLiveReplayFlowOptimizeDataDto.KeyWord = "";
             var replayList = await liveReplayFlowOptimizeService.GetListAsync(queryLiveReplayFlowOptimizeDataDto);

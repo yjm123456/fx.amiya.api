@@ -10,5 +10,8 @@ namespace Fx.Amiya.Dto.LiveReplayProductDealData.Input
     {
         public bool Valid { get; set; }
         public string LiveReplayId { get; set; }
+
+        public string ContentPlatFormId { get; set; }
+        public int LiveAnchorId { get; set; }
     }
 }

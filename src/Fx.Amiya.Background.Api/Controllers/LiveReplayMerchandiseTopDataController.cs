@@ -130,6 +130,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var result = takeGoodsInfo.Select(e => new LiveReplayMerchandiseTopDataVo
             {
                 Gmv = e.TotalPrice,
+                LiveReplayId = replayId,
                 ItemId = e.ItemId,
                 ItemName = e.ItemName,
                 MerchandiseCreateOrderNum = e.OrderNum,

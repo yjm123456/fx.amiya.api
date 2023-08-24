@@ -24,7 +24,7 @@ namespace Fx.Amiya.Dto.LiveReplayInteractionlData.Input
         /// <summary>
         /// 同比数据
         /// </summary>
-        public int LastLivingData { get; set; }
+        public decimal LastLivingData { get; set; }
         /// <summary>
         /// 同比增长
         /// </summary>

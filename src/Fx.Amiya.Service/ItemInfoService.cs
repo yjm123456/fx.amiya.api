@@ -616,7 +616,9 @@ namespace Fx.Amiya.Service
         public async Task<List<BaseKeyValueDto>> GetItemNameByBrandIdAndCategoryIdAsync(string brandId, string itemDetailsId)
         {
             var items = from d in dalItemInfo.GetAll()
-                        where (d.BrandId == brandId && d.ItemDetailsId == itemDetailsId && d.Valid == true)
+                        where (d.Valid == true)
+                        where (string.IsNullOrEmpty(brandId) || d.BrandId == brandId)
+                        where (string.IsNullOrEmpty(itemDetailsId) || d.ItemDetailsId == itemDetailsId)
                         select new BaseKeyValueDto
                         {
                             Key = d.Id.ToString(),

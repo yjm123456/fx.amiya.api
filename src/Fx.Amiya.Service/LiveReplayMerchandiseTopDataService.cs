@@ -17,23 +17,23 @@ namespace Fx.Amiya.Service
 {
     public class LiveReplayMerchandiseTopDataService : ILiveReplayMerchandiseTopDataService
     {
-        private readonly IDalLiveReplayMerchandiseTopData dalLiveReplyProductDealData;
+        private readonly IDalLiveReplayMerchandiseTopData dalLiveReplyMerchandiseTopData;
         private IUnitOfWork unitOfWork;
 
-        public LiveReplayMerchandiseTopDataService(IDalLiveReplayMerchandiseTopData dalLiveReplyProductDealData, IUnitOfWork unitOfWork)
+        public LiveReplayMerchandiseTopDataService(IDalLiveReplayMerchandiseTopData dalLiveReplyMerchandiseTopData, IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
-            this.dalLiveReplyProductDealData = dalLiveReplyProductDealData;
+            this.dalLiveReplyMerchandiseTopData = dalLiveReplyMerchandiseTopData;
         }
 
         public async Task<List<LiveReplayMerchandiseTopDataInfoDto>> GetListAsync(QueryLiveReplayMerchandiseTopDataDto query)
         {
             List<LiveReplayMerchandiseTopDataInfoDto> LiveReplayMerchandiseTopDataInfoDtoList = new List<LiveReplayMerchandiseTopDataInfoDto>();
-            var replayProductDealData = dalLiveReplyProductDealData.GetAll().Include(x=>x.ItemInfo)
+            var replayMerchandiseTopData = dalLiveReplyMerchandiseTopData.GetAll().Include(x=>x.ItemInfo)
                 .Where(e => e.LiveReplayId == query.LiveReplayId)
                 .Where(e => e.Valid == query.Valid)
                 .Where(e => string.IsNullOrEmpty(query.KeyWord) || e.MerchandiseQuestion.Contains(query.KeyWord));
-            LiveReplayMerchandiseTopDataInfoDtoList = await replayProductDealData.Select(e => new LiveReplayMerchandiseTopDataInfoDto
+            LiveReplayMerchandiseTopDataInfoDtoList = await replayMerchandiseTopData.Select(e => new LiveReplayMerchandiseTopDataInfoDto
             {
                 Id = e.Id,
                 LiveReplayId = e.LiveReplayId,
@@ -76,7 +76,7 @@ namespace Fx.Amiya.Service
                     liveReplayMerchandiseTopData.Sort = addDto.Sort;
                     liveReplayMerchandiseTopData.CreateDate = DateTime.Now;
                     liveReplayMerchandiseTopData.Valid = true;
-                    await dalLiveReplyProductDealData.AddAsync(liveReplayMerchandiseTopData, true);
+                    await dalLiveReplyMerchandiseTopData.AddAsync(liveReplayMerchandiseTopData, true);
                 }
                 unitOfWork.Commit();
             }
@@ -91,12 +91,12 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                var result = await dalLiveReplyProductDealData.GetAll().Where(x => x.LiveReplayId == liveReplayId).ToListAsync();
+                var result = await dalLiveReplyMerchandiseTopData.GetAll().Where(x => x.LiveReplayId == liveReplayId).ToListAsync();
                 foreach (var x in result)
                 {
                     x.Valid = false;
                     x.DeleteDate = DateTime.Now;
-                    await dalLiveReplyProductDealData.UpdateAsync(x, true);
+                    await dalLiveReplyMerchandiseTopData.UpdateAsync(x, true);
                 }
                 unitOfWork.Commit();
             }

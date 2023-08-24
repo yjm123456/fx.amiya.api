@@ -73,9 +73,9 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<string> GetLastLiveReplayId(string id)
+        public async Task<LiveReplayInfoDto> GetLastLiveReplayId(string id)
         {
-            string result = "";
+            LiveReplayInfoDto result = new LiveReplayInfoDto();
             var replay = await dalLiveReply.GetAll().Where(e => e.Id == id && e.Valid == true).FirstOrDefaultAsync();
             if (replay != null)
             {
@@ -85,7 +85,10 @@ namespace Fx.Amiya.Service
                 var lastReplayData = await dalLiveReply.GetAll().Where(e => e.LiveDate < currentLiveDate && e.LiveAnchorId == liveanchor && e.ContentPlatformId == contentPlatFormId && e.Valid == true).ToListAsync();
                 if (lastReplayData.Count > 0)
                 {
-                    result = lastReplayData.OrderByDescending(x => x.LiveDate).FirstOrDefault().Id;
+                    var selectResult = lastReplayData.OrderByDescending(x => x.LiveDate).FirstOrDefault();
+                    result.Id = selectResult.Id;
+                    result.LiveAnchorId = selectResult.LiveAnchorId;
+                    result.ContentPlatformId = selectResult.ContentPlatformId;
                 }
             }
             return result;

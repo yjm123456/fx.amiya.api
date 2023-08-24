@@ -110,11 +110,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet]
         public async Task<ResultData<AutoWriteInteractionlDataVo>> GetAutoWriteDataAsync(string replayId)
         {
-            var lastReplayId = await liveReplayService.GetLastLiveReplayId(replayId);
+            var lastReplay = await liveReplayService.GetLastLiveReplayId(replayId);
             AutoWriteInteractionlDataVo autoWriteProductDealDataVo = new AutoWriteInteractionlDataVo();
             List<LiveReplayInteractionlDataVo> resultList = new List<LiveReplayInteractionlDataVo>();
             QueryLiveReplayInteractionlDataDto queryLiveReplayInteractionlDataDto = new QueryLiveReplayInteractionlDataDto();
-            queryLiveReplayInteractionlDataDto.LiveReplayId = lastReplayId;
+            queryLiveReplayInteractionlDataDto.LiveReplayId = lastReplay.Id;
             queryLiveReplayInteractionlDataDto.Valid = true;
             queryLiveReplayInteractionlDataDto.KeyWord = "";
             var replayList = await liveReplayInteractionlDataService.GetListAsync(queryLiveReplayInteractionlDataDto);

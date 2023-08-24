@@ -300,7 +300,7 @@ CREATE TABLE `amiyadb`.`tbl_live_replay_interactionl_data` (
   `valid` BIT(1) NOT NULL,
   `delete_date` DATETIME NULL,
   `live_replay_id` VARCHAR(50) NOT NULL,
-  `sort` VARCHAR(45) NOT NULL,
+  `sort` INT NOT NULL,
   `merchandise_name` VARCHAR(500) NOT NULL,
   `gmv` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
   `merchandise_show_num` INT NOT NULL DEFAULT 0,

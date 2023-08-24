@@ -113,11 +113,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet]
         public async Task<ResultData<AutoWriteProductDealDataVo>> GetAutoWriteDataAsync(string replayId)
         {
-            var lastReplayId = await liveReplayService.GetLastLiveReplayId(replayId);
+            var lastReplay = await liveReplayService.GetLastLiveReplayId(replayId);
             AutoWriteProductDealDataVo autoWriteProductDealDataVo = new AutoWriteProductDealDataVo();
             List<LiveReplayInfoProductDealDataVo> resultList = new List<LiveReplayInfoProductDealDataVo>();
             QueryLiveReplayProductDealDataDto queryLiveReplayProductDealDataDto = new QueryLiveReplayProductDealDataDto();
-            queryLiveReplayProductDealDataDto.LiveReplayId = lastReplayId;
+            queryLiveReplayProductDealDataDto.LiveReplayId = lastReplay.Id;
+            queryLiveReplayProductDealDataDto.LiveAnchorId = lastReplay.LiveAnchorId;
+            queryLiveReplayProductDealDataDto.ContentPlatFormId = lastReplay.ContentPlatformId;
             queryLiveReplayProductDealDataDto.Valid = true;
             queryLiveReplayProductDealDataDto.KeyWord = "";
             var replayList = await liveReplayProductDealDataService.GetListAsync(queryLiveReplayProductDealDataDto);
@@ -134,6 +136,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             DateTime liveDate = thisReplayInfo.LiveDate;
             QueryLivingDailyTakeGoodsDto queryLivingDailyTakeGoodsDto = new QueryLivingDailyTakeGoodsDto();
             queryLivingDailyTakeGoodsDto.Valid = true;
+            queryLivingDailyTakeGoodsDto.ContentPlatFormId = thisReplayInfo.ContentPlatformId;
+            queryLivingDailyTakeGoodsDto.LiveAnchorId = thisReplayInfo.LiveAnchorId;
             queryLivingDailyTakeGoodsDto.StartDate = liveDate;
             queryLivingDailyTakeGoodsDto.EndDate = liveDate.Date.AddDays(1);
             queryLivingDailyTakeGoodsDto.PageNum = 1;
