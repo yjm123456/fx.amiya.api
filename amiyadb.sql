@@ -179,7 +179,6 @@ CREATE TABLE `amiyadb`.`tbl_supplier_item_details` (
     ON UPDATE NO ACTION);
     
 -----------------------------------------------余建明 2023/08/01 END--------------------------------------------
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
 
@@ -197,7 +196,7 @@ CREATE TABLE `tbl_live_replay` (
 	`live_personnel` VARCHAR(500) NOT NULL,
 	`create_date` DATETIME NOT NULL,
 	`update_date` DATETIME NULL DEFAULT NULL,
-	`valid` BIT(1) NOT NULL DEFAULT '0',
+	`valid` BIT(1) NOT NULL,
 	`delete_date` DATETIME NULL DEFAULT NULL,
 	PRIMARY KEY (`id`),
 	INDEX `fk_to_contentplatform` (`content_platform_id`),
@@ -222,7 +221,7 @@ CREATE TABLE `tbl_live_replay_flow_optimize` (
 	`sort` INT(10) NOT NULL DEFAULT '0',
 	`create_date` DATETIME NOT NULL,
 	`update_date` DATETIME NULL DEFAULT NULL,
-	`valid` BIT(1) NOT NULL DEFAULT '0',
+	`valid` BIT(1) NOT NULL ,
 	`delete_date` DATETIME NULL DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
@@ -239,7 +238,7 @@ CREATE TABLE `tbl_live_replay_word_analyse` (
 	`sort` INT(10) NOT NULL DEFAULT '0',
 	`create_date` DATETIME NOT NULL,
 	`update_date` DATETIME NULL DEFAULT NULL,
-	`valid` BIT(1) NOT NULL DEFAULT '0',
+	`valid` BIT(1) NOT NULL,
 	`delete_date` DATETIME NULL DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
@@ -286,7 +285,7 @@ CREATE TABLE `amiyadb`.`tbl_live_replay_interactionl_data` (
   `sort` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_to_live_replay_idx` (`live_replay_id` ASC) VISIBLE,
-  CONSTRAINT `fk_to_live_replay`
+  CONSTRAINT `fk_to_live_replay_live_replay_interactionl_data`
     FOREIGN KEY (`live_replay_id`)
     REFERENCES `amiyadb`.`tbl_live_replay` (`id`)
     ON DELETE NO ACTION
@@ -320,4 +319,5 @@ CREATE TABLE `amiyadb`.`tbl_live_replay_interactionl_data` (
     ON UPDATE NO ACTION);
 
 -----------------------------------------------余建明 2023/08/22 END--------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
