@@ -595,7 +595,7 @@ namespace Fx.Amiya.Service
                        .Where(e => !commissionRatio.HasValue || e.ContentPlatformOrder.CommissionRatio == commissionRatio.Value)
                        .Where(e => !toHospitalType.HasValue || e.ContentPlatformOrder.ToHospitalType == toHospitalType.Value)
                        .Where(e => !consultationEmpId.HasValue || e.ContentPlatformOrder.ConsultationEmpId == consultationEmpId.Value)
-                       .Where(e => liveAnchorIds.Count<=0 || liveAnchorIds.Contains(e.ContentPlatformOrder.LiveAnchorId))
+                       .Where(e => liveAnchorIds.Count <= 0 || liveAnchorIds.Contains(e.ContentPlatformOrder.LiveAnchorId))
                        .Where(e => orderStatus == null || (orderStatus != null && orderStatus == (int)ContentPlateFormOrderStatus.RepeatOrderProfundity ? e.ContentPlatformOrder.IsRepeatProfundityOrder == true : e.ContentPlatformOrder.OrderStatus == orderStatus))
                        .Where(e => string.IsNullOrWhiteSpace(contentPlatFormId) || e.ContentPlatformOrder.ContentPlateformId == contentPlatFormId);
 
@@ -621,16 +621,22 @@ namespace Fx.Amiya.Service
             if (employee.IsCustomerService && !employee.IsDirector)
             {
                 orders = from d in orders
-                         where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatformOrder.Phone) > 0 || d.ContentPlatformOrder.SupportEmpId == employeeId || d.ContentPlatformOrder.BelongEmpId == employeeId
-                         where (d.ContentPlatformOrder.IsSupportOrder == false || d.ContentPlatformOrder.SupportEmpId == employeeId)
+                         where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatformOrder.Phone) > 0
+                         || d.ContentPlatformOrder.SupportEmpId == employeeId 
+                         || d.ContentPlatformOrder.BelongEmpId == employeeId 
+                         || (d.ContentPlatformOrder.IsSupportOrder == false || d.ContentPlatformOrder.SupportEmpId == employeeId)
                          select d;
-               
+
             }
-            if (employeeId != -1)
+            else
             {
-                orders = from d in orders
-                         where d.ContentPlatformOrder.BelongEmpId == employeeId
-                         select d;
+
+                if (employeeId != -1)
+                {
+                    orders = from d in orders
+                             where d.ContentPlatformOrder.BelongEmpId == employeeId
+                             select d;
+                }
             }
             var orderCount = await orders.CountAsync();
             var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
