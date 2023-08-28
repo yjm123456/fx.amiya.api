@@ -203,7 +203,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("contentPlateFormOrderLlistWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>> GetOrderListWithPageAsync(string baseLiveAnchorId, int? getCustomerType, int? liveAnchorId,string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int orderSource, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>> GetOrderListWithPageAsync(string baseLiveAnchorId, int? getCustomerType, int? liveAnchorId, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int orderSource, int pageNum, int pageSize)
         {
             try
             {
@@ -215,23 +215,27 @@ namespace Fx.Amiya.Background.Api.Controllers
                     if (!liveAnchorId.HasValue)
                     {
                         liveAnchorIds = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e => e.Id).ToList();
-                        if (liveAnchorIds.Count<=0) {
+                        if (liveAnchorIds.Count <= 0)
+                        {
                             FxPageInfo<ContentPlatFormOrderInfoVo> emptyPageInfo = new FxPageInfo<ContentPlatFormOrderInfoVo>();
                             emptyPageInfo.TotalCount = 0;
-                            emptyPageInfo.List =new List<ContentPlatFormOrderInfoVo>();
+                            emptyPageInfo.List = new List<ContentPlatFormOrderInfoVo>();
                             return ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>.Success().AddData("contentPlatFormOrder", emptyPageInfo);
                         }
                     }
-                    else {
+                    else
+                    {
                         liveAnchorIds.Add(liveAnchorId.Value);
                     }
                 }
-                else {
-                    if (liveAnchorId.HasValue) {
+                else
+                {
+                    if (liveAnchorId.HasValue)
+                    {
                         liveAnchorIds.Add(liveAnchorId.Value);
                     }
                 }
-                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorIds,getCustomerType, liveAnchorWechatId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
+                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorIds, getCustomerType, liveAnchorWechatId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
                 List<ContentPlatFormOrderInfoVo> contentPlatFormOrderInfoVoList = new List<ContentPlatFormOrderInfoVo>();
                 var resutList = q.List.ToList();
                 foreach (var x in resutList)
@@ -343,7 +347,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="endDate">结束时间</param>
         /// <param name="contentPlateFormId">内容平台</param>
         /// <param name="consultationEmpId">面诊员id</param>
-        /// <param name="employeeId">员工id（-1查询所有）</param>
+        /// <param name="employeeId">归属客服（-1查询所有）</param>
         /// <param name="orderSource">订单来源（-1查询所有）</param>
         /// <param name="orderStatus">订单状态</param>
         /// <param name="pageNum"></param>
@@ -351,20 +355,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("unContentPlatFormSendOrderList")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<UnContentPlateFormSendOrderInfoVo>>> GetUnSendOrderListWithPageAsync(string baseLiveAnchorId,int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? consultationEmpId, string keyword, string contentPlateFormId, int? employeeId, int orderStatus, int orderSource, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<UnContentPlateFormSendOrderInfoVo>>> GetUnSendOrderListWithPageAsync(string baseLiveAnchorId, int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? consultationEmpId, string keyword, string contentPlateFormId, int? employeeId, int orderStatus, int orderSource, int pageNum, int pageSize)
         {
-            if (employeeId == null)
-            {
-                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-                employeeId = Convert.ToInt32(employee.Id);
-            }
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int loginEmployeeId = Convert.ToInt32(employee.Id);
             List<int?> liveAnchorIds = new List<int?>();
             if (!string.IsNullOrEmpty(baseLiveAnchorId))
             {
                 if (!liveAnchorId.HasValue)
                 {
                     var list = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e => e.Id).ToList();
-                    if (list.Count<=0) {
+                    if (list.Count <= 0)
+                    {
                         FxPageInfo<UnContentPlateFormSendOrderInfoVo> emptyPageInfo = new FxPageInfo<UnContentPlateFormSendOrderInfoVo>();
                         emptyPageInfo.TotalCount = 0;
                         emptyPageInfo.List = new List<UnContentPlateFormSendOrderInfoVo>();
@@ -375,7 +377,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                         liveAnchorIds.Add(item);
                     }
                 }
-                else {
+                else
+                {
                     liveAnchorIds.Add(liveAnchorId);
                 }
             }
@@ -386,7 +389,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     liveAnchorIds.Add(liveAnchorId.Value);
                 }
             }
-            var q = await _orderService.GetUnSendOrderListWithPageAsync(liveAnchorIds, keyword, startDate, endDate, consultationEmpId, (int)employeeId, orderStatus, contentPlateFormId, orderSource, pageNum, pageSize);
+            var q = await _orderService.GetUnSendOrderListWithPageAsync(liveAnchorIds, keyword, startDate, endDate, consultationEmpId, (int)loginEmployeeId, employeeId, orderStatus, contentPlateFormId, orderSource, pageNum, pageSize);
             var unSendOrder = from d in q.List
                               select new UnContentPlateFormSendOrderInfoVo
                               {
@@ -394,6 +397,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   ContentPlatFormName = d.ContentPlatFormName,
                                   LiveAnchorName = d.LiveAnchorName,
                                   GoodsName = d.GoodsName,
+                                  BelongEmpName = d.BelongEmpName,
                                   ThumbPictureUrl = d.ThumbPictureUrl,
                                   ConsultingContent = d.ConsultingContent,
                                   CustomerName = d.CustomerName,
@@ -464,7 +468,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                     if (!query.LiveAnchorId.HasValue)
                     {
                         var list = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId)).Select(e => e.Id).ToList();
-                        if (list.Count<=0) {
+                        if (list.Count <= 0)
+                        {
                             var resultStream = ExportExcelHelper.ExportExcel(exportSendOrder);
                             var finalResult = File(resultStream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "内容平台订单报表.xls");
                             return finalResult;
@@ -749,7 +754,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
                                 CommissionRatio = d.CommissionRatio,
                                 IsOldCustomer = d.IsOldCustomer == false ? "新客业绩" : "老客业绩",
-                                CustomerServiceSettlePrice=d.CustomerServiceSettlePrice
+                                CustomerServiceSettlePrice = d.CustomerServiceSettlePrice
                             };
                 FxPageInfo<ContentPlatFormCompleteOrderInfoVo> orderPageInfo = new FxPageInfo<ContentPlatFormCompleteOrderInfoVo>();
                 orderPageInfo.TotalCount = q.TotalCount;
@@ -1212,9 +1217,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("bindCustomerServieOrders")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<BindCustomerServiceContentPlatformOrderVo>>> GetBindCustomerServieContentPlatformOrdersAsync(int? customerServiceId, int? liveAnchorId, DateTime? startDate, DateTime? endDate, string keyword,string liveAnchorWechatNoId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<BindCustomerServiceContentPlatformOrderVo>>> GetBindCustomerServieContentPlatformOrdersAsync(int? customerServiceId, int? liveAnchorId, DateTime? startDate, DateTime? endDate, string keyword, string liveAnchorWechatNoId, int pageNum, int pageSize)
         {
-            var orders = await _orderService.GetBindCustomerServieContentPlatformOrdersAsync(customerServiceId, liveAnchorId, startDate, endDate, keyword,liveAnchorWechatNoId, pageNum, pageSize);
+            var orders = await _orderService.GetBindCustomerServieContentPlatformOrdersAsync(customerServiceId, liveAnchorId, startDate, endDate, keyword, liveAnchorWechatNoId, pageNum, pageSize);
             var contentPlatformOrders = from d in orders.List
                                         select new BindCustomerServiceContentPlatformOrderVo
                                         {
@@ -1225,7 +1230,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             ContentPlatformName = d.ContentPlatformName,
                                             LiveAnchorId = d.LiveAnchorId,
                                             LiveAnchorName = d.LiveAnchorName,
-                                            LiveAnchorWeChatNo=d.LiveAnchorWeChatNo,
+                                            LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                             CreateDate = d.CreateDate,
                                             UpdateDate = d.UpdateDate,
                                             GoodsId = d.GoodsId,
@@ -1463,18 +1468,20 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("getContentPlateFormOrderSimpleInfo")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<ContentPlateformOrderSimpleInfoVo>>> GetContentPlateformOrderSimpleInfoAsync(string phone,int pageNum,int pageSize) {
+        public async Task<ResultData<FxPageInfo<ContentPlateformOrderSimpleInfoVo>>> GetContentPlateformOrderSimpleInfoAsync(string phone, int pageNum, int pageSize)
+        {
             FxPageInfo<ContentPlateformOrderSimpleInfoVo> fxPageInfo = new FxPageInfo<ContentPlateformOrderSimpleInfoVo>();
-            var result= await _orderService.GetContentOrderInfoByEncryPhone(phone,pageNum,pageSize);
+            var result = await _orderService.GetContentOrderInfoByEncryPhone(phone, pageNum, pageSize);
             fxPageInfo.TotalCount = result.TotalCount;
-            fxPageInfo.List = result.List.Select(e => new ContentPlateformOrderSimpleInfoVo { 
-                Id=e.Id,
-                AppointmentHospital=e.AppointmentHospital,
-                OrderStatus=e.OrderStatus,
-                ConsultContent=e.ConsultContent,
-                IsToHospital=e.IsToHosiotal
+            fxPageInfo.List = result.List.Select(e => new ContentPlateformOrderSimpleInfoVo
+            {
+                Id = e.Id,
+                AppointmentHospital = e.AppointmentHospital,
+                OrderStatus = e.OrderStatus,
+                ConsultContent = e.ConsultContent,
+                IsToHospital = e.IsToHosiotal
             }).ToList();
-            return ResultData<FxPageInfo<ContentPlateformOrderSimpleInfoVo>>.Success().AddData("data",fxPageInfo);
+            return ResultData<FxPageInfo<ContentPlateformOrderSimpleInfoVo>>.Success().AddData("data", fxPageInfo);
         }
         #region {医院对接同步}
         ///// <summary>

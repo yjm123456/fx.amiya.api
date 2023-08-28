@@ -170,10 +170,11 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
                 List<int> liveAnchorIds = new List<int>();
-                if (liveAnchorId.HasValue) {
+                if (liveAnchorId.HasValue)
+                {
                     liveAnchorIds.Add(liveAnchorId.Value);
                 }
-                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorIds,getCustomerType, liveAnchorWechatId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
+                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorIds, getCustomerType, liveAnchorWechatId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
                 List<ContentPlatFormOrderInfoVo> contentPlatFormOrderInfoVoList = new List<ContentPlatFormOrderInfoVo>();
                 var resutList = q.List.ToList();
                 foreach (var x in resutList)
@@ -291,16 +292,14 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData<FxPageInfo<UnContentPlateFormSendOrderInfoVo>>> GetUnSendOrderListWithPageAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int? consultationEmpId, string keyword, string contentPlateFormId, int? employeeId, int orderStatus, int orderSource, int pageNum, int pageSize)
         {
-            if (employeeId == null)
-            {
-                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-                employeeId = Convert.ToInt32(employee.Id);
-            }
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var LoginEmployeeId = Convert.ToInt32(employee.Id);
             List<int?> liveAnchorIds = new List<int?>();
-            if (liveAnchorId.HasValue) {
+            if (liveAnchorId.HasValue)
+            {
                 liveAnchorIds.Add(liveAnchorId.Value);
             }
-            var q = await _orderService.GetUnSendOrderListWithPageAsync(liveAnchorIds, keyword, startDate, endDate, consultationEmpId, (int)employeeId, orderStatus, contentPlateFormId, orderSource, pageNum, pageSize);
+            var q = await _orderService.GetUnSendOrderListWithPageAsync(liveAnchorIds, keyword, startDate, endDate, consultationEmpId, LoginEmployeeId, (int)employeeId, orderStatus, contentPlateFormId, orderSource, pageNum, pageSize);
             var unSendOrder = from d in q.List
                               select new UnContentPlateFormSendOrderInfoVo
                               {
@@ -733,7 +732,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <returns></returns>
         [HttpGet("bindCustomerServieOrders")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<BindCustomerServiceContentPlatformOrderVo>>> GetBindCustomerServieContentPlatformOrdersAsync(int? customerServiceId, int? liveAnchorId, DateTime? startDate, DateTime? endDate, string keyword,string liveAnchorWechatNoId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<BindCustomerServiceContentPlatformOrderVo>>> GetBindCustomerServieContentPlatformOrdersAsync(int? customerServiceId, int? liveAnchorId, DateTime? startDate, DateTime? endDate, string keyword, string liveAnchorWechatNoId, int pageNum, int pageSize)
         {
             var orders = await _orderService.GetBindCustomerServieContentPlatformOrdersAsync(customerServiceId, liveAnchorId, startDate, endDate, keyword, liveAnchorWechatNoId, pageNum, pageSize);
             var contentPlatformOrders = from d in orders.List

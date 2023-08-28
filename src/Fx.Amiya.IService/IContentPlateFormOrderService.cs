@@ -75,12 +75,13 @@ namespace Fx.Amiya.IService
         /// <param name="liveAnchorIds">归属主播id集合</param>
         /// <param name="keyword">关键词</param>
         /// <param name="contentPlateFormId">内容平台</param>
-        /// <param name="employeeId">员工id（-1查询所有）</param>
+        /// <param name="loginEmployeeId">员工id（-1查询所有）</param>
+        /// <param name="belongCustomerid">归属客服</param>
         /// <param name="orderStatus">订单状态</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<UnSendContentPlatFormOrderInfoDto>> GetUnSendOrderListWithPageAsync(List<int?> liveAnchorIds, string keyword, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int employeeId, int statusCode, string contentPlatFormId, int orderSource, int pageNum, int pageSize);
+        Task<FxPageInfo<UnSendContentPlatFormOrderInfoDto>> GetUnSendOrderListWithPageAsync(List<int?> liveAnchorIds, string keyword, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int loginEmployeeId, int? belongCustomerid, int statusCode, string contentPlatFormId, int orderSource, int pageNum, int pageSize);
 
         /// <summary>
         /// 客服未派单报表

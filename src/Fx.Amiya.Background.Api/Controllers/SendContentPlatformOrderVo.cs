@@ -155,6 +155,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         public string SenderName { get; set; }
 
         /// <summary>
+        /// 归属客服
+        /// </summary>
+        public string BelongEmpName { get; set; }
+
+        /// <summary>
         /// 派单时间
         /// </summary>
         public DateTime SendDate { get; set; }

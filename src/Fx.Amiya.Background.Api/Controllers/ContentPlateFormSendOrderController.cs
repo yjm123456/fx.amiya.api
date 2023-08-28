@@ -118,10 +118,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 OrderStatus = d.OrderStatus,
                                 Phone = d.Phone,
                                 EncryptPhone = d.EncryptPhone,
-                                FirstlyRemark=d.FirstlyRemark,
+                                FirstlyRemark = d.FirstlyRemark,
                                 DealPictureUrl = d.DealPictureUrl,
                                 RepeateOrderPictureUrl = d.RepeateOrderPictureUrl,
-                                IsToHospital=d.IsToHospital,
+                                IsToHospital = d.IsToHospital,
                                 UnDealReason = d.UnDealReason,
                                 IsHospitalCheckPhone = d.IsHospitalCheckPhone,
                                 ConsultingContent = d.ConsultingContent,
@@ -134,7 +134,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 LiveAnchor = d.LiveAnchor,
                                 ToHospitalTypeText = d.ToHospitalTypeText,
                                 CheckState = d.CheckState,
-                                IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
+                                IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
                             };
 
             FxPageInfo<ContentPlatFormOrderSendInfoVo> sendOrderPageInfo = new FxPageInfo<ContentPlatFormOrderSendInfoVo>();
@@ -159,23 +159,23 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("followingListOfHospital")]
         [FxTenantAuthorize]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderSendInfoVo>>> GetFollowingListByHospitalIdAsync(string keyword,  DateTime? startDate, DateTime? endDate, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderSendInfoVo>>> GetFollowingListByHospitalIdAsync(string keyword, DateTime? startDate, DateTime? endDate, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int pageNum, int pageSize)
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalId = employee.HospitalId;
-            var q = await _sendOrderInfoService.GetFollowingListByHospitalIdAsync(hospitalId, keyword,  startDate, endDate, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, pageNum, pageSize);
+            var q = await _sendOrderInfoService.GetFollowingListByHospitalIdAsync(hospitalId, keyword, startDate, endDate, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, pageNum, pageSize);
             var sendOrder = from d in q.List
                             select new ContentPlatFormOrderSendInfoVo
                             {
                                 Id = d.Id,
                                 OrderId = d.OrderId,
                                 CustomerName = d.CustomerName,
-                                DepartmentName=d.DepartmentName,
+                                DepartmentName = d.DepartmentName,
                                 HospitalName = d.HospitalName,
                                 SendDate = d.SendDate,
                                 SendBy = d.SendBy,
                                 City = d.City,
-                                FirstlyRemark=d.FirstlyRemark,
+                                FirstlyRemark = d.FirstlyRemark,
                                 WeChatNo = d.WeChatNo,
                                 IsUncertainDate = d.IsUncertainDate,
                                 AppointmentDate = d.AppointmentDate,
@@ -198,11 +198,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 HospitalRemark = d.HospitalRemark,
                                 UnDealPictureUrl = d.UnDealPictureUrl,
                                 OrderSourceText = d.OrderSourceText,
-                                IsToHospital=d.IsToHospital,
+                                IsToHospital = d.IsToHospital,
                                 LiveAnchor = d.LiveAnchor,
                                 ToHospitalTypeText = d.ToHospitalTypeText,
                                 CheckState = d.CheckState,
-                                IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
+                                IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
                             };
 
             FxPageInfo<ContentPlatFormOrderSendInfoVo> sendOrderPageInfo = new FxPageInfo<ContentPlatFormOrderSendInfoVo>();
@@ -227,7 +227,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("waitingConfirmCustomerHospital")]
         [FxTenantAuthorize]
-        public async Task<ResultData<FxPageInfo<HospitalCustomerVo>>> WaitingConfirmCustomerHospitalAsync(string keyword, DateTime? startDate,int orderStatus, DateTime? endDate, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<HospitalCustomerVo>>> WaitingConfirmCustomerHospitalAsync(string keyword, DateTime? startDate, int orderStatus, DateTime? endDate, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int pageNum, int pageSize)
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalId = employee.HospitalId;
@@ -246,7 +246,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             foreach (var x in sendOrderPageInfo.List)
             {
                 var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
-                string phone =  ServiceClass.Decrypto(x.EncryptCustomerPhone, config.PhoneEncryptKey);
+                string phone = ServiceClass.Decrypto(x.EncryptCustomerPhone, config.PhoneEncryptKey);
                 var hospitalCustomerInfo = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(hospitalId, phone);
                 x.CustomerName = hospitalCustomerInfo.CustomerName;
                 x.City = hospitalCustomerInfo.City;
@@ -326,7 +326,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
 
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
-            int hospitalEmployeeId =Convert.ToInt32(employee.Id);
+            int hospitalEmployeeId = Convert.ToInt32(employee.Id);
             ContentPlatFormOrderRemarkDto updateDto = new ContentPlatFormOrderRemarkDto();
             updateDto.HospitalRemark = input.HospitalRemark;
             updateDto.SendOrderId = input.SendOrderId;
@@ -365,20 +365,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetSendOrderList(string keyword,string baseLiveAnchorId, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? liveAnchorId, int? consultationEmpId, int? employeeId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetSendOrderList(string keyword, string baseLiveAnchorId, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? liveAnchorId, int? consultationEmpId, int? employeeId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int pageNum, int pageSize)
         {
-            if (employeeId == null)
-            {
-                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-                employeeId = Convert.ToInt32(employee.Id);
-            }
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var loginEmployeeId = Convert.ToInt32(employee.Id);
             List<int?> liveAnchorIds = new List<int?>();
             if (!string.IsNullOrEmpty(baseLiveAnchorId))
             {
                 if (!liveAnchorId.HasValue)
                 {
                     var list = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e => e.Id).ToList();
-                    if (list.Count<=0) {
+                    if (list.Count <= 0)
+                    {
                         FxPageInfo<SendContentPlatformOrderVo> emptyPageInfo = new FxPageInfo<SendContentPlatformOrderVo>();
                         emptyPageInfo.TotalCount = emptyPageInfo.TotalCount;
                         emptyPageInfo.List = new List<SendContentPlatformOrderVo>();
@@ -389,7 +387,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                         liveAnchorIds.Add(item);
                     }
                 }
-                else {
+                else
+                {
                     liveAnchorIds.Add(liveAnchorId);
                 }
             }
@@ -400,7 +399,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                     liveAnchorIds.Add(liveAnchorId.Value);
                 }
             }
-            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorIds, consultationEmpId, sendBy, isAcompanying, isOldCustomer, commissionRatio, keyword, belongMonth, minAddOrderPrice, maxAddOrderPrice, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, orderSource, pageNum, pageSize);
+            if (!employeeId.HasValue)
+            {
+                employeeId = -1;
+            }
+            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorIds, consultationEmpId, sendBy, isAcompanying, isOldCustomer, commissionRatio, keyword, belongMonth, minAddOrderPrice, maxAddOrderPrice, loginEmployeeId, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, orderSource, pageNum, pageSize);
 
             var contentPlatformOrders = from d in orders.List
                                         select new SendContentPlatformOrderVo
@@ -414,6 +417,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             IsAcompanying = d.IsAcompanying,
                                             CommissionRatio = d.CommissionRatio,
                                             CustomerName = d.CustomerName,
+                                            BelongEmpName = d.BelongEmpName,
                                             Phone = d.Phone,
                                             EncryptPhone = d.EncryptPhone,
                                             BelongMonth = d.BelongMonth,
@@ -449,7 +453,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             ConsultatioType = d.ConsultationTypeText,
                                             CheckState = d.CheckState,
                                             OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
-                                            IsRepeatProfundityOrder=d.IsRepeatProfundityOrder
+                                            IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
                                         };
             FxPageInfo<SendContentPlatformOrderVo> pageInfo = new FxPageInfo<SendContentPlatformOrderVo>();
             pageInfo.TotalCount = orders.TotalCount;
@@ -483,8 +487,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             ToHospitalType = d.ToHospitalType,
                                             ToHospitalTypeText = d.ToHospitalTypeText,
                                             TohospitalDate = d.ToHospitalDate,
-                                            DealPerformanceType=d.DealPerformanceType,
-                                            DealPerformanceTypeText=d.DealPerformanceTypeText,
+                                            DealPerformanceType = d.DealPerformanceType,
+                                            DealPerformanceTypeText = d.DealPerformanceTypeText,
                                             DealHospital = d.LastDealHospital,
                                             DealPicture = d.DealPicture,
                                             Remark = d.Remark,
@@ -494,10 +498,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             IsAcompanying = d.IsAcompanying,
                                             IsOldCustomer = d.IsOldCustomer,
                                             CommissionRatio = d.CommissionRatio,
-                                            IsRepeatProfundityOrder=d.IsRepeatProfundityOrder,
-                                            ConsumptionType=d.ConsumptionType,
-                                            ConsumptionTypeText=d.ConsumptionTypeText,
-                                            ConsultationTypeText=d.ConsultationTypeText
+                                            IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
+                                            ConsumptionType = d.ConsumptionType,
+                                            ConsumptionTypeText = d.ConsumptionTypeText,
+                                            ConsultationTypeText = d.ConsultationTypeText
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;
@@ -534,14 +538,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             ToHospitalTypeText = d.ToHospitalTypeText,
                                             DealPicture = d.DealPicture,
                                             Remark = d.Remark,
-                                            DealPerformanceTypeText=d.DealPerformanceTypeText,
+                                            DealPerformanceTypeText = d.DealPerformanceTypeText,
                                             Price = d.Price,
                                             DealDate = d.DealDate,
                                             IsAcompanying = d.IsAcompanying,
                                             IsOldCustomer = d.IsOldCustomer,
-                                            IsRepeatProfundityOrder=d.IsRepeatProfundityOrder,
-                                            ConsumptionType=d.ConsumptionType,
-                                            ConsumptionTypeText=d.ConsumptionTypeText
+                                            IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
+                                            ConsumptionType = d.ConsumptionType,
+                                            ConsumptionTypeText = d.ConsumptionTypeText
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;

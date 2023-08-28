@@ -104,16 +104,14 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetSendOrderList(string keyword, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? liveAnchorId, int? consultationEmpId, int? employeeId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int pageNum, int pageSize)
         {
-            if (employeeId == null)
-            {
-                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-                employeeId = Convert.ToInt32(employee.Id);
-            }
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var LoginEmployeeId = Convert.ToInt32(employee.Id);
             List<int?> liveAnchorIds = new List<int?>();
-            if (liveAnchorId.HasValue) {
+            if (liveAnchorId.HasValue)
+            {
                 liveAnchorIds.Add(liveAnchorId);
             }
-            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorIds, consultationEmpId, sendBy, isAcompanying, isOldCustomer, commissionRatio, keyword, belongMonth, minAddOrderPrice, maxAddOrderPrice, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, orderSource, pageNum, pageSize);
+            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorIds, consultationEmpId, sendBy, isAcompanying, isOldCustomer, commissionRatio, keyword, belongMonth, minAddOrderPrice, maxAddOrderPrice, LoginEmployeeId, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, orderSource, pageNum, pageSize);
 
             var contentPlatformOrders = from d in orders.List
                                         select new SendContentPlatformOrderVo
@@ -198,7 +196,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                                             ToHospitalType = d.ToHospitalType,
                                             ToHospitalTypeText = d.ToHospitalTypeText,
                                             TohospitalDate = d.ToHospitalDate,
-                                            DealPerformanceTypeText=d.DealPerformanceTypeText,
+                                            DealPerformanceTypeText = d.DealPerformanceTypeText,
                                             DealHospital = d.LastDealHospital,
                                             DealPicture = d.DealPicture,
                                             Remark = d.Remark,
@@ -209,8 +207,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                                             IsOldCustomer = d.IsOldCustomer,
                                             CommissionRatio = d.CommissionRatio,
                                             IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
-                                            ConsumptionType=d.ConsumptionType,
-                                            ConsumptionTypeText=d.ConsumptionTypeText
+                                            ConsumptionType = d.ConsumptionType,
+                                            ConsumptionTypeText = d.ConsumptionTypeText
                                         };
             FxPageInfo<ContentPlatFormOrderDealInfoVo> pageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoVo>();
             pageInfo.TotalCount = result.TotalCount;

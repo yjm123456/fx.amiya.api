@@ -40,6 +40,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// </summary>
         public string ConsultingContent { get; set; }
         /// <summary>
+        /// 归属客服
+        /// </summary>
+        public string BelongEmpName { get; set; }
+        /// <summary>
         /// 客户姓名
         /// </summary>
         public string CustomerName { get; set; }

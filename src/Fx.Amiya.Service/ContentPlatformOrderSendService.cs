@@ -567,7 +567,8 @@ namespace Fx.Amiya.Service
         /// 获取内容平台订单已派单信息列表
         /// </summary>
         /// <param name="keyword"></param>
-        /// <param name="employeeId"></param>
+        /// <param name="loginEmployeeId">登陆员工id</param>
+        /// <param name="belongEmployeeId">归属客服</param>
         /// <param name="liveAnchorId">归属主播ID</param>
         /// <param name="orderStatus"></param>
         /// <param name="contentPlatFormId"></param>
@@ -579,8 +580,9 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<SendContentPlatformOrderDto>> GetSendOrderList(List<int?> liveAnchorIds, int? consultationEmpId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string keyword, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int employeeId, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int pageNum, int pageSize)
+        public async Task<FxPageInfo<SendContentPlatformOrderDto>> GetSendOrderList(List<int?> liveAnchorIds, int? consultationEmpId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string keyword, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int loginEmployeeId, int belongEmployeeId, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int pageNum, int pageSize)
         {
+            
             var orders = _dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder)
                        .Where(e => string.IsNullOrWhiteSpace(keyword) || e.ContentPlatformOrderId == keyword || e.ContentPlatformOrder.Phone.Contains(keyword) || e.ContentPlatformOrder.LiveAnchorWeChatNo.Contains(keyword))
                        .Where(e => hospitalId == 0 || e.HospitalId == hospitalId)
@@ -596,6 +598,7 @@ namespace Fx.Amiya.Service
                        .Where(e => !toHospitalType.HasValue || e.ContentPlatformOrder.ToHospitalType == toHospitalType.Value)
                        .Where(e => !consultationEmpId.HasValue || e.ContentPlatformOrder.ConsultationEmpId == consultationEmpId.Value)
                        .Where(e => liveAnchorIds.Count <= 0 || liveAnchorIds.Contains(e.ContentPlatformOrder.LiveAnchorId))
+                       .Where(e => belongEmployeeId == -1 || (e.ContentPlatformOrder.SupportEmpId == 0 ? e.ContentPlatformOrder.BelongEmpId == belongEmployeeId : e.ContentPlatformOrder.SupportEmpId == belongEmployeeId))
                        .Where(e => orderStatus == null || (orderStatus != null && orderStatus == (int)ContentPlateFormOrderStatus.RepeatOrderProfundity ? e.ContentPlatformOrder.IsRepeatProfundityOrder == true : e.ContentPlatformOrder.OrderStatus == orderStatus))
                        .Where(e => string.IsNullOrWhiteSpace(contentPlatFormId) || e.ContentPlatformOrder.ContentPlateformId == contentPlatFormId);
 
@@ -616,28 +619,28 @@ namespace Fx.Amiya.Service
                          select d;
             }
 
-            var employee = await _amiyaEmployeeService.GetByIdAsync(employeeId);
+            var employee = await _amiyaEmployeeService.GetByIdAsync(loginEmployeeId);
             //普通客服角色过滤其他订单信息只展示自己录单信息
             if (employee.IsCustomerService && !employee.IsDirector)
             {
                 orders = from d in orders
-                         where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatformOrder.Phone) > 0
-                         || d.ContentPlatformOrder.SupportEmpId == employeeId 
-                         || d.ContentPlatformOrder.BelongEmpId == employeeId 
-                         || (d.ContentPlatformOrder.IsSupportOrder == false || d.ContentPlatformOrder.SupportEmpId == employeeId)
+                         where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == loginEmployeeId && e.BuyerPhone == d.ContentPlatformOrder.Phone) > 0
+                         || d.ContentPlatformOrder.SupportEmpId == loginEmployeeId
+                         || d.ContentPlatformOrder.BelongEmpId == loginEmployeeId
+                         || (d.ContentPlatformOrder.IsSupportOrder == false || d.ContentPlatformOrder.SupportEmpId == loginEmployeeId)
                          select d;
 
             }
-            else
-            {
+            //else
+            //{
 
-                if (employeeId != -1)
-                {
-                    orders = from d in orders
-                             where d.ContentPlatformOrder.BelongEmpId == employeeId
-                             select d;
-                }
-            }
+            //    if (loginEmployeeId != -1)
+            //    {
+            //        orders = from d in orders
+            //                 where d.ContentPlatformOrder.BelongEmpId == loginEmployeeId
+            //                 select d;
+            //    }
+            //}
             var orderCount = await orders.CountAsync();
             var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
             var contentPlatformOrders = from d in orders
@@ -655,6 +658,7 @@ namespace Fx.Amiya.Service
                                             CommissionRatio = d.ContentPlatformOrder.CommissionRatio,
                                             BelongMonth = d.ContentPlatformOrder.BelongMonth,
                                             AddOrderPrice = d.ContentPlatformOrder.AddOrderPrice,
+                                            BelongEmpId = d.ContentPlatformOrder.BelongEmpId.HasValue ? d.ContentPlatformOrder.BelongEmpId.Value : 0,
                                             CustomerName = ServiceClass.GetIncompleteCustomerName(d.ContentPlatformOrder.CustomerName),
                                             Phone = config.EnablePhoneEncrypt == true ? ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone) : d.ContentPlatformOrder.Phone,
                                             EncryptPhone = ServiceClass.Encrypt(d.ContentPlatformOrder.Phone, config.PhoneEncryptKey),
@@ -706,6 +710,11 @@ namespace Fx.Amiya.Service
                         x.LiveAnchorWeChatNo = wechatInfo.WeChatNo;
                     }
 
+                }
+                if (x.BelongEmpId != 0)
+                {
+                    var empInfo = await _amiyaEmployeeService.GetByIdAsync(x.BelongEmpId);
+                    x.BelongEmpName = empInfo.Name.ToString();
                 }
             }
             return pageInfo;

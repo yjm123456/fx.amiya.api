@@ -468,12 +468,13 @@ namespace Fx.Amiya.Service
         /// <param name="liveAnchorId">归属主播id</param>
         /// <param name="keyword">关键词</param>
         /// <param name="contentPlateFormId">内容平台</param>
-        /// <param name="employeeId">员工id（-1查询所有）</param>
+        /// <param name="loginEmployeeId">员工id（-1查询所有）</param>
+        /// <param name="belongCustomerid">归属客服</param>
         /// <param name="orderStatus">订单状态</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<UnSendContentPlatFormOrderInfoDto>> GetUnSendOrderListWithPageAsync(List<int?> liveAnchorIds, string keyword, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int employeeId, int statusCode, string contentPlatFormId, int orderSource, int pageNum, int pageSize)
+        public async Task<FxPageInfo<UnSendContentPlatFormOrderInfoDto>> GetUnSendOrderListWithPageAsync(List<int?> liveAnchorIds, string keyword, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int loginEmployeeId, int? belongCustomerid, int statusCode, string contentPlatFormId, int orderSource, int pageNum, int pageSize)
         {
             var config = await GetCallCenterConfig();
 
@@ -502,13 +503,20 @@ namespace Fx.Amiya.Service
                          where o.CreateDate >= startrq && o.CreateDate <= endrq
                          select o;
             }
-            var employee = await _amiyaEmployeeService.GetByIdAsync(employeeId);
+            var employee = await _amiyaEmployeeService.GetByIdAsync(loginEmployeeId);
             if (employee.IsCustomerService && !employee.IsDirector)
             {
                 orders = from d in orders
-                         where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.Phone) > 0 || d.SupportEmpId == employeeId || d.BelongEmpId == employeeId
-                         where (d.IsSupportOrder == false || d.SupportEmpId == employeeId)
+                         where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == loginEmployeeId && e.BuyerPhone == d.Phone) > 0
+                         || d.SupportEmpId == loginEmployeeId
+                         || d.BelongEmpId == loginEmployeeId
+                         || (d.IsSupportOrder == false || d.SupportEmpId == loginEmployeeId)
                          select d;
+
+            }
+            if (!belongCustomerid.HasValue)
+            {
+                belongCustomerid = -1;
             }
             var unSendOrder = from o in orders
                               join b in _dalBindCustomerService.GetAll() on o.Phone equals b.BuyerPhone
@@ -516,6 +524,7 @@ namespace Fx.Amiya.Service
                               && (keyword == null || o.Id == keyword || o.Phone == keyword || o.AmiyaGoodsDemand.ProjectNname.Contains(keyword) || o.HospitalInfo.Name.Contains(keyword))
                               && (orderSource == -1 || o.OrderSource == orderSource)
                               && (liveAnchorIds.Count <= 0 || liveAnchorIds.Contains(o.LiveAnchorId))
+                              && (belongCustomerid == -1 || (o.SupportEmpId == 0 ? o.BelongEmpId == belongCustomerid.Value : o.SupportEmpId == belongCustomerid))
                               orderby b.CreateDate descending
                               select new UnSendContentPlatFormOrderInfoDto
                               {
@@ -523,6 +532,7 @@ namespace Fx.Amiya.Service
                                   ContentPlatFormName = o.Contentplatform.ContentPlatformName,
                                   LiveAnchorName = o.LiveAnchor.HostAccountName,
                                   GoodsName = o.AmiyaGoodsDemand.ProjectNname,
+                                  BelongEmpId = o.BelongEmpId.HasValue ? o.BelongEmpId.Value : 0,
                                   ThumbPictureUrl = o.AmiyaGoodsDemand.ThumbPictureUrl,
                                   ConsultingContent = o.ConsultingContent,
                                   CreateDate = o.CreateDate,
@@ -546,6 +556,14 @@ namespace Fx.Amiya.Service
             FxPageInfo<UnSendContentPlatFormOrderInfoDto> pageInfo = new FxPageInfo<UnSendContentPlatFormOrderInfoDto>();
             pageInfo.TotalCount = await unSendOrder.CountAsync();
             pageInfo.List = await unSendOrder.OrderByDescending(z => z.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+            foreach (var x in pageInfo.List)
+            {
+                if (x.BelongEmpId != 0)
+                {
+                    var empInfo = await _dalAmiyaEmployee.GetAll().FirstOrDefaultAsync(e => e.Id == x.BelongEmpId);
+                    x.BelongEmpName = empInfo.Name.ToString();
+                }
+            }
             return pageInfo;
         }
 
