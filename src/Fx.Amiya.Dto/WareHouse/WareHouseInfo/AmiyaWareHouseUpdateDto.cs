@@ -63,5 +63,10 @@ namespace Fx.Amiya.Dto.WareHouse.WareHouseInfo
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+
+        /// <summary>
+        /// 过期时间
+        /// </summary>
+        public DateTime? ExpireDate { get; set; }
     }
 }

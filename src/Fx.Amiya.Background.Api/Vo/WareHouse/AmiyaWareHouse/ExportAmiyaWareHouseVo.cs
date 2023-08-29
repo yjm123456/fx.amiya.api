@@ -48,5 +48,17 @@ namespace Fx.Amiya.Background.Api.Vo.WareHouse.AmiyaWareHouse
         /// </summary>
         [Description("总价")]
         public decimal TotalPrice { get; set; }
+
+        /// <summary>
+        /// 过期时间
+        /// </summary>
+        [Description("过期时间")]
+        public DateTime? ExpireDate { get; set; }
+
+        /// <summary>
+        /// 可用日期
+        /// </summary>
+        [Description("可用日期")]
+        public string HasUsedTime { get; set; }
     }
 }

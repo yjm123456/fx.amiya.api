@@ -47,7 +47,7 @@ namespace Fx.Amiya.Service
                 var amiyaWareHouseService = from d in dalAmiyaWareHouseService.GetAll().Include(x => x.WareHouseNameManage).ThenInclude(x => x.AmiyaWareHouseStorageRacks)
                                             where (keyword == null || d.GoodsName.Contains(keyword))
                                                && (string.IsNullOrEmpty(wareHouseInfoId) || d.GoodsSourceId == wareHouseInfoId)
-                                               && (string.IsNullOrEmpty(warehouseStorageRacksId) ||d.StorageRacksId == warehouseStorageRacksId)
+                                               && (string.IsNullOrEmpty(warehouseStorageRacksId) || d.StorageRacksId == warehouseStorageRacksId)
                                             select new AmiyaWareHouseDto
                                             {
                                                 Id = d.Id,
@@ -58,10 +58,54 @@ namespace Fx.Amiya.Service
                                                 SinglePrice = d.SinglePrice,
                                                 Amount = d.Amount,
                                                 TotalPrice = d.TotalPrice,
+                                                ExpireDate = d.ExpireDate
                                             };
                 FxPageInfo<AmiyaWareHouseDto> amiyaWareHouseServicePageInfo = new FxPageInfo<AmiyaWareHouseDto>();
                 amiyaWareHouseServicePageInfo.TotalCount = await amiyaWareHouseService.CountAsync();
                 amiyaWareHouseServicePageInfo.List = await amiyaWareHouseService.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+                //展示离到期时间还有多少并且如果到期后自动改为无效
+                foreach (var x in amiyaWareHouseServicePageInfo.List)
+                {
+
+                    if (x.ExpireDate.HasValue)
+                    {
+                        var dateResultDay = (x.ExpireDate.Value - DateTime.Now).Days;
+                        var dateResultHours = (x.ExpireDate.Value - DateTime.Now).Hours;
+                        var dateResultMin = (x.ExpireDate.Value - DateTime.Now).Minutes;
+                        var dateResultSecond = (x.ExpireDate.Value - DateTime.Now).Seconds;
+                        if (dateResultDay > 0)
+                        {
+                            if (dateResultDay < 10)
+                            {
+                                x.HasUsedTime = "<span style=color:red>" + dateResultDay + "天</span>";
+                            }
+                            else
+                            {
+                                x.HasUsedTime = "<span style=color:green>" + dateResultDay + "天</span>";
+                            }
+                        }
+                        else if (dateResultHours > 0)
+                        {
+                            x.HasUsedTime = "<span style=color:red>" + dateResultHours + "小时</span>";
+                        }
+
+                        else if (dateResultMin > 0)
+                        {
+                            x.HasUsedTime = "<span style=color:red>" + dateResultMin + "分</span>";
+                        }
+                        else if (dateResultSecond > 0)
+                        {
+                            x.HasUsedTime = "<span style=color:red>" + dateResultSecond + "秒</span>";
+                        }
+
+                        else
+                        {
+
+                            x.HasUsedTime = "<span style=color:gray>已过期</span>";
+                        }
+                    }
+
+                }
                 return amiyaWareHouseServicePageInfo;
             }
             catch (Exception ex)
@@ -74,7 +118,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var amiyaWareHouseService = from d in dalAmiyaWareHouseService.GetAll().Include(x=>x.WareHouseNameManage).ThenInclude(x=>x.AmiyaWareHouseStorageRacks)
+                var amiyaWareHouseService = from d in dalAmiyaWareHouseService.GetAll().Include(x => x.WareHouseNameManage).ThenInclude(x => x.AmiyaWareHouseStorageRacks)
                                             where (keyword == null || d.GoodsName.Contains(keyword))
                                                && (string.IsNullOrEmpty(wareHouseInfoId) || d.GoodsSourceId == wareHouseInfoId)
                                                && (string.IsNullOrEmpty(warehouseStorageRacksId) || d.StorageRacksId == warehouseStorageRacksId)
@@ -88,9 +132,52 @@ namespace Fx.Amiya.Service
                                                 SinglePrice = d.SinglePrice,
                                                 Amount = d.Amount,
                                                 TotalPrice = d.TotalPrice,
+                                                ExpireDate=d.ExpireDate,
                                             };
                 List<AmiyaWareHouseDto> amiyaWareHouseServicePageInfo = new List<AmiyaWareHouseDto>();
                 amiyaWareHouseServicePageInfo = await amiyaWareHouseService.ToListAsync();
+                foreach (var x in amiyaWareHouseServicePageInfo)
+                {
+
+                    if (x.ExpireDate.HasValue)
+                    {
+                        var dateResultDay = (x.ExpireDate.Value - DateTime.Now).Days;
+                        var dateResultHours = (x.ExpireDate.Value - DateTime.Now).Hours;
+                        var dateResultMin = (x.ExpireDate.Value - DateTime.Now).Minutes;
+                        var dateResultSecond = (x.ExpireDate.Value - DateTime.Now).Seconds;
+                        if (dateResultDay > 0)
+                        {
+                            if (dateResultDay < 10)
+                            {
+                                x.HasUsedTime = dateResultDay + "天";
+                            }
+                            else
+                            {
+                                x.HasUsedTime = dateResultDay + "天";
+                            }
+                        }
+                        else if (dateResultHours > 0)
+                        {
+                            x.HasUsedTime = dateResultHours + "小时";
+                        }
+
+                        else if (dateResultMin > 0)
+                        {
+                            x.HasUsedTime = dateResultMin + "分";
+                        }
+                        else if (dateResultSecond > 0)
+                        {
+                            x.HasUsedTime = dateResultSecond + "秒";
+                        }
+
+                        else
+                        {
+
+                            x.HasUsedTime = "已过期";
+                        }
+                    }
+
+                }
                 return amiyaWareHouseServicePageInfo;
             }
             catch (Exception ex)
@@ -112,7 +199,7 @@ namespace Fx.Amiya.Service
                 amiyaWareHouseService.SinglePrice = addDto.SinglePrice;
                 amiyaWareHouseService.Amount = addDto.Amount;
                 amiyaWareHouseService.TotalPrice = addDto.TotalPrice;
-
+                amiyaWareHouseService.ExpireDate = addDto.ExpireDate;
                 await dalAmiyaWareHouseService.AddAsync(amiyaWareHouseService, true);
 
             }
@@ -141,7 +228,7 @@ namespace Fx.Amiya.Service
                 amiyaWareHouseServiceDto.StorageRacksId = amiyaWareHouseService.StorageRacksId;
                 amiyaWareHouseServiceDto.Amount = amiyaWareHouseService.Amount;
                 amiyaWareHouseServiceDto.TotalPrice = amiyaWareHouseService.TotalPrice;
-
+                amiyaWareHouseServiceDto.ExpireDate = amiyaWareHouseService.ExpireDate;
 
                 return amiyaWareHouseServiceDto;
             }
@@ -164,7 +251,7 @@ namespace Fx.Amiya.Service
                 amiyaWareHouseService.GoodsName = updateDto.GoodsName;
                 amiyaWareHouseService.GoodsSourceId = updateDto.GoodsSourceId;
                 amiyaWareHouseService.StorageRacksId = updateDto.StorageRacksId;
-
+                amiyaWareHouseService.ExpireDate = updateDto.ExpireDate;
                 await dalAmiyaWareHouseService.UpdateAsync(amiyaWareHouseService, true);
 
 

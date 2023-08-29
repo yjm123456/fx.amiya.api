@@ -39,5 +39,10 @@ namespace Fx.Amiya.Background.Api.Vo.WareHouse.AmiyaWareHouse
         /// 总价
         /// </summary>
         public decimal TotalPrice { get; set; }
+
+        /// <summary>
+        /// 过期时间
+        /// </summary>
+        public DateTime? ExpireDate { get; set; }
     }
 }

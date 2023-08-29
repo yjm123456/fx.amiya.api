@@ -45,6 +45,11 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public decimal TotalPrice { get; set; }
 
+        /// <summary>
+        /// 过期时间
+        /// </summary>
+        public DateTime? ExpireDate { get; set; }
+
         public AmiyaWareHouseNameManage WareHouseNameManage { get; set; }
         public List<InventoryList> InventoryList { get; set; }
         public List<AmiyaOutWarehouse> AmiyaOutWarehouseList { get; set; }

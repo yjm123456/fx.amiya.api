@@ -54,5 +54,15 @@ namespace Fx.Amiya.Dto.WareHouse.WareHouseInfo
         /// 总价
         /// </summary>
         public decimal TotalPrice { get; set; }
+
+        /// <summary>
+        /// 过期时间
+        /// </summary>
+        public DateTime? ExpireDate { get; set; }
+
+        /// <summary>
+        /// 可用日期
+        /// </summary>
+        public string HasUsedTime { get; set; }
     }
 }

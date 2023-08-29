@@ -71,6 +71,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   SinglePrice = d.SinglePrice,
                                   Amount = d.Amount,
                                   TotalPrice = d.TotalPrice,
+                                  ExpireDate = d.ExpireDate,
+                                  HasUsedTime = d.HasUsedTime,
                               };
 
                 FxPageInfo<AmiyaWareHouseVo> amiyaWareHousePageInfo = new FxPageInfo<AmiyaWareHouseVo>();
@@ -106,6 +108,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.StorageRacksId = addVo.StorageRacksId;
                 addDto.Amount = addVo.Amount;
                 addDto.TotalPrice = addVo.TotalPrice;
+                addDto.ExpireDate = addVo.ExpireDate;
                 await _amiyaWareHouseService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -138,6 +141,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 amiyaWareHouseVo.SinglePrice = amiyaWareHouse.SinglePrice;
                 amiyaWareHouseVo.Amount = amiyaWareHouse.Amount;
                 amiyaWareHouseVo.TotalPrice = amiyaWareHouse.TotalPrice;
+                amiyaWareHouseVo.ExpireDate = amiyaWareHouse.ExpireDate;
                 return ResultData<AmiyaWareHouseVo>.Success().AddData("amiyaWareHouseInfo", amiyaWareHouseVo);
             }
             catch (Exception ex)
@@ -164,6 +168,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.StorageRacksId = updateVo.StorageRacksId;
                 updateDto.GoodsName = updateVo.GoodsName;
                 updateDto.GoodsSourceId = updateVo.GoodsSourceId;
+                updateDto.ExpireDate = updateVo.ExpireDate;
                 await _amiyaWareHouseService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -307,6 +312,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                               StorageRacks = d.StorageRacks,
                               Amount = d.Amount,
                               TotalPrice = d.TotalPrice,
+                              ExpireDate=d.ExpireDate,
+                              HasUsedTime=d.HasUsedTime,
                           };
                 var exportOrderWriteOff = res.ToList();
                 var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);

@@ -29,5 +29,10 @@ namespace Fx.Amiya.Background.Api.Vo.WareHouse.AmiyaWareHouse
         /// 归属货架id
         /// </summary>
         public string StorageRacksId { get; set; }
+
+        /// <summary>
+        /// 过期时间
+        /// </summary>
+        public DateTime? ExpireDate { get; set; }
     }
 }
