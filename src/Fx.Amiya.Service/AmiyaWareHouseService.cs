@@ -75,9 +75,13 @@ namespace Fx.Amiya.Service
                         var dateResultSecond = (x.ExpireDate.Value - DateTime.Now).Seconds;
                         if (dateResultDay > 0)
                         {
-                            if (dateResultDay < 10)
+                            if (dateResultDay < 60)
                             {
-                                x.HasUsedTime = "<span style=color:red>" + dateResultDay + "天</span>";
+                                x.HasUsedTime = "<span style=color:orange>" + dateResultDay + "天</span>";
+                                if (dateResultDay < 30)
+                                {
+                                    x.HasUsedTime = "<span style=color:red>" + dateResultDay + "天</span>";
+                                }
                             }
                             else
                             {
@@ -132,7 +136,7 @@ namespace Fx.Amiya.Service
                                                 SinglePrice = d.SinglePrice,
                                                 Amount = d.Amount,
                                                 TotalPrice = d.TotalPrice,
-                                                ExpireDate=d.ExpireDate,
+                                                ExpireDate = d.ExpireDate,
                                             };
                 List<AmiyaWareHouseDto> amiyaWareHouseServicePageInfo = new List<AmiyaWareHouseDto>();
                 amiyaWareHouseServicePageInfo = await amiyaWareHouseService.ToListAsync();
@@ -147,13 +151,17 @@ namespace Fx.Amiya.Service
                         var dateResultSecond = (x.ExpireDate.Value - DateTime.Now).Seconds;
                         if (dateResultDay > 0)
                         {
-                            if (dateResultDay < 10)
+                            if (dateResultDay < 60)
                             {
-                                x.HasUsedTime = dateResultDay + "天";
+                                x.HasUsedTime = "<span style=color:orange>" + dateResultDay + "天</span>";
+                                if (dateResultDay < 30)
+                                {
+                                    x.HasUsedTime = "<span style=color:red>" + dateResultDay + "天</span>";
+                                }
                             }
                             else
                             {
-                                x.HasUsedTime = dateResultDay + "天";
+                                x.HasUsedTime = "<span style=color:green>" + dateResultDay + "天</span>";
                             }
                         }
                         else if (dateResultHours > 0)
