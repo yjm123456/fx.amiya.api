@@ -111,6 +111,10 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             {
                 liveAnchorIds.Add(liveAnchorId);
             }
+            if (!employeeId.HasValue)
+            {
+                employeeId = -1;
+            }
             var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorIds, consultationEmpId, sendBy, isAcompanying, isOldCustomer, commissionRatio, keyword, belongMonth, minAddOrderPrice, maxAddOrderPrice, LoginEmployeeId, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, orderSource, pageNum, pageSize);
 
             var contentPlatformOrders = from d in orders.List
