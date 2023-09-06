@@ -809,6 +809,25 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Controllers.TakeGoodsDataBoardController">
+            <summary>
+            带货看板数据
+            </summary>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.TakeGoodsDataBoardController.GetGMVDataAsync(Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Input.QueryGmvDataVo)">
+            <summary>
+            获取GMV看板数据
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fx.Amiya.BusinessWechat.Api.Controllers.TakeGoodsDataBoardController.GetGMVDataBrokenLineDataAsync(Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Input.QueryGmvDataVo)">
+            <summary>
+            获取业绩趋势折线图数据
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
         <member name="T:Fx.Amiya.BusinessWechat.Api.Vo.BaseQueryVo">
             <summary>
             查询基础类
@@ -842,6 +861,236 @@
         <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.Login.HospitalEmployeeAccountVo.EmployeeType">
             <summary>
             员工类型
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Input.QueryGmvDataVo">
+            <summary>
+            gmv看板数据查询
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Input.QueryGmvDataVo.ContentPlatformId">
+            <summary>
+            平台id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Input.QueryGmvDataVo.LiveAnchorId">
+            <summary>
+            主播id
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Input.QueryGmvDataVo.Year">
+            <summary>
+            年
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Input.QueryGmvDataVo.Month">
+            <summary>
+            月
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataBrokenLineVo.OrderGMVBrokenLineList">
+            <summary>
+            下单GMV折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataBrokenLineVo.QianChuanPutInBrokenLineList">
+            <summary>
+            千川投放折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataBrokenLineVo.RefundGMVBrokenLineList">
+            <summary>
+            退款GMV折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataBrokenLineVo.OrderPackagesBrokenLineList">
+            <summary>
+            下单件数折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataBrokenLineVo.RefundPackagesBrokenLineList">
+            <summary>
+            退款件数折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataBrokenLineVo.SinglePriceBrokenLineList">
+            <summary>
+            下单件单价折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataBrokenLineVo.RefundSinglePriceBrokenLineList">
+            <summary>
+            退款件单价折线图
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.OrderGmv">
+            <summary>
+            下单gmv
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.OrderGmvCompleteRate">
+            <summary>
+            下单gmv目标完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.OrderGMVChainRatio">
+            <summary>
+            下单GMV环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.OrderGMVYearOnYear">
+            <summary>
+            下单GMV同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.OrderGMVToDateSchedule">
+            <summary>
+            下单gmv对比时间进度
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.OrderGMVDeviation">
+            <summary>
+            下单gmv对比时间进度偏差
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.LaterCompleteEveryDayOrderGMV">
+            <summary>
+            下单gmv距目标达成后期每天需完成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.QianChuanPutIn">
+            <summary>
+            千川投放金额
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.QianChuanPutInCompleteRate">
+            <summary>
+            千川投放金额完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.QianChuanPutInChainRatio">
+            <summary>
+            千川投放金额环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.QianChuanPutInYearOnYear">
+            <summary>
+            千川投放金额同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.QianChuanToDateSchedule">
+            <summary>
+            千川投流对比时间进度
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.QianChuanDeviation">
+            <summary>
+            千川投流对比时间进度偏差
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.LaterCompleteEveryDayQianChuan">
+            <summary>
+            千川投流距目标达成后期每天需完成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.DaoDaoOrderGmv">
+            <summary>
+            刀刀下单gmv
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.DaoDaoOrderGmvCompleteRate">
+            <summary>
+            刀刀下单gmv完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.DaoDaoOrderGMVChainRatio">
+            <summary>
+            刀刀下单gmv环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.DaoDaoOrderGMVYearOnYear">
+            <summary>
+            刀刀下单gmv同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.DaoDaoGMVProportion">
+            <summary>
+            刀刀组gmv占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.DaoDaoOrderGMVToDateSchedule">
+            <summary>
+            刀刀组下单gmv对比时间进度
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.DaoDaoOrderGMVDeviation">
+            <summary>
+            刀刀组下单gmv对比时间进度偏差
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.LaterCompleteEveryDayDaoDaoOrderGMV">
+            <summary>
+            刀刀组下单gmv距目标达成后期每天需完成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.JiNaOrderGmv">
+            <summary>
+            吉娜下单gmv
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.JiNaOrderGmvCompleteRate">
+            <summary>
+            吉娜下单gmv完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.JiNaOrderGMVChainRatio">
+            <summary>
+            吉娜下单gmv环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.JiNaOrderGMVYearOnYear">
+            <summary>
+            吉娜下单gmv同比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.JinaGMVProportion">
+            <summary>
+            吉娜组gmv占比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.JinaOrderGMVToDateSchedule">
+            <summary>
+            吉娜组下单gmv对比时间进度
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.JinaOrderGMVDeviation">
+            <summary>
+            吉娜组下单gmv对比时间进度偏差
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.JInaLaterCompleteEveryDayOrderGMV">
+            <summary>
+            吉娜组下单gmv距目标达成后期每天需完成
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.RefunGMV">
+            <summary>
+            退款gmv
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.RefunGMVCompleteRate">
+            <summary>
+            退款gmv完成率
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.RefunGMVChainRatio">
+            <summary>
+            退款gmv环比
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWechat.Api.Vo.TakeGoods.Result.GMVDataVo.RefunGMVYearOnYear">
+            <summary>
+            退款gmv同比
             </summary>
         </member>
         <member name="T:Fx.Amiya.BusinessWeChat.Api.Controllers.ContentPlatFormOrderAddWorkController">
@@ -1030,6 +1279,24 @@
         <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee.UpdatePasswordAmiyaVo.NewPassword">
             <summary>
             新密码
+            </summary>
+        </member>
+        <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.BaseBrokenLineVo">
+            <summary>
+            基础业绩折线图输出类
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.BaseBrokenLineVo.date">
+            <summary>
+            业绩折线图
+            </summary>
+            <summary>
+            日期（可以是年也可以是月）例：年输出1-12，月输出1-31
+            </summary>
+        </member>
+        <member name="P:Fx.Amiya.BusinessWeChat.Api.Vo.BaseBrokenLineVo.Performance">
+            <summary>
+            业绩金额
             </summary>
         </member>
         <member name="T:Fx.Amiya.BusinessWeChat.Api.Vo.Base.BaseKeyAndValueVo">
