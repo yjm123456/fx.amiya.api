@@ -5,6 +5,7 @@ using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderDealDetails.Input;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.CustomerInfo;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.IService;
 using Fx.Amiya.Service;
 using Fx.Authorization.Attributes;
@@ -13,6 +14,7 @@ using Fx.Open.Infrastructure.Web;
 using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +37,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         private IContentPlatFormCustomerPictureService _contentPlatFormCustomerPictureService;
         private IHttpContextAccessor _httpContextAccessor;
         private IAmiyaPositionInfoService amiyaPositionInfoService;
+        private IOperationLogService operationLogService;
         /// <summary>
         /// 内容平台订单模块
         /// </summary>
@@ -51,7 +54,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             IBindCustomerServiceService bindCustomerServiceService,
             IAmiyaPositionInfoService amiyaPositionInfoService,
             ICustomerService customerService,
-             IWxAppConfigService wxAppConfigService)
+             IWxAppConfigService wxAppConfigService, IOperationLogService operationLogService)
         {
             _orderService = orderService;
             this.customerService = customerService;
@@ -61,6 +64,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             _wxAppConfigService = wxAppConfigService;
             _httpContextAccessor = httpContextAccessor;
             _contentPlatFormCustomerPictureService = contentPlatFormCustomerPictureService;
+            this.operationLogService = operationLogService;
         }
 
 
@@ -601,59 +605,77 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData> FinishOrderByEmployeeAsync(ContentPlateFormOrderFinishVo updateVo)
         {
-            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
+            OperationAddDto operationLog = new OperationAddDto(); 
+            try
             {
-                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
+                if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
                 {
-                    updateVo.DealAmount = -updateVo.DealAmount;
+                    if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                    {
+                        updateVo.DealAmount = -updateVo.DealAmount;
+                    }
+                    else
+                    {
+                        throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
+                    }
                 }
-                else
-                {
-                    throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
-                }
-            }
 
-            ContentPlateFormOrderFinishDto updateDto = new ContentPlateFormOrderFinishDto();
-            updateDto.Id = updateVo.Id;
-            updateDto.IsFinish = updateVo.IsFinish;
-            updateDto.LastDealHospitalId = updateVo.LastDealHospitalId;
-            updateDto.ToHospitalDate = updateVo.ToHospitalDate;
-            updateDto.DealAmount = updateVo.DealAmount;
-            updateDto.LastProjectStage = updateVo.LastProjectStage;
-            updateDto.DealPictureUrl = updateVo.DealPictureUrl;
-            updateDto.CommissionRatio = updateVo.CommissionRatio;
-            updateDto.IsAcompanying = updateVo.IsAcompanying;
-            updateDto.UnDealReason = updateVo.UnDealReason;
-            updateDto.IsToHospital = updateVo.IsToHospital;
-            updateDto.ToHospitalType = updateVo.ToHospitalType;
-            updateDto.DealPerformanceType = updateVo.DealPerformanceType;
-            updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
-            updateDto.DealDate = updateVo.DealDate;
-            updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
-            updateDto.EmpId = Convert.ToInt32(employee.Id);
-            //企业微信新版本发布后退回
-            updateDto.ConsumptionType = updateVo.ConsumptionType;
-            //updateDto.ConsumptionType = (int)ConsumptionType.Deal;
-            updateDto.InvitationDocuments = updateVo.InvitationDocuments;
-            List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
-            if (updateDto.IsFinish == true && updateVo.AddContentPlatFormOrderDealDetailsVoList != null)
-            {
-                foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
+                ContentPlateFormOrderFinishDto updateDto = new ContentPlateFormOrderFinishDto();
+                updateDto.Id = updateVo.Id;
+                updateDto.IsFinish = updateVo.IsFinish;
+                updateDto.LastDealHospitalId = updateVo.LastDealHospitalId;
+                updateDto.ToHospitalDate = updateVo.ToHospitalDate;
+                updateDto.DealAmount = updateVo.DealAmount;
+                updateDto.LastProjectStage = updateVo.LastProjectStage;
+                updateDto.DealPictureUrl = updateVo.DealPictureUrl;
+                updateDto.CommissionRatio = updateVo.CommissionRatio;
+                updateDto.IsAcompanying = updateVo.IsAcompanying;
+                updateDto.UnDealReason = updateVo.UnDealReason;
+                updateDto.IsToHospital = updateVo.IsToHospital;
+                updateDto.ToHospitalType = updateVo.ToHospitalType;
+                updateDto.DealPerformanceType = updateVo.DealPerformanceType;
+                updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
+                updateDto.DealDate = updateVo.DealDate;
+                updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
+                updateDto.EmpId = Convert.ToInt32(employee.Id);
+                //企业微信新版本发布后退回
+                updateDto.ConsumptionType = updateVo.ConsumptionType;
+                //updateDto.ConsumptionType = (int)ConsumptionType.Deal;
+                updateDto.InvitationDocuments = updateVo.InvitationDocuments;
+                List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
+                if (updateDto.IsFinish == true && updateVo.AddContentPlatFormOrderDealDetailsVoList != null)
                 {
-                    AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
-                    addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
-                    addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;
-                    addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
-                    addContentPlatFormOrderDealDetailsDto.Price = x.Price;
-                    addContentPlatFormOrderDealDetailsDto.CreateBy = updateDto.EmpId;
-                    addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;
-                    addContentPlatFormOrderDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);
+                    foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
+                    {
+                        AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
+                        addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
+                        addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;
+                        addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
+                        addContentPlatFormOrderDealDetailsDto.Price = x.Price;
+                        addContentPlatFormOrderDealDetailsDto.CreateBy = updateDto.EmpId;
+                        addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;
+                        addContentPlatFormOrderDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);
+                    }
                 }
+                updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
+                await _orderService.FinishContentPlateFormOrderAsync(updateDto);
+                return ResultData.Success();
             }
-            updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
-            await _orderService.FinishContentPlateFormOrderAsync(updateDto);
-            return ResultData.Success();
+            catch (Exception ex)
+            {
+                operationLog.Code = -1;
+                operationLog.Message = ex.Message;
+                throw ex;
+            }
+            finally {
+                operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
+                operationLog.RequestType = (int)RequestType.Add;
+                operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
         /// <summary>
@@ -665,45 +687,62 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData> UpdateFinishOrderByEmployeeAsync(UpdateContentPlateFormOrderFinishVo updateVo)
         {
-            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            UpdateContentPlateFormOrderFinishDto updateDto = new UpdateContentPlateFormOrderFinishDto();
-            updateDto.Id = updateVo.Id;
-            updateDto.DealId = updateVo.DealId;
-            updateDto.IsFinish = updateVo.IsFinish;
-            updateDto.LastDealHospitalId = updateVo.LastDealHospitalId;
-            updateDto.ToHospitalDate = updateVo.ToHospitalDate;
-            updateDto.DealAmount = updateVo.DealAmount;
-            updateDto.LastProjectStage = updateVo.LastProjectStage;
-            updateDto.DealPictureUrl = updateVo.DealPictureUrl;
-            updateDto.UnDealReason = updateVo.UnDealReason;
-            updateDto.IsToHospital = updateVo.IsToHospital;
-            updateDto.ToHospitalType = updateVo.ToHospitalType;
-            updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
-            updateDto.DealDate = updateVo.DealDate;
-            updateDto.DealPerformanceType = updateVo.DealPerformanceType;
-            updateDto.CommissionRatio = updateVo.CommissionRatio;
-            updateDto.IsAcompanying = updateVo.IsAcompanying;
-            updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
-            updateDto.InvitationDocuments = updateVo.InvitationDocuments;
-            updateDto.ConsumptionType = updateVo.ConsumptionType;
-            List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
-            if (updateDto.IsFinish == true)
+            OperationAddDto operationLog = new OperationAddDto();
+            try
             {
-                foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
+                UpdateContentPlateFormOrderFinishDto updateDto = new UpdateContentPlateFormOrderFinishDto();
+                updateDto.Id = updateVo.Id;
+                updateDto.DealId = updateVo.DealId;
+                updateDto.IsFinish = updateVo.IsFinish;
+                updateDto.LastDealHospitalId = updateVo.LastDealHospitalId;
+                updateDto.ToHospitalDate = updateVo.ToHospitalDate;
+                updateDto.DealAmount = updateVo.DealAmount;
+                updateDto.LastProjectStage = updateVo.LastProjectStage;
+                updateDto.DealPictureUrl = updateVo.DealPictureUrl;
+                updateDto.UnDealReason = updateVo.UnDealReason;
+                updateDto.IsToHospital = updateVo.IsToHospital;
+                updateDto.ToHospitalType = updateVo.ToHospitalType;
+                updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
+                updateDto.DealDate = updateVo.DealDate;
+                updateDto.DealPerformanceType = updateVo.DealPerformanceType;
+                updateDto.CommissionRatio = updateVo.CommissionRatio;
+                updateDto.IsAcompanying = updateVo.IsAcompanying;
+                updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
+                updateDto.InvitationDocuments = updateVo.InvitationDocuments;
+                updateDto.ConsumptionType = updateVo.ConsumptionType;
+                List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
+                if (updateDto.IsFinish == true)
                 {
-                    AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
-                    addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
-                    addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;
-                    addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
-                    addContentPlatFormOrderDealDetailsDto.Price = x.Price;
-                    addContentPlatFormOrderDealDetailsDto.CreateBy = Convert.ToInt32(employee.Id);
-                    addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;
-                    addContentPlatFormOrderDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);
+                    foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
+                    {
+                        AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
+                        addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
+                        addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;
+                        addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
+                        addContentPlatFormOrderDealDetailsDto.Price = x.Price;
+                        addContentPlatFormOrderDealDetailsDto.CreateBy = Convert.ToInt32(employee.Id);
+                        addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;
+                        addContentPlatFormOrderDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);
+                    }
                 }
+                updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
+                await _orderService.UpdateFinishContentPlateFormOrderAsync(updateDto);
+                return ResultData.Success();
             }
-            updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
-            await _orderService.UpdateFinishContentPlateFormOrderAsync(updateDto);
-            return ResultData.Success();
+            catch (Exception ex) {
+                operationLog.Code = -1;
+                operationLog.Message = ex.Message;
+                throw ex;
+            }
+            finally {
+                operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
+                operationLog.RequestType = (int)RequestType.Add;
+                operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
         /// <summary>

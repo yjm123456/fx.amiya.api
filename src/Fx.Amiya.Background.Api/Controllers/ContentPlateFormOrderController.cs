@@ -55,6 +55,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IHttpContextAccessor _httpContextAccessor;
         private IOperationLogService operationLogService;
         private ILiveAnchorService liveAnchorService;
+        
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -1264,68 +1265,82 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData> FinishOrderByEmployeeAsync(ContentPlateFormOrderFinishVo updateVo)
         {
-            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND || updateVo.ConsumptionType == (int)ConsumptionType.Refund)
-            {
-                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+            OperationAddDto operationLog = new OperationAddDto();
+            try {
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
+                if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND || updateVo.ConsumptionType == (int)ConsumptionType.Refund)
                 {
-                    updateVo.DealAmount = -updateVo.DealAmount;
-                }
-                else
-                {
-                    throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
-                }
-            }
-
-            ContentPlateFormOrderFinishDto updateDto = new ContentPlateFormOrderFinishDto();
-            updateDto.Id = updateVo.Id;
-            updateDto.IsFinish = updateVo.IsFinish;
-            updateDto.LastDealHospitalId = updateVo.LastDealHospitalId;
-            updateDto.ToHospitalDate = updateVo.ToHospitalDate;
-            updateDto.DealAmount = updateVo.DealAmount;
-            updateDto.LastProjectStage = updateVo.LastProjectStage;
-            updateDto.DealPictureUrl = updateVo.DealPictureUrl;
-            updateDto.CommissionRatio = updateVo.CommissionRatio;
-            updateDto.IsAcompanying = updateVo.IsAcompanying;
-            updateDto.UnDealReason = updateVo.UnDealReason;
-            updateDto.IsToHospital = updateVo.IsToHospital;
-            updateDto.ToHospitalType = updateVo.ToHospitalType;
-            updateDto.DealPerformanceType = updateVo.DealPerformanceType.HasValue ? 0 : updateVo.DealPerformanceType.Value;
-            updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
-            updateDto.DealDate = updateVo.DealDate;
-            updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
-            updateDto.EmpId = Convert.ToInt32(employee.Id);
-            updateDto.ConsumptionType = updateVo.ConsumptionType;
-            updateDto.InvitationDocuments = updateVo.InvitationDocuments;
-            List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
-            if (updateDto.IsFinish == true)
-            {
-                foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
-                {
-                    if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND || updateVo.ConsumptionType == (int)ConsumptionType.Refund)
+                    if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
                     {
-                        if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
-                        {
-                            x.Price = -x.Price;
-                        }
-                        else
-                        {
-                            throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
-                        }
+                        updateVo.DealAmount = -updateVo.DealAmount;
                     }
-                    AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
-                    addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
-                    addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;
-                    addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
-                    addContentPlatFormOrderDealDetailsDto.Price = x.Price;
-                    addContentPlatFormOrderDealDetailsDto.CreateBy = updateDto.EmpId;
-                    addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;
-                    addContentPlatFormOrderDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);
+                    else
+                    {
+                        throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
+                    }
                 }
+
+                ContentPlateFormOrderFinishDto updateDto = new ContentPlateFormOrderFinishDto();
+                updateDto.Id = updateVo.Id;
+                updateDto.IsFinish = updateVo.IsFinish;
+                updateDto.LastDealHospitalId = updateVo.LastDealHospitalId;
+                updateDto.ToHospitalDate = updateVo.ToHospitalDate;
+                updateDto.DealAmount = updateVo.DealAmount;
+                updateDto.LastProjectStage = updateVo.LastProjectStage;
+                updateDto.DealPictureUrl = updateVo.DealPictureUrl;
+                updateDto.CommissionRatio = updateVo.CommissionRatio;
+                updateDto.IsAcompanying = updateVo.IsAcompanying;
+                updateDto.UnDealReason = updateVo.UnDealReason;
+                updateDto.IsToHospital = updateVo.IsToHospital;
+                updateDto.ToHospitalType = updateVo.ToHospitalType;
+                updateDto.DealPerformanceType = updateVo.DealPerformanceType.HasValue ? 0 : updateVo.DealPerformanceType.Value;
+                updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
+                updateDto.DealDate = updateVo.DealDate;
+                updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
+                updateDto.EmpId = Convert.ToInt32(employee.Id);
+                updateDto.ConsumptionType = updateVo.ConsumptionType;
+                updateDto.InvitationDocuments = updateVo.InvitationDocuments;
+                List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
+                if (updateDto.IsFinish == true)
+                {
+                    foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
+                    {
+                        if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND || updateVo.ConsumptionType == (int)ConsumptionType.Refund)
+                        {
+                            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                            {
+                                x.Price = -x.Price;
+                            }
+                            else
+                            {
+                                throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
+                            }
+                        }
+                        AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
+                        addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
+                        addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;
+                        addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
+                        addContentPlatFormOrderDealDetailsDto.Price = x.Price;
+                        addContentPlatFormOrderDealDetailsDto.CreateBy = updateDto.EmpId;
+                        addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;
+                        addContentPlatFormOrderDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);
+                    }
+                }
+                updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
+                await _orderService.FinishContentPlateFormOrderAsync(updateDto);
+                return ResultData.Success();
+            } catch (Exception ex) {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
+                throw ex;
+            } finally {
+                operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
+                operationLog.RequestType = (int)RequestType.Add;
+                operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
             }
-            updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
-            await _orderService.FinishContentPlateFormOrderAsync(updateDto);
-            return ResultData.Success();
         }
 
 
@@ -1339,68 +1354,85 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData> UpdateFinishOrderByEmployeeAsync(UpdateContentPlateFormOrderFinishVo updateVo)
         {
-            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            UpdateContentPlateFormOrderFinishDto updateDto = new UpdateContentPlateFormOrderFinishDto();
-            if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND || updateVo.ConsumptionType == (int)ConsumptionType.Refund)
+            OperationAddDto operationLog=new OperationAddDto();
+            try
             {
-                if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
+                UpdateContentPlateFormOrderFinishDto updateDto = new UpdateContentPlateFormOrderFinishDto();
+                if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND || updateVo.ConsumptionType == (int)ConsumptionType.Refund)
                 {
-                    updateVo.DealAmount = -updateVo.DealAmount;
-                }
-                else
-                {
-                    throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
-                }
-            }
-            updateDto.Id = updateVo.Id;
-            updateDto.DealId = updateVo.DealId;
-            updateDto.IsFinish = updateVo.IsFinish;
-            updateDto.LastDealHospitalId = updateVo.LastDealHospitalId;
-            updateDto.ToHospitalDate = updateVo.ToHospitalDate;
-            updateDto.DealAmount = updateVo.DealAmount;
-            updateDto.LastProjectStage = updateVo.LastProjectStage;
-            updateDto.DealPictureUrl = updateVo.DealPictureUrl;
-            updateDto.UnDealReason = updateVo.UnDealReason;
-            updateDto.IsToHospital = updateVo.IsToHospital;
-            updateDto.ToHospitalType = updateVo.ToHospitalType;
-            updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
-            updateDto.DealDate = updateVo.DealDate;
-            updateDto.DealPerformanceType = updateVo.DealPerformanceType;
-            updateDto.CommissionRatio = updateVo.CommissionRatio;
-            updateDto.UpdateBy = Convert.ToInt32(employee.Id);
-            updateDto.IsAcompanying = updateVo.IsAcompanying;
-            updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
-            updateDto.InvitationDocuments = updateVo.InvitationDocuments;
-            updateDto.ConsumptionType = updateVo.ConsumptionType;
-            List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
-            if (updateDto.IsFinish == true)
-            {
-                foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
-                {
-                    if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND || updateVo.ConsumptionType == (int)ConsumptionType.Refund)
+                    if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
                     {
-                        if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
-                        {
-                            x.Price = -x.Price;
-                        }
-                        else
-                        {
-                            throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
-                        }
+                        updateVo.DealAmount = -updateVo.DealAmount;
                     }
-                    AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
-                    addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
-                    addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;
-                    addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
-                    addContentPlatFormOrderDealDetailsDto.Price = x.Price;
-                    addContentPlatFormOrderDealDetailsDto.CreateBy = Convert.ToInt32(employee.Id);
-                    addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;
-                    addContentPlatFormOrderDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);
+                    else
+                    {
+                        throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
+                    }
                 }
+                updateDto.Id = updateVo.Id;
+                updateDto.DealId = updateVo.DealId;
+                updateDto.IsFinish = updateVo.IsFinish;
+                updateDto.LastDealHospitalId = updateVo.LastDealHospitalId;
+                updateDto.ToHospitalDate = updateVo.ToHospitalDate;
+                updateDto.DealAmount = updateVo.DealAmount;
+                updateDto.LastProjectStage = updateVo.LastProjectStage;
+                updateDto.DealPictureUrl = updateVo.DealPictureUrl;
+                updateDto.UnDealReason = updateVo.UnDealReason;
+                updateDto.IsToHospital = updateVo.IsToHospital;
+                updateDto.ToHospitalType = updateVo.ToHospitalType;
+                updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
+                updateDto.DealDate = updateVo.DealDate;
+                updateDto.DealPerformanceType = updateVo.DealPerformanceType;
+                updateDto.CommissionRatio = updateVo.CommissionRatio;
+                updateDto.UpdateBy = Convert.ToInt32(employee.Id);
+                updateDto.IsAcompanying = updateVo.IsAcompanying;
+                updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
+                updateDto.InvitationDocuments = updateVo.InvitationDocuments;
+                updateDto.ConsumptionType = updateVo.ConsumptionType;
+                List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
+                if (updateDto.IsFinish == true)
+                {
+                    foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
+                    {
+                        if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND || updateVo.ConsumptionType == (int)ConsumptionType.Refund)
+                        {
+                            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                            {
+                                x.Price = -x.Price;
+                            }
+                            else
+                            {
+                                throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
+                            }
+                        }
+                        AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
+                        addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
+                        addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;
+                        addContentPlatFormOrderDealDetailsDto.Quantity = x.Quantity;
+                        addContentPlatFormOrderDealDetailsDto.Price = x.Price;
+                        addContentPlatFormOrderDealDetailsDto.CreateBy = Convert.ToInt32(employee.Id);
+                        addContentPlatFormOrderDealDetailsDto.ContentPlatFormOrderId = updateDto.Id;
+                        addContentPlatFormOrderDealDetailsDtos.Add(addContentPlatFormOrderDealDetailsDto);
+                    }
+                }
+                updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
+                await _orderService.UpdateFinishContentPlateFormOrderAsync(updateDto);
+                return ResultData.Success();
             }
-            updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
-            await _orderService.UpdateFinishContentPlateFormOrderAsync(updateDto);
-            return ResultData.Success();
+            catch (Exception ex) {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
+                throw ex;
+            }
+            finally {
+                operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
+                operationLog.RequestType = (int)RequestType.Update;
+                operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
         /// <summary>
