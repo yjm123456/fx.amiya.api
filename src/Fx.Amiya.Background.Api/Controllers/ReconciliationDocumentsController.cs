@@ -578,7 +578,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                         }
                         else
                         {
-                            throw new Exception("返款比例有参数列为空，请检查表格数据！");
+                            throw new Exception("信息服务费比例有参数列为空，请检查表格数据！");
                         }
                         if (worksheet.Cells[x, 7].Value != null)
                         {
