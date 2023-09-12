@@ -224,7 +224,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("GetListWithPageByCustomerCompensation")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<FxPageInfo<ReconciliationDocumentsSettleVo>>> GetListWithPageByCustomerCompensationAsync(QueryReconciliationDocumentsSettleVo query)
+        public async Task<ResultData<FxPageInfo<ReconciliationDocumentsSettleVo>>> GetListWithPageByCustomerCompensationAsync([FromQuery] QueryReconciliationDocumentsSettleVo query)
         {
             try
             {
