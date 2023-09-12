@@ -85,6 +85,14 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// 出入账金额
         /// </summary>
         public decimal AccountPrice { get; set; }
+        /// <summary>
+        /// 薪资审核状态
+        /// </summary>
+        public int CompensationCheckState { get; set; }
+        /// <summary>
+        /// 薪资审核状态文本
+        /// </summary>
+        public string CompensationCheckStateText { get; set; }
 
         /// <summary>
         /// 审核日期

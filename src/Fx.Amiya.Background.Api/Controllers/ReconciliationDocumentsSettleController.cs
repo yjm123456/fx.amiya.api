@@ -234,6 +234,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryReconciliationDocumentsSettleDto.IsOldCustoemr = query.IsOldCustoemr;
                 queryReconciliationDocumentsSettleDto.CheckState = query.CheckState;
                 queryReconciliationDocumentsSettleDto.BelongEmpId = query.BelongEmpId;
+                queryReconciliationDocumentsSettleDto.StartDate = query.StartDate;
+                queryReconciliationDocumentsSettleDto.EndDate = query.EndDate;
+                queryReconciliationDocumentsSettleDto.PageNum = query.PageNum;
+                queryReconciliationDocumentsSettleDto.PageSize = query.PageSize;
                 var q = await billService.GetSettleListWithPageByCustomerCompensationAsync(queryReconciliationDocumentsSettleDto);
 
                 var reconciliationDocumentsSettle = from d in q.List
@@ -265,7 +269,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         AccountPrice = d.AccountPrice,
                                                         BelongEmpName = d.BelongEmpName,
                                                         BelongLiveAnchor = d.BelongLiveAnchor,
-                                                        CustomerServiceSettlePrice = d.CustomerServiceSettlePrice
+                                                        CustomerServiceSettlePrice = d.CustomerServiceSettlePrice,
+                                                        CompensationCheckStateText = d.CompensationCheckStateText,
+                                                        CheckDate = d.CheckDate,
+                                                        CheckRemark = d.CheckRemark,
+                                                        CheckBelongEmpName = d.CheckBelongEmpName,
                                                     };
 
                 FxPageInfo<ReconciliationDocumentsSettleVo> reconciliationDocumentsSettleResult = new FxPageInfo<ReconciliationDocumentsSettleVo>();

@@ -150,5 +150,24 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         /// </summary>
         [Description("出入账金额")]
         public decimal AccountPrice { get; set; }
+        /// <summary>
+        /// 薪资审核状态
+        /// </summary>
+        public string CompensationCheckStateText { get; set; }
+
+        /// <summary>
+        /// 审核日期
+        /// </summary>
+        public DateTime? CheckDate { get; set; }
+
+        /// <summary>
+        /// 审核备注
+        /// </summary>
+        public string CheckRemark { get; set; }
+
+        /// <summary>
+        /// 审核归属客服
+        /// </summary>
+        public string CheckBelongEmpName { get; set; }
     }
 }

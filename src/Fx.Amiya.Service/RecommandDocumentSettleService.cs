@@ -76,7 +76,7 @@ namespace Fx.Amiya.Service
               .Where(e => (string.IsNullOrEmpty(query.KeyWord) || e.RecommandDocumentId.Contains(query.KeyWord) || e.OrderId.Contains(query.KeyWord) || e.DealInfoId.Contains(query.KeyWord) || e.CheckRemark.Contains(query.KeyWord)))
               .Where(e => !query.StartDate.HasValue || e.CreateDate >= query.StartDate)
               .Where(e => !query.EndDate.HasValue || e.CreateDate <= query.EndDate)
-              .Where(e => query.ChooseHospitalId == 0 || e.HospitalId == query.ChooseHospitalId)
+              .Where(e => !query.ChooseHospitalId.HasValue || e.HospitalId == query.ChooseHospitalId)
               .Where(e => !query.BelongEmpId.HasValue || e.BelongEmpId == query.BelongEmpId).OrderByDescending(x => x.CreateDate)
               .Select(e => new RecommandDocumentSettleDto
               {
@@ -100,10 +100,12 @@ namespace Fx.Amiya.Service
                   CheckBelongEmpId = e.CheckBelongEmpId,
                   CheckRemark = e.CheckRemark,
                   CheckDate = e.CheckDate,
+                  CompensationCheckState = e.CompensationCheckState,
+                  CompensationCheckStateText = ServiceClass.GetCheckTypeText(e.CompensationCheckState),
               });
 
             FxPageInfo<RecommandDocumentSettleDto> resultPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();
-            resultPageInfo.TotalCount =  await record.CountAsync();
+            resultPageInfo.TotalCount = await record.CountAsync();
             resultPageInfo.List = await record.OrderByDescending(x => x.CreateDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
             return resultPageInfo;
         }

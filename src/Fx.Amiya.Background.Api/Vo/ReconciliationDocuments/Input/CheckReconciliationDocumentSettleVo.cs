@@ -8,7 +8,7 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments.Input
     /// <summary>
     /// 对账单审核记录审核薪资相关基础类
     /// </summary>
-    public class CheckReconciliationDocumentSettleVo:BaseQueryVo
+    public class CheckReconciliationDocumentSettleVo
     {
         /// <summary>
         /// 对账单审核记录id
@@ -19,10 +19,6 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments.Input
         /// </summary>
 
         public int CheckState { get; set; }
-        /// <summary>
-        /// 审核人
-        /// </summary>
-        public int CheckBy { get; set; }
         /// <summary>
         /// 审核备注
         /// </summary>
