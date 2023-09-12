@@ -37,6 +37,11 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.AccountPrice).HasColumnName("account_price").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.HospitalId).HasColumnName("hospital_id").HasColumnType("int").IsRequired();
             builder.HasOne(e => e.AmiyaEmployee).WithMany(e => e.RecommandDocumentSettleList).HasForeignKey(e => e.CreateBy);
+            builder.Property(e => e.CompensationCheckState).HasColumnName("compensation_check_state").HasColumnType("int").IsRequired();
+            builder.Property(e => e.CheckBy).HasColumnName("check_by").HasColumnType("int").IsRequired(false);
+            builder.Property(e => e.CheckDate).HasColumnName("check_date").HasColumnType("DATETIME").IsRequired(false);
+            builder.Property(e => e.CheckRemark).HasColumnName("check_remark").HasColumnType("varchar(1000)").IsRequired(false);
+            builder.Property(e => e.CheckBelongEmpId).HasColumnName("check_belong_empid").HasColumnType("int").IsRequired(false);
             //builder.HasOne(e => e.ReconciliationDocuments).WithMany(e => e.RecommandDocumentSettleList).HasForeignKey(e => e.RecommandDocumentId);
         }
     }

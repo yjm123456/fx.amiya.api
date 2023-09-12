@@ -68,6 +68,30 @@ namespace Fx.Amiya.DbModels.Model
 
         public AmiyaEmployee AmiyaEmployee { get; set; }
         /// <summary>
+        /// 薪资审核状态
+        /// </summary>
+        public int CompensationCheckState { get; set; }
+
+        /// <summary>
+        /// 审核人
+        /// </summary>
+        public int? CheckBy { get; set; }
+
+        /// <summary>
+        /// 审核日期
+        /// </summary>
+        public DateTime? CheckDate { get; set; }
+
+        /// <summary>
+        /// 审核备注
+        /// </summary>
+        public string CheckRemark { get; set; }
+
+        /// <summary>
+        /// 审核归属客服
+        /// </summary>
+        public int? CheckBelongEmpId { get; set; }
+        /// <summary>
         /// 对账单
         /// </summary>
         //public ReconciliationDocuments ReconciliationDocuments { get; set; }

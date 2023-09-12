@@ -70,6 +70,44 @@ namespace Fx.Amiya.Service
             return result;
         }
 
+        public async Task<FxPageInfo<RecommandDocumentSettleDto>> GetListWithPageAsync(QueryReconciliationDocumentsSettleDto query)
+        {
+            var record = _dalRecommandDocumentSettle.GetAll().Include(x => x.AmiyaEmployee)
+              .Where(e => (string.IsNullOrEmpty(query.KeyWord) || e.RecommandDocumentId.Contains(query.KeyWord) || e.OrderId.Contains(query.KeyWord) || e.DealInfoId.Contains(query.KeyWord) || e.CheckRemark.Contains(query.KeyWord)))
+              .Where(e => !query.StartDate.HasValue || e.CreateDate >= query.StartDate)
+              .Where(e => !query.EndDate.HasValue || e.CreateDate <= query.EndDate)
+              .Where(e => query.ChooseHospitalId == 0 || e.HospitalId == query.ChooseHospitalId)
+              .Where(e => !query.BelongEmpId.HasValue || e.BelongEmpId == query.BelongEmpId).OrderByDescending(x => x.CreateDate)
+              .Select(e => new RecommandDocumentSettleDto
+              {
+                  Id = e.Id,
+                  RecommandDocumentId = e.RecommandDocumentId,
+                  HospitalId = e.HospitalId,
+                  OrderId = e.OrderId,
+                  DealInfoId = e.DealInfoId,
+                  OrderFrom = e.OrderFrom,
+                  OrderFromText = ServiceClass.GetOrderFromText(e.OrderFrom),
+                  IsOldCustomer = e.IsOldCustomer,
+                  IsOldCustomerText = e.IsOldCustomer == true ? "老客业绩" : "新客业绩",
+                  OrderPrice = e.OrderPrice,
+                  CreateDate = e.CreateDate,
+                  RecolicationPrice = e.RecolicationPrice,
+                  CreateEmpId = e.CreateEmpId,
+                  BelongLiveAnchorAccount = e.BelongLiveAnchorAccount,
+                  BelongEmpId = e.BelongEmpId,
+                  AccountTypeText = e.AccountType == true ? "出账" : "入账",
+                  CustomerServiceSettlePrice = e.CustomerServiceSettlePrice,
+                  CheckBelongEmpId = e.CheckBelongEmpId,
+                  CheckRemark = e.CheckRemark,
+                  CheckDate = e.CheckDate,
+              });
+
+            FxPageInfo<RecommandDocumentSettleDto> resultPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();
+            resultPageInfo.TotalCount =  await record.CountAsync();
+            resultPageInfo.List = await record.OrderByDescending(x => x.CreateDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
+            return resultPageInfo;
+        }
+
         public async Task<List<RecommandDocumentSettleDto>> GetRecommandDocumentSettleAsync(List<string> recommandDocumentIds, bool? isSettle)
         {
             var recommandDocumentSettle = await _dalRecommandDocumentSettle.GetAll().Where(z => !isSettle.HasValue || z.IsSettle == isSettle).Where(z => recommandDocumentIds.Contains(z.RecommandDocumentId)).ToListAsync();
@@ -133,7 +171,18 @@ namespace Fx.Amiya.Service
                 await _dalRecommandDocumentSettle.UpdateAsync(result, true);
             }
         }
-
+        public async Task CheckAsync(CheckReconciliationDocumentSettleDto checkDto)
+        {
+            var result = await _dalRecommandDocumentSettle.GetAll().Where(x => x.Id == checkDto.Id).FirstOrDefaultAsync();
+            if (result != null)
+            {
+                result.CompensationCheckState = checkDto.CheckState;
+                result.CheckBy = checkDto.CheckBy;
+                result.CheckRemark = checkDto.CheckRemark;
+                result.CreateDate = DateTime.Now;
+                await _dalRecommandDocumentSettle.UpdateAsync(result, true);
+            }
+        }
 
     }
 }

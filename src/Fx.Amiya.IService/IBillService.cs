@@ -51,6 +51,14 @@ namespace Fx.Amiya.IService
         Task ReturnBakcPriceAsync(BillReturnBackPriceDto updateDto);
 
         /// <summary>
+        /// 审核助理薪资数据
+        /// </summary>
+        /// <param name="checkDto"></param>
+        /// <returns></returns>
+
+        Task CheckReconciliationDocumentsSettleAsync(CheckReconciliationDocumentSettleDto checkDto);
+
+        /// <summary>
         /// 对账单审核记录
         /// </summary>
         /// <param name="startDate"></param>
@@ -64,6 +72,13 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<FxPageInfo<RecommandDocumentSettleDto>> GetSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, int chooseHospitalId, string keyword, int pageNum, int pageSize);
 
+
+        /// <summary>
+        /// 分页获取审核记录数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<RecommandDocumentSettleDto>> GetSettleListWithPageByCustomerCompensationAsync(QueryReconciliationDocumentsSettleDto query);
         /// <summary>
         /// 导出对账单审核记录
         /// </summary>

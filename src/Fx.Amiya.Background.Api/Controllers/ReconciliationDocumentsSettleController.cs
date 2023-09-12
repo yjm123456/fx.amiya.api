@@ -2,6 +2,7 @@
 using Fx.Amiya.Background.Api.Vo.ReconciliationDocuments;
 using Fx.Amiya.Background.Api.Vo.ReconciliationDocuments.Input;
 using Fx.Amiya.Dto.OperationLog;
+using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -91,7 +92,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         AccountPrice = d.AccountPrice,
                                                         BelongEmpName = d.BelongEmpName,
                                                         BelongLiveAnchor = d.BelongLiveAnchor,
-                                                        CustomerServiceSettlePrice=d.CustomerServiceSettlePrice
+                                                        CustomerServiceSettlePrice = d.CustomerServiceSettlePrice
                                                     };
 
                 FxPageInfo<ReconciliationDocumentsSettleVo> reconciliationDocumentsSettleResult = new FxPageInfo<ReconciliationDocumentsSettleVo>();
@@ -170,7 +171,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         AccountPrice = d.AccountPrice,
                                                         BelongEmpName = d.BelongEmpName,
                                                         BelongLiveAnchor = d.BelongLiveAnchor,
-                                                        CustomerServiceSettlePrice=d.CustomerServiceSettlePrice
+                                                        CustomerServiceSettlePrice = d.CustomerServiceSettlePrice
                                                     };
 
                 res = reconciliationDocumentsSettle.ToList();
@@ -186,7 +187,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationAddDto.Parameters = JsonConvert.SerializeObject(query);
                 operationAddDto.RequestType = (int)RequestType.Export;
                 operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -194,5 +195,90 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+
+        /// <summary>
+        /// 审核助理薪资
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPut("CheckReconciliationDocumentsSettle")]
+        [FxInternalAuthorize]
+        public async Task CheckReconciliationDocumentsSettleAsync([FromBody] CheckReconciliationDocumentSettleVo query)
+        {
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            CheckReconciliationDocumentSettleDto checkReconciliationDocumentSettleDto = new CheckReconciliationDocumentSettleDto();
+            checkReconciliationDocumentSettleDto.CheckBy = employeeId;
+            checkReconciliationDocumentSettleDto.CheckRemark = query.CheckRemark;
+            checkReconciliationDocumentSettleDto.CheckState = query.CheckState;
+            checkReconciliationDocumentSettleDto.Id = query.Id;
+            checkReconciliationDocumentSettleDto.CheckBelongEmpId = query.CheckBelongEmpId;
+            await billService.CheckReconciliationDocumentsSettleAsync(checkReconciliationDocumentSettleDto);
+
+        }
+
+        /// <summary>
+        /// 分页获取对账单审核记录(助理薪资审核相关数据)
+        /// </summary>
+        /// <param name="query">查询条件</param>
+        /// <returns></returns>
+        [HttpGet("GetListWithPageByCustomerCompensation")]
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData<FxPageInfo<ReconciliationDocumentsSettleVo>>> GetListWithPageByCustomerCompensationAsync(QueryReconciliationDocumentsSettleVo query)
+        {
+            try
+            {
+
+                QueryReconciliationDocumentsSettleDto queryReconciliationDocumentsSettleDto = new QueryReconciliationDocumentsSettleDto();
+                queryReconciliationDocumentsSettleDto.ChooseHospitalId = query.ChooseHospitalId;
+                queryReconciliationDocumentsSettleDto.IsOldCustoemr = query.IsOldCustoemr;
+                queryReconciliationDocumentsSettleDto.CheckState = query.CheckState;
+                queryReconciliationDocumentsSettleDto.BelongEmpId = query.BelongEmpId;
+                var q = await billService.GetSettleListWithPageByCustomerCompensationAsync(queryReconciliationDocumentsSettleDto);
+
+                var reconciliationDocumentsSettle = from d in q.List
+                                                    select new ReconciliationDocumentsSettleVo
+                                                    {
+                                                        RecommandDocumentId = d.RecommandDocumentId,
+                                                        HospitalName = d.HospitalName,
+                                                        OrderId = d.OrderId,
+                                                        DealInfoId = d.DealInfoId,
+                                                        IsCerateBill = d.IsCerateBill == true ? "是" : "否",
+                                                        BelongCompany = d.BelongCompany,
+                                                        BelongCompany2 = d.BelongCompany2,
+                                                        DealDate = d.DealDate,
+                                                        GoodsName = d.GoodsName,
+                                                        Phone = d.Phone,
+                                                        OrderFromText = d.OrderFromText,
+                                                        OrderPrice = d.OrderPrice,
+                                                        IsOldCustomerText = d.IsOldCustomerText,
+                                                        InformationPrice = d.InformationPrice,
+                                                        SystemUpdatePrice = d.SystemUpdatePrice,
+                                                        ReturnBackPrice = d.ReturnBackPrice,
+                                                        CreateDate = d.CreateDate,
+                                                        IsSettle = d.IsSettle == true ? "是" : "否",
+                                                        SettleDate = d.SettleDate,
+                                                        RecolicationPrice = d.RecolicationPrice,
+                                                        CreateEmpName = d.CreateEmpName,
+                                                        CreateByEmpName = d.CreateByEmpName,
+                                                        AccountTypeText = d.AccountTypeText,
+                                                        AccountPrice = d.AccountPrice,
+                                                        BelongEmpName = d.BelongEmpName,
+                                                        BelongLiveAnchor = d.BelongLiveAnchor,
+                                                        CustomerServiceSettlePrice = d.CustomerServiceSettlePrice
+                                                    };
+
+                FxPageInfo<ReconciliationDocumentsSettleVo> reconciliationDocumentsSettleResult = new FxPageInfo<ReconciliationDocumentsSettleVo>();
+                reconciliationDocumentsSettleResult.List = reconciliationDocumentsSettle.ToList();
+                reconciliationDocumentsSettleResult.TotalCount = q.TotalCount;
+                reconciliationDocumentsSettleResult.PageSize = query.PageSize.Value;
+                reconciliationDocumentsSettleResult.CurrentPageIndex = query.PageNum.Value;
+                return ResultData<FxPageInfo<ReconciliationDocumentsSettleVo>>.Success().AddData("reconciliationDocumentsSettleInfo", reconciliationDocumentsSettleResult);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<FxPageInfo<ReconciliationDocumentsSettleVo>>.Fail(ex.Message);
+            }
+        }
     }
 }

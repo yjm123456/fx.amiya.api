@@ -188,3 +188,10 @@ ALTER TABLE `amiyadb`.`tbl_amiya_warehouse`
 ADD COLUMN `expire_date` DATETIME NULL AFTER `storage_racks_id`;
 -----------------------------------------------余建明 2023/08/29 END--------------------------------------------
 --------------------------------------------------------------------------以上已发布至线上
+--新增助理薪资审核功能
+ALTER TABLE `amiyadb`.`tbl_recommand_document_settle` 
+ADD COLUMN `compensation_check_state` INT NOT NULL DEFAULT 0 AFTER `hospital_id`,
+ADD COLUMN `check_by` INT NULL AFTER `compensation_check_state`,
+ADD COLUMN `check_date` DATETIME NULL AFTER `check_by`,
+ADD COLUMN `check_remark` VARCHAR(1000) NULL AFTER `check_date`;
+ADD COLUMN `check_belong_empid` INT NULL AFTER `check_remark`,

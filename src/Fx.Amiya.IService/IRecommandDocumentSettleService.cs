@@ -21,6 +21,12 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<RecommandDocumentSettleDto>> GetAllAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, int chooseHospitalId, string keyword);
         /// <summary>
+        /// 分页查询待审核助理新增对账单数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<RecommandDocumentSettleDto>> GetListWithPageAsync(QueryReconciliationDocumentsSettleDto query);
+        /// <summary>
         /// 根据对账单获取回款单未回款的数据
         /// </summary>
         /// <param name="recommandDocumentId"></param>
@@ -40,5 +46,7 @@ namespace Fx.Amiya.IService
         /// <param name="Id"></param>
         /// <returns></returns>
         Task UpdateIsRerturnBackAsync(string Id, DateTime returnBackDate);
+
+        Task CheckAsync(CheckReconciliationDocumentSettleDto checkDto);
     }
 }

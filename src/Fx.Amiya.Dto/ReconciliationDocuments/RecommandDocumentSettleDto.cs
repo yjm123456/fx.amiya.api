@@ -44,6 +44,11 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         public decimal SystemUpdatePrice { get; set; }
 
         public decimal ReturnBackPrice { get; set; }
+        /// <summary>
+        /// 审核客服结算金额
+        /// </summary>
+
+        public decimal CustomerServiceSettlePrice { get; set; }
         public DateTime CreateDate { get; set; }
         public bool IsSettle { get; set; }
         public DateTime? SettleDate { get; set; }
@@ -80,10 +85,22 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// 出入账金额
         /// </summary>
         public decimal AccountPrice { get; set; }
+
         /// <summary>
-        /// 审核客服业绩金额
+        /// 审核日期
         /// </summary>
-        public decimal? CustomerServiceSettlePrice { get; set; }
+        public DateTime? CheckDate { get; set; }
+
+        /// <summary>
+        /// 审核备注
+        /// </summary>
+        public string CheckRemark { get; set; }
+
+        /// <summary>
+        /// 审核归属客服
+        /// </summary>
+        public int? CheckBelongEmpId { get; set; }
+        public string CheckBelongEmpName { get; set; }
 
     }
 }

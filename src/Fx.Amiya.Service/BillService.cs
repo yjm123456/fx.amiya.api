@@ -493,6 +493,17 @@ namespace Fx.Amiya.Service
 
 
         #region [对账单审核记录]
+
+        /// <summary>
+        /// 审核助理薪资数据
+        /// </summary>
+        /// <param name="checkDto"></param>
+        /// <returns></returns>
+
+        public async Task CheckReconciliationDocumentsSettleAsync(CheckReconciliationDocumentSettleDto checkDto)
+        {
+            await recommandDocumentSettleService.CheckAsync(checkDto);
+        }
         /// <summary>
         /// 分页获取审核记录数据
         /// </summary>
@@ -601,6 +612,66 @@ namespace Fx.Amiya.Service
                 recommandDocumentSettleDtos.Add(recommandDocumentSettleDto);
             }
             fxPageInfo.List = recommandDocumentSettleDtos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+            fxPageInfo.TotalCount = recommandDocumentSettleDtos.Count();
+            return fxPageInfo;
+        }
+
+        /// <summary>
+        /// 分页获取审核记录数据
+        /// </summary>
+        /// <param name="isSettle"></param>
+        /// <param name="accountType"></param>
+        /// <param name="chooseHospitalId">选中医院id（0查询）维多连天美之外的</param>
+        /// <param name="keyword"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<RecommandDocumentSettleDto>> GetSettleListWithPageByCustomerCompensationAsync(QueryReconciliationDocumentsSettleDto query)
+        {
+            var record = await recommandDocumentSettleService.GetListWithPageAsync(query);
+
+            FxPageInfo<RecommandDocumentSettleDto> fxPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();
+            List<RecommandDocumentSettleDto> recommandDocumentSettleDtos = new List<RecommandDocumentSettleDto>();
+            foreach (var x in record.List)
+            {
+                if (x.HospitalId != 0)
+                {
+                    x.HospitalName =  dalHospitalInfo.GetAll().Where(e => e.Id == x.HospitalId).FirstOrDefault().Name;
+                }
+                if (x.BelongEmpId.HasValue)
+                {
+                    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
+                    x.BelongEmpName = empInfo.Name;
+                }
+
+                if (x.CheckBelongEmpId.HasValue)
+                {
+                    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CheckBelongEmpId.Value);
+                    x.CheckBelongEmpName = empInfo.Name;
+                }
+                if (x.BelongLiveAnchorAccount.HasValue)
+                {
+                    var liveAnchor = await liveAnchorService.GetByIdAsync(x.BelongLiveAnchorAccount.Value);
+                    x.BelongLiveAnchor = liveAnchor.Name;
+                }
+                switch (x.OrderFrom)
+                {
+                    case (int)OrderFrom.ContentPlatFormOrder:
+
+                        var dealInfo = await contentPlatFormOrderDealInfoService.GetByIdAsync(x.DealInfoId);
+                        x.DealDate = dealInfo.DealDate;
+                        break;
+                    case (int)OrderFrom.BuyAgainOrder:
+                        var customerHospitalConsume = await customerHospitalConsumeService.GetByConsumeIdAsync(x.DealInfoId);
+                        x.DealDate = customerHospitalConsume.BuyAgainTime;
+                        break;
+                    case (int)OrderFrom.ThirdPartyOrder:
+                        var tmallOrder = await orderService.GetByIdInCRMAsync(x.OrderId);
+                        x.DealDate = tmallOrder.WriteOffDate;
+                        break;
+                }
+            }
+            fxPageInfo.List = record.List;
             fxPageInfo.TotalCount = recommandDocumentSettleDtos.Count();
             return fxPageInfo;
         }
@@ -735,7 +806,7 @@ namespace Fx.Amiya.Service
             }
             var data = bill.GroupBy(e => e.HospitalId).OrderByDescending(g => g.Sum(item => item.DealPrice)).Select(g => new FinancialHospitalBoardDto
             {
-                HospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == g.Key).SingleOrDefault().Name,
+                HospitalName = dalHospitalInfo.GetAll().Where(e => e.Id == g.Key).FirstOrDefault().Name,
                 DealPrice = g.Sum(item => item.DealPrice) ?? 0m,
                 NoIncludeTaxPrice = g.Sum(item => item.NotInTaxPrice),
                 InformationPrice = g.Sum(item => item.InformationPrice) ?? 0m,
