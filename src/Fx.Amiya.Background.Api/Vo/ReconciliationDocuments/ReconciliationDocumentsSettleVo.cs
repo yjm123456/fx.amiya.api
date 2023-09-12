@@ -9,6 +9,10 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
     public class ReconciliationDocumentsSettleVo
     {
         /// <summary>
+        /// 对账单审核记录编号
+        /// </summary>
+        public string Id { get; set; }
+        /// <summary>
         /// 审核时间
         /// </summary>
         [Description("审核时间")]
