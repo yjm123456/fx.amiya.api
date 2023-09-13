@@ -203,7 +203,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpPut("CheckReconciliationDocumentsSettle")]
         [FxInternalAuthorize]
-        public async Task CheckReconciliationDocumentsSettleAsync([FromBody] CheckReconciliationDocumentSettleVo query)
+        public async Task<ResultData> CheckReconciliationDocumentsSettleAsync([FromBody] CheckReconciliationDocumentSettleVo query)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
@@ -214,6 +214,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             checkReconciliationDocumentSettleDto.Id = query.Id;
             checkReconciliationDocumentSettleDto.CheckBelongEmpId = query.CheckBelongEmpId;
             await billService.CheckReconciliationDocumentsSettleAsync(checkReconciliationDocumentSettleDto);
+            return ResultData.Success();
 
         }
 
@@ -234,6 +235,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryReconciliationDocumentsSettleDto.IsOldCustoemr = query.IsOldCustoemr;
                 queryReconciliationDocumentsSettleDto.CheckState = query.CheckState;
                 queryReconciliationDocumentsSettleDto.BelongEmpId = query.BelongEmpId;
+                queryReconciliationDocumentsSettleDto.KeyWord = query.KeyWord;
                 queryReconciliationDocumentsSettleDto.StartDate = query.StartDate;
                 queryReconciliationDocumentsSettleDto.EndDate = query.EndDate;
                 queryReconciliationDocumentsSettleDto.PageNum = query.PageNum;
@@ -243,6 +245,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var reconciliationDocumentsSettle = from d in q.List
                                                     select new ReconciliationDocumentsSettleVo
                                                     {
+                                                        Id=d.Id,
                                                         RecommandDocumentId = d.RecommandDocumentId,
                                                         HospitalName = d.HospitalName,
                                                         OrderId = d.OrderId,

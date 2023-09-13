@@ -77,6 +77,8 @@ namespace Fx.Amiya.Service
               .Where(e => !query.StartDate.HasValue || e.CreateDate >= query.StartDate)
               .Where(e => !query.EndDate.HasValue || e.CreateDate <= query.EndDate)
               .Where(e => !query.ChooseHospitalId.HasValue || e.HospitalId == query.ChooseHospitalId)
+              .Where(e => !query.IsOldCustoemr.HasValue || e.IsOldCustomer == query.IsOldCustoemr)
+              .Where(e => !query.CheckState.HasValue || e.CompensationCheckState == query.CheckState)
               .Where(e => !query.BelongEmpId.HasValue || e.BelongEmpId == query.BelongEmpId).OrderByDescending(x => x.CreateDate)
               .Select(e => new RecommandDocumentSettleDto
               {
@@ -180,8 +182,9 @@ namespace Fx.Amiya.Service
             {
                 result.CompensationCheckState = checkDto.CheckState;
                 result.CheckBy = checkDto.CheckBy;
+                result.CheckBelongEmpId = checkDto.CheckBelongEmpId;
                 result.CheckRemark = checkDto.CheckRemark;
-                result.CreateDate = DateTime.Now;
+                result.CheckDate = DateTime.Now;
                 await _dalRecommandDocumentSettle.UpdateAsync(result, true);
             }
         }
