@@ -812,6 +812,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     }*/
                     //交易信息添加支付交易订单号
                     await orderService.TradeAddTransNoAsync(tradeId, result.TransNo);
+                    await orderService.TradeAddChanelOrderNoAsync(tradeId,result.ChanelOrderNo);
                 }
                 else if (appId == "wx695942e4818de445")
                 {
@@ -1032,6 +1033,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 payRequestInfo.paySign = result.PayParam.PaySign;
                 orderPayResult.PayRequestInfo = payRequestInfo;
                 transNo = result.TransNo;
+                await orderService.TradeAddChanelOrderNoAsync(tradeId, result.ChanelOrderNo);
             }
             #endregion
 
@@ -1059,6 +1061,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
             //交易信息添加支付交易订单号
             await orderService.TradeAddTransNoAsync(tradeId, transNo);
+            
             #endregion
 
 
@@ -1290,6 +1293,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
                     //交易信息添加支付交易订单号
                     await orderService.TradeAddTransNoAsync(tradeId, result.TransNo);
+                    await orderService.TradeAddChanelOrderNoAsync(tradeId, result.ChanelOrderNo);
                 }
 
                 #endregion
@@ -1770,7 +1774,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <param name="tradeId"></param>
         /// <returns></returns>
         [HttpGet("confirmReceive/{tradeId}")]
-        public async Task<ResultData> ConfirmReceiveByTradeIdAsync(string tradeId)
+        public async Task<ResultData<ReceiveInfoVo>> ConfirmReceiveByTradeIdAsync(string tradeId)
         {
             try
             {
@@ -1875,7 +1879,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 //}
                 #endregion
                 unitOfWork.Commit();
-                return ResultData.Success();
+                ReceiveInfoVo result = new ReceiveInfoVo();
+                result.MchId = "";
+                result.TradeId = orderTrade.TransNo;
+                result.CreateDate = orderTrade.CreateDate.Value;
+                return ResultData<ReceiveInfoVo>.Success().AddData("result",result);
             }
             catch (Exception)
             {

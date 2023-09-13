@@ -1,4 +1,6 @@
 ﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.AssistantHomePage.Input;
+using Fx.Amiya.Dto.AssistantHomePage.Result;
 using Fx.Amiya.Dto.CustomerAppointmentSchedule.Input;
 using Fx.Amiya.Dto.CustomerAppointmentSchedule.Result;
 using Fx.Amiya.Dto.WareHouse.OutWareHouse;
@@ -48,6 +50,9 @@ namespace Fx.Amiya.IService
         /// <param name="AssignBy"></param>
         /// <returns></returns>
         Task AssignAsync(string id,string AssignBy);
+        #region 助理首页
+        Task<FxPageInfo<TodayAppointmentDataDto>> GetTodayAppointmentDataAsync(QueryAssistantHomePageDataDto query);
+        #endregion
 
     }
 }

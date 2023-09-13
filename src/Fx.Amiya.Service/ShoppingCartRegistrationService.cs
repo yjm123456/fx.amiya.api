@@ -17,6 +17,7 @@ using Fx.Amiya.Dto.WxAppConfig;
 using Newtonsoft.Json;
 using Fx.Amiya.Dto;
 using System.Threading;
+using Fx.Amiya.Dto.AssistantHomePage.Input;
 
 namespace Fx.Amiya.Service
 {
@@ -1069,6 +1070,57 @@ namespace Fx.Amiya.Service
                     };
             return await x.ToListAsync();
         }
+
+        /// <summary>
+        /// 根据条件获取助理月业绩完成情况数据
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isEffectiveCustomerData"></param>
+        /// <param name="contentPlatFormId"></param>
+        /// <returns></returns>
+        public async Task<List<ShoppingCartRegistrationDto>> GetAsistantMonthPerformanceDataAsync(QueryAssistantHomePageDataDto query)
+        {
+
+            var result = from d in dalShoppingCartRegistration.GetAll()
+            .Where(o => o.RecordDate >= query.StartDate.Value && o.RecordDate < query.EndDate.Value)
+                         select d;
+            if (!string.IsNullOrEmpty(query.BaseLiveAnchorId))
+            {
+                var ids = (await _liveAnchorService.GetLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId)).Select(e => e.Id);
+                result = result.Where(e => ids.Contains(e.LiveAnchorId));
+            }
+            if (string.IsNullOrEmpty(query.ContentPlatformId))
+            {
+                var ids = await _liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(query.ContentPlatformId, "");
+                result = result.Where(e => ids.Contains(e.LiveAnchorId));
+            }
+            if (query.LiveAnchorId.HasValue)
+            {
+                result = result.Where(e => e.LiveAnchorId == query.LiveAnchorId);
+            }
+            if (string.IsNullOrEmpty(query.WechatNoId))
+            {
+                result = result.Where(e => e.LiveAnchorWechatNo == query.WechatNoId);
+            }
+            //if (query.Source.HasValue)
+            //{
+            //    contentPlatformOrderDeal = contentPlatformOrderDeal.Where(e => e.ContentPlatFormOrder.OrderSource == query.Source);
+            //}
+            if (query.AssistantId.HasValue)
+            {
+                result = result.Where(e => e.AssignEmpId == query.AssistantId.Value);
+            }
+            var x = from d in result
+                    select new ShoppingCartRegistrationDto
+                    {
+                        IsReturnBackPrice = d.IsReturnBackPrice,
+                        AssignEmpId = d.AssignEmpId,
+                        IsAddWeChat = d.IsAddWeChat,
+                    };
+            return await x.ToListAsync();
+        }
+
         /// <summary>
         /// 获取面诊卡库存
         /// </summary>

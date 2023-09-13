@@ -12,6 +12,8 @@ using Fx.Infrastructure.DataAccess;
 using Fx.Amiya.Dto.CustomerAppointmentSchedule.Result;
 using Fx.Amiya.Dto.CustomerAppointmentSchedule.Input;
 using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.AssistantHomePage.Result;
+using Fx.Amiya.Dto.AssistantHomePage.Input;
 
 namespace Fx.Amiya.Service
 {
@@ -478,5 +480,49 @@ namespace Fx.Amiya.Service
             appointment.AssignLiveanchorId = AssignBy;
             await dalCustomerAppointmentScheduleService.UpdateAsync(appointment, true);
         }
+
+        #region 助理首页
+        /// <summary>
+        /// 分页获取今日预约
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<TodayAppointmentDataDto>> GetTodayAppointmentDataAsync(QueryAssistantHomePageDataDto query)
+        {
+            FxPageInfo<TodayAppointmentDataDto> todayToHospitalData = new FxPageInfo<TodayAppointmentDataDto>();
+            if (!query.Date.HasValue)
+            {
+                query.Date = DateTime.Now;
+            }
+            var startDate = query.Date.Value.Date;
+            var endDate = query.Date.Value.Date.AddDays(1).Date;
+            var todayTodayAppointmentData = dalCustomerAppointmentScheduleService.GetAll().Where(e => e.Valid == true && (e.AppointmentDate >= startDate && e.AppointmentDate < endDate));
+            if (query.AssistantId.HasValue)
+            {
+                todayTodayAppointmentData = todayTodayAppointmentData.Where(e => e.CreateBy == query.AssistantId);
+            }
+
+            var data = from a in todayTodayAppointmentData
+                       join e in _dalAmiyaEmployee.GetAll()
+                       on a.CreateBy equals e.Id
+                       join h in dalHospitalInfo.GetAll()
+                       on a.AppointmentHospitalId equals h.Id
+                       orderby a.AppointmentDate descending
+                       select new TodayAppointmentDataDto
+                       {
+                           Name = a.CustomerName,
+                           Phone = a.Phone,
+                           AssistantName = e.Name,
+                           Status = a.IsFinish ? "已完成" : "未完成",
+                           IsAccompany = a.AppointmentType == (int)AppointmentType.ToHospitalAppointment ? true : false,
+                           SendHospital = h.Name,
+                           ConsultSituation = a.Remark
+                       };
+            todayToHospitalData.TotalCount = await data.CountAsync();
+            todayToHospitalData.List = data.Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToList();
+            return todayToHospitalData;
+        }
+
+        #endregion
     }
 }

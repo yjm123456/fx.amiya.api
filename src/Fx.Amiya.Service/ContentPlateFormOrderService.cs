@@ -1,4 +1,6 @@
 ﻿using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto.AssistantHomePage.Input;
+using Fx.Amiya.Dto.AssistantHomePage.Result;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.CustomerInfo;
@@ -4324,6 +4326,59 @@ namespace Fx.Amiya.Service
 
 
 
+
+
+
+        #endregion
+
+        #region 助理首页
+        /// <summary>
+        /// 获取助理首页订单数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<AssistantOrderDataDto> GetAssistantOrderDataAsync(QueryAssistantHomePageDataDto query)
+        {
+            AssistantOrderDataDto assistantOrderData = new AssistantOrderDataDto();
+            if (!query.Date.HasValue)
+            {
+                query.Date = DateTime.Now;
+            }
+            var startDate = query.Date.Value.Date;
+            var endDate = query.Date.Value.Date.AddDays(1).Date;
+            var contentPlatformOrder = _dalContentPlatformOrder.GetAll();
+            if (!string.IsNullOrEmpty(query.BaseLiveAnchorId))
+            {
+                var ids = (await _liveAnchorService.GetLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId)).Select(e => e.Id);
+                contentPlatformOrder = contentPlatformOrder.Where(e => ids.Contains(e.LiveAnchorId.Value));
+            }
+            if (string.IsNullOrEmpty(query.ContentPlatformId))
+            {
+                var ids = await _liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(query.ContentPlatformId, "");
+                contentPlatformOrder = contentPlatformOrder.Where(e => ids.Contains(e.LiveAnchorId.Value));
+            }
+            if (query.LiveAnchorId.HasValue)
+            {
+                contentPlatformOrder = contentPlatformOrder.Where(e => e.LiveAnchorId == query.LiveAnchorId);
+            }
+            if (string.IsNullOrEmpty(query.WechatNoId))
+            {
+                contentPlatformOrder = contentPlatformOrder.Where(e => e.LiveAnchorWeChatNo == query.WechatNoId);
+            }
+            if (query.Source.HasValue)
+            {
+                contentPlatformOrder = contentPlatformOrder.Where(e => e.OrderSource == query.Source);
+            }
+            if (query.AssistantId.HasValue)
+            {
+                contentPlatformOrder = contentPlatformOrder.Where(e => e.BelongEmpId == query.AssistantId.Value);
+            }
+            assistantOrderData.TotalOrderCount = await contentPlatformOrder.CountAsync();
+            assistantOrderData.TodayOrderCount = await contentPlatformOrder.Where(e => e.CreateDate >= startDate && e.CreateDate < endDate).CountAsync();
+            assistantOrderData.UnSendOrderCount = await contentPlatformOrder.Where(e => e.OrderStatus < (int)ContentPlateFormOrderStatus.SendOrder).CountAsync();
+            assistantOrderData.TodayDealOrderCount = await contentPlatformOrder.Where(e => e.DealDate >= startDate && e.DealDate < endDate).CountAsync();
+            return assistantOrderData;
+        }
 
         #endregion
 

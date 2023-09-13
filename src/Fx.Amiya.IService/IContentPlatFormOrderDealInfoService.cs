@@ -1,4 +1,6 @@
 ﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.AssistantHomePage.Input;
+using Fx.Amiya.Dto.AssistantHomePage.Result;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.FinancialBoard;
@@ -346,6 +348,11 @@ namespace Fx.Amiya.IService
         /// <param name="customerServiceId"></param>
         /// <returns></returns>
         Task<List<CustomerServiceBoardDataDto>> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int? customerServiceId);
+
+        #endregion
+        #region 助理首页
+
+        Task<FxPageInfo<TodayToHospitalDataDto>> GetTodayToHospitalDataAsync(QueryAssistantHomePageDataDto query);
 
         #endregion
         #region 【枚举下拉框】

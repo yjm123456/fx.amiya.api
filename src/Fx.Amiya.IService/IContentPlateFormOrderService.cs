@@ -1,4 +1,6 @@
-﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
+﻿using Fx.Amiya.Dto.AssistantHomePage.Input;
+using Fx.Amiya.Dto.AssistantHomePage.Result;
+using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.FinancialBoard;
 using Fx.Amiya.Dto.HospitalBoard;
@@ -499,6 +501,15 @@ namespace Fx.Amiya.IService
         /// <param name="endDate"></param>
         /// <returns></returns>
         Task<List<RankDataDto>> GetRankDataAsync(DateTime startDate, DateTime endDate,int type);
+        #endregion
+
+        #region 助理首页
+        /// <summary>
+        /// 获取订单数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<AssistantOrderDataDto> GetAssistantOrderDataAsync(QueryAssistantHomePageDataDto query); 
         #endregion
     }
 }

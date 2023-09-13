@@ -17,8 +17,11 @@ namespace Fx.Amiya.Dto.TmallOrder
         public string Remark { get; set; }
         public string StatusCode { get; set; }
         public string StatusText { get; set; }
-        
-
+        public string TransNo { get; set; }
+        public string AppId { get; set; }
+        public string ChanelOrderNo { get; set; }
+        public string Phone { get; set; }
+        public string UserId { get; set; }
         public List<OrderInfoDto> OrderInfoList { get; set; }
         public List<TikTokOrderDto> TikTokOrderInfoList { get; set; }
     }

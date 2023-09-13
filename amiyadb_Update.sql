@@ -188,6 +188,15 @@ ALTER TABLE `amiyadb`.`tbl_amiya_warehouse`
 ADD COLUMN `expire_date` DATETIME NULL AFTER `storage_racks_id`;
 -----------------------------------------------余建明 2023/08/29 END--------------------------------------------
 --------------------------------------------------------------------------以上已发布至线上
+
+
+----------------------------------------------王健 2023/09/12 BEGIN-------------------------------------
+
+---交易信息添加三方支付单号用于上传订单信息
+ALTER TABLE `tbl_order_trade`
+	ADD COLUMN `chanel_order_no` VARCHAR(100) NULL DEFAULT NULL AFTER `trans_no`;
+
+---------------------------------------------王健 2023/09/12 END-------------------------------------
 --新增助理薪资审核功能
 ALTER TABLE `amiyadb`.`tbl_recommand_document_settle` 
 ADD COLUMN `compensation_check_state` INT NOT NULL DEFAULT 0 AFTER `hospital_id`,

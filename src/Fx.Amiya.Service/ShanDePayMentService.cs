@@ -214,7 +214,8 @@ namespace Fx.Amiya.Service
                         shanDePayParam.Package = payInfo.pay_data.package;
                         shanDePayParam.SignType = payInfo.pay_data.signType;
                         shanDePayParam.PaySign = payInfo.pay_data.paySign;
-                        shanDeOrderResult.PayParam = shanDePayParam;                      
+                        shanDeOrderResult.PayParam = shanDePayParam;
+                        shanDeOrderResult.ChanelOrderNo = payInfo.bank_order_no;
                     }
                     else
                     {

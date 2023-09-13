@@ -556,6 +556,13 @@ namespace Fx.Amiya.IService
         /// <param name=""></param>
         /// <returns></returns>
         Task TradeAddTransNoAsync(string tradeId,string transId);
+        /// <summary>
+        /// 保存三方支付上传到微信的支付订单号
+        /// </summary>
+        /// <param name="tradeId"></param>
+        /// <param name="chanelOrderNo"></param>
+        /// <returns></returns>
+        Task TradeAddChanelOrderNoAsync(string tradeId, string chanelOrderNo);
 
         /// <summary>
         /// 取消积分加钱购订单

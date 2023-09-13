@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.AssistantHomePage.Input;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.ShoppingCartRegistration;
 using Fx.Common;
@@ -158,6 +159,11 @@ namespace Fx.Amiya.IService
         /// <param name="liveAnchorIds"></param>
         /// <returns></returns>
         Task<List<PerformanceBrokenLine>> GetBaseBusinessPerformanceByLiveAnchorNameBrokenLineAsync(int year, int month, bool? isHistoryConsulationCardConsumed, bool? isConsulationCardRefund, bool? isAddWechat, bool? isConsulation, List<int> liveAnchorIds);
+        #endregion
+        #region 助理首页
+
+        Task<List<ShoppingCartRegistrationDto>> GetAsistantMonthPerformanceDataAsync(QueryAssistantHomePageDataDto query);
+
         #endregion
     }
 }

@@ -23,7 +23,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 支付时使用的交易单号
         /// </summary>
         public string TransNo { get; set; }
-
+        /// <summary>
+        /// 三方支付上传到微信支付的订单号
+        /// </summary>
+        public string ChanelOrderNo { get; set; }
         public CustomerInfo CustomerInfo { get; set; }
         public Address Address { get; set; }
         public List<OrderInfo> OrderInfoList { get; set; }

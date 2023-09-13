@@ -1,10 +1,12 @@
 ﻿using Fx.Amiya.Core.Dto.Integration;
 using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.Balance;
 using Fx.Amiya.Dto.HuiShouQianPay;
 using Fx.Amiya.Dto.HuiShouQianPayNotify;
 using Fx.Amiya.Dto.OperationLog;
+using Fx.Amiya.Dto.Order;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -51,9 +53,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private readonly IDalBindCustomerService _dalBindCustomerService;
         private readonly IDalWechatPayInfo dalWechatPayInfo;
         private readonly IOperationLogService operationLogService;
+        private readonly IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService;
+        private readonly IDalWxMpUserInfo dalWxMpUser;
+        private readonly IHttpContextAccessor httpContextAccessor;
         public NotifyController(IOrderService orderService,
             IAliPayService aliPayService,
-            ILogger<AliPayService> logger, IBalanceRechargeService balanceRechargeRecordService, IBalanceAccountService balanceAccountService, IUnitOfWork unitOfWork, IIntegrationAccount integrationAccount, IRechargeRewardRuleService rechargeRewardRuleService, IDalBindCustomerService dalBindCustomerService, IDalWechatPayInfo dalWechatPayInfo, IOperationLogService operationLogService)
+            ILogger<AliPayService> logger, IBalanceRechargeService balanceRechargeRecordService, IBalanceAccountService balanceAccountService, IUnitOfWork unitOfWork, IIntegrationAccount integrationAccount, IRechargeRewardRuleService rechargeRewardRuleService, IDalBindCustomerService dalBindCustomerService, IDalWechatPayInfo dalWechatPayInfo, IOperationLogService operationLogService, IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService, IDalWxMpUserInfo dalWxMpUser, IHttpContextAccessor httpContextAccessor)
         {
             this.orderService = orderService;
             _aliPayService = aliPayService;
@@ -66,6 +71,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             _dalBindCustomerService = dalBindCustomerService;
             this.dalWechatPayInfo = dalWechatPayInfo;
             this.operationLogService = operationLogService;
+            this.dockingHospitalCustomerInfoService = dockingHospitalCustomerInfoService;
+            this.dalWxMpUser = dalWxMpUser;
+            this.httpContextAccessor = httpContextAccessor;
         }
         /// <summary>
         /// 支付宝订单回调地址
@@ -602,6 +610,50 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                     else if (item.OrderType == (byte)OrderType.VirtualOrder)
                                     {
                                         updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                                        OperationAddDto operationLog = new OperationAddDto();
+                                        UploadMiniprogramOrderInfoDto uploadMiniprogramOrderInfo = new UploadMiniprogramOrderInfoDto();
+                                        try
+                                        {
+                                            operationLog.OperationBy = null;
+
+                                            OrderKey orderKey = new OrderKey();
+                                            if (orderTrade.AppId == "wx695942e4818de445")
+                                            {
+                                                orderKey.mchid = "1634868495";
+                                            }
+                                            else if (orderTrade.AppId == "wx8747b7f34c0047eb")
+                                            {
+                                                orderKey.mchid = "580913324";
+                                            }
+
+                                            orderKey.out_trade_no = notifyParam.channelOrderNo;
+                                            uploadMiniprogramOrderInfo.order_key = orderKey;
+                                            uploadMiniprogramOrderInfo.logistics_type = 3;
+                                            uploadMiniprogramOrderInfo.delivery_mode = 1;
+                                            uploadMiniprogramOrderInfo.is_all_delivered = true;
+                                            ShippingInfo shippingInfo = new ShippingInfo();
+                                            shippingInfo.item_desc = item.GoodsName;
+                                            Contact contact = new Contact();
+                                            contact.receiver_contact = ServiceClass.GetIncompletePhone(orderTrade.Phone);
+                                            shippingInfo.contact = contact;
+                                            uploadMiniprogramOrderInfo.shipping_list = new List<ShippingInfo> { shippingInfo };
+                                            uploadMiniprogramOrderInfo.upload_time = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssK");
+                                            uploadMiniprogramOrderInfo.payer = new PayerInfo() { openid = dalWxMpUser.GetAll().Where(e => e.UserId == orderTrade.UserId).FirstOrDefault().OpenId };
+                                            await this.UploadMiniprogramOrderInfoAsync(uploadMiniprogramOrderInfo);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            operationLog.Message = ex.Message;
+                                            operationLog.Code = -1;
+                                            throw ex;
+                                        }
+                                        finally
+                                        {
+                                            operationLog.Parameters = JsonConvert.SerializeObject(uploadMiniprogramOrderInfo);
+                                            operationLog.RequestType = (int)RequestType.Update;
+                                            operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                                            await operationLogService.AddOperationLogAsync(operationLog);
+                                        }
                                     }
                                     if (item.ActualPayment.HasValue)
                                     {
@@ -642,7 +694,39 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                 }
 
                                 await orderService.UpdateOrderTradeAsync(updateOrderTrade);
+                                await orderService.TradeAddChanelOrderNoAsync(orderTrade.TradeId,notifyParam.channelOrderNo);
                             }
+                            //UploadMiniprogramOrderInfoDto uploadMiniprogramOrderInfo = new UploadMiniprogramOrderInfoDto();
+                            //OrderKey orderKey = new OrderKey();
+                            //orderKey.mchid = "1634868495";
+                            //orderKey.out_trade_no = orderTrade.TransNo;
+                            //uploadMiniprogramOrderInfo.order_key = orderKey;
+                            //uploadMiniprogramOrderInfo.logistics_type = 3;
+                            //if (orderTrade.OrderInfoList.Count() == 1)
+                            //{
+                            //    uploadMiniprogramOrderInfo.delivery_mode = 1;
+                            //    uploadMiniprogramOrderInfo.is_all_delivered = true;
+                            //}
+                            //else if (orderTrade.OrderInfoList.Count() > 1)
+                            //{
+                            //    uploadMiniprogramOrderInfo.delivery_mode = 2;
+                            //    if (!orderTrade.OrderInfoList.Select(e => e.StatusCode).Contains(OrderStatusCode.WAIT_SELLER_SEND_GOODS) && !orderTrade.OrderInfoList.Select(e => e.StatusCode).Contains(OrderStatusCode.TRADE_BUYER_PAID) && orderTrade.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS)
+                            //    {
+                            //        uploadMiniprogramOrderInfo.is_all_delivered = true;
+                            //    }
+                            //    else
+                            //    {
+                            //        uploadMiniprogramOrderInfo.is_all_delivered = false;
+                            //    }
+                            //}
+                            //ShippingInfo shippingInfo = new ShippingInfo();                            
+                            //shippingInfo.item_desc = order.GoodsName;
+                            //Contact contact = new Contact();
+                            //contact.receiver_contact = ServiceClass.GetIncompletePhone(orderTrade.Address.Phone);
+                            //shippingInfo.contact = contact;
+                            //uploadMiniprogramOrderInfo.shipping_list = new List<ShippingInfo> { shippingInfo };
+                            //uploadMiniprogramOrderInfo.upload_time = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssK");
+                            //uploadMiniprogramOrderInfo.payer = new PayerInfo() { openid = dalWxMpUser.GetAll().Where(e => e.UserId == orderTrade.CustomerInfo.UserId).FirstOrDefault().OpenId };
                         }
                     }
 
@@ -660,6 +744,30 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
 
             }
         }
+
+        private async Task UploadMiniprogramOrderInfoAsync(UploadMiniprogramOrderInfoDto uploadInfo)
+        {
+            var appInfo = await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(192);
+            var requestUrl = $"https://api.weixin.qq.com/wxa/sec/order/upload_shipping_info?access_token={appInfo.AccessToken}";
+            var result = HttpUtil.HTTPJsonPost(requestUrl, JsonConvert.SerializeObject(uploadInfo));
+        }
+        /// <summary>
+        /// 获取小程序对应的物流公司信息
+        /// </summary>
+        /// <returns></returns>
+        private async Task<List<BaseKeyValueDto<string>>> GetDeliveryList()
+        {
+            var appInfo = await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(192);
+            var requestUrl = $"https://api.weixin.qq.com/cgi-bin/express/delivery/open_msg/get_delivery_list?access_token={appInfo.AccessToken}";
+            var result = HttpUtil.HTTPJsonPost(requestUrl, "{}");
+            Console.WriteLine();
+            return JsonConvert.DeserializeObject<DeliveryInfoDto>(result).delivery_list.Select(e => new BaseKeyValueDto<string>
+            {
+                Key = e.delivery_id,
+                Value = e.delivery_name
+            }).ToList();
+        }
+
         /// <summary>
         /// 拼接回调请求参数
         /// </summary>
@@ -739,6 +847,52 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                             else if (item.OrderType == (byte)OrderType.VirtualOrder)
                             {
                                 updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+
+                                //虚拟商品添加发货信息
+                                OperationAddDto operationLog = new OperationAddDto();
+                                UploadMiniprogramOrderInfoDto uploadMiniprogramOrderInfo = new UploadMiniprogramOrderInfoDto();
+                                try
+                                {
+                                    operationLog.OperationBy = null;
+
+                                    OrderKey orderKey = new OrderKey();
+                                    if (orderTrade.AppId == "wx695942e4818de445")
+                                    {
+                                        orderKey.mchid = "1634868495";
+                                    }
+                                    else if (orderTrade.AppId == "wx8747b7f34c0047eb")
+                                    {
+                                        orderKey.mchid = "580913324";
+                                    }
+
+                                    orderKey.out_trade_no = orderTrade.ChanelOrderNo;
+                                    uploadMiniprogramOrderInfo.order_key = orderKey;
+                                    uploadMiniprogramOrderInfo.logistics_type = 1;
+                                    uploadMiniprogramOrderInfo.delivery_mode = 1;
+                                    uploadMiniprogramOrderInfo.is_all_delivered = true;
+                                    ShippingInfo shippingInfo = new ShippingInfo();
+                                    shippingInfo.item_desc = item.GoodsName;
+                                    Contact contact = new Contact();
+                                    contact.receiver_contact = ServiceClass.GetIncompletePhone(orderTrade.Phone);
+                                    shippingInfo.contact = contact;
+                                    uploadMiniprogramOrderInfo.shipping_list = new List<ShippingInfo> { shippingInfo };
+                                    uploadMiniprogramOrderInfo.upload_time = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssK");
+                                    uploadMiniprogramOrderInfo.payer = new PayerInfo() { openid = dalWxMpUser.GetAll().Where(e => e.UserId == orderTrade.UserId).FirstOrDefault().OpenId };
+                                    await this.UploadMiniprogramOrderInfoAsync(uploadMiniprogramOrderInfo);
+                                }
+                                catch (Exception ex)
+                                {
+                                    operationLog.Message = ex.Message;
+                                    operationLog.Code = -1;
+                                    throw ex;
+                                }
+                                finally
+                                {
+                                    operationLog.Parameters = JsonConvert.SerializeObject(uploadMiniprogramOrderInfo);
+                                    operationLog.RequestType = (int)RequestType.Update;
+                                    operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                                    await operationLogService.AddOperationLogAsync(operationLog);
+                                }
                             }
                             if (item.ActualPayment.HasValue)
                             {
@@ -778,6 +932,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         else
                         {
                             updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+
                         }
                         await orderService.UpdateOrderTradeAsync(updateOrderTrade);
                     }

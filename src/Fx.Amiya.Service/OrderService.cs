@@ -50,6 +50,9 @@ using Fx.Amiya.Dto.GoodsInfo;
 using Fx.Amiya.Dto.BindCustomerService;
 using Fx.Amiya.Dto.HuiShouQianPay;
 using Fx.Amiya.Dto.ShanDePay;
+using Fx.Amiya.Dto;
+using Microsoft.AspNetCore.Http;
+using Fx.Amiya.Dto.OperationLog;
 
 namespace Fx.Amiya.Service
 {
@@ -94,6 +97,12 @@ namespace Fx.Amiya.Service
         private IUserService userService;
         private IDalWechatPayInfo dalWechatPayInfo;
         private IShanDePayMentService shanDePayMentService;
+        private IOrderAppInfoService orderAppInfoService;
+        private IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService;
+        private IDalWxMiniUserInfo dalWxMpUser;
+        private IDalExpressManage dalExpressManage;
+        private IHttpContextAccessor httpContextAccessor;
+        private OperationLogService operationLogService;
         public OrderService(
             IDalContentPlatformOrder dalContentPlatFormOrder,
             IDalOrderInfo dalOrderInfo,
@@ -124,7 +133,7 @@ namespace Fx.Amiya.Service
             IExpressManageService expressManageService,
             IFxSmsBasedTemplateSender smsSender,
              IMemberRankInfo memberRankInfoService,
-            IIntegrationAccount integrationAccountService, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor, IGoodsInfoService goodsInfoService2, IHuiShouQianPaymentService huiShouQianPaymentService, IUserService userService, IDalWechatPayInfo dalWechatPayInfo, IShanDePayMentService shanDePayMentService)
+            IIntegrationAccount integrationAccountService, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor, IGoodsInfoService goodsInfoService2, IHuiShouQianPaymentService huiShouQianPaymentService, IUserService userService, IDalWechatPayInfo dalWechatPayInfo, IShanDePayMentService shanDePayMentService, IOrderAppInfoService orderAppInfoService, IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService, IDalWxMiniUserInfo dalWxMpUser, IDalExpressManage dalExpressManage, IHttpContextAccessor httpContextAccessor, OperationLogService operationLogService)
         {
             this.dalOrderInfo = dalOrderInfo;
             this.dalCustomerInfo = dalCustomerInfo;
@@ -165,6 +174,12 @@ namespace Fx.Amiya.Service
             this.userService = userService;
             this.dalWechatPayInfo = dalWechatPayInfo;
             this.shanDePayMentService = shanDePayMentService;
+            this.orderAppInfoService = orderAppInfoService;
+            this.dockingHospitalCustomerInfoService = dockingHospitalCustomerInfoService;
+            this.dalWxMpUser = dalWxMpUser;
+            this.dalExpressManage = dalExpressManage;
+            this.httpContextAccessor = httpContextAccessor;
+            this.operationLogService = operationLogService;
         }
 
         /// <summary>
@@ -745,7 +760,7 @@ namespace Fx.Amiya.Service
             {
                 var date = DateTime.Today;
                 var model = from d in dalOrderInfo.GetAll() where (d.CreateDate >= date && d.CreateDate < date.AddDays(1)) select d;
-                return  model.CountAsync().Result.ToString();
+                return model.CountAsync().Result.ToString();
             }
             catch (Exception e)
             {
@@ -3103,11 +3118,14 @@ namespace Fx.Amiya.Service
 
         public async Task<OrderTradeForWxDto> GetOrderTradeByTradeIdAsync(string tradeId)
         {
-            var orderTrade = await dalOrderTrade.GetAll().Include(e => e.OrderInfoList).SingleOrDefaultAsync(e => e.TradeId == tradeId);
+            var orderTrade = await dalOrderTrade.GetAll().Include(e=>e.Address).Include(e => e.OrderInfoList).Include(e=>e.CustomerInfo).SingleOrDefaultAsync(e => e.TradeId == tradeId);
             if (orderTrade == null)
                 throw new Exception("交易编号错误");
 
             OrderTradeForWxDto orderTradeDto = new OrderTradeForWxDto();
+            orderTradeDto.Phone = orderTrade.Address.Phone;
+            orderTradeDto.ChanelOrderNo = orderTrade.ChanelOrderNo;
+            orderTradeDto.AppId = orderTrade.CustomerInfo.AppId;
             orderTradeDto.TradeId = orderTrade.TradeId;
             orderTradeDto.CustomerId = orderTrade.CustomerId;
             orderTradeDto.CreateDate = orderTrade.CreateDate;
@@ -3117,6 +3135,7 @@ namespace Fx.Amiya.Service
             orderTradeDto.TotalIntegration = orderTrade.TotalIntegration;
             orderTradeDto.Remark = orderTrade.Remark;
             orderTradeDto.StatusCode = orderTrade.StatusCode;
+            orderTradeDto.UserId = orderTrade.CustomerInfo.UserId;
             orderTradeDto.StatusText = ServiceClass.GetOrderStatusText(orderTrade.StatusCode);
             orderTradeDto.OrderInfoList = (from o in orderTrade.OrderInfoList
                                            select new OrderInfoDto
@@ -3413,7 +3432,7 @@ namespace Fx.Amiya.Service
             {
                 unitOfWork.BeginTransaction();
 
-                var orderTrade = await dalOrderTrade.GetAll().Include(e => e.OrderInfoList).SingleOrDefaultAsync(e => e.TradeId == sendGoodsDto.TradeId);
+                var orderTrade = await dalOrderTrade.GetAll().Include(e => e.OrderInfoList).Include(e => e.Address).ThenInclude(e => e.CustomerInfo).SingleOrDefaultAsync(e => e.TradeId == sendGoodsDto.TradeId);
                 if (orderTrade == null)
                     throw new Exception("交易编号错误！");
 
@@ -3454,6 +3473,69 @@ namespace Fx.Amiya.Service
                 model.ExpressId = sendGoodsDto.ExpressId;
                 await dalSendGoodsRecord.AddAsync(model, true);
                 unitOfWork.Commit();
+                //上传订单信息
+                OperationAddDto operationLog = new OperationAddDto();
+                UploadMiniprogramOrderInfoDto uploadMiniprogramOrderInfo = new UploadMiniprogramOrderInfoDto();
+                try
+                {
+                    operationLog.OperationBy = sendGoodsDto.HandleBy;
+                    
+                    OrderKey orderKey = new OrderKey();
+                    if (orderTrade.CustomerInfo.AppId == "wx695942e4818de445")
+                    {
+                        orderKey.mchid = "1634868495";
+                    }
+                    else if (orderTrade.CustomerInfo.AppId == "wx8747b7f34c0047eb")
+                    {
+                        orderKey.mchid = "580913324";
+                    }
+
+                    orderKey.out_trade_no = orderTrade.ChanelOrderNo;
+                    uploadMiniprogramOrderInfo.order_key = orderKey;
+                    uploadMiniprogramOrderInfo.logistics_type = 1;
+                    if (orderTrade.OrderInfoList.Count() == 1)
+                    {
+                        uploadMiniprogramOrderInfo.delivery_mode = 1;
+                        uploadMiniprogramOrderInfo.is_all_delivered = true;
+                    }
+                    else if (orderTrade.OrderInfoList.Count() > 1)
+                    {
+                        uploadMiniprogramOrderInfo.delivery_mode = 2;
+                        if (!orderTrade.OrderInfoList.Select(e => e.StatusCode).Contains(OrderStatusCode.WAIT_SELLER_SEND_GOODS) && !orderTrade.OrderInfoList.Select(e => e.StatusCode).Contains(OrderStatusCode.TRADE_BUYER_PAID) && orderTrade.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS)
+                        {
+                            uploadMiniprogramOrderInfo.is_all_delivered = true;
+                        }
+                        else
+                        {
+                            uploadMiniprogramOrderInfo.is_all_delivered = false;
+                        }
+                    }
+                    ShippingInfo shippingInfo = new ShippingInfo();
+                    shippingInfo.tracking_no = sendGoodsDto.CourierNumber;
+                    var express = dalExpressManage.GetAll().Where(e => e.Id == sendGoodsDto.ExpressId && e.Valid == true).FirstOrDefault();
+                    shippingInfo.express_company = (await this.GetDeliveryList()).Where(e => e.Value == express.ExpressName).FirstOrDefault().Key;
+                    shippingInfo.item_desc = order.GoodsName;
+                    Contact contact = new Contact();
+                    contact.receiver_contact = ServiceClass.GetIncompletePhone(orderTrade.Address.Phone);
+                    shippingInfo.contact = contact;
+                    uploadMiniprogramOrderInfo.shipping_list = new List<ShippingInfo> { shippingInfo };
+                    uploadMiniprogramOrderInfo.upload_time = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssK");
+                    uploadMiniprogramOrderInfo.payer = new PayerInfo() { openid = dalWxMpUser.GetAll().Where(e => e.UserId == orderTrade.CustomerInfo.UserId).FirstOrDefault().OpenId };
+                    await this.UploadMiniprogramOrderInfoAsync(uploadMiniprogramOrderInfo);
+                }
+                catch (Exception ex)
+                {
+                    operationLog.Message = ex.Message;
+                    operationLog.Code = -1;
+                    throw ex;
+                }
+                finally
+                {
+                    operationLog.Parameters = JsonConvert.SerializeObject(uploadMiniprogramOrderInfo);
+                    operationLog.RequestType = (int)RequestType.Update;
+                    operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                    await operationLogService.AddOperationLogAsync(operationLog);
+                }
             }
             catch (Exception ex)
             {
@@ -3962,6 +4044,19 @@ namespace Fx.Amiya.Service
             var trade = await dalOrderTrade.GetAll().Where(e => e.TradeId == tradeId && e.StatusCode == "WAIT_BUYER_PAY").FirstOrDefaultAsync();
             if (trade == null) throw new Exception("交易编号错误");
             trade.TransNo = transId;
+            await dalOrderTrade.UpdateAsync(trade, true);
+        }
+        /// <summary>
+        /// 保存三方支付上传到微信的支付订单号
+        /// </summary>
+        /// <param name="tradeId"></param>
+        /// <param name="chanelOrderNo"></param>
+        /// <returns></returns>
+        public async Task TradeAddChanelOrderNoAsync(string tradeId, string chanelOrderNo)
+        {
+            var trade = await dalOrderTrade.GetAll().Where(e => e.TradeId == tradeId).FirstOrDefaultAsync();
+            if (trade == null) throw new Exception("交易编号错误");
+            trade.ChanelOrderNo = chanelOrderNo;
             await dalOrderTrade.UpdateAsync(trade, true);
         }
 
@@ -5602,7 +5697,7 @@ namespace Fx.Amiya.Service
                 payRequestInfo.paySign = result.PayParam.PaySign;
                 //交易信息添加支付交易订单号
                 await this.TradeAddTransNoAsync(orderTradeAdd.Id, result.TransNo);
-
+                await this.TradeAddChanelOrderNoAsync(orderTradeAdd.Id, result.ChanelOrderNo);
                 //扣除库存
                 foreach (var item in moneyOrPointOrderList)
                 {
@@ -5944,7 +6039,33 @@ namespace Fx.Amiya.Service
                 throw new Exception("取消订单失败");
             }
         }
+        private async Task UploadMiniprogramOrderInfoAsync(UploadMiniprogramOrderInfoDto uploadInfo)
+        {
+            var appInfo = await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(192);
+            var requestUrl = $"https://api.weixin.qq.com/wxa/sec/order/upload_shipping_info?access_token={appInfo.AccessToken}";
+            var result = HttpUtil.HTTPJsonPost(requestUrl, JsonConvert.SerializeObject(uploadInfo));
+        }
+        /// <summary>
+        /// 获取小程序对应的物流公司信息
+        /// </summary>
+        /// <returns></returns>
+        private async Task<List<BaseKeyValueDto<string>>> GetDeliveryList()
+        {
+            var appInfo = await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(192);
+            var requestUrl = $"https://api.weixin.qq.com/cgi-bin/express/delivery/open_msg/get_delivery_list?access_token={appInfo.AccessToken}";
+            var result = HttpUtil.HTTPJsonPost(requestUrl, "{}");
+            Console.WriteLine();
+            return JsonConvert.DeserializeObject<DeliveryInfoDto>(result).delivery_list.Select(e => new BaseKeyValueDto<string>
+            {
+                Key = e.delivery_id,
+                Value = e.delivery_name
+            }).ToList();
+        }
     }
+    /// <summary>
+    /// 上传微信小程序订单信息
+    /// </summary>
+    /// <returns></returns>
 
 
     /// <summary>
