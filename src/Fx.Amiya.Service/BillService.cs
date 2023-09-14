@@ -672,7 +672,7 @@ namespace Fx.Amiya.Service
                 }
             }
             fxPageInfo.List = record.List;
-            fxPageInfo.TotalCount = recommandDocumentSettleDtos.Count();
+            fxPageInfo.TotalCount = record.TotalCount;
             return fxPageInfo;
         }
 

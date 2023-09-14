@@ -96,6 +96,7 @@ namespace Fx.Amiya.Service
                   RecolicationPrice = e.RecolicationPrice,
                   CreateEmpId = e.CreateEmpId,
                   BelongLiveAnchorAccount = e.BelongLiveAnchorAccount,
+                  ReturnBackPrice = e.ReturnBackPrice,
                   BelongEmpId = e.BelongEmpId,
                   AccountTypeText = e.AccountType == true ? "出账" : "入账",
                   CustomerServiceSettlePrice = e.CustomerServiceSettlePrice,

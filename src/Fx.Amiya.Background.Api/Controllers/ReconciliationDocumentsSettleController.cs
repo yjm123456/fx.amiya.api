@@ -246,6 +246,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                     select new ReconciliationDocumentsSettleVo
                                                     {
                                                         Id=d.Id,
+
                                                         RecommandDocumentId = d.RecommandDocumentId,
                                                         HospitalName = d.HospitalName,
                                                         OrderId = d.OrderId,
