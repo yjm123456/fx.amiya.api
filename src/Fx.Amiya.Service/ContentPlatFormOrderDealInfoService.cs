@@ -9,12 +9,14 @@ using Fx.Amiya.Dto.FinancialBoard;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Dto.TmallOrder;
+using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
 using Fx.Infrastructure.DataAccess;
 using jos_sdk_net.Util;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +42,7 @@ namespace Fx.Amiya.Service
         private IDalCompanyBaseInfo dalCompanyBaseInfo;
         private IDalLiveAnchor dalLiveAnchor;
         private ILiveAnchorService liveAnchorService;
-
+        private IDalConfig dalConfig;
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
             ICompanyBaseInfoService companyBaseInfoService,
@@ -50,7 +52,7 @@ namespace Fx.Amiya.Service
             IDalBindCustomerService dalBindCustomerService,
             IDalAmiyaEmployee dalAmiyaEmployee,
             IContentPlatFormOrderDealDetailsService contentPlatFormOrderDealDetailsService,
-            IHospitalInfoService hospitalInfoService, IDalHospitalInfo dalHospitalInfo, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor, ILiveAnchorService liveAnchorService)
+            IHospitalInfoService hospitalInfoService, IDalHospitalInfo dalHospitalInfo, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor, ILiveAnchorService liveAnchorService, IDalConfig dalConfig)
         {
             this.dalContentPlatFormOrderDealInfo = dalContentPlatFormOrderDealInfo;
             _hospitalInfoService = hospitalInfoService;
@@ -67,6 +69,7 @@ namespace Fx.Amiya.Service
             this.dalCompanyBaseInfo = dalCompanyBaseInfo;
             this.dalLiveAnchor = dalLiveAnchor;
             this.liveAnchorService = liveAnchorService;
+            this.dalConfig = dalConfig;
         }
 
         /// <summary>
@@ -2115,6 +2118,11 @@ namespace Fx.Amiya.Service
 
         #endregion
         #region 助理首页
+        /// <summary>
+        /// 获取今日到院数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
 
         public async Task<FxPageInfo<TodayToHospitalDataDto>> GetTodayToHospitalDataAsync(QueryAssistantHomePageDataDto query)
         {
@@ -2125,22 +2133,21 @@ namespace Fx.Amiya.Service
             }
             var startDate = query.Date.Value.Date;
             var endDate = query.Date.Value.Date.AddDays(1).Date;
-            var contentPlatformOrderDeal = dalContentPlatFormOrderDealInfo.GetAll().Include(e=>e.ContentPlatFormOrder).Where(e=>e.ToHospitalDate>=startDate&&e.ToHospitalDate<endDate);
+            var contentPlatformOrderDeal = dalContentPlatFormOrderDealInfo.GetAll().Include(e => e.ContentPlatFormOrder).Where(e => e.ToHospitalDate >= startDate && e.ToHospitalDate < endDate);
             if (!string.IsNullOrEmpty(query.BaseLiveAnchorId))
             {
                 var ids = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId)).Select(e => e.Id);
                 contentPlatformOrderDeal = contentPlatformOrderDeal.Where(e => ids.Contains(e.ContentPlatFormOrder.LiveAnchorId.Value));
             }
-            if (string.IsNullOrEmpty(query.ContentPlatformId))
-            {
-                var ids = await liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(query.ContentPlatformId, "");
-                contentPlatformOrderDeal = contentPlatformOrderDeal.Where(e => ids.Contains(e.ContentPlatFormOrder.LiveAnchorId.Value));
+            if (!string.IsNullOrEmpty(query.ContentPlatformId))
+            {          
+                contentPlatformOrderDeal = contentPlatformOrderDeal.Where(e => e.ContentPlatFormOrder.ContentPlateformId == query.ContentPlatformId);
             }
             if (query.LiveAnchorId.HasValue)
             {
                 contentPlatformOrderDeal = contentPlatformOrderDeal.Where(e => e.ContentPlatFormOrder.LiveAnchorId == query.LiveAnchorId);
             }
-            if (string.IsNullOrEmpty(query.WechatNoId))
+            if (!string.IsNullOrEmpty(query.WechatNoId))
             {
                 contentPlatformOrderDeal = contentPlatformOrderDeal.Where(e => e.ContentPlatFormOrder.LiveAnchorWeChatNo == query.WechatNoId);
             }
@@ -2153,19 +2160,70 @@ namespace Fx.Amiya.Service
                 contentPlatformOrderDeal = contentPlatformOrderDeal.Where(e => e.ContentPlatFormOrder.BelongEmpId == query.AssistantId.Value);
             }
             todayToHospitalData.TotalCount = await contentPlatformOrderDeal.CountAsync();
+            var config = await GetCallCenterConfig();
             todayToHospitalData.List = (from c in contentPlatformOrderDeal
                                         join h in _dalHospitalInfo.GetAll() on c.LastDealHospitalId equals h.Id
                                         join e in _dalAmiyaEmployee.GetAll() on c.ContentPlatFormOrder.BelongEmpId equals e.Id
+                                        orderby c.ToHospitalDate descending
                                         select new TodayToHospitalDataDto
                                         {
                                             Name = c.ContentPlatFormOrder.CustomerName,
-                                            Phone = c.ContentPlatFormOrder.Phone,
+                                            Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(c.ContentPlatFormOrder.Phone) : c.ContentPlatFormOrder.Phone,
+                                            EncryptPhone= ServiceClass.Encrypt(c.ContentPlatFormOrder.Phone, config.PhoneEncryptKey),
                                             AssistantName = e.Name,
                                             SendHospital = h.Name,
-                                            Status = c.IsDeal ? "成交" : "未成交"
+                                            Status = c.IsDeal ? "已成交" : "未成交"
                                         }).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToList();
             return todayToHospitalData;
         }
+
+        /// <summary>
+        /// 获取助理首页月业绩完成情况
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<MonthPerformanceCompleteSituationDataDto> GetAssistantMonthPerformanceDataAsync(QueryAssistantHomePageDataDto query)
+        {
+            MonthPerformanceCompleteSituationDataDto monthData = new MonthPerformanceCompleteSituationDataDto();
+            var performance = dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
+                .Where(o => o.CreateDate >= query.StartDate.Value && o.CreateDate < query.EndDate.Value && o.IsDeal == true && o.ContentPlatFormOrderId != null);
+            if (!string.IsNullOrEmpty(query.BaseLiveAnchorId))
+            {
+                var ids = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId)).Select(e => e.Id);
+                performance = performance.Where(e => ids.Contains(e.ContentPlatFormOrder.LiveAnchorId.Value));
+            }
+            if (!string.IsNullOrEmpty(query.ContentPlatformId))
+            {
+                performance = performance.Where(e => e.ContentPlatFormOrder.ContentPlateformId == query.ContentPlatformId);
+            }
+            if (query.LiveAnchorId.HasValue)
+            {
+                performance = performance.Where(e => e.ContentPlatFormOrder.LiveAnchorId == query.LiveAnchorId);
+            }
+            if (!string.IsNullOrEmpty(query.WechatNoId))
+            {
+                performance = performance.Where(e => e.ContentPlatFormOrder.LiveAnchorWeChatNo == query.WechatNoId);
+            }
+            if (query.Source.HasValue)
+            {
+                performance = performance.Where(e => e.ContentPlatFormOrder.OrderSource == query.Source);
+            }
+            if (query.AssistantId.HasValue)
+            {
+                performance = performance.Where(e => e.ContentPlatFormOrder.BelongEmpId == query.AssistantId.Value);
+            }
+            monthData.CompletedPerformance = performance.Sum(e => e.Price);
+            monthData.NewCustomerPerformance = performance.Where(e => e.IsOldCustomer == false).Sum(e => e.Price);
+            monthData.OldCustomerPerformance = performance.Where(e => e.IsOldCustomer == true).Sum(e => e.Price);
+            return monthData;
+        }
+
+        private async Task<CallCenterConfigDto> GetCallCenterConfig()
+        {
+            var config = await dalConfig.GetAll().SingleOrDefaultAsync();
+            return JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig;
+        }
+
         #endregion
 
         #region 【枚举下拉框】
@@ -2187,6 +2245,8 @@ namespace Fx.Amiya.Service
             }
             return orderTypeList;
         }
+
+
 
 
 

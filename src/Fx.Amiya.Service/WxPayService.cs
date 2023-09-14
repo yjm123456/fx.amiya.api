@@ -67,24 +67,43 @@ namespace Fx.Amiya.Service
                 refunResult.OrderId = refundOrder.OrderId;
                 return refunResult;
             }
-            
+
 
             //杉德支付退款
-            if (customerInfo.AppId == "wx8747b7f34c0047eb" && (refundOrder.ExchangeType == (int)ExchangeType.PointAndMoney || refundOrder.ExchangeType == (int)ExchangeType.ShanDePay)){
+            //if (customerInfo.AppId == "wx8747b7f34c0047eb" && (refundOrder.ExchangeType == (int)ExchangeType.PointAndMoney || refundOrder.ExchangeType == (int)ExchangeType.ShanDePay))
+            //{
+            //    //退还积分
+            //    if (refundOrder.IsPartial)
+            //    {
+            //        await orderService.CancelPartPointAndMoneyOrderWithNoTransactionAsync(refundOrder.OrderId, refundOrder.CustomerId);
+            //    }
+            //    else
+            //    {
+
+            //        await orderService.CancelPointAndMoneyOrderWithNoTransactionAsync(refundOrder.TradeId, refundOrder.CustomerId);
+            //    }
+            //    refunResult = await shanDePayMentService.CreateRefundOrderAsync(refundOrderId);
+            //    refunResult.IsPartial = refundOrder.IsPartial;
+            //    refunResult.OrderId = refundOrder.OrderId;
+            //    return refunResult;
+            //}
+            if (customerInfo.AppId == "wx8747b7f34c0047eb" &&  refundOrder.ExchangeType == (int)ExchangeType.ShanDePay)
+            {
+                return new RefundOrderResult { Result = false, Msg = "杉德支付已解绑,无法调用此接口退款" };
                 //退还积分
-                if (refundOrder.IsPartial)
-                {
-                    await orderService.CancelPartPointAndMoneyOrderWithNoTransactionAsync(refundOrder.OrderId, refundOrder.CustomerId);
-                }
-                else
-                {
-                    
-                    await orderService.CancelPointAndMoneyOrderWithNoTransactionAsync(refundOrder.TradeId, refundOrder.CustomerId);
-                }
-                refunResult = await shanDePayMentService.CreateRefundOrderAsync(refundOrderId);
-                refunResult.IsPartial = refundOrder.IsPartial;
-                refunResult.OrderId = refundOrder.OrderId;
-                return refunResult;
+                //if (refundOrder.IsPartial)
+                //{
+                //    await orderService.CancelPartPointAndMoneyOrderWithNoTransactionAsync(refundOrder.OrderId, refundOrder.CustomerId);
+                //}
+                //else
+                //{
+
+                //    await orderService.CancelPointAndMoneyOrderWithNoTransactionAsync(refundOrder.TradeId, refundOrder.CustomerId);
+                //}
+                //refunResult = await shanDePayMentService.CreateRefundOrderAsync(refundOrderId);
+                //refunResult.IsPartial = refundOrder.IsPartial;
+                //refunResult.OrderId = refundOrder.OrderId;
+                //return refunResult;
             }
 
             //微信支付退款

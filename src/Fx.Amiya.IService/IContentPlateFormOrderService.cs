@@ -509,7 +509,14 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        Task<AssistantOrderDataDto> GetAssistantOrderDataAsync(QueryAssistantHomePageDataDto query); 
+        Task<AssistantOrderDataDto> GetAssistantOrderDataAsync(QueryAssistantHomePageDataDto query);
+
+        /// <summary>
+        /// 获取助理首页月业绩完成情况
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<MonthPerformanceCompleteSituationDataDto> GetAssistantHomePageDataAsync(QueryAssistantHomePageDataDto query);
         #endregion
     }
 }

@@ -3418,6 +3418,60 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
+        /// 获取助理首页业绩完成情况数据
+        /// </summary>
+        /// <param name="startDate">开始时间</param>
+        /// <param name="endDate">结束时间</param>
+        /// <returns></returns>
+        public async Task<MonthPerformanceCompleteSituationDataDto> GetAssistantHomePageDataAsync(QueryAssistantHomePageDataDto query)
+        {
+            MonthPerformanceCompleteSituationDataDto orderData = new MonthPerformanceCompleteSituationDataDto();
+            var orderInfo=  _dalContentPlatformOrder.GetAll()
+             .Where(o => o.SendDate >= query.StartDate.Value && o.SendDate < query.EndDate.Value);
+            var visitInfo =  _dalContentPlatformOrder.GetAll()
+             .Where(o => o.ToHospitalDate >= query.StartDate.Value && o.ToHospitalDate < query.EndDate.Value);
+
+            if (!string.IsNullOrEmpty(query.BaseLiveAnchorId))
+            {
+                var ids = (await _liveAnchorService.GetLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId)).Select(e => e.Id);
+                orderInfo = orderInfo.Where(e => ids.Contains(e.LiveAnchorId.Value));
+
+                visitInfo= visitInfo.Where(e => ids.Contains(e.LiveAnchorId.Value));
+            }
+            if (!string.IsNullOrEmpty(query.ContentPlatformId))
+            {
+                orderInfo = orderInfo.Where(e => e.ContentPlateformId==query.ContentPlatformId);
+                visitInfo = visitInfo.Where(e => e.ContentPlateformId == query.ContentPlatformId);
+            }
+            if (query.LiveAnchorId.HasValue)
+            {
+                orderInfo = orderInfo.Where(e => e.LiveAnchorId == query.LiveAnchorId);
+                visitInfo = visitInfo.Where(e => e.LiveAnchorId == query.LiveAnchorId);
+            }
+            if (!string.IsNullOrEmpty(query.WechatNoId))
+            {
+                orderInfo = orderInfo.Where(e => e.LiveAnchorWeChatNo == query.WechatNoId);
+                visitInfo = visitInfo.Where(e => e.LiveAnchorWeChatNo == query.WechatNoId);
+            }
+            if (query.Source.HasValue)
+            {
+                orderInfo = orderInfo.Where(e => e.OrderSource == query.Source);
+                visitInfo = visitInfo.Where(e => e.OrderSource == query.Source);
+            }
+            if (query.AssistantId.HasValue)
+            {
+                orderInfo = orderInfo.Where(e => e.BelongEmpId == query.AssistantId.Value);
+                visitInfo = visitInfo.Where(e => e.BelongEmpId == query.AssistantId.Value);
+            }
+            orderData.SenOrderCount =await orderInfo.Select(e => e.Phone).Distinct().CountAsync();
+            orderData.ToHospitalCount= await visitInfo.Select(e => e.Phone).Distinct().CountAsync();
+            orderData.DealCount= visitInfo.Where(x => x.DealDate >= query.StartDate.Value && x.DealDate < query.EndDate.Value && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete).Select(e => e.Phone)
+                .Distinct()
+                .Count();
+            return orderData;
+        }
+
+        /// <summary>
         /// 获取老客复购数据
         /// </summary>
         /// <param name="date">时间</param>
@@ -4352,16 +4406,16 @@ namespace Fx.Amiya.Service
                 var ids = (await _liveAnchorService.GetLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId)).Select(e => e.Id);
                 contentPlatformOrder = contentPlatformOrder.Where(e => ids.Contains(e.LiveAnchorId.Value));
             }
-            if (string.IsNullOrEmpty(query.ContentPlatformId))
+            if (!string.IsNullOrEmpty(query.ContentPlatformId))
             {
-                var ids = await _liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(query.ContentPlatformId, "");
-                contentPlatformOrder = contentPlatformOrder.Where(e => ids.Contains(e.LiveAnchorId.Value));
+               
+                contentPlatformOrder = contentPlatformOrder.Where(e => e.ContentPlateformId==query.ContentPlatformId);
             }
             if (query.LiveAnchorId.HasValue)
             {
                 contentPlatformOrder = contentPlatformOrder.Where(e => e.LiveAnchorId == query.LiveAnchorId);
             }
-            if (string.IsNullOrEmpty(query.WechatNoId))
+            if (!string.IsNullOrEmpty(query.WechatNoId))
             {
                 contentPlatformOrder = contentPlatformOrder.Where(e => e.LiveAnchorWeChatNo == query.WechatNoId);
             }
@@ -4373,10 +4427,10 @@ namespace Fx.Amiya.Service
             {
                 contentPlatformOrder = contentPlatformOrder.Where(e => e.BelongEmpId == query.AssistantId.Value);
             }
-            assistantOrderData.TotalOrderCount = await contentPlatformOrder.CountAsync();
-            assistantOrderData.TodayOrderCount = await contentPlatformOrder.Where(e => e.CreateDate >= startDate && e.CreateDate < endDate).CountAsync();
-            assistantOrderData.UnSendOrderCount = await contentPlatformOrder.Where(e => e.OrderStatus < (int)ContentPlateFormOrderStatus.SendOrder).CountAsync();
-            assistantOrderData.TodayDealOrderCount = await contentPlatformOrder.Where(e => e.DealDate >= startDate && e.DealDate < endDate).CountAsync();
+            assistantOrderData.TotalOrderCount = await contentPlatformOrder.Select(e => e.Phone).Distinct().CountAsync();
+            assistantOrderData.TodayOrderCount = await contentPlatformOrder.Where(e => e.CreateDate >= startDate && e.CreateDate < endDate).Select(e=>e.Phone).Distinct().CountAsync();
+            assistantOrderData.UnSendOrderCount = await contentPlatformOrder.Where(e => e.OrderStatus < (int)ContentPlateFormOrderStatus.SendOrder).Select(e => e.Phone).Distinct().CountAsync();
+            assistantOrderData.TodayDealOrderCount = await contentPlatformOrder.Where(e => e.DealDate >= startDate && e.DealDate < endDate).Select(e => e.Phone).Distinct().CountAsync();
             return assistantOrderData;
         }
 

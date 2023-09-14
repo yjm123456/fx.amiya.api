@@ -353,6 +353,7 @@ namespace Fx.Amiya.IService
         #region 助理首页
 
         Task<FxPageInfo<TodayToHospitalDataDto>> GetTodayToHospitalDataAsync(QueryAssistantHomePageDataDto query);
+        Task<MonthPerformanceCompleteSituationDataDto> GetAssistantMonthPerformanceDataAsync(QueryAssistantHomePageDataDto query);
 
         #endregion
         #region 【枚举下拉框】

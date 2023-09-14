@@ -1,4 +1,6 @@
-﻿using Fx.Amiya.Dto.Track;
+﻿using Fx.Amiya.Dto.AssistantHomePage.Input;
+using Fx.Amiya.Dto.AssistantHomePage.Result;
+using Fx.Amiya.Dto.Track;
 using Fx.Common;
 using Fx.Infrastructure;
 using System;
@@ -149,6 +151,15 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<FxPageInfo<WaitTrackCustomerDto>> GetWaitTrackListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int employeeId,int pageNum, int pageSize);
 
+        #region 助理首页
 
+        /// <summary>
+        /// 获取助理今日回访数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<TodayTrackDataDto>> GetTodayTrackDataAsync(QueryAssistantHomePageTrackDataDto query);
+
+        #endregion
     }
 }

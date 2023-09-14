@@ -14,6 +14,8 @@ using Fx.Amiya.Dto.CustomerAppointmentSchedule.Input;
 using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.AssistantHomePage.Result;
 using Fx.Amiya.Dto.AssistantHomePage.Input;
+using Fx.Amiya.Dto.WxAppConfig;
+using Newtonsoft.Json;
 
 namespace Fx.Amiya.Service
 {
@@ -29,13 +31,14 @@ namespace Fx.Amiya.Service
         private IWxAppConfigService _wxAppConfigService;
         private IDalHospitalInfo dalHospitalInfo;
         private IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo;
+        private IDalConfig dalConfig;
         public CustomerAppointmentScheduleService(IDalCustomerAppointmentSchedule dalCustomerAppointmentScheduleService,
             IInventoryListService inventoryListService,
             IAmiyaInWareHouseService inWareHouseService,
              IWxAppConfigService wxAppConfigService,
            IDalAmiyaEmployee dalAmiyaEmployee,
             IAmiyaOutWareHouseService amiyaOutWareHouseService,
-            IUnitOfWork unitofWork, IDalTagDetailInfo dalTagDetailInfo, IDalHospitalInfo dalHospitalInfo, IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo)
+            IUnitOfWork unitofWork, IDalTagDetailInfo dalTagDetailInfo, IDalHospitalInfo dalHospitalInfo, IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo, IDalConfig dalConfig)
         {
             this.dalCustomerAppointmentScheduleService = dalCustomerAppointmentScheduleService;
             this.inventoryListService = inventoryListService;
@@ -47,6 +50,7 @@ namespace Fx.Amiya.Service
             this.dalTagDetailInfo = dalTagDetailInfo;
             this.dalHospitalInfo = dalHospitalInfo;
             this.dalLiveAnchorBaseInfo = dalLiveAnchorBaseInfo;
+            this.dalConfig = dalConfig;
         }
 
 
@@ -501,7 +505,7 @@ namespace Fx.Amiya.Service
             {
                 todayTodayAppointmentData = todayTodayAppointmentData.Where(e => e.CreateBy == query.AssistantId);
             }
-
+            var config = await GetCallCenterConfig();
             var data = from a in todayTodayAppointmentData
                        join e in _dalAmiyaEmployee.GetAll()
                        on a.CreateBy equals e.Id
@@ -511,7 +515,8 @@ namespace Fx.Amiya.Service
                        select new TodayAppointmentDataDto
                        {
                            Name = a.CustomerName,
-                           Phone = a.Phone,
+                           Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(a.Phone) : a.Phone,
+                           EncryptPhone = ServiceClass.Encrypt(a.Phone, config.PhoneEncryptKey),
                            AssistantName = e.Name,
                            Status = a.IsFinish ? "已完成" : "未完成",
                            IsAccompany = a.AppointmentType == (int)AppointmentType.ToHospitalAppointment ? true : false,
@@ -523,6 +528,11 @@ namespace Fx.Amiya.Service
             return todayToHospitalData;
         }
 
+        private async Task<CallCenterConfigDto> GetCallCenterConfig()
+        {
+            var config = await dalConfig.GetAll().SingleOrDefaultAsync();
+            return JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig;
+        }
         #endregion
     }
 }

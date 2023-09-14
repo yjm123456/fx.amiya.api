@@ -396,6 +396,51 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                             else if (item.OrderType == (byte)OrderType.VirtualOrder)
                             {
                                 updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                                //虚拟商品添加发货信息
+                                OperationAddDto operationLog = new OperationAddDto();
+                                UploadMiniprogramOrderInfoDto uploadMiniprogramOrderInfo = new UploadMiniprogramOrderInfoDto();
+                                try
+                                {
+                                    operationLog.OperationBy = null;
+
+                                    OrderKey orderKey = new OrderKey();
+                                    if (orderTrade.AppId == "wx695942e4818de445")
+                                    {
+                                        orderKey.mchid = "1634868495";
+                                    }
+                                    else if (orderTrade.AppId == "wx8747b7f34c0047eb")
+                                    {
+                                        orderKey.mchid = "1633229187";
+                                    }
+
+                                    orderKey.out_trade_no = orderTrade.ChanelOrderNo;
+                                    uploadMiniprogramOrderInfo.order_key = orderKey;
+                                    uploadMiniprogramOrderInfo.logistics_type = 1;
+                                    uploadMiniprogramOrderInfo.delivery_mode = 1;
+                                    uploadMiniprogramOrderInfo.is_all_delivered = true;
+                                    ShippingInfo shippingInfo = new ShippingInfo();
+                                    shippingInfo.item_desc = item.GoodsName;
+                                    Contact contact = new Contact();
+                                    contact.receiver_contact = ServiceClass.GetIncompletePhone(orderTrade.Phone);
+                                    shippingInfo.contact = contact;
+                                    uploadMiniprogramOrderInfo.shipping_list = new List<ShippingInfo> { shippingInfo };
+                                    uploadMiniprogramOrderInfo.upload_time = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssK");
+                                    uploadMiniprogramOrderInfo.payer = new PayerInfo() { openid = dalWxMpUser.GetAll().Where(e => e.UserId == orderTrade.UserId).FirstOrDefault().OpenId };
+                                    await this.UploadMiniprogramOrderInfoAsync(uploadMiniprogramOrderInfo);
+                                }
+                                catch (Exception ex)
+                                {
+                                    operationLog.Message = ex.Message;
+                                    operationLog.Code = -1;
+
+                                }
+                                finally
+                                {
+                                    operationLog.Parameters = JsonConvert.SerializeObject(uploadMiniprogramOrderInfo);
+                                    operationLog.RequestType = (int)RequestType.Update;
+                                    operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                                    await operationLogService.AddOperationLogAsync(operationLog);
+                                }
                             }
                             if (item.ActualPayment.HasValue)
                             {
@@ -435,6 +480,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         else
                         {
                             updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+                            
                         }
                         await orderService.UpdateOrderTradeAsync(updateOrderTrade);
                     }
@@ -623,7 +669,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                             }
                                             else if (orderTrade.AppId == "wx8747b7f34c0047eb")
                                             {
-                                                orderKey.mchid = "580913324";
+                                                orderKey.mchid = "1633229187";
                                             }
 
                                             orderKey.out_trade_no = notifyParam.channelOrderNo;
@@ -645,7 +691,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                         {
                                             operationLog.Message = ex.Message;
                                             operationLog.Code = -1;
-                                            throw ex;
+                                            
                                         }
                                         finally
                                         {
@@ -862,7 +908,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                     }
                                     else if (orderTrade.AppId == "wx8747b7f34c0047eb")
                                     {
-                                        orderKey.mchid = "580913324";
+                                        orderKey.mchid = "1633229187";
                                     }
 
                                     orderKey.out_trade_no = orderTrade.ChanelOrderNo;
@@ -884,7 +930,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                 {
                                     operationLog.Message = ex.Message;
                                     operationLog.Code = -1;
-                                    throw ex;
+                                    
                                 }
                                 finally
                                 {

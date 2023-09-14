@@ -15,6 +15,8 @@ using Fx.Infrastructure.Utils;
 using Fx.Infrastructure.DataAccess;
 using Microsoft.Extensions.Logging;
 using Fx.Common;
+using Fx.Amiya.Dto.AssistantHomePage.Result;
+using Fx.Amiya.Dto.AssistantHomePage.Input;
 
 namespace Fx.Amiya.Service
 {
@@ -548,6 +550,62 @@ namespace Fx.Amiya.Service
             waitTrackPageInfo.TotalCount = await waitTrack.CountAsync();
             waitTrackPageInfo.List = await waitTrack.OrderBy(e => e.PlanTrackDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
             return waitTrackPageInfo;
+        }
+
+
+
+        #endregion
+
+        #region 助理首页
+
+        /// <summary>
+        /// 获取助理今日回访数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<TodayTrackDataDto>> GetTodayTrackDataAsync(QueryAssistantHomePageTrackDataDto query)
+        {
+            FxPageInfo<TodayTrackDataDto> fxPageInfo = new FxPageInfo<TodayTrackDataDto>();
+            if (!query.Date.HasValue) {
+                query.Date = DateTime.Now;
+            }
+            var startDate= query.Date.Value.Date;
+            var endDate = query.Date.Value.AddDays(1).Date;
+            var config = await GetCallCenterConfig();
+            if (query.Type == 1) {
+                var track = dalWaitTrackCustomer.GetAll().Where(e => e.Status == false).Include(e=>e.PlanTrackEmployee).Where(e => e.PlanTrackDate >= startDate && e.PlanTrackDate < endDate);
+                if (query.AssistantId.HasValue) {
+                    track = track.Where(e => e.PlanTrackEmployeeId == query.AssistantId);
+                }
+                fxPageInfo.TotalCount=await track.CountAsync();
+                fxPageInfo.List = track.Select(e => new TodayTrackDataDto
+                {
+                    Phone= config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(e.Phone) : e.Phone,
+                    EncryptPhone = ServiceClass.Encrypt(e.Phone, config.PhoneEncryptKey),
+                    Status = e.Status ?"已回访":"未回访",
+                    TrackAssistantName=e.PlanTrackEmployee.Name,
+                    TrackPurpose=e.TrackPlan,
+                    Remark=""
+                }).Skip((query.PageNum.Value-1)*query.PageSize.Value).Take(query.PageSize.Value).ToList();
+
+            } else {
+                var track = dalTrackRecord.GetAll().Include(e =>e.AmiyaEmployee).Where(e => e.TrackDate >= startDate && e.TrackDate < endDate);
+                if (query.AssistantId.HasValue)
+                {
+                    track = track.Where(e => e.EmployeeId == query.AssistantId);
+                }
+                fxPageInfo.TotalCount = await track.CountAsync();
+                fxPageInfo.List = track.Select(e => new TodayTrackDataDto
+                {
+                    Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(e.Phone) : e.Phone,
+                    EncryptPhone = ServiceClass.Encrypt(e.Phone, config.PhoneEncryptKey),
+                    Status = "已回访",
+                    TrackAssistantName = e.AmiyaEmployee.Name,
+                    TrackPurpose = e.TrackPlan,
+                    Remark = ""
+                }).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToList();
+            }
+            return fxPageInfo;
         }
 
         #endregion

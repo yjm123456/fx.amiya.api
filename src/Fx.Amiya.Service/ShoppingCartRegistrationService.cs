@@ -1090,7 +1090,7 @@ namespace Fx.Amiya.Service
                 var ids = (await _liveAnchorService.GetLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId)).Select(e => e.Id);
                 result = result.Where(e => ids.Contains(e.LiveAnchorId));
             }
-            if (string.IsNullOrEmpty(query.ContentPlatformId))
+            if (!string.IsNullOrEmpty(query.ContentPlatformId))
             {
                 var ids = await _liveAnchorService.GetLiveAnchorIdsByContentPlatformIdAndBaseId(query.ContentPlatformId, "");
                 result = result.Where(e => ids.Contains(e.LiveAnchorId));
@@ -1099,7 +1099,7 @@ namespace Fx.Amiya.Service
             {
                 result = result.Where(e => e.LiveAnchorId == query.LiveAnchorId);
             }
-            if (string.IsNullOrEmpty(query.WechatNoId))
+            if (!string.IsNullOrEmpty(query.WechatNoId))
             {
                 result = result.Where(e => e.LiveAnchorWechatNo == query.WechatNoId);
             }

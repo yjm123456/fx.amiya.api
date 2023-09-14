@@ -102,7 +102,7 @@ namespace Fx.Amiya.Service
         private IDalWxMiniUserInfo dalWxMpUser;
         private IDalExpressManage dalExpressManage;
         private IHttpContextAccessor httpContextAccessor;
-        private OperationLogService operationLogService;
+        private IOperationLogService operationLogService;
         public OrderService(
             IDalContentPlatformOrder dalContentPlatFormOrder,
             IDalOrderInfo dalOrderInfo,
@@ -133,7 +133,7 @@ namespace Fx.Amiya.Service
             IExpressManageService expressManageService,
             IFxSmsBasedTemplateSender smsSender,
              IMemberRankInfo memberRankInfoService,
-            IIntegrationAccount integrationAccountService, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor, IGoodsInfoService goodsInfoService2, IHuiShouQianPaymentService huiShouQianPaymentService, IUserService userService, IDalWechatPayInfo dalWechatPayInfo, IShanDePayMentService shanDePayMentService, IOrderAppInfoService orderAppInfoService, IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService, IDalWxMiniUserInfo dalWxMpUser, IDalExpressManage dalExpressManage, IHttpContextAccessor httpContextAccessor, OperationLogService operationLogService)
+            IIntegrationAccount integrationAccountService, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor, IGoodsInfoService goodsInfoService2, IHuiShouQianPaymentService huiShouQianPaymentService, IUserService userService, IDalWechatPayInfo dalWechatPayInfo, IShanDePayMentService shanDePayMentService, IOrderAppInfoService orderAppInfoService, IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService, IDalWxMiniUserInfo dalWxMpUser, IDalExpressManage dalExpressManage, IHttpContextAccessor httpContextAccessor, IOperationLogService operationLogService)
         {
             this.dalOrderInfo = dalOrderInfo;
             this.dalCustomerInfo = dalCustomerInfo;
@@ -3462,8 +3462,6 @@ namespace Fx.Amiya.Service
                     return;
                 }
 
-
-
                 SendGoodsRecord model = new SendGoodsRecord();
                 model.TradeId = sendGoodsDto.TradeId;
                 model.OrderId = sendGoodsDto.OrderId;
@@ -3487,7 +3485,7 @@ namespace Fx.Amiya.Service
                     }
                     else if (orderTrade.CustomerInfo.AppId == "wx8747b7f34c0047eb")
                     {
-                        orderKey.mchid = "580913324";
+                        orderKey.mchid = "1633229187";
                     }
 
                     orderKey.out_trade_no = orderTrade.ChanelOrderNo;
@@ -3527,7 +3525,6 @@ namespace Fx.Amiya.Service
                 {
                     operationLog.Message = ex.Message;
                     operationLog.Code = -1;
-                    throw ex;
                 }
                 finally
                 {
@@ -5222,7 +5219,7 @@ namespace Fx.Amiya.Service
             var balance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(cartOrderAddDto.CustomerId);
             if (totalIntegral > balance) throw new Exception("积分余额不足！");
             //integralOrderList = amiyaOrderList.Where(e => e.ExchangeType == (int)ExchangeType.Integration).ToList();
-            moneyOrintegralMoneyOrderList = amiyaOrderList.Where(e => e.ExchangeType == (int)ExchangeType.HuiShouQian || e.ExchangeType == (int)ExchangeType.ShanDePay || e.ExchangeType == (int)ExchangeType.PointAndMoney).ToList();
+            moneyOrintegralMoneyOrderList = amiyaOrderList.Where(e => e.ExchangeType == (int)ExchangeType.HuiShouQian || e.ExchangeType == (int)ExchangeType.ShanDePay || e.ExchangeType == (int)ExchangeType.PointAndMoney||e.ExchangeType==(int)ExchangeType.Wechat).ToList();
 
             PayRequestInfoDto payRequestInfoDto = null;
 
@@ -5233,7 +5230,8 @@ namespace Fx.Amiya.Service
                 if (cartOrderAddDto.AppId == "wx8747b7f34c0047eb")
                 {
                     //杉德支付
-                    payRequestInfoDto = await AddShanDeMoneyOrPointAndMoneyTradeAsync(moneyOrintegralMoneyOrderList, voucher, cartOrderAddDto.CustomerId, cartOrderAddDto.AddressId.Value, cartOrderAddDto.Remark, cartOrderAddDto.OpenId, cartOrderAddDto.AppId);
+                    //payRequestInfoDto = await AddShanDeMoneyOrPointAndMoneyTradeAsync(moneyOrintegralMoneyOrderList, voucher, cartOrderAddDto.CustomerId, cartOrderAddDto.AddressId.Value, cartOrderAddDto.Remark, cartOrderAddDto.OpenId, cartOrderAddDto.AppId);
+                    payRequestInfoDto = await AddWechatMoneyOrPointAndMoneyTradeAsync(moneyOrintegralMoneyOrderList, voucher, cartOrderAddDto.CustomerId, cartOrderAddDto.AddressId.Value, cartOrderAddDto.Remark, cartOrderAddDto.OpenId, cartOrderAddDto.AppId);
                 }
                 else
                 {
@@ -5333,7 +5331,8 @@ namespace Fx.Amiya.Service
                 {
                     if (appId == "wx8747b7f34c0047eb")
                     {
-                        cartCreateOrderDto.ExchangeType = (int)ExchangeType.ShanDePay;
+                        //cartCreateOrderDto.ExchangeType = (int)ExchangeType.ShanDePay;
+                        cartCreateOrderDto.ExchangeType = (int)ExchangeType.Wechat;
                     }
                     else
                     {
@@ -5604,7 +5603,7 @@ namespace Fx.Amiya.Service
                 payRequestInfo.paySign = payRequest.paySign;
                 //交易信息添加支付交易订单号
                 await this.TradeAddTransNoAsync(orderTradeAdd.Id, orderTradeAdd.Id);
-
+                await this.TradeAddChanelOrderNoAsync(orderTradeAdd.Id, orderTradeAdd.Id);
                 //扣除库存
                 foreach (var item in moneyOrPointOrderList)
                 {
