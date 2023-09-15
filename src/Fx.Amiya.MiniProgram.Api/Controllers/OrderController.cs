@@ -782,8 +782,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     packageInfo.AppId = appId;
                     packageInfo.Body = orderId;
                     //回调地址需重新设置(todo;)                   
-                    //packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");
-                    packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "http://ymjxui.gnway.cc");
+                    packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "https://app.ameiyes.com/amiyamini");
+                    //packageInfo.NotifyUrl = string.Format("{0}/amiya/wxmini/Notify/orderpayresult", "http://ymjxui.gnway.cc");
                     packageInfo.OutTradeNo = tradeId;
                     packageInfo.Attach = tradeId;
                     packageInfo.TotalFee = (int)(totalFee * 100m);
