@@ -53,6 +53,7 @@ using Fx.Amiya.Dto.ShanDePay;
 using Fx.Amiya.Dto;
 using Microsoft.AspNetCore.Http;
 using Fx.Amiya.Dto.OperationLog;
+using Fx.Amiya.Dto.DockingHospitalCustomerInfo;
 
 namespace Fx.Amiya.Service
 {
@@ -3519,7 +3520,7 @@ namespace Fx.Amiya.Service
                     uploadMiniprogramOrderInfo.shipping_list = new List<ShippingInfo> { shippingInfo };
                     uploadMiniprogramOrderInfo.upload_time = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssK");
                     uploadMiniprogramOrderInfo.payer = new PayerInfo() { openid = dalWxMpUser.GetAll().Where(e => e.UserId == orderTrade.CustomerInfo.UserId).FirstOrDefault().OpenId };
-                    await this.UploadMiniprogramOrderInfoAsync(uploadMiniprogramOrderInfo);
+                    await this.UploadMiniprogramOrderInfoAsync(uploadMiniprogramOrderInfo, orderTrade.CustomerInfo.AppId);
                 }
                 catch (Exception ex)
                 {
@@ -6038,9 +6039,17 @@ namespace Fx.Amiya.Service
                 throw new Exception("取消订单失败");
             }
         }
-        private async Task UploadMiniprogramOrderInfoAsync(UploadMiniprogramOrderInfoDto uploadInfo)
+        private async Task UploadMiniprogramOrderInfoAsync(UploadMiniprogramOrderInfoDto uploadInfo,string appId)
         {
-            var appInfo = await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(192);
+            var appInfo = new DockingHospitalCustomerInfoDto();
+            if (appId == "wx695942e4818de445")
+            {
+                appInfo = await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(192);
+            }
+            else if (appId == "wx8747b7f34c0047eb")
+            {
+                appInfo = await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(84);
+            } 
             var requestUrl = $"https://api.weixin.qq.com/wxa/sec/order/upload_shipping_info?access_token={appInfo.AccessToken}";
             var result = HttpUtil.HTTPJsonPost(requestUrl, JsonConvert.SerializeObject(uploadInfo));
         }
@@ -6053,7 +6062,6 @@ namespace Fx.Amiya.Service
             var appInfo = await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(192);
             var requestUrl = $"https://api.weixin.qq.com/cgi-bin/express/delivery/open_msg/get_delivery_list?access_token={appInfo.AccessToken}";
             var result = HttpUtil.HTTPJsonPost(requestUrl, "{}");
-            Console.WriteLine();
             return JsonConvert.DeserializeObject<DeliveryInfoDto>(result).delivery_list.Select(e => new BaseKeyValueDto<string>
             {
                 Key = e.delivery_id,

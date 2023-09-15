@@ -3,6 +3,7 @@ using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.Balance;
+using Fx.Amiya.Dto.DockingHospitalCustomerInfo;
 using Fx.Amiya.Dto.HuiShouQianPay;
 using Fx.Amiya.Dto.HuiShouQianPayNotify;
 using Fx.Amiya.Dto.OperationLog;
@@ -428,7 +429,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                     uploadMiniprogramOrderInfo.shipping_list = new List<ShippingInfo> { shippingInfo };
                                     uploadMiniprogramOrderInfo.upload_time = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssK");
                                     uploadMiniprogramOrderInfo.payer = new PayerInfo() { openid = dalWxMpUser.GetAll().Where(e => e.UserId == orderTrade.UserId).FirstOrDefault().OpenId };
-                                    await this.UploadMiniprogramOrderInfoAsync(uploadMiniprogramOrderInfo);
+                                    await this.UploadMiniprogramOrderInfoAsync(uploadMiniprogramOrderInfo, orderTrade.AppId);
                                 }
                                 catch (Exception ex)
                                 {
@@ -689,7 +690,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                             uploadMiniprogramOrderInfo.shipping_list = new List<ShippingInfo> { shippingInfo };
                                             uploadMiniprogramOrderInfo.upload_time = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssK");
                                             uploadMiniprogramOrderInfo.payer = new PayerInfo() { openid = dalWxMpUser.GetAll().Where(e => e.UserId == orderTrade.UserId).FirstOrDefault().OpenId };
-                                            await this.UploadMiniprogramOrderInfoAsync(uploadMiniprogramOrderInfo);
+                                            await this.UploadMiniprogramOrderInfoAsync(uploadMiniprogramOrderInfo, orderTrade.AppId);
                                         }
                                         catch (Exception ex)
                                         {
@@ -795,9 +796,17 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
         }
 
-        private async Task UploadMiniprogramOrderInfoAsync(UploadMiniprogramOrderInfoDto uploadInfo)
+        private async Task UploadMiniprogramOrderInfoAsync(UploadMiniprogramOrderInfoDto uploadInfo,string appId)
         {
-            var appInfo = await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(192);
+            var appInfo = new DockingHospitalCustomerInfoDto();
+            if (appId == "wx695942e4818de445")
+            {
+                appInfo = await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(192);
+            }
+            else if (appId == "wx8747b7f34c0047eb")
+            {
+                appInfo = await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(84);
+            }
             var requestUrl = $"https://api.weixin.qq.com/wxa/sec/order/upload_shipping_info?access_token={appInfo.AccessToken}";
             var result = HttpUtil.HTTPJsonPost(requestUrl, JsonConvert.SerializeObject(uploadInfo));
         }
@@ -928,7 +937,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                     uploadMiniprogramOrderInfo.shipping_list = new List<ShippingInfo> { shippingInfo };
                                     uploadMiniprogramOrderInfo.upload_time = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssK");
                                     uploadMiniprogramOrderInfo.payer = new PayerInfo() { openid = dalWxMpUser.GetAll().Where(e => e.UserId == orderTrade.UserId).FirstOrDefault().OpenId };
-                                    await this.UploadMiniprogramOrderInfoAsync(uploadMiniprogramOrderInfo);
+                                    await this.UploadMiniprogramOrderInfoAsync(uploadMiniprogramOrderInfo, orderTrade.AppId);
                                 }
                                 catch (Exception ex)
                                 {

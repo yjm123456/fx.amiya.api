@@ -3463,10 +3463,9 @@ namespace Fx.Amiya.Service
                 orderInfo = orderInfo.Where(e => e.BelongEmpId == query.AssistantId.Value);
                 visitInfo = visitInfo.Where(e => e.BelongEmpId == query.AssistantId.Value);
             }
-            orderData.SenOrderCount = await orderInfo.Select(e => e.Phone).Distinct().CountAsync();
-            orderData.ToHospitalCount = await visitInfo.Select(e => e.Phone).Distinct().CountAsync();
-            orderData.DealCount = visitInfo.Where(x => x.DealDate >= query.StartDate.Value && x.DealDate < query.EndDate.Value && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete).Select(e => e.Phone)
-                .Distinct()
+            orderData.SenOrderCount = await orderInfo.CountAsync();
+            orderData.ToHospitalCount = await visitInfo.CountAsync();
+            orderData.DealCount = visitInfo.Where(x => x.DealDate >= query.StartDate.Value && x.DealDate < query.EndDate.Value && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
                 .Count();
             return orderData;
         }
@@ -4431,10 +4430,10 @@ namespace Fx.Amiya.Service
                                        select d;
 
             }
-            assistantOrderData.TotalOrderCount = await contentPlatformOrder.Select(e => e.Phone).Distinct().CountAsync();
-            assistantOrderData.TodayOrderCount = await contentPlatformOrder.Where(e => e.CreateDate >= startDate && e.CreateDate < endDate).Select(e => e.Phone).Distinct().CountAsync();
-            assistantOrderData.UnSendOrderCount = await contentPlatformOrder.Where(e => e.OrderStatus < (int)ContentPlateFormOrderStatus.SendOrder).Select(e => e.Phone).Distinct().CountAsync();
-            assistantOrderData.TodayDealOrderCount = await contentPlatformOrder.Where(e => e.DealDate >= startDate && e.DealDate < endDate).Select(e => e.Phone).Distinct().CountAsync();
+            assistantOrderData.TotalOrderCount = await contentPlatformOrder.CountAsync();
+            assistantOrderData.TodayOrderCount = await contentPlatformOrder.Where(e => e.CreateDate >= startDate && e.CreateDate < endDate).CountAsync();
+            assistantOrderData.UnSendOrderCount = await contentPlatformOrder.Where(e => e.OrderStatus < (int)ContentPlateFormOrderStatus.SendOrder).CountAsync();
+            assistantOrderData.TodayDealOrderCount = await contentPlatformOrder.Where(e => e.DealDate >= startDate && e.DealDate < endDate).CountAsync();
             return assistantOrderData;
         }
 
