@@ -3137,6 +3137,7 @@ namespace Fx.Amiya.Service
             orderTradeDto.Remark = orderTrade.Remark;
             orderTradeDto.StatusCode = orderTrade.StatusCode;
             orderTradeDto.UserId = orderTrade.CustomerInfo.UserId;
+            orderTradeDto.TransactionId = orderTrade.ChanelOrderNo;
             orderTradeDto.StatusText = ServiceClass.GetOrderStatusText(orderTrade.StatusCode);
             orderTradeDto.OrderInfoList = (from o in orderTrade.OrderInfoList
                                            select new OrderInfoDto

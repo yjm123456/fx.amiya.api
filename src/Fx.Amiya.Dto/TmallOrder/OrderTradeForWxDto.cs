@@ -22,6 +22,7 @@ namespace Fx.Amiya.Dto.TmallOrder
         public string ChanelOrderNo { get; set; }
         public string Phone { get; set; }
         public string UserId { get; set; }
+        public string TransactionId { get; set; }
         public List<OrderInfoDto> OrderInfoList { get; set; }
         public List<TikTokOrderDto> TikTokOrderInfoList { get; set; }
     }

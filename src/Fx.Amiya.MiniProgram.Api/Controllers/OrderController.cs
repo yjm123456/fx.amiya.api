@@ -1887,6 +1887,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 ReceiveInfoVo result = new ReceiveInfoVo();
                 result.MchId = "";
                 result.TradeId = orderTrade.TransNo;
+                result.TransactionId = orderTrade.TransactionId;
                 result.CreateDate = orderTrade.CreateDate.Value;
                 return ResultData<ReceiveInfoVo>.Success().AddData("result",result);
             }

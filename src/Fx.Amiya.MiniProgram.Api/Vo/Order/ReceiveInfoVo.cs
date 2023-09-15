@@ -10,6 +10,7 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.Order
 
         public string MchId { get; set; }
         public string TradeId { get; set; }
+        public string TransactionId { get; set; }
         public DateTime CreateDate { get; set; }
     }
 }
