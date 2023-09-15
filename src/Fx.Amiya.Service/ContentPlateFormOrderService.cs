@@ -3426,9 +3426,9 @@ namespace Fx.Amiya.Service
         public async Task<MonthPerformanceCompleteSituationDataDto> GetAssistantHomePageDataAsync(QueryAssistantHomePageDataDto query)
         {
             MonthPerformanceCompleteSituationDataDto orderData = new MonthPerformanceCompleteSituationDataDto();
-            var orderInfo=  _dalContentPlatformOrder.GetAll()
+            var orderInfo = _dalContentPlatformOrder.GetAll()
              .Where(o => o.SendDate >= query.StartDate.Value && o.SendDate < query.EndDate.Value);
-            var visitInfo =  _dalContentPlatformOrder.GetAll()
+            var visitInfo = _dalContentPlatformOrder.GetAll()
              .Where(o => o.ToHospitalDate >= query.StartDate.Value && o.ToHospitalDate < query.EndDate.Value);
 
             if (!string.IsNullOrEmpty(query.BaseLiveAnchorId))
@@ -3436,11 +3436,11 @@ namespace Fx.Amiya.Service
                 var ids = (await _liveAnchorService.GetLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId)).Select(e => e.Id);
                 orderInfo = orderInfo.Where(e => ids.Contains(e.LiveAnchorId.Value));
 
-                visitInfo= visitInfo.Where(e => ids.Contains(e.LiveAnchorId.Value));
+                visitInfo = visitInfo.Where(e => ids.Contains(e.LiveAnchorId.Value));
             }
             if (!string.IsNullOrEmpty(query.ContentPlatformId))
             {
-                orderInfo = orderInfo.Where(e => e.ContentPlateformId==query.ContentPlatformId);
+                orderInfo = orderInfo.Where(e => e.ContentPlateformId == query.ContentPlatformId);
                 visitInfo = visitInfo.Where(e => e.ContentPlateformId == query.ContentPlatformId);
             }
             if (query.LiveAnchorId.HasValue)
@@ -3463,9 +3463,9 @@ namespace Fx.Amiya.Service
                 orderInfo = orderInfo.Where(e => e.BelongEmpId == query.AssistantId.Value);
                 visitInfo = visitInfo.Where(e => e.BelongEmpId == query.AssistantId.Value);
             }
-            orderData.SenOrderCount =await orderInfo.Select(e => e.Phone).Distinct().CountAsync();
-            orderData.ToHospitalCount= await visitInfo.Select(e => e.Phone).Distinct().CountAsync();
-            orderData.DealCount= visitInfo.Where(x => x.DealDate >= query.StartDate.Value && x.DealDate < query.EndDate.Value && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete).Select(e => e.Phone)
+            orderData.SenOrderCount = await orderInfo.Select(e => e.Phone).Distinct().CountAsync();
+            orderData.ToHospitalCount = await visitInfo.Select(e => e.Phone).Distinct().CountAsync();
+            orderData.DealCount = visitInfo.Where(x => x.DealDate >= query.StartDate.Value && x.DealDate < query.EndDate.Value && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete).Select(e => e.Phone)
                 .Distinct()
                 .Count();
             return orderData;
@@ -4408,8 +4408,8 @@ namespace Fx.Amiya.Service
             }
             if (!string.IsNullOrEmpty(query.ContentPlatformId))
             {
-               
-                contentPlatformOrder = contentPlatformOrder.Where(e => e.ContentPlateformId==query.ContentPlatformId);
+
+                contentPlatformOrder = contentPlatformOrder.Where(e => e.ContentPlateformId == query.ContentPlatformId);
             }
             if (query.LiveAnchorId.HasValue)
             {
@@ -4425,10 +4425,14 @@ namespace Fx.Amiya.Service
             }
             if (query.AssistantId.HasValue)
             {
-                contentPlatformOrder = contentPlatformOrder.Where(e => e.BelongEmpId == query.AssistantId.Value);
+                contentPlatformOrder = from d in contentPlatformOrder
+                                       where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == query.AssistantId.Value && e.BuyerPhone == d.Phone) > 0 || d.SupportEmpId == query.AssistantId.Value || d.BelongEmpId == query.AssistantId.Value
+                                       where (d.IsSupportOrder == false || d.SupportEmpId == query.AssistantId.Value)
+                                       select d;
+
             }
             assistantOrderData.TotalOrderCount = await contentPlatformOrder.Select(e => e.Phone).Distinct().CountAsync();
-            assistantOrderData.TodayOrderCount = await contentPlatformOrder.Where(e => e.CreateDate >= startDate && e.CreateDate < endDate).Select(e=>e.Phone).Distinct().CountAsync();
+            assistantOrderData.TodayOrderCount = await contentPlatformOrder.Where(e => e.CreateDate >= startDate && e.CreateDate < endDate).Select(e => e.Phone).Distinct().CountAsync();
             assistantOrderData.UnSendOrderCount = await contentPlatformOrder.Where(e => e.OrderStatus < (int)ContentPlateFormOrderStatus.SendOrder).Select(e => e.Phone).Distinct().CountAsync();
             assistantOrderData.TodayDealOrderCount = await contentPlatformOrder.Where(e => e.DealDate >= startDate && e.DealDate < endDate).Select(e => e.Phone).Distinct().CountAsync();
             return assistantOrderData;

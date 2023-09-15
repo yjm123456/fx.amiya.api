@@ -3488,7 +3488,7 @@ namespace Fx.Amiya.Service
                         orderKey.mchid = "1633229187";
                     }
 
-                    orderKey.out_trade_no = orderTrade.ChanelOrderNo;
+                    orderKey.transaction_id = orderTrade.ChanelOrderNo;
                     uploadMiniprogramOrderInfo.order_key = orderKey;
                     uploadMiniprogramOrderInfo.logistics_type = 1;
                     if (orderTrade.OrderInfoList.Count() == 1)
@@ -5603,7 +5603,7 @@ namespace Fx.Amiya.Service
                 payRequestInfo.paySign = payRequest.paySign;
                 //交易信息添加支付交易订单号
                 await this.TradeAddTransNoAsync(orderTradeAdd.Id, orderTradeAdd.Id);
-                await this.TradeAddChanelOrderNoAsync(orderTradeAdd.Id, orderTradeAdd.Id);
+                
                 //扣除库存
                 foreach (var item in moneyOrPointOrderList)
                 {

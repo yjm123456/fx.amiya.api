@@ -42,7 +42,7 @@ namespace Fx.Amiya.Dto.Order
         /// <summary>
         /// 订单单号类型，用于确认需要上传详情的订单。枚举值1，使用下单商户号和商户侧单号；枚举值2，使用微信支付单号。
         /// </summary>
-        public int order_number_type { get; set; } = 1;
+        public int order_number_type { get; set; } = 2;
         /// <summary>
         /// 支付下单商户的商户号，由微信支付生成并下发。
         /// </summary>
@@ -51,6 +51,7 @@ namespace Fx.Amiya.Dto.Order
         /// 商户系统内部订单号，只能是数字、大小写字母`_-*`且在同一个商户号下唯一
         /// </summary>
         public string out_trade_no { get; set; }
+        public string transaction_id { get; set; }
     }
     public class ShippingInfo {
         /// <summary>

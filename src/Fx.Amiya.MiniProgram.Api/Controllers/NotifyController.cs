@@ -413,9 +413,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                         orderKey.mchid = "1633229187";
                                     }
 
-                                    orderKey.out_trade_no = orderTrade.ChanelOrderNo;
+                                    
+                                    orderKey.transaction_id= weiXinPayNotifyVo.transaction_id;
                                     uploadMiniprogramOrderInfo.order_key = orderKey;
                                     uploadMiniprogramOrderInfo.logistics_type = 1;
+                                    
                                     uploadMiniprogramOrderInfo.delivery_mode = 1;
                                     uploadMiniprogramOrderInfo.is_all_delivered = true;
                                     ShippingInfo shippingInfo = new ShippingInfo();
@@ -484,7 +486,9 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         }
                         await orderService.UpdateOrderTradeAsync(updateOrderTrade);
                     }
+                    await orderService.TradeAddChanelOrderNoAsync(orderTrade.TradeId, weiXinPayNotifyVo.transaction_id);
                 }
+                
                 return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
             }
             catch (Exception e)
@@ -672,7 +676,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                                 orderKey.mchid = "1633229187";
                                             }
 
-                                            orderKey.out_trade_no = notifyParam.channelOrderNo;
+                                            orderKey.transaction_id = notifyParam.payOrderNo;
                                             uploadMiniprogramOrderInfo.order_key = orderKey;
                                             uploadMiniprogramOrderInfo.logistics_type = 3;
                                             uploadMiniprogramOrderInfo.delivery_mode = 1;
@@ -740,7 +744,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                 }
 
                                 await orderService.UpdateOrderTradeAsync(updateOrderTrade);
-                                await orderService.TradeAddChanelOrderNoAsync(orderTrade.TradeId,notifyParam.channelOrderNo);
+                                await orderService.TradeAddChanelOrderNoAsync(orderTrade.TradeId,notifyParam.payOrderNo);
                             }
                             //UploadMiniprogramOrderInfoDto uploadMiniprogramOrderInfo = new UploadMiniprogramOrderInfoDto();
                             //OrderKey orderKey = new OrderKey();

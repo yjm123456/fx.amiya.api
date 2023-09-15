@@ -814,7 +814,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     //await orderService.TradeAddTransNoAsync(tradeId, result.TransNo);
                     //await orderService.TradeAddChanelOrderNoAsync(tradeId,result.ChanelOrderNo);
                     await orderService.TradeAddTransNoAsync(tradeId, tradeId);
-                    await orderService.TradeAddChanelOrderNoAsync(tradeId, tradeId);
+                    
                 }
                 else if (appId == "wx695942e4818de445")
                 {
@@ -1018,7 +1018,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     payRequestInfo.nonceStr = payRequest.nonceStr;
                     payRequestInfo.paySign = payRequest.paySign;
                     orderPayResult.PayRequestInfo = payRequestInfo;
-                    await orderService.TradeAddChanelOrderNoAsync(tradeId, packageInfo.OutTradeNo);
+                    
                 }
 
                 //ShanDeOrderInfo shanDeOrderInfo = new ShanDeOrderInfo();
@@ -1298,7 +1298,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     //await orderService.TradeAddTransNoAsync(tradeId, result.TransNo);
                     //await orderService.TradeAddChanelOrderNoAsync(tradeId, result.ChanelOrderNo);
                     await orderService.TradeAddTransNoAsync(tradeId, tradeId);
-                    await orderService.TradeAddChanelOrderNoAsync(tradeId, tradeId);
+                    
                 }
 
                 #endregion
