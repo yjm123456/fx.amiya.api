@@ -202,5 +202,5 @@ ALTER TABLE `amiyadb`.`tbl_recommand_document_settle`
 ADD COLUMN `compensation_check_state` INT NOT NULL DEFAULT 0 AFTER `hospital_id`,
 ADD COLUMN `check_by` INT NULL AFTER `compensation_check_state`,
 ADD COLUMN `check_date` DATETIME NULL AFTER `check_by`,
-ADD COLUMN `check_remark` VARCHAR(1000) NULL AFTER `check_date`;
-ADD COLUMN `check_belong_empid` INT NULL AFTER `check_remark`,
+ADD COLUMN `check_remark` VARCHAR(1000) NULL AFTER `check_date`,
+ADD COLUMN `check_belong_empid` INT NULL AFTER `check_remark`;
