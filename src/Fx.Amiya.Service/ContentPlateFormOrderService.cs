@@ -1600,6 +1600,7 @@ namespace Fx.Amiya.Service
                                 LateProjectStage = d.LateProjectStage,
                                 CreateDate = d.CreateDate,
                                 LiveAnchorName = d.LiveAnchor.HostAccountName,
+                                LiveAnchorBaseId = d.LiveAnchor.LiveAnchorBaseId,
                                 GoodsName = d.AmiyaGoodsDemand.ProjectNname,
                                 DepositAmount = d.DepositAmount,
                                 DealAmount = d.DealAmount,

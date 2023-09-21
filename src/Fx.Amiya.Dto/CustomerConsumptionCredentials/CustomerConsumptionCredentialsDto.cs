@@ -28,6 +28,7 @@ namespace Fx.Amiya.Dto.CustomerConsumptionCredentials
         public int? CheckBy { get; set; }
         public string CheckByEmpname { get; set; }
 
+        public string BaseLiveAnchorId { get; set; }
         public DateTime? CheckDate { get; set; }
         public string CheckRemark { get; set; }
 

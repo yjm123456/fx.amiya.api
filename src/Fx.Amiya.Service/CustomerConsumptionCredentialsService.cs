@@ -18,11 +18,13 @@ namespace Fx.Amiya.Service
     {
         private IDalCustomerConsumptionCredentials dalCustomerConsumptionCredentials;
         private IContentPlateFormOrderService contentPlateFormOrderService;
+        private IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo;
         public CustomerConsumptionCredentialsService(IDalCustomerConsumptionCredentials dalCustomerConsumptionCredentials,
-            IContentPlateFormOrderService contentPlateFormOrderService)
+            IContentPlateFormOrderService contentPlateFormOrderService, IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo)
         {
             this.contentPlateFormOrderService = contentPlateFormOrderService;
             this.dalCustomerConsumptionCredentials = dalCustomerConsumptionCredentials;
+            this.dalLiveAnchorBaseInfo = dalLiveAnchorBaseInfo;
         }
 
 
@@ -39,7 +41,7 @@ namespace Fx.Amiya.Service
                                                           select new CustomerConsumptionCredentialsDto
                                                           {
                                                               Id = d.Id,
-                                                              CustomerId=d.CustomerId,
+                                                              CustomerId = d.CustomerId,
                                                               CustomerName = d.CustomerName,
                                                               ToHospitalPhone = d.ToHospitalPhone,
                                                               ConsumeDate = d.ConsumeDate,
@@ -56,18 +58,26 @@ namespace Fx.Amiya.Service
                                                               UpdateDate = d.UpdateDate,
                                                               DeleteDate = d.DeleteDate,
                                                               Valid = d.Valid,
-                                                              CheckRemark=d.CheckRemark,
+                                                              CheckRemark = d.CheckRemark,
+                                                              BaseLiveAnchorId = d.BaseLiveAnchorId
                                                           };
             FxPageInfo<CustomerConsumptionCredentialsDto> CustomerConsumptionCredentialsBaseInfoPageInfo = new FxPageInfo<CustomerConsumptionCredentialsDto>();
             CustomerConsumptionCredentialsBaseInfoPageInfo.TotalCount = await CustomerConsumptionCredentialsBaseInfos.CountAsync();
             CustomerConsumptionCredentialsBaseInfoPageInfo.List = await CustomerConsumptionCredentialsBaseInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
             foreach (var x in CustomerConsumptionCredentialsBaseInfoPageInfo.List)
             {
-                var contentPlatFormOrderList = await contentPlateFormOrderService.GetOrderListByPhoneAsync(x.ToHospitalPhone);
-                var contentPlatFormOrder = contentPlatFormOrderList.FirstOrDefault();
-                if (contentPlatFormOrder != null)
+                if (!string.IsNullOrEmpty(x.BaseLiveAnchorId))
                 {
-                    x.LiveAnchor = contentPlatFormOrder.LiveAnchorName;
+                    x.LiveAnchor = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == x.BaseLiveAnchorId)?.FirstOrDefault().LiveAnchorName ?? "";
+                }
+                else
+                {
+                    var contentPlatFormOrderList = await contentPlateFormOrderService.GetOrderListByPhoneAsync(x.ToHospitalPhone);
+                    var contentPlatFormOrder = contentPlatFormOrderList.FirstOrDefault();
+                    if (contentPlatFormOrder != null)
+                    {
+                        x.LiveAnchor = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == contentPlatFormOrder.LiveAnchorBaseId)?.FirstOrDefault().LiveAnchorName ?? "";
+                    }
                 }
             }
 
@@ -126,7 +136,8 @@ namespace Fx.Amiya.Service
                 CustomerConsumptionCredentials.CustomerName = addDto.CustomerName;
                 CustomerConsumptionCredentials.ToHospitalPhone = addDto.ToHospitalPhone;
                 CustomerConsumptionCredentials.ConsumeDate = addDto.ConsumeDate;
-                if (!string.IsNullOrEmpty(addDto.BaseLiveAnchorId)) {
+                if (!string.IsNullOrEmpty(addDto.BaseLiveAnchorId))
+                {
                     CustomerConsumptionCredentials.BaseLiveAnchorId = addDto.BaseLiveAnchorId;
                 }
                 CustomerConsumptionCredentials.PayVoucherPicture1 = addDto.PayVoucherPicture1;
