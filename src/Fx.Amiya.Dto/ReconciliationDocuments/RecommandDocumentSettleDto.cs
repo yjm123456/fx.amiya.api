@@ -110,5 +110,10 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         public int? CheckBelongEmpId { get; set; }
         public string CheckBelongEmpName { get; set; }
 
+        /// <summary>
+        /// 薪资单据id
+        /// </summary>
+        public string CustomerServiceCompensationId { get; set; }
+
     }
 }

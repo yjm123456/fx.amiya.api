@@ -84,5 +84,8 @@ namespace Fx.Amiya.DbModels.Model
         public List<BindCustomerRFMLevelUpdateLog> BindCustomerRFMLevelUpdateLogList { get; set; }
         public List<AmiyaWareHouseStorageRacks> AmiyaWareHouseStorageRacks { get; set; }
         public List<LivingDailyTakeGoods> LivingDailyTakeGoodsList { get; set; }
+
+        public List<CustomerServiceCompensation> CustomerServiceCompensationCreateByList { get; set; }
+        public List<CustomerServiceCompensation> CustomerServiceCompensationBelongEmpList { get; set; }
     }
 }

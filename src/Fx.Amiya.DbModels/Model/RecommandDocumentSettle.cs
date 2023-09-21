@@ -92,6 +92,10 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public int? CheckBelongEmpId { get; set; }
         /// <summary>
+        /// 薪资单据id
+        /// </summary>
+        public string CustomerServiceCompensationId { get; set; }
+        /// <summary>
         /// 对账单
         /// </summary>
         //public ReconciliationDocuments ReconciliationDocuments { get; set; }

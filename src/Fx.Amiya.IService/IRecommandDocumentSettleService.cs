@@ -47,6 +47,26 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task UpdateIsRerturnBackAsync(string Id, DateTime returnBackDate);
 
+        /// <summary>
+        /// 审核助理薪资记录
+        /// </summary>
+        /// <param name="checkDto"></param>
+        /// <returns></returns>
         Task CheckAsync(CheckReconciliationDocumentSettleDto checkDto);
+
+        /// <summary>
+        /// 生成薪资单编号
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="customerServiceCompensationId"></param>
+        /// <returns></returns>
+        Task AddCustomerServiceCompensationIdAsync(List<string> ids, string customerServiceCompensationId);
+
+        /// <summary>
+        /// 根据薪资单id获取对账单记录
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<RecommandDocumentSettleDto>> GetListWithPageByCustomerServiceCompensationIdAsync(QueryReconciliationDocumentsSettleDto query);
     }
 }

@@ -173,5 +173,10 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         /// 审核归属客服
         /// </summary>
         public string CheckBelongEmpName { get; set; }
+
+        /// <summary>
+        /// 薪资单据id
+        /// </summary>
+        public string CustomerServiceCompensationId { get; set; }
     }
 }

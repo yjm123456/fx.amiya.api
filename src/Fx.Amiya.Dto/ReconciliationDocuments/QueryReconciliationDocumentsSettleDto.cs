@@ -29,5 +29,9 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// 审核状态
         /// </summary>
         public int? CheckState { get; set; }
+        /// <summary>
+        /// 薪资单id
+        /// </summary>
+        public string CustomerServiceCompensationId { get; set; }
     }
 }

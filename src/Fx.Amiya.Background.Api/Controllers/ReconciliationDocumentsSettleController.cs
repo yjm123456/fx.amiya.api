@@ -245,7 +245,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var reconciliationDocumentsSettle = from d in q.List
                                                     select new ReconciliationDocumentsSettleVo
                                                     {
-                                                        Id=d.Id,
+                                                        Id = d.Id,
 
                                                         RecommandDocumentId = d.RecommandDocumentId,
                                                         HospitalName = d.HospitalName,
@@ -278,6 +278,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         CheckDate = d.CheckDate,
                                                         CheckRemark = d.CheckRemark,
                                                         CheckBelongEmpName = d.CheckBelongEmpName,
+                                                        CustomerServiceCompensationId = d.CustomerServiceCompensationId,
                                                     };
 
                 FxPageInfo<ReconciliationDocumentsSettleVo> reconciliationDocumentsSettleResult = new FxPageInfo<ReconciliationDocumentsSettleVo>();

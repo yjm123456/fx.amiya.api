@@ -320,6 +320,35 @@ CREATE TABLE `amiyadb`.`tbl_live_replay_interactionl_data` (
 
 -----------------------------------------------余建明 2023/08/22 END--------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+-----------------------------------------------余建明 2023/09/20 BEGIN--------------------------------------------
+--助理薪资账单表
+CREATE TABLE `amiyadb`.`tbl_customer_service_compensation` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `create_by` INT UNSIGNED NOT NULL,
+  `name` VARCHAR(100) NOT NULL,
+  `belong_emp_id` INT UNSIGNED NOT NULL,
+  `total_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 ,
+  `other_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 ,
+  `remark` VARCHAR(1000) NULL AFTER `other_price`;
+  PRIMARY KEY (`id`),
+  INDEX `fk_customer_service_compensation_create_by_idx` (`create_by` ASC) VISIBLE,
+  INDEX `fk_customer_service_compensation_belong_empid_idx` (`belong_emp_id` ASC) VISIBLE,
+  CONSTRAINT `fk_customer_service_compensation_create_by`
+    FOREIGN KEY (`create_by`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_customer_service_compensation_belong_empid`
+    FOREIGN KEY (`belong_emp_id`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+    
+-----------------------------------------------余建明 2023/09/20 END--------------------------------------------
 
 
 --------------------------------------------王健 2023/09/18 START-------------------------------------------------

@@ -105,6 +105,7 @@ namespace Fx.Amiya.Service
                   CheckDate = e.CheckDate,
                   CompensationCheckState = e.CompensationCheckState,
                   CompensationCheckStateText = ServiceClass.GetCheckTypeText(e.CompensationCheckState),
+                  CustomerServiceCompensationId = e.CustomerServiceCompensationId
               });
 
             FxPageInfo<RecommandDocumentSettleDto> resultPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();
@@ -189,6 +190,66 @@ namespace Fx.Amiya.Service
                 await _dalRecommandDocumentSettle.UpdateAsync(result, true);
             }
         }
+        /// <summary>
+        /// 生成薪资单编号
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="customerServiceCompensationId"></param>
+        /// <returns></returns>
+        public async Task AddCustomerServiceCompensationIdAsync(List<string> ids, string customerServiceCompensationId)
+        {
+            foreach (var z in ids)
+            {
+                var result = await _dalRecommandDocumentSettle.GetAll().Where(x => x.Id == z).FirstOrDefaultAsync();
+                if (result != null)
+                {
+                    result.CustomerServiceCompensationId = customerServiceCompensationId;
+                    await _dalRecommandDocumentSettle.UpdateAsync(result, true);
+                }
+            }
+        }
 
+        /// <summary>
+        /// 根据薪资单id获取对账单记录
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<RecommandDocumentSettleDto>> GetListWithPageByCustomerServiceCompensationIdAsync(QueryReconciliationDocumentsSettleDto query)
+        {
+            var record = _dalRecommandDocumentSettle.GetAll().Include(x => x.AmiyaEmployee)
+              .Where(e => e.CustomerServiceCompensationId == query.CustomerServiceCompensationId).OrderByDescending(x => x.CreateDate)
+              .Select(e => new RecommandDocumentSettleDto
+              {
+                  Id = e.Id,
+                  RecommandDocumentId = e.RecommandDocumentId,
+                  HospitalId = e.HospitalId,
+                  OrderId = e.OrderId,
+                  DealInfoId = e.DealInfoId,
+                  OrderFrom = e.OrderFrom,
+                  OrderFromText = ServiceClass.GetOrderFromText(e.OrderFrom),
+                  IsOldCustomer = e.IsOldCustomer,
+                  IsOldCustomerText = e.IsOldCustomer == true ? "老客业绩" : "新客业绩",
+                  OrderPrice = e.OrderPrice,
+                  CreateDate = e.CreateDate,
+                  RecolicationPrice = e.RecolicationPrice,
+                  CreateEmpId = e.CreateEmpId,
+                  BelongLiveAnchorAccount = e.BelongLiveAnchorAccount,
+                  ReturnBackPrice = e.ReturnBackPrice,
+                  BelongEmpId = e.BelongEmpId,
+                  AccountTypeText = e.AccountType == true ? "出账" : "入账",
+                  CustomerServiceSettlePrice = e.CustomerServiceSettlePrice,
+                  CheckBelongEmpId = e.CheckBelongEmpId,
+                  CheckRemark = e.CheckRemark,
+                  CheckDate = e.CheckDate,
+                  CompensationCheckState = e.CompensationCheckState,
+                  CompensationCheckStateText = ServiceClass.GetCheckTypeText(e.CompensationCheckState),
+                  CustomerServiceCompensationId = e.CustomerServiceCompensationId
+              });
+
+            FxPageInfo<RecommandDocumentSettleDto> resultPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();
+            resultPageInfo.TotalCount = await record.CountAsync();
+            resultPageInfo.List = await record.OrderByDescending(x => x.CreateDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
+            return resultPageInfo;
+        }
     }
 }
