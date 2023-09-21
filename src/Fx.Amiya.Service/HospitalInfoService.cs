@@ -13,6 +13,8 @@ using Fx.Infrastructure.DataAccess;
 using Fx.Common;
 using Fx.Amiya.Dto.HospitalEnvironmentPicture;
 using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.HospitalContract.Input;
+using Fx.Amiya.Dto.HospitalContract.Result;
 
 namespace Fx.Amiya.Service
 {
@@ -26,13 +28,15 @@ namespace Fx.Amiya.Service
         private IDalItemInfo dalItemInfo;
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private IDalCompanyBaseInfo dalCompanyBaseInfo;
+        private IDalHospitalContract dalHospitalContract;
+        private IDalAmiyaEmployee dalAmiyaEmployee;
         public HospitalInfoService(IDalHospitalInfo dalHospitalInfo,
             IDalHospitalTagDetail dalHospitalTagDetail,
             IUnitOfWork unitOfWork,
             IHospitalEnvironmentPictureService hospitalEnvironmentPictureService,
             IDalHospitalPartakeItem dalHospitalQuotedPriceItemInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
-            IDalItemInfo dalItemInfo, IDalCompanyBaseInfo dalCompanyBaseInfo)
+            IDalItemInfo dalItemInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalHospitalContract dalHospitalContract, IDalAmiyaEmployee dalAmiyaEmployee)
         {
             this.dalHospitalInfo = dalHospitalInfo;
             this.dalHospitalTagDetail = dalHospitalTagDetail;
@@ -42,6 +46,8 @@ namespace Fx.Amiya.Service
             _hospitalEnvironmentPictureService = hospitalEnvironmentPictureService;
             _amiyaEmployeeService = amiyaEmployeeService;
             this.dalCompanyBaseInfo = dalCompanyBaseInfo;
+            this.dalHospitalContract = dalHospitalContract;
+            this.dalAmiyaEmployee = dalAmiyaEmployee;
         }
 
 
@@ -1291,6 +1297,74 @@ namespace Fx.Amiya.Service
             }
             return requestTypeList;
         }
+
+
+        #region 新的医院合同接口
+
+        public async Task UpdateContractAsync(UpdateHospitalContractDto updateDto)
+        {
+            var contract = await dalHospitalContract.GetAll().Where(e => e.Id == updateDto.Id).FirstOrDefaultAsync();
+            if (contract == null) throw new Exception("合同编号错误!");
+            contract.Name = updateDto.Name;
+            contract.ContractUrl = updateDto.ContractUrl;
+            contract.StartDate = updateDto.StartDate;
+            contract.ExpireDate = updateDto.ExpireDate;
+            contract.UpdateDate = DateTime.Now;
+            await dalHospitalContract.UpdateAsync(contract, true);
+        }
+
+        public async Task AddHospitalContractAsync(AddHospitalContractDto addDto)
+        {
+            HospitalContract contract = new HospitalContract();
+            contract.Id = Guid.NewGuid().ToString().Replace("-", "");
+            contract.Name = addDto.Name;
+            contract.HospitalId = addDto.HospitalId;
+            contract.ContractUrl = addDto.ContractUrl;
+            contract.StartDate = addDto.StartDate;
+            contract.ExpireDate = addDto.ExpireDate;
+            contract.CreateDate = DateTime.Now;
+            contract.Valid = true;
+            await dalHospitalContract.AddAsync(contract, true);
+        }
+
+        public async Task DeleteHospitalContractAsync(string id)
+        {
+            var contract = await dalHospitalContract.GetAll().Where(e => e.Id == id).FirstOrDefaultAsync();
+            if (contract == null) throw new Exception("合同编号错误!");
+            contract.Valid = false;
+            await dalHospitalContract.UpdateAsync(contract, true);
+        }
+
+        public async Task<List<HospitalContractInfoDto>> GetHospitalContractListAsync(int hospitalId)
+        {
+            return await dalHospitalContract.GetAll()
+                .Where(e => e.HospitalId == hospitalId && e.Valid == true)
+                .Select(e => new HospitalContractInfoDto
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    ContractUrl = e.ContractUrl,
+                    StartDate = e.StartDate,
+                    ExpireDate = e.ExpireDate,
+                }).ToListAsync();
+        }
+
+
+        public async Task<HospitalContractInfoDto> GetHospitalContractByIdAsync(string id)
+        {
+            HospitalContractInfoDto hospitalContractInfoDto = new HospitalContractInfoDto();
+            var contract = dalHospitalContract.GetAll()
+               .Where(e => e.Id == id).FirstOrDefault();
+            if (contract == null) throw new Exception("合同编号错误!");
+            hospitalContractInfoDto.Id = contract.Id;
+            hospitalContractInfoDto.Name = contract.Name;
+            hospitalContractInfoDto.ContractUrl = contract.ContractUrl;
+            hospitalContractInfoDto.StartDate = contract.StartDate;
+            hospitalContractInfoDto.ExpireDate = contract.ExpireDate;
+            return hospitalContractInfoDto;
+        }
+
+        #endregion
 
     }
 }

@@ -126,6 +126,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 addDto.CustomerName = addVo.CustomerName;
                 addDto.ToHospitalPhone = addVo.ToHospitalPhone;
                 addDto.ConsumeDate = addVo.ConsumeDate;
+                addDto.BaseLiveAnchorId = addVo.BaseLiveAnchorId;
                 addDto.PayVoucherPicture1 = addVo.PayVoucherPicture1;
                 addDto.PayVoucherPicture2 = addVo.PayVoucherPicture2;
                 addDto.PayVoucherPicture3 = addVo.PayVoucherPicture3;

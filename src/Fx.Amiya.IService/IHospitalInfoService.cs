@@ -1,4 +1,6 @@
 ﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.HospitalContract.Input;
+using Fx.Amiya.Dto.HospitalContract.Result;
 using Fx.Amiya.Dto.HospitalEnvironmentPicture;
 using Fx.Amiya.Dto.HospitalInfo;
 using Fx.Common;
@@ -187,6 +189,44 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<BaseKeyValueDto<int>>> GetYearServiceStatusAsync();
-       
+
+        #region 新的医院合同接口
+
+        /// <summary>
+        /// 新的医院合同修改接口
+        /// </summary>
+        /// <param name="contractUrl"></param>
+        /// <param name="hospitalId"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        Task UpdateContractAsync(UpdateHospitalContractDto updateDto);
+        /// <summary>
+        /// 新的医院合同添加接口
+        /// </summary>
+        /// <param name="addDto"></param>
+        /// <returns></returns>
+        Task AddHospitalContractAsync(AddHospitalContractDto addDto);
+        /// <summary>
+        /// 新的删除医院合同接口
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task DeleteHospitalContractAsync(string id);
+        /// <summary>
+        /// 根据医院id获取合同列表
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<List<HospitalContractInfoDto>> GetHospitalContractListAsync(int hospitalId);
+        /// <summary>
+        /// 根据id获取合同详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<HospitalContractInfoDto> GetHospitalContractByIdAsync(string id);
+
+        #endregion
+
+
     }
 }

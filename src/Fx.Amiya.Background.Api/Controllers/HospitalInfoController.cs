@@ -4,7 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.Doctor;
+using Fx.Amiya.Background.Api.Vo.HospitalContract.Input;
+using Fx.Amiya.Background.Api.Vo.HospitalContract.Result;
 using Fx.Amiya.Background.Api.Vo.HospitalInfo;
+using Fx.Amiya.Dto.HospitalContract.Input;
 using Fx.Amiya.Dto.HospitalEnvironmentPicture;
 using Fx.Amiya.Dto.HospitalInfo;
 using Fx.Amiya.IService;
@@ -27,6 +30,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IHospitalEnvironmentPictureService _hospitalEnvironmentPictureService;
         private IAmiyaHospitalDepartmentService _amiyaHospitalDepartmentService;
         private IDoctorService _doctorService;
+
         public HospitalInfoController(IHospitalInfoService hospitalInfoService,
             IHttpContextAccessor httpContextAccessor,
             IHospitalEnvironmentService hospitalEnvironmentService,
@@ -596,7 +600,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                await hospitalInfoService.UpdateContractUrlAsync(updateVo.ContractUrl,updateVo.HospitalId, employeeId);
+                await hospitalInfoService.UpdateContractUrlAsync(updateVo.ContractUrl, updateVo.HospitalId, employeeId);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -744,6 +748,132 @@ namespace Fx.Amiya.Background.Api.Controllers
             }).ToList();
             return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("nameList", result);
 
+        }
+
+        /// <summary>
+        /// 新的修改合同接口
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut("UpdateContract")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> UpdateContractAsync(UpdateHospitalContractVo updateVo)
+        {
+            try
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                UpdateHospitalContractDto updateHospitalContractDto = new UpdateHospitalContractDto();
+                updateHospitalContractDto.Id = updateVo.Id;
+                updateHospitalContractDto.Name = updateVo.Name;
+                updateHospitalContractDto.ContractUrl = updateVo.ContractUrl;
+                updateHospitalContractDto.StartDate = updateVo.StartDate;
+                updateHospitalContractDto.ExpireDate = updateVo.ExpireDate;
+                await hospitalInfoService.UpdateContractAsync(updateHospitalContractDto);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 新的合同添加接口
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPost("addContract")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> AddContractAsync(AddHospitalContractDto addVo)
+        {
+            try
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                AddHospitalContractDto addDto = new AddHospitalContractDto();
+                addDto.HospitalId = addVo.HospitalId;
+                addDto.Name = addVo.Name;
+                addDto.ContractUrl = addVo.ContractUrl;
+                addDto.StartDate = addVo.StartDate;
+                addDto.ExpireDate = addVo.ExpireDate;
+                await hospitalInfoService.AddHospitalContractAsync(addDto);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 根据医院id获取合同列表
+        /// </summary>
+        /// <param name="hospitalId">医院id</param>
+        /// <returns></returns>
+        [HttpGet("getContractList")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<List<HospitalContractInfoVo>>> GetContractListAsync(int hospitalId)
+        {
+            try
+            {
+                var list = (await hospitalInfoService.GetHospitalContractListAsync(hospitalId)).Select(e => new HospitalContractInfoVo
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    ContractUrl = e.ContractUrl,
+                    StartDate = e.StartDate,
+                    ExpireDate = e.ExpireDate
+                }).ToList();
+
+                return ResultData<List<HospitalContractInfoVo>>.Success().AddData("contractList", list);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<List<HospitalContractInfoVo>>.Fail(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 根据合同id获取合同详情
+        /// </summary>
+        /// <param name="contractId">合同id</param>
+        /// <returns></returns>
+        [HttpGet("getInfoByContractId")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<HospitalContractInfoVo>> GetContractInfobyIdAsync(string contractId)
+        {
+            try
+            {
+                HospitalContractInfoVo hospitalContractInfoVo = new HospitalContractInfoVo();
+                var info = await hospitalInfoService.GetHospitalContractByIdAsync(contractId);
+                hospitalContractInfoVo.Id = info.Id;
+                hospitalContractInfoVo.Name = info.Name;
+                hospitalContractInfoVo.ContractUrl = info.ContractUrl;
+                hospitalContractInfoVo.StartDate = info.StartDate;
+                hospitalContractInfoVo.ExpireDate = info.ExpireDate;
+                return ResultData<HospitalContractInfoVo>.Success().AddData("contractInfo", hospitalContractInfoVo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<HospitalContractInfoVo>.Fail(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 根据合同id删除合同
+        /// </summary>
+        /// <param name="id">合同id</param>
+        /// <returns></returns>
+        [HttpDelete("deleteById")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> DeleteByIdAsync(string id)
+        {
+            try
+            {
+                await hospitalInfoService.DeleteHospitalContractAsync(id);
+                return ResultData<HospitalContractInfoVo>.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData<HospitalContractInfoVo>.Fail(ex.Message);
+            }
         }
     }
 }

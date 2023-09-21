@@ -8,6 +8,10 @@ namespace Fx.Amiya.Dto.CustomerConsumptionCredentials
 {
     public class AddCustomerConsumptionCredentialsDto
     {
+        /// <summary>
+        /// 基础主播id
+        /// </summary>
+        public string BaseLiveAnchorId { get; set; }
         public string CustomerId { get; set; }
         public string CustomerName { get; set; }
 

@@ -8,6 +8,10 @@ namespace Fx.Amiya.MiniProgram.Api.Vo.CustomerConsumptionCredentialsService
     public class AddCustomerConsumptionCredentialsVo
     {
         /// <summary>
+        /// 基础主播id
+        /// </summary>
+        public string BaseLiveAnchorId { get; set; }
+        /// <summary>
         /// 客户id
         /// </summary>
         public string CustomerId { get; set; }

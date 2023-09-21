@@ -204,3 +204,14 @@ ADD COLUMN `check_by` INT NULL AFTER `compensation_check_state`,
 ADD COLUMN `check_date` DATETIME NULL AFTER `check_by`,
 ADD COLUMN `check_remark` VARCHAR(1000) NULL AFTER `check_date`,
 ADD COLUMN `check_belong_empid` INT NULL AFTER `check_remark`;
+
+
+
+----------------------------------------王健 2023/09/21 BEGIN-----------------------------------------
+
+---消费凭证新增基础主播id
+ALTER TABLE `tbl_customer_consumption_credentials`
+	ADD COLUMN `base_livenchor_id` VARCHAR(50) NULL DEFAULT NULL AFTER `check_remark`;
+
+
+----------------------------------------王健 2023/09/21 END-----------------------------------------

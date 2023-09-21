@@ -321,3 +321,24 @@ CREATE TABLE `amiyadb`.`tbl_live_replay_interactionl_data` (
 -----------------------------------------------余建明 2023/08/22 END--------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
+
+--------------------------------------------王健 2023/09/18 START-------------------------------------------------
+
+
+-------------医院合同
+CREATE TABLE `tbl_hospital_contract` (
+	`id` VARCHAR(50) NOT NULL,
+	`hospital_id` INT(10) NOT NULL,
+	`name` VARCHAR(500) NOT NULL,
+	`contract_url` VARCHAR(500) NOT NULL,
+	`start_date` DATETIME NULL DEFAULT NULL,
+	`expire_date` DATETIME NULL DEFAULT NULL,
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT(1) NOT NULL DEFAULT '0',
+	`delete_date` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+);
+
+
+--------------------------------------------王健 2023/09/18 END-------------------------------------------------

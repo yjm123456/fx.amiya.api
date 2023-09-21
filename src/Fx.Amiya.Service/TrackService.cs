@@ -608,6 +608,83 @@ namespace Fx.Amiya.Service
             return fxPageInfo;
         }
 
+
+
         #endregion
+
+        /// <summary>
+        /// 成交后录入待回访记录
+        /// </summary>
+        /// <param name="dealTrack"></param>
+        /// <returns></returns>
+        public async Task AddWaitTrackAfterDealAsync(DealAfterAddTrackDto dealTrack)
+        {
+            List<WaitTrackCustomer> waitTrackList = new List<WaitTrackCustomer>();
+            WaitTrackCustomer oneDay = new WaitTrackCustomer();
+            oneDay.Phone = dealTrack.Phone;
+            oneDay.PlanTrackDate= dealTrack.CreateDate.AddDays(1);
+            oneDay.TrackTypeId = 6;
+            oneDay.TrackThemeId = 0;
+            oneDay.CreateDate=DateTime.Now;
+            oneDay.TrackPlan = "术后第一天回访";
+            oneDay.CreateBy = dealTrack.EmployeeId;
+            oneDay.Status = false;
+            oneDay.PlanTrackEmployeeId = dealTrack.EmployeeId;
+            waitTrackList.Add(oneDay);
+
+            WaitTrackCustomer oneWeek=new WaitTrackCustomer();
+            oneWeek.Phone = dealTrack.Phone;
+            oneWeek.PlanTrackDate = dealTrack.CreateDate.AddDays(7);
+            oneWeek.TrackTypeId = 6;
+            oneWeek.TrackThemeId = 0;
+            oneWeek.CreateDate = DateTime.Now;
+            oneWeek.TrackPlan = "术后第七天回访";
+            oneWeek.CreateBy = dealTrack.EmployeeId;
+            oneWeek.Status = false;
+            oneWeek.PlanTrackEmployeeId = dealTrack.EmployeeId;
+            waitTrackList.Add(oneWeek);
+
+
+            WaitTrackCustomer halfMonth = new WaitTrackCustomer();
+            halfMonth.Phone = dealTrack.Phone;
+            halfMonth.PlanTrackDate = dealTrack.CreateDate.AddDays(15);
+            halfMonth.TrackTypeId = 6;
+            halfMonth.TrackThemeId = 0;
+            halfMonth.CreateDate = DateTime.Now;
+            halfMonth.TrackPlan = "术后第十五天回访";
+            halfMonth.CreateBy = dealTrack.EmployeeId;
+            halfMonth.Status = false;
+            halfMonth.PlanTrackEmployeeId = dealTrack.EmployeeId;
+            waitTrackList.Add(halfMonth);
+
+
+            WaitTrackCustomer oneMonth=new WaitTrackCustomer();
+            halfMonth.Phone = dealTrack.Phone;
+            halfMonth.PlanTrackDate = dealTrack.CreateDate.AddMonths(1);
+            halfMonth.TrackTypeId = 12;
+            halfMonth.TrackThemeId = 0;
+            halfMonth.CreateDate = DateTime.Now;
+            halfMonth.TrackPlan = "术后第十五天回访";
+            halfMonth.CreateBy = dealTrack.EmployeeId;
+            halfMonth.Status = false;
+            halfMonth.PlanTrackEmployeeId = dealTrack.EmployeeId;
+            waitTrackList.Add(oneMonth);
+
+
+            WaitTrackCustomer threeMonth = new WaitTrackCustomer();
+            halfMonth.Phone = dealTrack.Phone;
+            halfMonth.PlanTrackDate = dealTrack.CreateDate.AddMonths(3);
+            halfMonth.TrackTypeId = 12;
+            halfMonth.TrackThemeId = 0;
+            halfMonth.CreateDate = DateTime.Now;
+            halfMonth.TrackPlan = "术后第十五天回访";
+            halfMonth.CreateBy = dealTrack.EmployeeId;
+            halfMonth.Status = false;
+            halfMonth.PlanTrackEmployeeId = dealTrack.EmployeeId;
+            waitTrackList.Add(threeMonth);
+
+            await dalWaitTrackCustomer.AddCollectionAsync(waitTrackList,true);
+
+        }
     }
 }

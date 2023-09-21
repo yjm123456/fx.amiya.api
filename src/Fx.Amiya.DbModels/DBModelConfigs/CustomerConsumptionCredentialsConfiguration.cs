@@ -17,6 +17,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.CustomerName).HasColumnName("customer_name").HasColumnType("varchar(50)").IsRequired();
             builder.Property(t => t.ToHospitalPhone).HasColumnName("to_hospital_phone").HasColumnType("varchar(20)").IsRequired();
             builder.Property(e => e.ConsumeDate).HasColumnName("consume_date").HasColumnType("datetime").IsRequired();
+            builder.Property(e => e.BaseLiveAnchorId).HasColumnName("base_livenchor_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(t => t.PayVoucherPicture1).HasColumnName("pay_voucher_picture1").HasColumnType("varchar(500)").IsRequired(false);
             builder.Property(t => t.PayVoucherPicture2).HasColumnName("pay_voucher_picture2").HasColumnType("varchar(500)").IsRequired(false);
             builder.Property(t => t.PayVoucherPicture3).HasColumnName("pay_voucher_picture3").HasColumnType("varchar(500)").IsRequired(false);

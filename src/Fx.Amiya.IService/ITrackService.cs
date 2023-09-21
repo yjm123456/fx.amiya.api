@@ -161,5 +161,11 @@ namespace Fx.Amiya.IService
         Task<FxPageInfo<TodayTrackDataDto>> GetTodayTrackDataAsync(QueryAssistantHomePageTrackDataDto query);
 
         #endregion
+        /// <summary>
+        /// 成交后录入待回访记录
+        /// </summary>
+        /// <param name="dealTrack"></param>
+        /// <returns></returns>
+        Task AddWaitTrackAfterDealAsync(DealAfterAddTrackDto dealTrack);
     }
 }

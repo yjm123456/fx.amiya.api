@@ -2282,7 +2282,7 @@ namespace Fx.Amiya.Service
                 orderDealDto.InvitationDocuments = input.InvitationDocuments;
                 orderDealDto.AddContentPlatFormOrderDealDetailsDtoList = input.AddContentPlatFormOrderDealDetailsDtoList;
                 await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
-
+                
                 unitOfWork.Commit();
             }
             catch (Exception err)

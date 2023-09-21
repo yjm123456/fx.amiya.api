@@ -126,6 +126,9 @@ namespace Fx.Amiya.Service
                 CustomerConsumptionCredentials.CustomerName = addDto.CustomerName;
                 CustomerConsumptionCredentials.ToHospitalPhone = addDto.ToHospitalPhone;
                 CustomerConsumptionCredentials.ConsumeDate = addDto.ConsumeDate;
+                if (!string.IsNullOrEmpty(addDto.BaseLiveAnchorId)) {
+                    CustomerConsumptionCredentials.BaseLiveAnchorId = addDto.BaseLiveAnchorId;
+                }
                 CustomerConsumptionCredentials.PayVoucherPicture1 = addDto.PayVoucherPicture1;
                 CustomerConsumptionCredentials.PayVoucherPicture2 = addDto.PayVoucherPicture2;
                 CustomerConsumptionCredentials.PayVoucherPicture3 = addDto.PayVoucherPicture3;
