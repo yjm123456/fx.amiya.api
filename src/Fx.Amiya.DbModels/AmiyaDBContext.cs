@@ -204,6 +204,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<LiveReplayFlowOptimize> LiveReplayFlowOptimizes { get; set; }
         public virtual DbSet<LiveReplayWordAnalyse> LiveReplayWordAnalyses { get; set; }
         public virtual DbSet<CustomerServiceCompensation> CustomerServiceCompensation { get; set; }
+        public virtual DbSet<HospitalContract> HospitalContract { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -402,6 +403,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new LiveReplayFlowOptimizeConfiguration());
             modelBuilder.ApplyConfiguration(new LiveReplayWordAnalyseConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerServiceCompensationConfiguration());
+            modelBuilder.ApplyConfiguration(new HospitalContractConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }
