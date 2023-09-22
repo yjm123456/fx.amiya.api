@@ -21,6 +21,11 @@ namespace Fx.Amiya.Dto.CustomerConsumptionCredentials
 
         public DateTime ConsumeDate { get; set; }
 
+       
+        /// <summary>
+        /// 助理id(选填)
+        /// </summary>
+        public int? AssistantId { get; set; }
         public string PayVoucherPicture1 { get; set; }
         public string PayVoucherPicture2 { get; set; }
         public string PayVoucherPicture3 { get; set; }

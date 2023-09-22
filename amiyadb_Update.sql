@@ -222,3 +222,12 @@ ALTER TABLE `tbl_customer_consumption_credentials`
 
 
 ----------------------------------------王健 2023/09/21 END-----------------------------------------
+
+
+----------------------------------------王健 2023/09/21 BEGIN-----------------------------------------
+
+--消费凭证新增助理id
+ALTER TABLE `tbl_customer_consumption_credentials`
+	ADD COLUMN `assistant_id` INT NULL DEFAULT NULL AFTER `base_livenchor_id`;
+
+----------------------------------------王健 2023/09/21 BEGIN-----------------------------------------

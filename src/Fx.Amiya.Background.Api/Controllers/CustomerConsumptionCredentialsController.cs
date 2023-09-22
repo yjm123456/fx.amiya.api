@@ -1,6 +1,7 @@
 ﻿using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.CheckBaseInfo;
 using Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials;
+using Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials.Input;
 using Fx.Amiya.Dto.CheckBaseInfo;
 using Fx.Amiya.Dto.CustomerConsumptionCredentials;
 using Fx.Amiya.IService;
@@ -143,6 +144,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.PayVoucherPicture3 = addVo.PayVoucherPicture3;
                 addDto.PayVoucherPicture4 = addVo.PayVoucherPicture4;
                 addDto.PayVoucherPicture5 = addVo.PayVoucherPicture5;
+                addDto.AssistantId = addVo.AssistantId;
+                addDto.BaseLiveAnchorId = addVo.BaseLiveAnchorId;
                 await customerConsumptionCredentialsService.AddAsync(addDto);
                 return ResultData<int>.Success();
             }
@@ -150,6 +153,16 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 return ResultData<int>.Fail(ex.Message);
             }
+        }
+        /// <summary>
+        /// 修改绑定主播
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<ResultData> UpdateAssistantAsync(UpdateCustomerConsumptionCredentialVo updateVo) {
+            await customerConsumptionCredentialsService.UpdateAssistantAsync(updateVo.Id,updateVo.AssistantId);
+            return ResultData.Success();
         }
 
 

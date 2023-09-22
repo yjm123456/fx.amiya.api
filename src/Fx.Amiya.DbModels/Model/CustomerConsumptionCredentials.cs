@@ -8,7 +8,14 @@ namespace Fx.Amiya.DbModels.Model
 {
     public class CustomerConsumptionCredentials : BaseDbModel
     {
+        /// <summary>
+        /// 绑定的基础主播
+        /// </summary>
         public string BaseLiveAnchorId { get; set; }
+        /// <summary>
+        /// 助理id
+        /// </summary>
+        public int? AssistantId { get; set; }
         public string CustomerId { get; set; }
         public string CustomerName { get; set; }
 

@@ -145,6 +145,7 @@ namespace Fx.Amiya.Service
                 CustomerConsumptionCredentials.PayVoucherPicture3 = addDto.PayVoucherPicture3;
                 CustomerConsumptionCredentials.PayVoucherPicture4 = addDto.PayVoucherPicture4;
                 CustomerConsumptionCredentials.PayVoucherPicture5 = addDto.PayVoucherPicture5;
+                CustomerConsumptionCredentials.AssistantId = addDto.AssistantId;
                 CustomerConsumptionCredentials.Valid = true;
                 CustomerConsumptionCredentials.CreateDate = DateTime.Now;
                 await dalCustomerConsumptionCredentials.AddAsync(CustomerConsumptionCredentials, true);
@@ -240,7 +241,17 @@ namespace Fx.Amiya.Service
             result.DeleteDate = DateTime.Now;
             await dalCustomerConsumptionCredentials.UpdateAsync(result, true);
         }
-
-
+        /// <summary>
+        /// 修改消费凭证绑定的助理
+        /// </summary>
+        /// <param name="credentialId">消费凭证id</param>
+        /// <param name="assistantId">助理id</param>
+        public async Task UpdateAssistantAsync(string credentialId, int assistantId)
+        {
+            var credential = dalCustomerConsumptionCredentials.GetAll().Where(e => e.Id == credentialId).FirstOrDefault();
+            if (credential == null) throw new Exception("消费凭证编号错误!");
+            credential.AssistantId= assistantId;
+            await dalCustomerConsumptionCredentials.UpdateAsync(credential,true);
+        }
     }
 }

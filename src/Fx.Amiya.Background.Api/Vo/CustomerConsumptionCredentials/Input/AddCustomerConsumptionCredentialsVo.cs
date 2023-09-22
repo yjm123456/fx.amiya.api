@@ -12,6 +12,14 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials
         /// </summary>
         public string BindPhone { get; set; }
         /// <summary>
+        /// 基础主播id
+        /// </summary>
+        public string BaseLiveAnchorId { get; set; }
+        /// <summary>
+        /// 助理id(选填)
+        /// </summary>
+        public int? AssistantId { get; set; }
+        /// <summary>
         /// 客户姓名
         /// </summary>
         public string CustomerName { get; set; }

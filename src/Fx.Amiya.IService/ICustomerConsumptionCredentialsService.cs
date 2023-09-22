@@ -60,5 +60,12 @@ namespace Fx.Amiya.IService
         /// <param name="id"></param>
         /// <returns></returns>
         Task DeleteAsync(string id);
+        /// <summary>
+        /// 修改消费凭证绑定的助理
+        /// </summary>
+        /// <param name="credentialId">消费凭证id</param>
+        /// <param name="assistantId">助理id</param>
+        /// <returns></returns>
+        Task UpdateAssistantAsync(string credentialId,int assistantId);
     }
 }

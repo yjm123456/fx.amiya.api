@@ -14,6 +14,7 @@ using Fx.Amiya.Dto.OrderReport;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Dto.TmallOrder;
+using Fx.Amiya.Dto.Track;
 using Fx.Amiya.Dto.UpdateCreateBillAndCompany;
 using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
@@ -67,6 +68,7 @@ namespace Fx.Amiya.Service
         private IDalHospitalInfo dalHospitalInfo;
         private ICustomerAppointmentScheduleService customerAppointmentScheduleService;
         private IDalContentPlatformOrderSend dalContentPlatformOrderSend;
+        private ITrackService trackService;
 
         public ContentPlateFormOrderService(
            IDalContentPlatformOrder dalContentPlatformOrder,
@@ -93,7 +95,7 @@ namespace Fx.Amiya.Service
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDalService,
              IDalBindCustomerService dalBindCustomerService,
              IDalConfig dalConfig,
-             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment, IDalHospitalInfo dalHospitalInfo, ICustomerAppointmentScheduleService customerAppointmentScheduleService, IDalContentPlatformOrderSend dalContentPlatformOrderSend)
+             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment, IDalHospitalInfo dalHospitalInfo, ICustomerAppointmentScheduleService customerAppointmentScheduleService, IDalContentPlatformOrderSend dalContentPlatformOrderSend, ITrackService trackService)
         {
             _dalContentPlatformOrder = dalContentPlatformOrder;
             this.unitOfWork = unitOfWork;
@@ -127,6 +129,7 @@ namespace Fx.Amiya.Service
             this.dalHospitalInfo = dalHospitalInfo;
             this.customerAppointmentScheduleService = customerAppointmentScheduleService;
             this.dalContentPlatformOrderSend = dalContentPlatformOrderSend;
+            this.trackService = trackService;
         }
 
         /// <summary>
@@ -2285,6 +2288,22 @@ namespace Fx.Amiya.Service
                 await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
 
                 unitOfWork.Commit();
+
+                try
+                {
+                    if (input.EmpId!=0&&input.IsFinish&&order.HospitalDepartmentId== "99138ad8-a96b-40c2-b27c-c7e13d41d47b") {
+                        DealAfterAddTrackDto dealTrack = new DealAfterAddTrackDto();
+                        dealTrack.EmployeeId = input.EmpId;
+                        dealTrack.CreateDate = DateTime.Now;
+                        dealTrack.Phone = order.Phone;
+                        await trackService.AddWaitTrackAfterDealAsync(dealTrack);
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    
+                }
             }
             catch (Exception err)
             {
